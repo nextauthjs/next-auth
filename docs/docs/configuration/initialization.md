@@ -3,17 +3,23 @@ id: initialization
 title: Initialization
 ---
 
+The main entry point of NextAuth.js is the `NextAuth` method that you import from `next-auth`. It handles different types of requests, as defined in the [REST API](../getting-started/rest-api.md) section.
+
+
+:::info
+NextAuth.js cannot use the run [Edge Runtime](https://nextjs.org/docs/api-reference/edge-runtime) for initialization. The upcoming [`@auth/nextjs` library](https://authjs.dev/reference/nextjs) (which will replace `next-auth`) on the other hand will be fully compatible.
+:::
+
+You can initialize NextAuth.js in a few different ways.
+
+## Simple initialization
+### API Routes (`pages`)
+
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
 
 When you define a `/pages/api/auth/[...nextauth]` JS/TS file, you instruct NextAuth.js that every API request beginning with `/api/auth/*` should be handled by the code written in the `[...nextauth]` file.
 
-Depending on your use case, you can initialize NextAuth.js in two different ways:
-
-## Simple initialization
-
-In most cases, you won't need to worry about what `NextAuth.js` does, and you will get by just fine with the following initialization:
-
-```ts title="/pages/api/auth/[...nextauth].js"
+```ts title="/pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 
 export default NextAuth({
@@ -25,9 +31,37 @@ Here, you only need to pass your [options](/configuration/options) to `NextAuth`
 
 This is the preferred initialization in tutorials/other parts of the documentation, as it simplifies the code and reduces potential errors in the authentication flow.
 
+### Route Handlers (`app/`)
+
+[Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-handlers) introduced [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers), the preferred way to handle REST-like requests in the upcoming App Router (`app/`).
+
+You can initialize NextAuth.js with a Route Handler too, very similar to API Routes.
+
+```ts title="/app/api/auth/[...nextauth]/route.ts"
+import NextAuth from "next-auth"
+
+const handler = NextAuth({
+  ...
+})
+
+export { handler as GET, handler as POST }
+```
+
+Internally, NextAuth.js detects that it is being initialized in a Route Handler (by understanding that it is passed a Web [`Request` instance](https://developer.mozilla.org/en-US/docs/Web/API/Request)), and will return a handler that returns a [`Response` instance](https://developer.mozilla.org/en-US/docs/Web/API/Response). A Route Handler file expects you to export some named handler functions that handle a request and return a response. NextAuth.js needs the `GET` and `POST` handlers to function properly, so we export those two.
+
+:::info
+Technically, in a Route Handler, the `api/` prefix is not necessary, but we decided to keep it required for an easier migration.
+:::
+
 ## Advanced initialization
 
-If you have a specific use case and need to make NextAuth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].js` config file is still just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)** at the end of the day.
+:::info
+The following describes the advanced initialization with API Routes, but everything will apply similarily when using [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers) too.
+Instead, `NextAuth` will receive the first two arguments of a Route Handler, and the third argument will be the [auth options](../configuration/options.md)
+:::
+
+If you have a specific use case and need to make NextAuth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].ts` config file is just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)**.
+
 
 That said, you can initialize NextAuth.js like this:
 
@@ -91,7 +125,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
 A practical example could be to not show a certain provider on the default sign-in page, but still be able to sign in with it. (The idea is taken from [this discussion](https://github.com/nextauthjs/next-auth/discussions/3133)):
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="/pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"

@@ -7,7 +7,7 @@
   "name": "next-auth-docs",
   "version": "0.2.0",
   "scripts": {
-    "start": "npm run generate-providers && docusaurus start --no-open --port 8000",
+    "start": "npm run generate-providers && docusaurus start --no-open",
     "dev": "npm run start",
     "build": "npm run generate-providers && docusaurus build",
     "docusaurus": "docusaurus",

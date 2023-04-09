@@ -54,7 +54,7 @@ upstash-redis:
 xata:
   - packages/adapter-xata/**
 
-core:
+legacy:
   - packages/next-auth/src/**/*
 
 style:

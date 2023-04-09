@@ -1,12 +1,13 @@
 import { AuthHandler } from "../core"
 import { detectHost } from "../utils/detect-host"
-import { setCookie } from "./utils"
+import { setCookie, getBody, toResponse } from "./utils"
 
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next"
+import { type NextRequest } from "next/server"
 import type { AuthOptions, Session } from ".."
 import type {
   CallbacksOptions,
@@ -15,15 +16,18 @@ import type {
   NextAuthResponse,
 } from "../core/types"
 
-async function NextAuthHandler(
+interface RouteHandlerContext {
+  params: { nextauth: string[] }
+}
+
+async function NextAuthApiHandler(
   req: NextApiRequest,
   res: NextApiResponse,
   options: AuthOptions
 ) {
   const { nextauth, ...query } = req.query
 
-  options.secret =
-    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
   const handler = await AuthHandler({
     req: {
@@ -61,6 +65,51 @@ async function NextAuthHandler(
   return res.send(handler.body)
 }
 
+// @see https://beta.nextjs.org/docs/routing/route-handlers
+async function NextAuthRouteHandler(
+  req: NextRequest,
+  context: { params: { nextauth: string[] } },
+  options: AuthOptions
+) {
+  options.secret ??= process.env.NEXTAUTH_SECRET
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { headers, cookies } = require("next/headers")
+  const nextauth = context.params?.nextauth
+  const query = Object.fromEntries(req.nextUrl.searchParams)
+  const body = await getBody(req)
+  const internalResponse = await AuthHandler({
+    req: {
+      host: detectHost(req.headers["x-forwarded-host"]),
+      body,
+      query,
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+      headers: Object.fromEntries(headers() as Headers),
+      method: req.method,
+      action: nextauth?.[0] as AuthAction,
+      providerId: nextauth?.[1],
+      error: query.error ?? nextauth?.[1],
+    },
+    options,
+  })
+
+  const response = toResponse(internalResponse)
+  const redirect = response.headers.get("Location")
+  if (body?.json === "true" && redirect) {
+    response.headers.delete("Location")
+    response.headers.set("Content-Type", "application/json")
+    return new Response(JSON.stringify({ url: redirect }), {
+      headers: response.headers,
+    })
+  }
+
+  return response
+}
+
 function NextAuth(options: AuthOptions): any
 function NextAuth(
   req: NextApiRequest,
@@ -73,11 +122,32 @@ function NextAuth(
   ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
-    return async (req: NextAuthRequest, res: NextAuthResponse) =>
-      await NextAuthHandler(req, res, args[0])
+    return async (
+      req: NextAuthRequest | NextRequest,
+      res: NextAuthResponse | RouteHandlerContext
+    ) => {
+      if ((res as unknown as any)?.params) {
+        return await NextAuthRouteHandler(
+          req as unknown as NextRequest,
+          res as RouteHandlerContext,
+          args[0]
+        )
+      }
+      return await NextAuthApiHandler(
+        req as NextApiRequest,
+        res as NextApiResponse,
+        args[0]
+      )
+    }
   }
 
-  return NextAuthHandler(args[0], args[1], args[2])
+  if ((args[1] as any)?.params) {
+    return NextAuthRouteHandler(
+      ...(args as unknown as Parameters<typeof NextAuthRouteHandler>)
+    )
+  }
+
+  return NextAuthApiHandler(...args)
 }
 
 export default NextAuth
@@ -138,7 +208,7 @@ export async function getServerSession<
     options = Object.assign({}, args[2], { providers: [] })
   }
 
-  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= process.env.NEXTAUTH_SECRET
 
   const session = await AuthHandler<Session | {} | string>({
     options,
