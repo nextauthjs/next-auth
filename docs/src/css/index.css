@@ -57,6 +57,7 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "providers.css";
 @import "navbar.css";
 @import "search.css";
+@import "adapters.css";
 
 a {
   font-weight: 600;
@@ -99,6 +100,11 @@ hr {
 
 html[data-theme="dark"] hr {
   border-color: #242526;
+}
+
+/* Docusaurus announcementBar close button */
+.close {
+  color: inherit!important;
 }
 
 .home-main .code {

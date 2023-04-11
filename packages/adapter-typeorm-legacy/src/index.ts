@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">TypeORM</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://dgraph.io/">
- *   <img style={{display: "block", height: "56px" }} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-typeorm-legacy/logo.png" />
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://typeorm.io">TypeORM</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://typeorm.io">
+ *   <img style={{display: "block", height: "56px" }} src="https://authjs.dev/img/adapters/typeorm.png" />
  *  </a>
  * </div>
  *
@@ -64,7 +64,7 @@ export async function getManager(options: {
 }
 
 /**
- * ## Usage
+ * ## Setup
  *
  * Configure Auth.js to use the TypeORM Adapter:
  *
@@ -81,13 +81,15 @@ export async function getManager(options: {
  *
  * `TypeORMLegacyAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
  *
- * ## Custom models
+ * ## Advanced usage
+ *
+ * ### Custom models
  *
  * The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/blob/master/docs/entities.md) to define the shape of your data.
  *
  * If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
  *
- * > This schema is adapted for use in TypeORM and based upon our main [schema](/reference/adapters/models)
+ * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/adapters#models)
  *
  * 1. Create a file containing your modified entities:
  *
@@ -250,7 +252,7 @@ export async function getManager(options: {
  * `synchronize: true` should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema! We recommend that you synchronize/migrate your production database at build-time.
  * :::
  *
- * ## Naming Conventions
+ * ### Naming Conventions
  *
  * If mixed snake_case and camelCase column names are an issue for you and/or your underlying database system, we recommend using TypeORM's naming strategy feature to change the target field names. There is a package called `typeorm-naming-strategies` which includes a `snake_case` strategy which will translate the fields from how Auth.js expects them, to snake_case in the actual database.
  *

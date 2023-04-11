@@ -134,7 +134,8 @@ export async function handleOAuth(
     const result = await o.processAuthorizationCodeOpenIDResponse(
       as,
       client,
-      codeGrantResponse
+      codeGrantResponse,
+      nonce?.value ?? o.expectNoNonce
     )
 
     if (o.isOAuth2Error(result)) {

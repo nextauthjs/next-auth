@@ -2,17 +2,17 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html">DynamoDB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://docs.aws.amazon.com/dynamodb/index.html">
- *   <img style={{display: "block"}} src="https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-dynamodb/logo.png?raw=true" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/dynamodb.png" width="48"/>
  *  </a>
  * </div>
  *
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dgraph-adapter
+ * npm install next-auth @next-auth/dynamodb-adapter
  * ```
  *
- * @module @next-auth/dgraph-adapter
+ * @module @next-auth/dynamodb-adapter
  */
 import { v4 as uuid } from "uuid"
 
@@ -38,13 +38,12 @@ export interface DynamoDBAdapterOptions {
 }
 
 /**
- * ## Basic usage
+ * ## Setup
  *
- * This is the AWS DynamoDB Adapter for `next-auth`. This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
  * By default, the adapter expects a table with a partition key `pk` and a sort key `sk`, as well as a global secondary index named `GSI1` with `GSI1PK` as partition key and `GSI1SK` as sorting key. To automatically delete sessions and verification requests after they expire using [dynamodb TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) you should [enable the TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html) with attribute name 'expires'. You can set whatever you want as the table name and the billing method.
  * You can find the full schema in the table structure section below.
  *
- * ## Configuring Auth.js
+ * ### Configuring Auth.js
  *
  * You need to pass `DynamoDBDocument` client from the modular [`aws-sdk`](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-dynamodb-utilities.html) v3 to the adapter.
  * The default table name is `next-auth`, but you can customise that by passing `{ tableName: 'your-table-name' }` as the second parameter in the adapter.
@@ -94,7 +93,9 @@ export interface DynamoDBAdapterOptions {
  *
  * (AWS secrets start with `NEXT_AUTH_` in order to not conflict with [Vercel's reserved environment variables](https://vercel.com/docs/environment-variables#reserved-environment-variables).)
  *
- * ## Schema
+ * ## Advanced usage
+ *
+ * ### Default schema
  *
  * The table respects the single table design pattern. This has many advantages:
  *
@@ -102,7 +103,7 @@ export interface DynamoDBAdapterOptions {
  * - Querying relations is faster than with multi-table schemas (for eg. retrieving all sessions for a user).
  * - Only one table needs to be replicated if you want to go multi-region.
  *
- * > This schema is adapted for use in DynamoDB and based upon our main [schema](/reference/adapters/models)
+ * > This schema is adapted for use in DynamoDB and based upon our main [schema](https://authjs.dev/reference/adapters#models)
  *
  * ![DynamoDB Table](https://i.imgur.com/hGZtWDq.png)
  *
@@ -156,11 +157,11 @@ export interface DynamoDBAdapterOptions {
  *       Enabled: true
  * ```
  *
- * ## Configuring your custom schema
+ * ### Using a custom schema
  *
  * You can configure your custom table schema by passing the `options` key to the adapter constructor:
  *
- * ```
+ * ```javascript
  * const adapter = DynamoDBAdapter(client, {
  *   tableName: "custom-table-name",
  *   partitionKey: "custom-pk",
@@ -169,6 +170,7 @@ export interface DynamoDBAdapterOptions {
  *   indexPartitionKey: "custom-index-pk",
  *   indexSortKey: "custom-index-sk",
  * })
+ * ```
  **/
 export function DynamoDBAdapter(
   client: DynamoDBDocument,

@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">MongoDB</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://dgraph.io/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-mongodb/logo.svg" height="30"/>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.mongodb.com">MongoDB</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://www.mongodb.com">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/mongodb.svg" width="30" />
  *  </a>
  * </div>
  *
@@ -82,21 +82,16 @@ export const format = {
   },
 }
 
-function _id(hex?: string) {
+/** @internal */
+export function _id(hex?: string) {
   if (hex?.length !== 24) return new ObjectId()
   return new ObjectId(hex)
 }
 
 /**
- * ## Basic Usage
+ * ## Setup
  *
  * The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already. Below you can see an example how to do this.
- *
- * ### Installation
- *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/mongodb-adapter mongodb
- * ```
  *
  * ### Add the MongoDB client
  *
