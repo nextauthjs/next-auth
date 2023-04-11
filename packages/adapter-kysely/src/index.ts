@@ -23,7 +23,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * ## Basic usage
  * This is the Kysely Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
  *
- * This adapter supports the same first party dialects that Kysely (as of v0.23.5) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
+ * This adapter supports the same first party dialects that Kysely (as of v0.24.2) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
  * ### Configure Auth.js
  * ```typescript title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
@@ -42,18 +42,18 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * })
  * ```
  * ### Configure Kysely
- * Kysely expects you to define interfaces for each of your database tables before passing them to the `Kysely` constructor.
+ * Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them.
  *
- * This adapter also exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that Auth.js requires.
+ * This adapter also exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type-safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that Auth.js requires.
  *
  * ```ts title="db/index.ts"
- * import type { Generated } from "kysely"
+ * import type { GeneratedAlways } from "kysely"
  * import { PostgresDialect } from "kysely"
  * import { Pool } from "pg"
  * import { AuthedKysely } from "@next-auth/kysely-adapter"
  *
  * interface User {
- *   id: Generated<string>
+ *   id: GeneratedAlways<string>
  *   name: string | null
  *   email: string
  *   emailVerified: Date | null
@@ -61,7 +61,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * }
  *
  * interface Account {
- *   id: Generated<string>
+ *   id: GeneratedAlways<string>
  *   userId: string
  *   type: string
  *   provider: string
@@ -78,7 +78,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * }
  *
  * interface Session {
- *   id: Generated<string>
+ *   id: GeneratedAlways<string>
  *   userId: string
  *   sessionToken: string
  *   expires: Date
@@ -111,7 +111,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  *
  *
  * :::note
- * An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen). When using the generated types with `AuthedKysely`, import `Codegen` and pass it as the second generic arg:
+ * An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen), or from Prisma schemas using [prisma-kysely](https://github.com/valtyr/prisma-kysely). When using generated types with `AuthedKysely`, import `Codegen` and pass it as the second generic arg:
  * ```ts
  * import type { Codegen } from "@next-auth/kysely-adapter"
  * new AuthedKysely<Database, Codegen>(...)

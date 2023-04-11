@@ -1,7 +1,7 @@
-import type { Generated } from "kysely"
+import type { GeneratedAlways } from "kysely"
 
 interface User {
-  id: Generated<string>
+  id: GeneratedAlways<string>
   name: string | null
   email: string
   emailVerified: Date | string | null
@@ -9,7 +9,7 @@ interface User {
 }
 
 interface Account {
-  id: Generated<string>
+  id: GeneratedAlways<string>
   userId: string
   type: string
   provider: string
@@ -26,7 +26,7 @@ interface Account {
 }
 
 interface Session {
-  id: Generated<string>
+  id: GeneratedAlways<string>
   userId: string
   sessionToken: string
   expires: Date | string
