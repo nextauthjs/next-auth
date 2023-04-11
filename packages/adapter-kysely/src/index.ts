@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}><a href="https://koskimas.github.io/kysely/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://koskimas.github.io/kysely/">
- *   <img style={{display: "block"}} src="https://raw.githubusercontent.com/nextauthjs/adapters/main/packages/kysely/logo.svg" width="38" />
+ *   <img style={{display: "block"}} src="/img/adapters/kysely.svg" width="38" />
  *  </a>
  * </div>
  *
