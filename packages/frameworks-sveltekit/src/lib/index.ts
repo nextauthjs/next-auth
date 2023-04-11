@@ -238,6 +238,11 @@ export interface SvelteKitAuthConfig extends AuthConfig {
    * @default "/auth"
    */
   prefix?: string
+  /**
+   * Defines a handle that would be called for any endpoints not relating to the
+   * configured auth routes.
+   */
+  handle?: Handle
 }
 
 const actions: AuthAction[] = [
@@ -263,7 +268,7 @@ function AuthHandle(
       typeof svelteKitAuthOptions === "object"
         ? svelteKitAuthOptions
         : await svelteKitAuthOptions(event)
-    const { prefix = "/auth" } = authOptions
+    const { prefix = "/auth", handle } = authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
@@ -273,7 +278,11 @@ function AuthHandle(
       .split("/")[0] as AuthAction
 
     if (!actions.includes(action) || !url.pathname.startsWith(prefix + "/")) {
-      return resolve(event)
+      if (handle) {
+        return handle({ event, resolve })
+      } else {
+        return resolve(event)
+      }
     }
 
     return Auth(request, authOptions)
