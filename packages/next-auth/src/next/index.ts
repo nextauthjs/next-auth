@@ -80,7 +80,7 @@ async function NextAuthRouteHandler(
   const body = await getBody(req)
   const internalResponse = await AuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
+      host: detectHost(headers["x-forwarded-host"]),
       body,
       query,
       cookies: Object.fromEntries(
