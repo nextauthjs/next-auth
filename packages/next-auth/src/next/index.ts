@@ -75,12 +75,13 @@ async function NextAuthRouteHandler(
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { headers, cookies } = require("next/headers")
+  const headersList = headers()
   const nextauth = context.params?.nextauth
   const query = Object.fromEntries(req.nextUrl.searchParams)
   const body = await getBody(req)
   const internalResponse = await AuthHandler({
     req: {
-      host: detectHost(headers["x-forwarded-host"]),
+      host: detectHost(headersList.get("x-forwarded-host")),
       body,
       query,
       cookies: Object.fromEntries(
@@ -88,7 +89,7 @@ async function NextAuthRouteHandler(
           .getAll()
           .map((c) => [c.name, c.value])
       ),
-      headers: Object.fromEntries(headers() as Headers),
+      headers: Object.fromEntries(headersList as Headers),
       method: req.method,
       action: nextauth?.[0] as AuthAction,
       providerId: nextauth?.[1],
