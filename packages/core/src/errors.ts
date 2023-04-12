@@ -1,6 +1,5 @@
 interface ErrorCause extends Record<string, unknown> {}
 
-/** @internal */
 export class AuthError extends Error {
   constructor(message: string | Error | ErrorCause, cause?: ErrorCause) {
     if (message instanceof Error) {
@@ -91,7 +90,7 @@ export class InvalidCallbackUrl extends AuthError {}
 export class InvalidEndpoints extends AuthError {}
 
 /** @todo */
-export class InvalidState extends AuthError {}
+export class InvalidCheck extends AuthError {}
 
 /** @todo */
 export class JWTSessionError extends AuthError {}
