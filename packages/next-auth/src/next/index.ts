@@ -73,7 +73,6 @@ async function NextAuthRouteHandler(
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { headers, cookies } = require("next/headers")
-  const headersList = headers()
   const nextauth = context.params?.nextauth
   const query = Object.fromEntries(req.nextUrl.searchParams)
   const body = await getBody(req)
