@@ -587,7 +587,7 @@ export interface InternalOptions<
 > {
   providers: InternalProvider[]
   /**
-   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` on Vercel.
+   * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` and `x-forwarded-proto` if the host is trusted.
    * @default "http://localhost:3000/api/auth"
    */
   url: InternalUrl

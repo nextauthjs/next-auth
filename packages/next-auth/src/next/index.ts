@@ -1,5 +1,4 @@
 import { AuthHandler } from "../core"
-import { detectHost } from "../utils/detect-host"
 import { setCookie, getBody, toResponse } from "./utils"
 
 import type {
@@ -31,7 +30,6 @@ async function NextAuthApiHandler(
 
   const handler = await AuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
       body: req.body,
       query,
       cookies: req.cookies,
@@ -81,7 +79,6 @@ async function NextAuthRouteHandler(
   const body = await getBody(req)
   const internalResponse = await AuthHandler({
     req: {
-      host: detectHost(headersList.get("x-forwarded-host")),
       body,
       query,
       cookies: Object.fromEntries(
@@ -89,7 +86,7 @@ async function NextAuthRouteHandler(
           .getAll()
           .map((c) => [c.name, c.value])
       ),
-      headers: Object.fromEntries(headersList as Headers),
+      headers: Object.fromEntries(headers() as Headers),
       method: req.method,
       action: nextauth?.[0] as AuthAction,
       providerId: nextauth?.[1],
@@ -214,7 +211,6 @@ export async function getServerSession<
   const session = await AuthHandler<Session | {} | string>({
     options,
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
       action: "session",
       method: "GET",
       cookies: req.cookies,

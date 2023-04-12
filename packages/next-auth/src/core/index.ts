@@ -1,5 +1,5 @@
 import logger, { setLogger } from "../utils/logger"
-import { detectHost } from "../utils/detect-host"
+import { detectOrigin } from "../utils/detect-origin"
 import * as routes from "./routes"
 import renderPage from "./pages"
 import { init } from "./init"
@@ -13,7 +13,7 @@ import { parse as parseCookie } from "cookie"
 
 export interface RequestInternal {
   /** @default "http://localhost:3000" */
-  host?: string
+  origin?: string
   method?: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
@@ -70,7 +70,10 @@ async function toInternalRequest(
       cookies: parseCookie(req.headers.get("cookie") ?? ""),
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
-      host: detectHost(headers["x-forwarded-host"] ?? headers.host),
+      origin: detectOrigin(
+        headers["x-forwarded-host"] ?? headers.host,
+        headers["x-forwarded-proto"]
+      ),
       query,
     }
   }
@@ -132,7 +135,7 @@ export async function AuthHandler<
     authOptions,
     action,
     providerId,
-    host: req.host,
+    origin: req.origin,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
