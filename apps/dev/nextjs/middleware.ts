@@ -1,12 +1,10 @@
-// export { withAuth as default } from "app/auth"
-import { withAuth } from "app/auth"
+// export { auth as default } from "auth"
+import { auth } from "auth"
+import { NextResponse } from "next/server"
 
-// export default withAuth((req) => {
-//   const auth = req.auth?.id
-// })
-
-export async function middleware(req) {
-  const auth = await withAuth(req)
-}
+export default auth((req) => {
+  if (req.auth) return NextResponse.json(req.auth)
+  return NextResponse.json("Not authorized", { status: 401 })
+})
 
 export const config = { matcher: ["/middleware-protected"] }

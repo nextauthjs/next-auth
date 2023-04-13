@@ -160,4 +160,4 @@ function AuthHandler(...args: any[]) {
 
 export default AuthHandler(authConfig)
 
-export const config = { runtime: "experimental-edge" }
+export const config = { runtime: "edge" }

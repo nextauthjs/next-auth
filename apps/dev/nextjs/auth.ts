@@ -1,7 +1,7 @@
 import NextAuth from "@auth/nextjs"
 import GitHub from "@auth/core/providers/github"
 
-export const { GET, POST, getSession, withAuth, providers } = NextAuth({
+export const { handler, auth } = NextAuth({
   providers: [GitHub],
   callbacks: {
     async authorized({ request, auth }) {
