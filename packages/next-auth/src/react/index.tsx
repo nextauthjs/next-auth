@@ -210,7 +210,7 @@ export async function signIn<
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+  const { callbackUrl = window.location.href, redirect = true, signinInfo } = options ?? {}
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
@@ -248,6 +248,7 @@ export async function signIn<
       ...options,
       csrfToken: await getCsrfToken(),
       callbackUrl,
+      signinInfo: signinInfo === undefined ? undefined : encodeURIComponent(signinInfo)
     }),
   })
 

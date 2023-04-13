@@ -103,6 +103,15 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         maxAge: 60 * 15, // 15 minutes in seconds
       },
     },
+    signinInfo: {
+      name: `${cookiePrefix}next-auth.signin-info`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
+    },
     nonce: {
       name: `${cookiePrefix}next-auth.nonce`,
       options: {

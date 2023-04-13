@@ -6,7 +6,7 @@ import type {
   AdapterSession,
   AdapterUser,
 } from "../adapters.js"
-import type { Account, InternalOptions, User } from "../types.js"
+import type { Account, SigninInfo, InternalOptions, User } from "../types.js"
 import type { JWT } from "../jwt.js"
 import type { OAuthConfig } from "../providers/index.js"
 import type { SessionToken } from "./cookie.js"
@@ -27,7 +27,8 @@ export async function handleLogin(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   _account: AdapterAccount | Account | null,
-  options: InternalOptions
+  options: InternalOptions,
+  signinInfo: SigninInfo | undefined
 ) {
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
@@ -107,8 +108,8 @@ export async function handleLogin(
     } else {
       const { id: _, ...newUser } = { ...profile, emailVerified: new Date() }
       // Create user account if there isn't one for the email address already
-      user = await createUser(newUser)
-      await events.createUser?.({ user })
+      user = await createUser(newUser, { signinInfo })
+      await events.createUser?.({ user, signinInfo })
       isNewUser = true
     }
 
@@ -211,9 +212,9 @@ export async function handleLogin(
         // create a new account for the user, link it to the OAuth account and
         // create a new session for them so they are signed in with it.
         const { id: _, ...newUser } = { ...profile, emailVerified: null }
-        user = await createUser(newUser)
+        user = await createUser(newUser, { signinInfo })
       }
-      await events.createUser?.({ user })
+      await events.createUser?.({ user, signinInfo })
 
       await linkAccount({ ...account, userId: user.id })
       await events.linkAccount?.({ user, account, profile })

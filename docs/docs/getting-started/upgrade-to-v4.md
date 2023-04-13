@@ -140,7 +140,7 @@ The signatures for the callback methods now look like this:
 
 ```diff
 - signIn(user, account, profileOrEmailOrCredentials)
-+ signIn({ user, account, profile, email, credentials })
++ signIn({ user, account, profile, email, credentials, signinInfo })
 ```
 
 ```diff

@@ -36,7 +36,7 @@ The message object will contain one of these depending on if you use JWT or data
 
 Sent when the adapter is told to create a new user.
 
-The message object will contain the user.
+The message object will contain the user and `signinInfo`.
 
 ### updateUser
 

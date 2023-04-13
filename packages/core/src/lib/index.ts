@@ -11,6 +11,8 @@ import type {
   ResponseInternal,
 } from "../types.js"
 
+const SIGNIN_INFO_MAX_AGE = 60 * 15 // 15 minutes in seconds
+
 /** @internal */
 export async function AuthInternal<
   Body extends string | Record<string, any> | any[]
@@ -139,6 +141,18 @@ export async function AuthInternal<
   } else {
     switch (action) {
       case "signin":
+        if (request.body?.signinInfo !== undefined) {
+          const expires = new Date()
+          expires.setTime(expires.getTime() + SIGNIN_INFO_MAX_AGE * 1000)
+          cookies.push({
+            name: options.cookies.signinInfo.name,
+            value: request.body.signinInfo,
+            options: {
+              ...options.cookies.signinInfo.options,
+              expires,
+            },
+          })
+        }
         if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
           const signin = await routes.signin(
             request.query,

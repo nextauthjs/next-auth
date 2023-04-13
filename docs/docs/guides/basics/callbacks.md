@@ -12,9 +12,9 @@ If you want to pass data such as an Access Token or User ID to the browser when 
 
 You can specify a handler for any of the callbacks below.
 
-```js title="pages/api/auth/[...nextauth].js"s
+```js title="pages/api/auth/[...nextauth].js"
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account, profile, email, credentials, signinInfo }) {
       return true
     },
     async redirect({ url, baseUrl }) {
@@ -37,7 +37,7 @@ Use the `signIn()` callback to control if a user is allowed to sign in.
 
 ```js title="pages/api/auth/[...nextauth].js"
 callbacks: {
-  async signIn({ user, account, profile, email, credentials }) {
+  async signIn({ user, account, profile, email, credentials, signinInfo }) {
     const isAllowedToSignIn = true
     if (isAllowedToSignIn) {
       return true

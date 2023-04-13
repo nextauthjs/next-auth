@@ -41,8 +41,9 @@ export async function signin(
         provider: provider.id,
       }
 
+      const signinInfo = body?.signinInfo === undefined ? undefined : decodeURIComponent(body.signinInfo)
       const unauthorizedOrError = await handleAuthorized(
-        { user, account, email: { verificationRequest: true } },
+        { user, account, email: { verificationRequest: true }, signinInfo },
         options
       )
 

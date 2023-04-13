@@ -10,6 +10,7 @@ import type {
   ResponseInternal,
   InternalOptions,
   Account,
+  SigninInfo,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
 
@@ -41,6 +42,20 @@ export async function callback(params: {
 
   const useJwtSession = sessionStrategy === "jwt"
 
+  let signinInfo: undefined | SigninInfo = undefined
+  const encodedSigninInfo = params.cookies?.[options.cookies.signinInfo.name]
+  if (encodedSigninInfo !== undefined) {
+    signinInfo = decodeURIComponent(encodedSigninInfo)
+    // clear signinInfo cookie
+    cookies.push({
+      name: options.cookies.signinInfo.name,
+      value: "",
+      options: {
+        ...options.cookies.signinInfo.options,
+        maxAge: 0,
+      },
+    })
+  }
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
       const authorizationResult = await handleOAuth(
@@ -82,7 +97,7 @@ export async function callback(params: {
       }
 
       const unauthorizedOrError = await handleAuthorized(
-        { user: userOrProfile, account, profile: OAuthProfile },
+        { user: userOrProfile, account, profile: OAuthProfile, signinInfo },
         options
       )
 
@@ -93,7 +108,8 @@ export async function callback(params: {
         sessionStore.value,
         profile,
         account,
-        options
+        options,
+        signinInfo
       )
 
       if (useJwtSession) {
@@ -194,7 +210,7 @@ export async function callback(params: {
 
       // Check if user is allowed to sign in
       const unauthorizedOrError = await handleAuthorized(
-        { user, account },
+        { user, account, signinInfo },
         options
       )
 
@@ -205,7 +221,7 @@ export async function callback(params: {
         user: loggedInUser,
         session,
         isNewUser,
-      } = await handleLogin(sessionStore.value, user, account, options)
+      } = await handleLogin(sessionStore.value, user, account, options, signinInfo)
 
       if (useJwtSession) {
         const defaultToken = {
@@ -288,15 +304,14 @@ export async function callback(params: {
         }
       }
 
-      /** @type {import("src").Account} */
-      const account = {
+      const account: Account = {
         providerAccountId: user.id,
-        type: "credentials",
+        type: "credentials" as const,
         provider: provider.id,
       }
 
       const unauthorizedOrError = await handleAuthorized(
-        { user, account, credentials },
+        { user, account, credentials, signinInfo },
         options
       )
 
@@ -312,7 +327,6 @@ export async function callback(params: {
       const token = await callbacks.jwt({
         token: defaultToken,
         user,
-        // @ts-expect-error
         account,
         isNewUser: false,
       })
@@ -335,7 +349,6 @@ export async function callback(params: {
         cookies.push(...sessionCookies)
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account })
 
       return { redirect: callbackUrl, cookies }

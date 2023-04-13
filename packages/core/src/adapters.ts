@@ -116,7 +116,7 @@
  */
 
 import { ProviderType } from "./providers/index.js"
-import type { Account, Awaitable, User } from "./types.js"
+import type { Account, Awaitable, SigninInfo, User } from "./types.js"
 // TODO: Discuss if we should expose methods to serialize and deserialize
 // the data? Many adapters share this logic, so it could be useful to
 // have a common implementation.
@@ -216,7 +216,7 @@ export interface VerificationToken {
  * :::
  */
 export interface Adapter {
-  createUser?(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
+  createUser?(user: Omit<AdapterUser, "id">, info?: { signinInfo?: SigninInfo }): Awaitable<AdapterUser>
   getUser?(id: string): Awaitable<AdapterUser | null>
   getUserByEmail?(email: string): Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */

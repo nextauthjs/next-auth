@@ -163,6 +163,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     }
     /** If Credentials provider is used, it contains the user credentials */
     credentials?: Record<string, CredentialInput>
+    /** Info from the client's `signIn()` function. */
+    signinInfo?: SigninInfo
   }) => Awaitable<boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
@@ -237,8 +239,11 @@ export interface CookiesOptions {
   csrfToken: CookieOption
   pkceCodeVerifier: CookieOption
   state: CookieOption
+  signinInfo: CookieOption
   nonce: CookieOption
 }
+
+export type SigninInfo = string
 
 /**
  *  The various event callbacks you can register for from next-auth
@@ -269,7 +274,7 @@ export interface EventCallbacks {
       | { session: Awaited<ReturnType<Required<Adapter>["deleteSession"]>> }
       | { token: Awaited<ReturnType<JWTOptions["decode"]>> }
   ) => Awaitable<void>
-  createUser: (message: { user: User }) => Awaitable<void>
+  createUser: (message: { user: User, signinInfo?: SigninInfo }) => Awaitable<void>
   updateUser: (message: { user: User }) => Awaitable<void>
   linkAccount: (message: {
     user: User | AdapterUser

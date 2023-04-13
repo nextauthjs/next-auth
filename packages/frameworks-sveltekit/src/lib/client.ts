@@ -27,7 +27,7 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+  const { callbackUrl = window.location.href, redirect = true, signinInfo } = options ?? {}
 
   // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
@@ -57,6 +57,7 @@ export async function signIn<
       ...options,
       csrfToken,
       callbackUrl,
+      signinInfo: signinInfo === undefined ? undefined : encodeURIComponent(signinInfo)
     }),
   })
 

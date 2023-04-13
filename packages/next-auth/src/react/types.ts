@@ -32,6 +32,10 @@ export interface SignInOptions extends Record<string, unknown> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
   redirect?: boolean
+  /**
+   * Information that will be passed to the `signIn` callback, the `createUser` adapter function, and the `createUser` event.
+   */
+  signinInfo?: string
 }
 
 export interface SignInResponse {
