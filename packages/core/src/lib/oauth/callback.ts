@@ -190,7 +190,10 @@ async function getUserAndAccount(
 ) {
   try {
     const user = await provider.profile(OAuthProfile, tokens)
-    user.email = user.email?.toLowerCase()
+
+    if (typeof user.email === "string") {
+      user.email = user.email.toLowerCase()
+    }
 
     if (!user.id) {
       throw new TypeError(

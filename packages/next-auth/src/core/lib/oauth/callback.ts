@@ -150,7 +150,11 @@ async function getProfile({
   try {
     logger.debug("PROFILE_DATA", { OAuthProfile })
     const profile = await provider.profile(OAuthProfile, tokens)
-    profile.email = profile.email?.toLowerCase()
+    
+    if (typeof profile.email === 'string') {
+      profile.email = profile.email.toLowerCase()
+    }
+    
     if (!profile.id)
       throw new TypeError(
         `Profile id is missing in ${provider.name} OAuth profile response`
