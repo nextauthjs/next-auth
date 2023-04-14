@@ -38,6 +38,22 @@ function typedocAdapter(name) {
   ]
 }
 
+function typedocFramework(id, entrypoints) {
+  return [
+    "docusaurus-plugin-typedoc",
+    {
+      ...typedocConfig,
+      id: id.replace("frameworks-", ""),
+      plugin: [require.resolve("./typedoc-mdn-links")],
+      watch: process.env.TYPEDOC_WATCH,
+      entryPoints: entrypoints.map((e) => `../packages/${id}/src/${e}`),
+      tsconfig: `../packages/${id}/tsconfig.json`,
+      out: `reference/${id.replace("frameworks-", "")}`,
+      sidebar: { indexLabel: "index" },
+    },
+  ]
+}
+
 /** @type {import("@docusaurus/types").Config} */
 const docusaurusConfig = {
   markdown: {
@@ -231,62 +247,39 @@ const docusaurusConfig = {
     ],
   ],
   plugins: [
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "core",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
-        tsconfig: "../packages/core/tsconfig.json",
-        out: "reference/core",
-        sidebar: {
-          indexLabel: "index",
-        },
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "sveltekit",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
-        tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
-        out: "reference/sveltekit",
-        sidebar: {
-          indexLabel: "index",
-        },
-      },
-    ],
-    typedocAdapter("Dgraph"),
-    typedocAdapter("DynamoDB"),
-    typedocAdapter("Fauna"),
-    typedocAdapter("Firebase"),
-    typedocAdapter("Mikro ORM"),
-    typedocAdapter("MongoDB"),
-    typedocAdapter("Neo4j"),
-    typedocAdapter("PouchDB"),
-    typedocAdapter("Prisma"),
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "typeorm",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
-        tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
-        out: `reference/adapter/typeorm`,
-        sidebar: { indexLabel: "TypeORM" },
-      },
-    ],
-    typedocAdapter("Sequelize"),
-    typedocAdapter("Supabase"),
-    typedocAdapter("Upstash Redis"),
-    typedocAdapter("Xata"),
+    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
+    typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
+    typedocFramework("frameworks-nextjs", ["index.ts"]),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS
+      ? []
+      : [
+          typedocAdapter("Dgraph"),
+          typedocAdapter("DynamoDB"),
+          typedocAdapter("Fauna"),
+          typedocAdapter("Firebase"),
+          typedocAdapter("Mikro ORM"),
+          typedocAdapter("MongoDB"),
+          typedocAdapter("Neo4j"),
+          typedocAdapter("PouchDB"),
+          typedocAdapter("Prisma"),
+          [
+            "docusaurus-plugin-typedoc",
+            {
+              ...typedocConfig,
+              id: "typeorm",
+              plugin: [require.resolve("./typedoc-mdn-links")],
+              watch: process.env.TYPEDOC_WATCH,
+              entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
+              tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
+              out: `reference/adapter/typeorm`,
+              sidebar: { indexLabel: "TypeORM" },
+            },
+          ],
+          typedocAdapter("Sequelize"),
+          typedocAdapter("Supabase"),
+          typedocAdapter("Upstash Redis"),
+          typedocAdapter("Xata"),
+        ]),
   ],
 }
 
