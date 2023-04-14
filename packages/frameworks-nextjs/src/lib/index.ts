@@ -13,9 +13,6 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
   /**
    * Invoked when a user needs authorization, using [Middleware](https://nextjs.org/docs/advanced-features/middleware).
    *
-   * When applied to a request, by defualt it checks if the user is logged in, if not, it redirects
-   * to the login page.
-   *
    * You can override this behavior by returning a {@link NextResponse}.
    *
    * @example
@@ -32,7 +29,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
    *     return NextResponse.json("Invalid auth token", { status: 401 })
    *   }
    *
-   *   // Logged in users are authorized, otherwise, will redirect to login
+   *   // Logged in users are authenticated, otherwise redirect to login page
    *   return !!auth
    * }
    * ...
@@ -94,30 +91,17 @@ export function initAuth(config: NextAuthConfig) {
     if (!args.length) return getAuth(new Headers(), config)
     if (args[0] instanceof Headers) return getAuth(args[0], config)
     if (args[0] instanceof Request) {
-      const req = args[0]
       // export { auth as default } from "auth"
-      return authMiddleware(req, config)
+      const req = args[0]
+      const ev = args[1]
+      return authMiddleware([req, ev as any], config)
     }
 
     // import { auth } from "auth"
     // export default auth((req) => { console.log(req.auth) }})
     const userMiddleware = args[0]
     return async (...args: Parameters<NextMiddlewareWithAuth>) => {
-      return authMiddleware(args[0], config, async (auth, exp) => {
-        args[0].auth = auth
-        // Execute user middleware with augmented request
-        const userResponse = (await userMiddleware(...args)) ?? undefined
-
-        // Augment response with updated session cookie
-        const response = new NextResponse(userResponse?.body, userResponse)
-        // TODO: respect config/prefix/chunking etc.
-        const name = "next-auth.session-token"
-        const val = args[0].cookies.get(name)?.value
-        // TODO: respect config/prefix/chunking etc.
-        if (val) response.cookies.set(name, val, { expires: new Date(exp!) })
-
-        return response
-      })
+      return authMiddleware(args, config, userMiddleware)
     }
   }
 }
@@ -125,25 +109,44 @@ export function initAuth(config: NextAuthConfig) {
 type AuthData = JWT | User | null
 
 async function authMiddleware(
-  req: NextRequest,
+  args: Parameters<NextMiddleware>,
   config: NextAuthConfig,
-  onSuccess?: (
-    auth: AuthData,
-    expires: string | null
-  ) => ReturnType<NextMiddleware> | AuthData
+  userMiddleware?: NextMiddlewareWithAuth
 ) {
-  const request = req
+  const request = args[0]
   // TODO: pass `next/headers` when it's available
   const { data: auth = null, expires = null } =
     (await getAuth(request.headers, config)) ?? {}
 
-  const authorized =
-    (await config.callbacks.authorized?.({ request, auth, expires })) ?? !!auth
+  const authorized = config.callbacks.authorized
+    ? await config.callbacks.authorized({ request, auth, expires })
+    : true
 
-  if (authorized instanceof Response) return authorized
-  else if (authorized) return onSuccess?.(auth, expires)
-  else if (onSuccess) return onSuccess(auth, expires)
-  // TODO: Support custom signin page
-  req.nextUrl.pathname = "/api/auth/signin"
-  return NextResponse.redirect(req.nextUrl)
+  let response: Response = NextResponse.next()
+
+  if (authorized instanceof Response) {
+    // User returned a custom response, like redirecting to a page or 401, respect it
+    response = authorized
+  } else if (userMiddleware) {
+    // Execute user's middleware with the augmented request
+    const augmentedReq: NextRequestWithAuth = request as any
+    augmentedReq.auth = auth
+    response =
+      (await userMiddleware(augmentedReq, args[1])) ?? NextResponse.next()
+  } else if (!authorized) {
+    // Redirect to signin page by default if not authorized
+    // TODO: Support custom signin page
+    request.nextUrl.pathname = "/api/auth/signin"
+    response = NextResponse.redirect(request.nextUrl)
+  }
+
+  // We will update the session cookie if it exists,
+  // so that the session expiry is extended
+  const finalResponse = new NextResponse(response?.body, response)
+  // TODO: respect config/prefix/chunking etc.
+  const name = "next-auth.session-token"
+  const val = request.cookies.get(name)?.value
+  // TODO: respect config/prefix/chunking etc.
+  if (val) finalResponse.cookies.set(name, val, { expires: new Date(expires!) })
+  return finalResponse
 }
