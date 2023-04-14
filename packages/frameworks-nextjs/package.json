@@ -35,6 +35,7 @@
   "files": [
     "*.js",
     "*.d.ts",
+    "lib",
     "src"
   ],
   "exports": {
