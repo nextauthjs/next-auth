@@ -91,7 +91,6 @@ export function initAuth(config: NextAuthConfig) {
   return (...args: WithAuthArgs) => {
     // TODO: use `next/headers` when it's available in Middleware too
     // if (!args.length) return getAuth($headers(), config)
-    console.log(args[0])
     if (!args.length) return getAuth(new Headers(), config)
     if (args[0] instanceof Headers) return getAuth(args[0], config)
     if (args[0] instanceof Request) {
