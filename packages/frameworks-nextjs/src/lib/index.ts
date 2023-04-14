@@ -2,46 +2,55 @@ import { Auth, type AuthConfig } from "@auth/core"
 import { NextResponse } from "next/server"
 
 import type { JWT } from "@auth/core/jwt"
-import type { Awaitable, User } from "@auth/core/types"
+import type { Awaitable, CallbacksOptions, User } from "@auth/core/types"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
+/**
+ * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
+ * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
+ */
+export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
+  /**
+   * Invoked when a user needs authorization, using [Middleware](https://nextjs.org/docs/advanced-features/middleware).
+   *
+   * When applied to a request, by defualt it checks if the user is logged in, if not, it redirects
+   * to the login page.
+   *
+   * You can override this behavior by returning a {@link NextResponse}.
+   *
+   * @example
+   * ```ts title="app/auth.ts"
+   * ...
+   * async authorized({ request, auth, expires }) {
+   *   const url = request.nextUrl
+   *
+   *   if(request.method === "POST") {
+   *     const { authToken } = (await request.json()) ?? {}
+   *     // If the request has a valid auth token, it is authorized
+   *     const valid = await validateAuthToken(authToken)
+   *     if(valid) return true
+   *     return NextResponse.json("Invalid auth token", { status: 401 })
+   *   }
+   *
+   *   // Logged in users are authorized, otherwise, will redirect to login
+   *   return !!auth
+   * }
+   * ...
+   * ```
+   */
+  authorized: (params: {
+    /** The request to be authorized. */
+    request: NextRequest
+    /** The authenticated user or token, if any. */
+    auth: JWT | User | null
+    /** The expiration date of the session. */
+    expires: string | null
+  }) => Awaitable<boolean | NextResponse>
+}
+
+/** Configure Next.js Auth. */
 export interface NextAuthConfig extends AuthConfig {
-  callbacks: AuthConfig["callbacks"] & {
-    /**
-     * Invoked when a user needs authorization. It uses Middleware to
-     * intercept requests.
-     *
-     * By default, it checks if the user is logged in, if not, it redirects
-     * to the login page.
-     *
-     * You can override this behavior by returning a {@link NextResponse}
-     *
-     * @example
-     * ```ts title="app/auth.ts"
-     * ...
-     * async authorized({ request, auth }) {
-     *   const url = new URL(request.url)
-     *
-     *   if(request.method === "POST") {
-     *     const { authToken } = (await request.json()) ?? {}
-     *     // If the request has a valid auth token, it is authorized
-     *     const valid = await validateAuthToken(authToken)
-     *     if(valid) return true
-     *     return NextResponse.json("Invalid auth token", { status: 401 })
-     *   }
-     *
-     *   // Logged in users are authorized, otherwise, will redirect to login
-     *   return !!auth
-     * }
-     * ...
-     * ```
-     */
-    authorized: (params: {
-      request: NextRequest
-      auth: JWT | User | null
-      expires: string | null
-    }) => Awaitable<boolean | NextResponse>
-  }
+  callbacks: NextAuthCallbacks
 }
 
 async function getAuth(
@@ -130,11 +139,7 @@ async function authMiddleware(
     (await getAuth(request.headers, config)) ?? {}
 
   const authorized =
-    (await config.callbacks?.authorized?.({
-      request,
-      auth,
-      expires,
-    })) ?? !!auth
+    (await config.callbacks.authorized?.({ request, auth, expires })) ?? !!auth
 
   if (authorized instanceof Response) return authorized
   else if (authorized) return onSuccess?.(auth, expires)
