@@ -1,2 +1,2 @@
-import { handler } from "auth"
-export const { GET, POST } = handler
+import { handlers } from "auth"
+export const { GET, POST } = handlers
