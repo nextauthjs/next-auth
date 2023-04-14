@@ -72,7 +72,7 @@ export const providersEnv: Record<OAuthProviderType, [string | undefined, string
 }
 
 export function setEnvDefaults(config: AuthConfig) {
-  config.secret ??= process.env.NEXTAUTH_SECRET
+  config.secret ??= process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
   config.trustHost ??= !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
   config.providers = config.providers.map((p) => {
     if (typeof p !== "function") return p
