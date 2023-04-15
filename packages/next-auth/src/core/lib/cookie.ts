@@ -114,7 +114,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         path: "/",
         secure: useSecureCookies,
       },
-    },
+    }
   }
 }
 
