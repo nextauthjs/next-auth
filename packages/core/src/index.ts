@@ -363,7 +363,7 @@ export interface AuthConfig {
    *   redirectProxy: "https://github.example.com/api/auth"
    * })
    * ```
-   * @default `AUTH_REDIRECT_PROXY` environment variable
+   * @default `AUTH_REDIRECT_PROXY_URL` environment variable
    *
    */
   redirectProxy?: string
