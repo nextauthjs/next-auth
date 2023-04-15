@@ -3,7 +3,7 @@ import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { decodeState } from "../oauth/checks.js"
 import { createHash } from "../web.js"
-import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
+import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
@@ -160,7 +160,6 @@ export async function callback(params: {
         })
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account, profile, isNewUser })
 
       // Handle first logins on new accounts
@@ -201,8 +200,11 @@ export async function callback(params: {
       const invalidInvite = !hasInvite || expired
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
-      // @ts-expect-error -- Verified in `assertConfig`.
-      const user = await getAdapterUserFromEmail(identifier, adapter)
+      const user = (await adapter!.getUserByEmail(identifier)) ?? {
+        id: identifier,
+        email: identifier,
+        emailVerified: null,
+      }
 
       const account: Account = {
         providerAccountId: user.email,

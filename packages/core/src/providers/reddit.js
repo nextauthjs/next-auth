@@ -7,6 +7,12 @@ export default function Reddit(options) {
     authorization: "https://www.reddit.com/api/v1/authorize?scope=identity",
     token: "https://www.reddit.com/api/v1/access_token",
     userinfo: "https://oauth.reddit.com/api/v1/me",
+    checks: ["state"],
+    style: {
+      logo: "/reddit.svg",
+      bg: "#fff",
+      text: "#000",
+    },
     options,
   }
 }

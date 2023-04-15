@@ -1,0 +1,43 @@
+.adapter-card-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.adapter-card {
+  border: 1px solid #dbdde1;
+  border-radius: 8px;
+  padding: 16px;
+  width: 255px;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  color: black;
+  text-decoration: none;
+  transition: 0.2s background-color ease-in-out;
+}
+
+html[data-theme="dark"] .adapter-card {
+  color: #f5f5f5;
+}
+
+.adapter-card:hover {
+  text-decoration: none;
+  color: black;
+  background-color: #f5f5f5;
+}
+
+.adapter-card__title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  margin-left: 8px;
+}

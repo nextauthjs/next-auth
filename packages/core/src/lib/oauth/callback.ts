@@ -79,7 +79,7 @@ export async function handleOAuth(
     randomState
   )
 
-  const parameters = o.validateAuthResponse(
+  const codeGrantParams = o.validateAuthResponse(
     as,
     client,
     new URLSearchParams(query),
@@ -87,36 +87,24 @@ export async function handleOAuth(
   )
 
   /** https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1 */
-  if (o.isOAuth2Error(parameters)) {
+  if (o.isOAuth2Error(codeGrantParams)) {
     logger.debug("OAuthCallbackError", {
       providerId: provider.id,
-      ...parameters,
+      ...codeGrantParams,
     })
-    throw new OAuthCallbackError(parameters.error)
+    throw new OAuthCallbackError(codeGrantParams.error)
   }
 
-  const codeVerifier = await checks.pkce.use(
-    cookies?.[options.cookies.pkceCodeVerifier.name],
-    options
-  )
+  const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
 
-  if (codeVerifier) resCookies.push(codeVerifier.cookie)
-
-  // TODO:
-  if (provider.type === "oidc") {
-    const nonce = await checks.nonce.use(
-      cookies?.[options.cookies.nonce.name],
-      options
-    )
-    if (nonce) resCookies.push(nonce.cookie)
-  }
+  await checks.nonce.use(cookies, resCookies, options)
 
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
-    parameters,
-    provider.redirectProxy ?? provider.callbackUrl,
-    codeVerifier?.codeVerifier ?? "auth" // TODO: review fallback code verifier
+    codeGrantParams,
+    provider.callbackUrl,
+    codeVerifier ?? "auth" // TODO: review fallback code verifier
   )
 
   if (provider.token?.conform) {
@@ -137,10 +125,12 @@ export async function handleOAuth(
   let tokens: TokenSet
 
   if (provider.type === "oidc") {
+    const nonce = await checks.nonce.use(cookies, resCookies, options)
     const result = await o.processAuthorizationCodeOpenIDResponse(
       as,
       client,
-      codeGrantResponse
+      codeGrantResponse,
+      nonce ?? o.expectNoNonce
     )
 
     if (o.isOAuth2Error(result)) {

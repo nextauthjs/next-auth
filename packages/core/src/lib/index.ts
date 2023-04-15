@@ -11,6 +11,7 @@ import type {
   ResponseInternal,
 } from "../types.js"
 
+/** @internal */
 export async function AuthInternal<
   Body extends string | Record<string, any> | any[]
 >(

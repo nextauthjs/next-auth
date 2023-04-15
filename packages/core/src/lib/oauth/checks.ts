@@ -1,15 +1,18 @@
 import * as o from "oauth4webapi"
 import * as jose from "jose"
-import * as jwt from "../../jwt.js"
+import { InvalidCheck } from "../../errors.js"
+import { encode, decode } from "../../jwt.js"
 
 import type {
+  CookiesOptions,
   InternalOptions,
   RequestInternal,
-  CookiesOptions,
 } from "../../types.js"
 import type { Cookie } from "../cookie.js"
 
-import { InvalidState } from "../../errors.js"
+interface CheckPayload {
+  value: string
+}
 
 /** Returns a signed cookie. */
 export async function signCookie(
@@ -29,7 +32,7 @@ export async function signCookie(
   if (type === "state" && data) token.data = data
   return {
     name: cookies[type].name,
-    value: await jwt.encode({ ...options.jwt, maxAge, token }),
+    value: await encode({ ...options.jwt, maxAge, token }),
     options: { ...cookies[type].options, expires },
   }
 }
@@ -48,34 +51,43 @@ export const pkce = {
     )
     return { cookie, value }
   },
-
   /**
-   * Returns code_verifier if provider uses PKCE,
+   * Returns code_verifier if the provider is configured to use PKCE,
    * and clears the container cookie afterwards.
+   * An error is thrown if the code_verifier is missing or invalid.
+   * @see https://www.rfc-editor.org/rfc/rfc7636
+   * @see https://danielfett.de/2020/05/16/pkce-vs-nonce-equivalent-or-not/#pkce
    */
   async use(
-    codeVerifier: string | undefined,
+    cookies: RequestInternal["cookies"],
+    resCookies: Cookie[],
     options: InternalOptions<"oauth">
-  ): Promise<{ codeVerifier: string; cookie: Cookie } | undefined> {
-    const { cookies, provider } = options
+  ): Promise<string | undefined> {
+    const { provider } = options
 
-    if (!provider?.checks?.includes("pkce") || !codeVerifier) {
-      return
-    }
+    if (!provider?.checks?.includes("pkce")) return
 
-    const pkce = (await jwt.decode({
+    const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
+
+    if (!codeVerifier)
+      throw new InvalidCheck("PKCE code_verifier cookie was missing.")
+
+    const value = await decode<CheckPayload>({
       ...options.jwt,
       token: codeVerifier,
-    })) as any
+    })
 
-    return {
-      codeVerifier: pkce?.value ?? undefined,
-      cookie: {
-        name: cookies.pkceCodeVerifier.name,
-        value: "",
-        options: { ...cookies.pkceCodeVerifier.options, maxAge: 0 },
-      },
-    }
+    if (!value?.value)
+      throw new InvalidCheck("PKCE code_verifier value could not be parsed.")
+
+    // Clear the pkce code verifier cookie after use
+    resCookies.push({
+      name: options.cookies.pkceCodeVerifier.name,
+      value: "",
+      options: { ...options.cookies.pkceCodeVerifier.options, maxAge: 0 },
+    })
+
+    return value.value
   },
 }
 
@@ -110,9 +122,11 @@ export const state = {
     return { cookie, value }
   },
   /**
-   * Returns state from the saved cookie
-   * if the provider supports states,
+   * Returns state if the provider is configured to use state,
    * and clears the container cookie afterwards.
+   * An error is thrown if the state is missing or invalid.
+   * @see https://www.rfc-editor.org/rfc/rfc6749#section-10.12
+   * @see https://www.rfc-editor.org/rfc/rfc6749#section-4.1.1
    */
   async use(
     cookies: RequestInternal["cookies"],
@@ -120,27 +134,28 @@ export const state = {
     options: InternalOptions<"oauth">,
     paramRandom?: string
   ): Promise<string | undefined> {
-    const { provider, jwt } = options
+    const { provider } = options
     if (!provider.checks.includes("state")) return
 
     const state = cookies?.[options.cookies.state.name]
 
-    if (!state) throw new InvalidState("State was missing from the cookies.")
+    if (!state) throw new InvalidCheck("State cookie was missing.")
 
     // IDEA: Let the user do something with the returned state
-    const value = (await jwt.decode({ ...options.jwt, token: state })) as any
+    const value = await decode<CheckPayload>({ ...options.jwt, token: state })
 
-    if (!value?.value) throw new InvalidState("Could not parse state cookie.")
+    if (!value?.value)
+      throw new InvalidCheck("State value could not be parsed.")
 
     const isOriginProxy = provider.redirectProxy?.startsWith(options.url.origin)
     if (!isOriginProxy) {
       if (!paramRandom)
-        throw new InvalidState(
+        throw new InvalidCheck(
           "Random state was missing in the decoded `state` parameter, but required when using `redirectProxy`."
         )
       const cookieRandom = decodeState<{ random: string }>(value.value)?.random
       if (cookieRandom !== paramRandom)
-        throw new InvalidState(
+        throw new InvalidCheck(
           `Random state values did not match. Expected: ${cookieRandom}. Got: ${paramRandom}`
         )
     }
@@ -166,28 +181,36 @@ export const nonce = {
     return { cookie, value }
   },
   /**
-   * Returns nonce from if the provider supports nonce,
+   * Returns nonce if the provider is configured to use nonce,
    * and clears the container cookie afterwards.
+   * An error is thrown if the nonce is missing or invalid.
+   * @see https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes
+   * @see https://danielfett.de/2020/05/16/pkce-vs-nonce-equivalent-or-not/#nonce
    */
   async use(
-    nonce: string | undefined,
+    cookies: RequestInternal["cookies"],
+    resCookies: Cookie[],
     options: InternalOptions<"oidc">
-  ): Promise<{ value: string; cookie: Cookie } | undefined> {
-    const { cookies, provider } = options
+  ): Promise<string | undefined> {
+    const { provider } = options
 
-    if (!provider?.checks?.includes("nonce") || !nonce) {
-      return
-    }
+    if (!provider?.checks?.includes("nonce")) return
 
-    const value = (await jwt.decode({ ...options.jwt, token: nonce })) as any
+    const nonce = cookies?.[options.cookies.nonce.name]
+    if (!nonce) throw new InvalidCheck("Nonce cookie was missing.")
 
-    return {
-      value: value?.value ?? undefined,
-      cookie: {
-        name: cookies.nonce.name,
-        value: "",
-        options: { ...cookies.nonce.options, maxAge: 0 },
-      },
-    }
+    const value = await decode<CheckPayload>({ ...options.jwt, token: nonce })
+
+    if (!value?.value)
+      throw new InvalidCheck("Nonce value could not be parsed.")
+
+    // Clear the nonce cookie after use
+    resCookies.push({
+      name: options.cookies.nonce.name,
+      value: "",
+      options: { ...options.cookies.nonce.options, maxAge: 0 },
+    })
+
+    return value.value
   },
 }

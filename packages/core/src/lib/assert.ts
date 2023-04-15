@@ -34,9 +34,33 @@ function isValidHttpUrl(url: string, baseUrl: string) {
   }
 }
 
+let hasCredentials = false
+let hasEmail = false
+
+const emailMethods = [
+  "createVerificationToken",
+  "useVerificationToken",
+  "getUserByEmail",
+]
+
+const sessionMethods = [
+  "createUser",
+  "getUser",
+  "getUserByEmail",
+  "getUserByAccount",
+  "updateUser",
+  "linkAccount",
+  "createSession",
+  "getSessionAndUser",
+  "updateSession",
+  "deleteSession",
+]
+
 /**
  * Verify that the user configured Auth.js correctly.
  * Good place to mention deprecations as well.
+ *
+ * This is invoked before the init method, so default values are not available yet.
  */
 export function assertConfig(
   request: RequestInternal,
@@ -77,9 +101,8 @@ export function assertConfig(
     )
   }
 
-  let hasCredentials, hasEmail
-
-  for (const provider of options.providers) {
+  for (const p of options.providers) {
+    const provider = typeof p === "function" ? p() : p
     if (
       (provider.type === "oauth" || provider.type === "oidc") &&
       !(provider.issuer ?? provider.options?.issuer)
@@ -105,7 +128,7 @@ export function assertConfig(
   if (hasCredentials) {
     const dbStrategy = options.session?.strategy === "database"
     const onlyCredentials = !options.providers.some(
-      (p) => p.type !== "credentials"
+      (p) => (typeof p === "function" ? p() : p).type !== "credentials"
     )
     if (dbStrategy && onlyCredentials) {
       return new UnsupportedStrategy(
@@ -113,9 +136,10 @@ export function assertConfig(
       )
     }
 
-    const credentialsNoAuthorize = options.providers.some(
-      (p) => p.type === "credentials" && !p.authorize
-    )
+    const credentialsNoAuthorize = options.providers.some((p) => {
+      const provider = typeof p === "function" ? p() : p
+      return provider.type === "credentials" && !provider.authorize
+    })
     if (credentialsNoAuthorize) {
       return new MissingAuthorize(
         "Must define an authorize() handler to use credentials authentication provider"
@@ -123,23 +147,29 @@ export function assertConfig(
     }
   }
 
-  if (hasEmail) {
-    const { adapter } = options
-    if (!adapter) {
-      return new MissingAdapter("E-mail login requires an adapter.")
+  const { adapter, session } = options
+  if (
+    hasEmail ||
+    session?.strategy === "database" ||
+    (!session?.strategy && adapter)
+  ) {
+    let methods: string[]
+
+    if (hasEmail) {
+      if (!adapter)
+        return new MissingAdapter("Email login requires an adapter.")
+      methods = emailMethods
+    } else {
+      if (!adapter)
+        return new MissingAdapter("Database session requires an adapter.")
+      methods = sessionMethods
     }
 
-    const missingMethods = (
-      [
-        "createVerificationToken",
-        "useVerificationToken",
-        "getUserByEmail",
-      ] as const
-    ).filter((method) => !adapter[method])
+    const missing = methods.filter((m) => !adapter[m as keyof typeof adapter])
 
-    if (missingMethods.length) {
+    if (missing.length) {
       return new MissingAdapterMethods(
-        `Required adapter methods were missing: ${missingMethods.join(", ")}`
+        `Required adapter methods were missing: ${missing.join(", ")}`
       )
     }
   }

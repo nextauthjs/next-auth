@@ -72,6 +72,7 @@ import type {
 import type { JWT, JWTOptions } from "./jwt.js"
 import type { Cookie } from "./lib/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
+import { AuthConfig } from "./index.js"
 
 export type { AuthConfig } from "./index.js"
 export type Awaitable<T> = T | PromiseLike<T>
@@ -104,27 +105,27 @@ export type TokenSet = Partial<
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface Account extends Partial<OpenIDTokenEndpointResponse> {
+  /** Provider's id for this account. Eg.: "google" */
+  provider: string
   /**
    * This value depends on the type of the provider being used to create the account.
-   * - oauth: The OAuth account's id, returned from the `profile()` callback.
+   * - oauth/oidc: The OAuth account's id, returned from the `profile()` callback.
    * - email: The user's email address.
    * - credentials: `id` returned from the `authorize()` callback
    */
   providerAccountId: string
-  /** id of the user this account belongs to. */
-  userId?: string
-  /** id of the provider used for this account */
-  provider: string
   /** Provider's type for this account */
   type: ProviderType
+  /** id of the user this account belongs to */
+  userId?: string
 }
 
 /** The OAuth profile returned from your provider */
 export interface Profile {
-  sub?: string
-  name?: string
-  email?: string
-  image?: string
+  sub?: string | null
+  name?: string | null
+  email?: string | null
+  image?: string | null
 }
 
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */
@@ -266,7 +267,7 @@ export interface EventCallbacks {
    */
   signOut: (
     message:
-      | { session: Awaited<ReturnType<Adapter["deleteSession"]>> }
+      | { session: Awaited<ReturnType<Required<Adapter>["deleteSession"]>> }
       | { token: Awaited<ReturnType<JWTOptions["decode"]>> }
   ) => Awaitable<void>
   createUser: (message: { user: User }) => Awaitable<void>
@@ -350,53 +351,6 @@ export interface DefaultSession {
  */
 export interface Session extends DefaultSession {}
 
-export type SessionStrategy = "jwt" | "database"
-
-/** [Documentation](https://authjs.dev/reference/configuration/auth-config#session) */
-export interface SessionOptions {
-  /**
-   * Choose how you want to save the user session.
-   * The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
-   *
-   * If you use an `adapter` however, we default it to `"database"` instead.
-   * You can still force a JWT session by explicitly defining `"jwt"`.
-   *
-   * When using `"database"`, the session cookie will only contain a `sessionToken` value,
-   * which is used to look up the session in the database.
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#session) | [Adapter](https://authjs.dev/reference/configuration/auth-config#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
-   */
-  strategy: SessionStrategy
-  /**
-   * Relative time from now in seconds when to expire the session
-   *
-   * @default 2592000 // 30 days
-   */
-  maxAge: number
-  /**
-   * How often the session should be updated in seconds.
-   * If set to `0`, session is updated every time.
-   *
-   * @default 86400 // 1 day
-   */
-  updateAge: number
-  /**
-   * Generate a custom session token for database-based sessions.
-   * By default, a random UUID or string is generated depending on the Node.js version.
-   * However, you can specify your own custom string (such as CUID) to be used.
-   *
-   * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
-   */
-  generateSessionToken: () => string
-}
-
-export interface DefaultUser {
-  id: string
-  name?: string | null
-  email?: string | null
-  image?: string | null
-}
-
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
  * available in the `jwt` and `session` callbacks,
@@ -407,7 +361,12 @@ export interface DefaultUser {
  * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
  * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
-export interface User extends DefaultUser {}
+export interface User {
+  id: string
+  name?: string | null
+  email?: string | null
+  image?: string | null
+}
 
 // Below are types that are only supposed be used by next-auth internally
 
@@ -451,7 +410,7 @@ export interface RequestInternal {
 
 /** @internal */
 export interface ResponseInternal<
-  Body extends string | Record<string, any> | any[] = any
+  Body extends string | Record<string, any> | any[] | null = any
 > {
   status?: number
   headers?: Headers | HeadersInit
@@ -473,11 +432,11 @@ export interface InternalOptions<TProviderType = ProviderType> {
   theme: Theme
   debug: boolean
   logger: LoggerInstance
-  session: Required<SessionOptions>
+  session: NonNullable<Required<AuthConfig["session"]>>
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter: Adapter | undefined
+  adapter: Required<Adapter> | undefined
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string

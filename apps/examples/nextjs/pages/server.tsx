@@ -1,4 +1,4 @@
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import { authOptions } from "./api/auth/[...nextauth]"
 import Layout from "../components/layout"
 
@@ -38,7 +38,7 @@ export default function ServerSidePage() {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      session: await unstable_getServerSession(
+      session: await getServerSession(
         context.req,
         context.res,
         authOptions

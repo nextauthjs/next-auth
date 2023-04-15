@@ -25,7 +25,7 @@ type UrlParams = Record<string, unknown>
 
 type EndpointRequest<C, R, P> = (
   context: C & {
-    /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
+    /** Provider is passed for convenience, and also contains the `callbackUrl`. */
     provider: OAuthConfigInternal<P> & {
       signinUrl: string
       callbackUrl: string
@@ -159,6 +159,10 @@ export interface OAuth2Config<Profile>
   checks?: Array<"pkce" | "state" | "none">
   clientId?: string
   clientSecret?: string
+  /**
+   * Pass overrides to the underlying OAuth library.
+   * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
+   */
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
@@ -200,7 +204,6 @@ export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 /**
  * We parsed `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
- * @internal
  */
 export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
@@ -210,6 +213,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
+    /** @internal */
     conform?: TokenEndpointHandler["conform"]
   }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
