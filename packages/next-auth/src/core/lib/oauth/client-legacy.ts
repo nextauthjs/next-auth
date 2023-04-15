@@ -69,3 +69,5 @@ export function oAuth1Client(options: InternalOptions<"oauth">) {
   }
   return oauth1Client
 }
+
+export const oAuth1TokenStore = new Map()

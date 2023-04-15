@@ -1,9 +1,8 @@
-import { createCSRF, handler, mockAdapter } from "./utils"
+import { createCSRF, handler, mockAdapter } from "./lib"
 import EmailProvider from "../src/providers/email"
 
 it("Send e-mail to the only address correctly", async () => {
   const { secret, csrf } = await createCSRF()
-
   const sendVerificationRequest = jest.fn()
   const signIn = jest.fn(() => true)
 
@@ -14,13 +13,12 @@ it("Send e-mail to the only address correctly", async () => {
       providers: [EmailProvider({ sendVerificationRequest })],
       callbacks: { signIn },
       secret,
-      trustHost: true,
     },
     {
       path: "signin/email",
       requestInit: {
         method: "POST",
-        headers: { cookie: csrf.cookie, "content-type": "application/json" },
+        headers: { cookie: csrf.cookie },
         body: JSON.stringify({ email: email, csrfToken: csrf.value }),
       },
     }
@@ -55,13 +53,12 @@ it("Send e-mail to first address only", async () => {
       providers: [EmailProvider({ sendVerificationRequest })],
       callbacks: { signIn },
       secret,
-      trustHost: true,
     },
     {
       path: "signin/email",
       requestInit: {
         method: "POST",
-        headers: { cookie: csrf.cookie, "content-type": "application/json" },
+        headers: { cookie: csrf.cookie },
         body: JSON.stringify({ email: email, csrfToken: csrf.value }),
       },
     }
@@ -96,13 +93,12 @@ it("Send e-mail to address with first domain", async () => {
       providers: [EmailProvider({ sendVerificationRequest })],
       callbacks: { signIn },
       secret,
-      trustHost: true,
     },
     {
       path: "signin/email",
       requestInit: {
         method: "POST",
-        headers: { cookie: csrf.cookie, "content-type": "application/json" },
+        headers: { cookie: csrf.cookie },
         body: JSON.stringify({ email: email, csrfToken: csrf.value }),
       },
     }
@@ -143,13 +139,12 @@ it("Redirect to error page if multiple addresses aren't allowed", async () => {
         }),
       ],
       secret,
-      trustHost: true,
     },
     {
       path: "signin/email",
       requestInit: {
         method: "POST",
-        headers: { cookie: csrf.cookie, "content-type": "application/json" },
+        headers: { cookie: csrf.cookie },
         body: JSON.stringify({
           email: "email@email.com,email@email2.com",
           csrfToken: csrf.value,
@@ -161,6 +156,7 @@ it("Redirect to error page if multiple addresses aren't allowed", async () => {
   expect(signIn).toBeCalledTimes(0)
   expect(sendVerificationRequest).toBeCalledTimes(0)
 
+  // @ts-expect-error
   expect(log.error.mock.calls[0]).toEqual([
     "SIGNIN_EMAIL_ERROR",
     { error, providerId: "email" },
