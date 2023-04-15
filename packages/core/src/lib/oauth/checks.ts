@@ -100,7 +100,7 @@ export function decodeState<T>(value: string): T | undefined {
 }
 
 export const state = {
-  async create(options: InternalOptions<"oauth">, data: any) {
+  async create(options: InternalOptions<"oauth">, data?: object) {
     const { provider } = options
     if (!provider.checks.includes("state")) {
       if (data) {
@@ -111,11 +111,9 @@ export const state = {
       return
     }
 
-    const value = data
-      ? jose.base64url.encode(
-          JSON.stringify({ ...data, random: o.generateRandomState() })
-        )
-      : o.generateRandomState()
+    const value = jose.base64url.encode(
+      JSON.stringify({ ...data, random: o.generateRandomState() })
+    )
 
     const maxAge = STATE_MAX_AGE
     const cookie = await signCookie("state", value, maxAge, options, data)
@@ -147,6 +145,7 @@ export const state = {
     if (!value?.value)
       throw new InvalidCheck("State value could not be parsed.")
 
+    // TODO: verify that comparison is safe
     const isOriginProxy = provider.redirectProxy?.startsWith(options.url.origin)
     if (!isOriginProxy) {
       if (!paramRandom)
