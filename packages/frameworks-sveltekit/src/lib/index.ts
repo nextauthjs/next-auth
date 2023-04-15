@@ -165,10 +165,7 @@
  * 	}
  *
  * 	// If the request is still here, just proceed as normally
- * 	const result = await resolve(event, {
- * 		transformPageChunk: ({ html }) => html
- * 	});
- * 	return result;
+ * 	return resolve(event);
  * }
  *
  * // First handle authentication, then authorization
@@ -249,6 +246,18 @@ export async function getProviders(
   if (!data || !Object.keys(data).length) return null
   if (status === 200) return data
   throw new Error(data.message)
+}
+
+/** Configure the {@link SvelteKitAuth} method. */
+export interface SvelteKitAuthConfig extends AuthConfig {
+  /**
+   * Defines the base path for the auth routes.
+   * If you change the default value,
+   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
+   *
+   * @default "/auth"
+   */
+  prefix?: string
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
