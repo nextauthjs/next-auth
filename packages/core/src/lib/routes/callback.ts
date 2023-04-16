@@ -139,7 +139,6 @@ export async function callback(params: {
         })
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account, profile, isNewUser })
 
       // Handle first logins on new accounts

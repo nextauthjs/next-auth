@@ -87,13 +87,19 @@ function useOnline() {
   return isOnline
 }
 
+type UpdateSession = (data?: any) => Promise<Session | null>
+
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "loading" }
+      | { update: UpdateSession; data: Session; status: "authenticated" }
+      | { update: UpdateSession; data: null; status: "loading" }
   :
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "unauthenticated" | "loading" }
+      | { update: UpdateSession; data: Session; status: "authenticated" }
+      | {
+          update: UpdateSession
+          data: null
+          status: "unauthenticated" | "loading"
+        }
 
 export const SessionContext = React.createContext?.<
   SessionContextValue | undefined
@@ -105,7 +111,9 @@ export const SessionContext = React.createContext?.<
  *
  * [Documentation](https://next-auth.js.org/getting-started/client#usesession)
  */
-export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
+export function useSession<R extends boolean>(
+  options?: UseSessionOptions<R>
+): SessionContextValue<R> {
   if (!SessionContext) {
     throw new Error("React Context is unavailable in Server Components")
   }
@@ -134,7 +142,11 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
   }, [requiredAndNotLoading, onUnauthenticated])
 
   if (requiredAndNotLoading) {
-    return { data: value.data, status: "loading" } as const
+    return {
+      data: value.data,
+      update: value.update,
+      status: "loading",
+    }
   }
 
   return value
@@ -241,13 +253,13 @@ export async function signIn<
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
     },
     // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken: await getCsrfToken(),
       callbackUrl,
+      json: true,
     }),
   })
 
@@ -291,11 +303,12 @@ export async function signOut<R extends boolean = true>(
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
     },
+    // @ts-expect-error
     body: new URLSearchParams({
-      csrfToken: (await getCsrfToken()) ?? "",
+      csrfToken: await getCsrfToken(),
       callbackUrl,
+      json: true,
     }),
   }
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
@@ -455,6 +468,22 @@ export function SessionProvider(props: SessionProviderProps) {
         : session
         ? "authenticated"
         : "unauthenticated",
+      async update(data) {
+        if (loading || !session) return
+        setLoading(true)
+        const newSession = await fetchData<Session>(
+          "session",
+          __NEXTAUTH,
+          logger,
+          { req: { body: { csrfToken: await getCsrfToken(), data } } }
+        )
+        setLoading(false)
+        if (newSession) {
+          setSession(newSession)
+          broadcast.post({ event: "session", data: { trigger: "getSession" } })
+        }
+        return newSession
+      },
     }),
     [session, loading]
   )

@@ -19,7 +19,7 @@ type UrlParams = Record<string, unknown>
 
 type EndpointRequest<C, R, P> = (
   context: C & {
-    /** Provider is passed for convenience, ans also contains the `callbackUrl`. */
+    /** Provider is passed for convenience, and also contains the `callbackUrl`. */
     provider: OAuthConfigInternal<P> & {
       signinUrl: string
       callbackUrl: string
@@ -183,7 +183,6 @@ export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 /**
  * We parsed `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
- * @internal
  */
 export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
@@ -193,6 +192,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
+    /** @internal */
     conform?: TokenEndpointHandler["conform"]
   }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }

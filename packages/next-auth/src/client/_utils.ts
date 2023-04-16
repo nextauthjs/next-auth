@@ -18,8 +18,8 @@ export interface AuthClientConfig {
 }
 
 export interface CtxOrReq {
-  req?: IncomingMessage
-  ctx?: { req: IncomingMessage }
+  req?: Partial<IncomingMessage> & { body?: any }
+  ctx?: { req: Partial<IncomingMessage> & { body?: any } }
 }
 
 /**
@@ -37,9 +37,18 @@ export async function fetchData<T = any>(
 ): Promise<T | null> {
   const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`
   try {
-    const options = req?.headers.cookie
-      ? { headers: { cookie: req.headers.cookie } }
-      : {}
+    const options: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
+      },
+    }
+
+    if (req?.body) {
+      options.body = JSON.stringify(req.body)
+      options.method = "POST"
+    }
+
     const res = await fetch(url, options)
     const data = await res.json()
     if (!res.ok) throw data

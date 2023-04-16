@@ -51,9 +51,8 @@ export default function Foursquare(options) {
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/foursquare.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/foursquare-dark.svg",
+      logo: "/foursquare.svg",
+      logoDark: "/foursquare-dark.svg",
       bg: "#fff",
       text: "#000",
       bgDark: "#000",
