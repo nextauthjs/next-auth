@@ -16,9 +16,8 @@ export default function Box(options) {
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/box.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/box-dark.svg",
+      logo: "/box.svg",
+      logoDark: "/box-dark.svg",
       bg: "#fff",
       text: "#0075C9",
       bgDark: "#0075C9",

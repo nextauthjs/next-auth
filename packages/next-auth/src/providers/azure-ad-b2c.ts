@@ -43,9 +43,8 @@ export default function AzureADB2C<P extends AzureB2CProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/azure.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/azure-dark.svg",
+      logo: "/azure.svg",
+      logoDark: "/azure-dark.svg",
       bg: "#fff",
       text: "#0072c6",
       bgDark: "#0072c6",

@@ -31,7 +31,7 @@ export default function renderPage(params: RenderPageParams) {
     return {
       cookies,
       status,
-      headers: { "Content-Type": "text/html" },
+      headers: [{ key: "Content-Type", value: "text/html" }],
       body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css()}</style><title>${title}</title></head><body class="__next-auth-theme-${
         theme?.colorScheme ?? "auto"
       }"><div class="page">${renderToString(html)}</div></body></html>`,
