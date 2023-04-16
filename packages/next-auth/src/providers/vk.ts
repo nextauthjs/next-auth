@@ -306,9 +306,8 @@ export default function VK<P extends Record<string, any> = VkProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/vk.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/vk-dark.svg",
+      logo: "/vk.svg",
+      logoDark: "/vk-dark.svg",
       bg: "#fff",
       text: "#07F",
       bgDark: "#07F",

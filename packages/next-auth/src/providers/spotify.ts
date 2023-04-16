@@ -30,9 +30,8 @@ export default function Spotify<P extends SpotifyProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/spotify.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/spotify.svg",
+      logo: "/spotify.svg",
+      logoDark: "/spotify.svg",
       bg: "#fff",
       text: "#2ebd59",
       bgDark: "#fff",

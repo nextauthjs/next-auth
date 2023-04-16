@@ -33,37 +33,32 @@ export default function AzureAD<P extends AzureADProfile>(
     },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-      const profilePicture = await fetch(
+      const response = await fetch(
         `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
-        {
-          headers: {
-            Authorization: `Bearer ${tokens.access_token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${tokens.access_token}` } }
       )
 
       // Confirm that profile photo was returned
-      if (profilePicture.ok) {
-        const pictureBuffer = await profilePicture.arrayBuffer()
-        const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: `data:image/jpeg;base64, ${pictureBase64}`,
-        }
-      } else {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-        }
+      let image
+      // TODO: Do this without Buffer
+      if (response.ok && typeof Buffer !== "undefined") {
+        try {
+          const pictureBuffer = await response.arrayBuffer()
+          const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
+          image = `data:image/jpeg;base64, ${pictureBase64}`
+        } catch {}
+      }
+
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: image ?? null,
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/azure.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/azure-dark.svg",
+      logo: "/azure.svg",
+      logoDark: "/azure-dark.svg",
       bg: "#fff",
       text: "#0072c6",
       bgDark: "#0072c6",
