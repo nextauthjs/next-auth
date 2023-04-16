@@ -43,20 +43,21 @@ export interface YandexProfile {
   is_avatar_empty?: boolean
   /**
    * ID of the Yandex user's profile picture.
-   * The profile picture with this ID can be downloaded via a link that looks like this:
+   * Format for downloading user avatars: `https://avatars.yandex.net/get-yapic/<default_avatar_id>/<size>`
    * @example "https://avatars.yandex.net/get-yapic/31804/BYkogAC6AoB17bN1HKRFAyKiM4-1/islands-200"
+   * Available sizes: 
+   * `islands-small`: 28×28 pixels.
+   * `islands-34`: 34×34 pixels.
+   * `islands-middle`: 42×42 pixels.
+   * `islands-50`: 50×50 pixels.
+   * `islands-retina-small`: 56×56 pixels.
+   * `islands-68`: 68×68 pixels.
+   * `islands-75`: 75×75 pixels.
+   * `islands-retina-middle`: 84×84 pixels.
+   * `islands-retina-50`: 100×100 pixels.
+   * `islands-200`: 200×200 pixels.
    */
-  default_avatar_id?:
-    | "islands-small"
-    | "islands-34"
-    | "islands-middle"
-    | "islands-50"
-    | "islands-retina-small"
-    | "islands-68"
-    | "islands-75"
-    | "islands-retina-middle"
-    | "islands-retina-50"
-    | "islands-200"
+  default_avatar_id?: string
   /**
    * The user's date of birth in YYYY-MM-DD format.
    * Unknown elements of the date are filled in with zeros, such as: `0000-12-23`.
@@ -71,8 +72,8 @@ export interface YandexProfile {
    * Non-Latin characters of the first and last names are presented in Unicode format.
    */
   real_name?: string
-  /** User's gender. Possible values: Male: `male', Female: `female`, Unknown gender: `null` */
-  sex?: string
+  /** User's gender. `null` Stands for unknown or unspecified gender. Will be `undefined` if not provided by Yandex. */
+  sex?: "male" | "female" | null
   /**
    * The default phone number for contacting the user.
    * The API can exclude the user's phone number from the response at its discretion.
