@@ -43,6 +43,7 @@ packages/*/*.d.ts.map
 apps/dev/src/css
 apps/dev/prisma/migrations
 apps/dev/typeorm
+apps/dev/nextjs-2
 
 # VS
 /.vs/slnx.sqlite-journal
