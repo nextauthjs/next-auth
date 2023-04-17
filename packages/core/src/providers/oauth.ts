@@ -8,7 +8,7 @@ import type {
 } from "../types.js"
 import type { CommonProviderOptions } from "../providers/index.js"
 
-// TODO:
+// TODO: fix types
 type AuthorizationParameters = any
 type CallbackParamsType = any
 type IssuerMetadata = any
@@ -101,7 +101,7 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
-/** TODO: */
+/** TODO: Document */
 export interface OAuth2Config<Profile>
   extends CommonProviderOptions,
     PartialIssuer {
@@ -190,7 +190,7 @@ export interface OAuth2Config<Profile>
   options?: OAuthUserConfig<Profile>
 }
 
-/** TODO: */
+/** TODO: Document */
 export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
