@@ -118,13 +118,19 @@ export const state = {
       return
     }
 
-    const value = jose.base64url.encode(
+    const encodedState = jose.base64url.encode(
       JSON.stringify({ ...data, random: o.generateRandomState() })
     )
 
     const maxAge = STATE_MAX_AGE
-    const cookie = await signCookie("state", value, maxAge, options, data)
-    return { cookie, value }
+    const cookie = await signCookie(
+      "state",
+      encodedState,
+      maxAge,
+      options,
+      data
+    )
+    return { cookie, value: encodedState }
   },
   /**
    * Returns state if the provider is configured to use state,
@@ -147,22 +153,20 @@ export const state = {
     if (!state) throw new InvalidCheck("State cookie was missing.")
 
     // IDEA: Let the user do something with the returned state
-    const value = await decode<CheckPayload>({ ...options.jwt, token: state })
+    const encodedState = await decode<CheckPayload>({
+      ...options.jwt,
+      token: state,
+    })
 
-    if (!value?.value)
+    if (!encodedState?.value)
       throw new InvalidCheck("State value could not be parsed.")
 
-    if (!options.isOnRedirectProxy) {
-      if (!paramRandom)
-        throw new InvalidCheck(
-          "Random state was missing in the decoded `state` parameter, but required when using `redirectProxyUrl`."
-        )
-      const cookieRandom = decodeState(value.value)?.random
-      if (cookieRandom !== paramRandom)
-        throw new InvalidCheck(
-          `Random state values did not match. Expected: ${cookieRandom}. Got: ${paramRandom}`
-        )
-    }
+    const decodedState = decodeState(encodedState.value)
+
+    if (decodedState?.random !== paramRandom)
+      throw new InvalidCheck(
+        `Random state values did not match. Expected: ${decodedState?.random}. Got: ${paramRandom}`
+      )
 
     // Clear the state cookie after use
     resCookies.push({
@@ -171,7 +175,7 @@ export const state = {
       options: { ...options.cookies.state.options, maxAge: 0 },
     })
 
-    return value.value
+    return encodedState.value
   },
 }
 
