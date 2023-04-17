@@ -102,6 +102,57 @@ importers:
       sqlite3: 5.0.8
       typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
 
+  apps/dev/nextjs-2:
+    specifiers:
+      '@auth/core': workspace:*
+      '@next-auth/fauna-adapter': workspace:*
+      '@next-auth/prisma-adapter': workspace:*
+      '@next-auth/supabase-adapter': workspace:*
+      '@next-auth/typeorm-legacy-adapter': workspace:*
+      '@playwright/test': 1.29.2
+      '@prisma/client': ^3
+      '@supabase/supabase-js': ^2.0.5
+      '@types/jsonwebtoken': ^8.5.5
+      '@types/react': ^18.0.15
+      '@types/react-dom': ^18.0.6
+      dotenv: ^16.0.3
+      fake-smtp-server: ^0.8.0
+      faunadb: ^4
+      next: 13.3.0
+      next-auth: workspace:*
+      nodemailer: ^6
+      pg: ^8.7.3
+      prisma: ^3
+      react: ^18
+      react-dom: ^18
+      sqlite3: ^5.0.8
+      typeorm: 0.3.7
+    dependencies:
+      '@auth/core': link:../../../packages/core
+      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
+      '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
+      '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
+      '@next-auth/typeorm-legacy-adapter': link:../../../packages/adapter-typeorm-legacy
+      '@prisma/client': 3.15.2_prisma@3.15.2
+      '@supabase/supabase-js': 2.0.5
+      faunadb: 4.6.0
+      next: 13.3.0_biqbaboplfbrettd7655fr4n2y
+      next-auth: link:../../../packages/next-auth
+      nodemailer: 6.8.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@playwright/test': 1.29.2
+      '@types/jsonwebtoken': 8.5.9
+      '@types/react': 18.0.26
+      '@types/react-dom': 18.0.6
+      dotenv: 16.0.3
+      fake-smtp-server: 0.8.0
+      pg: 8.7.3
+      prisma: 3.15.2
+      sqlite3: 5.0.8
+      typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
+
   apps/dev/nextjs-v4:
     specifiers:
       '@next-auth/fauna-adapter': workspace:*
@@ -216,7 +267,7 @@ importers:
       '@mdx-js/react': 1.6.22
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
       classnames: ^2.3.2
-      docusaurus-plugin-typedoc: 1.0.0-next.2
+      docusaurus-plugin-typedoc: 1.0.0-next.5
       mdx-mermaid: 1.2.2
       mermaid: 9.0.1
       prism-react-renderer: 1.3.5
@@ -224,8 +275,8 @@ importers:
       react-dom: ^18.2.0
       react-marquee-slider: ^1.1.5
       styled-components: 5.3.6
-      typedoc: ^0.23.28
-      typedoc-plugin-markdown: 4.0.0-next.3
+      typedoc: ^0.24.4
+      typedoc-plugin-markdown: 4.0.0-next.6
     dependencies:
       '@mdx-js/react': 1.6.22_react@18.2.0
       '@sapphire/docusaurus-plugin-npm2yarn2pnpm': 1.1.4
@@ -245,9 +296,9 @@ importers:
       '@docusaurus/theme-common': 2.3.1_pmmuy6rkkayfggimpcjiffhloy
       '@docusaurus/theme-mermaid': 2.3.1_biqbaboplfbrettd7655fr4n2y
       '@docusaurus/types': 2.3.1_biqbaboplfbrettd7655fr4n2y
-      docusaurus-plugin-typedoc: 1.0.0-next.2_uohvtzr4yhotvxhnypob3homwy
-      typedoc: 0.23.28
-      typedoc-plugin-markdown: 4.0.0-next.3_typedoc@0.23.28
+      docusaurus-plugin-typedoc: 1.0.0-next.5_gzqsqt65mmdnb3xhclsp3l6pq4
+      typedoc: 0.24.4
+      typedoc-plugin-markdown: 4.0.0-next.6_typedoc@0.24.4
 
   packages/adapter-dgraph:
     specifiers:
@@ -15574,14 +15625,12 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docusaurus-plugin-typedoc/1.0.0-next.2_uohvtzr4yhotvxhnypob3homwy:
-    resolution: {integrity: sha512-JQOdw8U7Ix1lETgmlgkm1WpUrpmsTthWSQlMJRYiEnX06s2g/wSE+cg1JcP5ILAyeTjxDlF/DPwtOBIzTuzSTg==}
+  /docusaurus-plugin-typedoc/1.0.0-next.5_gzqsqt65mmdnb3xhclsp3l6pq4:
+    resolution: {integrity: sha512-p9t9ShQ6sqW3mYcJL0cg2tqJsEzD2IW7mMS3kgnb/Ifo5iIYe6uTZXpNdsD64xuJxbwxmhuWVOOAvVOyRhEgUQ==}
     peerDependencies:
-      typedoc: '>=0.23.0'
-      typedoc-plugin-markdown: '>=4.0.0-next.2'
+      typedoc-plugin-markdown: '>=4.0.0-next.6'
     dependencies:
-      typedoc: 0.23.28
-      typedoc-plugin-markdown: 4.0.0-next.3_typedoc@0.23.28
+      typedoc-plugin-markdown: 4.0.0-next.6_typedoc@0.24.4
     dev: true
 
   /dom-accessibility-api/0.5.14:
@@ -22757,7 +22806,7 @@ packages:
       klaw: 3.0.0
       markdown-it: 12.3.2
       markdown-it-anchor: 8.6.5_2zb4u3vubltivolgu556vv4aom
-      marked: 4.2.12
+      marked: 4.3.0
       mkdirp: 1.0.4
       requizzle: 0.2.4
       strip-json-comments: 3.1.1
@@ -23914,8 +23963,8 @@ packages:
     hasBin: true
     dev: true
 
-  /marked/4.2.12:
-    resolution: {integrity: sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==}
+  /marked/4.3.0:
+    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: true
@@ -24175,6 +24224,7 @@ packages:
   /mimic-response/3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
+    requiresBuild: true
 
   /mimic-response/4.0.0:
     resolution: {integrity: sha512-e5ISH9xMYU0DzrT+jl8q2ze9D6eWBto+I8CNpe+VI+K2J/F/k3PdkdTdz4wvGVH4NTpo+NRYTVIuMQEMMcsLqg==}
@@ -24242,9 +24292,9 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /minimatch/7.4.2:
-    resolution: {integrity: sha512-xy4q7wou3vUoC9k1xGTXc+awNdGaGVHtFUaey8tiX4H1QRc04DZ/rmDFwNm2EBsuYEhAZ6SgMmYf3InGY6OauA==}
-    engines: {node: '>=10'}
+  /minimatch/9.0.0:
+    resolution: {integrity: sha512-0jJj8AvgKqWN05mrwuqi8QYKx1WmYSUoKSxu5Qhs9prezTz10sxAHGNZe9J9cqIJzta8DWsleh2KaVaLl6Ru2w==}
+    engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
     dev: true
@@ -30900,24 +30950,25 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typedoc-plugin-markdown/4.0.0-next.3_typedoc@0.23.28:
-    resolution: {integrity: sha512-Koim98xkXOoY8KPlMNH/cKTfqTEocVEYMa3XZgoPX/DkGp7ioB6nl38p6Snl7rEmhcbHkFktcUoOQLn04Kk3sg==}
+  /typedoc-plugin-markdown/4.0.0-next.6_typedoc@0.24.4:
+    resolution: {integrity: sha512-U+Erp/mBHpxMRVFuZ5/J0US5Jv1TjhTPjAAcgmkoo3RUpwNzIu9jO6FeQZRgAqyDs0XOy6cwVtTvOmClzthzXQ==}
     peerDependencies:
-      typedoc: '>=0.23.0'
+      prettier: '>=1.8.0'
+      typedoc: '>=0.24.0'
     dependencies:
-      typedoc: 0.23.28
+      typedoc: 0.24.4
     dev: true
 
-  /typedoc/0.23.28:
-    resolution: {integrity: sha512-9x1+hZWTHEQcGoP7qFmlo4unUoVJLB0H/8vfO/7wqTnZxg4kPuji9y3uRzEu0ZKez63OJAUmiGhUrtukC6Uj3w==}
+  /typedoc/0.24.4:
+    resolution: {integrity: sha512-vQuliyGhJEGeKzzCFHbkS3m0gHoIL6cfr0fHf6eX658iGELtq2J9mWe0b+X5McEYgFoMuHFt5Py3Zug6Sxjn/Q==}
     engines: {node: '>= 14.14'}
     hasBin: true
     peerDependencies:
       typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x
     dependencies:
       lunr: 2.3.9
-      marked: 4.2.12
-      minimatch: 7.4.2
+      marked: 4.3.0
+      minimatch: 9.0.0
       shiki: 0.14.1
     dev: true
 

@@ -41,7 +41,7 @@ This is a monorepo containing the following packages / projects:
 ## Getting Started
 
 ```
-npm install --save next-auth
+npm install next-auth
 ```
 
 The easiest way to continue getting started, is to follow the [getting started](https://next-auth.js.org/getting-started/example) section in our docs.
@@ -247,7 +247,7 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
 ## Contributing
 
 We're open to all community contributions! If you'd like to contribute in any way, please first read
-our [Contributing Guide](https://github.com/nextauthjs/next-auth/blob/main/CONTRIBUTING.md).
+our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
 
 ## License
 
