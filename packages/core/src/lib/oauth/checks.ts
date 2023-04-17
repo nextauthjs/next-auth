@@ -111,7 +111,7 @@ export const state = {
     const { provider } = options
     if (!provider.checks.includes("state")) {
       if (data) {
-        throw new Error(
+        throw new InvalidCheck(
           "State data was provided but the provider is not configured to use state."
         )
       }
