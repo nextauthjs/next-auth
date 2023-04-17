@@ -49,6 +49,13 @@ export default function SigninPage(props: SignInServerPageParams) {
     return false
   })
 
+  if (typeof document !== "undefined" && theme.buttonText) {
+    document.documentElement.style.setProperty(
+      "--button-text-color",
+      theme.buttonText
+    )
+  }
+
   if (typeof document !== "undefined" && theme.brandColor) {
     document.documentElement.style.setProperty(
       "--brand-color",
@@ -74,6 +81,7 @@ export default function SigninPage(props: SignInServerPageParams) {
 
   const error = errorType && (errors[errorType] ?? errors.default)
 
+  const logos = "https://authjs.dev/img/providers"
   return (
     <div className="signin">
       {theme.brandColor && (
@@ -87,8 +95,19 @@ export default function SigninPage(props: SignInServerPageParams) {
           }}
         />
       )}
-      {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+      {theme.buttonText && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+        :root {
+          --button-text-color: ${theme.buttonText}
+        }
+      `,
+          }}
+        />
+      )}
       <div className="card">
+        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {error && (
           <div className="error">
             <p>{error}</p>
@@ -116,12 +135,25 @@ export default function SigninPage(props: SignInServerPageParams) {
                   }
                 >
                   {provider.style?.logo && (
-                    <img id="provider-logo" src={provider.style.logo} />
+                    <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
+                      id="provider-logo"
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logo}`}
+                    />
                   )}
                   {provider.style?.logoDark && (
                     <img
+                      loading="lazy"
+                      height={24}
+                      width={24}
                       id="provider-logo-dark"
-                      src={provider.style.logoDark}
+                      src={`${
+                        provider.style.logo.startsWith("/") ? logos : ""
+                      }${provider.style.logoDark}`}
                     />
                   )}
                   <span>Sign in with {provider.name}</span>
@@ -150,7 +182,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                   placeholder="email@example.com"
                   required
                 />
-                <button type="submit">Sign in with {provider.name}</button>
+                <button id="submitButton" type="submit">Sign in with {provider.name}</button>
               </form>
             )}
             {provider.type === "credentials" && (
