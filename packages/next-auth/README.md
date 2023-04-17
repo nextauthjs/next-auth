@@ -41,7 +41,7 @@ This is a monorepo containing the following packages / projects:
 ## Getting Started
 
 ```
-npm install --save next-auth
+npm install next-auth
 ```
 
 The easiest way to continue getting started, is to follow the [getting started](https://next-auth.js.org/getting-started/example) section in our docs.
