@@ -159,13 +159,16 @@ export const state = {
     })
 
     if (!encodedState?.value)
-      throw new InvalidCheck("State value could not be parsed.")
+      throw new InvalidCheck("State (cookie) value could not be parsed.")
 
     const decodedState = decodeState(encodedState.value)
 
-    if (decodedState?.random !== paramRandom)
+    if (!decodedState)
+      throw new InvalidCheck("State (encoded) value could not be parsed.")
+
+    if (decodedState.random !== paramRandom)
       throw new InvalidCheck(
-        `Random state values did not match. Expected: ${decodedState?.random}. Got: ${paramRandom}`
+        `Random state values did not match. Expected: ${decodedState.random}. Got: ${paramRandom}`
       )
 
     // Clear the state cookie after use
