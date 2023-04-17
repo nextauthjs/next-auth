@@ -35,7 +35,7 @@ export default function parseProviders(params: {
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
-      merged.redirectProxy ??= options.redirectProxy
+      merged.redirectProxyUrl ??= options.redirectProxyUrl
       return normalizeOAuth(merged)
     }
 
@@ -65,9 +65,9 @@ function normalizeOAuth(
   const userinfo = normalizeEndpoint(c.userinfo, c.issuer)
 
   const checks = c.checks ?? ["pkce"]
-  if (c.redirectProxy) {
+  if (c.redirectProxyUrl) {
     if (!checks.includes("state")) checks.push("state")
-    c.redirectProxy = `${c.redirectProxy}/callback/${c.id}`
+    c.redirectProxyUrl = `${c.redirectProxyUrl}/callback/${c.id}`
   }
 
   return {

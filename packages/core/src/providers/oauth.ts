@@ -149,7 +149,7 @@ export interface OAuth2Config<Profile>
    * The CSRF protection performed on the callback endpoint.
    * @default ["pkce"]
    *
-   * @note When `redirectProxy` or {@link AuthConfig.redirectProxy} is set,
+   * @note When `redirectProxyUrl` or {@link AuthConfig.redirectProxyUrl} is set,
    * `"state"` will be added to checks automatically.
    *
    * [RFC 7636 - Proof Key for Code Exchange by OAuth Public Clients (PKCE)](https://www.rfc-editor.org/rfc/rfc7636.html#section-4) |
@@ -179,7 +179,7 @@ export interface OAuth2Config<Profile>
    * to enable automatic account linking.
    */
   allowDangerousEmailAccountLinking?: boolean
-  redirectProxy?: AuthConfig["redirectProxy"]
+  redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -207,7 +207,7 @@ export type OAuthEndpointType = "authorization" | "token" | "userinfo"
  */
 export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
-  OAuthEndpointType | "redirectProxy"
+  OAuthEndpointType | "redirectProxyUrl"
 > & {
   authorization?: { url: URL }
   token?: {
@@ -218,11 +218,17 @@ export type OAuthConfigInternal<Profile> = Omit<
   }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
   /**
-   * Reconstructed from {@link OAuth2Config.redirectProxy},
+   * Reconstructed from {@link OAuth2Config.redirectProxyUrl},
    * adding the callback action and provider id onto the URL.
-   * @example `"https://auth.example.com/api/auth/callback/id"`
+   *
+   * If defined, it is favoured over {@link OAuthConfigInternal.callbackUrl} in the authorization request.
+   *
+   * When {@link InternalOptions.isOnRedirectProxy} is set, the actual value is saved in the decoded `state.origin` parameter.
+   *
+   * @example `"https://auth.example.com/api/auth/callback/:provider"`
+   *
    */
-  redirectProxy?: OAuth2Config<Profile>["redirectProxy"]
+  redirectProxyUrl?: OAuth2Config<Profile>["redirectProxyUrl"]
 } & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {

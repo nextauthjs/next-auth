@@ -439,5 +439,9 @@ export interface InternalOptions<TProviderType = ProviderType> {
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
-  redirectProxy?: string
+  /**
+   * If true, the OAuth callback is being proxied by the server to the original URL.
+   * See also {@link OAuthConfigInternal.redirectProxyUrl}.
+   */
+  isOnRedirectProxy: boolean
 }

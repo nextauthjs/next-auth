@@ -13,6 +13,7 @@ import type {
   Account,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
+import { handleProxyRedirect } from "../oauth/proxy-redirect.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {
@@ -44,24 +45,13 @@ export async function callback(params: {
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
-      let randomState: string | undefined
+      const { proxyRedirect, randomState } = handleProxyRedirect(
+        query,
+        provider,
+        options.isOnRedirectProxy
+      )
 
-      if (provider.redirectProxy && query?.state) {
-        const state = decodeState<{ origin: string; random: string }>(
-          query.state
-        )
-
-        randomState = state?.random
-
-        // TODO: verify that comparison is safe
-        const isOriginProxy = provider.redirectProxy.startsWith(
-          options.url.origin
-        )
-        // TODO: verify that redirect is safe
-        if (isOriginProxy && state?.origin) {
-          return { redirect: `${state.origin}?${new URLSearchParams(query)}` }
-        }
-      }
+      if (proxyRedirect) return { redirect: proxyRedirect }
 
       const authorizationResult = await handleOAuth(
         query,

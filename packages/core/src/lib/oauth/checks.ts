@@ -92,7 +92,14 @@ export const pkce = {
 }
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-export function decodeState<T>(value: string): T | undefined {
+export function decodeState(value: string):
+  | {
+      /** If defined, a redirect proxy is being used to support multiple OAuth endpoints with a single callback URL */
+      origin?: string
+      /** Random value for CSRF protection */
+      random: string
+    }
+  | undefined {
   try {
     const decoder = new TextDecoder()
     return JSON.parse(decoder.decode(jose.base64url.decode(value)))
@@ -145,14 +152,12 @@ export const state = {
     if (!value?.value)
       throw new InvalidCheck("State value could not be parsed.")
 
-    // TODO: verify that comparison is safe
-    const isOriginProxy = provider.redirectProxy?.startsWith(options.url.origin)
-    if (!isOriginProxy) {
+    if (!options.isOnRedirectProxy) {
       if (!paramRandom)
         throw new InvalidCheck(
-          "Random state was missing in the decoded `state` parameter, but required when using `redirectProxy`."
+          "Random state was missing in the decoded `state` parameter, but required when using `redirectProxyUrl`."
         )
-      const cookieRandom = decodeState<{ random: string }>(value.value)?.random
+      const cookieRandom = decodeState(value.value)?.random
       if (cookieRandom !== paramRandom)
         throw new InvalidCheck(
           `Random state values did not match. Expected: ${cookieRandom}. Got: ${paramRandom}`

@@ -343,28 +343,28 @@ export interface AuthConfig {
    * will be set based on this value.
    *
    * This is useful if your Identity Provider only supports a single `redirect_uri`
-   * or you want to use OAuth on preview URLs.
+   * or you want to use OAuth on preview URLs (like Vercel), where you don't know the final deployment URL beforehand.
    *
    * The url needs to include the full path up to where Auth.js is initialized.
    *
-   * @note This will auto-enable the `state` {@link OAuth2Config.checks} on the provider
+   * @note This will auto-enable the `state` {@link OAuth2Config.checks} on the provider.
    *
    * @example
    * ```
    * "https://authjs.example.com/api/auth"
    * ```
    *
-   * You can also override this individually for each provider
+   * You can also override this individually for each provider.
    *
    * @example
    * ```ts
    * GitHub({
    *   ...
-   *   redirectProxy: "https://github.example.com/api/auth"
+   *   redirectProxyUrl: "https://github.example.com/api/auth"
    * })
    * ```
-   * @default `AUTH_REDIRECT_PROXY_URL` environment variable
    *
+   * @default `AUTH_REDIRECT_PROXY_URL` environment variable
    */
-  redirectProxy?: string
+  redirectProxyUrl?: string
 }
