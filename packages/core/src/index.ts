@@ -342,7 +342,7 @@ export interface AuthConfig {
    * the `redirect_uri` of the authorization request
    * will be set based on this value.
    *
-   * This is useful if your Identity Provider only supports a single `redirect_uri`
+   * This is useful if your OAuth Provider only supports a single `redirect_uri`
    * or you want to use OAuth on preview URLs (like Vercel), where you don't know the final deployment URL beforehand.
    *
    * The url needs to include the full path up to where Auth.js is initialized.
@@ -365,6 +365,8 @@ export interface AuthConfig {
    * ```
    *
    * @default `AUTH_REDIRECT_PROXY_URL` environment variable
+   *
+   * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/guides/basics/deployment#securing-a-preview-deployment)
    */
   redirectProxyUrl?: string
 }
