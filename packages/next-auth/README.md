@@ -204,8 +204,8 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://clerk.dev" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Prisma Logo" />
+        <a href="https://clerk.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
         </a><br />
         <div>Clerk</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
