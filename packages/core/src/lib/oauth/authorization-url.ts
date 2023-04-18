@@ -47,6 +47,7 @@ export async function getAuthorizationUrl(
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
     data = { origin: provider.callbackUrl }
+    logger.debug("using redirect proxy", { redirect_uri, data })
   }
 
   const params = Object.assign(
