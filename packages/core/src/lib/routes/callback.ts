@@ -51,7 +51,10 @@ export async function callback(params: {
         options.isOnRedirectProxy
       )
 
-      if (proxyRedirect) return { redirect: proxyRedirect }
+      if (proxyRedirect) {
+        logger.debug("proxy redirect", { proxyRedirect, randomState })
+        return { redirect: proxyRedirect }
+      }
 
       const authorizationResult = await handleOAuth(
         query,
