@@ -77,6 +77,11 @@ async function toInternalRequest(
       query,
     }
   }
+
+  const { headers } = req
+  const host = headers?.["x-forwarded-host"] ?? headers?.host
+  req.origin = detectOrigin(host, headers?.["x-forwarded-proto"])
+
   return req
 }
 
