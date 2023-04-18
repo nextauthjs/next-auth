@@ -47,7 +47,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
 
 /** Configure Next.js Auth. */
 export interface NextAuthConfig extends AuthConfig {
-  callbacks: NextAuthCallbacks
+  callbacks?: NextAuthCallbacks
 }
 
 async function getAuth(
@@ -118,7 +118,7 @@ async function authMiddleware(
   const { data: auth = null, expires = null } =
     (await getAuth(request.headers, config)) ?? {}
 
-  const authorized = config.callbacks.authorized
+  const authorized = config.callbacks?.authorized
     ? await config.callbacks.authorized({ request, auth, expires })
     : true
 
