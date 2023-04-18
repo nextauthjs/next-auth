@@ -25,7 +25,7 @@ export function handleProxyRedirect(
     randomState = state?.random
 
     if (isOnRedirectProxy) {
-      if (!state?.origin) throw new InvalidCheck("Missing origin in state")
+      if (!state?.origin) return { randomState }
       proxyRedirect = `${state.origin}?${new URLSearchParams(query)}`
     }
   }
