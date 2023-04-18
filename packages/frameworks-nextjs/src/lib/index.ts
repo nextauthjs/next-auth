@@ -59,6 +59,7 @@ async function getAuth(
     headers: { cookie: headers.get("cookie") ?? "" },
   })
   config.trustHost = true
+  config.useSecureCookies ??= headers.get("x-forwarded-proto") === "https"
   if (config.callbacks) {
     config.callbacks.session ??= ({ session, user, token }) => ({
       expires: session.expires,
@@ -94,21 +95,21 @@ export function initAuth(config: NextAuthConfig) {
       // export { auth as default } from "auth"
       const req = args[0]
       const ev = args[1]
-      return authMiddleware([req, ev as any], config)
+      return handleAuth([req, ev as any], config)
     }
 
     // import { auth } from "auth"
     // export default auth((req) => { console.log(req.auth) }})
     const userMiddleware = args[0]
     return async (...args: Parameters<NextMiddlewareWithAuth>) => {
-      return authMiddleware(args, config, userMiddleware)
+      return handleAuth(args, config, userMiddleware)
     }
   }
 }
 
 type AuthData = JWT | User | null
 
-async function authMiddleware(
+async function handleAuth(
   args: Parameters<NextMiddleware>,
   config: NextAuthConfig,
   userMiddleware?: NextMiddlewareWithAuth
@@ -144,7 +145,8 @@ async function authMiddleware(
   // so that the session expiry is extended
   const finalResponse = new NextResponse(response?.body, response)
   // TODO: respect config/prefix/chunking etc.
-  const name = "next-auth.session-token"
+  const cookiePrefix = request.nextUrl.protocol === "https:" ? "__Secure-" : ""
+  const name = `${cookiePrefix}next-auth.session-token`
   const val = request.cookies.get(name)?.value
   // TODO: respect config/prefix/chunking etc.
   if (val) finalResponse.cookies.set(name, val, { expires: new Date(expires!) })
