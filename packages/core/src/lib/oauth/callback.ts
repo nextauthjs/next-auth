@@ -99,11 +99,15 @@ export async function handleOAuth(
 
   await checks.nonce.use(cookies, resCookies, options)
 
+  let redirect_uri = provider.callbackUrl
+  if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
+    redirect_uri = provider.redirectProxyUrl
+  }
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
     codeGrantParams,
-    provider.callbackUrl,
+    redirect_uri,
     codeVerifier ?? "auth" // TODO: review fallback code verifier
   )
 
