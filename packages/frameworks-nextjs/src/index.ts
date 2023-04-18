@@ -12,10 +12,6 @@ type AppRouteHandlers = Record<
 
 export type { NextAuthConfig, NextAuthCallbacks }
 
-// TODO: polyfill in Next.js
-if (typeof globalThis.crypto === "undefined")
-  globalThis.crypto = require("node:crypto").webcrypto
-
 /**
  * The result of invoking {@link NextAuth}, initialized with the {@link NextAuthConfig}.
  * It contains methods to set up and interact with Next.js Auth in your Next.js app.
