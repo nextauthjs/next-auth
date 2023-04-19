@@ -5,7 +5,7 @@ export default function Reddit(options) {
     name: "Reddit",
     type: "oauth",
     authorization: "https://www.reddit.com/api/v1/authorize?scope=identity",
-    token: "https://www.reddit.com/api/v1/access_token",
+    token: " https://www.reddit.com/api/v1/access_token",
     userinfo: "https://oauth.reddit.com/api/v1/me",
     profile(profile) {
       return {
@@ -14,11 +14,6 @@ export default function Reddit(options) {
         email: null,
         image: null,
       }
-    },
-    style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/reddit.svg",
-      bg: "#fff",
-      text: "#000",
     },
     options,
   }

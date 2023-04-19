@@ -41,7 +41,7 @@ This is a monorepo containing the following packages / projects:
 ## Getting Started
 
 ```
-npm install --save next-auth
+npm install next-auth
 ```
 
 The easiest way to continue getting started, is to follow the [getting started](https://next-auth.js.org/getting-started/example) section in our docs.
@@ -168,7 +168,7 @@ export default function App({
 
 ## Security
 
-If you think you have found a vulnerability (or not sure) in NextAuth.js or any of the related packages (i.e. Adapters), we ask you to have a read of our [Security Policy](https://github.com/nextauthjs/.github/blob/main/SECURITY.md) to reach out responsibly. Please do not open Pull Requests/Issues/Discussions before consulting with us.
+If you think you have found a vulnerability (or not sure) in NextAuth.js or any of the related packages (i.e. Adapters), we ask you to have a read of our [Security Policy](https://github.com/nextauthjs/next-auth/blob/main/SECURITY.md) to reach out responsibly. Please do not open Pull Requests/Issues/Discussions before consulting with us.
 
 ## Acknowledgments
 
@@ -190,27 +190,6 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
   <tbody>
     <tr>
       <td align="center" valign="top">
-        <a href="https://stytch.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/69983493?s=200&v=4" alt="Stytch Logo" />
-        </a><br />
-        <div>Stytch</div><br />
-        <sub>🥈 Silver Financial Sponsor</sub>
-      </td>
-      <td align="center" valign="top">
-        <a href="https://beyondidentity.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
-        </a><br />
-        <div>Beyond Identity</div><br />
-        <sub>🥈 Silver Financial Sponsor</sub>
-      </td>
-      <td align="center" valign="top">
-        <a href="https://fusionauth.io/" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
-        </a><br />
-        <div>FusionAuth</div><br />
-        <sub>🥈 Silver Financial Sponsor</sub>
-      </td> 
-      <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
         </a><br />
@@ -224,15 +203,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>Prisma</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
-        <a href="https://clerk.dev" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Prisma Logo" />
+        <a href="https://clerk.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
         </a><br />
         <div>Clerk</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
-      </td> 
+      </td>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -261,16 +238,7 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <div>superblog</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
-    </tr>
-    <tr>
-       <td align="center" valign="top">
-        <a href="https://www.permit.io?utm_source=github&utm_medium=referral&utm_campaign=authjs" target="_blank">
-          <img width="128px" src="https://github.com/permitio.png" alt="permit.io Logo" />
-        </a><br />
-        <div>Permit.io</div><br />
-        <sub>🥉 Bronze Financial Sponsor</sub>
-      </td>
-    </tr>
+    </tr><tr></tr>
   </tbody>
 </table>
 <br />

@@ -7,6 +7,7 @@ import {
   InvalidCallbackUrl,
   MissingAdapterMethods,
 } from "../errors"
+import parseUrl from "../../utils/parse-url"
 import { defaultCookies } from "./cookie"
 
 import type { RequestInternal } from ".."
@@ -43,11 +44,11 @@ export function assertConfig(params: {
   req: RequestInternal
 }): ConfigError | WarningCode[] {
   const { options, req } = params
-  const { url } = req
+
   const warnings: WarningCode[] = []
 
   if (!warned) {
-    if (!url.origin) warnings.push("NEXTAUTH_URL")
+    if (!req.origin) warnings.push("NEXTAUTH_URL")
 
     // TODO: Make this throw an error in next major. This will also get rid of `NODE_ENV`
     if (!options.secret && process.env.NODE_ENV !== "production")
@@ -60,7 +61,7 @@ export function assertConfig(params: {
     return new MissingSecret("Please define a `secret` in production.")
   }
 
-  // req.query isn't defined when asserting `unstable_getServerSession` for example
+  // req.query isn't defined when asserting `getServerSession` for example
   if (!req.query?.nextauth && !req.action) {
     return new MissingAPIRoute(
       "Cannot find [...nextauth].{js,ts} in `/pages/api/auth`. Make sure the filename is written correctly."
@@ -69,19 +70,21 @@ export function assertConfig(params: {
 
   const callbackUrlParam = req.query?.callbackUrl as string | undefined
 
-  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.origin)) {
+  const url = parseUrl(req.origin)
+
+  if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.base)) {
     return new InvalidCallbackUrl(
       `Invalid callback URL. Received: ${callbackUrlParam}`
     )
   }
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
-    options.useSecureCookies ?? url.protocol === "https://"
+    options.useSecureCookies ?? url.base.startsWith("https://")
   )
   const callbackUrlCookie =
     req.cookies?.[options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name]
 
-  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.origin)) {
+  if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.base)) {
     return new InvalidCallbackUrl(
       `Invalid callback URL. Received: ${callbackUrlCookie}`
     )

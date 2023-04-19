@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/sequelize-adapter",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Sequelize adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",

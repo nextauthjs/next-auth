@@ -9,6 +9,7 @@
   "excludeProtected": true,
   "hideHierarchy": true,
   "gitRevision": "main",
+  "groupByReflections": false,
   "hideBreadcrumbs": true,
   "hideGenerator": true,
   "kindSortOrder": [
@@ -36,11 +37,11 @@
     "SetSignature"
   ],
   "readme": "none",
+  "reflectionsWithOwnFile": "none",
   "sort": [
     "kind",
     "static-first",
     "required-first",
     "alphabetical"
-  ],
-  "symbolsWithOwnFile": "none"
+  ]
 }

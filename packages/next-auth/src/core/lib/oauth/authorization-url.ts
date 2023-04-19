@@ -1,8 +1,6 @@
 import { openidClient } from "./client"
-import { oAuth1Client } from "./client-legacy"
-import { createState } from "./state-handler"
-import { createNonce } from "./nonce-handler"
-import { createPKCE } from "./pkce-handler"
+import { oAuth1Client, oAuth1TokenStore } from "./client-legacy"
+import * as checks from "./checks"
 
 import type { AuthorizationParameters } from "openid-client"
 import type { InternalOptions } from "../../types"
@@ -44,7 +42,7 @@ export default async function getAuthorizationUrl({
       oauth_token_secret: tokens.oauth_token_secret,
       ...tokens.params,
     })}`
-
+    oAuth1TokenStore.set(tokens.oauth_token, tokens.oauth_token_secret)
     logger.debug("GET_AUTHORIZATION_URL", { url, provider })
     return { redirect: url }
   }
@@ -54,24 +52,9 @@ export default async function getAuthorizationUrl({
   const authorizationParams: AuthorizationParameters = params
   const cookies: Cookie[] = []
 
-  const state = await createState(options)
-  if (state) {
-    authorizationParams.state = state.value
-    cookies.push(state.cookie)
-  }
-
-  const nonce = await createNonce(options)
-  if (nonce) {
-    authorizationParams.nonce = nonce.value
-    cookies.push(nonce.cookie)
-  }
-
-  const pkce = await createPKCE(options)
-  if (pkce) {
-    authorizationParams.code_challenge = pkce.code_challenge
-    authorizationParams.code_challenge_method = pkce.code_challenge_method
-    cookies.push(pkce.cookie)
-  }
+  await checks.state.create(options, cookies, authorizationParams)
+  await checks.pkce.create(options, cookies, authorizationParams)
+  await checks.nonce.create(options, cookies, authorizationParams)
 
   const url = client.authorizationUrl(authorizationParams)
 
