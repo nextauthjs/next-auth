@@ -49,7 +49,7 @@ To support preview deployments, the `AUTH_SECRET` value needs to be the same for
 </summary>
 To support preview deployments, Auth.js uses the stable deployment URL as a redirect proxy server.
 
-This proxy server is used to redirect the OAuth callback to the preview deployment URL. The proxy server is only used for OAuth callbacks, and only when the `AUTH_REDIRECT_PROXY_URL` environment variable is set.
+It will redirect the OAuth callback request to the preview deployment URL, but only when the `AUTH_REDIRECT_PROXY_URL` environment variable is set. The stable deployment can still act as a regular app.
 
 When a user initiates an OAuth sign-in flow on a preview deployment, we save its URL in the `state` query parameter but set the `redirect_uri` to the stable deployment.
 
