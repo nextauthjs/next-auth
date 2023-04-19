@@ -169,7 +169,6 @@ export default function Wikimedia<P extends WikimediaProfile>(
     type: "oauth",
     token: "https://meta.wikimedia.org/w/rest.php/oauth2/access_token",
     userinfo: "https://meta.wikimedia.org/w/rest.php/oauth2/resource/profile",
-    // TODO: is empty scope necessary?
     authorization:
       "https://meta.wikimedia.org/w/rest.php/oauth2/authorize?scope=",
     profile(profile) {
