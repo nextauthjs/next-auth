@@ -31,7 +31,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "mongodb": "^5 | ^4",
+    "mongodb": "^5 || ^4",
     "next-auth": "^4"
   },
   "devDependencies": {
