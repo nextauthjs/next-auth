@@ -61,6 +61,10 @@ import type {
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
 import type { Adapter, AdapterUser } from "./adapters.js"
+import { AuthConfig } from "./index.js"
+import type { JWT, JWTOptions } from "./jwt.js"
+import type { Cookie } from "./lib/cookie.js"
+import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,
   CredentialsConfig,
@@ -69,14 +73,10 @@ import type {
   OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
-import type { JWT, JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/cookie.js"
-import type { LoggerInstance } from "./lib/utils/logger.js"
-import { AuthConfig } from "./index.js"
 
 export type { AuthConfig } from "./index.js"
-export type Awaitable<T> = T | PromiseLike<T>
 export type { LoggerInstance }
+export type Awaitable<T> = T | PromiseLike<T>
 
 /**
  * Change the theme of the built-in pages.

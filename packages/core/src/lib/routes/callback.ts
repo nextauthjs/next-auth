@@ -1,19 +1,18 @@
-import { handleLogin } from "../callback-handler.js"
 import { CallbackRouteError, Verification } from "../../errors.js"
+import { handleLogin } from "../callback-handler.js"
 import { handleOAuth } from "../oauth/callback.js"
-import { decodeState } from "../oauth/checks.js"
+import { handleProxyRedirect } from "../oauth/proxy-redirect.js"
 import { createHash } from "../web.js"
 import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
+  Account,
+  InternalOptions,
   RequestInternal,
   ResponseInternal,
-  InternalOptions,
-  Account,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
-import { handleProxyRedirect } from "../oauth/proxy-redirect.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {

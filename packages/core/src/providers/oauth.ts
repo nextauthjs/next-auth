@@ -1,4 +1,5 @@
 import type { Client } from "oauth4webapi"
+import type { CommonProviderOptions } from "../providers/index.js"
 import type {
   AuthConfig,
   Awaitable,
@@ -6,7 +7,6 @@ import type {
   TokenSet,
   User,
 } from "../types.js"
-import type { CommonProviderOptions } from "../providers/index.js"
 
 // TODO: fix types
 type AuthorizationParameters = any

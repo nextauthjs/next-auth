@@ -1,6 +1,5 @@
 import { merge } from "./utils/merge.js"
 
-import type { AuthConfig, InternalProvider } from "../types.js"
 import type {
   OAuthConfig,
   OAuthConfigInternal,
@@ -8,6 +7,7 @@ import type {
   OAuthUserConfig,
   Provider,
 } from "../providers/index.js"
+import type { AuthConfig, InternalProvider } from "../types.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider

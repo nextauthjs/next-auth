@@ -1,7 +1,7 @@
-import * as o from "oauth4webapi"
 import * as jose from "jose"
+import * as o from "oauth4webapi"
 import { InvalidCheck } from "../../errors.js"
-import { encode, decode } from "../../jwt.js"
+import { decode, encode } from "../../jwt.js"
 
 import type {
   CookiesOptions,
