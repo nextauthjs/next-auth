@@ -18,7 +18,7 @@ import type {
 export async function signin(
   query: RequestInternal["query"],
   body: RequestInternal["body"],
-  options: InternalOptions<"oauth" | "email">
+  options: InternalOptions<"oauth" | "oidc" | "email">
 ): Promise<ResponseInternal> {
   const { url, logger, provider } = options
   try {

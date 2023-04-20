@@ -337,4 +337,36 @@ export interface AuthConfig {
   /** @todo */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
+  /**
+   * When set, during an OAuth sign-in flow,
+   * the `redirect_uri` of the authorization request
+   * will be set based on this value.
+   *
+   * This is useful if your OAuth Provider only supports a single `redirect_uri`
+   * or you want to use OAuth on preview URLs (like Vercel), where you don't know the final deployment URL beforehand.
+   *
+   * The url needs to include the full path up to where Auth.js is initialized.
+   *
+   * @note This will auto-enable the `state` {@link OAuth2Config.checks} on the provider.
+   *
+   * @example
+   * ```
+   * "https://authjs.example.com/api/auth"
+   * ```
+   *
+   * You can also override this individually for each provider.
+   *
+   * @example
+   * ```ts
+   * GitHub({
+   *   ...
+   *   redirectProxyUrl: "https://github.example.com/api/auth"
+   * })
+   * ```
+   *
+   * @default `AUTH_REDIRECT_PROXY_URL` environment variable
+   *
+   * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/guides/basics/deployment#securing-a-preview-deployment)
+   */
+  redirectProxyUrl?: string
 }

@@ -1,15 +1,16 @@
-import { handleLogin } from "../callback-handler.js"
 import { CallbackRouteError, Verification } from "../../errors.js"
+import { handleLogin } from "../callback-handler.js"
 import { handleOAuth } from "../oauth/callback.js"
+import { handleState } from "../oauth/handle-state.js"
 import { createHash } from "../web.js"
 import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
+  Account,
+  InternalOptions,
   RequestInternal,
   ResponseInternal,
-  InternalOptions,
-  Account,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
 
@@ -43,10 +44,22 @@ export async function callback(params: {
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
+      const { proxyRedirect, randomState } = handleState(
+        query,
+        provider,
+        options.isOnRedirectProxy
+      )
+
+      if (proxyRedirect) {
+        logger.debug("proxy redirect", { proxyRedirect, randomState })
+        return { redirect: proxyRedirect }
+      }
+
       const authorizationResult = await handleOAuth(
         query,
         params.cookies,
-        options
+        options,
+        randomState
       )
 
       if (authorizationResult.cookies.length) {
