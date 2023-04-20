@@ -97,8 +97,6 @@ export async function handleOAuth(
 
   const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
 
-  await checks.nonce.use(cookies, resCookies, options)
-
   let redirect_uri = provider.callbackUrl
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
