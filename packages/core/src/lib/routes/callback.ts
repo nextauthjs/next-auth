@@ -1,7 +1,7 @@
 import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleLogin } from "../callback-handler.js"
 import { handleOAuth } from "../oauth/callback.js"
-import { handleProxyRedirect } from "../oauth/proxy-redirect.js"
+import { handleState } from "../oauth/handle-state.js"
 import { createHash } from "../web.js"
 import { handleAuthorized } from "./shared.js"
 
@@ -44,7 +44,7 @@ export async function callback(params: {
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
-      const { proxyRedirect, randomState } = handleProxyRedirect(
+      const { proxyRedirect, randomState } = handleState(
         query,
         provider,
         options.isOnRedirectProxy
