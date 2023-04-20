@@ -24,7 +24,8 @@ import type { Cookie } from "../cookie.js"
 export async function handleOAuth(
   query: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">,
+  randomState?: string
 ) {
   const { logger, provider } = options
   let as: o.AuthorizationServer
@@ -71,7 +72,12 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await checks.state.use(cookies, resCookies, options)
+  const state = await checks.state.use(
+    cookies,
+    resCookies,
+    options,
+    randomState
+  )
 
   const codeGrantParams = o.validateAuthResponse(
     as,
@@ -91,11 +97,17 @@ export async function handleOAuth(
 
   const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
 
+  await checks.nonce.use(cookies, resCookies, options)
+
+  let redirect_uri = provider.callbackUrl
+  if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
+    redirect_uri = provider.redirectProxyUrl
+  }
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
     codeGrantParams,
-    provider.callbackUrl,
+    redirect_uri,
     codeVerifier ?? "auth" // TODO: review fallback code verifier
   )
 
