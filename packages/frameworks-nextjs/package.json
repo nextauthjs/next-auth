@@ -21,6 +21,7 @@
     "build": "pnpm clean && tsc"
   },
   "devDependencies": {
+    "@types/react": "18.0.26",
     "typescript": "^4",
     "next": "13.3.0"
   },
@@ -28,7 +29,8 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "next": "^13.3.0"
+    "next": "^13.3.0",
+    "react": "^18.2.0"
   },
   "type": "module",
   "types": "./index.d.ts",
@@ -42,6 +44,10 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
+    },
+    "./client": {
+      "types": "./client.d.ts",
+      "import": "./client.js"
     },
     "./package.json": "./package.json"
   }
