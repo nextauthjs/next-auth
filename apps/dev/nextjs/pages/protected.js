@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
+import { useSession } from "@auth/nextjs/client"
 import Layout from "../components/layout"
 
 export default function Page() {
