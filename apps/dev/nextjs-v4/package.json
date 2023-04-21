@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.5",
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.6",
     "fake-smtp-server": "^0.8.0",
     "pg": "^8.7.3",

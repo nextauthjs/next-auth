@@ -63,7 +63,7 @@ importers:
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-dom': ^18.0.6
       dotenv: ^16.0.3
       fake-smtp-server: ^0.8.0
@@ -95,7 +95,7 @@ importers:
     devDependencies:
       '@playwright/test': 1.29.2
       '@types/jsonwebtoken': 8.5.8
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-dom': 18.0.6
       dotenv: 16.0.3
       fake-smtp-server: 0.8.0
@@ -115,7 +115,7 @@ importers:
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
-      '@types/react': ^18.0.37
+      '@types/react': 18.0.37
       '@types/react-dom': ^18.0.6
       dotenv: ^16.0.3
       fake-smtp-server: ^0.8.0
@@ -164,7 +164,7 @@ importers:
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
-      '@types/react': ^18.0.15
+      '@types/react': ^18.0.37
       '@types/react-dom': ^18.0.6
       fake-smtp-server: ^0.8.0
       faunadb: ^4
@@ -599,7 +599,7 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       autoprefixer: 10.4.13
       cookie: 0.5.0
       jose: ^4.11.1
@@ -620,7 +620,7 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       autoprefixer: 10.4.13_postcss@8.4.19
       postcss: 8.4.19
       postcss-nested: 6.0.0_postcss@8.4.19
@@ -628,13 +628,13 @@ importers:
   packages/frameworks-nextjs:
     specifiers:
       '@auth/core': workspace:*
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       next: 13.3.0
       typescript: ^4
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       next: 13.3.0
       typescript: 4.9.4
 
@@ -711,7 +711,7 @@ importers:
       '@types/node': ^17.0.42
       '@types/nodemailer': ^6.4.4
       '@types/oauth': ^0.9.1
-      '@types/react': ^18.0.15
+      '@types/react': 18.0.37
       '@types/react-dom': ^18.0.6
       autoprefixer: ^10.4.7
       babel-plugin-jsx-pragmatic: ^1.0.2
@@ -10655,14 +10655,6 @@ packages:
     dependencies:
       '@types/history': 4.7.11
       '@types/react': 18.0.37
-    dev: true
-
-  /@types/react/18.0.26:
-    resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.0
     dev: true
 
   /@types/react/18.0.37:
