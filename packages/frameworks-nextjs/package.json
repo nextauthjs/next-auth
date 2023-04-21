@@ -1,6 +1,6 @@
 {
   "name": "@auth/nextjs",
-  "version": "0.0.1",
+  "version": "0.0.0-6f96004d",
   "description": "Authentication for Next.js.",
   "keywords": [
     "authentication",
