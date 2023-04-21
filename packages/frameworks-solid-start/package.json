@@ -1,11 +1,13 @@
 {
   "name": "@auth/solid-start",
   "description": "Authentication for SolidStart.",
-  "version": "0.1.1",
+  "version": "2.0.0",
   "type": "module",
   "files": [
     "client.*",
     "index.*",
+    "utils.*",
+    "types.*",
     "src"
   ],
   "exports": {
@@ -15,32 +17,40 @@
     },
     "./client": {
       "types": "./client.d.ts",
+      "solid": "./client.js",
       "import": "./client.js"
+    },
+    "./types": "./types.d.ts",
+    "./utils": {
+      "types": "./utils.d.ts",
+      "import": "./utils.js"
     },
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
+    "build": "tsc -p . && rollup -c && node scripts/postbuild",
     "patch": "npm version patch --no-git-tag-version",
-    "clean": "rm -rf client.* index.*"
+    "clean": "rm -rf dist client.* index.* types.* utils.*"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
     "@auth/core": "workspace:*",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "@solidjs/meta": "^0.28.0",
     "@types/node": "^18.7.14",
-    "next-auth": "workspace:*",
+    "rollup": "^3.9.1",
     "solid-js": "^1.5.7",
-    "solid-start": "^0.2.14",
-    "tsup": "^6.5.0",
-    "typescript": "^4.8.2"
+    "solid-start": "^0.2.15",
+    "typescript": "^4.8.2",
+    "vite": "^4.3.1"
   },
   "peerDependencies": {
-    "@auth/core": "~0.2.2 || ^0.2.2",
+    "@auth/core": "0.5.1",
     "solid-js": "^1.5.7",
-    "solid-start": "^0.2.14"
+    "solid-start": "^0.2.15"
   },
   "keywords": [
     "SolidJS",
@@ -48,6 +58,6 @@
     "Auth"
   ],
   "author": "OrJDev <orjdeveloper@gmail.com>",
-  "repository": "https://github.com/nextauthjs/next-auth",
+  "repository": "https://github.com/orjdev/solid-auth",
   "license": "ISC"
 }
