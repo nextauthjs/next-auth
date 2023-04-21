@@ -48,7 +48,7 @@
     "vite": "^4.3.1"
   },
   "peerDependencies": {
-    "@auth/core": "0.5.1",
+    "@auth/core": "~0.2.2 || ^0.2.2",
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.15"
   },
