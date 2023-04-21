@@ -1,3 +1,10 @@
+/**
+ *
+ * Client-side methods for Next.js Auth
+ *
+ * @module client
+ */
+
 "use client"
 
 import * as React from "react"
