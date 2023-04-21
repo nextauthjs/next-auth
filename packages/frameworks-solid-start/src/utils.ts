@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Session } from "@auth/core/types";
+import type { Session } from "@auth/core/types"
 
 export interface InternalUrl {
-  origin: string;
-  host: string;
-  path: string;
-  base: string;
-  toString: () => string;
+  origin: string
+  host: string
+  path: string
+  base: string
+  toString: () => string
 }
 
 export function parseUrl(url?: string | URL): InternalUrl {
-  const defaultUrl = new URL("http://localhost:3000/api/auth");
+  const defaultUrl = new URL("http://localhost:3000/api/auth")
 
   if (url && !url.toString().startsWith("http")) {
-    url = `https://${url}`;
+    url = `https://${url}`
   }
 
-  const _url = new URL(url ?? defaultUrl);
+  const _url = new URL(url ?? defaultUrl)
   const path = (
     _url.pathname === "/" ? defaultUrl.pathname : _url.pathname
-  ).replace(/\/$/, "");
+  ).replace(/\/$/, "")
 
-  const base = `${_url.origin}${path}`;
+  const base = `${_url.origin}${path}`
 
   return {
     origin: _url.origin,
@@ -29,15 +29,15 @@ export function parseUrl(url?: string | URL): InternalUrl {
     path,
     base,
     toString: () => base,
-  };
+  }
 }
 
 export function now() {
-  return Math.floor(Date.now() / 1000);
+  return Math.floor(Date.now() / 1000)
 }
 
 export function objectIsSession(obj: any): obj is Session {
-  return obj && Object.keys(obj).length > 0;
+  return obj && Object.keys(obj).length > 0
 }
 
 export const getEnv = (env: string) => {
@@ -46,20 +46,20 @@ export const getEnv = (env: string) => {
     typeof process.env !== "undefined" &&
     !env.startsWith("VITE_")
   ) {
-    return process.env[env];
+    return process.env[env]
   }
   if (env.startsWith("VITE_")) {
-    return (import.meta as any).env[env];
+    return (import.meta as any).env[env]
   }
-  return undefined;
-};
+  return undefined
+}
 
 export const conditionalEnv = (...envs: string[]) => {
   for (const env of envs) {
-    const value = getEnv(env);
+    const value = getEnv(env)
     if (value) {
-      return value;
+      return value
     }
   }
-  return undefined;
-};
+  return undefined
+}
