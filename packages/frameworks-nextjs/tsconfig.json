@@ -5,6 +5,7 @@
       "dom",
       "esnext"
     ],
+    "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "target": "ES2020",
     "module": "ESNext",
