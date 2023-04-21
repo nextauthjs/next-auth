@@ -1,6 +1,6 @@
 /**
  *
- * Client-side methods for Next.js Auth
+ * Client-side methods for Next.js Auth.
  *
  * @module client
  */
@@ -160,6 +160,7 @@ export async function getSession(params?: GetSessionParams) {
  * required to make requests that changes state. (e.g. signing in or out, or updating the session).
  *
  * [CSRF Prevention: Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie)
+ * @internal
  */
 export async function getCsrfToken() {
   const response = await fetchData<{ csrfToken: string }>(
