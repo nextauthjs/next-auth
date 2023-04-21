@@ -1,14 +1,11 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { NextResponse } from "next/server"
+import type { headers as nextHeaders } from "next/headers"
 
 import type { JWT } from "@auth/core/jwt"
 import type { Awaitable, CallbacksOptions, User } from "@auth/core/types"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
-/**
- * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
- * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
- */
 export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
   /**
    * Invoked when a user needs authorization, using [Middleware](https://nextjs.org/docs/advanced-features/middleware).
@@ -39,7 +36,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
     /** The request to be authorized. */
     request: NextRequest
     /** The authenticated user or token, if any. */
-    auth: JWT | User | null
+    auth: AuthData
     /** The expiration date of the session. */
     expires: string | null
   }) => Awaitable<boolean | NextResponse>
@@ -47,13 +44,17 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
 
 /** Configure Next.js Auth. */
 export interface NextAuthConfig extends AuthConfig {
+  /**
+   * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
+   * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
+   */
   callbacks?: NextAuthCallbacks
 }
 
 async function getAuth(
-  headers: Headers,
+  headers: Headers | ReturnType<typeof nextHeaders>,
   config: NextAuthConfig
-): Promise<{ expires: string; data: AuthData } | null> {
+): Promise<AuthData & { expires: string }> {
   // TODO: Handle URL correctly (NEXTAUTH_URL, request host, protocol, custom path, etc.)
   const req = new Request("http://n/api/auth/session", {
     headers: { cookie: headers.get("cookie") ?? "" },
@@ -63,26 +64,28 @@ async function getAuth(
   if (config.callbacks) {
     config.callbacks.session ??= ({ session, user, token }) => ({
       expires: session.expires,
-      auth: user ?? token,
+      user,
+      token,
     })
   }
   const response = await Auth(req, config)
   return response.json()
 }
 
-export interface NextRequestWithAuth extends NextRequest {
-  auth: JWT | User | null
+export interface NextAuthRequest extends NextRequest {
+  auth: AuthData
 }
 
-type NextMiddlewareWithAuth = (
-  request: NextRequestWithAuth,
+export type NextAuthMiddleware = (
+  request: NextAuthRequest,
   event: NextFetchEvent
 ) => ReturnType<NextMiddleware>
 
-type WithAuthArgs =
-  | [NextRequestWithAuth, NextFetchEvent]
-  | [NextMiddlewareWithAuth]
+export type WithAuthArgs =
+  | [NextAuthRequest, NextFetchEvent]
+  | [NextAuthMiddleware]
   | [Headers]
+  | [ReturnType<typeof nextHeaders>]
   | []
 
 export function initAuth(config: NextAuthConfig) {
@@ -101,26 +104,38 @@ export function initAuth(config: NextAuthConfig) {
     // import { auth } from "auth"
     // export default auth((req) => { console.log(req.auth) }})
     const userMiddleware = args[0]
-    return async (...args: Parameters<NextMiddlewareWithAuth>) => {
+    return async (...args: Parameters<NextAuthMiddleware>) => {
+      // @ts-expect-error instanceof Headers higher up should not let this be a problem
       return handleAuth(args, config, userMiddleware)
     }
   }
 }
 
-type AuthData = JWT | User | null
+/** TODO: structure token similar to User */
+export interface AuthData {
+  token: JWT | null
+  user: User | null
+}
 
 async function handleAuth(
   args: Parameters<NextMiddleware>,
   config: NextAuthConfig,
-  userMiddleware?: NextMiddlewareWithAuth
+  userMiddleware?: NextAuthMiddleware
 ) {
   const request = args[0]
   // TODO: pass `next/headers` when it's available
-  const { data: auth = null, expires = null } =
-    (await getAuth(request.headers, config)) ?? {}
+  const {
+    token = null,
+    user = null,
+    expires = null,
+  } = (await getAuth(request.headers, config)) ?? {}
 
   const authorized = config.callbacks?.authorized
-    ? await config.callbacks.authorized({ request, auth, expires })
+    ? await config.callbacks.authorized({
+        request,
+        auth: { token, user },
+        expires,
+      })
     : true
 
   let response: Response = NextResponse.next()
@@ -130,8 +145,8 @@ async function handleAuth(
     response = authorized
   } else if (userMiddleware) {
     // Execute user's middleware with the augmented request
-    const augmentedReq: NextRequestWithAuth = request as any
-    augmentedReq.auth = auth
+    const augmentedReq: NextAuthRequest = request as any
+    augmentedReq.auth = { token, user }
     response =
       (await userMiddleware(augmentedReq, args[1])) ?? NextResponse.next()
   } else if (!authorized) {
