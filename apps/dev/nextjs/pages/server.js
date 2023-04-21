@@ -1,4 +1,4 @@
-import { unstable_getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next"
 import Layout from "../components/layout"
 import { authOptions } from "./api/auth/[...nextauth]"
 
@@ -12,11 +12,11 @@ export default function Page() {
     <Layout>
       <h1>Server Side Rendering</h1>
       <p>
-        This page uses the <strong>unstable_getServerSession()</strong> method
-        in <strong>getServerSideProps()</strong>.
+        This page uses the <strong>getServerSession()</strong> method in{" "}
+        <strong>getServerSideProps()</strong>.
       </p>
       <p>
-        Using <strong>unstable_getServerSession()</strong> in{" "}
+        Using <strong>getServerSession()</strong> in{" "}
         <strong>getServerSideProps()</strong> is currently the recommended
         approach, although the API may still change, if you need to support
         Server Side Rendering with authentication.
@@ -40,11 +40,7 @@ export default function Page() {
 export async function getServerSideProps(context) {
   return {
     props: {
-      session: await unstable_getServerSession(
-        context.req,
-        context.res,
-        authOptions
-      ),
+      session: await getServerSession(context.req, context.res, authOptions),
     },
   }
 }
