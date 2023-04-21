@@ -62,7 +62,7 @@ importers:
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
-      '@types/react': ^18.0.15
+      '@types/react': 18.0.37
       '@types/react-dom': ^18.0.6
       dotenv: ^16.0.3
       fake-smtp-server: ^0.8.0
@@ -93,7 +93,7 @@ importers:
     devDependencies:
       '@playwright/test': 1.29.2
       '@types/jsonwebtoken': 8.5.8
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-dom': 18.0.6
       dotenv: 16.0.3
       fake-smtp-server: 0.8.0
@@ -113,7 +113,7 @@ importers:
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
-      '@types/react': ^18.0.15
+      '@types/react': 18.0.37
       '@types/react-dom': ^18.0.6
       dotenv: ^16.0.3
       fake-smtp-server: ^0.8.0
@@ -144,7 +144,7 @@ importers:
     devDependencies:
       '@playwright/test': 1.29.2
       '@types/jsonwebtoken': 8.5.9
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-dom': 18.0.6
       dotenv: 16.0.3
       fake-smtp-server: 0.8.0
@@ -162,7 +162,7 @@ importers:
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
-      '@types/react': ^18.0.15
+      '@types/react': ^18.0.37
       '@types/react-dom': ^18.0.6
       fake-smtp-server: ^0.8.0
       faunadb: ^4
@@ -190,7 +190,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@types/jsonwebtoken': 8.5.9
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-dom': 18.0.6
       fake-smtp-server: 0.8.0
       pg: 8.7.3
@@ -597,7 +597,7 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       autoprefixer: 10.4.13
       cookie: 0.5.0
       jose: ^4.11.1
@@ -618,7 +618,7 @@ importers:
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       autoprefixer: 10.4.13_postcss@8.4.19
       postcss: 8.4.19
       postcss-nested: 6.0.0_postcss@8.4.19
@@ -696,7 +696,7 @@ importers:
       '@types/node': ^17.0.42
       '@types/nodemailer': ^6.4.4
       '@types/oauth': ^0.9.1
-      '@types/react': ^18.0.15
+      '@types/react': 18.0.37
       '@types/react-dom': ^18.0.6
       autoprefixer: ^10.4.7
       babel-plugin-jsx-pragmatic: ^1.0.2
@@ -746,13 +746,13 @@ importers:
       '@testing-library/dom': 8.14.0
       '@testing-library/jest-dom': 5.16.4
       '@testing-library/react': 13.3.0_biqbaboplfbrettd7655fr4n2y
-      '@testing-library/react-hooks': 8.0.1_bb2bxwco6ptpubzwpazr52qf6i
+      '@testing-library/react-hooks': 8.0.1_jf7puk66b2eiqxne3oe3xlxkou
       '@testing-library/user-event': 14.2.1_ihvo3xlg2d6kwqju3os3zitn3y
       '@types/jest': 28.1.3
       '@types/node': 17.0.45
       '@types/nodemailer': 6.4.4
       '@types/oauth': 0.9.1
-      '@types/react': 18.0.15
+      '@types/react': 18.0.37
       '@types/react-dom': 18.0.6
       autoprefixer: 10.4.7_postcss@8.4.14
       babel-plugin-jsx-pragmatic: 1.0.2
@@ -5546,7 +5546,7 @@ packages:
       '@docusaurus/react-loadable': 5.5.2_react@18.2.0
       '@docusaurus/types': 2.3.1_biqbaboplfbrettd7655fr4n2y
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-router-config': 5.0.6
       '@types/react-router-dom': 5.3.3
       react: 18.2.0
@@ -5875,7 +5875,7 @@ packages:
     peerDependencies:
       react: '*'
     dependencies:
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       prop-types: 15.8.1
       react: 18.2.0
     dev: true
@@ -5944,7 +5944,7 @@ packages:
       '@docusaurus/plugin-content-pages': 2.3.1_biqbaboplfbrettd7655fr4n2y
       '@docusaurus/utils': 2.3.1_@docusaurus+types@2.3.1
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-router-config': 5.0.6
       clsx: 1.2.1
       parse-numeric-range: 1.3.0
@@ -6063,7 +6063,7 @@ packages:
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       commander: 5.1.0
       joi: 17.7.0
       react: 18.2.0
@@ -9984,7 +9984,7 @@ packages:
       redent: 3.0.0
     dev: true
 
-  /@testing-library/react-hooks/8.0.1_bb2bxwco6ptpubzwpazr52qf6i:
+  /@testing-library/react-hooks/8.0.1_jf7puk66b2eiqxne3oe3xlxkou:
     resolution: {integrity: sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -10001,7 +10001,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.13
-      '@types/react': 18.0.15
+      '@types/react': 18.0.37
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-error-boundary: 3.1.4_react@18.2.0
@@ -10606,20 +10606,20 @@ packages:
   /@types/reach__router/1.3.11:
     resolution: {integrity: sha512-j23ChnIEiW8aAP4KT8OVyTXOFr+Ri65BDnwzmfHFO9WHypXYevHFjeil1Cj7YH3emfCE924BwAmgW4hOv7Wg3g==}
     dependencies:
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
     dev: false
 
   /@types/react-dom/18.0.6:
     resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
     dev: true
 
   /@types/react-router-config/5.0.6:
     resolution: {integrity: sha512-db1mx37a1EJDf1XeX8jJN7R3PZABmJQXR8r28yUjVMFSjkmnQo6X6pOEEmNl+Tp2gYQOGPdYbFIipBtdElZ3Yg==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-router': 5.1.18
     dev: true
 
@@ -10627,7 +10627,7 @@ packages:
     resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
       '@types/react-router': 5.1.18
     dev: true
 
@@ -10635,19 +10635,11 @@ packages:
     resolution: {integrity: sha512-YYknwy0D0iOwKQgz9v8nOzt2J6l4gouBmDnWqUUznltOTaon+r8US8ky8HvN0tXvc38U9m6z/t2RsVsnd1zM0g==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.37
     dev: true
 
-  /@types/react/18.0.15:
-    resolution: {integrity: sha512-iz3BtLuIYH1uWdsv6wXYdhozhqj20oD4/Hk2DNXIn1kFsmp9x8d9QB6FnPhfkbhd2PgEONt9Q1x/ebkwjfFLow==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.0
-    dev: true
-
-  /@types/react/18.0.26:
-    resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
+  /@types/react/18.0.37:
+    resolution: {integrity: sha512-4yaZZtkRN3ZIQD3KSEwkfcik8s0SWV+82dlJot1AbGYHCzJkWP3ENBY6wYeDRmKZ6HkrgoGAmR2HqdwYGp6OEw==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
