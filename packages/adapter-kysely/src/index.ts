@@ -1,7 +1,7 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}><a href="https://koskimas.github.io/kysely/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://koskimas.github.io/kysely/">
+ *  <p style={{fontWeight: "normal"}}><a href="https://kysely.dev/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://kysely.dev/">
  *   <img style={{display: "block"}} src="/img/adapters/kysely.svg" width="38" />
  *  </a>
  * </div>
@@ -198,9 +198,9 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * ```
  * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/adapters/models).
  *
- * For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://koskimas.github.io/kysely/#migrations).
+ * For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://kysely.dev/docs/migrations).
  * ## Naming conventions
- * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://koskimas.github.io/kysely/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
+ * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://kysely-org.github.io/kysely/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
  */
 export function KyselyAdapter(db: Kysely<Database>): Adapter {
   const adapter = db.getExecutor().adapter
