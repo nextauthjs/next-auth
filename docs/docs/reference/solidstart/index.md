@@ -1,3 +1,7 @@
+---
+title: SolidStart Auth
+---
+
 # Getting started
 
 Recommended to use [create-jd-app](https://github.com/OrJDev/create-jd-app)
