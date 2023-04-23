@@ -2,44 +2,43 @@
  * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>ZOHO</b> integration.</span>
  * <a href="https://zoho.com/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zoho.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zoho.svg" height="48" />
  * </a>
  * </div>
  *
  * ---
- * @module providers/zitadel
+ * @module providers/zoho
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
-
 /**
- * Add Zoho login to your page.
+ * Add ZOHO login to your page.
  *
  * @example
  *
  * ```js
  * import Auth from "@auth/core"
- * import Zoho from "@auth/core/providers/zoho"
+ * import ZOHO from "@auth/core/providers/zoho"
  *
- * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
- *   providers: [Zoho({ clientId: "", clientSecret: "" })],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [ZOHO({ clientId: ZOHO_CLIENT_ID, clientSecret: ZOHO_CLIENT_SECRET })],
  * })
  * ```
  *
  * ## Resources
  *
- * @see [Zoho OAuth 2.0 Integration Guide](https://www.zoho.com/accounts/protocol/oauth/web-server-applications.html)
- * @see [Zoho API Console](https://api-console.zoho.com)
+ * - [Zoho OAuth 2.0 Integration Guide](https://www.zoho.com/accounts/protocol/oauth/web-server-applications.html)
+ * - [Zoho API Console](https://api-console.zoho.com)
  *
  * ## Notes
  *
- * By default, Auth.js assumes that the Zoho provider is
+ * By default, Auth.js assumes that the ZOHO provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
  *
- * The Zoho provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/zoho.ts).
+ * The ZOHO provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/zoho.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
  * :::

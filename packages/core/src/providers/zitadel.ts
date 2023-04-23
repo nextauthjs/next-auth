@@ -1,8 +1,8 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Zitadel</b> integration.</span>
  * <a href="https://zitadel.com/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zitadel-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zitadel-dark.svg" height="48"/>
  * </a>
  * </div>
  *
@@ -12,6 +12,10 @@
 
 import type { OIDCConfig, OAuthUserConfig } from "./index.js"
 
+/**
+ * The returned user profile from ZITADEL when using the profile callback. See the standard claims reference [here](https://zitadel.com/docs/apis/openidoauth/claims#standard-claims). 
+ * If you need access to ZITADEL APIs or need additional information, make sure to add the corresponding scopes.
+ */
 export interface ZitadelProfile extends Record<string, any> {
   amr: string // Authentication Method References as defined in RFC8176
   aud: string // The audience of the token, by default all client id's and the project id are included
@@ -35,6 +39,7 @@ export interface ZitadelProfile extends Record<string, any> {
   preferred_username: string // ZITADEL's login name of the user. Consist of username@primarydomain
   sub: string // Subject ID of the user
 }
+
 /**
  * Add ZITADEL login to your page.
  *
@@ -44,29 +49,50 @@ export interface ZitadelProfile extends Record<string, any> {
  * import Auth from "@auth/core"
  * import ZITADEL from "@auth/core/providers/zitadel"
  *
- * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
- *   providers: [ZITADEL({ clientId: "", clientSecret: "" })],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [ZITADEL({ clientId: ZITADEL_CLIENT_ID, clientSecret: ZITADEL_CLIENT_SECRET })],
  * })
  * ```
  *
  * ## Resources
- *
- * @see [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
+ * - [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
+ * - [ZITADEL recommended OAuth Flows](https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows)
  *
  * ## Notes
  *
  * By default, Auth.js assumes that the ZITADEL provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- *
+ * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
+ * 
  * The Redirect URIs used when creating the credentials must include your full domain and end in the callback path. For example:
- * For production: https://{YOUR_DOMAIN}/api/auth/callback/zitadel
- * For development: http://localhost:3000/api/auth/callback/zitadel
+ * - For production: `https://{YOUR_DOMAIN}/api/auth/callback/zitadel`
+ * - For development: `http://localhost:3000/api/auth/callback/zitadel`
+ * 
  * Make sure to enable dev mode in ZITADEL console to allow redirects for local development.
+ *
  * :::tip
  *
  * The ZITADEL provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/zitadel.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ *
+ * :::
+ * :::tip
+ *
+ * ZITADEL also returns a email_verified boolean property in the profile. You can use this property to restrict access to people with verified accounts.
+ * ```ts title=pages/api/auth/[...nextauth].js
+ * const options = {
+ *   ...
+ *   callbacks: {
+ *     async signIn({ account, profile }) {
+ *       if (account.provider === "zitadel") {
+ *         return profile.email_verified;
+ *       }
+ *       return true; // Do different verification for other providers that don't have `email_verified`
+ *     },
+ *   }
+ *   ...
+ * }
+ * ```
  *
  * :::
  *

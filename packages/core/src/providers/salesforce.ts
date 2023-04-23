@@ -1,34 +1,30 @@
 /**
- * Add Salesforce login to your page.
+ * Add SaleForce login to your page.
  *
- * ## Example
+ * @example
  *
- * ```ts
- * import { Auth } from "@auth/core"
- * import Salesforce from "@auth/core/providers/salesforce"
+ * ```js
+ * import Auth from "@auth/core"
+ * import SaleForce from "@auth/core/providers/saleforce"
  *
- * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
- *   providers: [Salesforce({ clientId: "", clientSecret: "" })],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [SaleForce({ clientId: SALEFORCE_CLIENT_ID, clientSecret: SALEFORCE_CLIENT_SECRET })],
  * })
  * ```
  *
- * ---
- *
  * ## Resources
  *
- * - [](https://example.com)
- *
- * ---
+ * - [SaleForce OAuth documentation](https://help.salesforce.com/articleView?id=remoteaccess_authenticate.htm&type=5)
  *
  * ## Notes
  *
- * By default, Auth.js assumes that the Salesforce provider is
+ * By default, Auth.js assumes that the SaleForce provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
  *
- * The Salesforce provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/.ts).
+ * The SaleForce provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/saleforce.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
  * :::

@@ -77,19 +77,19 @@ export interface GitHubProfile {
  * import { Auth } from "@auth/core"
  * import GitHub from "@auth/core/providers/github"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [GitHub({ clientId: "", clientSecret: "" })],
+ *   providers: [GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET })],
  * })
  * ```
  *
  * ## Resources
  *
- * @see [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
- * @see [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
- * @see [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
- * @see [Learn more about OAuth](https://authjs.dev/concepts/oauth)
- * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
+ * - [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
+ * - [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
+ * - [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
+ * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+ * - [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
  *
  * ## Notes
  *

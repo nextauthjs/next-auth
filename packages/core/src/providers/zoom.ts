@@ -1,13 +1,13 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Zoom</b> integration.</span>
  * <a href="https://zoom.us/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zoom.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zoom.svg" height="48" />
  * </a>
  * </div>
  *
  * ---
- * @module providers/zitadel
+ * @module providers/zoom
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -49,23 +49,19 @@ export interface ZoomProfile extends Record<string, any> {
  *
  * @example
  *
- * ```ts
- * import { Auth } from "@auth/core"
+ * ```js
+ * import Auth from "@auth/core"
  * import Zoom from "@auth/core/providers/zoom"
  *
- * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
- *   providers: [Zoom({ clientId: "", clientSecret: "" })],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [Zoom({ clientId: ZOOM_CLIENT_ID, clientSecret: ZOOM_CLIENT_SECRET })],
  * })
  * ```
  *
- * ---
- *
  * ## Resources
  *
- * @see [Zoom OAuth 2.0 Integration Guide](https://developers.zoom.us/docs/integrations/oauth/)
- *
- * ---
+ * - [Zoom OAuth 2.0 Integration Guide](https://developers.zoom.us/docs/integrations/oauth/)
  *
  * ## Notes
  *
