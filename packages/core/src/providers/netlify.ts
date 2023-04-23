@@ -1,3 +1,15 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Netlify</b> integration.</span>
+ * <a href="https://netlify.com">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/netlify.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/netlify
+ */
+
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**

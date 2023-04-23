@@ -1,3 +1,15 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Okta</b> integration.</span>
+ * TODO: SVG LOGO
+ * <a href="https://okta.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/okta.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/okta
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface OktaProfile extends Record<string, any> {

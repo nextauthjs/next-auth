@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Pinterest</b> integration.</span>
+ * <a href="https://www.pinterest.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/pinterest.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/pinterest
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface PinterestProfile extends Record<string, any> {

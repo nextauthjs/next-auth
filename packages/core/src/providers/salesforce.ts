@@ -1,4 +1,24 @@
 /**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Salesforce</b> integration.</span>
+ * <a href="https://www.salesforce.com/ap/?ir=1">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/saleforce.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/saleforce
+ */
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+
+export interface SalesforceProfile extends Record<string, any> {
+  sub: string
+  nickname: string
+  email: string
+  picture: string
+}
+
+/**
  * Add SaleForce login to your page.
  *
  * @example
@@ -39,15 +59,6 @@
  *
  * :::
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
-
-export interface SalesforceProfile extends Record<string, any> {
-  sub: string
-  nickname: string
-  email: string
-  picture: string
-}
-
 export default function Salesforce<P extends SalesforceProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {

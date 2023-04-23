@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Azure AD</b> integration.</span>
+ * <a href="https://learn.microsoft.com/en-us/azure/active-directory">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure-dark.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/azure-ad
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface AzureADProfile extends Record<string, any> {

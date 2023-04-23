@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>DuendeIdentityServer6</b> integration.</span>
+ * <a href="https://docs.duendesoftware.com/identityserver/v6">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/duende-identity-server6.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/duende-identity-server6
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 export interface DuendeISUser extends Record<string, any> {
@@ -24,7 +35,7 @@ export interface DuendeISUser extends Record<string, any> {
  *
  * ## Resources
  *
- *  - [DuendeIdentityServer6 OAuth documentation](https://docs.duendesoftware.com/identityserver/v6)
+ *  - [DuendeIdentityServer6 documentation](https://docs.duendesoftware.com/identityserver/v6)
  *
  * ## Notes
  *

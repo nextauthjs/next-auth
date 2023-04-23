@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>WordPress</b> integration.</span>
+ * <a href="https://wordpress.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/wordpress.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/wordpress
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**

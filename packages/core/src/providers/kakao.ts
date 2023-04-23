@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Kakao</b> integration.</span>
+ * <a href="https://www.kakaocorp.com/page/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/kakao.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/kakao
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export type DateTime = string

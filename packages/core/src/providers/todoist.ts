@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Todoist</b> integration.</span>
+ * <a href="https://www.todoist.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/todoist.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/todoist
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**

@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Osso</b> integration.</span>
+ * <a href="https://ossoapp.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/osso.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/osso
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
@@ -19,7 +30,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * Osso is an open source service that handles SAML authentication against Identity Providers, normalizes profiles, and makes those profiles available to you in an OAuth 2.0 code grant flow.
  * 
  * - If you don't yet have an Osso instance, you can use [Osso's Demo App](https://demo.ossoapp.com) for your testing purposes. For documentation on deploying an Osso instance, see https://ossoapp.com/docs/deploy/overview/
- *  - [Osso OAuth documentation](https://example.com)
+ *  - [Osso OAuth documentation](https://ossoapp.com/)
  *
  * You can configure your OAuth Clients on your Osso Admin UI, i.e. https://demo.ossoapp.com/admin/config - you'll need to get a Client ID and Secret and allow-list your redirect URIs.
  * [SAML SSO differs a bit from OAuth](https://ossoapp.com/blog/saml-vs-oauth) - for every tenant who wants to sign in to your application using SAML, you and your customer need to perform a multi-step configuration in Osso's Admin UI and the admin dashboard of the tenant's Identity Provider. Osso provides documentation for providers like Okta and OneLogin, cloud-based IDPs who also offer a developer account that's useful for testing. Osso also provides a [Mock IDP](https://idp.ossoapp.com) that you can use for testing without needing to sign up for an Identity Provider service.

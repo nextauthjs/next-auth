@@ -1,3 +1,15 @@
+/**
+ * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Authentik</b> integration.</span>
+ * TODO: SVG logo
+ * <a href="https://goauthentik.io/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/authentik.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/authentik
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface AuthentikProfile extends Record<string, any> {

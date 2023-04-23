@@ -1,3 +1,15 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>IdentityServer4</b> integration.</span>
+ * TODO: SVG LOGO
+ * <a href="https://identityserver4.readthedocs.io">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/identity-server4.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/identity-server4
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**

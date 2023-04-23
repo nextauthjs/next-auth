@@ -1,3 +1,15 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>BoxyHQ SAML</b> integration.</span>
+ * TODO: SVG logo
+ * <a href="https://boxyhq.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/boxyhq-saml.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/boxyhq-saml
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface BoxyHQSAMLProfile extends Record<string, any> {

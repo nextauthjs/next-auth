@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Trakt</b> integration.</span>
+ * <a href="https://www.trakt.tv/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/trakt.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/trakt
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface TraktUser extends Record<string, any> {

@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Spotify</b> integration.</span>
+ * <a href="https://www.spotify.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/spotify.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/spotify
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface SpotifyImage {

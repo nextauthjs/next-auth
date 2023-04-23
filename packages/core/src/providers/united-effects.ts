@@ -1,11 +1,22 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>United Effects</b> integration.</span>
+ * TODO: SVG LOGO
+ * <a href="https://www.unitedeffects.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/united-effects.svg" height="48" />
+ * </a>
+ * </div>
+*
+* ---
+* @module providers/united-effects
+*/
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
-
 export interface UnitedEffectsProfile extends Record<string, any> {
   sub: string
   email: string
 }
 /**
- * Add UnitedEffects login to your page.
+ * Add United Effects login to your page.
  *
  * @example
  *
