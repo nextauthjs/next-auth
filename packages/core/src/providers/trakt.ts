@@ -85,7 +85,6 @@ export default function Trakt<P extends TraktUser>(
     id: "trakt",
     name: "Trakt",
     type: "oauth",
-    // when default, trakt returns auth error. TODO: Does it?
     authorization: "https://trakt.tv/oauth/authorize?scope=",
     token: "https://api.trakt.tv/oauth/token",
     userinfo: {

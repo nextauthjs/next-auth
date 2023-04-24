@@ -1,8 +1,14 @@
 import type { Client } from "oauth4webapi"
-import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { CommonProviderOptions } from "../providers/index.js"
+import type {
+  AuthConfig,
+  Awaitable,
+  Profile,
+  TokenSet,
+  User,
+} from "../types.js"
 
-// TODO:
+// TODO: fix types
 type AuthorizationParameters = any
 type CallbackParamsType = any
 type IssuerMetadata = any
@@ -95,7 +101,7 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
-/** TODO: */
+/** TODO: Document */
 export interface OAuth2Config<Profile>
   extends CommonProviderOptions,
     PartialIssuer {
@@ -143,11 +149,14 @@ export interface OAuth2Config<Profile>
    * The CSRF protection performed on the callback endpoint.
    * @default ["pkce"]
    *
+   * @note When `redirectProxyUrl` or {@link AuthConfig.redirectProxyUrl} is set,
+   * `"state"` will be added to checks automatically.
+   *
    * [RFC 7636 - Proof Key for Code Exchange by OAuth Public Clients (PKCE)](https://www.rfc-editor.org/rfc/rfc7636.html#section-4) |
    * [RFC 6749 - The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1.1) |
    * [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) |
    */
-  checks?: Array<"pkce" | "state" | "none" | "nonce">
+  checks?: Array<"pkce" | "state" | "none">
   clientId?: string
   clientSecret?: string
   /**
@@ -157,9 +166,20 @@ export interface OAuth2Config<Profile>
   client?: Partial<Client>
   style?: OAuthProviderButtonStyles
   /**
-   * [Documentation](https://authjs.dev/reference/providers/oauth#allowdangerousemailaccountlinking-option)
+   * Normally, when you sign in with an OAuth provider and another account
+   * with the same email address already exists,
+   * the accounts are not linked automatically.
+   *
+   * Automatic account linking on sign in is not secure
+   * between arbitrary providers and is disabled by default.
+   * Learn more in our [Security FAQ](https://authjs.dev/reference/faq#security).
+   *
+   * However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address
+   * associated with the account. Set `allowDangerousEmailAccountLinking: true`
+   * to enable automatic account linking.
    */
   allowDangerousEmailAccountLinking?: boolean
+  redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -170,10 +190,11 @@ export interface OAuth2Config<Profile>
   options?: OAuthUserConfig<Profile>
 }
 
-/** TODO: */
+/** TODO: Document */
 export interface OIDCConfig<Profile>
-  extends Omit<OAuth2Config<Profile>, "type"> {
+  extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
+  checks?: OAuth2Config<Profile>["checks"] & Array<"nonce">
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
@@ -186,7 +207,7 @@ export type OAuthEndpointType = "authorization" | "token" | "userinfo"
  */
 export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
-  OAuthEndpointType
+  OAuthEndpointType | "redirectProxyUrl"
 > & {
   authorization?: { url: URL }
   token?: {
@@ -196,7 +217,23 @@ export type OAuthConfigInternal<Profile> = Omit<
     conform?: TokenEndpointHandler["conform"]
   }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
+  /**
+   * Reconstructed from {@link OAuth2Config.redirectProxyUrl},
+   * adding the callback action and provider id onto the URL.
+   *
+   * If defined, it is favoured over {@link OAuthConfigInternal.callbackUrl} in the authorization request.
+   *
+   * When {@link InternalOptions.isOnRedirectProxy} is set, the actual value is saved in the decoded `state.origin` parameter.
+   *
+   * @example `"https://auth.example.com/api/auth/callback/:provider"`
+   *
+   */
+  redirectProxyUrl?: OAuth2Config<Profile>["redirectProxyUrl"]
 } & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
+
+export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
+  checks: OIDCConfig<Profile>["checks"]
+}
 
 export type OAuthUserConfig<Profile> = Omit<
   Partial<OAuthConfig<Profile>>,

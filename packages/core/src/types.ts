@@ -61,21 +61,22 @@ import type {
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
 import type { Adapter, AdapterUser } from "./adapters.js"
+import { AuthConfig } from "./index.js"
+import type { JWT, JWTOptions } from "./jwt.js"
+import type { Cookie } from "./lib/cookie.js"
+import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
+  OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
-import type { JWT, JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/cookie.js"
-import type { LoggerInstance } from "./lib/utils/logger.js"
-import { AuthConfig } from "./index.js"
 
 export type { AuthConfig } from "./index.js"
-export type Awaitable<T> = T | PromiseLike<T>
 export type { LoggerInstance }
+export type Awaitable<T> = T | PromiseLike<T>
 
 /**
  * Change the theme of the built-in pages.
@@ -372,12 +373,15 @@ export interface User {
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
+  : T extends "oidc"
+  ? OIDCConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
   signinUrl: string
+  /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
 }
 
@@ -415,7 +419,6 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
-// TODO: rename to AuthConfigInternal
 /** @internal */
 export interface InternalOptions<TProviderType = ProviderType> {
   providers: InternalProvider[]
@@ -436,4 +439,9 @@ export interface InternalOptions<TProviderType = ProviderType> {
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
+  /**
+   * If true, the OAuth callback is being proxied by the server to the original URL.
+   * See also {@link OAuthConfigInternal.redirectProxyUrl}.
+   */
+  isOnRedirectProxy: boolean
 }

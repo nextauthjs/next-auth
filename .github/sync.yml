@@ -1,5 +1,3 @@
-# Note that nextauthjs/next-auth-example syncs from the v4 branch
-
 nextauthjs/sveltekit-auth-example:
   - source: apps/examples/sveltekit
     dest: .
@@ -16,6 +14,13 @@ nextauthjs/solid-start-auth-example:
 
 nextauthjs/next-auth-gatsby-example:
   - source: apps/playgrounds/gatsby
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
+
+nextauthjs/next-auth-example:
+  - source: apps/examples/nextjs
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml

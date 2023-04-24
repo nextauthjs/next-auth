@@ -37,7 +37,7 @@ export async function toInternalRequest(
 
     const action = actions.find((a) => pathname.includes(a))
     if (!action) {
-      throw new UnknownAction("Cannot detect action.")
+      throw new UnknownAction(`Cannot detect action in pathname (${pathname}).`)
     }
 
     if (req.method !== "GET" && req.method !== "POST") {
