@@ -1,6 +1,7 @@
 import type { Client } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type {
+  Account,
   AuthConfig,
   Awaitable,
   Profile,
@@ -92,6 +93,8 @@ export type ProfileCallback<Profile> = (
   tokens: TokenSet
 ) => Awaitable<User>
 
+export type AccountCallback<Account> = (account: Account) => Account
+
 export interface OAuthProviderButtonStyles {
   logo: string
   logoDark: string
@@ -142,9 +145,20 @@ export interface OAuth2Config<Profile>
    * This will be used to create the user in the database.
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * [Documentation](https://authjs.dev/reference/adapters/models#user)
+   * [Documentation](https://authjs.dev/reference/adapters#user)
    */
   profile?: ProfileCallback<Profile>
+
+  /**
+   * Receives the Account object returned by the OAuth provider, and returns the user object.
+   * This will be used to create the account associated with a user in the database.
+   *
+   * [Documentation](https://authjs.dev/reference/adapters#account)
+   *
+   * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
+   * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
+   */
+  account?: AccountCallback<Account>
   /**
    * The CSRF protection performed on the callback endpoint.
    * @default ["pkce"]
@@ -229,7 +243,10 @@ export type OAuthConfigInternal<Profile> = Omit<
    *
    */
   redirectProxyUrl?: OAuth2Config<Profile>["redirectProxyUrl"]
-} & Pick<Required<OAuthConfig<Profile>>, "clientId" | "checks" | "profile">
+} & Pick<
+    Required<OAuthConfig<Profile>>,
+    "clientId" | "checks" | "profile" | "account"
+  >
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]

@@ -7,7 +7,7 @@ import type {
   OAuthUserConfig,
   Provider,
 } from "../providers/index.js"
-import type { AuthConfig, InternalProvider } from "../types.js"
+import type { Account, AuthConfig, InternalProvider } from "../types.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -77,6 +77,7 @@ function normalizeOAuth(
     checks,
     userinfo,
     profile: c.profile ?? defaultProfile,
+    account: c.account ?? defaultAccount,
   }
 }
 
@@ -89,6 +90,32 @@ function defaultProfile(profile: any) {
     image: profile.picture ?? null,
   }
 }
+
+/**
+ * Returns basic OAuth/OIDC values from the token response.
+ * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
+ */
+function defaultAccount(account: Account): Account {
+  return stripUndefined({
+    provider: account.provider,
+    type: account.type,
+    providerAccountId: account.providerAccountId,
+    id: account.id,
+    userId: account.userId,
+    access_token: account.access_token,
+    expires_in: account.expires_in,
+    id_token: account.id_token,
+    refresh_token: account.refresh_token,
+  })
+}
+
+function stripUndefined<T extends object>(o: T): T {
+  const result = {} as any
+  for (let [k, v] of Object.entries(o)) v !== undefined && (result[k] = v)
+  return result as T
+}
+
 function normalizeEndpoint(
   e?: OAuthConfig<any>[OAuthEndpointType],
   issuer?: string
