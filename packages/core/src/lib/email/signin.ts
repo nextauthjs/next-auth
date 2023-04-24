@@ -11,7 +11,10 @@ export default async function email(
 ): Promise<string> {
   const { url, adapter, provider, callbackUrl, theme } = options
   const token =
-    (await provider.generateVerificationToken?.()) ?? randomString(32)
+    (await provider.generateVerificationToken?.({
+      identifier,
+      expires,
+    })) ?? randomString(32)
 
   const ONE_DAY_IN_SECONDS = 86400
   const expires = new Date(

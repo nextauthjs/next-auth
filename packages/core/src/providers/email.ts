@@ -13,6 +13,9 @@ export interface SendVerificationRequestParams {
   theme: Theme
 }
 
+export interface GenerateVerificationTokenParams extends Pick<SendVerificationRequestParams, "expires" | "identifier"> {}
+
+
 /**
  * The Email Provider needs to be configured with an e-mail client.
  * By default, it uses `nodemailer`, which you have to install if this
@@ -57,7 +60,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * ```
    * [Documentation](https://authjs.dev/guides/providers/email#customizing-the-verification-token)
    */
-  generateVerificationToken?: () => Awaitable<string>
+  generateVerificationToken?: (params?: GenerateVerificationTokenParams) => Awaitable<string>
   /** If defined, it is used to hash the verification token when saving to the database . */
   secret?: string
   /**

@@ -214,3 +214,18 @@ providers: [
   })
 ],
 ```
+
+If the generated token depends on the identifier, you can access it as an optional first parameter:
+
+```js title="pages/api/auth/[...nextauth].js"
+providers: [
+  EmailProvider({
+    async generateVerificationToken({identifier}) {
+      // example encryption scheme
+      return nacl(identifier)
+    }
+  })
+],
+```
+
+

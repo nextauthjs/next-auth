@@ -13,7 +13,10 @@ export default async function email(
   const { url, adapter, provider, callbackUrl, theme } = options
   // Generate token
   const token =
-    (await provider.generateVerificationToken?.()) ??
+    (await provider.generateVerificationToken?.({
+        identifier,
+        expires,
+      })) ??
     randomBytes(32).toString("hex")
 
   const ONE_DAY_IN_SECONDS = 86400

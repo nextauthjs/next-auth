@@ -14,6 +14,8 @@ export interface SendVerificationRequestParams {
   theme: Theme
 }
 
+export interface GenerateVerificationTokenParams extends Pick<SendVerificationRequestParams, "expires" | "identifier"> {}
+
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
@@ -43,7 +45,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * ```
    * [Documentation](https://next-auth.js.org/providers/email#customizing-the-verification-token)
    */
-  generateVerificationToken?: () => Awaitable<string>
+  generateVerificationToken?: (params?: GenerateVerificationTokenParams) => Awaitable<string>
   /** If defined, it is used to hash the verification token when saving to the database . */
   secret?: string
   /**
