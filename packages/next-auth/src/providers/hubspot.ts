@@ -1,4 +1,4 @@
-ideimport type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "."
 
 interface HubSpotProfile extends Record<string, any> {
   // TODO: figure out additional fields, for now using
