@@ -66,9 +66,9 @@ const NOTION_API_VERSION = "2022-06-28"
  * import { Auth } from "@auth/core"
  * import Notion from "@auth/core/providers/notion"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Notion({ clientId: "", clientSecret: "", redirectUri: "" })],
+ *   providers: [Notion({ clientId: NOTION_CLIENT_ID, clientSecret: NOTION_CLIENT_SECRET, redirectUri: NOTION_CLIENT_REDIRECT_URI })],
  * })
  * ```
  *

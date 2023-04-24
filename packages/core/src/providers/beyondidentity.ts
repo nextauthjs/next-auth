@@ -33,9 +33,9 @@ export interface BeyondIdentityProfile {
  * import { Auth } from "@auth/core"
  * import BeyondIdentity from "@auth/core/providers/beyondidentity"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BeyondIdentity({ clientId: "", clientSecret: "", issuer: "" })],
+ *   providers: [BeyondIdentity({ clientId: BEYOND_IDENTITY_CLIENT_ID, clientSecret: BEYOND_IDENTITY_CLIENT_SECRET, issuer: BEYOND_IDENTITY_ISSUER })],
  * })
  * ```
  *

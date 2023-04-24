@@ -13,12 +13,12 @@
 import { OAuthConfig, OAuthUserConfig } from "."
 
 /**
- * @see [Getting information about the user](https://yandex.com/dev/id/doc/en/user-information)
- * @see [Access to email address](https://yandex.com/dev/id/doc/en/user-information#email-access)
- * @see [Access to the user's profile picture](https://yandex.com/dev/id/doc/en/user-information#avatar-access)
- * @see [Access to the date of birth](https://yandex.com/dev/id/doc/en/user-information#birthday-access)
- * @see [Access to login, first name, last name, and gender](https://yandex.com/dev/id/doc/en/user-information#name-access)
- * @see [Access to the phone number](https://yandex.com/dev/id/doc/en/user-information#phone-access)
+ * - {@link https://yandex.com/dev/id/doc/en/user-information | Getting information about the user}
+ * - {@link https://yandex.com/dev/id/doc/en/user-information#email-access | Access to email address}
+ * - {@link https://yandex.com/dev/id/doc/en/user-information#avatar-access | Access to the user's profile picture}
+ * - {@link https://yandex.com/dev/id/doc/en/user-information#birthday-access | Access to the date of birth}
+ * - {@link https://yandex.com/dev/id/doc/en/user-information#name-access | Access to login, first name, last name, and gender}
+ * - {@link https://yandex.com/dev/id/doc/en/user-information#phone-access | Access to the phone number}
  */
 export interface YandexProfile {
   /** User's Yandex login. */
@@ -87,25 +87,25 @@ export interface YandexProfile {
 /**
  * Add Yandex login to your page
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
  * import Yandex from "@auth/core/providers/yandex"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *  providers: [Yandex({ clientId: "", clientSecret: "" })],
+ *  providers: [Yandex({ clientId: YANDEX_CLIENT_ID, clientSecret: YANDEX_CLIENT_SECRET })],
  * })
  * ```
  *
  * ## Resources
  *
- * @see [Yandex - Creating an OAuth app](https://yandex.com/dev/id/doc/en/register-client#create)
- * @see [Yandex - Manage OAuth apps](https://oauth.yandex.com/)
- * @see [Yandex - OAuth documentation](https://yandex.com/dev/id/doc/en/)
- * @see [Learn more about OAuth](https://authjs.dev/concepts/oauth)
- * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
+ * - [Yandex - Creating an OAuth app](https://yandex.com/dev/id/doc/en/register-client#create)
+ * - [Yandex - Manage OAuth apps](https://oauth.yandex.com/)
+ * - [Yandex - OAuth documentation](https://yandex.com/dev/id/doc/en/)
+ * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+ * - [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
  *
  *:::tip
  * The Yandex provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts).
