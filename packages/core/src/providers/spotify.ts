@@ -1,3 +1,14 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Spotify</b> integration.</span>
+ * <a href="https://www.spotify.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/spotify.svg" height="48" />
+ * </a>
+ * </div>
+ *
+ * ---
+ * @module providers/spotify
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface SpotifyImage {
@@ -14,28 +25,22 @@ export interface SpotifyProfile extends Record<string, any> {
 /**
  * Add Spotify login to your page.
  *
- * ## Example
- *
  * @example
  *
- * ```ts
+ * ```js
  * import Auth from "@auth/core"
  * import Spotify from "@auth/core/providers/spotify"
  *
- * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
- *   providers: [
- *     Spotify({clientId: "", clientSecret: ""})
- *   ]
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [Spotify({ clientId: SPOTIFY_CLIENT_ID, clientSecret: SPOTIFY_CLIENT_SECRET })],
  * })
  * ```
  *
- * ---
- *
  * ## Resources
- * @see [Link 1](https://example.com)
  *
- * ---
+ * - [Spotify OAuth documentation](https://developer.spotify.com/documentation/general/guides/authorization-guide)
+ * - [Spotify app console](https://developer.spotify.com/dashboard/applications)
  *
  * ## Notes
  *
@@ -55,7 +60,7 @@ export interface SpotifyProfile extends Record<string, any> {
  *
  * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
- * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/github-discussions).
+ * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  *
  * :::
  */

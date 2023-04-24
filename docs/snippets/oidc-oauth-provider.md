@@ -1,29 +1,25 @@
 Add $1 login to your page.
 
-## Example
+@example
 
-```ts
-import { Auth } from "@auth/core"
+```js
+import Auth from "@auth/core"
 import $1 from "@auth/core/providers/$2"
 
-const request = new Request("https://example.com")
-const response = await AuthHandler(request, {
-  providers: [$1({ clientId: "", clientSecret: "" })],
+const request = new Request(origin)
+const response = await Auth(request, {
+  providers: [$1({ clientId: $3CLIENT_ID, clientSecret: $3CLIENT_SECRET })],
 })
 ```
 
----
-
 ## Resources
 
-- [Link 1](https://example.com)
-
----
+ - [$1 OAuth documentation](https://example.com)
 
 ## Notes
 
 By default, Auth.js assumes that the $1 provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
 
 :::tip
 
