@@ -1,11 +1,11 @@
 import Layout from "../components/layout"
 
-export default function PolicyPage() {
+export default function Page() {
   return (
     <Layout>
       <p>
         This is an example site to demonstrate how to use{" "}
-        <a href="https://next-auth.js.org">NextAuth.js</a> for authentication.
+        <a href="https://authjs.dev">Auth.js</a> for authentication.
       </p>
       <h2>Terms of Service</h2>
       <p>

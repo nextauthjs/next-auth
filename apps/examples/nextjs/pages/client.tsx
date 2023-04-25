@@ -1,15 +1,15 @@
 import Layout from "../components/layout"
 
-export default function ClientPage() {
+export default function Page() {
   return (
     <Layout>
       <h1>Client Side Rendering</h1>
       <p>
         This page uses the <strong>useSession()</strong> React Hook in the{" "}
-        <strong>&lt;Header/&gt;</strong> component.
+        <strong>&lt;/Header&gt;</strong> component.
       </p>
       <p>
-        The <strong>useSession()</strong> React Hook is easy to use and allows
+        The <strong>useSession()</strong> React Hook easy to use and allows
         pages to render very quickly.
       </p>
       <p>

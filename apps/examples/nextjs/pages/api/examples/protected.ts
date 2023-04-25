@@ -1,6 +1,6 @@
 // This is an example of to protect an API route
 import { unstable_getServerSession } from "next-auth/next"
-import { authOptions } from "../auth/[...nextauth]"
+import { authConfig } from "../auth-old/[...nextauth]"
 
 import type { NextApiRequest, NextApiResponse } from "next"
 
