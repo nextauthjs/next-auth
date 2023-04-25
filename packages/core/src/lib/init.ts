@@ -204,18 +204,22 @@ function adapterErrorHandler(
 ) {
   if (!adapter) return
 
-  return Object.keys(adapter).reduce<any>((acc, name) => {
-    acc[name] = async (...args: any[]) => {
-      try {
-        logger.debug(`adapter_${name}`, { args })
-        const method: Method = adapter[name as keyof Method]
-        return await method(...args)
-      } catch (e) {
-        const error = new AdapterError(e as Error)
-        logger.error(error)
-        throw error
-      }
+  return new Proxy(adapter, {
+    get(target, name, receiver) {
+      const method = target[name];
+      if (typeof method !== "function")
+        return method;
+  
+      return (...args) => {
+        try {
+          logger.debug(`adapter_${name}`, { args });
+          return method.apply(receiver, args);
+        } catch (e) {
+          const error = new AdapterError(e);
+          logger.error(error);
+          throw error;
+        }
+      };
     }
-    return acc
-  }, {})
+  });
 }
