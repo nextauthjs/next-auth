@@ -62,16 +62,7 @@ export default function Header() {
             <Link href="/protected">Protected</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/protected-ssr">Protected(SSR)</Link>
-          </li>
-          <li className={styles.navItem}>
             <Link href="/api-example">API</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/credentials">Credentials</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/email">Email</Link>
           </li>
           <li className={styles.navItem}>
             <Link href="/middleware-protected">Middleware protected</Link>
