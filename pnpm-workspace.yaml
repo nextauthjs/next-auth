@@ -1,5 +1,6 @@
 packages:
   - "packages/*"
   - "apps/dev/*"
+  - "apps/examples/nextjs"
   - "apps/playgrounds/*"
   - "docs"

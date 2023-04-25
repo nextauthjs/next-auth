@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "nextjs-example-app",
   "description": "An example project for NextAuth.js with Next.js",
   "repository": "https://github.com/nextauthjs/next-auth-example.git",
   "bugs": {
@@ -18,11 +19,13 @@
     "Lluis Agusti <hi@llu.lu>"
   ],
   "dependencies": {
+    "@auth/core": "workspace:*",
+    "@auth/nextjs": "workspace:*",
     "next": "latest",
-    "next-auth": "latest",
+    "next-auth": "workspace:*",
     "nodemailer": "^6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^17",
