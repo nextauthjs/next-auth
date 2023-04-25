@@ -111,19 +111,21 @@ export async function getToken<R extends boolean = false>(
 export async function getToken(
   params: GetTokenParams
 ): Promise<string | JWT | null> {
-  const {
+  let {
     req,
-    secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
-      !!process.env.VERCEL,
-    cookieName = secureCookie
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token",
+    secureCookie,
+    cookieName,
     raw,
     decode: _decode = decode,
     logger = console,
-    secret = process.env.AUTH_SECRET,
+    secret,
   } = params
-
+  secureCookie ??=
+    process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL
+  cookieName ??= secureCookie
+    ? "__Secure-next-auth.session-token"
+    : "next-auth.session-token"
+  secret ??= process.env.AUTH_SECRET
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
   if (!secret)
     throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
