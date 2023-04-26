@@ -1,5 +1,3 @@
-'use client'
-
 // eslint-disable-next-line no-use-before-define
 import * as React from "react"
 import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider"
