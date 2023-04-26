@@ -8,21 +8,21 @@
    <a href="https://nextjs.org" target="_blank">
    <img height="64" src="https://nextjs.org/static/favicon/android-chrome-192x192.png" />
    </a>
-   <h3 align="center"><b>NextAuth.js</b> - Example App</h3>
+   <h3 align="center"><b>@auth/nextjs</b> - Example App</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <a href="https://npm.im/next-auth">
-        <img alt="npm" src="https://img.shields.io/npm/v/next-auth?color=green&label=next-auth&style=flat-square">
+      <a href="https://npm.im/@auth/nextjs">
+        <img alt="npm" src="https://img.shields.io/npm/v/@auth/nextjs?color=green&label=@auth/nextjs&style=flat-square">
       </a>
       <a href="https://bundlephobia.com/result?p=next-auth-example">
-        <img src="https://img.shields.io/bundlephobia/minzip/next-auth?label=size&style=flat-square" alt="Bundle Size"/>
+        <img src="https://img.shields.io/bundlephobia/minzip/@auth/nextjs?label=size&style=flat-square" alt="Bundle Size"/>
       </a>
-      <a href="https://www.npmtrends.com/next-auth">
-        <img src="https://img.shields.io/npm/dm/next-auth?label=downloads&style=flat-square" alt="Downloads" />
+      <a href="https://www.npmtrends.com/@auth/nextjs">
+        <img src="https://img.shields.io/npm/dm/@auth/nextjs?label=downloads&style=flat-square" alt="Downloads" />
       </a>
-      <a href="https://npm.im/next-auth">
+      <a href="https://npm.im/@auth/nextjs">
         <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
       </a>
    </p>
@@ -32,11 +32,11 @@
 
 NextAuth.js is a complete open-source authentication solution.
 
-This is an example application that shows how `next-auth` is applied to a basic Next.js app.
+This is an example application that shows how `@auth/nextjs` is applied to a basic Next.js app.
 
 The deployed version can be found at [`next-auth-example.vercel.app`](https://next-auth-example.vercel.app)
 
-Go to [next-auth.js.org](https://next-auth.js.org) for more information and documentation.
+Go to [authjs.dev](https://authjs.dev) for more information and documentation.
 
 ## Getting Started
 
@@ -66,7 +66,7 @@ You **can** skip configuring a database and come back to it later if you want.
 
 For more information about setting up a database, please check out the following links:
 
-- Docs: [next-auth.js.org/adapters/overview](https://next-auth.js.org/adapters/overview)
+- Docs: [authjs.dev/reference/adapters](https://authjs.dev/reference/adapters)
 
 ### 3. Configure Authentication Providers
 
@@ -76,7 +76,7 @@ For more information about setting up a database, please check out the following
 
 e.g. For Google OAuth you would use: `http://localhost:3000/api/auth/callback/google`
 
-A list of configured providers and their callback URLs is available from the endpoint `/api/auth/providers`. You can find more information at https://next-auth.js.org/configuration/providers/oauth
+A list of configured providers and their callback URLs is available from the endpoint `/api/auth/providers`. You can find more information at [authjs.dev/getting-started/oauth-tutorial](https://authjs.dev/getting-started/oauth-tutorial)
 
 3. You can also choose to specify an SMTP server for passwordless sign in via email.
 
