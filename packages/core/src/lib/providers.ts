@@ -7,7 +7,7 @@ import type {
   OAuthUserConfig,
   Provider,
 } from "../providers/index.js"
-import type { Account, AuthConfig, InternalProvider } from "../types.js"
+import type { Account, AuthConfig, InternalProvider, User } from "../types.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -81,7 +81,13 @@ function normalizeOAuth(
   }
 }
 
-function defaultProfile(profile: any) {
+/**
+ * Returns basic user profile from the userinfo response/`id_token` claims.
+ * @see https://authjs.dev/reference/adapters#user
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#IDToken
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+ */
+function defaultProfile(profile: any): User {
   return {
     id: profile.sub ?? profile.id,
     name:
@@ -95,6 +101,10 @@ function defaultProfile(profile: any) {
  * Returns basic OAuth/OIDC values from the token response.
  * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
  * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
+ * @see https://authjs.dev/reference/adapters#account
+ *
+ * @todo Return `refresh_token` and `access_token_expires_at` as well when built-in
+ * refresh token support is added. (Can make it opt-in first with a flag).
  */
 function defaultAccount(account: Account): Account {
   return stripUndefined({
@@ -104,9 +114,7 @@ function defaultAccount(account: Account): Account {
     id: account.id,
     userId: account.userId,
     access_token: account.access_token,
-    expires_in: account.expires_in,
     id_token: account.id_token,
-    refresh_token: account.refresh_token,
   })
 }
 

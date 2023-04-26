@@ -3,6 +3,7 @@ import * as o from "oauth4webapi"
 import { OAuthCallbackError, OAuthProfileParseError } from "../../errors.js"
 
 import type {
+  Account,
   InternalOptions,
   LoggerInstance,
   Profile,
@@ -124,7 +125,7 @@ export async function handleOAuth(
   }
 
   let profile: Profile = {}
-  let tokens: TokenSet
+  let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
@@ -163,6 +164,11 @@ export async function handleOAuth(
       )
       profile = await userinfoResponse.json()
     }
+  }
+
+  if (tokens.expires_in) {
+    tokens.expires_at =
+      Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
   }
 
   const profileResult = await getProfile(profile, provider, tokens, logger)

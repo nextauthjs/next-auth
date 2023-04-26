@@ -96,15 +96,8 @@ erDiagram
       string type
       string provider
       string providerAccountId
-      string refresh_token
       string access_token
-      int expires_at
-      string token_type
-      string scope
       string id_token
-      string session_state
-      string oauth_token_secret
-      string oauth_token
     }
     VerificationToken {
       string identifier
