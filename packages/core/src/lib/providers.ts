@@ -88,13 +88,12 @@ function normalizeOAuth(
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
  */
 function defaultProfile(profile: any): User {
-  return {
+  return stripUndefined({
     id: profile.sub ?? profile.id,
-    name:
-      profile.name ?? profile.nickname ?? profile.preferred_username ?? null,
-    email: profile.email ?? null,
-    image: profile.picture ?? null,
-  }
+    name: profile.name ?? profile.nickname ?? profile.preferred_username,
+    email: profile.email,
+    image: profile.picture,
+  })
 }
 
 /**
