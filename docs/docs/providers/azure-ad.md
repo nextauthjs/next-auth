@@ -3,6 +3,17 @@ id: azure-ad
 title: Azure Active Directory
 ---
 
+:::note
+Azure Active Directory returns the following fields on `Account`:
+
+- `token_type` (string)
+- `expires_in` (number)
+- `ext_expires_in` (number)
+- `access_token` (string).
+
+Remember to add these fields to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+:::
+
 ## Documentation
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
@@ -20,7 +31,7 @@ https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-regis
 - Pay close attention to "Who can use this application or access this API?"
   - This allows you to scope access to specific types of user accounts
   - Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
-- When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
+- When asked for a redirection URL, select the platform type "Web" and use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
 - After your App Registration is created, under "Client Credential" create your Client secret.
 - Now copy your:
   - Application (client) ID
