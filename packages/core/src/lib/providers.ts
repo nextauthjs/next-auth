@@ -103,7 +103,7 @@ function defaultProfile(profile: any): User {
  * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
  * @see https://authjs.dev/reference/adapters#account
  *
- * @todo Return `refresh_token` and `access_token_expires_at` as well when built-in
+ * @todo Return `refresh_token` and `expires_at` as well when built-in
  * refresh token support is added. (Can make it opt-in first with a flag).
  */
 function defaultAccount(account: Account): Account {
