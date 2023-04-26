@@ -116,8 +116,23 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   providerAccountId: string
   /** Provider's type for this account */
   type: ProviderType
-  /** id of the user this account belongs to */
+  /**
+   * id of the user this account belongs to
+   *
+   * @see https://authjs.dev/reference/adapters#user
+   */
   userId?: string
+  /**
+   * Calculated value based on {@link OAuth2TokenEndpointResponse.expires_in}.
+   *
+   * It is the absolute timestamp (in seconds) when the {@link OAuth2TokenEndpointResponse.access_token} expires.
+   *
+   * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
+   *
+   * @see https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy
+   * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
+   */
+  expires_at?: number
 }
 
 /** The OAuth profile returned from your provider */

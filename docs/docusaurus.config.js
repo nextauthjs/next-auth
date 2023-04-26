@@ -7,7 +7,7 @@ const path = require("path")
 const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
-  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .filter((file) => file.endsWith(".ts"))
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")

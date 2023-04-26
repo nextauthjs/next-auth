@@ -53,7 +53,10 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   conform?: (response: Response) => Awaitable<Response | undefined>
 }
 
-/** Either an URL (containing all the parameters) or an object with more granular control. */
+/**
+ * Either an URL (containing all the parameters) or an object with more granular control.
+ * @internal
+ */
 export type EndpointHandler<
   P extends UrlParams,
   C = any,
@@ -145,16 +148,14 @@ export interface OAuth2Config<Profile>
    * This will be used to create the user in the database.
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * [Documentation](https://authjs.dev/reference/adapters#user)
+   * @see [Database Adapter: User model](https://authjs.dev/reference/adapters#user)
    */
   profile?: ProfileCallback<Profile>
-
   /**
    * Receives the Account object returned by the OAuth provider, and returns the user object.
    * This will be used to create the account associated with a user in the database.
    *
-   * [Documentation](https://authjs.dev/reference/adapters#account)
-   *
+   * @see [Database Adapter: Account model](https://authjs.dev/reference/adapters#account)
    * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
    * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
    */
@@ -204,7 +205,11 @@ export interface OAuth2Config<Profile>
   options?: OAuthUserConfig<Profile>
 }
 
-/** TODO: Document */
+/**
+ * Extension of the {@link OAuth2Config}.
+ *
+ * @see https://openid.net/specs/openid-connect-core-1_0.html
+ */
 export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
@@ -218,6 +223,7 @@ export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 /**
  * We parsed `authorization`, `token` and `userinfo`
  * to always contain a valid `URL`, with the params
+ * @internal
  */
 export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
