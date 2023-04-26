@@ -87,6 +87,10 @@ export default async function Page() {
 Currently, the underlying Next.js `cookies()` method [only provides read access](https://beta.nextjs.org/docs/api-reference/cookies) to the request cookies. This means that the `expires` value is stripped away from `session` in Server Components. Furthermore, there is a hard expiry on sessions, after which the user will be required to sign in again. (The default expiry is 30 days).
 :::
 
+### Caching
+
+Note that using this function implies personalized data and that you should not store pages or APIs using this in a [public cache](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control). For example a host like [Vercel](https://vercel.com/docs/concepts/functions/serverless-functions/edge-caching) will implicitly prevent you from caching publicly due to the `set-cookie` header set by this function.
+
 ## Middleware
 
 You can use a Next.js Middleware with NextAuth.js to protect your site.
