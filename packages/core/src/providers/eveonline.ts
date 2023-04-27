@@ -45,9 +45,9 @@ export interface EVEOnlineProfile extends Record<string, any> {
  * :::tip
  * When creating your application, make sure to select `Authentication Only` as the connection type.
  * :::
- * 
+ *
  * :::tip
- * If using JWT for the session, you can add the `CharacterID` to the JWT token and session. Example:
+ * If using JWT for the session, you can add the `CharacterID` to the JWT and session. Example:
  * ```js
  * options: {
  *   jwt: {
