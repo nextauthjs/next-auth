@@ -1,3 +1,7 @@
+import Header from "components/header"
+import Footer from "components/footer"
+import './styles.css'
+
 export default function RootLayout({
   children,
 }: {
@@ -6,7 +10,15 @@ export default function RootLayout({
   return (
     <html>
       <head></head>
-      <body>{children}</body>
+      <body>
+        <Header />
+        <main>
+          {children}
+        </main>
+        <Footer />
+      </body>
     </html>
   )
 }
+
+export const runtime = "experimental-edge"
