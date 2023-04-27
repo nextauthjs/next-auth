@@ -22,7 +22,6 @@
     "@auth/core": "workspace:*",
     "@auth/nextjs": "workspace:*",
     "next": "latest",
-    "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
     "react-dom": "^18"
