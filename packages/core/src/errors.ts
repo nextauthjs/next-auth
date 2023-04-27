@@ -107,7 +107,22 @@ export class MissingAPIRoute extends AuthError {}
 /** @todo */
 export class MissingAuthorize extends AuthError {}
 
-/** @todo */
+/**
+ * Auth.js requires a secret to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
+ *
+ * :::note
+ * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET` environment variable.
+ * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret).
+ * :::
+ *
+ *
+ * :::tip
+ * You can generate a good secret value:
+ *  - On Unix systems: type `openssl rand -hex 32` in the terminal
+ *  - Or generate one [online](https://generate-secret.vercel.app/32)
+ *
+ * :::
+ */
 export class MissingSecret extends AuthError {}
 
 /** @todo */
@@ -119,7 +134,11 @@ export class OAuthCallbackError extends AuthError {}
 /** @todo */
 export class OAuthCreateUserError extends AuthError {}
 
-/** @todo */
+/**
+ * This error occurs during an OAuth sign in attempt when the provdier's
+ * response could not be parsed. This could for example happen if the provider's API
+ * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers_oauth#profile) method is not implemented correctly.
+ */
 export class OAuthProfileParseError extends AuthError {}
 
 /** @todo */
@@ -131,7 +150,11 @@ export class SignInError extends AuthError {}
 /** @todo */
 export class SignOutError extends AuthError {}
 
-/** @todo */
+/**
+ * Auth.js was requested to handle an operation that it does not support.
+ *
+ * See [`AuthAction`](https://authjs.dev/reference/core/types#authaction) for the supported actions.
+ */
 export class UnknownAction extends AuthError {}
 
 /** @todo */
