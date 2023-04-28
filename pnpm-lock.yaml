@@ -102,6 +102,57 @@ importers:
       sqlite3: 5.0.8
       typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
 
+  apps/dev/nextjs-2:
+    specifiers:
+      '@auth/core': workspace:*
+      '@next-auth/fauna-adapter': workspace:*
+      '@next-auth/prisma-adapter': workspace:*
+      '@next-auth/supabase-adapter': workspace:*
+      '@next-auth/typeorm-legacy-adapter': workspace:*
+      '@playwright/test': 1.29.2
+      '@prisma/client': ^3
+      '@supabase/supabase-js': ^2.0.5
+      '@types/jsonwebtoken': ^8.5.5
+      '@types/react': 18.0.37
+      '@types/react-dom': ^18.0.6
+      dotenv: ^16.0.3
+      fake-smtp-server: ^0.8.0
+      faunadb: ^4
+      next: 13.3.0
+      next-auth: workspace:*
+      nodemailer: ^6
+      pg: ^8.7.3
+      prisma: ^3
+      react: ^18
+      react-dom: ^18
+      sqlite3: ^5.0.8
+      typeorm: 0.3.7
+    dependencies:
+      '@auth/core': link:../../../packages/core
+      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
+      '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
+      '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
+      '@next-auth/typeorm-legacy-adapter': link:../../../packages/adapter-typeorm-legacy
+      '@prisma/client': 3.15.2_prisma@3.15.2
+      '@supabase/supabase-js': 2.0.5
+      faunadb: 4.6.0
+      next: 13.3.0_biqbaboplfbrettd7655fr4n2y
+      next-auth: link:../../../packages/next-auth
+      nodemailer: 6.8.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@playwright/test': 1.29.2
+      '@types/jsonwebtoken': 8.5.9
+      '@types/react': 18.0.37
+      '@types/react-dom': 18.0.6
+      dotenv: 16.0.3
+      fake-smtp-server: 0.8.0
+      pg: 8.7.3
+      prisma: 3.15.2
+      sqlite3: 5.0.8
+      typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
+
   apps/dev/nextjs-v4:
     specifiers:
       '@next-auth/fauna-adapter': workspace:*
@@ -12154,7 +12205,7 @@ packages:
   /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.1_debug@4.3.4
+      follow-redirects: 1.15.1
     transitivePeerDependencies:
       - debug
 
@@ -17469,7 +17520,7 @@ packages:
       express-basic-auth: 1.2.1
       lodash: 4.17.21
       mailparser: 2.8.1
-      moment: 2.29.3
+      moment: 2.29.4
       smtp-server: 3.11.0
     transitivePeerDependencies:
       - supports-color
@@ -17888,7 +17939,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
 
   /follow-redirects/1.15.1_debug@4.3.4:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
@@ -17900,6 +17950,7 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4
+    dev: true
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
