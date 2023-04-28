@@ -97,7 +97,14 @@ export interface AppleProfile extends Record<string, any> {
 }
 
 /**
- * ## Setup
+ * ### Setup
+ *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/apple
+ * ```
+ *
+ * #### Configuration
  *
  * Import the provider and configure it in your **Auth.js** initialization file:
  *
@@ -115,14 +122,14 @@ export interface AppleProfile extends Record<string, any> {
  * })
  * ```
  * 
- * ## Resources
+ * ### Resources
  * 
  * - Sign in with Apple [Overview](https://developer.apple.com/sign-in-with-apple/get-started/)
  * - Sign in with Apple [REST API](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api)
  * - [How to retrieve](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple#3383773) the user's information from Apple ID servers
  * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
 
- * ## Notes
+ * ### Notes
  * 
  * The Apple provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/apple.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *

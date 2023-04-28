@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/saleforce
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -21,9 +20,15 @@ export interface SalesforceProfile extends Record<string, any> {
 /**
  * Add SaleForce login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/saleforce
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import SaleForce from "@auth/core/providers/saleforce"
  *
@@ -33,11 +38,11 @@ export interface SalesforceProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [SaleForce OAuth documentation](https://help.salesforce.com/articleView?id=remoteaccess_authenticate.htm&type=5)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the SaleForce provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

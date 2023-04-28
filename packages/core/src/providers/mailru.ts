@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/mailru
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Mailru login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/mailru
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Mailru from "@auth/core/providers/mailru"
  *
@@ -26,12 +31,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Mailru OAuth documentation](https://o2.mail.ru/docs)
  *  - [Mailru app console](https://o2.mail.ru/app/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Mailru provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -53,7 +58,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Mailru(config: OAuthUserConfig<Record<string, any>>
+export default function Mailru(
+  config: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "mailru",

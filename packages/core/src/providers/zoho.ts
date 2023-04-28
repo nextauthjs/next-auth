@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/zoho
  */
 
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add ZOHO login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/zoho
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import ZOHO from "@auth/core/providers/zoho"
  *
@@ -26,12 +31,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Zoho OAuth 2.0 Integration Guide](https://www.zoho.com/accounts/protocol/oauth/web-server-applications.html)
  * - [Zoho API Console](https://api-console.zoho.com)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the ZOHO provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
