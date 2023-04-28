@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/osso
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Osso login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/osso
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Osso from "@auth/core/providers/osso"
  *
@@ -26,7 +31,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  * Osso is an open source service that handles SAML authentication against Identity Providers, normalizes profiles, and makes those profiles available to you in an OAuth 2.0 code grant flow.
  * 
  * - If you don't yet have an Osso instance, you can use [Osso's Demo App](https://demo.ossoapp.com) for your testing purposes. For documentation on deploying an Osso instance, see https://ossoapp.com/docs/deploy/overview/
@@ -37,7 +42,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
  * See Osso's complete configuration and testing documentation at https://ossoapp.com/docs/configure/overview
  * 
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Osso provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/medium
  */
 
@@ -15,9 +14,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Medium login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/medium
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Medium from "@auth/core/providers/medium"
  *
@@ -27,11 +32,11 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Medium OAuth documentation](https://example.com)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Medium provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -59,7 +64,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Medium(config: OAuthUserConfig<Record<string, any>>
+export default function Medium(
+  config: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "medium",

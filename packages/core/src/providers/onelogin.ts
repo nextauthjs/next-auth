@@ -1,13 +1,11 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>OneLogin</b> integration.</span>
- * TODO: SVG LOGO
  * <a href="https://onelogin.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/onelogin.svg" height="48" />
  * </a>
  * </div>
  *
- * ---
  * @module providers/onelogin
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -15,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add OneLogin login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/onelogin
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import OneLogin from "@auth/core/providers/onelogin"
  *
@@ -27,11 +31,11 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [OneLogin OAuth documentation](https://example.com)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the OneLogin provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.

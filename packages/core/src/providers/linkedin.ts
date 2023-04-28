@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/linkedin
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -33,9 +32,15 @@ export interface LinkedInProfile extends Record<string, any> {
 /**
  * Add Linkedin login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/linkedin
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Linkedin from "@auth/core/providers/linkedin"
  *
@@ -45,12 +50,12 @@ export interface LinkedInProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Linkedin OAuth documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow)
  *  - [Linkedin app console](https://www.linkedin.com/developers/apps/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Linkedin provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

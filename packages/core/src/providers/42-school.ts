@@ -1,13 +1,11 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#fff", display: "flex", justifyContent: "space-between", color: "#000", padding: 16}}>
  * <span>Built-in <b>42School</b> integration.</span>
- * TODO: SVG logo
  * <a href="https://api.intra.42.fr//">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/42-school.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/42-school
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -167,9 +165,15 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
 /**
  * Add 42School login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/42-school
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import 42School from "@auth/core/providers/42-school"
  *
@@ -179,13 +183,13 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
  *
- * ## Notes
+ * ### Notes
  *
- * 
+ *
  * :::note
  * 42 returns a field on `Account` called `created_at` which is a number. See the [docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests). Make sure to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
  * :::

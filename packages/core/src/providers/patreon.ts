@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/patreon
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -21,9 +20,15 @@ export interface PatreonProfile extends Record<string, any> {
 /**
  * Add Patreon login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/patreon
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Patreon from "@auth/core/providers/patreon"
  *
@@ -33,13 +38,13 @@ export interface PatreonProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Patreon OAuth documentation](https://docs.patreon.com/#apiv2-oauth)
  *  - [Patreon Platform](https://www.patreon.com/portal/registration/register-clients)
  *  - [ApiV2 Scopes](https://docs.patreon.com/#scopes)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Patreon provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

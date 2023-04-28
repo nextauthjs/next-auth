@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/reddit
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Reddit login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/reddit
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Reddit from "@auth/core/providers/reddit"
  *
@@ -26,12 +31,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Reddit API documentation](https://www.reddit.com/dev/api/)
  * - [Reddit app console](https://www.reddit.com/prefs/apps/ )
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Reddit provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

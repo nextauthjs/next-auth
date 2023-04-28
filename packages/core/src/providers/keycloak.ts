@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/keycloak
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -38,9 +37,15 @@ export interface KeycloakProfile extends Record<string, any> {
 /**
  * Add Keycloak login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/keycloak
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Keycloak from "@auth/core/providers/keycloak"
  *
@@ -50,22 +55,22 @@ export interface KeycloakProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Keycloak OIDC documentation](https://www.keycloak.org/docs/latest/server_admin/#_oidc_clients)
- * 
- * :::tip 
- * 
+ *
+ * :::tip
+ *
  * Create an openid-connect client in Keycloak with "confidential" as the "Access Type".
- * 
+ *
  * :::
- * 
+ *
  * :::note
- * 
+ *
  * issuer should include the realm – e.g. https://my-keycloak-domain.com/realms/My_Realm
- * 
+ *
  * :::
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Keycloak provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.

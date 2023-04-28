@@ -33,7 +33,14 @@ export interface AtlassianProfile extends Record<string, any> {
 }
 
 /**
- * ## Setup
+ * ### Setup
+ *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/atlassian
+ * ```
+ *
+ * #### Configuration
  *
  * Import the provider and configure it in your **Auth.js** initialization file:
  *
@@ -51,11 +58,11 @@ export interface AtlassianProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Atlassian docs](https://developer.atlassian.com/server/jira/platform/oauth/)
  *
- * ## Notes
+ * ### Notes
  *
  * The Atlassian provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/atlassian.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *

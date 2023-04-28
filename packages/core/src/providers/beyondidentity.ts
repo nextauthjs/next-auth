@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/beyondidentity
  */
 
@@ -27,7 +26,7 @@ export interface BeyondIdentityProfile {
 /**
  * Add Beyond Identity login to your page.
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
@@ -41,13 +40,13 @@ export interface BeyondIdentityProfile {
  *
  * ---
  *
- * ## Resources
+ * ### Resources
  *
  * - [Beyond Identity Developer Docs](https://developer.beyondidentity.com/)
  *
  * ---
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the BeyondIdentity provider is
  * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.

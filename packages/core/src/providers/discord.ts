@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/discord
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -88,9 +87,15 @@ export interface DiscordProfile extends Record<string, any> {
 /**
  * Add Discord login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/discord
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Discord from "@auth/core/providers/discord"
  *
@@ -100,12 +105,12 @@ export interface DiscordProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Discord OAuth documentation](https://discord.com/developers/docs/topics/oauth2)
  *  - [Discord OAuth apps](https://discord.com/developers/applications)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Discord provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
