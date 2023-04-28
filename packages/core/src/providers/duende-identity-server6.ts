@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/duende-identity-server6
  */
 import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
@@ -21,9 +20,15 @@ export interface DuendeISUser extends Record<string, any> {
 /**
  * Add DuendeIdentityServer6 login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/duende-identity-server6
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import DuendeIdentityServer6 from "@auth/core/providers/duende-identity-server6"
  *
@@ -33,21 +38,21 @@ export interface DuendeISUser extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [DuendeIdentityServer6 documentation](https://docs.duendesoftware.com/identityserver/v6)
  *
- * ## Notes
+ * ### Notes
  *
- * 
+ *
  * ## Demo IdentityServer
- * 
+ *
  * The configuration below is for the demo server at https://demo.duendesoftware.com/
- * 
+ *
  * If you want to try it out, you can copy and paste the configuration below.
- * 
+ *
  * You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
- * 
+ *
  * ```js title=pages/api/auth/[...nextauth].js
  * import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
  * providers: [

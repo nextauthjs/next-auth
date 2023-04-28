@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/twitter
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -105,9 +104,15 @@ export interface TwitterProfile {
 /**
  * Add Twitter login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/twitter
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Twitter from "@auth/core/providers/twitter"
  *
@@ -117,7 +122,7 @@ export interface TwitterProfile {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Twitter App documentation](https://developer.twitter.com/en/apps)
  *
@@ -131,19 +136,19 @@ export interface TwitterProfile {
  * })
  * ```
  * Keep in mind that although this change is easy, it changes how and with which of Twitter APIs you can interact with. Read the official Twitter OAuth 2 documentation for more details.
- * 
- * 
+ *
+ *
  * :::note
- * 
- * Email is currently not supported by Twitter OAuth 2.0. 
+ *
+ * Email is currently not supported by Twitter OAuth 2.0.
  *
  * :::
- * 
- * ## Notes
  *
- * Twitter is currently the only built-in provider using the OAuth 1.0 spec. 
+ * ### Notes
+ *
+ * Twitter is currently the only built-in provider using the OAuth 1.0 spec.
  * This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
- * 
+ *
  * :::tip
  *
  * You must enable the "Request email address from users" option in your app permissions if you want to obtain the users email address.

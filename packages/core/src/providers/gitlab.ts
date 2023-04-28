@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/gitlab
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -59,9 +58,15 @@ export interface GitLabProfile extends Record<string, any> {
 /**
  * Add GitLab login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/gitlab
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import GitLab from "@auth/core/providers/gitlab"
  *
@@ -71,19 +76,19 @@ export interface GitLabProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [GitLab OAuth documentation](https://docs.gitlab.com/ee/api/oauth2.html)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the GitLab provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
- * :::tip 
+ * :::tip
  * Enable the `read_user` option in scope if you want to save the users email address on sign up.
  * :::
- * 
+ *
  * :::tip
  *
  * The GitLab provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/gitlab.ts).

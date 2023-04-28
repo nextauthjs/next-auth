@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/foursquare
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add FourSquare login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/foursquare
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import FourSquare from "@auth/core/providers/foursquare"
  *
@@ -26,16 +31,16 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [FourSquare OAuth documentation](https://developer.foursquare.com/docs/places-api/authentication/#web-applications)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the FourSquare provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- * 
- * :::warning 
+ *
+ * :::warning
  * Foursquare requires an additional apiVersion parameter in YYYYMMDD format, which essentially states "I'm prepared for API changes up to this date".
  * :::
  *
@@ -56,7 +61,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Foursquare(options: OAuthUserConfig<Record<string, any>> & { apiVersion?: string } 
+export default function Foursquare(
+  options: OAuthUserConfig<Record<string, any>> & { apiVersion?: string }
 ): OAuthConfig<Record<string, any>> {
   const { apiVersion = "20230131" } = options
   return {

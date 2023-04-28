@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/strava
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -21,9 +20,15 @@ export interface StravaProfile extends Record<string, any> {
 /**
  * Add Strava login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/strava
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Strava from "@auth/core/providers/strava"
  *
@@ -33,11 +38,11 @@ export interface StravaProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Strava API documentation](http://developers.strava.com/docs/reference/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Strava provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

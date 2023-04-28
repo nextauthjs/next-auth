@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/workos
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -35,9 +34,15 @@ export interface WorkOSProfile extends Record<string, any> {
 /**
  * Add WorkOS login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/workos
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import WorkOS from "@auth/core/providers/workos"
  *
@@ -47,19 +52,19 @@ export interface WorkOSProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [WorkOS SSO OAuth documentation](https://workos.com/docs/reference/sso)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the WorkOS provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- * 
- * WorkOS is not an identity provider itself, but, rather, a bridge to multiple single sign-on (SSO) providers. 
+ *
+ * WorkOS is not an identity provider itself, but, rather, a bridge to multiple single sign-on (SSO) providers.
  * As a result, we need to make some additional changes to authenticate users using WorkOS.
- * 
- * In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use. 
+ *
+ * In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use.
  * A common way to do this is to collect the user's email address and extract the domain. This can be done using a custom login page.
  * To add a custom login page, you can use the `pages` option:
  * ```js title="pages/api/auth/[...nextauth].js"
@@ -67,15 +72,15 @@ export interface WorkOSProfile extends Record<string, any> {
  *   signIn: "/auth/signin",
  * }
  * ```
- * We can then add a custom login page that displays an input where the user can enter their email address. 
+ * We can then add a custom login page that displays an input where the user can enter their email address.
  * We then extract the domain from the user's email address and pass it to the `authorizationParams` parameter on the `signIn` function:
  * ```js title="pages/auth/signin.js"
  * import { useState } from "react"
  * import { getProviders, signIn } from "next-auth/react"
- * 
+ *
  * export default function SignIn({ providers }) {
  *   const [email, setEmail] = useState("")
- * 
+ *
  *   return (
  *     <>
  *       {Object.values(providers).map((provider) => {
@@ -100,7 +105,7 @@ export interface WorkOSProfile extends Record<string, any> {
  *             </div>
  *           )
  *         }
- * 
+ *
  *         return (
  *           <div key={provider.id}>
  *             <button onClick={() => signIn(provider.id)}>
@@ -112,7 +117,7 @@ export interface WorkOSProfile extends Record<string, any> {
  *     </>
  *   )
  * }
- * 
+ *
  * export async function getServerSideProps(context) {
  *   const providers = await getProviders()
  *   return {
@@ -120,7 +125,7 @@ export interface WorkOSProfile extends Record<string, any> {
  *   }
  * }
  * ```
- * 
+ *
  * :::tip
  *
  * The WorkOS provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/workos.ts).

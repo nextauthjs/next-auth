@@ -1,13 +1,11 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>IdentityServer4</b> integration.</span>
- * TODO: SVG LOGO
  * <a href="https://identityserver4.readthedocs.io">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/identity-server4.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/identity-server4
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -15,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add IdentityServer4 login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/identity-server4
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import IdentityServer4 from "@auth/core/providers/identity-server4"
  *
@@ -27,11 +31,11 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [IdentityServer4 OAuth documentation](https://identityserver4.readthedocs.io/en/latest/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the IdentityServer4 provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
@@ -56,7 +60,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function IdentityServer4(options: OAuthUserConfig<Record<string, any>>
+export default function IdentityServer4(
+  options: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "identity-server4",

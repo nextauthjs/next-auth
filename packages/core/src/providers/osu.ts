@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/osu
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -63,9 +62,15 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
 /**
  * Add Osu login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/osu
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Osu! from "@auth/core/providers/osu"
  *
@@ -75,12 +80,12 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Osu OAuth documentation](https://osu.ppy.sh/docs/index.html#authentication)
  *  - [Osu app console](https://osu.ppy.sh/home/account/edit#new-oauth-application)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Osu provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

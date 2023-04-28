@@ -75,7 +75,14 @@ export interface Auth0Profile extends Record<string, any> {
 }
 
 /**
- * ## Setup
+ * ### Setup
+ *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/auth0
+ * ```
+ *
+ * #### Configuration
  *
  * Import the provider and configure it in your **Auth.js** initialization file:
  *
@@ -93,11 +100,11 @@ export interface Auth0Profile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Auth0 docs](https://auth0.com/docs/authenticate)
  *
- * ## Notes
+ * ### Notes
  *
  * The Auth0 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
