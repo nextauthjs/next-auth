@@ -33,7 +33,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "neo4j-driver": "^5.7.0",
+    "neo4j-driver": "^4.0.0 || ^5.7.0",
     "next-auth": "^4"
   },
   "devDependencies": {
