@@ -195,7 +195,7 @@ import type { XataClient } from "./xata"
  * xata init --schema=./path/to/your/schema.json
  * ```
  *
- * The CLI will walk you through a setup process where you choose a [workspace](https://docs.xata.io/concepts/workspaces) (kind of like a GitHub org or a Vercel team) and an appropriate database. We recommend using a fresh database for this, as we'll augment it with tables that Auth.js needs.
+ * The CLI will walk you through a setup process where you choose a [workspace](https://xata.io/docs/api-reference/workspaces) (kind of like a GitHub org or a Vercel team) and an appropriate database. We recommend using a fresh database for this, as we'll augment it with tables that Auth.js needs.
  *
  * Once you're done, you can continue using Auth.js in your project as expected, like creating a `./pages/api/auth/[...nextauth]` route.
  *
