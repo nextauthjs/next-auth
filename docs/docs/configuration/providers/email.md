@@ -3,6 +3,12 @@ id: email
 title: Email
 ---
 
+### Install nodemailer
+
+```bash npm2yarn2pnpm
+npm install nodemailer
+```
+
 ### How to
 
 The Email provider sends "magic links" via email that the user can click on to sign in.
