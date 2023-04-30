@@ -96,7 +96,7 @@ export type ProfileCallback<Profile> = (
   tokens: TokenSet
 ) => Awaitable<User>
 
-export type AccountCallback<Account> = (account: Account) => Account
+export type AccountCallback = (account: TokenSet) => TokenSet
 
 export interface OAuthProviderButtonStyles {
   logo: string
@@ -159,7 +159,7 @@ export interface OAuth2Config<Profile>
    * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
    * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
    */
-  account?: AccountCallback<Account>
+  account?: AccountCallback
   /**
    * The CSRF protection performed on the callback endpoint.
    * @default ["pkce"]

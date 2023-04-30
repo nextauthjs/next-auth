@@ -154,12 +154,10 @@ export async function handleLogin(
 
       return { session, user: userByAccount, isNewUser }
     } else {
-      const { provider } = options as InternalOptions<"oauth" | "oidc">
-      account = Object.assign(provider.account({ ...account }), {
-        providerAccountId: account.providerAccountId,
-        provider: account.provider,
-        type: account.type,
-      }) as AdapterAccount
+      const { provider: p } = options as InternalOptions<"oauth" | "oidc">
+      const { type, provider, providerAccountId, userId, ...tokenSet } = account
+      const defaults = { providerAccountId, provider, type, userId }
+      account = Object.assign(p.account(tokenSet), defaults)
 
       if (user) {
         // If the user is already signed in and the OAuth account isn't already associated

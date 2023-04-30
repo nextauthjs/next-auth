@@ -1,13 +1,14 @@
 import { merge } from "./utils/merge.js"
 
 import type {
+  AccountCallback,
   OAuthConfig,
   OAuthConfigInternal,
   OAuthEndpointType,
   OAuthUserConfig,
   Provider,
 } from "../providers/index.js"
-import type { Account, AuthConfig, InternalProvider, User } from "../types.js"
+import type { AuthConfig, InternalProvider, User } from "../types.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -105,13 +106,9 @@ function defaultProfile(profile: any): User {
  * @todo Return `refresh_token` and `expires_at` as well when built-in
  * refresh token support is added. (Can make it opt-in first with a flag).
  */
-function defaultAccount(account: Account): Account {
+const defaultAccount: AccountCallback = (account) => {
   return stripUndefined({
-    provider: account.provider,
-    type: account.type,
-    providerAccountId: account.providerAccountId,
     id: account.id,
-    userId: account.userId,
     access_token: account.access_token,
     id_token: account.id_token,
   })
