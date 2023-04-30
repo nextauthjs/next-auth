@@ -3,6 +3,7 @@ import * as o from "oauth4webapi"
 import { OAuthCallbackError, OAuthProfileParseError } from "../../errors.js"
 
 import type {
+  Account,
   InternalOptions,
   LoggerInstance,
   Profile,
@@ -123,8 +124,8 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {}
-  let tokens: TokenSet
+  let profile: Profile
+  let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
@@ -162,37 +163,49 @@ export async function handleOAuth(
         (tokens as any).access_token
       )
       profile = await userinfoResponse.json()
+    } else {
+      throw new TypeError("No userinfo endpoint configured")
     }
   }
 
-  const profileResult = await getProfile(profile, provider, tokens, logger)
+  if (tokens.expires_in) {
+    tokens.expires_at =
+      Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
+  }
+
+  const profileResult = await getUserAndProfile(
+    profile,
+    provider,
+    tokens,
+    logger
+  )
 
   return { ...profileResult, cookies: resCookies }
 }
 
 /** Returns profile, raw profile and auth provider details */
-async function getProfile(
+async function getUserAndProfile(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
   logger: LoggerInstance
 ) {
   try {
-    const profile = await provider.profile(OAuthProfile, tokens)
-    profile.email = profile.email?.toLowerCase()
+    const user = await provider.profile(OAuthProfile, tokens)
+    user.email = user.email?.toLowerCase()
 
-    if (!profile.id) {
+    if (!user.id) {
       throw new TypeError(
-        `Profile id is missing in ${provider.name} OAuth profile response`
+        `User id is missing in ${provider.name} OAuth profile response`
       )
     }
 
     return {
-      profile,
+      user,
       account: {
         provider: provider.id,
         type: provider.type,
-        providerAccountId: profile.id.toString(),
+        providerAccountId: user.id.toString(),
         ...tokens,
       },
       OAuthProfile,
