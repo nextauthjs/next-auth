@@ -190,7 +190,7 @@ export interface JWTEncodeParams<Payload = JWT> {
   /**
    * The maximum age of the Auth.js issued JWT in seconds.
    *
-   * @default 30 * 24 * 30 * 60 // 30 days
+   * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge?: number
 }
@@ -213,7 +213,7 @@ export interface JWTOptions {
   /**
    * The maximum age of the Auth.js issued JWT in seconds.
    *
-   * @default 30 * 24 * 30 * 60 // 30 days
+   * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge: number
   /** Override this method to control the Auth.js issued JWT encoding. */

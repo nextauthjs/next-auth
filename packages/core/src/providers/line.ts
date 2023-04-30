@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/line
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -26,9 +25,15 @@ export interface LineProfile extends Record<string, any> {
 /**
  * Add LINE login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/line
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import LINE from "@auth/core/providers/line"
  *
@@ -38,15 +43,15 @@ export interface LineProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [LINE Login documentation](https://developers.line.biz/en/docs/line-login/integrate-line-login/)
  *  - [LINE app console](https://developers.line.biz/console/)
- * 
+ *
  * ## Configuration
  * Create a provider and a LINE login channel at https://developers.line.biz/console/. In the settings of the channel under LINE Login, activate web app and configure the following: Callback URL `http://localhost:3000/api/auth/callback/line`
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the LINE provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.

@@ -421,7 +421,7 @@ importers:
       '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       jest: ^27.4.3
-      neo4j-driver: ^4.4.0
+      neo4j-driver: ^5.7.0
       next-auth: workspace:*
       uuid: ^8.3.2
     dependencies:
@@ -431,7 +431,7 @@ importers:
       '@next-auth/tsconfig': link:../tsconfig
       '@types/uuid': 8.3.4
       jest: 27.5.1
-      neo4j-driver: 4.4.6
+      neo4j-driver: 5.7.0
       next-auth: link:../next-auth
 
   packages/adapter-pouchdb:
@@ -5179,13 +5179,6 @@ packages:
     dependencies:
       core-js-pure: 3.26.0
       regenerator-runtime: 0.13.11
-    dev: true
-
-  /@babel/runtime/7.18.3:
-    resolution: {integrity: sha512-38Y8f7YUhce/K7RMwTp7m0uCumpv9hZkitCbBClqQIow1qSbCvGkcegKOXpEWCQLfWmevgRiWokZ1GkpfhbZug==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.13.9
     dev: true
 
   /@babel/runtime/7.20.13:
@@ -17527,7 +17520,7 @@ packages:
       express-basic-auth: 1.2.1
       lodash: 4.17.21
       mailparser: 2.8.1
-      moment: 2.29.3
+      moment: 2.29.4
       smtp-server: 3.11.0
     transitivePeerDependencies:
       - supports-color
@@ -19985,7 +19978,7 @@ packages:
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1
-      rxjs: 7.6.0
+      rxjs: 7.8.1
       string-width: 4.2.3
       strip-ansi: 6.0.1
       through: 2.3.8
@@ -20006,7 +19999,7 @@ packages:
       mute-stream: 0.0.8
       ora: 6.1.2
       run-async: 2.4.1
-      rxjs: 7.6.0
+      rxjs: 7.8.1
       string-width: 5.1.2
       strip-ansi: 7.0.1
       through: 2.3.8
@@ -24574,25 +24567,24 @@ packages:
   /neo-async/2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  /neo4j-driver-bolt-connection/4.4.6:
-    resolution: {integrity: sha512-ZjYVwHk8oMeRtBf4j/1CmA/7t88OHl7WOiZtFnbdU3LHkfnhtrovLk7sU1zGK60f6AmaQrA9lAh1rpxwDfri5Q==}
+  /neo4j-driver-bolt-connection/5.7.0:
+    resolution: {integrity: sha512-TMXNJuwEEYBqzyKsiyfF2DDaG/eV13y86nhxbXICcq9/1/j36OJx2zEuhzk1XstLYFD0WioSJZ3khV1+3aVRkw==}
     dependencies:
       buffer: 6.0.3
-      neo4j-driver-core: 4.4.6
+      neo4j-driver-core: 5.7.0
       string_decoder: 1.3.0
     dev: true
 
-  /neo4j-driver-core/4.4.6:
-    resolution: {integrity: sha512-8Pc5lLeWwrxjrEGyJm8QASfguKK90i4YxB4Unz1FWV1z3xRq2xFtLhNl6PSa5Kx1VtKS5dhiwHlJArBJJEQjZA==}
+  /neo4j-driver-core/5.7.0:
+    resolution: {integrity: sha512-q/mP1oDtt562+8uSMZZJJ8k8MNGeghTegzmmDCo9v4LDxuq+wkaKQ3tHm92o1xemuko+uyqlX8lU/844rX3T4A==}
     dev: true
 
-  /neo4j-driver/4.4.6:
-    resolution: {integrity: sha512-KzTEQ/PYuaVkeEuQmr8jZm0cFLlK/zAAMe3IkhxWj56Tgwn2nT2RASPrqwvyEVfk8jg6xS4U1Fx2VABmkO4cdQ==}
+  /neo4j-driver/5.7.0:
+    resolution: {integrity: sha512-Le5lgMERk0nIHPHQa18DRifrzXpPYkJEr9Sz/bxPQ8gbWFqTTL292LtJ/qM8RjByaRH2C923dKk2Ni8b0mzLNQ==}
     dependencies:
-      '@babel/runtime': 7.18.3
-      neo4j-driver-bolt-connection: 4.4.6
-      neo4j-driver-core: 4.4.6
-      rxjs: 6.6.7
+      neo4j-driver-bolt-connection: 5.7.0
+      neo4j-driver-core: 5.7.0
+      rxjs: 7.8.1
     dev: true
 
   /netmask/2.0.2:
@@ -27853,10 +27845,6 @@ packages:
   /regenerator-runtime/0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
 
-  /regenerator-runtime/0.13.9:
-    resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
-    dev: true
-
   /regenerator-transform/0.15.0:
     resolution: {integrity: sha512-LsrGtPmbYg19bcPHwdtmXwbW+TqNvtY4riE3P83foeHRroMbH6/2ddFBfab3t7kbzc7v7p4wbkIecHImqt0QNg==}
     dependencies:
@@ -28344,6 +28332,7 @@ packages:
     engines: {npm: '>=2.0.0'}
     dependencies:
       tslib: 1.14.1
+    dev: false
 
   /rxjs/7.5.5:
     resolution: {integrity: sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==}
@@ -28351,8 +28340,8 @@ packages:
       tslib: 2.4.1
     dev: true
 
-  /rxjs/7.6.0:
-    resolution: {integrity: sha512-DDa7d8TFNUalGC9VqXvQ1euWNN7sc63TrUCuM9J998+ViviahMIjKSOU7rfcgFOF+FCD71BhDRv4hrFz+ImDLQ==}
+  /rxjs/7.8.1:
+    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
       tslib: 2.4.1
     dev: true
@@ -32005,7 +31994,7 @@ packages:
       joi: 17.7.0
       lodash: 4.17.21
       minimist: 1.2.6
-      rxjs: 7.6.0
+      rxjs: 7.8.1
     transitivePeerDependencies:
       - debug
     dev: true
@@ -32019,7 +32008,7 @@ packages:
       joi: 17.7.0
       lodash: 4.17.21
       minimist: 1.2.6
-      rxjs: 7.6.0
+      rxjs: 7.8.1
     transitivePeerDependencies:
       - debug
     dev: true

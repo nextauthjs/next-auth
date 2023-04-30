@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/fushionauth
  */
 import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
@@ -35,9 +34,15 @@ export interface FusionAuthProfile extends Record<string, any> {
 /**
  * Add FusionAuth login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/fusionauth
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import FusionAuth from "@auth/core/providers/fusionauth"
  *
@@ -50,11 +55,11 @@ export interface FusionAuthProfile extends Record<string, any> {
  * If you're using multi-tenancy, you need to pass in the tenantId option to apply the proper theme.
  * :::
  *
- * ## Resources
+ * ### Resources
  *
  *  - [FusionAuth OAuth documentation](https://fusionauth.io/docs/v1/tech/oauth/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the FusionAuth provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -62,17 +67,17 @@ export interface FusionAuthProfile extends Record<string, any> {
  * ## Configuration
  * :::tip
  * An application can be created at https://your-fusionauth-server-url/admin/application.
- * 
+ *
  * For more information, follow the [FusionAuth 5-minute setup guide](https://fusionauth.io/docs/v1/tech/5-minute-setup-guide).
  * :::
- * 
+ *
  * In the OAuth settings for your application, configure the following.
- * 
+ *
  * - Redirect URL
  *   - https://localhost:3000/api/auth/callback/fusionauth
  * - Enabled grants
  *   - Make sure _Authorization Code_ is enabled.
- * 
+ *
  * If using JSON Web Tokens, you need to make sure the signing algorithm is RS256, you can create an RS256 key pair by
  * going to Settings, Key Master, generate RSA and choosing SHA-256 as algorithm. After that, go to the JWT settings of
  * your application and select this key as Access Token signing key and Id Token signing key.

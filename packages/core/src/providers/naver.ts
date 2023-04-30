@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/naver
  */
 
@@ -33,9 +32,15 @@ export interface NaverProfile extends Record<string, any> {
 /**
  * Add Naver login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/naver
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Naver from "@auth/core/providers/naver"
  *
@@ -45,12 +50,12 @@ export interface NaverProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Naver OAuth documentation](https://developers.naver.com/docs/login/overview/overview.md)
  *  - [Naver OAuth documentation 2](https://developers.naver.com/docs/login/api/api.md)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Naver provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

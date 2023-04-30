@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/slack
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -46,9 +45,15 @@ export interface SlackProfile extends Record<string, any> {
 /**
  * Add Slack login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/slack
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Slack from "@auth/core/providers/slack"
  *
@@ -58,19 +63,19 @@ export interface SlackProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Slack OAuth documentation](https://api.slack.com/authentication https://api.slack.com/docs/sign-in-with-slack)
  * - [Slack app console](https://api.slack.com/apps)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Slack provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
  * :::danger
  *
- * Slack requires that the redirect URL of your app uses https, even for local development. 
+ * Slack requires that the redirect URL of your app uses https, even for local development.
  * An easy workaround for this is using a service like [ngrok](https://ngrok.com/) that creates a secure tunnel to your app, using https. Remember to set the url as `NEXTAUTH_URL` as well.
  *
  * :::

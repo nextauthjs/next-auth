@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/pinterest
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -21,9 +20,15 @@ export interface PinterestProfile extends Record<string, any> {
 /**
  * Add Pinterest login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/pinterest
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Pinterest from "@auth/core/providers/pinterest"
  *
@@ -33,23 +38,23 @@ export interface PinterestProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Pinterest OAuth documentation](https://developers.pinterest.com/docs/getting-started/authentication/)
  *  - [Pinterest app console](https://developers.pinterest.com/apps/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Pinterest provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
- * 
+ *
  * :::tip
- * 
+ *
  * To use in production, make sure the app has standard API access and not trial access
- * 
+ *
  * :::
- * 
+ *
  * :::tip
  *
  * The Pinterest provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/pinterest.ts).

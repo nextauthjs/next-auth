@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/notion
  */
 
@@ -60,7 +59,7 @@ const NOTION_API_VERSION = "2022-06-28"
 /**
  * Add Notion login to your page.
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
@@ -74,15 +73,15 @@ const NOTION_API_VERSION = "2022-06-28"
  *
  * ---
  *
- * ## Resources
+ * ### Resources
  * - [Notion Docs](https://developers.notion.com/docs)
  * - [Notion Authorization Docs](https://developers.notion.com/docs/authorization)
  * - [Notion Integrations](https://www.notion.so/my-integrations)
  *
  * ---
  *
- * ## Notes
- * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details. 
+ * ### Notes
+ * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.
  * You must provide a `clientId` and `clientSecret` to use this provider, as-well as a redirect URI (due to this being required by Notion endpoint to fetch tokens).
  *
  * :::tip

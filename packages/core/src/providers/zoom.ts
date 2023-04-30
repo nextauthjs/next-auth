@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/zoom
  */
 
@@ -47,9 +46,15 @@ export interface ZoomProfile extends Record<string, any> {
 /**
  * Add Zoom login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/zoom
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Zoom from "@auth/core/providers/zoom"
  *
@@ -59,11 +64,11 @@ export interface ZoomProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Zoom OAuth 2.0 Integration Guide](https://developers.zoom.us/docs/integrations/oauth/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Zoom provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

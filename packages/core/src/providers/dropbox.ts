@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/dropbox
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Dropbox login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/dropbox
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Dropbox from "@auth/core/providers/dropbox"
  *
@@ -26,11 +31,11 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Dropbox OAuth documentation](https://developers.dropbox.com/oauth-guide)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Dropbox provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -52,7 +57,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Dropbox(options: OAuthUserConfig<Record<string, any>>
+export default function Dropbox(
+  options: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "dropbox",

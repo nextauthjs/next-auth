@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/mailchimp
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Mailchimp login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/mailchimp
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Mailchimp from "@auth/core/providers/mailchimp"
  *
@@ -26,12 +31,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Mailchimp OAuth documentation](https://admin.mailchimp.com/account/oauth2/client/)
  *  - [Mailchimp documentation: Access user data](https://mailchimp.com/developer/marketing/guides/access-user-data-oauth-2/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Mailchimp provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -53,7 +58,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Mailchimp(config: OAuthUserConfig<Record<string, any>>
+export default function Mailchimp(
+  config: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "mailchimp",

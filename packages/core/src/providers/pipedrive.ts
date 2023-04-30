@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/pipedrive
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -49,9 +48,15 @@ export interface PipedriveProfile extends Record<string, any> {
 /**
  * Add Pipedrive login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/pipedrive
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Pipedrive from "@auth/core/providers/pipedrive"
  *
@@ -61,11 +66,11 @@ export interface PipedriveProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Pipedrive OAuth documentation](https://pipedrive.readme.io/docs/marketplace-oauth-authorization)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Pipedrive provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
