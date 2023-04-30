@@ -124,7 +124,7 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {}
+  let profile: Profile
   let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
@@ -163,6 +163,8 @@ export async function handleOAuth(
         (tokens as any).access_token
       )
       profile = await userinfoResponse.json()
+    } else {
+      throw new TypeError("No userinfo endpoint configured")
     }
   }
 
@@ -171,34 +173,39 @@ export async function handleOAuth(
       Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
   }
 
-  const profileResult = await getProfile(profile, provider, tokens, logger)
+  const profileResult = await getUserAndProfile(
+    profile,
+    provider,
+    tokens,
+    logger
+  )
 
   return { ...profileResult, cookies: resCookies }
 }
 
 /** Returns profile, raw profile and auth provider details */
-async function getProfile(
+async function getUserAndProfile(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
   logger: LoggerInstance
 ) {
   try {
-    const profile = await provider.profile(OAuthProfile, tokens)
-    profile.email = profile.email?.toLowerCase()
+    const user = await provider.profile(OAuthProfile, tokens)
+    user.email = user.email?.toLowerCase()
 
-    if (!profile.id) {
+    if (!user.id) {
       throw new TypeError(
-        `Profile id is missing in ${provider.name} OAuth profile response`
+        `User id is missing in ${provider.name} OAuth profile response`
       )
     }
 
     return {
-      profile,
+      user,
       account: {
         provider: provider.id,
         type: provider.type,
-        providerAccountId: profile.id.toString(),
+        providerAccountId: user.id.toString(),
         ...tokens,
       },
       OAuthProfile,

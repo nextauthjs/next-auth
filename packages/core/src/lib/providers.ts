@@ -6,9 +6,10 @@ import type {
   OAuthConfigInternal,
   OAuthEndpointType,
   OAuthUserConfig,
+  ProfileCallback,
   Provider,
 } from "../providers/index.js"
-import type { AuthConfig, InternalProvider, User } from "../types.js"
+import type { AuthConfig, InternalProvider, Profile } from "../types.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -88,7 +89,7 @@ function normalizeOAuth(
  * @see https://openid.net/specs/openid-connect-core-1_0.html#IDToken
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
  */
-function defaultProfile(profile: any): User {
+const defaultProfile: ProfileCallback<Profile> = (profile) => {
   return stripUndefined({
     id: profile.sub ?? profile.id,
     name: profile.name ?? profile.nickname ?? profile.preferred_username,
@@ -108,7 +109,6 @@ function defaultProfile(profile: any): User {
  */
 const defaultAccount: AccountCallback = (account) => {
   return stripUndefined({
-    id: account.id,
     access_token: account.access_token,
     id_token: account.id_token,
   })

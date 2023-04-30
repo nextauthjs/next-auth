@@ -135,12 +135,39 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   expires_at?: number
 }
 
-/** The OAuth profile returned from your provider */
+/**
+ * The user info returned from your OAuth provider.
+ *
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+ */
 export interface Profile {
-  sub?: string | null
-  name?: string | null
-  email?: string | null
-  image?: string | null
+  sub: string
+  name?: string
+  given_name?: string
+  family_name?: string
+  middle_name?: string
+  nickname?: string
+  preferred_username?: string
+  profile?: string
+  picture?: string
+  website?: string
+  email?: string
+  email_verified?: boolean
+  gender?: string
+  birthdate?: string
+  zoneinfo?: string
+  locale?: string
+  phone_number?: string
+  updated_at?: number
+  address?: {
+    formatted?: string
+    street_address?: string
+    locality?: string
+    region?: string
+    postal_code?: string
+    country?: string
+  }
+  [claim: string]: unknown
 }
 
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */

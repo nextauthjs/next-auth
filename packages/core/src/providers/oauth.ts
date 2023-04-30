@@ -1,7 +1,6 @@
 import type { Client } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type {
-  Account,
   AuthConfig,
   Awaitable,
   Profile,
@@ -144,16 +143,19 @@ export interface OAuth2Config<Profile>
   userinfo?: string | UserinfoEndpointHandler
   type: "oauth"
   /**
-   * Receives the profile object returned by the OAuth provider, and returns the user object.
-   * This will be used to create the user in the database.
+   * Receives the full {@link Profile} returned by the OAuth provider, and returns a subset.
+   * It is used to create the user in the database.
+   *
    * Defaults to: `id`, `email`, `name`, `image`
    *
    * @see [Database Adapter: User model](https://authjs.dev/reference/adapters#user)
    */
   profile?: ProfileCallback<Profile>
   /**
-   * Receives the Account object returned by the OAuth provider, and returns the user object.
-   * This will be used to create the account associated with a user in the database.
+   * Receives the full {@link TokenSet} returned by the OAuth provider, and returns a subset.
+   * It is used to create the account associated with a user in the database.
+   *
+   * Defaults to: `access_token` and `id_token`
    *
    * @see [Database Adapter: Account model](https://authjs.dev/reference/adapters#account)
    * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
