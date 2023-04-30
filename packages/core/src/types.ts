@@ -116,16 +116,58 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   providerAccountId: string
   /** Provider's type for this account */
   type: ProviderType
-  /** id of the user this account belongs to */
+  /**
+   * id of the user this account belongs to
+   *
+   * @see https://authjs.dev/reference/adapters#user
+   */
   userId?: string
+  /**
+   * Calculated value based on {@link OAuth2TokenEndpointResponse.expires_in}.
+   *
+   * It is the absolute timestamp (in seconds) when the {@link OAuth2TokenEndpointResponse.access_token} expires.
+   *
+   * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
+   *
+   * @see https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy
+   * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
+   */
+  expires_at?: number
 }
 
-/** The OAuth profile returned from your provider */
+/**
+ * The user info returned from your OAuth provider.
+ *
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+ */
 export interface Profile {
-  sub?: string | null
-  name?: string | null
-  email?: string | null
-  image?: string | null
+  sub: string
+  name?: string
+  given_name?: string
+  family_name?: string
+  middle_name?: string
+  nickname?: string
+  preferred_username?: string
+  profile?: string
+  picture?: string
+  website?: string
+  email?: string
+  email_verified?: boolean
+  gender?: string
+  birthdate?: string
+  zoneinfo?: string
+  locale?: string
+  phone_number?: string
+  updated_at?: number
+  address?: {
+    formatted?: string
+    street_address?: string
+    locality?: string
+    region?: string
+    postal_code?: string
+    country?: string
+  }
+  [claim: string]: unknown
 }
 
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */

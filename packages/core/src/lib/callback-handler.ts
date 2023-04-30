@@ -49,7 +49,7 @@ export async function handleLogin(
   }
 
   const profile = _profile as AdapterUser
-  const account = _account as AdapterAccount
+  let account = _account as AdapterAccount
 
   const {
     createUser,
@@ -154,6 +154,11 @@ export async function handleLogin(
 
       return { session, user: userByAccount, isNewUser }
     } else {
+      const { provider: p } = options as InternalOptions<"oauth" | "oidc">
+      const { type, provider, providerAccountId, userId, ...tokenSet } = account
+      const defaults = { providerAccountId, provider, type, userId }
+      account = Object.assign(p.account(tokenSet), defaults)
+
       if (user) {
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
