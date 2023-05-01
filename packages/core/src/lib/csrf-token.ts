@@ -16,7 +16,7 @@ interface CreateCSRFTokenParams {
  * where 'token' is the CSRF token and 'hash' is a hash made of the token and
  * the secret, and the two values are joined by a pipe '|'. By storing the
  * value and the hash of the value (with the secret used as a salt) we can
- * verify the cookie was set by the server and not by a malicous attacker.
+ * verify the cookie was set by the server and not by a malicious attacker.
  *
  * For more details, see the following OWASP links:
  * https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie

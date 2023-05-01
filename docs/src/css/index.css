@@ -31,6 +31,7 @@
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
   --ifm-h1-font-size: 3rem;
   --ifm-h1-font-size: 2rem;
+  --docusaurus-announcement-bar-height: auto !important;
 }
 
 html[data-theme="dark"]:root {
@@ -56,6 +57,7 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "providers.css";
 @import "navbar.css";
 @import "search.css";
+@import "adapters.css";
 
 a {
   font-weight: 600;
@@ -100,6 +102,11 @@ html[data-theme="dark"] hr {
   border-color: #242526;
 }
 
+/* Docusaurus announcementBar close button */
+.close {
+  color: inherit!important;
+}
+
 .home-main .code {
   padding: 0;
   height: 100%;
@@ -117,6 +124,9 @@ html[data-theme="dark"] hr {
   font-size: 1rem;
   font-weight: 700;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .home-main .code .code-heading span {

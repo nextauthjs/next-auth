@@ -2,7 +2,8 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**/*"]
     },
     "next-auth#build": {
       "dependsOn": ["^build"],
@@ -14,20 +15,25 @@
         "next/**",
         "providers/**",
         "react/**",
-        "index.d.ts",
-        "index.js",
-        "adapters.d.ts",
-        "middleware.d.ts",
-        "middleware.js"
+        "*.js",
+        "*.d.ts"
       ]
     },
     "@auth/core#build": {
       "dependsOn": ["^build"],
-      "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
+      "outputs": [
+        "lib/**",
+        "providers/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/pages/styles.ts",
+        "src/providers/oauth-types.ts"
+      ]
     },
     "@auth/sveltekit#build": {
       "dependsOn": ["^build"],
-      "outputs": ["client.*", "index.*"]
+      "outputs": [".svelte-kit/**", "client.*", "index.*"]
     },
     "clean": {
       "cache": false
@@ -45,15 +51,54 @@
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
     },
     "docs#dev": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "@auth/core#build",
+        "@auth/sveltekit#build",
+        "@next-auth/dgraph-adapter#build",
+        "@next-auth/dynamodb-adapter#build",
+        "@next-auth/fauna-adapter#build",
+        "@next-auth/firebase-adapter#build",
+        "@next-auth/mikro-orm-adapter#build",
+        "@next-auth/mongodb-adapter#build",
+        "@next-auth/neo4j-adapter#build",
+        "@next-auth/pouchdb-adapter#build",
+        "@next-auth/prisma-adapter#build",
+        "@next-auth/sequelize-adapter#build",
+        "@next-auth/supabase-adapter#build",
+        "@next-auth/typeorm-legacy-adapter#build",
+        "@next-auth/upstash-redis-adapter#build",
+        "@next-auth/xata-adapter#build",
+        "^build",
+        "next-auth#build"
+      ],
       "cache": false
     },
     "docs#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "@auth/core#build",
+        "@auth/sveltekit#build",
+        "@next-auth/dgraph-adapter#build",
+        "@next-auth/dynamodb-adapter#build",
+        "@next-auth/fauna-adapter#build",
+        "@next-auth/firebase-adapter#build",
+        "@next-auth/mikro-orm-adapter#build",
+        "@next-auth/mongodb-adapter#build",
+        "@next-auth/neo4j-adapter#build",
+        "@next-auth/pouchdb-adapter#build",
+        "@next-auth/prisma-adapter#build",
+        "@next-auth/sequelize-adapter#build",
+        "@next-auth/supabase-adapter#build",
+        "@next-auth/typeorm-legacy-adapter#build",
+        "@next-auth/upstash-redis-adapter#build",
+        "@next-auth/xata-adapter#build",
+        "^build",
+        "next-auth#build"
+      ],
       "outputs": [
-        "build",
-        "docs/reference/core",
-        "docs/reference/sveltekit",
+        ".docusaurus/**/*",
+        "build/**/*",
+        "docs/reference/core/**/*",
+        "docs/reference/sveltekit/**/*",
         "docs/reference/adapter/**"
       ]
     }

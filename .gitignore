@@ -1,6 +1,5 @@
 # Misc
 .DS_Store
-.npmrc
 .eslintcache
 .env
 .env.local
@@ -14,7 +13,7 @@ yarn-error.log*
 firebase-debug.log
 ui-debug.log
 .pnpm-debug.log
-
+.husky
 
 # Dependencies
 node_modules
@@ -44,6 +43,7 @@ packages/*/*.d.ts.map
 apps/dev/src/css
 apps/dev/prisma/migrations
 apps/dev/typeorm
+apps/dev/nextjs-2
 
 # VS
 /.vs/slnx.sqlite-journal

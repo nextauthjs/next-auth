@@ -6,7 +6,7 @@
  * issued and used by Auth.js.
  *
  * The JWT issued by Auth.js is _encrypted by default_, using the _A256GCM_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7516 JWE}).
- * It uses the `AUTH_SECRET` environment variable to dervice a sufficient encryption key.
+ * It uses the `AUTH_SECRET` environment variable to derive a sufficient encryption key.
  *
  * :::info Note
  * Auth.js JWTs are meant to be used by the same app that issued them.
@@ -48,9 +48,10 @@ const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 const now = () => (Date.now() / 1000) | 0
 
 /** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
-export async function encode(params: JWTEncodeParams) {
+export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
   const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
   const encryptionSecret = await getDerivedEncryptionKey(secret)
+  // @ts-expect-error `jose` allows any object as payload.
   return await new EncryptJWT(token)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
@@ -60,14 +61,16 @@ export async function encode(params: JWTEncodeParams) {
 }
 
 /** Decodes a Auth.js issued JWT. */
-export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
+export async function decode<Payload = JWT>(
+  params: JWTDecodeParams
+): Promise<Payload | null> {
   const { token, secret } = params
   if (!token) return null
   const encryptionSecret = await getDerivedEncryptionKey(secret)
   const { payload } = await jwtDecrypt(token, encryptionSecret, {
     clockTolerance: 15,
   })
-  return payload
+  return payload as Payload
 }
 
 export interface GetTokenParams<R extends boolean = false> {
@@ -179,15 +182,15 @@ export interface DefaultJWT extends Record<string, unknown> {
  */
 export interface JWT extends Record<string, unknown>, DefaultJWT {}
 
-export interface JWTEncodeParams {
+export interface JWTEncodeParams<Payload = JWT> {
   /** The JWT payload. */
-  token?: JWT
+  token?: Payload
   /** The secret used to encode the Auth.js issued JWT. */
   secret: string
   /**
    * The maximum age of the Auth.js issued JWT in seconds.
    *
-   * @default 30 * 24 * 30 * 60 // 30 days
+   * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge?: number
 }
@@ -203,14 +206,14 @@ export interface JWTOptions {
   /**
    * The secret used to encode/decode the Auth.js issued JWT.
    *
-   * @deprecated  Set the `AUTH_SECRET` environment vairable or
+   * @deprecated  Set the `AUTH_SECRET` environment variable or
    * use the top-level `secret` option instead
    */
   secret: string
   /**
    * The maximum age of the Auth.js issued JWT in seconds.
    *
-   * @default 30 * 24 * 30 * 60 // 30 days
+   * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge: number
   /** Override this method to control the Auth.js issued JWT encoding. */

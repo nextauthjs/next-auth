@@ -53,9 +53,8 @@ export default function Okta<P extends OktaProfile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/okta.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/okta-dark.svg",
+      logo: "/okta.svg",
+      logoDark: "/okta-dark.svg",
       bg: "#fff",
       text: "#000",
       bgDark: "#000",

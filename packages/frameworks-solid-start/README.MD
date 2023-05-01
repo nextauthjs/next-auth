@@ -27,8 +27,8 @@ AUTH_TRUST_HOST=true
 in this example we are using github so make sure to set the following environment variables:
 
 ```
-GITHUB_ID=your_github_oatuh_id
-GITHUB_SECRET=your_github_oatuh_secret
+GITHUB_ID=your_github_oauth_id
+GITHUB_SECRET=your_github_oauth_secret
 ```
 
 ```ts

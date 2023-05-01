@@ -174,7 +174,7 @@ If you are deploying directly to a particular cloud platform you may also want t
 
 ## Security
 
-Parts of this section has been moved to its [own page](/getting-started/security).
+Parts of this section has been moved to its [own page](/security).
 
 <details>
 <summary>
@@ -269,7 +269,7 @@ Ultimately if your request is not accepted or is not actively in development, yo
 </summary>
 <p>
 
-Auth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](/guides/adapters/using-a-database-adapter), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/reference/configuration/auth-config#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
+Auth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](/guides/adapters/using-a-database-adapter), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/reference/configuration/auth-config#session). Since v4 all our JWTs are now encrypted by default with A256GCM.
 
 </p>
 </details>

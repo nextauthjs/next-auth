@@ -21,4 +21,4 @@
 
 ---
 
-Check out the documentation at [authjs.dev](https://authjs.dev/reference/core/modules/main).
+Check out the documentation at [authjs.dev](https://authjs.dev/reference/core).
