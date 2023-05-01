@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/yandex
  */
 
@@ -45,7 +44,7 @@ export interface YandexProfile {
    * ID of the Yandex user's profile picture.
    * Format for downloading user avatars: `https://avatars.yandex.net/get-yapic/<default_avatar_id>/<size>`
    * @example "https://avatars.yandex.net/get-yapic/31804/BYkogAC6AoB17bN1HKRFAyKiM4-1/islands-200"
-   * Available sizes: 
+   * Available sizes:
    * `islands-small`: 28×28 pixels.
    * `islands-34`: 34×34 pixels.
    * `islands-middle`: 42×42 pixels.
@@ -99,7 +98,7 @@ export interface YandexProfile {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Yandex - Creating an OAuth app](https://yandex.com/dev/id/doc/en/register-client#create)
  * - [Yandex - Manage OAuth apps](https://oauth.yandex.com/)

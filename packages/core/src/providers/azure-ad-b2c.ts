@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/azure-ad-b2c
  */
 
@@ -60,7 +59,7 @@ export interface AzureADB2CProfile {
  *   - Identity Provider Access Token
  *   - User's Object ID
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
@@ -75,13 +74,13 @@ export interface AzureADB2CProfile {
  *
  * ---
  *
- * ## Resources
+ * ### Resources
  *
  * - [Azure Active Directory B2C documentation](https://learn.microsoft.com/en-us/azure/active-directory-b2c)
  *
  * ---
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Azure AD B2C provider is
  * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.

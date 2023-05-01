@@ -1,13 +1,11 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Okta</b> integration.</span>
- * TODO: SVG LOGO
  * <a href="https://okta.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/okta.svg" height="48" />
  * </a>
  * </div>
  *
- * ---
  * @module providers/okta
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -49,9 +47,15 @@ export interface OktaProfile extends Record<string, any> {
 /**
  * Add Okta login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/okta
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Okta from "@auth/core/providers/okta"
  *
@@ -61,11 +65,11 @@ export interface OktaProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Okta OAuth documentation](https://developer.okta.com/docs/reference/api/oidc)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Okta provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.

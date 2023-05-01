@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/eveonline
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -24,9 +23,15 @@ export interface EVEOnlineProfile extends Record<string, any> {
 /**
  * Add EveOnline login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/eveonline
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import EveOnline from "@auth/core/providers/eveonline"
  *
@@ -36,18 +41,18 @@ export interface EVEOnlineProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [EveOnline OAuth documentation](https://developers.eveonline.com/blog/article/sso-to-authenticated-calls)
  *
- * ## Notes
+ * ### Notes
  *
  * :::tip
  * When creating your application, make sure to select `Authentication Only` as the connection type.
  * :::
- * 
+ *
  * :::tip
- * If using JWT for the session, you can add the `CharacterID` to the JWT token and session. Example:
+ * If using JWT for the session, you can add the `CharacterID` to the JWT and session. Example:
  * ```js
  * options: {
  *   jwt: {

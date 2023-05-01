@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/spotify
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -25,9 +24,15 @@ export interface SpotifyProfile extends Record<string, any> {
 /**
  * Add Spotify login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/spotify
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Spotify from "@auth/core/providers/spotify"
  *
@@ -37,12 +42,12 @@ export interface SpotifyProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Spotify OAuth documentation](https://developer.spotify.com/documentation/general/guides/authorization-guide)
  * - [Spotify app console](https://developer.spotify.com/dashboard/applications)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Spotify provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

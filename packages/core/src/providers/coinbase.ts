@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/coinbase
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Coinbase login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/coinbase
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Coinbase from "@auth/core/providers/coinbase"
  *
@@ -26,16 +31,16 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Coinbase OAuth documentation](https://developers.coinbase.com/api/v2)
  *
- * ## Notes
+ * ### Notes
  *
  * :::tip
  * This Provider template has a 2 hour access token to it. A refresh token is also returned.
  * :::
- * 
+ *
  * By default, Auth.js assumes that the Coinbase provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
@@ -56,7 +61,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Coinbase(options: OAuthUserConfig<Record<string, any>>
+export default function Coinbase(
+  options: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "coinbase",

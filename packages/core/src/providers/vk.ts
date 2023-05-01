@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/vk
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -295,9 +294,15 @@ export interface VkProfile {
 /**
  * Add VK login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/vk
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import VK from "@auth/core/providers/vk"
  *
@@ -307,12 +312,12 @@ export interface VkProfile {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [VK API documentation](https://vk.com/dev/first_guide)
  * - [VK App configuration](https://vk.com/apps?act=manage)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the VK provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

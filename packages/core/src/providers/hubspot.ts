@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/hubspot
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -22,9 +21,15 @@ interface HubSpotProfile extends Record<string, any> {
 /**
  * Add HubSpot login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/hubspot
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import HubSpot from "@auth/core/providers/hubspot"
  *
@@ -34,11 +39,11 @@ interface HubSpotProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [HubSpot OAuth documentation](https://developers.hubspot.com/docs/api/oauth-quickstart-guide)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the HubSpot provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

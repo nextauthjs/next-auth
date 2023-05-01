@@ -29,7 +29,7 @@ export interface SendVerificationRequestParams {
 export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server: string | SMTPTransportOptions
+  server?: string | SMTPTransportOptions
   /** @default `"Auth.js <no-reply@authjs.dev>"` */
   from?: string
   /**
@@ -72,7 +72,7 @@ export interface EmailConfig extends CommonProviderOptions {
    * By default, we treat email addresses as all lower case,
    * but you can override this function to change this behavior.
    *
-   * [Documentation](https://authjs.dev/guides/providers/email#normalizing-the-e-mail-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
+   * [Normalizing the email address](https://authjs.dev/reference/core/providers_email#normalizing-the-email-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
    */
   normalizeIdentifier?: (identifier: string) => string
 }
@@ -287,7 +287,7 @@ export type EmailProviderType = "email"
  * 
  * ## Normalizing the email address
  * 
- * By default, NextAuth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
+ * By default, Auth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
  * ```ts
  *   EmailProvider({
  *     // ...
@@ -301,7 +301,7 @@ export type EmailProviderType = "email"
  *       return `${local}@${domain}`
  * 
  *       // You can also throw an error, which will redirect the user
- *       // to the error page with error=EmailSignin in the URL
+ *       // to the sign-in page with error=EmailSignin in the URL
  *       // if (identifier.split("@").length > 2) {
  *       //   throw new Error("Only one email allowed")
  *       // }

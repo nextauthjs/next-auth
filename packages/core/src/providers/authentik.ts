@@ -1,13 +1,11 @@
 /**
- * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#fd4b2d", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Authentik</b> integration.</span>
- * TODO: SVG logo
  * <a href="https://goauthentik.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/authentik.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/authentik
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -36,9 +34,15 @@ export interface AuthentikProfile extends Record<string, any> {
 /**
  * Add Authentik login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/authentik
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Authentik from "@auth/core/providers/authentik"
  *
@@ -47,16 +51,16 @@ export interface AuthentikProfile extends Record<string, any> {
  *   providers: [Authentik({ clientId: AUTHENTIK_CLIENT_ID, clientSecret: AUTHENTIK_CLIENT_SECRET, issuer: AUTHENTIK_ISSUER })],
  * })
  * ```
- * 
+ *
  * :::note
  * issuer should include the slug without a trailing slash – e.g., https://my-authentik-domain.com/application/o/My_Slug
  * :::
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Authentik OAuth documentation](https://goauthentik.io/docs/providers/oauth2)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Authentik provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.

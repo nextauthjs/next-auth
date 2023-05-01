@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/mattermost
  */
 import type { OAuthConfig, OAuthUserConfig } from "./oauth"
@@ -70,9 +69,15 @@ export interface MattermostProfile {
 /**
  * Add Mattermost login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/mattermost
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Mattermost from "@auth/core/providers/mattermost"
  *
@@ -82,23 +87,23 @@ export interface MattermostProfile {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Mattermost OAuth documentation](https://example.com)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Mattermost provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- * 
+ *
  * To create your Mattermost OAuth2 app visit `http://<your Mattermost instance url>/<your team>/integrations/oauth2-apps`
  *
  * :::warning
- * 
+ *
  * The Mattermost provider requires the `issuer` option to be set. This is the base url of your Mattermost instance. e.g https://my-cool-server.cloud.mattermost.com
- * 
+ *
  * :::
- * 
+ *
  * :::tip
  *
  * The Mattermost provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/mattermost.ts).
