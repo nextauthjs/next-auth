@@ -1,8 +1,12 @@
 import NextAuth from "next-auth"
+import Auth0 from "@auth/core/providers/github"
+import Facebook from "@auth/core/providers/facebook"
 import GitHub from "@auth/core/providers/github"
+import Google from "@auth/core/providers/google"
+import Twitter from "@auth/core/providers/twitter"
 
 export const { handlers, auth } = NextAuth({
-  providers: [GitHub],
+  providers: [GitHub, Auth0, Facebook, Google, Twitter],
   callbacks: {
     async authorized({ request, auth }) {
       // if (request.method === "POST") {
