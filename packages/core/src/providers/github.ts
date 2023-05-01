@@ -65,6 +65,7 @@ export interface GitHubProfile {
     space: number
     private_repos: number
   }
+  [claim: string]: unknown
 }
 
 /**
