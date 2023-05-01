@@ -125,7 +125,12 @@ export class MissingSecret extends AuthError {}
  */
 export class OAuthAccountNotLinked extends AuthError {}
 
-/** @todo */
+/**
+ * Thrown when an OAuth provider returns an error during the sign in process.
+ * This could happen for example if the user denied access to the application or there was a configuration error.
+ *
+ * For a full list of possible reasons, check out the specification [Authorization Code Grant: Error Response](https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1)
+ */
 export class OAuthCallbackError extends AuthError {}
 
 /** @todo */

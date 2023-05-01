@@ -337,7 +337,7 @@ export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
 export type SignInPageErrorParam =
   | "Signin"
   | "OAuthSignin"
-  | "OAuthCallback"
+  | "OAuthCallbackError"
   | "OAuthCreateAccount"
   | "EmailCreateAccount"
   | "Callback"
