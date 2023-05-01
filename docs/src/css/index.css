@@ -124,6 +124,9 @@ html[data-theme="dark"] hr {
   font-size: 1rem;
   font-weight: 700;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .home-main .code .code-heading span {

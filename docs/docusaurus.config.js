@@ -7,7 +7,7 @@ const path = require("path")
 const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
-  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .filter((file) => file.endsWith(".ts"))
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
@@ -249,7 +249,7 @@ const docusaurusConfig = {
   plugins: [
     typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
     typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
-    typedocFramework("frameworks-nextjs", ["index.ts", "client.tsx"]),
+    typedocFramework("next-auth", ["index.ts", "react.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [

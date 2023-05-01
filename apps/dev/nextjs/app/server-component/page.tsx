@@ -35,5 +35,3 @@ export default async function Page() {
   }
   return <SignIn id="github">Sign in with github</SignIn>
 }
-
-export const runtime = "experimental-edge"

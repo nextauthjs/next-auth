@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { useSession } from "@auth/nextjs/client"
+import { useSession } from "next-auth/react"
 import styles from "./header.module.css"
 
 // The approach used in this component shows how to built a sign in and sign out

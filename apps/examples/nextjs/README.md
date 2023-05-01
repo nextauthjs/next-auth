@@ -8,21 +8,21 @@
    <a href="https://nextjs.org" target="_blank">
    <img height="64" src="https://nextjs.org/static/favicon/android-chrome-192x192.png" />
    </a>
-   <h3 align="center"><b>@auth/nextjs</b> - Example App</h3>
+   <h3 align="center"><b>next-auth</b> - Example App</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <a href="https://npm.im/@auth/nextjs">
-        <img alt="npm" src="https://img.shields.io/npm/v/@auth/nextjs?color=green&label=@auth/nextjs&style=flat-square">
+      <a href="https://npm.im/next-auth">
+        <img alt="npm" src="https://img.shields.io/npm/v/next-auth?color=green&label=next-auth&style=flat-square">
       </a>
       <a href="https://bundlephobia.com/result?p=next-auth-example">
-        <img src="https://img.shields.io/bundlephobia/minzip/@auth/nextjs?label=size&style=flat-square" alt="Bundle Size"/>
+        <img src="https://img.shields.io/bundlephobia/minzip/next-auth?label=size&style=flat-square" alt="Bundle Size"/>
       </a>
-      <a href="https://www.npmtrends.com/@auth/nextjs">
-        <img src="https://img.shields.io/npm/dm/@auth/nextjs?label=downloads&style=flat-square" alt="Downloads" />
+      <a href="https://www.npmtrends.com/next-auth">
+        <img src="https://img.shields.io/npm/dm/next-auth?label=downloads&style=flat-square" alt="Downloads" />
       </a>
-      <a href="https://npm.im/@auth/nextjs">
+      <a href="https://npm.im/next-auth">
         <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
       </a>
    </p>
@@ -32,7 +32,7 @@
 
 NextAuth.js is a complete open-source authentication solution.
 
-This is an example application that shows how `@auth/nextjs` is applied to a basic Next.js app.
+This is an example application that shows how `next-auth` is applied to a basic Next.js app.
 
 The deployed version can be found at [`next-auth-example.vercel.app`](https://next-auth-example.vercel.app)
 

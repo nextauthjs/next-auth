@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/trakt
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -29,9 +28,15 @@ export interface TraktUser extends Record<string, any> {
 /**
  * Add Trakt login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/trakt
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Trakt from "@auth/core/providers/trakt"
  *
@@ -41,15 +46,15 @@ export interface TraktUser extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Trakt OAuth documentation](https://trakt.docs.apiary.io/#reference/authentication-oauth)
- * 
+ *
  * If you're using the api in production by calling `api.trakt.tv`. Follow the example. If you wish to develop on Trakt's sandbox environment by calling `api-staging.trakt.tv`, change the URLs.
- * 
+ *
  * Start by creating an OAuth app on Trakt for production or development. Then set the Client ID and Client Secret as TRAKT_ID and TRAKT_SECRET in .env.
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Trakt provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

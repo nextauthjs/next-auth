@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/cognito
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -21,9 +20,15 @@ export interface CognitoProfile extends Record<string, any> {
 /**
  * Add Cognito login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/cognito
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Cognito from "@auth/core/providers/cognito"
  *
@@ -33,13 +38,13 @@ export interface CognitoProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Cognito OAuth documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
  *
- * ## Notes
+ * ### Notes
  * You need to select your AWS region to go the the Cognito dashboard.
- * 
+ *
  * :::tip
  * The issuer is a URL, that looks like this: https://cognito-idp.{region}.amazonaws.com/{PoolId}
  * :::
@@ -47,7 +52,7 @@ export interface CognitoProfile extends Record<string, any> {
  * :::warning
  * Make sure you select all the appropriate client settings or the OAuth flow will not work.
  * :::
- * 
+ *
  * By default, Auth.js assumes that the Cognito provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *

@@ -19,23 +19,29 @@ const icons = [
   "/img/providers/twitter.svg",
 ]
 
-export default React.memo(function ProviderMarquee() {
-  let scale = 0.4
-
+function changeScale() {
   if (typeof window !== "undefined") {
     const width = window.outerWidth
-    if (width > 800) {
-      scale = 0.6
-    }
 
-    if (width > 1100) {
-      scale = 0.7
-    }
-
-    if (width > 1400) {
-      scale = 0.8
-    }
+    if (width > 800) return 0.6
+    else if (width > 1100) return 0.7
+    else if (width > 1400) return 0.8
   }
+}
+
+export default React.memo(function ProviderMarquee() {
+  // Get initial scale on load
+  const [scale, setScale] = React.useState(changeScale)
+
+  React.useEffect(() => {
+    // Account for window size change
+    function handleEvent() {
+      setScale(changeScale)
+    }
+
+    window.addEventListener("resize", handleEvent)
+    return () => window.removeEventListener("resize", handleEvent)
+  }, [])
 
   return (
     <div className={styles.fullWidth}>

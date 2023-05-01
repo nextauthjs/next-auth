@@ -97,8 +97,6 @@
     "packages/core/src/lib/pages/styles.ts",
     "packages/frameworks-sveltekit/package",
     "packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*",
-    "packages/next-auth/src/providers/oauth-types.ts",
-    "packages/next-auth/css/index.css",
     ".branches",
     "db.sqlite",
     "dev.db",
@@ -252,7 +250,7 @@
           "apps/dev/nextjs/pages/api/auth-old/[...nextauth].ts",
           "apps/dev/nextjs/app/api/auth/[...nextauth]/route.ts",
           "docs/{sidebars,docusaurus.config}.js",
-          "packages/frameworks-nextjs/src/lib/env.ts"
+          "packages/next-auth/src/lib/env.ts"
         ],
         "options": {
           "printWidth": 150

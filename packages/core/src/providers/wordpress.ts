@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/wordpress
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add WordPress login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/wordpress
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import WordPress from "@auth/core/providers/wordpress"
  *
@@ -26,11 +31,11 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [WordPress OAuth documentation](https://developer.wordpress.com/docs/oauth2/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the WordPress provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

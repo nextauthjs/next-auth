@@ -1,6 +1,6 @@
 import Link from "next/link"
 import styles from "./footer.module.css"
-import packageJSON from "@auth/nextjs/package.json"
+import packageJSON from "next-auth/package.json"
 
 export default function Footer() {
   return (

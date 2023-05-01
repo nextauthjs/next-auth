@@ -1,6 +1,6 @@
 // This is an example of how to protect content using server rendering
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
+import { authConfig } from "./api/auth-old/[...nextauth]"
 import Layout from "../components/layout"
 import AccessDenied from "../components/access-denied"
 
@@ -26,7 +26,7 @@ export default function Page({ content, session }) {
 }
 
 export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions)
+  const session = await getServerSession(context.req, context.res, authConfig)
   let content = null
 
   if (session) {
