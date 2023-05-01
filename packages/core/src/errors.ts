@@ -22,13 +22,6 @@ export class AuthError extends Error {
 
 /**
  * @todo
- * Thrown when an Email address is already associated with an account
- * but the user is trying an OAuth account that is not linked to it.
- */
-export class AccountNotLinked extends AuthError {}
-
-/**
- * @todo
  * One of the database `Adapter` methods failed.
  */
 export class AdapterError extends AuthError {}
@@ -37,8 +30,8 @@ export class AdapterError extends AuthError {}
 export class AuthorizedCallbackError extends AuthError {}
 
 /**
- * There was an error while trying to finish up authenticating the user.
- * Depending on the type of provider, this could be for multiple reasons.
+ * This error occurs when the user cannot finish the sign-in process.
+ * Depending on the provider type, this could have happened for multiple reasons.
  *
  * :::tip
  * Check out `[auth][details]` in the error message to know which provider failed.
@@ -48,7 +41,7 @@ export class AuthorizedCallbackError extends AuthError {}
  * ```
  * :::
  *
- * For an **OAuth provider**, possible causes are:
+ * For an [OAuth provider](https://authjs.dev/reference/core/providers_oauth), possible causes are:
  * - The user denied access to the application
  * - There was an error parsing the OAuth Profile:
  *   Check out the provider's `profile` or `userinfo.request` method to make sure
@@ -56,7 +49,7 @@ export class AuthorizedCallbackError extends AuthError {}
  * - The `signIn` or `jwt` callback methods threw an uncaught error:
  *   Check the callback method implementations.
  *
- * For an **Email provider**, possible causes are:
+ * For an [Email provider](https://authjs.dev/reference/core/providers_email), possible causes are:
  * - The provided email/token combination was invalid/missing:
  *   Check if the provider's `sendVerificationRequest` method correctly sends the email.
  * - The provided email/token combination has expired:
@@ -64,7 +57,7 @@ export class AuthorizedCallbackError extends AuthError {}
  * - There was an error with the database:
  *   Check the database logs.
  *
- * For a **Credentials provider**, possible causes are:
+ * For a [Credentials provider](https://authjs.dev/reference/core/providers_credentials), possible causes are:
  * - The `authorize` method threw an uncaught error:
  *   Check the provider's `authorize` method.
  * - The `signIn` or `jwt` callback methods threw an uncaught error:
@@ -125,8 +118,12 @@ export class MissingAuthorize extends AuthError {}
  */
 export class MissingSecret extends AuthError {}
 
-/** @todo */
-export class OAuthSignInError extends AuthError {}
+/**
+ * @todo
+ * Thrown when an Email address is already associated with an account
+ * but the user is trying an OAuth account that is not linked to it.
+ */
+export class OAuthAccountNotLinked extends AuthError {}
 
 /** @todo */
 export class OAuthCallbackError extends AuthError {}
@@ -144,7 +141,31 @@ export class OAuthProfileParseError extends AuthError {}
 /** @todo */
 export class SessionTokenError extends AuthError {}
 
-/** @todo */
+/**
+ * This error occurs when the user cannot initiate the sign-in process.
+ * Depending on the provider type, this could have happened for multiple reasons.
+ *
+ * :::tip
+ * Check out `[auth][details]` in the error message to know which provider failed.
+ * @example
+ * ```sh
+ * [auth][details]: { "provider": "github" }
+ * ```
+ * :::
+ *
+ * For an [OAuth provider](https://authjs.dev/reference/core/providers_oauth), possible causes are:
+ * - The Authorization Server is not compliant with the [OAuth 2.0 specifcation](https://www.ietf.org/rfc/rfc6749.html)
+ *   Check the details in the error message.
+ * - A runtime error occurred in Auth.js. This should be reported as a bug.
+ *
+ * For an [Email provider](https://authjs.dev/reference/core/providers_email), possible causes are:
+ * - The email sent from the client is invalid, could not be normalized by [`EmailConfig.normalizeIdentifier`](https://authjs.dev/reference/core/providers_email#normalizeidentifier)
+ * - The provided email/token combination has expired:
+ *   Ask the user to log in again.
+ * - There was an error with the database:
+ *   Check the database logs.
+ *
+ */
 export class SignInError extends AuthError {}
 
 /** @todo */
