@@ -149,7 +149,7 @@ export interface Profile {
   nickname?: string | null
   preferred_username?: string | null
   profile?: string | null
-  picture?: string | null
+  picture?: string | null | any
   website?: string | null
   email?: string | null
   email_verified?: boolean | null
@@ -337,7 +337,7 @@ export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
 export type SignInPageErrorParam =
   | "Signin"
   | "OAuthSignin"
-  | "OAuthCallback"
+  | "OAuthCallbackError"
   | "OAuthCreateAccount"
   | "EmailCreateAccount"
   | "Callback"

@@ -1,4 +1,8 @@
-import { CallbackRouteError, Verification } from "../../errors.js"
+import {
+  CallbackRouteError,
+  OAuthCallbackError,
+  Verification,
+} from "../../errors.js"
 import { handleLogin } from "../callback-handler.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { handleState } from "../oauth/handle-state.js"
@@ -368,6 +372,15 @@ export async function callback(params: {
       cookies,
     }
   } catch (e) {
+    if (e instanceof OAuthCallbackError) {
+      logger.error(e)
+      // REVIEW: Should we expose original error= and error_description=
+      // Should we use a different name for error= then, since we already use it for all kind of errors?
+      url.searchParams.set("error", OAuthCallbackError.name)
+      url.pathname += "/signin"
+      return { redirect: url.toString(), cookies }
+    }
+
     const error = new CallbackRouteError(e as Error, { provider: provider.id })
 
     logger.debug("callback route error details", { method, query, body })

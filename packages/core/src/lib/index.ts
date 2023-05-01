@@ -110,7 +110,6 @@ export async function AuthInternal<
         if (
           [
             "Signin",
-            "OAuthCallback",
             "OAuthCreateAccount",
             "EmailCreateAccount",
             "Callback",

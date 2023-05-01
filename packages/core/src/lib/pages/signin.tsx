@@ -11,7 +11,7 @@ const signinErrors: Record<
   default: "Unable to sign in.",
   signin: "Try signing in with a different account.",
   oauthsignin: "Try signing in with a different account.",
-  oauthcallback: "Try signing in with a different account.",
+  oauthcallbackerror: "Try signing in with a different account.",
   oauthcreateaccount: "Try signing in with a different account.",
   emailcreateaccount: "Try signing in with a different account.",
   callback: "Try signing in with a different account.",
