@@ -370,6 +370,7 @@ export async function callback(params: {
   } catch (e) {
     const error = new CallbackRouteError(e as Error, { provider: provider.id })
 
+    logger.debug("callback route error details", { method, query, body })
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)
     url.pathname += "/error"

@@ -304,7 +304,7 @@ export interface EventCallbacks {
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
-   * - `token`: The JWT token for this session.
+   * - `token`: The JWT for this session.
    * - `session`: The session object from your adapter that is being ended.
    */
   signOut: (
@@ -322,7 +322,7 @@ export interface EventCallbacks {
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
-   * - `token`: The JWT token for this session.
+   * - `token`: The JWT for this session.
    * - `session`: The session object from your adapter.
    */
   session: (message: { session: Session; token: JWT }) => Awaitable<void>
@@ -427,15 +427,40 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
+/**
+ * Supported actions by Auth.js. Each action map to a REST API endpoint.
+ * Some actions have a `GET` and `POST` variant, depending on if the action
+ * changes the state of the server.
+ *
+ * - **`"callback"`**:
+ *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers_oauth).
+ *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers_credentials).
+ * - **`"csrf"`**: Returns the raw CSRF token, which is saved in a cookie (encrypted).
+ * It is used for CSRF protection, implementing the [double submit cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) technique.
+ * :::note
+ * Some frameworks have built-in CSRF protection and can therefore disable this action. In this case, the corresponding endpoint will return a 404 response. Read more at [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck).
+ * _⚠ We don't recommend manually disabling CSRF protection, unless you know what you're doing._
+ * :::
+ * - **`"error"`**: Renders the built-in error page.
+ * - **`"providers"`**: Returns a client-safe list of all configured providers.
+ * - **`"session"`**: Returns the user's session if it exists, otherwise `null`.
+ * - **`"signin"`**:
+ *   - **`GET`**: Renders the built-in sign-in page.
+ *   - **`POST`**: Initiates the sign-in flow.
+ * - **`"signout"`**:
+ *   - **`GET`**: Renders the built-in sign-out page.
+ *   - **`POST`**: Initiates the sign-out flow. This will invalidate the user's session (deleting the cookie, and if there is a session in the database, it will be deleted as well).
+ * - **`"verify-request"`**: Renders the built-in verification request page.
+ */
 export type AuthAction =
+  | "callback"
+  | "csrf"
+  | "error"
   | "providers"
   | "session"
-  | "csrf"
   | "signin"
   | "signout"
-  | "callback"
   | "verify-request"
-  | "error"
 
 /** @internal */
 export interface RequestInternal {

@@ -52,7 +52,7 @@ export interface EVEOnlineProfile extends Record<string, any> {
  * :::
  *
  * :::tip
- * If using JWT for the session, you can add the `CharacterID` to the JWT token and session. Example:
+ * If using JWT for the session, you can add the `CharacterID` to the JWT and session. Example:
  * ```js
  * options: {
  *   jwt: {
