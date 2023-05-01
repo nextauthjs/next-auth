@@ -55,8 +55,9 @@ export async function signin(
   } catch (e) {
     const error = new SignInError(e as Error, { provider: provider.id })
     logger.error(error)
-    url.searchParams.set("error", error.name)
-    url.pathname += "/error"
+    const code = provider.type === "email" ? "EmailSignin" : "OAuthSignin"
+    url.searchParams.set("error", code)
+    url.pathname += "/signin"
     return { redirect: url.toString() }
   }
 }

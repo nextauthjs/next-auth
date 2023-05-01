@@ -219,6 +219,8 @@ async function getUserAndProfile(
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
     logger.debug("getProfile error details", OAuthProfile)
-    logger.error(new OAuthProfileParseError(e as Error))
+    logger.error(
+      new OAuthProfileParseError(e as Error, { provider: provider.id })
+    )
   }
 }
