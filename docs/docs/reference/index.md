@@ -14,7 +14,7 @@ Here are the _currently_ planned and released packages under the `@auth/*` scope
 
 |       Feature       |  Status  |
 | ------------------- | -------- |
-| `@auth/nextjs`      | Planned  |
+| `@auth/nextjs`      | Experimental, under `next-auth@5`.   |
 | `@auth/*-adapter`   | Planned  |
 | `@auth/core`        | Experimental |
 | `@auth/sveltekit`   | Experimental |
