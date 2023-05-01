@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/twitch
  */
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
@@ -21,9 +20,15 @@ export interface TwitchProfile extends Record<string, any> {
 /**
  * Add Twitch login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/twitch
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Twitch from "@auth/core/providers/twitch"
  *
@@ -33,14 +38,14 @@ export interface TwitchProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Twitch app documentation](https://dev.twitch.tv/console/apps)
- * 
- * Add the following redirect URL into the console `http://<your-next-app-url>/api/auth/callback/twitch`
- * 
  *
- * ## Notes
+ * Add the following redirect URL into the console `http://<your-next-app-url>/api/auth/callback/twitch`
+ *
+ *
+ * ### Notes
  *
  * By default, Auth.js assumes that the Twitch provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.

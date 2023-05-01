@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/facebook
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -26,9 +25,15 @@ export interface FacebookProfile extends Record<string, any> {
 /**
  * Add Facebook login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/facebook
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Facebook from "@auth/core/providers/facebook"
  *
@@ -38,20 +43,20 @@ export interface FacebookProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Facebook OAuth documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/)
  *
- * ## Notes
+ * ### Notes
  *
- * :::tip 
- * Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use localhost callback URLs. 
+ * :::tip
+ * Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use localhost callback URLs.
  * :::
- * 
- * :::tip 
+ *
+ * :::tip
  * Email address may not be returned for accounts created on mobile.
  * :::
- * 
+ *
  * By default, Auth.js assumes that the Facebook provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *

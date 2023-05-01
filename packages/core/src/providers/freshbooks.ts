@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/freshbooks
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add FreshBooks login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/freshbooks
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import FreshBooks from "@auth/core/providers/freshbooks"
  *
@@ -26,12 +31,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [FreshBooks OAuth documentation](https://www.freshbooks.com/api/authenticating-with-oauth-2-0-on-the-new-freshbooks-api
 )
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the FreshBooks provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -53,7 +58,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Freshbooks(options: OAuthUserConfig<Record<string, any>>
+export default function Freshbooks(
+  options: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "freshbooks",

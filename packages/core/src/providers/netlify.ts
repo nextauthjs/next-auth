@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/netlify
  */
 
@@ -15,9 +14,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Netlify login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/netlify
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Netlify from "@auth/core/providers/netlify"
  *
@@ -27,12 +32,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Netlify OAuth blog](https://www.netlify.com/blog/2016/10/10/integrating-with-netlify-oauth2/)
  *  - [Netlify OAuth example](https://github.com/netlify/netlify-oauth-example/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Netlify provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -54,7 +59,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Netlify(config: OAuthUserConfig<Record<string, any>>
+export default function Netlify(
+  config: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "netlify",

@@ -35,7 +35,14 @@ export interface AsgardeoProfile extends Record<string, any> {
 
 /**
  *
- * ## Setup
+ * ### Setup
+ *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/asgardeo
+ * ```
+ *
+ * #### Configuration
  *
  * Import the provider and configure it in your **Auth.js** initialization file:
  *
@@ -75,12 +82,12 @@ export interface AsgardeoProfile extends Record<string, any> {
  * ASGARDEO_ISSUER="Copy the issuer url from the info tab here"
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Asgardeo - Authentication Guide](https://wso2.com/asgardeo/docs/guides/authentication)
  * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
  *
- * ## Notes
+ * ### Notes
  *
  * The Asgardeo provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/asgardeo.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *

@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/todoist
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -24,9 +23,15 @@ interface TodoistProfile extends Record<string, any> {
 /**
  * Add Todoist login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/todoist
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Todoist from "@auth/core/providers/todoist"
  *
@@ -36,12 +41,12 @@ interface TodoistProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [Todoist OAuth documentation](https://developer.todoist.com/guides/#oauth)
  * - [Todoist configuration](https://developer.todoist.com/appconsole.html)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Todoist provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

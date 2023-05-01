@@ -1,13 +1,11 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Box</b> integration.</span>
- * TODO: SVG logo
  * <a href="https://box.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/box.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/box
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -15,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add Box login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/box
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Box from "@auth/core/providers/box"
  *
@@ -27,12 +31,12 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Box developers documentation](https://developer.box.com/reference/)
  *  - [Box OAuth documentation](https://developer.box.com/guides/sso-identities-and-app-users/connect-okta-to-app-users/configure-box/)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Box provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -54,7 +58,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Box(options: OAuthUserConfig<Record<string, any>>
+export default function Box(
+  options: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "box",

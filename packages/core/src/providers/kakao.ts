@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/kakao
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -81,9 +80,15 @@ export interface KakaoProfile extends Record<string, any> {
 /**
  * Add Kakao login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/kakao
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import Kakao from "@auth/core/providers/kakao"
  *
@@ -93,15 +98,15 @@ export interface KakaoProfile extends Record<string, any> {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [Kakao OAuth documentation](https://developers.kakao.com/product/kakaoLogin)
  *  - [Kakao OAuth configuration](https://developers.kakao.com/docs/latest/en/kakaologin/common)
- * 
+ *
  * ## Configuration
  * Create a provider and a Kakao application at https://developers.kakao.com/console/app. In the settings of the app under Kakao Login, activate web app, change consent items and configure callback URL.
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Kakao provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.

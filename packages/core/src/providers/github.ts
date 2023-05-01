@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/github
  */
 
@@ -71,8 +70,14 @@ export interface GitHubProfile {
 /**
  * Add GitHub login to your page and make requests to [GitHub APIs](https://docs.github.com/en/rest).
  *
- * ## Example
+ * ### Setup
  *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/github
+ * ```
+ *
+ * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
  * import GitHub from "@auth/core/providers/github"
@@ -83,7 +88,7 @@ export interface GitHubProfile {
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  * - [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
  * - [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
@@ -91,7 +96,7 @@ export interface GitHubProfile {
  * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
  * - [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the GitHub provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -129,14 +134,20 @@ export default function GitHub(
       url: "https://api.github.com/user",
       async request({ tokens, provider }) {
         const profile = await fetch(provider.userinfo?.url as URL, {
-          headers: { Authorization: `Bearer ${tokens.access_token}`, 'User-Agent': 'authjs' },
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            "User-Agent": "authjs",
+          },
         }).then(async (res) => await res.json())
 
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
           const res = await fetch("https://api.github.com/user/emails", {
-            headers: { Authorization: `Bearer ${tokens.access_token}`, 'User-Agent': 'authjs' },
+            headers: {
+              Authorization: `Bearer ${tokens.access_token}`,
+              "User-Agent": "authjs",
+            },
           })
 
           if (res.ok) {

@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/faceit
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -14,9 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * Add FACEIT login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```js
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/faceit
+ * ```
+ *
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import FACEIT from "@auth/core/providers/faceit"
  *
@@ -26,11 +31,11 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
  *  - [FACEIT OAuth documentation](https://cdn.faceit.com/third_party/docs/FACEIT_Connect_3.0.pdf)
  *
- * ## Notes
+ * ### Notes
  *
  * Grant type: Authorization Code
  * Scopes to have basic infos (email, nickname, guid and avatar) : openid, email, profile
@@ -54,7 +59,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function FACEIT(options: OAuthUserConfig<Record<string, any>>
+export default function FACEIT(
+  options: OAuthUserConfig<Record<string, any>>
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "faceit",

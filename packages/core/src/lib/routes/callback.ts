@@ -68,14 +68,18 @@ export async function callback(params: {
 
       logger.debug("authorization result", authorizationResult)
 
-      const { profile, account, OAuthProfile } = authorizationResult
+      const {
+        user: userFromProvider,
+        account,
+        OAuthProfile,
+      } = authorizationResult
 
       // If we don't have a profile object then either something went wrong
       // or the user cancelled signing in. We don't know which, so we just
       // direct the user to the signin page for now. We could do something
       // else in future.
       // TODO: Handle user cancelling signin
-      if (!profile || !account || !OAuthProfile) {
+      if (!userFromProvider || !account || !OAuthProfile) {
         return { redirect: `${url}/signin`, cookies }
       }
 
@@ -83,7 +87,7 @@ export async function callback(params: {
       // Attempt to get Profile from OAuth provider details before invoking
       // signIn callback - but if no user object is returned, that is fine
       // (that just means it's a new user signing in for the first time).
-      let userOrProfile = profile
+      let userByAccountOrFromProvider
       if (adapter) {
         const { getUserByAccount } = adapter
         const userByAccount = await getUserByAccount({
@@ -91,11 +95,15 @@ export async function callback(params: {
           provider: provider.id,
         })
 
-        if (userByAccount) userOrProfile = userByAccount
+        if (userByAccount) userByAccountOrFromProvider = userByAccount
       }
 
       const unauthorizedOrError = await handleAuthorized(
-        { user: userOrProfile, account, profile: OAuthProfile },
+        {
+          user: userByAccountOrFromProvider,
+          account,
+          profile: OAuthProfile,
+        },
         options
       )
 
@@ -104,7 +112,7 @@ export async function callback(params: {
       // Sign user in
       const { user, session, isNewUser } = await handleLogin(
         sessionStore.value,
-        profile,
+        userFromProvider,
         account,
         options
       )
@@ -152,7 +160,7 @@ export async function callback(params: {
         })
       }
 
-      await events.signIn?.({ user, account, profile, isNewUser })
+      await events.signIn?.({ user, account, profile: OAuthProfile, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
