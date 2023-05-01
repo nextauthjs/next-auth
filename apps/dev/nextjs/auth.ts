@@ -1,8 +1,9 @@
 import NextAuth from "next-auth"
 import GitHub from "@auth/core/providers/github"
+import Auth0 from "@auth/core/providers/auth0"
 
 export const { handlers, auth } = NextAuth({
-  providers: [GitHub],
+  providers: [GitHub, Auth0],
   callbacks: {
     async authorized({ request, auth }) {
       // if (request.method === "POST") {
