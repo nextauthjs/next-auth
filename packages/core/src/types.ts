@@ -141,32 +141,32 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
  * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
  */
 export interface Profile {
-  sub: string
-  name?: string
-  given_name?: string
-  family_name?: string
-  middle_name?: string
-  nickname?: string
-  preferred_username?: string
-  profile?: string
-  picture?: string
-  website?: string
-  email?: string
-  email_verified?: boolean
-  gender?: string
-  birthdate?: string
-  zoneinfo?: string
-  locale?: string
-  phone_number?: string
-  updated_at?: number
+  sub?: string | null
+  name?: string | null
+  given_name?: string | null
+  family_name?: string | null
+  middle_name?: string | null
+  nickname?: string | null
+  preferred_username?: string | null
+  profile?: string | null
+  picture?: string | null
+  website?: string | null
+  email?: string | null
+  email_verified?: boolean | null
+  gender?: string | null
+  birthdate?: string | null
+  zoneinfo?: string | null
+  locale?: string | null
+  phone_number?: string | null
+  updated_at?: Date | string | number | null
   address?: {
-    formatted?: string
-    street_address?: string
-    locality?: string
-    region?: string
-    postal_code?: string
-    country?: string
-  }
+    formatted?: string | null
+    street_address?: string | null
+    locality?: string | null
+    region?: string | null
+    postal_code?: string | null
+    country?: string | null
+  } | null
   [claim: string]: unknown
 }
 

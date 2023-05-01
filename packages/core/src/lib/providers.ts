@@ -1,3 +1,4 @@
+import { OAuthProfileParseError } from "../errors.js"
 import { merge } from "./utils/merge.js"
 
 import type {
@@ -90,8 +91,10 @@ function normalizeOAuth(
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
  */
 const defaultProfile: ProfileCallback<Profile> = (profile) => {
+  const id = profile.sub ?? profile.id
+  if (!id) throw new OAuthProfileParseError("Missing user id")
   return stripUndefined({
-    id: profile.sub ?? profile.id,
+    id: id.toString(),
     name: profile.name ?? profile.nickname ?? profile.preferred_username,
     email: profile.email,
     image: profile.picture,
