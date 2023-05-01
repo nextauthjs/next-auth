@@ -249,7 +249,7 @@ const docusaurusConfig = {
   plugins: [
     typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
     typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
-    typedocFramework("frameworks-nextjs", ["index.ts", "client.tsx"]),
+    typedocFramework("next-auth", ["index.ts", "react.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [

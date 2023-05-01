@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import * as React from "react"
-import { signIn, signOut, useSession } from "@auth/nextjs/client"
+import { signIn, signOut, useSession } from "next-auth/react"
 import Layout from "components/layout"
 
 export default function Page() {

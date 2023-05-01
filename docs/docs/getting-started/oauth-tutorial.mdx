@@ -36,10 +36,6 @@ This tutorial assumes you have a Next.js application set up. If you don't, you c
 npm install next-auth
 ```
 
-:::info
-We are working on a new `@auth/nextjs` package that will make it easier to set up Auth.js with Next.js. Stay tuned! For now, you can use the `next-auth` package.
-:::
-
 ### Creating the server config
 
 Create the following [API route](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes) file. This route contains the necessary configuration for NextAuth.js, as well as the dynamic route handler:
@@ -270,7 +266,7 @@ Note that, for each provider, the configuration process will be similar to what 
 2. Create create your OAuth application within it
 3. Set the callback URL
 4. Get the Client ID and Generate a Client Secret
-:::
+   :::
 
 ## 3. Wiring all together
 

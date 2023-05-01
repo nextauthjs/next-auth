@@ -1,8 +1,7 @@
 {
   "files.exclude": {
     "packages/core/{lib,providers,*.js,*.d.ts*}": true,
-    "packages/frameworks-nextjs/{lib,*.js,*.d.ts*}": true,
-    "packages/next-auth/{client,core,css,jwt,next,providers,react,utils,*.js,*.d.ts}": true
+    "packages/next-auth/{lib,*.js,*.d.ts*}": true,
   },
   "typescript.tsdk": "node_modules/typescript/lib",
   "openInGitHub.remote.branch": "main"
