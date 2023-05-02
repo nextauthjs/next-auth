@@ -14,16 +14,16 @@
  *
  * @module @next-auth/upstash-redis-adapter
  */
+import type { Redis } from "@upstash/redis"
 import type {
   Adapter,
-  AdapterUser,
   AdapterAccount,
   AdapterSession,
+  AdapterUser,
   VerificationToken,
 } from "next-auth/adapters"
-import type { Redis } from "@upstash/redis"
 
-import { v4 as uuid } from "uuid"
+import { randomUUID } from "crypto"
 
 /** This is the interface of the Upstash Redis adapter options. */
 export interface UpstashRedisAdapterOptions {
@@ -217,7 +217,7 @@ export function UpstashRedisAdapter(
 
   return {
     async createUser(user) {
-      const id = uuid()
+      const id = randomUUID()
       // TypeScript thinks the emailVerified field is missing
       // but all fields are copied directly from user, so it's there
       return await setUser(id, { ...user, id })

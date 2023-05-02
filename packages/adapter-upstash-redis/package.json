@@ -36,15 +36,11 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "@types/uuid": "^8.3.3",
     "@upstash/redis": "^1.0.1",
     "dotenv": "^10.0.0",
     "isomorphic-fetch": "3.0.0",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
-  },
-  "dependencies": {
-    "uuid": "^8.3.2"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"

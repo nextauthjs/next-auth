@@ -14,9 +14,9 @@
  *
  * @module @next-auth/neo4j-adapter
  */
+import { randomUUID } from "crypto"
 import type { Session } from "neo4j-driver"
 import type { Adapter } from "next-auth/adapters"
-import { v4 as uuid } from "uuid"
 
 import { client, format } from "./utils"
 export { format }
@@ -134,7 +134,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 
   return {
     async createUser(data) {
-      const user: any = { id: uuid(), ...data }
+      const user: any = { id: randomUUID(), ...data }
       await write(`CREATE (u:User $data)`, user)
       return user
     },
@@ -190,7 +190,7 @@ export function Neo4jAdapter(session: Session): Adapter {
          MERGE (a:Account {
            providerAccountId: $data.a.providerAccountId,
            provider: $data.a.provider
-         }) 
+         })
          SET a += $data.a
          MERGE (u)-[:HAS_ACCOUNT]->(a)`,
         { userId, a }

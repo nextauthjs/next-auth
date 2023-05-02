@@ -1,20 +1,20 @@
-import { v4 as randomUUID } from "uuid"
+import { randomUUID } from "crypto"
 
 import {
+  Collection,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryKey,
   Property,
   Unique,
-  PrimaryKey,
-  Entity,
-  OneToMany,
-  Collection,
-  ManyToOne,
   types,
 } from "@mikro-orm/core"
 
 import type {
-  AdapterUser,
   AdapterAccount,
   AdapterSession,
+  AdapterUser,
   VerificationToken as AdapterVerificationToken,
 } from "next-auth/adapters"
 import type { ProviderType } from "next-auth/providers"

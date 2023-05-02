@@ -72,8 +72,7 @@
     "oauth": "^0.9.15",
     "openid-client": "^5.4.0",
     "preact": "^10.6.3",
-    "preact-render-to-string": "^5.1.19",
-    "uuid": "^8.3.2"
+    "preact-render-to-string": "^5.1.19"
   },
   "peerDependencies": {
     "next": "^12.2.5 || ^13",

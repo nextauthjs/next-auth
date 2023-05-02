@@ -1,11 +1,11 @@
-import { EncryptJWT, jwtDecrypt } from "jose"
 import hkdf from "@panva/hkdf"
-import { v4 as uuid } from "uuid"
-import { SessionStore } from "../core/lib/cookie"
+import { randomUUID } from "crypto"
+import { EncryptJWT, jwtDecrypt } from "jose"
 import type { GetServerSidePropsContext, NextApiRequest } from "next"
 import type { NextRequest } from "next/server"
-import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 import type { LoggerInstance } from ".."
+import { SessionStore } from "../core/lib/cookie"
+import type { JWT, JWTDecodeParams, JWTEncodeParams, JWTOptions } from "./types"
 
 export * from "./types"
 
@@ -21,7 +21,7 @@ export async function encode(params: JWTEncodeParams) {
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
-    .setJti(uuid())
+    .setJti(randomUUID())
     .encrypt(encryptionSecret)
 }
 

@@ -14,7 +14,7 @@
  *
  * @module @next-auth/dynamodb-adapter
  */
-import { v4 as uuid } from "uuid"
+import { randomUUID } from "crypto"
 
 import type {
   BatchWriteCommandInput,
@@ -22,8 +22,8 @@ import type {
 } from "@aws-sdk/lib-dynamodb"
 import type {
   Adapter,
-  AdapterSession,
   AdapterAccount,
+  AdapterSession,
   AdapterUser,
   VerificationToken,
 } from "next-auth/adapters"
@@ -187,7 +187,7 @@ export function DynamoDBAdapter(
     async createUser(data) {
       const user: AdapterUser = {
         ...(data as any),
-        id: uuid(),
+        id: randomUUID(),
       }
 
       await client.put({
@@ -312,7 +312,7 @@ export function DynamoDBAdapter(
     async linkAccount(data) {
       const item = {
         ...data,
-        id: uuid(),
+        id: randomUUID(),
         [pk]: `USER#${data.userId}`,
         [sk]: `ACCOUNT#${data.provider}#${data.providerAccountId}`,
         [GSI1PK]: `ACCOUNT#${data.provider}`,
@@ -376,7 +376,7 @@ export function DynamoDBAdapter(
     },
     async createSession(data) {
       const session = {
-        id: uuid(),
+        id: randomUUID(),
         ...data,
       }
       await client.put({

@@ -102,57 +102,6 @@ importers:
       sqlite3: 5.0.8
       typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
 
-  apps/dev/nextjs-2:
-    specifiers:
-      '@auth/core': workspace:*
-      '@next-auth/fauna-adapter': workspace:*
-      '@next-auth/prisma-adapter': workspace:*
-      '@next-auth/supabase-adapter': workspace:*
-      '@next-auth/typeorm-legacy-adapter': workspace:*
-      '@playwright/test': 1.29.2
-      '@prisma/client': ^3
-      '@supabase/supabase-js': ^2.0.5
-      '@types/jsonwebtoken': ^8.5.5
-      '@types/react': 18.0.37
-      '@types/react-dom': ^18.0.6
-      dotenv: ^16.0.3
-      fake-smtp-server: ^0.8.0
-      faunadb: ^4
-      next: 13.3.0
-      next-auth: workspace:*
-      nodemailer: ^6
-      pg: ^8.7.3
-      prisma: ^3
-      react: ^18
-      react-dom: ^18
-      sqlite3: ^5.0.8
-      typeorm: 0.3.7
-    dependencies:
-      '@auth/core': link:../../../packages/core
-      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
-      '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
-      '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
-      '@next-auth/typeorm-legacy-adapter': link:../../../packages/adapter-typeorm-legacy
-      '@prisma/client': 3.15.2_prisma@3.15.2
-      '@supabase/supabase-js': 2.0.5
-      faunadb: 4.6.0
-      next: 13.3.0_biqbaboplfbrettd7655fr4n2y
-      next-auth: link:../../../packages/next-auth
-      nodemailer: 6.8.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    devDependencies:
-      '@playwright/test': 1.29.2
-      '@types/jsonwebtoken': 8.5.9
-      '@types/react': 18.0.37
-      '@types/react-dom': 18.0.6
-      dotenv: 16.0.3
-      fake-smtp-server: 0.8.0
-      pg: 8.7.3
-      prisma: 3.15.2
-      sqlite3: 5.0.8
-      typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
-
   apps/dev/nextjs-v4:
     specifiers:
       '@next-auth/fauna-adapter': workspace:*
@@ -332,19 +281,14 @@ importers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@shelf/jest-dynamodb': ^2.1.0
-      '@types/uuid': ^9.0.0
       jest: ^27.4.3
       next-auth: workspace:*
-      uuid: ^9.0.0
-    dependencies:
-      uuid: 9.0.0
     devDependencies:
       '@aws-sdk/client-dynamodb': 3.113.0
       '@aws-sdk/lib-dynamodb': 3.113.0_eb2z3hhrjl3qvyc6ecmpo2nhva
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@shelf/jest-dynamodb': 2.2.4_qsruu6yolbxs4rh6ixjhkibvwu
-      '@types/uuid': 9.0.0
       jest: 27.5.1
       next-auth: link:../next-auth
 
@@ -386,18 +330,13 @@ importers:
       '@mikro-orm/sqlite': ^5
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      '@types/uuid': '>=8'
       jest: ^29
       next-auth: workspace:*
-      uuid: ^9
-    dependencies:
-      uuid: 9.0.0
     devDependencies:
       '@mikro-orm/core': 5.2.1_@mikro-orm+sqlite@5.2.1
       '@mikro-orm/sqlite': 5.2.1_@mikro-orm+core@5.2.1
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      '@types/uuid': 8.3.4
       jest: 29.3.0
       next-auth: link:../next-auth
 
@@ -419,17 +358,12 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      '@types/uuid': ^8.3.3
       jest: ^27.4.3
       neo4j-driver: ^5.7.0
       next-auth: workspace:*
-      uuid: ^8.3.2
-    dependencies:
-      uuid: 8.3.2
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      '@types/uuid': 8.3.4
       jest: 27.5.1
       neo4j-driver: 5.7.0
       next-auth: link:../next-auth
@@ -555,19 +489,14 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      '@types/uuid': ^8.3.3
       '@upstash/redis': ^1.0.1
       dotenv: ^10.0.0
       isomorphic-fetch: 3.0.0
       jest: ^27.4.3
       next-auth: workspace:*
-      uuid: ^8.3.2
-    dependencies:
-      uuid: 8.3.2
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      '@types/uuid': 8.3.4
       '@upstash/redis': 1.7.0
       dotenv: 10.0.0
       isomorphic-fetch: 3.0.0
@@ -719,7 +648,6 @@ importers:
       preact-render-to-string: ^5.1.19
       react: ^18
       react-dom: ^18
-      uuid: ^8.3.2
       whatwg-fetch: ^3.6.2
     dependencies:
       '@babel/runtime': 7.20.13
@@ -730,7 +658,6 @@ importers:
       openid-client: 5.4.0
       preact: 10.8.2
       preact-render-to-string: 5.2.0_preact@10.8.2
-      uuid: 8.3.2
     devDependencies:
       '@babel/cli': 7.17.10_@babel+core@7.18.5
       '@babel/core': 7.18.5
@@ -10748,14 +10675,6 @@ packages:
 
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
-
-  /@types/uuid/8.3.4:
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
-    dev: true
-
-  /@types/uuid/9.0.0:
-    resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
-    dev: true
 
   /@types/validator/13.7.3:
     resolution: {integrity: sha512-DNviAE5OUcZ5s+XEQHRhERLg8fOp8gSgvyJ4aaFASx5wwaObm+PBwTIMXiOFm1QrSee5oYwEAYb7LMzX2O88gA==}
@@ -31494,6 +31413,7 @@ packages:
   /uuid/9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
+    dev: true
 
   /v8-compile-cache/2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}
