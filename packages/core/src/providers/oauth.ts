@@ -263,11 +263,9 @@ export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
 export type OAuthUserConfig<Profile> = Omit<
   Partial<OAuthConfig<Profile>>,
   "options" | "type"
-> &
-  Required<Pick<OAuthConfig<Profile>, "clientId" | "clientSecret">>
+>
 
 export type OIDCUserConfig<Profile> = Omit<
   Partial<OIDCConfig<Profile>>,
   "options" | "type"
-> &
-  Required<Pick<OIDCConfig<Profile>, "clientId" | "clientSecret">>
+>

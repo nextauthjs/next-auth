@@ -99,6 +99,7 @@ export interface TwitterProfile {
       text: string
     }>
   }
+  [claims: string]: unknown
 }
 
 /**

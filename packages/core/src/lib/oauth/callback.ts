@@ -89,11 +89,9 @@ export async function handleOAuth(
 
   /** https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1 */
   if (o.isOAuth2Error(codeGrantParams)) {
-    logger.debug("OAuthCallbackError", {
-      providerId: provider.id,
-      ...codeGrantParams,
-    })
-    throw new OAuthCallbackError(codeGrantParams.error)
+    const cause = { providerId: provider.id, ...codeGrantParams }
+    logger.debug("OAuthCallbackError", cause)
+    throw new OAuthCallbackError("OAuth Provider returned an error", cause)
   }
 
   const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
