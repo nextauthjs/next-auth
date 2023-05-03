@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Auth } from "@auth/core"
+import type { Provider } from "@auth/core/providers"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
-export interface SolidAuthConfig extends AuthConfig {
-  /**
-   * Defines the base path for the auth routes.
-   * @default '/api/auth'
-   */
+export interface SolidAuthConfig extends Omit<AuthConfig, "providers"> {
   prefix?: string
+  providers: Provider<any>[]
 }
 
 const actions: AuthAction[] = [
