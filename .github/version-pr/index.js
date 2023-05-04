@@ -5,12 +5,12 @@ const core = require("@actions/core")
 try {
   const packageJSONPath = path.join(
     process.cwd(),
-    "packages/next-auth/package.json"
+    `packages/${process.env.PACKAGE_PATH || "next-auth"}/package.json`
   )
   const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"))
 
   const sha8 = process.env.GITHUB_SHA.substring(0, 8)
-  const prNumber = process.env.PR_NUMBER
+  const prNumber = process.env.PR_NUMBER || "manual"
 
   const packageVersion = `0.0.0-pr.${prNumber}.${sha8}`
   packageJSON.version = packageVersion
