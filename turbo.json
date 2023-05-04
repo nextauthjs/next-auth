@@ -51,9 +51,7 @@
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
     },
     "nextjs-example-app#dev": {
-      "dependsOn": [
-        "@auth/core#build"
-      ]
+      "dependsOn": ["@auth/core#build"]
     },
     "docs#dev": {
       "dependsOn": [
@@ -68,6 +66,7 @@
       "dependsOn": [
         "@auth/core#build",
         "@auth/sveltekit#build",
+        "@auth/nextjs#build",
         "@next-auth/dgraph-adapter#build",
         "@next-auth/dynamodb-adapter#build",
         "@next-auth/fauna-adapter#build",
@@ -90,6 +89,7 @@
         "build/**/*",
         "docs/reference/core/**/*",
         "docs/reference/sveltekit/**/*",
+        "docs/reference/nextjs/**/*",
         "docs/reference/adapter/**"
       ]
     }
