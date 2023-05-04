@@ -109,7 +109,7 @@ import type { Adapter } from "next-auth/adapters"
  * ```
  *
  **/
-export function DrizzleAdapter(client: typeof db): Adapter {
+export function DrizzleAdapterSQLite(client: typeof db): Adapter {
   return {
     createUser: (data) => {
       return client

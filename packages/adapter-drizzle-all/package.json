@@ -1,5 +1,5 @@
 {
-  "name": "@next-auth/drizzle-adapter-mysql",
+  "name": "@next-auth/drizzle-adapter-all",
   "version": "0.0.1",
   "description": "Drizzle adapter for next-auth.",
   "homepage": "https://authjs.dev",
@@ -24,9 +24,9 @@
     "clean": "rm -rf ./drizzle || echo 'Drizzle directory deleted'",
     "generate-schema": "drizzle-kit generate:mysql --schema=src/schema.ts --breakpoints",
     "test:init": "pnpm clean && pnpm generate-schema",
-    "test": "pnpm test:init && ./tests/test.sh",
-    "build": "pnpm clean && drizzle-kit generate:mysql --schema=src/schema.ts && tsc",
-    "dev": "drizzle-kit generate:mysql --schema=src/schema.ts && tsc -w"
+    "test": "pnpm test:init && jest",
+    "build": "pnpm clean && drizzle-kit generate:sqlite --schema=src/schema.ts && tsc",
+    "dev": "drizzle-kit generate:sqlite --schema=src/schema.ts && tsc -w"
   },
   "files": [
     "README.md",
@@ -35,9 +35,16 @@
   "peerDependencies": {
     "next-auth": "^4"
   },
+  "dependencies": {
+    "@next-auth/drizzle-adapter-sqlite": "workspace:*",
+    "@next-auth/drizzle-adapter-mysql": "workspace:*",
+    "@next-auth/drizzle-adapter-pg": "workspace:*"
+  },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
+    "@types/better-sqlite3": "^7.6.3",
+    "better-sqlite3": "^8.3.0",
     "mysql2": "^3.2.0",
     "drizzle-kit": "^0.17.3",
     "drizzle-orm": "^0.23.5",
