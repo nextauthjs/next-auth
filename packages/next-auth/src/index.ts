@@ -115,21 +115,28 @@ export interface NextAuthResult {
   handlers: AppRouteHandlers
   /**
    * A universal method to interact with NextAuth.js in your Next.js app.
-   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Route Handlers and React Server Components.
+   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Route Handlers or React Server Components.
    *
    * @example
-   * ```ts
-   * // middleware.ts
-   * // This will also make sure that the session expiry is rotated.
+   * ```ts title="middleware.ts"
    * export { auth as middleware } from "./auth"
-   *
-   * // app/page.ts
-   * import { auth } from "auth"
+   * ```
+   * @example
+   * ```ts title="app/page.ts"
+   * import { auth } from "../auth"
    * import { headers } from "next/headers"
    * export default async function Page() {
    *   const { token } = await auth(headers())
    *   return <div>Hello {token?.name}</div>
    * }
+   * ```
+   * @example
+   * ```ts title="app/api/route.ts"
+   * import { auth } from "../../auth"
+   *
+   * export const POST = auth((req) => {
+   *   // req.auth
+   * })
    * ```
    */
   auth: ReturnType<typeof initAuth>
