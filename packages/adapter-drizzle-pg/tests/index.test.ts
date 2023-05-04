@@ -1,11 +1,11 @@
 import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
-import { DrizzleAdapter } from "../src"
+import { DrizzleAdapterPg } from "../src"
 import { db, users, accounts, sessions, verificationTokens } from '../src/schema'
 import { eq, and } from 'drizzle-orm/expressions';
 
 
 runBasicTests({
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapterPg(db),
   db: {
     id() {
       return randomUUID()

@@ -1,8 +1,5 @@
 import { integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { BaseSQLiteDatabase } from 'drizzle-orm/sqlite-core';
-import { PgDatabase } from 'drizzle-orm/pg-core'
-import { MySqlDatabase } from 'drizzle-orm/mysql-core'
 import Database from 'better-sqlite3';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import { ProviderType } from 'next-auth/providers';

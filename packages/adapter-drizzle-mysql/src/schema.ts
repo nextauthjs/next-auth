@@ -1,6 +1,4 @@
 import { int, timestamp, mysqlTable, text, primaryKey } from 'drizzle-orm/mysql-core';
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise'
 import { ProviderType } from 'next-auth/providers';
 
 export const users = mysqlTable('users', {
