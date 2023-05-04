@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth from "@auth/nextjs"
 import Auth0 from "@auth/core/providers/auth0"
 import Facebook from "@auth/core/providers/facebook"
 import GitHub from "@auth/core/providers/github"

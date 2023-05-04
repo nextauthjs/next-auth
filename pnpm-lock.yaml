@@ -54,6 +54,7 @@ importers:
   apps/dev/nextjs:
     specifiers:
       '@auth/core': workspace:*
+      '@auth/nextjs': workspace:*
       '@next-auth/fauna-adapter': workspace:*
       '@next-auth/prisma-adapter': workspace:*
       '@next-auth/supabase-adapter': workspace:*
@@ -78,6 +79,7 @@ importers:
       typeorm: 0.3.7
     dependencies:
       '@auth/core': link:../../../packages/core
+      '@auth/nextjs': link:../../../packages/frameworks-nextjs
       '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
       '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
