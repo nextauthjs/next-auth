@@ -8,7 +8,7 @@
 
 // TODO: remove this file and replace references with `@auth/core/adapters`
 
-import {
+import type {
   Adapter as CoreAdapter,
   AdapterAccount as CoreAdapterAccount,
   AdapterSession as CoreAdapterSession,
