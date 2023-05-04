@@ -4,6 +4,7 @@ import { NextResponse } from "next/server"
 import type { JWT } from "@auth/core/jwt"
 import type { Awaitable, CallbacksOptions, User } from "@auth/core/types"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
+import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 
 export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
   /**
@@ -50,16 +51,17 @@ export interface NextAuthConfig extends AuthConfig {
   callbacks?: NextAuthCallbacks
 }
 
-async function getAuth(
-  headers: Headers,
-  config: NextAuthConfig
-): Promise<AuthData & { expires: string }> {
+async function runAuth(headers: Headers, config: NextAuthConfig) {
+  const host = headers.get("x-forwarded-host") ?? headers.get("host")
+  const protocol =
+    headers.get("x-forwarded-proto") === "http" ? "http" : "https"
   // TODO: Handle URL correctly (NEXTAUTH_URL, request host, protocol, custom path, etc.)
-  const req = new Request("http://n/api/auth/session", {
+  const origin = `${protocol}://${host}`
+  const req = new Request(`${origin}/api/auth/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
   config.trustHost = true
-  config.useSecureCookies ??= headers.get("x-forwarded-proto") === "https"
+  config.useSecureCookies ??= protocol === "https"
   if (config.callbacks) {
     config.callbacks.session ??= ({ session, user, token }) => ({
       expires: session.expires,
@@ -67,8 +69,7 @@ async function getAuth(
       token,
     })
   }
-  const response = await Auth(req, config)
-  return response.json()
+  return await Auth(req, config)
 }
 
 export interface NextAuthRequest extends NextRequest {
@@ -90,20 +91,27 @@ export function initAuth(config: NextAuthConfig) {
   return (...args: WithAuthArgs) => {
     // TODO: use `next/headers` when it's available in Middleware too
     // if (!args.length) return getAuth($headers(), config)
-    if (!args.length) return getAuth(new Headers(), config)
-    if (args[0] instanceof Headers) return getAuth(args[0], config)
+    if (!args.length)
+      return runAuth(new Headers(), config).then((r) => r.json())
+    if (args[0] instanceof Headers) {
+      return runAuth(args[0], config).then((r) => r.json())
+    }
     if (args[0] instanceof Request) {
+      // middleare.ts
       // export { auth as default } from "auth"
       const req = args[0]
       const ev = args[1]
       return handleAuth([req, ev as any], config)
     }
 
+    // middleare.ts/router.ts
     // import { auth } from "auth"
     // export default auth((req) => { console.log(req.auth) }})
-    const userMiddleware = args[0]
-    return async (...args: Parameters<NextAuthMiddleware>) => {
-      return handleAuth(args, config, userMiddleware)
+    const userMiddlewareOrRoute = args[0]
+    return async (
+      ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
+    ) => {
+      return handleAuth(args, config, userMiddlewareOrRoute)
     }
   }
 }
@@ -115,17 +123,18 @@ export interface AuthData {
 }
 
 async function handleAuth(
-  args: Parameters<NextMiddleware>,
+  args: Parameters<NextMiddleware | AppRouteHandlerFn>,
   config: NextAuthConfig,
-  userMiddleware?: NextAuthMiddleware
+  userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
   const request = args[0]
   // TODO: pass `next/headers` when it's available
+  const authResponse = await runAuth(request.headers, config)
   const {
     token = null,
     user = null,
     expires = null,
-  } = (await getAuth(request.headers, config)) ?? {}
+  } = (await authResponse.json()) ?? {}
 
   const authorized = config.callbacks?.authorized
     ? await config.callbacks.authorized({
@@ -140,12 +149,14 @@ async function handleAuth(
   if (authorized instanceof Response) {
     // User returned a custom response, like redirecting to a page or 401, respect it
     response = authorized
-  } else if (userMiddleware) {
-    // Execute user's middleware with the augmented request
+  } else if (userMiddlewareOrRoute) {
+    // Execute user's middleware/handler with the augmented request
     const augmentedReq: NextAuthRequest = request as any
     augmentedReq.auth = { token, user }
     response =
-      (await userMiddleware(augmentedReq, args[1])) ?? NextResponse.next()
+      // @ts-expect-error
+      (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
+      NextResponse.next()
   } else if (!authorized) {
     // Redirect to signin page by default if not authorized
     // TODO: Support custom signin page
@@ -156,11 +167,12 @@ async function handleAuth(
   // We will update the session cookie if it exists,
   // so that the session expiry is extended
   const finalResponse = new NextResponse(response?.body, response)
-  // TODO: respect config/prefix/chunking etc.
-  const cookiePrefix = request.nextUrl.protocol === "https:" ? "__Secure-" : ""
-  const name = `${cookiePrefix}next-auth.session-token`
-  const val = request.cookies.get(name)?.value
-  // TODO: respect config/prefix/chunking etc.
-  if (val) finalResponse.cookies.set(name, val, { expires: new Date(expires!) })
+  if (authResponse.headers.has("set-cookie")) {
+    finalResponse.headers.set(
+      "set-cookie",
+      authResponse.headers.get("set-cookie")!
+    )
+  }
+
   return finalResponse
 }
