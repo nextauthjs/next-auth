@@ -328,10 +328,8 @@ export function TypeORMLegacyAdapter(
     },
     async getUserByAccount(provider_providerAccountId) {
       const m = await getManager(c)
-      // @ts-ignore
       const account = await m.findOne<AdapterAccount & { user: AdapterUser }>(
         "AccountEntity",
-        // @ts-ignore
         { where: provider_providerAccountId, relations: ["user"] }
       )
       if (!account) return null
