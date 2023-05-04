@@ -283,11 +283,12 @@ importers:
       '@next-auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.3
       better-sqlite3: ^8.3.0
-      drizzle-kit: ^0.17.3
-      drizzle-orm: ^0.23.5
+      drizzle-kit: ^0.17.6
+      drizzle-orm: ^0.25.4
       jest: ^27.4.3
       mysql2: ^3.2.0
       next-auth: workspace:*
+      postgres: ^3.3.4
     dependencies:
       '@next-auth/drizzle-adapter-mysql': link:../adapter-drizzle-mysql
       '@next-auth/drizzle-adapter-pg': link:../adapter-drizzle-pg
@@ -298,17 +299,18 @@ importers:
       '@types/better-sqlite3': 7.6.4
       better-sqlite3: 8.3.0
       drizzle-kit: 0.17.6
-      drizzle-orm: 0.23.13_5nbt64cxz347yz6uzzic7pvcqa
+      drizzle-orm: 0.25.4_fjj6i37mkijnrd5wr7thv2suqe
       jest: 27.5.1
       mysql2: 3.2.4
       next-auth: link:../next-auth
+      postgres: 3.3.4
 
   packages/adapter-drizzle-mysql:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      drizzle-kit: ^0.17.3
-      drizzle-orm: ^0.23.5
+      drizzle-kit: ^0.17.6
+      drizzle-orm: ^0.25.4
       jest: ^27.4.3
       mysql2: ^3.2.0
       next-auth: workspace:*
@@ -316,7 +318,7 @@ importers:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       drizzle-kit: 0.17.6
-      drizzle-orm: 0.23.13_mysql2@3.2.4
+      drizzle-orm: 0.25.4_mysql2@3.2.4
       jest: 27.5.1
       mysql2: 3.2.4
       next-auth: link:../next-auth
@@ -325,8 +327,8 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      drizzle-kit: ^0.17.3
-      drizzle-orm: ^0.23.5
+      drizzle-kit: ^0.17.6
+      drizzle-orm: ^0.25.4
       jest: ^27.4.3
       next-auth: workspace:*
       postgres: ^3.3.4
@@ -334,7 +336,7 @@ importers:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       drizzle-kit: 0.17.6
-      drizzle-orm: 0.23.13_postgres@3.3.4
+      drizzle-orm: 0.25.4_postgres@3.3.4
       jest: 27.5.1
       next-auth: link:../next-auth
       postgres: 3.3.4
@@ -345,8 +347,8 @@ importers:
       '@next-auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.3
       better-sqlite3: ^8.2.0
-      drizzle-kit: ^0.17.3
-      drizzle-orm: ^0.23.5
+      drizzle-kit: ^0.17.6
+      drizzle-orm: ^0.25.4
       jest: ^27.4.3
       next-auth: workspace:*
     devDependencies:
@@ -355,7 +357,7 @@ importers:
       '@types/better-sqlite3': 7.6.4
       better-sqlite3: 8.3.0
       drizzle-kit: 0.17.6
-      drizzle-orm: 0.23.13_be2pxusxixxujrmbyhb7l52dj4
+      drizzle-orm: 0.25.4_be2pxusxixxujrmbyhb7l52dj4
       jest: 27.5.1
       next-auth: link:../next-auth
 
@@ -14894,8 +14896,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm/0.23.13_5nbt64cxz347yz6uzzic7pvcqa:
-    resolution: {integrity: sha512-lqPqpBwqVXBYpFKB7JaIkbKpEQpefjmvTdOTVHjFIB8YOhs0+3QMjsjTlZKEx6m8xab4ZGS8DUtFcbBEemZe7g==}
+  /drizzle-orm/0.25.4_be2pxusxixxujrmbyhb7l52dj4:
+    resolution: {integrity: sha512-vURs2SqDh5pk81WWE4hR8gFKDTRmCK4FbaUGsZoljKnjKvMrjlA5xFPGiCih4/1XKqnOgSuh+I6T9KGBjYcPAA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -14905,6 +14907,7 @@ packages:
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
       '@types/sql.js': '*'
+      '@vercel/postgres': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       knex: '*'
@@ -14931,66 +14934,7 @@ packages:
         optional: true
       '@types/sql.js':
         optional: true
-      better-sqlite3:
-        optional: true
-      bun-types:
-        optional: true
-      knex:
-        optional: true
-      kysely:
-        optional: true
-      mysql2:
-        optional: true
-      pg:
-        optional: true
-      postgres:
-        optional: true
-      sql.js:
-        optional: true
-      sqlite3:
-        optional: true
-    dependencies:
-      '@types/better-sqlite3': 7.6.4
-      better-sqlite3: 8.3.0
-      mysql2: 3.2.4
-    dev: true
-
-  /drizzle-orm/0.23.13_be2pxusxixxujrmbyhb7l52dj4:
-    resolution: {integrity: sha512-lqPqpBwqVXBYpFKB7JaIkbKpEQpefjmvTdOTVHjFIB8YOhs0+3QMjsjTlZKEx6m8xab4ZGS8DUtFcbBEemZe7g==}
-    peerDependencies:
-      '@aws-sdk/client-rds-data': '>=3'
-      '@cloudflare/workers-types': '>=3'
-      '@libsql/client': '*'
-      '@neondatabase/serverless': '>=0.1'
-      '@planetscale/database': '>=1'
-      '@types/better-sqlite3': '*'
-      '@types/pg': '*'
-      '@types/sql.js': '*'
-      better-sqlite3: '>=7'
-      bun-types: '*'
-      knex: '*'
-      kysely: '*'
-      mysql2: '>=2'
-      pg: '>=8'
-      postgres: '>=3'
-      sql.js: '>=1'
-      sqlite3: '>=5'
-    peerDependenciesMeta:
-      '@aws-sdk/client-rds-data':
-        optional: true
-      '@cloudflare/workers-types':
-        optional: true
-      '@libsql/client':
-        optional: true
-      '@neondatabase/serverless':
-        optional: true
-      '@planetscale/database':
-        optional: true
-      '@types/better-sqlite3':
-        optional: true
-      '@types/pg':
-        optional: true
-      '@types/sql.js':
+      '@vercel/postgres':
         optional: true
       better-sqlite3:
         optional: true
@@ -15015,8 +14959,8 @@ packages:
       better-sqlite3: 8.3.0
     dev: true
 
-  /drizzle-orm/0.23.13_mysql2@3.2.4:
-    resolution: {integrity: sha512-lqPqpBwqVXBYpFKB7JaIkbKpEQpefjmvTdOTVHjFIB8YOhs0+3QMjsjTlZKEx6m8xab4ZGS8DUtFcbBEemZe7g==}
+  /drizzle-orm/0.25.4_fjj6i37mkijnrd5wr7thv2suqe:
+    resolution: {integrity: sha512-vURs2SqDh5pk81WWE4hR8gFKDTRmCK4FbaUGsZoljKnjKvMrjlA5xFPGiCih4/1XKqnOgSuh+I6T9KGBjYcPAA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -15026,6 +14970,7 @@ packages:
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
       '@types/sql.js': '*'
+      '@vercel/postgres': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       knex: '*'
@@ -15051,6 +14996,73 @@ packages:
       '@types/pg':
         optional: true
       '@types/sql.js':
+        optional: true
+      '@vercel/postgres':
+        optional: true
+      better-sqlite3:
+        optional: true
+      bun-types:
+        optional: true
+      knex:
+        optional: true
+      kysely:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      postgres:
+        optional: true
+      sql.js:
+        optional: true
+      sqlite3:
+        optional: true
+    dependencies:
+      '@types/better-sqlite3': 7.6.4
+      better-sqlite3: 8.3.0
+      mysql2: 3.2.4
+      postgres: 3.3.4
+    dev: true
+
+  /drizzle-orm/0.25.4_mysql2@3.2.4:
+    resolution: {integrity: sha512-vURs2SqDh5pk81WWE4hR8gFKDTRmCK4FbaUGsZoljKnjKvMrjlA5xFPGiCih4/1XKqnOgSuh+I6T9KGBjYcPAA==}
+    peerDependencies:
+      '@aws-sdk/client-rds-data': '>=3'
+      '@cloudflare/workers-types': '>=3'
+      '@libsql/client': '*'
+      '@neondatabase/serverless': '>=0.1'
+      '@planetscale/database': '>=1'
+      '@types/better-sqlite3': '*'
+      '@types/pg': '*'
+      '@types/sql.js': '*'
+      '@vercel/postgres': '*'
+      better-sqlite3: '>=7'
+      bun-types: '*'
+      knex: '*'
+      kysely: '*'
+      mysql2: '>=2'
+      pg: '>=8'
+      postgres: '>=3'
+      sql.js: '>=1'
+      sqlite3: '>=5'
+    peerDependenciesMeta:
+      '@aws-sdk/client-rds-data':
+        optional: true
+      '@cloudflare/workers-types':
+        optional: true
+      '@libsql/client':
+        optional: true
+      '@neondatabase/serverless':
+        optional: true
+      '@planetscale/database':
+        optional: true
+      '@types/better-sqlite3':
+        optional: true
+      '@types/pg':
+        optional: true
+      '@types/sql.js':
+        optional: true
+      '@vercel/postgres':
         optional: true
       better-sqlite3:
         optional: true
@@ -15074,8 +15086,8 @@ packages:
       mysql2: 3.2.4
     dev: true
 
-  /drizzle-orm/0.23.13_postgres@3.3.4:
-    resolution: {integrity: sha512-lqPqpBwqVXBYpFKB7JaIkbKpEQpefjmvTdOTVHjFIB8YOhs0+3QMjsjTlZKEx6m8xab4ZGS8DUtFcbBEemZe7g==}
+  /drizzle-orm/0.25.4_postgres@3.3.4:
+    resolution: {integrity: sha512-vURs2SqDh5pk81WWE4hR8gFKDTRmCK4FbaUGsZoljKnjKvMrjlA5xFPGiCih4/1XKqnOgSuh+I6T9KGBjYcPAA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -15085,6 +15097,7 @@ packages:
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
       '@types/sql.js': '*'
+      '@vercel/postgres': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       knex: '*'
@@ -15110,6 +15123,8 @@ packages:
       '@types/pg':
         optional: true
       '@types/sql.js':
+        optional: true
+      '@vercel/postgres':
         optional: true
       better-sqlite3:
         optional: true

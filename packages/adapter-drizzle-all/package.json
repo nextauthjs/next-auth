@@ -46,8 +46,9 @@
     "@types/better-sqlite3": "^7.6.3",
     "better-sqlite3": "^8.3.0",
     "mysql2": "^3.2.0",
-    "drizzle-kit": "^0.17.3",
-    "drizzle-orm": "^0.23.5",
+    "postgres": "^3.3.4",
+    "drizzle-kit": "^0.17.6",
+    "drizzle-orm": "^0.25.4",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   },

@@ -21,8 +21,8 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf ./drizzle && rm db.sqlite || echo 'Drizzle directory deleted'",
-    "generate-schema": "drizzle-kit generate:mysql --schema=src/schema.ts --breakpoints",
+    "clean": "rm -rf ./drizzle && rm -f db.sqlite || echo 'Drizzle directory deleted'",
+    "generate-schema": "drizzle-kit generate:sqlite --schema=src/schema.ts --breakpoints",
     "test:init": "pnpm clean && pnpm generate-schema",
     "test": "pnpm test:init && jest",
     "build": "pnpm clean && drizzle-kit generate:sqlite --schema=src/schema.ts && tsc",
@@ -40,8 +40,8 @@
     "@next-auth/tsconfig": "workspace:*",
     "@types/better-sqlite3": "^7.6.3",
     "better-sqlite3": "^8.2.0",
-    "drizzle-kit": "^0.17.3",
-    "drizzle-orm": "^0.23.5",
+    "drizzle-kit": "^0.17.6",
+    "drizzle-orm": "^0.25.4",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   },

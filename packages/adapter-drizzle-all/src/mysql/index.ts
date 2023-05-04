@@ -18,7 +18,7 @@
  */
 import { accounts, users, sessions, verificationTokens } from './schema'
 import { db } from './client'
-import { and, eq } from 'drizzle-orm/expressions'
+import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
 
 /**

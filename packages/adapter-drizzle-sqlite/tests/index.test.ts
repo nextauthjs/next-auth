@@ -1,7 +1,7 @@
 import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
 import { DrizzleAdapterSQLite } from "../src"
 import { db, users, accounts, sessions, verificationTokens } from '../src/schema'
-import { eq, and } from 'drizzle-orm/expressions';
+import { eq, and } from 'drizzle-orm';
 
 
 runBasicTests({
