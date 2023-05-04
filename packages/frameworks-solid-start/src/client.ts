@@ -51,7 +51,6 @@ export async function signIn<
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error -- ignore
     body: new URLSearchParams({
       ...options,
       csrfToken,
