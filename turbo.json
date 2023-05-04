@@ -35,6 +35,10 @@
       "dependsOn": ["^build"],
       "outputs": [".svelte-kit/**", "client.*", "index.*"]
     },
+    "@auth/nextjs#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["lib/**", "*.js", "*.d.ts", "*.d.ts*"]
+    },
     "clean": {
       "cache": false
     },
