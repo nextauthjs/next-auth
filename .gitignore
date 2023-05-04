@@ -88,7 +88,7 @@ docs/docs/reference/sveltekit
 docs/docs/reference/nextjs
 
 # Next.js
-packages/next-auth/lib
+packages/frameworks-nextjs/lib
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*
