@@ -15,7 +15,7 @@ import type { Cookie } from "../cookie.js"
  */
 export async function getAuthorizationUrl(
   query: RequestInternal["query"],
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">
 ): Promise<ResponseInternal> {
   const { logger, provider } = options
 
@@ -41,12 +41,21 @@ export async function getAuthorizationUrl(
   }
 
   const authParams = url.searchParams
+
+  let redirect_uri: string = provider.callbackUrl
+  let data: object | undefined
+  if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
+    redirect_uri = provider.redirectProxyUrl
+    data = { origin: provider.callbackUrl }
+    logger.debug("using redirect proxy", { redirect_uri, data })
+  }
+
   const params = Object.assign(
     {
       response_type: "code",
       // clientId can technically be undefined, should we check this in assert.ts or rely on the Authorization Server to do it?
       client_id: provider.clientId,
-      redirect_uri: provider.callbackUrl,
+      redirect_uri,
       // @ts-expect-error TODO:
       ...provider.authorization?.params,
     },
@@ -58,7 +67,7 @@ export async function getAuthorizationUrl(
 
   const cookies: Cookie[] = []
 
-  const state = await checks.state.create(options)
+  const state = await checks.state.create(options, data)
   if (state) {
     authParams.set("state", state.value)
     cookies.push(state.cookie)
@@ -68,7 +77,7 @@ export async function getAuthorizationUrl(
     if (as && !as.code_challenge_methods_supported?.includes("S256")) {
       // We assume S256 PKCE support, if the server does not advertise that,
       // a random `nonce` must be used for CSRF protection.
-      provider.checks = ["nonce"]
+      if (provider.type === "oidc") provider.checks = ["nonce"] as any
     } else {
       const { value, cookie } = await checks.pkce.create(options)
       authParams.set("code_challenge", value)

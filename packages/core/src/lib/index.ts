@@ -11,6 +11,7 @@ import type {
   ResponseInternal,
 } from "../types.js"
 
+/** @internal */
 export async function AuthInternal<
   Body extends string | Record<string, any> | any[]
 >(
@@ -109,14 +110,10 @@ export async function AuthInternal<
         if (
           [
             "Signin",
-            "OAuthSignin",
-            "OAuthCallback",
             "OAuthCreateAccount",
             "EmailCreateAccount",
             "Callback",
             "OAuthAccountNotLinked",
-            "EmailSignin",
-            "CredentialsSignin",
             "SessionRequired",
           ].includes(error as string)
         ) {
