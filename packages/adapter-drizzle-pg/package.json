@@ -39,8 +39,8 @@
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "postgres": "^3.3.4",
-    "drizzle-kit": "^0.17.3",
-    "drizzle-orm": "^0.23.5",
+    "drizzle-kit": "^0.17.6",
+    "drizzle-orm": "^0.25.4",
     "jest": "^27.4.3",
     "next-auth": "workspace:*"
   },
