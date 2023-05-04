@@ -105,6 +105,10 @@ export interface NextAuthResult {
    * The NextAuth.js [Route Handler](https://beta.nextjs.org/docs/routing/route-handlers) methods. After initializing NextAuth.js in `auth.ts`,
    * export these methods from `app/api/auth/[...nextauth]/route.ts`.
    *
+   * :::note
+   * This is a workaround until we have integrated with [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions).
+   * :::
+   *
    * @example
    * ```ts title="app/api/auth/[...nextauth]/route.ts"
    * import { handlers } from "../../../../auth"
