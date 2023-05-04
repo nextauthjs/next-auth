@@ -69,12 +69,12 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/next-auth"
+      "destination": "https://authjs.dev/reference/nextjs"
     },
     {
       "source": "/v5",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
-      "destination": "https://authjs.dev/guides/next-auth-v5"
+      "destination": "https://authjs.dev/getting-started/upgrade-to-v5"
     },
     {
       "source": "/:path(.*)",
