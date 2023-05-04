@@ -56,6 +56,7 @@
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/nextjs#build",
         "@auth/sveltekit#build",
         "^build",
         "next-auth#build"
@@ -87,10 +88,10 @@
       "outputs": [
         ".docusaurus/**/*",
         "build/**/*",
+        "docs/reference/adapter/**",
         "docs/reference/core/**/*",
-        "docs/reference/sveltekit/**/*",
         "docs/reference/nextjs/**/*",
-        "docs/reference/adapter/**"
+        "docs/reference/sveltekit/**/*"
       ]
     }
   }
