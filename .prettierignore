@@ -44,6 +44,7 @@ packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/css/index.css
 
+
 # Adapters
 .branches
 db.sqlite
