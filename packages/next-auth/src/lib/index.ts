@@ -1,6 +1,5 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { NextResponse } from "next/server"
-import type { headers as nextHeaders } from "next/headers"
 
 import type { JWT } from "@auth/core/jwt"
 import type { Awaitable, CallbacksOptions, User } from "@auth/core/types"
@@ -52,7 +51,7 @@ export interface NextAuthConfig extends AuthConfig {
 }
 
 async function getAuth(
-  headers: Headers | ReturnType<typeof nextHeaders>,
+  headers: Headers,
   config: NextAuthConfig
 ): Promise<AuthData & { expires: string }> {
   // TODO: Handle URL correctly (NEXTAUTH_URL, request host, protocol, custom path, etc.)
@@ -85,7 +84,6 @@ export type WithAuthArgs =
   | [NextAuthRequest, NextFetchEvent]
   | [NextAuthMiddleware]
   | [Headers]
-  | [ReturnType<typeof nextHeaders>]
   | []
 
 export function initAuth(config: NextAuthConfig) {
@@ -105,7 +103,6 @@ export function initAuth(config: NextAuthConfig) {
     // export default auth((req) => { console.log(req.auth) }})
     const userMiddleware = args[0]
     return async (...args: Parameters<NextAuthMiddleware>) => {
-      // @ts-expect-error instanceof Headers higher up should not let this be a problem
       return handleAuth(args, config, userMiddleware)
     }
   }
