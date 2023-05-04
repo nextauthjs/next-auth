@@ -65,3 +65,4 @@ apps/example-sveltekit
 apps/dev/prisma
 apps/dev/migrations
 apps/dev/typeorm
+
