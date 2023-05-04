@@ -104,7 +104,7 @@ jobs:
     name: Publish PR
     runs-on: ubuntu-latest
     needs: test
-    if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'pull_request' }}
     environment: Preview
     steps:
       - name: Init
@@ -121,25 +121,55 @@ jobs:
         uses: ./.github/version-pr
         id: determine-version
         env:
-          PACKAGE_PATH: ${{ github.event.inputs.path }}
           PR_NUMBER: ${{ github.event.number }}
       - name: Publish to npm
         run: |
-          cd $PACKAGE_PATH
+          cd packages/core
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           pnpm publish --no-git-checks --access public --tag experimental
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PACKAGE_PATH: ${{ github.event.inputs.path }}
       - name: Comment version on PR
-        if: ${{ github.event_name == 'pull_request'}}
         uses: NejcZdovc/comment-pr@v2
         with:
           message:
-            "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/${{ github.event.inputs.name }}/v/${{ env.VERSION }})!\n \
-            ```sh\npnpm add ${{ github.event.inputs.name }}@${{ env.VERSION }}\n```\n \
-            ```sh\nyarn add ${{ github.event.inputs.name }}@${{ env.VERSION }}\n```\n \
-            ```sh\nnpm i ${{ github.event.inputs.name }}@${{ env.VERSION }}\n```"
+            "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/@auth/core/v/${{ env.VERSION }})!\n \
+            ```sh\npnpm add @auth/core@${{ env.VERSION }}\n```\n \
+            ```sh\nyarn add @auth/core@${{ env.VERSION }}\n```\n \
+            ```sh\nnpm i @auth/core@${{ env.VERSION }}\n```"
         env:
           VERSION: ${{ steps.determine-version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+  release-manual:
+    name: Publish manually
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Init
+        uses: actions/checkout@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: pnpm install
+      - name: Determine version
+        uses: ./.github/version-pr
+        id: determine-version
+        env:
+          PACKAGE_PATH: ${{ github.event.inputs.path }}
+      - name: Publish to npm
+        run: |
+          cd packages/$PACKAGE_PATH
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          pnpm publish --no-git-checks --access public --tag experimental
+          echo "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/${{ github.event.inputs.name }}/v/${{ env.VERSION }})!"
+          echo "pnpm add ${{ github.event.inputs.name }}@${{ env.VERSION }}"
+        
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_PATH: ${{ github.event.inputs.path }}
+          VERSION: ${{ steps.determine-version.outputs.version }}
