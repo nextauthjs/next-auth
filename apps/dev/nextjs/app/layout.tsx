@@ -1,12 +1,16 @@
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+import Header from "./header"
+import Footer from "./footer"
+import "./styles.css"
+
+export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html>
       <head></head>
-      <body>{children}</body>
+      <body>
+        <Header />
+        <main>{props.children}</main>
+        <Footer />
+      </body>
     </html>
   )
 }
