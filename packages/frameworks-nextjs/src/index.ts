@@ -12,9 +12,7 @@
  * npm install next-auth@5 @auth/core
  * ```
  *
- *
  * ## Signing in and signing out
- *
  *
  * The App Router embraces Server Actions that can be leveraged to decrease the amount of JavaScript sent to the browser.
  *
