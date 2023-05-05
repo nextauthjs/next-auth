@@ -12,9 +12,10 @@ The API reference is being migrated from the [old documentation page](https://ne
 
 Here are the _currently_ planned and released packages under the `@auth/*` scope. This is not an exhaustive list, but the set of packages that we would like to focus on to begin with.
 
-|       Feature       |  Status  |
+|       Package       |  Status  |
 | ------------------- | -------- |
-| `@auth/nextjs`      | Experimental, under `next-auth@5`.   |
+| `next-auth@4 `      | Stable. See [docs](https://next-auth.js.org/)   |
+| `@auth/nextjs`      | Experimental, under `next-auth@5`.  |
 | `@auth/*-adapter`   | Planned  |
 | `@auth/core`        | Experimental |
 | `@auth/sveltekit`   | Experimental |
