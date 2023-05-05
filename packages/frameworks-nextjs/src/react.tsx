@@ -43,6 +43,7 @@ export type {
   SignOutParams,
 }
 
+export { SessionProviderProps }
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
 // 1. An empty value is legitimate when the code is being invoked client side as
@@ -81,8 +82,12 @@ const logger: LoggerInstance = {
   warn: console.warn,
 }
 
-type UpdateSession = (data?: any) => Promise<Session | null>
+/** @todo Document */
+export type UpdateSession = (data?: any) => Promise<Session | null>
 
+/**
+ * useSession() returns an object containing three things: a method called {@link UpdateSession|update}, `data` and `status`.
+ */
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
       | { update: UpdateSession; data: Session; status: "authenticated" }
@@ -100,8 +105,11 @@ export const SessionContext = React.createContext?.<
 >(undefined)
 
 /**
- * React Hook that gives you access
- * to the logged in user's session data.
+ * React Hook that gives you access to the logged in user's session data and lets you modify it.
+ *
+ * :::info
+ * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * :::
  */
 export function useSession<R extends boolean>(
   options?: UseSessionOptions<R>
@@ -317,9 +325,14 @@ export async function signOut<R extends boolean = true>(
 }
 
 /**
- * Provider to wrap the app in to make session data available globally.
- * Can also be used to throttle the number of requests to the endpoint
- * `/api/auth/session`.
+ * [React Context](https://react.dev/learn/passing-data-deeply-with-context) provider to wrap the app (`pages/`) to make session data available anywhere.
+ *
+ * When used, the session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus
+ * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
+ *
+ * :::info
+ * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * :::
  */
 export function SessionProvider(props: SessionProviderProps) {
   if (!SessionContext) {

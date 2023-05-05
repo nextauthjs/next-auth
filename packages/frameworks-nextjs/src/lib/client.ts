@@ -36,6 +36,7 @@ export interface UseSessionOptions<R extends boolean> {
 /**
  * Util type that matches some strings literally, but allows any other string as well.
  * @source https://github.com/microsoft/TypeScript/issues/29729#issuecomment-832522611
+ * @internal
  */
 export type LiteralUnion<T extends U, U = string> =
   | T
@@ -67,7 +68,10 @@ export interface SignInResponse {
   url: string | null
 }
 
-/** Match `inputType` of `new URLSearchParams(inputType)` */
+/**
+ * Match `inputType` of `new URLSearchParams(inputType)`
+ * @internal
+ */
 export type SignInAuthorizationParams =
   | string
   | string[][]
@@ -86,7 +90,12 @@ export interface SignOutParams<R extends boolean = true> {
   redirect?: R
 }
 
-/** [Documentation](https://next-auth.js.org/getting-started/client#options) */
+/**
+ 
+ * If you have session expiry times of 30 days (the default) or more, then you probably don't need to change any of the default options.
+ *
+ * However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the {@link useSession} hook.
+ */
 export interface SessionProviderProps {
   children: React.ReactNode
   session?: Session | null
