@@ -4,15 +4,27 @@ import Facebook from "@auth/core/providers/facebook"
 import GitHub from "@auth/core/providers/github"
 import Google from "@auth/core/providers/google"
 import Twitter from "@auth/core/providers/twitter"
+import Credentials from "@auth/core/providers/credentials"
 
-export const { handlers, auth } = NextAuth({
+export const { handlers, auth, getServerSession } = NextAuth({
   debug: true,
-  providers: [GitHub, Auth0, Facebook, Google, Twitter],
+  providers: [
+    GitHub,
+    Auth0,
+    Facebook,
+    Google,
+    Twitter,
+    Credentials({
+      credentials: { password: { label: "Password", type: "password" } },
+      authorize(c) {
+        if (c.password !== "password") return null
+        return { id: "test", name: "Test User", email: "test@example.com" }
+      },
+    }),
+  ],
   callbacks: {
-    async authorized({ request, auth }) {
-      if (request.nextUrl.pathname === "/dashboard") {
-        return !!auth.token
-      }
+    async authorized({ request: { nextUrl }, auth }) {
+      if (nextUrl.pathname === "/dashboard") return !!auth.user
       return true
     },
   },

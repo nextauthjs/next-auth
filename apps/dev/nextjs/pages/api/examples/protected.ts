@@ -1,9 +1,8 @@
 // This is an example of to protect an API route
-import { authConfig } from "../auth-old/[...nextauth]"
-import { getServerSession } from "next-auth/next"
+import { getServerSession } from "auth"
 
 export default async (req, res) => {
-  const session = await getServerSession(req, res, authConfig as any)
+  const session = await getServerSession(req, res)
 
   if (session) {
     res.send({
