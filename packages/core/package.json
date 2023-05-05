@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.5.1",
+  "version": "0.7.1",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -88,7 +88,7 @@
     "@types/cookie": "0.5.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
-    "@types/react": "18.0.26",
+    "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
     "postcss-nested": "6.0.0"

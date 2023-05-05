@@ -25,6 +25,10 @@
   transition: 0.2s background-color ease-in-out;
 }
 
+html[data-theme="dark"] .adapter-card {
+  color: #f5f5f5;
+}
+
 .adapter-card:hover {
   text-decoration: none;
   color: black;

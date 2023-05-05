@@ -1,6 +1,6 @@
 import type { CommonProviderOptions } from "./index.js"
 import type { Awaitable, User } from "../types.js"
-import type { JSXInternal } from "preact/src/jsx.js"
+import type { JSX } from "preact"
 
 /**
  * Besides providing type safety inside {@link CredentialsConfig.authorize}
@@ -8,7 +8,7 @@ import type { JSXInternal } from "preact/src/jsx.js"
  * on the default sign in page.
  */
 export interface CredentialInput
-  extends Partial<JSXInternal.IntrinsicElements["input"]> {
+  extends Partial<JSX.IntrinsicElements["input"]> {
   label?: string
 }
 

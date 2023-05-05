@@ -44,6 +44,12 @@ export interface CommonProviderOptions {
   type: ProviderType
 }
 
+interface InternalProviderOptions {
+  /** Used to deep merge user-provided config with the default config
+   */
+  options?: Record<string, unknown>
+}
+
 /**
  * Must be a supported authentication provider config:
  * - {@link OAuthConfig}
@@ -57,17 +63,14 @@ export interface CommonProviderOptions {
  * @see [Credentials guide](https://authjs.dev/guides/providers/credentials)
  */
 export type Provider<P extends Profile = Profile> = (
-  | OIDCConfig<P>
-  | OAuth2Config<P>
-  | EmailConfig
-  | CredentialsConfig
-) & {
-  /**
-   * Used to deep merge user-provided config with the default config
-   * @internal
-   */
-  options: Record<string, unknown>
-}
+  | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig) &
+      InternalProviderOptions)
+  | ((
+      ...args: any
+    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig) &
+      InternalProviderOptions)
+) &
+  InternalProviderOptions
 
 export type BuiltInProviders = Record<
   OAuthProviderType,

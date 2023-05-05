@@ -25,6 +25,7 @@ export async function openidClient(
       authorization_endpoint: provider.authorization?.url,
       token_endpoint: provider.token?.url,
       userinfo_endpoint: provider.userinfo?.url,
+      jwks_uri: provider.jwks_endpoint,
     })
   }
 

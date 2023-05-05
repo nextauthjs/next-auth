@@ -8,6 +8,24 @@ on:
       - next
       - 3.x
   pull_request:
+  # TODO: Support latest releases
+  workflow_dispatch:
+    inputs:
+      name: 
+        type: choice
+        description: Package name (npm)
+        options:
+        - "@auth/nextjs"
+        - "@auth/core"
+        - "next-auth"
+      # TODO: Infer from package name
+      path:
+        type: choice
+        description: Directory name (packages/*)
+        options:
+        - "frameworks-nextjs"
+        - "core"
+        - "next-auth"
 
 jobs:
   test:
@@ -122,3 +140,34 @@ jobs:
         env:
           VERSION: ${{ steps.determine-version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+  release-manual:
+    name: Publish manually
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Init
+        uses: actions/checkout@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: pnpm install
+      - name: Determine version
+        uses: ./.github/version-pr
+        id: determine-version
+        env:
+          PACKAGE_PATH: ${{ github.event.inputs.path }}
+      - name: Publish to npm
+        run: |
+          cd packages/$PACKAGE_PATH
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          pnpm publish --no-git-checks --access public --tag experimental
+          echo "🎉 Experimental release published 📦️ on npm: https://npmjs.com/package/${{ github.event.inputs.name }}/v/${{ env.VERSION }}"
+          echo "Install via: pnpm add ${{ github.event.inputs.name }}@${{ env.VERSION }}"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_PATH: ${{ github.event.inputs.path }}
+          VERSION: ${{ steps.determine-version.outputs.version }}

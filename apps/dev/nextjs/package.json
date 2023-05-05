@@ -22,7 +22,7 @@
     "@prisma/client": "^3",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
-    "next": "13.1.1",
+    "next": "13.3.0",
     "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@playwright/test": "1.29.2",
     "@types/jsonwebtoken": "^8.5.5",
-    "@types/react": "^18.0.15",
+    "@types/react": "18.0.37",
     "@types/react-dom": "^18.0.6",
     "dotenv": "^16.0.3",
     "fake-smtp-server": "^0.8.0",

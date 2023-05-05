@@ -56,9 +56,25 @@ export async function init({
     providers: authOptions.providers,
     url,
     providerId,
+    options: authOptions,
   })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
+
+  let isOnRedirectProxy = false
+  if (
+    (provider?.type === "oauth" || provider?.type === "oidc") &&
+    provider.redirectProxyUrl
+  ) {
+    try {
+      isOnRedirectProxy =
+        new URL(provider.redirectProxyUrl).origin === url.origin
+    } catch {
+      throw new TypeError(
+        `redirectProxyUrl must be a valid URL. Received: ${provider.redirectProxyUrl}`
+      )
+    }
+  }
 
   // User provided options are overridden by other options,
   // except for the options with special handling above
@@ -113,6 +129,7 @@ export async function init({
     callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
     logger,
     callbackUrl: url.origin,
+    isOnRedirectProxy,
   }
 
   // Init cookies
