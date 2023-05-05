@@ -136,8 +136,8 @@ export interface NextAuthResult {
    * import { auth } from "../auth"
    * import { headers } from "next/headers"
    * export default async function Page() {
-   *   const { token } = await auth(headers())
-   *   return <div>Hello {token?.name}</div>
+   *   const { user } = await auth(headers())
+   *   return <div>Hello {user?.name}</div>
    * }
    * ```
    * @example
