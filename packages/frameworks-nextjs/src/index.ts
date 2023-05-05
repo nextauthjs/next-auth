@@ -4,7 +4,7 @@
  * This is the documentation for `next-auth@5`, which is currently **experimental**. For the documentation of the latest stable version, see [next-auth@4](https://next-auth.js.org).
  * :::
  *
- * If you are looking for the migration guide, visit [next-auth@5 Migration Guide](https://nextjs.authjs.dev/v5).
+ * If you are looking for the migration guide, visit the [`next-auth@5` Migration Guide](https://nextjs.authjs.dev/v5).
  *
  * ## Signing in and signing out
  *
@@ -12,8 +12,8 @@
  * The App Router embraces Server Actions that can be leveraged to decrease the amount of JavaScript sent to the browser.
  *
  * :::info
- * Next.js Server Actions is **under development**. In the future, NextAuth.js will integrate with Server Actions and provide first-party APIs.
- * The below is a workaround until then.
+ * [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions) is **in alpha stage**. In the future, NextAuth.js will integrate with Server Actions and provide first-party APIs.
+ * Until then, here is how you can use NextAuth.js to log in and log out without JavaScript.
  * :::
  *
  * ```ts title="app/auth-components.tsx"
