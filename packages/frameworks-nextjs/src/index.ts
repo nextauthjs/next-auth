@@ -48,7 +48,7 @@
  *
  * ```ts title="app/auth-components.tsx"
  * "use client"
- * import { signIn, signOut } from "@next-auth/react"
+ * import { signIn, signOut } from "next-auth/react"
  *
  * export function SignIn({provider, ...props}: any) {
  *   return <button {...props} onClick={() => signIn(provider)}/>
