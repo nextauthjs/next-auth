@@ -359,7 +359,7 @@ export default async (req, res) => {
 ```
 
 :::note
-Unlike and `getCsrfToken()`, when calling `getProviders()` server side, you don't need to pass anything, just as calling it client side.
+Unlike `getCsrfToken()`, when calling `getProviders()` server side, you don't need to pass anything, just as calling it client side.
 :::
 
 ---
