@@ -33,11 +33,8 @@ export interface UseSessionOptions<R extends boolean> {
   onUnauthenticated?: () => void
 }
 
-/**
- * Util type that matches some strings literally, but allows any other string as well.
- * @source https://github.com/microsoft/TypeScript/issues/29729#issuecomment-832522611
- * @internal
- */
+// Util type that matches some strings literally, but allows any other string as well.
+// @source https://github.com/microsoft/TypeScript/issues/29729#issuecomment-832522611
 export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<never, never>)

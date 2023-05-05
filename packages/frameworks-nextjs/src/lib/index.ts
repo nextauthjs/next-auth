@@ -1,8 +1,7 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { NextResponse } from "next/server"
 
-import type { JWT } from "@auth/core/jwt"
-import type { Awaitable, CallbacksOptions, User } from "@auth/core/types"
+import type { Awaitable, CallbacksOptions, Session } from "@auth/core/types"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 
@@ -60,16 +59,15 @@ async function runAuth(headers: Headers, config: NextAuthConfig) {
   const req = new Request(`${origin}/api/auth/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
-  config.trustHost = true
   config.useSecureCookies ??= protocol === "https"
-  if (config.callbacks) {
-    config.callbacks.session ??= ({ session, user, token }) => ({
-      expires: session.expires,
-      user,
-      token,
-    })
-  }
-  return await Auth(req, config)
+
+  // Since we are server-side, we don't need to filter out the session data
+  config.callbacks = Object.assign(config.callbacks as any, {
+    session({ session, user, token }) {
+      return { expires: session.expires, user: user ?? token }
+    },
+  })
+  return Auth(req, config)
 }
 
 export interface NextAuthRequest extends NextRequest {
@@ -116,10 +114,9 @@ export function initAuth(config: NextAuthConfig) {
   }
 }
 
-/** TODO: structure token similar to User */
+/** TODO: document */
 export interface AuthData {
-  token: JWT | null
-  user: User | null
+  user: Session | null
 }
 
 async function handleAuth(
@@ -130,19 +127,14 @@ async function handleAuth(
   const request = args[0]
   // TODO: pass `next/headers` when it's available
   const authResponse = await runAuth(request.headers, config)
-  const {
-    token = null,
-    user = null,
-    expires = null,
-  } = (await authResponse.json()) ?? {}
+  const { user = null, expires = null } = (await authResponse.json()) ?? {}
 
-  const authorized = config.callbacks?.authorized
-    ? await config.callbacks.authorized({
-        request,
-        auth: { token, user },
-        expires,
-      })
-    : true
+  const authorized =
+    (await config.callbacks?.authorized?.({
+      request,
+      auth: { user },
+      expires,
+    })) ?? true
 
   let response: Response = NextResponse.next()
 
@@ -152,7 +144,7 @@ async function handleAuth(
   } else if (userMiddlewareOrRoute) {
     // Execute user's middleware/handler with the augmented request
     const augmentedReq: NextAuthRequest = request as any
-    augmentedReq.auth = { token, user }
+    augmentedReq.auth = { user }
     response =
       // @ts-expect-error
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
@@ -164,8 +156,7 @@ async function handleAuth(
     response = NextResponse.redirect(request.nextUrl)
   }
 
-  // We will update the session cookie if it exists,
-  // so that the session expiry is extended
+  // Preserve cookies set by Auth.js Core
   const finalResponse = new NextResponse(response?.body, response)
   if (authResponse.headers.has("set-cookie")) {
     finalResponse.headers.set(

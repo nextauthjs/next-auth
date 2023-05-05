@@ -41,7 +41,7 @@ export async function session(
         user: {
           name: decodedToken?.name,
           email: decodedToken?.email,
-          image: decodedToken?.picture,
+          picture: decodedToken?.picture,
         },
         expires: newExpires.toISOString(),
       }
@@ -128,7 +128,7 @@ export async function session(
           user: {
             name: user.name,
             email: user.email,
-            image: user.image,
+            picture: user.image,
           },
           expires: session.expires.toISOString(),
         },

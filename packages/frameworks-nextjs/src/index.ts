@@ -93,6 +93,7 @@ import { initAuth } from "./lib/index.js"
 
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./lib/index.js"
+import { getServerSession } from "./next"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",
@@ -149,6 +150,8 @@ export interface NextAuthResult {
    * ```
    */
   auth: ReturnType<typeof initAuth>
+  /** TODO: document */
+  getServerSession: ReturnType<typeof getServerSession>
 }
 
 /**
@@ -168,5 +171,6 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     auth: initAuth(config),
+    getServerSession: getServerSession(config),
   }
 }
