@@ -27,7 +27,7 @@ export const accounts = sqliteTable("accounts", {
   id_token: text("id_token"),
   session_state: text("session_state"),
 }, (account) => ({
-  nameDoesntMatter: primaryKey(account.provider, account.providerAccountId)
+  compoundKey: primaryKey(account.provider, account.providerAccountId)
 }))
 
 export const sessions = sqliteTable("sessions", {
@@ -41,7 +41,7 @@ export const verificationTokens = sqliteTable("verificationToken", {
   token: text("token").notNull(),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull()
 }, (vt) => ({
-  nameDoesntMatter: primaryKey(vt.identifier, vt.token)
+  compoundKey: primaryKey(vt.identifier, vt.token)
 }))
 
 export const db = drizzle(sqlite);
