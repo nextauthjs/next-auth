@@ -114,7 +114,7 @@ export function SQLiteAdapter(client: typeof db): Adapter {
     createUser: (data) => {
       return client
         .insert(users)
-        .values({ ...data, id: "123" })
+        .values(data)
         .returning()
         .get()
     },

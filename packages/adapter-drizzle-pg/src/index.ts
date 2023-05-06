@@ -114,7 +114,7 @@ export function DrizzleAdapterPg(client: typeof db): Adapter {
     createUser: async (data) => {
       return client
         .insert(users)
-        .values({ ...data, id: "123" })
+        .values(data)
         .returning()
         .then(res => res[0])
     },
