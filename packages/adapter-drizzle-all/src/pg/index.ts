@@ -179,6 +179,8 @@ export function PgAdapter(client: typeof db): Adapter {
         .returning()
         .then(res => res[0])
 
+      // Drizzle will return `null` for fields that are not defined.
+      // However, the return type is expecting `undefined`.
       const account: ReturnType<Adapter["linkAccount"]> = {
         ...updatedAccount,
         access_token: updatedAccount.access_token ?? undefined,
