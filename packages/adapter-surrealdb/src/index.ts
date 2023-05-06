@@ -98,8 +98,16 @@ export function SurrealDBAdapter(
     async getUser(id: string) {
       const surreal = await client
       try {
-        const users = (await surreal.select(`user:${id}`)) as UserDoc[]
-        return docToUser(users[0])
+        const usersResultArr = await surreal.query<Result<UserDoc[]>[]>(
+          "SELECT * FROM $user",
+          {
+            user: `user:${id}`,
+          }
+        )
+        const users = usersResultArr[0]?.result
+        if (users) {
+          return docToUser(users[0])
+        }
       } catch (e) {}
       return null
     },
