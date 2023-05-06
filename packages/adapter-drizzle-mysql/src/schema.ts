@@ -22,7 +22,7 @@ export const accounts = mysqlTable("accounts", {
   id_token: text("id_token"),
   session_state: text("session_state"),
 }, (account) => ({
-  nameDoesntMatter: primaryKey(account.provider, account.providerAccountId)
+  compoundKey: primaryKey(account.provider, account.providerAccountId)
 }))
 
 export const sessions = mysqlTable("sessions", {
@@ -36,5 +36,5 @@ export const verificationTokens = mysqlTable("verificationToken", {
   token: text("token").notNull(),
   expires: timestamp("expires", { mode: "date" }).notNull()
 }, (vt) => ({
-  nameDoesntMatter: primaryKey(vt.identifier, vt.token)
+  compoundKey: primaryKey(vt.identifier, vt.token)
 }))

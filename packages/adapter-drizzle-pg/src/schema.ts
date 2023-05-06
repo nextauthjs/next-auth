@@ -28,7 +28,7 @@ export const accounts = pgTable("accounts", {
   id_token: text("id_token"),
   session_state: text("session_state"),
 }, (account) => ({
-  nameDoesntMatter: primaryKey(account.provider, account.providerAccountId)
+  compoundKey: primaryKey(account.provider, account.providerAccountId)
 }))
 
 export const sessions = pgTable("sessions", {
@@ -42,7 +42,7 @@ export const verificationTokens = pgTable("verificationToken", {
   token: text("token").notNull(),
   expires: timestamp("expires", { mode: "date" }).notNull()
 }, (vt) => ({
-  nameDoesntMatter: primaryKey(vt.identifier, vt.token)
+  compoundKey: primaryKey(vt.identifier, vt.token)
 }))
 
 export const db = drizzle(queryConnection);
