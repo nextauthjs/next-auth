@@ -62,6 +62,27 @@ callbacks: {
 
   You can check for the `verificationRequest` property to avoid sending emails to addresses or domains on a blocklist (or to only explicitly generate them for email address in an allow list).
 
+  You can ensure that only existing users are sent a magic login link. You will need to grab the email the user entered and check your database to see if the email already exists in the User collection in your database. If it exists, send the user a magic link but otherwise, you can send the user to another page, such as "/register". 
+
+  ```js title="pages/api/auth/[...nextauth].js"
+  import User from "../../../models/User"; 
+  import db from "../../../utils/db"; 
+  ...
+  callbacks: {
+    async signIn({ user, account, email }) { 
+      await db.connect(); 
+      const userExists = await User.findOne({ 
+        email: user.email,  //the user object has an email property, which contains the email the user entered.
+      });
+      if (userExists) {
+        return true;   //if the email exists in the User collection, email them a magic login link
+      } else {
+        return "/register"; 
+      }
+    },
+   ...
+  ``` 
+  
 * When using the **Credentials Provider** the `user` object is the response returned from the `authorize` callback and the `profile` object is the raw body of the `HTTP POST` submission.
 
 :::note
