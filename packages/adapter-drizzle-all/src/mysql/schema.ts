@@ -40,3 +40,7 @@ export const verificationTokens = mysqlTable("verificationToken", {
 }, (vt) => ({
   compoundKey: primaryKey(vt.identifier, vt.token)
 }))
+
+const poolConnection = mysql.createPool({})
+
+export const db = drizzle(poolConnection);

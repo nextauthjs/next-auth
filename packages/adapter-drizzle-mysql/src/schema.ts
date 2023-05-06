@@ -1,5 +1,7 @@
 import { int, timestamp, mysqlTable, text, primaryKey } from 'drizzle-orm/mysql-core';
 import { ProviderType } from 'next-auth/providers';
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from 'mysql2/promise'
 
 export const users = mysqlTable('users', {
   id: text('id').notNull().primaryKey(),
@@ -8,6 +10,7 @@ export const users = mysqlTable('users', {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
+
 
 export const accounts = mysqlTable("accounts", {
   userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -38,3 +41,7 @@ export const verificationTokens = mysqlTable("verificationToken", {
 }, (vt) => ({
   compoundKey: primaryKey(vt.identifier, vt.token)
 }))
+
+const poolConnection = mysql.createPool({})
+
+export const db = drizzle(poolConnection);
