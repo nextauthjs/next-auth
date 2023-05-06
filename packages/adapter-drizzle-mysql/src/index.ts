@@ -115,7 +115,7 @@ export function DrizzleAdapterMySQL(client: typeof db): Adapter {
     createUser: async (data) => {
       await client
         .insert(users)
-        .values({ ...data, id: "123" })
+        .values(data)
 
       return client
         .select()
