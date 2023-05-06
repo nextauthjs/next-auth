@@ -129,9 +129,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  *     )
  *     .addColumn("name", "text")
  *     .addColumn("email", "text", (col) => col.unique().notNull())
- *     .addColumn("emailVerified", "timestamptz", (col) =>
- *       col.defaultTo(sql`NOW()`)
- *     )
+ *     .addColumn("emailVerified", "timestamptz")
  *     .addColumn("image", "text")
  *     .execute()
  *
