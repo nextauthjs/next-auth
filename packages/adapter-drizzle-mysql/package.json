@@ -35,9 +35,13 @@
   "peerDependencies": {
     "next-auth": "^4"
   },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
+    "@types/uuid": "^8.3.3",
     "mysql2": "^3.2.0",
     "drizzle-kit": "^0.17.6",
     "drizzle-orm": "^0.25.4",

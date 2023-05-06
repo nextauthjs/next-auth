@@ -18,8 +18,9 @@
  */
 import { accounts, users, sessions, verificationTokens } from './schema'
 import { db } from './client'
-import { and, eq } from 'drizzle-orm/expressions'
+import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
+import { v4 as uuid } from 'uuid'
 
 /**
  * ## Setup
@@ -115,7 +116,7 @@ export function DrizzleAdapterMySQL(client: typeof db): Adapter {
     createUser: async (data) => {
       await client
         .insert(users)
-        .values(data)
+        .values({ ...data, id: uuid() })
 
       return client
         .select()

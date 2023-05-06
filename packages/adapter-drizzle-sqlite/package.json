@@ -35,10 +35,14 @@
   "peerDependencies": {
     "next-auth": "^4"
   },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@types/better-sqlite3": "^7.6.3",
+    "@types/uuid": "^8.3.3",
     "better-sqlite3": "^8.2.0",
     "drizzle-kit": "^0.17.6",
     "drizzle-orm": "^0.25.4",

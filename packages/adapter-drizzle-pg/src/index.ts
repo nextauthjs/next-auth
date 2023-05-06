@@ -19,6 +19,7 @@
 import { db, accounts, users, sessions, verificationTokens } from './schema'
 import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
+import { v4 as uuid } from 'uuid'
 
 /**
  * ## Setup
@@ -114,7 +115,7 @@ export function DrizzleAdapterPg(client: typeof db): Adapter {
     createUser: async (data) => {
       return client
         .insert(users)
-        .values(data)
+        .values({ ...data, id: uuid() })
         .returning()
         .then(res => res[0])
     },

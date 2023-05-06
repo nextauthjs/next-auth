@@ -17,6 +17,7 @@
  * @module @next-auth/drizzle-adapter
  */
 import { db, accounts, users, sessions, verificationTokens } from './schema'
+import { v4 as uuid } from 'uuid'
 import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
 
@@ -114,7 +115,7 @@ export function DrizzleAdapterSQLite(client: typeof db): Adapter {
     createUser: (data) => {
       return client
         .insert(users)
-        .values(data)
+        .values({ ...data, id: uuid() })
         .returning()
         .get()
     },
