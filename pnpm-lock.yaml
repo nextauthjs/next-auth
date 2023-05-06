@@ -282,6 +282,7 @@ importers:
       '@next-auth/drizzle-adapter-sqlite': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.3
+      '@types/uuid': ^8.3.3
       better-sqlite3: ^8.3.0
       drizzle-kit: ^0.17.6
       drizzle-orm: ^0.25.4
@@ -289,14 +290,17 @@ importers:
       mysql2: ^3.2.0
       next-auth: workspace:*
       postgres: ^3.3.4
+      uuid: ^8.3.2
     dependencies:
       '@next-auth/drizzle-adapter-mysql': link:../adapter-drizzle-mysql
       '@next-auth/drizzle-adapter-pg': link:../adapter-drizzle-pg
       '@next-auth/drizzle-adapter-sqlite': link:../adapter-drizzle-sqlite
+      uuid: 8.3.2
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@types/better-sqlite3': 7.6.4
+      '@types/uuid': 8.3.4
       better-sqlite3: 8.3.0
       drizzle-kit: 0.17.6
       drizzle-orm: 0.25.4_fjj6i37mkijnrd5wr7thv2suqe

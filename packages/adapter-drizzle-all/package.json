@@ -38,12 +38,14 @@
   "dependencies": {
     "@next-auth/drizzle-adapter-sqlite": "workspace:*",
     "@next-auth/drizzle-adapter-mysql": "workspace:*",
-    "@next-auth/drizzle-adapter-pg": "workspace:*"
+    "@next-auth/drizzle-adapter-pg": "workspace:*",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@types/better-sqlite3": "^7.6.3",
+    "@types/uuid": "^8.3.3",
     "better-sqlite3": "^8.3.0",
     "mysql2": "^3.2.0",
     "postgres": "^3.3.4",

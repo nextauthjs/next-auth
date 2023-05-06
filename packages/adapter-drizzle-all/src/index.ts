@@ -13,8 +13,8 @@ import { MySqlDatabase } from "drizzle-orm/mysql-core"
 import { PgDatabase } from "drizzle-orm/pg-core"
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 
-export function isMySqlDatabase(db: any): db is MySqlDatabase<any> {
-  return db instanceof MySqlDatabase<any>
+export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any> {
+  return db instanceof MySqlDatabase<any, any>
 }
 
 export function isPgDatabase(db: any): db is PgDatabase<any> {

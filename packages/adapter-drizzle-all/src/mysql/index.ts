@@ -20,6 +20,7 @@ import { accounts, users, sessions, verificationTokens } from './schema'
 import { db } from './client'
 import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
+import { v4 as uuid } from 'uuid'
 
 /**
  * ## Setup
@@ -113,14 +114,15 @@ import type { Adapter } from "next-auth/adapters"
 export function MySqlAdapter(client: typeof db): Adapter {
   return {
     createUser: async (data) => {
+      const id = uuid()
       await client
         .insert(users)
-        .values(data)
+        .values({ ...data, id })
 
       return client
         .select()
         .from(users)
-        .where(eq(users.id, '123'))
+        .where(eq(users.id, id))
         .then(res => res[0])
 
     },
@@ -210,13 +212,7 @@ export function MySqlAdapter(client: typeof db): Adapter {
         .then(res => res[0])
     },
     getUserByAccount: async (account) => {
-      return client.select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        name: users.name
-      })
+      const user = await client.select()
         .from(users)
         .innerJoin(accounts, (
           and(
@@ -226,6 +222,8 @@ export function MySqlAdapter(client: typeof db): Adapter {
         ))
         .then(res => res[0])
         ?? null
+
+      return user.users
     }
     ,
     deleteSession: async (sessionToken) => {
