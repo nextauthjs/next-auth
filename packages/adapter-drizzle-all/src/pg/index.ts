@@ -19,6 +19,7 @@
 import { db, accounts, users, sessions, verificationTokens } from './schema'
 import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
+import { v4 as uuid } from 'uuid'
 
 /**
  * ## Setup
@@ -114,7 +115,7 @@ export function PgAdapter(client: typeof db): Adapter {
     createUser: async (data) => {
       return client
         .insert(users)
-        .values(data)
+        .values({ ...data, id: uuid() })
         .returning()
         .then(res => res[0])
     },
@@ -195,13 +196,7 @@ export function PgAdapter(client: typeof db): Adapter {
       return account
     },
     getUserByAccount: async (account) => {
-      return client.select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        name: users.name
-      })
+      const user = await client.select()
         .from(users)
         .innerJoin(accounts, (
           and(
@@ -211,6 +206,8 @@ export function PgAdapter(client: typeof db): Adapter {
         ))
         .then(res => res[0])
         ?? null
+
+      return user.users
     }
     ,
     deleteSession: async (sessionToken) => {

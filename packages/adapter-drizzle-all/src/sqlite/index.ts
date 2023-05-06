@@ -17,8 +17,9 @@
  * @module @next-auth/drizzle-adapter
  */
 import { db, accounts, users, sessions, verificationTokens } from './schema'
-import { and, eq } from 'drizzle-orm/expressions'
+import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
+import { v4 as uuid } from 'uuid'
 
 /**
  * ## Setup
@@ -114,7 +115,7 @@ export function SQLiteAdapter(client: typeof db): Adapter {
     createUser: (data) => {
       return client
         .insert(users)
-        .values(data)
+        .values({ ...data, id: uuid() })
         .returning()
         .get()
     },
@@ -190,13 +191,7 @@ export function SQLiteAdapter(client: typeof db): Adapter {
       return account
     },
     getUserByAccount: (account) => {
-      return client.select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        name: users.name
-      })
+      const user = client.select()
         .from(users)
         .innerJoin(accounts, (
           and(
@@ -205,6 +200,8 @@ export function SQLiteAdapter(client: typeof db): Adapter {
           )
         ))
         .get() ?? null
+
+      return user.users
     }
     ,
     deleteSession: (sessionToken) => {

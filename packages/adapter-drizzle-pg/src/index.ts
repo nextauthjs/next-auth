@@ -196,13 +196,7 @@ export function DrizzleAdapterPg(client: typeof db): Adapter {
       return account
     },
     getUserByAccount: async (account) => {
-      return client.select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        name: users.name
-      })
+      const user = await client.select()
         .from(users)
         .innerJoin(accounts, (
           and(
@@ -212,8 +206,9 @@ export function DrizzleAdapterPg(client: typeof db): Adapter {
         ))
         .then(res => res[0])
         ?? null
-    }
-    ,
+
+      return user.users
+    },
     deleteSession: async (sessionToken) => {
       await client
         .delete(sessions)

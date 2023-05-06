@@ -191,13 +191,7 @@ export function DrizzleAdapterSQLite(client: typeof db): Adapter {
       return account
     },
     getUserByAccount: (account) => {
-      return client.select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        name: users.name
-      })
+      const user = client.select()
         .from(users)
         .innerJoin(accounts, (
           and(
@@ -206,6 +200,8 @@ export function DrizzleAdapterSQLite(client: typeof db): Adapter {
           )
         ))
         .get() ?? null
+
+      return user.users
     }
     ,
     deleteSession: (sessionToken) => {

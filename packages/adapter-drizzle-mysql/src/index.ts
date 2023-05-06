@@ -114,18 +114,19 @@ import { v4 as uuid } from 'uuid'
 export function DrizzleAdapterMySQL(client: typeof db): Adapter {
   return {
     createUser: async (data) => {
+      const id = uuid()
+
       await client
         .insert(users)
-        .values({ ...data, id: uuid() })
+        .values({ ...data, id })
 
       return client
         .select()
         .from(users)
-        .where(eq(users.id, '123'))
+        .where(eq(users.id, id))
         .then(res => res[0])
 
     },
-
     getUser: async (data) => {
       return client
         .select()
@@ -211,13 +212,7 @@ export function DrizzleAdapterMySQL(client: typeof db): Adapter {
         .then(res => res[0])
     },
     getUserByAccount: async (account) => {
-      return client.select({
-        id: users.id,
-        email: users.email,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        name: users.name
-      })
+      const user = await client.select()
         .from(users)
         .innerJoin(accounts, (
           and(
@@ -227,6 +222,8 @@ export function DrizzleAdapterMySQL(client: typeof db): Adapter {
         ))
         .then(res => res[0])
         ?? null
+
+      return user.users
     }
     ,
     deleteSession: async (sessionToken) => {
