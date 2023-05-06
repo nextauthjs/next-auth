@@ -17,7 +17,7 @@
  * @module @next-auth/drizzle-adapter
  */
 import { accounts, users, sessions, verificationTokens } from './schema'
-import { db } from './client'
+import { db, } from './client'
 import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
 import { v4 as uuid } from 'uuid'

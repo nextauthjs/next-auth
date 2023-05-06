@@ -4,7 +4,6 @@ import postgres from 'postgres'
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { ProviderType } from 'next-auth/providers';
 
-const migrationConnection = postgres(process.env.DATABASE_URL!, { max: 1 });
 const queryConnection = postgres(process.env.DATABASE_URL!);
 
 export const users = pgTable('users', {

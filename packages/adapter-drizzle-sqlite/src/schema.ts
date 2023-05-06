@@ -45,5 +45,3 @@ export const verificationTokens = sqliteTable("verificationToken", {
 }))
 
 export const db = drizzle(sqlite);
-
-migrate(db, { migrationsFolder: "./drizzle" })
