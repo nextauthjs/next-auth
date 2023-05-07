@@ -14,7 +14,6 @@ npm install next-auth
 
 Below is a summary of the high-level API changes in `next-auth` v5.
 
-```
 | Where                     | Old                                                 | New            |
 | ------------------------- | --------------------------------------------------- | -------------- |
 | API Route (Node)          | getServerSession(req, res, authOptions)             | auth() wrapper |
@@ -24,7 +23,6 @@ Below is a summary of the high-level API changes in `next-auth` v5.
 | Route Handler             | -                                                   | auth() wrapper |
 | Server Component          | getServerSession(authOptions)                       | auth() call    |
 | Client Component          | useSession() hook                                   | useAuth() hook |
-```
 
 
 ## Summary
