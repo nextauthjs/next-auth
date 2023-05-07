@@ -130,6 +130,7 @@ const docusaurusConfig = {
           to: "https://github.com/nextauthjs/next-auth",
           label: "GitHub",
           position: "right",
+          className:"navbar-github-link"
         },
       ],
     },
