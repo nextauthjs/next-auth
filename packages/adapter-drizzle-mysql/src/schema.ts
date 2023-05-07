@@ -44,7 +44,7 @@ export const verificationTokens = mysqlTable("verificationToken", {
 
 const poolConnection = mysql.createPool({})
 
-const db = drizzle(poolConnection);
+export const db = drizzle(poolConnection);
 
 export type DbClient = typeof db
 

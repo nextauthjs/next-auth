@@ -43,7 +43,7 @@ export const verificationTokens = pgTable("verificationToken", {
   compoundKey: primaryKey(vt.identifier, vt.token)
 }))
 
-const db = drizzle(queryConnection);
+export const db = drizzle(queryConnection);
 
 export type DbClient = typeof db
 

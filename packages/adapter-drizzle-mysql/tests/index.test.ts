@@ -1,12 +1,11 @@
 import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
 import { DrizzleAdapterMySQL } from "../src"
-import { users, accounts, sessions, verificationTokens } from '../src/schema'
-import { db } from '../src/client'
-import { eq, and } from 'drizzle-orm/expressions';
+import { db, users, accounts, sessions, verificationTokens } from '../src/schema'
+import { eq, and } from 'drizzle-orm';
 
 
 runBasicTests({
-  adapter: DrizzleAdapterMySQL(db),
+  adapter: DrizzleAdapterMySQL(db, { users, sessions, accounts, verificationTokens }),
   db: {
     id() {
       return randomUUID()
