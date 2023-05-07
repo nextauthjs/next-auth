@@ -1,9 +1,10 @@
 import { Auth, type AuthConfig } from "@auth/core"
+import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
 import type { Awaitable, CallbacksOptions, Session } from "@auth/core/types"
-import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
+import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
   /**
@@ -82,18 +83,11 @@ export type NextAuthMiddleware = (
 export type WithAuthArgs =
   | [NextAuthRequest, NextFetchEvent]
   | [NextAuthMiddleware]
-  | [Headers]
   | []
 
 export function initAuth(config: NextAuthConfig) {
   return (...args: WithAuthArgs) => {
-    // TODO: use `next/headers` when it's available in Middleware too
-    // if (!args.length) return getAuth($headers(), config)
-    if (!args.length)
-      return runAuth(new Headers(), config).then((r) => r.json())
-    if (args[0] instanceof Headers) {
-      return runAuth(args[0], config).then((r) => r.json())
-    }
+    if (!args.length) return runAuth(headers(), config).then((r) => r.json())
     if (args[0] instanceof Request) {
       // middleare.ts
       // export { auth as default } from "auth"

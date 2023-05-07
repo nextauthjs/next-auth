@@ -2,7 +2,7 @@
 title: Upgrade Guide (v5)
 ---
 
-NextAuth.js version 5 will continue to be shipped as `next-auth` *for the Next.js version only*. We're here to help you upgrade your applications as smoothly as possible. It is possible to upgrade from any version of 4.x to the latest v5 release by following the  migration steps below.
+NextAuth.js version 5 will continue to be shipped as `next-auth` **for the Next.js version only**. We're here to help you upgrade your applications as smoothly as possible. It is possible to upgrade from any version of 4.x to the latest v5 release by following the  migration steps below.
 
 Upgrade to the latest version by running:
 

@@ -470,7 +470,9 @@ export function SessionProvider(props: SessionProviderProps) {
           "session",
           __NEXTAUTH,
           logger,
-          { req: { body: { csrfToken: await getCsrfToken(), data } } }
+          typeof data === "undefined"
+            ? undefined
+            : { body: { csrfToken: await getCsrfToken(), data } }
         )
         setLoading(false)
         if (newSession) {
