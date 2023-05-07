@@ -1,4 +1,4 @@
-import { signIn } from "@auth/nextjs/react"
+import { signIn } from "@auth/nextjs/client"
 
 export default function AccessDenied() {
   return (

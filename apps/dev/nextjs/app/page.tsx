@@ -1,12 +1,14 @@
+import { SessionProvider } from "@auth/nextjs/client"
 import { auth } from "auth"
-import { headers } from "next/headers"
 import Client from "./client"
 
 export default async function Page() {
-  const session = await auth(headers())
+  const session = await auth()
   return (
     <>
-      <Client session={session} />
+      <SessionProvider session={session}>
+        <Client />
+      </SessionProvider>
       <h1>NextAuth.js Example</h1>
       <p>
         This is an example site to demonstrate how to use{" "}

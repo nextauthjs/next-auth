@@ -3,7 +3,7 @@ import {
   signIn,
   signOut,
   useSession,
-} from "@auth/nextjs/react"
+} from "@auth/nextjs/client"
 import "./styles.css"
 import { Header } from "components/header"
 import styles from "components/header.module.css"

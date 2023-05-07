@@ -1,8 +1,8 @@
 // This is an example of to protect an API route
-import { getServerSession } from "auth"
+import { auth } from "auth"
 
-export default async (req, res) => {
-  const session = await getServerSession(req, res)
+export default auth(req, res) => {
+  const session = req.auth
 
   if (session) {
     res.send({

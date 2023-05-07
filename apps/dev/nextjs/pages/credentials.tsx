@@ -1,5 +1,5 @@
 import * as React from "react"
-import { signIn, signOut, useSession } from "@auth/nextjs/react"
+import { signIn, signOut, useSession } from "@auth/nextjs/client"
 import { SignInResponse, SignOutResponse } from "@auth/nextjs/lib/client"
 
 export default function Page() {

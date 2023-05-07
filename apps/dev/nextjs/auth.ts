@@ -6,7 +6,7 @@ import Google from "@auth/core/providers/google"
 import Twitter from "@auth/core/providers/twitter"
 import Credentials from "@auth/core/providers/credentials"
 
-export const { handlers, auth, getServerSession } = NextAuth({
+export const { handlers, auth } = NextAuth({
   debug: true,
   providers: [
     GitHub,

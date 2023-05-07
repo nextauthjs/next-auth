@@ -1,10 +1,11 @@
-"use client"
+import { signIn, useSession } from "@auth/nextjs/client"
 
-import { useEffect } from "react"
-
-export default function Client({ session }: any) {
-  useEffect(() => {
-    console.log(window.location)
-  })
-  return <div>{JSON.stringify(session)}</div>
+export default function Client() {
+  const { data: session } = useSession()
+  return (
+    <div>
+      {JSON.stringify(session)}
+      <button onClick={() => signIn("github")}>Sign in</button>
+    </div>
+  )
 }

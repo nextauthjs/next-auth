@@ -1,7 +1,7 @@
 import { auth } from "auth"
 import Footer from "components/footer"
 import { Header } from "components/header"
-import { cookies, headers } from "next/headers"
+import { cookies } from "next/headers"
 import styles from "components/header.module.css"
 import "./styles.css"
 
@@ -43,7 +43,7 @@ function SignOut(props: any) {
 }
 
 export async function AppHeader() {
-  const session = await auth(headers())
+  const session = await auth()
   return (
     <Header
       session={session}
