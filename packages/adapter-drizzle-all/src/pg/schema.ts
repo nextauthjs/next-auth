@@ -1,7 +1,6 @@
 import { integer, timestamp, pgTable, text, primaryKey } from 'drizzle-orm/pg-core';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres'
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { ProviderType } from 'next-auth/providers';
 
 const queryConnection = postgres(process.env.DATABASE_URL!);
