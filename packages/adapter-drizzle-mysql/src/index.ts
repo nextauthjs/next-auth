@@ -244,16 +244,7 @@ export function DrizzleAdapterMySQL(client: typeof db): Adapter {
     },
     useVerificationToken: async (token) => {
       try {
-        await client
-          .delete(verificationTokens)
-          .where(
-            and(
-              eq(verificationTokens.identifier, token.identifier),
-              eq(verificationTokens.token, token.token)
-            )
-          )
-
-        return client
+        const deletedToken = await client
           .select()
           .from(verificationTokens)
           .where(
@@ -265,6 +256,16 @@ export function DrizzleAdapterMySQL(client: typeof db): Adapter {
           .then(res => res[0])
           ?? null
 
+        await client
+          .delete(verificationTokens)
+          .where(
+            and(
+              eq(verificationTokens.identifier, token.identifier),
+              eq(verificationTokens.token, token.token)
+            )
+          )
+
+        return deletedToken
       } catch (err) {
         throw new Error("No verification token found.")
       }
