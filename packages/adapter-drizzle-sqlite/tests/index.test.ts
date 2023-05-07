@@ -5,7 +5,7 @@ import { eq, and } from 'drizzle-orm';
 
 
 runBasicTests({
-  adapter: DrizzleAdapterSQLite(db),
+  adapter: DrizzleAdapterSQLite(db, { users, accounts, sessions, verificationTokens }),
   db: {
     id() {
       return randomUUID()

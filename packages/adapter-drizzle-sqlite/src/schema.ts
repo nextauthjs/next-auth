@@ -43,7 +43,7 @@ export const verificationTokens = sqliteTable("verificationToken", {
   compoundKey: primaryKey(vt.identifier, vt.token)
 }))
 
-const db = drizzle(sqlite);
+export const db = drizzle(sqlite);
 
 export type DbClient = typeof db
 
