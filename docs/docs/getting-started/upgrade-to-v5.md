@@ -16,13 +16,13 @@ Below is a summary of the high-level API changes in `next-auth` v5.
 
 | Where                     | Old                                                 | New            |
 | ------------------------- | --------------------------------------------------- | -------------- |
-| API Route (Node)          | getServerSession(req, res, authOptions)             | auth() wrapper |
-| API Route (Edge)          | -                                                   | auth() wrapper |
-| getServerSideProps        | getServerSession(ctx.req, ctx.res, authOptions)     | auth() wrapper |
-| Middleware                | withAuth(middleware, subset of authOptions) wrapper | auth() wrapper |
-| Route Handler             | -                                                   | auth() wrapper |
-| Server Component          | getServerSession(authOptions)                       | auth() call    |
-| Client Component          | useSession() hook                                   | useAuth() hook |
+| API Route (Node)          | `getServerSession(req, res, authOptions)`             | `auth()` wrapper |
+| API Route (Edge)          | -                                                   | `auth()` wrapper |
+| getServerSideProps        | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth()` wrapper |
+| Middleware                | `withAuth(middleware, subset of authOptions)` wrapper | `auth()` wrapper |
+| Route Handler             | -                                                   | `auth()` wrapper |
+| Server Component          | `getServerSession(authOptions)`                       | `auth()` call    |
+| Client Component          | `useSession()` hook                                   | `useAuth()` hook |
 
 
 ## Summary
