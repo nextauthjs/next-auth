@@ -23,8 +23,7 @@
   "scripts": {
     "clean": "rm -rf ./drizzle  || echo 'Drizzle directory deleted'",
     "generate-schema": "drizzle-kit generate:pg --schema=src/schema.ts --breakpoints",
-    "test:init": "pnpm clean && pnpm generate-schema",
-    "test": "pnpm test:init && ./tests/test.sh",
+    "test": "pnpm clean && ./tests/test.sh",
     "build": "tsc",
     "dev": "drizzle-kit generate:pg --schema=src/schema.ts && tsc -w"
   },
