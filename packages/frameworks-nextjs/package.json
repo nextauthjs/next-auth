@@ -42,9 +42,9 @@
     "./providers": {
       "types": "./providers.d.ts"
     },
-    "./react": {
-      "types": "./react.d.ts",
-      "import": "./react.js"
+    "./client": {
+      "types": "./client.d.ts",
+      "import": "./client.js"
     },
     "./package.json": "./package.json"
   },
