@@ -101,11 +101,11 @@ export default function Home() {
       .fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
-        const navLinks = document.getElementByClassName("navbar-github-link")
+        const navLink = document.getElementByClassName("navbar-github-link")
         const githubStat = document.createElement("span")
         githubStat.innerHTML = kFormatter(data.stargazers_count)
         githubStat.className = "github-counter"
-        navLinks.appendChild(githubStat)
+        navLink.appendChild(githubStat)
       })
   }, [])
   return (
