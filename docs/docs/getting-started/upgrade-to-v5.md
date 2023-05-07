@@ -7,7 +7,7 @@ NextAuth.js version 5 will continue to be shipped as `next-auth` **for the Next.
 Upgrade to the latest version by running:
 
 ```bash npm2yarn2pnpm
-npm install next-auth
+npm install next-auth@latest
 ```
 
 ## Getting Started
@@ -16,13 +16,33 @@ Below is a summary of the high-level API changes in `next-auth` v5.
 
 | Where                     | Old                                                 | New            |
 | ------------------------- | --------------------------------------------------- | -------------- |
-| API Route (Node)          | `getServerSession(req, res, authOptions)`             | `auth()` wrapper |
-| API Route (Edge)          | -                                                   | `auth()` wrapper |
-| getServerSideProps        | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth()` wrapper |
-| Middleware                | `withAuth(middleware, subset of authOptions)` wrapper | `auth()` wrapper |
-| Route Handler             | -                                                   | `auth()` wrapper |
-| Server Component          | `getServerSession(authOptions)`                       | `auth()` call    |
-| Client Component          | `useSession()` hook                                   | `useAuth()` hook |
+| [API Route (Node)](#api-route-node)          | `getServerSession(req, res, authOptions)`             | `auth()` wrapper |))
+| [API Route (Edge)](#api-route-edge)          | -                                                   | `auth()` wrapper |
+| [getServerSideProps](#getserversideprops)        | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth()` wrapper |
+| [Middleware](#middleware)                | `withAuth(middleware, subset of authOptions)` wrapper | `auth()` wrapper |
+| [Route Handler](#route-handler)             | -                                                   | `auth()` wrapper |
+| [Server Component](#server-component)          | `getServerSession(authOptions)`                       | `auth()` call    |
+| [Client Component](#client-component)          | `useSession()` hook                                   | `useAuth()` hook |
+
+## Breaking Changes
+
+- The import `next-auth/next` is no longer available
+- The import `next-auth/react` is no longer available
+- The import `next-auth/middleware` is no longer available
+
+## API Route (Node)
+
+## API Route (Edge)
+
+## `getServerSideProps`
+
+## Middleware
+
+## Route Handler
+
+## Server Component
+
+## Client Component
 
 
 ## Summary
