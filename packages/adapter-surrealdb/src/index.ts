@@ -1,5 +1,4 @@
 import type Surreal from "surrealdb.js"
-import type { Result } from "surrealdb.js"
 import type {
   Adapter,
   AdapterUser,
@@ -92,21 +91,22 @@ export function SurrealDBAdapter(
     async createUser(user: Omit<AdapterUser, "id">) {
       const surreal = await client
       const doc = userToDoc(user)
-      const userDoc = (await surreal.create("user", doc)) as UserDoc
-      return docToUser(userDoc)
+      const userDoc = await surreal.create("user", doc)
+      const newUser = userDoc[0] !== undefined ? docToUser(userDoc[0]) : null
+      return newUser
     },
     async getUser(id: string) {
       const surreal = await client
       try {
-        const usersResultArr = await surreal.query<Result<UserDoc[]>[]>(
+        const queryResult = await surreal.query<UserDoc[]>(
           "SELECT * FROM $user",
           {
             user: `user:${id}`,
           }
         )
-        const users = usersResultArr[0]?.result
-        if (users) {
-          return docToUser(users[0])
+        const doc = queryResult[0].result?.[0]
+        if (doc) {
+          return docToUser(doc as unknown as UserDoc)
         }
       } catch (e) {}
       return null
@@ -114,12 +114,12 @@ export function SurrealDBAdapter(
     async getUserByEmail(email: string) {
       const surreal = await client
       try {
-        const users = await surreal.query<Result<UserDoc[]>[]>(
+        const users = await surreal.query<UserDoc[]>(
           `SELECT * FROM user WHERE email = $email`,
           { email }
         )
-        const user = users[0].result?.[0]
-        if (user) return docToUser(user)
+        const doc = users[0].result?.[0]
+        if (doc) return docToUser(doc as unknown as UserDoc)
       } catch (e) {}
       return null
     },
@@ -129,7 +129,7 @@ export function SurrealDBAdapter(
     }: Pick<AdapterAccount, "provider" | "providerAccountId">) {
       const surreal = await client
       try {
-        const users = await surreal.query<Result<AccountDoc<UserDoc>[]>[]>(
+        const users = await surreal.query<AccountDoc<UserDoc>[]>(
           `SELECT userId
            FROM account
            WHERE providerAccountId = $providerAccountId
@@ -137,21 +137,19 @@ export function SurrealDBAdapter(
            FETCH userId`,
           { providerAccountId, provider }
         )
-        const user = users[0].result?.[0]?.userId
+        const user = (users[0].result as unknown as AccountDoc<UserDoc>[])[0]
+          ?.userId
         if (user) return docToUser(user)
       } catch (e) {}
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
       const surreal = await client
-      const doc = userToDoc(user)
-      let updatedUser = await surreal.change<Omit<UserDoc, "id">>(
-        `user:${user.id}`,
-        doc
-      )
-      if (Array.isArray(updatedUser)) {
-        updatedUser = updatedUser[0]
-      }
+      let updatedUser = await surreal.change<
+        Omit<UserDoc, "id">,
+        UserDoc,
+        string
+      >(`user:${user.id}`, user)
       return docToUser(updatedUser as UserDoc)
     },
     async deleteUser(userId: string) {
@@ -159,14 +157,14 @@ export function SurrealDBAdapter(
 
       // delete account
       try {
-        const accounts = await surreal.query<Result<AccountDoc[]>[]>(
+        const accounts = await surreal.query<AccountDoc[]>(
           `SELECT *
           FROM account
           WHERE userId = $userId
           LIMIT 1`,
           { userId: `user:${userId}` }
         )
-        const account = accounts[0].result?.[0]
+        const account = (accounts[0].result as unknown as AccountDoc[])[0]
         if (account) {
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
@@ -175,14 +173,14 @@ export function SurrealDBAdapter(
 
       // delete session
       try {
-        const sessions = await surreal.query<Result<SessionDoc[]>[]>(
+        const sessions = await surreal.query<SessionDoc[]>(
           `SELECT *
           FROM session
           WHERE userId = $userId
           LIMIT 1`,
           { userId: `user:${userId}` }
         )
-        const session = sessions[0].result?.[0]
+        const session = (sessions[0].result as unknown as SessionDoc[])[0]
         if (session) {
           const sessionId = extractId(session.id)
           await surreal.delete(`session:${sessionId}`)
@@ -196,11 +194,8 @@ export function SurrealDBAdapter(
     },
     async linkAccount(account: AdapterAccount) {
       const surreal = await client
-      const doc = (await surreal.create(
-        "account",
-        accountToDoc(account)
-      )) as AccountDoc
-      return docToAccount(doc)
+      const doc = await surreal.create("account", accountToDoc(account))
+      return docToAccount(doc[0])
     },
     async unlinkAccount({
       providerAccountId,
@@ -208,7 +203,7 @@ export function SurrealDBAdapter(
     }: Pick<AdapterAccount, "provider" | "providerAccountId">) {
       const surreal = await client
       try {
-        const accounts = await surreal.query<Result<AccountDoc[]>[]>(
+        const accounts = await surreal.query<AccountDoc[]>(
           `SELECT *
           FROM account
           WHERE providerAccountId = $providerAccountId
@@ -216,7 +211,7 @@ export function SurrealDBAdapter(
           LIMIT 1`,
           { providerAccountId, provider }
         )
-        const account = accounts[0].result?.[0]
+        const account = (accounts[0].result as unknown as AccountDoc[])[0]
         if (account) {
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
@@ -238,22 +233,24 @@ export function SurrealDBAdapter(
         userId: `user:${userId}`,
         expires,
       }
-      await surreal.create("session", doc)
-      return doc
+      const result = await surreal.create("session", doc)
+      return result[0] ?? null
     },
     async getSessionAndUser(sessionToken: string) {
       const surreal = await client
       try {
         // Can't use limit 1 because it prevent userId to be fetched.
         //   Works setting limit to 2
-        const sessions = await surreal.query<Result<SessionDoc<UserDoc>[]>[]>(
+        const sessions = await surreal.query<SessionDoc<UserDoc>[]>(
           `SELECT *
            FROM session
            WHERE sessionToken = $sessionToken
            FETCH userId`,
           { sessionToken }
         )
-        const session = sessions[0].result?.[0]
+        const session = (
+          sessions[0].result as unknown as SessionDoc<UserDoc>[]
+        )[0]
         if (session) {
           const userDoc = session.userId
           if (!userDoc) return null
@@ -265,28 +262,29 @@ export function SurrealDBAdapter(
             }),
           }
         }
-        return null
-      } catch (e) {
-        return null
-      }
+      } catch (e) {}
+      return null
     },
     async updateSession(
-      session: Partial<AdapterSession> &
-        Pick<AdapterSession, "sessionToken">
+      session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
     ) {
       const surreal = await client
       try {
-        const sessions = await surreal.query<Result<SessionDoc[]>[]>(
+        const sessions = await surreal.query<SessionDoc[]>(
           `SELECT *
           FROM session
           WHERE sessionToken = $sessionToken
           LIMIT 1`,
           { sessionToken: session.sessionToken }
         )
-        const sessionDoc = sessions[0].result?.[0]
+        const sessionDoc = (sessions[0].result as unknown as SessionDoc[])[0]
         if (sessionDoc && session.expires) {
           const sessionId = extractId(sessionDoc.id)
-          let updatedSession = await surreal.change<Omit<SessionDoc, "id">>(
+          let updatedSession = await surreal.change<
+            Omit<SessionDoc, "id">,
+            Omit<SessionDoc, "id">,
+            string
+          >(
             `session:${sessionId}`,
             sessionToDoc({
               ...sessionDoc,
@@ -295,9 +293,6 @@ export function SurrealDBAdapter(
               expires: session.expires,
             })
           )
-          if (Array.isArray(updatedSession)) {
-            updatedSession = updatedSession[0]
-          }
           return docToSession(updatedSession as SessionDoc)
         }
       } catch (e) {}
@@ -306,17 +301,17 @@ export function SurrealDBAdapter(
     async deleteSession(sessionToken: string) {
       const surreal = await client
       try {
-        const sessions = await surreal.query<Result<SessionDoc[]>[]>(
+        const sessions = await surreal.query<SessionDoc[]>(
           `SELECT *
            FROM session
            WHERE sessionToken = $sessionToken
            LIMIT 1`,
           { sessionToken }
         )
-        const session = sessions[0].result?.[0]
+        const session = (sessions[0].result as unknown as SessionDoc[])[0]
         if (session) {
           const sessionId = extractId(session.id)
-          await surreal.delete(`session:${sessionId}`)
+          return await surreal.delete(`session:${sessionId}`)
         }
       } catch (e) {}
     },
@@ -331,8 +326,8 @@ export function SurrealDBAdapter(
         expires,
         token,
       }
-      await surreal.create("verification_token", doc)
-      return doc
+      const result = await surreal.create("verification_token", doc)
+      return result[0] ?? null
     },
     async useVerificationToken({
       identifier,
@@ -344,14 +339,14 @@ export function SurrealDBAdapter(
       const surreal = await client
       try {
         const tokens = await surreal.query<
-          Result<(VerificationToken & { id: string })[]>[]
+          (VerificationToken & { id: string })[]
         >(
           `SELECT *
            FROM verification_token
            WHERE identifier = $identifier
-             AND token = $token
+             AND token = $verificationToken
            LIMIT 1`,
-          { identifier, token }
+          { identifier, verificationToken: token }
         )
         const vt = tokens[0].result?.[0]
         if (vt) {
@@ -362,10 +357,8 @@ export function SurrealDBAdapter(
             token: vt.token,
           }
         }
-        return null
-      } catch (e) {
-        return null
-      }
+      } catch (e) {}
+      return null
     },
   }
 }

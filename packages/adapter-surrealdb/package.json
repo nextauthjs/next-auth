@@ -32,14 +32,15 @@
   ],
   "peerDependencies": {
     "next-auth": "^4",
-    "surrealdb.js": "^0.5.0"
+    "surrealdb.js": "^0.7.1"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
+    "@types/node-fetch": "^2.5.11",
     "jest": "^27.4.3",
     "next-auth": "workspace:*",
-    "surrealdb-rest-ts": "^1.0.3"
+    "node-fetch": "^2.6.1"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"

@@ -55,18 +55,19 @@ export default NextAuth({
 })
 ```
 
-### Restfull
+### Restfull / HTTP
 
-1. Install `surrealdb-rest-ts`, `next-auth` and `@next-auth/surrealdb-adapter`
+1. Install `surrealdb.js`, `next-auth` and `@next-auth/surrealdb-adapter`
 
 ```js
-npm install surrealdb-rest-ts next-auth @next-auth/surrealdb-adapter@next
+npm install surrealdb.js next-auth @next-auth/surrealdb-adapter@next
 ```
 
 2. Add `lib/surrealdb.js`
 
 ```js
-import { SurrealREST as Surreal } from "surrealdb-rest-ts";
+import { ExperimentalSurrealHTTP } from "surrealdb.js"
+import fetch from "node-fetch"
 
 const host = ...
 const port = ...
@@ -76,16 +77,19 @@ const ns = ...
 const db = ...
 const protocol = ...
 
-export const clientPromise = new Promise<Surreal>((resolve) => {
-  resolve(
-    new Surreal(`${protocol}://${host}:${port}`, {
-      ns,
-      db,
-      user,
-      password: pass,
-    }) as unknown as Surreal
-  );
-});
+const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
+  try {
+    const db = new ExperimentalSurrealHTTP(
+      `${protocol}://${host}:${port}/sql`,
+      { fetch }
+    )
+    db.use(ns, db)
+    await db.signin({ user, pass })
+    resolve(db)
+  } catch (e) {
+    reject(e)
+  }
+})
 ```
 
 3. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.

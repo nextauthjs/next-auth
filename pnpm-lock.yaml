@@ -621,8 +621,8 @@ importers:
   packages/adapter-surrealdb:
     dependencies:
       surrealdb.js:
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: ^0.7.1
+        version: 0.7.1(ws@8.13.0)
     devDependencies:
       '@next-auth/adapter-test':
         specifier: workspace:*
@@ -630,15 +630,18 @@ importers:
       '@next-auth/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@types/node-fetch':
+        specifier: ^2.5.11
+        version: 2.5.11
       jest:
         specifier: ^27.4.3
         version: 27.4.3
       next-auth:
         specifier: workspace:*
         version: link:../next-auth
-      surrealdb-rest-ts:
-        specifier: ^1.0.3
-        version: 1.0.3
+      node-fetch:
+        specifier: ^2.6.1
+        version: 2.6.9
 
   packages/adapter-test:
     devDependencies:
@@ -9514,10 +9517,6 @@ packages:
     resolution: {integrity: sha512-Qs5aULi+zV1bwKAg5z1PWnDXWmsn+LxIvUGv6E2+OOMYhclZMO+OXd9pYVf2gLykf2I7IV2u7oTHwChPNsvJ7g==}
     dependencies:
       '@types/node': 17.0.42
-
-  /@types/isomorphic-fetch@0.0.36:
-    resolution: {integrity: sha512-ulw4d+vW1HKn4oErSmNN2HYEcHGq0N1C5exlrMM0CRqX1UUpFhGb5lwiom5j9KN3LBJJDLRmYIZz1ghm7FIzZw==}
-    dev: true
 
   /@types/istanbul-lib-coverage@2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
@@ -29158,23 +29157,12 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /surrealdb-rest-ts@1.0.3:
-    resolution: {integrity: sha512-jcV9S8yNMNBqwOFD7WoOFu+3gggOjIRLi2Y0YU88Q8L3/Lz4qAW8Mqk9yaH8lj1Fw4G1FuVF0EETmbJD3wyJVg==}
-    dependencies:
-      '@types/isomorphic-fetch': 0.0.36
-      isomorphic-fetch: 3.0.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
-  /surrealdb.js@0.5.0:
-    resolution: {integrity: sha512-CpDfCwVnG3ahr2/kUf3i9RgDtLuEzQeU5Zxuhtud5Ijq9abXzkAhS/gcvtSQ9qyZiqSQcp4u7IK3yjnd1OkqKQ==}
+  /surrealdb.js@0.7.1(ws@8.13.0):
+    resolution: {integrity: sha512-N9X1rDRqmwY+iRlDbPrNmth6Mi6m0lx3Dc+EsV3bBqTeRVJgIzoKm2TuiR61OFViANUPLxpzI2lNwAzNjn2FAg==}
     dependencies:
       isomorphic-ws: 5.0.0(ws@8.13.0)
-      ws: 8.13.0
     transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
+      - ws
     dev: false
 
   /svelte-check@2.10.2(svelte@3.55.0):

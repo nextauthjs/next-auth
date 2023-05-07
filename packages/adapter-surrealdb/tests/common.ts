@@ -1,5 +1,4 @@
-import Surreal from "surrealdb.js"
-import type { Result } from "surrealdb.js"
+import type Surreal from "surrealdb.js"
 import { VerificationToken } from "next-auth/adapters"
 
 import {
@@ -10,58 +9,59 @@ import {
 } from "../src/index"
 import type { UserDoc, AccountDoc, SessionDoc } from "../src/index"
 
-export const config = (clientPromise: Promise<Surreal>) => ({
+export const config = (
+  clientPromise: Promise<Surreal>
+) => ({
   adapter: SurrealDBAdapter(clientPromise),
   db: {
     async disconnect() {
       const surreal = await clientPromise
       if (surreal.close) surreal.close()
     },
-    async user(id) {
+    async user(id: string) {
       const surreal = await clientPromise
       try {
-        const users = await surreal.select<UserDoc>(`user:${id}`)
+        const users = await surreal.query<UserDoc[]>("SELECT * FROM $user", {
+          user: `user:${id}`,
+        })
         const user = users[0]
-        return docToUser(user)
-      } catch (e) {
-        return null
-      }
+        if (user.result?.[0] !== undefined)
+          return docToUser(user.result[0] as unknown as UserDoc)
+      } catch (e) {}
+      return null
     },
     async account({ provider, providerAccountId }) {
       const surreal = await clientPromise
-      const accounts = await surreal.query<Result<AccountDoc[]>[]>(
+      const accounts = await surreal.query<AccountDoc[]>(
         `SELECT * FROM account WHERE provider = $provider AND providerAccountId = $providerAccountId`,
         { provider, providerAccountId }
       )
-      const account = accounts[0].result?.[0]
-      if (account) {
-        return docToAccount(account)
-      }
+      const account = accounts[0]
+      if (account.result?.[0] !== undefined)
+        return docToAccount(account.result[0])
       return null
     },
-    async session(sessionToken) {
+    async session(sessionToken: string) {
       const surreal = await clientPromise
-      const sessions = await surreal.query<Result<SessionDoc[]>[]>(
+      const sessions = await surreal.query<SessionDoc[]>(
         `SELECT * FROM session WHERE sessionToken = $sessionToken`,
         { sessionToken }
       )
-      const session = sessions[0].result?.[0]
-      if (session) {
+      const session = (sessions[0]?.result as unknown as SessionDoc[])?.[0]
+      if (session !== undefined) {
         return docToSession(session)
       }
       return null
     },
     async verificationToken({ identifier, token }) {
       const surreal = await clientPromise
-      const tokens = await surreal.query<
-        Result<(VerificationToken & { id: string })[]>[]
-      >(
+      const tokens = await surreal.query<VerificationToken[]>(
         `SELECT *
          FROM verification_token
          WHERE identifier = $identifier
-           AND token = $token
+           AND token = $verificationToken
          LIMIT 1`,
-        { identifier, token }
+        { identifier, verificationToken: token }
       )
       const verificationToken = tokens[0].result?.[0]
       if (verificationToken) {
