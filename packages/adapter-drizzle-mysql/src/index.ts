@@ -16,7 +16,7 @@
  *
  * @module @next-auth/drizzle-adapter
  */
-import { db, accounts, users, sessions, verificationTokens } from './schema'
+import type { DbClient, Schema } from './schema'
 import { and, eq } from 'drizzle-orm'
 import type { Adapter } from "next-auth/adapters"
 import { v4 as uuid } from 'uuid'
@@ -110,7 +110,9 @@ import { v4 as uuid } from 'uuid'
  * ```
  *
  **/
-export function DrizzleAdapterMySQL(client: typeof db): Adapter {
+export function DrizzleAdapterMySQL(client: DbClient, {
+  users, sessions, verificationTokens, accounts
+}: Schema): Adapter {
   return {
     createUser: async (data) => {
       const id = uuid()
