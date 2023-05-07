@@ -18,7 +18,7 @@ import type {
 export async function signin(
   query: RequestInternal["query"],
   body: RequestInternal["body"],
-  options: InternalOptions<"oauth" | "email">
+  options: InternalOptions<"oauth" | "oidc" | "email">
 ): Promise<ResponseInternal> {
   const { url, logger, provider } = options
   try {
@@ -55,8 +55,9 @@ export async function signin(
   } catch (e) {
     const error = new SignInError(e as Error, { provider: provider.id })
     logger.error(error)
-    url.searchParams.set("error", error.name)
-    url.pathname += "/error"
+    const code = provider.type === "email" ? "EmailSignin" : "OAuthSignin"
+    url.searchParams.set("error", code)
+    url.pathname += "/signin"
     return { redirect: url.toString() }
   }
 }

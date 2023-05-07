@@ -1,6 +1,6 @@
 {
   "name": "@next-auth/typeorm-legacy-adapter",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "TypeORM (legacy) adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",

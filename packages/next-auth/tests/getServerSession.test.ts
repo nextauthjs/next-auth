@@ -1,7 +1,7 @@
 import * as core from "../src/core"
 import { MissingSecret } from "../src/core/errors"
-import { unstable_getServerSession } from "../src/next"
-import { mockLogger } from "./utils"
+import { getServerSession } from "../src/next"
+import { mockLogger } from "./lib"
 
 const originalWarn = console.warn
 let logger = mockLogger()
@@ -27,7 +27,7 @@ afterEach(() => {
 describe("Treat secret correctly", () => {
   it("Read from NEXTAUTH_SECRET", async () => {
     process.env.NEXTAUTH_SECRET = "secret"
-    await unstable_getServerSession(req, res, { providers: [], logger })
+    await getServerSession(req, res, { providers: [], logger })
 
     expect(logger.error).toBeCalledTimes(0)
     expect(logger.error).not.toBeCalledWith("NO_SECRET")
@@ -36,7 +36,7 @@ describe("Treat secret correctly", () => {
   })
 
   it("Read from options.secret", async () => {
-    await unstable_getServerSession(req, res, {
+    await getServerSession(req, res, {
       providers: [],
       logger,
       secret: "secret",
@@ -51,29 +51,11 @@ describe("Treat secret correctly", () => {
       "There is a problem with the server configuration. Check the server logs for more information."
     )
     await expect(
-      unstable_getServerSession(req, res, { providers: [], logger })
+      getServerSession(req, res, { providers: [], logger })
     ).rejects.toThrowError(configError)
 
     expect(logger.error).toBeCalledTimes(1)
     expect(logger.error).toBeCalledWith("NO_SECRET", expect.any(MissingSecret))
-  })
-
-  it("Only logs warning once and in development", async () => {
-    process.env.NEXTAUTH_SECRET = "secret"
-    // Expect console.warn to NOT be called due to NODE_ENV=production
-    await unstable_getServerSession(req, res, { providers: [], logger })
-    expect(console.warn).toBeCalledTimes(0)
-
-    // Expect console.warn to be called ONCE due to NODE_ENV=development
-    // @ts-expect-error
-    process.env.NODE_ENV = "development"
-    await unstable_getServerSession(req, res, { providers: [], logger })
-    expect(console.warn).toBeCalledTimes(1)
-
-    // Expect console.warn to be still only be called ONCE
-    await unstable_getServerSession(req, res, { providers: [], logger })
-    expect(console.warn).toBeCalledTimes(1)
-    delete process.env.NEXTAUTH_SECRET
   })
 })
 
@@ -84,10 +66,10 @@ describe("Return correct data", () => {
 
   it("Should return null if there is no session", async () => {
     const spy = jest.spyOn(core, "AuthHandler")
-    // @ts-expect-error [Response.json](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)
-    spy.mockReturnValue(Promise.resolve(Response.json(null)))
+    // @ts-expect-error
+    spy.mockReturnValue({ body: {} })
 
-    const session = await unstable_getServerSession(req, res, {
+    const session = await getServerSession(req, res, {
       providers: [],
       logger,
       secret: "secret",
@@ -97,26 +79,28 @@ describe("Return correct data", () => {
   })
 
   it("Should return the session if one is found", async () => {
-    const mockedBody = {
-      user: {
-        name: "John Doe",
-        email: "test@example.com",
-        image: "",
-        id: "1234",
+    const mockedResponse = {
+      body: {
+        user: {
+          name: "John Doe",
+          email: "test@example.com",
+          image: "",
+          id: "1234",
+        },
+        expires: "",
       },
-      expires: "",
     }
 
     const spy = jest.spyOn(core, "AuthHandler")
-    // @ts-expect-error [Response.json](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)
-    spy.mockReturnValue(Promise.resolve(Response.json(mockedBody)))
+    // @ts-expect-error
+    spy.mockReturnValue(mockedResponse)
 
-    const session = await unstable_getServerSession(req, res, {
+    const session = await getServerSession(req, res, {
       providers: [],
       logger,
       secret: "secret",
     })
 
-    expect(session).toEqual(mockedBody)
+    expect(session).toEqual(mockedResponse.body)
   })
 })

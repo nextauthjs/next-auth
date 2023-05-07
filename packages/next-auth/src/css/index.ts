@@ -4,12 +4,7 @@
 import fs from "fs"
 import path from "path"
 
-const pathToCss = path.join(
-  process.cwd(),
-  process.env.NODE_ENV === "development"
-    ? "node_modules/next-auth/css/index.css"
-    : "/src/css/index.css"
-)
+const pathToCss = path.join(process.cwd(), process.env.NODE_ENV === "development" ? "node_modules/next-auth/css/index.css" : "/src/css/index.css")
 
 export default function css() {
   return fs.readFileSync(pathToCss, "utf8")

@@ -61,21 +61,22 @@ import type {
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
 import type { Adapter, AdapterUser } from "./adapters.js"
+import { AuthConfig } from "./index.js"
+import type { JWT, JWTOptions } from "./jwt.js"
+import type { Cookie } from "./lib/cookie.js"
+import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
+  OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
-import type { JWT, JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/cookie.js"
-import type { LoggerInstance } from "./lib/utils/logger.js"
-import { AuthConfig } from "./index.js"
 
 export type { AuthConfig } from "./index.js"
-export type Awaitable<T> = T | PromiseLike<T>
 export type { LoggerInstance }
+export type Awaitable<T> = T | PromiseLike<T>
 
 /**
  * Change the theme of the built-in pages.
@@ -115,16 +116,58 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   providerAccountId: string
   /** Provider's type for this account */
   type: ProviderType
-  /** id of the user this account belongs to */
+  /**
+   * id of the user this account belongs to
+   *
+   * @see https://authjs.dev/reference/adapters#user
+   */
   userId?: string
+  /**
+   * Calculated value based on {@link OAuth2TokenEndpointResponse.expires_in}.
+   *
+   * It is the absolute timestamp (in seconds) when the {@link OAuth2TokenEndpointResponse.access_token} expires.
+   *
+   * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
+   *
+   * @see https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy
+   * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
+   */
+  expires_at?: number
 }
 
-/** The OAuth profile returned from your provider */
+/**
+ * The user info returned from your OAuth provider.
+ *
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+ */
 export interface Profile {
-  sub?: string
-  name?: string
-  email?: string
-  image?: string
+  sub?: string | null
+  name?: string | null
+  given_name?: string | null
+  family_name?: string | null
+  middle_name?: string | null
+  nickname?: string | null
+  preferred_username?: string | null
+  profile?: string | null
+  picture?: string | null | any
+  website?: string | null
+  email?: string | null
+  email_verified?: boolean | null
+  gender?: string | null
+  birthdate?: string | null
+  zoneinfo?: string | null
+  locale?: string | null
+  phone_number?: string | null
+  updated_at?: Date | string | number | null
+  address?: {
+    formatted?: string | null
+    street_address?: string | null
+    locality?: string | null
+    region?: string | null
+    postal_code?: string | null
+    country?: string | null
+  } | null
+  [claim: string]: unknown
 }
 
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */
@@ -261,7 +304,7 @@ export interface EventCallbacks {
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
-   * - `token`: The JWT token for this session.
+   * - `token`: The JWT for this session.
    * - `session`: The session object from your adapter that is being ended.
    */
   signOut: (
@@ -279,7 +322,7 @@ export interface EventCallbacks {
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
-   * - `token`: The JWT token for this session.
+   * - `token`: The JWT for this session.
    * - `session`: The session object from your adapter.
    */
   session: (message: { session: Session; token: JWT }) => Awaitable<void>
@@ -294,7 +337,7 @@ export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
 export type SignInPageErrorParam =
   | "Signin"
   | "OAuthSignin"
-  | "OAuthCallback"
+  | "OAuthCallbackError"
   | "OAuthCreateAccount"
   | "EmailCreateAccount"
   | "Callback"
@@ -372,24 +415,52 @@ export interface User {
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
+  : T extends "oidc"
+  ? OIDCConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
   signinUrl: string
+  /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
 }
 
+/**
+ * Supported actions by Auth.js. Each action map to a REST API endpoint.
+ * Some actions have a `GET` and `POST` variant, depending on if the action
+ * changes the state of the server.
+ *
+ * - **`"callback"`**:
+ *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers_oauth).
+ *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers_credentials).
+ * - **`"csrf"`**: Returns the raw CSRF token, which is saved in a cookie (encrypted).
+ * It is used for CSRF protection, implementing the [double submit cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) technique.
+ * :::note
+ * Some frameworks have built-in CSRF protection and can therefore disable this action. In this case, the corresponding endpoint will return a 404 response. Read more at [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck).
+ * _⚠ We don't recommend manually disabling CSRF protection, unless you know what you're doing._
+ * :::
+ * - **`"error"`**: Renders the built-in error page.
+ * - **`"providers"`**: Returns a client-safe list of all configured providers.
+ * - **`"session"`**: Returns the user's session if it exists, otherwise `null`.
+ * - **`"signin"`**:
+ *   - **`GET`**: Renders the built-in sign-in page.
+ *   - **`POST`**: Initiates the sign-in flow.
+ * - **`"signout"`**:
+ *   - **`GET`**: Renders the built-in sign-out page.
+ *   - **`POST`**: Initiates the sign-out flow. This will invalidate the user's session (deleting the cookie, and if there is a session in the database, it will be deleted as well).
+ * - **`"verify-request"`**: Renders the built-in verification request page.
+ */
 export type AuthAction =
+  | "callback"
+  | "csrf"
+  | "error"
   | "providers"
   | "session"
-  | "csrf"
   | "signin"
   | "signout"
-  | "callback"
   | "verify-request"
-  | "error"
 
 /** @internal */
 export interface RequestInternal {
@@ -406,7 +477,7 @@ export interface RequestInternal {
 
 /** @internal */
 export interface ResponseInternal<
-  Body extends string | Record<string, any> | any[] = any
+  Body extends string | Record<string, any> | any[] | null = any
 > {
   status?: number
   headers?: Headers | HeadersInit
@@ -415,7 +486,6 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
-// TODO: rename to AuthConfigInternal
 /** @internal */
 export interface InternalOptions<TProviderType = ProviderType> {
   providers: InternalProvider[]
@@ -436,4 +506,9 @@ export interface InternalOptions<TProviderType = ProviderType> {
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
+  /**
+   * If true, the OAuth callback is being proxied by the server to the original URL.
+   * See also {@link OAuthConfigInternal.redirectProxyUrl}.
+   */
+  isOnRedirectProxy: boolean
 }

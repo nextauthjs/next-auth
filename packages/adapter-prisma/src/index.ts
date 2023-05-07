@@ -42,8 +42,6 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  * })
  * ```
  *
- * ## Advanced usage
- *
  * ### Create the Prisma schema from scratch
  *
  * You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:

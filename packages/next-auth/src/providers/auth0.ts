@@ -27,9 +27,8 @@ export default function Auth0<P extends Auth0Profile>(
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/auth0.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/auth0-dark.svg",
+      logo: "/auth0.svg",
+      logoDark: "/auth0-dark.svg",
       bg: "#fff",
       text: "#EB5424",
       bgDark: "#EB5424",

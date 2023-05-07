@@ -228,6 +228,10 @@ export interface Adapter {
   deleteUser?(
     userId: string
   ): Promise<void> | Awaitable<AdapterUser | null | undefined>
+  /**
+   * This method is invoked internally (but optionally can be used for manual linking).
+   * It creates an [Account](https://authjs.dev/reference/adapters#models) in the database.
+   */
   linkAccount?(
     account: AdapterAccount
   ): Promise<void> | Awaitable<AdapterAccount | null | undefined>
