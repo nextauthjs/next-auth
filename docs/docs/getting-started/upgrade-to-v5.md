@@ -40,9 +40,9 @@ Now that Next.js components are **server first** by default, those `fetch` calls
 
 ## Configuration File
 
-We worked hard to avoid having to save your config options in a separate file and then pass them around as `AuthOptions` throughout your application. To achieve this, we settled on moving the configuration file to the root of the repository and having it export an `auth` function you can use everywhere else. There is no required magic name, however, we recommend naming it `auth.ts`. 
+We worked hard to avoid having to save your config options in a separate file and then pass them around as `AuthOptions` throughout your application. To achieve this, we settled on moving the configuration file to the root of the repository and having it export an `auth` function you can use everywhere else. There is no required magic name, however, we recommend naming it `auth.ts`.
 
-A very bare-bones example of the new configuration file format is as follows, as you can see it looks very similar to the existing one.
+An example of the new configuration file format is as follows, as you can see it looks very similar to the existing one.
 
 ```ts title="./auth.ts"
 import NextAuth from "next-auth"
@@ -55,8 +55,8 @@ export const { handlers, auth } = NextAuth({
     GitHub,
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
-      authorize(c) {
-        if (c.password !== "password") return null
+      authorize(credentials) {
+        if (credentials.password !== "password") return null
         return { id: "test", name: "Test User", email: "test@example.com" }
       },
     }),
@@ -71,7 +71,7 @@ This then allows you to import the functions exported from this file elsewhere i
 import { auth } from 'auth'
 ```
 
-The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now simply becomes a simple 3-line handler for `GET` and `POST` requests for those paths.
+The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a simple 3-line handler for `GET` and `POST` requests for those paths.
 
 ```ts title="app/api/auth/[...nextauth]/route.tsx"
 import { handlers } from "./auth"
