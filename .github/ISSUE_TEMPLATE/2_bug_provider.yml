@@ -32,6 +32,7 @@ body:
         - "Azure Active Directory"
         - "Azure Active Directory B2C"
         - "Battlenet"
+        - "Beyond Identity"
         - "Box"
         - "Bungie"
         - "Cognito"

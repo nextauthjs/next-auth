@@ -1,7 +1,7 @@
 {
   "name": "@next-auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",
@@ -29,7 +29,8 @@
     "test:default": "jest",
     "test:custom": "CUSTOM_MODEL=1 jest",
     "test": "pnpm test:default && pnpm test:custom",
-    "build": "tsc"
+    "clean": "rm -rf index.*",
+    "build": "pnpm clean && tsc"
   },
   "files": [
     "README.md",

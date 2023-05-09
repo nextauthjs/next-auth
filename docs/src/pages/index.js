@@ -135,7 +135,7 @@ export default function Home() {
                   )}
                   href="https://next-auth-example.vercel.app"
                 >
-                  Live Demo (Next.js)
+                  Next.js Demo
                 </a>
                 <a
                   className={classnames(
@@ -144,7 +144,7 @@ export default function Home() {
                   )}
                   href="https://sveltekit-auth-example.vercel.app"
                 >
-                  Live Demo (SvelteKit)
+                  SvelteKit Demo
                 </a>
                 <a
                   className={classnames(
@@ -153,7 +153,7 @@ export default function Home() {
                   )}
                   href="https://auth-solid.vercel.app"
                 >
-                  Live Demo (SolidStart)
+                  SolidStart Demo
                 </a>
                 <Link
                   className={classnames(

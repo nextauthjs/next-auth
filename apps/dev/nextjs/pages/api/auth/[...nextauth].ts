@@ -1,11 +1,12 @@
 import { Auth, type AuthConfig } from "@auth/core"
 
 // Providers
-// import Apple from "@auth/core/providers/apple"
-// import Auth0 from "@auth/core/providers/auth0"
-// import AzureAD from "@auth/core/providers/azure-ad"
-// import AzureB2C from "@auth/core/providers/azure-ad-b2c"
-// import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
+import Apple from "@auth/core/providers/apple"
+import Asgardeo from "@auth/core/providers/asgardeo"
+import Auth0 from "@auth/core/providers/auth0"
+import AzureAD from "@auth/core/providers/azure-ad"
+import AzureB2C from "@auth/core/providers/azure-ad-b2c"
+import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 // import Cognito from "@auth/core/providers/cognito"
 import Credentials from "@auth/core/providers/credentials"
 // import Discord from "@auth/core/providers/discord"
@@ -24,16 +25,17 @@ import Credentials from "@auth/core/providers/credentials"
 // import LinkedIn from "@auth/core/providers/linkedin"
 // import Mailchimp from "@auth/core/providers/mailchimp"
 // import Okta from "@auth/core/providers/okta"
-// import Osu from "@auth/core/providers/osu"
-// import Patreon from "@auth/core/providers/patreon"
-// import Slack from "@auth/core/providers/slack"
-// import Spotify from "@auth/core/providers/spotify"
-// import Trakt from "@auth/core/providers/trakt"
-// import Twitch from "@auth/core/providers/twitch"
-// import Twitter from "@auth/core/providers/twitter"
-// import Vk from "@auth/core/providers/vk"
-// import Wikimedia from "@auth/core/providers/wikimedia"
-// import WorkOS from "@auth/core/providers/workos"
+import Osu from "@auth/core/providers/osu"
+import Patreon from "@auth/core/providers/patreon"
+import Slack from "@auth/core/providers/slack"
+import Spotify from "@auth/core/providers/spotify"
+import Trakt from "@auth/core/providers/trakt"
+import Twitch from "@auth/core/providers/twitch"
+import Twitter from "@auth/core/providers/twitter"
+import Yandex from "@auth/core/providers/yandex"
+import Vk from "@auth/core/providers/vk"
+import Wikimedia from "@auth/core/providers/wikimedia"
+import WorkOS from "@auth/core/providers/workos"
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
@@ -90,42 +92,46 @@ export const authConfig: AuthConfig = {
         }
       },
     }),
-    // Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
-    // Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
-    // AzureAD({
-    //   clientId: process.env.AZURE_AD_CLIENT_ID,
-    //   clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
-    //   tenantId: process.env.AZURE_AD_TENANT_ID,
-    // }),
-    // AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
-    // BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
-    // // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
-    // Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
-    // DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
-    // Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
-    // Foursquare({ clientId: process.env.FOURSQUARE_ID, clientSecret: process.env.FOURSQUARE_SECRET }),
-    // Freshbooks({ clientId: process.env.FRESHBOOKS_ID, clientSecret: process.env.FRESHBOOKS_SECRET }),
-    // GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
-    // Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
-    // Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
-    // // IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
-    // Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
-    // // Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
-    // Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
-    // LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
-    // Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
-    // // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
-    // Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
-    // Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
-    // Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
-    // Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
-    // Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
-    // Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
-    // Twitter({ clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
-    // // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
-    // Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
-    // Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
-    // WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
+    Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
+    Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
+    Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
+    AzureAD({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+    }),
+    AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
+    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
+    BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
+    // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
+    Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
+    DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
+    Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
+    Foursquare({ clientId: process.env.FOURSQUARE_ID, clientSecret: process.env.FOURSQUARE_SECRET }),
+    Freshbooks({ clientId: process.env.FRESHBOOKS_ID, clientSecret: process.env.FRESHBOOKS_SECRET }),
+    GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET, redirectProxy: process.env.AUTH_REDIRECT_PROXY_URL }),
+    Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
+    Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
+    // IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
+    Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
+    // Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
+    Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
+    LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
+    Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
+    Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET, redirectUri: process.env.NOTION_REDIRECT_URI }),
+    // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
+    Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
+    Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
+    Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
+    Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
+    Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
+    Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
+    Twitter({ clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
+    // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
+    Yandex({ clientId: process.env.YANDEX_ID, clientSecret: process.env.YANDEX_SECRET }),
+    Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
+    Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
+    WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
   // debug: process.env.NODE_ENV !== "production",
 }

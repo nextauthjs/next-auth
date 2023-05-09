@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.18.6",
+  "version": "4.22.1",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -9,7 +9,7 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Thang Huu Vu <hi@thvu.dev>"
+    "Thang Huu Vu <thvu@hey.com>"
   ],
   "main": "index.js",
   "module": "index.js",
@@ -38,31 +38,30 @@
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
-    "build:js": "pnpm clean && pnpm generate-providers && tsc && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
+    "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
-    "watch:ts": "tsc --watch --emitDeclarationOnly false --module CommonJS",
+    "watch:ts": "pnpm tsc --project tsconfig.dev.json",
     "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
     "test": "jest --config ./config/jest.config.js",
     "prepublishOnly": "pnpm build",
-    "generate-providers": "node ./config/generate-providers.js"
+    "generate-providers": "node ./config/generate-providers.js",
+    "lint": "eslint src config tests"
   },
   "files": [
-    "lib",
+    "client",
+    "core",
     "css",
     "jwt",
-    "react",
+    "lib",
     "next",
-    "client",
     "providers",
-    "core",
-    "index.d.ts",
-    "index.js",
-    "adapters.d.ts",
-    "middleware.d.ts",
-    "middleware.js",
-    "utils"
+    "react",
+    "src",
+    "utils",
+    "*.d.ts*",
+    "*.js"
   ],
   "license": "ISC",
   "dependencies": {
@@ -71,9 +70,9 @@
     "@simplewebauthn/browser": "^6.2.2",
     "@simplewebauthn/server": "^6.2.2",
     "cookie": "^0.5.0",
-    "jose": "^4.9.3",
+    "jose": "^4.11.4",
     "oauth": "^0.9.15",
-    "openid-client": "^5.1.0",
+    "openid-client": "^5.4.0",
     "preact": "^10.6.3",
     "preact-render-to-string": "^5.1.19",
     "uuid": "^8.3.2"
@@ -105,13 +104,13 @@
     "@testing-library/dom": "^8.13.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
-    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-hooks": "^8.0.0",
     "@testing-library/user-event": "^14.2.0",
     "@types/jest": "^28.1.3",
     "@types/node": "^17.0.42",
     "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
-    "@types/react": "^18.0.15",
+    "@types/react": "18.0.37",
     "@types/react-dom": "^18.0.6",
     "autoprefixer": "^10.4.7",
     "babel-plugin-jsx-pragmatic": "^1.0.2",
@@ -122,15 +121,12 @@
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
-    "next": "13.1.1",
+    "next": "13.3.0",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
     "react": "^18",
     "react-dom": "^18",
     "whatwg-fetch": "^3.6.2"
-  },
-  "engines": {
-    "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0"
   }
 }

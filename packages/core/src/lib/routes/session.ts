@@ -9,7 +9,7 @@ import type { SessionStore } from "../cookie.js"
 export async function session(
   sessionStore: SessionStore,
   options: InternalOptions
-): Promise<ResponseInternal<Session | {}>> {
+): Promise<ResponseInternal<Session | null>> {
   const {
     adapter,
     jwt,
@@ -19,8 +19,8 @@ export async function session(
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
   } = options
 
-  const response: ResponseInternal<Session | {}> = {
-    body: {},
+  const response: ResponseInternal<Session | null> = {
+    body: null,
     headers: { "Content-Type": "application/json" },
     cookies: [],
   }
@@ -60,7 +60,6 @@ export async function session(
         const newToken = await jwt.encode({
           ...jwt,
           token,
-          maxAge: options.session.maxAge,
         })
 
         // Set cookie, to also update expiry date on cookie
@@ -73,7 +72,7 @@ export async function session(
         await events.session?.({ session: newSession, token })
       } else {
         response.cookies?.push(...sessionStore.clean())
-      } 
+      }
     } catch (e) {
       logger.error(new JWTSessionError(e as Error))
       // If the JWT is not verifiable remove the broken session cookie(s).
@@ -86,7 +85,7 @@ export async function session(
   // Retrieve session from database
   try {
     const { getSessionAndUser, deleteSession, updateSession } =
-      adapter as Adapter
+      adapter as Required<Adapter>
     let userAndSession = await getSessionAndUser(sessionToken)
 
     // If session has expired, clean up the database

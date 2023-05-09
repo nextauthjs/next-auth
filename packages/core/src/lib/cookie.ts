@@ -1,9 +1,4 @@
-import type {
-  CookieOption,
-  CookiesOptions,
-  LoggerInstance,
-  SessionStrategy,
-} from "../types.js"
+import type { CookieOption, CookiesOptions, LoggerInstance } from "../types.js"
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie
@@ -41,7 +36,7 @@ export type SetCookieOptions = Partial<CookieOption["options"]> & {
  * If `options.session.strategy` is set to `jwt`, this is a stringified `JWT`.
  * In case of `strategy: "database"`, this is the `sessionToken` of the session in the database.
  */
-export type SessionToken<T extends SessionStrategy = "jwt"> = T extends "jwt"
+export type SessionToken<T extends "jwt" | "database" = "jwt"> = T extends "jwt"
   ? JWTString
   : string
 

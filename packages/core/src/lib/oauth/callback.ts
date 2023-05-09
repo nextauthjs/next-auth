@@ -3,6 +3,7 @@ import * as o from "oauth4webapi"
 import { OAuthCallbackError, OAuthProfileParseError } from "../../errors.js"
 
 import type {
+  Account,
   InternalOptions,
   LoggerInstance,
   Profile,
@@ -24,7 +25,8 @@ import type { Cookie } from "../cookie.js"
 export async function handleOAuth(
   query: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">,
+  randomState?: string
 ) {
   const { logger, provider } = options
   let as: o.AuthorizationServer
@@ -71,9 +73,14 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await checks.state.use(cookies, resCookies, options)
+  const state = await checks.state.use(
+    cookies,
+    resCookies,
+    options,
+    randomState
+  )
 
-  const parameters = o.validateAuthResponse(
+  const codeGrantParams = o.validateAuthResponse(
     as,
     client,
     new URLSearchParams(query),
@@ -81,36 +88,24 @@ export async function handleOAuth(
   )
 
   /** https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1 */
-  if (o.isOAuth2Error(parameters)) {
-    logger.debug("OAuthCallbackError", {
-      providerId: provider.id,
-      ...parameters,
-    })
-    throw new OAuthCallbackError(parameters.error)
+  if (o.isOAuth2Error(codeGrantParams)) {
+    const cause = { providerId: provider.id, ...codeGrantParams }
+    logger.debug("OAuthCallbackError", cause)
+    throw new OAuthCallbackError("OAuth Provider returned an error", cause)
   }
 
-  const codeVerifier = await checks.pkce.use(
-    cookies?.[options.cookies.pkceCodeVerifier.name],
-    options
-  )
+  const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
 
-  if (codeVerifier) resCookies.push(codeVerifier.cookie)
-
-  // TODO:
-  const nonce = await checks.nonce.use(
-    cookies?.[options.cookies.nonce.name],
-    options
-  )
-  if (nonce && provider.type === "oidc") {
-    resCookies.push(nonce.cookie)
+  let redirect_uri = provider.callbackUrl
+  if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
+    redirect_uri = provider.redirectProxyUrl
   }
-
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
-    parameters,
-    provider.callbackUrl,
-    codeVerifier?.codeVerifier ?? "auth" // TODO: review fallback code verifier
+    codeGrantParams,
+    redirect_uri,
+    codeVerifier ?? "auth" // TODO: review fallback code verifier
   )
 
   if (provider.token?.conform) {
@@ -127,14 +122,16 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {}
-  let tokens: TokenSet
+  let profile: Profile
+  let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
+    const nonce = await checks.nonce.use(cookies, resCookies, options)
     const result = await o.processAuthorizationCodeOpenIDResponse(
       as,
       client,
-      codeGrantResponse
+      codeGrantResponse,
+      nonce ?? o.expectNoNonce
     )
 
     if (o.isOAuth2Error(result)) {
@@ -164,37 +161,49 @@ export async function handleOAuth(
         (tokens as any).access_token
       )
       profile = await userinfoResponse.json()
+    } else {
+      throw new TypeError("No userinfo endpoint configured")
     }
   }
 
-  const profileResult = await getProfile(profile, provider, tokens, logger)
+  if (tokens.expires_in) {
+    tokens.expires_at =
+      Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
+  }
+
+  const profileResult = await getUserAndProfile(
+    profile,
+    provider,
+    tokens,
+    logger
+  )
 
   return { ...profileResult, cookies: resCookies }
 }
 
 /** Returns profile, raw profile and auth provider details */
-async function getProfile(
+async function getUserAndProfile(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
   logger: LoggerInstance
 ) {
   try {
-    const profile = await provider.profile(OAuthProfile, tokens)
-    profile.email = profile.email?.toLowerCase()
+    const user = await provider.profile(OAuthProfile, tokens)
+    user.email = user.email?.toLowerCase()
 
-    if (!profile.id) {
+    if (!user.id) {
       throw new TypeError(
-        `Profile id is missing in ${provider.name} OAuth profile response`
+        `User id is missing in ${provider.name} OAuth profile response`
       )
     }
 
     return {
-      profile,
+      user,
       account: {
         provider: provider.id,
         type: provider.type,
-        providerAccountId: profile.id.toString(),
+        providerAccountId: user.id.toString(),
         ...tokens,
       },
       OAuthProfile,
@@ -208,6 +217,8 @@ async function getProfile(
     // redirected back to the sign up page. We log the error to help developers
     // who might be trying to debug this when configuring a new provider.
     logger.debug("getProfile error details", OAuthProfile)
-    logger.error(new OAuthProfileParseError(e as Error))
+    logger.error(
+      new OAuthProfileParseError(e as Error, { provider: provider.id })
+    )
   }
 }

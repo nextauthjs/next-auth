@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -20,7 +20,7 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Iain Collins <me@iaincollins.com"
+    "Iain Collins <me@iaincollins.com>"
   ],
   "scripts": {
     "dev": "svelte-package -w",

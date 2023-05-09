@@ -1,7 +1,7 @@
 {
   "name": "@auth/solid-start",
   "description": "Authentication for SolidStart.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "files": [
     "client.*",
@@ -30,22 +30,17 @@
   "devDependencies": {
     "@auth/core": "workspace:*",
     "@solidjs/meta": "^0.28.0",
-    "@types/cookie": "0.5.1",
     "@types/node": "^18.7.14",
-    "@types/set-cookie-parser": "^2.4.2",
     "next-auth": "workspace:*",
     "solid-js": "^1.5.7",
-    "solid-start": "^0.2.1",
+    "solid-start": "^0.2.14",
     "tsup": "^6.5.0",
     "typescript": "^4.8.2"
   },
   "peerDependencies": {
     "@auth/core": "~0.2.2 || ^0.2.2",
     "solid-js": "^1.5.7",
-    "solid-start": "^0.2.1"
-  },
-  "dependencies": {
-    "set-cookie-parser": "^2.5.1"
+    "solid-start": "^0.2.14"
   },
   "keywords": [
     "SolidJS",
