@@ -98,7 +98,15 @@ export interface Theme {
  */
 export type TokenSet = Partial<
   OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
->
+> & {
+  /**
+   * Date of when the `access_token` expires in seconds.
+   * This value is calculated from the `expires_in` value.
+   *
+   * @see https://www.ietf.org/rfc/rfc6749.html#section-4.2.2
+   */
+  expires_at?: number
+}
 
 /**
  * Usually contains information about the provider being used

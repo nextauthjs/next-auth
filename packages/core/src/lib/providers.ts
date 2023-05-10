@@ -106,14 +106,16 @@ const defaultProfile: ProfileCallback<Profile> = (profile) => {
  * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
  * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
  * @see https://authjs.dev/reference/adapters#account
- *
- * @todo Return `refresh_token` and `expires_at` as well when built-in
- * refresh token support is added. (Can make it opt-in first with a flag).
  */
 const defaultAccount: AccountCallback = (account) => {
   return stripUndefined({
     access_token: account.access_token,
     id_token: account.id_token,
+    refresh_token: account.refresh_token,
+    expires_at: account.expires_at,
+    scope: account.scope,
+    token_type: account.token_type,
+    session_state: account.session_state,
   })
 }
 

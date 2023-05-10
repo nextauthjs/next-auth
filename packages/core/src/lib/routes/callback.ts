@@ -75,7 +75,7 @@ export async function callback(params: {
       const {
         user: userFromProvider,
         account,
-        OAuthProfile,
+        profile: OAuthProfile,
       } = authorizationResult
 
       // If we don't have a profile object then either something went wrong
