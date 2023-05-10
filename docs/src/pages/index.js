@@ -101,7 +101,7 @@ export default function Home() {
       .fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
-        const navLink = document.getElementByClassName("navbar-github-link")
+        const navLink = document.getElementById("navbar-github-link")
         const githubStat = document.createElement("span")
         githubStat.innerHTML = kFormatter(data.stargazers_count)
         githubStat.className = "github-counter"
