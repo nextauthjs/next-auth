@@ -36,25 +36,25 @@ export async function session(params: {
     try {
       const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
 
-      const newExpires = fromDate(sessionMaxAge)
-
-      // By default, only exposes a limited subset of information to the client
-      // as needed for presentation purposes (e.g. "you are logged in as...").
-      const session = {
-        user: {
-          name: decodedToken?.name,
-          email: decodedToken?.email,
-          image: decodedToken?.picture,
-        },
-        expires: newExpires.toISOString(),
-      }
-
       const token = await callbacks.jwt({
         // @ts-expect-error
         token: decodedToken,
         ...(isUpdate && { trigger: "update" }),
         session: newSession,
       })
+
+      const newExpires = fromDate(sessionMaxAge)
+
+      // By default, only exposes a limited subset of information to the client
+      // as needed for presentation purposes (e.g. "you are logged in as...").
+      const session = {
+        user: {
+          name: token?.name,
+          email: token?.email,
+          image: token?.picture,
+        },
+        expires: newExpires.toISOString(),
+      }
 
       if (token !== null) {
         // @ts-expect-error
@@ -135,7 +135,7 @@ export async function session(params: {
           user: {
             name: user.name,
             email: user.email,
-            image: user.image,
+            picture: user.image,
           },
           expires: session.expires.toISOString(),
         },
