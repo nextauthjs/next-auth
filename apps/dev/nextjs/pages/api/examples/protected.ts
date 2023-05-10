@@ -1,7 +1,10 @@
 // This is an example of to protect an API route
 import { auth } from "auth"
+import { NextApiRequest, NextApiResponse } from "next"
 
-export default auth(req, res) => {
+// @ts-expect-error
+export default auth((req: NextApiRequest, res: NextApiResponse) => {
+  // @ts-expect-error
   const session = req.auth
 
   if (session) {
@@ -15,4 +18,4 @@ export default auth(req, res) => {
       error: "You must be sign in to view the protected content on this page.",
     })
   }
-}
+})
