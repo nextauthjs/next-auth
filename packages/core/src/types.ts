@@ -238,40 +238,86 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * If you want to make something available you added to the token through the `jwt` callback,
    * you have to explicitly forward it here to make it available to the client.
    *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#session-callback) |
-   * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
-   * [`useSession`](https://authjs.dev/reference/react/#usesession) |
-   * [`getSession`](https://authjs.dev/reference/utilities/#getsession) |
-   *
+   * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
-  session: (params: {
-    session: Session
-    user: User | AdapterUser
-    token: JWT
-  }) => Awaitable<Session>
+  session: (
+    params:
+      | {
+          session: Session
+          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+          token: JWT
+          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+          user: AdapterUser
+        } & {
+          /**
+           * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
+           *
+           * :::note
+           * You should validate this data before using it.
+           * :::
+           */
+          newSession: any
+          trigger: "update"
+        }
+  ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
    * Its content is forwarded to the `session` callback,
    * where you can control what should be returned to the client.
-   * Anything else will be kept inaccessible from the client.
+   * Anything else will be kept from your front-end.
    *
-   * Returning `null` will invalidate the JWT session by clearing
-   * the user's cookies. You'll still have to monitor and invalidate
-   * unexpired tokens from future requests yourself to prevent
-   * unauthorized access.
+   * The JWT is encrypted by default.
    *
-   * By default the JWT is encrypted.
-   *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
-   * [`session` callback](https://authjs.dev/guides/basics/callbacks#session-callback)
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
+   * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
    */
   jwt: (params: {
+    /**
+     * When `trigger` is `"signIn"` or `"signUp"`, it will be a subset of {@link JWT},
+     * `name`, `email` and `image` will be included.
+     *
+     * Otherwise, it will be the full {@link JWT} for subsequent calls.
+     */
     token: JWT
-    user?: User | AdapterUser
-    account?: A | null
+    /**
+     * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
+     * @note available when `trigger` is `"signIn"` or `"signUp"`.
+     *
+     * Resources:
+     * - [Credentials Provider](https://authjs.dev/reference/core/providers_credentials)
+     * - [User database model](https://authjs.dev/reference/adapters#user)
+     */
+    user: User | AdapterUser
+    /**
+     * Contains information about the provider that was used to sign in.
+     * Also includes {@link TokenSet}
+     * @note available when `trigger` is `"signIn"` or `"signUp"`
+     */
+    account: A | null
+    /**
+     * The OAuth profile returned from your provider.
+     * (In case of OIDC it will be the decoded ID Token or /userinfo response)
+     * @note available when `trigger` is `"signIn"`.
+     */
     profile?: P
+    /**
+     * Check why was the jwt callback invoked. Possible reasons are:
+     * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
+     * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
+     * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+     * In case of the latter, `trigger` will be `undefined`.
+     */
+    trigger?: "signIn" | "signUp" | "update"
+    /** @deprecated use `trigger === "signUp"` instead */
     isNewUser?: boolean
+    /**
+     * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
+     * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+     *
+     * ⚠ Note, you should validate this data before using it.
+     */
+    session?: any
   }) => Awaitable<JWT | null>
 }
 
@@ -451,7 +497,9 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
  * :::
  * - **`"error"`**: Renders the built-in error page.
  * - **`"providers"`**: Returns a client-safe list of all configured providers.
- * - **`"session"`**: Returns the user's session if it exists, otherwise `null`.
+ * - **`"session"`**:
+ *   - **`GET**`: Returns the user's session if it exists, otherwise `null`.
+ *   - **`POST**`: Updates the user's session and returns the updated session.
  * - **`"signin"`**:
  *   - **`GET`**: Renders the built-in sign-in page.
  *   - **`POST`**: Initiates the sign-in flow.
