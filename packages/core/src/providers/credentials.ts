@@ -32,12 +32,14 @@ export interface CredentialsConfig<
    * @example
    * ```ts
    * //...
-   * async authorize(, request) {
+   * async authorize(credentials, request) {
+   *   if(!isValidCredentials(credentials)) return null
    *   const response = await fetch(request)
    *   if(!response.ok) return null
    *   return await response.json() ?? null
    * }
    * //...
+   * ```
    */
   authorize: (
     /**

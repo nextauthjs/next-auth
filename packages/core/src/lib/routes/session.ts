@@ -6,10 +6,13 @@ import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
 import type { SessionStore } from "../cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
-export async function session(
-  sessionStore: SessionStore,
+export async function session(params: {
   options: InternalOptions
-): Promise<ResponseInternal<Session | null>> {
+  sessionStore: SessionStore
+  isUpdate?: boolean
+  newSession?: any
+}): Promise<ResponseInternal<Session | null>> {
+  const { options, sessionStore, newSession, isUpdate } = params
   const {
     adapter,
     jwt,
@@ -46,8 +49,12 @@ export async function session(
         expires: newExpires.toISOString(),
       }
 
-      // @ts-expect-error
-      const token = await callbacks.jwt({ token: decodedToken })
+      const token = await callbacks.jwt({
+        // @ts-expect-error
+        token: decodedToken,
+        ...(isUpdate && { trigger: "update" }),
+        session: newSession,
+      })
 
       if (token !== null) {
         // @ts-expect-error
@@ -133,6 +140,8 @@ export async function session(
           expires: session.expires.toISOString(),
         },
         user,
+        newSession,
+        ...(isUpdate ? { trigger: "update" } : {}),
       })
 
       // Return session payload as response

@@ -134,6 +134,7 @@ export async function callback(params: {
           account,
           profile: OAuthProfile,
           isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
         })
 
         // Clear cookies if token is null
@@ -244,6 +245,7 @@ export async function callback(params: {
           user: loggedInUser,
           account,
           isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
         })
 
         // Clear cookies if token is null
@@ -340,6 +342,7 @@ export async function callback(params: {
         // @ts-expect-error
         account,
         isNewUser: false,
+        trigger: "signIn",
       })
 
       // Clear cookies if token is null
