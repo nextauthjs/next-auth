@@ -95,7 +95,7 @@ export type ProfileCallback<Profile> = (
   tokens: TokenSet
 ) => Awaitable<User>
 
-export type AccountCallback = (account: TokenSet) => TokenSet
+export type AccountCallback = (tokens: TokenSet) => TokenSet
 
 export interface OAuthProviderButtonStyles {
   logo: string
@@ -155,7 +155,31 @@ export interface OAuth2Config<Profile>
    * Receives the full {@link TokenSet} returned by the OAuth provider, and returns a subset.
    * It is used to create the account associated with a user in the database.
    *
-   * Defaults to: `access_token` and `id_token`
+   * :::note
+   * You need to adjust your database's [Account model](https://authjs.dev/reference/adapters#account) to match the returned properties.
+   * Check out the documentation of your [database adapter](https://authjs.dev/reference/adapters) for more information.
+   * :::
+   *
+   * Defaults to: `access_token`, `id_token`, `refresh_token`, `expires_at`, `scope`, `token_type`, `session_state`
+   *
+   * @example
+   * ```ts
+   * import GitHub from "@auth/core/providers/github"
+   * // ...
+   * GitHub({
+   *   account(account) {
+   *     // https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens#refreshing-a-user-access-token-with-a-refresh-token
+   *     const refresh_token_expires_at =
+   *       Math.floor(Date.now() / 1000) + Number(account.refresh_token_expires_in)
+   *     return {
+   *       access_token: account.access_token,
+   *       expires_at: account.expires_at,
+   *       refresh_token: account.refresh_token,
+   *       refresh_token_expires_at
+   *     }
+   *   }
+   * })
+   * ```
    *
    * @see [Database Adapter: Account model](https://authjs.dev/reference/adapters#account)
    * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
