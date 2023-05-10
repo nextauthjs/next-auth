@@ -171,18 +171,18 @@ export async function handleOAuth(
       Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
   }
 
-  const profileResult = await getUserAndProfile(
+  const profileResult = await getUserAndAccount(
     profile,
     provider,
     tokens,
     logger
   )
 
-  return { ...profileResult, cookies: resCookies }
+  return { ...profileResult, profile, cookies: resCookies }
 }
 
-/** Returns profile, raw profile and auth provider details */
-async function getUserAndProfile(
+/** Returns the user and account that is going to be created in the database. */
+async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
@@ -206,7 +206,6 @@ async function getUserAndProfile(
         providerAccountId: user.id.toString(),
         ...tokens,
       },
-      OAuthProfile,
     }
   } catch (e) {
     // If we didn't get a response either there was a problem with the provider
