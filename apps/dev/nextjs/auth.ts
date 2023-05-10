@@ -23,6 +23,10 @@ export const { handlers, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    jwt({ token, trigger, session }) {
+      if (trigger === "update" && session) token.name = session
+      return token
+    },
     async authorized({ request: { nextUrl }, auth }) {
       if (nextUrl.pathname === "/dashboard") return !!auth.user
       return true
