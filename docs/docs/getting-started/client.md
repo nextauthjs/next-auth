@@ -519,7 +519,7 @@ where `data.url` is the validated URL you can redirect the user to without any f
 
 ## SessionProvider
 
-Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://reactjs.org/docs/context.html) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
+Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://react.dev/learn/passing-data-deeply-with-context) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
 
 ```jsx title="pages/_app.js"
 import { SessionProvider } from "next-auth/react"
