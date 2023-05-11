@@ -23,7 +23,7 @@
  *
  * ```ts title="app/auth-components.tsx"
  * import { auth } from "../auth"
- * import { cookies, headers } from "next/headers"
+ * import { cookies } from "next/headers"
  *
  * function CSRF() {
  *   const value = cookies().get("next-auth.csrf-token")?.value.split("|")[0]
@@ -67,11 +67,10 @@
  * Then, you could for example use it like this:
  *
  * ```ts title=app/page.tsx
- * import { headers } from "next/headers"
  * import { SignIn, SignOut } from "./auth-components"
  *
  * export default async function Page() {
- *   const session = await auth(headers())
+ *   const session = await auth()
  *   if (session) {
  *     return (
  *       <>
@@ -102,7 +101,7 @@ type AppRouteHandlers = Record<
 export type { NextAuthConfig }
 
 /**
- * The result of invoking {@link NextAuth}, initialized with the {@link NextAuthConfig}.
+ * The result of invoking {@link NextAuth|NextAuth}, initialized with the {@link NextAuthConfig}.
  * It contains methods to set up and interact with NextAuth.js in your Next.js app.
  */
 export interface NextAuthResult {
@@ -124,21 +123,39 @@ export interface NextAuthResult {
   handlers: AppRouteHandlers
   /**
    * A universal method to interact with NextAuth.js in your Next.js app.
-   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Route Handlers or React Server Components.
+   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Route Handlers, Edge API Routes or React Server Components.
+   *
+   * #### In Middleware
    *
    * @example
    * ```ts title="middleware.ts"
    * export { auth as middleware } from "./auth"
+   * // or
+   * import { auth } from "./auth"
+   * export default auth((req) => {
+   *   // req.auth
+   * })
+   *
+   * // Optionally, don't invoke Middleware on some paths
+   * // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+   * export const config = {
+   *   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+   * }
    * ```
+   *
+   * #### In Server Components
+   *
    * @example
    * ```ts title="app/page.ts"
    * import { auth } from "../auth"
-   * import { headers } from "next/headers"
+   *
    * export default async function Page() {
-   *   const { user } = await auth(headers())
-   *   return <div>Hello {user?.name}</div>
+   *   const { user } = await auth()
+   *   return <p>Hello {user?.name}</p>
    * }
    * ```
+   *
+   * #### In Route Handlers
    * @example
    * ```ts title="app/api/route.ts"
    * import { auth } from "../../auth"
@@ -146,6 +163,19 @@ export interface NextAuthResult {
    * export const POST = auth((req) => {
    *   // req.auth
    * })
+   * ```
+   *
+   * #### In Edge API Routes
+   *
+   * @example
+   * ```ts title="pages/api/protected.ts"
+   * import { auth } from "../../auth"
+   *
+   * export default auth((req) => {
+   *   // req.auth
+   * })
+   *
+   * export const config = { runtime: "edge" }
    * ```
    */
   auth: ReturnType<typeof initAuth>
