@@ -20,13 +20,12 @@ First, let's see what is new!
 - Fully Edge-compatible, thanks to rewriting on top of Auth.js. [Read more](/reference/core).
 - Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](/reference/nextjs#auth).
 
-
 ## Breaking Changes
 
 - Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
 - OAuth 1.0 support is deprecated.
-- The import `next-auth/next` is no longer available / needed.
-- The import `next-auth/middleware` is no longer available / needed.
+- The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - If you are using a **database adapter** and passing it additional fields from your provider, the default behaviour has changed. We used to automatically pass on all fields from the provider to the adapter. **We no longer pass on all returned fields from your provider(s) to the adapter by default**. We listened to the community, and decided to revert this to a similar state as it was in v3. You must now manually pass on your chosen fields in the provider's `account` callback, if the default is not working for you. See: [`account()` docs](/reference/core/providers#account).
 
 ## Configuration
@@ -67,7 +66,6 @@ import { handlers } from "./auth"
 export const { GET, POST } = handlers
 export const runtime = "edge" // optional
 ```
-
 
 ## Authenticating server-side
 
