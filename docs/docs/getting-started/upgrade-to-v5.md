@@ -162,6 +162,8 @@ Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
 
 ### Server Component
 
+TODO: Make this `getServerSession` -> `auth` diff
+
 Since Next.js 13+ now operates in a **server-first** model, our server components become the most common use-case and those have been significantly simplified as well. Again, we can use the same `auth` method as before to get the session inside the component.
 
 <details><summary>Before Code</summary>
