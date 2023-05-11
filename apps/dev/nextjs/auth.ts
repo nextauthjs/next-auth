@@ -6,7 +6,7 @@ import Google from "@auth/core/providers/google"
 import Twitter from "@auth/core/providers/twitter"
 import Credentials from "@auth/core/providers/credentials"
 
-export const { handlers, auth } = NextAuth({
+export const { handlers, auth, getServerSession } = NextAuth({
   debug: true,
   providers: [
     GitHub,
@@ -27,8 +27,9 @@ export const { handlers, auth } = NextAuth({
       if (trigger === "update" && session) token.name = session
       return token
     },
-    async authorized({ request: { nextUrl }, auth }) {
-      if (nextUrl.pathname === "/dashboard") return !!auth.user
+    async authorized({ request, auth }) {
+      const url = new URL(request.url)
+      if (url.pathname === "/dashboard") return !!auth.user
       return true
     },
   },
