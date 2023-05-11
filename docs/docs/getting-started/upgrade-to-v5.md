@@ -2,7 +2,7 @@
 title: Upgrade Guide (v5)
 ---
 
-NextAuth.js version 5 is a complete rewrite of the package, but we made sure to introduce as little breaking changes as possible. For anything else, we summed up the necessary change in this guide.
+NextAuth.js version 5 is a complete rewrite of the package, but we made sure to introduce as little breaking changes as possible. For anything else, we summed up the necessary changes in this guide.
 
 Upgrade to the latest version by running:
 
@@ -35,17 +35,17 @@ Now that Next.js components are **server first** by default, those `fetch` calls
 | [Server Component](#server-component)     | `getServerSession(authOptions)`                       | `auth()` call                    |
 | [Middleware](#middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
 | [Client Component](#client-component)     | `useSession()` hook                                   | `useSession()` hook              |
-| [Route Handler](#route-handler)           | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Edge)](#api-route-edge)       | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth()` call                    |
-| [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth()` call                    |
+| [Route Handler](/reference/nextjs#in-route-handlers)           | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)       | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
 
 ## Breaking Changes
 
+- Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
 - OAuth 1.0 support is deprecated.
 - The import `next-auth/next` is no longer available / needed.
 - The import `next-auth/middleware` is no longer available / needed.
-- The data returned from the `profile` callback from a provider used to have a field called `image` on it (i.e. `session.user.image`). To be more in line with the [OAuth spec](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims), we've renamed this to `picture`.
 - If you are using a **database adapter** and passing it additional fields from your provider, the default behaviour has changed. We used to automatically pass on all fields from the provider to the adapter. **We no longer pass on all returned fields from your provider(s) to the adapter by default**. We listened to the community, and decided to revert this to a similar state as it was in v3. You must now manually pass on your chosen fields in the provider's `account` callback, if the default is not working for you. See: [`account()` docs](/reference/core/providers#account).
 
 ## Configuration
@@ -104,8 +104,6 @@ export default async function handler(req, res) {
 }
 ```
 
-## API Route (Edge)
-
 ## `getServerSideProps`
 
 Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
@@ -144,8 +142,6 @@ export default auth(req => {
 ```
 
 Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
-
-## Route Handler
 
 ## Server Component
 
@@ -204,11 +200,12 @@ export default async function Page() {
 
 Imports from `next-auth/react` are now marked with the `"use client"` directive. [Read more](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive).
 
-If you have previously used `getSession()` or other imports server-side, you'll have to change it to use the [`auth()](/reference/nextjs#auth) method instead.
+If you have previously used `getSession()` or other imports server-side, you'll have to change it to use the [`auth()`](/reference/nextjs#auth) method instead.
 
 `getCsrfToken` and `getProviders` are still available as imports, but we plan to deprecate them in the future and introduce a new API to get this data server-side.
 
 Client side: Instead of using these APIs, you can make a fetch request to the `/api/auth/providers` and `/api/auth/csrf` endpoints respectively.
+
 Server-side: TBD
 
 ## Database Migrations
