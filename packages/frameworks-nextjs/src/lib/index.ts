@@ -75,6 +75,7 @@ async function runAuth(headers: Headers, config: NextAuthConfig) {
   config.useSecureCookies ??= origin.protocol === "https"
 
   // Since we are server-side, we don't need to filter out the session data
+  // See https://nextjs.authjs.dev/v5#authenticating-server-side
   config.callbacks = Object.assign(config.callbacks as any, {
     session({ session, user, token }) {
       return { expires: session.expires, user: user ?? token }
@@ -105,16 +106,7 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
 }
 
 export function initAuth(config: NextAuthConfig) {
-  function auth(
-    ...args: [NextApiRequest, NextApiResponse]
-  ): Promise<Session["user"]>
-  function auth(...args: []): Promise<Session>
-  function auth(...args: [GetServerSidePropsContext]): Promise<Session>
-  function auth(
-    ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
-  ): ReturnType<AppRouteHandlerFn>
-
-  async function auth(...args: WithAuthArgs) {
+  return async (...args: WithAuthArgs) => {
     if (!args.length) return runAuth(headers(), config).then((r) => r.json())
     if (args[0] instanceof Request) {
       // middleare.ts
@@ -151,7 +143,6 @@ export function initAuth(config: NextAuthConfig) {
 
     return { user, expires } as Session
   }
-  return auth
 }
 
 async function handleAuth(
