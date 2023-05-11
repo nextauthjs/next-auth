@@ -88,7 +88,7 @@
 
 import { Auth } from "@auth/core"
 import { setEnvDefaults } from "./lib/env.js"
-import { initAuth } from "./lib/index.js"
+import { initAuth, initGetServerSession } from "./lib/index.js"
 
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./lib/index.js"
@@ -179,6 +179,49 @@ export interface NextAuthResult {
    * ```
    */
   auth: ReturnType<typeof initAuth>
+  /**
+   * Similar to {@link auth}, but for use in [`getServerSideProps`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) and [API Routes in `pages/`](https://nextjs.org/docs/pages/building-your-application/routing/api-routes)
+   * that do not set [`runtime: "edge"`](https://nextjs.org/docs/pages/building-your-application/routing/api-routes#edge-api-routes).
+   * For all other usecases, use {@link auth} instead.
+   *
+   * #### In `getServerSideProps`
+   * @example
+   * ```ts title="pages/api/protected-ssr.ts"
+   * //...
+   * export const getServerSideProps: GetServerSideProps = async (context) => {
+   *   const session = await getServerSession(context)
+   *
+   *   if (session) {
+   *     // Do something with the session
+   *     return { props: { session, content: (await res.json()).content } }
+   *   }
+   *
+   *   return { props: {} }
+   * }
+   * ```
+   *
+   * #### In API Routes
+   *
+   * :::info
+   * If you set `export const config = {runtime: "edge"}` in your API Route, use {@link auth} instead.
+   * :::
+   *
+   * @example
+   * ```ts title="pages/api/protected.ts"
+   * import { getServerSession } from "../auth"
+   * import type { NextApiRequest, NextApiResponse } from "next"
+   *
+   * export default async (req: NextApiRequest, res: NextApiResponse) => {
+   *   const session = await getServerSession(req, res)
+   *   if (session) {
+   *     // Do something with the session
+   *     return res.send("This is protected content.")
+   *   }
+   *   res.status(401).send("You must be signed in.")
+   * }
+   * ```
+   */
+  getServerSession: ReturnType<typeof initGetServerSession>
 }
 
 /**
@@ -198,5 +241,6 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     auth: initAuth(config),
+    getServerSession: initGetServerSession(config),
   }
 }

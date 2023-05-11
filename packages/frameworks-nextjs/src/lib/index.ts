@@ -3,6 +3,7 @@ import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
 import type { Awaitable, CallbacksOptions, Session } from "@auth/core/types"
+import type { GetServerSideProps, NextApiHandler } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
@@ -39,7 +40,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
     auth: AuthData
     /** The expiration date of the session. */
     expires: string | null
-  }) => Awaitable<boolean | NextResponse>
+  }) => Awaitable<boolean | NextResponse | undefined>
 }
 
 /** Configure NextAuth.js. */
@@ -51,16 +52,21 @@ export interface NextAuthConfig extends AuthConfig {
   callbacks?: NextAuthCallbacks
 }
 
-async function runAuth(headers: Headers, config: NextAuthConfig) {
-  const host = headers.get("x-forwarded-host") ?? headers.get("host")
+function detectOrigin(headers: Headers | object) {
+  const _headers = new Headers(headers as any)
+  const host = _headers.get("x-forwarded-host") ?? _headers.get("host")
   const protocol =
-    headers.get("x-forwarded-proto") === "http" ? "http" : "https"
+    _headers.get("x-forwarded-proto") === "http" ? "http" : "https"
   // TODO: Handle URL correctly (NEXTAUTH_URL, request host, protocol, custom path, etc.)
-  const origin = `${protocol}://${host}`
+  return new URL(`${protocol}://${host}`)
+}
+
+async function runAuth(headers: Headers, config: NextAuthConfig) {
+  const origin = detectOrigin(headers)
   const req = new Request(`${origin}/api/auth/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
-  config.useSecureCookies ??= protocol === "https"
+  config.useSecureCookies ??= origin.protocol === "https"
 
   // Since we are server-side, we don't need to filter out the session data
   config.callbacks = Object.assign(config.callbacks as any, {
@@ -85,6 +91,7 @@ export type WithAuthArgs =
   | [NextAuthMiddleware]
   | []
 
+/** Initializes the `auth()` Web compatible (Request -> Response) method */
 export function initAuth(config: NextAuthConfig) {
   return (...args: WithAuthArgs) => {
     if (!args.length) return runAuth(headers(), config).then((r) => r.json())
@@ -160,4 +167,40 @@ async function handleAuth(
   }
 
   return finalResponse
+}
+
+/** Initializes the `getServerSession()` Node.js ((req, res) => void) method. */
+export function initGetServerSession(config: NextAuthConfig) {
+  return async (
+    ...args: Parameters<NextApiHandler | GetServerSideProps>
+  ): Promise<AuthData["user"] | null> => {
+    // getServerSideProps, /pages/api/* (runtime="nodejs")
+    // import { getServerSession } from "auth"
+    // export default async (req, res) => {
+    //   const session = await getServerSession(req, res)
+    //   console.log(req.auth)
+    // }
+
+    const request = "req" in args[0] ? args[0].req : args[0]
+    const response = "res" in args[0] ? args[0].res : args[1]
+
+    // FIXME: Upstream in Next.js.
+    // if (request instanceof Request) {
+    // @ts-expect-error
+    if (request.nextUrl) {
+      throw new TypeError(
+        "`getServerSession()` was called with a `Request` instance, use `auth()` instead. See: https://nextjs.authjs.dev#auth"
+      )
+    }
+
+    const headers = new Headers(request.headers as any)
+    const authResponse = await runAuth(headers, config)
+    const { user = null } = (await authResponse.json()) ?? {}
+
+    // Preserve cookies set by Auth.js Core
+    const cookies = authResponse.headers.get("set-cookie")
+    if (cookies) response?.setHeader("set-cookie", cookies)
+
+    return user
+  }
 }
