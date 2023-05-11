@@ -33,7 +33,7 @@ This is the preferred initialization in tutorials/other parts of the documentati
 
 ### Route Handlers (`app/`)
 
-[Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-handlers) introduced [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers), the preferred way to handle REST-like requests in the upcoming App Router (`app/`).
+[Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-handlers) introduced [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers), the preferred way to handle REST-like requests in App Router (`app/`).
 
 You can initialize NextAuth.js with a Route Handler too, very similar to API Routes.
 
