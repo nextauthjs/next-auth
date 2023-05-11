@@ -21,25 +21,6 @@ First, let's see what is new!
 - Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](/reference/nextjs#auth).
 
 
-## Getting Started
-
-Below is a summary of the high-level API changes in `next-auth` v5. Most of these methods were doing 1 of 2 things, 
-
-1. They were reading/modifying the session state (via cookie or database calls).
-2. They were making `fetch` calls to get data from the backend to the client. 
-
-Now that Next.js components are **server first** by default, those `fetch` calls are no longer necessary and all session manipulation could be generalized and .... `[TODO]`. This allowed us to simplify our API surface significantly, to the point where we felt comfortable enough exposing all functionality via 1 export.
-
-| Where                                     | Old                                                   | New                              |
-| ----------------------------------------- | ----------------------------------------------------- | -------------------------------- |
-| [Server Component](#server-component)     | `getServerSession(authOptions)`                       | `auth()` call                    |
-| [Middleware](#middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
-| [Client Component](#client-component)     | `useSession()` hook                                   | `useSession()` hook              |
-| [Route Handler](/reference/nextjs#in-route-handlers)           | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)       | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
-
 ## Breaking Changes
 
 - Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
@@ -87,7 +68,26 @@ export const { GET, POST } = handlers
 export const runtime = "edge" // optional
 ```
 
-## API Route (Node)
+
+## Authenticating server-side
+
+NextAuth.js has had a few different ways to authenticate server-side in the past, and we've tried to simplify this as much as possible.
+
+Now that Next.js components are **server first** by default, and their investment on usig Web standard APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
+
+See the table below for a summary of the changes, and click on the links to learn more about each one.
+
+| Where                                     | Old                                                   | New                              |
+| ----------------------------------------- | ----------------------------------------------------- | -------------------------------- |
+| [Server Component](#server-component)     | `getServerSession(authOptions)`                       | `auth()` call                    |
+| [Middleware](#middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| [Client Component](#client-component)     | `useSession()` hook                                   | `useSession()` hook              |
+| [Route Handler](/reference/nextjs#in-route-handlers)           | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)       | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
+
+### API Route (Node)
 
 Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
 
@@ -104,7 +104,7 @@ export default async function handler(req, res) {
 }
 ```
 
-## `getServerSideProps`
+### `getServerSideProps`
 
 Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
 
@@ -124,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 ```
 
-## Middleware
+### Middleware
 
 ```diff title="middleware.ts"
 - export { default } from 'next-auth/middleware'
@@ -143,7 +143,7 @@ export default auth(req => {
 
 Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
 
-## Server Component
+### Server Component
 
 Since Next.js 13+ now operates in a **server-first** model, our server components become the most common use-case and those have been significantly simplified as well. Again, we can use the same `auth` method as before to get the session inside the component.
 
@@ -196,7 +196,7 @@ export default async function Page() {
 
 </details>
 
-## Client Component
+### Client Component
 
 Imports from `next-auth/react` are now marked with the `"use client"` directive. [Read more](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive).
 
