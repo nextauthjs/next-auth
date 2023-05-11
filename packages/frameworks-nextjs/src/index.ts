@@ -88,10 +88,17 @@
 
 import { Auth } from "@auth/core"
 import { setEnvDefaults } from "./lib/env.js"
-import { initAuth, initGetServerSession } from "./lib/index.js"
+import { initAuth } from "./lib/index.js"
 
+import type { Session } from "@auth/core/types"
+import type {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next"
+import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
-import type { NextAuthConfig } from "./lib/index.js"
+import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",
@@ -123,19 +130,30 @@ export interface NextAuthResult {
   handlers: AppRouteHandlers
   /**
    * A universal method to interact with NextAuth.js in your Next.js app.
-   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Route Handlers, Edge API Routes or React Server Components.
+   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Server Components, Route Handlers (`app/`), and Edge or Node.js API Routes (`pages/`).
    *
    * #### In Middleware
    *
+   * :::info
+   * Adding `auth` to your Middleware is optional, but recommended to keep the user session alive.
+   * :::
+   *
+   * Authentication is done by the {@link NextAuthConfig.callbacks|callbacks.authorized} callback.
    * @example
    * ```ts title="middleware.ts"
    * export { auth as middleware } from "./auth"
-   * // or
+   * ```
+   *
+   * Alternatively you can wrap your own middleware with `auth`, where `req` is extended with `auth`:
+   * @example
+   * ```ts title="middleware.ts"
    * import { auth } from "./auth"
    * export default auth((req) => {
    *   // req.auth
    * })
+   * ```
    *
+   * ```ts
    * // Optionally, don't invoke Middleware on some paths
    * // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
    * export const config = {
@@ -177,19 +195,32 @@ export interface NextAuthResult {
    *
    * export const config = { runtime: "edge" }
    * ```
-   */
-  auth: ReturnType<typeof initAuth>
-  /**
-   * Similar to {@link auth}, but for use in [`getServerSideProps`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) and [API Routes in `pages/`](https://nextjs.org/docs/pages/building-your-application/routing/api-routes)
-   * that do not set [`runtime: "edge"`](https://nextjs.org/docs/pages/building-your-application/routing/api-routes#edge-api-routes).
-   * For all other usecases, use {@link auth} instead.
+   *
+   * #### In API Routes
+   *
+   * @example
+   * ```ts title="pages/api/protected.ts"
+   * import { auth } from "../auth"
+   * import type { NextApiRequest, NextApiResponse } from "next"
+   *
+   * export default async (req: NextApiRequest, res: NextApiResponse) => {
+   *   const session = await auth(req, res)
+   *   if (session) {
+   *     // Do something with the session
+   *     return res.json("This is protected content.")
+   *   }
+   *   res.status(401).json("You must be signed in.")
+   * }
+   * ```
    *
    * #### In `getServerSideProps`
+   *
    * @example
-   * ```ts title="pages/api/protected-ssr.ts"
+   * ```ts title="pages/protected-ssr.ts"
+   * import { auth } from "../auth"
    * //...
    * export const getServerSideProps: GetServerSideProps = async (context) => {
-   *   const session = await getServerSession(context)
+   *   const session = await auth(context)
    *
    *   if (session) {
    *     // Do something with the session
@@ -199,29 +230,13 @@ export interface NextAuthResult {
    *   return { props: {} }
    * }
    * ```
-   *
-   * #### In API Routes
-   *
-   * :::info
-   * If you set `export const config = {runtime: "edge"}` in your API Route, use {@link auth} instead.
-   * :::
-   *
-   * @example
-   * ```ts title="pages/api/protected.ts"
-   * import { getServerSession } from "../auth"
-   * import type { NextApiRequest, NextApiResponse } from "next"
-   *
-   * export default async (req: NextApiRequest, res: NextApiResponse) => {
-   *   const session = await getServerSession(req, res)
-   *   if (session) {
-   *     // Do something with the session
-   *     return res.send("This is protected content.")
-   *   }
-   *   res.status(401).send("You must be signed in.")
-   * }
-   * ```
    */
-  getServerSession: ReturnType<typeof initGetServerSession>
+  auth: ((...args: [NextApiRequest, NextApiResponse]) => Promise<Session>) &
+    ((...args: []) => Promise<Session>) &
+    ((...args: [GetServerSidePropsContext]) => Promise<Session>) &
+    ((
+      ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
+    ) => ReturnType<AppRouteHandlerFn>)
 }
 
 /**
@@ -241,6 +256,5 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     auth: initAuth(config),
-    getServerSession: initGetServerSession(config),
   }
 }

@@ -3,7 +3,13 @@ import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
 import type { Awaitable, CallbacksOptions, Session } from "@auth/core/types"
-import type { GetServerSideProps, NextApiHandler } from "next"
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextApiHandler,
+  NextApiRequest,
+  NextApiResponse,
+} from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
@@ -37,7 +43,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
     /** The request to be authorized. */
     request: NextRequest
     /** The authenticated user or token, if any. */
-    auth: AuthData
+    auth: Session
     /** The expiration date of the session. */
     expires: string | null
   }) => Awaitable<boolean | NextResponse | undefined>
@@ -78,7 +84,7 @@ async function runAuth(headers: Headers, config: NextAuthConfig) {
 }
 
 export interface NextAuthRequest extends NextRequest {
-  auth: AuthData
+  auth: Session
 }
 
 export type NextAuthMiddleware = (
@@ -87,13 +93,28 @@ export type NextAuthMiddleware = (
 ) => ReturnType<NextMiddleware>
 
 export type WithAuthArgs =
-  | [NextAuthRequest, NextFetchEvent]
+  | [NextAuthRequest, any]
   | [NextAuthMiddleware]
+  | [AppRouteHandlerFn]
+  | [NextApiRequest, NextApiResponse]
+  | [GetServerSidePropsContext]
   | []
 
-/** Initializes the `auth()` Web compatible (Request -> Response) method */
+function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
+  return typeof arg === "function"
+}
+
 export function initAuth(config: NextAuthConfig) {
-  return (...args: WithAuthArgs) => {
+  function auth(
+    ...args: [NextApiRequest, NextApiResponse]
+  ): Promise<Session["user"]>
+  function auth(...args: []): Promise<Session>
+  function auth(...args: [GetServerSidePropsContext]): Promise<Session>
+  function auth(
+    ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
+  ): ReturnType<AppRouteHandlerFn>
+
+  async function auth(...args: WithAuthArgs) {
     if (!args.length) return runAuth(headers(), config).then((r) => r.json())
     if (args[0] instanceof Request) {
       // middleare.ts
@@ -103,21 +124,34 @@ export function initAuth(config: NextAuthConfig) {
       return handleAuth([req, ev as any], config)
     }
 
-    // middleare.ts/router.ts
-    // import { auth } from "auth"
-    // export default auth((req) => { console.log(req.auth) }})
-    const userMiddlewareOrRoute = args[0]
-    return async (
-      ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
-    ) => {
-      return handleAuth(args, config, userMiddlewareOrRoute)
+    if (isReqWrapper(args[0])) {
+      // middleare.ts/router.ts
+      // import { auth } from "auth"
+      // export default auth((req) => { console.log(req.auth) }})
+      const userMiddlewareOrRoute = args[0]
+      return async (
+        ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
+      ) => {
+        return handleAuth(args, config, userMiddlewareOrRoute)
+      }
     }
-  }
-}
 
-/** TODO: document */
-export interface AuthData {
-  user: Session | null
+    const request = "req" in args[0] ? args[0].req : args[0]
+    const response: any = "res" in args[0] ? args[0].res : args[1]
+
+    const authResponse = await runAuth(
+      new Headers(request.headers as any),
+      config
+    )
+    const { user = null, expires = null } = (await authResponse.json()) ?? {}
+
+    // Preserve cookies set by Auth.js Core
+    const cookies = authResponse.headers.get("set-cookie")
+    if (cookies) response?.setHeader("set-cookie", cookies)
+
+    return { user, expires } as Session
+  }
+  return auth
 }
 
 async function handleAuth(
@@ -133,7 +167,7 @@ async function handleAuth(
   const authorized =
     (await config.callbacks?.authorized?.({
       request,
-      auth: { user },
+      auth: { user, expires },
       expires,
     })) ?? true
 
@@ -145,7 +179,7 @@ async function handleAuth(
   } else if (userMiddlewareOrRoute) {
     // Execute user's middleware/handler with the augmented request
     const augmentedReq: NextAuthRequest = request as any
-    augmentedReq.auth = { user }
+    augmentedReq.auth = { user, expires }
     response =
       // @ts-expect-error
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
@@ -167,40 +201,4 @@ async function handleAuth(
   }
 
   return finalResponse
-}
-
-/** Initializes the `getServerSession()` Node.js ((req, res) => void) method. */
-export function initGetServerSession(config: NextAuthConfig) {
-  return async (
-    ...args: Parameters<NextApiHandler | GetServerSideProps>
-  ): Promise<AuthData["user"] | null> => {
-    // getServerSideProps, /pages/api/* (runtime="nodejs")
-    // import { getServerSession } from "auth"
-    // export default async (req, res) => {
-    //   const session = await getServerSession(req, res)
-    //   console.log(req.auth)
-    // }
-
-    const request = "req" in args[0] ? args[0].req : args[0]
-    const response = "res" in args[0] ? args[0].res : args[1]
-
-    // FIXME: Upstream in Next.js.
-    // if (request instanceof Request) {
-    // @ts-expect-error
-    if (request.nextUrl) {
-      throw new TypeError(
-        "`getServerSession()` was called with a `Request` instance, use `auth()` instead. See: https://nextjs.authjs.dev#auth"
-      )
-    }
-
-    const headers = new Headers(request.headers as any)
-    const authResponse = await runAuth(headers, config)
-    const { user = null } = (await authResponse.json()) ?? {}
-
-    // Preserve cookies set by Auth.js Core
-    const cookies = authResponse.headers.get("set-cookie")
-    if (cookies) response?.setHeader("set-cookie", cookies)
-
-    return user
-  }
 }
