@@ -1,6 +1,6 @@
 /**
  * :::warning Deprecated
- * This module is currently not available in v5. Read more at: https://nextjs.authjs.dev/v5
+ * This module is replaced in v5. Read more at: https://nextjs.authjs.dev/v5
  * :::
  *
  * @module jwt

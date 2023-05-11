@@ -26,6 +26,7 @@ First, let's see what is new!
 - OAuth 1.0 support is deprecated.
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- The import `next-auth/jwt` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - If you are using a **database adapter** and passing it additional fields from your provider, the default behaviour has changed. We used to automatically pass on all fields from the provider to the adapter. **We no longer pass on all returned fields from your provider(s) to the adapter by default**. We listened to the community, and decided to revert this to a similar state as it was in v3. You must now manually pass on your chosen fields in the provider's `account` callback, if the default is not working for you. See: [`account()` docs](/reference/core/providers#account).
 
 ## Configuration
@@ -83,44 +84,58 @@ See the table below for a summary of the changes, and click on the links to lear
 | [Route Handler](/reference/nextjs#in-route-handlers)           | _Previously not supported_                            | `auth()` wrapper                 |
 | [API Route (Edge)](/reference/nextjs#in-edge-api-routes)       | _Previously not supported_                            | `auth()` wrapper                 |
 | [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [API Route (Node)](#api-route-node)       | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
 | [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
+| [getServerSideProps](#getserversideprops) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
+
+
 
 ### API Route (Node)
 
-Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
 
 ```diff title='pages/api/example.ts'
-- import { authOptions } from 'pages/api/auth/[...nextauth]'
 - import { getServerSession } from "next-auth/next"
+- import { getToken } from "next-auth/jwt"
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
 + import { auth } from "../auth"
 
 export default async function handler(req, res) {
 -  const session = await getServerSession(req, res, authOptions)
+-  const token = await getToken({ req })
 +  const session = await auth(req, res)
   if (session) return res.json('Success')
   return res.status(401).json("You must be logged in.");
 }
 ```
 
+:::tip
+Whenever `auth()` is passed the res object, it will rotate the session expiry. This was not the case with `getToken()` previously.
+:::
+
 ### `getServerSideProps`
 
-Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
-
-To get the `session` server-side, we used to recommend calling `getServerSession` inside the `getServerSideProps` function, which would expose the `session` on the `props` passed to the component. Since components are server rendered by default now, you can grab the session directly in the body of the component with the same `auth` import.
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
 
 ```diff title="pages/protected.tsx"
 - import { getServerSession } from "next-auth/next"
+- import { getToken } from "next-auth/jwt"
 - import { authOptions } from 'pages/api/auth/[...nextauth]'
 + import { auth } from "../auth"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 -  const session = await getServerSession(context.req, context.res, authOptions)
+-  const token = await getToken({ req: context.req })
 +  const session = await auth(context)
   if (session) // Do something with the session
 
   return { props: { session } }
 }
 ```
+
+:::tip
+Whenever `auth()` is passed the res object, it will rotate the session expiry. This was not the case with `getToken()` previously.
+:::
 
 ### Middleware
 
