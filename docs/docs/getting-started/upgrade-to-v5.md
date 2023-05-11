@@ -74,6 +74,10 @@ NextAuth.js has had a few different ways to authenticate server-side in the past
 
 Now that Next.js components are **server first** by default, and their investment on usig Web standard APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
 
+:::note
+When using `auth()`, the [`session()` callback](/reference/core/types#session) is ignored. `auth()` will expose anything returned from the [`jwt()` callback](reference/core/types#jwt) or if using a [`"database"` strategy](/reference/core#session), from the [User](/reference/adapters#user). This is because the `session()` callback was designed to protect you from exposing sensitive information to the client, but when using `auth()` you are always on the server.
+:::
+
 See the table below for a summary of the changes, and click on the links to learn more about each one.
 
 | Where                                     | Old                                                   | New                              |
@@ -88,9 +92,7 @@ See the table below for a summary of the changes, and click on the links to lear
 | [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
 | [getServerSideProps](#getserversideprops) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
 
-:::note
-When using `auth()`, the [`session()` callback](/reference/core/types#session) is ignored. `auth()` will expose anything returned from the [`jwt()` callback](reference/core/types#jwt) or if using a [`"database"` strategy](/reference/core#session), from the [User](/reference/adapters#user). This is because the `session()` callback was designed to protect you from exposing sensitive information to the client, but when using `auth()` you are always on the server.
-:::
+
 
 ### API Route (Node)
 
