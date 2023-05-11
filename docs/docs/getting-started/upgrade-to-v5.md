@@ -2,13 +2,24 @@
 title: Upgrade Guide (v5)
 ---
 
-NextAuth.js version 5 will continue to be shipped as `next-auth` **for the Next.js version only**. We're here to help you upgrade your applications as smoothly as possible. It is possible to upgrade from any version of 4.x to the latest v5 release by following the  migration steps below.
+NextAuth.js version 5 is a complete rewrite of the package, but we made sure to introduce as little breaking changes as possible. For anything else, we summed up the necessary change in this guide.
 
 Upgrade to the latest version by running:
 
 ```bash npm2yarn2pnpm
 npm install next-auth@latest
 ```
+
+## New Features
+
+First, let's see what is new!
+
+- App Router-first (`pages/` still supported). Read the migration guide to learn more.
+- OAuth support on preview deployments: [Read more](/guides/basics/deployment#securing-a-preview-deployment).
+- Simplified init (shared config, inferred env vars). Read the migration guide to learn more. TODO: mention env inferring
+- Fully Edge-compatible, thanks to rewriting on top of Auth.js. [Read more](/reference/core).
+- Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](/reference/nextjs#auth).
+
 
 ## Getting Started
 
@@ -19,27 +30,27 @@ Below is a summary of the high-level API changes in `next-auth` v5. Most of thes
 
 Now that Next.js components are **server first** by default, those `fetch` calls are no longer necessary and all session manipulation could be generalized and .... `[TODO]`. This allowed us to simplify our API surface significantly, to the point where we felt comfortable enough exposing all functionality via 1 export.
 
-| Where                                     | Old                                                   | New              |
-| ----------------------------------------- | ----------------------------------------------------- | ---------------- |
-| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth()` call    |
-| [API Route (Edge)](#api-route-edge)       | -                                                     | `auth()` wrapper |
-| [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth()` call    |
-| [Middleware](#middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth()` wrapper |
-| [Route Handler](#route-handler)           | -                                                     | `auth()` wrapper |
-| [Server Component](#server-component)     | `getServerSession(authOptions)`                       | `auth()` call    |
-| [Client Component](#client-component)     | `useSession()` hook                                   | `useAuth()` hook |
-
+| Where                                     | Old                                                   | New                              |
+| ----------------------------------------- | ----------------------------------------------------- | -------------------------------- |
+| [Server Component](#server-component)     | `getServerSession(authOptions)`                       | `auth()` call                    |
+| [Middleware](#middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| [Client Component](#client-component)     | `useSession()` hook                                   | `useSession()` hook              |
+| [Route Handler](#route-handler)           | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Edge)](#api-route-edge)       | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth()` call                    |
+| [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth()` call                    |
 
 ## Breaking Changes
 
-- The import `next-auth/next` is no longer available.
-- The import `next-auth/middleware` is no longer available.
+- OAuth 1.0 support is deprecated.
+- The import `next-auth/next` is no longer available / needed.
+- The import `next-auth/middleware` is no longer available / needed.
 - The data returned from the `profile` callback from a provider used to have a field called `image` on it (i.e. `session.user.image`). To be more in line with the [OAuth spec](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims), we've renamed this to `picture`.
-- If you are using a **database adapter** and passing it additional fields from your provider, the default behaviour has changed. We used to automatically pass on all fields from the provider to the adapter. **We no longer pass on all returned fields from your provider(s) to the adapter by default**. You must manually pass on your chosen fields in the provider's `account` callback. See: [AccountCallback docs](#).
+- If you are using a **database adapter** and passing it additional fields from your provider, the default behaviour has changed. We used to automatically pass on all fields from the provider to the adapter. **We no longer pass on all returned fields from your provider(s) to the adapter by default**. We listened to the community, and decided to revert this to a similar state as it was in v3. You must now manually pass on your chosen fields in the provider's `account` callback, if the default is not working for you. See: [`account()` docs](/reference/core/providers#account).
 
-## Configuration File
+## Configuration
 
-We worked hard to avoid having to save your config options in a separate file and then pass them around as `AuthOptions` throughout your application. To achieve this, we settled on moving the configuration file to the root of the repository and having it export an `auth` function you can use everywhere else. There is no required magic name, however, we recommend naming it `auth.ts`.
+We worked hard to avoid having to save your config options in a separate file and then pass them around as `authOptions` throughout your application. To achieve this, we settled on moving the configuration file to the root of the repository and having it export an `auth` function you can use everywhere else.
 
 An example of the new configuration file format is as follows, as you can see it looks very similar to the existing one.
 
@@ -65,83 +76,74 @@ export const { handlers, auth } = NextAuth({
 This then allows you to import the functions exported from this file elsewhere in your codebase via import statements like one of the following.
 
 ```ts
-// import { auth } from './auth'
-import { auth } from 'auth'
+import { auth } from '../path-to-config/auth'
 ```
 
-The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a simple 3-line handler for `GET` and `POST` requests for those paths.
+The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a 2-line handler for `GET` and `POST` requests for those paths.
 
-```ts title="app/api/auth/[...nextauth]/route.tsx"
+```ts title="app/api/auth/[...nextauth]/route.ts"
 import { handlers } from "./auth"
 export const { GET, POST } = handlers
-export const runtime = "edge"
+export const runtime = "edge" // optional
 ```
 
 ## API Route (Node)
 
-The `auth` import can now be used to simply wrap your App Router API Route. This will expose an `auth` object on your `req` argument. See the example below:
+Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
 
+```diff title='pages/api/example.ts'
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
+- import { getServerSession } from "next-auth/next"
++ import { auth } from "../auth"
 
-<details><summary>Before Code</summary>
-
-```ts title='pages/api/example.js'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { getServerSession } from "next-auth/next"
-
-
-export async function handler(req, res) {
-  const session = await getServerSession(req, res, authOptions)
-
-  if (!session) {
-    res.status(401).json({ message: "You must be logged in." });
-    return;
-  }
-
-  return res.json({
-    message: 'Success',
-  })
+export default async function handler(req, res) {
+-  const session = await getServerSession(req, res, authOptions)
++  const session = await auth(req, res)
+  if (session) return res.json('Success')
+  return res.status(401).json("You must be logged in.");
 }
 ```
-
-</details>
-
-<details><summary>After Code</summary>
-
-```ts title='app/example/route.ts'
-import { auth } from "./auth"
-import { NextResponse } from "next/server"
-
-export const GET = auth(function GET(req) {
-  if (req.auth) {
-    return NextResponse.json(req.auth)
-  }
-
-  return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-})
-```
-
-</details>
 
 ## API Route (Edge)
 
 ## `getServerSideProps`
 
+Instead of importing `getServerSession` from `next-auth/next`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
+
 To get the `session` server-side, we used to recommend calling `getServerSession` inside the `getServerSideProps` function, which would expose the `session` on the `props` passed to the component. Since components are server rendered by default now, you can grab the session directly in the body of the component with the same `auth` import.
 
-```ts title="app/welcome/page.tsx"
-import { auth } from "../../auth"
+```diff title="pages/protected.tsx"
+- import { getServerSession } from "next-auth/next"
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
++ import { auth } from "../auth"
 
-export default async function Page() {
-  const session = await auth()
-  return (
-    <>
-      <p>Welcome {session?.user.name}!</p>
-    </>
-  )
+export const getServerSideProps: GetServerSideProps = async (context) => {
+-  const session = await getServerSession(context.req, context.res, authOptions)
++  const session = await auth(context)
+  if (session) // Do something with the session
+
+  return { props: { session } }
 }
 ```
 
 ## Middleware
+
+```diff title="middleware.ts"
+- export { default } from 'next-auth/middleware'
++ export { auth as default } from "./auth"
+```
+
+For advanced use cases, you can use `auth` as a wrapper for your Middleware:
+
+```ts title="middleware.ts"
+import { auth } from "./auth"
+
+export default auth(req => {
+  // req.auth
+})
+```
+
+Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
 
 ## Route Handler
 
@@ -200,11 +202,14 @@ export default async function Page() {
 
 ## Client Component
 
-Imports from `next-auth/react` are marked with the `"use client"` directive. [Read more](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive).
+Imports from `next-auth/react` are now marked with the `"use client"` directive. [Read more](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive).
 
-If you have previously used `getSession()` server-side, you'll have to change it to use the [`auth()](/reference/nextjs#auth) method instead.
+If you have previously used `getSession()` or other imports server-side, you'll have to change it to use the [`auth()](/reference/nextjs#auth) method instead.
 
-TODO: Add diff example
+`getCsrfToken` and `getProviders` are still available as imports, but we plan to deprecate them in the future and introduce a new API to get this data server-side.
+
+Client side: Instead of using these APIs, you can make a fetch request to the `/api/auth/providers` and `/api/auth/csrf` endpoints respectively.
+Server-side: TBD
 
 ## Database Migrations
 
