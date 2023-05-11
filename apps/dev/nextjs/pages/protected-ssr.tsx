@@ -1,5 +1,5 @@
 // This is an example of how to protect content using server rendering
-import { getServerSession } from "../auth"
+import { auth } from "../auth"
 import AccessDenied from "components/access-denied"
 import { GetServerSideProps } from "next"
 
@@ -19,8 +19,7 @@ export default function Page({ content, session }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerSession(context)
-
+  const session = await auth(context)
   if (session) {
     // Note usually you don't need to fetch from an API route in getServerSideProps
     // This is done here to demonstrate how you can fetch from a third-party API

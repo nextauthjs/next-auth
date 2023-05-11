@@ -1,13 +1,13 @@
 import type { NextApiHandler } from "next"
 
-import { getServerSession } from "../../../auth"
+import { auth } from "../../../auth"
 
 export default async function handler(...args: Parameters<NextApiHandler>) {
-  const session = await getServerSession(...args)
+  const session = await auth(...args)
   const res = args[1]
   if (session) {
     // Do something with the session
-    return res.send("This is protected content.")
+    return res.json("This is protected content.")
   }
-  res.status(401).send("You must be signed in.")
+  res.status(401).json("You must be signed in.")
 }
