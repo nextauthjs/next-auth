@@ -36,8 +36,10 @@ export async function session(params: {
     try {
       const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
 
+      if (!decodedToken) throw new Error("Invalid JWT")
+
+      // @ts-expect-error
       const token = await callbacks.jwt({
-        // @ts-expect-error
         token: decodedToken,
         ...(isUpdate && { trigger: "update" }),
         session: newSession,
@@ -45,18 +47,13 @@ export async function session(params: {
 
       const newExpires = fromDate(sessionMaxAge)
 
-      // By default, only exposes a limited subset of information to the client
-      // as needed for presentation purposes (e.g. "you are logged in as...").
-      const session = {
-        user: {
-          name: token?.name,
-          email: token?.email,
-          image: token?.picture,
-        },
-        expires: newExpires.toISOString(),
-      }
-
       if (token !== null) {
+        // By default, only exposes a limited subset of information to the client
+        // as needed for presentation purposes (e.g. "you are logged in as...").
+        const session = {
+          user: { name: token.name, email: token.email, image: token.picture },
+          expires: newExpires.toISOString(),
+        }
         // @ts-expect-error
         const newSession = await callbacks.session({ session, token })
 
@@ -132,11 +129,7 @@ export async function session(params: {
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
         session: {
-          user: {
-            name: user.name,
-            email: user.email,
-            picture: user.image,
-          },
+          user: { name: user.name, email: user.email, image: user.image },
           expires: session.expires.toISOString(),
         },
         user,
