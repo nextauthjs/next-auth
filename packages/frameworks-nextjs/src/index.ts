@@ -83,6 +83,24 @@
  * }
  * ```
  *
+ *
+ * ## Environment variable inferrence
+ *
+ * NextAuth.js can automatically infer environment variables that are prefiexed with `AUTH_`.
+ *
+ * For example `AUTH_SECRET` will be used as the {@link NextAuthConfig.secret} option or `AUTH_URL` can be us.
+ *
+ * `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
+ *
+ * :::tip
+ * The environment variable name inferring has the following format: `AUTH_{PROVIDER}_{ID|SECRET}`.
+ *
+ * `PROVIDER` is the uppercase snake case version of the provider's id, followed with either `ID` or `SECRET` respectively.
+ * :::
+ *
+ *
+ *
+ *
  * @module index
  */
 

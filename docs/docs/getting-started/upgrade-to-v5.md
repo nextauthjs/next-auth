@@ -16,7 +16,7 @@ First, let's see what is new!
 
 - App Router-first (`pages/` still supported). Read the migration guide to learn more.
 - OAuth support on preview deployments: [Read more](/guides/basics/deployment#securing-a-preview-deployment).
-- Simplified init (shared config, inferred env vars). Read the migration guide to learn more. TODO: mention env inferring
+- Simplified init (shared config, inferred [env variables](/reference/nextjs#environment-variable-inferrence)). Read the migration guide to learn more.
 - Fully Edge-compatible, thanks to rewriting on top of Auth.js. [Read more](/reference/core).
 - Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](/reference/nextjs#auth).
 
