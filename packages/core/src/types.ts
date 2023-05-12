@@ -232,7 +232,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * This callback is called whenever a session is checked.
    * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
    *
-   * ⚠ By default, only a subset (email, name, picture)
+   * ⚠ By default, only a subset (email, name, image)
    * of the token is returned for increased security.
    *
    * If you want to make something available you added to the token through the `jwt` callback,
