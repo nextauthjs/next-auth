@@ -25,6 +25,7 @@ import Instagram from "@auth/core/providers/instagram"
 import Line from "@auth/core/providers/line"
 import LinkedIn from "@auth/core/providers/linkedin"
 import Mailchimp from "@auth/core/providers/mailchimp"
+import Nextcloud from "@auth/core/providers/nextcloud"
 import Notion from "@auth/core/providers/notion"
 // import Okta from "@auth/core/providers/okta"
 import Osu from "@auth/core/providers/osu"
@@ -111,6 +112,7 @@ export const authConfig: AuthConfig = {
     Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
     LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
+    Nextcloud({ clientId: process.env.NEXTCLOUD_ID, clientSecret: process.env.NEXTCLOUD_SECRET, issuer: process.env.NEXTCLOUD_ISSUER }),
     Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET, redirectUri: process.env.NOTION_REDIRECT_URI }),
     // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
