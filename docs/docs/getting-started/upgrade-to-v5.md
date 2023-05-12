@@ -229,9 +229,9 @@ Server-side: TBD
 
 ## Database Migrations
 
-NextAuth.js v5 does not introduce any breaking changes to the database schema. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table.
+NextAuth.js v5 does not introduce any breaking changes to the database schema. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table, if you are not using them.
 
-TODO: Mention that fields like GitHub's `refresh_token_expires_in` field need to be added in the `account()` callback if used.
+Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` field was required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. if you do, make sure to return it via the new [`acconut()` callback](/reference/core/providers#account)
 
 ## Summary
 
