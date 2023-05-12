@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#0082C9", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Nextcloud</b> integration.</span>
  * <a href="https://nextcloud.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/nextcloud.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/nextcloud-dark.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -234,10 +234,10 @@ export default function Nextcloud(
     },
     style: {
       logo: "/nextcloud.svg",
-      logoDark: "/nextcloud.svg",
-      bg: "#0082C9",
+      logoDark: "/nextcloud-dark.svg",
+      bg: "#fff",
       bgDark: "#0082C9",
-      text: "#fff",
+      text: "#0082C9",
       textDark: "#fff",
     },
     options,
