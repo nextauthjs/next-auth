@@ -162,58 +162,19 @@ Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
 
 ### Server Component
 
-TODO: Make this `getServerSession` -> `auth` diff
+NextAuth.js v4 has supported reading the session in Server Components for a while via `getServerSession`. This has been also simplified to the same `auth()` function.
 
-Since Next.js 13+ now operates in a **server-first** model, our server components become the most common use-case and those have been significantly simplified as well. Again, we can use the same `auth` method as before to get the session inside the component.
-
-<details><summary>Before Code</summary>
-
-```ts title="pages/welcome.tsx"
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { getServerSession } from "next-auth/next"
-
-export function Header({ props }) {
-  return (
-    <div>
-      Welcome {props.session.user.name}!
-    </div>
-  )
-}
-
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions)
-
-  return {
-    props: {
-      session,
-    },
-  }
-}
-```
-
-</details>
-
-<details><summary>After Code</summary>
-
-```ts title="app/welcome/page.tsx"
-import { auth } from "../../auth"
+```diff title="app/page.tsx"
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
+- import { getServerSession } from "next-auth/next"
++ import { auth } from "../auth"
 
 export default async function Page() {
-  const session = await auth()
-  return (
-    <>
-      <h1>NextAuth.js Example</h1>
-      <p>Welcome {session.user.name}!</p>
-      <p>
-        This is an example site to demonstrate how to use{" "}
-        <a href="https://nextjs.authjs.dev">NextAuth.js</a> for authentication.
-      </p>
-    </>
-  )
+-  const session = await getServerSession(authOptions)
++  const session = await auth()
+  return (<p>Welcome {session?.user.name}!</p>)
 }
 ```
-
-</details>
 
 ### Client Component
 
