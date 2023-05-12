@@ -15,8 +15,8 @@ export function Header({ session, signIn, signOut }: any) {
         )}
         {session && (
           <>
-            {session.user.picture && (
-              <img src={session.user.picture} className={styles.avatar} />
+            {session.user.image && (
+              <img src={session.user.image} className={styles.avatar} />
             )}
             <span className={styles.signedInText}>
               <small>Signed in as</small>
