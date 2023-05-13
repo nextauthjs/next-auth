@@ -56,7 +56,12 @@ export default async function getAuthorizationUrl({
   await checks.pkce.create(options, cookies, authorizationParams)
   await checks.nonce.create(options, cookies, authorizationParams)
 
-  const url = client.authorizationUrl(authorizationParams)
+  let url = client.authorizationUrl(authorizationParams)
+
+  // Authorization custom processing URL
+  if (provider.authorization?.request) {
+    url = await provider.authorization.request({client, url})
+  }
 
   logger.debug("GET_AUTHORIZATION_URL", { url, cookies, provider })
   return { redirect: url, cookies }
