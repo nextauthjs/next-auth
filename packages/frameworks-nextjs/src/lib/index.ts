@@ -4,9 +4,7 @@ import { NextResponse } from "next/server"
 
 import type { Awaitable, CallbacksOptions, Session } from "@auth/core/types"
 import type {
-  GetServerSideProps,
   GetServerSidePropsContext,
-  NextApiHandler,
   NextApiRequest,
   NextApiResponse,
 } from "next"
@@ -39,7 +37,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
    * ...
    * ```
    */
-  authorized: (params: {
+  authorized?: (params: {
     /** The request to be authorized. */
     request: NextRequest
     /** The authenticated user or token, if any. */
@@ -76,7 +74,7 @@ async function runAuth(headers: Headers, config: NextAuthConfig) {
 
   // Since we are server-side, we don't need to filter out the session data
   // See https://nextjs.authjs.dev/v5#authenticating-server-side
-  config.callbacks = Object.assign(config.callbacks as any, {
+  config.callbacks = Object.assign(config.callbacks ?? {}, {
     session({ session, user, token }) {
       return { expires: session.expires, user: user ?? token }
     },
