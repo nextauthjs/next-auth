@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import Layout from "../components/layout"
 
 export default function Page() {
   const { status } = useSession({
@@ -25,11 +24,11 @@ export default function Page() {
 
   // If session exists, display content
   return (
-    <Layout>
+    <>
       <h1>Protected Page</h1>
       <p>
         <strong>{content}</strong>
       </p>
-    </Layout>
+    </>
   )
 }
