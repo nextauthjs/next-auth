@@ -38,19 +38,9 @@ An example of the new configuration file format is as follows, as you can see it
 ```ts title="./auth.ts"
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
-import Credentials from "next-auth/providers/credentials"
 
 export const { handlers, auth } = NextAuth({
-  providers: [
-    GitHub,
-    Credentials({
-      credentials: { password: { label: "Password", type: "password" } },
-      authorize(credentials) {
-        if (credentials.password !== "password") return null
-        return { id: "test", name: "Test User", email: "test@example.com" }
-      },
-    }),
-  ],
+  providers: [ GitHub ],
 })
 ```
 
@@ -215,21 +205,11 @@ The following is only a convention we chose, the filenames/structure have no imp
 
 ```ts title="auth.config.ts"
 import GitHub from "next-auth/providers/github"
-import Credentials from "next-auth/providers/credentials"
 
 import type { NextAuthConfig } from "next-auth"
 
 export default {
-  providers: [
-    GitHub,
-    Credentials({
-      credentials: { password: { label: "Password", type: "password" } },
-      authorize(credentials) {
-        if (credentials.password !== "password") return null
-        return { id: "test", name: "Test User", email: "test@example.com" }
-      },
-    }),
-  ],
+  providers: [ GitHub ],
 } satisfies NextAuthConfig
 ```
 
