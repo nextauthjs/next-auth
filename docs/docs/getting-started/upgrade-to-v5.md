@@ -188,11 +188,78 @@ Client side: Instead of using these APIs, you can make a fetch request to the `/
 
 Server-side: TBD
 
-## Database Migrations
+## Adapters
+
+### Database Migrations
 
 NextAuth.js v5 does not introduce any breaking changes to the database schema. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table, if you are not using them.
 
-Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` field was required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. if you do, make sure to return it via the new [`acconut()` callback](/reference/core/providers#account)
+Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. if you do, make sure to return it via the new [`acconut()` callback](/reference/core/providers#account)
+
+
+### Edge compatibility
+
+NextAuth.js supports to session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and it's adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a "database" session strategy.
+
+:::note
+If you are using a sufficiently fast and Edge-compatible database ORM/library, you can ignore this section.
+:::
+
+Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it:
+
+:::note
+The following is only a convention we chose, the filenames/structure have no important meaning, as long as you import the correct files in the correct places.
+:::
+
+1. Create an `auth.config.ts` with your config and export it:
+
+```ts title="auth.config.ts"
+import GitHub from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+
+import type { NextAuthConfig } from "next-auth"
+
+export default {
+  providers: [
+    GitHub,
+    Credentials({
+      credentials: { password: { label: "Password", type: "password" } },
+      authorize(credentials) {
+        if (credentials.password !== "password") return null
+        return { id: "test", name: "Test User", email: "test@example.com" }
+      },
+    }),
+  ],
+} satisfies NextAuthConfig
+```
+
+2. Create an `auth.ts` file and add your adapter there, together with the `jwt` session strategy:
+
+```ts title="auth.ts"
+import NextAuth from "next-auth"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+import authConfig from "./auth.config"
+
+const prisma = new PrismaClient()
+
+export const { handlers, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  ...authConfig,
+})
+```
+
+3. Make sure that Middleware is not using the import with a non-edge compatible adapter:
+
+```diff title="pages/api/auth/[...nextauth].ts"
+- export { auth as middleware } from './auth'
++ import authConfig from "./auth.config"
++ import NextAuth from "@auth/nextjs"
++ export const { auth: middleware } = NextAuth(authConfig)
+```
+
+That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime.
 
 ## Summary
 
