@@ -56,6 +56,9 @@ export interface NextAuthConfig extends AuthConfig {
   callbacks?: NextAuthCallbacks
 }
 
+/** @deprecated Use {@link NextAuthConfig} instead. */
+export interface NextAuthOptions extends NextAuthConfig {}
+
 function detectOrigin(headers: Headers | object) {
   const _headers = new Headers(headers as any)
   const host = _headers.get("x-forwarded-host") ?? _headers.get("host")
