@@ -1,9 +1,9 @@
-import Auth0 from "@auth/core/providers/auth0"
-import Credentials from "@auth/core/providers/credentials"
-import Facebook from "@auth/core/providers/facebook"
-import GitHub from "@auth/core/providers/github"
-import Google from "@auth/core/providers/google"
-import Twitter from "@auth/core/providers/twitter"
+import Auth0 from "@auth/nextjs/providers/auth0"
+import Credentials from "@auth/nextjs/providers/credentials"
+import Facebook from "@auth/nextjs/providers/facebook"
+import GitHub from "@auth/nextjs/providers/github"
+import Google from "@auth/nextjs/providers/google"
+import Twitter from "@auth/nextjs/providers/twitter"
 import NextAuth from "@auth/nextjs"
 
 export const { handlers, auth } = NextAuth({
