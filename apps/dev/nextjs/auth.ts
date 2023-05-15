@@ -7,7 +7,7 @@ import Twitter from "@auth/nextjs/providers/twitter"
 import NextAuth from "@auth/nextjs"
 
 export const { handlers, auth } = NextAuth({
-  debug: true,
+  // debug: true,
   providers: [
     GitHub,
     Auth0,
@@ -27,7 +27,7 @@ export const { handlers, auth } = NextAuth({
       if (trigger === "update" && session) token.name = session
       return token
     },
-    async authorized({ request, auth }) {
+    authorized({ request, auth }) {
       const url = new URL(request.url)
       if (url.pathname === "/dashboard") return !!auth.user
       return true
