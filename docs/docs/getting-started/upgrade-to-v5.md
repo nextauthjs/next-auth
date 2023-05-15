@@ -71,7 +71,7 @@ When using `auth()`, the [`session()` callback](/reference/core/types#session) i
 
 See the table below for a summary of the changes, and click on the links to learn more about each one.
 
-| Where                                     | Old                                                   | New                              |
+| Where                                     | v4                                                    | v5                               |
 | ----------------------------------------- | ----------------------------------------------------- | -------------------------------- |
 | [Server Component](#server-component)     | `getServerSession(authOptions)`                       | `auth()` call                    |
 | [Middleware](#middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
