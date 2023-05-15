@@ -40,7 +40,11 @@
       "import": "./next.js"
     },
     "./providers": {
-      "types": "./providers.d.ts"
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
     },
     "./client": {
       "types": "./client.d.ts",
@@ -49,9 +53,10 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "dev": "tsc -w",
-    "clean": "rm -rf *.js *.d.ts lib",
-    "build": "pnpm clean && tsc"
+    "dev": "pnpm providers && tsc -w",
+    "clean": "rm -rf *.js *.d.ts lib providers",
+    "build": "pnpm clean && pnpm providers && tsc",
+    "providers": "node scripts/generate-providers"
   },
   "files": [
     "*.js",

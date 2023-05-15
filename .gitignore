@@ -89,6 +89,9 @@ docs/docs/reference/nextjs
 
 # Next.js
 packages/frameworks-nextjs/lib
+packages/frameworks-nextjs/providers
+# copied from @auth/core
+packages/frameworks-nextjs/src/providers
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*
