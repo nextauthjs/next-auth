@@ -189,11 +189,11 @@ Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in`
 
 ### Edge compatibility
 
-NextAuth.js supports to session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and it's adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a "database" session strategy.
-
 :::note
 If you are using a sufficiently fast and Edge-compatible database ORM/library, you can ignore this section.
 :::
+
+NextAuth.js supports two session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and it's adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a "database" session strategy.
 
 Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it:
 
