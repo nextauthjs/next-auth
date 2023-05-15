@@ -86,20 +86,37 @@
  *
  * ## Environment variable inferrence
  *
- * NextAuth.js can automatically infer environment variables that are prefiexed with `AUTH_`.
+ * `NEXTAUTH_URL` and `NEXTAUTH_SECRET` have been inferred since v4.
  *
- * For example `AUTH_SECRET` will be used as the {@link NextAuthConfig.secret} option or `AUTH_URL` can be us.
+ * Since NextAuth.js v5 can also automatically infer environment variables that are prefiexed with `AUTH_`.
  *
- * `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
+ * For example `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
  *
  * :::tip
- * The environment variable name inferring has the following format: `AUTH_{PROVIDER}_{ID|SECRET}`.
+ * The environment variable name inferring has the following format for OAuth providers: `AUTH_{PROVIDER}_{ID|SECRET}`.
  *
- * `PROVIDER` is the uppercase snake case version of the provider's id, followed with either `ID` or `SECRET` respectively.
+ * `PROVIDER` is the uppercase snake case version of the provider's id, followed by either `ID` or `SECRET` respectively.
  * :::
  *
+ * `AUTH_SECRET` and `AUTH_URL` are also aliased for `NEXTAUTH_SECRET` and `NEXTAUTH_URL` for consistency.
  *
+ * To add social login to your app, the configuration becomes:
  *
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "next-auth/providers/GitHub"
+ * export const { handlers, auth } = NextAuth({ providers: [ GitHub ] })
+ * ```
+ *
+ * And the `.env.local` file:
+ *
+ * ```sh title=".env.local"
+ * AUTH_GITHUB_ID=...
+ * AUTH_GITHUB_SECRET=...
+ * AUTH_SECRET=...
+ * ```
+ *
+ * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
  * @module index
  */
