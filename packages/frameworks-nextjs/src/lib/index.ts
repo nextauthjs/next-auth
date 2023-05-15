@@ -152,7 +152,6 @@ async function handleAuth(
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
   const request = args[0]
-  // TODO: pass `next/headers` when it's available
   const authResponse = await runAuth(request.headers, config)
   const { user = null, expires = null } = (await authResponse.json()) ?? {}
 
@@ -178,8 +177,7 @@ async function handleAuth(
       NextResponse.next()
   } else if (!authorized) {
     // Redirect to signin page by default if not authorized
-    // TODO: Support custom signin page
-    request.nextUrl.pathname = "/api/auth/signin"
+    request.nextUrl.pathname = config.pages?.signIn ?? "/api/auth/signin"
     response = NextResponse.redirect(request.nextUrl)
   }
 
