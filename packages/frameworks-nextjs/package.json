@@ -59,9 +59,10 @@
     "providers": "node scripts/generate-providers"
   },
   "files": [
-    "*.js",
     "*.d.ts",
+    "*.js",
     "lib",
+    "providers",
     "src"
   ],
   "devDependencies": {
