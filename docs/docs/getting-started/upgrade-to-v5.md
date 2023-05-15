@@ -40,7 +40,7 @@ An example of the new configuration file format is as follows, as you can see it
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 
-export const { handlers, auth } = NextAuth({
+export const { handlers: { GET, POST }, auth } = NextAuth({
   providers: [ GitHub ],
 })
 ```
@@ -51,11 +51,10 @@ This then allows you to import the functions exported from this file elsewhere i
 import { auth } from '../path-to-config/auth'
 ```
 
-The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a 2-line handler for `GET` and `POST` requests for those paths.
+The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a 1-line handler for `GET` and `POST` requests for those paths.
 
 ```ts title="app/api/auth/[...nextauth]/route.ts"
-import { handlers } from "./auth"
-export const { GET, POST } = handlers
+export { GET, POST } from "./auth"
 export const runtime = "edge" // optional
 ```
 

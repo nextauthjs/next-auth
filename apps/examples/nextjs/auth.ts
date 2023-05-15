@@ -5,7 +5,10 @@ import GitHub from "@auth/core/providers/github"
 import Google from "@auth/core/providers/google"
 import Twitter from "@auth/core/providers/twitter"
 
-export const { handlers, auth } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+} = NextAuth({
   providers: [GitHub, Auth0, Facebook, Google, Twitter],
   callbacks: {
     async authorized({ request, auth }) {

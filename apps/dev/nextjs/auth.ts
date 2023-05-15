@@ -6,7 +6,10 @@ import Google from "@auth/nextjs/providers/google"
 import Twitter from "@auth/nextjs/providers/twitter"
 import NextAuth from "@auth/nextjs"
 
-export const { handlers, auth } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+} = NextAuth({
   // debug: true,
   providers: [
     GitHub,

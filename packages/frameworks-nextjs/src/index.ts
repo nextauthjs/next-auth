@@ -149,17 +149,18 @@ export type { NextAuthConfig }
 export interface NextAuthResult {
   /**
    * The NextAuth.js [Route Handler](https://beta.nextjs.org/docs/routing/route-handlers) methods. After initializing NextAuth.js in `auth.ts`,
-   * export these methods from `app/api/auth/[...nextauth]/route.ts`.
+   * re-export these methods.
    *
-   * :::note
-   * This is a workaround until we have integrated with [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions).
-   * :::
+   * In `app/api/auth/[...nextauth]/route.ts`:
    *
-   * @example
    * ```ts title="app/api/auth/[...nextauth]/route.ts"
-   * import { handlers } from "../../../../auth"
-   * export const { GET, POST } = handlers
-   * export const runtime = "edge"
+   * export { GET, POST } from "../../../../auth"
+   * export const runtime = "edge" // optional
+   * ```
+   * Then `auth.ts`:
+   * ```ts title="auth.ts"
+   * // ...
+   * export const { handlers: { GET, POST }, auth } = NextAuth({...})
    * ```
    */
   handlers: AppRouteHandlers
