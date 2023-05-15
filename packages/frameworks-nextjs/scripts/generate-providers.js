@@ -12,8 +12,9 @@ try {
   for (const file of files) {
     const destinationPath = resolve(destinationDir, file)
     const provider = file.substring(0, file.indexOf("."))
-    const content = `export * from "@auth/core/providers/${provider}"`.replace(
-      "/index",
+    const content = `export * from "@auth/core/providers/${provider}"
+export { default } from "@auth/core/providers/${provider}"`.replace(
+      /\/index$/g,
       ""
     )
     await fs.writeFile(destinationPath, content)
