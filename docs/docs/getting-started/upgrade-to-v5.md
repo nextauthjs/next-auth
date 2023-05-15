@@ -22,8 +22,9 @@ First, let's see what is new!
 
 ## Breaking Changes
 
-- Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
+- NextAuth.js now builds on `@auth/core`, which means stricter OAuth spec-compliance is required.
 - OAuth 1.0 support is deprecated.
+- Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/jwt` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
