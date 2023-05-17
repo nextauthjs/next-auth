@@ -140,7 +140,7 @@ export async function AuthHandler<
     authOptions,
     action,
     providerId,
-    origin: req.origin,
+    origin: req.headers.origin,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
