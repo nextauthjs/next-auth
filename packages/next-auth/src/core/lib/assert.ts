@@ -48,7 +48,7 @@ export function assertConfig(params: {
   const warnings: WarningCode[] = []
 
   if (!warned) {
-    if (!req.origin) warnings.push("NEXTAUTH_URL")
+    if (!req.headers.origin) warnings.push("NEXTAUTH_URL")
 
     // TODO: Make this throw an error in next major. This will also get rid of `NODE_ENV`
     if (!options.secret && process.env.NODE_ENV !== "production")
@@ -70,7 +70,7 @@ export function assertConfig(params: {
 
   const callbackUrlParam = req.query?.callbackUrl as string | undefined
 
-  const url = parseUrl(req.origin)
+  const url = parseUrl(req.headers.origin)
 
   if (callbackUrlParam && !isValidHttpUrl(callbackUrlParam, url.base)) {
     return new InvalidCallbackUrl(
