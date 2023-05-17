@@ -23,10 +23,9 @@ import {
   VerificationToken,
 } from "next-auth/adapters"
 
-function isDate(date: any) {
-  return (
-    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
-  )
+function isDate(testDate: string | number | Date): boolean {
+  const date = new Date(testDate);
+  return !isNaN(date.getTime()) && date.toString() !== 'Invalid Date';
 }
 
 export function format<T>(obj: Record<string, any>): T {
