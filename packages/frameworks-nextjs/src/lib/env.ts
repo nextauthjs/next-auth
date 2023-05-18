@@ -1,4 +1,4 @@
-import type { AuthConfig } from "@auth/core"
+import type { NextAuthConfig } from "./index.js"
 import type { OAuthProviderType } from "@auth/core/providers"
 
 // TODO: Generate this from the available providers
@@ -71,7 +71,7 @@ export const providersEnv: Record<OAuthProviderType, Array<string | undefined>> 
   zoom: [process.env.AUTH_ZOOM_ID, process.env.AUTH_ZOOM_SECRET, process.env.AUTH_ZOOM_ISSUER],
 }
 
-export function setEnvDefaults(config: AuthConfig) {
+export function setEnvDefaults(config: NextAuthConfig) {
   config.secret ??= process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
   config.trustHost ??= !!(process.env.NEXTAUTH_URL ?? process.env.AUTH_TRUST_HOST ?? process.env.VERCEL ?? process.env.NODE_ENV !== "production")
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
