@@ -1,8 +1,6 @@
-import Layout from "../components/layout"
-
 export default function Page() {
   return (
-    <Layout>
+    <>
       <h1>API Example</h1>
       <p>The examples below show responses from the example API endpoints.</p>
       <p>
@@ -14,6 +12,6 @@ export default function Page() {
       <h2>JSON Web Token</h2>
       <p>/api/examples/jwt</p>
       <iframe src="/api/examples/jwt" />
-    </Layout>
+    </>
   )
 }

@@ -10,7 +10,7 @@ export const {
   handlers: { GET, POST },
   auth,
 } = NextAuth({
-  // debug: true,
+  debug: true,
   providers: [
     GitHub,
     Auth0,

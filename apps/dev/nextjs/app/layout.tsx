@@ -22,7 +22,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 function SignIn({ id, ...props }: any) {
   const $cookies = cookies()
   const csrfToken = $cookies.get("next-auth.csrf-token")?.value.split("|")[0]
-  const action = id ? `/api/auth/signin/${id}` : "/api/auth/signin"
+  const action = id ? `/auth/signin/${id}` : "/auth/signin"
   return (
     <form action={action} method="post">
       <button {...props} />
