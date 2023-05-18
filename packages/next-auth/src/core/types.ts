@@ -52,8 +52,8 @@ export interface AuthOptions {
    */
   secret?: string
   /**
-   * Configure your session like if you want to use JWT or a database,
-   * how long until an idle session expires, or to throttle write operations in case you are using a database.
+   * Configure your session settings, such as determining whether to use JWT or a database,
+   * setting the idle session expiration duration, or implementing write operation throttling for database usage.
    * * **Default value**: See the documentation page
    * * **Required**: No
    *
