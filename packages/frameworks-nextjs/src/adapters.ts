@@ -18,30 +18,30 @@ import type {
 
 /**
  * @deprecated use `@auth/core/adapters`
- * Read more at: https://nextjs.authjs.dev/v5
+ * Read more at: https://nextjs.authjs.dev/v5#adapter-type
  */
 export type Adapter = CoreAdapter
 
 /**
  * @deprecated use `@auth/core/adapters`
- * Read more at: https://nextjs.authjs.dev/v5
+ * Read more at: https://nextjs.authjs.dev/v5#adapter-type
  */
 export type AdapterAccount = CoreAdapterAccount
 
 /**
  * @deprecated use `@auth/core/adapters`
- * Read more at: https://nextjs.authjs.dev/v5
+ * Read more at: https://nextjs.authjs.dev/v5#adapter-type
  */
 export type AdapterSession = CoreAdapterSession
 
 /**
  * @deprecated use `@auth/core/adapters`
- * Read more at: https://nextjs.authjs.dev/v5
+ * Read more at: https://nextjs.authjs.dev/v5#adapter-type
  */
 export type AdapterUser = CoreAdapterUser
 
 /**
  * @deprecated use `@auth/core/adapters`
- * Read more at: https://nextjs.authjs.dev/v5
+ * Read more at: https://nextjs.authjs.dev/v5#adapter-type
  */
 export type VerificationToken = CoreVerificationToken
