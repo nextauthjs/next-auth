@@ -28,6 +28,7 @@ First, let's see what is new!
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/jwt` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- The import `next-auth/adapters` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - If you are using a **database adapter** and passing it additional fields from your provider, the default behaviour has changed. We used to automatically pass on all fields from the provider to the adapter. **We no longer pass on all returned fields from your provider(s) to the adapter by default**. We listened to the community, and decided to revert this to a similar state as it was in v3. You must now manually pass on your chosen fields in the provider's `account` callback, if the default is not working for you. See: [`account()` docs](/reference/core/providers#account).
 
 ## Configuration
@@ -179,6 +180,19 @@ Client side: Instead of using these APIs, you can make a fetch request to the `/
 Server-side: TBD
 
 ## Adapters
+
+### Adapter type
+
+The `Adapter` type is uncommon, unless you are writing your own adapter. If you are using an existing adapter, you can likely ignore this change.
+
+Otherwise, the `Adapter` type can now be imported from `@auth/core/adapters` instead of `next-auth/adapters`.
+
+```diff title="pages/api/auth/[...nextauth].ts"
+- import type { Adapter } from "next-auth/adapters"
++ import type { Adapter } from "@auth/core/adapters"
+```
+
+This is because the - previously - NextAuth.js scoped [`@next-auth/*-adapter`](https://www.npmjs.com/search?q=next-auth%20adapter) database adapters should work in any framework the same way (there is nothing Next.js specific in these adapters), so it was unnecessary to keep this type tied to the `next-auth` package.
 
 ### Database Migrations
 
