@@ -22,7 +22,7 @@
  * :::
  *
  * ```ts title="app/auth-components.tsx"
- * import { auth, CSRF_experimental } from "../auth"
+ * import { CSRF_experimental } from "../auth"
  *
  * export function SignIn({ provider, ...props }: any) {
  *   return (
@@ -287,7 +287,16 @@ export interface NextAuthResult {
    * import { CSRF_experimental } from "../auth"
    * async function SignIn({ id, ...props }: { id: string } & JSX.IntrinsicElements["button"]) {
    *  return (
-   *    <form action={`/auth/signin/${id}`} method="post">
+   *    <form action={`/api/auth/signin/${id}`} method="post">
+   *      <button {...props} />
+   *      <CSRF_experimental />
+   *    </form>
+   *  )
+   * }
+   *
+   * async function SignOut({ id, ...props }: JSX.IntrinsicElements["button"]) {
+   *  return (
+   *    <form action="/api/auth/signout" method="post">
    *      <button {...props} />
    *      <CSRF_experimental />
    *    </form>
