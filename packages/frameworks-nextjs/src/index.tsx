@@ -1,7 +1,7 @@
 /**
  *
  * :::warning Note
- * This is the documentation for `next-auth@5`, which is currently **experimental**. For the documentation of the latest stable version, see [next-auth@4](https://next-auth.js.org).
+ * This is the documentation for `next-auth@5`. For the documentation of v4, see [next-auth@4](https://next-auth.js.org).
  * :::
  *
  * If you are looking for the migration guide, visit the [`next-auth@5` Migration Guide](https://nextjs.authjs.dev/v5).

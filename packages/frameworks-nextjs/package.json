@@ -50,6 +50,9 @@
       "types": "./client.d.ts",
       "import": "./client.js"
     },
+    "./types": {
+      "types": "./types.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

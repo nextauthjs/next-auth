@@ -255,6 +255,11 @@ export const { handlers, auth } = NextAuth({
 
 That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime.
 
+
+## TyperScript
+
+TODO
+
 ## Summary
 
 We hope this migration goes smoothly for each and every one of you! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub.

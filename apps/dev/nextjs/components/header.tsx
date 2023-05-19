@@ -1,4 +1,4 @@
-import { Session } from "@auth/core/types"
+import type { Session } from "@auth/nextjs/types"
 import Link from "next/link"
 import styles from "./header.module.css"
 
