@@ -1,7 +1,16 @@
+import { Session } from "@auth/core/types"
 import Link from "next/link"
 import styles from "./header.module.css"
 
-export function Header({ session, signIn, signOut }: any) {
+export function Header({
+  session,
+  signIn,
+  signOut,
+}: {
+  session: Session
+  signIn: any
+  signOut: any
+}) {
   return (
     <header>
       <div className={styles.signedInStatus}>
@@ -15,14 +24,14 @@ export function Header({ session, signIn, signOut }: any) {
         )}
         {session && (
           <>
-            {session.user.image && (
+            {session.user?.image && (
               <img src={session.user.image} className={styles.avatar} />
             )}
             <span className={styles.signedInText}>
               <small>Signed in as</small>
               <br />
-              <strong>{session.user.email} </strong>
-              {session.user.name ? `(${session.user.name})` : null}
+              <strong>{session.user?.email} </strong>
+              {session.user?.name ? `(${session.user.name})` : null}
             </span>
             {signOut}
           </>

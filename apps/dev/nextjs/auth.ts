@@ -1,39 +1,23 @@
-import Auth0 from "@auth/nextjs/providers/auth0"
-import Credentials from "@auth/nextjs/providers/credentials"
-import Facebook from "@auth/nextjs/providers/facebook"
-import GitHub from "@auth/nextjs/providers/github"
-import Google from "@auth/nextjs/providers/google"
-import Twitter from "@auth/nextjs/providers/twitter"
 import NextAuth from "@auth/nextjs"
+import Email from "@auth/nextjs/providers/email"
+import authConfig from "auth.config"
+import { PrismaClient } from "@prisma/client"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+
+const prisma = new PrismaClient()
+
+authConfig.providers.push(
+  // @ts-expect-error
+  Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
+)
 
 export const {
   handlers: { GET, POST },
   auth,
+  CSRF_experimental,
 } = NextAuth({
-  debug: true,
-  providers: [
-    GitHub,
-    Auth0,
-    Facebook,
-    Google,
-    Twitter,
-    Credentials({
-      credentials: { password: { label: "Password", type: "password" } },
-      authorize(c) {
-        if (c.password !== "password") return null
-        return { id: "test", name: "Test User", email: "test@example.com" }
-      },
-    }),
-  ],
-  callbacks: {
-    jwt({ token, trigger, session }) {
-      if (trigger === "update" && session) token.name = session
-      return token
-    },
-    authorized({ request, auth }) {
-      const url = new URL(request.url)
-      if (url.pathname === "/dashboard") return !!auth.user
-      return true
-    },
-  },
+  // @ts-expect-error https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/guides/upgrade-to-v5#adapter-type
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  ...authConfig,
 })

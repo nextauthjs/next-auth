@@ -1,7 +1,7 @@
-import { auth } from "auth"
+import { auth, CSRF_experimental } from "auth"
 import Footer from "components/footer"
 import { Header } from "components/header"
-import { cookies } from "next/headers"
+import Link from "next/link"
 import styles from "components/header.module.css"
 import "./styles.css"
 
@@ -19,25 +19,25 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   )
 }
 
-function SignIn({ id, ...props }: any) {
-  const $cookies = cookies()
-  const csrfToken = $cookies.get("next-auth.csrf-token")?.value.split("|")[0]
-  const action = id ? `/auth/signin/${id}` : "/auth/signin"
-  return (
-    <form action={action} method="post">
-      <button {...props} />
-      <input type="hidden" name="csrfToken" value={csrfToken} />
-    </form>
-  )
+async function SignIn({ id, ...props }: { id?: string } & any) {
+  if (id) {
+    return (
+      <form action={`/auth/signin/${id}`} method="post">
+        {/* @ts-expect-error */}
+        <CSRF_experimental />
+        <button {...props} />
+      </form>
+    )
+  }
+  return <Link href="/auth/signin" {...props} />
 }
 
-function SignOut(props: any) {
-  const $cookies = cookies()
-  const csrfToken = $cookies.get("next-auth.csrf-token")?.value.split("|")[0]
+async function SignOut(props: JSX.IntrinsicElements["button"]) {
   return (
-    <form action="/api/auth/signout" method="post">
+    <form action="/auth/signout" method="post">
       <button {...props} />
-      <input type="hidden" name="csrfToken" value={csrfToken} />
+      {/* @ts-expect-error */}
+      <CSRF_experimental />
     </form>
   )
 }
@@ -47,7 +47,13 @@ export async function AppHeader() {
   return (
     <Header
       session={session}
-      signIn={<SignIn className={styles.buttonPrimary}>Sign in</SignIn>}
+      signIn={
+        // @ts-expect-error
+        <SignIn id="github" className={styles.buttonPrimary}>
+          Sign in
+        </SignIn>
+      }
+      // @ts-expect-error
       signOut={<SignOut className={styles.button}>Sign out</SignOut>}
     />
   )
