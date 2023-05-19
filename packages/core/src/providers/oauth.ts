@@ -95,7 +95,7 @@ export type ProfileCallback<Profile> = (
   tokens: TokenSet
 ) => Awaitable<User>
 
-export type AccountCallback = (tokens: TokenSet) => TokenSet
+export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
 
 export interface OAuthProviderButtonStyles {
   logo: string
