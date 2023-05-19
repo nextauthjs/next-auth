@@ -110,10 +110,6 @@ describe("Login page", () => {
             secure: cookie.secure,
           })
 
-          Cypress.Cookies.defaults({
-            preserve: cookieName,
-          })
-
           // remove the two lines below if you need to stay logged in
           // for your remaining tests
           cy.visit("/api/auth/signout")
