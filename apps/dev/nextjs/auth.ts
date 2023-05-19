@@ -7,6 +7,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 const prisma = new PrismaClient()
 
 authConfig.providers.push(
+  // Start server with `pnpm email`
   // @ts-expect-error
   Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
 )
