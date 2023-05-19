@@ -22,19 +22,13 @@
  * :::
  *
  * ```ts title="app/auth-components.tsx"
- * import { auth } from "../auth"
- * import { cookies } from "next/headers"
- *
- * function CSRF() {
- *   const value = cookies().get("next-auth.csrf-token")?.value.split("|")[0]
- *   return <input type="hidden" name="csrfToken" value={value} />
- * }
+ * import { auth, CSRF_experimental } from "../auth"
  *
  * export function SignIn({ provider, ...props }: any) {
  *   return (
  *     <form action={`/api/auth/signin/${provider}`} method="post">
  *       <button {{...props}}/>
- *       <CSRF/>
+ *       <CSRF_experimental/>
  *     </form>
  *   )
  * }
@@ -43,7 +37,7 @@
  *   return (
  *     <form action="/api/auth/signout" method="post">
  *       <button {...props}/>
- *       <CSRF/>
+ *       <CSRF_experimental/>
  *     </form>
  *   )
  * }
@@ -138,6 +132,7 @@ import type {
   NextAuthRequest,
   NextAuthOptions,
 } from "./lib/index.js"
+import { headers } from "next/headers.js"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",
@@ -277,6 +272,30 @@ export interface NextAuthResult {
     ((
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => ReturnType<AppRouteHandlerFn>)
+  /**
+   * Returns a hidden `<input>` field with a CSRF token, that can be used in signin/signout forms.
+   *
+   * Read more about signing in and signing out in the [NextAuth.js docs](nextjs.authjs.dev/reference/nextjs#signing-in-and-signing-out).
+   *
+   * :::info
+   * This API is not finalized yet. We are looking into
+   * [Server Action](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions) support which might make this method unnecessary in the future.
+   * :::
+   *
+   * @example
+   * ```ts title="app/page.ts"
+   * import { CSRF_experimental } from "../auth"
+   * async function SignIn({ id, ...props }: { id: string } & JSX.IntrinsicElements["button"]) {
+   *  return (
+   *    <form action={`/auth/signin/${id}`} method="post">
+   *      <button {...props} />
+   *      <CSRF_experimental />
+   *    </form>
+   *  )
+   * }
+   * ```
+   */
+  CSRF_experimental: () => Promise<ReturnType<React.FunctionComponent>>
 }
 
 /**
@@ -296,5 +315,17 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     auth: initAuth(config),
+    async CSRF_experimental() {
+      const value = await Auth(
+        new Request("http://a/api/auth/csrf", { headers: headers() }),
+        config
+      )
+        .then((res) => res.json())
+        .then((res) => res?.csrfToken)
+
+      if (!value) throw new Error("CSRF token could not be found.")
+
+      return <input type="hidden" name="csrfToken" value={value} />
+    },
   }
 }
