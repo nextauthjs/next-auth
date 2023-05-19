@@ -73,7 +73,7 @@
  *       </>
  *     )
  *   }
- *   return <SignIn id="github">Sign in with github</SignIn>
+ *   return <SignIn id="github">Sign in with GitHub</SignIn>
  * }
  * ```
  *
