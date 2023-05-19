@@ -91,7 +91,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *   id            String    @id @default(cuid())
  *   name          String?
  *   email         String?   @unique
- *   emailVerified DateTime?
+ *   emailVerified Boolean?
  *   image         String?
  *   accounts      Account[]
  *   sessions      Session[]
@@ -199,7 +199,7 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  *   id            String    @id @default(cuid())
  *   name          String?
  *   email         String?   @unique
- *   emailVerified DateTime? @map("email_verified")
+ *   emailVerified Boolean? @map("email_verified")
  *   image         String?
  *   accounts      Account[]
  *   sessions      Session[]

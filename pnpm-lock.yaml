@@ -102,57 +102,6 @@ importers:
       sqlite3: 5.0.8
       typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
 
-  apps/dev/nextjs-2:
-    specifiers:
-      '@auth/core': workspace:*
-      '@next-auth/fauna-adapter': workspace:*
-      '@next-auth/prisma-adapter': workspace:*
-      '@next-auth/supabase-adapter': workspace:*
-      '@next-auth/typeorm-legacy-adapter': workspace:*
-      '@playwright/test': 1.29.2
-      '@prisma/client': ^3
-      '@supabase/supabase-js': ^2.0.5
-      '@types/jsonwebtoken': ^8.5.5
-      '@types/react': 18.0.37
-      '@types/react-dom': ^18.0.6
-      dotenv: ^16.0.3
-      fake-smtp-server: ^0.8.0
-      faunadb: ^4
-      next: 13.3.0
-      next-auth: workspace:*
-      nodemailer: ^6
-      pg: ^8.7.3
-      prisma: ^3
-      react: ^18
-      react-dom: ^18
-      sqlite3: ^5.0.8
-      typeorm: 0.3.7
-    dependencies:
-      '@auth/core': link:../../../packages/core
-      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
-      '@next-auth/prisma-adapter': link:../../../packages/adapter-prisma
-      '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
-      '@next-auth/typeorm-legacy-adapter': link:../../../packages/adapter-typeorm-legacy
-      '@prisma/client': 3.15.2_prisma@3.15.2
-      '@supabase/supabase-js': 2.0.5
-      faunadb: 4.6.0
-      next: 13.3.0_biqbaboplfbrettd7655fr4n2y
-      next-auth: link:../../../packages/next-auth
-      nodemailer: 6.8.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    devDependencies:
-      '@playwright/test': 1.29.2
-      '@types/jsonwebtoken': 8.5.9
-      '@types/react': 18.0.37
-      '@types/react-dom': 18.0.6
-      dotenv: 16.0.3
-      fake-smtp-server: 0.8.0
-      pg: 8.7.3
-      prisma: 3.15.2
-      sqlite3: 5.0.8
-      typeorm: 0.3.7_pg@8.7.3+sqlite3@5.0.8
-
   apps/dev/nextjs-v4:
     specifiers:
       '@next-auth/fauna-adapter': workspace:*
@@ -11695,10 +11644,8 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats/2.1.1_ajv@8.11.0:
+  /ajv-formats/2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -17299,7 +17246,7 @@ packages:
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.0.9
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       body-parser: 1.20.1
       content-type: 1.0.4
       deep-freeze: 0.0.1
@@ -28438,7 +28385,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0_ajv@8.11.0
     dev: true
 
