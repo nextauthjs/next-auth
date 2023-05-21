@@ -225,6 +225,13 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://www.descope.com" target="_blank">
+          <img width="128px" src="https://avatars.githubusercontent.com/u/97479186?v=4" alt="Descope Logo" />
+        </a><br />
+        <div>Descope</div><br />
+        <sub>🥉 Bronze Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
         </a><br />
