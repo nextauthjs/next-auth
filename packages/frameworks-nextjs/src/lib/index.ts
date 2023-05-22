@@ -201,10 +201,13 @@ async function handleAuth(
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
       NextResponse.next()
   } else if (!authorized) {
-    // Redirect to signin page by default if not authorized
-    request.nextUrl.pathname = config.pages?.signIn ?? "/api/auth/signin"
-    request.nextUrl.searchParams.set("callbackUrl", request.nextUrl.href)
-    response = NextResponse.redirect(request.nextUrl)
+    const signInPage = config.pages?.signIn ?? "/api/auth/signin"
+    if (request.nextUrl.pathname !== signInPage) {
+      // Redirect to signin page by default if not authorized
+      request.nextUrl.pathname = signInPage
+      request.nextUrl.searchParams.set("callbackUrl", request.nextUrl.href)
+      response = NextResponse.redirect(request.nextUrl)
+    }
   }
 
   // Preserve cookies set by Auth.js Core
