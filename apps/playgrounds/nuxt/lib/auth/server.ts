@@ -1,13 +1,14 @@
-import { AuthHandler, AuthOptions, Session } from "@auth/core"
+import { AuthConfig, Session } from "@auth/core/types"
+import { Auth } from "@auth/core"
 import { fromNodeMiddleware, H3Event } from "h3"
 import getURL from "requrl"
 import { createMiddleware } from "@hattip/adapter-node"
 
-export function NuxtAuthHandler(options: AuthOptions) {
+export function NuxtAuthHandler(options: AuthConfig) {
   async function handler(ctx: { request: Request }) {
     options.trustHost ??= true
 
-    return AuthHandler(ctx.request, options)
+    return Auth(ctx.request, options)
   }
 
   const middleware = createMiddleware(handler)
@@ -17,7 +18,7 @@ export function NuxtAuthHandler(options: AuthOptions) {
 
 export async function getSession(
   event: H3Event,
-  options: AuthOptions
+  options: AuthConfig
 ): Promise<Session | null> {
   options.trustHost ??= true
 
@@ -30,7 +31,7 @@ export async function getSession(
     nodeHeaders.append(key, headers[key] as any)
   })
 
-  const response = await AuthHandler(
+  const response = await Auth(
     new Request(url, { headers: nodeHeaders }),
     options
   )
