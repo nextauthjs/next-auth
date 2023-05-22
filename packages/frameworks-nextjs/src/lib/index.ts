@@ -203,6 +203,7 @@ async function handleAuth(
   } else if (!authorized) {
     // Redirect to signin page by default if not authorized
     request.nextUrl.pathname = config.pages?.signIn ?? "/api/auth/signin"
+    request.nextUrl.searchParams.set("callbackUrl", request.nextUrl.href)
     response = NextResponse.redirect(request.nextUrl)
   }
 
