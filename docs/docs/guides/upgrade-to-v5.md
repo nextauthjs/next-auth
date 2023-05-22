@@ -63,7 +63,7 @@ export const runtime = "edge" // optional
 
 NextAuth.js has had a few different ways to authenticate server-side in the past, and we've tried to simplify this as much as possible.
 
-Now that Next.js components are **server first** by default, and their investment on usig Web standard APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
+Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
 
 :::note
 When using `auth()`, the [`session()` callback](/reference/core/types#session) is ignored. `auth()` will expose anything returned from the [`jwt()` callback](reference/core/types#jwt) or if using a [`"database"` strategy](/reference/core#session), from the [User](/reference/adapters#user). This is because the `session()` callback was designed to protect you from exposing sensitive information to the client, but when using `auth()` you are always on the server.

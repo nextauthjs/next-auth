@@ -1,6 +1,6 @@
 import Link from "next/link"
 import styles from "./footer.module.css"
-import packageJSON from "next-auth/package.json"
+import packageJSON from "@auth/nextjs/package.json"
 
 export default function Footer() {
   return (
@@ -11,7 +11,7 @@ export default function Footer() {
           <a href="https://authjs.dev">Documentation</a>
         </li>
         <li className={styles.navItem}>
-          <a href="https://www.npmjs.com/package/@auth/core">NPM</a>
+          <a href="https://www.npmjs.com/package/next-auth">NPM</a>
         </li>
         <li className={styles.navItem}>
           <a href="https://github.com/nextauthjs/next-auth-example">GitHub</a>

@@ -1,91 +1,64 @@
+import type { Session } from "@auth/nextjs/types"
 import Link from "next/link"
-import { auth } from "auth"
-import { cookies, headers } from "next/headers"
 import styles from "./header.module.css"
 
-function SignIn({ id, children, className }: any) {
-  const $cookies = cookies()
-  const csrfToken = $cookies.get("next-auth.csrf-token")?.value.split("|")[0]
-  return (
-    <form action={`/api/auth/signin/${id}`} method="post">
-      <button className={className} type="submit">{children}</button>
-      <input type="hidden" name="csrfToken" value={csrfToken} />
-    </form>
-  )
-}
-
-function SignOut({ children, className }: any) {
-  const $cookies = cookies()
-  const csrfToken = $cookies.get("next-auth.csrf-token")?.value.split("|")[0]
-  return (
-    <form action="/api/auth/signout" method="post">
-      <button className={className} type="submit">{children}</button>
-      <input type="hidden" name="csrfToken" value={csrfToken} />
-    </form>
-  )
-}
-
-// The approach used in this component shows how to built a sign in and sign out
-// component that works on pages which support both client and server side
-// rendering, and avoids any flash incorrect content on initial page load.
-export default async function Header() {
-  const session = await auth(headers())
-
+export function Header({
+  session,
+  signIn,
+  signOut,
+}: {
+  session: Session | null
+  signIn: any
+  signOut: any
+}) {
   return (
     <header>
-      <noscript>
-        <style>{".nojs-show { opacity: 1; top: 0; }"}</style>
-      </noscript>
       <div className={styles.signedInStatus}>
-        <p className={`nojs-show ${styles.loaded}`}>
-          {!session && (
-            <>
-              <span className={styles.notSignedInText}>
-                You are not signed in
-              </span>
-              <SignIn className={styles.buttonPrimary}>Sign In</SignIn>
-            </>
-          )}
-          {session && (
-            <>
-              {session.user.image && (
-                <img src={session.user.image} className={styles.avatar} />
-              )}
-              <span className={styles.signedInText}>
-                <small>Signed in as</small>
-                <br />
-                <strong>{session.user.email} </strong>
-                {session.user.name ? `(${session.user.name})` : null}
-              </span>
-              <SignOut className={styles.button}>Sign Out</SignOut>
-            </>
-          )}
-        </p>
+        {!session?.user && (
+          <>
+            <span className={styles.notSignedInText}>
+              You are not signed in
+            </span>
+            {signIn}
+          </>
+        )}
+        {session?.user && (
+          <>
+            {session.user?.image && (
+              <img src={session.user.image} className={styles.avatar} />
+            )}
+            <span className={styles.signedInText}>
+              <small>Signed in as</small>
+              <br />
+              <strong>{session.user?.email} </strong>
+              {session.user?.name ? `(${session.user.name})` : null}
+            </span>
+            {signOut}
+          </>
+        )}
       </div>
       <nav>
         <ul className={styles.navItems}>
           <li className={styles.navItem}>
-            <Link href="/">Home</Link>
+            <Link href="/">Home (app)</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/client">Client</Link>
+            <Link href="/dashboard">Dashboard (app)</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/server-component">Server</Link>
+            <Link href="/policy">Policy (pages)</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/protected">Protected</Link>
+            <Link href="/credentials">Credentials (pages)</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/api-example">API</Link>
+            <Link href="/protected-ssr">getServerSideProps (pages)</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/middleware-protected">Middleware protected</Link>
+            <Link href="/api/examples/protected">API Route (pages)</Link>
           </li>
         </ul>
       </nav>
     </header>
   )
 }
-
-export const runtime = "experimental-edge"
