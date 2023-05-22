@@ -41,6 +41,7 @@ export type {
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
+  SignInResponse,
 }
 
 export { SessionProviderProps }

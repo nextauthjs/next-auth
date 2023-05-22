@@ -116,7 +116,7 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
 }
 
 export function initAuth(config: NextAuthConfig) {
-  return async (...args: WithAuthArgs) => {
+  return (...args: WithAuthArgs) => {
     if (!args.length) return getSession(headers(), config).then((r) => r.json())
     if (args[0] instanceof Request) {
       // middleare.ts
@@ -142,18 +142,19 @@ export function initAuth(config: NextAuthConfig) {
     const request = "req" in args[0] ? args[0].req : args[0]
     const response: any = "res" in args[0] ? args[0].res : args[1]
 
-    const authResponse = await getSession(
+    return getSession(
       // @ts-expect-error
       new Headers(request.headers),
       config
-    )
-    const { user = null, expires = null } = (await authResponse.json()) ?? {}
+    ).then(async (authResponse) => {
+      const { user = null, expires = null } = (await authResponse.json()) ?? {}
 
-    // Preserve cookies set by Auth.js Core
-    const cookies = authResponse.headers.get("set-cookie")
-    if (cookies) response?.setHeader("set-cookie", cookies)
+      // Preserve cookies set by Auth.js Core
+      const cookies = authResponse.headers.get("set-cookie")
+      if (cookies) response?.setHeader("set-cookie", cookies)
 
-    return { user, expires } satisfies Session
+      return { user, expires } satisfies Session
+    })
   }
 }
 
@@ -186,7 +187,7 @@ async function handleAuth(
     })
   }
 
-  let response: Response = NextResponse.next()
+  let response: Response = NextResponse.next?.()
 
   if (authorized instanceof Response) {
     // User returned a custom response, like redirecting to a page or 401, respect it
@@ -206,7 +207,7 @@ async function handleAuth(
   }
 
   // Preserve cookies set by Auth.js Core
-  const finalResponse = new NextResponse(response?.body, response)
+  const finalResponse = new Response(response?.body, response)
   const authCookies = sessionResponse.headers.get("set-cookie")
   if (authCookies) finalResponse.headers.set("set-cookie", authCookies)
 

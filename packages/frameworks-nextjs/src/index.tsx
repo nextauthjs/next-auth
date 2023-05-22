@@ -271,7 +271,7 @@ export interface NextAuthResult {
     ((...args: [GetServerSidePropsContext]) => Promise<Session>) &
     ((
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
-    ) => ReturnType<AppRouteHandlerFn>)
+    ) => AppRouteHandlerFn)
   /**
    * Returns a hidden `<input>` field with a CSRF token, that can be used in signin/signout forms.
    *
@@ -323,6 +323,7 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
   const httpHandler = (req: NextRequest) => Auth(req, config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
+    // @ts-expect-error
     auth: initAuth(config),
     async CSRF_experimental() {
       const value = await Auth(
