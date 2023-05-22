@@ -7,7 +7,7 @@ export function Header({
   signIn,
   signOut,
 }: {
-  session: Session
+  session: Session | null
   signIn: any
   signOut: any
 }) {
