@@ -127,11 +127,8 @@ import type {
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
-import type {
-  NextAuthConfig,
-  NextAuthRequest,
-  NextAuthOptions,
-} from "./lib/index.js"
+import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+
 import { headers } from "next/headers.js"
 
 type AppRouteHandlers = Record<
@@ -139,7 +136,7 @@ type AppRouteHandlers = Record<
   (req: NextRequest) => Promise<Response>
 >
 
-export type { NextAuthConfig, NextAuthOptions }
+export type { NextAuthConfig }
 
 /**
  * The result of invoking {@link NextAuth|NextAuth}, initialized with the {@link NextAuthConfig}.
