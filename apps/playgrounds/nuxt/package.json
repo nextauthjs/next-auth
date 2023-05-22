@@ -1,5 +1,5 @@
 {
-  "name": "playground-nuxt",
+  "name": "next-auth-nuxt",
   "private": true,
   "scripts": {
     "build": "nuxt prepare && nuxt build",
