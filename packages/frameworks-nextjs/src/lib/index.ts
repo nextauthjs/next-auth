@@ -25,7 +25,7 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
    * @example
    * ```ts title="app/auth.ts"
    * ...
-   * async authorized({ request, auth, expires }) {
+   * async authorized({ request, auth }) {
    *   const url = request.nextUrl
    *
    *   if(request.method === "POST") {
@@ -52,8 +52,6 @@ export interface NextAuthCallbacks extends Partial<CallbacksOptions> {
     request: NextRequest
     /** The authenticated user or token, if any. */
     auth: Session
-    /** The expiration date of the session. */
-    expires: string | null
   }) => Awaitable<boolean | NextResponse | undefined>
 }
 
@@ -88,7 +86,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
   // See https://nextjs.authjs.dev/v5#authenticating-server-side
   config.callbacks = Object.assign(config.callbacks ?? {}, {
     session({ session, user, token }) {
-      return { expires: session.expires, user: user ?? token }
+      return { ...session, user: user ?? token }
     },
   })
   return Auth(request, config)
@@ -147,13 +145,17 @@ export function initAuth(config: NextAuthConfig) {
       new Headers(request.headers),
       config
     ).then(async (authResponse) => {
-      const { user = null, expires = null } = (await authResponse.json()) ?? {}
+      const {
+        user = null,
+        expires = null,
+        ...rest
+      } = (await authResponse.json()) ?? {}
 
       // Preserve cookies set by Auth.js Core
       const cookies = authResponse.headers.get("set-cookie")
       if (cookies) response?.setHeader("set-cookie", cookies)
 
-      return { user, expires } satisfies Session
+      return { user, expires, ...rest } satisfies Session
     })
   }
 }
@@ -165,7 +167,11 @@ async function handleAuth(
 ) {
   const request = args[0]
   const sessionResponse = await getSession(request.headers, config)
-  const { user = null, expires = null } = (await sessionResponse.json()) ?? {}
+  const {
+    user = null,
+    expires = null,
+    ...rest
+  } = (await sessionResponse.json()) ?? {}
 
   // If we are handling a recognized NextAuth.js request,
   // don't require authorization to avoid an accidental redirect loop
@@ -182,8 +188,7 @@ async function handleAuth(
   ) {
     authorized = await config.callbacks.authorized({
       request,
-      auth: { user, expires },
-      expires,
+      auth: { user, expires, ...rest },
     })
   }
 
@@ -195,7 +200,7 @@ async function handleAuth(
   } else if (userMiddlewareOrRoute) {
     // Execute user's middleware/handler with the augmented request
     const augmentedReq = request as NextAuthRequest
-    augmentedReq.auth = { user, expires }
+    augmentedReq.auth = { user, expires, ...rest }
     response =
       // @ts-expect-error
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
