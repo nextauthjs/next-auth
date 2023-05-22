@@ -14,7 +14,7 @@ export function Header({
   return (
     <header>
       <div className={styles.signedInStatus}>
-        {!session && (
+        {!session?.user && (
           <>
             <span className={styles.notSignedInText}>
               You are not signed in
@@ -22,7 +22,7 @@ export function Header({
             {signIn}
           </>
         )}
-        {session && (
+        {session?.user && (
           <>
             {session.user?.image && (
               <img src={session.user.image} className={styles.avatar} />

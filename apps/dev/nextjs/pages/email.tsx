@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-use-before-define
 import * as React from "react"
-import { signIn, signOut, useSession } from "next-auth/react"
-import Layout from "components/layout"
+import { signIn, signOut, useSession } from "@auth/nextjs/client"
 
 export default function Page() {
-  const [response, setResponse] = React.useState(null)
+  const [response, setResponse] =
+    React.useState<Awaited<ReturnType<typeof signIn>>>()
   const [email, setEmail] = React.useState("")
 
   const handleChange = (event) => {
@@ -33,7 +33,7 @@ export default function Page() {
 
   if (session) {
     return (
-      <Layout>
+      <>
         <h1>Test different flows for Email logout</h1>
         <span className="spacing">Default:</span>
         <button onClick={handleLogout({ redirect: true })}>Logout</button>
@@ -45,12 +45,12 @@ export default function Page() {
         <pre style={{ background: "#eee", padding: 16 }}>
           {JSON.stringify(response, null, 2)}
         </pre>
-      </Layout>
+      </>
     )
   }
 
   return (
-    <Layout>
+    <>
       <h1>Test different flows for Email login</h1>
       <label className="spacing">
         Email address:{" "}
@@ -75,6 +75,6 @@ export default function Page() {
       <pre style={{ background: "#eee", padding: 16 }}>
         {JSON.stringify(response, null, 2)}
       </pre>
-    </Layout>
+    </>
   )
 }

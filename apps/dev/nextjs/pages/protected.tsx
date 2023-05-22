@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
+import { useSession } from "@auth/nextjs/client"
 
 export default function Page() {
-  const { status } = useSession({
-    required: true,
-  })
+  const { status } = useSession({ required: true })
   const [content, setContent] = useState()
 
   // Fetch content from protected route
@@ -20,7 +18,7 @@ export default function Page() {
     fetchData()
   }, [status])
 
-  if (status === "loading") return <Layout>Loading...</Layout>
+  if (status === "loading") return "Loading..."
 
   // If session exists, display content
   return (
