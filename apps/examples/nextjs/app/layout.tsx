@@ -1,8 +1,8 @@
-import { auth, CSRF_experimental } from "auth"
-import Footer from "components/footer"
-import { Header } from "components/header"
 import Link from "next/link"
-import styles from "components/header.module.css"
+import { auth, CSRF_experimental } from "@/auth"
+import Footer from "@/components/footer"
+import { Header } from "@/components/header"
+import styles from "@/components/header.module.css"
 import "./styles.css"
 
 export default function RootLayout(props: { children: React.ReactNode }) {
