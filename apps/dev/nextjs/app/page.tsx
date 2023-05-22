@@ -6,7 +6,11 @@ export default async function Page() {
   const session = await auth()
   return (
     <>
-      <SessionProvider session={session}>
+      {/* 
+       NOTE: The `auth()` result is not run through the `session` callback, be careful passing down data
+       to a client component, this will be exposed via the /api/auth/session endpoint
+      */}
+      <SessionProvider session={session} basePath="/auth">
         <Client />
       </SessionProvider>
       <h1>NextAuth.js Example</h1>

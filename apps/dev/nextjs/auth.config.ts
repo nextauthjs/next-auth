@@ -1,10 +1,10 @@
+import { NextAuthConfig } from "@auth/nextjs"
 import Auth0 from "@auth/nextjs/providers/auth0"
 import Credentials from "@auth/nextjs/providers/credentials"
 import Facebook from "@auth/nextjs/providers/facebook"
 import GitHub from "@auth/nextjs/providers/github"
 import Google from "@auth/nextjs/providers/google"
 import Twitter from "@auth/nextjs/providers/twitter"
-import { NextAuthConfig } from "@auth/nextjs"
 
 export default {
   debug: true,
