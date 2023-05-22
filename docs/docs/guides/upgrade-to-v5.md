@@ -18,7 +18,7 @@ First, let's see what is new!
 - OAuth support on preview deployments: [Read more](/guides/basics/deployment#securing-a-preview-deployment).
 - Simplified init (shared config, inferred [env variables](/reference/nextjs#environment-variable-inferrence)). Read the migration guide to learn more.
 - Fully Edge-compatible, thanks to rewriting on top of Auth.js. [Read more](/reference/core).
-- Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](/getting-started/upgrade-to-v5#authenticating-server-side).
+- Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](#authenticating-server-side).
 
 ## Breaking Changes
 
@@ -198,7 +198,7 @@ This is because the - previously - NextAuth.js scoped [`@next-auth/*-adapter`](h
 
 NextAuth.js v5 does not introduce any breaking changes to the database schema. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table, if you are not using them.
 
-Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. if you do, make sure to return it via the new [`acconut()` callback](/reference/core/providers#account)
+Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. if you do, make sure to return it via the new [`account()` callback](/reference/core/providers#account).
 
 
 ### Edge compatibility
@@ -207,7 +207,7 @@ Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in`
 If you are using a sufficiently fast and Edge-compatible database ORM/library, you can ignore this section.
 :::
 
-NextAuth.js supports two session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and it's adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a "database" session strategy.
+NextAuth.js supports two session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy.
 
 Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it:
 
@@ -246,7 +246,7 @@ export const { handlers, auth } = NextAuth({
 
 3. Make sure that Middleware is not using the import with a non-edge compatible adapter:
 
-```diff title="pages/api/auth/[...nextauth].ts"
+```diff title="middleware.ts"
 - export { auth as middleware } from './auth'
 + import authConfig from "./auth.config"
 + import NextAuth from "@auth/nextjs"
