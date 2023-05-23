@@ -162,6 +162,7 @@ jobs:
           PACKAGE_PATH: ${{ github.event.inputs.path }}
       - name: Publish to npm
         run: |
+          pnpm build
           cd packages/$PACKAGE_PATH
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           pnpm publish --no-git-checks --access public --tag experimental
