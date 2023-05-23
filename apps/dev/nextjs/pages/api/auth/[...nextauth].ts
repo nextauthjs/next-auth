@@ -86,8 +86,7 @@ export const authConfig: AuthConfig = {
         return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64", id: "1", foo: "" }
       },
     }),
-    Whop({ clientId: process.env.WHOP_ID, clientSecret: process.env.WHOP_SECRET }),
-    /*Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
+    Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
     Asgardeo({ clientId: process.env.ASGARDEO_CLIENT_ID, clientSecret: process.env.ASGARDEO_CLIENT_SECRET, issuer: process.env.ASGARDEO_ISSUER }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
     AzureAD({
@@ -125,8 +124,9 @@ export const authConfig: AuthConfig = {
     // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
     Yandex({ clientId: process.env.YANDEX_ID, clientSecret: process.env.YANDEX_SECRET }),
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
+    Whop({ clientId: process.env.WHOP_ID, clientSecret: process.env.WHOP_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
-    WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),*/
+    WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
   // debug: process.env.NODE_ENV !== "production",
 }
