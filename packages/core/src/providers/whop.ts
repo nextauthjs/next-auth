@@ -81,7 +81,6 @@ export default function Whop<P extends WhopProfile>(
     id: 'whop',
     name: 'Whop',
     type: 'oauth',
-    checks: ['state'],
     authorization: {
       url: 'https://whop.com/oauth',
       params: {
