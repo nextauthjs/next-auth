@@ -2,12 +2,7 @@ import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
-import type {
-  AuthAction,
-  Awaitable,
-  CallbacksOptions,
-  Session,
-} from "@auth/core/types"
+import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -43,7 +38,7 @@ export interface NextAuthConfig extends AuthConfig {
      *   }
      *
      *   // Logged in users are authenticated, otherwise redirect to login page
-     *   return !!auth
+     *   return !!auth.user
      * }
      * ...
      * ```
