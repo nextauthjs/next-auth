@@ -274,6 +274,35 @@ importers:
       next-auth: link:../next-auth
       ts-jest: 27.1.5_lvqy56smyn5gszh3zmisfmhukm
 
+  packages/adapter-drizzle:
+    specifiers:
+      '@next-auth/adapter-test': workspace:*
+      '@next-auth/tsconfig': workspace:*
+      '@types/better-sqlite3': ^7.6.4
+      '@types/uuid': ^8.3.3
+      better-sqlite3: ^8.4.0
+      drizzle-kit: ^0.18.0
+      drizzle-orm: ^0.26.0
+      jest: ^27.4.3
+      mysql2: ^3.2.0
+      next-auth: workspace:*
+      postgres: ^3.3.4
+      uuid: ^8.3.2
+    dependencies:
+      uuid: 8.3.2
+    devDependencies:
+      '@next-auth/adapter-test': link:../adapter-test
+      '@next-auth/tsconfig': link:../tsconfig
+      '@types/better-sqlite3': 7.6.4
+      '@types/uuid': 8.3.4
+      better-sqlite3: 8.4.0
+      drizzle-kit: 0.18.0
+      drizzle-orm: 0.26.0_4f62tcfbpvn4bkzrup4d3t6lr4
+      jest: 27.5.1
+      mysql2: 3.3.2
+      next-auth: link:../next-auth
+      postgres: 3.3.4
+
   packages/adapter-drizzle-mysql:
     specifiers:
       '@next-auth/adapter-test': workspace:*
@@ -8641,7 +8670,7 @@ packages:
       '@sveltejs/vite-plugin-svelte': 2.1.1_svelte@3.55.0+vite@4.0.1
       '@types/cookie': 0.5.1
       cookie: 0.5.0
-      devalue: 4.3.0
+      devalue: 4.3.2
       esm-env: 1.0.0
       kleur: 4.1.5
       magic-string: 0.27.0
@@ -10149,7 +10178,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.0
+      semver: 7.5.1
       tsutils: 3.21.0_typescript@4.9.4
       typescript: 4.9.4
     transitivePeerDependencies:
@@ -10211,7 +10240,7 @@ packages:
       eslint: 8.30.0
       eslint-scope: 5.1.1
       eslint-utils: 3.0.0_eslint@8.30.0
-      semver: 7.5.0
+      semver: 7.5.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -10230,7 +10259,7 @@ packages:
       '@typescript-eslint/types': 5.59.2
       '@typescript-eslint/typescript-estree': 5.59.2
       eslint-scope: 5.1.1
-      semver: 7.5.0
+      semver: 7.5.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -10250,7 +10279,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.59.2_typescript@4.9.4
       eslint: 8.30.0
       eslint-scope: 5.1.1
-      semver: 7.5.0
+      semver: 7.5.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -14751,6 +14780,24 @@ packages:
       - supports-color
     dev: true
 
+  /drizzle-kit/0.18.0:
+    resolution: {integrity: sha512-43oH0XNWJDfMmVtDVnW8OV+tIs3xXDb1MjdsDiv0a7unQAylr0hpGG0HD5uEPWSbt7oxBots+hnYWxo98D0KAg==}
+    hasBin: true
+    dependencies:
+      camelcase: 7.0.1
+      chalk: 5.2.0
+      commander: 9.5.0
+      esbuild: 0.15.18
+      esbuild-register: 3.4.2_esbuild@0.15.18
+      glob: 8.1.0
+      hanji: 0.0.5
+      json-diff: 0.9.0
+      minimatch: 7.4.6
+      zod: 3.21.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /drizzle-orm/0.25.4_7ijxa3nhwqbkkcvjud62g7f6tu:
     resolution: {integrity: sha512-vURs2SqDh5pk81WWE4hR8gFKDTRmCK4FbaUGsZoljKnjKvMrjlA5xFPGiCih4/1XKqnOgSuh+I6T9KGBjYcPAA==}
     peerDependencies:
@@ -14935,6 +14982,71 @@ packages:
       sqlite3:
         optional: true
     dependencies:
+      postgres: 3.3.4
+    dev: true
+
+  /drizzle-orm/0.26.0_4f62tcfbpvn4bkzrup4d3t6lr4:
+    resolution: {integrity: sha512-ztjhHehcuG5+lpGYxfT/L5I+yd/Z0dOf0fV3cS2ywBU01wkpxjwl4EJZVT7kVzjYfM8kwMGDghAPRPBCK0vULA==}
+    peerDependencies:
+      '@aws-sdk/client-rds-data': '>=3'
+      '@cloudflare/workers-types': '>=3'
+      '@libsql/client': '*'
+      '@neondatabase/serverless': '>=0.1'
+      '@planetscale/database': '>=1'
+      '@types/better-sqlite3': '*'
+      '@types/pg': '*'
+      '@types/sql.js': '*'
+      '@vercel/postgres': '*'
+      better-sqlite3: '>=7'
+      bun-types: '*'
+      knex: '*'
+      kysely: '*'
+      mysql2: '>=2'
+      pg: '>=8'
+      postgres: '>=3'
+      sql.js: '>=1'
+      sqlite3: '>=5'
+    peerDependenciesMeta:
+      '@aws-sdk/client-rds-data':
+        optional: true
+      '@cloudflare/workers-types':
+        optional: true
+      '@libsql/client':
+        optional: true
+      '@neondatabase/serverless':
+        optional: true
+      '@planetscale/database':
+        optional: true
+      '@types/better-sqlite3':
+        optional: true
+      '@types/pg':
+        optional: true
+      '@types/sql.js':
+        optional: true
+      '@vercel/postgres':
+        optional: true
+      better-sqlite3:
+        optional: true
+      bun-types:
+        optional: true
+      knex:
+        optional: true
+      kysely:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      postgres:
+        optional: true
+      sql.js:
+        optional: true
+      sqlite3:
+        optional: true
+    dependencies:
+      '@types/better-sqlite3': 7.6.4
+      better-sqlite3: 8.4.0
+      mysql2: 3.3.2
       postgres: 3.3.4
     dev: true
 
@@ -16101,7 +16213,7 @@ packages:
       natural-compare: 1.4.0
       nth-check: 2.1.1
       postcss-selector-parser: 6.0.12
-      semver: 7.5.0
+      semver: 7.5.1
       vue-eslint-parser: 9.2.0_eslint@8.30.0
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
@@ -16457,7 +16569,7 @@ packages:
       pump: 3.0.0
       qs: 6.11.1
       raw-body: 2.5.2
-      semver: 7.5.0
+      semver: 7.5.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -21464,7 +21576,7 @@ packages:
       jws: 3.2.2
       lodash: 4.17.21
       ms: 2.1.3
-      semver: 7.5.0
+      semver: 7.5.1
     dev: true
 
   /jsprim/1.4.2:
@@ -22751,6 +22863,13 @@ packages:
 
   /minimatch/6.2.0:
     resolution: {integrity: sha512-sauLxniAmvnhhRjFwPNnJKaPFYyddAgbYdeUpHULtCT/GhzdCx/MDNy+Y40lBxTQUrMzDE8e0S43Z5uqfO0REg==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
+
+  /minimatch/7.4.6:
+    resolution: {integrity: sha512-sBz8G/YjVniEz6lKPNpKxXwazJe4c19fEfV2GDMX6AjFz+MX9uDWIZW8XreVhkFW3fkIdTv/gxWr/Kks5FFAVw==}
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
@@ -30008,7 +30127,7 @@ packages:
       pupa: 2.1.1
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
-      semver: 7.5.0
+      semver: 7.5.1
       semver-diff: 3.1.1
       xdg-basedir: 4.0.0
     transitivePeerDependencies:

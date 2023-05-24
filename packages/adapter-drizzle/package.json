@@ -1,0 +1,57 @@
+{
+  "name": "@next-auth/drizzle-adapter",
+  "version": "0.0.1",
+  "description": "Drizzle adapter for next-auth.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Anthony Shew",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "drizzle"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf ./.drizzle",
+    "generate-schema": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle",
+    "test": "pnpm clean && ./tests/test.sh",
+    "tests": "jest",
+    "build": "tsc",
+    "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "next-auth": "^4"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "@types/better-sqlite3": "^7.6.4",
+    "@types/uuid": "^8.3.3",
+    "mysql2": "^3.2.0",
+    "better-sqlite3": "^8.4.0",
+    "drizzle-kit": "^0.18.0",
+    "postgres": "^3.3.4",
+    "drizzle-orm": "^0.26.0",
+    "jest": "^27.4.3",
+    "next-auth": "workspace:*"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
