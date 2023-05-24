@@ -64,9 +64,7 @@ packages/adapter-prisma/prisma/dev.db
 packages/adapter-prisma/prisma/migrations
 db.sqlite
 packages/adapter-supabase/supabase/.branches
-packages/adapter-drizzle-sqlite/drizzle
-packages/adapter-drizzle-pg/drizzle
-packages/adapter-drizzle-mysql/drizzle
+packages/adapter-drizzle/.drizzle
 
 # Tests
 coverage
