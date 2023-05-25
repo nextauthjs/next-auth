@@ -65,8 +65,6 @@ export const db = drizzle(poolConnection)
 
 export type DbClient = typeof db
 
-export const schema = { users, accounts, sessions, verificationTokens }
-
 export type Schema = {
   users: typeof users
   accounts: typeof accounts

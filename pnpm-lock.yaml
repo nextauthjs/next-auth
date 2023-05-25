@@ -278,6 +278,7 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
+      '@planetscale/database': ^1.7.0
       '@types/better-sqlite3': ^7.6.4
       '@types/uuid': ^8.3.3
       better-sqlite3: ^8.4.0
@@ -293,11 +294,12 @@ importers:
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
+      '@planetscale/database': 1.7.0
       '@types/better-sqlite3': 7.6.4
       '@types/uuid': 8.3.4
       better-sqlite3: 8.4.0
       drizzle-kit: 0.18.0
-      drizzle-orm: 0.26.0_5skptx2ytdkmhn5za4hlkixylq
+      drizzle-orm: 0.26.0_d24qodwbu36ukxg35gkha7lfsi
       jest: 27.5.1
       mysql2: 3.2.4
       next-auth: link:../next-auth
@@ -8186,6 +8188,11 @@ packages:
       nullthrows: 1.1.1
     dev: false
 
+  /@planetscale/database/1.7.0:
+    resolution: {integrity: sha512-lWR6biXChUyQnxsT4RT1CIeR3ZJvwTQXiQ+158MnY3VjLwjHEGakDzdH9kwUGPk6CHvu6UeqRXp1DgUOVHJFTw==}
+    engines: {node: '>=16'}
+    dev: true
+
   /@playwright/test/1.29.2:
     resolution: {integrity: sha512-+3/GPwOgcoF0xLz/opTnahel1/y42PdcgZ4hs+BZGIUjtmEFSXGg+nFoaH3NSmuc7a6GSFwXDJ5L7VXpqzigNg==}
     engines: {node: '>=14'}
@@ -15123,7 +15130,7 @@ packages:
       postgres: 3.3.4
     dev: true
 
-  /drizzle-orm/0.26.0_5skptx2ytdkmhn5za4hlkixylq:
+  /drizzle-orm/0.26.0_d24qodwbu36ukxg35gkha7lfsi:
     resolution: {integrity: sha512-ztjhHehcuG5+lpGYxfT/L5I+yd/Z0dOf0fV3cS2ywBU01wkpxjwl4EJZVT7kVzjYfM8kwMGDghAPRPBCK0vULA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -15182,6 +15189,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
+      '@planetscale/database': 1.7.0
       '@types/better-sqlite3': 7.6.4
       better-sqlite3: 8.4.0
       mysql2: 3.2.4
