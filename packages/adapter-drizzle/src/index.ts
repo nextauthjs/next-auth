@@ -17,12 +17,9 @@
  */
 import { Flavors, MinimumSchema } from "./utils"
 import type { Adapter } from "next-auth/adapters"
-import { db } from "./pg/schema"
 import { MySqlAdapter } from "./mysql"
 import { PgAdapter } from "./pg"
 import { SQLiteAdapter } from "./sqlite"
-import { accounts, sessions, users, verificationTokens } from './pg/schema'
-import { schema } from "./pg/schema"
 
 /**
  * ## Setup
@@ -133,7 +130,4 @@ export function DrizzleAdapter<
   }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
-
 }
-
-const thing = DrizzleAdapter("pg", db, schema)
