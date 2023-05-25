@@ -1,22 +1,17 @@
-import { MySqlDatabase } from "drizzle-orm/mysql-core"
-import { PgDatabase } from "drizzle-orm/pg-core"
-import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
+import { MySqlDatabase, MySqlTableWithColumns } from "drizzle-orm/mysql-core"
+import { PgDatabase, PgTableWithColumns } from "drizzle-orm/pg-core"
+import { BaseSQLiteDatabase, SQLiteTableWithColumns } from "drizzle-orm/sqlite-core"
 import { Schema as PgSchema } from "./pg/schema"
 import { Schema as MySqlSchema } from "./mysql/schema"
 import { Schema as SQLiteSchema } from "./sqlite/schema"
 
-export function isMySqlDatabase(
-  db: any
-): db is MySqlDatabase<any, any, MySqlSchema> {
-  return db instanceof MySqlDatabase<any, any>
-}
+export type Flavors<T> = T extends "mysql" | "pg" | "sqlite" ? T extends "mysql" ? MySqlDatabase<any, any> :
+  T extends "pg" ? PgDatabase<any, PgSchema, any> :
+  T extends "sqlite" ? BaseSQLiteDatabase<any, any> :
+  never : never
 
-export function isPgDatabase(db: any): db is PgDatabase<any, PgSchema, any> {
-  return db instanceof PgDatabase<any, any>
-}
-
-export function isSQLiteDatabase(
-  db: any
-): db is BaseSQLiteDatabase<any, any, SQLiteSchema> {
-  return db instanceof BaseSQLiteDatabase<any, any>
+export interface MinimumSchema {
+  mysql: MySqlSchema & Record<string, MySqlTableWithColumns<any>>
+  pg: PgSchema & Record<string, PgTableWithColumns<any>>,
+  sqlite: SQLiteSchema & Record<string, SQLiteTableWithColumns<any>>
 }

@@ -15,20 +15,14 @@
  *
  * @module @next-auth/drizzle-adapter
  */
-import {
-  ExtractTableRelationsFromSchema,
-  ExtractTablesWithRelations,
-  and,
-  eq,
-} from "drizzle-orm"
-import { isMySqlDatabase, isPgDatabase, isSQLiteDatabase } from "./utils"
-import { Schema as MySqlSchema } from "./mysql/schema"
-import { Schema as PgSchema } from "./pg/schema"
-import { Schema as SQLiteSchema } from "./sqlite/schema"
+import { Flavors, MinimumSchema } from "./utils"
 import type { Adapter } from "next-auth/adapters"
+import { db } from "./pg/schema"
 import { MySqlAdapter } from "./mysql"
 import { PgAdapter } from "./pg"
 import { SQLiteAdapter } from "./sqlite"
+import { accounts, sessions, users, verificationTokens } from './pg/schema'
+import { schema } from "./pg/schema"
 
 /**
  * ## Setup
@@ -119,35 +113,27 @@ import { SQLiteAdapter } from "./sqlite"
  * ```
  *
  **/
-export function DrizzleAdapter<T>(db: any, {
-  accounts,
-  sessions,
-  users,
-  verificationTokens
-}: {
-  accounts: MySqlSchema["accounts"]
-  sessions: MySqlSchema["sessions"]
-  users: MySqlSchema["users"]
-  verificationTokens: MySqlSchema["verificationTokens"]
-}): Adapter {
-  if (isMySqlDatabase(db))
-    return MySqlAdapter(db as any, {
-      accounts,
-      sessions,
-      users,
-      verificationTokens,
-    })
-  else if (isPgDatabase(db)) return PgAdapter(db as any, {
-    accounts,
-    sessions,
-    users,
-    verificationTokens,
-  })
-  else if (isSQLiteDatabase(db)) return SQLiteAdapter(db as any, {
-    accounts,
-    sessions,
-    users,
-    verificationTokens,
-  })
-  else throw new Error("Unsupported database")
+export function DrizzleAdapter<
+  T extends "mysql" | "pg" | "sqlite",
+  Y extends Flavors<T>,
+  P extends MinimumSchema[T]>(
+    dbType: T,
+    db: Y,
+    schema: P
+  ): Adapter {
+  if (dbType === "mysql") {
+    db
+    return MySqlAdapter(db as Flavors<"mysql">, schema as MinimumSchema["mysql"])
+  }
+  if (dbType === "pg") {
+    return PgAdapter(db as Flavors<"pg">, schema as MinimumSchema["pg"])
+  }
+  if (dbType === "sqlite") {
+    return SQLiteAdapter(db as Flavors<"sqlite">, schema as MinimumSchema["sqlite"])
+  }
+
+  throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
+
 }
+
+const thing = DrizzleAdapter("pg", db, schema)
