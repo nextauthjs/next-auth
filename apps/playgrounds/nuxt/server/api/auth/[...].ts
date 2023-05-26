@@ -1,10 +1,10 @@
 import { NuxtAuthHandler } from "@/lib/auth/server"
 import GithubProvider from "@auth/core/providers/github"
-import type { AuthOptions } from "@auth/core"
+import type { AuthConfig } from "@auth/core"
 
 const runtimeConfig = useRuntimeConfig()
 
-export const authOptions: AuthOptions = {
+export const authOptions = {
   secret: runtimeConfig.secret,
   providers: [
     GithubProvider({
@@ -12,6 +12,6 @@ export const authOptions: AuthOptions = {
       clientSecret: runtimeConfig.github.clientSecret,
     }),
   ],
-}
+} as AuthConfig
 
 export default NuxtAuthHandler(authOptions)
