@@ -88,7 +88,7 @@ export default function SignIn({ providers }: InferGetServerSidePropsType<typeof
     <>
       {Object.values(providers).map((provider) => (
         <div key={provider.name}>
-          <button onClick={() => signIn(provider.id)}>
+          <button onClick={() => void signIn(provider.id)}>
             Sign in with {provider.name}
           </button>
         </div>
