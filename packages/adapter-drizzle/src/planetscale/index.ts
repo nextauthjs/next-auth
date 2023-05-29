@@ -153,7 +153,6 @@ export function PlanetScaleAdapter(
       }
     },
     deleteUser: async (id) => {
-      console.log({ id })
       await Promise.all([
         client.delete(users).where(eq(users.id, id)),
         client.delete(sessions).where(eq(sessions.userId, id)),
