@@ -19,6 +19,7 @@ import { AdapterFlavors, ClientFlavors, MinimumSchema } from "./utils"
 import type { Adapter } from "next-auth/adapters"
 import { MySqlAdapter } from "./mysql"
 import { PgAdapter } from "./pg"
+import { PlanetScaleAdapter } from "./planetscale"
 import { SQLiteAdapter } from "./sqlite"
 
 /**
@@ -129,7 +130,7 @@ export function DrizzleAdapter<
   }
 
   if (dbType === "planetscale") {
-    return SQLiteAdapter(db as ClientFlavors<"sqlite">, schema as MinimumSchema["sqlite"])
+    return PlanetScaleAdapter(db as ClientFlavors<"planetscale">, schema as MinimumSchema["planetscale"])
   }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")

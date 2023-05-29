@@ -101,10 +101,13 @@ export function PlanetScaleAdapter(
               eq(accounts.providerAccountId, account.providerAccountId),
               eq(accounts.provider, account.provider)
             )
-          )
-          .then((res) => res[0])) ?? null
+          ).then((res) => res[0])) ?? null
 
-      return user.users
+      if (user) {
+        return user.users
+      }
+
+      return null
     },
     deleteSession: async (sessionToken) => {
       await client
@@ -149,6 +152,7 @@ export function PlanetScaleAdapter(
       }
     },
     deleteUser: async (id) => {
+      console.log({ id })
       await Promise.all([
         client
           .delete(users)

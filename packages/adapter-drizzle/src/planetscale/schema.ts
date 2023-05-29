@@ -9,7 +9,6 @@ import { drizzle } from 'drizzle-orm/planetscale-serverless'
 import { ProviderType } from "next-auth/providers"
 import { connect } from "@planetscale/database";
 
-
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
