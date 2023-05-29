@@ -30,9 +30,6 @@ function typedocAdapter(name) {
       entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
       tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
       out: `reference/adapter/${slug}`,
-      sidebar: {
-        indexLabel: name,
-      },
       ...typedocConfig,
     },
   ]
@@ -49,7 +46,7 @@ function typedocFramework(id, entrypoints) {
       entryPoints: entrypoints.map((e) => `../packages/${id}/src/${e}`),
       tsconfig: `../packages/${id}/tsconfig.json`,
       out: `reference/${id.replace("frameworks-", "")}`,
-      sidebar: { indexLabel: "index" },
+      skipIndexPage: true,
     },
   ]
 }
@@ -238,6 +235,16 @@ const docusaurusConfig = {
             current: {
               label: "experimental",
             },
+          },
+          async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
+            const sidebarItems = await defaultSidebarItemsGenerator(args)
+            const sidebarIdsToOmit = [
+              "reference/core/module.index",
+              "reference/sveltekit/module.index",
+              "reference/solidstart/index",
+              "reference/nextjs/module.index",
+            ]
+            return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
           },
         },
         theme: {
