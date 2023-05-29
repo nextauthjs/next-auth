@@ -5,9 +5,9 @@ import {
   varchar,
   primaryKey,
 } from "drizzle-orm/mysql-core"
-import { drizzle } from 'drizzle-orm/planetscale-serverless'
+import { drizzle } from "drizzle-orm/planetscale-serverless"
 import { ProviderType } from "next-auth/providers"
-import { connect } from "@planetscale/database";
+import { connect } from "@planetscale/database"
 
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -59,7 +59,7 @@ const connection = connect({
   host: process.env["DATABASE_HOST"],
   username: process.env["DATABASE_USERNAME"],
   password: process.env["DATABASE_PASSWORD"],
-});
+})
 
 export const db = drizzle(connection)
 
