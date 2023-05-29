@@ -209,13 +209,16 @@ export function PgAdapter(client: DbClient, {
         .then(res => res[0])
         ?? null
 
-      return user.users
+      if (user) {
+        return user.users
+      }
+
+      return null
     },
     deleteSession: async (sessionToken) => {
       await client
         .delete(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
-
     },
     createVerificationToken: async (token) => {
       return client

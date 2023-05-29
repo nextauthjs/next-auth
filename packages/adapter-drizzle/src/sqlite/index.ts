@@ -203,7 +203,11 @@ export function SQLiteAdapter(client: DbClient, {
         ))
         .get() ?? null
 
-      return user.users
+      if (user) {
+        return user.users
+      }
+
+      return null
     }
     ,
     deleteSession: (sessionToken) => {

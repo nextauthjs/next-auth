@@ -91,20 +91,23 @@ export function MySqlAdapter(
         .then((res) => res[0])
     },
     getUserByAccount: async (account) => {
-      const user =
-        (await client
-          .select()
-          .from(users)
-          .innerJoin(
-            accounts,
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
+      const user = await client
+        .select()
+        .from(users)
+        .innerJoin(
+          accounts,
+          and(
+            eq(accounts.providerAccountId, account.providerAccountId),
+            eq(accounts.provider, account.provider)
           )
-          .then((res) => res[0])) ?? null
+        )
+        .then((res) => res[0]) ?? null
 
-      return user.users
+      if (user) {
+        return user.users
+      }
+
+      return null
     },
     deleteSession: async (sessionToken) => {
       await client
