@@ -256,7 +256,7 @@ export const { handlers, auth } = NextAuth({
 That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime.
 
 
-## TyperScript
+## TypeScript
 
 - `NextAuthOptions` is renamed to `NextAuthConfig`
 - `Adapter` from `next-auth/adapters` is moved to `@auth/core/adapters`. If you are creating a custom adapter, use `@auth/core` instead of `next-auth`.
