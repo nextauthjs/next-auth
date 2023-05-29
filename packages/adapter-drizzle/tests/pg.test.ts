@@ -1,11 +1,21 @@
 import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
 import { DrizzleAdapterPg } from "../src/pg"
-import { db, users, accounts, sessions, verificationTokens } from '../src/pg/schema'
-import { eq, and } from 'drizzle-orm';
-
+import {
+  db,
+  users,
+  accounts,
+  sessions,
+  verificationTokens,
+} from "../src/pg/schema"
+import { eq, and } from "drizzle-orm"
 
 runBasicTests({
-  adapter: DrizzleAdapterPg(db, { users, accounts, sessions, verificationTokens }),
+  adapter: DrizzleAdapterPg(db, {
+    users,
+    accounts,
+    sessions,
+    verificationTokens,
+  }),
   db: {
     id() {
       return randomUUID()
@@ -26,43 +36,35 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: (id) => db
-      .select()
-      .from(users)
-      .where(eq(users.id, id)) ?? null,
+    user: (id) => db.select().from(users).where(eq(users.id, id)) ?? null,
     // .where(eq(users.id, id)) ?? null,
-    session: (sessionToken) => db
-      .select()
-      .from(sessions)
-      .where(eq(sessions.sessionToken, sessionToken))
-      ?? null,
-    account: (provider_providerAccountId) => {
-      return db
+    session: (sessionToken) =>
+      db
         .select()
-        .from(accounts)
-        .where(
-          eq(
-            accounts.providerAccountId,
-            provider_providerAccountId.providerAccountId
-          )
-        )
-
-        ?? null
+        .from(sessions)
+        .where(eq(sessions.sessionToken, sessionToken)) ?? null,
+    account: (provider_providerAccountId) => {
+      return (
+        db
+          .select()
+          .from(accounts)
+          .where(
+            eq(
+              accounts.providerAccountId,
+              provider_providerAccountId.providerAccountId
+            )
+          ) ?? null
+      )
     },
-    verificationToken: (identifier_token) => db
-      .select()
-      .from(verificationTokens)
-      .where(
-        and(
-          eq(
-            verificationTokens.token,
-            identifier_token.token
-          ),
-          eq(
-            verificationTokens.identifier,
-            identifier_token.identifier
+    verificationToken: (identifier_token) =>
+      db
+        .select()
+        .from(verificationTokens)
+        .where(
+          and(
+            eq(verificationTokens.token, identifier_token.token),
+            eq(verificationTokens.identifier, identifier_token.identifier)
           )
-        )
-      ) ?? null,
+        ) ?? null,
   },
 })

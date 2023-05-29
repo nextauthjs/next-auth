@@ -88,7 +88,7 @@ export function PlanetScaleAdapter(
       await client
         .insert(accounts)
         .values(rawAccount)
-        .then(res => res.rows[0])
+        .then((res) => res.rows[0])
     },
     getUserByAccount: async (account) => {
       const user =
@@ -101,7 +101,8 @@ export function PlanetScaleAdapter(
               eq(accounts.providerAccountId, account.providerAccountId),
               eq(accounts.provider, account.provider)
             )
-          ).then((res) => res[0])) ?? null
+          )
+          .then((res) => res[0])) ?? null
 
       if (user) {
         return user.users
@@ -154,15 +155,9 @@ export function PlanetScaleAdapter(
     deleteUser: async (id) => {
       console.log({ id })
       await Promise.all([
-        client
-          .delete(users)
-          .where(eq(users.id, id)),
-        client
-          .delete(sessions)
-          .where(eq(sessions.userId, id)),
-        client
-          .delete(accounts)
-          .where(eq(accounts.userId, id))
+        client.delete(users).where(eq(users.id, id)),
+        client.delete(sessions).where(eq(sessions.userId, id)),
+        client.delete(accounts).where(eq(accounts.userId, id)),
       ])
 
       return null
