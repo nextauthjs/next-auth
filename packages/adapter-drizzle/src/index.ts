@@ -15,7 +15,15 @@
  *
  * @module @next-auth/drizzle-adapter
  */
-import { AdapterFlavors, ClientFlavors, MinimumSchema } from "./utils"
+import {
+  ClientFlavors,
+  MinimumSchema,
+  SqlFlavorOptions,
+  isMySqlDatabase,
+  isPgDatabase,
+  isPlanetScaleDatabase,
+  isSQLiteDatabase
+} from "./utils"
 import type { Adapter } from "next-auth/adapters"
 import { MySqlAdapter } from "./mysql"
 import { PgAdapter } from "./pg"
@@ -32,7 +40,7 @@ import { SQLiteAdapter } from "./sqlite"
  * import { db, users, accounts, sessions, verificationTokens } from "./schema"
  *
  * export default NextAuth({
- *   adapter: DrizzleAdapter("pg", db, { users, accounts, sessions, verificationTokens }),
+ *   adapter: DrizzleAdapter(db, { users, accounts, sessions, verificationTokens }),
  *   providers: [
  *     GoogleProvider({
  *       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -320,31 +328,23 @@ import { SQLiteAdapter } from "./sqlite"
  * ## TypeScript interface
  **/
 export function DrizzleAdapter<
-  SqlFlavor extends AdapterFlavors,
-  DbClient extends ClientFlavors<SqlFlavor>,
-  DbSchema extends MinimumSchema[SqlFlavor]
->(dbType: SqlFlavor, db: DbClient, schema: DbSchema): Adapter {
-  if (dbType === "mysql") {
-    return MySqlAdapter(
-      db as ClientFlavors<"mysql">,
-      schema as MinimumSchema["mysql"]
-    )
-  }
-  if (dbType === "pg") {
-    return PgAdapter(db as ClientFlavors<"pg">, schema as MinimumSchema["pg"])
-  }
-  if (dbType === "sqlite") {
-    return SQLiteAdapter(
-      db as ClientFlavors<"sqlite">,
-      schema as MinimumSchema["sqlite"]
-    )
+  SqlFlavor extends SqlFlavorOptions,
+>(db: SqlFlavor, schema: ClientFlavors<SqlFlavor>
+): Adapter {
+  if (isMySqlDatabase(db)) {
+    return MySqlAdapter(db, schema as MinimumSchema["mysql"])
   }
 
-  if (dbType === "planetscale") {
-    return PlanetScaleAdapter(
-      db as ClientFlavors<"planetscale">,
-      schema as MinimumSchema["planetscale"]
-    )
+  if (isPgDatabase(db)) {
+    return PgAdapter(db, schema as MinimumSchema["pg"])
+  }
+
+  if (isSQLiteDatabase(db)) {
+    return SQLiteAdapter(db, schema as MinimumSchema["sqlite"])
+  }
+
+  if (isPlanetScaleDatabase(db)) {
+    return PlanetScaleAdapter(db, schema as unknown as MinimumSchema["planetscale"])
   }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
