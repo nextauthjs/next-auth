@@ -146,7 +146,7 @@ When using Next.js and JWT, you can alternatively also use [Middleware](https://
 
 ## Resources
 
-- [Concepts: Session strategies](/concepts/session-strategies)
+- [Concepts: Session strategies](/getting-started/upgrade-to-v4#session-strategy)
 - [Next.js: Middleware](https://next-auth.js.org/configuration/nextjs#wrap-middleware)
 - [Adapters: User model](/reference/adapters/models#user)
 - [Adapters: Prisma adapter](/reference/adapters/prisma)
