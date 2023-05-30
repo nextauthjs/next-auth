@@ -10,7 +10,7 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
   </a>
   <a href="/reference/adapter/drizzle" class="adapter-card">
-    <img src="https://pbs.twimg.com/profile_images/1598308842391179266/CtXrfLnk_400x400.jpg" width="30" />
+    <img src="/img/adapters/drizzle-orm.png" width="30" />
     <h4 class="adapter-card__title">Drizzle Adapter</h4>
   </a>
   <a href="/reference/adapter/dynamodb" class="adapter-card">
@@ -71,9 +71,7 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
 If you don't find an adapter for the database or service you use, you can always create one yourself. Have a look at our guide on [how to create a database adapter](/guides/adapters/creating-a-database-adapter).
 :::
 
-
 ## Models
-
 
 Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this:
 
@@ -135,7 +133,7 @@ If a user first signs in with an OAuth provider, then their email address is aut
 This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in the future (if the [Email Provider](/reference/core/providers_email) is configured).
 :::
 
-User creation in the database is automatic and happens when the user is logging in for the first time with a provider. 
+User creation in the database is automatic and happens when the user is logging in for the first time with a provider.
 If the first sign-in is via the [OAuth Provider](/reference/core/providers_oauth), the default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
 If the first sign-in is via the [Email Provider](/reference/core/providers_email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.

@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://github.com/drizzle-team/drizzle-orm">Drizzle ORM</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://github.com/drizzle-team/drizzle-orm">
- *   <img style={{display: "block"}} src="https://pbs.twimg.com/profile_images/1598308842391179266/CtXrfLnk_400x400.jpg" width="38" />
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://orm.drizzle.team">Drizzle ORM</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://orm.drizzle.team">
+ *   <img style={{display: "block"}} src="/img/adapters/drizzle-orm.png" width="38" />
  *  </a>
  * </div>
  *
@@ -23,18 +23,16 @@ import { PlanetScaleAdapter } from "./planetscale"
 import { SQLiteAdapter } from "./sqlite"
 
 /**
- * ## Setup
- *
- * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
+ * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@next-auth/drizzle-adapter"
- * import { db } from "./db-schema"
+ * import { db, users, accounts, sessions, verificationTokens } from "./schema"
  *
  * export default NextAuth({
- *   adapter: DrizzleAdapter(db),
+ *   adapter: DrizzleAdapter("pg", db, { users, accounts, sessions, verificationTokens }),
  *   providers: [
  *     GoogleProvider({
  *       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -44,78 +42,288 @@ import { SQLiteAdapter } from "./sqlite"
  * })
  * ```
  *
- * ## Advanced usage
+ * ## Setup
  *
- * ### Create the Drizzle schema from scratch
- *
- * You'll need to create a database schema that includes the minimal schema for a `next-auth` adapter.
+ * First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/adapters#models).
  * Be sure to use the Drizzle driver version that you're using for your project.
  *
- * > This schema is adapted for use in Drizzle and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * - [Postgres](#postgres)
+ * - [PlanetScale](#planetscale)
+ * - [MySQL](#mysql)
+ * - [SQLite](#sqlite)
  *
  *
- * ```json title="db-schema.ts"
+ * ### Postgres
  *
- * import { integer, pgTable, text, primaryKey } from 'drizzle-orm/pg-core';
- * import { drizzle } from 'drizzle-orm/node-postgres';
- * import { migrate } from 'drizzle-orm/node-postgres/migrator';
- * import { Pool } from 'pg'
- * import { ProviderType } from 'next-auth/providers';
+ *    ```json title="schema.ts"
+ *    import { integer, pgTable, text, primaryKey } from "drizzle-orm/pg-core"
+ *    import { drizzle } from "drizzle-orm/vercel-postgres"
+ *    import { migrate } from "drizzle-orm/vercel-postgres/migrator"
+ *    import { createPool } from "@vercel/postgres"
+ *    import { ProviderType } from "next-auth/providers"
  *
- * export const users = pgTable('users', {
- * id: text('id').notNull().primaryKey(),
- * name: text('name'),
- * email: text("email").notNull(),
- * emailVerified: integer("emailVerified"),
- * image: text("image"),
- * });
+ *    const connection = createPool({ connectionString: process.env.POSTGRES_URL })
+ *    export const db = drizzle(connection)
  *
- * export const accounts = pgTable("accounts", {
- *  userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
- *  type: text("type").$type<ProviderType>().notNull(),
- *  provider: text("provider").notNull(),
- *  providerAccountId: text("providerAccountId").notNull(),
- *  refresh_token: text("refresh_token"),
- *  access_token: text("access_token"),
- *  expires_at: integer("expires_at"),
- *  token_type: text("token_type"),
- *  scope: text("scope"),
- *  id_token: text("id_token"),
- *  session_state: text("session_state"),
- * }, (account) => ({
- *   _: primaryKey(account.provider, account.providerAccountId)
- * }))
+ *    export const users = pgTable("users", {
+ *      id: text("id").notNull().primaryKey(),
+ *      name: text("name"),
+ *      email: text("email").notNull(),
+ *      emailVerified: integer("emailVerified"),
+ *      image: text("image"),
+ *    })
  *
- * export const sessions = pgTable("sessions", {
- *  userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
- *  sessionToken: text("sessionToken").notNull().primaryKey(),
- *  expires: integer("expires").notNull(),
- * })
+ *    export const accounts = pgTable("accounts", {
+ *      userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+ *      type: text("type").$type<ProviderType>().notNull(),
+ *      provider: text("provider").notNull(),
+ *      providerAccountId: text("providerAccountId").notNull(),
+ *      refresh_token: text("refresh_token"),
+ *      access_token: text("access_token"),
+ *      expires_at: integer("expires_at"),
+ *      token_type: text("token_type"),
+ *      scope: text("scope"),
+ *      id_token: text("id_token"),
+ *      session_state: text("session_state"),
+ *    }, (account) => ({
+ *      _: primaryKey(account.provider, account.providerAccountId)
+ *    }))
  *
- * export const verificationTokens = pgTable("verificationToken", {
- *  identifier: text("identifier").notNull(),
- *  token: text("token").notNull(),
- *  expires: integer("expires").notNull()
- * }, (vt) => ({
- *   _: primaryKey(vt.identifier, vt.token)
- * }))
+ *    export const sessions = pgTable("sessions", {
+ *      userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+ *      sessionToken: text("sessionToken").notNull().primaryKey(),
+ *      expires: integer("expires").notNull(),
+ *    })
  *
- * const pool = new Pool({
- *   connectionString: "YOUR_CONNECTION_STRING"
- * });
- *
- * export const db = drizzle(pool);
- *
- * migrate(db, { migrationsFolder: "./drizzle" })
- *
+ *    export const verificationTokens = pgTable("verificationToken", {
+ *      identifier: text("identifier").notNull(),
+ *      token: text("token").notNull(),
+ *      expires: integer("expires").notNull()
+ *    }, (vt) => ({
+ *      _: primaryKey(vt.identifier, vt.token)
+ *    }))
  * ```
  *
+ * ### PlanetScale
+ *
+ *```json title="schema.ts"
+ * import {
+ *   int,
+ *   timestamp,
+ *   mysqlTable,
+ *   varchar,
+ *   primaryKey,
+ * } from "drizzle-orm/mysql-core"
+ * import { drizzle } from "drizzle-orm/planetscale-serverless"
+ * import { ProviderType } from "next-auth/providers"
+ * import { connect } from "@planetscale/database"
+ *
+ * const connection = connect({
+ *   host: process.env["DATABASE_HOST"],
+ *   username: process.env["DATABASE_USERNAME"],
+ *   password: process.env["DATABASE_PASSWORD"],
+ * })
+ *
+ * export const db = drizzle(connection)
+ *
+ * export const users = mysqlTable("users", {
+ *   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+ *   name: varchar("name", { length: 255 }),
+ *   email: varchar("email", { length: 255 }).notNull(),
+ *   emailVerified: timestamp("emailVerified", { mode: "date" }),
+ *   image: varchar("image", { length: 255 }),
+ * })
+
+ * export const accounts = mysqlTable("accounts",
+ *   {
+ *     userId: varchar("userId", { length: 255 }).notNull(),
+ *     type: varchar("type", { length: 255 }).$type<ProviderType>().notNull(),
+ *     provider: varchar("provider", { length: 255 }).notNull(),
+ *     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+ *     refresh_token: varchar("refresh_token", { length: 255 }),
+ *     access_token: varchar("access_token", { length: 255 }),
+ *     expires_at: int("expires_at"),
+ *     token_type: varchar("token_type", { length: 255 }),
+ *     scope: varchar("scope", { length: 255 }),
+ *     id_token: varchar("id_token", { length: 255 }),
+ *     session_state: varchar("session_state", { length: 255 }),
+ *   },
+ *   (account) => ({
+ *     compoundKey: primaryKey(account.provider, account.providerAccountId),
+ *   })
+ * )
+
+ * export const sessions = mysqlTable("sessions", {
+ *   sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
+ *   userId: varchar("userId", { length: 255 }).notNull(),
+ *   expires: timestamp("expires", { mode: "date" }).notNull(),
+ * })
+
+ * export const verificationTokens = mysqlTable("verificationToken",
+ *   {
+ *     identifier: varchar("identifier", { length: 255 }).notNull(),
+ *     token: varchar("token", { length: 255 }).notNull(),
+ *     expires: timestamp("expires", { mode: "date" }).notNull(),
+ *   },
+ *   (vt) => ({
+ *     compoundKey: primaryKey(vt.identifier, vt.token),
+ *   })
+ * )
+ * ```
+ *
+ * ### MySQL
+ *
+ * ```json title="schema.ts"
+ * import {
+ *  int,
+ *  timestamp,
+ *  mysqlTable,
+ *  text,
+ *  primaryKey,
+ * } from "drizzle-orm/mysql-core"
+ * import { ProviderType } from "next-auth/providers"
+ * import { drizzle } from "drizzle-orm/mysql2"
+ * import mysql from "mysql2/promise"
+ *
+ * const poolConnection = mysql.createPool({})
+ *
+ * export const db = drizzle(poolConnection)
+ *
+ * export const users = mysqlTable("users", {
+ *   id: text("id").notNull().primaryKey(),
+ *   name: text("name"),
+ *   email: text("email").notNull(),
+ *   emailVerified: timestamp("emailVerified", { mode: "date" }),
+ *   image: text("image"),
+ * })
+ *
+ * export const accounts = mysqlTable("accounts",
+ *   {
+ *    userId: text("userId")
+ *      .notNull()
+ *      .references(() => users.id, { onDelete: "cascade" }),
+ *    type: text("type").$type<ProviderType>().notNull(),
+ *    provider: text("provider").notNull(),
+ *    providerAccountId: text("providerAccountId").notNull(),
+ *    refresh_token: text("refresh_token"),
+ *    access_token: text("access_token"),
+ *    expires_at: int("expires_at"),
+ *    token_type: text("token_type"),
+ *    scope: text("scope"),
+ *    id_token: text("id_token"),
+ *    session_state: text("session_state"),
+ *  },
+ *  (account) => ({
+ *    compoundKey: primaryKey(account.provider, account.providerAccountId),
+ *  })
+ * )
+ *
+ * export const sessions = mysqlTable("sessions", {
+ * sessionToken: text("sessionToken").notNull().primaryKey(),
+ * userId: text("userId")
+ *   .notNull()
+ *   .references(() => users.id, { onDelete: "cascade" }),
+ * expires: timestamp("expires", { mode: "date" }).notNull(),
+ * })
+ *
+ * export const verificationTokens = mysqlTable(
+ * "verificationToken",
+ * {
+ *   identifier: text("identifier").notNull(),
+ *   token: text("token").notNull(),
+ *   expires: timestamp("expires", { mode: "date" }).notNull(),
+ * },
+ * (vt) => ({
+ *   compoundKey: primaryKey(vt.identifier, vt.token),
+ *  })
+ * )
+ * ```
+ *
+ * ### SQLite
+ *
+ * ```json title="schema.ts"
+ * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
+ * import { drizzle } from "drizzle-orm/better-sqlite3"
+ * import Database from "better-sqlite3"
+ * import { ProviderType } from "next-auth/providers"
+ *
+ * const sqlite = new Database("db.sqlite")
+ * export const db = drizzle(sqlite)
+ *
+ * export const users = sqliteTable("users", {
+ *   id: text("id").notNull().primaryKey(),
+ *   name: text("name"),
+ *   email: text("email").notNull(),
+ *   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+ *   image: text("image"),
+ * })
+ *
+ * export const accounts = sqliteTable("accounts",
+ *   {
+ *     userId: text("userId")
+ *       .notNull()
+ *       .references(() => users.id, { onDelete: "cascade" }),
+ *    type: text("type").$type<ProviderType>().notNull(),
+ *    provider: text("provider").notNull(),
+ *    providerAccountId: text("providerAccountId").notNull(),
+ *    refresh_token: text("refresh_token"),
+ *    access_token: text("access_token"),
+ *    expires_at: integer("expires_at"),
+ *    token_type: text("token_type"),
+ *    scope: text("scope"),
+ *    id_token: text("id_token"),
+ *    session_state: text("session_state"),
+ *  },
+ *  (account) => ({
+ *    compoundKey: primaryKey(account.provider, account.providerAccountId),
+ *  })
+ * )
+ *
+ * export const sessions = sqliteTable("sessions", {
+ *   sessionToken: text("sessionToken").notNull().primaryKey(),
+ *   userId: text("userId")
+ *     .notNull()
+ *     .references(() => users.id, { onDelete: "cascade" }),
+ *   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+ * })
+ *
+ * export const verificationTokens = sqliteTable("verificationToken",
+ *   {
+ *     identifier: text("identifier").notNull(),
+ *     token: text("token").notNull(),
+ *     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+ *   },
+ *   (vt) => ({
+ *     compoundKey: primaryKey(vt.identifier, vt.token),
+ *   })
+ * )
+ * ```
+ *
+ * ## Migrating your database
+ * With your schema now described in your code, you'll need to migrate your database to your schema.
+ *
+ * For full documentation of how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations).
+ *
+ * In short, you'll create and execute a migrator file with your SQL flavor and client. We're using `postgres-js` for the example below.
+ *
+ * ```json title="migrator.ts"
+ * import { drizzle } from "drizzle-orm/postgres-js";
+ * import { migrate } from "drizzle-orm/postgres-js/migrator";
+ * import postgres from "postgres";
+ *
+ * const sql = postgres("...", { max: 1 })
+ * const db = drizzle(sql);
+ *
+ * await migrate(db, { migrationsFolder: "drizzle" });
+ * ```
+ *
+ * ## TypeScript interface
  **/
 export function DrizzleAdapter<
-  T extends AdapterFlavors,
-  Y extends ClientFlavors<T>,
-  P extends MinimumSchema[T]
->(dbType: T, db: Y, schema: P): Adapter {
+  SqlFlavor extends AdapterFlavors,
+  DbClient extends ClientFlavors<SqlFlavor>,
+  DbSchema extends MinimumSchema[SqlFlavor]
+>(dbType: SqlFlavor, db: DbClient, schema: DbSchema): Adapter {
   if (dbType === "mysql") {
     return MySqlAdapter(
       db as ClientFlavors<"mysql">,
