@@ -1,4 +1,4 @@
-import { AnyMySqlTable, MySqlDatabase, MySqlTable } from "drizzle-orm/mysql-core"
+import { AnyMySqlTable, MySqlDatabase } from "drizzle-orm/mysql-core"
 import { AnyPgTable, PgDatabase } from "drizzle-orm/pg-core"
 import { AnySQLiteTable, BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 import { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless"
@@ -24,14 +24,14 @@ export type SqlFlavorOptions = AnyMySqlDatabase
   | AnySQLiteDatabase
   | AnyPlanetScaleDatabase
 
-export type ClientFlavors<Flavor> = Flavor extends AnyMySqlDatabase
+export type ClientFlavors<Flavor> = Flavor extends AnyPlanetScaleDatabase
+  ? MinimumSchema["planetscale"]
+  : Flavor extends AnyMySqlDatabase
   ? MinimumSchema["mysql"]
   : Flavor extends AnyPgDatabase
   ? MinimumSchema["pg"]
   : Flavor extends AnySQLiteDatabase
   ? MinimumSchema["sqlite"]
-  : Flavor extends AnyPlanetScaleDatabase
-  ? MinimumSchema["planetscale"]
   : never
 
 export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any> {

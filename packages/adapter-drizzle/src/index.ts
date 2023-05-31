@@ -332,7 +332,13 @@ export function DrizzleAdapter<
 >(db: SqlFlavor, schema: ClientFlavors<SqlFlavor>
 ): Adapter {
   if (isMySqlDatabase(db)) {
-    return MySqlAdapter(db, schema as MinimumSchema["mysql"])
+    // We need to cast to unknown since the type overlaps (PScale is MySQL based)
+    return MySqlAdapter(db, schema as unknown as MinimumSchema["mysql"])
+  }
+
+  if (isPlanetScaleDatabase(db)) {
+    // We need to cast to unknown since the type overlaps (PScale is MySQL based)
+    return PlanetScaleAdapter(db, schema as unknown as MinimumSchema["planetscale"])
   }
 
   if (isPgDatabase(db)) {
@@ -341,10 +347,6 @@ export function DrizzleAdapter<
 
   if (isSQLiteDatabase(db)) {
     return SQLiteAdapter(db, schema as MinimumSchema["sqlite"])
-  }
-
-  if (isPlanetScaleDatabase(db)) {
-    return PlanetScaleAdapter(db, schema as unknown as MinimumSchema["planetscale"])
   }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
