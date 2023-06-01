@@ -78,18 +78,16 @@ export const authOptions: NextAuthOptions = {
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {
         if (credentials.password !== "pw") return null
-        return {
-          name: "Fill Murray",
-          email: "bill@fillmurray.com",
-          image: "https://www.fillmurray.com/64/64",
-          id: "1",
-          foo: "",
-        }
+        return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64", id: "1", foo: "" }
       },
     }),
     Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
     Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
-    AzureAD({ clientId: process.env.AZURE_AD_CLIENT_ID, clientSecret: process.env.AZURE_AD_CLIENT_SECRET, tenantId: process.env.AZURE_AD_TENANT_ID }),
+    AzureAD({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
+    }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
