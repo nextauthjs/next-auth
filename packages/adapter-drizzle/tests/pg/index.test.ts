@@ -1,21 +1,11 @@
-import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
-import { DrizzleAdapterPg } from "../src/pg"
-import {
-  db,
-  users,
-  accounts,
-  sessions,
-  verificationTokens,
-} from "../src/pg/schema"
-import { eq, and } from "drizzle-orm"
+import { runBasicTests } from "../../../adapter-test"
+import { DrizzleAdapter } from "../../src"
+import { db, accounts, sessions, users, verificationTokens } from '../../src/pg/schema'
+import { eq, and } from 'drizzle-orm'
+import { v4 as randomUUID } from "uuid"
 
 runBasicTests({
-  adapter: DrizzleAdapterPg(db, {
-    users,
-    accounts,
-    sessions,
-    verificationTokens,
-  }),
+  adapter: DrizzleAdapter(db, { accounts, sessions, users, verificationTokens }),
   db: {
     id() {
       return randomUUID()
@@ -66,5 +56,5 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         ) ?? null,
-  },
+  }
 })
