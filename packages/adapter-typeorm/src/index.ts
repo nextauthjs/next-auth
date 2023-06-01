@@ -9,10 +9,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/typeorm-legacy-adapter typeorm
+ * npm install next-auth @auth/typeorm-adapter typeorm
  * ```
  *
- * @module @next-auth/typeorm-legacy-adapter
+ * @module @auth/typeorm-adapter
  */
 import type {
   Adapter,
@@ -70,7 +70,7 @@ export async function getManager(options: {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+ * import { TypeORMLegacyAdapter } from "@auth/typeorm-adapter"
  *
  *
  * export default NextAuth({
@@ -93,7 +93,7 @@ export async function getManager(options: {
  *
  * 1. Create a file containing your modified entities:
  *
- * (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm-legacy/src/entities.ts))
+ * (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm/src/entities.ts))
  *
  * ```diff title="lib/entities.ts"
  * import {
@@ -235,7 +235,7 @@ export async function getManager(options: {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+ * import { TypeORMLegacyAdapter } from "@auth/typeorm-adapter"
  * import * as entities from "lib/entities"
  *
  * export default NextAuth({
@@ -260,7 +260,7 @@ export async function getManager(options: {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+ * import { TypeORMLegacyAdapter } from "@auth/typeorm-adapter"
  * import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
  * import { ConnectionOptions } from "typeorm"
  *
