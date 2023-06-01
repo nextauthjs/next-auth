@@ -34,16 +34,16 @@ export type ClientFlavors<Flavor> = Flavor extends AnyPlanetScaleDatabase
   ? MinimumSchema["sqlite"]
   : never
 
-export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any> {
-  return db instanceof MySqlDatabase<any, any>
+export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any, MySqlSchema, any> {
+  return db instanceof MySqlDatabase<any, any, MySqlSchema, any>
 }
 
-export function isPgDatabase(db: any): db is PgDatabase<any, any, any> {
-  return db instanceof PgDatabase<any, any, any>
+export function isPgDatabase(db: any): db is PgDatabase<any, PgSchema, any> {
+  return db instanceof PgDatabase<any, PgSchema, any>
 }
 
-export function isSQLiteDatabase(db: any): db is BaseSQLiteDatabase<any, any> {
-  return db instanceof BaseSQLiteDatabase<any, any>
+export function isSQLiteDatabase(db: any): db is BaseSQLiteDatabase<any, SQLiteSchema, any> {
+  return db instanceof BaseSQLiteDatabase<any, SQLiteSchema, any>
 }
 
 export function isPlanetScaleDatabase(db: any): db is PlanetScaleDatabase<any> {

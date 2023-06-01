@@ -202,24 +202,20 @@ export function PgAdapter(
       return account
     },
     getUserByAccount: async (account) => {
-      const user =
-        (await client
+      const dbAccount =
+        await client
           .select()
-          .from(users)
-          .innerJoin(
-            accounts,
+          .from(accounts)
+          .where(
             and(
               eq(accounts.providerAccountId, account.providerAccountId),
               eq(accounts.provider, account.provider)
             )
           )
-          .then((res) => res[0])) ?? null
+          .leftJoin(users, eq(accounts.userId, users.id))
+          .then(res => res[0])
 
-      if (user) {
-        return user.users
-      }
-
-      return null
+      return dbAccount.users
     },
     deleteSession: async (sessionToken) => {
       await client

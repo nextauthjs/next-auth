@@ -186,24 +186,26 @@ export function SQLiteAdapter(
       return account
     },
     getUserByAccount: (account) => {
-      const user =
+      const dbAccount =
         client
           .select()
-          .from(users)
-          .innerJoin(
-            accounts,
+          .from(accounts)
+          .where(
             and(
               eq(accounts.providerAccountId, account.providerAccountId),
               eq(accounts.provider, account.provider)
             )
-          )
-          .get() ?? null
+          ).get()
 
-      if (user) {
-        return user.users
-      }
+      if (!dbAccount) return null
 
-      return null
+      const user = client
+        .select()
+        .from(users)
+        .where(eq(users.id, dbAccount.userId))
+        .get()
+
+      return user
     },
     deleteSession: (sessionToken) => {
       return (
