@@ -1,5 +1,5 @@
 import { runBasicTests } from "../../../adapter-test"
-import { TypeORMLegacyAdapter } from "../../src"
+import { TypeORMAdapter } from "../../src"
 import { db } from "../helpers"
 import { SnakeNamingStrategy } from "typeorm-naming-strategies"
 
@@ -14,6 +14,6 @@ const sqliteConfig: DataSourceOptions = {
 }
 
 runBasicTests({
-  adapter: TypeORMLegacyAdapter(sqliteConfig),
+  adapter: TypeORMAdapter(sqliteConfig),
   db: db(sqliteConfig),
 })
