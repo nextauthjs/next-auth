@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
-import { ProviderType } from "next-auth/providers"
+import { AdapterAccount } from '@auth/core/adapters'
 
 const queryConnection = postgres(process.env.DATABASE_URL!)
 
@@ -25,7 +25,7 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<ProviderType>().notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),

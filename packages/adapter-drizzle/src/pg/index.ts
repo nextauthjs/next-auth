@@ -17,7 +17,7 @@
  */
 import type { DbClient, Schema } from "./schema"
 import { and, eq } from "drizzle-orm"
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { v4 as uuid } from "uuid"
 
 /**
@@ -188,7 +188,7 @@ export function PgAdapter(
 
       // Drizzle will return `null` for fields that are not defined.
       // However, the return type is expecting `undefined`.
-      const account: ReturnType<Adapter["linkAccount"]> = {
+      const account = {
         ...updatedAccount,
         access_token: updatedAccount.access_token ?? undefined,
         token_type: updatedAccount.token_type ?? undefined,

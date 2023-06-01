@@ -18,7 +18,7 @@
 import type { Schema, DbClient } from "./schema"
 import { v4 as uuid } from "uuid"
 import { and, eq } from "drizzle-orm"
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 /**
  * ## Setup
@@ -172,8 +172,9 @@ export function SQLiteAdapter(
         .returning()
         .get()
 
-      const account: ReturnType<Adapter["linkAccount"]> = {
+      const account: AdapterAccount = {
         ...updatedAccount,
+        type: updatedAccount.type,
         access_token: updatedAccount.access_token ?? undefined,
         token_type: updatedAccount.token_type ?? undefined,
         id_token: updatedAccount.id_token ?? undefined,

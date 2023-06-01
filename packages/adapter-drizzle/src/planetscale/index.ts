@@ -1,6 +1,6 @@
 import type { DbClient, Schema } from "./schema"
 import { and, eq } from "drizzle-orm"
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { v4 as uuid } from "uuid"
 
 export function PlanetScaleAdapter(

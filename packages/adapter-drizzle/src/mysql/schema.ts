@@ -5,7 +5,7 @@ import {
   text,
   primaryKey,
 } from "drizzle-orm/mysql-core"
-import { ProviderType } from "next-auth/providers"
+import { AdapterAccount } from "@auth/core/adapters"
 import { drizzle } from "drizzle-orm/mysql2"
 import mysql from "mysql2/promise"
 
@@ -23,7 +23,7 @@ export const accounts = mysqlTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<ProviderType>().notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
