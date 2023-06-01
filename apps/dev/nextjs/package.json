@@ -16,7 +16,7 @@
   "dependencies": {
     "@auth/core": "workspace:*",
     "@next-auth/fauna-adapter": "workspace:*",
-    "@next-auth/prisma-adapter": "workspace:*",
+    "@auth/prisma-adapter": "workspace:*",
     "@next-auth/supabase-adapter": "workspace:*",
     "@next-auth/typeorm-legacy-adapter": "workspace:*",
     "@prisma/client": "^3",
