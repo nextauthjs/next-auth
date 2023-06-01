@@ -19,7 +19,7 @@ import type {
   AdapterUser,
   AdapterAccount,
   AdapterSession,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import { DataSourceOptions, DataSource, EntityManager } from "typeorm"
 import * as defaultEntities from "./entities"
 import { parseDataSourceConfig, updateConnectionEntities } from "./utils"
@@ -328,8 +328,10 @@ export function TypeORMLegacyAdapter(
     },
     async getUserByAccount(provider_providerAccountId) {
       const m = await getManager(c)
+      // @ts-expect-error
       const account = await m.findOne<AdapterAccount & { user: AdapterUser }>(
         "AccountEntity",
+        // @ts-expect-error
         { where: provider_providerAccountId, relations: ["user"] }
       )
       if (!account) return null
