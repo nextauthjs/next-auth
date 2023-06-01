@@ -101,17 +101,10 @@ export function PlanetScaleAdapter(
               eq(accounts.provider, account.provider)
             )
           )
+          .leftJoin(users, eq(accounts.userId, users.id))
           .then(res => res[0])
 
-      if (!dbAccount) return null
-
-      const user = await client
-        .select()
-        .from(users)
-        .where(eq(users.id, dbAccount.userId))
-        .then(res => res[0])
-
-      return user
+      return dbAccount.users
     },
     deleteSession: async (sessionToken) => {
       await client
