@@ -6,7 +6,7 @@ import {
   primaryKey,
 } from "drizzle-orm/mysql-core"
 import { drizzle } from "drizzle-orm/planetscale-serverless"
-import { ProviderType } from "next-auth/providers"
+import { AdapterAccount } from "@auth/core/adapters"
 import { connect } from "@planetscale/database"
 
 
@@ -22,7 +22,7 @@ export const accounts = mysqlTable(
   "accounts",
   {
     userId: varchar("userId", { length: 255 }).notNull(),
-    type: varchar("type", { length: 255 }).$type<ProviderType>().notNull(),
+    type: varchar("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
     refresh_token: varchar("refresh_token", { length: 255 }),

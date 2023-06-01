@@ -24,7 +24,7 @@ import {
   isPlanetScaleDatabase,
   isSQLiteDatabase
 } from "./utils"
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { MySqlAdapter } from "./mysql"
 import { PgAdapter } from "./pg"
 import { PlanetScaleAdapter } from "./planetscale"

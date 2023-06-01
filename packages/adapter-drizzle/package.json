@@ -1,7 +1,7 @@
 {
-  "name": "@next-auth/drizzle-adapter",
+  "name": "@auth/drizzle-adapter",
   "version": "0.0.1",
-  "description": "Drizzle adapter for next-auth.",
+  "description": "Drizzle adapter for @auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
@@ -12,6 +12,7 @@
   "license": "ISC",
   "keywords": [
     "next-auth",
+    "@auth",
     "next.js",
     "oauth",
     "drizzle"
@@ -48,10 +49,10 @@
     "drizzle-orm": "^0.26.3",
     "jest": "^27.4.3",
     "mysql2": "^3.2.0",
-    "next-auth": "workspace:*",
+    "@auth/core": "workspace:*",
     "postgres": "^3.3.4"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "@auth/core/adapter-test/jest"
   }
 }
