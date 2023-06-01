@@ -17,6 +17,7 @@ on:
         options:
         - "@auth/nextjs"
         - "@auth/core"
+        - "@auth/prisma-adapter"
         - "next-auth"
       # TODO: Infer from package name
       path:
@@ -25,6 +26,7 @@ on:
         options:
         - "frameworks-nextjs"
         - "core"
+        - "adapter-prisma"
         - "next-auth"
 
 jobs:
