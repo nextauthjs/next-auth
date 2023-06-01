@@ -94,11 +94,7 @@ export const authConfig: AuthConfig = {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
-    BeyondIdentity({
-      clientId: process.env.BEYOND_IDENTITY_CLIENT_ID,
-      clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET,
-      issuer: process.env.BEYOND_IDENTITY_ISSUER,
-    }),
+    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET issuer: process.env.BEYOND_IDENTITY_ISSUER }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
