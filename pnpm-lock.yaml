@@ -455,23 +455,23 @@ importers:
 
   packages/adapter-test:
     specifiers:
+      '@auth/core': workspace:*
       '@babel/cli': ^7.14.3
       '@babel/plugin-transform-runtime': ^7.14.3
       '@babel/preset-env': ^7.14.2
       '@types/jest': ^26.0.23
       '@types/nodemailer': ^6.4.4
       jest: ^27.0.3
-      next-auth: workspace:*
       ts-jest: ^27.0.3
       typescript: ^4.2.4
     devDependencies:
+      '@auth/core': link:../core
       '@babel/cli': 7.17.10
       '@babel/plugin-transform-runtime': 7.18.5
       '@babel/preset-env': 7.18.2
       '@types/jest': 26.0.24
       '@types/nodemailer': 6.4.4
       jest: 27.5.1
-      next-auth: link:../next-auth
       ts-jest: 27.1.5_r5n7iohbfbguzk5ispbdybm75m
       typescript: 4.7.4
 
