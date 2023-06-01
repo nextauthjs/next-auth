@@ -1,4 +1,4 @@
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
 
 const requiredMethods = [
@@ -58,7 +58,8 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.connect?.()
   })
 
-  const { adapter, db, skipTests } = options
+  const { adapter: _adapter, db, skipTests } = options
+  const adapter = _adapter as Required<Adapter>
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
@@ -88,7 +89,7 @@ export async function runBasicTests(options: TestOptions) {
     providerAccountId: randomUUID(),
     type: "oauth",
     access_token: randomUUID(),
-    expires_at: ONE_MONTH,
+    expires_at: ONE_MONTH / 1000,
     id_token: randomUUID(),
     refresh_token: randomUUID(),
     token_type: "bearer",

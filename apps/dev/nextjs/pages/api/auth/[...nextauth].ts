@@ -41,7 +41,7 @@ import WorkOS from "@auth/core/providers/workos"
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
-// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// import { PrismaAdapter } from "@auth/prisma-adapter"
 // const client = globalThis.prisma || new PrismaClient()
 // if (process.env.NODE_ENV !== "production") globalThis.prisma = client
 // const adapter = PrismaAdapter(client)

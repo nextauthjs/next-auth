@@ -1,14 +1,29 @@
 {
-  "name": "@next-auth/prisma-adapter",
-  "version": "1.0.7",
-  "description": "Prisma adapter for next-auth.",
-  "homepage": "https://authjs.dev",
+  "name": "@auth/prisma-adapter",
+  "version": "0.0.0",
+  "description": "Prisma adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/prisma",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "William Luke",
-  "main": "dist/index.js",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -32,22 +47,19 @@
     "dev": "prisma generate && tsc -w",
     "studio": "prisma studio"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "@prisma/client": ">=2.26.0 || >=3",
-    "next-auth": "^4"
+    "@prisma/client": ">=2.26.0 || >=3 || >=4"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "@prisma/client": "^3.10.0",
+    "@prisma/client": "^4.15.0",
     "jest": "^27.4.3",
     "mongodb": "^4.4.0",
-    "next-auth": "workspace:*",
-    "prisma": "^3.10.0"
+    "prisma": "^4.15.0"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
