@@ -57,7 +57,7 @@
     "mysql": "^2.18.1",
     "pg": "^8.7.3",
     "sqlite3": "^5.0.8",
-    "typeorm": "0.3.16",
+    "typeorm": "0.3.15",
     "typeorm-naming-strategies": "^4.1.0",
     "typescript": "^4.7.4"
   },
@@ -66,7 +66,7 @@
     "mysql": "^2.18.1",
     "pg": "^8.2.1",
     "sqlite3": "^5.0.2",
-    "typeorm": "0.3.16"
+    "typeorm": "^0.3.7"
   },
   "peerDependenciesMeta": {
     "mysql": {
