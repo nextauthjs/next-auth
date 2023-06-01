@@ -51,7 +51,7 @@ import WorkOS from "next-auth/providers/workos"
 // const adapter = FaunaAdapter(client)
 
 // // TypeORM
-// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+// import { TypeORMLegacyAdapter } from "@auth/typeorm-adapter"
 // const adapter = TypeORMLegacyAdapter({
 //   type: "sqlite",
 //   name: "next-auth-test-memory",

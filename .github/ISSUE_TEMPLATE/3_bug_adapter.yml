@@ -32,7 +32,7 @@ body:
         - "@auth/prisma-adapter"
         - "@next-auth/sequelize-adapter"
         - "@next-auth/supabase-adapter"
-        - "@next-auth/typeorm-legacy-adapter"
+        - "@auth/typeorm-adapter"
         - "@next-auth/upstash-redis-adapter"
         - "@next-auth/xata-adapter"
     validations:
