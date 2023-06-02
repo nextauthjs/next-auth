@@ -63,6 +63,6 @@
     "postgres": "^3.3.4"
   },
   "jest": {
-    "preset": "@auth/core/adapter-test/jest"
+    "preset": "@next-auth/adapter-test/jest"
   }
 }
