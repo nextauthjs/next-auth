@@ -9,17 +9,17 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/typeorm-legacy-adapter typeorm
+ * npm install @auth/typeorm-adapter typeorm
  * ```
  *
- * @module @next-auth/typeorm-legacy-adapter
+ * @module @auth/typeorm-adapter
  */
 import type {
   Adapter,
   AdapterUser,
   AdapterAccount,
   AdapterSession,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import { DataSourceOptions, DataSource, EntityManager } from "typeorm"
 import * as defaultEntities from "./entities"
 import { parseDataSourceConfig, updateConnectionEntities } from "./utils"
@@ -29,7 +29,7 @@ export const entities = defaultEntities
 export type Entities = typeof entities
 
 /** This is the interface for the TypeORM adapter options. */
-export interface TypeORMLegacyAdapterOptions {
+export interface TypeORMAdapterOptions {
   /**
    * The {@link https://orkhan.gitbook.io/typeorm/docs/entities TypeORM entities} to create the database tables from.
    */
@@ -70,16 +70,16 @@ export async function getManager(options: {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+ * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  *
  *
  * export default NextAuth({
- *   adapter: TypeORMLegacyAdapter("yourconnectionstring"),
+ *   adapter: TypeORMAdapter("yourconnectionstring"),
  *   ...
  * })
  * ```
  *
- * `TypeORMLegacyAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
+ * `TypeORMAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
  *
  * ## Advanced usage
  *
@@ -93,7 +93,7 @@ export async function getManager(options: {
  *
  * 1. Create a file containing your modified entities:
  *
- * (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm-legacy/src/entities.ts))
+ * (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm/src/entities.ts))
  *
  * ```diff title="lib/entities.ts"
  * import {
@@ -231,15 +231,15 @@ export async function getManager(options: {
  * }
  * ```
  *
- * 2. Pass them to `TypeORMLegacyAdapter`
+ * 2. Pass them to `TypeORMAdapter`
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+ * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  * import * as entities from "lib/entities"
  *
  * export default NextAuth({
- *   adapter: TypeORMLegacyAdapter("yourconnectionstring", { entities }),
+ *   adapter: TypeORMAdapter("yourconnectionstring", { entities }),
  *   ...
  * })
  * ```
@@ -260,7 +260,7 @@ export async function getManager(options: {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+ * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  * import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
  * import { ConnectionOptions } from "typeorm"
  *
@@ -275,14 +275,14 @@ export async function getManager(options: {
  * }
  *
  * export default NextAuth({
- *   adapter: TypeORMLegacyAdapter(connection),
+ *   adapter: TypeORMAdapter(connection),
  *   ...
  * })
  * ```
  */
-export function TypeORMLegacyAdapter(
+export function TypeORMAdapter(
   dataSource: string | DataSourceOptions,
-  options?: TypeORMLegacyAdapterOptions
+  options?: TypeORMAdapterOptions
 ): Adapter {
   const entities = options?.entities
   const c = {
@@ -328,8 +328,10 @@ export function TypeORMLegacyAdapter(
     },
     async getUserByAccount(provider_providerAccountId) {
       const m = await getManager(c)
+      // @ts-expect-error
       const account = await m.findOne<AdapterAccount & { user: AdapterUser }>(
         "AccountEntity",
+        // @ts-expect-error
         { where: provider_providerAccountId, relations: ["user"] }
       )
       if (!account) return null

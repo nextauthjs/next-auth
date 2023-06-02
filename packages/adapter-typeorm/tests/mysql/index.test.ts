@@ -1,5 +1,5 @@
 import { runBasicTests } from "../../../adapter-test"
-import { TypeORMLegacyAdapter } from "../../src"
+import { TypeORMAdapter } from "../../src"
 import { db } from "../helpers"
 
 const mysqlConfig = {
@@ -13,6 +13,6 @@ const mysqlConfig = {
 }
 
 runBasicTests({
-  adapter: TypeORMLegacyAdapter(mysqlConfig),
+  adapter: TypeORMAdapter(mysqlConfig),
   db: db(mysqlConfig),
 })

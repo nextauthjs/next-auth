@@ -9,11 +9,11 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth drizzle-orm @next-auth/drizzle-adapter
+ * npm install drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
  *
- * @module @next-auth/drizzle-adapter
+ * @module @auth/drizzle-adapter
  */
 import {
   ClientFlavors,
@@ -22,21 +22,21 @@ import {
   isMySqlDatabase,
   isPgDatabase,
   isPlanetScaleDatabase,
-  isSQLiteDatabase
-} from "./utils"
+  isSQLiteDatabase,
+} from "./lib/utils"
 import type { Adapter } from "@auth/core/adapters"
-import { MySqlAdapter } from "./mysql"
-import { PgAdapter } from "./pg"
-import { PlanetScaleAdapter } from "./planetscale"
-import { SQLiteAdapter } from "./sqlite"
+import { MySqlAdapter } from "./lib/mysql"
+import { PgAdapter } from "./lib/pg"
+import { PlanetScaleAdapter } from "./lib/planetscale"
+import { SQLiteAdapter } from "./lib/sqlite"
 
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
  *
- * ```js title="pages/api/auth/[...nextauth].js"
+ * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { DrizzleAdapter } from "@next-auth/drizzle-adapter"
+ * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db, users, accounts, sessions, verificationTokens } from "./schema"
  *
  * export default NextAuth({
@@ -63,7 +63,7 @@ import { SQLiteAdapter } from "./sqlite"
  *
  * ### Postgres
  *
- *    ```json title="schema.ts"
+ *    ```ts title="schema.ts"
  *    import { integer, pgTable, text, primaryKey } from "drizzle-orm/pg-core"
  *    import { drizzle } from "drizzle-orm/vercel-postgres"
  *    import { migrate } from "drizzle-orm/vercel-postgres/migrator"
@@ -114,7 +114,7 @@ import { SQLiteAdapter } from "./sqlite"
  *
  * ### PlanetScale
  *
- *```json title="schema.ts"
+ *```ts title="schema.ts"
  * import {
  *   int,
  *   timestamp,
@@ -181,7 +181,7 @@ import { SQLiteAdapter } from "./sqlite"
  *
  * ### MySQL
  *
- * ```json title="schema.ts"
+ * ```ts title="schema.ts"
  * import {
  *  int,
  *  timestamp,
@@ -249,7 +249,7 @@ import { SQLiteAdapter } from "./sqlite"
  *
  * ### SQLite
  *
- * ```json title="schema.ts"
+ * ```ts title="schema.ts"
  * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
  * import { drizzle } from "drizzle-orm/better-sqlite3"
  * import Database from "better-sqlite3"
@@ -325,11 +325,10 @@ import { SQLiteAdapter } from "./sqlite"
  * await migrate(db, { migrationsFolder: "drizzle" });
  * ```
  *
- * ## TypeScript interface
  **/
-export function DrizzleAdapter<
-  SqlFlavor extends SqlFlavorOptions,
->(db: SqlFlavor, schema: ClientFlavors<SqlFlavor>
+export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
+  db: SqlFlavor,
+  schema: ClientFlavors<SqlFlavor>
 ): Adapter {
   if (isMySqlDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
@@ -338,7 +337,10 @@ export function DrizzleAdapter<
 
   if (isPlanetScaleDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
-    return PlanetScaleAdapter(db, schema as unknown as MinimumSchema["planetscale"])
+    return PlanetScaleAdapter(
+      db,
+      schema as unknown as MinimumSchema["planetscale"]
+    )
   }
 
   if (isPgDatabase(db)) {

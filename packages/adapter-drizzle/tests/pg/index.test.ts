@@ -1,15 +1,22 @@
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
-import { db, accounts, sessions, users, verificationTokens } from '../../src/pg/schema'
-import { eq, and } from 'drizzle-orm'
-import { v4 as randomUUID } from "uuid"
+import {
+  db,
+  accounts,
+  sessions,
+  users,
+  verificationTokens,
+} from "../../src/lib/pg/schema"
+import { eq, and } from "drizzle-orm"
 
 runBasicTests({
-  adapter: DrizzleAdapter(db, { accounts, sessions, users, verificationTokens }),
+  adapter: DrizzleAdapter(db, {
+    accounts,
+    sessions,
+    users,
+    verificationTokens,
+  }),
   db: {
-    id() {
-      return randomUUID()
-    },
     connect: async () => {
       await Promise.all([
         db.delete(sessions),
@@ -56,5 +63,5 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         ) ?? null,
-  }
+  },
 })

@@ -29,10 +29,10 @@ body:
         - "@next-auth/mongodb-adapter"
         - "@next-auth/neo4j-adapter"
         - "@next-auth/pouchdb-adapter"
-        - "@next-auth/prisma-adapter"
+        - "@auth/prisma-adapter"
         - "@next-auth/sequelize-adapter"
         - "@next-auth/supabase-adapter"
-        - "@next-auth/typeorm-legacy-adapter"
+        - "@auth/typeorm-adapter"
         - "@next-auth/upstash-redis-adapter"
         - "@next-auth/xata-adapter"
     validations:

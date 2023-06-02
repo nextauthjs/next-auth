@@ -9,7 +9,7 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/dgraph.png" width="30" />
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
   </a>
-  <a href="/reference/adapter/drizzle" class="adapter-card">
+   <a href="/reference/adapter/drizzle" class="adapter-card">
     <img src="/img/adapters/drizzle-orm.png" width="30" />
     <h4 class="adapter-card__title">Drizzle Adapter</h4>
   </a>

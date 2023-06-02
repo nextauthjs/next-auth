@@ -3,6 +3,8 @@
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "isolatedModules": true,
     "target": "ES2020",
     "module": "ESNext",
