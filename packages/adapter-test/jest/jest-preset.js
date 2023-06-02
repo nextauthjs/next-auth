@@ -10,7 +10,7 @@ module.exports = {
     ".(js|jsx)$": ["@swc/jest", swcConfig],
   },
   transformIgnorePatterns: ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleFileExtensions: ["mjs", "cjs", "ts", "tsx", "js", "jsx", "json", "node"],
   rootDir: ".",
   // coverageDirectory: "<rootDir>/coverage/",
   // collectCoverageFrom: ["<rootDir>/packages/*/src/**/*.{ts,tsx}"],
