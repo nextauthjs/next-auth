@@ -1,14 +1,13 @@
-import { runBasicTests } from "../../../adapter-test";
-import { DrizzleAdapter } from "../../src";
+import { runBasicTests } from "../../../adapter-test"
+import { DrizzleAdapter } from "../../src"
 import {
   db,
   accounts,
   sessions,
   users,
   verificationTokens,
-} from "../../src/lib/sqlite/schema";
-import { eq, and } from "drizzle-orm";
-import { v4 as randomUUID } from "uuid";
+} from "../../src/lib/sqlite/schema"
+import { eq, and } from "drizzle-orm"
 
 runBasicTests({
   adapter: DrizzleAdapter(db, {
@@ -18,16 +17,13 @@ runBasicTests({
     verificationTokens,
   }),
   db: {
-    id() {
-      return randomUUID();
-    },
     connect: async () => {
       await Promise.all([
         db.delete(sessions),
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
-      ]);
+      ])
     },
     disconnect: async () => {
       await Promise.all([
@@ -35,15 +31,16 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
-      ]);
+      ])
     },
-    user: (id) => db.select().from(users).where(eq(users.id, id)) ?? null,
+    user: (id) => db.select().from(users).where(eq(users.id, id)).get() ?? null,
     // .where(eq(users.id, id)) ?? null,
     session: (sessionToken) =>
       db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)) ?? null,
+        .where(eq(sessions.sessionToken, sessionToken))
+        .get() ?? null,
     account: (provider_providerAccountId) => {
       return (
         db
@@ -54,8 +51,9 @@ runBasicTests({
               accounts.providerAccountId,
               provider_providerAccountId.providerAccountId
             )
-          ) ?? null
-      );
+          )
+          .get() ?? null
+      )
     },
     verificationToken: (identifier_token) =>
       db
@@ -66,6 +64,7 @@ runBasicTests({
             eq(verificationTokens.token, identifier_token.token),
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
-        ) ?? null,
+        )
+        .get() ?? null,
   },
-});
+})

@@ -1,7 +1,6 @@
 import type { DbClient, Schema } from "./schema"
 import { and, eq } from "drizzle-orm"
 import type { Adapter } from "@auth/core/adapters"
-import { v4 as uuid } from "uuid"
 
 export function MySqlAdapter(
   client: DbClient,
@@ -9,7 +8,7 @@ export function MySqlAdapter(
 ): Adapter {
   return {
     createUser: async (data) => {
-      const id = uuid()
+      const id = crypto.randomUUID()
 
       await client.insert(users).values({ ...data, id })
 
@@ -91,18 +90,17 @@ export function MySqlAdapter(
         .then((res) => res[0])
     },
     getUserByAccount: async (account) => {
-      const dbAccount =
-        await client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
+      const dbAccount = await client
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, account.providerAccountId),
+            eq(accounts.provider, account.provider)
           )
-          .leftJoin(users, eq(accounts.userId, users.id))
-          .then(res => res[0])
+        )
+        .leftJoin(users, eq(accounts.userId, users.id))
+        .then((res) => res[0])
 
       return dbAccount.users
     },

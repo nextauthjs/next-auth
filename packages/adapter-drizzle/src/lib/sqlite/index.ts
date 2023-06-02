@@ -15,10 +15,9 @@
  *
  * @module @auth/drizzle-adapter
  */
-import type { Schema, DbClient } from "./schema";
-import { v4 as uuid } from "uuid";
-import { and, eq } from "drizzle-orm";
-import type { Adapter, AdapterAccount } from "@auth/core/adapters";
+import type { Schema, DbClient } from "./schema"
+import { and, eq } from "drizzle-orm"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 /**
  * ## Setup
@@ -117,22 +116,20 @@ export function SQLiteAdapter(
     createUser: (data) => {
       return client
         .insert(users)
-        .values({ ...data, id: uuid() })
+        .values({ ...data, id: crypto.randomUUID() })
         .returning()
-        .get();
+        .get()
     },
     getUser: (data) => {
-      return (
-        client.select().from(users).where(eq(users.id, data)).get() ?? null
-      );
+      return client.select().from(users).where(eq(users.id, data)).get() ?? null
     },
     getUserByEmail: (data) => {
       return (
         client.select().from(users).where(eq(users.email, data)).get() ?? null
-      );
+      )
     },
     createSession: (data) => {
-      return client.insert(sessions).values(data).returning().get();
+      return client.insert(sessions).values(data).returning().get()
     },
     getSessionAndUser: (data) => {
       return (
@@ -145,11 +142,11 @@ export function SQLiteAdapter(
           .where(eq(sessions.sessionToken, data))
           .innerJoin(users, eq(users.id, sessions.userId))
           .get() ?? null
-      );
+      )
     },
     updateUser: (data) => {
       if (!data.id) {
-        throw new Error("No user id.");
+        throw new Error("No user id.")
       }
 
       return client
@@ -157,7 +154,7 @@ export function SQLiteAdapter(
         .set(data)
         .where(eq(users.id, data.id))
         .returning()
-        .get();
+        .get()
     },
     updateSession: (data) => {
       return client
@@ -165,14 +162,14 @@ export function SQLiteAdapter(
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
-        .get();
+        .get()
     },
     linkAccount: (rawAccount) => {
       const updatedAccount = client
         .insert(accounts)
         .values(rawAccount)
         .returning()
-        .get();
+        .get()
 
       const account: AdapterAccount = {
         ...updatedAccount,
@@ -184,9 +181,9 @@ export function SQLiteAdapter(
         scope: updatedAccount.scope ?? undefined,
         expires_at: updatedAccount.expires_at ?? undefined,
         session_state: updatedAccount.session_state ?? undefined,
-      };
+      }
 
-      return account;
+      return account
     },
     getUserByAccount: (account) => {
       const dbAccount = client
@@ -198,17 +195,17 @@ export function SQLiteAdapter(
             eq(accounts.provider, account.provider)
           )
         )
-        .get();
+        .get()
 
-      if (!dbAccount) return null;
+      if (!dbAccount) return null
 
       const user = client
         .select()
         .from(users)
         .where(eq(users.id, dbAccount.userId))
-        .get();
+        .get()
 
-      return user;
+      return user
     },
     deleteSession: (sessionToken) => {
       return (
@@ -217,10 +214,10 @@ export function SQLiteAdapter(
           .where(eq(sessions.sessionToken, sessionToken))
           .returning()
           .get() ?? null
-      );
+      )
     },
     createVerificationToken: (token) => {
-      return client.insert(verificationTokens).values(token).returning().get();
+      return client.insert(verificationTokens).values(token).returning().get()
     },
     useVerificationToken: (token) => {
       try {
@@ -235,13 +232,13 @@ export function SQLiteAdapter(
             )
             .returning()
             .get() ?? null
-        );
+        )
       } catch (err) {
-        throw new Error("No verification token found.");
+        throw new Error("No verification token found.")
       }
     },
     deleteUser: (id) => {
-      return client.delete(users).where(eq(users.id, id)).returning().get();
+      return client.delete(users).where(eq(users.id, id)).returning().get()
     },
     unlinkAccount: (account) => {
       client
@@ -252,9 +249,9 @@ export function SQLiteAdapter(
             eq(accounts.provider, account.provider)
           )
         )
-        .run();
+        .run()
 
-      return undefined;
+      return undefined
     },
-  };
+  }
 }

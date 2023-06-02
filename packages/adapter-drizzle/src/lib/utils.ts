@@ -19,7 +19,8 @@ export interface MinimumSchema {
   planetscale: PlanetScaleSchema & Record<string, AnyMySqlTable>
 }
 
-export type SqlFlavorOptions = AnyMySqlDatabase
+export type SqlFlavorOptions =
+  | AnyMySqlDatabase
   | AnyPgDatabase
   | AnySQLiteDatabase
   | AnyPlanetScaleDatabase
@@ -34,7 +35,9 @@ export type ClientFlavors<Flavor> = Flavor extends AnyPlanetScaleDatabase
   ? MinimumSchema["sqlite"]
   : never
 
-export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any, MySqlSchema, any> {
+export function isMySqlDatabase(
+  db: any
+): db is MySqlDatabase<any, any, MySqlSchema, any> {
   return db instanceof MySqlDatabase<any, any, MySqlSchema, any>
 }
 
@@ -42,11 +45,14 @@ export function isPgDatabase(db: any): db is PgDatabase<any, PgSchema, any> {
   return db instanceof PgDatabase<any, PgSchema, any>
 }
 
-export function isSQLiteDatabase(db: any): db is BaseSQLiteDatabase<any, SQLiteSchema, any> {
+export function isSQLiteDatabase(
+  db: any
+): db is BaseSQLiteDatabase<any, SQLiteSchema, any> {
   return db instanceof BaseSQLiteDatabase<any, SQLiteSchema, any>
 }
 
 export function isPlanetScaleDatabase(db: any): db is PlanetScaleDatabase<any> {
+  return false
   // PlanetScaleDatabase is a type (not a class) so we can't use instanceof
   return db
 }

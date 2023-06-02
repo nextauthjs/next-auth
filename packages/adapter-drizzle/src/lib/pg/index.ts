@@ -15,10 +15,9 @@
  *
  * @module @auth/drizzle-adapter
  */
-import type { DbClient, Schema } from "./schema";
-import { and, eq } from "drizzle-orm";
-import type { Adapter } from "@auth/core/adapters";
-import { v4 as uuid } from "uuid";
+import type { DbClient, Schema } from "./schema"
+import { and, eq } from "drizzle-orm"
+import type { Adapter } from "@auth/core/adapters"
 
 /**
  * ## Setup
@@ -117,9 +116,9 @@ export function PgAdapter(
     createUser: async (data) => {
       return client
         .insert(users)
-        .values({ ...data, id: uuid() })
+        .values({ ...data, id: crypto.randomUUID() })
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
     },
     getUser: async (data) => {
       return (
@@ -128,7 +127,7 @@ export function PgAdapter(
           .from(users)
           .where(eq(users.id, data))
           .then((res) => res[0]) ?? null
-      );
+      )
     },
     getUserByEmail: async (data) => {
       return (
@@ -137,14 +136,14 @@ export function PgAdapter(
           .from(users)
           .where(eq(users.email, data))
           .then((res) => res[0]) ?? null
-      );
+      )
     },
     createSession: async (data) => {
       return client
         .insert(sessions)
         .values(data)
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
     },
     getSessionAndUser: async (data) => {
       return (
@@ -157,11 +156,11 @@ export function PgAdapter(
           .where(eq(sessions.sessionToken, data))
           .innerJoin(users, eq(users.id, sessions.userId))
           .then((res) => res[0]) ?? null
-      );
+      )
     },
     updateUser: async (data) => {
       if (!data.id) {
-        throw new Error("No user id.");
+        throw new Error("No user id.")
       }
 
       return client
@@ -169,7 +168,7 @@ export function PgAdapter(
         .set(data)
         .where(eq(users.id, data.id))
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
     },
     updateSession: async (data) => {
       return client
@@ -177,14 +176,14 @@ export function PgAdapter(
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
     },
     linkAccount: async (rawAccount) => {
       const updatedAccount = await client
         .insert(accounts)
         .values(rawAccount)
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
 
       // Drizzle will return `null` for fields that are not defined.
       // However, the return type is expecting `undefined`.
@@ -197,9 +196,9 @@ export function PgAdapter(
         scope: updatedAccount.scope ?? undefined,
         expires_at: updatedAccount.expires_at ?? undefined,
         session_state: updatedAccount.session_state ?? undefined,
-      };
+      }
 
-      return account;
+      return account
     },
     getUserByAccount: async (account) => {
       const dbAccount = await client
@@ -212,21 +211,21 @@ export function PgAdapter(
           )
         )
         .leftJoin(users, eq(accounts.userId, users.id))
-        .then((res) => res[0]);
+        .then((res) => res[0])
 
-      return dbAccount.users;
+      return dbAccount.users
     },
     deleteSession: async (sessionToken) => {
       await client
         .delete(sessions)
-        .where(eq(sessions.sessionToken, sessionToken));
+        .where(eq(sessions.sessionToken, sessionToken))
     },
     createVerificationToken: async (token) => {
       return client
         .insert(verificationTokens)
         .values(token)
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
     },
     useVerificationToken: async (token) => {
       try {
@@ -241,9 +240,9 @@ export function PgAdapter(
             )
             .returning()
             .then((res) => res[0]) ?? null
-        );
+        )
       } catch (err) {
-        throw new Error("No verification token found.");
+        throw new Error("No verification token found.")
       }
     },
     deleteUser: async (id) => {
@@ -251,7 +250,7 @@ export function PgAdapter(
         .delete(users)
         .where(eq(users.id, id))
         .returning()
-        .then((res) => res[0]);
+        .then((res) => res[0])
     },
     unlinkAccount: async (account) => {
       await client
@@ -261,9 +260,9 @@ export function PgAdapter(
             eq(accounts.providerAccountId, account.providerAccountId),
             eq(accounts.provider, account.provider)
           )
-        );
+        )
 
-      return undefined;
+      return undefined
     },
-  };
+  }
 }

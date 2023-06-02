@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
-import { AdapterAccount } from '@auth/core/adapters'
+import { AdapterAccount } from "@auth/core/adapters"
 
 const queryConnection = postgres(process.env.DATABASE_URL!)
 
