@@ -290,9 +290,9 @@ importers:
       postgres: ^3.3.4
       uuid: ^8.3.2
     dependencies:
+      '@auth/core': link:../core
       uuid: 8.3.2
     devDependencies:
-      '@auth/core': link:../core
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@planetscale/database': 1.7.0
@@ -19215,7 +19215,7 @@ packages:
       winston-transport: 4.5.0
       ws: 7.5.8
     optionalDependencies:
-      esbuild: 0.15.16
+      esbuild: 0.15.18
     transitivePeerDependencies:
       - bluebird
       - bufferutil

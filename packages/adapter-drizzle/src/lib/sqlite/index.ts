@@ -9,16 +9,16 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth drizzle-orm @next-auth/drizzle-adapter
+ * npm install next-auth drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
  *
- * @module @next-auth/drizzle-adapter
+ * @module @auth/drizzle-adapter
  */
-import type { DbClient, Schema } from "./schema"
-import { and, eq } from "drizzle-orm"
-import type { Adapter } from "@auth/core/adapters"
-import { v4 as uuid } from "uuid"
+import type { Schema, DbClient } from "./schema";
+import { v4 as uuid } from "uuid";
+import { and, eq } from "drizzle-orm";
+import type { Adapter, AdapterAccount } from "@auth/core/adapters";
 
 /**
  * ## Setup
@@ -28,7 +28,7 @@ import { v4 as uuid } from "uuid"
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { DrizzleAdapter } from "@next-auth/drizzle-adapter"
+ * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db } from "./db-schema"
  *
  * export default NextAuth({
@@ -109,44 +109,32 @@ import { v4 as uuid } from "uuid"
  * ```
  *
  **/
-export function PgAdapter(
+export function SQLiteAdapter(
   client: DbClient,
-  { users, sessions, verificationTokens, accounts }: Schema
+  { users, sessions, accounts, verificationTokens }: Schema
 ): Adapter {
   return {
-    createUser: async (data) => {
+    createUser: (data) => {
       return client
         .insert(users)
         .values({ ...data, id: uuid() })
         .returning()
-        .then((res) => res[0])
+        .get();
     },
-    getUser: async (data) => {
+    getUser: (data) => {
       return (
-        client
-          .select()
-          .from(users)
-          .where(eq(users.id, data))
-          .then((res) => res[0]) ?? null
-      )
+        client.select().from(users).where(eq(users.id, data)).get() ?? null
+      );
     },
-    getUserByEmail: async (data) => {
+    getUserByEmail: (data) => {
       return (
-        client
-          .select()
-          .from(users)
-          .where(eq(users.email, data))
-          .then((res) => res[0]) ?? null
-      )
+        client.select().from(users).where(eq(users.email, data)).get() ?? null
+      );
     },
-    createSession: async (data) => {
-      return client
-        .insert(sessions)
-        .values(data)
-        .returning()
-        .then((res) => res[0])
+    createSession: (data) => {
+      return client.insert(sessions).values(data).returning().get();
     },
-    getSessionAndUser: async (data) => {
+    getSessionAndUser: (data) => {
       return (
         client
           .select({
@@ -156,12 +144,12 @@ export function PgAdapter(
           .from(sessions)
           .where(eq(sessions.sessionToken, data))
           .innerJoin(users, eq(users.id, sessions.userId))
-          .then((res) => res[0]) ?? null
-      )
+          .get() ?? null
+      );
     },
-    updateUser: async (data) => {
+    updateUser: (data) => {
       if (!data.id) {
-        throw new Error("No user id.")
+        throw new Error("No user id.");
       }
 
       return client
@@ -169,27 +157,26 @@ export function PgAdapter(
         .set(data)
         .where(eq(users.id, data.id))
         .returning()
-        .then((res) => res[0])
+        .get();
     },
-    updateSession: async (data) => {
+    updateSession: (data) => {
       return client
         .update(sessions)
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
-        .then((res) => res[0])
+        .get();
     },
-    linkAccount: async (rawAccount) => {
-      const updatedAccount = await client
+    linkAccount: (rawAccount) => {
+      const updatedAccount = client
         .insert(accounts)
         .values(rawAccount)
         .returning()
-        .then((res) => res[0])
+        .get();
 
-      // Drizzle will return `null` for fields that are not defined.
-      // However, the return type is expecting `undefined`.
-      const account = {
+      const account: AdapterAccount = {
         ...updatedAccount,
+        type: updatedAccount.type,
         access_token: updatedAccount.access_token ?? undefined,
         token_type: updatedAccount.token_type ?? undefined,
         id_token: updatedAccount.id_token ?? undefined,
@@ -197,39 +184,45 @@ export function PgAdapter(
         scope: updatedAccount.scope ?? undefined,
         expires_at: updatedAccount.expires_at ?? undefined,
         session_state: updatedAccount.session_state ?? undefined,
-      }
+      };
 
-      return account
+      return account;
     },
-    getUserByAccount: async (account) => {
-      const dbAccount =
-        await client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
+    getUserByAccount: (account) => {
+      const dbAccount = client
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, account.providerAccountId),
+            eq(accounts.provider, account.provider)
           )
-          .leftJoin(users, eq(accounts.userId, users.id))
-          .then(res => res[0])
+        )
+        .get();
 
-      return dbAccount.users
+      if (!dbAccount) return null;
+
+      const user = client
+        .select()
+        .from(users)
+        .where(eq(users.id, dbAccount.userId))
+        .get();
+
+      return user;
     },
-    deleteSession: async (sessionToken) => {
-      await client
-        .delete(sessions)
-        .where(eq(sessions.sessionToken, sessionToken))
+    deleteSession: (sessionToken) => {
+      return (
+        client
+          .delete(sessions)
+          .where(eq(sessions.sessionToken, sessionToken))
+          .returning()
+          .get() ?? null
+      );
     },
-    createVerificationToken: async (token) => {
-      return client
-        .insert(verificationTokens)
-        .values(token)
-        .returning()
-        .then((res) => res[0])
+    createVerificationToken: (token) => {
+      return client.insert(verificationTokens).values(token).returning().get();
     },
-    useVerificationToken: async (token) => {
+    useVerificationToken: (token) => {
       try {
         return (
           client
@@ -241,21 +234,17 @@ export function PgAdapter(
               )
             )
             .returning()
-            .then((res) => res[0]) ?? null
-        )
+            .get() ?? null
+        );
       } catch (err) {
-        throw new Error("No verification token found.")
+        throw new Error("No verification token found.");
       }
     },
-    deleteUser: async (id) => {
-      await client
-        .delete(users)
-        .where(eq(users.id, id))
-        .returning()
-        .then((res) => res[0])
+    deleteUser: (id) => {
+      return client.delete(users).where(eq(users.id, id)).returning().get();
     },
-    unlinkAccount: async (account) => {
-      await client
+    unlinkAccount: (account) => {
+      client
         .delete(accounts)
         .where(
           and(
@@ -263,8 +252,9 @@ export function PgAdapter(
             eq(accounts.provider, account.provider)
           )
         )
+        .run();
 
-      return undefined
+      return undefined;
     },
-  }
+  };
 }

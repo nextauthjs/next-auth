@@ -9,11 +9,11 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth drizzle-orm @next-auth/drizzle-adapter
+ * npm install drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
  *
- * @module @next-auth/drizzle-adapter
+ * @module @auth/drizzle-adapter
  */
 import {
   ClientFlavors,
@@ -22,13 +22,13 @@ import {
   isMySqlDatabase,
   isPgDatabase,
   isPlanetScaleDatabase,
-  isSQLiteDatabase
-} from "./utils"
-import type { Adapter } from "@auth/core/adapters"
-import { MySqlAdapter } from "./mysql"
-import { PgAdapter } from "./pg"
-import { PlanetScaleAdapter } from "./planetscale"
-import { SQLiteAdapter } from "./sqlite"
+  isSQLiteDatabase,
+} from "./lib/utils";
+import type { Adapter } from "@auth/core/adapters";
+import { MySqlAdapter } from "./lib/mysql";
+import { PgAdapter } from "./lib/pg";
+import { PlanetScaleAdapter } from "./lib/planetscale";
+import { SQLiteAdapter } from "./lib/sqlite";
 
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
@@ -36,7 +36,7 @@ import { SQLiteAdapter } from "./sqlite"
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { DrizzleAdapter } from "@next-auth/drizzle-adapter"
+ * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db, users, accounts, sessions, verificationTokens } from "./schema"
  *
  * export default NextAuth({
@@ -327,27 +327,30 @@ import { SQLiteAdapter } from "./sqlite"
  *
  * ## TypeScript interface
  **/
-export function DrizzleAdapter<
-  SqlFlavor extends SqlFlavorOptions,
->(db: SqlFlavor, schema: ClientFlavors<SqlFlavor>
+export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
+  db: SqlFlavor,
+  schema: ClientFlavors<SqlFlavor>
 ): Adapter {
   if (isMySqlDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
-    return MySqlAdapter(db, schema as unknown as MinimumSchema["mysql"])
+    return MySqlAdapter(db, schema as unknown as MinimumSchema["mysql"]);
   }
 
   if (isPlanetScaleDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
-    return PlanetScaleAdapter(db, schema as unknown as MinimumSchema["planetscale"])
+    return PlanetScaleAdapter(
+      db,
+      schema as unknown as MinimumSchema["planetscale"]
+    );
   }
 
   if (isPgDatabase(db)) {
-    return PgAdapter(db, schema as MinimumSchema["pg"])
+    return PgAdapter(db, schema as MinimumSchema["pg"]);
   }
 
   if (isSQLiteDatabase(db)) {
-    return SQLiteAdapter(db, schema as MinimumSchema["sqlite"])
+    return SQLiteAdapter(db, schema as MinimumSchema["sqlite"]);
   }
 
-  throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
+  throw new Error("Unsupported database type in Auth.js Drizzle adapter.");
 }

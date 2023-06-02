@@ -9,16 +9,16 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth drizzle-orm @next-auth/drizzle-adapter
+ * npm install next-auth drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
  *
- * @module @next-auth/drizzle-adapter
+ * @module @auth/drizzle-adapter
  */
-import type { Schema, DbClient } from "./schema"
-import { v4 as uuid } from "uuid"
-import { and, eq } from "drizzle-orm"
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type { DbClient, Schema } from "./schema";
+import { and, eq } from "drizzle-orm";
+import type { Adapter } from "@auth/core/adapters";
+import { v4 as uuid } from "uuid";
 
 /**
  * ## Setup
@@ -28,7 +28,7 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { DrizzleAdapter } from "@next-auth/drizzle-adapter"
+ * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db } from "./db-schema"
  *
  * export default NextAuth({
@@ -109,30 +109,44 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  * ```
  *
  **/
-export function SQLiteAdapter(
+export function PgAdapter(
   client: DbClient,
-  { users, sessions, accounts, verificationTokens }: Schema
+  { users, sessions, verificationTokens, accounts }: Schema
 ): Adapter {
   return {
-    createUser: (data) => {
+    createUser: async (data) => {
       return client
         .insert(users)
         .values({ ...data, id: uuid() })
         .returning()
-        .get()
+        .then((res) => res[0]);
     },
-    getUser: (data) => {
-      return client.select().from(users).where(eq(users.id, data)).get() ?? null
-    },
-    getUserByEmail: (data) => {
+    getUser: async (data) => {
       return (
-        client.select().from(users).where(eq(users.email, data)).get() ?? null
-      )
+        client
+          .select()
+          .from(users)
+          .where(eq(users.id, data))
+          .then((res) => res[0]) ?? null
+      );
     },
-    createSession: (data) => {
-      return client.insert(sessions).values(data).returning().get()
+    getUserByEmail: async (data) => {
+      return (
+        client
+          .select()
+          .from(users)
+          .where(eq(users.email, data))
+          .then((res) => res[0]) ?? null
+      );
     },
-    getSessionAndUser: (data) => {
+    createSession: async (data) => {
+      return client
+        .insert(sessions)
+        .values(data)
+        .returning()
+        .then((res) => res[0]);
+    },
+    getSessionAndUser: async (data) => {
       return (
         client
           .select({
@@ -142,12 +156,12 @@ export function SQLiteAdapter(
           .from(sessions)
           .where(eq(sessions.sessionToken, data))
           .innerJoin(users, eq(users.id, sessions.userId))
-          .get() ?? null
-      )
+          .then((res) => res[0]) ?? null
+      );
     },
-    updateUser: (data) => {
+    updateUser: async (data) => {
       if (!data.id) {
-        throw new Error("No user id.")
+        throw new Error("No user id.");
       }
 
       return client
@@ -155,26 +169,27 @@ export function SQLiteAdapter(
         .set(data)
         .where(eq(users.id, data.id))
         .returning()
-        .get()
+        .then((res) => res[0]);
     },
-    updateSession: (data) => {
+    updateSession: async (data) => {
       return client
         .update(sessions)
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
-        .get()
+        .then((res) => res[0]);
     },
-    linkAccount: (rawAccount) => {
-      const updatedAccount = client
+    linkAccount: async (rawAccount) => {
+      const updatedAccount = await client
         .insert(accounts)
         .values(rawAccount)
         .returning()
-        .get()
+        .then((res) => res[0]);
 
-      const account: AdapterAccount = {
+      // Drizzle will return `null` for fields that are not defined.
+      // However, the return type is expecting `undefined`.
+      const account = {
         ...updatedAccount,
-        type: updatedAccount.type,
         access_token: updatedAccount.access_token ?? undefined,
         token_type: updatedAccount.token_type ?? undefined,
         id_token: updatedAccount.id_token ?? undefined,
@@ -182,45 +197,38 @@ export function SQLiteAdapter(
         scope: updatedAccount.scope ?? undefined,
         expires_at: updatedAccount.expires_at ?? undefined,
         session_state: updatedAccount.session_state ?? undefined,
-      }
+      };
 
-      return account
+      return account;
     },
-    getUserByAccount: (account) => {
-      const dbAccount =
-        client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
-          ).get()
-
-      if (!dbAccount) return null
-
-      const user = client
+    getUserByAccount: async (account) => {
+      const dbAccount = await client
         .select()
-        .from(users)
-        .where(eq(users.id, dbAccount.userId))
-        .get()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, account.providerAccountId),
+            eq(accounts.provider, account.provider)
+          )
+        )
+        .leftJoin(users, eq(accounts.userId, users.id))
+        .then((res) => res[0]);
 
-      return user
+      return dbAccount.users;
     },
-    deleteSession: (sessionToken) => {
-      return (
-        client
-          .delete(sessions)
-          .where(eq(sessions.sessionToken, sessionToken))
-          .returning()
-          .get() ?? null
-      )
+    deleteSession: async (sessionToken) => {
+      await client
+        .delete(sessions)
+        .where(eq(sessions.sessionToken, sessionToken));
     },
-    createVerificationToken: (token) => {
-      return client.insert(verificationTokens).values(token).returning().get()
+    createVerificationToken: async (token) => {
+      return client
+        .insert(verificationTokens)
+        .values(token)
+        .returning()
+        .then((res) => res[0]);
     },
-    useVerificationToken: (token) => {
+    useVerificationToken: async (token) => {
       try {
         return (
           client
@@ -232,27 +240,30 @@ export function SQLiteAdapter(
               )
             )
             .returning()
-            .get() ?? null
-        )
+            .then((res) => res[0]) ?? null
+        );
       } catch (err) {
-        throw new Error("No verification token found.")
+        throw new Error("No verification token found.");
       }
     },
-    deleteUser: (id) => {
-      return client.delete(users).where(eq(users.id, id)).returning().get()
+    deleteUser: async (id) => {
+      await client
+        .delete(users)
+        .where(eq(users.id, id))
+        .returning()
+        .then((res) => res[0]);
     },
-    unlinkAccount: (account) => {
-      client
+    unlinkAccount: async (account) => {
+      await client
         .delete(accounts)
         .where(
           and(
             eq(accounts.providerAccountId, account.providerAccountId),
             eq(accounts.provider, account.provider)
           )
-        )
-        .run()
+        );
 
-      return undefined
+      return undefined;
     },
-  }
+  };
 }

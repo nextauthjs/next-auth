@@ -1,18 +1,32 @@
 {
   "name": "@auth/drizzle-adapter",
   "version": "0.0.1",
-  "description": "Drizzle adapter for @auth.",
+  "description": "Drizzle adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Anthony Shew",
-  "main": "dist/index.js",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
     "@auth",
+    "Auth.js",
     "next.js",
     "oauth",
     "drizzle"
@@ -28,14 +42,11 @@
     "build": "tsc",
     "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
   "peerDependencies": {
-    "next-auth": "^4"
+    "drizzle-orm": "^0.26.3"
   },
   "dependencies": {
+    "@auth/core": "workspace:*",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -49,7 +60,6 @@
     "drizzle-orm": "^0.26.3",
     "jest": "^27.4.3",
     "mysql2": "^3.2.0",
-    "@auth/core": "workspace:*",
     "postgres": "^3.3.4"
   },
   "jest": {
