@@ -15,6 +15,14 @@ export default function Reddit(options) {
         image: null,
       }
     },
+    style: {
+      logo: "/reddit.svg",
+      bg: "#fff",
+      text: "#000",
+      logoDark: "/reddit.svg",
+      bgDark: "#000",
+      textDark: "#fff",
+    },
     options,
   }
 }
