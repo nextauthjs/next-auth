@@ -14,10 +14,13 @@ docker run -d --rm \
 mysql:8 \
 --default-authentication-plugin=mysql_native_password
 
+drizzle-kit generate:mysql --config=./src/mysql/drizzle.config.ts
+drizzle-kit push:mysql --config=./src/mysql/drizzle.config.ts
+
 echo "Started running MySQL tests."
-jest ./mysql/index.test.ts
+jest ./tests/mysql/zero-config.test.ts
 echo "Finished running MySQL tests."
 
 echo "Started running MySQL tests with custom models."
-CUSTOM_MODEL=1 jest tests/mysql/index.custom.test.ts
+CUSTOM_MODEL=1 jest ./tests/mysql/custom.test.ts
 echo "Finished running MySQL tests with custom models."

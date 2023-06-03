@@ -6,7 +6,7 @@ import {
   sessions,
   users,
   verificationTokens,
-} from "../../src/lib/sqlite/schema"
+} from "../../src/sqlite"
 import { eq, and } from "drizzle-orm"
 
 runBasicTests({

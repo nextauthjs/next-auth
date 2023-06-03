@@ -98,5 +98,7 @@ packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
 
 # Adapters
-
 docs/docs/reference/adapter
+
+## Drizzle migration folder
+.drizzle

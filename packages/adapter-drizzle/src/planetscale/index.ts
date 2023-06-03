@@ -1,15 +1,90 @@
-import type { DbClient, Schema } from "./schema"
-import { and, eq } from "drizzle-orm"
-import type { Adapter } from "@auth/core/adapters"
-import { v4 as uuid } from "uuid"
+import {
+  int,
+  timestamp,
+  mysqlTable,
+  varchar,
+  primaryKey,
+} from "drizzle-orm/mysql-core"
+import crypto from 'node:crypto'
+import { drizzle } from "drizzle-orm/planetscale-serverless"
+import { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { connect } from "@planetscale/database"
+import { eq, and } from 'drizzle-orm'
+
+export const users = mysqlTable("users", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: varchar("image", { length: 255 }),
+})
+
+export const accounts = mysqlTable(
+  "accounts",
+  {
+    userId: varchar("userId", { length: 255 }).notNull(),
+    type: varchar("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
+    provider: varchar("provider", { length: 255 }).notNull(),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    refresh_token: varchar("refresh_token", { length: 255 }),
+    access_token: varchar("access_token", { length: 255 }),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type", { length: 255 }),
+    scope: varchar("scope", { length: 255 }),
+    id_token: varchar("id_token", { length: 255 }),
+    session_state: varchar("session_state", { length: 255 }),
+  },
+  (account) => ({
+    compoundKey: primaryKey(account.provider, account.providerAccountId),
+  })
+)
+
+export const sessions = mysqlTable("sessions", {
+  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+})
+
+export const verificationTokens = mysqlTable(
+  "verificationToken",
+  {
+    identifier: varchar("identifier", { length: 255 }).notNull(),
+    token: varchar("token", { length: 255 }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey(vt.identifier, vt.token),
+  })
+)
+
+const connection = connect({
+  host: process.env["DATABASE_HOST"],
+  username: process.env["DATABASE_USERNAME"],
+  password: process.env["DATABASE_PASSWORD"],
+})
+
+export const db = drizzle(connection)
+export type DbClient = typeof db
+
+export const defaultSchema = { users, accounts, sessions, verificationTokens }
+export type DefaultSchema = typeof defaultSchema
+interface CustomSchema extends DefaultSchema { }
 
 export function PlanetScaleAdapter(
   client: DbClient,
-  { users, sessions, verificationTokens, accounts }: Schema
+  schema?: Partial<CustomSchema>
 ): Adapter {
+  const { users, accounts, sessions, verificationTokens } = {
+    users: schema?.users ?? defaultSchema.users,
+    accounts: schema?.accounts ?? defaultSchema.accounts,
+    sessions: schema?.sessions ?? defaultSchema.sessions,
+    verificationTokens:
+      schema?.verificationTokens ?? defaultSchema.verificationTokens,
+  }
+
   return {
     createUser: async (data) => {
-      const id = uuid()
+      const id = crypto.randomUUID()
 
       await client.insert(users).values({ ...data, id })
 

@@ -2,10 +2,10 @@ import { AnyMySqlTable, MySqlDatabase } from "drizzle-orm/mysql-core"
 import { AnyPgTable, PgDatabase } from "drizzle-orm/pg-core"
 import { AnySQLiteTable, BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 import { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless"
-import { Schema as PgSchema } from "./pg/schema"
-import { Schema as MySqlSchema } from "./mysql/schema"
-import { Schema as SQLiteSchema } from "./sqlite/schema"
-import { Schema as PlanetScaleSchema } from "./planetscale/schema"
+import { DefaultSchema as PgSchema } from "./pg"
+import { DefaultSchema as MySqlSchema } from "./mysql"
+import { DefaultSchema as SQLiteSchema } from "./sqlite"
+import { DefaultSchema as PlanetScaleSchema } from "./planetscale"
 
 export type AnyMySqlDatabase = MySqlDatabase<any, any>
 export type AnyPgDatabase = PgDatabase<any, any, any>

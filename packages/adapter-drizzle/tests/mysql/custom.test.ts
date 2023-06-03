@@ -1,21 +1,50 @@
+import { mysqlTable, varchar, timestamp, text, int, primaryKey, MySqlTextColumnType } from "drizzle-orm/mysql-core"
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
-import {
-  db,
-  accounts,
-  sessions,
-  users,
-  verificationTokens,
-} from "../../src/lib/pg/schema"
+import { users, sessions, accounts, verificationTokens, db } from "../../src/mysql"
 import { eq, and } from "drizzle-orm"
+import type { AdapterAccount } from "@auth/core/adapters"
+
+export const customUsersTable = mysqlTable("users", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name"),
+  email: text("email").notNull(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+  phone: text("phone")
+})
+
+export const customAccountsTable = mysqlTable(
+  "accounts",
+  {
+    userId: varchar("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: varchar("type").$type<AdapterAccount["type"]>().notNull(),
+    provider: varchar("provider").notNull(),
+    providerAccountId: varchar("providerAccountId").notNull(),
+    refresh_token: varchar("refresh_token"),
+    access_token: varchar("access_token"),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type"),
+    scope: varchar("scope"),
+    id_token: varchar("id_token"),
+    session_state: varchar("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey(account.provider, account.providerAccountId),
+  })
+)
 
 runBasicTests({
-  adapter: DrizzleAdapter(db, {
-    accounts,
-    sessions,
-    users,
-    verificationTokens,
-  }),
+  adapter: DrizzleAdapter(
+    db,
+    {
+      // TODO: MySQLVarchar doesn't fit with text?
+      users: customUsersTable,
+      accounts: customAccountsTable
+    }
+  ),
   db: {
     connect: async () => {
       await Promise.all([

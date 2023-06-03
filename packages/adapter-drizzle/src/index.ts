@@ -25,10 +25,11 @@ import {
   isSQLiteDatabase,
 } from "./lib/utils"
 import type { Adapter } from "@auth/core/adapters"
-import { MySqlAdapter } from "./lib/mysql"
+import { mySqlDrizzleAdapter } from "./mysql"
 import { PgAdapter } from "./lib/pg"
 import { PlanetScaleAdapter } from "./lib/planetscale"
 import { SQLiteAdapter } from "./lib/sqlite"
+import { MySqlAdapter } from "src/lib/mysql"
 
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
@@ -328,7 +329,7 @@ import { SQLiteAdapter } from "./lib/sqlite"
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  schema: ClientFlavors<SqlFlavor>
+  schema?: ClientFlavors<SqlFlavor>
 ): Adapter {
   if (isMySqlDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
@@ -336,9 +337,9 @@ export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   }
 
   if (isPlanetScaleDatabase(db)) {
-    // We need to cast to unknown since the type overlaps (PScale is MySQL based)
     return PlanetScaleAdapter(
       db,
+      // We need to cast to unknown since the type overlaps (PScale is MySQL based)
       schema as unknown as MinimumSchema["planetscale"]
     )
   }

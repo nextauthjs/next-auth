@@ -1,15 +1,98 @@
-import type { DbClient, Schema } from "./schema"
 import { and, eq } from "drizzle-orm"
-import type { Adapter } from "@auth/core/adapters"
-import { v4 as uuid } from "uuid"
+import crypto from 'node:crypto'
+import {
+  int,
+  timestamp,
+  mysqlTable,
+  primaryKey,
+  varchar,
+  MySqlTextColumnType
+} from "drizzle-orm/mysql-core"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { drizzle } from "drizzle-orm/mysql2"
+import { createPool } from "mysql2/promise"
 
-export function MySqlAdapter(
+export const users = mysqlTable("users", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: varchar("image", { length: 255 }),
+})
+
+export const accounts = mysqlTable(
+  "accounts",
+  {
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
+    provider: varchar("provider", { length: 255 }).notNull(),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    refresh_token: varchar("refresh_token", { length: 255 }),
+    access_token: varchar("access_token", { length: 255 }),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type", { length: 255 }),
+    scope: varchar("scope", { length: 255 }),
+    id_token: varchar("id_token", { length: 255 }),
+    session_state: varchar("session_state", { length: 255 }),
+  },
+  (account) => ({
+    compoundKey: primaryKey(account.provider, account.providerAccountId),
+  })
+)
+
+export const sessions = mysqlTable("sessions", {
+  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+})
+
+export const verificationTokens = mysqlTable(
+  "verificationToken",
+  {
+    identifier: varchar("identifier", { length: 255 }).notNull(),
+    token: varchar("token", { length: 255 }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey(vt.identifier, vt.token),
+  })
+)
+
+const poolConnection = process.env.AUTH_DRIZZLE_MYSQL_URL ? createPool(
+  process.env.AUTH_DRIZZLE_MYSQL_URL as string,
+) : createPool({
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "next-auth",
+})
+
+export const db = drizzle(poolConnection)
+export type DbClient = typeof db
+
+export const defaultSchema = { users, accounts, sessions, verificationTokens }
+export type DefaultSchema = typeof defaultSchema
+interface CustomSchema extends DefaultSchema { }
+
+export function mySqlDrizzleAdapter(
   client: DbClient,
-  { users, sessions, verificationTokens, accounts }: Schema
+  schema?: Partial<CustomSchema>
 ): Adapter {
+  const { users, accounts, sessions, verificationTokens } = {
+    users: schema?.users ?? defaultSchema.users,
+    accounts: schema?.accounts ?? defaultSchema.accounts,
+    sessions: schema?.sessions ?? defaultSchema.sessions,
+    verificationTokens:
+      schema?.verificationTokens ?? defaultSchema.verificationTokens,
+  }
+
   return {
     createUser: async (data) => {
-      const id = uuid()
+      const id = crypto.randomUUID()
 
       await client.insert(users).values({ ...data, id })
 
@@ -91,18 +174,17 @@ export function MySqlAdapter(
         .then((res) => res[0])
     },
     getUserByAccount: async (account) => {
-      const dbAccount =
-        await client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
+      const dbAccount = await client
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, account.providerAccountId),
+            eq(accounts.provider, account.provider)
           )
-          .leftJoin(users, eq(accounts.userId, users.id))
-          .then(res => res[0])
+        )
+        .leftJoin(users, eq(accounts.userId, users.id))
+        .then((res) => res[0])
 
       return dbAccount.users
     },

@@ -17,5 +17,9 @@ docker run -d --rm \
 postgres:15.3
 
 echo "Started running PostgreSQL tests."
-jest ./pg/index.test.ts
+jest ./tests/pg/custom.test.ts
+echo "Finished running PostgreSQL tests."
+
+echo "Started running PostgreSQL tests."
+jest ./tests/pg/zero-config.test.ts
 echo "Finished running PostgreSQL tests."
