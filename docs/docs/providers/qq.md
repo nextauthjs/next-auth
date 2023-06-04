@@ -15,7 +15,7 @@ https://connect.qq.com/manage.html#/
 
 The **Tencent QQ Provider** comes with a set of default options:
 
-- [Tencent QQ Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/qq.js)
+- [Tencent QQ Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/qq.ts)
 
 You can override any of the options to suit your own use case.
 
