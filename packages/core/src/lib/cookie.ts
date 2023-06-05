@@ -159,8 +159,17 @@ export class SessionStore {
    * The JWT Session or database Session ID
    * constructed from the cookie chunks.
    */
-  get value() {
-    return Object.values(this.#chunks)?.join("")
+   get value() {
+    // Sort the chunks by their keys before joining
+    const sortedKeys = Object.keys(this.#chunks).sort((a, b) => {
+      const aSuffix = parseInt(a.split(".")[1] || "0");
+      const bSuffix = parseInt(b.split(".")[1] || "0");
+  
+      return aSuffix - bSuffix;
+    });
+  
+    // Use the sorted keys to join the chunks in the correct order
+    return sortedKeys.map(key => this.#chunks[key]).join("");
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */
