@@ -26,9 +26,9 @@
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
- * 
+ *
  * or to use sveltekit platform environment variables for platforms like Cloudflare
- * 
+ *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/core/providers/github"
@@ -251,9 +251,13 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>
+type DynamicSvelteKitAuthConfig = (
+  event: RequestEvent
+) => PromiseLike<SvelteKitAuthConfig>
 
-function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+function AuthHandle(
+  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   return async function ({ event, resolve }) {
     const authOptions =
       typeof svelteKitAuthOptions === "object"
@@ -280,7 +284,9 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+export function SvelteKitAuth(
+  options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)

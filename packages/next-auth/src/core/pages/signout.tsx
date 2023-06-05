@@ -40,7 +40,9 @@ export default function SignoutPage(props: SignoutProps) {
         <p>Are you sure you want to sign out?</p>
         <form action={`${url}/signout`} method="POST">
           <input type="hidden" name="csrfToken" value={csrfToken} />
-          <button id="submitButton" type="submit">Sign out</button>
+          <button id="submitButton" type="submit">
+            Sign out
+          </button>
         </form>
       </div>
     </div>

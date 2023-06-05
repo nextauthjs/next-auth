@@ -32,7 +32,6 @@
 
 This is the official SolidStart Auth example for [Auth.js](https://authjs.dev).
 
-
 ## Getting started
 
 You can follow the guide below, or click the following button to deploy this example to [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=solid-start-auth-example).
@@ -44,9 +43,11 @@ You can follow the guide below, or click the following button to deploy this exa
 ```sh
 pnpm add -D solid-start-vercel
 ```
+
 ```sh
 npm i -D solid-start-vercel
 ```
+
 ```sh
 yarn add -D solid-start-vercel
 ```
@@ -54,19 +55,18 @@ yarn add -D solid-start-vercel
 ### Adding to Vite config
 
 ```ts
-import solid from "solid-start/vite";
-import dotenv from "dotenv";
-import { defineConfig } from "vite";
+import solid from "solid-start/vite"
+import dotenv from "dotenv"
+import { defineConfig } from "vite"
 // @ts-expect-error no typing
-import vercel from "solid-start-vercel";
-  
+import vercel from "solid-start-vercel"
+
 export default defineConfig(() => {
-  dotenv.config();
+  dotenv.config()
   return {
     plugins: [solid({ ssr: true, adapter: vercel({ edge: false }) })],
-  };
-});
-  
+  }
+})
 ```
 
 ### Environment Variables

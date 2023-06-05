@@ -182,7 +182,9 @@ export default function SigninPage(props: SignInServerPageParams) {
                   placeholder="email@example.com"
                   required
                 />
-                <button id="submitButton" type="submit">Sign in with {provider.name}</button>
+                <button id="submitButton" type="submit">
+                  Sign in with {provider.name}
+                </button>
               </form>
             )}
             {provider.type === "credentials" && (

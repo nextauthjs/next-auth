@@ -14,10 +14,6 @@
     "declarationMap": true,
     "declaration": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "tests"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["tests"]
 }

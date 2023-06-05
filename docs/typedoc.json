@@ -38,10 +38,5 @@
   ],
   "readme": "none",
   "reflectionsWithOwnFile": "none",
-  "sort": [
-    "kind",
-    "static-first",
-    "required-first",
-    "alphabetical"
-  ]
+  "sort": ["kind", "static-first", "required-first", "alphabetical"]
 }

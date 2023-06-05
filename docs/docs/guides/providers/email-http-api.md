@@ -9,7 +9,6 @@ title: HTTP-based Email Provider
 The following guide is written for `next-auth` (NextAuth.js), but it should work for any of the Auth.js framework libraries (`@auth/*`) as well.
 :::
 
-
 There is a built-in Email provider with which you could connect to the SMTP server of your choice to send "magic link" emails for sign-in purposes. However, the Email provider can also be used with HTTP-based email services, like AWS SES, Postmark, Sendgrid, etc. In this guide, we are going to explain how to use our Email magic link provider with any of the more modern HTTP-based Email APIs.
 
 For this example, we will be using [SendGrid](https://sendgrid.com), but any email service providing an HTTP API or JS client library will work.
@@ -34,11 +33,10 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     {
-      id: 'sendgrid',
-      type: 'email',
-      async sendVerificationRequest({identifier: email, url}) {
-      }
-    }
+      id: "sendgrid",
+      type: "email",
+      async sendVerificationRequest({ identifier: email, url }) {},
+    },
   ],
 }
 
@@ -60,9 +58,9 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     {
-      id: 'sendgrid',
-      type: 'email',
-      async sendVerificationRequest({identifier: email, url}) {
+      id: "sendgrid",
+      type: "email",
+      async sendVerificationRequest({ identifier: email, url }) {
         // highlight-start
         // Call the cloud Email provider API for sending emails
         // See https://docs.sendgrid.com/api-reference/mail-send/mail-send
@@ -94,7 +92,7 @@ export const authOptions: NextAuthOptions = {
         }
         // highlight-end
       },
-    }
+    },
   ],
 }
 ```

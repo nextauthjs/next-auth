@@ -222,4 +222,3 @@ return (...)
 ## Source Code
 
 A working example can be accessed [here](https://github.com/nextauthjs/next-auth-refresh-token-example).
-
