@@ -19,7 +19,7 @@ export default NextAuth({
         return { role: profile.role ?? "user", ... }
       },
       ...
-    })
+    })  
   ],
 })
 ```
@@ -29,7 +29,6 @@ To determine the user's role, you can either add your logic or if your provider 
 :::
 
 ## Persisting the role
-
 ### With JWT
 
 When you don't have a database configured, the role will be persisted in a cookie, by using the `jwt()` callback. On sign-in, the `role` property is exposed from the `profile` callback on the `user` object. Persist the `user.role` value by assigning it to `token.role`. That's it!
@@ -47,7 +46,7 @@ export default NextAuth({
         return { role: profile.role ?? "user", ... }
       },
       ...
-    })
+    })  
   ],
   // highlight-start
   callbacks: {
@@ -106,7 +105,7 @@ export default NextAuth({
         return { role: profile.role ?? "user", ... }
       }
       ...
-    })
+    })  
   ],
   // highlight-start
   callbacks: {

@@ -8,12 +8,15 @@ import { SessionSchema } from "../src/schemas/sessions"
 import { AccountSchema } from "../src/schemas/accounts"
 
 const name = "test"
-const connection = createConnection(`mongodb://localhost:27017/${name}`, {
-  // @ts-ignore
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-const connectionPromise = connection
+
+const connectionPromise = createConnection(
+  `mongodb://localhost:27017/${name}`,
+  {
+    // @ts-ignore
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
 
 runBasicTests({
   adapter: TypegooseAdapter({
@@ -22,11 +25,11 @@ runBasicTests({
   db: {
     id: () => new Types.ObjectId().toString(),
     disconnect: async () => {
-      await connection.db.dropDatabase()
-      await connection.close()
+      await connectionPromise.db.dropDatabase()
+      await connectionPromise.close()
     },
     account: async ({ provider, providerAccountId }) => {
-      const user = await connection.models[UserSchema.name]
+      const user = await connectionPromise.models[UserSchema.name]
         .findOne({
           accounts: {
             $elemMatch: {
@@ -48,7 +51,7 @@ runBasicTests({
       return serialized
     },
     session: async (sessionToken) => {
-      const user = await connection.models[UserSchema.name]
+      const user = await connectionPromise.models[UserSchema.name]
         .findOne({
           sessions: {
             $elemMatch: {
@@ -68,7 +71,9 @@ runBasicTests({
       return serialized
     },
     user: async (id) => {
-      const user = await connection.models[UserSchema.name].findById(id).exec()
+      const user = await connectionPromise.models[UserSchema.name]
+        .findById(id)
+        .exec()
       if (!user) {
         return null
       }
@@ -76,7 +81,7 @@ runBasicTests({
       return serialized
     },
     verificationToken: async (token) => {
-      const verificationToken = await connection.models[
+      const verificationToken = await connectionPromise.models[
         VerificationTokenSchema.name
       ]
         .findOne(token)

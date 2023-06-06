@@ -29,10 +29,6 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/mongodb.svg" width="15" />
     <h4 class="adapter-card__title">MongoDB Adapter</h4>
   </a>
-  <a href="/reference/adapter/typegoose" class="adapter-card">
-    <img src="/img/adapters/typegoose.svg" width="15" />
-    <h4 class="adapter-card__title">Typegoose Adapter</h4>
-  </a>
   <a href="/reference/adapter/neo4j" class="adapter-card">
     <img src="/img/adapters/neo4j.svg" width="50" />
     <h4 class="adapter-card__title">Neo4j Adapter</h4>
@@ -71,7 +67,9 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
 If you don't find an adapter for the database or service you use, you can always create one yourself. Have a look at our guide on [how to create a database adapter](/guides/adapters/creating-a-database-adapter).
 :::
 
+
 ## Models
+
 
 Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this:
 
@@ -133,7 +131,7 @@ If a user first signs in with an OAuth provider, then their email address is aut
 This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in the future (if the [Email Provider](/reference/core/providers_email) is configured).
 :::
 
-User creation in the database is automatic and happens when the user is logging in for the first time with a provider.
+User creation in the database is automatic and happens when the user is logging in for the first time with a provider. 
 If the first sign-in is via the [OAuth Provider](/reference/core/providers_oauth), the default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
 If the first sign-in is via the [Email Provider](/reference/core/providers_email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.

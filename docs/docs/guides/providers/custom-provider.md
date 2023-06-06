@@ -4,6 +4,7 @@ title: OAuth Provider
 
 Auth.js comes with a set of built-in OAuth providers that you can import from `@auth/core/providers/*`. Every provider has their separate documentation page under the [core package's API Reference](/reference/core)
 
+
 ## Use your own provider
 
 However, you can use _any_ provider as long as they are compliant with the OAuth/OIDC specifications.
@@ -38,6 +39,7 @@ Then, you can set the [Redirect URI](https://www.ietf.org/archive/id/draft-ietf-
 `{path-to-auth-handler}` is _usually_ `auth` or `api/auth`, depending on your framework of your choice.
 `my-oidc-provider` matches the `id` you set in the [`providers` list](/reference/core#providers).
 
+
 ## Override default provider config
 
 For built-in providers, in most cases you will only need to specify the `clientId` and `clientSecret`, and in case of OIDC providers, the `issuer` property. If you need to override any of the defaults, you can add them in the provider's function call and they will be deep-merged with the default configuration options.
@@ -45,6 +47,7 @@ For built-in providers, in most cases you will only need to specify the `clientI
 :::note
 The user provided options are deeply merged with the default options. That means you only have to override part of the options that you need to be different. For example if you want different scopes, overriding `authorization.params.scope` is enough, instead of the whole `authorization` option.
 :::
+
 
 For example, to override a provider's default scopes, you can do the following:
 
@@ -99,12 +102,10 @@ We are only accepting new providers to `@auth/core`, and not `next-auth`. Follow
 
 1. Create a new `{provider}.ts` (for it to get merged, you must use TypeScript) file under the [`packages/core/src/providers`](https://github.com/nextauthjs/next-auth/tree/main/packages/core/src/providers) directory.
 2. Make sure that you are following other providers, ie.:
-
-- Use a named default export: `export default function YourProvider`
-- Export the TypeScript `interface` that defines the provider's available user info properties
-- Add the necessary JSDoc comments/documentation (Study the built-in providers to get an understanding what's needed. For example, the [Auth0 provider](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts) is a good example for OIDC and the [GitHub Provider](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts) is an OAuth provider.)
-- Add links to the provider's API reference/documentation so others can understand how to use the provider
-
+  - Use a named default export: `export default function YourProvider`
+  - Export the TypeScript `interface` that defines the provider's available user info properties
+  - Add the necessary JSDoc comments/documentation (Study the built-in providers to get an understanding what's needed. For example, the [Auth0 provider](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts) is a good example for OIDC and the [GitHub Provider](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts) is an OAuth provider.)
+  - Add links to the provider's API reference/documentation so others can understand how to use the provider
 3. Add the new provider name to the `Provider type` dropdown options in [`the provider issue template`](https://github.com/nextauthjs/next-auth/edit/main/.github/ISSUE_TEMPLATE/2_bug_provider.yml)
 4. (Optional): Add a logo `{provider}.svg` to the [`docs/static/img/providers`](https://github.com/nextauthjs/next-auth/tree/main/docs/static/img/providers) directory.
 

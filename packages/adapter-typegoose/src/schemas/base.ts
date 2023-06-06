@@ -1,4 +1,4 @@
-import { Exclude, Expose, Transform } from "class-transformer"
+import { Exclude, Expose } from "class-transformer"
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses"
 import { Severity, modelOptions } from "@typegoose/typegoose"
 

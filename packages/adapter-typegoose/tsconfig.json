@@ -1,10 +1,21 @@
 {
-  "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "isolatedModules": true,
     "rootDir": "src",
-    "outDir": "dist",
+    "outDir": ".",
+    "baseUrl": ".",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipDefaultLibCheck": true,
+    "strictNullChecks": true,
+    "stripInternal": true
   },
-  "exclude": ["tests", "dist", "jest.config.js"]
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts"]
 }

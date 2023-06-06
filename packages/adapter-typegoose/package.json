@@ -1,22 +1,35 @@
 {
-  "name": "@next-auth/typegoose-adapter",
+  "name": "@auth/typegoose-adapter",
   "version": "1.0.0",
-  "description": "Typegoose adapter for next-auth.",
-  "homepage": "https://authjs.dev",
+  "description": "Typegoose adapter for Auth.js.",
+  "homepage": "https://authjs.dev/reference/adapter/typegoose",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Davi Nomoeh Dani <dapino.dev@gmail.com>",
-  "main": "dist/index.js",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
   "license": "ISC",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "keywords": [
     "next-auth",
     "next.js",
     "oauth",
-    "mongodb",
     "typegoose",
-    "mongoose",
     "adapter"
   ],
   "private": false,
@@ -28,10 +41,6 @@
     "test:watch": "./tests/test.sh -w",
     "build": "tsc"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
   "dependencies": {
     "class-transformer": "^0.5.1"
   },

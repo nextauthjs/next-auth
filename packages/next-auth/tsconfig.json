@@ -4,7 +4,11 @@
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "strictNullChecks": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "strict": false,
     "module": "esnext",
@@ -18,11 +22,19 @@
     "outDir": ".",
     "rootDir": "src",
     "paths": {
-      "next": ["node_modules/next"],
-      "react": ["node_modules/react"]
+      "next": [
+        "node_modules/next"
+      ],
+      "react": [
+        "node_modules/react"
+      ]
     }
   },
-  "include": ["src/**/*", "tests/**/*", "config/**/*"],
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "config/**/*"
+  ],
   "exclude": [
     "./*.js",
     "./*.d.ts",

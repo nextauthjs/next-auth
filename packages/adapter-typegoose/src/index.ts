@@ -8,13 +8,15 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/typegoose-adapter @typegoose/typegoose mongoose
+ * npm install next-auth @auth/typegoose-adapter @typegoose/typegoose mongoose
  * ```
  *
- * @module @next-auth/typegoose-adapter
+ * @module @auth/typegoose-adapter
  */
 export { TypegooseAdapter } from "./adapter"
-export { configureMongoDBClient } from "./client"
+export { AccountSchema } from "./schemas/accounts"
+export { SessionSchema } from "./schemas/sessions"
+export { UserSchema } from "./schemas/users"
+export { VerificationTokenSchema } from "./schemas/verifycation-token"
 
-export type { MongoDBClientConfig } from "./client"
 export type { TypegooseAdapterOptions } from "./adapter"

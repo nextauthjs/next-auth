@@ -25,7 +25,6 @@ Continue to our tutorials to see how to use Auth.js for authentication:
 - Use with any username/password store
 
 ### Flexible
-
 - Runtime agnostic - run anywhere! Vercel Edge Functions, Node.js, Serverless, etc.
 - Use with any modern framework! Next.js, SolidStart, SvelteKit, etc.
 - [Bring Your Own Database](/getting-started/databases) - or none! MySQL, Postgres, MSSQL, MongoDB, etc. Choose database sessions or JWT.
@@ -33,7 +32,6 @@ Continue to our tutorials to see how to use Auth.js for authentication:
 _Note: Email sign-in requires a database to store single-use verification tokens._
 
 ### Secure by default
-
 - Signed, prefixed, server-only cookies
 - Built-in CSRF protection
 - Doesn't rely on client-side JavaScript

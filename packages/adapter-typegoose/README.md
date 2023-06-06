@@ -8,14 +8,14 @@
   </a>
   <h3 align="center"><b>Typegoose Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
-    <a href="https://npm.im/@next-auth/typegoose-adapter">
+    <a href="https://npm.im/@auth/typegoose-adapter">
       <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
     </a>
-    <a href="https://npm.im/@next-auth/typegoose-adapter">
-      <img alt="npm" src="https://img.shields.io/npm/v/@next-auth/typegoose-adapter?color=green&label=@next-auth/typegoose-adapter&style=flat-square">
+    <a href="https://npm.im/@auth/typegoose-adapter">
+      <img alt="npm" src="https://img.shields.io/npm/v/@auth/typegoose-adapter?color=green&label=@auth/typegoose-adapter&style=flat-square">
     </a>
-    <a href="https://www.npmtrends.com/@next-auth/typegoose-adapter">
-      <img src="https://img.shields.io/npm/dm/@next-auth/typegoose-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
+    <a href="https://www.npmtrends.com/@auth/typegoose-adapter">
+      <img src="https://img.shields.io/npm/dm/@auth/typegoose-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
       <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />

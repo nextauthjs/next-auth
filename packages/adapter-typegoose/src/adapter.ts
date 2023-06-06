@@ -1,6 +1,5 @@
 import { getModelForClass } from "@typegoose/typegoose"
-import type { Connection } from "mongoose"
-import type { Awaitable } from "next-auth"
+import { ConnectionStates, type Connection } from "mongoose"
 import {
   Adapter,
   AdapterAccount,
@@ -13,25 +12,34 @@ import { UserSchema } from "./schemas/users"
 import { SessionSchema } from "./schemas/sessions"
 import { AccountSchema } from "./schemas/accounts"
 import { VerificationTokenSchema } from "./schemas/verifycation-token"
+import { IModelOptions } from "@typegoose/typegoose/lib/types"
 
 export interface TypegooseAdapterOptions {
-  connection: Awaitable<Connection>
-  options?: Partial<{}>
+  connection: Connection
+  options?: Partial<{
+    dbName: string
+  }>
 }
 export function TypegooseAdapter({
   connection,
+  options,
 }: TypegooseAdapterOptions): Adapter {
   const db = (async () => {
-    let _db = await connection
-    const modelOptions = {
-      existingConnection: _db,
-      schemaOptions: {
-        timestamps: true,
-      },
+    let _conn =
+      connection.readyState !== ConnectionStates.connected
+        ? await connection.asPromise()
+        : connection
+    if (options?.dbName) {
+      _conn = await _conn.useDb(options.dbName).asPromise()
     }
+    const modelOptions: IModelOptions = {
+      existingConnection: _conn,
+    }
+    const UModel = getModelForClass(UserSchema, modelOptions)
+    const VModel = getModelForClass(VerificationTokenSchema, modelOptions)
     return {
-      U: getModelForClass(UserSchema, modelOptions),
-      V: getModelForClass(VerificationTokenSchema, modelOptions),
+      U: UModel,
+      V: VModel,
     }
   })()
   return {
@@ -76,7 +84,7 @@ export function TypegooseAdapter({
         new: true,
       }).exec()
       const serialized = instanceToPlain(
-        plainToClass(UserSchema, updatedUser || {})
+        plainToClass(UserSchema, updatedUser ?? {})
       )
       return serialized as AdapterUser
     },
@@ -115,7 +123,7 @@ export function TypegooseAdapter({
         },
       }).exec()
       if (!user) return null
-      const session = user.sessions!.find(
+      const session = user.sessions.find(
         (session) => session.sessionToken === sessionToken
       )
       const serializedUser = instanceToPlain(plainToClass(UserSchema, user))
@@ -162,7 +170,7 @@ export function TypegooseAdapter({
         }
       ).exec()
       if (!user) return null
-      const session = user.sessions!.find(
+      const session = user.sessions.find(
         (session) => session.sessionToken === sessionToken
       )
       const serialized = instanceToPlain(plainToClass(SessionSchema, session))
@@ -181,7 +189,7 @@ export function TypegooseAdapter({
         { new: true }
       ).exec()
       if (!user) return null
-      const newAccount = user.accounts!.find(
+      const newAccount = user.accounts.find(
         (acc) => acc.providerId === account.providerId
       )
       const serialized = instanceToPlain(
@@ -214,7 +222,7 @@ export function TypegooseAdapter({
         }
       )
       if (!user) return undefined
-      const deletedAccount = user.accounts!.find(
+      const deletedAccount = user.accounts.find(
         (acc) =>
           acc.providerId === providerAccountId && acc.provider === provider
       )

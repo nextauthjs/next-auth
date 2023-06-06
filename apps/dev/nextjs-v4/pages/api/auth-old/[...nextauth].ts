@@ -78,130 +78,45 @@ export const authOptions: NextAuthOptions = {
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {
         if (credentials.password !== "pw") return null
-        return {
-          name: "Fill Murray",
-          email: "bill@fillmurray.com",
-          image: "https://www.fillmurray.com/64/64",
-          id: "1",
-          foo: "",
-        }
+        return { name: "Fill Murray", email: "bill@fillmurray.com", image: "https://www.fillmurray.com/64/64", id: "1", foo: "" }
       },
     }),
-    Apple({
-      clientId: process.env.APPLE_ID,
-      clientSecret: process.env.APPLE_SECRET,
-    }),
-    Auth0({
-      clientId: process.env.AUTH0_ID,
-      clientSecret: process.env.AUTH0_SECRET,
-      issuer: process.env.AUTH0_ISSUER,
-    }),
+    Apple({ clientId: process.env.APPLE_ID, clientSecret: process.env.APPLE_SECRET }),
+    Auth0({ clientId: process.env.AUTH0_ID, clientSecret: process.env.AUTH0_SECRET, issuer: process.env.AUTH0_ISSUER }),
     AzureAD({
       clientId: process.env.AZURE_AD_CLIENT_ID,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
-    AzureB2C({
-      clientId: process.env.AZURE_B2C_ID,
-      clientSecret: process.env.AZURE_B2C_SECRET,
-      issuer: process.env.AZURE_B2C_ISSUER,
-    }),
-    BoxyHQSAML({
-      issuer: "https://jackson-demo.boxyhq.com",
-      clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com",
-      clientSecret: "dummy",
-    }),
+    AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
+    BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
-    Discord({
-      clientId: process.env.DISCORD_ID,
-      clientSecret: process.env.DISCORD_SECRET,
-    }),
-    DuendeIDS6({
-      clientId: "interactive.confidential",
-      clientSecret: "secret",
-      issuer: "https://demo.duendesoftware.com",
-    }),
-    Facebook({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET,
-    }),
-    Foursquare({
-      clientId: process.env.FOURSQUARE_ID,
-      clientSecret: process.env.FOURSQUARE_SECRET,
-    }),
-    Freshbooks({
-      clientId: process.env.FRESHBOOKS_ID,
-      clientSecret: process.env.FRESHBOOKS_SECRET,
-    }),
-    GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-    Gitlab({
-      clientId: process.env.GITLAB_ID,
-      clientSecret: process.env.GITLAB_SECRET,
-    }),
-    Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
+    Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
+    DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
+    Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
+    Foursquare({ clientId: process.env.FOURSQUARE_ID, clientSecret: process.env.FOURSQUARE_SECRET }),
+    Freshbooks({ clientId: process.env.FRESHBOOKS_ID, clientSecret: process.env.FRESHBOOKS_SECRET }),
+    GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
+    Gitlab({ clientId: process.env.GITLAB_ID, clientSecret: process.env.GITLAB_SECRET }),
+    Google({ clientId: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET }),
     // IDS4({ clientId: process.env.IDS4_ID, clientSecret: process.env.IDS4_SECRET, issuer: process.env.IDS4_ISSUER }),
-    Instagram({
-      clientId: process.env.INSTAGRAM_ID,
-      clientSecret: process.env.INSTAGRAM_SECRET,
-    }),
+    Instagram({ clientId: process.env.INSTAGRAM_ID, clientSecret: process.env.INSTAGRAM_SECRET }),
     // Keycloak({ clientId: process.env.KEYCLOAK_ID, clientSecret: process.env.KEYCLOAK_SECRET, issuer: process.env.KEYCLOAK_ISSUER }),
-    Line({
-      clientId: process.env.LINE_ID,
-      clientSecret: process.env.LINE_SECRET,
-    }),
-    LinkedIn({
-      clientId: process.env.LINKEDIN_ID,
-      clientSecret: process.env.LINKEDIN_SECRET,
-    }),
-    Mailchimp({
-      clientId: process.env.MAILCHIMP_ID,
-      clientSecret: process.env.MAILCHIMP_SECRET,
-    }),
+    Line({ clientId: process.env.LINE_ID, clientSecret: process.env.LINE_SECRET }),
+    LinkedIn({ clientId: process.env.LINKEDIN_ID, clientSecret: process.env.LINKEDIN_SECRET }),
+    Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
     // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
-    Osu({
-      clientId: process.env.OSU_CLIENT_ID,
-      clientSecret: process.env.OSU_CLIENT_SECRET,
-    }),
-    Patreon({
-      clientId: process.env.PATREON_ID,
-      clientSecret: process.env.PATREON_SECRET,
-    }),
-    Slack({
-      clientId: process.env.SLACK_ID,
-      clientSecret: process.env.SLACK_SECRET,
-    }),
-    Spotify({
-      clientId: process.env.SPOTIFY_ID,
-      clientSecret: process.env.SPOTIFY_SECRET,
-    }),
-    Trakt({
-      clientId: process.env.TRAKT_ID,
-      clientSecret: process.env.TRAKT_SECRET,
-    }),
-    Twitch({
-      clientId: process.env.TWITCH_ID,
-      clientSecret: process.env.TWITCH_SECRET,
-    }),
-    Twitter({
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET,
-    }),
+    Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
+    Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
+    Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
+    Spotify({ clientId: process.env.SPOTIFY_ID, clientSecret: process.env.SPOTIFY_SECRET }),
+    Trakt({ clientId: process.env.TRAKT_ID, clientSecret: process.env.TRAKT_SECRET }),
+    Twitch({ clientId: process.env.TWITCH_ID, clientSecret: process.env.TWITCH_SECRET }),
+    Twitter({ clientId: process.env.TWITTER_ID, clientSecret: process.env.TWITTER_SECRET }),
     // TwitterLegacy({ clientId: process.env.TWITTER_LEGACY_ID, clientSecret: process.env.TWITTER_LEGACY_SECRET }),
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
-    Wikimedia({
-      clientId: process.env.WIKIMEDIA_ID,
-      clientSecret: process.env.WIKIMEDIA_SECRET,
-    }),
-    WorkOS({
-      clientId: process.env.WORKOS_ID,
-      clientSecret: process.env.WORKOS_SECRET,
-    }),
+    Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
+    WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
   ],
 }
 
