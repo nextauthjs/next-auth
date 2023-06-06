@@ -14,9 +14,11 @@
  * @module @auth/typegoose-adapter
  */
 export { TypegooseAdapter } from "./adapter"
-export { AccountSchema } from "./schemas/accounts"
-export { SessionSchema } from "./schemas/sessions"
-export { UserSchema } from "./schemas/users"
-export { VerificationTokenSchema } from "./schemas/verifycation-token"
+export {
+  AccountSchema,
+  SessionSchema,
+  UserSchema,
+  VerificationTokenSchema,
+} from "./schemas"
 
 export type { TypegooseAdapterOptions } from "./adapter"

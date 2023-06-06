@@ -1,5 +1,5 @@
 import { instanceToPlain, plainToClass } from "class-transformer"
-import { VerificationTokenSchema } from "../src/schemas/verifycation-token"
+import { VerificationTokenSchema } from "../src"
 import type { VerificationToken } from "next-auth/adapters"
 
 describe("VerificationTokenSchema", () => {

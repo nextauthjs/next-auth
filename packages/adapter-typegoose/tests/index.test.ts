@@ -1,11 +1,13 @@
 import { runBasicTests } from "@next-auth/adapter-test"
-import { TypegooseAdapter } from "../src"
+import {
+  AccountSchema,
+  SessionSchema,
+  TypegooseAdapter,
+  UserSchema,
+  VerificationTokenSchema,
+} from "../src"
 import { Types, createConnection } from "mongoose"
-import { UserSchema } from "../src/schemas/users"
-import { VerificationTokenSchema } from "../src/schemas/verifycation-token"
 import { instanceToPlain, plainToClass } from "class-transformer"
-import { SessionSchema } from "../src/schemas/sessions"
-import { AccountSchema } from "../src/schemas/accounts"
 
 const name = "test"
 

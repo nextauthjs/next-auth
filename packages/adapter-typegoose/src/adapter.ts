@@ -8,11 +8,13 @@ import {
   VerificationToken,
 } from "next-auth/adapters"
 import { instanceToPlain, plainToClass } from "class-transformer"
-import { UserSchema } from "./schemas/users"
-import { SessionSchema } from "./schemas/sessions"
-import { AccountSchema } from "./schemas/accounts"
-import { VerificationTokenSchema } from "./schemas/verifycation-token"
-import { IModelOptions } from "@typegoose/typegoose/lib/types"
+import {
+  UserSchema,
+  VerificationTokenSchema,
+  SessionSchema,
+  AccountSchema,
+} from "./schemas"
+import type { IModelOptions } from "@typegoose/typegoose/lib/types"
 
 export interface TypegooseAdapterOptions {
   connection: Connection
