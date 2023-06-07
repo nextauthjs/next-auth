@@ -89,11 +89,9 @@ export function TypegooseAdapter({
     const modelOptions: IModelOptions = {
       existingConnection: _conn,
     }
-    const UModel = getModelForClass(UserSchema, modelOptions)
-    const VModel = getModelForClass(VerificationTokenSchema, modelOptions)
     return {
-      U: UModel,
-      V: VModel,
+      U: getModelForClass(UserSchema, modelOptions),
+      V: getModelForClass(VerificationTokenSchema, modelOptions),
     }
   })()
   return {
