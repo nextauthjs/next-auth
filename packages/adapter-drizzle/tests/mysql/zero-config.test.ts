@@ -28,13 +28,13 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: (id) => db.select().from(users).where(eq(users.id, id)) ?? null,
+    user: (id) => db.select().from(users).where(eq(users.id, id)).then(res => res[0]) ?? null,
     // .where(eq(users.id, id)) ?? null,
     session: (sessionToken) =>
       db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)) ?? null,
+        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0]) ?? null,
     account: (provider_providerAccountId) => {
       return (
         db
@@ -45,7 +45,7 @@ runBasicTests({
               accounts.providerAccountId,
               provider_providerAccountId.providerAccountId
             )
-          ) ?? null
+          ).then(res => res[0]) ?? null
       )
     },
     verificationToken: (identifier_token) =>
@@ -57,6 +57,6 @@ runBasicTests({
             eq(verificationTokens.token, identifier_token.token),
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
-        ) ?? null,
+        ).then(res => res[0]) ?? null,
   },
 })

@@ -82,13 +82,13 @@ export function mySqlDrizzleAdapter(
   client: DbClient,
   schema?: Partial<CustomSchema>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } = {
-    users: schema?.users ?? defaultSchema.users,
-    accounts: schema?.accounts ?? defaultSchema.accounts,
-    sessions: schema?.sessions ?? defaultSchema.sessions,
-    verificationTokens:
-      schema?.verificationTokens ?? defaultSchema.verificationTokens,
-  }
+  // const { users, accounts, sessions, verificationTokens } = {
+  //   users: schema?.users ?? defaultSchema.users,
+  //   accounts: schema?.accounts ?? defaultSchema.accounts,
+  //   sessions: schema?.sessions ?? defaultSchema.sessions,
+  //   verificationTokens:
+  //     schema?.verificationTokens ?? defaultSchema.verificationTokens,
+  // }
 
   return {
     createUser: async (data) => {
@@ -101,15 +101,17 @@ export function mySqlDrizzleAdapter(
         .from(users)
         .where(eq(users.id, id))
         .then((res) => res[0])
+
     },
     getUser: async (data) => {
-      return (
-        client
-          .select()
-          .from(users)
-          .where(eq(users.id, data))
-          .then((res) => res[0]) ?? null
-      )
+      const thing = await client
+        .select()
+        .from(users)
+        .where(eq(users.id, data))
+        .then((res) => res[0]) ?? null
+
+      console.log(thing)
+      return thing
     },
     getUserByEmail: async (data) => {
       return (

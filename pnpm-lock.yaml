@@ -412,8 +412,8 @@ importers:
         specifier: ^0.18.1
         version: 0.18.1
       drizzle-orm:
-        specifier: ^0.26.3
-        version: 0.26.3(@planetscale/database@1.7.0)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4)
+        specifier: ^0.24.3
+        version: 0.24.3(@planetscale/database@1.7.0)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4)
       jest:
         specifier: ^27.4.3
         version: 27.5.1
@@ -14541,19 +14541,17 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.26.3(@planetscale/database@1.7.0)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4):
-    resolution: {integrity: sha512-KefTFAXxFtBmDRZWgM71ucxUuDvNEiPgv0lg7qAPEfrQVfyzSz0ukUfNz2Ck4Pro6PEmYFJmA6oNQwwgENkk7g==}
+  /drizzle-orm@0.24.3(@planetscale/database@1.7.0)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4):
+    resolution: {integrity: sha512-/C5aOp2uTDonxK7c1OWgJ+E/icwAjDsQg0ufclh51d8/mETx7hSHi1vNPH6e5+uu/0OFeOadj9+3oWPa8uvb5w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
       '@libsql/client': '*'
       '@neondatabase/serverless': '>=0.1'
-      '@opentelemetry/api': ^1.4.1
       '@planetscale/database': '>=1'
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
       '@types/sql.js': '*'
-      '@vercel/postgres': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       knex: '*'
@@ -14572,8 +14570,6 @@ packages:
         optional: true
       '@neondatabase/serverless':
         optional: true
-      '@opentelemetry/api':
-        optional: true
       '@planetscale/database':
         optional: true
       '@types/better-sqlite3':
@@ -14581,8 +14577,6 @@ packages:
       '@types/pg':
         optional: true
       '@types/sql.js':
-        optional: true
-      '@vercel/postgres':
         optional: true
       better-sqlite3:
         optional: true

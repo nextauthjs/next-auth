@@ -20,16 +20,15 @@ import {
   MinimumSchema,
   SqlFlavorOptions,
   isMySqlDatabase,
-  isPgDatabase,
-  isPlanetScaleDatabase,
-  isSQLiteDatabase,
-} from "./lib/utils"
+  // isPgDatabase,
+  // isPlanetScaleDatabase,
+  // isSQLiteDatabase,
+} from "./utils"
 import type { Adapter } from "@auth/core/adapters"
 import { mySqlDrizzleAdapter } from "./mysql"
-import { PgAdapter } from "./lib/pg"
-import { PlanetScaleAdapter } from "./lib/planetscale"
-import { SQLiteAdapter } from "./lib/sqlite"
-import { MySqlAdapter } from "src/lib/mysql"
+// import { pgDrizzleAdapter } from "./pg"
+// import { PlanetScaleAdapter } from "./planetscale"
+// import { SQLiteDrizzleAdapter } from "./sqlite"
 
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
@@ -333,24 +332,24 @@ export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
 ): Adapter {
   if (isMySqlDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
-    return MySqlAdapter(db, schema as unknown as MinimumSchema["mysql"])
+    return mySqlDrizzleAdapter(db, schema as unknown as MinimumSchema["mysql"])
   }
 
-  if (isPlanetScaleDatabase(db)) {
-    return PlanetScaleAdapter(
-      db,
-      // We need to cast to unknown since the type overlaps (PScale is MySQL based)
-      schema as unknown as MinimumSchema["planetscale"]
-    )
-  }
+  // if (isPlanetScaleDatabase(db)) {
+  //   return PlanetScaleAdapter(
+  //     db,
+  //     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
+  //     schema as unknown as MinimumSchema["planetscale"]
+  //   )
+  // }
 
-  if (isPgDatabase(db)) {
-    return PgAdapter(db, schema as MinimumSchema["pg"])
-  }
+  // if (isPgDatabase(db)) {
+  //   return pgDrizzleAdapter(db, schema as MinimumSchema["pg"])
+  // }
 
-  if (isSQLiteDatabase(db)) {
-    return SQLiteAdapter(db, schema as MinimumSchema["sqlite"])
-  }
+  // if (isSQLiteDatabase(db)) {
+  //   return SQLiteDrizzleAdapter(db, schema as MinimumSchema["sqlite"])
+  // }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
 }

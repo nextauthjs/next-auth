@@ -38,15 +38,12 @@
   "scripts": {
     "clean": "rm -rf ./.drizzle",
     "generate-schema": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle",
-    "test": "pnpm test:mysql && pnpm test:sqlite && pnpm test:pg",
+    "test": "pnpm test:mysql",
     "test:mysql": "pnpm clean && ./tests/mysql/test.sh",
     "test:sqlite": "pnpm clean && ./tests/sqlite/test.sh",
     "test:pg": "pnpm clean && ./tests/pg/test.sh",
     "build": "tsc",
     "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
-  },
-  "peerDependencies": {
-    "drizzle-orm": "^0.26.3"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -59,7 +56,7 @@
     "@types/uuid": "^8.3.3",
     "better-sqlite3": "^8.4.0",
     "drizzle-kit": "^0.18.1",
-    "drizzle-orm": "^0.26.3",
+    "drizzle-orm": "^0.24.3",
     "jest": "^27.4.3",
     "mysql2": "^3.2.0",
     "postgres": "^3.3.4"

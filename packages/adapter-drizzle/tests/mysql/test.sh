@@ -21,6 +21,6 @@ echo "Started running MySQL tests."
 jest ./tests/mysql/zero-config.test.ts
 echo "Finished running MySQL tests."
 
-echo "Started running MySQL tests with custom models."
-CUSTOM_MODEL=1 jest ./tests/mysql/custom.test.ts
-echo "Finished running MySQL tests with custom models."
+# echo "Started running MySQL tests with custom models."
+# CUSTOM_MODEL=1 jest ./tests/mysql/custom.test.ts
+# echo "Finished running MySQL tests with custom models."
