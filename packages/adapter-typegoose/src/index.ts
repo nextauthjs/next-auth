@@ -33,13 +33,14 @@ import {
   VerificationTokenSchema,
 } from "./schemas"
 import { instanceToPlain, plainToClass } from "class-transformer"
+import { Awaitable } from "@auth/core/types"
 
 /** This is the interface for the Typegoose adapter options. */
 export interface TypegooseAdapterOptions {
   /**
    * The {@link https://typegoose.github.io/typegoose/docs/api/decorators/model-options/#existingconnection Connection} you want to use for the MongoDB database.
    */
-  connection: Connection
+  connection: Awaitable<Connection>
   /**
    * The optional options for the adapter.
    * @property {string} dbName The DB name you want to connect to the MongoDB database.
@@ -79,10 +80,7 @@ export function TypegooseAdapter({
   options,
 }: TypegooseAdapterOptions): Adapter {
   const db = (async () => {
-    let _conn =
-      connection.readyState !== ConnectionStates.connected
-        ? await connection.asPromise()
-        : connection
+    let _conn = await connection
     if (options?.dbName) {
       _conn = await _conn.useDb(options.dbName).asPromise()
     }
