@@ -29,6 +29,7 @@ html[data-theme="dark"] .adapter-card {
   color: #f5f5f5;
 }
 
+html[data-theme="dark"] .adapter-card:hover,
 .adapter-card:hover {
   text-decoration: none;
   color: black;

@@ -16,9 +16,9 @@
   "dependencies": {
     "@auth/nextjs": "workspace:*",
     "@next-auth/fauna-adapter": "workspace:*",
-    "@next-auth/prisma-adapter": "workspace:*",
+    "@auth/prisma-adapter": "workspace:*",
     "@next-auth/supabase-adapter": "workspace:*",
-    "@next-auth/typeorm-legacy-adapter": "workspace:*",
+    "@auth/typeorm-adapter": "workspace:*",
     "@prisma/client": "^3",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",

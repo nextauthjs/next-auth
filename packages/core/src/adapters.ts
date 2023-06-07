@@ -71,7 +71,7 @@
  *
  * ```ts title=my-adapter.ts
  * import { type Adapter } from "@auth/core/adapters"
- * import { PrismaAdapter } from "@next-auth/prisma-adapter"
+ * import { PrismaAdapter } from "@auth/prisma-adapter"
  * import { PrismaClient } from "@prisma/client"
  *
  * const prisma = new PrismaClient()

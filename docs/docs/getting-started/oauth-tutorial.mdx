@@ -239,10 +239,13 @@ http://localhost:5173/auth/callback/github
 TODO Core
   </TabItem>
 </Tabs>
+
 :::info
 The last part of the URL, `[provider]`, is the ID of the provider you're using. In this case, we're using GitHub, so it's `github`. If you're using Google, it'll be `google`, etc... We keep track of the provider IDs internally.
+
 The same id is used in the `signIn()` method we saw earlier.
 :::
+
 To register, tap on "Register application" button.
 
 The next screen shows all the configurations for your newly created OAuth app. For now, we need two things from it - the **Client ID** and **Client Secret**:

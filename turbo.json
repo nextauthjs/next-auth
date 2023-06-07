@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**/*"]
+      "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"]
     },
     "next-auth#build": {
       "dependsOn": ["^build"],
@@ -61,7 +61,21 @@
       "dependsOn": [
         "@auth/core#build",
         "@auth/nextjs#build",
+        "@auth/prisma-adapter#build",
         "@auth/sveltekit#build",
+        "@next-auth/dgraph-adapter#build",
+        "@next-auth/dynamodb-adapter#build",
+        "@next-auth/fauna-adapter#build",
+        "@next-auth/firebase-adapter#build",
+        "@next-auth/mikro-orm-adapter#build",
+        "@next-auth/mongodb-adapter#build",
+        "@next-auth/neo4j-adapter#build",
+        "@next-auth/pouchdb-adapter#build",
+        "@next-auth/sequelize-adapter#build",
+        "@next-auth/supabase-adapter#build",
+        "@auth/typeorm-adapter#build",
+        "@next-auth/upstash-redis-adapter#build",
+        "@next-auth/xata-adapter#build",
         "^build",
         "next-auth#build"
       ],
@@ -70,6 +84,7 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/prisma-adapter#build",
         "@auth/sveltekit#build",
         "@auth/nextjs#build",
         "@next-auth/dgraph-adapter#build",
@@ -80,10 +95,9 @@
         "@next-auth/mongodb-adapter#build",
         "@next-auth/neo4j-adapter#build",
         "@next-auth/pouchdb-adapter#build",
-        "@next-auth/prisma-adapter#build",
         "@next-auth/sequelize-adapter#build",
         "@next-auth/supabase-adapter#build",
-        "@next-auth/typeorm-legacy-adapter#build",
+        "@auth/typeorm-adapter#build",
         "@next-auth/upstash-redis-adapter#build",
         "@next-auth/xata-adapter#build",
         "^build",

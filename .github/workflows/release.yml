@@ -15,16 +15,46 @@ on:
         type: choice
         description: Package name (npm)
         options:
-        - "@auth/nextjs"
         - "@auth/core"
+        - "@auth/nextjs"
+        - "@auth/dgraph-adapter"
+        - "@auth/drizzle-adapter"
+        - "@auth/dynamodb-adapter"
+        - "@auth/fauna-adapter"
+        - "@auth/firebase-adapter"
+        - "@auth/mikro-orm-adapter"
+        - "@auth/mongodb-adapter"
+        - "@auth/neo4j-adapter"
+        - "@auth/pouchdb-adapter"
+        - "@auth/prisma-adapter"
+        - "@auth/sequelize-adapter"
+        - "@auth/supabase-adapter"
+        - "@auth/typeorm-adapter"
+        - "@auth/upstash-redis-adapter"
+        - "@auth/xata-adapter"
         - "next-auth"
       # TODO: Infer from package name
       path:
         type: choice
         description: Directory name (packages/*)
         options:
-        - "frameworks-nextjs"
         - "core"
+        - "frameworks-nextjs"
+        - "adapter-dgraph"
+        - "adapter-drizzle"
+        - "adapter-dynamodb"
+        - "adapter-fauna"
+        - "adapter-firebase"
+        - "adapter-mikro-orm"
+        - "adapter-mongodb"
+        - "adapter-neo4j"
+        - "adapter-pouchdb"
+        - "adapter-prisma"
+        - "adapter-sequelize"
+        - "adapter-supabase"
+        - "adapter-typeorm"
+        - "adapter-upstash-redis"
+        - "adapter-xata"
         - "next-auth"
 
 jobs:
@@ -42,6 +72,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Run tests
@@ -91,6 +122,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
@@ -115,6 +147,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Determine version
@@ -153,6 +186,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Determine version
