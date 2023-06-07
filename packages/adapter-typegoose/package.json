@@ -42,10 +42,10 @@
     "build": "tsc"
   },
   "dependencies": {
-    "class-transformer": "^0.5.1"
+    "class-transformer": "^0.5.1",
+    "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "next-auth": "^4",
     "@typegoose/typegoose": "^11.2.0",
     "mongoose": "^7.2.2"
   },
@@ -53,7 +53,6 @@
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*",
     "@typegoose/typegoose": "^11.2.0",
     "mongoose": "^7.2.2"
   },

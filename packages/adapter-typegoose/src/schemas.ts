@@ -1,13 +1,12 @@
 import { modelOptions, prop, Severity } from "@typegoose/typegoose"
-import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses"
 import { Exclude, Expose, Type } from "class-transformer"
+import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses"
 import type {
   AdapterAccount,
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
-import type { ProviderType } from "next-auth/providers"
+} from "@auth/core/adapters"
 
 @Exclude()
 @modelOptions({
@@ -18,106 +17,101 @@ import type { ProviderType } from "next-auth/providers"
     allowMixed: Severity.ALLOW,
   },
 })
-export class BaseSchema extends TimeStamps {
+export class BaseSchema extends TimeStamps implements Omit<Base, "_id"> {
   @Expose()
-  id!: string
+  id!: Base["id"]
 
   @Exclude()
   __v!: number
 
   @Exclude()
-  createdAt!: Date
+  createdAt!: TimeStamps["createdAt"]
 
   @Exclude()
-  updatedAt!: Date
+  updatedAt!: TimeStamps["updatedAt"]
 }
 
-@modelOptions({
-  schemaOptions: {
-    timestamps: true,
-  },
-})
 @Exclude()
 export class AccountSchema extends BaseSchema implements AdapterAccount {
   @prop({ required: true })
   @Expose()
-  userId!: string
+  userId!: AdapterAccount["userId"]
 
   @prop({ required: true })
   @Expose()
-  providerAccountId!: string
+  providerAccountId!: AdapterAccount["providerAccountId"]
 
   @prop({ required: true })
   @Expose()
-  provider!: string
+  provider!: AdapterAccount["provider"]
 
   @prop({ required: true })
   @Expose()
-  type!: ProviderType
+  type!: AdapterAccount["type"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  access_token?: string
+  access_token?: AdapterAccount["access_token"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  token_type?: string
+  token_type?: AdapterAccount["token_type"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  id_token?: string
+  id_token?: AdapterAccount["id_token"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  refresh_token?: string
+  refresh_token?: AdapterAccount["refresh_token"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  scope?: string
+  scope?: AdapterAccount["scope"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  expires_at?: number
+  expires_at?: AdapterAccount["expires_at"]
 
   @prop({ required: false, default: undefined })
   @Expose()
-  session_state?: string;
+  session_state?: AdapterAccount["session_state"];
 
-  [x: string]: unknown
+  [parameter: string]: any
 }
 
 @Exclude()
 export class SessionSchema extends BaseSchema implements AdapterSession {
   @prop({ required: true })
   @Expose()
-  userId!: string
+  userId!: AdapterSession["userId"]
 
   @prop({ required: true })
   @Expose()
-  sessionToken!: string
+  sessionToken!: AdapterSession["sessionToken"]
 
   @prop({ required: true })
   @Expose()
-  expires!: Date
+  expires!: AdapterSession["expires"]
 }
 
 @Exclude()
 export class UserSchema extends BaseSchema implements AdapterUser {
   @prop({ required: false, default: null })
   @Expose()
-  name?: string | null
+  name?: AdapterUser["name"]
 
   @prop({ required: true, unique: true })
   @Expose()
-  email!: string
+  email!: AdapterUser["email"]
 
   @prop({ required: false, default: null })
   @Expose()
-  image?: string | null
+  image?: AdapterUser["image"]
 
   @prop({ required: false, default: null })
   @Expose()
-  emailVerified!: Date | null
+  emailVerified!: AdapterUser["emailVerified"]
 
   @prop({ required: true, default: [] })
   @Type(() => SessionSchema)
@@ -136,18 +130,18 @@ export class VerificationTokenSchema
   implements VerificationToken
 {
   @Exclude()
-  id!: string
+  id!: Base["id"]
 
   @prop({ required: true })
   @Expose()
-  identifier!: string
+  identifier!: VerificationToken["identifier"]
 
   @prop({ required: true })
   @Expose()
   @Type(() => Date)
-  expires!: Date
+  expires!: VerificationToken["expires"]
 
   @prop({ required: true })
   @Expose()
-  token!: string
+  token!: VerificationToken["token"]
 }
