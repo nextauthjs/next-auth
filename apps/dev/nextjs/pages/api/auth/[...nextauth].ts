@@ -27,6 +27,7 @@ import LinkedIn from "@auth/core/providers/linkedin"
 import Mailchimp from "@auth/core/providers/mailchimp"
 import Notion from "@auth/core/providers/notion"
 // import Okta from "@auth/core/providers/okta"
+import OryHydra from "@auth/core/providers/ory-hydra"
 import Osu from "@auth/core/providers/osu"
 import Patreon from "@auth/core/providers/patreon"
 import Slack from "@auth/core/providers/slack"
@@ -94,7 +95,11 @@ export const authConfig: AuthConfig = {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
-    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
+    BeyondIdentity({
+      clientId: process.env.BEYOND_IDENTITY_CLIENT_ID,
+      clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET,
+      issuer: process.env.BEYOND_IDENTITY_ISSUER,
+    }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
@@ -113,6 +118,7 @@ export const authConfig: AuthConfig = {
     Mailchimp({ clientId: process.env.MAILCHIMP_ID, clientSecret: process.env.MAILCHIMP_SECRET }),
     Notion({ clientId: process.env.NOTION_ID, clientSecret: process.env.NOTION_SECRET, redirectUri: process.env.NOTION_REDIRECT_URI }),
     // Okta({ clientId: process.env.OKTA_ID, clientSecret: process.env.OKTA_SECRET, issuer: process.env.OKTA_ISSUER }),
+    OryHydra({ clientId: process.env.ORY_HYDRA_CLIENT_ID, clientSecret: process.env.ORY_HYDRA_CLIENT_SECRET, issuer: process.env.ORY_HYDRA_ISSUER }),
     Osu({ clientId: process.env.OSU_CLIENT_ID, clientSecret: process.env.OSU_CLIENT_SECRET }),
     Patreon({ clientId: process.env.PATREON_ID, clientSecret: process.env.PATREON_SECRET }),
     Slack({ clientId: process.env.SLACK_ID, clientSecret: process.env.SLACK_SECRET }),
