@@ -274,6 +274,7 @@ const docusaurusConfig = {
           typedocAdapter("PouchDB"),
           typedocAdapter("Prisma"),
           typedocAdapter("TypeORM"),
+          typedocAdapter("Typegoose"),
           typedocAdapter("Sequelize"),
           typedocAdapter("Supabase"),
           typedocAdapter("Upstash Redis"),

@@ -53,6 +53,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/typeorm.png" width="30" />
     <h4 class="adapter-card__title">TypeORM Adapter</h4>
   </a>
+  <a href="/reference/adapter/typegoose" class="adapter-card">
+    <img src="/img/adapters/typegoose.svg" width="30" />
+    <h4 class="adapter-card__title">Typegoose Adapter</h4>
+  </a>
   <a href="/reference/adapter/upstash-redis" class="adapter-card">
     <img src="/img/adapters/upstash-redis.svg" width="30" />
     <h4 class="adapter-card__title">Upstash Adapter</h4>

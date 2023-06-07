@@ -2,9 +2,10 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://typegoose.github.io">Typegoose</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://typegoose.github.io">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/typegoose.svg" width="30" />
+ *   <img style={{display: "block"}} src="/img/adapters/typegoose.svg" width="150" />
  *  </a>
  * </div>
+ *
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
@@ -33,13 +34,46 @@ import {
 } from "./schemas"
 import { instanceToPlain, plainToClass } from "class-transformer"
 
+/** This is the interface for the Typegoose adapter options. */
 export interface TypegooseAdapterOptions {
+  /**
+   * The {@link https://typegoose.github.io/typegoose/docs/api/decorators/model-options/#existingconnection Connection} you want to use for the MongoDB database.
+   */
   connection: Connection
+  /**
+   * The optional options for the adapter.
+   * @property {string} dbName The DB name you want to connect to the MongoDB database.
+   */
   options?: Partial<{
+    /**
+     * The DB name you want to connect to the MongoDB database
+     */
     dbName: string
   }>
 }
 
+/**
+ * ## Setup
+ *
+ * Configure Auth.js with Typegoose Adapter:
+ *
+ * ```typescript
+ * import NextAuth from "next-auth"
+ * import { TypegooseAdapter } from "@auth/typegoose-adapter"
+ *
+ * export default NextAuth({
+ *  adapter: TypegooseAdapter({
+ *   connection: mongoose.createConnection("mongodb://localhost:27017/mydb", {
+ *    useNewUrlParser: true,
+ *    useUnifiedTopology: true,
+ *   })
+ *  }),
+ *  // ...
+ * })
+ * ```
+ * `TypegooseAdapter` takes a [`Connection`](https://typegoose.github.io/typegoose/docs/api/decorators/model-options/#existingconnection) and an optional `options.dbName` as parameters.
+ *
+ */
 export function TypegooseAdapter({
   connection,
   options,
