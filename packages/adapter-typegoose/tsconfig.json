@@ -1,0 +1,21 @@
+{
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "rootDir": "src",
+    "outDir": ".",
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipDefaultLibCheck": true,
+    "strictNullChecks": true,
+    "stripInternal": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts"]
+}

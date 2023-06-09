@@ -66,6 +66,7 @@ module.exports = {
               { type: "doc", id: "reference/adapter/sequelize/index" },
               { type: "doc", id: "reference/adapter/supabase/index" },
               { type: "doc", id: "reference/adapter/typeorm/index" },
+              { type: "doc", id: "reference/adapter/typegoose/index" },
               { type: "doc", id: "reference/adapter/upstash-redis/index" },
               { type: "doc", id: "reference/adapter/xata/index" },
             ],

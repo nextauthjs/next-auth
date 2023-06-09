@@ -36,6 +36,9 @@ supabase:
 typeorm:
   - "@auth/typeorm-adapter"
 
+typegoose:
+  - "@auth/typegoose-adapter"
+
 upstash-redis:
   - "@next-auth/upstash-redis-adapter"
 

@@ -1,0 +1,64 @@
+{
+  "name": "@auth/typegoose-adapter",
+  "version": "0.0.0",
+  "description": "Typegoose adapter for Auth.js.",
+  "homepage": "https://authjs.dev/reference/adapter/typegoose",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Davi Nomoeh Dani <dapino.dev@gmail.com>",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "license": "ISC",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "typegoose",
+    "adapter"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "./tests/test.sh",
+    "test:watch": "./tests/test.sh -w",
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "class-transformer": "^0.5.1"
+  },
+  "peerDependencies": {
+    "@typegoose/typegoose": "^11.2.0",
+    "mongoose": "^7.2.2"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "@typegoose/typegoose": "^11.2.0",
+    "jest": "^27.4.3",
+    "mongoose": "^7.2.2",
+    "typescript": "^5.1.3"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}

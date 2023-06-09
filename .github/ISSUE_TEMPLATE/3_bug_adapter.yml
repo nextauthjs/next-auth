@@ -33,6 +33,7 @@ body:
         - "@next-auth/sequelize-adapter"
         - "@next-auth/supabase-adapter"
         - "@auth/typeorm-adapter"
+        - "@auth/typegoose-adapter"
         - "@next-auth/upstash-redis-adapter"
         - "@next-auth/xata-adapter"
     validations:
