@@ -15,7 +15,7 @@
  * @module @auth/typegoose-adapter
  */
 
-import { type Connection, ConnectionStates } from "mongoose"
+import type { Connection } from "mongoose"
 import type {
   Adapter,
   AdapterAccount,
@@ -23,9 +23,8 @@ import type {
   AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
-import type { IModelOptions } from "@typegoose/typegoose/lib/types"
 
-import { getModelForClass } from "@typegoose/typegoose"
+import { buildSchema } from "@typegoose/typegoose"
 import {
   AccountSchema,
   SessionSchema,
@@ -34,6 +33,16 @@ import {
 } from "./schemas"
 import { instanceToPlain, plainToClass } from "class-transformer"
 import { Awaitable } from "@auth/core/types"
+import type {
+  AnyParamConstructor,
+  BeAnObject,
+  ReturnModelType,
+} from "@typegoose/typegoose/lib/types"
+
+export interface AdapterSchema<T extends AnyParamConstructor<any>> {
+  modelName: string
+  schema: ReturnType<typeof buildSchema<T>>
+}
 
 /** This is the interface for the Typegoose adapter options. */
 export interface TypegooseAdapterOptions {
@@ -41,6 +50,15 @@ export interface TypegooseAdapterOptions {
    * The {@link https://typegoose.github.io/typegoose/docs/api/decorators/model-options/#existingconnection Connection} you want to use for the MongoDB database.
    */
   connection: Awaitable<Connection>
+  /**
+   * The optional schemas to override the default schemas.
+   */
+  schemas?: Partial<{
+    UserSchema: AdapterSchema<typeof UserSchema>
+    AccountSchema: AdapterSchema<typeof AccountSchema>
+    SessionSchema: AdapterSchema<typeof SessionSchema>
+    VerificationTokenSchema: AdapterSchema<typeof VerificationTokenSchema>
+  }>
   /**
    * The optional options for the adapter.
    * @property {string} dbName The DB name you want to connect to the MongoDB database.
@@ -52,6 +70,35 @@ export interface TypegooseAdapterOptions {
     dbName: string
   }>
 }
+
+// deep required of type TypegooseAdapterOptions['schemas']
+type DeepRequired<T> = {
+  [P in keyof T]-?: T[P] extends Array<infer U>
+    ? Array<DeepRequired<U>>
+    : T[P] extends object
+    ? DeepRequired<T[P]>
+    : T[P]
+}
+
+export const defaultSchemas: DeepRequired<TypegooseAdapterOptions["schemas"]> =
+  {
+    UserSchema: {
+      modelName: UserSchema.name,
+      schema: buildSchema(UserSchema),
+    },
+    AccountSchema: {
+      modelName: AccountSchema.name,
+      schema: buildSchema(AccountSchema),
+    },
+    SessionSchema: {
+      modelName: SessionSchema.name,
+      schema: buildSchema(SessionSchema),
+    },
+    VerificationTokenSchema: {
+      modelName: VerificationTokenSchema.name,
+      schema: buildSchema(VerificationTokenSchema),
+    },
+  }
 
 /**
  * ## Setup
@@ -77,19 +124,32 @@ export interface TypegooseAdapterOptions {
  */
 export function TypegooseAdapter({
   connection,
-  options,
+  schemas,
+  options: _options,
 }: TypegooseAdapterOptions): Adapter {
+  let _connection: Connection | null = null
+  const s = {
+    UserSchema: schemas?.UserSchema ?? defaultSchemas!.UserSchema,
+    AccountSchema: schemas?.AccountSchema ?? defaultSchemas!.AccountSchema,
+    SessionSchema: schemas?.SessionSchema ?? defaultSchemas!.SessionSchema,
+    VerificationTokenSchema:
+      schemas?.VerificationTokenSchema ??
+      defaultSchemas!.VerificationTokenSchema,
+  }
   const db = (async () => {
-    let _conn = await connection
-    if (options?.dbName) {
-      _conn = await _conn.useDb(options.dbName).asPromise()
-    }
-    const modelOptions: IModelOptions = {
-      existingConnection: _conn,
-    }
+    if (!_connection) _connection = await connection
+    const UModel =
+      _connection.models[s.UserSchema.modelName] ??
+      _connection.model(s.UserSchema.modelName, s.UserSchema.schema)
+    const VModel =
+      _connection.models[s.VerificationTokenSchema.modelName] ??
+      _connection.model(
+        s.VerificationTokenSchema.modelName,
+        s.VerificationTokenSchema.schema
+      )
     return {
-      U: getModelForClass(UserSchema, modelOptions),
-      V: getModelForClass(VerificationTokenSchema, modelOptions),
+      U: UModel as ReturnModelType<typeof UserSchema, BeAnObject>,
+      V: VModel as ReturnModelType<typeof VerificationTokenSchema, BeAnObject>,
     }
   })()
   return {
