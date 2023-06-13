@@ -13,7 +13,7 @@ firebase:
   - "@next-auth/firebase-adapter"
 
 mikro-orm:
-  - "@next-auth/mikro-orm-adapter"
+  - "@auth/mikro-orm-adapter"
 
 mongodb:
   - "@auth/mongodb-adapter"
