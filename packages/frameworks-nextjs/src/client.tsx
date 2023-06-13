@@ -67,14 +67,16 @@ const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
-const broadcast =
-  typeof BroadcastChannel === "undefined"
-    ? {
-        postMessage: () => {},
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      }
-    : new BroadcastChannel("next-auth")
+function broadcast() {
+  if (typeof BroadcastChannel !== "undefined") {
+    return new BroadcastChannel("next-auth")
+  }
+  return {
+    postMessage: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }
+}
 
 // TODO:
 const logger: LoggerInstance = {
@@ -167,7 +169,10 @@ export async function getSession(params?: GetSessionParams) {
     params
   )
   if (params?.broadcast ?? true) {
-    broadcast.postMessage({ event: "session", data: { trigger: "getSession" } })
+    broadcast().postMessage({
+      event: "session",
+      data: { trigger: "getSession" },
+    })
   }
   return session
 }
@@ -309,7 +314,7 @@ export async function signOut<R extends boolean = true>(
   const res = await fetch(`${baseUrl}/signout`, fetchOptions)
   const data = await res.json()
 
-  broadcast.postMessage({ event: "session", data: { trigger: "signout" } })
+  broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
 
   if (options?.redirect ?? true) {
     const url = data.url ?? callbackUrl
@@ -423,8 +428,8 @@ export function SessionProvider(props: SessionProviderProps) {
     // on how the session object is being used in the client; it is
     // more robust to have each window/tab fetch it's own copy of the
     // session object rather than share it across instances.
-    broadcast.addEventListener("message", handle)
-    return () => broadcast.removeEventListener("message", handle)
+    broadcast().addEventListener("message", handle)
+    return () => broadcast().removeEventListener("message", handle)
   }, [])
 
   React.useEffect(() => {
@@ -478,7 +483,7 @@ export function SessionProvider(props: SessionProviderProps) {
         setLoading(false)
         if (newSession) {
           setSession(newSession)
-          broadcast.postMessage({
+          broadcast().postMessage({
             event: "session",
             data: { trigger: "getSession" },
           })
