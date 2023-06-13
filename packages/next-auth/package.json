@@ -11,9 +11,44 @@
     "Lluis Agusti <hi@llu.lu>",
     "Thang Huu Vu <thvu@hey.com>"
   ],
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./jwt": {
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
+    },
+    "./middleware": {
+      "types": "./middleware.d.ts",
+      "import": "./middleware.js"
+    },
+    "./next": {
+      "types": "./next.d.ts",
+      "import": "./next.js"
+    },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    },
+    "./client": {
+      "types": "./client.d.ts",
+      "import": "./client.js"
+    },
+    "./types": {
+      "types": "./types.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "keywords": [
     "react",
     "nodejs",
@@ -26,57 +61,28 @@
     "oidc",
     "nextauth"
   ],
-  "exports": {
-    ".": "./index.js",
-    "./jwt": "./jwt/index.js",
-    "./react": "./react/index.js",
-    "./core": "./core/index.js",
-    "./next": "./next/index.js",
-    "./middleware": "./middleware.js",
-    "./client/_utils": "./client/_utils.js",
-    "./providers/*": "./providers/*.js"
-  },
   "scripts": {
-    "build": "pnpm clean && pnpm build:js && pnpm build:css",
-    "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
-    "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
-    "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
-    "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
-    "watch:ts": "pnpm tsc --project tsconfig.dev.json",
-    "watch:css": "postcss --config config/postcss.config.js --watch src/**/*.css --base src --dir .",
-    "test": "jest --config ./config/jest.config.js",
+    "build": "pnpm clean && pnpm providers && tsc",
+    "clean": "rm -rf coverage providers *.js *.d.ts*",
+    "dev": "pnpm clean && pnpm providers && tsc -w",
+    "lint": "eslint src config tests",
     "prepublishOnly": "pnpm build",
-    "generate-providers": "node ./config/generate-providers.js",
-    "lint": "eslint src config tests"
+    "providers": "node scripts/generate-providers",
+    "test": "jest --config ./config/jest.config.js"
   },
   "files": [
-    "client",
-    "core",
-    "css",
-    "jwt",
-    "lib",
-    "next",
-    "providers",
-    "react",
-    "src",
-    "utils",
     "*.d.ts*",
-    "*.js"
+    "*.js",
+    "providers",
+    "src"
   ],
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.20.13",
-    "@panva/hkdf": "^1.0.2",
-    "cookie": "^0.5.0",
-    "jose": "^4.11.4",
-    "oauth": "^0.9.15",
-    "openid-client": "^5.4.0",
-    "preact": "^10.6.3",
-    "preact-render-to-string": "^5.1.19",
-    "uuid": "^8.3.2"
+    "@auth/core": "workspace:*",
+    "@auth/nextjs": "workspace:*"
   },
   "peerDependencies": {
-    "next": "^12.2.5 || ^13",
+    "next": "^13.4.5",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
     "react-dom": "^17.0.2 || ^18"
@@ -118,7 +124,7 @@
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
-    "next": "13.3.0",
+    "next": "13.4.5",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
