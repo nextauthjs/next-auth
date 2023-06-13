@@ -16,7 +16,7 @@ mikro-orm:
   - "@next-auth/mikro-orm-adapter"
 
 mongodb:
-  - "@next-auth/mongodb-adapter"
+  - "@auth/mongodb-adapter"
 
 neo4j:
   - "@next-auth/neo4j-adapter"
