@@ -1,7 +1,4 @@
 import * as jwt from "jsonwebtoken"
-import fetch from "node-fetch"
-
-import type { HeadersInit } from "node-fetch"
 
 export interface DgraphClientParams {
   endpoint: string
