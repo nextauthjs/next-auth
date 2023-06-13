@@ -1,5 +1,3 @@
-import { v4 as randomUUID } from "uuid"
-
 import {
   Property,
   Unique,
@@ -16,8 +14,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken as AdapterVerificationToken,
-} from "next-auth/adapters"
-import type { ProviderType } from "next-auth/providers"
+} from "@auth/core/adapters"
 
 type RemoveIndex<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -27,7 +24,7 @@ type RemoveIndex<T> = {
 @Entity()
 export class User implements RemoveIndex<AdapterUser> {
   @PrimaryKey()
-  id: string = randomUUID()
+  id: string = crypto.randomUUID()
 
   @Property({ type: types.string, nullable: true })
   name?: string
@@ -63,7 +60,7 @@ export class User implements RemoveIndex<AdapterUser> {
 export class Session implements AdapterSession {
   @PrimaryKey()
   @Property({ type: types.string })
-  id: string = randomUUID()
+  id: string = crypto.randomUUID()
 
   @ManyToOne({
     entity: "User",
@@ -88,7 +85,7 @@ export class Session implements AdapterSession {
 export class Account implements RemoveIndex<AdapterAccount> {
   @PrimaryKey()
   @Property({ type: types.string })
-  id: string = randomUUID()
+  id: string = crypto.randomUUID()
 
   @ManyToOne({
     entity: "User",
@@ -101,7 +98,7 @@ export class Account implements RemoveIndex<AdapterAccount> {
   userId!: string
 
   @Property({ type: types.string })
-  type!: ProviderType
+  type!: AdapterAccount["type"]
 
   @Property({ type: types.string })
   provider!: string
