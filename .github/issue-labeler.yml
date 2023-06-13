@@ -4,7 +4,7 @@ dgraph:
   - "@auth/dgraph-adapter"
 
 dynamodb:
-  - "@next-auth/dynamodb-adapter"
+  - "@auth/dynamodb-adapter"
 
 fauna:
   - "@next-auth/fauna-adapter"

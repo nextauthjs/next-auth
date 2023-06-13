@@ -22,7 +22,7 @@ body:
       options:
         - "Custom adapter"
         - "@auth/dgraph-adapter"
-        - "@next-auth/dynamodb-adapter"
+        - "@auth/dynamodb-adapter"
         - "@next-auth/fauna-adapter"
         - "@next-auth/firebase-adapter"
         - "@next-auth/mikro-orm-adapter"
