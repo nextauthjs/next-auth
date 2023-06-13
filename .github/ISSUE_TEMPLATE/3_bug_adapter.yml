@@ -21,7 +21,7 @@ body:
       multiple: true
       options:
         - "Custom adapter"
-        - "@next-auth/dgraph-adapter"
+        - "@auth/dgraph-adapter"
         - "@next-auth/dynamodb-adapter"
         - "@next-auth/fauna-adapter"
         - "@next-auth/firebase-adapter"
