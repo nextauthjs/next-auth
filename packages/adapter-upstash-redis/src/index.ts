@@ -9,10 +9,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install @upstash/redis @next-auth/upstash-redis-adapter
+ * npm install @upstash/redis @auth/upstash-redis-adapter
  * ```
  *
- * @module @next-auth/upstash-redis-adapter
+ * @module @auth/upstash-redis-adapter
  */
 import type {
   Adapter,
@@ -22,8 +22,6 @@ import type {
   VerificationToken,
 } from "next-auth/adapters"
 import type { Redis } from "@upstash/redis"
-
-import { v4 as uuid } from "uuid"
 
 /** This is the interface of the Upstash Redis adapter options. */
 export interface UpstashRedisAdapterOptions {
@@ -93,7 +91,7 @@ export function hydrateDates(json: object) {
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { UpstashRedisAdapter } from "@next-auth/upstash-redis-adapter"
+ * import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
  * import upstashRedisClient from "@upstash/redis"
  *
  * const redis = upstashRedisClient(
@@ -217,7 +215,7 @@ export function UpstashRedisAdapter(
 
   return {
     async createUser(user) {
-      const id = uuid()
+      const id = crypto.randomUUID()
       // TypeScript thinks the emailVerified field is missing
       // but all fields are copied directly from user, so it's there
       return await setUser(id, { ...user, id })

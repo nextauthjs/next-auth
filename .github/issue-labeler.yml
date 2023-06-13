@@ -37,7 +37,7 @@ typeorm:
   - "@auth/typeorm-adapter"
 
 upstash-redis:
-  - "@next-auth/upstash-redis-adapter"
+  - "@auth/upstash-redis-adapter"
 
 xata:
   - "@next-auth/xata-adapter"

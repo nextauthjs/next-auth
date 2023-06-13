@@ -47,7 +47,7 @@
     "e2e": {
       "outputs": ["playwright-report/**"]
     },
-    "@next-auth/upstash-redis-adapter#test": {
+    "@auth/upstash-redis-adapter#test": {
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
     },
     "docs#dev": {
@@ -66,7 +66,7 @@
         "@next-auth/sequelize-adapter#build",
         "@next-auth/supabase-adapter#build",
         "@auth/typeorm-adapter#build",
-        "@next-auth/upstash-redis-adapter#build",
+        "@auth/upstash-redis-adapter#build",
         "@next-auth/xata-adapter#build",
         "^build",
         "next-auth#build"
@@ -89,7 +89,7 @@
         "@next-auth/sequelize-adapter#build",
         "@next-auth/supabase-adapter#build",
         "@auth/typeorm-adapter#build",
-        "@next-auth/upstash-redis-adapter#build",
+        "@auth/upstash-redis-adapter#build",
         "@next-auth/xata-adapter#build",
         "^build",
         "next-auth#build"
