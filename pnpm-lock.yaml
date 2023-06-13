@@ -373,17 +373,18 @@ importers:
 
   packages/adapter-mongodb:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       jest: ^27.4.3
       mongodb: ^5.1.0
-      next-auth: workspace:*
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       jest: 27.5.1
       mongodb: 5.1.0
-      next-auth: link:../next-auth
 
   packages/adapter-neo4j:
     specifiers:
@@ -525,6 +526,7 @@ importers:
 
   packages/adapter-upstash-redis:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
@@ -533,9 +535,8 @@ importers:
       isomorphic-fetch: 3.0.0
       jest: ^27.4.3
       next-auth: workspace:*
-      uuid: ^8.3.2
     dependencies:
-      uuid: 8.3.2
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig

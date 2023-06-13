@@ -16,7 +16,7 @@ mikro-orm:
   - "@next-auth/mikro-orm-adapter"
 
 mongodb:
-  - "@next-auth/mongodb-adapter"
+  - "@auth/mongodb-adapter"
 
 neo4j:
   - "@next-auth/neo4j-adapter"
@@ -37,7 +37,7 @@ typeorm:
   - "@auth/typeorm-adapter"
 
 upstash-redis:
-  - "@next-auth/upstash-redis-adapter"
+  - "@auth/upstash-redis-adapter"
 
 xata:
   - "@next-auth/xata-adapter"
