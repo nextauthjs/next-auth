@@ -96,7 +96,7 @@ For this tutorial, we're going to use the **MongoDB** adapter, but any of the ot
 First, let's start by installing the adapter package:
 
 ```bash npm2yarn2pnpm
-npm install -D  @next-auth/mongodb-adapter mongodb
+npm install -D  @auth/mongodb-adapter mongodb
 ```
 
 and create a simple MongoDB client:
@@ -142,7 +142,7 @@ And now let's reference this new adapter from our Auth.js configuration file:
 ```diff title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
-+ import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
++ import { MongoDBAdapter } from "@auth/mongodb-adapter"
 + import clientPromise from "../../../lib/mongodb/client"
 
 export default NextAuth({

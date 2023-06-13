@@ -352,17 +352,18 @@ importers:
 
   packages/adapter-mongodb:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       jest: ^27.4.3
       mongodb: ^5.1.0
-      next-auth: workspace:*
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       jest: 27.5.1
       mongodb: 5.1.0
-      next-auth: link:../next-auth
 
   packages/adapter-neo4j:
     specifiers:

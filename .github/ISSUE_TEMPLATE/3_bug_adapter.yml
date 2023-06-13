@@ -26,7 +26,7 @@ body:
         - "@next-auth/fauna-adapter"
         - "@next-auth/firebase-adapter"
         - "@next-auth/mikro-orm-adapter"
-        - "@next-auth/mongodb-adapter"
+        - "@auth/mongodb-adapter"
         - "@next-auth/neo4j-adapter"
         - "@next-auth/pouchdb-adapter"
         - "@auth/prisma-adapter"
