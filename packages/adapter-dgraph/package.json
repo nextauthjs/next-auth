@@ -47,7 +47,8 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node-fetch": "^2.5.11",
     "jest": "^27.4.3",
-    "ts-jest": "^27.0.3"
+    "ts-jest": "^27.0.3",
+    "undici": "5.22.1"
   },
   "dependencies": {
     "@auth/core": "workspace:*",

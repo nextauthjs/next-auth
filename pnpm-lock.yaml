@@ -260,6 +260,7 @@ importers:
       jest: ^27.4.3
       jsonwebtoken: ^8.5.1
       ts-jest: ^27.0.3
+      undici: 5.22.1
     dependencies:
       '@auth/core': link:../core
       jsonwebtoken: 8.5.1
@@ -271,6 +272,7 @@ importers:
       '@types/node-fetch': 2.6.2
       jest: 27.5.1
       ts-jest: 27.1.5_lvqy56smyn5gszh3zmisfmhukm
+      undici: 5.22.1
 
   packages/adapter-dynamodb:
     specifiers:

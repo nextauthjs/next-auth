@@ -28,7 +28,7 @@ export interface DgraphAdapterOptions {
    * The GraphQL {@link https://dgraph.io/docs/query-language/fragments/ Fragments} you can supply to the adapter
    * to define how the shapes of the `user`, `account`, `session`, `verificationToken` entities look.
    *
-   * By default the adapter will uses the [default defined fragments](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-dgraph/src/graphql/fragments.ts)
+   * By default the adapter will uses the [default defined fragments](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-dgraph/src/lib/graphql/fragments.ts)
    * , this config option allows to extend them.
    */
   fragments?: {
