@@ -20,7 +20,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import type { Redis } from "@upstash/redis"
 
 /** This is the interface of the Upstash Redis adapter options. */
