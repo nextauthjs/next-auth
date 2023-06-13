@@ -1,16 +1,25 @@
 {
-  "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": ".",
+    "allowJs": true,
+    "baseUrl": ".",
+    "isolatedModules": true,
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "node",
+    "outDir": ".",
+    "rootDir": "src",
     "skipDefaultLibCheck": true,
     "strictNullChecks": true,
     "stripInternal": true,
     "declarationMap": true,
     "declaration": true
   },
-  "exclude": ["tests", "dist", "jest.config.js", "jest-dynamodb-config.js"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "*.js",
+    "*.d.ts",
+  ]
 }
