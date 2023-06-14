@@ -418,16 +418,17 @@ importers:
 
   packages/adapter-sequelize:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       jest: ^27.4.3
-      next-auth: workspace:*
       sequelize: ^6.6.5
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       jest: 27.5.1
-      next-auth: link:../next-auth
       sequelize: 6.21.0
 
   packages/adapter-supabase:

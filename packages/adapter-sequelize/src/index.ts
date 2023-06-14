@@ -9,10 +9,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/sequelize-adapter sequelize
+ * npm install next-auth @auth/sequelize-adapter sequelize
  * ```
  *
- * @module @next-auth/sequelize-adapter
+ * @module @auth/sequelize-adapter
  */
 import type {
   Adapter,
@@ -70,7 +70,7 @@ export interface SequelizeAdapterOptions {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import SequelizeAdapter from "@next-auth/sequelize-adapter"
+ * import SequelizeAdapter from "@auth/sequelize-adapter"
  * import { Sequelize } from "sequelize"
  *
  * // https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database
@@ -93,7 +93,7 @@ export interface SequelizeAdapterOptions {
  *
  * ```js
  * import NextAuth from "next-auth"
- * import SequelizeAdapter from "@next-auth/sequelize-adapter"
+ * import SequelizeAdapter from "@auth/sequelize-adapter"
  * import Sequelize from 'sequelize'
  *
  * const sequelize = new Sequelize("sqlite::memory:")
@@ -117,7 +117,7 @@ export interface SequelizeAdapterOptions {
  *
  * ```js
  * import NextAuth from "next-auth"
- * import SequelizeAdapter, { models } from "@next-auth/sequelize-adapter"
+ * import SequelizeAdapter, { models } from "@auth/sequelize-adapter"
  * import Sequelize, { DataTypes } from "sequelize"
  *
  * const sequelize = new Sequelize("sqlite::memory:")
