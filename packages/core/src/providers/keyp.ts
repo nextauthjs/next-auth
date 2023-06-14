@@ -56,6 +56,38 @@ interface AdditionalConfig {
  *
  * :::
  *
+ * :::tip
+ * If using JWT for the session, you can add additional properties to the JWT and session. Example:
+ * ```js
+ * options: {
+ *   callbacks: {
+ *      async jwt({ token, account, profile }: { token: Token; account: Account; profile: Profile }) {
+ *          if (account) {
+ *              // Comes from the returned JWT from Keyp
+ *              token.accessToken = account.access_token;
+ *          }
+ *          if (profile) {
+                // Comes from the /userinfo endpoint
+ *              token.username = profile.username;
+ *              token.address = profile.address;
+ *              token.sub = profile.sub;
+ *          }
+ *          return token;
+ *      },
+ *      async session({ session, token }: { session: Session; token: Token }) {
+ *          // Send properties to the client, like an access_token from a provider.
+ *          if (token) {
+ *              session.user.accessToken = token.accessToken;
+ *              session.user.username = token.username;
+ *              session.user.address = token.address;
+ *              session.user.id = token.sub;
+ *          }
+ *          return session;
+ *      },
+ *  },
+ * ```
+ * :::
+ *
  * :::info **Disclaimer**
  *
  * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
@@ -69,10 +101,10 @@ interface AdditionalConfig {
 export default function Keyp<P extends KeypProfile>(
   config: OIDCUserConfig<P> & AdditionalConfig
 ): OIDCConfig<P> {
-  const { clientId } = config;
+  const { clientId } = config
   // Keyp's API domain is configurable for local testing, but defaults to https://api.usekeyp.com
   const KEYP_API_DOMAIN =
-    process.env.NEXT_PUBLIC_KEYP_API_DOMAIN || "https://api.usekeyp.com";
+    process.env.NEXT_PUBLIC_KEYP_API_DOMAIN || "https://api.usekeyp.com"
 
   return {
     id: "keyp",
@@ -91,8 +123,8 @@ export default function Keyp<P extends KeypProfile>(
         name: profile.username,
         email: profile.email,
         image: profile.imageSrc,
-        address: profile.address,
-      };
+        address: profile.address
+      }
     },
     style: {
       logo: "/keyp.svg",
@@ -100,8 +132,8 @@ export default function Keyp<P extends KeypProfile>(
       bg: "#fff",
       text: "#005285",
       bgDark: "#005285",
-      textDark: "#fff",
+      textDark: "#fff"
     },
-    options: config,
-  };
+    options: config
+  }
 }
