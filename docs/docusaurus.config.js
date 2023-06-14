@@ -238,12 +238,7 @@ const docusaurusConfig = {
           },
           async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
             const sidebarItems = await defaultSidebarItemsGenerator(args)
-            const sidebarIdsToOmit = [
-              "reference/core/module.index",
-              "reference/sveltekit/module.index",
-              "reference/solidstart/index",
-              "reference/nextjs/module.index",
-            ]
+            const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index", "reference/nextjs/index"]
             return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
           },
         },
