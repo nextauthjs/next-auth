@@ -54,9 +54,9 @@ importers:
   apps/dev/nextjs:
     specifiers:
       '@auth/core': workspace:*
+      '@auth/fauna-adapter': workspace:*
       '@auth/prisma-adapter': workspace:*
       '@auth/typeorm-adapter': workspace:*
-      '@auth/fauna-adapter': workspace:*
       '@next-auth/supabase-adapter': workspace:*
       '@playwright/test': 1.29.2
       '@prisma/client': ^3
@@ -78,9 +78,9 @@ importers:
       typeorm: 0.3.7
     dependencies:
       '@auth/core': link:../../../packages/core
+      '@auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@auth/prisma-adapter': link:../../../packages/adapter-prisma
       '@auth/typeorm-adapter': link:../../../packages/adapter-typeorm
-      '@auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
       '@prisma/client': 3.15.2_prisma@3.15.2
       '@supabase/supabase-js': 2.0.5
@@ -104,9 +104,9 @@ importers:
 
   apps/dev/nextjs-v4:
     specifiers:
+      '@auth/fauna-adapter': workspace:*
       '@auth/prisma-adapter': workspace:*
       '@auth/typeorm-adapter': workspace:*
-      '@auth/fauna-adapter': workspace:*
       '@next-auth/supabase-adapter': workspace:*
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
@@ -125,9 +125,9 @@ importers:
       sqlite3: ^5.0.8
       typeorm: 0.3.7
     dependencies:
+      '@auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@auth/prisma-adapter': link:../../../packages/adapter-prisma
       '@auth/typeorm-adapter': link:../../../packages/adapter-typeorm
-      '@auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
       '@prisma/client': 3.15.2_prisma@3.15.2
       '@supabase/supabase-js': 2.0.5
@@ -422,16 +422,17 @@ importers:
 
   packages/adapter-sequelize:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       jest: ^27.4.3
-      next-auth: workspace:*
       sequelize: ^6.6.5
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       jest: 27.5.1
-      next-auth: link:../next-auth
       sequelize: 6.21.0
 
   packages/adapter-supabase:

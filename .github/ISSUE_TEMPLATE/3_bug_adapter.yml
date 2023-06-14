@@ -30,7 +30,7 @@ body:
         - "@next-auth/neo4j-adapter"
         - "@next-auth/pouchdb-adapter"
         - "@auth/prisma-adapter"
-        - "@next-auth/sequelize-adapter"
+        - "@auth/sequelize-adapter"
         - "@next-auth/supabase-adapter"
         - "@auth/typeorm-adapter"
         - "@auth/upstash-redis-adapter"
