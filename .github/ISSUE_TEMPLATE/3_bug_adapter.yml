@@ -34,7 +34,7 @@ body:
         - "@next-auth/supabase-adapter"
         - "@auth/typeorm-adapter"
         - "@auth/upstash-redis-adapter"
-        - "@next-auth/xata-adapter"
+        - "@auth/xata-adapter"
     validations:
       required: true
   - type: textarea

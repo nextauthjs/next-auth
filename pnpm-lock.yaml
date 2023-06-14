@@ -519,18 +519,19 @@ importers:
 
   packages/adapter-xata:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:^0.0.0
       '@next-auth/tsconfig': workspace:^0.0.0
       '@xata.io/client': ^0.13.0
       jest: ^27.4.3
-      next-auth: workspace:*
       typescript: ^4.7.4
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@xata.io/client': 0.13.4_typescript@4.7.4
       jest: 27.5.1
-      next-auth: link:../next-auth
       typescript: 4.7.4
 
   packages/core:
