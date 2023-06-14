@@ -27,7 +27,7 @@ body:
         - "@auth/firebase-adapter"
         - "@auth/mikro-orm-adapter"
         - "@auth/mongodb-adapter"
-        - "@next-auth/neo4j-adapter"
+        - "@auth/neo4j-adapter"
         - "@next-auth/pouchdb-adapter"
         - "@auth/prisma-adapter"
         - "@next-auth/sequelize-adapter"
