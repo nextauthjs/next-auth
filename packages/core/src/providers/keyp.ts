@@ -16,6 +16,7 @@ export interface KeypProfile extends Record<string, any> {
 // The redirect URL must be added to a Keyp client in the [Keyp Developer Portal](https://dev.usekeyp.com)
 interface AdditionalConfig {
   redirectUrl: string | undefined;
+  scope: string | undefined;
 }
 
 /**
@@ -101,7 +102,9 @@ interface AdditionalConfig {
 export default function Keyp<P extends KeypProfile>(
   config: OIDCUserConfig<P> & AdditionalConfig
 ): OIDCConfig<P> {
-  const { clientId } = config
+  const { clientId, scope } = config
+  const defaultScope = "openid email"
+
   // Keyp's API domain is configurable for local testing, but defaults to https://api.usekeyp.com
   const KEYP_API_DOMAIN =
     process.env.NEXT_PUBLIC_KEYP_API_DOMAIN || "https://api.usekeyp.com"
@@ -113,7 +116,7 @@ export default function Keyp<P extends KeypProfile>(
     clientId,
     issuer: "https://api.usekeyp.com",
     wellKnown: `${KEYP_API_DOMAIN}/oauth/.well-known/openid-configuration`,
-    authorization: { url: "https://app.usekeyp.com/oauth/auth", params: { scope: "openid email" } },
+    authorization: { url: "https://app.usekeyp.com/oauth/auth", params: { scope: scope ? scope : defaultScope } },
     token: { url: "https://app.usekeyp.com/oauth/token" },
     userinfo: `https://api.usekeyp.com/oauth/me`,
     client: { token_endpoint_auth_method: "none" },
