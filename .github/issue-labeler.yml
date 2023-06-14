@@ -28,7 +28,7 @@ prisma:
   - "@auth/prisma-adapter"
 
 sequelize:
-  - "@next-auth/sequelize-adapter"
+  - "@auth/sequelize-adapter"
 
 supabase:
   - "@auth/supabase-adapter"
