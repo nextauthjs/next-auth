@@ -10,7 +10,7 @@ fauna:
   - "@auth/fauna-adapter"
 
 firebase:
-  - "@next-auth/firebase-adapter"
+  - "@auth/firebase-adapter"
 
 mikro-orm:
   - "@auth/mikro-orm-adapter"
