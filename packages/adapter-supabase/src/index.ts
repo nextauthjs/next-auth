@@ -9,19 +9,18 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install @supabase/supabase-js next-auth @next-auth/supabase-adapter
+ * npm install @supabase/supabase-js @auth/supabase-adapter
  * ```
  *
- * @module @next-auth/supabase-adapter
+ * @module @auth/supabase-adapter
  */
 import { createClient } from "@supabase/supabase-js"
-import { Database } from "./database.types"
 import {
   Adapter,
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 function isDate(date: any) {
   return (
@@ -61,7 +60,7 @@ export interface SupabaseAdapterOptions {
  * :::note
  * This adapter is developed by the community and not officially maintained or supported by Supabase. It uses the Supabase Database to store user and session data in a separate `next_auth` schema. It is a standalone Auth server that does not interface with Supabase Auth and therefore provides a different feature set.
  *
- * If you’re looking for an officially maintained Auth server with additional features like [built-in email server](https://supabase.com/docs/guides/auth/auth-email#configure-email-settings?utm_source=authjs-docs&medium=referral&campaign=authjs), [phone auth](https://supabase.com/docs/guides/auth/auth-twilio?utm_source=authjs-docs&medium=referral&campaign=authjs), and [Multi Factor Authentication (MFA / 2FA)](https://supabase.com/contact/mfa?utm_source=authjs-docs&medium=referral&campaign=authjs), please use [Supabase Auth](https://supabase.com/auth) with the [Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/auth-helpers/nextjs?utm_source=authjs-docs&medium=referral&campaign=authjs).
+ * If you're looking for an officially maintained Auth server with additional features like [built-in email server](https://supabase.com/docs/guides/auth/auth-email#configure-email-settings?utm_source=authjs-docs&medium=referral&campaign=authjs), [phone auth](https://supabase.com/docs/guides/auth/auth-twilio?utm_source=authjs-docs&medium=referral&campaign=authjs), and [Multi Factor Authentication (MFA / 2FA)](https://supabase.com/contact/mfa?utm_source=authjs-docs&medium=referral&campaign=authjs), please use [Supabase Auth](https://supabase.com/auth) with the [Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/auth-helpers/nextjs?utm_source=authjs-docs&medium=referral&campaign=authjs).
  * :::
  *
  * ## Setup
@@ -72,7 +71,7 @@ export interface SupabaseAdapterOptions {
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+ * import { SupabaseAdapter } from "@auth/supabase-adapter"
  *
  * // For more information on each option (and a full list of options) go to
  * // https://authjs.dev/reference/configuration/auth-config
@@ -224,7 +223,7 @@ export interface SupabaseAdapterOptions {
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+ * import { SupabaseAdapter } from "@auth/supabase-adapter"
  * import jwt from "jsonwebtoken"
  *
  * // For more information on each option (and a full list of options) go to
@@ -350,9 +349,7 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
   const { url, secret } = options
   const supabase = createClient<Database, "next_auth">(url, secret, {
     db: { schema: "next_auth" },
-    global: {
-      headers: { "X-Client-Info": "@next-auth/supabase-adapter@0.1.0" },
-    },
+    global: { headers: { "X-Client-Info": "@auth/supabase-adapter" } },
   })
   return {
     async createUser(user) {
@@ -522,5 +519,137 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       return format<VerificationToken>(verificationToken)
     },
+  }
+}
+
+interface Database {
+  next_auth: {
+    Tables: {
+      accounts: {
+        Row: {
+          id: string
+          type: string | null
+          provider: string | null
+          providerAccountId: string | null
+          refresh_token: string | null
+          access_token: string | null
+          expires_at: number | null
+          token_type: string | null
+          scope: string | null
+          id_token: string | null
+          session_state: string | null
+          oauth_token_secret: string | null
+          oauth_token: string | null
+          userId: string | null
+        }
+        Insert: {
+          id?: string
+          type?: string | null
+          provider?: string | null
+          providerAccountId?: string | null
+          refresh_token?: string | null
+          access_token?: string | null
+          expires_at?: number | null
+          token_type?: string | null
+          scope?: string | null
+          id_token?: string | null
+          session_state?: string | null
+          oauth_token_secret?: string | null
+          oauth_token?: string | null
+          userId?: string | null
+        }
+        Update: {
+          id?: string
+          type?: string | null
+          provider?: string | null
+          providerAccountId?: string | null
+          refresh_token?: string | null
+          access_token?: string | null
+          expires_at?: number | null
+          token_type?: string | null
+          scope?: string | null
+          id_token?: string | null
+          session_state?: string | null
+          oauth_token_secret?: string | null
+          oauth_token?: string | null
+          userId?: string | null
+        }
+      }
+      sessions: {
+        Row: {
+          expires: string | null
+          sessionToken: string | null
+          userId: string | null
+          id: string
+        }
+        Insert: {
+          expires?: string | null
+          sessionToken?: string | null
+          userId?: string | null
+          id?: string
+        }
+        Update: {
+          expires?: string | null
+          sessionToken?: string | null
+          userId?: string | null
+          id?: string
+        }
+      }
+      users: {
+        Row: {
+          name: string | null
+          email: string | null
+          emailVerified: string | null
+          image: string | null
+          id: string
+        }
+        Insert: {
+          name?: string | null
+          email?: string | null
+          emailVerified?: string | null
+          image?: string | null
+          id?: string
+        }
+        Update: {
+          name?: string | null
+          email?: string | null
+          emailVerified?: string | null
+          image?: string | null
+          id?: string
+        }
+      }
+      verification_tokens: {
+        Row: {
+          id: number
+          identifier: string | null
+          token: string | null
+          expires: string | null
+        }
+        Insert: {
+          id?: number
+          identifier?: string | null
+          token?: string | null
+          expires?: string | null
+        }
+        Update: {
+          id?: number
+          identifier?: string | null
+          token?: string | null
+          expires?: string | null
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      uid: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
   }
 }
