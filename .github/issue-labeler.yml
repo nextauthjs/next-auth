@@ -31,7 +31,7 @@ sequelize:
   - "@next-auth/sequelize-adapter"
 
 supabase:
-  - "@next-auth/supabase-adapter"
+  - "@auth/supabase-adapter"
 
 typeorm:
   - "@auth/typeorm-adapter"
