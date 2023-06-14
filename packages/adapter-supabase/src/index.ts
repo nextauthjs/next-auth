@@ -460,7 +460,7 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       return {
         user: format<AdapterUser>(
-          user as Database["next_auth"]["Tables"]["users"]["Row"]
+          user as Database["next_auth"]["Tables"]["users"]["Row"][]
         ),
         session: format<AdapterSession>(session),
       }
