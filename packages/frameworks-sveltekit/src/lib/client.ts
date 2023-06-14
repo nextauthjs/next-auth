@@ -61,7 +61,6 @@ export async function signIn<
   })
 
   const data = await res.clone().json()
-  const error = new URL(data.url).searchParams.get("error")
 
   if (redirect || !isSupportingReturn) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
