@@ -22,7 +22,7 @@ neo4j:
   - "@auth/neo4j-adapter"
 
 pouchdb:
-  - "@next-auth/pouchdb-adapter"
+  - "@auth/pouchdb-adapter"
 
 prisma:
   - "@auth/prisma-adapter"
