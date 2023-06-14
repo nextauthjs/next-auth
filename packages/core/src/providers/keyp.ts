@@ -1,7 +1,7 @@
 /**
  * <h1 align="center"><img width="600" style="border-radius: 30px;" src="https://raw.githubusercontent.com/UseKeyp/.github/main/Keyp-Logo-Color.svg"/></h1>
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js";
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface KeypProfile extends Record<string, any> {
   sub: string;
@@ -36,7 +36,7 @@ interface AdditionalConfig {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Keyp({ clientId: KEYP_CLIENT_ID, clientSecret: KEYP_CLIENT_SECRET, redirectUrl: KEYP_CLIENT_REDIRECT_URI })],
+ *   providers: [Keyp({ clientId: KEYP_CLIENT_ID, redirectUrl: KEYP_CLIENT_REDIRECT_URI })],
  * })
  * ```
  *
@@ -67,23 +67,22 @@ interface AdditionalConfig {
  * :::
  */
 export default function Keyp<P extends KeypProfile>(
-  options: OAuthUserConfig<P> & AdditionalConfig
-): OAuthConfig<P> {
-  const { clientId } = options;
+  config: OIDCUserConfig<P> & AdditionalConfig
+): OIDCConfig<P> {
+  const { clientId } = config;
   // Keyp's API domain is configurable for local testing, but defaults to https://api.usekeyp.com
   const KEYP_API_DOMAIN =
-    process.env.NEXT_PUBLIC_KEYP_API_DOMAIN || "https://app.usekeyp.com";
+    process.env.NEXT_PUBLIC_KEYP_API_DOMAIN || "https://api.usekeyp.com";
 
   return {
     id: "keyp",
     name: "Keyp",
-    type: "oauth",
+    type: "oidc",
     clientId,
     issuer: "https://api.usekeyp.com",
     wellKnown: `${KEYP_API_DOMAIN}/oauth/.well-known/openid-configuration`,
-    checks: ["pkce"],
-    authorization: "https://app.usekeyp.com/oauth/auth?scope=openid%20email",
-    token: `https://api.usekeyp.com/oauth/token`,
+    authorization: { url: "https://app.usekeyp.com/oauth/auth", params: { scope: "openid email" } },
+    token: { url: "https://app.usekeyp.com/oauth/token" },
     userinfo: `https://api.usekeyp.com/oauth/me`,
     client: { token_endpoint_auth_method: "none" },
     profile(profile: P) {
@@ -103,6 +102,6 @@ export default function Keyp<P extends KeypProfile>(
       bgDark: "#005285",
       textDark: "#fff",
     },
-    options,
+    options: config,
   };
 }
