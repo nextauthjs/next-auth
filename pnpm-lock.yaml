@@ -56,7 +56,7 @@ importers:
       '@auth/core': workspace:*
       '@auth/prisma-adapter': workspace:*
       '@auth/typeorm-adapter': workspace:*
-      '@next-auth/fauna-adapter': workspace:*
+      '@auth/fauna-adapter': workspace:*
       '@next-auth/supabase-adapter': workspace:*
       '@playwright/test': 1.29.2
       '@prisma/client': ^3
@@ -80,7 +80,7 @@ importers:
       '@auth/core': link:../../../packages/core
       '@auth/prisma-adapter': link:../../../packages/adapter-prisma
       '@auth/typeorm-adapter': link:../../../packages/adapter-typeorm
-      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
+      '@auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
       '@prisma/client': 3.15.2_prisma@3.15.2
       '@supabase/supabase-js': 2.0.5
@@ -106,7 +106,7 @@ importers:
     specifiers:
       '@auth/prisma-adapter': workspace:*
       '@auth/typeorm-adapter': workspace:*
-      '@next-auth/fauna-adapter': workspace:*
+      '@auth/fauna-adapter': workspace:*
       '@next-auth/supabase-adapter': workspace:*
       '@prisma/client': ^3
       '@supabase/supabase-js': ^2.0.5
@@ -127,7 +127,7 @@ importers:
     dependencies:
       '@auth/prisma-adapter': link:../../../packages/adapter-prisma
       '@auth/typeorm-adapter': link:../../../packages/adapter-typeorm
-      '@next-auth/fauna-adapter': link:../../../packages/adapter-fauna
+      '@auth/fauna-adapter': link:../../../packages/adapter-fauna
       '@next-auth/supabase-adapter': link:../../../packages/adapter-supabase
       '@prisma/client': 3.15.2_prisma@3.15.2
       '@supabase/supabase-js': 2.0.5
@@ -295,19 +295,20 @@ importers:
 
   packages/adapter-fauna:
     specifiers:
+      '@auth/core': workspace:*
       '@fauna-labs/fauna-schema-migrate': ^2.1.3
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       faunadb: ^4.3.0
       jest: ^27.4.3
-      next-auth: workspace:*
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@fauna-labs/fauna-schema-migrate': 2.2.1_faunadb@4.6.0
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       faunadb: 4.6.0
       jest: 27.5.1
-      next-auth: link:../next-auth
 
   packages/adapter-firebase:
     specifiers:
@@ -32977,6 +32978,7 @@ packages:
   /uuid/9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
+    dev: true
 
   /v8-compile-cache/2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}
