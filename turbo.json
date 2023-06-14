@@ -67,7 +67,7 @@
         "@next-auth/supabase-adapter#build",
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
-        "@next-auth/xata-adapter#build",
+        "@auth/xata-adapter#build",
         "^build",
         "next-auth#build"
       ],
@@ -90,7 +90,7 @@
         "@next-auth/supabase-adapter#build",
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
-        "@next-auth/xata-adapter#build",
+        "@auth/xata-adapter#build",
         "^build",
         "next-auth#build"
       ],

@@ -40,4 +40,4 @@ upstash-redis:
   - "@auth/upstash-redis-adapter"
 
 xata:
-  - "@next-auth/xata-adapter"
+  - "@auth/xata-adapter"
