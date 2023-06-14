@@ -7,7 +7,7 @@ dynamodb:
   - "@auth/dynamodb-adapter"
 
 fauna:
-  - "@next-auth/fauna-adapter"
+  - "@auth/fauna-adapter"
 
 firebase:
   - "@auth/firebase-adapter"

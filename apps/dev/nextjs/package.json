@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@next-auth/fauna-adapter": "workspace:*",
+    "@auth/fauna-adapter": "workspace:*",
     "@auth/prisma-adapter": "workspace:*",
     "@next-auth/supabase-adapter": "workspace:*",
     "@auth/typeorm-adapter": "workspace:*",
