@@ -60,7 +60,7 @@ import WorkOS from "next-auth/providers/workos"
 // })
 
 // // Supabase
-// import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+// import { SupabaseAdapter } from "@auth/supabase-adapter"
 // const adapter = SupabaseAdapter({
 //   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
