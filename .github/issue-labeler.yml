@@ -19,7 +19,7 @@ mongodb:
   - "@auth/mongodb-adapter"
 
 neo4j:
-  - "@next-auth/neo4j-adapter"
+  - "@auth/neo4j-adapter"
 
 pouchdb:
   - "@auth/pouchdb-adapter"
