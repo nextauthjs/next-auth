@@ -361,42 +361,38 @@ importers:
 
   packages/adapter-neo4j:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       jest: ^27.4.3
       neo4j-driver: ^5.7.0
-      next-auth: workspace:*
-      uuid: ^8.3.2
     dependencies:
-      uuid: 8.3.2
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@types/uuid': 8.3.4
       jest: 27.5.1
       neo4j-driver: 5.7.0
-      next-auth: link:../next-auth
 
   packages/adapter-pouchdb:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@types/pouchdb': ^6.4.0
       jest: ^27.4.3
-      next-auth: workspace:*
       pouchdb: ^8.0.1
       pouchdb-adapter-memory: ^8.0.1
       pouchdb-find: ^8.0.1
-      ulid: 2.3.0
     dependencies:
-      ulid: 2.3.0
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
       '@types/pouchdb': 6.4.0
       jest: 27.5.1
-      next-auth: link:../next-auth
       pouchdb: 8.0.1
       pouchdb-adapter-memory: 8.0.1
       pouchdb-find: 8.0.1
@@ -32408,11 +32404,6 @@ packages:
     hasBin: true
     requiresBuild: true
     dev: true
-
-  /ulid/2.3.0:
-    resolution: {integrity: sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw==}
-    hasBin: true
-    dev: false
 
   /ultrahtml/1.2.0:
     resolution: {integrity: sha512-vxZM2yNvajRmCj/SknRYGNXk2tqiy6kRNvZjJLaleG3zJbSh/aNkOqD1/CVzypw8tyHyhpzYuwQgMMhUB4ZVNQ==}

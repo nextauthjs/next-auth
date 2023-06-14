@@ -1,6 +1,6 @@
 {
-  "name": "@next-auth/pouchdb-adapter",
-  "version": "1.0.0",
+  "name": "@auth/pouchdb-adapter",
+  "version": "0.0.0",
   "description": "PouchDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -38,19 +38,17 @@
     "src"
   ],
   "peerDependencies": {
-    "next-auth": "^4",
     "pouchdb": "^8.0.1",
     "pouchdb-find": "^8.0.1"
   },
   "dependencies": {
-    "ulid": "2.3.0"
+    "@auth/core": "workspace:*"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@types/pouchdb": "^6.4.0",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*",
     "pouchdb": "^8.0.1",
     "pouchdb-adapter-memory": "^8.0.1",
     "pouchdb-find": "^8.0.1"
