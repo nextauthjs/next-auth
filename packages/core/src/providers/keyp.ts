@@ -4,19 +4,19 @@
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface KeypProfile extends Record<string, any> {
-  sub: string;
-  username: string;
-  address: string;
-  email: string;
-  imageSrc: string;
+  sub: string
+  username: string
+  address: string
+  email: string
+  imageSrc: string
 }
 
 // Any config required that isn't part of the `OAuthUserConfig` spec should belong here
 // For example, we must pass a `redirectUrl` to Keyp's API when requesting tokens, therefore we add it here
 // The redirect URL must be added to a Keyp client in the [Keyp Developer Portal](https://dev.usekeyp.com)
 interface AdditionalConfig {
-  redirectUrl: string | undefined;
-  scope: string | undefined;
+  redirectUrl: string | undefined
+  scope: string | undefined
 }
 
 /**
@@ -116,7 +116,10 @@ export default function Keyp<P extends KeypProfile>(
     clientId,
     issuer: "https://api.usekeyp.com",
     wellKnown: `${KEYP_API_DOMAIN}/oauth/.well-known/openid-configuration`,
-    authorization: { url: "https://app.usekeyp.com/oauth/auth", params: { scope: scope ? scope : defaultScope } },
+    authorization: {
+      url: "https://app.usekeyp.com/oauth/auth",
+      params: { scope: scope ? scope : defaultScope },
+    },
     token: { url: "https://api.usekeyp.com/oauth/token" },
     userinfo: `https://api.usekeyp.com/oauth/me`,
     client: { token_endpoint_auth_method: "none" },
@@ -126,7 +129,7 @@ export default function Keyp<P extends KeypProfile>(
         name: profile.username,
         email: profile.email,
         image: profile.imageSrc,
-        address: profile.address
+        address: profile.address,
       }
     },
     style: {
@@ -135,8 +138,8 @@ export default function Keyp<P extends KeypProfile>(
       bg: "#fff",
       text: "#005285",
       bgDark: "#005285",
-      textDark: "#fff"
+      textDark: "#fff",
     },
-    options: config
+    options: config,
   }
 }
