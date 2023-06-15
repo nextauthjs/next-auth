@@ -117,7 +117,7 @@ export default function Keyp<P extends KeypProfile>(
     issuer: "https://api.usekeyp.com",
     wellKnown: `${KEYP_API_DOMAIN}/oauth/.well-known/openid-configuration`,
     authorization: { url: "https://app.usekeyp.com/oauth/auth", params: { scope: scope ? scope : defaultScope } },
-    token: { url: "https://app.usekeyp.com/oauth/token" },
+    token: { url: "https://api.usekeyp.com/oauth/token" },
     userinfo: `https://api.usekeyp.com/oauth/me`,
     client: { token_endpoint_auth_method: "none" },
     profile(profile: P) {
