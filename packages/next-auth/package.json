@@ -40,9 +40,9 @@
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
     },
-    "./client": {
-      "types": "./client.d.ts",
-      "import": "./client.js"
+    "./react": {
+      "types": "./react.d.ts",
+      "import": "./react.js"
     },
     "./types": {
       "types": "./types.d.ts"
