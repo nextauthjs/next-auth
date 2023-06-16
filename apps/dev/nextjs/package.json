@@ -14,7 +14,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*",
     "@auth/fauna-adapter": "workspace:*",
     "@auth/prisma-adapter": "workspace:*",
     "@auth/supabase-adapter": "workspace:*",
@@ -22,7 +21,7 @@
     "@prisma/client": "^3",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
-    "next": "13.4.2",
+    "next": "13.4.6",
     "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
