@@ -1,1 +1,1 @@
-export * from "@auth/core"
+export * from "@auth/nextjs"
