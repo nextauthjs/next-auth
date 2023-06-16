@@ -144,7 +144,10 @@ export type { NextAuthConfig }
  */
 export interface NextAuthResult {
   /**
-   * The NextAuth.js [Route Handler](https://beta.nextjs.org/docs/routing/route-handlers) methods. After initializing NextAuth.js in `auth.ts`,
+   * The NextAuth.js [Route Handler](https://beta.nextjs.org/docs/routing/route-handlers) methods. These are used to expose an endpoint for OAuth/Email providers,
+   * as well as REST API endpoints (such as `/api/auth/session`) that can be contacted from the client.
+   *
+   * After initializing NextAuth.js in `auth.ts`,
    * re-export these methods.
    *
    * In `app/api/auth/[...nextauth]/route.ts`:

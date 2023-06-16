@@ -71,14 +71,14 @@
   "devDependencies": {
     "@types/react": "18.0.37",
     "typescript": "^4",
-    "next": "13.4.2"
+    "next": "13.4.6"
   },
   "license": "ISC",
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "next": "^13.4.2",
+    "next": "^13.4.6",
     "react": "^18.2.0"
   }
 }
