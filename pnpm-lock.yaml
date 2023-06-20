@@ -589,7 +589,7 @@ importers:
 
   packages/frameworks-nextjs:
     specifiers:
-      '@auth/core': workspace:*
+      '@auth/core': workspace:experimental
       '@types/react': 18.0.37
       next: 13.4.6
       typescript: ^4
@@ -651,8 +651,8 @@ importers:
 
   packages/next-auth:
     specifiers:
-      '@auth/core': workspace:*
-      '@auth/nextjs': workspace:*
+      '@auth/core': workspace:experimental
+      '@auth/nextjs': workspace:experimental
       '@babel/cli': ^7.17.10
       '@babel/core': ^7.18.2
       '@babel/plugin-proposal-optional-catch-binding': ^7.16.7

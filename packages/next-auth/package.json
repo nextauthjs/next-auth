@@ -78,8 +78,8 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "@auth/nextjs": "workspace:*"
+    "@auth/core": "workspace:experimental",
+    "@auth/nextjs": "workspace:experimental"
   },
   "peerDependencies": {
     "next": "^13.4.5",
