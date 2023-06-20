@@ -18,7 +18,7 @@
     "@auth/prisma-adapter": "workspace:*",
     "@auth/supabase-adapter": "workspace:*",
     "@auth/typeorm-adapter": "workspace:*",
-    "@prisma/client": "^3",
+    "@prisma/client": "^4",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
     "next": "13.4.6",
@@ -35,7 +35,7 @@
     "dotenv": "^16.0.3",
     "fake-smtp-server": "^0.8.0",
     "pg": "^8.7.3",
-    "prisma": "^3",
+    "prisma": "^4",
     "sqlite3": "^5.0.8",
     "typeorm": "0.3.7"
   }

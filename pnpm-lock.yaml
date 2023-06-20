@@ -58,7 +58,7 @@ importers:
       '@auth/supabase-adapter': workspace:*
       '@auth/typeorm-adapter': workspace:*
       '@playwright/test': 1.29.2
-      '@prisma/client': ^3
+      '@prisma/client': ^4
       '@supabase/supabase-js': ^2.0.5
       '@types/jsonwebtoken': ^8.5.5
       '@types/react': 18.0.37
@@ -70,7 +70,7 @@ importers:
       next-auth: workspace:*
       nodemailer: ^6
       pg: ^8.7.3
-      prisma: ^3
+      prisma: ^4
       react: ^18
       react-dom: ^18
       sqlite3: ^5.0.8
@@ -80,7 +80,7 @@ importers:
       '@auth/prisma-adapter': link:../../../packages/adapter-prisma
       '@auth/supabase-adapter': link:../../../packages/adapter-supabase
       '@auth/typeorm-adapter': link:../../../packages/adapter-typeorm
-      '@prisma/client': 3.15.2_prisma@3.15.2
+      '@prisma/client': 4.15.0_prisma@4.15.0
       '@supabase/supabase-js': 2.25.0
       faunadb: 4.8.0
       next: 13.4.6_biqbaboplfbrettd7655fr4n2y
@@ -96,7 +96,7 @@ importers:
       dotenv: 16.1.4
       fake-smtp-server: 0.8.0
       pg: 8.11.0
-      prisma: 3.15.2
+      prisma: 4.15.0
       sqlite3: 5.1.6
       typeorm: 0.3.7_pg@8.11.0+sqlite3@5.1.6
 
@@ -8371,7 +8371,6 @@ packages:
     dependencies:
       '@prisma/engines-version': 4.15.0-28.8fbc245156db7124f997f4cecdd8d1219e360944
       prisma: 4.15.0
-    dev: true
 
   /@prisma/engines-version/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
     resolution: {integrity: sha512-e3k2Vd606efd1ZYy2NQKkT4C/pn31nehyLhVug6To/q8JT8FpiMrDy7zmm3KLF0L98NOQQcutaVtAPhzKhzn9w==}
@@ -8379,7 +8378,6 @@ packages:
 
   /@prisma/engines-version/4.15.0-28.8fbc245156db7124f997f4cecdd8d1219e360944:
     resolution: {integrity: sha512-sVOig4tjGxxlYaFcXgE71f/rtFhzyYrfyfNFUsxCIEJyVKU9rdOWIlIwQ2NQ7PntvGnn+x0XuFo4OC1jvPJKzg==}
-    dev: true
 
   /@prisma/engines/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
     resolution: {integrity: sha512-NHlojO1DFTsSi3FtEleL9QWXeSF/UjhCW0fgpi7bumnNZ4wj/eQ+BJJ5n2pgoOliTOGv9nX2qXvmHap7rJMNmg==}
@@ -8388,7 +8386,6 @@ packages:
   /@prisma/engines/4.15.0:
     resolution: {integrity: sha512-FTaOCGs0LL0OW68juZlGxFtYviZa4xdQj/rQEdat2txw0s3Vu/saAPKjNVXfIgUsGXmQ72HPgNr6935/P8FNAA==}
     requiresBuild: true
-    dev: true
 
   /@protobufjs/aspromise/1.1.2:
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -25761,7 +25758,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.15.0
-    dev: true
 
   /prismjs/1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
