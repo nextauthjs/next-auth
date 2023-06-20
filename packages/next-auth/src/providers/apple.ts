@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/apple"
-export { default } from "@auth/core/providers/apple"
+export * from "@auth/nextjs/providers/apple"
+export { default } from "@auth/nextjs/providers/apple"

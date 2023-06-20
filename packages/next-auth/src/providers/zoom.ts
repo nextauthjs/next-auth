@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/zoom"
-export { default } from "@auth/core/providers/zoom"
+export * from "@auth/nextjs/providers/zoom"
+export { default } from "@auth/nextjs/providers/zoom"

@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/naver"
-export { default } from "@auth/core/providers/naver"
+export * from "@auth/nextjs/providers/naver"
+export { default } from "@auth/nextjs/providers/naver"

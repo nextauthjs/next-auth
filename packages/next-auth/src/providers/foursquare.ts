@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/foursquare"
-export { default } from "@auth/core/providers/foursquare"
+export * from "@auth/nextjs/providers/foursquare"
+export { default } from "@auth/nextjs/providers/foursquare"

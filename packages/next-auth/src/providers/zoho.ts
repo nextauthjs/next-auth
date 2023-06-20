@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/zoho"
-export { default } from "@auth/core/providers/zoho"
+export * from "@auth/nextjs/providers/zoho"
+export { default } from "@auth/nextjs/providers/zoho"

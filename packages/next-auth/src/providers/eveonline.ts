@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/eveonline"
-export { default } from "@auth/core/providers/eveonline"
+export * from "@auth/nextjs/providers/eveonline"
+export { default } from "@auth/nextjs/providers/eveonline"

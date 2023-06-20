@@ -655,7 +655,6 @@ importers:
 
   packages/next-auth:
     specifiers:
-      '@auth/core': workspace:experimental
       '@auth/nextjs': workspace:experimental
       '@babel/cli': ^7.17.10
       '@babel/core': ^7.18.2
@@ -696,7 +695,6 @@ importers:
       react-dom: ^18
       whatwg-fetch: ^3.6.2
     dependencies:
-      '@auth/core': link:../core
       '@auth/nextjs': link:../frameworks-nextjs
     devDependencies:
       '@babel/cli': 7.22.5_@babel+core@7.22.5

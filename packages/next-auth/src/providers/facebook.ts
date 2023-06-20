@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/facebook"
-export { default } from "@auth/core/providers/facebook"
+export * from "@auth/nextjs/providers/facebook"
+export { default } from "@auth/nextjs/providers/facebook"

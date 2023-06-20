@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/workos"
-export { default } from "@auth/core/providers/workos"
+export * from "@auth/nextjs/providers/workos"
+export { default } from "@auth/nextjs/providers/workos"

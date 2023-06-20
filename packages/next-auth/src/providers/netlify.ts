@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/netlify"
-export { default } from "@auth/core/providers/netlify"
+export * from "@auth/nextjs/providers/netlify"
+export { default } from "@auth/nextjs/providers/netlify"

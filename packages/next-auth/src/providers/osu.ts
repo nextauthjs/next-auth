@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/osu"
-export { default } from "@auth/core/providers/osu"
+export * from "@auth/nextjs/providers/osu"
+export { default } from "@auth/nextjs/providers/osu"

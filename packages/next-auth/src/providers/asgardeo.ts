@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/asgardeo"
-export { default } from "@auth/core/providers/asgardeo"
+export * from "@auth/nextjs/providers/asgardeo"
+export { default } from "@auth/nextjs/providers/asgardeo"

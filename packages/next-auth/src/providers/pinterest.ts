@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/pinterest"
-export { default } from "@auth/core/providers/pinterest"
+export * from "@auth/nextjs/providers/pinterest"
+export { default } from "@auth/nextjs/providers/pinterest"

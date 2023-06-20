@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/wikimedia"
-export { default } from "@auth/core/providers/wikimedia"
+export * from "@auth/nextjs/providers/wikimedia"
+export { default } from "@auth/nextjs/providers/wikimedia"

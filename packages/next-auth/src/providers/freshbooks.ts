@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/freshbooks"
-export { default } from "@auth/core/providers/freshbooks"
+export * from "@auth/nextjs/providers/freshbooks"
+export { default } from "@auth/nextjs/providers/freshbooks"

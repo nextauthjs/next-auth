@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/discord"
-export { default } from "@auth/core/providers/discord"
+export * from "@auth/nextjs/providers/discord"
+export { default } from "@auth/nextjs/providers/discord"

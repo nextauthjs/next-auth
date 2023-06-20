@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/zitadel"
-export { default } from "@auth/core/providers/zitadel"
+export * from "@auth/nextjs/providers/zitadel"
+export { default } from "@auth/nextjs/providers/zitadel"

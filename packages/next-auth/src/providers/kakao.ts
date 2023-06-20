@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/kakao"
-export { default } from "@auth/core/providers/kakao"
+export * from "@auth/nextjs/providers/kakao"
+export { default } from "@auth/nextjs/providers/kakao"

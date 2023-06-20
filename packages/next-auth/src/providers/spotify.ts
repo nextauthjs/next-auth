@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/spotify"
-export { default } from "@auth/core/providers/spotify"
+export * from "@auth/nextjs/providers/spotify"
+export { default } from "@auth/nextjs/providers/spotify"

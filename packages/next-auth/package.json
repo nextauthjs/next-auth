@@ -78,7 +78,6 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:experimental",
     "@auth/nextjs": "workspace:experimental"
   },
   "peerDependencies": {

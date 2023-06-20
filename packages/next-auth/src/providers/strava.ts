@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/strava"
-export { default } from "@auth/core/providers/strava"
+export * from "@auth/nextjs/providers/strava"
+export { default } from "@auth/nextjs/providers/strava"

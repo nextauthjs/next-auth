@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import { resolve } from "path"
 
-const sourceDir = resolve(process.cwd(), "../core/src/providers")
+const sourceDir = resolve(process.cwd(), "../frameworks-nextjs/src/providers")
 const destinationDir = resolve(process.cwd(), "src/providers")
 const nonProvider = ["oauth-types.ts", "oauth.ts"]
 try {
@@ -12,8 +12,8 @@ try {
   for (const file of files) {
     const destinationPath = resolve(destinationDir, file)
     const provider = file.substring(0, file.indexOf("."))
-    const content = `export * from "@auth/core/providers/${provider}"
-export { default } from "@auth/core/providers/${provider}"`.replace(
+    const content = `export * from "@auth/nextjs/providers/${provider}"
+export { default } from "@auth/nextjs/providers/${provider}"`.replace(
       /\/index$/g,
       ""
     )

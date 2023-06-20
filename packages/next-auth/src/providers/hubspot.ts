@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/hubspot"
-export { default } from "@auth/core/providers/hubspot"
+export * from "@auth/nextjs/providers/hubspot"
+export { default } from "@auth/nextjs/providers/hubspot"

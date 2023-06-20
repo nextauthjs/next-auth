@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/beyondidentity"
-export { default } from "@auth/core/providers/beyondidentity"
+export * from "@auth/nextjs/providers/beyondidentity"
+export { default } from "@auth/nextjs/providers/beyondidentity"

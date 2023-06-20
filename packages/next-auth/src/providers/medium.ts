@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/medium"
-export { default } from "@auth/core/providers/medium"
+export * from "@auth/nextjs/providers/medium"
+export { default } from "@auth/nextjs/providers/medium"

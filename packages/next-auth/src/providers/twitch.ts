@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/twitch"
-export { default } from "@auth/core/providers/twitch"
+export * from "@auth/nextjs/providers/twitch"
+export { default } from "@auth/nextjs/providers/twitch"

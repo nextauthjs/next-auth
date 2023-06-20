@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/twitter"
-export { default } from "@auth/core/providers/twitter"
+export * from "@auth/nextjs/providers/twitter"
+export { default } from "@auth/nextjs/providers/twitter"

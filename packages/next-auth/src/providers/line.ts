@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/line"
-export { default } from "@auth/core/providers/line"
+export * from "@auth/nextjs/providers/line"
+export { default } from "@auth/nextjs/providers/line"

@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/dropbox"
-export { default } from "@auth/core/providers/dropbox"
+export * from "@auth/nextjs/providers/dropbox"
+export { default } from "@auth/nextjs/providers/dropbox"

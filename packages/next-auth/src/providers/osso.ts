@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/osso"
-export { default } from "@auth/core/providers/osso"
+export * from "@auth/nextjs/providers/osso"
+export { default } from "@auth/nextjs/providers/osso"

@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/wordpress"
-export { default } from "@auth/core/providers/wordpress"
+export * from "@auth/nextjs/providers/wordpress"
+export { default } from "@auth/nextjs/providers/wordpress"

@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/vk"
-export { default } from "@auth/core/providers/vk"
+export * from "@auth/nextjs/providers/vk"
+export { default } from "@auth/nextjs/providers/vk"

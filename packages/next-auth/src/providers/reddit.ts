@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/reddit"
-export { default } from "@auth/core/providers/reddit"
+export * from "@auth/nextjs/providers/reddit"
+export { default } from "@auth/nextjs/providers/reddit"

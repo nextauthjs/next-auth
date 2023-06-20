@@ -1,2 +1,2 @@
-export * from "@auth/core/providers/todoist"
-export { default } from "@auth/core/providers/todoist"
+export * from "@auth/nextjs/providers/todoist"
+export { default } from "@auth/nextjs/providers/todoist"
