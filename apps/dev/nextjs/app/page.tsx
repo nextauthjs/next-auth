@@ -1,4 +1,4 @@
-import { SessionProvider } from "@auth/nextjs/client"
+import { SessionProvider } from "next-auth/react"
 import { auth } from "auth"
 import Client from "./client"
 

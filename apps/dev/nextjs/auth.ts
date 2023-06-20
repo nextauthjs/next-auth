@@ -1,8 +1,8 @@
-import NextAuth from "@auth/nextjs"
-import Email from "@auth/nextjs/providers/email"
+import NextAuth from "next-auth"
+import Email from "next-auth/providers/email"
 import authConfig from "auth.config"
 import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 
 const prisma = new PrismaClient()
 
@@ -17,7 +17,6 @@ export const {
   auth,
   CSRF_experimental,
 } = NextAuth({
-  // @ts-expect-error https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/guides/upgrade-to-v5#adapter-type
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,

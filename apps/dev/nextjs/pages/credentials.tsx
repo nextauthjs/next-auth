@@ -1,6 +1,6 @@
 import * as React from "react"
-import { signIn, signOut, useSession } from "@auth/nextjs/client"
-import { SignInResponse, SignOutResponse } from "@auth/nextjs/lib/client"
+import { signIn, signOut, useSession } from "next-auth/react"
+import { SignInResponse, SignOutResponse } from "next-auth/react"
 
 export default function Page() {
   const [response, setResponse] = React.useState<
