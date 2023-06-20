@@ -23,7 +23,7 @@
     "faunadb": "^4",
     "next": "13.4.6",
     "next-auth": "workspace:*",
-    "nodemailer": "^6",
+    "nodemailer": "^6.9.3",
     "react": "^18",
     "react-dom": "^18"
   },
