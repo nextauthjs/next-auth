@@ -130,6 +130,8 @@ export function initAuth(config: NextAuthConfig) {
     const request = "req" in args[0] ? args[0].req : args[0]
     const response: any = "res" in args[0] ? args[0].res : args[1]
 
+    const origin = detectOrigin(new Headers(request.headers as any))
+    config.useSecureCookies ??= origin.protocol === "https"
     return getSession(
       // @ts-expect-error
       new Headers(request.headers),
@@ -156,6 +158,8 @@ async function handleAuth(
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
   const request = args[0]
+  const origin = detectOrigin(request.headers)
+  config.useSecureCookies ??= origin.protocol === "https"
   const sessionResponse = await getSession(request.headers, config)
   const {
     user = null,
