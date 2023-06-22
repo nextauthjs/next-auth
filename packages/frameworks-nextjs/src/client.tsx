@@ -15,7 +15,7 @@ import {
   now,
   parseUrl,
   useOnline,
-} from "./lib/client"
+} from "./lib/client.js"
 
 import type {
   BuiltInProviderType,
