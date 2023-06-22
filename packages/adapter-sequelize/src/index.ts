@@ -22,7 +22,7 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters"
 import { Sequelize, Model, ModelCtor } from "sequelize"
-import * as defaultModels from "./models"
+import * as defaultModels from "./models.js"
 
 export { defaultModels as models }
 
