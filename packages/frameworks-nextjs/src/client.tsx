@@ -33,7 +33,7 @@ import type {
   SignOutParams,
   SignOutResponse,
   UseSessionOptions,
-} from "./lib/client"
+} from "./lib/client.js"
 
 // TODO: Remove/move to core?
 export type {
