@@ -70,7 +70,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
   const request = new Request(`${origin}/api/auth/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
-  config.useSecureCookies ??= origin.protocol === "https"
+  config.useSecureCookies ??= origin.protocol === "https:"
 
   // Since we are server-side, we don't need to filter out the session data
   // See https://nextjs.authjs.dev/v5#authenticating-server-side
