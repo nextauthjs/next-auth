@@ -62,7 +62,7 @@ interface InternalProviderOptions {
  * @see [Email (Passwordless) guide](https://authjs.dev/guides/providers/email)
  * @see [Credentials guide](https://authjs.dev/guides/providers/credentials)
  */
-export type Provider<P extends Profile = Profile> = (
+export type Provider<P extends Profile = any> = (
   | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig) &
       InternalProviderOptions)
   | ((

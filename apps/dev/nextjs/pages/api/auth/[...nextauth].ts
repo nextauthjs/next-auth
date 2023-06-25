@@ -49,7 +49,7 @@ import WorkOS from "@auth/core/providers/workos"
 
 // // Fauna
 // import { Client as FaunaClient } from "faunadb"
-// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+// import { FaunaAdapter } from "@auth/fauna-adapter"
 // const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
 // const client = globalThis.fauna || new FaunaClient(opts)
 // if (process.env.NODE_ENV !== "production") globalThis.fauna = client
@@ -65,7 +65,7 @@ import WorkOS from "@auth/core/providers/workos"
 // })
 
 // // Supabase
-// import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+// import { SupabaseAdapter } from "@auth/supabase-adapter"
 // const adapter = SupabaseAdapter({
 //   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
@@ -95,7 +95,11 @@ export const authConfig: AuthConfig = {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
-    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
+    BeyondIdentity({
+      clientId: process.env.BEYOND_IDENTITY_CLIENT_ID,
+      clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET,
+      issuer: process.env.BEYOND_IDENTITY_ISSUER,
+    }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
     Descope({ issuer: process.env.DESCOPE_ISSUER, clientSecret: process.env.DESCOPE_SECRET }),

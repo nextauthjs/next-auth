@@ -7,10 +7,10 @@ dynamodb:
   - "@auth/dynamodb-adapter"
 
 fauna:
-  - "@next-auth/fauna-adapter"
+  - "@auth/fauna-adapter"
 
 firebase:
-  - "@next-auth/firebase-adapter"
+  - "@auth/firebase-adapter"
 
 mikro-orm:
   - "@auth/mikro-orm-adapter"
@@ -19,19 +19,19 @@ mongodb:
   - "@auth/mongodb-adapter"
 
 neo4j:
-  - "@next-auth/neo4j-adapter"
+  - "@auth/neo4j-adapter"
 
 pouchdb:
-  - "@next-auth/pouchdb-adapter"
+  - "@auth/pouchdb-adapter"
 
 prisma:
   - "@auth/prisma-adapter"
 
 sequelize:
-  - "@next-auth/sequelize-adapter"
+  - "@auth/sequelize-adapter"
 
 supabase:
-  - "@next-auth/supabase-adapter"
+  - "@auth/supabase-adapter"
 
 typeorm:
   - "@auth/typeorm-adapter"
@@ -40,4 +40,4 @@ upstash-redis:
   - "@auth/upstash-redis-adapter"
 
 xata:
-  - "@next-auth/xata-adapter"
+  - "@auth/xata-adapter"
