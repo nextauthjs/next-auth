@@ -7,6 +7,7 @@ const icons = [
   "/img/providers/apple.svg",
   "/img/providers/auth0.svg",
   "/img/providers/cognito.svg",
+  "/img/providers/descope.svg",
   "/img/providers/battlenet.svg",
   "/img/providers/box.svg",
   "/img/providers/facebook.svg",
