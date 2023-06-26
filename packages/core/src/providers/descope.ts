@@ -4,7 +4,7 @@
  *  Built-in sign in with <b>Descope</b> integration.
  * </span>
  * <a href="https://descope.com" style={{backgroundColor: "#000000", padding: "12px", borderRadius: "100%" }}>
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/descope-dark.svg" width="24"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/descope.svg" width="24"/>
  * </a>
  * </div>
  *
@@ -14,15 +14,17 @@
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 /** The returned user profile from Descope when using the profile callback. */
-export interface DescopeProfile extends Record<string, any> {
-  sub: string; // The user Descope ID
-  name: string;
-  email: string;
-  email_verified: boolean;
-  phone_number: string;
-  phone_number_verified: boolean;
-  picture: string;    
-  [key: string]: any // Custom user's attributes
+export interface DescopeProfile {
+  /** The user Descope ID */
+  sub: string
+  name: string
+  email: string
+  email_verified: boolean
+  phone_number: string
+  phone_number_verified: boolean
+  picture: string
+  /** Custom user's attributes */
+  [claim: string]: unknown
 }
 
 /**
@@ -95,11 +97,10 @@ export default function Descope(
     id: "descope",
     name: "Descope",
     type: "oidc",
-    wellKnown: `${config?.issuer}/.well-known/openid-configuration`,
     clientId: config?.issuer?.substring(config?.issuer?.lastIndexOf('/') + 1),
     style: {
       logo: "/descope.svg",
-      logoDark: "/descope-dark.svg",
+      logoDark: "/descope.svg",
       bg: "#1C1C23",
       text: "#ffffff",
       bgDark: "#1C1C23",
