@@ -28,25 +28,29 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: (id) => db.select().from(users).where(eq(users.id, id)).then(res => res[0]) ?? null,
-    // .where(eq(users.id, id)) ?? null,
-    session: (sessionToken) =>
-      db
+    user: async (id) => {
+      const user = await db.select().from(users).where(eq(users.id, id)).then(res => res[0] ?? null)
+      return user
+    },
+    session: async (sessionToken) => {
+      const session = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0]) ?? null,
+        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0] ?? null)
+
+      return session
+    },
     account: (provider_providerAccountId) => {
-      return (
-        db
-          .select()
-          .from(accounts)
-          .where(
-            eq(
-              accounts.providerAccountId,
-              provider_providerAccountId.providerAccountId
-            )
-          ).then(res => res[0]) ?? null
-      )
+      const account = db
+        .select()
+        .from(accounts)
+        .where(
+          eq(
+            accounts.providerAccountId,
+            provider_providerAccountId.providerAccountId
+          )
+        ).then(res => res[0] ?? null)
+      return account
     },
     verificationToken: (identifier_token) =>
       db

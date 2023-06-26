@@ -67,11 +67,14 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.disconnect?.()
   })
 
+  const emailVerified = new Date()
+  emailVerified.setMilliseconds(0)
+
   let user: any = {
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
-    emailVerified: new Date(),
+    emailVerified
   }
 
   if (process.env.CUSTOM_MODEL === "1") {
@@ -335,7 +338,16 @@ export function hashToken(token: string) {
 
 export { randomUUID }
 
-export const ONE_WEEK_FROM_NOW = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-export const FIFTEEN_MINUTES_FROM_NOW = new Date(Date.now() + 15 * 60 * 1000)
+const weekFromNow = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+weekFromNow.setMilliseconds(0)
+
+const fifteenMinFromNow = new Date(Date.now() + 15 * 60 * 1000)
+fifteenMinFromNow.setMilliseconds(0)
+
 export const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
-export const ONE_MONTH_FROM_NOW = new Date(Date.now() + ONE_MONTH)
+const monthFromNow = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+monthFromNow.setMilliseconds(0)
+
+export const ONE_WEEK_FROM_NOW = weekFromNow
+export const FIFTEEN_MINUTES_FROM_NOW = fifteenMinFromNow
+export const ONE_MONTH_FROM_NOW = monthFromNow

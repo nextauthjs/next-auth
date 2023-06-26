@@ -16,7 +16,7 @@ export const users = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }).defaultNow(),
   image: varchar("image", { length: 255 }),
 })
 
@@ -110,17 +110,17 @@ export function mySqlDrizzleAdapter(
         .where(eq(users.id, data))
         .then((res) => res[0]) ?? null
 
-      console.log(thing)
       return thing
     },
     getUserByEmail: async (data) => {
-      return (
-        client
-          .select()
-          .from(users)
-          .where(eq(users.email, data))
-          .then((res) => res[0]) ?? null
-      )
+      const user = await client
+        .select()
+        .from(users)
+        .where(eq(users.email, data))
+        .then((res) => res[0]) ?? null
+
+      return user
+
     },
     createSession: async (data) => {
       await client.insert(sessions).values(data)
@@ -132,17 +132,17 @@ export function mySqlDrizzleAdapter(
         .then((res) => res[0])
     },
     getSessionAndUser: async (data) => {
-      return (
-        client
-          .select({
-            session: sessions,
-            user: users,
-          })
-          .from(sessions)
-          .where(eq(sessions.sessionToken, data))
-          .innerJoin(users, eq(users.id, sessions.userId))
-          .then((res) => res[0]) ?? null
-      )
+      const sessionAndUser = await client
+        .select({
+          session: sessions,
+          user: users,
+        })
+        .from(sessions)
+        .where(eq(sessions.sessionToken, data))
+        .innerJoin(users, eq(users.id, sessions.userId))
+        .then((res) => res[0]) ?? null
+
+      return sessionAndUser
     },
     updateUser: async (data) => {
       if (!data.id) {
@@ -186,14 +186,26 @@ export function mySqlDrizzleAdapter(
           )
         )
         .leftJoin(users, eq(accounts.userId, users.id))
-        .then((res) => res[0])
+        .then((res) => res[0]) ?? null
+
+      if (!dbAccount) {
+        return null
+      }
 
       return dbAccount.users
     },
     deleteSession: async (sessionToken) => {
+      const session = await client
+        .select()
+        .from(sessions)
+        .where(eq(sessions.sessionToken, sessionToken))
+        .then(res => res[0]) ?? null
+
       await client
         .delete(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
+
+      return session
     },
     createVerificationToken: async (token) => {
       await client.insert(verificationTokens).values(token)
@@ -233,10 +245,17 @@ export function mySqlDrizzleAdapter(
       }
     },
     deleteUser: async (id) => {
+      const user = await client
+        .select()
+        .from(users)
+        .where(eq(users.id, id))
+        .then((res) => res[0] ?? null)
+
       await client
         .delete(users)
         .where(eq(users.id, id))
-        .then((res) => res[0])
+
+      return user
     },
     unlinkAccount: async (account) => {
       await client

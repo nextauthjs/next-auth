@@ -9,7 +9,7 @@ export const customUsersTable = mysqlTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
   email: text("email").notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
   image: text("image"),
   phone: text("phone")
 })
