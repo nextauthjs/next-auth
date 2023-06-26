@@ -97,7 +97,7 @@ export default function Descope(
     id: "descope",
     name: "Descope",
     type: "oidc",
-    clientId: config?.issuer?.substring(config?.issuer?.lastIndexOf('/') + 1),
+    clientId: config?.issuer?.split("/").at(-1),
     style: {
       logo: "/descope.svg",
       logoDark: "/descope.svg",
