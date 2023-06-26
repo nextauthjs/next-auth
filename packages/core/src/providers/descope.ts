@@ -48,7 +48,7 @@ export interface DescopeProfile {
  *  providers: [
  *    DescopeProvider({
  *      issuer: process.env.DESCOPE_ISSUER,
- *      clientSecret: process.env.DESCOPE_CLIENT_SECRET,
+ *      clientSecret: process.env.DESCOPE_SECRET,
  *    }),
  *  ],
  * })
@@ -66,7 +66,7 @@ export interface DescopeProfile {
  * Get the following from the Descope's console:
  * ```
  * DESCOPE_ISSUER="<Descope Issuer>" # Authentication Methods > SSO > Identity Provider
- * DESCOPE_CLIENT_SECRET="<Descope Access Key>" # Manage > Access Keys
+ * DESCOPE_SECRET="<Descope Access Key>" # Manage > Access Keys
  * ```
  *
  * ### Resources
