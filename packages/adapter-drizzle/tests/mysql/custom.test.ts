@@ -1,4 +1,4 @@
-import { mysqlTable, varchar, timestamp, text, int, primaryKey, MySqlTextColumnType } from "drizzle-orm/mysql-core"
+import { mysqlTable, timestamp, text, int, primaryKey, MySqlTextColumnType } from "drizzle-orm/mysql-core"
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
 import { users, sessions, accounts, verificationTokens, db } from "../../src/mysql"
@@ -17,19 +17,19 @@ export const customUsersTable = mysqlTable("users", {
 export const customAccountsTable = mysqlTable(
   "accounts",
   {
-    userId: varchar("userId")
+    userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: varchar("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: varchar("provider").notNull(),
-    providerAccountId: varchar("providerAccountId").notNull(),
-    refresh_token: varchar("refresh_token"),
-    access_token: varchar("access_token"),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
     expires_at: int("expires_at"),
-    token_type: varchar("token_type"),
-    scope: varchar("scope"),
-    id_token: varchar("id_token"),
-    session_state: varchar("session_state"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
   },
   (account) => ({
     compoundKey: primaryKey(account.provider, account.providerAccountId),
@@ -40,7 +40,7 @@ runBasicTests({
   adapter: DrizzleAdapter(
     db,
     {
-      // TODO: MySQLVarchar doesn't fit with text?
+      // TODO: MySQLText doesn't fit with text?
       users: customUsersTable,
       accounts: customAccountsTable
     }
@@ -62,25 +62,29 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: (id) => db.select().from(users).where(eq(users.id, id)) ?? null,
-    // .where(eq(users.id, id)) ?? null,
-    session: (sessionToken) =>
-      db
+    user: async (id) => {
+      const user = await db.select().from(users).where(eq(users.id, id)).then(res => res[0] ?? null)
+      return user
+    },
+    session: async (sessionToken) => {
+      const session = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)) ?? null,
+        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0] ?? null)
+
+      return session
+    },
     account: (provider_providerAccountId) => {
-      return (
-        db
-          .select()
-          .from(accounts)
-          .where(
-            eq(
-              accounts.providerAccountId,
-              provider_providerAccountId.providerAccountId
-            )
-          ) ?? null
-      )
+      const account = db
+        .select()
+        .from(accounts)
+        .where(
+          eq(
+            accounts.providerAccountId,
+            provider_providerAccountId.providerAccountId
+          )
+        ).then(res => res[0] ?? null)
+      return account
     },
     verificationToken: (identifier_token) =>
       db
@@ -91,6 +95,6 @@ runBasicTests({
             eq(verificationTokens.token, identifier_token.token),
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
-        ) ?? null,
+        ).then(res => res[0]) ?? null,
   },
 })

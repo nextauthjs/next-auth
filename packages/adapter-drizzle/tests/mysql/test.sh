@@ -14,13 +14,15 @@ docker run -d --rm \
 mysql:8 \
 --default-authentication-plugin=mysql_native_password
 
+echo "Waiting 15 sec for db to start..." && sleep 15
+
 drizzle-kit generate:mysql --config=./src/mysql/drizzle.config.ts
 drizzle-kit push:mysql --config=./src/mysql/drizzle.config.ts
 
 echo "Started running MySQL tests."
-jest ./tests/mysql/zero-config.test.ts
+jest ./tests/mysql/zero-config.test.ts --forceExit
 echo "Finished running MySQL tests."
 
-# echo "Started running MySQL tests with custom models."
-# CUSTOM_MODEL=1 jest ./tests/mysql/custom.test.ts
-# echo "Finished running MySQL tests with custom models."
+echo "Started running MySQL tests with custom models."
+jest ./tests/mysql/custom.test.ts --forceExit
+echo "Finished running MySQL tests with custom models."
