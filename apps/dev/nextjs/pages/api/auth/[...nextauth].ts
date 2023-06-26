@@ -102,7 +102,7 @@ export const authConfig: AuthConfig = {
     }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
-    Descope({ issuer: process.env.DESCOPE_ISSUER, clientSecret: process.env.DESCOPE_SECRET }),
+    Descope({ clientId: process.env.DESCOPE_ID, clientSecret: process.env.DESCOPE_SECRET }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
     DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
     Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),
