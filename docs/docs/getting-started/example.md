@@ -26,7 +26,7 @@ If you are using TypeScript, NextAuth.js comes with its types definitions within
 
 To add NextAuth.js to a project create a file called `[...nextauth].js` in `pages/api/auth`. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
 
-If you're using [Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-handlers) or above with the new App Router (`app/`), you can initialize the configuration using the new [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers) by following our [guide](https://next-auth.js.org/configuration/initialization#route-handlers-app).
+If you're using [Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-handlers) or above with the new App Router (`app/`), you can initialize the configuration using the new [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/router-handlers) by following our [guide](https://next-auth.js.org/configuration/initialization#route-handlers-app).
 
 ```javascript title="pages/api/auth/[...nextauth].js" showLineNumbers
 import NextAuth from "next-auth"
