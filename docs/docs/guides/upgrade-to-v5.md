@@ -175,9 +175,11 @@ If you have previously used `getSession()` or other imports server-side, you'll 
 
 `getCsrfToken` and `getProviders` are still available as imports, but we plan to deprecate them in the future and introduce a new API to get this data server-side.
 
-Client side: Instead of using these APIs, you can make a fetch request to the `/api/auth/providers` and `/api/auth/csrf` endpoints respectively.
+Client-side: Instead of using these APIs, you can make a fetch request to the `/api/auth/providers` and `/api/auth/csrf` endpoints respectively.
 
-Server-side: TBD
+Server-side: 
+- Get the list of providers from your config's `providers` array
+- Check out the [CSRF_experimental](/reference/nextjs#csrf_experimental) React component
 
 ## Adapters
 
