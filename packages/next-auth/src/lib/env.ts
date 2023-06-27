@@ -18,6 +18,7 @@ export const providersEnv: Record<OAuthProviderType, Array<string | undefined>> 
   bungie: [process.env.AUTH_BUNGIE_ID, process.env.AUTH_BUNGIE_SECRET, process.env.AUTH_BUNGIE_ISSUER],
   cognito: [process.env.AUTH_COGNITO_ID, process.env.AUTH_COGNITO_SECRET, process.env.AUTH_COGNITO_ISSUER],
   coinbase: [process.env.AUTH_COINBASE_ID, process.env.AUTH_COINBASE_SECRET, process.env.AUTH_COINBASE_ISSUER],
+  descope: [process.env.AUTH_DESCOPE_ID, process.env.AUTH_DESCOPE_SECRET],
   discord: [process.env.AUTH_DISCORD_ID, process.env.AUTH_DISCORD_SECRET, process.env.AUTH_DISCORD_ISSUER],
   dropbox: [process.env.AUTH_DROPBOX_ID, process.env.AUTH_DROPBOX_SECRET, process.env.AUTH_DROPBOX_ISSUER],
   "duende-identity-server6": [process.env.AUTH_IDS6_ID, process.env.AUTH_IDS6_SECRET, process.env.AUTH_IDS6_ISSUER],
