@@ -183,6 +183,20 @@ Server-side:
 
 ## Adapters
 
+### Adapter packages
+
+Beginning with `next-auth` v5, you should now install database adapters from the `@auth/*-adapter` scope, instead of `@next-auth/*-adapter`.
+
+This is because Database Adapters don't rely on any Next.js features, so it made sense to move them to this new scope.
+
+Example:
+```diff
+- npm install @next-auth/prisma-adapter
++ npm install @auth/prisma-adapter
+```
+
+Check out the [Adapters docs](/reference/adapters) for a list of official adapters, or the the [Create a database adapter](/guides/adapters/creating-a-database-adapter) guide to learn how to create your own.
+
 ### Adapter type
 
 The `Adapter` type is uncommon, unless you are writing your own adapter. If you are using an existing adapter, you can likely ignore this change.
@@ -233,7 +247,7 @@ export default {
 
 ```ts title="auth.ts"
 import NextAuth from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import authConfig from "./auth.config"
 
