@@ -18,9 +18,6 @@
       "types": "./index.d.ts",
       "import": "./index.js"
     },
-    "./adapters": {
-      "types": "./adapters.d.ts"
-    },
     "./jwt": {
       "types": "./jwt.d.ts",
       "import": "./jwt.js"

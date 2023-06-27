@@ -52,7 +52,7 @@ export interface NextAuthConfig extends AuthConfig {
       /** The request to be authorized. */
       request: NextRequest
       /** The authenticated user or token, if any. */
-      auth: Session
+      auth: Session | null
     }) => Awaitable<boolean | NextResponse | undefined>
   }
 }
