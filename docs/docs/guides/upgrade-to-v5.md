@@ -214,8 +214,7 @@ This is because the - previously - NextAuth.js scoped [`@next-auth/*-adapter`](h
 
 NextAuth.js v5 does not introduce any breaking changes to the database schema. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table, if you are not using them.
 
-Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. if you do, make sure to return it via the new [`account()` callback](/reference/core/providers#account).
-
+Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. If you do, make sure to return it via the new [`account()` callback](/reference/core/providers#account).
 
 ### Edge compatibility
 
@@ -225,13 +224,13 @@ If you are using a sufficiently fast and Edge-compatible database ORM/library, y
 
 NextAuth.js supports two session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy.
 
-Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it:
+Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it, by forcing a JWT session strategy:
 
 :::note
 The following is only a convention we chose, the filenames/structure have no important meaning, as long as you import the correct files in the correct places.
 :::
 
-1. Create an `auth.config.ts` with your config and export it:
+1. Create an `auth.config.ts` file with your config and export it:
 
 ```ts title="auth.config.ts"
 import GitHub from "next-auth/providers/github"
@@ -269,8 +268,9 @@ export const { handlers, auth } = NextAuth({
 + export const { auth: middleware } = NextAuth(authConfig)
 ```
 
-That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime.
+That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime yet, by forcing the session strategy to be JWT.
 
+Please follow up with your database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
 
 ## TypeScript
 
@@ -280,4 +280,4 @@ That's it! Now you can keep using a database for user data, even if your adapter
 
 ## Summary
 
-We hope this migration goes smoothly for each and every one of you! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub.
+We hope this migration goes smoothly for everyone! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub.
