@@ -1,10 +1,10 @@
 /**
  *
  * :::warning Note
- * This is the documentation for `next-auth@5`. For the documentation of v4, see [next-auth@4](https://next-auth.js.org).
+ * This is the documentation for `next-auth@latest`. Check out the documentation of v4 [here](https://next-auth.js.org).
  * :::
  *
- * If you are looking for the migration guide, visit the [`next-auth@5` Migration Guide](https://nextjs.authjs.dev/v5).
+ * If you are looking for the migration guide, visit the [`next-auth@latest` Migration Guide](https://nextjs.authjs.dev/v5).
  *
  * ## Installation
  *
@@ -130,6 +130,14 @@ import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 
 import { headers } from "next/headers.js"
+
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "./types.js"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",

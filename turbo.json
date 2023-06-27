@@ -5,20 +5,6 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"]
     },
-    "next-auth#build": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        "client/**",
-        "core/**",
-        "css/**",
-        "jwt/**",
-        "next/**",
-        "providers/**",
-        "react/**",
-        "*.js",
-        "*.d.ts"
-      ]
-    },
     "@auth/core#build": {
       "dependsOn": ["^build"],
       "outputs": [
@@ -35,9 +21,9 @@
       "dependsOn": ["^build"],
       "outputs": [".svelte-kit/**", "client.*", "index.*"]
     },
-    "@auth/nextjs#build": {
+    "next-auth#build": {
       "dependsOn": ["^build"],
-      "outputs": ["lib/**", "*.js", "*.d.ts", "*.d.ts*"]
+      "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts*"]
     },
     "clean": {
       "cache": false
@@ -60,7 +46,6 @@
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/nextjs#build",
         "@auth/prisma-adapter#build",
         "@auth/sveltekit#build",
         "@auth/dgraph-adapter#build",
@@ -86,7 +71,6 @@
         "@auth/core#build",
         "@auth/prisma-adapter#build",
         "@auth/sveltekit#build",
-        "@auth/nextjs#build",
         "@auth/dgraph-adapter#build",
         "@auth/dynamodb-adapter#build",
         "@auth/fauna-adapter#build",

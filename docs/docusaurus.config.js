@@ -35,17 +35,18 @@ function typedocAdapter(name) {
   ]
 }
 
-function typedocFramework(id, entrypoints) {
+function typedocFramework(pkgDir, entrypoints) {
+  const id = pkgDir.replace("frameworks-", "")
   return [
     "docusaurus-plugin-typedoc",
     {
       ...typedocConfig,
-      id: id.replace("frameworks-", ""),
+      id: id,
       plugin: [require.resolve("./typedoc-mdn-links")],
       watch: process.env.TYPEDOC_WATCH,
-      entryPoints: entrypoints.map((e) => `../packages/${id}/src/${e}`),
-      tsconfig: `../packages/${id}/tsconfig.json`,
-      out: `reference/${id.replace("frameworks-", "")}`,
+      entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
+      tsconfig: `../packages/${pkgDir}/tsconfig.json`,
+      out: `reference/${id === "next-auth" ? "nextjs" : id}`,
       skipIndexPage: true,
     },
   ]
@@ -251,7 +252,7 @@ const docusaurusConfig = {
   plugins: [
     typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
     typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
-    typedocFramework("frameworks-nextjs", ["index.tsx", "client.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
+    typedocFramework("next-auth", ["index.tsx", "react.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [

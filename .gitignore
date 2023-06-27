@@ -28,13 +28,6 @@ dist
 .cache-loader
 packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
-packages/next-auth/client
-packages/next-auth/css
-packages/next-auth/utils
-packages/next-auth/core
-packages/next-auth/jwt
-packages/next-auth/react
-packages/next-auth/next
 packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
@@ -89,10 +82,10 @@ docs/docs/reference/sveltekit
 docs/docs/reference/nextjs
 
 # Next.js
-packages/frameworks-nextjs/lib
-packages/frameworks-nextjs/providers
+packages/next-auth/lib
+packages/next-auth/providers
 # copied from @auth/core
-packages/frameworks-nextjs/src/providers
+packages/next-auth/src/providers
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*
