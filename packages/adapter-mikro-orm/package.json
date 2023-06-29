@@ -11,7 +11,6 @@
   "contributors": [
     "Balázs Orbán <info@balazsorban.com>"
   ],
-  "type": "module",
   "types": "./index.d.ts",
   "files": [
     "*.js",
@@ -19,10 +18,12 @@
     "lib",
     "src"
   ],
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
   "license": "ISC",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "test": "jest --runInBand",
-    "build": "tsc"
+    "build": "./multibuild.sh"
   },
   "peerDependencies": {
     "@mikro-orm/core": "^5"
