@@ -98,7 +98,11 @@ export async function handleLogin(
         // Delete existing session if they are currently signed in as another user.
         // This will switch user accounts for the session in cases where the user was
         // already logged in with a different account.
-        await deleteSession(sessionToken)
+        // Catch any errors in case the other user is already deleted in the database
+        // and therefore the session does not exist anymore.
+        try {
+          await deleteSession(sessionToken)
+        } catch { }
       }
 
       // Update emailVerified property on the user object
