@@ -22,13 +22,13 @@ import {
   isMySqlDatabase,
   // isPgDatabase,
   // isPlanetScaleDatabase,
-  // isSQLiteDatabase,
+  isSQLiteDatabase,
 } from "./utils"
 import type { Adapter } from "@auth/core/adapters"
 import { mySqlDrizzleAdapter } from "./mysql"
 // import { pgDrizzleAdapter } from "./pg"
 // import { PlanetScaleAdapter } from "./planetscale"
-// import { SQLiteDrizzleAdapter } from "./sqlite"
+import { SQLiteDrizzleAdapter } from "./sqlite"
 
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
@@ -347,9 +347,9 @@ export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   //   return pgDrizzleAdapter(db, schema as MinimumSchema["pg"])
   // }
 
-  // if (isSQLiteDatabase(db)) {
-  //   return SQLiteDrizzleAdapter(db, schema as MinimumSchema["sqlite"])
-  // }
+  if (isSQLiteDatabase(db)) {
+    return SQLiteDrizzleAdapter(db, schema as MinimumSchema["sqlite"])
+  }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
 }
