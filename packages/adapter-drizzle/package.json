@@ -36,7 +36,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm -rf ./.drizzle",
+    "clean": "find . -type d -name \".drizzle\" | xargs rm -rf",
     "test": "pnpm test:mysql && pnpm test:sqlite && pnpm test:pg",
     "test:mysql": "pnpm clean && ./tests/mysql/test.sh",
     "test:sqlite": "pnpm clean && ./tests/sqlite/test.sh",

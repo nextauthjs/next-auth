@@ -29,12 +29,16 @@ runBasicTests({
       ])
     },
     user: async (id) =>
-      db.select().from(users).where(eq(users.id, id)).then(res => res[0]) ?? null,
+      db
+        .select()
+        .from(users)
+        .where(eq(users.id, id))
+        .then(res => res[0] ?? null),
     session: (sessionToken) =>
       db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0]) ?? null,
+        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0] ?? null),
     account: (provider_providerAccountId) => {
       return (
         db
@@ -45,7 +49,8 @@ runBasicTests({
               accounts.providerAccountId,
               provider_providerAccountId.providerAccountId
             )
-          ).then(res => res[0]) ?? null
+          )
+          .then(res => res[0] ?? null)
       )
     },
     verificationToken: (identifier_token) =>
@@ -57,6 +62,7 @@ runBasicTests({
             eq(verificationTokens.token, identifier_token.token),
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
-        ).then(res => res[0]) ?? null,
+        )
+        .then(res => res[0] ?? null),
   },
 })

@@ -186,9 +186,13 @@ export function pgDrizzleAdapter(
       return dbAccount.users
     },
     deleteSession: async (sessionToken) => {
-      await client
+      const session = await client
         .delete(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
+        .returning()
+        .then(res => res[0] ?? null)
+
+      return session
     },
     createVerificationToken: async (token) => {
       return client
@@ -220,10 +224,10 @@ export function pgDrizzleAdapter(
         .delete(users)
         .where(eq(users.id, id))
         .returning()
-        .then((res) => res[0])
+        .then((res) => res[0] ?? null)
     },
     unlinkAccount: async (account) => {
-      await client
+      const { type, provider, providerAccountId, userId } = await client
         .delete(accounts)
         .where(
           and(
@@ -231,8 +235,10 @@ export function pgDrizzleAdapter(
             eq(accounts.provider, account.provider)
           )
         )
+        .returning()
+        .then(res => res[0] ?? null)
 
-      return undefined
+      return { provider, type, providerAccountId, userId }
     },
   }
 }
