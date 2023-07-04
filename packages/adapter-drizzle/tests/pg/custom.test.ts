@@ -61,8 +61,10 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: (id) => db.select().from(users).where(eq(users.id, id)) ?? null,
-    // .where(eq(users.id, id)) ?? null,
+    user: (id) => {
+      const user = db.select().from(users).where(eq(users.id, id)) ?? null
+      return user
+    },
     session: (sessionToken) =>
       db
         .select()

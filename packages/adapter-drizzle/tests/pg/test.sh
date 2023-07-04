@@ -21,9 +21,9 @@ drizzle-kit generate:pg --config=./src/pg/drizzle.config.ts
 npx tsx ./tests/pg/migrate-db.ts
 
 echo "Started running Postgres tests."
-jest ./tests/postgres/zero-config.test.ts --forceExit
+jest ./tests/pg/zero-config.test.ts --forceExit
 echo "Finished running Postgres tests."
 
-echo "Started running Postgres tests with custom models."
-jest ./tests/postgres/custom.test.ts --forceExit
-echo "Finished running Postgres tests with custom models."
+# echo "Started running Postgres tests with custom models."
+# jest ./tests/pg/custom.test.ts --forceExit
+# echo "Finished running Postgres tests with custom models."

@@ -20,13 +20,13 @@ import {
   MinimumSchema,
   SqlFlavorOptions,
   isMySqlDatabase,
-  // isPgDatabase,
+  isPgDatabase,
   // isPlanetScaleDatabase,
   isSQLiteDatabase,
 } from "./utils"
 import type { Adapter } from "@auth/core/adapters"
 import { mySqlDrizzleAdapter } from "./mysql"
-// import { pgDrizzleAdapter } from "./pg"
+import { pgDrizzleAdapter } from "./pg"
 // import { PlanetScaleAdapter } from "./planetscale"
 import { SQLiteDrizzleAdapter } from "./sqlite"
 
@@ -343,9 +343,9 @@ export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   //   )
   // }
 
-  // if (isPgDatabase(db)) {
-  //   return pgDrizzleAdapter(db, schema as MinimumSchema["pg"])
-  // }
+  if (isPgDatabase(db)) {
+    return pgDrizzleAdapter(db, schema as MinimumSchema["pg"])
+  }
 
   if (isSQLiteDatabase(db)) {
     return SQLiteDrizzleAdapter(db, schema as MinimumSchema["sqlite"])
