@@ -253,7 +253,7 @@ const docusaurusConfig = {
         id: "sveltekit",
         plugin: [require.resolve("./typedoc-mdn-links")],
         watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
+        entryPoints: ["index.ts", "client.ts", "server.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
         tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
         out: "reference/sveltekit",
         sidebar: {

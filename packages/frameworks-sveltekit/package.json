@@ -67,6 +67,10 @@
       "types": "./client.d.ts",
       "import": "./client.js"
     },
+    "./server": {
+      "types": "./server.d.ts",
+      "import": "./server.js"
+    },
     "./package.json": "./package.json"
   }
 }

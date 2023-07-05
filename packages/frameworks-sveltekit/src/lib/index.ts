@@ -26,9 +26,9 @@
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
- * 
+ *
  * or to use sveltekit platform environment variables for platforms like Cloudflare
- * 
+ *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/core/providers/github"
@@ -54,6 +54,8 @@
  * ```
  *
  * ## Signing in and signing out
+ *
+ * ### Client-side
  *
  * The data for the current session in this example was made available through the `$page` store which can be set through the root `+page.server.ts` file.
  * It is not necessary to store the data there, however, this makes it globally accessible throughout your application simplifying state management.
@@ -83,6 +85,176 @@
  *     <button on:click={() => signIn("github")}>Sign In with GitHub</button>
  *   {/if}
  * </p>
+ * ```
+ *
+ * ### Server-side
+ *
+ * It can be useful to perform sign-in and sign-out on the server if you are using a single provider, don't want to use the provided `Auth.js` frontend, or don't have access to `window` for any reason.
+ *
+ * #### Hooks
+ *
+ * In this example, `/login` and `/logout` routes are programmatically created inside of server hooks. Access to protected routes will require a session, initiating the sign-in flow if the user is signed out.
+ *
+ * ```ts title="src/hooks.server.ts"
+ * import GitHub from "@auth/core/providers/github"
+ *
+ * import { SvelteKitAuth } from "@auth/sveltekit"
+ * import { signIn, signOut } from "@auth/sveltekit/server"
+ *
+ * import { type Handle, redirect } from '@sveltejs/kit';
+ * import { sequence } from '@sveltejs/kit/hooks';
+ *
+ * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private";
+ *
+ * const protectedRoutes = ["/protected"]
+ * const signInHref = "/login"
+ * const signOutHref = "/logout"
+ *
+ * const authorization: Handle = async ({ event, resolve }) => {
+ *   const session = await event.locals.getSession();
+ *   if (protectedRoutes.some((route) => event.url.pathname.startsWith(route))) {
+ *     if (session === null) {
+ *       const callbackUrl = event.url.href;
+ * 	  	 const { location } = await signIn(event.fetch, 'github', { callbackUrl });
+ *       if (location !== undefined) {
+ *         throw redirect(303, location);
+ *       }
+ * 	   }
+ *   }
+ *
+ * 	 return resolve(event);
+ * };
+ *
+ * const signInRoute: Handle = async ({ event, resolve }) => {
+ *   const lastPath = event.cookies.get("last-path")
+ *   if (event.url.pathname.startsWith(signInHref)) {
+ *     const session = await event.locals.getSession();
+ *		 if (session === null) {
+ *			 const { location } = await signIn(event.fetch, 'github', { callbackUrl: lastPath || '/' });
+ *			 if (location !== undefined) {
+ *				 throw redirect(303, location);
+ *			 }
+ *		 } else {
+ *			 throw redirect(303, '/');
+ *		 }
+ *	 }
+ *
+ *   return resolve(event);
+ * };
+ *
+ * const signOutRoute: Handle = async ({ event, resolve }) => {
+ *   const lastPath = event.cookies.get('last-path');
+ *	 if (event.url.pathname.startsWith(signOutHref)) {
+ *		 const session = await event.locals.getSession();
+ *		 if (session !== null) {
+ *			 const location = await signOut(event.fetch);
+ *       throw redirect(303, location);
+ *		 } else {
+ *		   throw redirect(303, lastPath || '/');
+ *		 }
+ *	 }
+ *
+ *	 return resolve(event);
+ * };
+ *
+ * const lastPath: Handle = async ({ event, resolve }) => {
+ *   event.cookies.set('last-path', event.url.pathname, {
+ * 		 httpOnly: true,
+ * 		 path: '/',
+ * 		 secure: true,
+ * 		 sameSite: 'lax',
+ * 		 maxAge: 60 * 10
+ * 	 });
+ *
+ * 	 return resolve(event);
+ * };
+ *
+ * export const handle: Handle = sequence(
+ *	 SvelteKitAuth({
+ *		 providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+ *	 }),
+ *	 signInRoute,
+ *	 signOutRoute,
+ *	 lastPath,
+ *	 authorization
+ * );
+ * ```
+ *
+ * Note that the `signIn` function will return an object with either a `redirect` property of [`Redirect`](https://kit.svelte.dev/docs/types#public-types-redirect) type from SvelteKit, or a `response` property of `Response` type.
+ * Given the `credentials` or `email` as `providerId` or `{ redirect: false }` in `options` (defaults to `true`), the function will return a `Response` object.
+ * Awaiting and throwing the `redirect` property will cause a redirect.
+ * Logout will always return a `Redirect`.
+ *
+ * #### `+server`
+ *
+ * You can also use the `signIn` and `signOut` functions from `@auth/sveltekit/server` to authenticate inside of `+server` api-style endpoints.
+ *
+ * ```ts title="src/routes/signin/+server.ts"
+ * import { signIn } from "@auth/sveltekit/server"
+ *
+ * import { redirect } from '@sveltejs/kit';
+ *
+ * export const GET = async (event) => {
+ *   const session = await event.locals.getSession();
+ *   if (session === null) {
+ * 	   const { location } = await signIn(event.fetch, 'github', { callbackUrl: "/" });
+ *     if (location !== undefined) {
+ *       throw redirect(303, location);
+ *     } else {
+ *       // this code will probably not be reached
+ *       throw redirect(303, '/');
+ *     }
+ *   } else {
+ *     // just send user to "/" if already signed in
+ *     throw redirect(303, '/');
+ *   }
+ * };
+ * ```
+ *
+ * #### `+page.server`
+ *
+ * `+page.server` files could also use `signIn` or `signOut` inside load functions or form actions.
+ *
+ * ```ts title="src/routes/signin/+page.server.ts"
+ * import { signIn } from "@auth/sveltekit/server"
+ *
+ * import { redirect } from '@sveltejs/kit';
+ *
+ * // load
+ * export const load = async (event) => {
+ *   const session = await event.locals.getSession();
+ *   if (session === null) {
+ * 	   const { location } = await signIn(event.fetch, 'github', { callbackUrl: "/" });
+ *     if (location !== undefined) {
+ *       throw redirect(303, location);
+ *     } else {
+ *       // this code will probably not be reached
+ *       throw redirect(303, '/');
+ *     }
+ *   } else {
+ *     // just send user to "/" if already signed in
+ *     throw redirect(303, '/');
+ *   }
+ * };
+ *
+ * // form actions
+ * export const actions = {
+ *   default: async (event) => {
+ *     const session = await event.locals.getSession();
+ *     if (session === null) {
+ * 	     const { location } = await signIn(event.fetch, 'github', { callbackUrl: "/" });
+ *       if (location !== undefined) {
+ *         throw redirect(303, location);
+ *       } else {
+ *         // this code will probably not be reached
+ *         throw redirect(303, '/');
+ *       }
+ *     } else {
+ *       // just send user to "/" if already signed in
+ *       throw redirect(303, '/');
+ *     }
+ *   }
+ * };
  * ```
  *
  * ## Managing the session
@@ -251,9 +423,13 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>
+type DynamicSvelteKitAuthConfig = (
+  event: RequestEvent
+) => PromiseLike<SvelteKitAuthConfig>
 
-function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+function AuthHandle(
+  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   return async function ({ event, resolve }) {
     const authOptions =
       typeof svelteKitAuthOptions === "object"
@@ -280,7 +456,9 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+export function SvelteKitAuth(
+  options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)

@@ -15,10 +15,9 @@
           {/if}
           <span class="signedInText">
             <small>Signed in as</small><br />
-            <strong
-              >{$page.data.session.user?.email ??
-                $page.data.session.user?.name}</strong
-            >
+            <strong>
+              {$page.data.session.user?.email ?? $page.data.session.user?.name}
+            </strong>
           </span>
           <a href="/auth/signout" class="button">Sign out</a>
         {:else}
@@ -31,6 +30,9 @@
       <ul class="navItems">
         <li class="navItem"><a href="/">Home</a></li>
         <li class="navItem"><a href="/protected">Protected</a></li>
+        <li class="navItem">
+          <a href="/server-protected">Server Protected</a>
+        </li>
       </ul>
     </nav>
   </header>
