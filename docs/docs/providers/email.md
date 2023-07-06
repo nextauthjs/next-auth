@@ -36,7 +36,7 @@ You can override any of the options to suit your own use case.
 2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
 3. There are two ways to configure the SMTP server connection.
 
-You can either use a connection string or a `nodemailer` configuration object.
+You can either use a connection string or a `nodemailer` configuration object or transport.
 
 2.1 **Using a connection string**
 
