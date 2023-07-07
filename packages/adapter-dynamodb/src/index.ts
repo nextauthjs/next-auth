@@ -438,11 +438,12 @@ export function DynamoDBAdapter(
       })
       if (!data?.Items?.length) return null
 
-      const { pk, sk } = data.Items[0]
+      const { [pk]: partitionKeyToDelete, [sk]: sortKeyToDelete } =
+        data.Items[0]
 
       const res = await client.delete({
         TableName,
-        Key: { pk, sk },
+        Key: { [pk]: partitionKeyToDelete, [sk]: sortKeyToDelete },
         ReturnValues: "ALL_OLD",
       })
       return format.from<AdapterSession>(res.Attributes)
