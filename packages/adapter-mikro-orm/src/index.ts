@@ -24,7 +24,7 @@ import type { Adapter } from "@auth/core/adapters"
 
 import { MikroORM, wrap } from "@mikro-orm/core"
 
-import * as defaultEntities from "./lib/entities"
+import * as defaultEntities from "./lib/entities.js"
 
 export { defaultEntities }
 
