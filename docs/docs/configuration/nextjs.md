@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  return res.status(200).json({
+  return res.json({
     message: 'Success',
   })
 }
