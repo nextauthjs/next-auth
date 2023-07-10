@@ -209,21 +209,21 @@ export function withAuth(
 ): <Req extends Request = NextRequestWithAuth>(
   request: Req,
   event: NextFetchEvent
-) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+) => ReturnType<NextMiddlewareWithAuth>
 
 export function withAuth(
   middleware: NextMiddlewareWithAuth
 ): <Req extends Request = NextRequestWithAuth>(
   request: Req,
   event: NextFetchEvent
-) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+) => ReturnType<NextMiddlewareWithAuth>
 
 export function withAuth(
   options: NextAuthMiddlewareOptions
 ): <Req extends Request = NextRequestWithAuth>(
   request: Req,
   event: NextFetchEvent
-) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+) => ReturnType<NextMiddlewareWithAuth>
 
 export function withAuth(
   ...args: WithAuthArgs
