@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -48,7 +48,6 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "svelte": "^3.54.0",
     "@sveltejs/kit": "^1.0.0"
   },
   "type": "module",
