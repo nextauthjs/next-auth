@@ -48,7 +48,7 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "svelte": "^3.54.0" || "^4.0.0",
+    "svelte": "^3.54.0 || ^4.0.0",
     "@sveltejs/kit": "^1.0.0"
   },
   "type": "module",
