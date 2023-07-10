@@ -189,36 +189,41 @@ export type WithAuthArgs =
 
 export function withAuth(): ReturnType<NextMiddlewareWithAuth>
 
-export function withAuth(
-  req: NextRequestWithAuth
+export function withAuth<Req extends Request = NextRequestWithAuth>(
+  req: Req
 ): ReturnType<NextMiddlewareWithAuth>
 
-export function withAuth(
-  req: NextRequestWithAuth,
+export function withAuth<Req extends Request = NextRequestWithAuth>(
+  req: Req,
   event: NextFetchEvent
 ): ReturnType<NextMiddlewareWithAuth>
 
-export function withAuth(
-  req: NextRequestWithAuth,
+export function withAuth<Req extends Request = NextRequestWithAuth>(
+  req: Req,
   options: NextAuthMiddlewareOptions
-): ReturnType<NextMiddlewareWithAuth>
-
-export function withAuth(
-  req: NextRequestWithAuth
 ): ReturnType<NextMiddlewareWithAuth>
 
 export function withAuth(
   middleware: NextMiddlewareWithAuth,
   options: NextAuthMiddlewareOptions
-): NextMiddlewareWithAuth
+): <Req extends Request = NextRequestWithAuth>(
+  request: Req,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
 
 export function withAuth(
   middleware: NextMiddlewareWithAuth
-): NextMiddlewareWithAuth
+): <Req extends Request = NextRequestWithAuth>(
+  request: Req,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
 
 export function withAuth(
   options: NextAuthMiddlewareOptions
-): NextMiddlewareWithAuth
+): <Req extends Request = NextRequestWithAuth>(
+  request: Req,
+  event: NextFetchEvent
+) => NextMiddlewareResult | Promise<NextMiddlewareResult>
 
 export function withAuth(
   ...args: WithAuthArgs
