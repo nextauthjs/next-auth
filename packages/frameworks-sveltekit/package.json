@@ -35,7 +35,7 @@
     "@playwright/test": "1.29.2",
     "@sveltejs/adapter-auto": "^1.0.0",
     "@sveltejs/kit": "^1.0.0",
-    "@sveltejs/package": "^2.0.0",
+    "@sveltejs/package": "^1.0.0",
     "next-auth": "workspace:*",
     "svelte": "^3.54.0",
     "svelte-check": "^2.9.2",
