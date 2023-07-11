@@ -41,10 +41,10 @@ The email provider requires a database, it cannot be used without one.
 
 |          Name           |                                     Description                                     |               Type               | Required |
 | :---------------------: | :---------------------------------------------------------------------------------: | :------------------------------: | :------: |
-|           id            |                             Unique ID for the provider                              |             `string`             |   Yes    |
-|          name           |                          Descriptive name for the provider                          |             `string`             |   Yes    |
-|          type           |                       Type of provider, in this case `email`                        |            `"email"`             |   Yes    |
-|         server          |                     Path or object pointing to the email server                     |       `string` or `Object`       |   Yes    |
-| sendVerificationRequest |               Callback to execute when a verification request is sent               | `(params) => Promise<undefined>` |   Yes    |
+|           id            |                             Unique ID for the provider                              |             `string`             |    No    |
+|          name           |                          Descriptive name for the provider                          |             `string`             |    No    |
+|          type           |                       Type of provider, in this case `email`                        |            `"email"`             |    No    |
+|         server          |                     Path or object pointing to the email server                     |       `string` or `Object`       |   No    |
+| sendVerificationRequest |     Callback to execute to send a verification request, default uses nodemailer     | `(params) => Promise<undefined>` |    No    |
 |          from           |   The email address from which emails are sent, default: "<no-reply@example.com>"   |             `string`             |    No    |
 |         maxAge          | How long until the e-mail can be used to log the user in seconds. Defaults to 1 day |             `number`             |    No    |
