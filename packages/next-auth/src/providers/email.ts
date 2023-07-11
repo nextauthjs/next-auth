@@ -22,7 +22,7 @@ export interface SendVerificationRequestParams {
 }
 
 export interface EmailUserConfig {
-  server: AllTransportOptions
+  server?: AllTransportOptions
   type?: "email"
   /** @default "NextAuth <no-reply@example.com>" */
   from?: string
