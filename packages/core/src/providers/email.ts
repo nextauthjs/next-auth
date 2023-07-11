@@ -1,8 +1,16 @@
-import { createTransport } from "nodemailer"
-
 import type { CommonProviderOptions } from "./index.js"
-import type { Options as SMTPTransportOptions } from "nodemailer/lib/smtp-transport"
 import type { Awaitable, Theme } from "../types.js"
+
+import { Transport, TransportOptions, createTransport } from "nodemailer"
+import * as JSONTransport from "nodemailer/lib/json-transport/index.js"
+import * as SendmailTransport from "nodemailer/lib/sendmail-transport/index.js"
+import * as SESTransport from "nodemailer/lib/ses-transport/index.js"
+import * as SMTPTransport from "nodemailer/lib/smtp-transport/index.js"
+import * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
+import * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
+
+// TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html for the string
+type AllTransportOptions = string | SMTPTransport | SMTPTransport.Options | SMTPPool | SMTPPool.Options | SendmailTransport | SendmailTransport.Options | StreamTransport | StreamTransport.Options | JSONTransport | JSONTransport.Options | SESTransport | SESTransport.Options | Transport<any> | TransportOptions
 
 export interface SendVerificationRequestParams {
   identifier: string
@@ -26,10 +34,9 @@ export interface SendVerificationRequestParams {
  *
  * [Custom email service with Auth.js](https://authjs.dev/guides/providers/email#custom-email-service)
  */
-export interface EmailConfig extends CommonProviderOptions {
-  type: "email"
-  // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server?: string | SMTPTransportOptions
+export interface EmailUserConfig {
+  server?: AllTransportOptions
+  type?: "email"
   /** @default `"Auth.js <no-reply@authjs.dev>"` */
   from?: string
   /**
@@ -40,7 +47,7 @@ export interface EmailConfig extends CommonProviderOptions {
    */
   maxAge?: number
   /** [Documentation](https://authjs.dev/guides/providers/email#customizing-emails) */
-  sendVerificationRequest: (
+  sendVerificationRequest?: (
     params: SendVerificationRequestParams
   ) => Awaitable<void>
   /**
@@ -77,24 +84,49 @@ export interface EmailConfig extends CommonProviderOptions {
   normalizeIdentifier?: (identifier: string) => string
 }
 
+export interface EmailConfig extends CommonProviderOptions {
+  // defaults
+  id: "email"
+  type: "email"
+  name: "Email"
+  server: AllTransportOptions
+  from: string
+  maxAge: number
+  sendVerificationRequest: (
+    params: SendVerificationRequestParams
+  ) => Awaitable<void>
+
+  /**
+   * This is copied into EmailConfig in parseProviders() don't use elsewhere
+   */
+  options: EmailUserConfig
+
+  // user options
+  // TODO figure out a better way than copying from EmailUserConfig
+  secret?: string
+  generateVerificationToken?: () => Awaitable<string>
+  normalizeIdentifier?: (identifier: string) => string
+}
+
+
 // TODO: Rename to Token provider
 // when started working on https://github.com/nextauthjs/next-auth/discussions/1465
 export type EmailProviderType = "email"
 
-/** 
+/**
  * ## Overview
  * The Email provider uses email to send "magic links" that can be used to sign in, you will likely have seen these if you have used services like Slack before.
- * 
+ *
  * Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
- * 
+ *
  * The Email provider can be used in conjunction with (or instead of) one or more OAuth providers.
  * ### How it works
- * 
+ *
  * On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
- * 
- * 
+ *
+ *
  * If someone provides the email address of an _existing account_ when signing in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
- * 
+ *
  * :::tip
  * The Email Provider can be used with both JSON Web Tokens and database sessions, but you **must** configure a database to use it. It is not possible to enable email sign in without using a database.
  * :::
@@ -103,20 +135,20 @@ export type EmailProviderType = "email"
  * 1. NextAuth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
  * 2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
  * 3. There are two ways to configure the SMTP server connection.
- * 
+ *
  * You can either use a connection string or a `nodemailer` configuration object.
- * 
+ *
  * 3.1 **Using a connection string**
- * 
+ *
  * Create an `.env` file to the root of your project and add the connection string and email address.
- * 
+ *
  * ```js title=".env" {1}
  * 	EMAIL_SERVER=smtp://username:password@smtp.example.com:587
  * 	EMAIL_FROM=noreply@example.com
  * ```
- * 
+ *
  * Now you can add the email provider like this:
- * 
+ *
  * ```js {3} title="pages/api/auth/[...nextauth].js"
  * import EmailProvider from "next-auth/providers/email";
  * ...
@@ -127,11 +159,11 @@ export type EmailProviderType = "email"
  *   }),
  * ],
  * ```
- * 
+ *
  * 3.2 **Using a configuration object**
- * 
+ *
  * In your `.env` file in the root of your project simply add the configuration object options individually:
- * 
+ *
  * ```js title=".env"
  * EMAIL_SERVER_USER=username
  * EMAIL_SERVER_PASSWORD=password
@@ -139,9 +171,9 @@ export type EmailProviderType = "email"
  * EMAIL_SERVER_PORT=587
  * EMAIL_FROM=noreply@example.com
  * ```
- * 
+ *
  * Now you can add the provider settings to the NextAuth.js options object in the Email Provider.
- * 
+ *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import EmailProvider from "next-auth/providers/email";
  * ...
@@ -159,19 +191,19 @@ export type EmailProviderType = "email"
  *   }),
  * ],
  * ```
- * 
+ *
  * 4. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/adapters) for storing the Email verification token.
- * 
+ *
  * 5. You can now sign in with an email address at `/api/auth/signin`.
- * 
+ *
  * A user account (i.e. an entry in the Users table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they use the link in the email.
- * 
+ *
  * ## Customizing emails
- * 
+ *
  * You can fully customize the sign in email that is sent by passing a custom function as the `sendVerificationRequest` option to `EmailProvider()`.
- * 
+ *
  * e.g.
- * 
+ *
  * ```js {3} title="pages/api/auth/[...nextauth].js"
  * import EmailProvider from "next-auth/providers/email";
  * ...
@@ -189,12 +221,12 @@ export type EmailProviderType = "email"
  *   }),
  * ]
  * ```
- * 
+ *
  * The following code shows the complete source for the built-in `sendVerificationRequest()` method:
- * 
+ *
  * ```js
  * import { createTransport } from "nodemailer"
- * 
+ *
  * async function sendVerificationRequest(params) {
  *   const { identifier, url, provider, theme } = params
  *   const { host } = new URL(url)
@@ -212,12 +244,12 @@ export type EmailProviderType = "email"
  *     throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
  *   }
  * }
- * 
+ *
  * function html(params: { url: string; host: string; theme: Theme }) {
  *   const { url, host, theme } = params
- * 
+ *
  *   const escapedHost = host.replace(/\./g, "&#8203;.")
- * 
+ *
  *   const brandColor = theme.brandColor || "#346df1"
  *   const color = {
  *     background: "#f9f9f9",
@@ -227,7 +259,7 @@ export type EmailProviderType = "email"
  *     buttonBorder: brandColor,
  *     buttonText: theme.buttonText || "#fff",
  *   }
- * 
+ *
  *   return `
  * <body style="background: ${color.background};">
  *   <table width="100%" border="0" cellspacing="20" cellpadding="0"
@@ -260,21 +292,21 @@ export type EmailProviderType = "email"
  * </body>
  * `
  * }
- * 
+ *
  * // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
  * function text({ url, host }: { url: string; host: string }) {
  *   return `Sign in to ${host}\n${url}\n\n`
  * }
  * ```
- * 
+ *
  * :::tip
  * If you want to generate great looking email client compatible HTML with React, check out https://mjml.io
  * :::
- * 
+ *
  * ## Customizing the Verification Token
- * 
+ *
  * By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it:
- * 
+ *
  * ```js title="pages/api/auth/[...nextauth].js"
  * providers: [
  *   EmailProvider({
@@ -284,9 +316,9 @@ export type EmailProviderType = "email"
  *   })
  * ],
  * ```
- * 
+ *
  * ## Normalizing the email address
- * 
+ *
  * By default, Auth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
  * ```ts
  *   EmailProvider({
@@ -299,7 +331,7 @@ export type EmailProviderType = "email"
  *       // but we remove it on the domain part
  *       domain = domain.split(",")[0]
  *       return `${local}@${domain}`
- * 
+ *
  *       // You can also throw an error, which will redirect the user
  *       // to the sign-in page with error=EmailSignin in the URL
  *       // if (identifier.split("@").length > 2) {
@@ -308,12 +340,12 @@ export type EmailProviderType = "email"
  *     },
  *   })
  * ```
- * 
+ *
  * :::warning
  * Always make sure this returns a single e-mail address, even if multiple ones were passed in.
  * :::
  */
-export default function Email(config: EmailConfig): EmailConfig {
+export default function Email(config: EmailUserConfig): EmailConfig {
   return {
     id: "email",
     type: "email",
@@ -337,7 +369,6 @@ export default function Email(config: EmailConfig): EmailConfig {
         throw new Error(`Email (${failed.join(", ")}) could not be sent`)
       }
     },
-    // @ts-expect-error
     options: config,
   }
 }
