@@ -22,11 +22,18 @@ Next you will have to create some configuration files for Cypress.
 
 First, the primary cypress config:
 
-```js title="cypress.json"
-{
-  "baseUrl": "http://localhost:3000",
-  "chromeWebSecurity": false
-}
+```ts title="cypress.config.ts"
+import { defineConfig } from 'cypress'
+
+export default defineConfig({
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    chromeWebSecurity: false,
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    },
+  },
+})
 ```
 
 This initial Cypress config will tell Cypress where to find your site on initial launch as well as allow it to open up URLs at domains that aren't your page, for example to be able to login to a social provider.
@@ -46,14 +53,24 @@ You must change the login credentials you want to use, but you can also redefine
 
 Third, if you're using the `cypress-social-login` plugin, you must add this to your `/cypress/plugins/index.js` file like so:
 
-```js title="cypress/plugins/index.js"
-const { GoogleSocialLogin } = require("cypress-social-logins").plugins
+```js title="cypress.config.ts" {3-4,10-14}
+import { defineConfig } from 'cypress'
 
-module.exports = (on, config) => {
-  on("task", {
-    GoogleSocialLogin: GoogleSocialLogin,
-  })
-}
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { GoogleSocialLogin } = require('cypress-social-logins').plugins
+
+export default defineConfig({
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    chromeWebSecurity: false,
+    setupNodeEvents(on, config) {
+      on('task', {
+        GoogleSocialLogin,
+      })
+    },
+  },
+})
+
 ```
 
 Finally, you can also add the following npm scripts to your `package.json`:

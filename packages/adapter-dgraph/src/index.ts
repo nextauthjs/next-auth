@@ -9,18 +9,18 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dgraph-adapter
+ * npm install next-auth @auth/dgraph-adapter
  * ```
  *
- * @module @next-auth/dgraph-adapter
+ * @module @auth/dgraph-adapter
  */
-import { client as dgraphClient } from "./client"
-import { format } from "./utils"
-import type { Adapter } from "next-auth/adapters"
-import type { DgraphClientParams } from "./client"
-import * as defaultFragments from "./graphql/fragments"
+import { client as dgraphClient } from "./lib/client"
+import { format } from "./lib/utils"
+import type { Adapter } from "@auth/core/adapters"
+import type { DgraphClientParams } from "./lib/client"
+import * as defaultFragments from "./lib/graphql/fragments"
 
-export type { DgraphClientParams, DgraphClientError } from "./client"
+export type { DgraphClientParams, DgraphClientError } from "./lib/client"
 
 /** This is the interface of the Dgraph adapter options. */
 export interface DgraphAdapterOptions {
@@ -28,7 +28,7 @@ export interface DgraphAdapterOptions {
    * The GraphQL {@link https://dgraph.io/docs/query-language/fragments/ Fragments} you can supply to the adapter
    * to define how the shapes of the `user`, `account`, `session`, `verificationToken` entities look.
    *
-   * By default the adapter will uses the [default defined fragments](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-dgraph/src/graphql/fragments.ts)
+   * By default the adapter will uses the [default defined fragments](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-dgraph/src/lib/graphql/fragments.ts)
    * , this config option allows to extend them.
    */
   fragments?: {
@@ -48,7 +48,7 @@ export { format }
  *
  * ```ts title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { DgraphAdapter } from "@next-auth/dgraph-adapter"
+ * import { DgraphAdapter } from "@auth/dgraph-adapter"
  *
  * export default NextAuth({
  *   providers: [],

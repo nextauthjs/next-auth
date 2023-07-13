@@ -21,8 +21,8 @@ import type {
   AdapterSession,
 } from "@auth/core/adapters"
 import { DataSourceOptions, DataSource, EntityManager } from "typeorm"
-import * as defaultEntities from "./entities"
-import { parseDataSourceConfig, updateConnectionEntities } from "./utils"
+import * as defaultEntities from "./entities.js"
+import { parseDataSourceConfig, updateConnectionEntities } from "./utils.js"
 
 export const entities = defaultEntities
 

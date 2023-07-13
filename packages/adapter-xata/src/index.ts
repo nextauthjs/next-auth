@@ -10,7 +10,7 @@
  *
  * ```bash npm2yarn2pnpm
  * # Install Auth.js and the Xata adapter
- * npm install next-auth @next-auth/xata-adapter
+ * npm install @auth/xata-adapter
  *
  * # Install the Xata CLI globally if you don't already have it
  * npm install --location=global @xata.io/cli
@@ -19,9 +19,9 @@
  * xata auth login
  * ```
  *
- * @module @next-auth/xata-adapter
+ * @module @auth/xata-adapter
  */
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 
 import type { XataClient } from "./xata"
 
@@ -220,7 +220,7 @@ import type { XataClient } from "./xata"
  * ```diff
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * +import { XataAdapter } from "@next-auth/xata-adapter"
+ * +import { XataAdapter } from "@auth/xata-adapter"
  * +import { XataClient } from "../../../xata" // or wherever you've chosen to create the client
  *
  * +const client = new XataClient()
