@@ -6,11 +6,9 @@ import {
   mysqlTable,
   primaryKey,
   varchar,
-  MySqlTextColumnType
 } from "drizzle-orm/mysql-core"
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { drizzle } from "drizzle-orm/mysql2"
-import { createPool } from "mysql2/promise"
+import { MySql2Database } from "drizzle-orm/mysql2"
 
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -62,24 +60,12 @@ export const verificationTokens = mysqlTable(
   })
 )
 
-const poolConnection = process.env.AUTH_DRIZZLE_MYSQL_URL ? createPool(
-  process.env.AUTH_DRIZZLE_MYSQL_URL as string,
-) : createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "next-auth",
-})
-
-export const db = drizzle(poolConnection)
-export type DbClient = typeof db
-
 export const defaultSchema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof defaultSchema
 interface CustomSchema extends DefaultSchema { }
 
 export function mySqlDrizzleAdapter(
-  client: DbClient,
+  client: MySql2Database<Record<string, never>>,
   schema?: Partial<CustomSchema>
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } = {

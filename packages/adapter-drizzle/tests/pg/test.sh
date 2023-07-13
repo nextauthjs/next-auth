@@ -16,7 +16,7 @@ docker run -d --rm \
 -p ${PGPORT}:5432 \
 postgres:15.3
 
-drizzle-kit generate:pg --config=./src/pg/drizzle.config.ts
+drizzle-kit generate:pg --config=./tests/pg/drizzle.config.ts
 
 npx tsx ./tests/pg/migrate-db.ts
 

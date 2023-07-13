@@ -1,11 +1,8 @@
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
-import { drizzle } from "drizzle-orm/better-sqlite3"
+import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import crypto from 'node:crypto'
-import Database from "better-sqlite3"
 import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { eq, and } from "drizzle-orm"
-
-const sqlite = new Database("db.sqlite")
 
 export const users = sqliteTable("users", {
   id: text("id").notNull().primaryKey(),
@@ -58,16 +55,12 @@ export const verificationTokens = sqliteTable(
 )
 
 
-export const db = drizzle(sqlite)
 export const defaultSchema = { users, accounts, sessions, verificationTokens }
-
-export type DbClient = typeof db
-
 export type DefaultSchema = typeof defaultSchema
 interface CustomSchema extends DefaultSchema { }
 
 export function SQLiteDrizzleAdapter(
-  client: DbClient,
+  client: BetterSQLite3Database<Record<string, never>>,
   schema?: Partial<CustomSchema>
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } = {

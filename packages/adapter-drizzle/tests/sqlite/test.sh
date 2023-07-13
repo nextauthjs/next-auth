@@ -5,8 +5,8 @@ set -eu
 rm -f tests/sqlite/dev.db
 
 
-drizzle-kit generate:sqlite --config=./src/sqlite/drizzle.config.ts
-drizzle-kit push:sqlite --config=./src/sqlite/drizzle.config.ts
+drizzle-kit generate:sqlite --config=./tests/sqlite/drizzle.config.ts
+drizzle-kit push:sqlite --config=./tests/sqlite/drizzle.config.ts
 
 echo "Started running SQLite tests."
 jest ./tests/sqlite/zero-config.test.ts --forceExit

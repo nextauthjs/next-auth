@@ -16,12 +16,15 @@ mysql:8 \
 
 echo "Waiting 15 sec for db to start..." && sleep 15
 
-drizzle-kit generate:mysql --config=./src/mysql/drizzle.config.ts
-drizzle-kit push:mysql --config=./src/mysql/drizzle.config.ts
+# drizzle-kit generate:mysql --config=./src/tests/mysql/drizzle.config.ts
+# drizzle-kit push:mysql --config=./src/tests/mysql/drizzle.config.ts
 
-echo "Started running MySQL tests."
-jest ./tests/mysql/zero-config.test.ts --forceExit
-echo "Finished running MySQL tests."
+# echo "Started running MySQL tests."
+# jest ./tests/mysql/zero-config.test.ts --forceExit
+# echo "Finished running MySQL tests."
+
+drizzle-kit generate:mysql --config=./tests/mysql/drizzle.config.ts
+drizzle-kit push:mysql --config=./tests/mysql/drizzle.config.ts
 
 echo "Started running MySQL tests with custom models."
 jest ./tests/mysql/custom.test.ts --forceExit

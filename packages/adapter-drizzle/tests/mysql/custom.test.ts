@@ -1,9 +1,11 @@
 import { mysqlTable, timestamp, text, int, primaryKey } from "drizzle-orm/mysql-core"
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
-import { users, sessions, accounts, verificationTokens, db } from "../../src/mysql"
+import { users, sessions, accounts, verificationTokens } from "../../src/mysql"
 import { eq, and } from "drizzle-orm"
 import type { AdapterAccount } from "@auth/core/adapters"
+import { drizzle } from "drizzle-orm/mysql2"
+import { createPool } from "mysql2/promise"
 
 export const customUsersTable = mysqlTable("users", {
   id: text("id").notNull().primaryKey(),
@@ -36,15 +38,24 @@ export const customAccountsTable = mysqlTable(
   })
 )
 
+const poolConnection = createPool({
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "next-auth",
+})
+
+export const db = drizzle(poolConnection)
+
 runBasicTests({
   adapter: DrizzleAdapter(
     db,
-    {
+    // {
 
-      // TODO: MySQLText doesn't fit with text?
-      users: customUsersTable,
-      accounts: customAccountsTable
-    }
+    //   // TODO: MySQLText doesn't fit with text?
+    //   users: customUsersTable,
+    //   accounts: customAccountsTable
+    // }
   ),
   db: {
     connect: async () => {

@@ -5,12 +5,9 @@ import {
   text,
   primaryKey,
 } from "drizzle-orm/pg-core"
-import { drizzle } from "drizzle-orm/postgres-js"
-import postgres from "postgres"
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import { Adapter, AdapterAccount } from '@auth/core/adapters'
 import { and, eq } from "drizzle-orm"
-
-const queryConnection = postgres(process.env.DATABASE_URL!)
 
 export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
@@ -62,15 +59,12 @@ export const verificationTokens = pgTable(
   })
 )
 
-export const db = drizzle(queryConnection)
-export type DbClient = typeof db
-
 export const defaultSchema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof defaultSchema
 interface CustomSchema extends DefaultSchema { }
 
 export function pgDrizzleAdapter(
-  client: DbClient,
+  client: PostgresJsDatabase<Record<string, never>>,
   schema?: Partial<CustomSchema>
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } = {
