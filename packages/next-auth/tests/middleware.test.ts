@@ -93,3 +93,38 @@ it("should redirect according to nextUrl basePath", async () => {
   // then return sign in page
   expect(resFromRedirectedUrl).toBeUndefined()
 })
+
+it("should redirect to client page if user is not admin", async () => {
+  // given
+  const options: NextAuthMiddlewareOptions = {
+    secret: "secret",
+    callbacks: {
+      authorized: ({ token }) => {
+        if (token && token.admin) {
+          return true
+        }
+
+        return {
+          authorized: false,
+          redirect: "/client",
+        }
+      }
+    }
+  }
+  const handleMiddleware = withAuth(options) as NextMiddleware
+
+  // when
+  const res = await handleMiddleware({
+    nextUrl: {
+      pathname: "/admin",
+      search: "",
+      origin: "http://127.0.0.1",
+      basePath: "/custom-base-path"
+    }, headers: { authorization: "" }
+  } as any, null as any)
+
+  // then
+  expect(res).toBeDefined()
+  expect(res.status).toEqual(307)
+  expect(res.headers.get("location")).toContain("http://127.0.0.1/custom-base-path/client")
+})

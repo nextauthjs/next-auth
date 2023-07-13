@@ -1,6 +1,6 @@
 export { default } from "next-auth/middleware"
 
-export const config = { matcher: ["/middleware-protected"] }
+export const config = { matcher: ["/middleware-protected", "/admin"] }
 
 // Other ways to use this middleware
 
@@ -18,7 +18,22 @@ export const config = { matcher: ["/middleware-protected"] }
 // export function middleware(req, ev) {
 //   return withAuth(req, {
 //     callbacks: {
-//       authorized: ({ token }) => !!token,
+//       authorized: ({ token }) => {        
+//         // handle admin url
+//         if (req.url.includes("/admin")) {
+//           if (token && token.admin) {
+//             return true
+//           }
+
+//         // custom redirect
+//           return {
+//             authorized: false,
+//             redirect: "/client",
+//           }
+//         }
+
+//         return !!token
+//       },
 //     },
 //   })
 // }

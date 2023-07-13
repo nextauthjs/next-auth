@@ -59,6 +59,11 @@ export default function Header() {
             <Link href="/server">Server</Link>
           </li>
           <li className={styles.navItem}>
+            <Link href="/admin">
+              Admin (protected by middleware)
+            </Link>
+          </li>
+          <li className={styles.navItem}>
             <Link href="/protected">Protected</Link>
           </li>
           <li className={styles.navItem}>

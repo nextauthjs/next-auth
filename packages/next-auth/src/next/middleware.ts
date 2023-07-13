@@ -7,10 +7,16 @@ import { NextResponse, NextRequest } from "next/server"
 import { getToken } from "../jwt"
 import parseUrl from "../utils/parse-url"
 
+type AuthorizedCallbackOptions = {
+  authorized: boolean
+  // If `redirect` is set, the user will be redirected to the given URL.
+  redirect?: string
+}
+
 type AuthorizedCallback = (params: {
   token: JWT | null
   req: NextRequest
-}) => Awaitable<boolean>
+}) => Awaitable<boolean | AuthorizedCallbackOptions>
 
 export interface NextAuthMiddlewareOptions {
   /**
@@ -58,11 +64,12 @@ export interface NextAuthMiddlewareOptions {
      *
      * This is similar to the `signIn` callback in `NextAuthOptions`.
      *
-     * If it returns `false`, the user is redirected to the sign-in page instead
+     * If it returns `false`, the user is redirected to the sign-in page instead.
+     * If returns an object (AuthorizedCallbackOptions), the user is redirected to the given URL instead.
      *
      * The default is to let the user continue if they have a valid JWT (basic authentication).
      *
-     * How to restrict a page and all of it's subpages for admins-only:
+     * How to restrict a page and all of it's subpages for admins-only and redirect to the client page:
      * @example
      *
      * ```js
@@ -71,7 +78,10 @@ export interface NextAuthMiddlewareOptions {
      *
      * export default withAuth({
      *   callbacks: {
-     *     authorized: ({ token }) => token?.user.isAdmin
+     *     authorized: ({ token }) => { 
+     *        authorized: token?.user.isAdmin, 
+     *        redirect: "/client"
+     *    }
      *   }
      * })
      *
@@ -138,18 +148,39 @@ async function handleMiddleware(
     secret,
   })
 
-  const isAuthorized =
+  const authorizationResponse =
     (await options?.callbacks?.authorized?.({ req, token })) ?? !!token
 
-  // the user is authorized, let the middleware handle the rest
-  if (isAuthorized) return await onSuccess?.(token)
+  // handle booleans responses
+  if (typeof authorizationResponse !== "object") {
+    // the user is authorized, let the middleware handle the rest
+    if (authorizationResponse) return await onSuccess?.(token)
 
-  // the user is not logged in, redirect to the sign-in page
+    // the user is not logged in, redirect to the sign-in page
+    const signInUrl = new URL(`${basePath}${signInPage}`, origin)
+    signInUrl.searchParams.append(
+      "callbackUrl",
+      `${basePath}${pathname}${search}`
+    )
+    return NextResponse.redirect(signInUrl)
+  }
+
+
+  // handle object responses
+  if (authorizationResponse.authorized) {
+    // the user is authorized, let the middleware handle the rest
+    return await onSuccess?.(token)
+  }
+
+  // the user is not authorized, redirect to the given URL
+  if (authorizationResponse.redirect) {
+    const url = new URL(`${basePath}${authorizationResponse.redirect}`, origin)
+    return NextResponse.redirect(url)
+  }
+
+  // the user is not authorized, redirect to the sign-in page
   const signInUrl = new URL(`${basePath}${signInPage}`, origin)
-  signInUrl.searchParams.append(
-    "callbackUrl",
-    `${basePath}${pathname}${search}`
-  )
+  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
   return NextResponse.redirect(signInUrl)
 }
 
