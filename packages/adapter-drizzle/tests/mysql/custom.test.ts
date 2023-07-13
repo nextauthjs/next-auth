@@ -1,4 +1,4 @@
-import { mysqlTable, timestamp, text, int, primaryKey, MySqlTextColumnType } from "drizzle-orm/mysql-core"
+import { mysqlTable, timestamp, text, int, primaryKey } from "drizzle-orm/mysql-core"
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
 import { users, sessions, accounts, verificationTokens, db } from "../../src/mysql"
@@ -40,6 +40,7 @@ runBasicTests({
   adapter: DrizzleAdapter(
     db,
     {
+
       // TODO: MySQLText doesn't fit with text?
       users: customUsersTable,
       accounts: customAccountsTable

@@ -21,7 +21,7 @@ export interface MinimumSchema {
 
 export type SqlFlavorOptions = AnyMySqlDatabase
   | AnyPgDatabase
-// | AnySQLiteDatabase
+  | AnySQLiteDatabase
 // | AnyPlanetScaleDatabase
 
 export type ClientFlavors<Flavor> =
@@ -36,16 +36,16 @@ export type ClientFlavors<Flavor> =
   ? MinimumSchema["sqlite"]
   : never
 
-export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any, MySqlSchema, any> {
-  return db instanceof MySqlDatabase<any, any, MySqlSchema, any>
+export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any, any, any> {
+  return db instanceof MySqlDatabase
 }
 
-export function isPgDatabase(db: any): db is PgDatabase<any, PgSchema, any> {
-  return db instanceof PgDatabase<any, PgSchema, any>
+export function isPgDatabase(db: any): db is PgDatabase<any, any, any> {
+  return db instanceof PgDatabase
 }
 
-export function isSQLiteDatabase(db: any): db is BaseSQLiteDatabase<any, SQLiteSchema, any> {
-  return db instanceof BaseSQLiteDatabase<any, SQLiteSchema, any>
+export function isSQLiteDatabase(db: any): db is BaseSQLiteDatabase<any, any, any> {
+  return db instanceof BaseSQLiteDatabase
 }
 
 // export function isPlanetScaleDatabase(db: any): db is PlanetScaleDatabase<any> {
