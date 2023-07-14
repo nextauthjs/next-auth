@@ -1,8 +1,8 @@
 import type { Config } from "drizzle-kit";
 
 export default {
-  schema: "./tests/mysql/custom/index.ts",
-  out: "./test/mysql/custom/.drizzle",
+  schema: "./tests/mysql/custom/schema.ts",
+  out: "./tests/mysql/custom/.drizzle",
   "driver": "mysql2",
   dbCredentials: {
     host: "localhost",
