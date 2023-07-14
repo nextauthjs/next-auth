@@ -29,3 +29,5 @@ drizzle-kit push:mysql --config=./tests/mysql/drizzle.config.ts
 echo "Started running MySQL tests with custom models."
 jest ./tests/mysql/custom.test.ts --forceExit
 echo "Finished running MySQL tests with custom models."
+
+docker stop ${MYSQL_CONTAINER_NAME}

@@ -1,12 +1,6 @@
-import { runBasicTests } from "../../../adapter-test"
-import { DrizzleAdapter } from "../../src"
-import {
-  db,
-  accounts,
-  sessions,
-  users,
-  verificationTokens,
-} from "../../src/mysql"
+import { runBasicTests } from "../../../../adapter-test"
+import { DrizzleAdapter } from "../../../src"
+import { db, accounts, sessions, users, verificationTokens } from './schema'
 import { eq, and } from "drizzle-orm"
 
 runBasicTests({
@@ -28,17 +22,13 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: async (id) =>
-      db
-        .select()
-        .from(users)
-        .where(eq(users.id, id))
-        .then(res => res[0] ?? null),
+    user: (id) => db.select().from(users).where(eq(users.id, id)).get() ?? null,
     session: (sessionToken) =>
       db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0] ?? null),
+        .where(eq(sessions.sessionToken, sessionToken))
+        .get() ?? null,
     account: (provider_providerAccountId) => {
       return (
         db
@@ -50,7 +40,7 @@ runBasicTests({
               provider_providerAccountId.providerAccountId
             )
           )
-          .then(res => res[0] ?? null)
+          .get() ?? null
       )
     },
     verificationToken: (identifier_token) =>
@@ -63,6 +53,6 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         )
-        .then(res => res[0] ?? null),
+        .get() ?? null,
   },
 })
