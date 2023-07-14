@@ -39,6 +39,30 @@ it("should not redirect on public paths", async () => {
   expect(res).toBeUndefined()
 })
 
+it("should not redirect on pages", async () => {
+  const options: NextAuthMiddlewareOptions = {
+    pages: {
+      signIn: "/special/signin",
+      newUser: "/special/newuser",
+      error: "/special/error",
+    },
+    secret: "secret",
+  }
+  for (const page of ['signIn', 'error', 'newUser']) {
+    const nextUrl: any = {
+      pathname: options.pages?.[page],
+      search: "",
+      origin: "http://127.0.0.1",
+    }
+
+    const req: any = { nextUrl, headers: { authorization: "" } }
+
+    const handleMiddleware = withAuth(options) as NextMiddleware
+    const res = await handleMiddleware(req, null as any)
+    expect(res).toBeUndefined()
+  }
+})
+
 it("should redirect according to nextUrl basePath", async () => {
   const options: NextAuthMiddlewareOptions = {
     secret: "secret"
