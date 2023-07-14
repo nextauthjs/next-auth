@@ -9,7 +9,7 @@ import { DefaultSchema as SQLiteSchema } from "./sqlite"
 
 export type AnyMySqlDatabase = MySqlDatabase<any, any>
 export type AnyPgDatabase = PgDatabase<any, any, any>
-export type AnySQLiteDatabase = BaseSQLiteDatabase<any, any>
+export type AnySQLiteDatabase = BaseSQLiteDatabase<any, any, any, any>
 // export type AnyPlanetScaleDatabase = PlanetScaleDatabase<any>
 
 export interface MinimumSchema {
@@ -19,7 +19,8 @@ export interface MinimumSchema {
   // planetscale: PlanetScaleSchema & Record<string, AnyMySqlTable>
 }
 
-export type SqlFlavorOptions = AnyMySqlDatabase
+export type SqlFlavorOptions =
+  | AnyMySqlDatabase
   | AnyPgDatabase
   | AnySQLiteDatabase
 // | AnyPlanetScaleDatabase
@@ -44,7 +45,7 @@ export function isPgDatabase(db: any): db is PgDatabase<any, any, any> {
   return db instanceof PgDatabase
 }
 
-export function isSQLiteDatabase(db: any): db is BaseSQLiteDatabase<any, any, any> {
+export function isSQLiteDatabase(db: any): db is AnySQLiteDatabase {
   return db instanceof BaseSQLiteDatabase
 }
 

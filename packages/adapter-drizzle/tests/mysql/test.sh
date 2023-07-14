@@ -23,11 +23,11 @@ echo "Waiting 15 sec for db to start..." && sleep 15
 # jest ./tests/mysql/zero-config.test.ts --forceExit
 # echo "Finished running MySQL tests."
 
-drizzle-kit generate:mysql --config=./tests/mysql/drizzle.config.ts
-drizzle-kit push:mysql --config=./tests/mysql/drizzle.config.ts
+drizzle-kit generate:mysql --config=./tests/mysql/zero-config/drizzle.config.ts
+drizzle-kit push:mysql --config=./tests/mysql/zero-config/drizzle.config.ts
 
 echo "Started running MySQL tests with custom models."
-jest ./tests/mysql/custom.test.ts --forceExit
+jest ./tests/mysql/zero-config/index.test.ts --forceExit
 echo "Finished running MySQL tests with custom models."
 
 docker stop ${MYSQL_CONTAINER_NAME}
