@@ -8,6 +8,7 @@ import {
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import { Adapter, AdapterAccount } from '@auth/core/adapters'
 import { and, eq } from "drizzle-orm"
+import crypto from 'node:crypto'
 
 export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
@@ -81,7 +82,7 @@ export function pgDrizzleAdapter(
         .insert(users)
         .values({ ...data, id: crypto.randomUUID() })
         .returning()
-        .then((res) => res[0])
+        .then((res) => res[0] ?? null)
     },
     getUser: async (data) => {
       return (
@@ -89,7 +90,7 @@ export function pgDrizzleAdapter(
           .select()
           .from(users)
           .where(eq(users.id, data))
-          .then((res) => res[0]) ?? null
+          .then((res) => res[0] ?? null)
       )
     },
     getUserByEmail: async (data) => {
@@ -98,7 +99,7 @@ export function pgDrizzleAdapter(
           .select()
           .from(users)
           .where(eq(users.email, data))
-          .then((res) => res[0]) ?? null
+          .then((res) => res[0] ?? null)
       )
     },
     createSession: async (data) => {
@@ -118,7 +119,7 @@ export function pgDrizzleAdapter(
           .from(sessions)
           .where(eq(sessions.sessionToken, data))
           .innerJoin(users, eq(users.id, sessions.userId))
-          .then((res) => res[0]) ?? null
+          .then((res) => res[0] ?? null)
       )
     },
     updateUser: async (data) => {
@@ -164,20 +165,24 @@ export function pgDrizzleAdapter(
       return account
     },
     getUserByAccount: async (account) => {
-      const dbAccount =
-        await client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
+      const dbAccount = await client
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, account.providerAccountId),
+            eq(accounts.provider, account.provider)
           )
-          .leftJoin(users, eq(accounts.userId, users.id))
-          .then(res => res[0])
+        )
+        .leftJoin(users, eq(accounts.userId, users.id))
+        .then((res) => res[0]) ?? null
+
+      if (!dbAccount) {
+        return null
+      }
 
       return dbAccount.users
+
     },
     deleteSession: async (sessionToken) => {
       const session = await client
@@ -207,7 +212,7 @@ export function pgDrizzleAdapter(
               )
             )
             .returning()
-            .then((res) => res[0]) ?? null
+            .then((res) => res[0] ?? null)
         )
       } catch (err) {
         throw new Error("No verification token found.")

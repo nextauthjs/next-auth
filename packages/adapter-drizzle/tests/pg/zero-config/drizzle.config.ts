@@ -9,6 +9,5 @@ export default {
     user: "nextauth",
     password: "nextauth",
     port: 5432,
-
   }
 } satisfies Config;

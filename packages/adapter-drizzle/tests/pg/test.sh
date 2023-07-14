@@ -22,6 +22,8 @@ echo "Waiting 15 sec for db to start..." && sleep 15
 
 drizzle-kit generate:pg --config=./tests/pg/zero-config/drizzle.config.ts
 
+npx tsx ./tests/pg/zero-config/migrator.ts
+
 echo "Started running Postgres tests."
 jest ./tests/pg/zero-config/index.test.ts --forceExit
 echo "Finished running Postgres tests."
@@ -30,4 +32,4 @@ echo "Finished running Postgres tests."
 # jest ./tests/pg/custom.test.ts --forceExit
 # echo "Finished running Postgres tests with custom models."
 
-# docker stop ${PG_CONTAINER_NAME}
+docker stop ${PG_CONTAINER_NAME}
