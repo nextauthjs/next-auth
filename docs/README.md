@@ -37,22 +37,31 @@ This documentation site is based on the [Docusaurus](https://docusaurus.io) fram
 
 To start a local environment of this project, please do the following.
 
-1. Clone the repository.
+1. Clone the repo:
 
-```bash
-$ git clone https://github.com/nextauthjs/docs.git
+```sh
+git clone git@github.com:nextauthjs/next-auth.git
+cd next-auth
 ```
 
-2. Install dependencies
+2. Set up the correct pnpm version, using [Corepack](https://nodejs.org/api/corepack.html). Run the following in the project'a root:
 
-```bash
-$ npm install
+```sh
+corepack enable pnpm
 ```
 
-3. Start the development server
+(Now, if you run `pnpm --version`, it should print the same verion as the `packageManager` property in the [`package.json` file](https://github.com/nextauthjs/next-auth/blob/main/package.json))
+
+3. Install packages. Developing requires Node.js v18:
+
+```sh
+pnpm install
+```
+
+4. Start the development server
 
 ```bash
-$ npm start
+$ pnpm dev:docs
 ```
 
 And thats all! Now you should have a local copy of this docs site running at [localhost:3000](http://localhost:3000)!
