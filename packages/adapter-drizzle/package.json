@@ -50,7 +50,6 @@
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "@planetscale/database": "^1.7.0",
     "@types/better-sqlite3": "^7.6.4",
     "@types/uuid": "^8.3.3",
     "better-sqlite3": "^8.4.0",

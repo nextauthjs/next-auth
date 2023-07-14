@@ -396,9 +396,6 @@ importers:
       '@next-auth/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@planetscale/database':
-        specifier: ^1.7.0
-        version: 1.7.0
       '@types/better-sqlite3':
         specifier: ^7.6.4
         version: 7.6.4
@@ -413,7 +410,7 @@ importers:
         version: 0.19.2
       drizzle-orm:
         specifier: ^0.27.0
-        version: 0.27.0(@planetscale/database@1.7.0)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4)
+        version: 0.27.0(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4)
       jest:
         specifier: ^27.4.3
         version: 27.5.1
@@ -8542,11 +8539,6 @@ packages:
       nullthrows: 1.1.1
     dev: false
 
-  /@planetscale/database@1.7.0:
-    resolution: {integrity: sha512-lWR6biXChUyQnxsT4RT1CIeR3ZJvwTQXiQ+158MnY3VjLwjHEGakDzdH9kwUGPk6CHvu6UeqRXp1DgUOVHJFTw==}
-    engines: {node: '>=16'}
-    dev: true
-
   /@playwright/test@1.29.2:
     resolution: {integrity: sha512-+3/GPwOgcoF0xLz/opTnahel1/y42PdcgZ4hs+BZGIUjtmEFSXGg+nFoaH3NSmuc7a6GSFwXDJ5L7VXpqzigNg==}
     engines: {node: '>=14'}
@@ -15216,7 +15208,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.27.0(@planetscale/database@1.7.0)(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4):
+  /drizzle-orm@0.27.0(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4):
     resolution: {integrity: sha512-LGiJ0icB+wQwgbSCOvAjONY8Ec6G/EDzQQP5PmUaQYeI9OqgpVKHC2T1fFIbvk5dabWsbokJ5NOciVAxriStig==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -15278,7 +15270,6 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@planetscale/database': 1.7.0
       '@types/better-sqlite3': 7.6.4
       better-sqlite3: 8.4.0
       mysql2: 3.3.2
