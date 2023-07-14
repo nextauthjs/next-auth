@@ -10,6 +10,7 @@ import BeyondIdentity from "@auth/core/providers/beyondidentity"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 // import Cognito from "@auth/core/providers/cognito"
 import Credentials from "@auth/core/providers/credentials"
+import Descope from "@auth/core/providers/descope"
 import Discord from "@auth/core/providers/discord"
 import DuendeIDS6 from "@auth/core/providers/duende-identity-server6"
 // import Email from "@auth/core/providers/email"
@@ -41,22 +42,22 @@ import WorkOS from "@auth/core/providers/workos"
 
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
-// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// import { PrismaAdapter } from "@auth/prisma-adapter"
 // const client = globalThis.prisma || new PrismaClient()
 // if (process.env.NODE_ENV !== "production") globalThis.prisma = client
 // const adapter = PrismaAdapter(client)
 
 // // Fauna
 // import { Client as FaunaClient } from "faunadb"
-// import { FaunaAdapter } from "@next-auth/fauna-adapter"
+// import { FaunaAdapter } from "@auth/fauna-adapter"
 // const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
 // const client = globalThis.fauna || new FaunaClient(opts)
 // if (process.env.NODE_ENV !== "production") globalThis.fauna = client
 // const adapter = FaunaAdapter(client)
 
 // // TypeORM
-// import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
-// const adapter = TypeORMLegacyAdapter({
+// import { TypeORMAdapter } from "@auth/typeorm-adapter"
+// const adapter = TypeORMAdapter({
 //   type: "sqlite",
 //   name: "next-auth-test-memory",
 //   database: "./typeorm/dev.db",
@@ -64,7 +65,7 @@ import WorkOS from "@auth/core/providers/workos"
 // })
 
 // // Supabase
-// import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+// import { SupabaseAdapter } from "@auth/supabase-adapter"
 // const adapter = SupabaseAdapter({
 //   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
@@ -94,9 +95,14 @@ export const authConfig: AuthConfig = {
       tenantId: process.env.AZURE_AD_TENANT_ID,
     }),
     AzureB2C({ clientId: process.env.AZURE_B2C_ID, clientSecret: process.env.AZURE_B2C_SECRET, issuer: process.env.AZURE_B2C_ISSUER }),
-    BeyondIdentity({ clientId: process.env.BEYOND_IDENTITY_CLIENT_ID, clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET, issuer: process.env.BEYOND_IDENTITY_ISSUER }),
+    BeyondIdentity({
+      clientId: process.env.BEYOND_IDENTITY_CLIENT_ID,
+      clientSecret: process.env.BEYOND_IDENTITY_CLIENT_SECRET,
+      issuer: process.env.BEYOND_IDENTITY_ISSUER,
+    }),
     BoxyHQSAML({ issuer: "https://jackson-demo.boxyhq.com", clientId: "tenant=boxyhq.com&product=saml-demo.boxyhq.com", clientSecret: "dummy" }),
     // Cognito({ clientId: process.env.COGNITO_ID, clientSecret: process.env.COGNITO_SECRET, issuer: process.env.COGNITO_ISSUER }),
+    Descope({ clientId: process.env.DESCOPE_ID, clientSecret: process.env.DESCOPE_SECRET }),
     Discord({ clientId: process.env.DISCORD_ID, clientSecret: process.env.DISCORD_SECRET }),
     DuendeIDS6({ clientId: "interactive.confidential", clientSecret: "secret", issuer: "https://demo.duendesoftware.com" }),
     Facebook({ clientId: process.env.FACEBOOK_ID, clientSecret: process.env.FACEBOOK_SECRET }),

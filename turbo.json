@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**/*"]
+      "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"]
     },
     "next-auth#build": {
       "dependsOn": ["^build"],
@@ -47,27 +47,27 @@
     "e2e": {
       "outputs": ["playwright-report/**"]
     },
-    "@next-auth/upstash-redis-adapter#test": {
+    "@auth/upstash-redis-adapter#test": {
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
     },
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/prisma-adapter#build",
         "@auth/sveltekit#build",
-        "@next-auth/dgraph-adapter#build",
-        "@next-auth/dynamodb-adapter#build",
-        "@next-auth/fauna-adapter#build",
-        "@next-auth/firebase-adapter#build",
-        "@next-auth/mikro-orm-adapter#build",
-        "@next-auth/mongodb-adapter#build",
-        "@next-auth/neo4j-adapter#build",
-        "@next-auth/pouchdb-adapter#build",
-        "@next-auth/prisma-adapter#build",
-        "@next-auth/sequelize-adapter#build",
-        "@next-auth/supabase-adapter#build",
-        "@next-auth/typeorm-legacy-adapter#build",
-        "@next-auth/upstash-redis-adapter#build",
-        "@next-auth/xata-adapter#build",
+        "@auth/dgraph-adapter#build",
+        "@auth/dynamodb-adapter#build",
+        "@auth/fauna-adapter#build",
+        "@auth/firebase-adapter#build",
+        "@auth/mikro-orm-adapter#build",
+        "@auth/mongodb-adapter#build",
+        "@auth/neo4j-adapter#build",
+        "@auth/pouchdb-adapter#build",
+        "@auth/sequelize-adapter#build",
+        "@auth/supabase-adapter#build",
+        "@auth/typeorm-adapter#build",
+        "@auth/upstash-redis-adapter#build",
+        "@auth/xata-adapter#build",
         "^build",
         "next-auth#build"
       ],
@@ -76,21 +76,21 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/prisma-adapter#build",
         "@auth/sveltekit#build",
-        "@next-auth/dgraph-adapter#build",
-        "@next-auth/dynamodb-adapter#build",
-        "@next-auth/fauna-adapter#build",
-        "@next-auth/firebase-adapter#build",
-        "@next-auth/mikro-orm-adapter#build",
-        "@next-auth/mongodb-adapter#build",
-        "@next-auth/neo4j-adapter#build",
-        "@next-auth/pouchdb-adapter#build",
-        "@next-auth/prisma-adapter#build",
-        "@next-auth/sequelize-adapter#build",
-        "@next-auth/supabase-adapter#build",
-        "@next-auth/typeorm-legacy-adapter#build",
-        "@next-auth/upstash-redis-adapter#build",
-        "@next-auth/xata-adapter#build",
+        "@auth/dgraph-adapter#build",
+        "@auth/dynamodb-adapter#build",
+        "@auth/fauna-adapter#build",
+        "@auth/firebase-adapter#build",
+        "@auth/mikro-orm-adapter#build",
+        "@auth/mongodb-adapter#build",
+        "@auth/neo4j-adapter#build",
+        "@auth/pouchdb-adapter#build",
+        "@auth/sequelize-adapter#build",
+        "@auth/supabase-adapter#build",
+        "@auth/typeorm-adapter#build",
+        "@auth/upstash-redis-adapter#build",
+        "@auth/xata-adapter#build",
         "^build",
         "next-auth#build"
       ],

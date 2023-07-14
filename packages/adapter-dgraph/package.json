@@ -1,19 +1,30 @@
 {
-  "name": "@next-auth/dgraph-adapter",
-  "version": "1.0.6",
-  "description": "Dgraph adapter for next-auth.",
+  "name": "@auth/dgraph-adapter",
+  "version": "1.0.0",
+  "description": "Dgraph adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Arnaud Derbey <arnaud@derbey.dev>",
-  "contributors": [],
-  "main": "dist/index.js",
-  "files": [
-    "dist",
-    "index.d.ts"
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
   ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -29,10 +40,6 @@
     "build": "tsc",
     "test": "./tests/test.sh"
   },
-  "peerDependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "next-auth": "^4"
-  },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
@@ -40,12 +47,12 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node-fetch": "^2.5.11",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*",
-    "ts-jest": "^27.0.3"
+    "ts-jest": "^27.0.3",
+    "undici": "5.22.1"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "node-fetch": "^2.6.1"
+    "@auth/core": "workspace:*",
+    "jsonwebtoken": "^8.5.1"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"

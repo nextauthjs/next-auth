@@ -1,8 +1,9 @@
 {
-  "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "isolatedModules": true,
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -18,6 +19,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "tests"
+    "*.js",
+    "*.d.ts",
   ]
 }
