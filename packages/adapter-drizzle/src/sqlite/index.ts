@@ -1,5 +1,4 @@
 import { integer, sqliteTable, text, primaryKey, BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
-import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import crypto from 'node:crypto'
 import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { eq, and } from "drizzle-orm"
@@ -144,26 +143,14 @@ export function SQLiteDrizzleAdapter(
       return account
     },
     getUserByAccount: (account) => {
-      const dbAccount =
-        client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
-          ).get()
+      const results = client
+        .select().from(accounts)
+        .leftJoin(users, eq(users.id, accounts.userId))
+        .where(
+          and(eq(accounts.provider, account.provider), eq(accounts.providerAccountId, account.providerAccountId))
+        ).get()
 
-      if (!dbAccount) return null
-
-      const user = client
-        .select()
-        .from(users)
-        .where(eq(users.id, dbAccount.userId))
-        .get()
-
-      return user
+      return results?.users ?? null
     },
     deleteSession: (sessionToken) => {
       return (
