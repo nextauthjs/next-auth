@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/mysql2"
 import { createPool } from "mysql2"
 import { users, accounts, sessions, verificationTokens, defaultSchema } from "../../../src/mysql"
 
-export const customUsersTable = mysqlTable("users", {
+const customUsersTable = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
@@ -14,7 +14,7 @@ export const customUsersTable = mysqlTable("users", {
   phone: varchar("phone", { length: 255 })
 })
 
-export const customAccountsTable = mysqlTable("accounts", {
+const customAccountsTable = mysqlTable("accounts", {
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -41,7 +41,7 @@ const poolConnection = createPool({
   database: "next-auth",
 })
 
-export { users, accounts, sessions, verificationTokens }
+export { customUsersTable, customAccountsTable, sessions, verificationTokens }
 export const db = drizzle(poolConnection, {
   schema: {
     ...defaultSchema,
