@@ -131,6 +131,11 @@ export default function AzureAD<P extends AzureADProfile>(
     name: "Azure Active Directory",
     type: "oidc",
     wellKnown: `${rest.issuer}}/.well-known/openid-configuration?appid=${options.clientId}`,
+    authorization: {
+      params: {
+        scope: 'openid profile email User.Read',
+      },
+    },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
       const response = await fetch(
