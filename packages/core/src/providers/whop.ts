@@ -83,11 +83,8 @@ export default function Whop<P extends WhopProfile>(
     type: 'oauth',
     authorization: {
       url: 'https://whop.com/oauth',
-      params: {
-        scope: 'openid',
-      },
     },
-    token: 'https://data.whop.com/api/v3/oauth/token',
+    token: 'https://api.whop.com/api/v3/oauth/token',
     userinfo: 'https://api.whop.com/api/v2/me',
     profile(profile) {
       return {
