@@ -265,9 +265,8 @@ export function DynamoDBAdapter(
       const data = await client.update({
         TableName,
         Key: {
-          // next-auth type is incorrect it should be Partial<AdapterUser> & {id: string} instead of just Partial<AdapterUser>
-          [pk]: `USER#${user.id as string}`,
-          [sk]: `USER#${user.id as string}`,
+          [pk]: `USER#${user.id}`,
+          [sk]: `USER#${user.id}`,
         },
         UpdateExpression,
         ExpressionAttributeNames,
