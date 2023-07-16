@@ -583,7 +583,6 @@ export type AuthAction =
 /** @internal */
 export interface InternalOptions<
   TProviderType = ProviderType,
-  WithVerificationToken = TProviderType extends "email" ? true : false
 > {
   providers: InternalProvider[]
   /**
@@ -603,9 +602,7 @@ export interface InternalOptions<
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter: WithVerificationToken extends true
-    ? Adapter<WithVerificationToken>
-    : Adapter<WithVerificationToken> | undefined
+  adapter?: Adapter
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string

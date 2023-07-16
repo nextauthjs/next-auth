@@ -1,6 +1,5 @@
 import { fromDate } from "../lib/utils"
 
-import type { Adapter } from "../../adapters"
 import type { InternalOptions } from "../types"
 import type { ResponseInternal } from ".."
 import type { Session } from "../.."
@@ -98,8 +97,9 @@ export default async function session(
     }
   } else {
     try {
+      // @ts-expect-error -- adapter is checked to be defined in `init`
       const { getSessionAndUser, deleteSession, updateSession } =
-        adapter as Adapter
+        adapter
       let userAndSession = await getSessionAndUser(sessionToken)
 
       // If session has expired, clean up the database

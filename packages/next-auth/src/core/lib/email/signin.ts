@@ -36,7 +36,8 @@ export default async function email(
       theme,
     }),
     // Save in database
-    adapter.createVerificationToken({
+    // @ts-expect-error -- adapter is checked to be defined in `init`
+    adapter.createVerificationToken?.({
       identifier,
       token: hashToken(token, options),
       expires,

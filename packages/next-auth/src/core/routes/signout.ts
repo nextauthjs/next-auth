@@ -1,4 +1,3 @@
-import type { Adapter } from "../../adapters"
 import type { InternalOptions } from "../types"
 import type { ResponseInternal } from ".."
 import type { SessionStore } from "../lib/cookie"
@@ -28,7 +27,8 @@ export default async function signout(params: {
     }
   } else {
     try {
-      const session = await (adapter as Adapter).deleteSession(sessionToken)
+      // @ts-expect-error -- adapter is checked to be defined in `init`
+      const session = await adapter.deleteSession(sessionToken)
       // Dispatch signout event
       // @ts-expect-error
       await events.signOut?.({ session })

@@ -12,6 +12,7 @@ export default async function getAdapterUserFromEmail({
   email: string
   adapter: InternalOptions<"email">["adapter"]
 }): Promise<AdapterUser> {
+  // @ts-expect-error -- adapter is checked to be defined in `init`
   const { getUserByEmail } = adapter
   const adapterUser = email ? await getUserByEmail(email) : null
   if (adapterUser) return adapterUser

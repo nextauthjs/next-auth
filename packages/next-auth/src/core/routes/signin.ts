@@ -57,7 +57,6 @@ export default async function signin(params: {
 
     const user = await getAdapterUserFromEmail({
       email,
-      // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       adapter: options.adapter,
     })
 

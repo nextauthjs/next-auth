@@ -220,7 +220,6 @@ export default async function callback(params: {
 
       const profile = await getAdapterUserFromEmail({
         email: identifier,
-        // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
         adapter,
       })
 
