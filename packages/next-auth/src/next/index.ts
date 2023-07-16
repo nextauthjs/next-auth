@@ -147,6 +147,16 @@ function NextAuth(
   return NextAuthApiHandler(...args)
 }
 
+//syntax sugar export for NextAuthRouteHandler
+export function NextAuthRoute(options: AuthOptions) {
+  return {
+    GET: async (req: NextRequest, ctx: { params: { nextauth: string[] } }) =>
+      NextAuthRouteHandler(req, ctx, options),
+    POST: async (req: NextRequest, ctx: { params: { nextauth: string[] } }) =>
+      NextAuthRouteHandler(req, ctx, options),
+  }
+}
+
 export default NextAuth
 
 let experimentalRSCWarningShown = false
