@@ -1,30 +1,33 @@
-import { runBasicTests } from "../../../../adapter-test"
-import { DrizzleAdapter } from "../../../src"
-import { db, customUsersTable, sessions, customAccountsTable, verificationTokens } from "./schema"
+import { runBasicTests } from "../../../adapter-test"
+import { DrizzleAdapter } from "../../src"
+import { db, sessions, verificationTokens, accounts, users } from './schema'
 import { eq, and } from "drizzle-orm"
 
 runBasicTests({
-
   adapter: DrizzleAdapter(db),
   db: {
     connect: async () => {
       await Promise.all([
         db.delete(sessions),
-        db.delete(customAccountsTable),
+        db.delete(accounts),
         db.delete(verificationTokens),
-        db.delete(customUsersTable),
+        db.delete(users),
       ])
     },
     disconnect: async () => {
       await Promise.all([
         db.delete(sessions),
-        db.delete(customAccountsTable),
+        db.delete(accounts),
         db.delete(verificationTokens),
-        db.delete(customUsersTable),
+        db.delete(users),
       ])
     },
     user: async (id) => {
-      const user = await db.select().from(customUsersTable).where(eq(customUsersTable.id, id)).then(res => res[0] ?? null)
+      const user = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, id))
+        .then(res => res[0] ?? null)
       return user
     },
     session: async (sessionToken) => {
@@ -38,10 +41,10 @@ runBasicTests({
     account: (provider_providerAccountId) => {
       const account = db
         .select()
-        .from(customAccountsTable)
+        .from(accounts)
         .where(
           eq(
-            customAccountsTable.providerAccountId,
+            accounts.providerAccountId,
             provider_providerAccountId.providerAccountId
           )
         ).then(res => res[0] ?? null)

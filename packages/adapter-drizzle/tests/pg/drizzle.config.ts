@@ -1,8 +1,8 @@
 import type { Config } from "drizzle-kit";
 
 export default {
-  schema: "./tests/pg/zero-config/schema.ts",
-  out: "./tests/pg/zero-config/.drizzle",
+  schema: "./tests/pg/schema.ts",
+  out: "./tests/pg/.drizzle",
   dbCredentials: {
     database: "nextauth",
     host: "nextauth",

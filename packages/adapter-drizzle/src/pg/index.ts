@@ -1,15 +1,16 @@
 import {
-  integer,
   timestamp,
   pgTable,
   text,
   primaryKey,
+  integer
 } from "drizzle-orm/pg-core"
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import { Adapter, AdapterAccount } from '@auth/core/adapters'
 import { and, eq } from "drizzle-orm"
 import crypto from 'node:crypto'
 
+/** @internal */
 export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -18,6 +19,7 @@ export const users = pgTable("users", {
   image: text("image"),
 })
 
+/** @internal */
 export const accounts = pgTable(
   "accounts",
   {
@@ -40,6 +42,7 @@ export const accounts = pgTable(
   })
 )
 
+/** @internal */
 export const sessions = pgTable("sessions", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
   userId: text("userId")
@@ -48,6 +51,7 @@ export const sessions = pgTable("sessions", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 })
 
+/** @internal */
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -60,21 +64,13 @@ export const verificationTokens = pgTable(
   })
 )
 
-export const defaultSchema = { users, accounts, sessions, verificationTokens }
-export type DefaultSchema = typeof defaultSchema
-interface CustomSchema extends DefaultSchema { }
+/** @internal */
+export const schema = { users, accounts, sessions, verificationTokens }
+export type DefaultSchema = typeof schema
 
-export function pgDrizzleAdapter(
-  client: PostgresJsDatabase<Record<string, never>>,
-  schema?: Partial<CustomSchema>
-): Adapter {
-  const { users, accounts, sessions, verificationTokens } = {
-    users: schema?.users ?? defaultSchema.users,
-    accounts: schema?.accounts ?? defaultSchema.accounts,
-    sessions: schema?.sessions ?? defaultSchema.sessions,
-    verificationTokens:
-      schema?.verificationTokens ?? defaultSchema.verificationTokens,
-  }
+/** @internal */
+export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never>>,): Adapter {
+
 
   return {
     createUser: async (data) => {
