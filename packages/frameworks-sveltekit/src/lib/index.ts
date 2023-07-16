@@ -216,7 +216,8 @@ export async function getSession(
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL("/auth/session", req.url)
+  const prefix = config.prefix ?? "/auth"
+  const url = new URL(prefix + "/session", req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
 
