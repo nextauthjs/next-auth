@@ -3,12 +3,12 @@ import {
   pgTable,
   text,
   primaryKey,
-  integer
+  integer,
 } from "drizzle-orm/pg-core"
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
-import { Adapter, AdapterAccount } from '@auth/core/adapters'
+import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { and, eq } from "drizzle-orm"
-import crypto from 'node:crypto'
+import crypto from "node:crypto"
 
 /** @internal */
 export const users = pgTable("users", {
@@ -69,9 +69,9 @@ export const schema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof schema
 
 /** @internal */
-export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never>>,): Adapter {
-
-
+export function pgDrizzleAdapter(
+  client: PostgresJsDatabase<Record<string, never>>
+): Adapter {
   return {
     createUser: async (data) => {
       return await client
@@ -88,13 +88,15 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
         .then((res) => res[0] ?? null)
     },
     getUserByEmail: async (data) => {
-      return await client.select()
+      return await client
+        .select()
         .from(users)
         .where(eq(users.email, data))
         .then((res) => res[0] ?? null)
     },
     createSession: async (data) => {
-      return await client.insert(sessions)
+      return await client
+        .insert(sessions)
         .values(data)
         .returning()
         .then((res) => res[0])
@@ -123,7 +125,8 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
         .then((res) => res[0])
     },
     updateSession: async (data) => {
-      return await client.update(sessions)
+      return await client
+        .update(sessions)
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
@@ -152,54 +155,53 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
       return account
     },
     getUserByAccount: async (account) => {
-      const dbAccount = await client
-        .select()
-        .from(accounts)
-        .where(
-          and(
-            eq(accounts.providerAccountId, account.providerAccountId),
-            eq(accounts.provider, account.provider)
+      const dbAccount =
+        (await client
+          .select()
+          .from(accounts)
+          .where(
+            and(
+              eq(accounts.providerAccountId, account.providerAccountId),
+              eq(accounts.provider, account.provider)
+            )
           )
-        )
-        .leftJoin(users, eq(accounts.userId, users.id))
-        .then((res) => res[0]) ?? null
+          .leftJoin(users, eq(accounts.userId, users.id))
+          .then((res) => res[0])) ?? null
 
       if (!dbAccount) {
         return null
       }
 
       return dbAccount.users
-
     },
     deleteSession: async (sessionToken) => {
       const session = await client
         .delete(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
         .returning()
-        .then(res => res[0] ?? null)
+        .then((res) => res[0] ?? null)
 
       return session
     },
     createVerificationToken: async (token) => {
-      return await client.insert(verificationTokens)
+      return await client
+        .insert(verificationTokens)
         .values(token)
         .returning()
         .then((res) => res[0])
     },
     useVerificationToken: async (token) => {
       try {
-        return (
-          await client
-            .delete(verificationTokens)
-            .where(
-              and(
-                eq(verificationTokens.identifier, token.identifier),
-                eq(verificationTokens.token, token.token)
-              )
+        return await client
+          .delete(verificationTokens)
+          .where(
+            and(
+              eq(verificationTokens.identifier, token.identifier),
+              eq(verificationTokens.token, token.token)
             )
-            .returning()
-            .then((res) => res[0] ?? null)
-        )
+          )
+          .returning()
+          .then((res) => res[0] ?? null)
       } catch (err) {
         throw new Error("No verification token found.")
       }
@@ -221,7 +223,7 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
           )
         )
         .returning()
-        .then(res => res[0] ?? null)
+        .then((res) => res[0] ?? null)
 
       return { provider, type, providerAccountId, userId }
     },

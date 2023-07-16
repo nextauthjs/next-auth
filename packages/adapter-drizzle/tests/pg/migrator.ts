@@ -1,8 +1,10 @@
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import { db } from "./schema";
+import { migrate } from "drizzle-orm/postgres-js/migrator"
+import { db } from "./schema"
 
 const migrator = async () => {
-  await migrate(db, { migrationsFolder: "./tests/pg/.drizzle" });
+  await migrate(db, { migrationsFolder: "./tests/pg/.drizzle" })
 }
 
-migrator().then(() => process.exit(0)).catch(() => process.exit(1))
+migrator()
+  .then(() => process.exit(0))
+  .catch(() => process.exit(1))

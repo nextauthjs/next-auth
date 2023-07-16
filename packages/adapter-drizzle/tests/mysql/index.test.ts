@@ -1,9 +1,8 @@
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
-import { db, sessions, verificationTokens, accounts, users } from './schema'
+import { db, sessions, verificationTokens, accounts, users } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"
-
 
 runBasicTests({
   adapter: DrizzleAdapter(db),
@@ -30,14 +29,15 @@ runBasicTests({
         .select()
         .from(users)
         .where(eq(users.id, id))
-        .then(res => res[0] ?? null)
+        .then((res) => res[0] ?? null)
       return user
     },
     session: async (sessionToken) => {
       const session = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken)).then(res => res[0] ?? null)
+        .where(eq(sessions.sessionToken, sessionToken))
+        .then((res) => res[0] ?? null)
 
       return session
     },
@@ -50,7 +50,8 @@ runBasicTests({
             accounts.providerAccountId,
             provider_providerAccountId.providerAccountId
           )
-        ).then(res => res[0] ?? null)
+        )
+        .then((res) => res[0] ?? null)
       return account
     },
     verificationToken: (identifier_token) =>
@@ -62,6 +63,7 @@ runBasicTests({
             eq(verificationTokens.token, identifier_token.token),
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
-        ).then(res => res[0]) ?? null,
+        )
+        .then((res) => res[0]) ?? null,
   },
 })

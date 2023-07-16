@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm"
-import crypto from 'node:crypto'
+import crypto from "node:crypto"
 import {
   int,
   timestamp,
@@ -15,7 +15,10 @@ export const users = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }).defaultNow(),
+  emailVerified: timestamp("emailVerified", {
+    mode: "date",
+    fsp: 3,
+  }).defaultNow(),
   image: varchar("image", { length: 255 }),
 })
 
@@ -26,7 +29,9 @@ export const accounts = mysqlTable(
     userId: varchar("userId", { length: 255 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
+    type: varchar("type", { length: 255 })
+      .$type<AdapterAccount["type"]>()
+      .notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
     refresh_token: varchar("refresh_token", { length: 255 }),
@@ -69,7 +74,8 @@ export const schema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof schema
 
 /** @internal */
-export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>>
+export function mySqlDrizzleAdapter(
+  client: MySql2Database<Record<string, never>>
 ): Adapter {
   return {
     createUser: async (data) => {
@@ -82,26 +88,26 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
         .from(users)
         .where(eq(users.id, id))
         .then((res) => res[0])
-
     },
     getUser: async (data) => {
-      const thing = await client
-        .select()
-        .from(users)
-        .where(eq(users.id, data))
-        .then((res) => res[0]) ?? null
+      const thing =
+        (await client
+          .select()
+          .from(users)
+          .where(eq(users.id, data))
+          .then((res) => res[0])) ?? null
 
       return thing
     },
     getUserByEmail: async (data) => {
-      const user = await client
-        .select()
-        .from(users)
-        .where(eq(users.email, data))
-        .then((res) => res[0]) ?? null
+      const user =
+        (await client
+          .select()
+          .from(users)
+          .where(eq(users.email, data))
+          .then((res) => res[0])) ?? null
 
       return user
-
     },
     createSession: async (data) => {
       await client.insert(sessions).values(data)
@@ -113,15 +119,16 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
         .then((res) => res[0])
     },
     getSessionAndUser: async (data) => {
-      const sessionAndUser = await client
-        .select({
-          session: sessions,
-          user: users,
-        })
-        .from(sessions)
-        .where(eq(sessions.sessionToken, data))
-        .innerJoin(users, eq(users.id, sessions.userId))
-        .then((res) => res[0]) ?? null
+      const sessionAndUser =
+        (await client
+          .select({
+            session: sessions,
+            user: users,
+          })
+          .from(sessions)
+          .where(eq(sessions.sessionToken, data))
+          .innerJoin(users, eq(users.id, sessions.userId))
+          .then((res) => res[0])) ?? null
 
       return sessionAndUser
     },
@@ -157,17 +164,18 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
         .then((res) => res[0])
     },
     getUserByAccount: async (account) => {
-      const dbAccount = await client
-        .select()
-        .from(accounts)
-        .where(
-          and(
-            eq(accounts.providerAccountId, account.providerAccountId),
-            eq(accounts.provider, account.provider)
+      const dbAccount =
+        (await client
+          .select()
+          .from(accounts)
+          .where(
+            and(
+              eq(accounts.providerAccountId, account.providerAccountId),
+              eq(accounts.provider, account.provider)
+            )
           )
-        )
-        .leftJoin(users, eq(accounts.userId, users.id))
-        .then((res) => res[0]) ?? null
+          .leftJoin(users, eq(accounts.userId, users.id))
+          .then((res) => res[0])) ?? null
 
       if (!dbAccount) {
         return null
@@ -176,11 +184,12 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
       return dbAccount.users
     },
     deleteSession: async (sessionToken) => {
-      const session = await client
-        .select()
-        .from(sessions)
-        .where(eq(sessions.sessionToken, sessionToken))
-        .then(res => res[0]) ?? null
+      const session =
+        (await client
+          .select()
+          .from(sessions)
+          .where(eq(sessions.sessionToken, sessionToken))
+          .then((res) => res[0])) ?? null
 
       await client
         .delete(sessions)
@@ -232,9 +241,7 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
         .where(eq(users.id, id))
         .then((res) => res[0] ?? null)
 
-      await client
-        .delete(users)
-        .where(eq(users.id, id))
+      await client.delete(users).where(eq(users.id, id))
 
       return user
     },

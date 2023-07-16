@@ -245,7 +245,9 @@ import { SQLiteDrizzleAdapter } from "./sqlite"
  * ---
  *
  **/
-export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(db: SqlFlavor,): Adapter {
+export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
+  db: SqlFlavor
+): Adapter {
   if (isMySqlDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
     return mySqlDrizzleAdapter(db)

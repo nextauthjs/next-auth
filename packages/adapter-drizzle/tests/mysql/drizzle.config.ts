@@ -1,4 +1,4 @@
-import type { Config } from "drizzle-kit";
+import type { Config } from "drizzle-kit"
 
 export default {
   schema: "./tests/mysql/schema.ts",
@@ -9,5 +9,5 @@ export default {
     user: "root",
     password: "password",
     database: "next-auth",
-  }
-} satisfies Config;
+  },
+} satisfies Config

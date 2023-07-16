@@ -1,5 +1,11 @@
-import { integer, sqliteTable, text, primaryKey, BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
-import crypto from 'node:crypto'
+import {
+  integer,
+  sqliteTable,
+  text,
+  primaryKey,
+  BaseSQLiteDatabase,
+} from "drizzle-orm/sqlite-core"
+import crypto from "node:crypto"
 import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { eq, and } from "drizzle-orm"
 
@@ -57,13 +63,14 @@ export const verificationTokens = sqliteTable(
   })
 )
 
-
 /** @internal */
 export const schema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof schema
 
 /** @internal */
-export function SQLiteDrizzleAdapter(client: BaseSQLiteDatabase<any, any>,): Adapter {
+export function SQLiteDrizzleAdapter(
+  client: BaseSQLiteDatabase<any, any>
+): Adapter {
   return {
     createUser: (data) => {
       return client
@@ -139,11 +146,16 @@ export function SQLiteDrizzleAdapter(client: BaseSQLiteDatabase<any, any>,): Ada
     },
     getUserByAccount: (account) => {
       const results = client
-        .select().from(accounts)
+        .select()
+        .from(accounts)
         .leftJoin(users, eq(users.id, accounts.userId))
         .where(
-          and(eq(accounts.provider, account.provider), eq(accounts.providerAccountId, account.providerAccountId))
-        ).get()
+          and(
+            eq(accounts.provider, account.provider),
+            eq(accounts.providerAccountId, account.providerAccountId)
+          )
+        )
+        .get()
 
       return results?.users ?? null
     },

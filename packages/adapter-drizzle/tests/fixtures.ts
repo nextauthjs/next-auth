@@ -15,13 +15,12 @@ const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 const ONE_MONTH_FROM_NOW = new Date(Date.now() + ONE_MONTH)
 ONE_MONTH_FROM_NOW.setMilliseconds(0)
 
-
 export const fixtures = {
   user: {
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
-    emailVerified
+    emailVerified,
   },
   session: {
     sessionToken: randomUUID(),
@@ -40,5 +39,5 @@ export const fixtures = {
     token_type: "bearer",
     scope: "user",
     session_state: randomUUID(),
-  }
+  },
 }

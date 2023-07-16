@@ -20,8 +20,7 @@ export type SqlFlavorOptions =
   | AnyPgDatabase
   | AnySQLiteDatabase
 
-export type ClientFlavors<Flavor> =
-  Flavor extends AnyMySqlDatabase
+export type ClientFlavors<Flavor> = Flavor extends AnyMySqlDatabase
   ? MinimumSchema["mysql"]
   : Flavor extends AnyPgDatabase
   ? MinimumSchema["pg"]
@@ -29,7 +28,9 @@ export type ClientFlavors<Flavor> =
   ? MinimumSchema["sqlite"]
   : never
 
-export function isMySqlDatabase(db: any): db is MySqlDatabase<any, any, any, any> {
+export function isMySqlDatabase(
+  db: any
+): db is MySqlDatabase<any, any, any, any> {
   return db instanceof MySqlDatabase
 }
 
