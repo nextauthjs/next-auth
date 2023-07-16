@@ -3,6 +3,7 @@ import crypto from 'node:crypto'
 import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { eq, and } from "drizzle-orm"
 
+/** @internal */
 export const users = sqliteTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -11,6 +12,7 @@ export const users = sqliteTable("users", {
   image: text("image"),
 })
 
+/** @internal */
 export const accounts = sqliteTable(
   "accounts",
   {
@@ -33,6 +35,7 @@ export const accounts = sqliteTable(
   })
 )
 
+/** @internal */
 export const sessions = sqliteTable("sessions", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
   userId: text("userId")
@@ -41,6 +44,7 @@ export const sessions = sqliteTable("sessions", {
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 })
 
+/** @internal */
 export const verificationTokens = sqliteTable(
   "verificationToken",
   {
@@ -53,22 +57,13 @@ export const verificationTokens = sqliteTable(
   })
 )
 
-export const defaultSchema = { users, accounts, sessions, verificationTokens }
-export type DefaultSchema = typeof defaultSchema
-interface CustomSchema extends DefaultSchema { }
 
-export function SQLiteDrizzleAdapter(
-  client: BaseSQLiteDatabase<any, any>,
-  schema?: Partial<CustomSchema>
-): Adapter {
-  const { users, accounts, sessions, verificationTokens } = {
-    users: schema?.users ?? defaultSchema.users,
-    accounts: schema?.accounts ?? defaultSchema.accounts,
-    sessions: schema?.sessions ?? defaultSchema.sessions,
-    verificationTokens:
-      schema?.verificationTokens ?? defaultSchema.verificationTokens,
-  }
+/** @internal */
+export const schema = { users, accounts, sessions, verificationTokens }
+export type DefaultSchema = typeof schema
 
+/** @internal */
+export function SQLiteDrizzleAdapter(client: BaseSQLiteDatabase<any, any>,): Adapter {
   return {
     createUser: (data) => {
       return client

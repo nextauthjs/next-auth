@@ -406,8 +406,8 @@ importers:
         specifier: ^8.4.0
         version: 8.4.0
       drizzle-kit:
-        specifier: ^0.19.2
-        version: 0.19.2
+        specifier: ^0.19.5
+        version: 0.19.5
       drizzle-orm:
         specifier: ^0.27.0
         version: 0.27.0(@types/better-sqlite3@7.6.4)(better-sqlite3@8.4.0)(mysql2@3.3.2)(postgres@3.3.4)
@@ -5346,6 +5346,10 @@ packages:
       - supports-color
       - uglify-js
       - webpack-cli
+    dev: true
+
+  /@drizzle-team/studio@0.0.1:
+    resolution: {integrity: sha512-cHgGezy2ojBFMaU6PZyBkksgFsg2CQ8IRN4mS7WdbA/Zv6xUK6fCNmpEWS/FftbxoA4B8Z0XGnuKsaTJEZsGgA==}
     dev: true
 
   /@edge-runtime/jest-environment@1.1.0-beta.35:
@@ -15189,10 +15193,11 @@ packages:
       wordwrap: 1.0.0
     dev: true
 
-  /drizzle-kit@0.19.2:
-    resolution: {integrity: sha512-o+T/+Xc6hlLj2ocvGEo3kyWgTIAFjmsVK/HdBjU7gmbolmFZHv6T3lhaAsAD4mWfOX69uC7IggCmIqLq+zcM4Q==}
+  /drizzle-kit@0.19.5:
+    resolution: {integrity: sha512-eX+M4QpPLbbZwLUamCxRhS9Y98ppZLk3jew2FghKoAr7bGEC3omFIm+YPiwtrhe/alZZgrJCn/1TDTRHwo1r9w==}
     hasBin: true
     dependencies:
+      '@drizzle-team/studio': 0.0.1
       '@esbuild-kit/esm-loader': 2.5.5
       camelcase: 7.0.1
       chalk: 5.2.0
