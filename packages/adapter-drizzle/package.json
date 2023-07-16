@@ -20,18 +20,6 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
-    },
-    "./mysql": {
-      "types": "./mysql/index.d.ts",
-      "import": "./mysql/index.js"
-    },
-    "./pg": {
-      "types": "./pg/index.d.ts",
-      "import": "./pg/index.js"
-    },
-    "./sqlite": {
-      "types": "./sqlite/index.d.ts",
-      "import": "./sqlite/index.js"
     }
   },
   "license": "ISC",
