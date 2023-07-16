@@ -1,6 +1,5 @@
 # Misc
 .DS_Store
-.npmrc
 .eslintcache
 .env
 .env.local
@@ -12,8 +11,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log
+ui-debug.log
 .pnpm-debug.log
-
+.husky
 
 # Dependencies
 node_modules
@@ -34,18 +34,17 @@ packages/next-auth/utils
 packages/next-auth/core
 packages/next-auth/jwt
 packages/next-auth/react
-packages/next-auth/adapters.d.ts
-packages/next-auth/adapters.js
-packages/next-auth/index.d.ts
-packages/next-auth/index.js
 packages/next-auth/next
-packages/next-auth/middleware.d.ts
-packages/next-auth/middleware.js
+packages/*/*.js
+packages/*/*.d.ts
+packages/*/*.d.ts.map
+packages/*/lib
 
 # Development app
 apps/dev/src/css
 apps/dev/prisma/migrations
 apps/dev/typeorm
+apps/dev/nextjs-2
 
 # VS
 /.vs/slnx.sqlite-journal
@@ -81,14 +80,12 @@ docs/.docusaurus
 docs/providers.json
 
 # Core
-packages/core/*.js
-packages/core/*.d.ts
-packages/core/*.d.ts.map
+packages/core/src/providers/oauth-types.ts
 packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
-docs/docs/reference/03-core
-docs/docs/reference/04-sveltekit
+docs/docs/reference/core
+docs/docs/reference/sveltekit
 
 
 # SvelteKit
@@ -98,3 +95,7 @@ packages/frameworks-sveltekit/.svelte-kit
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
+
+# Adapters
+
+docs/docs/reference/adapter

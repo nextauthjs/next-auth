@@ -1,7 +1,7 @@
 import emailSignin from "../email/signin.js"
 import { SignInError } from "../../errors.js"
 import { getAuthorizationUrl } from "../oauth/authorization-url.js"
-import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
+import { handleAuthorized } from "./shared.js"
 
 import type {
   Account,
@@ -18,7 +18,7 @@ import type {
 export async function signin(
   query: RequestInternal["query"],
   body: RequestInternal["body"],
-  options: InternalOptions<"oauth" | "email">
+  options: InternalOptions<"oauth" | "oidc" | "email">
 ): Promise<ResponseInternal> {
   const { url, logger, provider } = options
   try {
@@ -28,8 +28,11 @@ export async function signin(
       const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
       const email = normalizer(body?.email)
 
-      // @ts-expect-error -- Verified in `assertConfig`
-      const user = await getAdapterUserFromEmail(email, options.adapter)
+      const user = (await options.adapter!.getUserByEmail(email)) ?? {
+        id: email,
+        email,
+        emailVerified: null,
+      }
 
       const account: Account = {
         providerAccountId: email,
@@ -52,9 +55,10 @@ export async function signin(
   } catch (e) {
     const error = new SignInError(e as Error, { provider: provider.id })
     logger.error(error)
-    url.searchParams.set("error", error.name)
-    url.pathname += "/error"
-    return { redirect: url }
+    const code = provider.type === "email" ? "EmailSignin" : "OAuthSignin"
+    url.searchParams.set("error", code)
+    url.pathname += "/signin"
+    return { redirect: url.toString() }
   }
 }
 

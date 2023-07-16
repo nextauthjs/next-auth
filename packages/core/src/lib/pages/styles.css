@@ -15,7 +15,7 @@
   --color-control-border: #bbb;
   --color-button-active-background: #f9f9f9;
   --color-button-active-border: #aaa;
-  --color-seperator: #ccc;
+  --color-separator: #ccc;
 }
 
 .__next-auth-theme-dark {
@@ -26,7 +26,7 @@
   --color-control-border: #555;
   --color-button-active-background: #060606;
   --color-button-active-border: #666;
-  --color-seperator: #444;
+  --color-separator: #444;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,7 +38,7 @@
     --color-control-border: #555;
     --color-button-active-background: #060606;
     --color-button-active-border: #666;
-    --color-seperator: #444;
+    --color-separator: #444;
   }
 }
 
@@ -218,7 +218,7 @@ a.site {
   hr {
     display: block;
     border: 0;
-    border-top: 1px solid var(--color-seperator);
+    border-top: 1px solid var(--color-separator);
     margin: 2rem auto 1rem auto;
     overflow: visible;
 

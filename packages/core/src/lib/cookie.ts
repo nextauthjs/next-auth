@@ -1,9 +1,4 @@
-import type {
-  CookieOption,
-  CookiesOptions,
-  LoggerInstance,
-  SessionStrategy,
-} from "../types.js"
+import type { CookieOption, CookiesOptions, LoggerInstance } from "../types.js"
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie
@@ -41,7 +36,7 @@ export type SetCookieOptions = Partial<CookieOption["options"]> & {
  * If `options.session.strategy` is set to `jwt`, this is a stringified `JWT`.
  * In case of `strategy: "database"`, this is the `sessionToken` of the session in the database.
  */
-export type SessionToken<T extends SessionStrategy = "jwt"> = T extends "jwt"
+export type SessionToken<T extends "jwt" | "database" = "jwt"> = T extends "jwt"
   ? JWTString
   : string
 
@@ -164,8 +159,17 @@ export class SessionStore {
    * The JWT Session or database Session ID
    * constructed from the cookie chunks.
    */
-  get value() {
-    return Object.values(this.#chunks)?.join("")
+   get value() {
+    // Sort the chunks by their keys before joining
+    const sortedKeys = Object.keys(this.#chunks).sort((a, b) => {
+      const aSuffix = parseInt(a.split(".")[1] || "0");
+      const bSuffix = parseInt(b.split(".")[1] || "0");
+  
+      return aSuffix - bSuffix;
+    });
+  
+    // Use the sorted keys to join the chunks in the correct order
+    return sortedKeys.map(key => this.#chunks[key]).join("");
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */

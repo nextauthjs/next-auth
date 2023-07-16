@@ -1,6 +1,18 @@
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
 
+const requiredMethods = [
+  "createUser",
+  "getUser",
+  "getUserByEmail",
+  "getUserByAccount",
+  "updateUser",
+  "linkAccount",
+  "createSession",
+  "getSessionAndUser",
+  "updateSession",
+  "deleteSession",
+]
 export interface TestOptions {
   adapter: Adapter
   db: {
@@ -31,21 +43,23 @@ export interface TestOptions {
      */
     verificationToken: (params: { identifier: string; token: string }) => any
   }
+  skipTests?: string[]
 }
-
+const testIf = (condition: boolean) => (condition ? test : test.skip)
 /**
  * A wrapper to run the most basic tests.
  * Run this at the top of your test file.
  * You can add additional tests below, if you wish.
  */
-export function runBasicTests(options: TestOptions) {
+export async function runBasicTests(options: TestOptions) {
   const id = options.db.id ?? randomUUID
   // Init
   beforeAll(async () => {
     await options.db.connect?.()
   })
 
-  const { adapter, db } = options
+  const { adapter: _adapter, db, skipTests } = options
+  const adapter = _adapter as Required<Adapter>
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
@@ -75,7 +89,7 @@ export function runBasicTests(options: TestOptions) {
     providerAccountId: randomUUID(),
     type: "oauth",
     access_token: randomUUID(),
-    expires_at: ONE_MONTH,
+    expires_at: ONE_MONTH / 1000,
     id_token: randomUUID(),
     refresh_token: randomUUID(),
     token_type: "bearer",
@@ -287,7 +301,7 @@ export function runBasicTests(options: TestOptions) {
     expect(dbAccount).toBeNull()
   })
 
-  test("deleteUser", async () => {
+  testIf(!skipTests?.includes("deleteUser"))("deleteUser", async () => {
     let dbUser = await db.user(user.id)
     expect(dbUser).toEqual(user)
 

@@ -32,10 +32,12 @@ body:
         - "Azure Active Directory"
         - "Azure Active Directory B2C"
         - "Battlenet"
+        - "Beyond Identity"
         - "Box"
         - "Bungie"
         - "Cognito"
         - "Coinbase"
+        - "Descope"
         - "Discord"
         - "Dropbox"
         - "EVE Online"
@@ -58,6 +60,7 @@ body:
         - "Medium"
         - "Naver"
         - "Netlify"
+        - "Notion"
         - "Okta"
         - "OneLogin"
         - "Osso"
@@ -88,7 +91,7 @@ body:
         Run this command in your project's root folder and paste the result:
 
         ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth"
+        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth,@auth/*"
         ```
         Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
     validations:

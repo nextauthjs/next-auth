@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.2.5",
+  "version": "0.9.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -27,7 +27,7 @@
   "types": "./index.d.ts",
   "files": [
     "*.js",
-    "*.d.ts",
+    "*.d.ts*",
     "lib",
     "providers",
     "src"
@@ -61,7 +61,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@panva/hkdf": "^1.0.2",
+    "@panva/hkdf": "^1.0.4",
     "cookie": "0.5.0",
     "jose": "^4.11.1",
     "oauth4webapi": "^2.0.6",
@@ -69,7 +69,7 @@
     "preact-render-to-string": "5.2.3"
   },
   "peerDependencies": {
-    "nodemailer": "6.8.0"
+    "nodemailer": "^6.8.0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
@@ -77,17 +77,18 @@
     }
   },
   "scripts": {
-    "build": "pnpm css && tsc",
+    "build": "pnpm css && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
-    "dev": "pnpm css && tsc -w"
+    "dev": "pnpm css && pnpm providers && tsc -w",
+    "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
     "@next-auth/tsconfig": "workspace:*",
     "@types/cookie": "0.5.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
-    "@types/react": "18.0.26",
+    "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
     "postcss-nested": "6.0.0"

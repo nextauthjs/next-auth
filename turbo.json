@@ -2,7 +2,8 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"]
     },
     "next-auth#build": {
       "dependsOn": ["^build"],
@@ -14,16 +15,25 @@
         "next/**",
         "providers/**",
         "react/**",
-        "index.d.ts",
-        "index.js",
-        "adapters.d.ts",
-        "middleware.d.ts",
-        "middleware.js"
+        "*.js",
+        "*.d.ts"
       ]
     },
     "@auth/core#build": {
       "dependsOn": ["^build"],
-      "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
+      "outputs": [
+        "lib/**",
+        "providers/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/pages/styles.ts",
+        "src/providers/oauth-types.ts"
+      ]
+    },
+    "@auth/sveltekit#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".svelte-kit/**", "client.*", "index.*"]
     },
     "clean": {
       "cache": false
@@ -37,8 +47,60 @@
     "e2e": {
       "outputs": ["playwright-report/**"]
     },
-    "@next-auth/upstash-redis-adapter#test": {
+    "@auth/upstash-redis-adapter#test": {
       "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
+    },
+    "docs#dev": {
+      "dependsOn": [
+        "@auth/core#build",
+        "@auth/prisma-adapter#build",
+        "@auth/sveltekit#build",
+        "@auth/dgraph-adapter#build",
+        "@auth/dynamodb-adapter#build",
+        "@auth/fauna-adapter#build",
+        "@auth/firebase-adapter#build",
+        "@auth/mikro-orm-adapter#build",
+        "@auth/mongodb-adapter#build",
+        "@auth/neo4j-adapter#build",
+        "@auth/pouchdb-adapter#build",
+        "@auth/sequelize-adapter#build",
+        "@auth/supabase-adapter#build",
+        "@auth/typeorm-adapter#build",
+        "@auth/upstash-redis-adapter#build",
+        "@auth/xata-adapter#build",
+        "^build",
+        "next-auth#build"
+      ],
+      "cache": false
+    },
+    "docs#build": {
+      "dependsOn": [
+        "@auth/core#build",
+        "@auth/prisma-adapter#build",
+        "@auth/sveltekit#build",
+        "@auth/dgraph-adapter#build",
+        "@auth/dynamodb-adapter#build",
+        "@auth/fauna-adapter#build",
+        "@auth/firebase-adapter#build",
+        "@auth/mikro-orm-adapter#build",
+        "@auth/mongodb-adapter#build",
+        "@auth/neo4j-adapter#build",
+        "@auth/pouchdb-adapter#build",
+        "@auth/sequelize-adapter#build",
+        "@auth/supabase-adapter#build",
+        "@auth/typeorm-adapter#build",
+        "@auth/upstash-redis-adapter#build",
+        "@auth/xata-adapter#build",
+        "^build",
+        "next-auth#build"
+      ],
+      "outputs": [
+        ".docusaurus/**/*",
+        "build/**/*",
+        "docs/reference/core/**/*",
+        "docs/reference/sveltekit/**/*",
+        "docs/reference/adapter/**"
+      ]
     }
   }
 }

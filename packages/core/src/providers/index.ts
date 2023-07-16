@@ -4,11 +4,8 @@ import type {
   CredentialsConfig,
   CredentialsProviderType,
 } from "./credentials.js"
-import type {
-  Email as EmailProvider,
-  EmailConfig,
-  EmailProviderType,
-} from "./email.js"
+import type EmailProvider from "./email.js"
+import type { EmailConfig, EmailProviderType } from "./email.js"
 import type {
   OAuth2Config,
   OAuthConfig,
@@ -47,6 +44,12 @@ export interface CommonProviderOptions {
   type: ProviderType
 }
 
+interface InternalProviderOptions {
+  /** Used to deep merge user-provided config with the default config
+   */
+  options?: Record<string, unknown>
+}
+
 /**
  * Must be a supported authentication provider config:
  * - {@link OAuthConfig}
@@ -59,18 +62,19 @@ export interface CommonProviderOptions {
  * @see [Email (Passwordless) guide](https://authjs.dev/guides/providers/email)
  * @see [Credentials guide](https://authjs.dev/guides/providers/credentials)
  */
-export type Provider<P extends Profile = Profile> = (
-  | OIDCConfig<P>
-  | OAuth2Config<P>
-  | EmailConfig
-  | CredentialsConfig
-) & {
-  options: Record<string, unknown>
-}
+export type Provider<P extends Profile = any> = (
+  | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig) &
+      InternalProviderOptions)
+  | ((
+      ...args: any
+    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig) &
+      InternalProviderOptions)
+) &
+  InternalProviderOptions
 
 export type BuiltInProviders = Record<
   OAuthProviderType,
-  (options: Partial<OAuthConfig<any>>) => OAuthConfig<any>
+  (config: Partial<OAuthConfig<any>>) => OAuthConfig<any>
 > &
   Record<CredentialsProviderType, typeof CredentialsProvider> &
   Record<EmailProviderType, typeof EmailProvider>

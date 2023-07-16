@@ -1,5 +1,4 @@
 import { UnknownAction } from "../errors.js"
-import { skipCSRFCheck } from "../index.js"
 import { SessionStore } from "./cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
@@ -12,6 +11,7 @@ import type {
   ResponseInternal,
 } from "../types.js"
 
+/** @internal */
 export async function AuthInternal<
   Body extends string | Record<string, any> | any[]
 >(
@@ -47,7 +47,7 @@ export async function AuthInternal<
       case "providers":
         return (await routes.providers(options.providers)) as any
       case "session": {
-        const session = await routes.session(sessionStore, options)
+        const session = await routes.session({ sessionStore, options })
         if (session.cookies) cookies.push(...session.cookies)
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
@@ -72,9 +72,9 @@ export async function AuthInternal<
         if (pages.signIn) {
           let signinUrl = `${pages.signIn}${
             pages.signIn.includes("?") ? "&" : "?"
-          }callbackUrl=${encodeURIComponent(options.callbackUrl)}`
+          }${new URLSearchParams({ callbackUrl: options.callbackUrl })}`
           if (error)
-            signinUrl = `${signinUrl}&error=${encodeURIComponent(error)}`
+            signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
           return { redirect: signinUrl, cookies }
         }
 
@@ -110,14 +110,10 @@ export async function AuthInternal<
         if (
           [
             "Signin",
-            "OAuthSignin",
-            "OAuthCallback",
             "OAuthCreateAccount",
             "EmailCreateAccount",
             "Callback",
             "OAuthAccountNotLinked",
-            "EmailSignin",
-            "CredentialsSignin",
             "SessionRequired",
           ].includes(error as string)
         ) {
@@ -181,8 +177,35 @@ export async function AuthInternal<
           return { ...callback, cookies }
         }
         break
+      case "session": {
+        if (options.csrfTokenVerified) {
+          const session = await routes.session({
+            options,
+            sessionStore,
+            newSession: request.body?.data,
+            isUpdate: true,
+          })
+          if (session.cookies) cookies.push(...session.cookies)
+          return { ...session, cookies } as any
+        }
+
+        // If CSRF token is invalid, return a 400 status code
+        // we should not redirect to a page as this is an API route
+        return { status: 400, cookies }
+      }
       default:
     }
   }
   throw new UnknownAction(`Cannot handle action: ${action}`)
 }
+
+/**
+ * :::danger
+ * This option is intended for framework authors.
+ * :::
+ *
+ * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
+ * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
+ * passing this value to {@link AuthConfig.skipCSRFCheck}.
+ */
+export const skipCSRFCheck = Symbol("skip-csrf-check")
