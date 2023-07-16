@@ -77,7 +77,7 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
 
       await client.insert(users).values({ ...data, id })
 
-      return client
+      return await client
         .select()
         .from(users)
         .where(eq(users.id, id))
@@ -106,7 +106,7 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
     createSession: async (data) => {
       await client.insert(sessions).values(data)
 
-      return client
+      return await client
         .select()
         .from(sessions)
         .where(eq(sessions.sessionToken, data.sessionToken))
@@ -132,7 +132,7 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
 
       await client.update(users).set(data).where(eq(users.id, data.id))
 
-      return client
+      return await client
         .select()
         .from(users)
         .where(eq(users.id, data.id))
@@ -144,7 +144,7 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
 
-      return client
+      return await client
         .select()
         .from(sessions)
         .where(eq(sessions.sessionToken, data.sessionToken))
@@ -191,7 +191,7 @@ export function mySqlDrizzleAdapter(client: MySql2Database<Record<string, never>
     createVerificationToken: async (token) => {
       await client.insert(verificationTokens).values(token)
 
-      return client
+      return await client
         .select()
         .from(verificationTokens)
         .where(eq(verificationTokens.identifier, token.identifier))

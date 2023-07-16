@@ -74,56 +74,48 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
 
   return {
     createUser: async (data) => {
-      return client
+      return await client
         .insert(users)
         .values({ ...data, id: crypto.randomUUID() })
         .returning()
         .then((res) => res[0] ?? null)
     },
     getUser: async (data) => {
-      return (
-        client
-          .select()
-          .from(users)
-          .where(eq(users.id, data))
-          .then((res) => res[0] ?? null)
-      )
+      return await client
+        .select()
+        .from(users)
+        .where(eq(users.id, data))
+        .then((res) => res[0] ?? null)
     },
     getUserByEmail: async (data) => {
-      return (
-        client
-          .select()
-          .from(users)
-          .where(eq(users.email, data))
-          .then((res) => res[0] ?? null)
-      )
+      return await client.select()
+        .from(users)
+        .where(eq(users.email, data))
+        .then((res) => res[0] ?? null)
     },
     createSession: async (data) => {
-      return client
-        .insert(sessions)
+      return await client.insert(sessions)
         .values(data)
         .returning()
         .then((res) => res[0])
     },
     getSessionAndUser: async (data) => {
-      return (
-        client
-          .select({
-            session: sessions,
-            user: users,
-          })
-          .from(sessions)
-          .where(eq(sessions.sessionToken, data))
-          .innerJoin(users, eq(users.id, sessions.userId))
-          .then((res) => res[0] ?? null)
-      )
+      return await client
+        .select({
+          session: sessions,
+          user: users,
+        })
+        .from(sessions)
+        .where(eq(sessions.sessionToken, data))
+        .innerJoin(users, eq(users.id, sessions.userId))
+        .then((res) => res[0] ?? null)
     },
     updateUser: async (data) => {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      return client
+      return await client
         .update(users)
         .set(data)
         .where(eq(users.id, data.id))
@@ -131,8 +123,7 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
         .then((res) => res[0])
     },
     updateSession: async (data) => {
-      return client
-        .update(sessions)
+      return await client.update(sessions)
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
@@ -190,8 +181,7 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
       return session
     },
     createVerificationToken: async (token) => {
-      return client
-        .insert(verificationTokens)
+      return await client.insert(verificationTokens)
         .values(token)
         .returning()
         .then((res) => res[0])
@@ -199,7 +189,7 @@ export function pgDrizzleAdapter(client: PostgresJsDatabase<Record<string, never
     useVerificationToken: async (token) => {
       try {
         return (
-          client
+          await client
             .delete(verificationTokens)
             .where(
               and(
