@@ -1,4 +1,4 @@
-import type { Config } from "drizzle-kit";
+import type { Config } from "drizzle-kit"
 
 export default {
   schema: "./tests/pg/schema.ts",
@@ -9,5 +9,5 @@ export default {
     user: "nextauth",
     password: "nextauth",
     port: 5432,
-  }
-} satisfies Config;
+  },
+} satisfies Config

@@ -1,6 +1,6 @@
 import { runBasicTests } from "../../../adapter-test"
 import { DrizzleAdapter } from "../../src"
-import { db, accounts, sessions, users, verificationTokens } from './schema'
+import { db, accounts, sessions, users, verificationTokens } from "./schema"
 import { eq, and } from "drizzle-orm"
 
 runBasicTests({
