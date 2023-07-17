@@ -1,5 +1,15 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
+export interface UserImage {
+  link: string | null
+  versions: {
+    large: string | null
+    medium: string | null
+    small: string | null
+    micro: string | null
+  }
+}
+
 export interface UserData {
   id: number
   email: string
@@ -11,7 +21,7 @@ export interface UserData {
   url: string
   phone: "hidden" | string | null
   displayname: string
-  image_url: string | null
+  image: UserImage
   "staff?": boolean
   correction_point: number
   pool_month: string | null
@@ -170,7 +180,7 @@ export default function FortyTwo<P extends FortyTwoProfile>(
         id: profile.id.toString(),
         name: profile.usual_full_name,
         email: profile.email,
-        image: profile.image_url,
+        image: profile.image?.link,
       }
     },
     options,
