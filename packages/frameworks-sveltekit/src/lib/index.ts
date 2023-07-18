@@ -211,12 +211,13 @@ import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export async function getSession(
   req: Request,
-  config: AuthConfig
+  config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["getSession"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL("/api/auth/session", req.url)
+  const prefix = config.prefix ?? "/auth"
+  const url = new URL(prefix + "/session", req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
 

@@ -72,6 +72,17 @@ export async function toInternalRequest(
   }
 }
 
+export function toRequest(request: RequestInternal): Request {
+  return new Request(request.url, {
+    headers: request.headers,
+    method: request.method,
+    body:
+      request.method === "POST"
+        ? JSON.stringify(request.body ?? {})
+        : undefined,
+  })
+}
+
 export function toResponse(res: ResponseInternal): Response {
   const headers = new Headers(res.headers)
 
