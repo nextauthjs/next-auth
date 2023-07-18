@@ -76,7 +76,7 @@
     "@auth/core": "workspace:experimental"
   },
   "peerDependencies": {
-    "next": "^13.4.7",
+    "next": "^13.4.10",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
@@ -87,7 +87,7 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
-    "next": "13.4.7",
+    "next": "13.4.10",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0",
     "typescript": "^4"
