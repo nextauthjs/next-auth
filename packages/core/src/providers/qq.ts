@@ -107,10 +107,7 @@ export default function TencentQQ<P extends TencentQQProfile>(
             new URLSearchParams({
               access_token: context.tokens.access_token || "",
               fmt: "json",
-            }),
-          {
-            method: "GET",
-          }
+            })
         )
         const openIDInfo = await response.json()
         const userInfoResponse = await fetch(
@@ -119,10 +116,7 @@ export default function TencentQQ<P extends TencentQQProfile>(
               access_token: context.tokens.access_token || "",
               oauth_consumer_key: openIDInfo.client_id,
               openid: openIDInfo.openid,
-            }),
-          {
-            method: "GET",
-          }
+            })
         )
         return { ...(await userInfoResponse.json()), openid: openIDInfo.openid }
       },
