@@ -211,7 +211,7 @@ import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export async function getSession(
   req: Request,
-  config: AuthConfig
+  config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["getSession"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
