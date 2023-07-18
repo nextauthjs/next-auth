@@ -72,7 +72,7 @@ export async function toInternalRequest(
   }
 }
 
-export function toStandardRequest(request: RequestInternal): Request {
+export function toRequest(request: RequestInternal): Request {
   return new Request(request.url, {
     headers: request.headers,
     method: request.method,

@@ -1,4 +1,4 @@
-import { createHash, randomString, toStandardRequest } from "../web.js"
+import { createHash, randomString, toRequest } from "../web.js"
 
 import type { InternalOptions, RequestInternal } from "../../types.js"
 /**
@@ -32,7 +32,7 @@ export default async function email(
       url: _url,
       provider,
       theme,
-      request: toStandardRequest(request),
+      request: toRequest(request),
     }),
     // @ts-expect-error -- Verified in `assertConfig`.
     adapter.createVerificationToken?.({
