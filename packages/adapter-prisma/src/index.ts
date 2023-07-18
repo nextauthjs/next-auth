@@ -21,7 +21,7 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 /**
  * ## Setup
  *
- * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
+ * Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object:
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"

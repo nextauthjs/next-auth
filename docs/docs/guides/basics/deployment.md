@@ -34,7 +34,7 @@ Most OAuth providers cannot be configured with multiple callback URLs or using a
 
 However, Auth.js **supports Preview deployments**, even **with OAuth providers**:
 
-1. Determine a stable deployment URL. Eg.: A deployment whose URL does not change between builds, for example. `auth.yourdomain.com`),
+1. Determine a stable deployment URL. Eg.: A deployment whose URL does not change between builds, for example. `auth.yourdomain.com` (using a subdomain is not a requirement, this can simply be the main site's URL too.),
 2. Set `AUTH_REDIRECT_PROXY_URL` to that URL, adding the path up until your `[...nextauth]` route. Eg.: (`https://auth.yourdomain.com/api/auth`)
 3. For your OAuth provider, set the callback URL using the stable deployment URL. Eg.: For GitHub `https://auth.yourdomain.com/api/auth/callback/github`)
 
@@ -42,6 +42,9 @@ However, Auth.js **supports Preview deployments**, even **with OAuth providers**
 To support preview deployments, the `AUTH_SECRET` value needs to be the same for the stable deployment and deployments that will need OAuth support.
 :::
 
+:::note
+If you are storing users in a [database](reference/adapters), we recommend using a different OAuth app for development/production so that you don't mix your test and production user base.
+:::
 
 <details>
 <summary>
