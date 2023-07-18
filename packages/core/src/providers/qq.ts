@@ -40,7 +40,7 @@ export interface TencentQQProfile extends Record<string, any> {
  *   providers: [
  *    TencentQQProvider({
  *      clientId: process.env.TENCENT_ID,
- *      clientSecret: process.env.TENCENT_APP_KEY,
+ *      clientSecret: process.env.TENCENT_SECRET,
  *    }),
  *   ],
  * })
