@@ -112,6 +112,7 @@ providers: [
       identifier: email,
       url,
       provider: { server, from },
+      request // for example can be used to get the user agent (`request.headers.get("user-agent")`) to parse and pass on to the user in the email so they can be more confident they originated the request
     }) {
       /* your function */
     },

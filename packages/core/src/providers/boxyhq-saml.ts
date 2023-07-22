@@ -20,7 +20,7 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
 /**
  * Add BoxyHQ SAML login to your page.
  *
- * BoxyHQ SAML is an open source service that handles the SAML login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol.
+ * BoxyHQ SAML is an open source service that handles the SAML SSO login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol. Enable Enterprise single-sign-on in your app with ease.
  *
  * You can deploy BoxyHQ SAML as a separate service or embed it into your app using our NPM library. [Check out the documentation for more details](https://boxyhq.com/docs/jackson/deploy)
  *
@@ -32,13 +32,38 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
+ * 
+ * For OAuth 2.0 Flow:
  *```js
  * import Auth from "@auth/core"
  * import BoxyHQ from "@auth/core/providers/boxyhq-saml"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BoxyHQ({ clientId: BOXYHQ_SAML_CLIENT_ID, clientSecret: BOXYHQ_SAML_CLIENT_SECRET. issuer: BOXYHQ_SAML_ISSUER })],
+ *   providers: [BoxyHQ({ 
+ *    authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+ *    clientId: BOXYHQ_SAML_CLIENT_ID, 
+ *    clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
+ *    issuer: BOXYHQ_SAML_ISSUER
+ *   })],
+ * })
+ * ```
+ * For OIDC Flow:
+ * 
+ *```js
+ * import Auth from "@auth/core"
+ * import BoxyHQ from "@auth/core/providers/boxyhq-saml"
+ *
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [BoxyHQ({ 
+ *    id: "boxyhq-saml-oidc",
+ *    wellKnown: `http://localhost:5225/.well-known/openid-configuration`,
+ *    authorization: { params: { scope: "openid email" } },
+ *    clientId: BOXYHQ_SAML_CLIENT_ID, 
+ *    clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
+ *    issuer: BOXYHQ_SAML_ISSUER
+ *   })],
  * })
  * ```
  *
