@@ -1,13 +1,14 @@
-import { createHash, randomString } from "../web.js"
+import { createHash, randomString, toRequest } from "../web.js"
 
-import type { InternalOptions } from "../../types.js"
+import type { InternalOptions, RequestInternal } from "../../types.js"
 /**
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)
  */
 export default async function email(
   identifier: string,
-  options: InternalOptions<"email">
+  options: InternalOptions<"email">,
+  request: RequestInternal
 ): Promise<string> {
   const { url, adapter, provider, callbackUrl, theme } = options
   const token =
@@ -31,6 +32,7 @@ export default async function email(
       url: _url,
       provider,
       theme,
+      request: toRequest(request),
     }),
     // @ts-expect-error -- Verified in `assertConfig`.
     adapter.createVerificationToken?.({
