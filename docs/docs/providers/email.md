@@ -252,3 +252,27 @@ By default, NextAuth.js will normalize the email address. It treats values as ca
 :::warning
 Always make sure this returns a single e-mail address, even if multiple ones were passed in.
 :::
+
+
+## Sending Magic Links To Existing Users
+
+You can ensure that only existing users are sent a magic login link. You will need to grab the email the user entered and check your database to see if the email already exists in the "User" collection in your database. If it exists, it will send the user a magic link but otherwise, you can send the user to another page, such as "/register". 
+
+  ```js title="pages/api/auth/[...nextauth].js"
+  import User from "../../../models/User"; 
+  import db from "../../../utils/db"; 
+  ...
+  callbacks: {
+    async signIn({ user, account, email }) { 
+      await db.connect(); 
+      const userExists = await User.findOne({ 
+        email: user.email,  //the user object has an email property, which contains the email the user entered.
+      });
+      if (userExists) {
+        return true;   //if the email exists in the User collection, email them a magic login link
+      } else {
+        return "/register"; 
+      }
+    },
+   ...
+  ``` 
