@@ -125,7 +125,7 @@ providers: [
       return user
     },
     credentials: {
-      email: { label: "Username", type: "text ", placeholder: "jsmith" },
+      username: { label: "Username", type: "text ", placeholder: "jsmith" },
       "2fa-key": { label: "2FA Key" },
     },
   }),
