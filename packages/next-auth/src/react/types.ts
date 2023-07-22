@@ -35,7 +35,7 @@ export interface SignInOptions extends Record<string, unknown> {
 }
 
 export interface SignInResponse {
-  error: string | undefined
+  error: string | null
   status: number
   ok: boolean
   url: string | null
