@@ -122,7 +122,7 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile
+  let profile: Profile = {} 
   let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
@@ -153,7 +153,8 @@ export async function handleOAuth(
     }
 
     if (userinfo?.request) {
-      profile = await userinfo.request({ tokens, provider })
+      const _profile = await userinfo.request({ tokens, provider })
+      if (_profile instanceof Object) profile = _profile
     } else if (userinfo?.url) {
       const userinfoResponse = await o.userInfoRequest(
         as,
