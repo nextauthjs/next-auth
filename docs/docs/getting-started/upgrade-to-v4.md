@@ -351,8 +351,8 @@ User {
   id
   name
   email
-- emailVerified
-+ email_verified
++ emailVerified
+- email_verified
   image
 -  created_at
 -  updated_at
