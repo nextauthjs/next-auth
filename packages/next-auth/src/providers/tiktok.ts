@@ -47,6 +47,7 @@ export default function Tiktok<P extends TiktokProfile>(
         response_type: "code",
       },
     },
+
     token: {
       async request({ checks, client, params, provider }) {
         const res = await fetch(`https://open.tiktokapis.com/v2/oauth/token/`, {
