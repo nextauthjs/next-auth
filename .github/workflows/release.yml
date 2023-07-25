@@ -56,6 +56,10 @@ on:
         - "adapter-upstash-redis"
         - "adapter-xata"
         - "next-auth"
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  FORCE_COLOR: true
 
 jobs:
   test:
@@ -81,8 +85,8 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          # TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          # TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e
