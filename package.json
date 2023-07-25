@@ -6,7 +6,7 @@
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
-    "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps",
+    "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps --summarize",
     "test": "turbo run test --concurrency=1 --summarize --filter=[HEAD^1] --filter=./packages/* --filter=!@*upstash* --filter=!*dynamodb-* --filter=!*app*",
     "clean": "turbo run clean --no-cache",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
