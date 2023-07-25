@@ -149,8 +149,6 @@ function NextAuth(
 
 export default NextAuth
 
-let experimentalRSCWarningShown = false
-
 type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
   callbacks?: Omit<AuthOptions["callbacks"], "session"> & {
     session?: (...args: Parameters<CallbacksOptions["session"]>) => any
@@ -170,19 +168,6 @@ export async function getServerSession<
     : Session
 >(...args: GetServerSessionParams<O>): Promise<R | null> {
   const isRSC = args.length === 0 || args.length === 1
-  if (
-    !experimentalRSCWarningShown &&
-    isRSC &&
-    process.env.NODE_ENV !== "production"
-  ) {
-    console.warn(
-      "[next-auth][warn][EXPERIMENTAL_API]",
-      "\n`getServerSession` is used in a React Server Component.",
-      `\nhttps://next-auth.js.org/configuration/nextjs#getServerSession}`,
-      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
-    )
-    experimentalRSCWarningShown = true
-  }
 
   let req, res, options: AuthOptions
   if (isRSC) {
