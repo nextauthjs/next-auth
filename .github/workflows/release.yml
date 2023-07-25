@@ -79,12 +79,20 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      # Reset changes so that Turbo can reuse the old build cache
+      - name: Reset changes
+        run: git reset --hard
       - name: Run tests
         run: pnpm test
         timeout-minutes: 15
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+      - name: Upload Turbo artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: turbo-report
+          path: next-auth/next-auth/.turbo/runs/
           # TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           # TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       # - name: Run E2E tests
