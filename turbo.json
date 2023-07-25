@@ -46,7 +46,6 @@
       "cache": false
     },
     "test": {
-      "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"],
       "outputMode": "new-only"
     },
     "e2e": {
