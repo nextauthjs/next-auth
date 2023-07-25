@@ -72,14 +72,17 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
   })
   config.useSecureCookies ??= origin.protocol === "https:"
 
-  // Since we are server-side, we don't need to filter out the session data
-  // See https://nextjs.authjs.dev/v5#authenticating-server-side
-  config.callbacks = Object.assign(config.callbacks ?? {}, {
-    session({ session, user, token }) {
-      return { ...session, user: user ?? token }
-    },
+  return Auth(request, {
+    ...config,
+    callbacks: {
+      ...config.callbacks,
+      // Since we are server-side, we don't need to filter out the session data
+      // See https://nextjs.authjs.dev/v5#authenticating-server-side
+      session({ session, user, token }) {
+        return { ...session, user: user ?? token }
+      },
+    }
   })
-  return Auth(request, config)
 }
 
 export interface NextAuthRequest extends NextRequest {
