@@ -16,10 +16,10 @@ import type {
  * For Email, sends an email with a sign in link.
  */
 export async function signin(
-  query: RequestInternal["query"],
-  body: RequestInternal["body"],
+  request: RequestInternal,
   options: InternalOptions<"oauth" | "oidc" | "email">
 ): Promise<ResponseInternal> {
+  const { query, body } = request
   const { url, logger, provider } = options
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
@@ -48,7 +48,7 @@ export async function signin(
 
       if (unauthorizedOrError) return unauthorizedOrError
 
-      const redirect = await emailSignin(email, options)
+      const redirect = await emailSignin(email, options, request)
       return { redirect }
     }
     return { redirect: `${url}/signin` }
