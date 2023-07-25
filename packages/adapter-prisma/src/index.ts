@@ -13,7 +13,6 @@
  * npm install prisma --save-dev
  * ```
  *
- * 
  * @module @auth/prisma-adapter
  */
 import type { PrismaClient, Prisma } from "@prisma/client"
