@@ -56,6 +56,8 @@ on:
         - "adapter-upstash-redis"
         - "adapter-xata"
         - "next-auth"
+env:
+  FORCE_COLOR: true
 
 jobs:
   test:
@@ -75,6 +77,11 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Build
+        run: pnpm build
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       - name: Run tests
         run: pnpm test
         timeout-minutes: 15
@@ -83,6 +90,11 @@ jobs:
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      - name: Upload Turbo artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: turbo-report
+          path: .turbo/runs/
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e
