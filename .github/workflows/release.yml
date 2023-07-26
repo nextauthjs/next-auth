@@ -8,6 +8,10 @@ on:
       - next
       - 3.x
   pull_request:
+    paths-ignore:
+      - ".vscode/**"
+      - "**/*.md"
+      - ".github/ISSUE_TEMPLATE/**"
   # TODO: Support latest releases
   workflow_dispatch:
     inputs:
