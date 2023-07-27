@@ -14,15 +14,15 @@ npm install next-auth@latest
 
 First, let's see what is new!
 
-- App Router-first (`pages/` still supported). Read the migration guide to learn more.
+- App Router-first (`pages/` still supported).
 - OAuth support on preview deployments: [Read more](/guides/basics/deployment#securing-a-preview-deployment).
-- Simplified init (shared config, inferred [env variables](/reference/nextjs#environment-variable-inferrence)). Read the migration guide to learn more.
+- Simplified set up (shared config, inferred [env variables](/reference/nextjs#environment-variable-inferrence)).
 - Fully Edge-compatible, thanks to rewriting on top of Auth.js. [Read more](/reference/core).
 - Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](#authenticating-server-side).
 
 ## Breaking Changes
 
-- NextAuth.js now builds on `@auth/core`, which means stricter OAuth spec-compliance is required.
+- NextAuth.js now builds on `@auth/core` with stricter [OAuth](https://www.ietf.org/rfc/rfc6749.html)/[OIDC](https://openid.net/specs/openid-connect-core-1_0.html) spec-compliance, which might break some existing OAuth providers. See #v5-TESTING-PROVIDERS-ISSUE for more details.
 - OAuth 1.0 support is deprecated.
 - Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
@@ -78,14 +78,14 @@ See the table below for a summary of the changes, and click on the links to lear
 | [Client Component](#client-component)     | `useSession()` hook                                   | `useSession()` hook              |
 | [Route Handler](/reference/nextjs#in-route-handlers)           | _Previously not supported_                            | `auth()` wrapper                 |
 | [API Route (Edge)](/reference/nextjs#in-edge-api-routes)       | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| [API Route (Node)](#api-route-node)       | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| [API Route (Node.js)](#api-route-node)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [API Route (Node.js)](#api-route-node)       | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
 | [getServerSideProps](#getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
 | [getServerSideProps](#getserversideprops) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
 
 
 
-### API Route (Node)
+### API Route (Node.js)
 
 Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
 
@@ -94,8 +94,9 @@ Instead of importing `getServerSession` from `next-auth/next` or `getToken` from
 - import { getToken } from "next-auth/jwt"
 - import { authOptions } from 'pages/api/auth/[...nextauth]'
 + import { auth } from "../auth"
++ import { NextApiRequest, NextApiResponse } from "next"
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 -  const session = await getServerSession(req, res, authOptions)
 -  const token = await getToken({ req })
 +  const session = await auth(req, res)
@@ -106,6 +107,7 @@ export default async function handler(req, res) {
 
 :::tip
 Whenever `auth()` is passed the res object, it will rotate the session expiry. This was not the case with `getToken()` previously.
+The default session expiry is 30 days, but you can change it by setting `authOptions.session.maxAge`.
 :::
 
 ### `getServerSideProps`
@@ -195,7 +197,7 @@ Example:
 + npm install @auth/prisma-adapter
 ```
 
-Check out the [Adapters docs](/reference/adapters) for a list of official adapters, or the the [Create a database adapter](/guides/adapters/creating-a-database-adapter) guide to learn how to create your own.
+Check out the [Adapters docs](/reference/adapters) for a list of official adapters, or the [Create a database adapter](/guides/adapters/creating-a-database-adapter) guide to learn how to create your own.
 
 ### Adapter type
 

@@ -17,7 +17,7 @@ Continue to our tutorials to see how to use Auth.js for authentication:
 - [Setup with magic links](/getting-started/email-tutorial)
 - [Integrating with external auth](/getting-started/credentials-tutorial)
 
-### Battery included
+### Features
 
 - Built in support for 60+ popular services (Google, Facebook, Auth0, Apple…)
 - Built-in email/password-less/magic link
