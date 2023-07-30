@@ -109,6 +109,10 @@
  * AUTH_GITHUB_SECRET=...
  * AUTH_SECRET=...
  * ```
+ * 
+ * :::tip
+ * In production, `AUTH_SECRET` is a required environment variable - if not set, NextAuth.js will throw an error. See [MissingSecretError](https://authjs.dev/reference/core/errors#missingsecret) for more details.
+ * :::
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
