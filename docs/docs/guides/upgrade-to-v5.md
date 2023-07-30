@@ -4,11 +4,6 @@ title: Upgrade Guide (v5)
 
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
-import ApiRoute from "./upgrade-to-v5/api-route.md"
-import GetServerSideProps from "./upgrade-to-v5/getServerSideProps.md"
-import Middleware from "./upgrade-to-v5/middleware.md"
-import ServerComponent from "./upgrade-to-v5/serverComponent.md"
-import ClientComponent from "./upgrade-to-v5/clientComponent.md"
 
 NextAuth.js version 5 is a complete rewrite of the package, but we made sure to introduce as little breaking changes as possible. For anything else, we summed up the necessary changes in this guide.
 
@@ -93,19 +88,113 @@ See the table below for a summary of the changes, and click on the links to lear
 ### Authentication methods
 <Tabs groupId="authentication-method" queryString>
 <TabItem value="api-route" label="API Route (Node.js)">
-  <ApiRoute />
+
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
+
+```diff title='pages/api/example.ts'
+- import { getServerSession } from "next-auth/next"
+- import { getToken } from "next-auth/jwt"
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
++ import { auth } from "../auth"
++ import { NextApiRequest, NextApiResponse } from "next"
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+-  const session = await getServerSession(req, res, authOptions)
+-  const token = await getToken({ req })
++  const session = await auth(req, res)
+  if (session) return res.json('Success')
+  return res.status(401).json("You must be logged in.");
+}
+```
+
+:::tip
+Whenever `auth()` is passed the res object, it will rotate the session expiry. This was not the case with `getToken()` previously.
+The default session expiry is 30 days, but you can change it by setting `authOptions.session.maxAge`.
+:::
+
 </TabItem>
 <TabItem value="get-serverside-props" label="getServerSideProps">
-  <GetServerSideProps />
+
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
+
+```diff title="pages/protected.tsx"
+- import { getServerSession } from "next-auth/next"
+- import { getToken } from "next-auth/jwt"
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
++ import { auth } from "../auth"
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+-  const session = await getServerSession(context.req, context.res, authOptions)
+-  const token = await getToken({ req: context.req })
++  const session = await auth(context)
+  if (session) // Do something with the session
+
+  return { props: { session } }
+}
+```
+
+:::tip
+Whenever `auth()` is passed the res object, it will rotate the session expiry. This was not the case with `getToken()` previously.
+:::
+
 </TabItem>
 <TabItem value="middleware" label="Middleware">
-  <Middleware />
+
+```diff title='middleware.ts'
+- export { default } from 'next-auth/middleware'
++ export { auth as default } from "./auth"
+```
+
+For advanced use cases, you can use `auth` as a wrapper for your Middleware:
+
+```ts title="middleware.ts"
+import { auth } from "./auth"
+
+export default auth(req => {
+  // req.auth
+})
+
+// Optionally, don't invoke Middleware on some paths
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
+
+```
+
+Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
+
 </TabItem>
 <TabItem value="server-component" label="Server Component" default>
-  <ServerComponent />
+
+NextAuth.js v4 has supported reading the session in Server Components for a while via `getServerSession`. This has been also simplified to the same `auth()` function.
+
+```diff title="app/page.tsx"
+- import { authOptions } from 'pages/api/auth/[...nextauth]'
+- import { getServerSession } from "next-auth/next"
++ import { auth } from "../auth"
+
+export default async function Page() {
+-  const session = await getServerSession(authOptions)
++  const session = await auth()
+  return (<p>Welcome {session?.user.name}!</p>)
+}
+```
+
 </TabItem>
 <TabItem value="client-component" label="Client Component">
-  <ClientComponent />
+
+Imports from `next-auth/react` are now marked with the `"use client"` directive. [Read more](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive).
+
+If you have previously used `getSession()` or other imports server-side, you'll have to change it to use the [`auth()`](/reference/nextjs#auth) method instead.
+
+`getCsrfToken` and `getProviders` are still available as imports, but we plan to deprecate them in the future and introduce a new API to get this data server-side.
+
+Client-side: Instead of using these APIs, you can make a fetch request to the `/api/auth/providers` and `/api/auth/csrf` endpoints respectively.
+
+Server-side: 
+- Get the list of providers from your config's `providers` array
+- Check out the [CSRF_experimental](/reference/nextjs#csrf_experimental) React component
+
 </TabItem>
 </Tabs>
 
