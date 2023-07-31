@@ -122,7 +122,7 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {} 
+  let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
@@ -176,7 +176,8 @@ export async function handleOAuth(
     profile,
     provider,
     tokens,
-    logger
+    logger,
+    query?.user
   )
 
   return { ...profileResult, profile, cookies: resCookies }
@@ -187,10 +188,11 @@ async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
-  logger: LoggerInstance
+  logger: LoggerInstance,
+  userResponse: string | undefined
 ) {
   try {
-    const user = await provider.profile(OAuthProfile, tokens)
+    const user = await provider.profile(OAuthProfile, tokens, userResponse)
     user.email = user.email?.toLowerCase()
 
     if (!user.id) {

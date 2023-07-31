@@ -106,7 +106,8 @@ export interface AppleProfile extends Record<string, any> {
  *
  * #### Configuration
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
+ * Import the provider and configure it in your **Auth.js** initialization file.
+ * Also add the pkceCodeVerifier cookie to the cookies option.
  *
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
@@ -115,10 +116,21 @@ export interface AppleProfile extends Record<string, any> {
  * export default NextAuth({
  *   providers: [
  *     AppleProvider({
- *       clientId: process.env.GITHUB_ID,
- *       clientSecret: process.env.GITHUB_SECRET,
+ *       clientId: process.env.APPLE_ID,
+ *       clientSecret: process.env.APPLE_SECRET,
  *     }),
  *   ],
+ *   cookies: {
+ *     pkceCodeVerifier: {
+ *       name: "next-auth.pkce.code_verifier",
+ *       options: {
+ *         httpOnly: true,
+ *         sameSite: "none",
+ *         path: "/",
+ *         secure: true,
+ *       },
+ *     },
+ *   },
  * })
  * ```
  * 
@@ -158,16 +170,37 @@ export default function Apple<P extends AppleProfile>(
     name: "Apple",
     type: "oidc",
     issuer: "https://appleid.apple.com",
-    authorization: {
-      params: { scope: "name email", response_mode: "form_post" },
+    wellKnown: "https://appleid.apple.com/.well-known/openid-configuration",
+    checks: ["pkce"],
+    token: {
+      url: `https://appleid.apple.com/auth/token`,
     },
-    profile(profile) {
+    authorization: {
+      url: 'https://appleid.apple.com/auth/authorize',
+      params: {
+        scope: "name email",
+        response_type: "code",
+        response_mode: "form_post",
+        state: crypto.randomUUID()
+      },
+    },
+    profile(profile, _, userResponse) {
+      let name = null;
+
+      if (userResponse) {
+        const user = JSON.parse(userResponse);
+        name = user.name.firstName + " " + user.name.lastName;
+      }
+
       return {
         id: profile.sub,
-        name: profile.name,
+        name: name,
         email: profile.email,
         image: null,
       }
+    },
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
     style: {
       logo: "/apple.svg",
