@@ -55,6 +55,8 @@ More details can be found [here](/reference/nextjs/#middleware).
 
 ### Server Side
 
+#### Using Pages Router
+
 You can protect server side rendered pages using the `unstable_getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
 
 You need to add this to every server rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
@@ -110,6 +112,51 @@ export default function App({
 ```
 
 :::
+
+#### Using App Router
+You can protect client components using  the [`useSession` hook](#client-side).
+
+You can protect server components using the `getServerSession` method.
+
+```js title="app/server-component-get-server-session-example.js"
+import { getServerSession } from "next-auth/next"
+
+export default async function Page() {
+  const session = await getServerSession()
+ 
+  if (session) {
+    return (
+      <>
+        <h1>Protected Page</h1>
+        <p>You can view this page because you are signed in.</p>
+      </>
+    )
+  }
+  
+  return <p>Access Denied</p>
+}
+```
+
+If you are using JSON Web Tokens you can use the `getToken()` helper to protect a server component and access the contents of the JWT without having to handle JWT decryption / verification yourself.
+
+```js title="app/server-component-get-token-example.js"
+import { getToken } from "next-auth/jwt"
+
+export default async function Page() {
+  const token = await getToken()
+ 
+  if (token) {
+    return (
+      <>
+        <h1>Protected Page</h1>
+        <p>You can view this page because you are signed in.</p>
+      </>
+    )
+  }
+  
+  return <p>Access Denied</p>
+}
+```
 
 ## Securing API Routes
 
