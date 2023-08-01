@@ -113,6 +113,11 @@ function NextAuth(
   res: NextApiResponse,
   options: AuthOptions
 ): any
+function NextAuth(
+  req: NextRequest,
+  context: any,
+  options: AuthOptions
+): any;
 
 /** The main entry point to next-auth */
 function NextAuth(
