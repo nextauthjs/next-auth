@@ -229,7 +229,6 @@ The `middleware` function will only be invoked if the `authorized` callback retu
 
 If you have a custom jwt decode method set in `[...nextauth].ts`, you must also pass the same `decode` method to `withAuth` in order to read the custom-signed JWT correctly. You may want to extract the encode/decode logic to a separate function for consistency.
 
-``
 ```ts title="/api/auth/[...nextauth].ts"
 import type { NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth"
