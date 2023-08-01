@@ -36,9 +36,11 @@ export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
   return payload
 }
 
+let experimentalRSCWarningShown = false
+
 export interface GetTokenParams<R extends boolean = false> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
-  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
+  req?: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
   /**
    * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
    * or not set (e.g. development or test instance) case use unprefixed name
@@ -81,20 +83,44 @@ export async function getToken<R extends boolean = false>(
     secret = process.env.NEXTAUTH_SECRET,
   } = params
 
-  if (!req) throw new Error("Must pass `req` to JWT getToken()")
+  const isRSC = !req
+  if (
+    !experimentalRSCWarningShown &&
+    isRSC &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    console.warn(
+      "[next-auth][warn][EXPERIMENTAL_API]",
+      "\n`getToken` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken}`,
+      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
+    )
+    experimentalRSCWarningShown = true
+  }
+
+  let cookies: NextRequest["cookies"] | NextApiRequest["cookies"]
+  let headers: NextRequest["headers"] | NextApiRequest["headers"]
+  if (isRSC) {
+    const nextHeaders = require("next/headers")
+    cookies = nextHeaders.cookies()
+    headers = nextHeaders.headers()
+  } else {
+    cookies = req.cookies
+    headers = req.headers
+  }
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
-    { cookies: req.cookies, headers: req.headers },
+    { cookies, headers },
     logger
   )
 
   let token = sessionStore.value
 
   const authorizationHeader =
-    req.headers instanceof Headers
-      ? req.headers.get("authorization")
-      : req.headers?.authorization
+    headers instanceof Headers
+      ? headers.get("authorization")
+      : headers?.authorization
 
   if (!token && authorizationHeader?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = authorizationHeader.split(" ")[1]
