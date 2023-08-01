@@ -11,7 +11,7 @@ https://help.salesforce.com/articleView?id=remoteaccess_authenticate.htm&type=5
 
 The **Salesforce Provider** comes with a set of default options:
 
-- [Salesforce Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/salesforce.js)
+- [Salesforce Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/salesforce.ts)
 
 You can override any of the options to suit your own use case.
 
