@@ -113,15 +113,14 @@ function NextAuth(
   res: NextApiResponse,
   options: AuthOptions
 ): any
-function NextAuth(
-  req: NextRequest,
-  context: any,
-  options: AuthOptions
-): any;
+function NextAuth(req: NextRequest, context: any, options: AuthOptions): any
 
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
+  ...args:
+    | [AuthOptions]
+    | [NextApiRequest, NextApiResponse, AuthOptions]
+    | [NextRequest, any, AuthOptions]
 ) {
   if (args.length === 1) {
     return async (
@@ -149,7 +148,9 @@ function NextAuth(
     )
   }
 
-  return NextAuthApiHandler(...args)
+  return NextAuthApiHandler(
+    ...(args as unknown as Parameters<typeof NextAuthApiHandler>)
+  )
 }
 
 export default NextAuth
