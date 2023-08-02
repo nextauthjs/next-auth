@@ -109,7 +109,7 @@ const emailOptions: EmailUserConfig = {
   type: "email",
   async sendVerificationRequest({ identifier: email, url }) {
     try {
-      const sentFrom = new Sender("me@aquawashpc.com.au", "1Try");
+      const sentFrom = new Sender("me@domain.com", "Company Name");
       const recipients = [new Recipient(email, "Your Client")];
       const emailParams = new EmailParams()
         .setFrom(sentFrom)
