@@ -170,11 +170,7 @@ export default function Apple<P extends AppleProfile>(
     name: "Apple",
     type: "oidc",
     issuer: "https://appleid.apple.com",
-    wellKnown: "https://appleid.apple.com/.well-known/openid-configuration",
-    checks: ["pkce"],
-    token: {
-      url: `https://appleid.apple.com/auth/token`,
-    },
+    checks: ["pkce", "state"],
     authorization: {
       url: 'https://appleid.apple.com/auth/authorize',
       params: {
