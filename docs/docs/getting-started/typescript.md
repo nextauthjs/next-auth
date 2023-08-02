@@ -161,3 +161,6 @@ Contributions of any kind are always welcome, especially for TypeScript. Please 
 :::note
 When contributing to TypeScript, if the actual JavaScript user API does not change in a breaking manner, we reserve the right to push any TypeScript change in a minor release. This ensures that we can keep on a faster release cycle.
 :::
+
+
+remember don't save typescript use for suggestion in doing job
