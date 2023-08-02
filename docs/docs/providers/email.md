@@ -32,6 +32,108 @@ You can override any of the options to suit your own use case.
 
 ## Configuration
 
+Nextauth provides you with the ability to send emails via SMTP or HTTP.
+
+### HTTP
+
+You are able to send HTTP requests using your favourite libarary (fetch/axios etc) however we will install an SDK to make it easier. You will need to seek the documentation for the tranactional email provider you wish to implement.
+
+Some options for transactional emails: Postmark, Sendgrid, AWS SES, MailerSend.
+
+1. Obtain the required API key from your choosen provider and add it to your `.env` file e.g. `MAILERSEND_TOKEN=`
+2. Install `mailersend` using your package manager `npm i mailersend`. Otherwise you can use fetch/axios to utilise there API.
+3. Import the Email provider from Nextauth e.g. `import EmailProvider from "next-auth/providers/email";` Also initialise the package:
+
+```js
+function mailerSendToken() {
+  const mailerSendToken = process.env.MAILERSEND_TOKEN;
+
+  if (!mailerSendToken || mailerSendToken.length === 0) {
+    throw new Error("Missing MAILERSEND_TOKEN for auth HTTP Email.");
+  }
+
+  return mailerSendToken as string;
+}
+
+const mailerSend = new MailerSend({
+  apiKey: mailerSendToken(),
+});
+```
+
+5. In the options we will use the `sendVerificationRequest` method to handle our email logic. It will look something like this:
+
+```js
+async sendVerificationRequest({ identifier: email, url }) {
+    try {
+      // your req validation here
+
+      const sentFrom = new Sender("me@domain.com", "Company Name");
+      const recipients = [new Recipient(email, "Client Name")];
+      const emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(recipients)
+        .setReplyTo(sentFrom)
+        .setSubject("Sign in to Your page")
+        .setHtml(`Please click here to authenticate - ${url}`)
+        .setText(`Please click here to authenticate - ${url}`);
+
+      await mailerSend.email.send(emailParams);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+```
+
+#### Complete with TS
+
+```js
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
+import EmailProvider, { EmailUserConfig } from "next-auth/providers/email";
+import { NextAuthOptions } from "next-auth";
+
+function mailerSendToken() {
+  const mailerSendToken = process.env.MAILERSEND_TOKEN;
+
+  if (!mailerSendToken || mailerSendToken.length === 0) {
+    throw new Error("Missing MAILERSEND_TOKEN for auth HTTP Email.");
+  }
+
+  return mailerSendToken as string;
+}
+
+const mailerSend = new MailerSend({
+  apiKey: mailerSendToken(),
+});
+
+const emailOptions: EmailUserConfig = {
+  type: "email",
+  async sendVerificationRequest({ identifier: email, url }) {
+    try {
+      const sentFrom = new Sender("me@aquawashpc.com.au", "1Try");
+      const recipients = [new Recipient(email, "Your Client")];
+      const emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(recipients)
+        .setReplyTo(sentFrom)
+        .setSubject("Sign in to Your page")
+        .setHtml(`Please click here to authenticate - ${url}`)
+        .setText(`Please click here to authenticate - ${url}`);
+
+      await mailerSend.email.send(emailParams);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+}
+
+export const authOptions: NextAuthOptions = {
+  providers: [EmailProvider(emailOptions)],
+  debug: process.env.NODE_ENV === "development" ? true : false,
+};
+```
+
+### SMTP
+
 1. NextAuth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
 2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
 3. There are two ways to configure the SMTP server connection.
