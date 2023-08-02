@@ -179,9 +179,7 @@ export default function Apple<P extends AppleProfile>(
       url: 'https://appleid.apple.com/auth/authorize',
       params: {
         scope: "name email",
-        response_type: "code",
         response_mode: "form_post",
-        state: crypto.randomUUID()
       },
     },
     profile(profile, _, userResponse) {
