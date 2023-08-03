@@ -1,9 +1,5 @@
 # Next.js
 
-## `unstable_getServerSession`
-
-This method was renamed to `getServerSession`. See the documentation below.
-
 ## `getServerSession`
 
 When calling from server-side i.e. in API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` on server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
@@ -90,6 +86,11 @@ Currently, the underlying Next.js `cookies()` method [only provides read access]
 ### Caching
 
 Note that using this function implies personalized data and that you should not store pages or APIs using this in a [public cache](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control). For example a host like [Vercel](https://vercel.com/docs/concepts/functions/serverless-functions/edge-caching) will implicitly prevent you from caching publicly due to the `set-cookie` header set by this function.
+
+
+## `unstable_getServerSession`
+
+This method was renamed to `getServerSession`. See the documentation above.
 
 ## Middleware
 
