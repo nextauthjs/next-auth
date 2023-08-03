@@ -72,6 +72,7 @@ import type {
   OAuthConfigInternal,
   OIDCConfigInternal,
   ProviderType,
+  SIWAConfigInternal,
 } from "./providers/index.js"
 
 export type { AuthConfig } from "./index.js"
@@ -243,22 +244,22 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   session: (
     params:
       | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        } & {
-          /**
-           * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
-           *
-           * :::note
-           * You should validate this data before using it.
-           * :::
-           */
-          newSession: any
-          trigger: "update"
-        }
+        session: Session
+        /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+        token: JWT
+        /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+        user: AdapterUser
+      } & {
+        /**
+         * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
+         *
+         * :::note
+         * You should validate this data before using it.
+         * :::
+         */
+        newSession: any
+        trigger: "update"
+      }
   ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
@@ -445,7 +446,7 @@ export interface DefaultSession {
  * [`SessionProvider`](https://authjs.dev/reference/react#sessionprovider) |
  * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
  */
-export interface Session extends DefaultSession {}
+export interface Session extends DefaultSession { }
 
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
@@ -471,15 +472,17 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
   ? OIDCConfigInternal<any>
+  : T extends "siwa"
+  ? SIWAConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
-  signinUrl: string
-  /** @example `"https://example.com/api/auth/callback/id"` */
-  callbackUrl: string
-}
+    signinUrl: string
+    /** @example `"https://example.com/api/auth/callback/id"` */
+    callbackUrl: string
+  }
 
 /**
  * Supported actions by Auth.js. Each action map to a REST API endpoint.

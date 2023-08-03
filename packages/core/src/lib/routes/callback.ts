@@ -47,7 +47,7 @@ export async function callback(params: {
   const useJwtSession = sessionStrategy === "jwt"
 
   try {
-    if (provider.type === "oauth" || provider.type === "oidc") {
+    if (provider.type === "oauth" || provider.type === "oidc" || provider.type === "siwa") {
       const { proxyRedirect, randomState } = handleState(
         query,
         provider,
@@ -60,7 +60,8 @@ export async function callback(params: {
       }
 
       const authorizationResult = await handleOAuth(
-        provider.authorization?.url.searchParams.get("response_mode") === 'form_post' ? body : query,
+        // siwa uses a post request to return data, so we have to pass the body, instead of the query
+        provider.type === "siwa" ? body : query,
         params.cookies,
         options,
         randomState

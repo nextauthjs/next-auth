@@ -93,21 +93,6 @@ export type UserinfoEndpointHandler = EndpointHandler<
 export type ProfileCallback<Profile> = (
   profile: Profile,
   tokens: TokenSet,
-  /**
-   * Additional user data returned by the authorization endpoint
-   * in some cases. For example, in the case of Apple, the user
-   * information is returned with the authorization response and
-   * nowhere else.
-   * 
-   * This can then be used in the `profile` callback to fill in
-   * the user information.
-   * 
-   * @example
-   * ```json
-   * {"name":{"firstName":"John","lastName":"Doe"},"email":"john.doe@icloud.com"}
-   * ```
-   */
-  userResponse: string | undefined,
 ) => Awaitable<User>
 
 export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
@@ -257,7 +242,15 @@ export interface OIDCConfig<Profile>
   checks?: OAuth2Config<Profile>["checks"] & Array<"nonce">
 }
 
-export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
+/**
+ * Extension of the {@link OIDCConfig} for Sign in with Apple.
+ */
+export interface SIWAConfig<Profile>
+  extends Omit<OIDCConfig<Profile>, "type" | "wellKnown"> {
+  type: "siwa"
+}
+
+export type OAuthConfig<Profile> = SIWAConfig<Profile> | OIDCConfig<Profile> | OAuth2Config<Profile>
 
 export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 
@@ -298,6 +291,8 @@ export type OAuthConfigInternal<Profile> = Omit<
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
 }
+
+export type SIWAConfigInternal<Profile> = OIDCConfigInternal<Profile>
 
 export type OAuthUserConfig<Profile> = Omit<
   Partial<OAuthConfig<Profile>>,

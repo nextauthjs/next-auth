@@ -25,7 +25,7 @@ import type { Cookie } from "../cookie.js"
 export async function handleOAuth(
   query: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth" | "oidc">,
+  options: InternalOptions<"oauth" | "oidc" | "siwa">,
   randomState?: string
 ) {
   const { logger, provider } = options
@@ -125,7 +125,7 @@ export async function handleOAuth(
   let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
-  if (provider.type === "oidc") {
+  if (provider.type === "oidc" || provider.type === "siwa") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
     const result = await o.processAuthorizationCodeOpenIDResponse(
       as,
@@ -139,7 +139,12 @@ export async function handleOAuth(
       throw new Error("TODO: Handle OIDC response body error")
     }
 
-    profile = o.getValidatedIdTokenClaims(result)
+    // siwa returns the user with the authorization response
+    if (provider.type === "siwa") {
+      profile = query?.user;
+    } else {
+      profile = o.getValidatedIdTokenClaims(result)
+    }
     tokens = result
   } else {
     tokens = await o.processAuthorizationCodeOAuth2Response(
@@ -177,7 +182,6 @@ export async function handleOAuth(
     provider,
     tokens,
     logger,
-    query?.user
   )
 
   return { ...profileResult, profile, cookies: resCookies }
@@ -189,10 +193,9 @@ async function getUserAndAccount(
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
   logger: LoggerInstance,
-  userResponse: string | undefined
 ) {
   try {
-    const user = await provider.profile(OAuthProfile, tokens, userResponse)
+    const user = await provider.profile(OAuthProfile, tokens)
     user.email = user.email?.toLowerCase()
 
     if (!user.id) {
