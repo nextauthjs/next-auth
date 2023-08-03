@@ -32,6 +32,14 @@ You can override any of the options to suit your own use case.
 
 ## Configuration
 
+NextAuth.js lets you send emails either via HTTP or SMTP.
+
+### HTTP
+
+Check out our [HTTP-based Email Provider](https://authjs.dev/guides/providers/email-http) guide.
+
+### SMTP
+
 1. NextAuth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
 2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
 3. There are two ways to configure the SMTP server connection.
