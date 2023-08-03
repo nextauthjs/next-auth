@@ -106,8 +106,7 @@ export interface AppleProfile extends Record<string, any> {
  *
  * #### Configuration
  *
- * Import the provider and configure it in your **Auth.js** initialization file.
- * Also add the pkceCodeVerifier cookie to the cookies option.
+ * Import the provider and configure it in your **Auth.js** initialization file:
  *
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
@@ -120,17 +119,6 @@ export interface AppleProfile extends Record<string, any> {
  *       clientSecret: process.env.APPLE_SECRET,
  *     }),
  *   ],
- *   cookies: {
- *     pkceCodeVerifier: {
- *       name: "next-auth.pkce.code_verifier",
- *       options: {
- *         httpOnly: true,
- *         sameSite: "none",
- *         path: "/",
- *         secure: true,
- *       },
- *     },
- *   },
  * })
  * ```
  * 
