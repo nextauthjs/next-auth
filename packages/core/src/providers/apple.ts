@@ -156,7 +156,7 @@ export default function Apple<P extends AppleProfile>(
   return {
     id: "apple",
     name: "Apple",
-    type: "siwa",
+    type: "oidcfp",
     issuer: "https://appleid.apple.com",
     checks: ["pkce", "state"],
     authorization: {

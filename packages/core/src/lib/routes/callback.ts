@@ -47,7 +47,7 @@ export async function callback(params: {
   const useJwtSession = sessionStrategy === "jwt"
 
   try {
-    if (provider.type === "oauth" || provider.type === "oidc" || provider.type === "siwa") {
+    if (provider.type === "oauth" || provider.type === "oidc" || provider.type === "oidcfp") {
       const { proxyRedirect, randomState } = handleState(
         query,
         provider,
@@ -60,8 +60,8 @@ export async function callback(params: {
       }
 
       const authorizationResult = await handleOAuth(
-        // siwa uses a post request to return data, so we have to pass the body, instead of the query
-        provider.type === "siwa" ? body : query,
+        // oidcfp uses a post request to return data, so we have to pass the body, instead of the query
+        provider.type === "oidcfp" ? body : query,
         params.cookies,
         options,
         randomState

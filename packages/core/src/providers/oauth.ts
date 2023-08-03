@@ -243,14 +243,16 @@ export interface OIDCConfig<Profile>
 }
 
 /**
- * Extension of the {@link OIDCConfig} for Sign in with Apple.
+ * Extension of the {@link OIDCConfig} using form_post response mode.
+ * 
+ * @see https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html
  */
-export interface SIWAConfig<Profile>
+export interface OIDCFPConfig<Profile>
   extends Omit<OIDCConfig<Profile>, "type" | "wellKnown"> {
-  type: "siwa"
+  type: "oidcfp"
 }
 
-export type OAuthConfig<Profile> = SIWAConfig<Profile> | OIDCConfig<Profile> | OAuth2Config<Profile>
+export type OAuthConfig<Profile> = OIDCFPConfig<Profile> | OIDCConfig<Profile> | OAuth2Config<Profile>
 
 export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 
@@ -292,7 +294,7 @@ export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
 }
 
-export type SIWAConfigInternal<Profile> = OIDCConfigInternal<Profile>
+export type OIDCFPConfigInternal<Profile> = OIDCConfigInternal<Profile>
 
 export type OAuthUserConfig<Profile> = Omit<
   Partial<OAuthConfig<Profile>>,

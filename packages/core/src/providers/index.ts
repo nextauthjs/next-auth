@@ -25,7 +25,7 @@ export * from "./oauth.js"
  * @see [Email or Passwordless Authentication](https://authjs.dev/concepts/oauth)
  * @see [Credentials-based Authentication](https://authjs.dev/concepts/credentials)
  */
-export type ProviderType = "siwa" | "oidc" | "oauth" | "email" | "credentials"
+export type ProviderType = "oidcfp" | "oidc" | "oauth" | "email" | "credentials"
 
 /** Shared across all {@link ProviderType} */
 export interface CommonProviderOptions {

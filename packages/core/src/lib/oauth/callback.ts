@@ -25,7 +25,7 @@ import type { Cookie } from "../cookie.js"
 export async function handleOAuth(
   query: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth" | "oidc" | "siwa">,
+  options: InternalOptions<"oauth" | "oidc" | "oidcfp">,
   randomState?: string
 ) {
   const { logger, provider } = options
@@ -125,7 +125,7 @@ export async function handleOAuth(
   let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
-  if (provider.type === "oidc" || provider.type === "siwa") {
+  if (provider.type === "oidc" || provider.type === "oidcfp") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
     const result = await o.processAuthorizationCodeOpenIDResponse(
       as,
@@ -139,8 +139,8 @@ export async function handleOAuth(
       throw new Error("TODO: Handle OIDC response body error")
     }
 
-    // siwa returns the user with the authorization response
-    if (provider.type === "siwa") {
+    // oidcfp returns the user with the authorization response
+    if (provider.type === "oidcfp") {
       profile = query?.user;
     } else {
       profile = o.getValidatedIdTokenClaims(result)

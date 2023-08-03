@@ -72,7 +72,7 @@ import type {
   OAuthConfigInternal,
   OIDCConfigInternal,
   ProviderType,
-  SIWAConfigInternal,
+  OIDCFPConfigInternal,
 } from "./providers/index.js"
 
 export type { AuthConfig } from "./index.js"
@@ -472,8 +472,8 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
   ? OIDCConfigInternal<any>
-  : T extends "siwa"
-  ? SIWAConfigInternal<any>
+  : T extends "oidcfp"
+  ? OIDCFPConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
