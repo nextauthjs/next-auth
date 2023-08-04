@@ -25,7 +25,7 @@ export * from "./oauth.js"
  * @see [Email or Passwordless Authentication](https://authjs.dev/concepts/oauth)
  * @see [Credentials-based Authentication](https://authjs.dev/concepts/credentials)
  */
-export type ProviderType = "oidcfp" | "oidc" | "oauth" | "email" | "credentials"
+export type ProviderType = "oidc" | "oauth" | "email" | "credentials"
 
 /** Shared across all {@link ProviderType} */
 export interface CommonProviderOptions {
@@ -64,11 +64,11 @@ interface InternalProviderOptions {
  */
 export type Provider<P extends Profile = any> = (
   | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig) &
-    InternalProviderOptions)
+      InternalProviderOptions)
   | ((
-    ...args: any
-  ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig) &
-    InternalProviderOptions)
+      ...args: any
+    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig) &
+      InternalProviderOptions)
 ) &
   InternalProviderOptions
 

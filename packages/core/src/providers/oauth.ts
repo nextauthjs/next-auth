@@ -93,6 +93,21 @@ export type UserinfoEndpointHandler = EndpointHandler<
 export type ProfileCallback<Profile> = (
   profile: Profile,
   tokens: TokenSet,
+  /**
+   * Additional user data returned by the authorization endpoint
+   * in some cases. For example, in the case of Apple, the user
+   * information is returned with the authorization response and
+   * nowhere else.
+   * 
+   * This can then be used in the `profile` callback to fill in
+   * the user information.
+   * 
+   * @example
+   * ```json
+   * {"name":{"firstName":"John","lastName":"Doe"},"email":"john.doe@icloud.com"}
+   * ```
+   */
+  userResponse: string | undefined,
 ) => Awaitable<User>
 
 export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
@@ -242,17 +257,7 @@ export interface OIDCConfig<Profile>
   checks?: OAuth2Config<Profile>["checks"] & Array<"nonce">
 }
 
-/**
- * Extension of the {@link OIDCConfig} using form_post response mode.
- * 
- * @see https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html
- */
-export interface OIDCFPConfig<Profile>
-  extends Omit<OIDCConfig<Profile>, "type" | "wellKnown"> {
-  type: "oidcfp"
-}
-
-export type OAuthConfig<Profile> = OIDCFPConfig<Profile> | OIDCConfig<Profile> | OAuth2Config<Profile>
+export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
 
 export type OAuthEndpointType = "authorization" | "token" | "userinfo"
 
@@ -293,8 +298,6 @@ export type OAuthConfigInternal<Profile> = Omit<
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
 }
-
-export type OIDCFPConfigInternal<Profile> = OIDCConfigInternal<Profile>
 
 export type OAuthUserConfig<Profile> = Omit<
   Partial<OAuthConfig<Profile>>,

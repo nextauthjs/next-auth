@@ -156,7 +156,7 @@ export default function Apple<P extends AppleProfile>(
   return {
     id: "apple",
     name: "Apple",
-    type: "oidcfp",
+    type: "oidc",
     issuer: "https://appleid.apple.com",
     checks: ["pkce", "state"],
     authorization: {
@@ -166,10 +166,17 @@ export default function Apple<P extends AppleProfile>(
         response_mode: "form_post",
       },
     },
-    profile(profile) {
+    profile(profile, _, userResponse) {
+      let name = null;
+
+      if (userResponse) {
+        const user = JSON.parse(userResponse);
+        name = user.name.firstName + " " + user.name.lastName;
+      }
+
       return {
         id: profile.sub,
-        name: profile.name,
+        name: name,
         email: profile.email,
         image: null,
       }
