@@ -11,6 +11,18 @@
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
+ * Schema according to the official Bungie API spec
+ * {@link https://bungie-net.github.io/#/components/schemas/User.UserMembershipData}
+ * */
+export interface BungieProfile {
+  bungieNetUser: {
+    membershipId: string
+    displayName: string
+    profilePicturePath: string
+  }
+}
+
+/**
  * Add Bungie login to your page.
  *
  * ### Setup
@@ -158,19 +170,35 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::
  */
-export default function Bungie(
-  options: OAuthUserConfig<Record<string, any>>
-): OAuthConfig<Record<string, any>> {
+export default function Bungie<P extends BungieProfile>(
+  options: OAuthUserConfig<P> & {
+    apiKey: string
+  }
+): OAuthConfig<P> {
   return {
     id: "bungie",
     name: "Bungie",
     type: "oauth",
-    authorization: "https://www.bungie.net/en/OAuth/Authorize?reauth=true",
+    authorization: {
+      url: "https://www.bungie.net/en/OAuth/Authorize",
+      params: { scope: "" },
+    },
     token: "https://www.bungie.net/platform/app/oauth/token/",
-    userinfo:
-      "https://www.bungie.net/platform/User/GetBungieAccount/{membershipId}/254/",
+    userinfo: {
+      url: "https://www.bungie.net/Platform/User/GetMembershipsForCurrentUser/",
+      async request({ tokens, provider }) {
+        return await fetch(provider.userinfo?.url as URL, {
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            "X-API-KEY": options.apiKey,
+          },
+        })
+          .then(async (res) => await res.json())
+          .then((res) => res.Response)
+      },
+    },
     profile(profile) {
-      const { bungieNetUser: user } = profile.Response
+      const { bungieNetUser: user } = profile
 
       return {
         id: user.membershipId,
