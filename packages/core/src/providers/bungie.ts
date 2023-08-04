@@ -210,5 +210,13 @@ export default function Bungie<P extends BungieProfile>(
       }
     },
     options,
+    style: {
+      logo: "/bungie.svg",
+      logoDark: "/bungie.svg",
+      bg: "#fff",
+      text: "#414142",
+      bgDark: "#414142",
+      textDark: "#fff",
+    },
   }
 }
