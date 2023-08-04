@@ -81,7 +81,7 @@ jobs:
         run: pnpm build
         env:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       - name: Run tests
         run: pnpm test
         timeout-minutes: 15
@@ -89,7 +89,7 @@ jobs:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       - name: Upload Turbo artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -103,7 +103,7 @@ jobs:
       #     AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
       #     AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
       #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      #     TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      #     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       # - name: Upload E2E artifacts
       #   if: github.repository == 'nextauthjs/next-auth'
       #   uses: actions/upload-artifact@v3
