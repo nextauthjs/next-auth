@@ -39,7 +39,7 @@ export interface BungieProfile {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Bungie({ clientId: BUNGIE_CLIENT_ID, clientSecret: BUNGIE_CLIENT_SECRET, headers: { "X-API-Key": BUNGIE_API_KEY } })],
+ *   providers: [Bungie({ clientId: BUNGIE_CLIENT_ID, clientSecret: BUNGIE_CLIENT_SECRET, apiKey: BUNGIE_API_KEY })],
  * })
  * ```
  *
