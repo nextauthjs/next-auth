@@ -55,7 +55,8 @@ async function NextAuthApiHandler(
       // Could chain. .end() when lowest target is Node 14
       // https://github.com/nodejs/node/issues/33148
       res.status(302).setHeader("Location", handler.redirect)
-      return res.end()
+      res.end()
+      return
     }
     return res.json({ url: handler.redirect })
   }
