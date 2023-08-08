@@ -1,36 +1,43 @@
 {
-  "name": "@next-auth/kysely-adapter",
-  "version": "0.1.0",
-  "description": "Kysely adapter for next-auth.",
-  "homepage": "https://next-auth.js.org",
+  "name": "@auth/kysely-adapter",
+  "version": "0.0.0",
+  "description": "Kysely adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/kysely",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "mwojtul <mark.wojtul@gmail.com> (https://github.com/mwojtul)",
-  "main": "dist/index.js",
   "license": "ISC",
   "keywords": [
+    "authjs",
     "next-auth",
     "next.js",
     "oauth",
     "kysely"
   ],
-  "private": false,
-  "publishConfig": {
-    "access": "public"
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
   },
   "scripts": {
     "build": "tsc",
     "test": "./tests/test.sh"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "kysely": "^0.23.5",
-    "next-auth": "^4"
+    "kysely": "^0.26.1"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
@@ -41,7 +48,6 @@
     "jest": "^27.4.3",
     "kysely": "^0.24.2",
     "mysql2": "^3.2.0",
-    "next-auth": "workspace:*",
     "pg": "^8.10.0"
   },
   "jest": {

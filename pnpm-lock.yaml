@@ -320,6 +320,7 @@ importers:
 
   packages/adapter-kysely:
     specifiers:
+      '@auth/core': workspace:*
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.3
@@ -328,8 +329,9 @@ importers:
       jest: ^27.4.3
       kysely: ^0.24.2
       mysql2: ^3.2.0
-      next-auth: workspace:*
       pg: ^8.10.0
+    dependencies:
+      '@auth/core': link:../core
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
@@ -339,7 +341,6 @@ importers:
       jest: 27.5.1
       kysely: 0.24.2
       mysql2: 3.6.0
-      next-auth: link:../next-auth
       pg: 8.11.2
 
   packages/adapter-mikro-orm:

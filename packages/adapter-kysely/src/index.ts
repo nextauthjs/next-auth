@@ -8,17 +8,98 @@
  *
  * ## Installation
  * ```bash npm2yarn2pnpm
- * npm install next-auth kysely pg @next-auth/kysely-adapter
+ * npm install kysely pg @auth/kysely-adapter
  * npm install --save-dev @types/pg
  * ```
  *
- * @module @next-auth/kysely-adapter
+ * @module @auth/kysely-adapter
  */
 import { Kysely, SqliteAdapter } from "kysely"
-import type { Adapter } from "next-auth/adapters"
-import type { Database } from "./database"
+import type { Adapter } from "@auth/core/adapters"
+
+import type { GeneratedAlways } from "kysely"
+
+export interface Database {
+  User: {
+    id: GeneratedAlways<string>
+    name: string | null
+    email: string
+    emailVerified: Date | string | null
+    image: string | null
+  }
+  Account: {
+    id: GeneratedAlways<string>
+    userId: string
+    type: string
+    provider: string
+    providerAccountId: string
+    refresh_token: string | null
+    access_token: string | null
+    expires_at: number | null
+    token_type: string | null
+    scope: string | null
+    id_token: string | null
+    session_state: string | null
+    oauth_token_secret: string | null
+    oauth_token: string | null
+  }
+
+  Session: {
+    id: GeneratedAlways<string>
+    userId: string
+    sessionToken: string
+    expires: Date | string
+  }
+  VerificationToken: {
+    identifier: string
+    token: string
+    expires: Date | string
+  }
+}
+
+export const format = {
+  /**
+   * Helper function to return the passed in object and its specified prop
+   * as an ISO string if SQLite is being used.
+   */
+  from<T extends Partial<Record<K, Date | null>>, K extends keyof T>(
+    data: T,
+    key: K,
+    isSqlite: boolean
+  ) {
+    const value = data[key]
+    return {
+      ...data,
+      [key]: value && isSqlite ? value.toISOString() : value,
+    }
+  },
+  to,
+}
 
 type ReturnData<T = never> = Record<string, Date | string | T>
+
+/**
+ * Helper function to return the passed in object and its specified prop as a date.
+ * Necessary because SQLite has no date type so we store dates as ISO strings.
+ */
+function to<T extends Partial<ReturnData>, K extends keyof T>(
+  data: T,
+  key: K
+): Omit<T, K> & Record<K, Date>
+function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
+  data: T,
+  key: K
+): Omit<T, K> & Record<K, Date | null>
+function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
+  data: T,
+  key: K
+) {
+  const value = data[key]
+  return Object.assign(data, {
+    [key]: value && typeof value === "string" ? new Date(value) : value,
+  })
+}
+
 /**
  * ## Basic usage
  * This is the Kysely Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
@@ -28,7 +109,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * ```typescript title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { KyselyAdapter } from "@next-auth/kysely-adapter"
+ * import { KyselyAdapter } from "@auth/kysely-adapter"
  * import { db } from "../../../db"
  *
  * export default NextAuth({
@@ -50,7 +131,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * import type { GeneratedAlways } from "kysely"
  * import { PostgresDialect } from "kysely"
  * import { Pool } from "pg"
- * import { AuthedKysely } from "@next-auth/kysely-adapter"
+ * import { AuthedKysely } from "@auth/kysely-adapter"
  *
  * interface User {
  *   id: GeneratedAlways<string>
@@ -113,7 +194,7 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * :::note
  * An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen), or from Prisma schemas using [prisma-kysely](https://github.com/valtyr/prisma-kysely). When using generated types with `AuthedKysely`, import `Codegen` and pass it as the second generic arg:
  * ```ts
- * import type { Codegen } from "@next-auth/kysely-adapter"
+ * import type { Codegen } from "@auth/kysely-adapter"
  * new AuthedKysely<Database, Codegen>(...)
  * ```
  * :::
@@ -201,49 +282,13 @@ type ReturnData<T = never> = Record<string, Date | string | T>
  * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://kysely-org.github.io/kysely/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
  */
 export function KyselyAdapter(db: Kysely<Database>): Adapter {
-  const adapter = db.getExecutor().adapter
+  const { adapter } = db.getExecutor()
   const supportsReturning = adapter.supportsReturning
-  const storeDatesAsISOStrings = adapter instanceof SqliteAdapter
-
-  /** Helper function to return the passed in object and its specified prop
-   * as an ISO string if SQLite is being used.
-   **/
-  function coerceInputData<
-    T extends Partial<Record<K, Date | null>>,
-    K extends keyof T
-  >(data: T, key: K) {
-    const value = data[key]
-    return {
-      ...data,
-      [key]: value && storeDatesAsISOStrings ? value.toISOString() : value,
-    }
-  }
-
-  /**
-   * Helper function to return the passed in object and its specified prop as a date.
-   * Necessary because SQLite has no date type so we store dates as ISO strings.
-   **/
-  function coerceReturnData<T extends Partial<ReturnData>, K extends keyof T>(
-    data: T,
-    key: K
-  ): Omit<T, K> & Record<K, Date>
-  function coerceReturnData<
-    T extends Partial<ReturnData<null>>,
-    K extends keyof T
-  >(data: T, key: K): Omit<T, K> & Record<K, Date | null>
-  function coerceReturnData<
-    T extends Partial<ReturnData<null>>,
-    K extends keyof T
-  >(data: T, key: K) {
-    const value = data[key]
-    return Object.assign(data, {
-      [key]: value && typeof value === "string" ? new Date(value) : value,
-    })
-  }
+  const isSqlite = adapter instanceof SqliteAdapter
 
   return {
     async createUser(data) {
-      const userData = coerceInputData(data, "emailVerified")
+      const userData = format.from(data, "emailVerified", isSqlite)
       const query = db.insertInto("User").values(userData)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -254,7 +299,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("email", "=", `${userData.email}`)
               .executeTakeFirstOrThrow()
           })
-      return coerceReturnData(result, "emailVerified")
+      return to(result, "emailVerified")
     },
     async getUser(id) {
       const result =
@@ -264,7 +309,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .where("id", "=", id)
           .executeTakeFirst()) ?? null
       if (!result) return null
-      return coerceReturnData(result, "emailVerified")
+      return to(result, "emailVerified")
     },
     async getUserByEmail(email) {
       const result =
@@ -274,7 +319,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .where("email", "=", email)
           .executeTakeFirst()) ?? null
       if (!result) return null
-      return coerceReturnData(result, "emailVerified")
+      return to(result, "emailVerified")
     },
     async getUserByAccount({ providerAccountId, provider }) {
       const result =
@@ -286,11 +331,11 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
           .where("Account.provider", "=", provider)
           .executeTakeFirst()) ?? null
       if (!result) return null
-      return coerceReturnData(result, "emailVerified")
+      return to(result, "emailVerified")
     },
     async updateUser({ id, ...user }) {
       if (!id) throw new Error("User not found")
-      const userData = coerceInputData(user, "emailVerified")
+      const userData = format.from(user, "emailVerified", isSqlite)
       const query = db.updateTable("User").set(userData).where("id", "=", id)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -301,7 +346,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("id", "=", id)
               .executeTakeFirstOrThrow()
           })
-      return coerceReturnData(result, "emailVerified")
+      return to(result, "emailVerified")
     },
     async deleteUser(userId) {
       await db.deleteFrom("User").where("User.id", "=", userId).execute()
@@ -317,7 +362,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createSession(data) {
-      const sessionData = coerceInputData(data, "expires")
+      const sessionData = format.from(data, "expires", isSqlite)
       const query = db.insertInto("Session").values(sessionData)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -329,7 +374,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("sessionToken", "=", sessionData.sessionToken)
               .executeTakeFirstOrThrow()
           })()
-      return coerceReturnData(result, "expires")
+      return to(result, "expires")
     },
     async getSessionAndUser(sessionTokenArg) {
       const result = await db
@@ -347,15 +392,12 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       if (!result) return null
       const { sessionId: id, userId, sessionToken, expires, ...user } = result
       return {
-        user: coerceReturnData({ ...user }, "emailVerified"),
-        session: coerceReturnData(
-          { id, userId, sessionToken, expires },
-          "expires"
-        ),
+        user: to({ ...user }, "emailVerified"),
+        session: to({ id, userId, sessionToken, expires }, "expires"),
       }
     },
     async updateSession(session) {
-      const sessionData = coerceInputData(session, "expires")
+      const sessionData = format.from(session, "expires", isSqlite)
       const query = db
         .updateTable("Session")
         .set(sessionData)
@@ -369,7 +411,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("Session.sessionToken", "=", sessionData.sessionToken)
               .executeTakeFirstOrThrow()
           })
-      return coerceReturnData(result, "expires")
+      return to(result, "expires")
     },
     async deleteSession(sessionToken) {
       await db
@@ -378,9 +420,10 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createVerificationToken(verificationToken) {
-      const verificationTokenData = coerceInputData(
+      const verificationTokenData = format.from(
         verificationToken,
-        "expires"
+        "expires",
+        isSqlite
       )
       const query = db
         .insertInto("VerificationToken")
@@ -394,7 +437,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               .where("token", "=", verificationTokenData.token)
               .executeTakeFirstOrThrow()
           })
-      return coerceReturnData(result, "expires")
+      return to(result, "expires")
     },
     async useVerificationToken({ identifier, token }) {
       const query = db
@@ -413,7 +456,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
               return res
             })
       if (!result) return null
-      return coerceReturnData(result, "expires")
+      return to(result, "expires")
     },
   }
 }

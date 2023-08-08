@@ -12,8 +12,8 @@ import {
 import { KyselyAdapter, AuthedKysely } from "../src"
 import { createPool } from "mysql2"
 import SqliteDatabase from "better-sqlite3"
-import type { Database } from "../src/database"
-import type { DataTypeExpression } from "kysely/dist/cjs/parser/data-type-parser"
+import type { Database } from "../src"
+import { DataTypeExpression } from "kysely/dist/cjs/parser/data-type-parser"
 
 type BuiltInDialect = "postgres" | "mysql" | "sqlite"
 
