@@ -1,20 +1,7 @@
-import type { AdapterAccount } from "@auth/core/adapters"
-import {
-  mysqlTable,
-  varchar,
-  timestamp,
-  int,
-  primaryKey,
-} from "drizzle-orm/mysql-core"
+import { mysqlTable } from "drizzle-orm/mysql-core"
 import { drizzle } from "drizzle-orm/mysql2"
 import { createPool } from "mysql2"
-import {
-  users,
-  accounts,
-  sessions,
-  verificationTokens,
-  schema,
-} from "../../src/lib/mysql"
+import { createTables } from "../../src/lib/mysql"
 
 const poolConnection = createPool({
   host: "localhost",
@@ -23,7 +10,8 @@ const poolConnection = createPool({
   database: "next-auth",
 })
 
-export { users, accounts, sessions, verificationTokens }
-export const db = drizzle(poolConnection, {
-  schema: schema,
-})
+export const { users, accounts, sessions, verificationTokens } =
+  createTables(mysqlTable)
+export const schema = { users, accounts, sessions, verificationTokens }
+
+export const db = drizzle(poolConnection, { schema })
