@@ -51,6 +51,10 @@ import type { Adapter } from "@auth/core/adapters"
  *   ],
  * })
  * ```
+ * 
+ * :::info
+ * If you're using multi-project schemas, you can pass your table function as a second argument
+ * :::
  *
  * ## Setup
  *
