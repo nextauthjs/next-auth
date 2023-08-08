@@ -1,22 +1,23 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}><a href="https://kysely.dev/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://kysely.dev/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://kysely.dev/">
  *   <img style={{display: "block"}} src="/img/adapters/kysely.svg" width="38" />
  *  </a>
  * </div>
  *
  * ## Installation
+ *
  * ```bash npm2yarn2pnpm
- * npm install kysely pg @auth/kysely-adapter
- * npm install --save-dev @types/pg
+ * npm install kysely @auth/kysely-adapter
  * ```
  *
  * @module @auth/kysely-adapter
  */
-import { Kysely, SqliteAdapter } from "kysely"
-import type { Adapter } from "@auth/core/adapters"
 
+import { Kysely, SqliteAdapter } from "kysely"
+
+import type { Adapter } from "@auth/core/adapters"
 import type { GeneratedAlways } from "kysely"
 
 export interface Database {
@@ -40,10 +41,7 @@ export interface Database {
     scope: string | null
     id_token: string | null
     session_state: string | null
-    oauth_token_secret: string | null
-    oauth_token: string | null
   }
-
   Session: {
     id: GeneratedAlways<string>
     userId: string
@@ -101,11 +99,16 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
 }
 
 /**
- * ## Basic usage
- * This is the Kysely Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
- *
+ * 
+ * ## Setup
+ * 
  * This adapter supports the same first party dialects that Kysely (as of v0.24.2) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
- * ### Configure Auth.js
+ * 
+ *  ```bash npm2yarn2pnpm
+ * npm install pg
+ * npm install --save-dev @types/pg
+ * ```
+ * 
  * ```typescript title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
@@ -122,63 +125,57 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  *   ],
  * })
  * ```
- * ### Configure Kysely
- * Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them.
  *
- * This adapter also exports a wrapper around the original Kysely class, `AuthedKysely`, that can be used to provide an additional level of type-safety. While using it isn't required, it is recommended as it will verify that the database interface has all the fields that Auth.js requires.
+ * Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/reference/adapters#models) required by Auth.js.
  *
- * ```ts title="db/index.ts"
- * import type { GeneratedAlways } from "kysely"
+ * ```ts title="db.ts"
  * import { PostgresDialect } from "kysely"
  * import { Pool } from "pg"
- * import { AuthedKysely } from "@auth/kysely-adapter"
- *
- * interface User {
- *   id: GeneratedAlways<string>
- *   name: string | null
- *   email: string
- *   emailVerified: Date | null
- *   image: string | null
- * }
- *
- * interface Account {
- *   id: GeneratedAlways<string>
- *   userId: string
- *   type: string
- *   provider: string
- *   providerAccountId: string
- *   refresh_token: string | null
- *   access_token: string | null
- *   expires_at: number | null
- *   token_type: string | null
- *   scope: string | null
- *   id_token: string | null
- *   session_state: string | null
- *   oauth_token_secret: string | null
- *   oauth_token: string | null
- * }
- *
- * interface Session {
- *   id: GeneratedAlways<string>
- *   userId: string
- *   sessionToken: string
- *   expires: Date
- * }
- *
- * interface VerificationToken {
- *   identifier: string
- *   token: string
- *   expires: Date
- * }
+ * 
+ * // This adapter exports a wrapper of the original `Kysely` class called `KyselyAuth`,
+ * // that can be used to provide additional type-safety.
+ * // While using it isn't required, it is recommended as it will verify
+ * // that the database interface has all the fields that Auth.js expects.
+ * import { KyselyAuth } from "@auth/kysely-adapter"
+ * 
+ * import type { GeneratedAlways } from "kysely"
  *
  * interface Database {
- *   User: User
- *   Account: Account
- *   Session: Session
- *   VerificationToken: VerificationToken
+ *   User: {
+ *     id: GeneratedAlways<string>
+ *     name: string | null
+ *     email: string
+ *     emailVerified: Date | null
+ *     image: string | null
+ *   }
+ *   Account: {
+ *     id: GeneratedAlways<string>
+ *     userId: string
+ *     type: string
+ *     provider: string
+ *     providerAccountId: string
+ *     refresh_token: string | null
+ *     access_token: string | null
+ *     expires_at: number | null
+ *     token_type: string | null
+ *     scope: string | null
+ *     id_token: string | null
+ *     session_state: string | null
+ *   }
+ *   Session: {
+ *     id: GeneratedAlways<string>
+ *     userId: string
+ *     sessionToken: string
+ *     expires: Date
+ *   }
+ *   VerificationToken: {
+ *     identifier: string
+ *     token: string
+ *     expires: Date
+ *   }
  * }
  *
- * export const db = new AuthedKysely<Database>({
+ * export const db = new KyselyAuth<Database>({
  *   dialect: new PostgresDialect({
  *     pool: new Pool({
  *       host: process.env.DATABASE_HOST,
@@ -192,10 +189,10 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  *
  *
  * :::note
- * An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen), or from Prisma schemas using [prisma-kysely](https://github.com/valtyr/prisma-kysely). When using generated types with `AuthedKysely`, import `Codegen` and pass it as the second generic arg:
+ * An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen), or from Prisma schemas using [prisma-kysely](https://github.com/valtyr/prisma-kysely). When using generated types with `KyselyAuth`, import `Codegen` and pass it as the second generic arg:
  * ```ts
  * import type { Codegen } from "@auth/kysely-adapter"
- * new AuthedKysely<Database, Codegen>(...)
+ * new KyselyAuth<Database, Codegen>(...)
  * ```
  * :::
  * ### Schema
@@ -232,8 +229,6 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  *     .addColumn("scope", "text")
  *     .addColumn("id_token", "text")
  *     .addColumn("session_state", "text")
- *     .addColumn("oauth_token_secret", "text")
- *     .addColumn("oauth_token", "text")
  *     .execute()
  *
  *   await db.schema
@@ -278,7 +273,8 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/adapters/models).
  *
  * For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://kysely.dev/docs/migrations).
- * ## Naming conventions
+ * 
+ * ### Naming conventions
  * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://kysely-org.github.io/kysely/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
  */
 export function KyselyAdapter(db: Kysely<Database>): Adapter {
@@ -467,9 +463,9 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
  * it ensures the database interface implements the fields that Auth.js
  * requires. When used with `kysely-codegen`, the `Codegen` type can be passed as
  * the second generic argument. The generated types will be used, and
- * `AuthedKysely` will only verify that the correct fields exist.
+ * `KyselyAuth` will only verify that the correct fields exist.
  **/
-export class AuthedKysely<DB extends T, T = Database> extends Kysely<DB> {}
+export class KyselyAuth<DB extends T, T = Database> extends Kysely<DB> {}
 
 export type Codegen = {
   [K in keyof Database]: { [J in keyof Database[K]]: unknown }
