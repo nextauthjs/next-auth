@@ -3,6 +3,9 @@
 dgraph:
   - "@auth/dgraph-adapter"
 
+drizzle:
+  - "@auth/drizzle-adapter"
+
 dynamodb:
   - "@auth/dynamodb-adapter"
 
