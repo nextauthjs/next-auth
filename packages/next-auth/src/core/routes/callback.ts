@@ -39,10 +39,10 @@ export default async function callback(params: {
   const useJwtSession = sessionStrategy === "jwt"
   const sessionToken = sessionStore.value
 
-  let prevToken: JWT | null | undefined = undefined
+  let prevToken: JWT | null | undefined
   try {
     if (useJwtSession) {
-      prevToken = (await jwt.decode({ ...jwt, token: sessionToken }))!
+      prevToken = await jwt.decode({ ...jwt, token: sessionToken })
     }
   } catch (error) {
     return {
