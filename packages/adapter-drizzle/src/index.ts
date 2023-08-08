@@ -17,6 +17,8 @@
  */
 
 import { MySqlTableFn } from "drizzle-orm/mysql-core/index.js"
+import { PgTableFn } from "drizzle-orm/pg-core/index.js"
+import { SQLiteTableFn } from "drizzle-orm/sqlite-core/index.js"
 import { mySqlDrizzleAdapter } from "./lib/mysql.js"
 import { pgDrizzleAdapter } from "./lib/pg.js"
 import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
@@ -29,8 +31,6 @@ import {
 } from "./lib/utils.js"
 
 import type { Adapter } from "@auth/core/adapters"
-import { PgTableFn } from "drizzle-orm/pg-core/index.js"
-import { SQLiteTableFn } from "drizzle-orm/sqlite-core/index.js"
 
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
