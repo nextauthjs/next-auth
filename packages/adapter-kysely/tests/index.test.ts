@@ -42,10 +42,12 @@ const DIALECT_CONFIGS = {
 } as const
 
 async function dropDatabase(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropTable("Account").ifExists().execute()
-  await db.schema.dropTable("Session").ifExists().execute()
-  await db.schema.dropTable("User").ifExists().execute()
-  await db.schema.dropTable("VerificationToken").ifExists().execute()
+  await Promise.all([
+    db.schema.dropTable("Account").ifExists().execute(),
+    db.schema.dropTable("Session").ifExists().execute(),
+    db.schema.dropTable("User").ifExists().execute(),
+    db.schema.dropTable("VerificationToken").ifExists().execute(),
+  ])
 }
 
 export function createTableWithId(
@@ -111,8 +113,6 @@ async function createDatabase(
     .addColumn("scope", textColumnType)
     .addColumn("id_token", textColumnType)
     .addColumn("session_state", textColumnType)
-    .addColumn("oauth_token_secret", textColumnType)
-    .addColumn("oauth_token", textColumnType)
   if (dialect === "mysql")
     createAccountTable = createAccountTable.addForeignKeyConstraint(
       "Account_userId_fk",
@@ -190,7 +190,7 @@ const runDialectBasicTests = (
           .where("providerAccountId", "=", providerAccountId)
           .executeTakeFirst()
         if (!result) return null
-        const { oauth_token, oauth_token_secret, ...account } = result
+        const { ...account } = result
         if (typeof account.expires_at === "string")
           account.expires_at = Number(account.expires_at)
         return account
