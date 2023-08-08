@@ -33,7 +33,7 @@ import {
 import type { Adapter } from "@auth/core/adapters"
 
 /**
- * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
+ * Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
  *
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
