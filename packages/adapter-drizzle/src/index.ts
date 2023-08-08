@@ -64,7 +64,7 @@ import { SQLiteDrizzleAdapter } from "./sqlite"
  *   primaryKey,
  *  integer
  * } from "drizzle-orm/pg-core"
- * import { AdapterAccount } from '@auth/core/adapters'
+ * import type { AdapterAccount } from '@auth/core/adapters'
  *
  * export const users = pgTable("users", {
  *  id: text("id").notNull().primaryKey(),
@@ -184,7 +184,7 @@ import { SQLiteDrizzleAdapter } from "./sqlite"
  *
  * ```ts title="schema.ts"
  * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
- * import { AdapterAccount } from "@auth/core/adapters"
+ * import type { AdapterAccount } from "@auth/core/adapters"
  *
  * export const users = sqliteTable("users", {
  *  id: text("id").notNull().primaryKey(),
