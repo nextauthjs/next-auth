@@ -66,25 +66,25 @@ export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<any, any>
 ): Adapter {
   return {
-    createUser: (data) => {
+    createUser(data) {
       return client
         .insert(users)
         .values({ ...data, id: crypto.randomUUID() })
         .returning()
         .get()
     },
-    getUser: (data) => {
+    getUser(data) {
       return client.select().from(users).where(eq(users.id, data)).get() ?? null
     },
-    getUserByEmail: (data) => {
+    getUserByEmail(data) {
       return (
         client.select().from(users).where(eq(users.email, data)).get() ?? null
       )
     },
-    createSession: (data) => {
+    createSession(data) {
       return client.insert(sessions).values(data).returning().get()
     },
-    getSessionAndUser: (data) => {
+    getSessionAndUser(data) {
       return (
         client
           .select({
@@ -97,7 +97,7 @@ export function SQLiteDrizzleAdapter(
           .get() ?? null
       )
     },
-    updateUser: (data) => {
+    updateUser(data) {
       if (!data.id) {
         throw new Error("No user id.")
       }
@@ -109,7 +109,7 @@ export function SQLiteDrizzleAdapter(
         .returning()
         .get()
     },
-    updateSession: (data) => {
+    updateSession(data) {
       return client
         .update(sessions)
         .set(data)
@@ -117,7 +117,7 @@ export function SQLiteDrizzleAdapter(
         .returning()
         .get()
     },
-    linkAccount: (rawAccount) => {
+    linkAccount(rawAccount) {
       const updatedAccount = client
         .insert(accounts)
         .values(rawAccount)
@@ -138,7 +138,7 @@ export function SQLiteDrizzleAdapter(
 
       return account
     },
-    getUserByAccount: (account) => {
+    getUserByAccount(account) {
       const results = client
         .select()
         .from(accounts)
@@ -153,7 +153,7 @@ export function SQLiteDrizzleAdapter(
 
       return results?.users ?? null
     },
-    deleteSession: (sessionToken) => {
+    deleteSession(sessionToken) {
       return (
         client
           .delete(sessions)
@@ -162,10 +162,10 @@ export function SQLiteDrizzleAdapter(
           .get() ?? null
       )
     },
-    createVerificationToken: (token) => {
+    createVerificationToken(token) {
       return client.insert(verificationTokens).values(token).returning().get()
     },
-    useVerificationToken: (token) => {
+    useVerificationToken(token) {
       try {
         return (
           client
@@ -183,10 +183,10 @@ export function SQLiteDrizzleAdapter(
         throw new Error("No verification token found.")
       }
     },
-    deleteUser: (id) => {
+    deleteUser(id) {
       return client.delete(users).where(eq(users.id, id)).returning().get()
     },
-    unlinkAccount: (account) => {
+    unlinkAccount(account) {
       client
         .delete(accounts)
         .where(

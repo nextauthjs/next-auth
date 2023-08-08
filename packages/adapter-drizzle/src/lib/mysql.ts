@@ -72,7 +72,7 @@ export function mySqlDrizzleAdapter(
   client: MySql2Database<Record<string, never>>
 ): Adapter {
   return {
-    createUser: async (data) => {
+    async createUser(data) {
       const id = crypto.randomUUID()
 
       await client.insert(users).values({ ...data, id })
@@ -83,7 +83,7 @@ export function mySqlDrizzleAdapter(
         .where(eq(users.id, id))
         .then((res) => res[0])
     },
-    getUser: async (data) => {
+    async getUser(data) {
       const thing =
         (await client
           .select()
@@ -93,7 +93,7 @@ export function mySqlDrizzleAdapter(
 
       return thing
     },
-    getUserByEmail: async (data) => {
+    async getUserByEmail(data) {
       const user =
         (await client
           .select()
@@ -103,7 +103,7 @@ export function mySqlDrizzleAdapter(
 
       return user
     },
-    createSession: async (data) => {
+    async createSession(data) {
       await client.insert(sessions).values(data)
 
       return await client
@@ -112,7 +112,7 @@ export function mySqlDrizzleAdapter(
         .where(eq(sessions.sessionToken, data.sessionToken))
         .then((res) => res[0])
     },
-    getSessionAndUser: async (data) => {
+    async getSessionAndUser(data) {
       const sessionAndUser =
         (await client
           .select({
@@ -126,7 +126,7 @@ export function mySqlDrizzleAdapter(
 
       return sessionAndUser
     },
-    updateUser: async (data) => {
+    async updateUser(data) {
       if (!data.id) {
         throw new Error("No user id.")
       }
@@ -139,7 +139,7 @@ export function mySqlDrizzleAdapter(
         .where(eq(users.id, data.id))
         .then((res) => res[0])
     },
-    updateSession: async (data) => {
+    async updateSession(data) {
       await client
         .update(sessions)
         .set(data)
@@ -151,13 +151,13 @@ export function mySqlDrizzleAdapter(
         .where(eq(sessions.sessionToken, data.sessionToken))
         .then((res) => res[0])
     },
-    linkAccount: async (rawAccount) => {
+    async linkAccount(rawAccount) {
       await client
         .insert(accounts)
         .values(rawAccount)
         .then((res) => res[0])
     },
-    getUserByAccount: async (account) => {
+    async getUserByAccount(account) {
       const dbAccount =
         (await client
           .select()
@@ -177,7 +177,7 @@ export function mySqlDrizzleAdapter(
 
       return dbAccount.users
     },
-    deleteSession: async (sessionToken) => {
+    async deleteSession(sessionToken) {
       const session =
         (await client
           .select()
@@ -191,7 +191,7 @@ export function mySqlDrizzleAdapter(
 
       return session
     },
-    createVerificationToken: async (token) => {
+    async createVerificationToken(token) {
       await client.insert(verificationTokens).values(token)
 
       return await client
@@ -200,7 +200,7 @@ export function mySqlDrizzleAdapter(
         .where(eq(verificationTokens.identifier, token.identifier))
         .then((res) => res[0])
     },
-    useVerificationToken: async (token) => {
+    async useVerificationToken(token) {
       try {
         const deletedToken =
           (await client
@@ -228,7 +228,7 @@ export function mySqlDrizzleAdapter(
         throw new Error("No verification token found.")
       }
     },
-    deleteUser: async (id) => {
+    async deleteUser(id) {
       const user = await client
         .select()
         .from(users)
@@ -239,7 +239,7 @@ export function mySqlDrizzleAdapter(
 
       return user
     },
-    unlinkAccount: async (account) => {
+    async unlinkAccount(account) {
       await client
         .delete(accounts)
         .where(
