@@ -1,3 +1,4 @@
+import { eq, and } from "drizzle-orm"
 import {
   integer,
   sqliteTable,
@@ -5,10 +6,9 @@ import {
   primaryKey,
   BaseSQLiteDatabase,
 } from "drizzle-orm/sqlite-core"
-import { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { eq, and } from "drizzle-orm"
 
-/** @internal */
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+
 export const users = sqliteTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -17,7 +17,6 @@ export const users = sqliteTable("users", {
   image: text("image"),
 })
 
-/** @internal */
 export const accounts = sqliteTable(
   "accounts",
   {
@@ -40,7 +39,6 @@ export const accounts = sqliteTable(
   })
 )
 
-/** @internal */
 export const sessions = sqliteTable("sessions", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
   userId: text("userId")
@@ -49,7 +47,6 @@ export const sessions = sqliteTable("sessions", {
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 })
 
-/** @internal */
 export const verificationTokens = sqliteTable(
   "verificationToken",
   {
@@ -62,11 +59,9 @@ export const verificationTokens = sqliteTable(
   })
 )
 
-/** @internal */
 export const schema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof schema
 
-/** @internal */
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<any, any>
 ): Adapter {

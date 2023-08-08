@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
-import { users, accounts, sessions, verificationTokens } from "../../src/pg"
+import { users, accounts, sessions, verificationTokens } from "../../src/lib/pg"
 
 const connectionString = "postgres://nextauth:nextauth@localhost:5432/nextauth"
 const sql = postgres(connectionString, { max: 1 })

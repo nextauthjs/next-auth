@@ -1,3 +1,4 @@
+import { and, eq } from "drizzle-orm"
 import {
   timestamp,
   pgTable,
@@ -5,11 +6,10 @@ import {
   primaryKey,
   integer,
 } from "drizzle-orm/pg-core"
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
-import { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { and, eq } from "drizzle-orm"
 
-/** @internal */
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+
 export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
@@ -18,7 +18,6 @@ export const users = pgTable("users", {
   image: text("image"),
 })
 
-/** @internal */
 export const accounts = pgTable(
   "accounts",
   {
@@ -41,7 +40,6 @@ export const accounts = pgTable(
   })
 )
 
-/** @internal */
 export const sessions = pgTable("sessions", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
   userId: text("userId")
@@ -50,7 +48,6 @@ export const sessions = pgTable("sessions", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 })
 
-/** @internal */
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -63,11 +60,9 @@ export const verificationTokens = pgTable(
   })
 )
 
-/** @internal */
 export const schema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof schema
 
-/** @internal */
 export function pgDrizzleAdapter(
   client: PostgresJsDatabase<Record<string, never>>
 ): Adapter {

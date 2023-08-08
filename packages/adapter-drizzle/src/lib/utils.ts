@@ -1,9 +1,13 @@
-import { AnyMySqlTable, MySqlDatabase } from "drizzle-orm/mysql-core"
-import { AnyPgTable, PgDatabase } from "drizzle-orm/pg-core"
-import { AnySQLiteTable, BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
-import { DefaultSchema as PgSchema } from "./pg"
-import { DefaultSchema as MySqlSchema } from "./mysql"
-import { DefaultSchema as SQLiteSchema } from "./sqlite"
+import { MySqlDatabase } from "drizzle-orm/mysql-core"
+import { PgDatabase } from "drizzle-orm/pg-core"
+import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
+
+import type { AnyMySqlTable } from "drizzle-orm/mysql-core"
+import type { AnyPgTable } from "drizzle-orm/pg-core"
+import type { AnySQLiteTable } from "drizzle-orm/sqlite-core"
+import type { DefaultSchema as PgSchema } from "./pg"
+import type { DefaultSchema as MySqlSchema } from "./mysql"
+import type { DefaultSchema as SQLiteSchema } from "./sqlite"
 
 export type AnyMySqlDatabase = MySqlDatabase<any, any>
 export type AnyPgDatabase = PgDatabase<any, any, any>

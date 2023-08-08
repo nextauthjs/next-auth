@@ -6,10 +6,10 @@ import {
   primaryKey,
   varchar,
 } from "drizzle-orm/mysql-core"
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { MySql2Database } from "drizzle-orm/mysql2"
 
-/** @internal */
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type { MySql2Database } from "drizzle-orm/mysql2"
+
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
@@ -21,7 +21,6 @@ export const users = mysqlTable("users", {
   image: varchar("image", { length: 255 }),
 })
 
-/** @internal */
 export const accounts = mysqlTable(
   "accounts",
   {
@@ -46,7 +45,6 @@ export const accounts = mysqlTable(
   })
 )
 
-/** @internal */
 export const sessions = mysqlTable("sessions", {
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
   userId: varchar("userId", { length: 255 })
@@ -55,7 +53,6 @@ export const sessions = mysqlTable("sessions", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 })
 
-/** @internal */
 export const verificationTokens = mysqlTable(
   "verificationToken",
   {
@@ -68,11 +65,9 @@ export const verificationTokens = mysqlTable(
   })
 )
 
-/** @internal */
 export const schema = { users, accounts, sessions, verificationTokens }
 export type DefaultSchema = typeof schema
 
-/** @internal */
 export function mySqlDrizzleAdapter(
   client: MySql2Database<Record<string, never>>
 ): Adapter {

@@ -14,7 +14,7 @@ import {
   sessions,
   verificationTokens,
   schema,
-} from "../../src/mysql"
+} from "../../src/lib/mysql"
 
 const poolConnection = createPool({
   host: "localhost",
