@@ -58,12 +58,12 @@ export default async function session(
       if (token !== null) {
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
-        const updatedSession = {
+        const session = {
           user: { name: token.name, email: token.email, image: token.picture },
           expires: newExpires.toISOString(),
         }
         // @ts-expect-error
-        const newSession = await callbacks.session({ session, token })
+        const updatedSession = await callbacks.session({ session, token })
 
         // Return session payload as response
         response.body = updatedSession
