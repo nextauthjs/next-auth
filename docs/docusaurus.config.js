@@ -265,6 +265,7 @@ const docusaurusConfig = {
       ? []
       : [
           typedocAdapter("Dgraph"),
+          typedocAdapter("Drizzle"),
           typedocAdapter("DynamoDB"),
           typedocAdapter("Fauna"),
           typedocAdapter("Firebase"),
