@@ -71,24 +71,28 @@ export default async function session(
         token,
       })
 
-      // Return session payload as response
-      response.body = updatedSession
+      if (token !== null) {
+        // Return session payload as response
+        response.body = updatedSession
 
-      // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newToken = await jwt.encode({
-        ...jwt,
-        token,
-        maxAge: options.session.maxAge,
-      })
+        // Refresh JWT expiry by re-signing it, with an updated expiry date
+        const newToken = await jwt.encode({
+          ...jwt,
+          token,
+          maxAge: options.session.maxAge,
+        })
 
-      // Set cookie, to also update expiry date on cookie
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: newExpires,
-      })
+        // Set cookie, to also update expiry date on cookie
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: newExpires,
+        })
 
-      response.cookies?.push(...sessionCookies)
+        response.cookies?.push(...sessionCookies)
 
-      await events.session?.({ session: updatedSession, token })
+        await events.session?.({ session: updatedSession, token })
+      } else {
+        response.cookies?.push(...sessionStore.clean())
+      }
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error as Error)

@@ -342,6 +342,11 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * where you can control what should be returned to the client.
    * Anything else will be kept from your front-end.
    *
+   * Returning `null` will invalidate the JWT session by clearing
+   * the user's cookies. You'll still have to monitor and invalidate
+   * unexpired tokens from future requests yourself to prevent
+   * unauthorized access.
+   *
    * The JWT is encrypted by default.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
@@ -396,7 +401,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
        */
       session?: any
     }
-  ) => Awaitable<JWT>
+  ) => Awaitable<JWT|null>
 }
 
 /** [Documentation](https://next-auth.js.org/configuration/options#cookies) */
