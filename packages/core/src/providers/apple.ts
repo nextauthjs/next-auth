@@ -164,19 +164,34 @@ export default function Apple<P extends AppleProfile>(
       params: {
         scope: "name email",
         response_mode: "form_post",
-      },
+      }
     },
-    profile(profile, _, userResponse) {
-      let name = null;
-
-      if (userResponse) {
-        const user = JSON.parse(userResponse);
-        name = user.name.firstName + " " + user.name.lastName;
+    // Provide a token endpoint to omit the discovery step.
+    // This is required because Apple does not provide a userinfo endpoint.
+    token: 'https://appleid.apple.com/auth/token',
+    profileConform(profile, query) {
+      if (profile.name !== undefined) {
+        console.warn(
+          "'Name' is not undefined. Redundant workaround, please open an issue."
+        )
       }
 
+      if (query.user) {
+        const user = JSON.parse(query.user);
+        if (user.name) {
+          return {
+            ...profile,
+            name: Object.values(user.name).join(" "),
+          }
+        }
+      }
+
+      return profile;
+    },
+    profile(profile) {
       return {
         id: profile.sub,
-        name: name,
+        name: profile.name,
         email: profile.email,
         image: null,
       }

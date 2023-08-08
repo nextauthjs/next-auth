@@ -49,7 +49,7 @@ export async function callback(params: {
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
       const { proxyRedirect, randomState } = handleState(
-        query,
+        provider.authorization?.url.searchParams.get("response_mode") === 'form_post' ? body : query,
         provider,
         options.isOnRedirectProxy
       )

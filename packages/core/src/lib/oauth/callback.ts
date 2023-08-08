@@ -140,6 +140,11 @@ export async function handleOAuth(
     }
 
     profile = o.getValidatedIdTokenClaims(result)
+
+    if (provider.profileConform) {
+      profile = provider.profileConform(profile, query);
+    }
+
     tokens = result
   } else {
     tokens = await o.processAuthorizationCodeOAuth2Response(
@@ -176,8 +181,7 @@ export async function handleOAuth(
     profile,
     provider,
     tokens,
-    logger,
-    query?.user
+    logger
   )
 
   return { ...profileResult, profile, cookies: resCookies }
@@ -189,10 +193,9 @@ async function getUserAndAccount(
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
   logger: LoggerInstance,
-  userResponse: string | undefined
 ) {
   try {
-    const user = await provider.profile(OAuthProfile, tokens, userResponse)
+    const user = await provider.profile(OAuthProfile, tokens)
     user.email = user.email?.toLowerCase()
 
     if (!user.id) {

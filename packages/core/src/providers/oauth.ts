@@ -93,21 +93,6 @@ export type UserinfoEndpointHandler = EndpointHandler<
 export type ProfileCallback<Profile> = (
   profile: Profile,
   tokens: TokenSet,
-  /**
-   * Additional user data returned by the authorization endpoint
-   * in some cases. For example, in the case of Apple, the user
-   * information is returned with the authorization response and
-   * nowhere else.
-   * 
-   * This can then be used in the `profile` callback to fill in
-   * the user information.
-   * 
-   * @example
-   * ```json
-   * {"name":{"firstName":"John","lastName":"Doe"},"email":"john.doe@icloud.com"}
-   * ```
-   */
-  userResponse: string | undefined,
 ) => Awaitable<User>
 
 export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
@@ -236,6 +221,16 @@ export interface OAuth2Config<Profile>
    */
   allowDangerousEmailAccountLinking?: boolean
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
+  /**
+   * If the profile information is not fully returned in the id_token,
+   * the provider can add additional information in this function.
+   * 
+   * Currently only used by the `apple` provider, as the user information
+   * is returned in the authorization response, instead of the id_token.
+   * 
+   * @internal
+   */
+  profileConform?: (profile: Profile, query: any) => Profile
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
