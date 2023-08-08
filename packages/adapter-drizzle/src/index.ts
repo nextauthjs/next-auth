@@ -16,15 +16,15 @@
  * @module @auth/drizzle-adapter
  */
 
-import { mySqlDrizzleAdapter } from "./lib/mysql"
-import { pgDrizzleAdapter } from "./lib/pg"
-import { SQLiteDrizzleAdapter } from "./lib/sqlite"
+import { mySqlDrizzleAdapter } from "./lib/mysql.js"
+import { pgDrizzleAdapter } from "./lib/pg.js"
+import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
 import {
   isMySqlDatabase,
   isPgDatabase,
   isSQLiteDatabase,
   SqlFlavorOptions,
-} from "./lib/utils"
+} from "./lib/utils.js"
 
 import type { Adapter } from "@auth/core/adapters"
 

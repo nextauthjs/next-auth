@@ -5,9 +5,9 @@ import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 import type { AnyMySqlTable } from "drizzle-orm/mysql-core"
 import type { AnyPgTable } from "drizzle-orm/pg-core"
 import type { AnySQLiteTable } from "drizzle-orm/sqlite-core"
-import type { DefaultSchema as PgSchema } from "./pg"
-import type { DefaultSchema as MySqlSchema } from "./mysql"
-import type { DefaultSchema as SQLiteSchema } from "./sqlite"
+import type { DefaultSchema as PgSchema } from "./pg.js"
+import type { DefaultSchema as MySqlSchema } from "./mysql.js"
+import type { DefaultSchema as SQLiteSchema } from "./sqlite.js"
 
 export type AnyMySqlDatabase = MySqlDatabase<any, any>
 export type AnyPgDatabase = PgDatabase<any, any, any>
