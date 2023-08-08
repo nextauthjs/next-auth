@@ -358,6 +358,13 @@ export interface CallbacksOptions<P = Profile, A = Account> {
        */
       token: JWT
       /**
+       * Contains the existing JWT of a user (if any).
+       * 
+       * This allows using multiple providers while being already authorized (merging sessions),
+       * or having providers that check and invalidate existing user sessions (sign out users).
+       */
+      prevToken?: JWT | null
+      /**
        * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
        * @note available when `trigger` is `"signIn"` or `"signUp"`.
        *

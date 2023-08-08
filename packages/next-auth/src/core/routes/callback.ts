@@ -36,6 +36,21 @@ export default async function callback(params: {
   const cookies: Cookie[] = []
 
   const useJwtSession = sessionStrategy === "jwt"
+  const sessionToken = sessionStore.value
+
+  let prevToken: JWT | null
+  try {
+    if (useJwtSession) {
+      prevToken = (await jwt.decode({ ...jwt, token: sessionToken }))!
+    }
+  } catch (error) {
+    return {
+      redirect: `${url}/error?error=${encodeURIComponent(
+        (error as Error).message
+      )}`,
+      cookies,
+    }
+  }
 
   if (provider.type === "oauth") {
     try {
@@ -126,6 +141,7 @@ export default async function callback(params: {
           }
           const token = await callbacks.jwt({
             token: defaultToken,
+            prevToken,
             user,
             account,
             profile: OAuthProfile,
@@ -266,6 +282,7 @@ export default async function callback(params: {
         }
         const token = await callbacks.jwt({
           token: defaultToken,
+          prevToken,
           user,
           account,
           isNewUser,
@@ -390,6 +407,7 @@ export default async function callback(params: {
 
     const token = await callbacks.jwt({
       token: defaultToken,
+      prevToken,
       user,
       // @ts-expect-error
       account,
