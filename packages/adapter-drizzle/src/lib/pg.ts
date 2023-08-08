@@ -8,7 +8,6 @@ import {
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { and, eq } from "drizzle-orm"
-import crypto from "node:crypto"
 
 /** @internal */
 export const users = pgTable("users", {

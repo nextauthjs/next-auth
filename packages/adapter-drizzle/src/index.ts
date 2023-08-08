@@ -15,16 +15,19 @@
  *
  * @module @auth/drizzle-adapter
  */
+
+import { mySqlDrizzleAdapter } from "./lib/mysql"
+import { pgDrizzleAdapter } from "./lib/pg"
+import { SQLiteDrizzleAdapter } from "./lib/sqlite"
 import {
-  SqlFlavorOptions,
   isMySqlDatabase,
   isPgDatabase,
   isSQLiteDatabase,
-} from "./utils"
+  SqlFlavorOptions,
+} from "./lib/utils"
+
 import type { Adapter } from "@auth/core/adapters"
-import { mySqlDrizzleAdapter } from "./mysql"
-import { pgDrizzleAdapter } from "./pg"
-import { SQLiteDrizzleAdapter } from "./sqlite"
+
 /**
  * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
  *

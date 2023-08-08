@@ -5,7 +5,6 @@ import {
   primaryKey,
   BaseSQLiteDatabase,
 } from "drizzle-orm/sqlite-core"
-import crypto from "node:crypto"
 import { Adapter, AdapterAccount } from "@auth/core/adapters"
 import { eq, and } from "drizzle-orm"
 
