@@ -58,7 +58,7 @@ export default async function session(
       if (token !== null) {
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
-        const session = {
+        const updatedSession = {
           user: { name: token.name, email: token.email, image: token.picture },
           expires: newExpires.toISOString(),
         }
