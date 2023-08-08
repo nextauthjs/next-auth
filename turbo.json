@@ -3,7 +3,8 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"]
+      "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"],
+      "outputMode": "new-only"
     },
     "next-auth#build": {
       "dependsOn": ["^build"],
@@ -17,7 +18,8 @@
         "react/**",
         "*.js",
         "*.d.ts"
-      ]
+      ],
+      "outputMode": "new-only"
     },
     "@auth/core#build": {
       "dependsOn": ["^build"],
@@ -29,11 +31,13 @@
         "*.d.ts.map",
         "src/lib/pages/styles.ts",
         "src/providers/oauth-types.ts"
-      ]
+      ],
+      "outputMode": "new-only"
     },
     "@auth/sveltekit#build": {
       "dependsOn": ["^build"],
-      "outputs": [".svelte-kit/**", "client.*", "index.*"]
+      "outputs": [".svelte-kit/**", "client.*", "index.*"],
+      "outputMode": "new-only"
     },
     "clean": {
       "cache": false
@@ -42,7 +46,7 @@
       "cache": false
     },
     "test": {
-      "outputs": []
+      "outputMode": "new-only"
     },
     "e2e": {
       "outputs": ["playwright-report/**"]

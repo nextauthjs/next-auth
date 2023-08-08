@@ -19,6 +19,7 @@ export interface SendVerificationRequestParams {
   provider: EmailConfig
   token: string
   theme: Theme
+  request: Request
 }
 
 /**
