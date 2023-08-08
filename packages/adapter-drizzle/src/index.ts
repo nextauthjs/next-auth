@@ -16,6 +16,9 @@
  * @module @auth/drizzle-adapter
  */
 
+import { MySqlTableFn } from "drizzle-orm/mysql-core/index.js"
+import { PgTableFn } from "drizzle-orm/pg-core/index.js"
+import { SQLiteTableFn } from "drizzle-orm/sqlite-core/index.js"
 import { mySqlDrizzleAdapter } from "./lib/mysql.js"
 import { pgDrizzleAdapter } from "./lib/pg.js"
 import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
@@ -24,12 +27,13 @@ import {
   isPgDatabase,
   isSQLiteDatabase,
   SqlFlavorOptions,
+  TableFn,
 } from "./lib/utils.js"
 
 import type { Adapter } from "@auth/core/adapters"
 
 /**
- * Add the adapter to your `app/api/[...nextauth]/route.js` next-auth configuration object.
+ * Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
  *
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
@@ -47,6 +51,10 @@ import type { Adapter } from "@auth/core/adapters"
  *   ],
  * })
  * ```
+ * 
+ * :::info
+ * If you're using multi-project schemas, you can pass your table function as a second argument
+ * :::
  *
  * ## Setup
  *
@@ -249,19 +257,20 @@ import type { Adapter } from "@auth/core/adapters"
  *
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
-  db: SqlFlavor
+  db: SqlFlavor,
+  table?: TableFn<SqlFlavor>
 ): Adapter {
   if (isMySqlDatabase(db)) {
     // We need to cast to unknown since the type overlaps (PScale is MySQL based)
-    return mySqlDrizzleAdapter(db)
+    return mySqlDrizzleAdapter(db, table as MySqlTableFn)
   }
 
   if (isPgDatabase(db)) {
-    return pgDrizzleAdapter(db)
+    return pgDrizzleAdapter(db, table as PgTableFn)
   }
 
   if (isSQLiteDatabase(db)) {
-    return SQLiteDrizzleAdapter(db)
+    return SQLiteDrizzleAdapter(db, table as SQLiteTableFn)
   }
 
   throw new Error("Unsupported database type in Auth.js Drizzle adapter.")

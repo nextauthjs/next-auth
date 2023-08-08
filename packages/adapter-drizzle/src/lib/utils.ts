@@ -2,9 +2,9 @@ import { MySqlDatabase } from "drizzle-orm/mysql-core"
 import { PgDatabase } from "drizzle-orm/pg-core"
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 
-import type { AnyMySqlTable } from "drizzle-orm/mysql-core"
-import type { AnyPgTable } from "drizzle-orm/pg-core"
-import type { AnySQLiteTable } from "drizzle-orm/sqlite-core"
+import type { AnyMySqlTable, MySqlTableFn } from "drizzle-orm/mysql-core"
+import type { AnyPgTable, PgTableFn } from "drizzle-orm/pg-core"
+import type { AnySQLiteTable, SQLiteTableFn } from "drizzle-orm/sqlite-core"
 import type { DefaultSchema as PgSchema } from "./pg.js"
 import type { DefaultSchema as MySqlSchema } from "./mysql.js"
 import type { DefaultSchema as SQLiteSchema } from "./sqlite.js"
@@ -31,6 +31,14 @@ export type ClientFlavors<Flavor> = Flavor extends AnyMySqlDatabase
   : Flavor extends AnySQLiteDatabase
   ? MinimumSchema["sqlite"]
   : never
+
+export type TableFn<Flavor> = Flavor extends AnyMySqlDatabase
+  ? MySqlTableFn
+  : Flavor extends AnyPgDatabase
+  ? PgTableFn
+  : Flavor extends AnySQLiteDatabase
+  ? AnySQLiteTable
+  : SQLiteTableFn
 
 export function isMySqlDatabase(
   db: any

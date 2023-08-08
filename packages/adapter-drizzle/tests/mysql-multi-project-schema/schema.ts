@@ -1,4 +1,4 @@
-import { mysqlTable } from "drizzle-orm/mysql-core"
+import { mysqlTableCreator } from "drizzle-orm/mysql-core"
 import { drizzle } from "drizzle-orm/mysql2"
 import { createPool } from "mysql2"
 import { createTables } from "../../src/lib/mysql"
@@ -9,6 +9,8 @@ const poolConnection = createPool({
   password: "password",
   database: "next-auth",
 })
+
+const mysqlTable = mysqlTableCreator((name) => `foobar_${name}`)
 
 export const { users, accounts, sessions, verificationTokens } =
   createTables(mysqlTable)

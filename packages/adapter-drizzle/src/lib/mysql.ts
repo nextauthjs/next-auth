@@ -2,75 +2,87 @@ import { and, eq } from "drizzle-orm"
 import {
   int,
   timestamp,
-  mysqlTable,
+  mysqlTable as defaultMySqlTableFn,
   primaryKey,
   varchar,
+  MySqlTableFn,
 } from "drizzle-orm/mysql-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 import type { MySql2Database } from "drizzle-orm/mysql2"
 
-export const users = mysqlTable("users", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    fsp: 3,
-  }).defaultNow(),
-  image: varchar("image", { length: 255 }),
-})
+export function createTables(mySqlTable: MySqlTableFn) {
+  const users = mySqlTable("users", {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    name: varchar("name", { length: 255 }),
+    email: varchar("email", { length: 255 }).notNull(),
+    emailVerified: timestamp("emailVerified", {
+      mode: "date",
+      fsp: 3,
+    }).defaultNow(),
+    image: varchar("image", { length: 255 }),
+  })
 
-export const accounts = mysqlTable(
-  "accounts",
-  {
+  const accounts = mySqlTable(
+    "accounts",
+    {
+      userId: varchar("userId", { length: 255 })
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+      type: varchar("type", { length: 255 })
+        .$type<AdapterAccount["type"]>()
+        .notNull(),
+      provider: varchar("provider", { length: 255 }).notNull(),
+      providerAccountId: varchar("providerAccountId", {
+        length: 255,
+      }).notNull(),
+      refresh_token: varchar("refresh_token", { length: 255 }),
+      access_token: varchar("access_token", { length: 255 }),
+      expires_at: int("expires_at"),
+      token_type: varchar("token_type", { length: 255 }),
+      scope: varchar("scope", { length: 255 }),
+      id_token: varchar("id_token", { length: 255 }),
+      session_state: varchar("session_state", { length: 255 }),
+    },
+    (account) => ({
+      compoundKey: primaryKey(account.provider, account.providerAccountId),
+    })
+  )
+
+  const sessions = mySqlTable("sessions", {
+    sessionToken: varchar("sessionToken", { length: 255 })
+      .notNull()
+      .primaryKey(),
     userId: varchar("userId", { length: 255 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 })
-      .$type<AdapterAccount["type"]>()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-    refresh_token: varchar("refresh_token", { length: 255 }),
-    access_token: varchar("access_token", { length: 255 }),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
-    id_token: varchar("id_token", { length: 255 }),
-    session_state: varchar("session_state", { length: 255 }),
-  },
-  (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
-  })
-)
-
-export const sessions = mysqlTable("sessions", {
-  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-})
-
-export const verificationTokens = mysqlTable(
-  "verificationToken",
-  {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
   })
-)
 
-export const schema = { users, accounts, sessions, verificationTokens }
-export type DefaultSchema = typeof schema
+  const verificationTokens = mySqlTable(
+    "verificationToken",
+    {
+      identifier: varchar("identifier", { length: 255 }).notNull(),
+      token: varchar("token", { length: 255 }).notNull(),
+      expires: timestamp("expires", { mode: "date" }).notNull(),
+    },
+    (vt) => ({
+      compoundKey: primaryKey(vt.identifier, vt.token),
+    })
+  )
+
+  return { users, accounts, sessions, verificationTokens }
+}
+
+export type DefaultSchema = ReturnType<typeof createTables>
 
 export function mySqlDrizzleAdapter(
-  client: MySql2Database<Record<string, never>>
+  client: MySql2Database<Record<string, never>>,
+  tableFn = defaultMySqlTableFn
 ): Adapter {
+  const { users, accounts, sessions, verificationTokens } =
+    createTables(tableFn)
+
   return {
     async createUser(data) {
       const id = crypto.randomUUID()
