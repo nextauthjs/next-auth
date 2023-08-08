@@ -8,6 +8,7 @@ import type { RequestInternal, ResponseInternal } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
 import type { AdapterSession } from "../../adapters"
+import type { JWT } from "../../jwt"
 
 /** Handle callbacks from login services */
 export default async function callback(params: {
