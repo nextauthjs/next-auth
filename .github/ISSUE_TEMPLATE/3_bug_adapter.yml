@@ -22,6 +22,7 @@ body:
       options:
         - "Custom adapter"
         - "@auth/dgraph-adapter"
+        - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
         - "@auth/drizzle-adapter"
         - "@auth/fauna-adapter"
