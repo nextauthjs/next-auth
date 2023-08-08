@@ -13,7 +13,7 @@ firebase:
   - "@auth/firebase-adapter"
 
 kysely:
-  - "@next-auth/kysely-adapter"
+  - "@auth/kysely-adapter"
 
 mikro-orm:
   - "@auth/mikro-orm-adapter"

@@ -26,7 +26,7 @@ body:
         - "@auth/drizzle-adapter"
         - "@auth/fauna-adapter"
         - "@auth/firebase-adapter"
-        - "@next-auth/kysely-adapter"
+        - "@auth/kysely-adapter"
         - "@auth/mikro-orm-adapter"
         - "@auth/mongodb-adapter"
         - "@auth/neo4j-adapter"
