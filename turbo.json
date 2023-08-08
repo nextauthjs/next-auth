@@ -2,12 +2,21 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**/*", "*.js", "*.d.ts", "*.d.ts.map"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**/*",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map"
+      ],
       "outputMode": "new-only"
     },
     "next-auth#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         "client/**",
         "core/**",
@@ -22,7 +31,9 @@
       "outputMode": "new-only"
     },
     "@auth/core#build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         "lib/**",
         "providers/**",
@@ -35,8 +46,14 @@
       "outputMode": "new-only"
     },
     "@auth/sveltekit#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".svelte-kit/**", "client.*", "index.*"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".svelte-kit/**",
+        "client.*",
+        "index.*"
+      ],
       "outputMode": "new-only"
     },
     "clean": {
@@ -49,10 +66,15 @@
       "outputMode": "new-only"
     },
     "e2e": {
-      "outputs": ["playwright-report/**"]
+      "outputs": [
+        "playwright-report/**"
+      ]
     },
     "@auth/upstash-redis-adapter#test": {
-      "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
+      "env": [
+        "UPSTASH_REDIS_KEY",
+        "UPSTASH_REDIS_URL"
+      ]
     },
     "docs#dev": {
       "dependsOn": [
@@ -63,6 +85,7 @@
         "@auth/dynamodb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
+        "@auth/kysely-adapter#build",
         "@auth/mikro-orm-adapter#build",
         "@auth/mongodb-adapter#build",
         "@auth/neo4j-adapter#build",
@@ -86,6 +109,7 @@
         "@auth/dynamodb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
+        "@auth/kysely-adapter#build",
         "@auth/mikro-orm-adapter#build",
         "@auth/mongodb-adapter#build",
         "@auth/neo4j-adapter#build",
