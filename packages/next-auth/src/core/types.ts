@@ -580,10 +580,12 @@ export type AuthAction =
   | "error"
   | "_log"
 
+type NonNullableFields<T> = {
+  [P in keyof T]-?: NonNullable<T[P]>
+}
+
 /** @internal */
-export interface InternalOptions<
-  TProviderType = ProviderType,
-> {
+export interface InternalOptions<TProviderType = ProviderType> {
   providers: InternalProvider[]
   /**
    * Parsed from `NEXTAUTH_URL` or `x-forwarded-host` and `x-forwarded-proto` if the host is trusted.
@@ -602,7 +604,7 @@ export interface InternalOptions<
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter?: Adapter
+  adapter?: NonNullableFields<Adapter>
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
