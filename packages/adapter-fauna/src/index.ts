@@ -10,10 +10,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/fauna-adapter faunadb
+ * npm install @auth/fauna-adapter faunadb
  * ```
  *
- * @module @next-auth/fauna-adapter
+ * @module @auth/fauna-adapter
  */
 import {
   Client as FaunaClient,
@@ -44,7 +44,7 @@ import {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 export const collections = {
   Users: Collection("users"),
@@ -137,7 +137,7 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { Client as FaunaClient } from "faunadb"
- * import { FaunaAdapter } from "@next-auth/fauna-adapter"
+ * import { FaunaAdapter } from "@auth/fauna-adapter"
  *
  * const client = new FaunaClient({
  *   secret: "secret",

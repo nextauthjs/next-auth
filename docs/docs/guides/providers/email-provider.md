@@ -30,7 +30,7 @@ You can override any of the options to suit your own use case.
 ## Configuration
 
 1. Auth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
-2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
+2. You will need an SMTP account; such as [the official Nodemailer recommended service](https://nodemailer.com/about/#example) of [Forward Email](https://forwardemail.net).
 3. There are two ways to configure the SMTP server connection.
 
 You can either use a connection string or a `nodemailer` configuration object.
@@ -40,8 +40,8 @@ You can either use a connection string or a `nodemailer` configuration object.
 Create an `.env` file to the root of your project and add the connection string and email address.
 
 ```js title=".env" {1}
-	EMAIL_SERVER=smtp://username:password@smtp.example.com:587
-	EMAIL_FROM=noreply@example.com
+	EMAIL_SERVER=smtp://username:password@smtp.forwardemail.net:587
+	EMAIL_FROM=support@example.com
 ```
 
 Now you can add the email provider like this:
@@ -64,7 +64,7 @@ In your `.env` file in the root of your project simply add the configuration obj
 ```js title=".env"
 EMAIL_SERVER_USER=username
 EMAIL_SERVER_PASSWORD=password
-EMAIL_SERVER_HOST=smtp.example.com
+EMAIL_SERVER_HOST=smtp.forwardemail.net
 EMAIL_SERVER_PORT=587
 EMAIL_FROM=noreply@example.com
 ```
@@ -112,6 +112,7 @@ providers: [
       identifier: email,
       url,
       provider: { server, from },
+      request // for example can be used to get the user agent (`request.headers.get("user-agent")`) to parse and pass on to the user in the email so they can be more confident they originated the request
     }) {
       /* your function */
     },

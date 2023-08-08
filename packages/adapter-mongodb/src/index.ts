@@ -9,10 +9,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/mongodb-adapter mongodb
+ * npm install @auth/mongodb-adapter mongodb
  * ```
  *
- * @module @next-auth/mongodb-adapter
+ * @module @auth/mongodb-adapter
  */
 import { ObjectId } from "mongodb"
 
@@ -22,7 +22,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import type { MongoClient } from "mongodb"
 
 /** This is the interface of the MongoDB adapter options. */
@@ -132,7 +132,7 @@ export function _id(hex?: string) {
  *
  * ```js
  * import NextAuth from "next-auth"
- * import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+ * import { MongoDBAdapter } from "@auth/mongodb-adapter"
  * import clientPromise from "../../../lib/mongodb"
  *
  * // For more information on each option (and a full list of options) go to

@@ -10,7 +10,7 @@
  *
  * ```bash npm2yarn2pnpm
  * # Install Auth.js and the Xata adapter
- * npm install next-auth @next-auth/xata-adapter
+ * npm install @auth/xata-adapter
  *
  * # Install the Xata CLI globally if you don't already have it
  * npm install --location=global @xata.io/cli
@@ -19,9 +19,9 @@
  * xata auth login
  * ```
  *
- * @module @next-auth/xata-adapter
+ * @module @auth/xata-adapter
  */
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 
 import type { XataClient } from "./xata"
 
@@ -195,7 +195,7 @@ import type { XataClient } from "./xata"
  * xata init --schema=./path/to/your/schema.json
  * ```
  *
- * The CLI will walk you through a setup process where you choose a [workspace](https://docs.xata.io/concepts/workspaces) (kind of like a GitHub org or a Vercel team) and an appropriate database. We recommend using a fresh database for this, as we'll augment it with tables that Auth.js needs.
+ * The CLI will walk you through a setup process where you choose a [workspace](https://xata.io/docs/api-reference/workspaces) (kind of like a GitHub org or a Vercel team) and an appropriate database. We recommend using a fresh database for this, as we'll augment it with tables that Auth.js needs.
  *
  * Once you're done, you can continue using Auth.js in your project as expected, like creating a `./pages/api/auth/[...nextauth]` route.
  *
@@ -220,7 +220,7 @@ import type { XataClient } from "./xata"
  * ```diff
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * +import { XataAdapter } from "@next-auth/xata-adapter"
+ * +import { XataAdapter } from "@auth/xata-adapter"
  * +import { XataClient } from "../../../xata" // or wherever you've chosen to create the client
  *
  * +const client = new XataClient()

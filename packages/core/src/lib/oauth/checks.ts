@@ -1,6 +1,7 @@
+import * as jose from "jose"
 import * as o from "oauth4webapi"
 import { InvalidCheck } from "../../errors.js"
-import { encode, decode } from "../../jwt.js"
+import { decode, encode } from "../../jwt.js"
 
 import type {
   CookiesOptions,
@@ -18,7 +19,8 @@ export async function signCookie(
   type: keyof CookiesOptions,
   value: string,
   maxAge: number,
-  options: InternalOptions<"oauth">
+  options: InternalOptions<"oauth" | "oidc">,
+  data?: any
 ): Promise<Cookie> {
   const { cookies, logger } = options
 
@@ -26,13 +28,11 @@ export async function signCookie(
 
   const expires = new Date()
   expires.setTime(expires.getTime() + maxAge * 1000)
+  const token: any = { value }
+  if (type === "state" && data) token.data = data
   return {
     name: cookies[type].name,
-    value: await encode<CheckPayload>({
-      ...options.jwt,
-      maxAge,
-      token: { value },
-    }),
+    value: await encode({ ...options.jwt, maxAge, token }),
     options: { ...cookies[type].options, expires },
   }
 }
@@ -92,14 +92,45 @@ export const pkce = {
 }
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+export function decodeState(value: string):
+  | {
+      /** If defined, a redirect proxy is being used to support multiple OAuth apps with a single callback URL */
+      origin?: string
+      /** Random value for CSRF protection */
+      random: string
+    }
+  | undefined {
+  try {
+    const decoder = new TextDecoder()
+    return JSON.parse(decoder.decode(jose.base64url.decode(value)))
+  } catch {}
+}
+
 export const state = {
-  async create(options: InternalOptions<"oauth">) {
-    if (!options.provider.checks.includes("state")) return
-    // TODO: support customizing the state
-    const value = o.generateRandomState()
+  async create(options: InternalOptions<"oauth">, data?: object) {
+    const { provider } = options
+    if (!provider.checks.includes("state")) {
+      if (data) {
+        throw new InvalidCheck(
+          "State data was provided but the provider is not configured to use state."
+        )
+      }
+      return
+    }
+
+    const encodedState = jose.base64url.encode(
+      JSON.stringify({ ...data, random: o.generateRandomState() })
+    )
+
     const maxAge = STATE_MAX_AGE
-    const cookie = await signCookie("state", value, maxAge, options)
-    return { cookie, value }
+    const cookie = await signCookie(
+      "state",
+      encodedState,
+      maxAge,
+      options,
+      data
+    )
+    return { cookie, value: encodedState }
   },
   /**
    * Returns state if the provider is configured to use state,
@@ -111,7 +142,8 @@ export const state = {
   async use(
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalOptions<"oauth">
+    options: InternalOptions<"oauth">,
+    paramRandom?: string
   ): Promise<string | undefined> {
     const { provider } = options
     if (!provider.checks.includes("state")) return
@@ -121,10 +153,23 @@ export const state = {
     if (!state) throw new InvalidCheck("State cookie was missing.")
 
     // IDEA: Let the user do something with the returned state
-    const value = await decode<CheckPayload>({ ...options.jwt, token: state })
+    const encodedState = await decode<CheckPayload>({
+      ...options.jwt,
+      token: state,
+    })
 
-    if (!value?.value)
-      throw new InvalidCheck("State value could not be parsed.")
+    if (!encodedState?.value)
+      throw new InvalidCheck("State (cookie) value could not be parsed.")
+
+    const decodedState = decodeState(encodedState.value)
+
+    if (!decodedState)
+      throw new InvalidCheck("State (encoded) value could not be parsed.")
+
+    if (decodedState.random !== paramRandom)
+      throw new InvalidCheck(
+        `Random state values did not match. Expected: ${decodedState.random}. Got: ${paramRandom}`
+      )
 
     // Clear the state cookie after use
     resCookies.push({
@@ -133,13 +178,13 @@ export const state = {
       options: { ...options.cookies.state.options, maxAge: 0 },
     })
 
-    return value.value
+    return encodedState.value
   },
 }
 
 const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export const nonce = {
-  async create(options: InternalOptions<"oauth">) {
+  async create(options: InternalOptions<"oidc">) {
     if (!options.provider.checks.includes("nonce")) return
     const value = o.generateRandomNonce()
     const maxAge = NONCE_MAX_AGE
@@ -156,7 +201,7 @@ export const nonce = {
   async use(
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalOptions<"oauth">
+    options: InternalOptions<"oidc">
   ): Promise<string | undefined> {
     const { provider } = options
 

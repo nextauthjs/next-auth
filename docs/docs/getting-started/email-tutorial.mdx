@@ -34,7 +34,7 @@ npm install -D nodemailer
 
 ## 2. Setting up a SMTP service
 
-Next we need a [SMTP service](https://sendgrid.com/blog/what-is-an-smtp-server/) which will be in charge of sending emails from our application. There's a number of services available for this, however [here are the ones](http://nodemailer.com/smtp/well-known/) known to work with `nodemailer`.
+Next we need a [SMTP service](https://sendgrid.com/blog/what-is-an-smtp-server/) which will be in charge of sending emails from our application. There's a number of services available for this, however [here are the ones](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services) known to work with `nodemailer`.
 
 :::info
 For this tutorial, we're going to be using [Sendgrid](https://sendgrid.com/), but any of the services linked above should work the same
@@ -91,12 +91,12 @@ Finally, we'll need to set up a database adapter to store verification tokens th
 
 An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc...
 
-For this tutorial, we're going to use the **MongoDB** adapter, other any of the other adapters will work just fine.
+For this tutorial, we're going to use the **MongoDB** adapter, but any of the other adapters will work just fine.
 
 First, let's start by installing the adapter package:
 
 ```bash npm2yarn2pnpm
-npm install -D  @next-auth/mongodb-adapter mongodb
+npm install -D  @auth/mongodb-adapter mongodb
 ```
 
 and create a simple MongoDB client:
@@ -142,7 +142,7 @@ And now let's reference this new adapter from our Auth.js configuration file:
 ```diff title="pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
-+ import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
++ import { MongoDBAdapter } from "@auth/mongodb-adapter"
 + import clientPromise from "../../../lib/mongodb/client"
 
 export default NextAuth({

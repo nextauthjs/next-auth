@@ -34,9 +34,9 @@
     "@docusaurus/theme-common": "2.3.1",
     "@docusaurus/theme-mermaid": "2.3.1",
     "@docusaurus/types": "2.3.1",
-    "docusaurus-plugin-typedoc": "1.0.0-next.2",
-    "typedoc": "^0.23.28",
-    "typedoc-plugin-markdown": "4.0.0-next.3"
+    "docusaurus-plugin-typedoc": "1.0.0-next.5",
+    "typedoc": "^0.24.4",
+    "typedoc-plugin-markdown": "4.0.0-next.6"
   },
   "browserslist": {
     "production": [

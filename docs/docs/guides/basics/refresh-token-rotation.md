@@ -117,7 +117,7 @@ Using the database strategy is very similar, but instead of preserving the `acce
 import { Auth } from "@auth/core"
 import { type TokenSet } from "@auth/core/types"
 import Google from "@auth/core/providers/google"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()

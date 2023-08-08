@@ -71,7 +71,7 @@
  *
  * ```ts title=my-adapter.ts
  * import { type Adapter } from "@auth/core/adapters"
- * import { PrismaAdapter } from "@next-auth/prisma-adapter"
+ * import { PrismaAdapter } from "@auth/prisma-adapter"
  * import { PrismaClient } from "@prisma/client"
  *
  * const prisma = new PrismaClient()
@@ -223,11 +223,15 @@ export interface Adapter {
   getUserByAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ): Awaitable<AdapterUser | null>
-  updateUser?(user: Partial<AdapterUser>): Awaitable<AdapterUser>
+  updateUser?(user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>): Awaitable<AdapterUser>
   /** @todo This method is currently not invoked yet. */
   deleteUser?(
     userId: string
   ): Promise<void> | Awaitable<AdapterUser | null | undefined>
+  /**
+   * This method is invoked internally (but optionally can be used for manual linking).
+   * It creates an [Account](https://authjs.dev/reference/adapters#models) in the database.
+   */
   linkAccount?(
     account: AdapterAccount
   ): Promise<void> | Awaitable<AdapterAccount | null | undefined>

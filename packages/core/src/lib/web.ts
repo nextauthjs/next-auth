@@ -33,11 +33,13 @@ export async function toInternalRequest(
     // TODO: url.toString() should not include action and providerId
     // see init.ts
     const url = new URL(req.url.replace(/\/$/, ""))
+    // FIXME: Upstream issue in Next.js, pathname segments get included as part of the query string
+    url.searchParams.delete("nextauth")
     const { pathname } = url
 
     const action = actions.find((a) => pathname.includes(a))
     if (!action) {
-      throw new UnknownAction("Cannot detect action.")
+      throw new UnknownAction(`Cannot detect action in pathname (${pathname}).`)
     }
 
     if (req.method !== "GET" && req.method !== "POST") {
@@ -68,6 +70,17 @@ export async function toInternalRequest(
   } catch (e) {
     return e as Error
   }
+}
+
+export function toRequest(request: RequestInternal): Request {
+  return new Request(request.url, {
+    headers: request.headers,
+    method: request.method,
+    body:
+      request.method === "POST"
+        ? JSON.stringify(request.body ?? {})
+        : undefined,
+  })
 }
 
 export function toResponse(res: ResponseInternal): Response {

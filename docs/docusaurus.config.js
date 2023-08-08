@@ -7,7 +7,7 @@ const path = require("path")
 const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
-  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .filter((file) => file.endsWith(".ts"))
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
@@ -261,33 +261,26 @@ const docusaurusConfig = {
         },
       },
     ],
-    typedocAdapter("Dgraph"),
-    typedocAdapter("DynamoDB"),
-    typedocAdapter("Fauna"),
-    typedocAdapter("Firebase"),
-    typedocAdapter("Mikro ORM"),
-    typedocAdapter("MongoDB"),
-    typedocAdapter("Neo4j"),
-    typedocAdapter("PouchDB"),
-    typedocAdapter("Prisma"),
-    typedocAdapter("Kysely"),
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "typeorm",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
-        tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
-        out: `reference/adapter/typeorm`,
-        sidebar: { indexLabel: "TypeORM" },
-      },
-    ],
-    typedocAdapter("Sequelize"),
-    typedocAdapter("Supabase"),
-    typedocAdapter("Upstash Redis"),
-    typedocAdapter("Xata"),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS
+      ? []
+      : [
+          typedocAdapter("Dgraph"),
+          typedocAdapter("Drizzle"),
+          typedocAdapter("DynamoDB"),
+          typedocAdapter("Fauna"),
+          typedocAdapter("Firebase"),
+          typedocAdapter("Kysely"),
+          typedocAdapter("Mikro ORM"),
+          typedocAdapter("MongoDB"),
+          typedocAdapter("Neo4j"),
+          typedocAdapter("PouchDB"),
+          typedocAdapter("Prisma"),
+          typedocAdapter("TypeORM"),
+          typedocAdapter("Sequelize"),
+          typedocAdapter("Supabase"),
+          typedocAdapter("Upstash Redis"),
+          typedocAdapter("Xata"),
+        ]),
   ],
 }
 
