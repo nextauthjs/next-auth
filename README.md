@@ -1,6 +1,6 @@
 <p align="center">
   <br/>
-  <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
   <h3 align="center">Auth.js</h3>
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
