@@ -1,7 +1,7 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>VK</b> integration.</span>
- * <a href="www.vk.com/">
+ * <a href="https://vk.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/vk.svg" height="48" />
  * </a>
  * </div>
