@@ -37,8 +37,8 @@ export type TableFn<Flavor> = Flavor extends AnyMySqlDatabase
   : Flavor extends AnyPgDatabase
   ? PgTableFn
   : Flavor extends AnySQLiteDatabase
-  ? AnySQLiteTable
-  : SQLiteTableFn
+  ? SQLiteTableFn
+  : AnySQLiteTable
 
 export function isMySqlDatabase(
   db: any
