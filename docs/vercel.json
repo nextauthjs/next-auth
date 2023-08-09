@@ -78,11 +78,8 @@
       "destination": "https://authjs.dev/reference/warnings/:path*"
     },
     {
-      "source": "/(.*)",
-      "has": [
-        { "type": "host", "value": "adapters.authjs.dev" },
-        { "type": "header", "key": ":path:", "value": "/" }
-      ],
+      "source": "/",
+      "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
       "destination": "https://authjs.dev/reference/adapters"
     },
     {
