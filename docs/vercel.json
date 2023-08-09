@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "headers": [
     {
@@ -78,7 +79,10 @@
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
+      "has": [
+        { "type": "host", "value": "adapters.authjs.dev" },
+        { "type": "header", "key": ":path:", "value": "/" }
+      ],
       "destination": "https://authjs.dev/reference/adapters"
     },
     {
