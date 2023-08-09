@@ -57,6 +57,8 @@ on:
           - "adapter-xata"
           - "next-auth"
 env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
   FORCE_COLOR: true
 
 jobs:
@@ -79,22 +81,12 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm build
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       - name: Run tests
         run: pnpm test
         timeout-minutes: 15
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      - name: Upload Turbo artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: turbo-report
-          path: .turbo/runs/
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e
