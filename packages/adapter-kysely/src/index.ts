@@ -270,7 +270,7 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  *   await db.schema.dropTable("VerificationToken").ifExists().execute()
  * }
  * ```
- * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/adapters/models).
+ * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/adapters#models).
  *
  * For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://kysely.dev/docs/migrations).
  * 
