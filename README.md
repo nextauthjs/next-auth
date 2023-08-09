@@ -75,7 +75,7 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
 
 ### Support
 
-We're happy to announce we've recently created an [OpenCollective](https://opencollective.com/nextauth) for individuals and companies looking to contribute financially to the project!
+We have an [OpenCollective](https://opencollective.com/nextauth) for individuals and companies looking to contribute financially to the project!
 
 <!--sponsors start-->
 <table>
