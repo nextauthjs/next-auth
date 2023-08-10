@@ -21,7 +21,7 @@
     "@prisma/client": "^4",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
-    "next": "13.4.7",
+    "next": "13.4.13",
     "next-auth": "workspace:*",
     "nodemailer": "^6.9.3",
     "react": "^18",
