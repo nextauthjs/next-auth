@@ -11,7 +11,7 @@ import {
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 export function createTables(sqliteTable: SQLiteTableFn) {
-  const users = sqliteTable("users", {
+  const users = sqliteTable("user", {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
@@ -20,7 +20,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
   })
 
   const accounts = sqliteTable(
-    "accounts",
+    "account",
     {
       userId: text("userId")
         .notNull()
@@ -41,7 +41,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
     })
   )
 
-  const sessions = sqliteTable("sessions", {
+  const sessions = sqliteTable("session", {
     sessionToken: text("sessionToken").notNull().primaryKey(),
     userId: text("userId")
       .notNull()
@@ -159,7 +159,7 @@ export function SQLiteDrizzleAdapter(
         )
         .get()
 
-      return results?.users ?? null
+      return results?.user ?? null
     },
     deleteSession(sessionToken) {
       return (

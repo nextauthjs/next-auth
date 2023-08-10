@@ -77,7 +77,7 @@ import type { Adapter } from "@auth/core/adapters"
  * } from "drizzle-orm/pg-core"
  * import type { AdapterAccount } from '@auth/core/adapters'
  *
- * export const users = pgTable("users", {
+ * export const users = pgTable("user", {
  *  id: text("id").notNull().primaryKey(),
  *  name: text("name"),
  *  email: text("email").notNull(),
@@ -86,7 +86,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const accounts = pgTable(
- * "accounts",
+ * "account",
  * {
  *   userId: text("userId")
  *     .notNull()
@@ -107,7 +107,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  * )
  *
- * export const sessions = pgTable("sessions", {
+ * export const sessions = pgTable("session", {
  *  sessionToken: text("sessionToken").notNull().primaryKey(),
  *  userId: text("userId")
  *    .notNull()
@@ -140,7 +140,7 @@ import type { Adapter } from "@auth/core/adapters"
  * } from "drizzle-orm/mysql-core"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
- * export const users = mysqlTable("users", {
+ * export const users = mysqlTable("user", {
  *  id: varchar("id", { length: 255 }).notNull().primaryKey(),
  *  name: varchar("name", { length: 255 }),
  *  email: varchar("email", { length: 255 }).notNull(),
@@ -149,7 +149,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const accounts = mysqlTable(
- *  "accounts",
+ *  "account",
  *   {
  *    userId: varchar("userId", { length: 255 })
  *       .notNull()
@@ -170,7 +170,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  * )
  *
- * export const sessions = mysqlTable("sessions", {
+ * export const sessions = mysqlTable("session", {
  *  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
  *  userId: varchar("userId", { length: 255 })
  *    .notNull()
@@ -197,7 +197,7 @@ import type { Adapter } from "@auth/core/adapters"
  * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
- * export const users = sqliteTable("users", {
+ * export const users = sqliteTable("user", {
  *  id: text("id").notNull().primaryKey(),
  *  name: text("name"),
  *  email: text("email").notNull(),
@@ -206,7 +206,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const accounts = sqliteTable(
- *  "accounts",
+ *  "account",
  *  {
  *    userId: text("userId")
  *      .notNull()
@@ -227,7 +227,7 @@ import type { Adapter } from "@auth/core/adapters"
  *  })
  * )
  *
- * export const sessions = sqliteTable("sessions", {
+ * export const sessions = sqliteTable("session", {
  * sessionToken: text("sessionToken").notNull().primaryKey(),
  * userId: text("userId")
  *   .notNull()
