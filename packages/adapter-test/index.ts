@@ -15,6 +15,13 @@ const requiredMethods = [
 ]
 export interface TestOptions {
   adapter: Adapter
+  fixtures?: {
+    user?: any
+    session?: any
+    account?: any
+    sessionUpdateExpires?: Date
+    verificationTokenExpires?: Date
+  },
   db: {
     /** Generates UUID v4 by default. Use it to override how the test suite should generate IDs, like user id. */
     id?: () => string
@@ -67,11 +74,11 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.disconnect?.()
   })
 
-  let user: any = {
+  let user: any = options.fixtures?.user ?? {
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
-    emailVerified: new Date(),
+    emailVerified: new Date()
   }
 
   if (process.env.CUSTOM_MODEL === "1") {
@@ -79,12 +86,12 @@ export async function runBasicTests(options: TestOptions) {
     user.phone = "00000000000"
   }
 
-  const session: any = {
+  const session: any = options.fixtures?.session ?? {
     sessionToken: randomUUID(),
     expires: ONE_WEEK_FROM_NOW,
   }
 
-  const account: any = {
+  const account: any = options.fixtures?.account ?? {
     provider: "github",
     providerAccountId: randomUUID(),
     type: "oauth",
@@ -175,15 +182,17 @@ export async function runBasicTests(options: TestOptions) {
   test("updateSession", async () => {
     let dbSession = await db.session(session.sessionToken)
 
-    expect(dbSession.expires.valueOf()).not.toBe(ONE_MONTH_FROM_NOW.valueOf())
+    const expires = options.fixtures?.sessionUpdateExpires ?? ONE_MONTH_FROM_NOW
+
+    expect(dbSession.expires.valueOf()).not.toBe(expires.valueOf())
 
     await adapter.updateSession({
       sessionToken: session.sessionToken,
-      expires: ONE_MONTH_FROM_NOW,
+      expires,
     })
 
     dbSession = await db.session(session.sessionToken)
-    expect(dbSession.expires.valueOf()).toBe(ONE_MONTH_FROM_NOW.valueOf())
+    expect(dbSession.expires.valueOf()).toBe(expires.valueOf())
   })
 
   test("linkAccount", async () => {
@@ -232,7 +241,7 @@ export async function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: FIFTEEN_MINUTES_FROM_NOW,
+      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
@@ -251,7 +260,7 @@ export async function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: FIFTEEN_MINUTES_FROM_NOW,
+      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 

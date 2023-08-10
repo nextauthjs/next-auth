@@ -257,9 +257,11 @@ const docusaurusConfig = {
       ? []
       : [
           typedocAdapter("Dgraph"),
+          typedocAdapter("Drizzle"),
           typedocAdapter("DynamoDB"),
           typedocAdapter("Fauna"),
           typedocAdapter("Firebase"),
+          typedocAdapter("Kysely"),
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),
           typedocAdapter("Neo4j"),

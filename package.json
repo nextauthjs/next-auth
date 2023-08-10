@@ -7,7 +7,7 @@
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
     "build": "turbo run build --filter=next-auth --filter=@next-auth/* --filter=@auth/* --no-deps",
-    "test": "turbo run test --concurrency=1 --summarize --filter=[HEAD^1] --filter=./packages/* --filter=!@*upstash* --filter=!*dynamodb-* --filter=!*app*",
+    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!@*upstash* --filter=!*dynamodb-* --filter=!*app*",
     "clean": "turbo run clean --no-cache",
     "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
@@ -44,7 +44,7 @@
     "eslint-plugin-svelte3": "^4.0.0",
     "prettier": "2.8.1",
     "prettier-plugin-svelte": "^2.8.1",
-    "turbo": "1.10.1",
+    "turbo": "^1.10.3",
     "typescript": "4.9.4"
   },
   "engines": {

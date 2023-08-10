@@ -48,9 +48,11 @@ module.exports = {
             link: { type: "doc", id: "reference/adapters/index" },
             items: [
               { type: "doc", id: "reference/adapter/dgraph/index" },
+              { type: "doc", id: "reference/adapter/drizzle/index" },
               { type: "doc", id: "reference/adapter/dynamodb/index" },
               { type: "doc", id: "reference/adapter/fauna/index" },
               { type: "doc", id: "reference/adapter/firebase/index" },
+              { type: "doc", id: "reference/adapter/kysely/index" },
               { type: "doc", id: "reference/adapter/mikro-orm/index" },
               { type: "doc", id: "reference/adapter/mongodb/index" },
               { type: "doc", id: "reference/adapter/neo4j/index" },

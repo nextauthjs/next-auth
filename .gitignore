@@ -6,6 +6,8 @@
 .env.development.local
 .env.test.local
 .env.production.local
+packages/*/.npmrc
+
 
 npm-debug.log*
 yarn-debug.log*
@@ -58,6 +60,7 @@ packages/adapter-prisma/prisma/dev.db
 packages/adapter-prisma/prisma/migrations
 db.sqlite
 packages/adapter-supabase/supabase/.branches
+packages/adapter-drizzle/.drizzle
 
 # Tests
 coverage
@@ -96,5 +99,7 @@ packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
 
 # Adapters
-
 docs/docs/reference/adapter
+
+## Drizzle migration folder
+.drizzle
