@@ -1,6 +1,7 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
+import { detectOrigin, reqWithEnvUrl } from "./env"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
@@ -57,13 +58,6 @@ export interface NextAuthConfig extends AuthConfig {
   }
 }
 
-function detectOrigin(_headers: Headers | ReturnType<typeof headers>) {
-  const host = _headers.get("x-forwarded-host") ?? _headers.get("host")
-  const protocol =
-    _headers.get("x-forwarded-proto") === "http" ? "http" : "https"
-  return new URL(process.env.NEXTAUTH_URL ?? `${protocol}://${host}`)
-}
-
 /** Server-side method to read the session. */
 async function getSession(headers: Headers, config: NextAuthConfig) {
   const origin = detectOrigin(headers)
@@ -81,7 +75,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
       session({ session, user, token }) {
         return { ...session, user: user ?? token }
       },
-    }
+    },
   })
 }
 
@@ -158,7 +152,7 @@ async function handleAuth(
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
-  const request = args[0]
+  const request = reqWithEnvUrl(args[0])
   const sessionResponse = await getSession(request.headers, config)
   const {
     user = null,

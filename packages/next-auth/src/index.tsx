@@ -109,7 +109,7 @@
  * AUTH_GITHUB_SECRET=...
  * AUTH_SECRET=...
  * ```
- * 
+ *
  * :::tip
  * In production, `AUTH_SECRET` is a required environment variable - if not set, NextAuth.js will throw an error. See [MissingSecretError](https://authjs.dev/reference/core/errors#missingsecret) for more details.
  * :::
@@ -120,7 +120,8 @@
  */
 
 import { Auth } from "@auth/core"
-import { setEnvDefaults } from "./lib/env.js"
+import { headers } from "next/headers.js"
+import { detectOrigin, reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 
 import type { Session } from "@auth/core/types"
@@ -132,8 +133,6 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-
-import { headers } from "next/headers.js"
 
 export type {
   Account,
@@ -332,16 +331,15 @@ export interface NextAuthResult {
  */
 export default function NextAuth(config: NextAuthConfig): NextAuthResult {
   setEnvDefaults(config)
-  const httpHandler = (req: NextRequest) => Auth(req, config)
+  const httpHandler = (req: NextRequest) => Auth(reqWithEnvUrl(req), config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
     auth: initAuth(config),
     async CSRF_experimental() {
-      const value = await Auth(
-        new Request("http://a/api/auth/csrf", { headers: headers() }),
-        config
-      )
+      const _headers = headers()
+      const url = `${detectOrigin(_headers).origin}/api/auth/csrf`
+      const value = await Auth(new Request(url, { headers: _headers }), config)
         .then((res) => res.json())
         .then((res) => res?.csrfToken)
 
