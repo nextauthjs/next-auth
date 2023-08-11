@@ -223,7 +223,9 @@ export interface Adapter {
   getUserByAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ): Awaitable<AdapterUser | null>
-  updateUser?(user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>): Awaitable<AdapterUser>
+  updateUser?(
+    user: Partial<AdapterUser> & Pick<AdapterUser, "id">
+  ): Awaitable<AdapterUser>
   /** @todo This method is currently not invoked yet. */
   deleteUser?(
     userId: string
@@ -269,4 +271,13 @@ export interface Adapter {
     identifier: string
     token: string
   }): Awaitable<VerificationToken | null>
+}
+
+// For compatibility with older versions of NextAuth.js
+// @ts-expect-error
+declare module "next-auth/adapters" {
+  export interface AdapterAccount {
+    type: any
+    [key: string]: any
+  }
 }
