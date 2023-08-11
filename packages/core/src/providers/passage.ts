@@ -47,7 +47,7 @@ export interface PassageProfile {
  * #### Configuration
  *```js
  * import Auth from "@auth/core"
- * import Passage from "@auth/core/providers/assage"
+ * import Passage from "@auth/core/providers/passage"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
