@@ -223,9 +223,7 @@ export interface Adapter {
   getUserByAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ): Awaitable<AdapterUser | null>
-  updateUser?(
-    user: Partial<AdapterUser> & Pick<AdapterUser, "id">
-  ): Awaitable<AdapterUser>
+  updateUser?(user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>): Awaitable<AdapterUser>
   /** @todo This method is currently not invoked yet. */
   deleteUser?(
     userId: string
