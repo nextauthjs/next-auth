@@ -274,8 +274,14 @@ export interface Adapter {
 // For compatibility with older versions of NextAuth.js
 // @ts-expect-error
 declare module "next-auth/adapters" {
-  export interface AdapterAccount {
-    type: any
-    [key: string]: any
+  type JsonObject = {
+    [Key in string]?: JsonValue
+  }
+  type JsonArray = JsonValue[]
+  type JsonPrimitive = string | number | boolean | null
+  type JsonValue = JsonPrimitive | JsonObject | JsonArray
+  interface AdapterAccount {
+    type: "oauth" | "email" | "oidc"
+    [key: string]: JsonValue | undefined
   }
 }
