@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
+  "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
       "dependsOn": [
@@ -98,8 +98,7 @@
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
-        "^build",
-        "next-auth#build"
+        "^build"
       ],
       "cache": false
     },
@@ -124,8 +123,7 @@
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
-        "^build",
-        "next-auth#build"
+        "^build"
       ],
       "outputs": [
         ".docusaurus/**/*",

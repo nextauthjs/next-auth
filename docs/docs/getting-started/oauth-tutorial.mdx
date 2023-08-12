@@ -156,7 +156,7 @@ export default function CamperVanPage() {
 
 ### Protecting API Routes
 
-To protect your API Routes (blocking unauthorized access to resources), you can use [`getServerSession()`](/reference/nextjs#getserversession) to know whether a session exists or not:
+To protect your API Routes (blocking unauthorized access to resources), you can use [`getServerSession()`](https://next-auth.js.org/configuration/nextjs#getserversession) to know whether a session exists or not:
 
 ```ts title="pages/api/movies/list.ts"
 import { getServerSession } from "next-auth/next"
