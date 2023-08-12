@@ -7,6 +7,7 @@
       ],
       "outputs": [
         "dist/**/*",
+        "lib/**/*",
         "*.js",
         "*.d.ts",
         "*.d.ts.map"
