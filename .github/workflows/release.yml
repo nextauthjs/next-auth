@@ -16,7 +16,6 @@ on:
         description: Package name (npm)
         options:
           - "@auth/core"
-          - "@auth/nextjs"
           - "@auth/dgraph-adapter"
           - "@auth/drizzle-adapter"
           - "@auth/dynamodb-adapter"
