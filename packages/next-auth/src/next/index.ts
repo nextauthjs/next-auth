@@ -55,7 +55,8 @@ async function NextAuthApiHandler(
       // Could chain. .end() when lowest target is Node 14
       // https://github.com/nodejs/node/issues/33148
       res.status(302).setHeader("Location", handler.redirect)
-      return res.end()
+      res.end()
+      return
     }
     return res.json({ url: handler.redirect })
   }
@@ -66,7 +67,7 @@ async function NextAuthApiHandler(
 // @see https://beta.nextjs.org/docs/routing/route-handlers
 async function NextAuthRouteHandler(
   req: NextRequest,
-  context: { params: { nextauth: string[] } },
+  context: RouteHandlerContext,
   options: AuthOptions
 ) {
   options.secret ??= process.env.NEXTAUTH_SECRET
@@ -114,18 +115,27 @@ function NextAuth(
   options: AuthOptions
 ): any
 
+function NextAuth(
+  req: NextRequest,
+  res: RouteHandlerContext,
+  options: AuthOptions
+): any
+
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
+  ...args:
+    | [AuthOptions]
+    | Parameters<typeof NextAuthRouteHandler>
+    | Parameters<typeof NextAuthApiHandler>
 ) {
   if (args.length === 1) {
     return async (
       req: NextAuthRequest | NextRequest,
       res: NextAuthResponse | RouteHandlerContext
     ) => {
-      if ((res as unknown as any)?.params) {
+      if ((res as any)?.params) {
         return await NextAuthRouteHandler(
-          req as unknown as NextRequest,
+          req as NextRequest,
           res as RouteHandlerContext,
           args[0]
         )
@@ -140,11 +150,11 @@ function NextAuth(
 
   if ((args[1] as any)?.params) {
     return NextAuthRouteHandler(
-      ...(args as unknown as Parameters<typeof NextAuthRouteHandler>)
+      ...(args as Parameters<typeof NextAuthRouteHandler>)
     )
   }
 
-  return NextAuthApiHandler(...args)
+  return NextAuthApiHandler(...(args as Parameters<typeof NextAuthApiHandler>))
 }
 
 export default NextAuth

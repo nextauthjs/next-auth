@@ -1,4 +1,4 @@
-import type { EventCallbacks, LoggerInstance } from ".."
+import type { EventCallbacks, InternalOptions, LoggerInstance } from ".."
 
 /**
  * Same as the default `Error`, but it is JSON serializable.
@@ -106,7 +106,7 @@ export function eventsErrorHandler(
 export function adapterErrorHandler<TAdapter>(
   adapter: TAdapter | undefined,
   logger: LoggerInstance
-): TAdapter | undefined {
+): InternalOptions["adapter"] | undefined {
   if (!adapter) return
 
   return Object.keys(adapter).reduce<any>((acc, name) => {

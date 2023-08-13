@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.22.3",
+  "version": "4.23.0",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -27,19 +27,42 @@
     "nextauth"
   ],
   "exports": {
-    ".": "./index.js",
-    "./jwt": "./jwt/index.js",
-    "./react": "./react/index.js",
-    "./core": "./core/index.js",
-    "./next": "./next/index.js",
-    "./middleware": "./middleware.js",
-    "./client/_utils": "./client/_utils.js",
-    "./providers/*": "./providers/*.js"
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./jwt": {
+      "types": "./jwt/index.d.ts",
+      "import": "./jwt/index.js"
+    },
+    "./react": {
+      "types": "./react/index.d.ts",
+      "import": "./react/index.js"
+    },
+    "./next": {
+      "types": "./next/index.d.ts",
+      "import": "./next/index.js"
+    },
+    "./middleware": {
+      "types": "./middleware.d.ts",
+      "import": "./middleware.js"
+    },
+    "./client/_utils": {
+      "types": "./client/_utils.d.ts",
+      "import": "./client/_utils.js"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    }
   },
   "scripts": {
     "build": "pnpm clean && pnpm build:js && pnpm build:css",
     "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
-    "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
+    "clean": "rm -rf coverage client css utils providers core jwt react next lib ./*.js ./*.ts*",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",
     "dev": "pnpm clean && pnpm generate-providers && concurrently \"pnpm watch:css\" \"pnpm watch:ts\"",
     "watch:ts": "pnpm tsc --project tsconfig.dev.json",
