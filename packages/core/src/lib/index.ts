@@ -208,3 +208,14 @@ export async function AuthInternal<
  * passing this value to {@link AuthConfig.skipCSRFCheck}.
  */
 export const skipCSRFCheck = Symbol("skip-csrf-check")
+
+/**
+ * :::danger
+ * This option is intended for framework authors.
+ * :::
+ *
+ * Auth.js returns a web standard {@link Response} by default, but
+ * if you are implementing a framework you might want to get access to the raw internal response
+ * by passing this value to {@link AuthConfig.raw}.
+ */
+export const raw = Symbol("return-type-raw")
