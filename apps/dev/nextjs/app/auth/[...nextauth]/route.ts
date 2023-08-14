@@ -1,5 +1,6 @@
-import { GET as AuthGET } from "auth"
-export { POST } from "auth"
+import { handlers } from "auth"
+const { GET: AuthGET, POST } = handlers
+export { POST }
 
 import type { NextRequest } from "next/server"
 

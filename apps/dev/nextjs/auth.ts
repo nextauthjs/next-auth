@@ -12,11 +12,7 @@ authConfig.providers.push(
   Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
 )
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  CSRF_experimental,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,

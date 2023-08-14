@@ -23,7 +23,7 @@ declare module "next-auth" {
 }
 
 export default {
-  debug: true,
+  debug: false,
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,

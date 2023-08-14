@@ -4,6 +4,6 @@ module.exports = {
     config.experiments = { ...config.experiments, topLevelAwait: true }
     return config
   },
-  experimental: { appDir: true },
+  experimental: { serverActions: true },
   typescript: { ignoreBuildErrors: true },
 }
