@@ -119,8 +119,8 @@
  * @module index
  */
 
-import { Auth } from "@auth/core"
-import { headers } from "next/headers.js"
+import { Auth, skipCSRFCheck, raw } from "@auth/core"
+import { cookies, headers } from "next/headers.js"
 import { detectOrigin, reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 
@@ -131,8 +131,9 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
-import type { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+import { redirect } from "next/navigation"
 
 export type {
   Account,
@@ -316,6 +317,14 @@ export interface NextAuthResult {
    * ```
    */
   CSRF_experimental: () => Promise<ReturnType<React.FunctionComponent>>
+  signIn: (
+    provider?: string,
+    params?: { redirectTo?: string; redirect?: boolean }
+  ) => () => Promise<string | never>
+  signOut: (params?: {
+    redirectTo?: string
+    redirect?: boolean
+  }) => () => Promise<string | never>
 }
 
 /**
@@ -346,6 +355,62 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
       if (!value) throw new Error("CSRF token could not be found.")
 
       return <input type="hidden" name="csrfToken" value={value} />
+    },
+    signIn(provider, params) {
+      return async () => {
+        "use server"
+        const _headers = new Headers(headers())
+        _headers.set("Content-Type", "application/x-www-form-urlencoded")
+
+        const origin = detectOrigin(_headers)
+        const url = `${origin}/signin/${provider}`
+        const res = (await Auth(
+          new Request(url, {
+            method: "POST",
+            headers: _headers,
+            body: new URLSearchParams({
+              callbackUrl: params?.redirectTo ?? _headers.get("Referer") ?? "/",
+            }),
+          }),
+          { ...config, raw, skipCSRFCheck }
+        )) as any // TODO: fix return type when "raw" is set
+
+        for (const c of res?.cookies ?? []) {
+          cookies().set(c.name, c.value, c.options)
+        }
+
+        if (params?.redirect) return redirect(res.redirect)
+
+        return res.redirect
+      }
+    },
+    signOut(params) {
+      return async () => {
+        "use server"
+        const _headers = new Headers(headers())
+        _headers.set("Content-Type", "application/x-www-form-urlencoded")
+
+        const origin = detectOrigin(_headers)
+        const url = `${origin}/signout`
+        const res = (await Auth(
+          new Request(url, {
+            method: "POST",
+            headers: _headers,
+            body: new URLSearchParams({
+              callbackUrl: params?.redirectTo ?? _headers.get("Referer") ?? "/",
+            }),
+          }),
+          { ...config, raw, skipCSRFCheck }
+        )) as any // TODO: fix return type when "raw" is set
+
+        for (const c of res?.cookies ?? []) {
+          cookies().set(c.name, c.value, c.options)
+        }
+
+        if (params?.redirect) return redirect(res.redirect)
+
+        return res.redirect
+      }
     },
   }
 }
