@@ -9,7 +9,6 @@ title: HTTP-based Email Provider
 The following guide is written for `next-auth` (NextAuth.js), but it should work for any of the Auth.js framework libraries (`@auth/*`) as well.
 :::
 
-
 There is a built-in Email provider with which you could connect to the SMTP server of your choice to send "magic link" emails for sign-in purposes. However, the Email provider can also be used with HTTP-based email services, like AWS SES, Postmark, Sendgrid, etc. In this guide, we are going to explain how to use our Email magic link provider with any of the more modern HTTP-based Email APIs.
 
 For this example, we will be using [SendGrid](https://sendgrid.com), but any email service providing an HTTP API or JS client library will work.
@@ -27,18 +26,18 @@ First, if you do not have a project using Auth.js, clone and set up a basic Auth
 import NextAuth, { NextAuthOptions } from "next-auth"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
+import Email from "next-auth/providers/email"
 
 const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    {
-      id: 'sendgrid',
-      type: 'email',
-      async sendVerificationRequest({identifier: email, url}) {
-      }
-    }
+    Email({
+      id: "sendgrid",
+      type: "email",
+      async sendVerificationRequest({ identifier: email, url }) {},
+    }),
   ],
 }
 
@@ -51,6 +50,7 @@ As mentioned earlier, we're going to be using SendGrid in this example, so the a
 
 ```js title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
+import Email from "next-auth/providers/email"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
@@ -59,10 +59,10 @@ const prisma = new PrismaClient()
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    {
-      id: 'sendgrid',
-      type: 'email',
-      async sendVerificationRequest({identifier: email, url}) {
+    Email({
+      id: "sendgrid",
+      type: "email",
+      async sendVerificationRequest({ identifier: email, url }) {
         // highlight-start
         // Call the cloud Email provider API for sending emails
         // See https://docs.sendgrid.com/api-reference/mail-send/mail-send
@@ -94,7 +94,7 @@ export const authOptions: NextAuthOptions = {
         }
         // highlight-end
       },
-    }
+    }),
   ],
 }
 ```
