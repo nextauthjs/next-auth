@@ -38,7 +38,7 @@
 
 import { assertConfig } from "./lib/assert.js"
 import { ErrorPageLoop } from "./errors.js"
-import { AuthInternal, skipCSRFCheck } from "./lib/index.js"
+import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/web.js"
@@ -54,7 +54,7 @@ import type {
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
-export { skipCSRFCheck }
+export { skipCSRFCheck, raw }
 
 /**
  * Core functionality provided by Auth.js.
@@ -136,6 +136,9 @@ export async function Auth(
   }
 
   const internalResponse = await AuthInternal(internalRequest, config)
+
+  // @ts-expect-error TODO: Fix return type
+  if (config.raw === raw) return internalResponse
 
   const response = await toResponse(internalResponse)
 
@@ -337,6 +340,7 @@ export interface AuthConfig {
   /** @todo */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
+  raw?: typeof raw
   /**
    * When set, during an OAuth sign-in flow,
    * the `redirect_uri` of the authorization request
