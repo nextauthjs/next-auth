@@ -1,22 +1,20 @@
 import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
-import express, { Request, Response, NextFunction } from "express";
-import { httpApiAdapters } from "./httpApiAdapters";
+import type { AuthConfig, Session } from "@auth/core/types"
+import { Request as ExpressRequest, Response as ExpressResponse } from "express"
+import { toWebRequest, toExpressResponse } from "./http-api-adapters"
 
-
-
-
- function ExpressAuthHandler(authConfig: AuthConfig) {
-  
-  return async (req: Request, res: Response, )=> {
-    const request = httpApiAdapters.request.fromExpressToFetch(req);
-    const response = await Auth(request, authConfig);
-    await httpApiAdapters.response.fromFetchToExpress(response, res)
+function ExpressAuthHandler(authConfig: AuthConfig) {
+  return async (req: ExpressRequest, res: ExpressResponse) => {
+    const request = toWebRequest(req)
+    const response = await Auth(request, authConfig)
+    await toExpressResponse(response, res)
   }
 }
 
-export function ExpressAuth(config: AuthConfig) :ReturnType<typeof ExpressAuthHandler>{
-  const {  ...authOptions } = config
+export function ExpressAuth(
+  config: AuthConfig
+): ReturnType<typeof ExpressAuthHandler> {
+  const { ...authOptions } = config
   authOptions.secret ??= process.env.AUTH_SECRET
   authOptions.trustHost ??= !!(
     process.env.AUTH_TRUST_HOST ??
@@ -24,7 +22,9 @@ export function ExpressAuth(config: AuthConfig) :ReturnType<typeof ExpressAuthHa
     process.env.NODE_ENV !== "production"
   )
 
-  return ExpressAuthHandler(authOptions)
+  const handler = ExpressAuthHandler(authOptions)
+
+  return handler
 }
 
 export type GetSessionResult = Promise<Session | null>
@@ -51,7 +51,6 @@ export type GetSessionResult = Promise<Session | null>
 //   throw new Error(data.message)
 // }
 
-
 // TODO: implement Express router handler
 
 /*
@@ -67,3 +66,4 @@ return async (req, res) => {
 
 router.use("auth/....", ExpressAuth(authConfig))
 */
+
