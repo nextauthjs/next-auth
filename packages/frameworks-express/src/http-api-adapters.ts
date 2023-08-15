@@ -3,12 +3,18 @@ import { Request as ExpressRequest, Response as ExpressResponse } from "express"
 /**
  * Encodes an object as url-encoded string.
  */
-function encodeUrl(obj: Record<string, any>) {
-  return Object.entries(obj).reduce((acc, [key, value]) => {
-    const encKey = encodeURIComponent(key)
-    const encValue = encodeURIComponent(value)
-    return `${acc ? `${acc}&` : ""}${encKey}=${encValue}`
-  }, "")
+export function encodeUrlEncoded(object: Record<string, any>) {
+  const params = new URLSearchParams()
+
+  for (let [key, value] of Object.entries(object)) {
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, v))
+    } else {
+      params.append(key, value)
+    }
+  }
+
+  return params.toString()
 }
 
 /**
@@ -25,7 +31,7 @@ function encodeRequestBody(req: ExpressRequest) {
   const contentType = req.headers["content-type"]
 
   if (contentType?.includes("application/x-www-form-urlencoded")) {
-    return encodeUrl(req.body)
+    return encodeUrlEncoded(req.body)
   }
 
   if (contentType?.includes("application/json")) {
