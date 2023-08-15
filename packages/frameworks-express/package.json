@@ -1,0 +1,46 @@
+{
+  "name": "@auth/express",
+  "description": "Authentication for Express.",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "index.*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
+    "patch": "npm version patch --no-git-tag-version",
+    "clean": "rm -rf index.*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@auth/core": "workspace:*",
+    "@types/node": "^18.7.14",
+    "tsup": "^6.5.0",
+    "typescript": "^4.8.2"
+  },
+  "peerDependencies": {
+    "@auth/core": "~0.2.2 || ^0.2.2"
+  },
+  "keywords": [
+    "Express",
+    "Auth"
+  ],
+  "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
+  "contributors": [
+    "Rexford Essilfie <rexfordessilfie09@gmail.com",
+  "Lachie Hill <lachiehill@gmail.com>"
+  
+  ],
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "license": "ISC"
+}
