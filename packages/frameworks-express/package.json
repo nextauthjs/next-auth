@@ -5,12 +5,17 @@
   "type": "module",
   "files": [
     "index.*",
+    "http-api-adapters.*",
     "src"
   ],
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
+    },
+    "./http-api-adapters": {
+      "types": "./http-api-adapters.d.ts",
+      "import": "./http-api-adapters.js"
     },
     "./package.json": "./package.json"
   },
