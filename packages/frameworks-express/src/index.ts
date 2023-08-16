@@ -1,7 +1,7 @@
 import { Auth } from "@auth/core"
 import type { AuthConfig, Session } from "@auth/core/types"
 import { Request as ExpressRequest, Response as ExpressResponse } from "express"
-import { toWebRequest, toExpressResponse } from "./http-api-adapters"
+import { toWebRequest, toExpressResponse } from "./http-api-adapters.js"
 
 function ExpressAuthHandler(authConfig: AuthConfig) {
   return async (req: ExpressRequest, res: ExpressResponse) => {
