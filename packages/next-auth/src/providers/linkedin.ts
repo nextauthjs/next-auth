@@ -22,7 +22,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
-    async profile(profile) {
+    profile(profile) {
       return {
         id: profile.sub,
         name: profile.name,
