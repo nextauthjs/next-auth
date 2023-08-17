@@ -10,23 +10,11 @@
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-interface Identifier {
-  identifier: string
-}
-
-interface Element {
-  identifiers?: Identifier[]
-}
-
 export interface LinkedInProfile extends Record<string, any> {
-  id: string
-  localizedFirstName: string
-  localizedLastName: string
-  profilePicture: {
-    "displayImage~": {
-      elements?: Element[]
-    }
-  }
+  sub: string
+  name: string
+  email: string
+  picture: string
 }
 
 /**
