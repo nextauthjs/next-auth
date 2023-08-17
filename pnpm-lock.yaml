@@ -678,6 +678,9 @@ importers:
       '@types/node':
         specifier: ^18.7.14
         version: 18.11.10
+      '@types/node-fetch':
+        specifier: ^2.6.4
+        version: 2.6.9
       '@types/supertest':
         specifier: ^2.0.12
         version: 2.0.16
@@ -687,6 +690,9 @@ importers:
       jest:
         specifier: ^29.6.2
         version: 29.7.0(@types/node@18.11.10)
+      node-fetch:
+        specifier: ^2.6.12
+        version: 2.7.0
       supertest:
         specifier: ^6.3.3
         version: 6.3.3
