@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "."
 
-export interface LinkedInProfile extends Record<string, any> {
+export interface LinkedInProfile {
   sub: string
   name: string
   email: string

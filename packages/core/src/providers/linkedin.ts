@@ -10,7 +10,7 @@
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-export interface LinkedInProfile extends Record<string, any> {
+export interface LinkedInProfile {
   sub: string
   name: string
   email: string
