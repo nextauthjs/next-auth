@@ -164,10 +164,7 @@ export function mySqlDrizzleAdapter(
         .then((res) => res[0])
     },
     async linkAccount(rawAccount) {
-      await client
-        .insert(accounts)
-        .values(rawAccount)
-        .then((res) => res[0])
+      await client.insert(accounts).values(rawAccount)
     },
     async getUserByAccount(account) {
       const dbAccount =
