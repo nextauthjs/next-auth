@@ -67,7 +67,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
 export type DefaultSchema = ReturnType<typeof createTables>
 
 export function SQLiteDrizzleAdapter(
-  client: BaseSQLiteDatabase<any, any>,
+  client: InstanceType<typeof BaseSQLiteDatabase>,
   tableFn = defaultSqliteTableFn
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } =

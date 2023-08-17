@@ -39,17 +39,3 @@ export type TableFn<Flavor> = Flavor extends AnyMySqlDatabase
   : Flavor extends AnySQLiteDatabase
   ? SQLiteTableFn
   : AnySQLiteTable
-
-export function isMySqlDatabase(
-  db: any
-): db is MySqlDatabase<any, any, any, any> {
-  return db instanceof MySqlDatabase
-}
-
-export function isPgDatabase(db: any): db is PgDatabase<any, any, any> {
-  return db instanceof PgDatabase
-}
-
-export function isSQLiteDatabase(db: any): db is AnySQLiteDatabase {
-  return db instanceof BaseSQLiteDatabase
-}

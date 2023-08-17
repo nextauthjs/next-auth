@@ -6,10 +6,10 @@ import {
   primaryKey,
   varchar,
   MySqlTableFn,
+  MySqlDatabase,
 } from "drizzle-orm/mysql-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import type { MySql2Database } from "drizzle-orm/mysql2"
 
 export function createTables(mySqlTable: MySqlTableFn) {
   const users = mySqlTable("user", {
@@ -77,7 +77,7 @@ export function createTables(mySqlTable: MySqlTableFn) {
 export type DefaultSchema = ReturnType<typeof createTables>
 
 export function mySqlDrizzleAdapter(
-  client: MySql2Database<Record<string, never>>,
+  client: InstanceType<typeof MySqlDatabase>,
   tableFn = defaultMySqlTableFn
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } =
