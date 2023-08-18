@@ -21,7 +21,7 @@ This error occurs when the `SessionProvider` Context has a problem fetching sess
 
 #### CLIENT_FETCH_ERROR
 
-If you see `CLIENT_FETCH_ERROR` make sure you have configured the `NEXTAUTH_URL` environment variable.
+This can happen for multiple reasons. Make sure that you [configured](/configuration/initialization) NextAuth.js correctly, and if you used [`NEXTAUTH_URL`](https://next-auth.js.org/configuration/options#nextauth_url) that it's correctly set.
 
 ---
 
