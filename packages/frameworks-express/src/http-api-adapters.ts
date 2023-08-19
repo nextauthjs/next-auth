@@ -3,7 +3,7 @@ import { Request as ExpressRequest, Response as ExpressResponse } from "express"
 /**
  * Encodes an object as url-encoded string.
  */
-export function encodeUrlEncoded(object: Record<string, any>) {
+export function encodeUrlEncoded(object: Record<string, any> = {}) {
   const params = new URLSearchParams()
 
   for (let [key, value] of Object.entries(object)) {
