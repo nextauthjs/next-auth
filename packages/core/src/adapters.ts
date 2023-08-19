@@ -153,7 +153,7 @@ export interface AdapterUser extends User {
  */
 export interface AdapterAccount extends Account {
   userId: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email">
+  type: Extract<ProviderType, "oauth" | "oidc" | "token">
 }
 
 /**

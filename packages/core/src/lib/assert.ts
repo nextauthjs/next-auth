@@ -35,18 +35,18 @@ function isValidHttpUrl(url: string, baseUrl: string) {
 }
 
 let hasCredentials = false
-let hasEmail = false
+let hasToken = false
 
-const emailMethods = [
+const tokenMethods = [
   "createVerificationToken",
   "useVerificationToken",
-  "getUserByEmail",
+  "getUserByTokenId",
 ]
 
 const sessionMethods = [
   "createUser",
   "getUser",
-  "getUserByEmail",
+  "getUserByTokenId",
   "getUserByAccount",
   "updateUser",
   "linkAccount",
@@ -122,7 +122,7 @@ export function assertConfig(
     }
 
     if (provider.type === "credentials") hasCredentials = true
-    else if (provider.type === "email") hasEmail = true
+    else if (provider.type === "token") hasToken = true
   }
 
   if (hasCredentials) {
@@ -149,16 +149,16 @@ export function assertConfig(
 
   const { adapter, session } = options
   if (
-    hasEmail ||
+    hasToken ||
     session?.strategy === "database" ||
     (!session?.strategy && adapter)
   ) {
     let methods: string[]
 
-    if (hasEmail) {
+    if (hasToken) {
       if (!adapter)
-        return new MissingAdapter("Email login requires an adapter.")
-      methods = emailMethods
+        return new MissingAdapter("Token login requires an adapter.")
+      methods = tokenMethods
     } else {
       if (!adapter)
         return new MissingAdapter("Database session requires an adapter.")

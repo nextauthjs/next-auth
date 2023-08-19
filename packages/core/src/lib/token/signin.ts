@@ -5,9 +5,9 @@ import type { InternalOptions, RequestInternal } from "../../types.js"
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)
  */
-export default async function email(
+export default async function token(
   identifier: string,
-  options: InternalOptions<"email">,
+  options: InternalOptions<"token">,
   request: RequestInternal
 ): Promise<string> {
   const { url, adapter, provider, callbackUrl, theme } = options
@@ -19,7 +19,7 @@ export default async function email(
     Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
   )
 
-  // Generate a link with email, unhashed token and callback url
+  // Generate a link with token, unhashed token and callback url
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
   const _url = `${url}/callback/${provider.id}?${params}`
 

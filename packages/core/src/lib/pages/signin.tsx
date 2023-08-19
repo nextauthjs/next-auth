@@ -27,7 +27,7 @@ export default function SigninPage(props: {
   csrfToken: string
   providers: InternalProvider[]
   callbackUrl: string
-  email: string
+  token: string
   error?: SignInPageErrorParam
   theme: Theme
 }) {
@@ -36,7 +36,7 @@ export default function SigninPage(props: {
     providers = [],
     callbackUrl,
     theme,
-    email,
+    token,
     error: errorType,
   } = props
 
@@ -131,26 +131,26 @@ export default function SigninPage(props: {
                 </button>
               </form>
             ) : null}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "token" || provider.type === "credentials") &&
               i > 0 &&
-              providers[i - 1].type !== "email" &&
+              providers[i - 1].type !== "token" &&
               providers[i - 1].type !== "credentials" && <hr />}
-            {provider.type === "email" && (
+            {provider.type === "token" && (
               <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 <label
                   className="section-header"
                   htmlFor={`input-email-for-${provider.id}-provider`}
                 >
-                  Email
+                  Token
                 </label>
                 <input
                   id={`input-email-for-${provider.id}-provider`}
                   autoFocus
-                  type="email"
-                  name="email"
-                  value={email}
-                  placeholder="email@example.com"
+                  type="token"
+                  name="token"
+                  value={token}
+                  placeholder="email@example.com / + 1 555 123 4567"
                   required
                 />
                 <button type="submit">Sign in with {provider.name}</button>
@@ -185,7 +185,7 @@ export default function SigninPage(props: {
                 </button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "token" || provider.type === "credentials") &&
               i + 1 < providers.length && <hr />}
           </div>
         ))}

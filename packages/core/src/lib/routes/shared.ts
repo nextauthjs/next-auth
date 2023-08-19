@@ -2,7 +2,7 @@ import { AuthorizedCallbackError } from "../../errors.js"
 import { InternalOptions } from "../../types.js"
 
 export async function handleAuthorized(
-  params: any,
+  params: Parameters<typeof signIn>[0],
   { url, logger, callbacks: { signIn } }: InternalOptions
 ) {
   try {

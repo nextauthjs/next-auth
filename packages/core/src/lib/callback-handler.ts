@@ -56,7 +56,7 @@ export async function handleLogin(
     updateUser,
     getUser,
     getUserByAccount,
-    getUserByEmail,
+    getUserByTokenId,
     linkAccount,
     createSession,
     getSessionAndUser,
@@ -88,24 +88,42 @@ export async function handleLogin(
     }
   }
 
-  if (account.type === "email") {
+  const tokenId = profile.tokenId ?? profile.email
+
+  if (account.type === "token") {
     // If signing in with an email, check if an account with the same email address exists already
-    const userByEmail = await getUserByEmail(profile.email)
-    if (userByEmail) {
+    const userByTokenId = await getUserByTokenId(
+      profile.tokenId ?? profile.email
+    )
+    if (userByTokenId) {
       // If they are not already signed in as the same user, this flow will
       // sign them out of the current session and sign them in as the new user
-      if (user?.id !== userByEmail.id && !useJwtSession && sessionToken) {
+      if (user?.id !== userByTokenId.id && !useJwtSession && sessionToken) {
         // Delete existing session if they are currently signed in as another user.
         // This will switch user accounts for the session in cases where the user was
         // already logged in with a different account.
         await deleteSession(sessionToken)
       }
 
+      const updateUserPayload: Parameters<typeof updateUser>[0] = {
+        id: userByTokenId.id,
+      }
+
+      if (profile.email) updateUserPayload.emailVerified = new Date()
+      if (profile.tokenId) updateUserPayload.tokenVerified = new Date()
+
       // Update emailVerified property on the user object
-      user = await updateUser({ id: userByEmail.id, emailVerified: new Date() })
+      user = await updateUser(updateUserPayload)
       await events.updateUser?.({ user })
     } else {
-      const { id: _, ...newUser } = { ...profile, emailVerified: new Date() }
+      const createUserPayload = {
+        ...profile,
+      }
+
+      if (profile.email) createUserPayload.emailVerified = new Date()
+      if (profile.tokenId) createUserPayload.tokenVerified = new Date()
+
+      const { id: _, ...newUser } = createUserPayload
       // Create user account if there isn't one for the email address already
       user = await createUser(newUser)
       await events.createUser?.({ user })
@@ -187,15 +205,15 @@ export async function handleLogin(
     //
     // OAuth providers should require email address verification to prevent this, but in
     // practice that is not always the case; this helps protect against that.
-    const userByEmail = profile.email
-      ? await getUserByEmail(profile.email)
+    const userByTokenId = profile.tokenId
+      ? await getUserByTokenId(profile.tokenId)
       : null
-    if (userByEmail) {
+    if (userByTokenId) {
       const provider = options.provider as OAuthConfig<any>
       if (provider?.allowDangerousEmailAccountLinking) {
         // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
         // account linking even when the user is not signed-in.
-        user = userByEmail
+        user = userByTokenId
       } else {
         // We end up here when we don't have an account with the same [provider].id *BUT*
         // we do already have an account with the same email address as the one in the

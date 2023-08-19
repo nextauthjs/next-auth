@@ -68,11 +68,11 @@ import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,
   CredentialsConfig,
-  EmailConfig,
   OAuthConfigInternal,
   OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
+import { TokenConfig } from "./providers/token.js"
 
 export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
@@ -471,10 +471,10 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
   ? OIDCConfigInternal<any>
-  : T extends "email"
-  ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
+  : T extends "token"
+  ? TokenConfig
   : never) & {
   signinUrl: string
   /** @example `"https://example.com/api/auth/callback/id"` */

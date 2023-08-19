@@ -13,7 +13,7 @@ import Credentials from "@auth/core/providers/credentials"
 import Descope from "@auth/core/providers/descope"
 import Discord from "@auth/core/providers/discord"
 import DuendeIDS6 from "@auth/core/providers/duende-identity-server6"
-// import Email from "@auth/core/providers/email"
+import SmtpEmail from "@auth/core/providers/email-smtp"
 import Facebook from "@auth/core/providers/facebook"
 import Foursquare from "@auth/core/providers/foursquare"
 import Freshbooks from "@auth/core/providers/freshbooks"
@@ -41,11 +41,11 @@ import Wikimedia from "@auth/core/providers/wikimedia"
 import WorkOS from "@auth/core/providers/workos"
 
 // // Prisma
-// import { PrismaClient } from "@prisma/client"
-// import { PrismaAdapter } from "@auth/prisma-adapter"
-// const client = globalThis.prisma || new PrismaClient()
-// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-// const adapter = PrismaAdapter(client)
+import { PrismaClient } from "@prisma/client"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+const client = globalThis.prisma || new PrismaClient()
+if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+const adapter = PrismaAdapter(client)
 
 // // Fauna
 // import { Client as FaunaClient } from "faunadb"
@@ -72,7 +72,7 @@ import WorkOS from "@auth/core/providers/workos"
 // })
 
 export const authConfig: AuthConfig = {
-  // adapter,
+  adapter,
   debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
@@ -137,11 +137,57 @@ export const authConfig: AuthConfig = {
 
 if (authConfig.adapter) {
   // TODO:
-  // authOptions.providers.unshift(
-  //   // NOTE: You can start a fake e-mail server with `pnpm email`
-  //   // and then go to `http://localhost:1080` in the browser
-  //   Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
-  // )
+  authConfig.providers.unshift(
+    // NOTE: You can start a fake e-mail server with `pnpm email`
+    // and then go to `http://localhost:1080` in the browser
+    SmtpEmail({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
+    {
+      id: "sendgrid",
+      type: "token",
+      name: "SendGrid",
+      async sendVerificationRequest({ identifier: email, url }) {
+        // Call the cloud Email provider API for sending emails
+        // See https://docs.sendgrid.com/api-reference/mail-send/mail-send
+        const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
+          // The body format will vary depending on provider, please see their documentation
+          // for further details.
+          body: JSON.stringify({
+            personalizations: [{ to: [{ email }] }],
+            from: { email: "noreply@authjs.dev" },
+            subject: "Sign in by SendGrid",
+            content: [
+              {
+                type: "text/plain",
+                value: `Please click here to authenticate - ${url}`,
+              },
+            ],
+          }),
+          headers: {
+            // Authentication will also vary from provider to provider, please see their docs.
+            Authorization: `Bearer ${process.env.SENDGRID_API}`,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        })
+
+        if (!response.ok) {
+          const { errors } = await response.json()
+          throw new Error(JSON.stringify(errors))
+        }
+      },
+      options: {},
+    },
+    {
+      id: "token",
+      type: "token",
+      name: "Token",
+      sendVerificationRequest(params) {
+        console.log("sendVerificationRequest", params)
+        return Promise.resolve()
+      },
+      options: {},
+    }
+  )
 }
 
 // TODO: move to next-auth/edge
@@ -162,4 +208,4 @@ function AuthHandler(...args: any[]) {
 
 export default AuthHandler(authConfig)
 
-export const config = { runtime: "edge" }
+// export const config = { runtime: "edge" }

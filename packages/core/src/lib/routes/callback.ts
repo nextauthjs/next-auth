@@ -104,6 +104,7 @@ export async function callback(params: {
 
       const unauthorizedOrError = await handleAuthorized(
         {
+          // @ts-expect-error
           user: userByAccountOrFromProvider,
           account,
           profile: OAuthProfile,
@@ -180,14 +181,14 @@ export async function callback(params: {
       }
 
       return { redirect: callbackUrl, cookies }
-    } else if (provider.type === "email") {
+    } else if (provider.type === "token") {
       const token = query?.token as string | undefined
-      const identifier = query?.email as string | undefined
+      const tokenId = query?.tokenId as string | undefined
 
-      if (!token || !identifier) {
+      if (!token || !tokenId) {
         const e = new TypeError(
-          "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
-          { cause: { hasToken: !!token, hasEmail: !!identifier } }
+          "Missing token or identifier. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the identifier.",
+          { cause: { hasToken: !!token, hasIdentifier: !!tokenId } }
         )
         e.name = "Configuration"
         throw e
@@ -196,7 +197,7 @@ export async function callback(params: {
       const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
-        identifier,
+        identifier: tokenId,
         token: await createHash(`${token}${secret}`),
       })
 
@@ -205,16 +206,18 @@ export async function callback(params: {
       const invalidInvite = !hasInvite || expired
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
-      const user = (await adapter!.getUserByEmail(identifier)) ?? {
-        id: identifier,
-        email: identifier,
+      const user = (await adapter!.getUserByTokenId(tokenId)) ?? {
+        id: tokenId,
+        email: tokenId,
+        tokenId,
         emailVerified: null,
+        tokenVerified: null,
       }
 
       const account: Account = {
-        providerAccountId: user.email,
+        providerAccountId: user.tokenId,
         userId: user.id,
-        type: "email" as const,
+        type: provider.type,
         provider: provider.id,
       }
 
@@ -315,8 +318,7 @@ export async function callback(params: {
         }
       }
 
-      /** @type {import("src").Account} */
-      const account = {
+      const account: Account = {
         providerAccountId: user.id,
         type: "credentials",
         provider: provider.id,
@@ -339,7 +341,6 @@ export async function callback(params: {
       const token = await callbacks.jwt({
         token: defaultToken,
         user,
-        // @ts-expect-error
         account,
         isNewUser: false,
         trigger: "signIn",
@@ -363,7 +364,6 @@ export async function callback(params: {
         cookies.push(...sessionCookies)
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account })
 
       return { redirect: callbackUrl, cookies }
