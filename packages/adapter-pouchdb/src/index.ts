@@ -167,7 +167,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
       }
     },
 
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const res = await (
         pouchdb as unknown as PouchDB.Database<AdapterUser>
       ).find({

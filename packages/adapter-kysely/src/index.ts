@@ -307,7 +307,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       if (!result) return null
       return to(result, "emailVerified")
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const result =
         (await db
           .selectFrom("User")

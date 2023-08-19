@@ -378,7 +378,7 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       return format<AdapterUser>(data)
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const { data, error } = await supabase
         .from("users")
         .select()

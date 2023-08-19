@@ -221,7 +221,7 @@ export function UpstashRedisAdapter(
       return await setUser(id, { ...user, id })
     },
     getUser,
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const userId = await client.get<string>(emailKeyPrefix + email)
       if (!userId) {
         return null

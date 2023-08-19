@@ -214,7 +214,7 @@ export function FaunaAdapter(f: FaunaClient): Adapter {
   return {
     createUser: async (data) => (await q(Create(Users, { data: to(data) })))!,
     getUser: async (id) => await q(Get(Ref(Users, id))),
-    getUserByEmail: async (email) => await q(Get(Match(UserByEmail, email))),
+    getUserByTokenId: async (email) => await q(Get(Match(UserByEmail, email))),
     async getUserByAccount({ provider, providerAccountId }) {
       const key = [provider, providerAccountId]
       const ref = Match(AccountByProviderAndProviderAccountId, key)

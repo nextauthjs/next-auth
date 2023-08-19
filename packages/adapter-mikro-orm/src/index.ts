@@ -205,7 +205,7 @@ export function MikroOrmAdapter<
 
       return wrap(user).toObject()
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const em = await getEM()
       const user = await em.findOne(UserModel, { email })
       if (!user) return null

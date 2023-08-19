@@ -141,7 +141,7 @@ export function Neo4jAdapter(session: Session): Adapter {
       })
     },
 
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       return await read(`MATCH (u:User { email: $email }) RETURN u{.*}`, {
         email,
       })

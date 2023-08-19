@@ -213,7 +213,7 @@ export function DynamoDBAdapter(
       })
       return format.from<AdapterUser>(data.Item)
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const data = await client.query({
         TableName,
         IndexName,

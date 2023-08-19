@@ -89,7 +89,7 @@ export function pgDrizzleAdapter(
         .where(eq(users.id, data))
         .then((res) => res[0] ?? null)
     },
-    async getUserByEmail(data) {
+    async getUserByTokenId(data) {
       return await client
         .select()
         .from(users)

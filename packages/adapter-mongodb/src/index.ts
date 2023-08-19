@@ -172,7 +172,7 @@ export function MongoDBAdapter(
       if (!user) return null
       return from<AdapterUser>(user)
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const user = await (await db).U.findOne({ email })
       if (!user) return null
       return from<AdapterUser>(user)

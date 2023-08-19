@@ -313,7 +313,7 @@ export function DgraphAdapter(
 
       return format.from<any>(result)
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const [user] = await c.run<any>(
         /* GraphQL */ `
           query ($email: String = "") {

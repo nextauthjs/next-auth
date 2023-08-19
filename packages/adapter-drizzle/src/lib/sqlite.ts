@@ -84,7 +84,7 @@ export function SQLiteDrizzleAdapter(
     getUser(data) {
       return client.select().from(users).where(eq(users.id, data)).get() ?? null
     },
-    getUserByEmail(data) {
+    getUserByTokenId(data) {
       return (
         client.select().from(users).where(eq(users.email, data)).get() ?? null
       )

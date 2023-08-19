@@ -160,7 +160,7 @@ export function FirestoreAdapter(
       return await getDoc(C.users.doc(id))
     },
 
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       return await getOneDoc(C.users.where("email", "==", email))
     },
 

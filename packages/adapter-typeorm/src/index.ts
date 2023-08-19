@@ -320,7 +320,7 @@ export function TypeORMAdapter(
       return { ...user }
     },
     // @ts-expect-error
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const m = await getManager(c)
       const user = await m.findOne("UserEntity", { where: { email } })
       if (!user) return null

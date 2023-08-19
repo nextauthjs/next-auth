@@ -206,7 +206,7 @@ export default function SequelizeAdapter(
 
       return userInstance?.get({ plain: true }) ?? null
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       await sync()
 
       const userInstance = await User.findOne({

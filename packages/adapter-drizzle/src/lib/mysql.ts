@@ -105,7 +105,7 @@ export function mySqlDrizzleAdapter(
 
       return thing
     },
-    async getUserByEmail(data) {
+    async getUserByTokenId(data) {
       const user =
         (await client
           .select()

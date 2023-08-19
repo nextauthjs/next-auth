@@ -248,7 +248,7 @@ export function XataAdapter(client: XataClient): Adapter {
       const user = await client.db.nextauth_users.filter({ id }).getFirst()
       return user ?? null
     },
-    async getUserByEmail(email) {
+    async getUserByTokenId(email) {
       const user = await client.db.nextauth_users.filter({ email }).getFirst()
       return user ?? null
     },
