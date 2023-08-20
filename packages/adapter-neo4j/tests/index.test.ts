@@ -14,7 +14,7 @@ const driver = neo4j.driver(
 const neo4jSession = driver.session()
 
 runBasicTests({
-  adapter: Neo4jAdapter(neo4jSession),
+  adapter: Neo4jAdapter(driver),
   db: {
     async connect() {
       for await (const statement of statements.split(";")) {

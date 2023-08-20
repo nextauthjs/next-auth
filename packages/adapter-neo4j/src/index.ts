@@ -14,11 +14,11 @@
  *
  * @module @auth/neo4j-adapter
  */
-import { type Session, isInt, integer } from "neo4j-driver"
-import type { Adapter } from "@auth/core/adapters"
+import { type Driver, isInt, integer } from "neo4j-driver"
+import type { Adapter } from "@auth/core/src/adapters"
 
 /** This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument. */
-export interface Neo4jOptions extends Session {}
+export interface Neo4jOptions extends Driver {}
 
 /**
  * ## Setup
@@ -34,14 +34,12 @@ export interface Neo4jOptions extends Session {}
  *   neo4j.auth.basic("neo4j", "password")
  * )
  *
- * const neo4jSession = driver.session()
- *
  * // For more information on each option (and a full list of options) go to
  * // https://authjs.dev/reference/configuration/auth-options
  * export default NextAuth({
  *   // https://authjs.dev/reference/providers/oauth-builtin
  *   providers: [],
- *   adapter: Neo4jAdapter(neo4jSession),
+ *   adapter: Neo4jAdapter(driver),
  *   ...
  * })
  * ```
@@ -78,7 +76,7 @@ export interface Neo4jOptions extends Session {}
  * ```cypher
  *
  * CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
- * ON (u:User) ASSERT u.id IS UNIQUE;
+ * FOR (u:User) REQUIRE u.id IS UNIQUE;
  *
  * CREATE INDEX user_id_index IF NOT EXISTS
  * FOR (u:User) ON (u.id);
@@ -87,7 +85,7 @@ export interface Neo4jOptions extends Session {}
  * FOR (u:User) ON (u.email);
  *
  * CREATE CONSTRAINT session_session_token_constraint IF NOT EXISTS
- * ON (s:Session) ASSERT s.sessionToken IS UNIQUE;
+ * FOR (s:Session) REQUIRE s.sessionToken IS UNIQUE;
  *
  * CREATE INDEX session_session_token_index IF NOT EXISTS
  * FOR (s:Session) ON (s.sessionToken);
@@ -113,20 +111,20 @@ export interface Neo4jOptions extends Session {}
  *
  * ```cypher
  * CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS
- * ON (a:Account) ASSERT (a.provider, a.providerAccountId) IS NODE KEY;
+ * FOR (a:Account) REQUIRE (a.provider, a.providerAccountId) IS NODE KEY;
  *
  * CREATE INDEX account_provider_composite_index IF NOT EXISTS
  * FOR (a:Account) ON (a.provider, a.providerAccountId);
  *
  * CREATE CONSTRAINT verification_token_composite_constraint IF NOT EXISTS
- * ON (v:VerificationToken) ASSERT (v.identifier, v.token) IS NODE KEY;
+ * FOR (v:VerificationToken) REQUIRE (v.identifier, v.token) IS NODE KEY;
  *
  * CREATE INDEX verification_token_composite_index IF NOT EXISTS
  * FOR (v:VerificationToken) ON (v.identifier, v.token);
  * ```
  */
-export function Neo4jAdapter(session: Session): Adapter {
-  const { read, write } = client(session)
+export function Neo4jAdapter(driver: Driver): Adapter {
+  const { read, write } = client(driver);
 
   return {
     async createUser(data) {
@@ -324,15 +322,25 @@ export const format = {
   },
 }
 
-function client(session: Session) {
+function client(driver: Driver) {
+
   return {
     /** Reads values from the database */
     async read<T>(statement: string, values?: any): Promise<T | null> {
-      const result = await session.readTransaction((tx) =>
-        tx.run(statement, values)
-      )
+      const session = driver.session();
+      try {
+        const result = await session.readTransaction((tx) =>
+          tx.run(statement, values)
+        )
 
-      return format.from<T>(result?.records[0]?.get(0)) ?? null
+        return format.from<T>(result?.records[0]?.get(0)) ?? null
+      } catch (err) {
+        console.error("Error reading from Neo4j:", err);
+      } finally {
+        await session.close();
+      }
+
+      return null
     },
     /**
      * Reads/writes values from/to the database.
@@ -342,11 +350,20 @@ function client(session: Session) {
       statement: string,
       values: T
     ): Promise<any> {
-      const result = await session.writeTransaction((tx) =>
-        tx.run(statement, { data: format.to(values) })
-      )
+      const session = driver.session();
+      try {
+        const result = await session.writeTransaction((tx) =>
+          tx.run(statement, { data: format.to(values) })
+        )
 
-      return format.from<T>(result?.records[0]?.toObject())
+        return format.from<T>(result?.records[0]?.toObject())
+      } catch (err) {
+        console.error("Error writing to Neo4j:", err);
+      } finally {
+        await session.close();
+      }
+
+      return null
     },
   }
 }
