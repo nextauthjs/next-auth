@@ -32,7 +32,7 @@ export async function handleLogin(
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth", "oidc"].includes(_account.type))
+  if (!["token", "oauth", "oidc"].includes(_account.type))
     throw new Error("Provider not supported")
 
   const {

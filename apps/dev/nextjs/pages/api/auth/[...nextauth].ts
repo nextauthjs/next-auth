@@ -39,13 +39,16 @@ import Yandex from "@auth/core/providers/yandex"
 import Vk from "@auth/core/providers/vk"
 import Wikimedia from "@auth/core/providers/wikimedia"
 import WorkOS from "@auth/core/providers/workos"
+import { AdapterUser } from "next-auth/adapters"
+import Token from "@auth/core/providers/token"
+import { TestAdapter } from "lib/db"
 
 // // Prisma
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-const client = globalThis.prisma || new PrismaClient()
-if (process.env.NODE_ENV !== "production") globalThis.prisma = client
-const adapter = PrismaAdapter(client)
+// import { PrismaClient } from "@prisma/client"
+// import { PrismaAdapter } from "@auth/prisma-adapter"
+// const client = globalThis.prisma || new PrismaClient()
+// if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+// const adapter = PrismaAdapter(client)
 
 // // Fauna
 // import { Client as FaunaClient } from "faunadb"
@@ -71,8 +74,22 @@ const adapter = PrismaAdapter(client)
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
+const db = {}
+
 export const authConfig: AuthConfig = {
-  adapter,
+  adapter: TestAdapter({
+    getItem(key) {
+      return db[key]
+    },
+    setItem: function (key: string, value: string): Promise<void> {
+      db[key] = value
+      return Promise.resolve()
+    },
+    deleteItems: function (...keys: string[]): Promise<void> {
+      keys.forEach((key) => delete db[key])
+      return Promise.resolve()
+    },
+  }),
   debug: process.env.NODE_ENV !== "production",
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
@@ -140,53 +157,15 @@ if (authConfig.adapter) {
   authConfig.providers.unshift(
     // NOTE: You can start a fake e-mail server with `pnpm email`
     // and then go to `http://localhost:1080` in the browser
-    SmtpEmail({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
-    {
-      id: "sendgrid",
-      type: "token",
-      name: "SendGrid",
-      async sendVerificationRequest({ identifier: email, url }) {
-        // Call the cloud Email provider API for sending emails
-        // See https://docs.sendgrid.com/api-reference/mail-send/mail-send
-        const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-          // The body format will vary depending on provider, please see their documentation
-          // for further details.
-          body: JSON.stringify({
-            personalizations: [{ to: [{ email }] }],
-            from: { email: "noreply@authjs.dev" },
-            subject: "Sign in by SendGrid",
-            content: [
-              {
-                type: "text/plain",
-                value: `Please click here to authenticate - ${url}`,
-              },
-            ],
-          }),
-          headers: {
-            // Authentication will also vary from provider to provider, please see their docs.
-            Authorization: `Bearer ${process.env.SENDGRID_API}`,
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-        })
-
-        if (!response.ok) {
-          const { errors } = await response.json()
-          throw new Error(JSON.stringify(errors))
-        }
-      },
-      options: {},
-    },
-    {
+    // SmtpEmail({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
+    Token({
       id: "token",
-      type: "token",
       name: "Token",
-      sendVerificationRequest(params) {
-        console.log("sendVerificationRequest", params)
-        return Promise.resolve()
+      type: "token",
+      async sendVerificationRequest(params) {
+        console.log({ verificationUrl: params.url })
       },
-      options: {},
-    }
+    })
   )
 }
 
@@ -208,4 +187,4 @@ function AuthHandler(...args: any[]) {
 
 export default AuthHandler(authConfig)
 
-// export const config = { runtime: "edge" }
+export const config = { runtime: "edge" }

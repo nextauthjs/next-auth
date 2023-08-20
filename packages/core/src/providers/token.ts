@@ -45,7 +45,7 @@ export type TokenConfig<ProviderConfig = {}> = CommonProviderOptions &
      * Normalizes the user input before sending the verification request.
      */
     normalizeIdentifier?: (identifier: string) => string
-    options: ProviderConfig
+    options?: ProviderConfig
   }
 
 export default function Token(config: TokenConfig): TokenConfig {

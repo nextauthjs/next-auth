@@ -140,17 +140,17 @@ export default function SigninPage(props: {
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 <label
                   className="section-header"
-                  htmlFor={`input-email-for-${provider.id}-provider`}
+                  htmlFor={`input-for-${provider.id}-provider`}
                 >
                   Token
                 </label>
                 <input
-                  id={`input-email-for-${provider.id}-provider`}
+                  id={`input-for-${provider.id}-provider`}
                   autoFocus
-                  type="token"
-                  name="token"
+                  type="tokenId"
+                  name="tokenId"
                   value={token}
-                  placeholder="email@example.com / + 1 555 123 4567"
+                  placeholder="email@example.com"
                   required
                 />
                 <button type="submit">Sign in with {provider.name}</button>

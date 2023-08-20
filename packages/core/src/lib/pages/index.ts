@@ -51,8 +51,8 @@ export default function renderPage(params: RenderPageParams) {
           // We only want to render providers
           providers: params.providers?.filter(
             (provider) =>
-              // Always render oauth and email type providers
-              ["email", "oauth", "oidc"].includes(provider.type) ||
+              // Always render oauth and token type providers
+              ["token", "oauth", "oidc"].includes(provider.type) ||
               // Only render credentials type provider if credentials are defined
               (provider.type === "credentials" && provider.credentials) ||
               // Don't render other provider types

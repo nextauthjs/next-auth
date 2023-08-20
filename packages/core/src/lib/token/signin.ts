@@ -2,8 +2,8 @@ import { createHash, randomString, toRequest } from "../web.js"
 
 import type { InternalOptions, RequestInternal } from "../../types.js"
 /**
- * Starts an e-mail login flow, by generating a token,
- * and sending it to the user's e-mail (with the help of a DB adapter)
+ * Starts an token login flow, by generating a token,
+ * and sending it to the user's token identifier (with the help of a DB adapter)
  */
 export default async function token(
   identifier: string,
@@ -20,7 +20,11 @@ export default async function token(
   )
 
   // Generate a link with token, unhashed token and callback url
-  const params = new URLSearchParams({ callbackUrl, token, email: identifier })
+  const params = new URLSearchParams({
+    callbackUrl,
+    token,
+    tokenId: identifier,
+  })
   const _url = `${url}/callback/${provider.id}?${params}`
 
   const secret = provider.secret ?? options.secret
