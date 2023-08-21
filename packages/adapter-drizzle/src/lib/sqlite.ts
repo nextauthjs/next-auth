@@ -159,7 +159,10 @@ export function SQLiteDrizzleAdapter(
         )
         .get()
 
-      return results?.user ?? null
+      if (!results) {
+        return null;
+      }
+      return Promise.resolve(results).then((results) => results.user)
     },
     deleteSession(sessionToken) {
       return (
