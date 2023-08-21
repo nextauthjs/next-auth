@@ -1,15 +1,7 @@
-import * as express from "express"
 import { encodeUrlEncoded, toWebRequest } from "../../src/http-api-adapters"
-import * as supertest from "supertest"
 import { Request as ExpressRequest } from "express"
-
-if (!globalThis.fetch) {
-  console.log("polyfill fetch")
-  globalThis.fetch = require("node-fetch")
-  globalThis.Request = require("node-fetch").Request
-  globalThis.Response = require("node-fetch").Response
-  globalThis.Headers = require("node-fetch").Headers
-}
+import supertest from 'supertest';
+import express from 'express';
 
 function expectMatchingRequestHeaders(req: ExpressRequest, request: Request) {
   for (let headerName in req.headers) {
