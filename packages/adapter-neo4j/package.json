@@ -9,8 +9,7 @@
   },
   "author": "Davey Brown",
   "contributors": [
-    "Balázs Orbán <info@balazsorban.com>",
-    "Greg Krause <gregckrause@gregckrause.com>"
+    "Balázs Orbán <info@balazsorban.com>"
   ],
   "type": "module",
   "types": "./index.d.ts",
@@ -42,14 +41,14 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "neo4j-driver": "^4.0.0 || ^5.11.0"
+    "neo4j-driver": "^4.0.0 || ^5.7.0"
   },
   "devDependencies": {
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
     "@types/uuid": "^8.3.3",
     "jest": "^27.4.3",
-    "neo4j-driver": "^5.11.0"
+    "neo4j-driver": "^5.7.0"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
