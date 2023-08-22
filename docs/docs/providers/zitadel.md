@@ -5,11 +5,11 @@ title: Zitadel
 
 ## Documentation
 
-https://docs.zitadel.com/docs/apis/openidoauth/endpoints
+[https://zitadel.com/docs/apis/openidoauth/endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
 
 ## Configuration
 
-https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows
+[https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows](https://zitadel.com/docs/guides/integrate/oauth-recommended-flows)
 
 The Redirect URIs used when creating the credentials must include your full domain and end in the callback path. For example:
 
