@@ -1,7 +1,7 @@
 // Constraints and indexes - relevant to Neo4j Community Edition.
 export default `
 CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
-ON (u:User) ASSERT u.id IS UNIQUE;
+FOR (u:User) REQUIRE u.id IS UNIQUE;
 
 CREATE INDEX user_id_index IF NOT EXISTS
 FOR (u:User) ON (u.id);
@@ -10,7 +10,7 @@ CREATE INDEX user_email_index IF NOT EXISTS
 FOR (u:User) ON (u.email);
 
 CREATE CONSTRAINT session_session_token_constraint IF NOT EXISTS
-ON (s:Session) ASSERT s.sessionToken IS UNIQUE;
+FOR (s:Session) REQUIRE s.sessionToken IS UNIQUE;
 
 CREATE INDEX session_session_token_index IF NOT EXISTS
 FOR (s:Session) ON (s.sessionToken);

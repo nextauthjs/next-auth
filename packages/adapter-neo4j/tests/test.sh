@@ -21,12 +21,12 @@ docker run -d --rm \
 -e TEST_NEO4J_PASS=${NEO4J_PASS} \
 --name "${CONTAINER_NAME}" \
 -p7474:7474 -p7687:7687 \
-neo4j:4.2.0
+neo4j:5.11.0-community
 
 # For debug or testing it may be useful to use neo4j enterprise edition.
 # Use the lines below in the docker run statement.
 # -e NEO4J_ACCEPT_LICENSE_AGREEMENT=yes \
-# neo4j:4.2.0-enterprise
+# neo4j:5.11.0-enterprise
 
 echo "Waiting 10 sec for db to start..." && sleep 10
 
