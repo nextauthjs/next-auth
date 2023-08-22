@@ -22,3 +22,7 @@ beforeAll(() => {
         globalThis.crypto = cryptoLib.webcrypto;
     }
 });
+
+if (!process.env.AUTH_SECRET) {
+    process.env.AUTH_SECRET = 'secret'
+}
