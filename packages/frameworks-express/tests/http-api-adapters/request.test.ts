@@ -1,7 +1,7 @@
 import { encodeUrlEncoded, toWebRequest } from "../../src/http-api-adapters"
 import { Request as ExpressRequest } from "express"
-import supertest from 'supertest';
-import express from 'express';
+import supertest from "supertest"
+import express from "express"
 
 function expectMatchingRequestHeaders(req: ExpressRequest, request: Request) {
   for (let headerName in req.headers) {

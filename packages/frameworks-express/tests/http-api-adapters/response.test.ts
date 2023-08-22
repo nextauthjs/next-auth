@@ -1,13 +1,10 @@
-import supertest from 'supertest';
-import express from 'express';
-import {
-  toExpressResponse,
-} from "../../src/http-api-adapters"
-
+import supertest from "supertest"
+import express from "express"
+import { toExpressResponse } from "../../src/http-api-adapters"
 
 function expectMatchingResponseHeaders(
   response: Response,
-  res: supertest.Response,
+  res: supertest.Response
 ) {
   for (let [headerName] of response.headers) {
     expect(response.headers.get(headerName)).toEqual(

@@ -672,6 +672,9 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+      '@jest/globals':
+        specifier: ^29.6.3
+        version: 29.7.0
       '@types/express':
         specifier: ^4.17.17
         version: 4.17.17
