@@ -1,15 +1,21 @@
 {
+  "extends": "@next-auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
-    "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "esnext",
-    "moduleResolution": "Node",
-    "strict": false,
-    "module": "esnext",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strictNullChecks": true
+    "allowJs": true,
+    "baseUrl": ".",
+    "isolatedModules": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": ".",
+    "rootDir": "src",
+    "skipDefaultLibCheck": true,
+    "strictNullChecks": true,
+    "stripInternal": true,
+    "declarationMap": true,
+    "declaration": true
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["./src"]
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
 }
