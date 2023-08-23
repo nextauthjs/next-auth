@@ -1,0 +1,3 @@
+CreateCollection({
+  "name": "verification_tokens"
+})

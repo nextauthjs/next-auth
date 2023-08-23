@@ -1,0 +1,57 @@
+{
+  "name": "@auth/faunadb-adapter",
+  "version": "1.0.0",
+  "description": "Fauna v10 Adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Lindsey Jacks",
+  "contributors": [],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "fauna",
+    "faunadb"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rm -rf dist",
+    "test": "./tests/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "@fauna-labs/fauna-schema-migrate": "^2.1.3",
+    "fauna": "^1.0.1",
+    "faunadb": "^4.8.0",
+    "svelte": "^4.2.0"
+  },
+  "devDependencies": {
+    "@next-auth/adapter-test": "workspace:*",
+    "@next-auth/tsconfig": "workspace:*",
+    "jest": "^27.4.3"
+  },
+  "jest": {
+    "preset": "@next-auth/adapter-test/jest"
+  }
+}
