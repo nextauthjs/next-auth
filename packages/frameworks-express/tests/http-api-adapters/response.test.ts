@@ -1,6 +1,6 @@
 import supertest from "supertest"
 import express from "express"
-import { toExpressResponse } from "../../src/http-api-adapters"
+import { toExpressResponse } from "../../src/lib"
 
 function expectMatchingResponseHeaders(
   response: Response,
