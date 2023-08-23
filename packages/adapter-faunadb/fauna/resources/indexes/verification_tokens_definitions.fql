@@ -1,0 +1,13 @@
+VerificationTokens.definition.update({
+  indexes: {
+    byIdentifierAndToken: {
+      terms: [
+        { field: "identifier" },
+        { field: "token" },
+      ],
+    }
+  },
+  constraints: [{
+    unique: ["identifier", "token"]
+  }]
+})

@@ -1,0 +1,21 @@
+Sessions.definition.update({
+  indexes: {
+    bySessionToken: {
+      terms: [{ field: "sessionToken" }],
+    },
+    byUserId: {
+      terms: [{ field: "userId" }]
+    }
+  },
+  constraints: [{
+    unique: ["sessionToken"]
+  }]
+})
+
+Users.definition.update({
+  indexes: {
+    byEmail: {
+      terms: [{ field: "email"}]
+    }
+  }
+})

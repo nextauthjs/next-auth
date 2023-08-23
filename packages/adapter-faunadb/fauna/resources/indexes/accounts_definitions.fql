@@ -1,0 +1,16 @@
+Accounts.definition.update({
+  indexes: {
+    byUserId: {
+      terms: [{ field: "userId" }],
+    },
+    byProviderAndProviderAccountId: {
+      terms: [
+        { field: "provider" },
+        { field: "providerAccountId" }
+      ]
+    }
+  },
+  constraints: [{
+    unique: ["provider", "providerAccountId"]
+  }]
+})

@@ -1,0 +1,10 @@
+Users.definition.update({
+  indexes: {
+    byEmail: {
+      terms: [{ field: "email"}]
+    }
+  },
+  constraints: {
+    unique: ["email"]
+  }
+})

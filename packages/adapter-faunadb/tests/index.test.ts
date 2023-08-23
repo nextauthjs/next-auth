@@ -16,9 +16,9 @@ runBasicTests({
   adapter: FaunaAdapter(client),
   db: {
     disconnect: async () => await client.close({ force: true }),
-    user: async (id) => await q(fql`Users.byId(${id})`), //Get(Ref(collections.Users, id))),
+    user: async (id) => await q(fql`Users.byId(${id})`),
     session: async (sessionToken) =>
-      await q(fql`Sessions.firstWhere(.sessionToken == ${sessionToken})`), //Get(Match(indexes.SessionByToken, sessionToken))),
+      await q(fql`Sessions.firstWhere(.sessionToken == ${sessionToken})`),
     async account({ provider, providerAccountId }) {
       // const key = [provider, providerAccountId]
       // const ref = Match(indexes.AccountByProviderAndProviderAccountId, key)
@@ -27,11 +27,10 @@ runBasicTests({
       ) //Get(ref))
     },
     async verificationToken({ identifier, token }) {
-      // const key = [identifier, token]
-      // const ref = Match(indexes.VerificationTokenByIdentifierAndToken, key)
+      const key = [identifier, token]
       const verificationToken = await q(
-        fql`VerificationTokens.firstWhere(.identifier == ${identifier} && .token == ${token})`
-      ) //Get(ref))
+        fql`VerificationTokens.byIdentifierAndToken(${key})`
+      )
       // @ts-expect-error
       if (verificationToken) delete verificationToken.id
       return verificationToken
