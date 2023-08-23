@@ -27,7 +27,6 @@
   "devDependencies": {
     "@auth/core": "workspace:experimental",
     "@jest/globals": "^29.6.3",
-    "@next-auth/tsconfig": "workspace:*",
     "@types/express": "^4.17.17",
     "@types/node": "^18.7.14",
     "@types/supertest": "^2.0.12",

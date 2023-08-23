@@ -1,5 +1,5 @@
 {
-  "extends": "@next-auth/tsconfig/tsconfig.base.json",
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
