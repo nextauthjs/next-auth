@@ -26,13 +26,20 @@
  *
  * // Make sure to use these body parsers so Auth.js can receive data from the client
  * app.use(express.json())
- * app.use(express.urlencoded({ extended: true })
- *
- * app.use("/api/auth", ExpressAuth({
- *  providers: [
- *    GitHub({
- *      clientId: process.env.GITHUB_ID,
- *      clientSecret: process.env.GITHUB_SECRET
+ * app.use(express.urlencoded({ extended: true }))
+ * 
+ * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
+ * app.use('trust proxy')
+
+ * app.use(
+ *   "/api/auth/*",
+ *   ExpressAuth({
+ *     providers: [
+ *       GitHub({
+ *         clientId: process.env.GITHUB_ID,
+ *         clientSecret: process.env.GITHUB_SECRET,
+ *       }),
+ *     ],
  *   })
  *  ],
  * }))
