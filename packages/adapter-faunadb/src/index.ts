@@ -150,47 +150,24 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
     }
   }
 }
-//   return async function <T>(expr: QueryValue): Promise<any | null> {
-//     try {
-//       const result = await f.query<QueryValue>(expr)
-//       if (!result) return null
-//       return format({ ...result.data })
-//     } catch (error) {
-//       if ((error as errors.FaunaError).name === "NotFound") return null
-//       if (
-//         (error as errors.FaunaError).description?.includes(
-//           "Number or numeric String expected"
-//         )
-//       )
-//         return null
-
-//       if (process.env.NODE_ENV === "test") console.error(error)
-
-//       throw error
-//     }
-//   }
-// }
 
 /**
  *
  * ## Setup
  *
- * This is the Fauna Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+ * This is the Fauna v10 Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
  *
- * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
+ * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapter/faunadb).
  *
  * ### Configure Auth.js
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { Client as FaunaClient } from "faunadb"
- * import { FaunaAdapter } from "@auth/fauna-adapter"
+ * import { Client as FaunaClient } from "fauna"
+ * import { FaunaAdapter } from "@auth/faunadb-adapter"
  *
  * const client = new FaunaClient({
  *   secret: "secret",
- *   scheme: "http",
- *   domain: "localhost",
- *   port: 8443,
  * })
  *
  * // For more information on each option (and a full list of options) go to
@@ -208,41 +185,66 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  * Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
  *
  * ```javascript
- * CreateCollection({ name: "accounts" })
- * CreateCollection({ name: "sessions" })
- * CreateCollection({ name: "users" })
- * CreateCollection({ name: "verification_tokens" })
+ * Collection.create({ name: "accounts" })
+ * Collection.create({ name: "sessions" })
+ * Collection.create({ name: "users" })
+ * Collection.create({ name: "verification_tokens" })
  * ```
  *
  * ```javascript
- * CreateIndex({
- *   name: "account_by_provider_and_provider_account_id",
- *   source: Collection("accounts"),
- *   unique: true,
- *   terms: [
- *     { field: ["data", "provider"] },
- *     { field: ["data", "providerAccountId"] },
- *   ],
- * })
- * CreateIndex({
- *   name: "session_by_session_token",
- *   source: Collection("sessions"),
- *   unique: true,
- *   terms: [{ field: ["data", "sessionToken"] }],
- * })
- * CreateIndex({
- *   name: "user_by_email",
- *   source: Collection("users"),
- *   unique: true,
- *   terms: [{ field: ["data", "email"] }],
- * })
- * CreateIndex({
- *   name: "verification_token_by_identifier_and_token",
- *   source: Collection("verification_tokens"),
- *   unique: true,
- *   terms: [{ field: ["data", "identifier"] }, { field: ["data", "token"] }],
- * })
+ * Accounts.definition.update({
+ *    indexes: {
+ *      byUserId: {
+ *        terms: [{ field: "userId" }],
+ *      },
+ *      byProviderAndProviderAccountId: {
+ *        terms: [
+ *          { field: "provider" },
+ *          { field: "providerAccountId" }
+ *        ]
+ *      }
+ *    },
+ *    constraints: [{
+ *      unique: ["provider", "providerAccountId"]
+ *    }]
+ *  })
+ *
+ *  Sessions.definition.update({
+ *    indexes: {
+ *      bySessionToken: {
+ *        terms: [{ field: "sessionToken" }],
+ *      },
+ *      byUserId: {
+ *        terms: [{ field: "userId" }]
+ *      }
+ *    },
+ *    constraints: [{
+ *      unique: ["sessionToken"]
+ *    }]
+ *  })
+ *
+ *  Users.definition.update({
+ *    indexes: {
+ *      byEmail: {
+ *        terms: [{ field: "email"}]
+ *      }
+ *    }
+ *  })
+ *
+ *  VerificationTokens.definition.update({
+ *    indexes: {
+ *      byIdentifierAndToken: {
+ *        terms: [
+ *          { field: "identifier" },
+ *          { field: "token" },
+ *        ],
+ *      }
+ *    },
+ *    constraints: [{
+ *      unique: ["identifier", "token"]
+ *    }]
+ *  })
  * ```
  *
- * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Fauna v10 and based upon our main [schema](https://authjs.dev/reference/adapters#models)
  **/
