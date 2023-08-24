@@ -1,5 +1,5 @@
 {
-  "name": "@next-auth/adapter-test",
+  "name": "@auth/adapter-test",
   "version": "0.0.0",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "contributors": [

@@ -215,9 +215,9 @@ importers:
 
   packages/adapter-dgraph:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@types/jest': ^26.0.24
       '@types/jsonwebtoken': ^8.5.5
       '@types/node-fetch': ^2.5.11
@@ -229,8 +229,8 @@ importers:
       '@auth/core': link:../core
       jsonwebtoken: 8.5.1
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@types/jest': 26.0.24
       '@types/jsonwebtoken': 8.5.8
       '@types/node-fetch': 2.6.2
@@ -240,9 +240,9 @@ importers:
 
   packages/adapter-drizzle:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.4
       '@types/uuid': ^8.3.3
       better-sqlite3: ^8.4.0
@@ -254,8 +254,8 @@ importers:
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@types/better-sqlite3': 7.6.4
       '@types/uuid': 8.3.4
       better-sqlite3: 8.5.0
@@ -267,62 +267,62 @@ importers:
 
   packages/adapter-dynamodb:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
+      '@auth/tsconfig': workspace:*
       '@aws-sdk/client-dynamodb': ^3.36.1
       '@aws-sdk/lib-dynamodb': ^3.36.1
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
       '@shelf/jest-dynamodb': ^2.1.0
       jest: ^27.4.3
     dependencies:
       '@auth/core': link:../core
     devDependencies:
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@aws-sdk/client-dynamodb': 3.113.0
       '@aws-sdk/lib-dynamodb': 3.113.0_eb2z3hhrjl3qvyc6ecmpo2nhva
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
       '@shelf/jest-dynamodb': 2.2.4_qsruu6yolbxs4rh6ixjhkibvwu
       jest: 27.5.1
 
   packages/adapter-fauna:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
+      '@auth/tsconfig': workspace:*
       '@fauna-labs/fauna-schema-migrate': ^2.1.3
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
       faunadb: ^4.3.0
       jest: ^27.4.3
     dependencies:
       '@auth/core': link:../core
     devDependencies:
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@fauna-labs/fauna-schema-migrate': 2.2.1_faunadb@4.6.0
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
       faunadb: 4.6.0
       jest: 27.5.1
 
   packages/adapter-firebase:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       firebase-admin: ^11.4.1
       firebase-tools: ^11.16.1
       jest: ^29.3.1
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       firebase-admin: 11.4.1
       firebase-tools: 11.16.1
       jest: 29.3.1
 
   packages/adapter-kysely:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@types/better-sqlite3': ^7.6.3
       '@types/pg': ^8.6.5
       better-sqlite3: ^8.2.0
@@ -333,8 +333,8 @@ importers:
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@types/better-sqlite3': 7.6.4
       '@types/pg': 8.10.2
       better-sqlite3: 8.5.0
@@ -345,58 +345,58 @@ importers:
 
   packages/adapter-mikro-orm:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
+      '@auth/tsconfig': workspace:*
       '@mikro-orm/core': ^5
       '@mikro-orm/sqlite': ^5
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
       jest: ^29
     dependencies:
       '@auth/core': link:../core
     devDependencies:
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@mikro-orm/core': 5.2.1_@mikro-orm+sqlite@5.2.1
       '@mikro-orm/sqlite': 5.2.1_@mikro-orm+core@5.2.1
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
       jest: 29.3.0
 
   packages/adapter-mongodb:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       jest: ^27.4.3
       mongodb: ^5.1.0
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       jest: 27.5.1
       mongodb: 5.1.0
 
   packages/adapter-neo4j:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       jest: ^27.4.3
       neo4j-driver: ^5.7.0
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@types/uuid': 8.3.4
       jest: 27.5.1
       neo4j-driver: 5.7.0
 
   packages/adapter-pouchdb:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@types/pouchdb': ^6.4.0
       jest: ^27.4.3
       pouchdb: ^8.0.1
@@ -405,8 +405,8 @@ importers:
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@types/pouchdb': 6.4.0
       jest: 27.5.1
       pouchdb: 8.0.1
@@ -415,9 +415,9 @@ importers:
 
   packages/adapter-prisma:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@prisma/client': ^4.15.0
       jest: ^27.4.3
       mongodb: ^4.4.0
@@ -425,8 +425,8 @@ importers:
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@prisma/client': 4.15.0_prisma@4.15.0
       jest: 27.5.1
       mongodb: 4.7.0
@@ -434,31 +434,31 @@ importers:
 
   packages/adapter-sequelize:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       jest: ^27.4.3
       sequelize: ^6.6.5
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       jest: 27.5.1
       sequelize: 6.21.0
 
   packages/adapter-supabase:
     specifiers:
+      '@auth/adapter-test': workspace:^0.0.0
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@auth/tsconfig': workspace:^0.0.0
       '@supabase/supabase-js': ^2.0.5
       jest: ^27.4.3
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@supabase/supabase-js': 2.0.5
       jest: 27.5.1
 
@@ -488,9 +488,9 @@ importers:
 
   packages/adapter-typeorm:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       jest: ^27.4.3
       mssql: ^7.2.1
       mysql: ^2.18.1
@@ -502,8 +502,8 @@ importers:
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       jest: 27.5.1
       mssql: 7.3.5
       mysql: 2.18.1
@@ -515,9 +515,9 @@ importers:
 
   packages/adapter-upstash-redis:
     specifiers:
+      '@auth/adapter-test': workspace:*
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:*
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@types/uuid': ^8.3.3
       '@upstash/redis': ^1.0.1
       dotenv: ^10.0.0
@@ -527,8 +527,8 @@ importers:
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@types/uuid': 8.3.4
       '@upstash/redis': 1.7.0
       dotenv: 10.0.0
@@ -538,24 +538,24 @@ importers:
 
   packages/adapter-xata:
     specifiers:
+      '@auth/adapter-test': workspace:^0.0.0
       '@auth/core': workspace:*
-      '@next-auth/adapter-test': workspace:^0.0.0
-      '@next-auth/tsconfig': workspace:^0.0.0
+      '@auth/tsconfig': workspace:^0.0.0
       '@xata.io/client': ^0.13.0
       jest: ^27.4.3
       typescript: ^4.7.4
     dependencies:
       '@auth/core': link:../core
     devDependencies:
-      '@next-auth/adapter-test': link:../adapter-test
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/adapter-test': link:../adapter-test
+      '@auth/tsconfig': link:../tsconfig
       '@xata.io/client': 0.13.4_typescript@4.7.4
       jest: 27.5.1
       typescript: 4.7.4
 
   packages/core:
     specifiers:
-      '@next-auth/tsconfig': workspace:*
+      '@auth/tsconfig': workspace:*
       '@panva/hkdf': ^1.0.4
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
@@ -577,7 +577,7 @@ importers:
       preact: 10.11.3
       preact-render-to-string: 5.2.3_preact@10.11.3
     devDependencies:
-      '@next-auth/tsconfig': link:../tsconfig
+      '@auth/tsconfig': link:../tsconfig
       '@types/cookie': 0.5.1
       '@types/node': 18.11.10
       '@types/nodemailer': 6.4.6
@@ -637,6 +637,7 @@ importers:
 
   packages/next-auth:
     specifiers:
+      '@auth/tsconfig': workspace:*
       '@babel/cli': ^7.17.10
       '@babel/core': ^7.18.2
       '@babel/plugin-proposal-optional-catch-binding': ^7.16.7
@@ -646,7 +647,6 @@ importers:
       '@babel/preset-typescript': ^7.17.12
       '@babel/runtime': ^7.20.13
       '@edge-runtime/jest-environment': 1.1.0-beta.35
-      '@next-auth/tsconfig': workspace:*
       '@panva/hkdf': ^1.0.2
       '@swc/core': ^1.2.198
       '@swc/jest': ^0.2.21
@@ -695,6 +695,7 @@ importers:
       preact-render-to-string: 5.2.0_preact@10.8.2
       uuid: 8.3.2
     devDependencies:
+      '@auth/tsconfig': link:../tsconfig
       '@babel/cli': 7.17.10_@babel+core@7.18.5
       '@babel/core': 7.18.5
       '@babel/plugin-proposal-optional-catch-binding': 7.16.7_@babel+core@7.18.5
@@ -703,7 +704,6 @@ importers:
       '@babel/preset-react': 7.17.12_@babel+core@7.18.5
       '@babel/preset-typescript': 7.17.12_@babel+core@7.18.5
       '@edge-runtime/jest-environment': 1.1.0-beta.35
-      '@next-auth/tsconfig': link:../tsconfig
       '@swc/core': 1.2.204
       '@swc/jest': 0.2.21_@swc+core@1.2.204
       '@testing-library/dom': 8.14.0

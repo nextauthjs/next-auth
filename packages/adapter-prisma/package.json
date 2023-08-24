@@ -54,14 +54,14 @@
     "@prisma/client": ">=2.26.0 || >=3 || >=4"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
+    "@auth/adapter-test": "workspace:*",
+    "@auth/tsconfig": "workspace:*",
     "@prisma/client": "^4.15.0",
     "jest": "^27.4.3",
     "mongodb": "^4.4.0",
     "prisma": "^4.15.0"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "@auth/adapter-test/jest"
   }
 }
