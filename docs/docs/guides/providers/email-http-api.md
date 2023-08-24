@@ -25,7 +25,7 @@ First, if you do not have a project using Auth.js, clone and set up a basic Auth
 
 ```js title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
@@ -51,7 +51,7 @@ As mentioned earlier, we're going to be using SendGrid in this example, so the a
 
 ```js title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()

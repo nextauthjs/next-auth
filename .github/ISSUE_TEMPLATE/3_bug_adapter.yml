@@ -24,7 +24,6 @@ body:
         - "@auth/dgraph-adapter"
         - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
-        - "@auth/drizzle-adapter"
         - "@auth/fauna-adapter"
         - "@auth/firebase-adapter"
         - "@auth/kysely-adapter"

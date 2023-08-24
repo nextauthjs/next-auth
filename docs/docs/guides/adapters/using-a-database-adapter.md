@@ -8,6 +8,6 @@ An **Adapter** in Auth.js connects your application to whatever database or back
 When using a database, you can still use JWT for session handling for fast access. See the [`session.strategy`](/reference/configuration/auth-config#session) option. Read about the trade-offs of JWT in the [FAQ](/concepts/faq#json-web-tokens).
 :::
 
-We have a list of official adapters that are distributed as their own packages under the `@next-auth/{name}-adapter` namespace. Their source code is available in their various adapters package directories at [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth/tree/main/packages):
+We have a list of official adapters that are distributed as their own packages under the `@auth/{name}-adapter` namespace. Their source code is available in their various adapters package directories at [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth/tree/main/packages):
 
 - [All available adapters](/reference/adapters)
