@@ -1,9 +1,0 @@
-auth_root_key: secret
-cluster_name: fauna
-storage_data_path: /var/lib/faunadb
-log_path: /var/log/faunadb
-shutdown_grace_period_seconds: 0
-network_listen_address: 172.17.0.2
-network_broadcast_address: 172.17.0.2
-network_admin_http_address: 172.17.0.2
-network_coordinator_http_address: 172.17.0.2
