@@ -41,18 +41,19 @@ export function FaunaAdapter(f: FaunaClient): Adapter {
     createUser: async (data) => await q(fql`Users.create({ ${to(data)} })`),
     getUser: async (id) => await q(fql`Users.byId(${id})`),
     getUserByEmail: async (email) =>
-      await q(fql`Users.byEmail(.email == ${email})`),
+      // email has a unique constraint in Fauna so it's safe to assume there's only one.
+      await q(fql`Users.byEmail(${email}).first()`),
     getUserByAccount: async ({ provider, providerAccountId }) => {
-      const key = [provider, providerAccountId]
-      const accountQuery = fql`Accounts.byProviderAndProviderAccountId(${key})`
-      const accountResult: QuerySuccess<AdapterAccount> = await q(accountQuery)
+      const accountQuery = fql`Accounts.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()`
+      const accountResult: AdapterAccount = await q(accountQuery)
       if (!accountResult) return null
-      const userQuery = fql`Users.byId(${accountResult.data.userId})`
-      const userResult: QuerySuccess<AdapterUser> = await q(userQuery)
-      return userResult.data
+
+      const userQuery = fql`Users.byId(${accountResult.userId})`
+      const userResult: AdapterUser = await q(userQuery)
+      return userResult
     },
     updateUser: async (data) =>
-      await q(fql`Users.byId(data.id)!.update({ ${to(data)} })`),
+      await q(fql`Users.byId(${data.id})!.update({ ${to(data)} })`),
     deleteUser: async (userId) => {
       await q(fql`Sessions.byUserId(${userId})!.forEach(.delete())`)
       await q(fql`Accounts.byUserId(${userId})!.forEach(.delete())`)
@@ -60,12 +61,10 @@ export function FaunaAdapter(f: FaunaClient): Adapter {
       return null
     },
     linkAccount: async (data) => await q(fql`Accounts.create(${to(data)})!`),
-    unlinkAccount: async ({ provider, providerAccountId }) => {
-      const id = [provider, providerAccountId]
-      return await q(
-        fql`Accounts.byProviderAndProviderAccountId(${id}).delete()`
-      )
-    },
+    unlinkAccount: async ({ provider, providerAccountId }) =>
+      await q(
+        fql`Accounts.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`
+      ),
     createSession: async (data) => await q(fql`Sessions.create(${to(data)})`),
     getSessionAndUser: async (sessionToken) => {
       const session = await q(
@@ -80,7 +79,7 @@ export function FaunaAdapter(f: FaunaClient): Adapter {
         fql`Session.bySessionToken(${data.sessionToken}).update(${to(data)})`
       ),
     deleteSession: async (sessionToken) =>
-      await q(fql`Session.bySessionToken(${sessionToken}).delete()`),
+      await q(fql`Session.bySessionToken(${sessionToken}).forEach(.delete())`),
     createVerificationToken: async (data) => {
       const { id: _id, ...verificationToken } = await q(
         fql`VerificationTokens.create(${to(data)})`
@@ -88,10 +87,10 @@ export function FaunaAdapter(f: FaunaClient): Adapter {
       return verificationToken
     },
     useVerificationToken: async ({ identifier, token }) => {
-      const key = [identifier, token]
-      const object = fql`VerificationTokens.byIdentifierAndToken(${key})`
+      const object = fql`VerificationTokens.byIdentifierAndToken(${identifier}, ${token})`
       const verificationToken = await q(object)
       if (!verificationToken) return null
+
       await q(fql`VerificationTokens.byId(${verificationToken.id}).delete()`)
       delete verificationToken.id
       return verificationToken
@@ -137,6 +136,9 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
     try {
       const result: QuerySuccess<QueryValue> = await f.query(expr)
       if (!result) return null
+      // If the query returns a null result, it might be hidden inside a .data key.
+      if (Object.keys(result).includes("data") && !result.data) return null
+      console.log(result)
       const finalResult = result.data ? format(result.data) : format(result)
       return finalResult
     } catch (error) {
