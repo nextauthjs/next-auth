@@ -11,11 +11,3 @@ Sessions.definition.update({
     unique: ["sessionToken"]
   }]
 })
-
-Users.definition.update({
-  indexes: {
-    byEmail: {
-      terms: [{ field: "email"}]
-    }
-  }
-})
