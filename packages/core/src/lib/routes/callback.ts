@@ -318,7 +318,7 @@ export async function callback(params: {
       /** @type {import("src").Account} */
       const account = {
         providerAccountId: user.id,
-        type: "credentials",
+        type: "credentials" as const,
         provider: provider.id,
       }
 
@@ -339,7 +339,6 @@ export async function callback(params: {
       const token = await callbacks.jwt({
         token: defaultToken,
         user,
-        // @ts-expect-error
         account,
         isNewUser: false,
         trigger: "signIn",
@@ -363,7 +362,6 @@ export async function callback(params: {
         cookies.push(...sessionCookies)
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account })
 
       return { redirect: callbackUrl, cookies }

@@ -38,7 +38,6 @@ export async function session(params: {
 
       if (!decodedToken) throw new Error("Invalid JWT")
 
-      // @ts-expect-error
       const token = await callbacks.jwt({
         token: decodedToken,
         ...(isUpdate && { trigger: "update" }),
@@ -54,7 +53,6 @@ export async function session(params: {
           user: { name: token.name, email: token.email, image: token.picture },
           expires: newExpires.toISOString(),
         }
-        // @ts-expect-error
         const newSession = await callbacks.session({ session, token })
 
         // Return session payload as response
@@ -124,7 +122,6 @@ export async function session(params: {
       }
 
       // Pass Session through to the session callback
-      // @ts-expect-error
       const sessionPayload = await callbacks.session({
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
@@ -150,7 +147,6 @@ export async function session(params: {
         },
       })
 
-      // @ts-expect-error
       await events.session?.({ session: sessionPayload })
     } else if (sessionToken) {
       // If `sessionToken` was found set but it's not valid for a session then
