@@ -17,6 +17,8 @@ echo "Waiting 20 sec for db to start..."
 sleep 20
 
 # Create tables and indeces
+# NOTE: None of this will work now because we've changed the way schemas are generated and
+# fauna-schema-migrator isn't compatible with v10
 npx fauna-schema-migrate generate
 npx fauna-schema-migrate apply all
 

@@ -21,7 +21,7 @@
     "@auth/typeorm-adapter": "workspace:*",
     "@prisma/client": "^3",
     "@supabase/supabase-js": "^2.0.5",
-    "faunadb": "^4",
+    "fauna": "^1.0.1",
     "next": "13.4.0",
     "next-auth": "workspace:*",
     "nodemailer": "^6",

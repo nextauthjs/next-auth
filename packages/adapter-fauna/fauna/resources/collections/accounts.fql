@@ -1,1 +1,1 @@
-CreateCollection({ name: "accounts" })
+Collection.create({ name: "Accounts" })

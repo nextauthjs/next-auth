@@ -48,9 +48,9 @@ import WorkOS from "@auth/core/providers/workos"
 // const adapter = PrismaAdapter(client)
 
 // // Fauna
-// import { Client as FaunaClient } from "faunadb"
+// import { Client as FaunaClient } from "fauna"
 // import { FaunaAdapter } from "@auth/fauna-adapter"
-// const opts = { secret: process.env.FAUNA_SECRET, domain: process.env.FAUNA_DOMAIN }
+// const opts = { secret: process.env.FAUNA_SECRET }
 // const client = globalThis.fauna || new FaunaClient(opts)
 // if (process.env.NODE_ENV !== "production") globalThis.fauna = client
 // const adapter = FaunaAdapter(client)

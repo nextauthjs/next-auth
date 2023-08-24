@@ -10,7 +10,8 @@
   "author": "Bhanu Teja P",
   "contributors": [
     "Nico Domino <yo@ndo.dev>",
-    "Balázs Orbán <info@balazsorban.com>"
+    "Balázs Orbán <info@balazsorban.com>",
+    "Lindsey Jacks <linzjax@gmail.com>"
   ],
   "type": "module",
   "types": "./index.d.ts",
@@ -44,16 +45,13 @@
     "test": "./tests/test.sh"
   },
   "dependencies": {
-    "@auth/core": "workspace:*"
-  },
-  "peerDependencies": {
-    "faunadb": "^4.3.0"
+    "@auth/core": "workspace:*",
+    "fauna": "^1.0.1"
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.1.3",
     "@next-auth/adapter-test": "workspace:*",
     "@next-auth/tsconfig": "workspace:*",
-    "faunadb": "^4.3.0",
     "jest": "^27.4.3"
   },
   "jest": {
