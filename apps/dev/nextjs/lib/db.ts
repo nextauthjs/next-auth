@@ -1,3 +1,4 @@
+// Copy from RedisUpstashAdapter
 import type {
   Adapter,
   AdapterUser,
@@ -5,7 +6,7 @@ import type {
   AdapterSession,
 } from "@auth/core/adapters"
 
-export interface LocalStorageAdapterOptions {
+export interface AdapterOptions {
   /**
    * The base prefix for your keys
    */
@@ -70,7 +71,7 @@ export function TestAdapter(
     setItem: (key: string, value: string) => Promise<void>
     deleteItems: (...keys: string[]) => Promise<void>
   },
-  options: LocalStorageAdapterOptions = {}
+  options: AdapterOptions = {}
 ): Adapter {
   const mergedOptions = {
     ...defaultOptions,
