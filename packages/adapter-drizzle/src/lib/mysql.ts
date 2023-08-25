@@ -6,13 +6,13 @@ import {
   primaryKey,
   varchar,
   MySqlTableFn,
+  MySqlDatabase,
 } from "drizzle-orm/mysql-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import type { MySql2Database } from "drizzle-orm/mysql2"
 
 export function createTables(mySqlTable: MySqlTableFn) {
-  const users = mySqlTable("users", {
+  const users = mySqlTable("user", {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
     email: varchar("email", { length: 255 }).notNull(),
@@ -24,7 +24,7 @@ export function createTables(mySqlTable: MySqlTableFn) {
   })
 
   const accounts = mySqlTable(
-    "accounts",
+    "account",
     {
       userId: varchar("userId", { length: 255 })
         .notNull()
@@ -49,7 +49,7 @@ export function createTables(mySqlTable: MySqlTableFn) {
     })
   )
 
-  const sessions = mySqlTable("sessions", {
+  const sessions = mySqlTable("session", {
     sessionToken: varchar("sessionToken", { length: 255 })
       .notNull()
       .primaryKey(),
@@ -77,7 +77,7 @@ export function createTables(mySqlTable: MySqlTableFn) {
 export type DefaultSchema = ReturnType<typeof createTables>
 
 export function mySqlDrizzleAdapter(
-  client: MySql2Database<Record<string, never>>,
+  client: InstanceType<typeof MySqlDatabase>,
   tableFn = defaultMySqlTableFn
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } =
@@ -164,10 +164,7 @@ export function mySqlDrizzleAdapter(
         .then((res) => res[0])
     },
     async linkAccount(rawAccount) {
-      await client
-        .insert(accounts)
-        .values(rawAccount)
-        .then((res) => res[0])
+      await client.insert(accounts).values(rawAccount)
     },
     async getUserByAccount(account) {
       const dbAccount =
@@ -187,7 +184,7 @@ export function mySqlDrizzleAdapter(
         return null
       }
 
-      return dbAccount.users
+      return dbAccount.user
     },
     async deleteSession(sessionToken) {
       const session =

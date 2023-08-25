@@ -16,19 +16,14 @@
  * @module @auth/drizzle-adapter
  */
 
-import { MySqlTableFn } from "drizzle-orm/mysql-core/index.js"
-import { PgTableFn } from "drizzle-orm/pg-core/index.js"
-import { SQLiteTableFn } from "drizzle-orm/sqlite-core/index.js"
+import { MySqlDatabase, MySqlTableFn } from "drizzle-orm/mysql-core"
+import { PgDatabase, PgTableFn } from "drizzle-orm/pg-core"
+import { BaseSQLiteDatabase, SQLiteTableFn } from "drizzle-orm/sqlite-core"
 import { mySqlDrizzleAdapter } from "./lib/mysql.js"
 import { pgDrizzleAdapter } from "./lib/pg.js"
 import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
-import {
-  isMySqlDatabase,
-  isPgDatabase,
-  isSQLiteDatabase,
-  SqlFlavorOptions,
-  TableFn,
-} from "./lib/utils.js"
+import { SqlFlavorOptions, TableFn } from "./lib/utils.js"
+import { is } from "drizzle-orm"
 
 import type { Adapter } from "@auth/core/adapters"
 
@@ -77,7 +72,7 @@ import type { Adapter } from "@auth/core/adapters"
  * } from "drizzle-orm/pg-core"
  * import type { AdapterAccount } from '@auth/core/adapters'
  *
- * export const users = pgTable("users", {
+ * export const users = pgTable("user", {
  *  id: text("id").notNull().primaryKey(),
  *  name: text("name"),
  *  email: text("email").notNull(),
@@ -86,7 +81,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const accounts = pgTable(
- * "accounts",
+ * "account",
  * {
  *   userId: text("userId")
  *     .notNull()
@@ -107,7 +102,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  * )
  *
- * export const sessions = pgTable("sessions", {
+ * export const sessions = pgTable("session", {
  *  sessionToken: text("sessionToken").notNull().primaryKey(),
  *  userId: text("userId")
  *    .notNull()
@@ -140,7 +135,7 @@ import type { Adapter } from "@auth/core/adapters"
  * } from "drizzle-orm/mysql-core"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
- * export const users = mysqlTable("users", {
+ * export const users = mysqlTable("user", {
  *  id: varchar("id", { length: 255 }).notNull().primaryKey(),
  *  name: varchar("name", { length: 255 }),
  *  email: varchar("email", { length: 255 }).notNull(),
@@ -149,7 +144,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const accounts = mysqlTable(
- *  "accounts",
+ *  "account",
  *   {
  *    userId: varchar("userId", { length: 255 })
  *       .notNull()
@@ -170,7 +165,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  * )
  *
- * export const sessions = mysqlTable("sessions", {
+ * export const sessions = mysqlTable("session", {
  *  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
  *  userId: varchar("userId", { length: 255 })
  *    .notNull()
@@ -197,7 +192,7 @@ import type { Adapter } from "@auth/core/adapters"
  * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
- * export const users = sqliteTable("users", {
+ * export const users = sqliteTable("user", {
  *  id: text("id").notNull().primaryKey(),
  *  name: text("name"),
  *  email: text("email").notNull(),
@@ -206,7 +201,7 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const accounts = sqliteTable(
- *  "accounts",
+ *  "account",
  *  {
  *    userId: text("userId")
  *      .notNull()
@@ -227,7 +222,7 @@ import type { Adapter } from "@auth/core/adapters"
  *  })
  * )
  *
- * export const sessions = sqliteTable("sessions", {
+ * export const sessions = sqliteTable("session", {
  * sessionToken: text("sessionToken").notNull().primaryKey(),
  * userId: text("userId")
  *   .notNull()
@@ -260,18 +255,15 @@ export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
   table?: TableFn<SqlFlavor>
 ): Adapter {
-  if (isMySqlDatabase(db)) {
-    // We need to cast to unknown since the type overlaps (PScale is MySQL based)
+  if (is(db, MySqlDatabase)) {
     return mySqlDrizzleAdapter(db, table as MySqlTableFn)
-  }
-
-  if (isPgDatabase(db)) {
+  } else if (is(db, PgDatabase)) {
     return pgDrizzleAdapter(db, table as PgTableFn)
-  }
-
-  if (isSQLiteDatabase(db)) {
+  } else if (is(db, BaseSQLiteDatabase)) {
     return SQLiteDrizzleAdapter(db, table as SQLiteTableFn)
   }
 
-  throw new Error("Unsupported database type in Auth.js Drizzle adapter.")
+  throw new Error(
+    `Unsupported database type (${typeof db}) in Auth.js Drizzle adapter.`
+  )
 }

@@ -6,13 +6,13 @@ import {
   primaryKey,
   integer,
   PgTableFn,
+  PgDatabase,
 } from "drizzle-orm/pg-core"
 
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 export function createTables(pgTable: PgTableFn) {
-  const users = pgTable("users", {
+  const users = pgTable("user", {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
@@ -21,7 +21,7 @@ export function createTables(pgTable: PgTableFn) {
   })
 
   const accounts = pgTable(
-    "accounts",
+    "account",
     {
       userId: text("userId")
         .notNull()
@@ -42,7 +42,7 @@ export function createTables(pgTable: PgTableFn) {
     })
   )
 
-  const sessions = pgTable("sessions", {
+  const sessions = pgTable("session", {
     sessionToken: text("sessionToken").notNull().primaryKey(),
     userId: text("userId")
       .notNull()
@@ -68,7 +68,7 @@ export function createTables(pgTable: PgTableFn) {
 export type DefaultSchema = ReturnType<typeof createTables>
 
 export function pgDrizzleAdapter(
-  client: PostgresJsDatabase<Record<string, never>>,
+  client: InstanceType<typeof PgDatabase>,
   tableFn = defaultPgTableFn
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } =
@@ -174,7 +174,7 @@ export function pgDrizzleAdapter(
         return null
       }
 
-      return dbAccount.users
+      return dbAccount.user
     },
     async deleteSession(sessionToken) {
       const session = await client

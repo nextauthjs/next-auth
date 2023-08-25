@@ -2,7 +2,7 @@
 
 # install Supabase CLI when run on CI
 if [ "$CI" = true ]; then
-	wget -q -O supabase.deb https://github.com/supabase/cli/releases/download/v0.29.0/supabase_0.29.0_linux_amd64.deb
+	wget -q -O supabase.deb https://github.com/supabase/cli/releases/download/v1.91.1/supabase_1.91.1_linux_arm64.deb
 	sudo dpkg -i supabase.deb
 fi
 
@@ -17,3 +17,4 @@ if npx jest; then
 else
 	supabase stop && exit 1
 fi
+

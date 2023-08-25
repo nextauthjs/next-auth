@@ -17,7 +17,7 @@ We will also refer to the [Prisma Adapter](/reference/adapter/prisma). A [databa
 
 ## Setup
 
-First, if you do not have a project using Auth.js, clone and set up a basic Auth.js project like the one [provided in](https://github.com/nextauthjs/next-auth-example.git) our example repo](https://github.com/nextauthjs/next-auth-example.git).
+First, if you do not have a project using Auth.js, clone and set up a basic Auth.js project like the one [provided in our example repo](https://github.com/nextauthjs/next-auth-example).
 
 - Install the [Prisma Adapter](/reference/adapter/prisma)
 - Generate an API key from your cloud Email provider of choice and add it to your `.env.*` file. For example, mine is going to be called `SENDGRID_API`
@@ -25,7 +25,7 @@ First, if you do not have a project using Auth.js, clone and set up a basic Auth
 
 ```js title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
@@ -51,7 +51,7 @@ As mentioned earlier, we're going to be using SendGrid in this example, so the a
 
 ```js title="pages/api/auth/[...nextauth].ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
