@@ -294,14 +294,14 @@ importers:
         specifier: 2.4.1
         version: 2.4.1(react-dom@18.2.0)(react@18.2.0)
       docusaurus-plugin-typedoc:
-        specifier: 1.0.0-next.14
-        version: 1.0.0-next.14(typedoc-plugin-markdown@4.0.0-next.18)
+        specifier: 1.0.0-next.5
+        version: 1.0.0-next.5(typedoc-plugin-markdown@4.0.0-next.6)
       typedoc:
         specifier: ^0.24.8
         version: 0.24.8(typescript@5.0.4)
       typedoc-plugin-markdown:
-        specifier: 4.0.0-next.18
-        version: 4.0.0-next.18(typedoc@0.24.8)
+        specifier: 4.0.0-next.6
+        version: 4.0.0-next.6(prettier@2.8.1)(typedoc@0.24.8)
 
   packages/adapter-dgraph:
     dependencies:
@@ -16019,13 +16019,12 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /docusaurus-plugin-typedoc@1.0.0-next.14(typedoc-plugin-markdown@4.0.0-next.18):
-    resolution: {integrity: sha512-zK2P27l5nbL3n1FHDk11g1GyDPPV6akJpoGsLBxcCFHRfNzXmG88/zo3+KCQMVAyRs/pJ3kN03VoIyzA9mOvkA==}
+  /docusaurus-plugin-typedoc@1.0.0-next.5(typedoc-plugin-markdown@4.0.0-next.6):
+    resolution: {integrity: sha512-p9t9ShQ6sqW3mYcJL0cg2tqJsEzD2IW7mMS3kgnb/Ifo5iIYe6uTZXpNdsD64xuJxbwxmhuWVOOAvVOyRhEgUQ==}
     peerDependencies:
-      typedoc-plugin-markdown: '>=4.0.0-next.18'
+      typedoc-plugin-markdown: '>=4.0.0-next.6'
     dependencies:
-      typedoc-plugin-frontmatter: 0.0.2
-      typedoc-plugin-markdown: 4.0.0-next.18(typedoc@0.24.8)
+      typedoc-plugin-markdown: 4.0.0-next.6(prettier@2.8.1)(typedoc@0.24.8)
     dev: true
 
   /dom-accessibility-api@0.5.14:
@@ -30990,17 +30989,13 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typedoc-plugin-frontmatter@0.0.2:
-    resolution: {integrity: sha512-xPw76L4S4/zbd01Tt89CVsJdPiMxztlmkXaA2Wu/l0KEbIrsqSHPv/sGsPI1O+pkZrSpaFr94qLA3ls1MrpKKw==}
-    dependencies:
-      yaml: 2.3.1
-    dev: true
-
-  /typedoc-plugin-markdown@4.0.0-next.18(typedoc@0.24.8):
-    resolution: {integrity: sha512-Qf4tUrAsZLcJ1TzCJc5NWP+ulPsQh7v1cxNCeJqeIQovnbpMOkZPQogEhZBUvMjHxABS64EQ9PkpDFJuE0IpGw==}
+  /typedoc-plugin-markdown@4.0.0-next.6(prettier@2.8.1)(typedoc@0.24.8):
+    resolution: {integrity: sha512-U+Erp/mBHpxMRVFuZ5/J0US5Jv1TjhTPjAAcgmkoo3RUpwNzIu9jO6FeQZRgAqyDs0XOy6cwVtTvOmClzthzXQ==}
     peerDependencies:
+      prettier: '>=1.8.0'
       typedoc: '>=0.24.0'
     dependencies:
+      prettier: 2.8.1
       typedoc: 0.24.8(typescript@5.0.4)
     dev: true
 
@@ -32543,11 +32538,6 @@ packages:
   /yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
-    dev: true
-
-  /yaml@2.3.1:
-    resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
-    engines: {node: '>= 14'}
     dev: true
 
   /yargs-parser@18.1.3:
