@@ -54,6 +54,10 @@
       "types": "./client/_utils.d.ts",
       "default": "./client/_utils.js"
     },
+    "./providers": {
+      "types": "./providers/index.d.ts",
+      "default": "./providers/index.js"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "default": "./providers/*.js"
