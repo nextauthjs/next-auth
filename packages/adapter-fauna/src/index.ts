@@ -76,10 +76,10 @@ export function FaunaAdapter(f: FaunaClient): Adapter {
     },
     updateSession: async (data) =>
       await q(
-        fql`Session.bySessionToken(${data.sessionToken}).update(${to(data)})`
+        fql`Sessions.bySessionToken(${data.sessionToken}).update(${to(data)})`
       ),
     deleteSession: async (sessionToken) =>
-      await q(fql`Session.bySessionToken(${sessionToken}).forEach(.delete())`),
+      await q(fql`Sessions.bySessionToken(${sessionToken}).forEach(.delete())`),
     createVerificationToken: async (data) => {
       const { id: _id, ...verificationToken } = await q(
         fql`VerificationTokens.create(${to(data)})`
