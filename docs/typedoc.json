@@ -1,5 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
+  "outputFileStrategy": "members",
   "cleanOutputDir": true,
   "disableSources": true,
   "excludeExternals": true,
@@ -9,7 +10,6 @@
   "excludeProtected": true,
   "hideHierarchy": true,
   "gitRevision": "main",
-  "groupByReflections": false,
   "hideBreadcrumbs": true,
   "hideGenerator": true,
   "kindSortOrder": [
@@ -37,7 +37,6 @@
     "SetSignature"
   ],
   "readme": "none",
-  "reflectionsWithOwnFile": "none",
   "sort": [
     "kind",
     "static-first",
