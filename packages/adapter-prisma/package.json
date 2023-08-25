@@ -51,15 +51,15 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@prisma/client": ">=2.26.0 || >=3 || >=4"
+    "@prisma/client": ">=2.26.0 || >=3 || >=4 || >=5"
   },
   "devDependencies": {
     "@auth/adapter-test": "workspace:*",
     "@auth/tsconfig": "workspace:*",
-    "@prisma/client": "^4.15.0",
+    "@prisma/client": "^5.2.0",
     "jest": "^27.4.3",
     "mongodb": "^4.4.0",
-    "prisma": "^4.15.0"
+    "prisma": "^5.2.0"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"
