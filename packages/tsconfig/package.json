@@ -1,10 +1,8 @@
 {
-  "name": "@next-auth/tsconfig",
+  "name": "@auth/tsconfig",
   "private": true,
   "version": "0.0.0",
   "files": [
-    "tsconfig.adapters.json",
-    "tsconfig.base.json",
-    "tsconfig.eslint.json"
+    "tsconfig.base.json"
   ]
 }

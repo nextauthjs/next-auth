@@ -1,5 +1,5 @@
 {
-  "extends": "@next-auth/tsconfig/tsconfig.base.json",
+  "extends": "@auth/tsconfig/tsconfig.base.json",
   "compilerOptions": {
     "declarationMap": true,
     "emitDeclarationOnly": true,
