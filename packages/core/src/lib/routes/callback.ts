@@ -48,8 +48,11 @@ export async function callback(params: {
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
+      // Use body if the response mode is set to form_post. For all other cases, use query
+      const payload = provider.authorization?.url.searchParams.get("response_mode") === 'form_post' ? body : query;
+
       const { proxyRedirect, randomState } = handleState(
-        query,
+        payload,
         provider,
         options.isOnRedirectProxy
       )
@@ -60,7 +63,7 @@ export async function callback(params: {
       }
 
       const authorizationResult = await handleOAuth(
-        query,
+        payload,
         params.cookies,
         options,
         randomState
@@ -172,9 +175,8 @@ export async function callback(params: {
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
         return {
-          redirect: `${pages.newUser}${
-            pages.newUser.includes("?") ? "&" : "?"
-          }${new URLSearchParams({ callbackUrl })}`,
+          redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
+            }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -283,9 +285,8 @@ export async function callback(params: {
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
         return {
-          redirect: `${pages.newUser}${
-            pages.newUser.includes("?") ? "&" : "?"
-          }${new URLSearchParams({ callbackUrl })}`,
+          redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
+            }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
