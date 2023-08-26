@@ -15,7 +15,7 @@ import type { InternalOptions } from "./types"
 import parseUrl from "../utils/parse-url"
 
 interface InitParams {
-  url: URL
+  origin?: string
   authOptions: AuthOptions
   providerId?: string
   action: InternalOptions["action"]
@@ -33,7 +33,7 @@ export async function init({
   authOptions,
   providerId,
   action,
-  url: reqUrl,
+  origin,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -42,12 +42,7 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  // TODO: move this to web.ts
-  const parsed = parseUrl(
-    reqUrl.origin +
-      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
-  )
-  const url = new URL(parsed.toString())
+  const url = parseUrl(origin)
 
   const secret = createSecret({ authOptions, url })
 
@@ -72,7 +67,7 @@ export async function init({
     },
     // Custom options override defaults
     ...authOptions,
-    // These computed settings can have values in userOptions but we override them
+    // These computed settings can have values in authOptions but we override them
     // and are request-specific.
     url,
     action,
@@ -80,7 +75,7 @@ export async function init({
     provider,
     cookies: {
       ...cookie.defaultCookies(
-        authOptions.useSecureCookies ?? url.protocol === "https:"
+        authOptions.useSecureCookies ?? url.base.startsWith("https://")
       ),
       // Allow user cookie options to override any cookie settings above
       ...authOptions.cookies,

@@ -14,7 +14,7 @@ import type {
  * or send the user to the signin page listing all possible providers.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://authjs.dev/reference/utilities/#signin)
+ * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
@@ -52,7 +52,7 @@ export async function signIn<
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error -- ignore
+    // @ts-ignore
     body: new URLSearchParams({
       ...options,
       csrfToken,
@@ -61,9 +61,8 @@ export async function signIn<
   })
 
   const data = await res.clone().json()
-  const error = new URL(data.url).searchParams.get("error")
 
-  if (redirect || !isSupportingReturn || !error) {
+  if (redirect || !isSupportingReturn) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
     window.location.href = data.url ?? callbackUrl
     // If url contains a hash, the browser does not reload the page. We reload manually
@@ -78,7 +77,7 @@ export async function signIn<
  * Signs the user out, by removing the session cookie.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://authjs.dev/reference/utilities/#signout)
+ * [Documentation](https://authjs.dev/reference/sveltekit/client#signout)
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}

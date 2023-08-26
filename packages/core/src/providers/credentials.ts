@@ -1,14 +1,14 @@
 import type { CommonProviderOptions } from "./index.js"
 import type { Awaitable, User } from "../types.js"
-import type { JSXInternal } from "preact/src/jsx.js"
+import type { JSX } from "preact"
 
 /**
- * Besieds providing type safety inside {@link CredentialsConfig.authorize}
+ * Besides providing type safety inside {@link CredentialsConfig.authorize}
  * it also determines how the credentials input fields will be rendered
  * on the default sign in page.
  */
 export interface CredentialInput
-  extends Partial<JSXInternal.IntrinsicElements["input"]> {
+  extends Partial<JSX.IntrinsicElements["input"]> {
   label?: string
 }
 
@@ -32,12 +32,14 @@ export interface CredentialsConfig<
    * @example
    * ```ts
    * //...
-   * async authorize(, request) {
+   * async authorize(credentials, request) {
+   *   if(!isValidCredentials(credentials)) return null
    *   const response = await fetch(request)
    *   if(!response.ok) return null
    *   return await response.json() ?? null
    * }
    * //...
+   * ```
    */
   authorize: (
     /**
@@ -82,7 +84,7 @@ export type CredentialsProviderType = "Credentials"
  * import Credentials from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")
- * const resposne = await AuthHandler(request, {
+ * const response = await AuthHandler(request, {
  *   providers: [
  *     Credentials({
  *       credentials: {

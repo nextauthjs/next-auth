@@ -1,3 +1,5 @@
+// @ts-check
+
 const fs = require("fs")
 const path = require("path")
 
@@ -5,14 +7,43 @@ const path = require("path")
 const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
-  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .filter((file) => file.endsWith(".ts"))
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
+// @ts-expect-error
 delete typedocConfig.$schema
+
+/**
+ * @param {string} name
+ * @returns Record<[string, any]>
+ */
+function typedocAdapter(name) {
+  const slug = name.toLowerCase().replace(" ", "-")
+
+  return [
+    "docusaurus-plugin-typedoc",
+    {
+      id: slug,
+      plugin: [require.resolve("./typedoc-mdn-links")],
+      watch: process.env.TYPEDOC_WATCH,
+      entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
+      tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
+      out: `reference/adapter/${slug}`,
+      sidebar: {
+        indexLabel: name,
+      },
+      ...typedocConfig,
+    },
+  ]
+}
 
 /** @type {import("@docusaurus/types").Config} */
 const docusaurusConfig = {
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   title: "Auth.js",
   tagline: "Authentication for the Web.",
   url: "https://authjs.dev",
@@ -62,17 +93,21 @@ const docusaurusConfig = {
           position: "left",
         },
         {
-          to: "/reference/core",
-          // TODO: change to this when the overview page looks better.
-          // to: "/reference",
+          to: "/reference",
           activeBasePath: "/reference",
-          label: "Reference",
+          label: "API Reference",
           position: "left",
         },
         {
           to: "/concepts/faq",
           activeBasePath: "/concepts",
           label: "Concepts",
+          position: "left",
+        },
+        {
+          to: "/security",
+          activeBasePath: "/security",
+          label: "Security",
           position: "left",
         },
         {
@@ -101,7 +136,7 @@ const docusaurusConfig = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. Starting with SvelteKit, check out <a href='/reference/sveltekit'>the docs</a>. Note, this site is under active development.",
+        "<a target='_blank' rel='noopener noreferrer' href='https://next-auth.js.org'>NextAuth.js</a> is becoming Auth.js! 🎉 <a target='_blank' rel='noopener noreferrer' href='https://twitter.com/balazsorban44/status/1603082914362986496'>Read the announcement.</a> Note, this site is under active development. 🏗",
       backgroundColor: "#000",
       textColor: "#fff",
     },
@@ -178,7 +213,25 @@ const docusaurusConfig = {
           breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
+          /**
+           *
+           * @param {{
+           *  version: string;
+           *  versionDocsDirPath: string;
+           *  docPath: string;
+           *  permalink: string;
+           *  locale: string;
+           *}} params
+           */
+          editUrl({ docPath }) {
+            // TODO: support other packages, fix directory links like "providers"
+            if (docPath.includes("reference/core")) {
+              const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
+              const base = `https://github.com/nextauthjs/next-auth/edit/main/packages/core/src/${file}`
+              return base
+            }
+            return "https://github.com/nextauthjs/next-auth/edit/main/docs"
+          },
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
@@ -226,21 +279,26 @@ const docusaurusConfig = {
         },
       },
     ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "firebase-adapter",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["../packages/adapter-firebase/src/index.ts"],
-        tsconfig: "../packages/adapter-firebase/tsconfig.json",
-        out: "reference/adapter/firebase",
-        sidebar: {
-          indexLabel: "Firebase",
-        },
-      },
-    ],
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS
+      ? []
+      : [
+          typedocAdapter("Dgraph"),
+          typedocAdapter("Drizzle"),
+          typedocAdapter("DynamoDB"),
+          typedocAdapter("Fauna"),
+          typedocAdapter("Firebase"),
+          typedocAdapter("Kysely"),
+          typedocAdapter("Mikro ORM"),
+          typedocAdapter("MongoDB"),
+          typedocAdapter("Neo4j"),
+          typedocAdapter("PouchDB"),
+          typedocAdapter("Prisma"),
+          typedocAdapter("TypeORM"),
+          typedocAdapter("Sequelize"),
+          typedocAdapter("Supabase"),
+          typedocAdapter("Upstash Redis"),
+          typedocAdapter("Xata"),
+        ]),
   ],
 }
 

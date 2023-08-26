@@ -21,7 +21,7 @@ export interface JWTEncodeParams {
   secret: string | Buffer
   /**
    * The maximum age of the NextAuth.js issued JWT in seconds.
-   * @default 30 * 24 * 30 * 60 // 30 days
+   * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge?: number
 }
@@ -42,7 +42,7 @@ export interface JWTOptions {
   secret: string
   /**
    * The maximum age of the NextAuth.js issued JWT in seconds.
-   * @default 30 * 24 * 30 * 60 // 30 days
+   * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge: number
   /** Override this method to control the NextAuth.js issued JWT encoding. */

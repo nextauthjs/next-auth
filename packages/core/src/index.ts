@@ -38,7 +38,7 @@
 
 import { assertConfig } from "./lib/assert.js"
 import { ErrorPageLoop } from "./errors.js"
-import { AuthInternal, skipCSRFCheck } from "./lib/index.js"
+import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/web.js"
@@ -49,13 +49,12 @@ import type {
   CookiesOptions,
   EventCallbacks,
   PagesOptions,
-  SessionOptions,
   Theme,
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
-export { skipCSRFCheck }
+export { skipCSRFCheck, raw }
 
 /**
  * Core functionality provided by Auth.js.
@@ -138,6 +137,9 @@ export async function Auth(
 
   const internalResponse = await AuthInternal(internalRequest, config)
 
+  // @ts-expect-error TODO: Fix return type
+  if (config.raw === raw) return internalResponse
+
   const response = await toResponse(internalResponse)
 
   // If the request expects a return URL, send it as JSON
@@ -166,7 +168,7 @@ export async function Auth(
  * const response = await AuthHandler(request, authConfig)
  * ```
  *
- * @see [Initiailzation](https://authjs.dev/reference/configuration/auth-options)
+ * @see [Initialization](https://authjs.dev/reference/configuration/auth-options)
  */
 export interface AuthConfig {
   /**
@@ -182,15 +184,50 @@ export interface AuthConfig {
    * If not specified, it falls back to `AUTH_SECRET` or `NEXTAUTH_SECRET` from environment variables.
    * To generate a random string, you can use the following command:
    *
-   * On Unix systems: `openssl rand -hex 32`
-   * Or go to https://generate-secret.vercel.app/32
+   * - On Unix systems, type `openssl rand -hex 32` in the terminal
+   * - Or generate one [online](https://generate-secret.vercel.app/32)
    */
   secret?: string
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.
    */
-  session?: Partial<SessionOptions>
+  session?: {
+    /**
+     * Choose how you want to save the user session.
+     * The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
+     *
+     * If you use an `adapter` however, we default it to `"database"` instead.
+     * You can still force a JWT session by explicitly defining `"jwt"`.
+     *
+     * When using `"database"`, the session cookie will only contain a `sessionToken` value,
+     * which is used to look up the session in the database.
+     *
+     * [Documentation](https://authjs.dev/reference/configuration/auth-config#session) | [Adapter](https://authjs.dev/reference/configuration/auth-config#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
+     */
+    strategy?: "jwt" | "database"
+    /**
+     * Relative time from now in seconds when to expire the session
+     *
+     * @default 2592000 // 30 days
+     */
+    maxAge?: number
+    /**
+     * How often the session should be updated in seconds.
+     * If set to `0`, session is updated every time.
+     *
+     * @default 86400 // 1 day
+     */
+    updateAge?: number
+    /**
+     * Generate a custom session token for database-based sessions.
+     * By default, a random UUID or string is generated depending on the Node.js version.
+     * However, you can specify your own custom string (such as CUID) to be used.
+     *
+     * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
+     */
+    generateSessionToken?: () => string
+  }
   /**
    * JSON Web Tokens are enabled by default if you have not specified an {@link AuthConfig.adapter}.
    * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
@@ -303,4 +340,37 @@ export interface AuthConfig {
   /** @todo */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
+  raw?: typeof raw
+  /**
+   * When set, during an OAuth sign-in flow,
+   * the `redirect_uri` of the authorization request
+   * will be set based on this value.
+   *
+   * This is useful if your OAuth Provider only supports a single `redirect_uri`
+   * or you want to use OAuth on preview URLs (like Vercel), where you don't know the final deployment URL beforehand.
+   *
+   * The url needs to include the full path up to where Auth.js is initialized.
+   *
+   * @note This will auto-enable the `state` {@link OAuth2Config.checks} on the provider.
+   *
+   * @example
+   * ```
+   * "https://authjs.example.com/api/auth"
+   * ```
+   *
+   * You can also override this individually for each provider.
+   *
+   * @example
+   * ```ts
+   * GitHub({
+   *   ...
+   *   redirectProxyUrl: "https://github.example.com/api/auth"
+   * })
+   * ```
+   *
+   * @default `AUTH_REDIRECT_PROXY_URL` environment variable
+   *
+   * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/guides/basics/deployment#securing-a-preview-deployment)
+   */
+  redirectProxyUrl?: string
 }
