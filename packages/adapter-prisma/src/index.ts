@@ -16,7 +16,7 @@
  * @module @auth/prisma-adapter
  */
 import type { PrismaClient, Prisma } from "@prisma/client"
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type { Adapter } from "@auth/core/adapters"
 
 /**
  * ## Setup
@@ -223,21 +223,8 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     createUser: (data) => p.user.create({ data }),
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
-    async getUserByAccount(provider_providerAccountId) {
-      const account = await p.account.findUnique({
-        where: { provider_providerAccountId },
-        select: { user: true },
-      })
-      return account?.user ?? null
-    },
     updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
     deleteUser: (id) => p.user.delete({ where: { id } }),
-    linkAccount: (data) =>
-      p.account.create({ data }) as unknown as AdapterAccount,
-    unlinkAccount: (provider_providerAccountId) =>
-      p.account.delete({
-        where: { provider_providerAccountId },
-      }) as unknown as AdapterAccount,
     async getSessionAndUser(sessionToken) {
       const userAndSession = await p.session.findUnique({
         where: { sessionToken },

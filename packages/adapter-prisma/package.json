@@ -7,9 +7,10 @@
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "author": "William Luke",
+  "author": "Abdi Zamed Mohamed",
   "contributors": [
-    "Balázs Orbán <info@balazsorban.com>"
+    "Balázs Orbán <info@balazsorban.com>",
+    "Abdi Zamed Mohamed <info@abdizamedmo.com>"
   ],
   "type": "module",
   "types": "./index.d.ts",
