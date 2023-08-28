@@ -31,6 +31,7 @@ body:
         - "Authentik"
         - "Azure Active Directory"
         - "Azure Active Directory B2C"
+        - "Azure DevOps"
         - "Battlenet"
         - "Beyond Identity"
         - "Box"
