@@ -71,22 +71,11 @@ export default function LinkedIn<P extends LinkedInProfile>(
   return {
     id: "linkedin",
     name: "LinkedIn",
-    type: "oauth",
+    type: "oidc",
     wellKnown:
       "https://www.linkedin.com/oauth/.well-known/openid-configuration",
-    authorization: {
-      params: { scope: "profile email openid" },
-    },
     client: {
       token_endpoint_auth_method: "client_secret_post",
-    },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
     },
     style: {
       logo: "/linkedin.svg",
