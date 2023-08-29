@@ -72,8 +72,6 @@ export default function LinkedIn<P extends LinkedInProfile>(
     id: "linkedin",
     name: "LinkedIn",
     type: "oidc",
-    wellKnown:
-      "https://www.linkedin.com/oauth/.well-known/openid-configuration",
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
