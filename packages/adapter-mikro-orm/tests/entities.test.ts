@@ -13,7 +13,7 @@ import {
   Options,
   types,
 } from "@mikro-orm/core"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 
 globalThis.crypto ??= require("node:crypto").webcrypto
 

@@ -51,12 +51,12 @@
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.1.3",
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
+    "@auth/adapter-test": "workspace:*",
+    "@auth/tsconfig": "workspace:*",
     "faunadb": "^4.3.0",
     "jest": "^27.4.3"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "@auth/adapter-test/jest"
   }
 }

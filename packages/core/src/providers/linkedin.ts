@@ -10,10 +10,6 @@
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-interface Identifier {
-  identifier: string
-}
-
 export interface LinkedInProfile extends Record<string, string> {
   id: string
   name: string
@@ -80,6 +76,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
       url: "https://www.linkedin.com/oauth/v2/authorization",
       params: { scope: "openid profile email" },
     },
+    type: "oidc",
     token: "https://www.linkedin.com/oauth/v2/accessToken",
     client: {
       token_endpoint_auth_method: "client_secret_post",
