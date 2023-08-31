@@ -82,7 +82,7 @@ export async function toExpressResponse(
 ) {
   response.headers.forEach((value, key) => {
     if (value) {
-      res.appendHeader(key, value)
+      res.append(key, value)
     }
   })
 
