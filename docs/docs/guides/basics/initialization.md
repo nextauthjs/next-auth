@@ -2,6 +2,14 @@
 title: Custom Initialization
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
+
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
+
+
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
 
 When you define a `/pages/api/auth/[...nextauth]` JS/TS file, you instruct Auth.js that every API request beginning with `/api/auth/*` should be handled by the code written in the `[...nextauth]` file.
@@ -120,3 +128,15 @@ This way of initializing `NextAuth` is very powerful, but should be used sparing
 :::warning
 Changing parts of the request that is essential to `NextAuth` to do it's job - like messing with the [default cookies](/reference/configuration/auth-config#cookies) - can have unforeseen consequences, and have the potential to introduce security holes if done incorrectly. Only change those if you understand consequences.
 :::
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>

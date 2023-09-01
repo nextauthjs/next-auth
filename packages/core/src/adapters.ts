@@ -270,3 +270,18 @@ export interface Adapter {
     token: string
   }): Awaitable<VerificationToken | null>
 }
+
+// For compatibility with older versions of NextAuth.js
+// @ts-expect-error
+declare module "next-auth/adapters" {
+  type JsonObject = {
+    [Key in string]?: JsonValue
+  }
+  type JsonArray = JsonValue[]
+  type JsonPrimitive = string | number | boolean | null
+  type JsonValue = JsonPrimitive | JsonObject | JsonArray
+  interface AdapterAccount {
+    type: "oauth" | "email" | "oidc"
+    [key: string]: JsonValue | undefined
+  }
+}

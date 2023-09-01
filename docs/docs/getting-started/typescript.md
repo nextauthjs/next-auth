@@ -9,6 +9,9 @@ https://github.com/nextauthjs/next-auth-example
 
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
 ## Adapters
 
 If you're writing your own custom Adapter, you can take advantage of the types to make sure your implementation conforms to what's expected:
@@ -46,30 +49,45 @@ This will work in code editors with a strong TypeScript integration like VSCode 
 
 Let's look at `Session`:
 
-```ts title="pages/api/auth/[...nextauth].ts"
-import NextAuth from "next-auth"
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
 
-export default NextAuth({
-  callbacks: {
-    session({ session, token, user }) {
-      return session // The return type will match the one returned in `useSession()`
+  ```ts title="pages/api/auth/[...nextauth].ts"
+  import NextAuth from "next-auth"
+
+  export default NextAuth({
+    callbacks: {
+      session({ session, token, user }) {
+        return session // The return type will match the one returned in `useSession()`
+      },
     },
-  },
-})
-```
+  })
+  ```
 
-```ts title="pages/index.ts"
-import { useSession } from "next-auth/react"
+  ```ts title="pages/index.ts"
+  import { useSession } from "next-auth/react"
 
-export default function IndexPage() {
-  // `session` will match the returned value of `callbacks.session()` from `NextAuth()`
-  const { data: session } = useSession()
+  export default function IndexPage() {
+    // `session` will match the returned value of `callbacks.session()` from `NextAuth()`
+    const { data: session } = useSession()
 
-  return (
-    // Your component
-  )
-}
-```
+    return (
+      // Your component
+    )
+  }
+  ```
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>
 
 To extend/augment this type, create a `types/next-auth.d.ts` file in your project:
 

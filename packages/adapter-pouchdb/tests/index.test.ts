@@ -1,4 +1,4 @@
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 import {
   createIndexes,
   PouchDBAdapter,
