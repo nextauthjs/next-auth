@@ -2,13 +2,16 @@
 title: Pages
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
 Auth.js automatically creates simple, unbranded authentication pages for handling Sign in, Sign out, Email Verification and displaying error messages.
 
 The options displayed on the sign-up page are automatically generated based on the providers specified in the options passed to Auth.js.
 
 To add a custom login page, you can use the `pages` option:
 
-```javascript title="pages/api/auth/[...nextauth].js"
+```javascript title="auth.js"
 ...
   pages: {
     signIn: '/auth/signin',
@@ -76,6 +79,11 @@ In addition, you can define the background color and text color of the button wi
 
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
+
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
+
+
 ```jsx title="pages/auth/signin.js"
 import { getProviders, signIn } from "next-auth/react"
 
@@ -100,12 +108,28 @@ export async function getServerSideProps(context) {
   }
 }
 ```
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>
+
 
 There is another, more fully styled example signin page available [here](https://github.com/ndom91/next-auth-example-sign-in-page).
 
 ### Email Sign in
 
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
+
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
+
 
 ```jsx title="pages/auth/email-signin.js"
 import { getCsrfToken } from "next-auth/react"
@@ -131,6 +155,18 @@ export async function getServerSideProps(context) {
 }
 ```
 
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>
+
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
 
 ```js
@@ -140,6 +176,10 @@ signIn("email", { email: "jsmith@example.com" })
 ### Credentials Sign in
 
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a `POST` request to **/api/auth/callback/credentials**.
+
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
+
 
 ```jsx title="pages/auth/credentials-signin.js"
 import { getCsrfToken } from "next-auth/react"
@@ -169,6 +209,18 @@ export async function getServerSideProps(context) {
   }
 }
 ```
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>
 
 You can also use the `signIn()` function which will handle obtaining the CSRF token for you:
 

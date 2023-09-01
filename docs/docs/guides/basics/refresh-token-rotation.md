@@ -2,6 +2,9 @@
 title: Refresh token rotation
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
 Refresh token rotation is the practice of updating an `access_token` on behalf of the user, without requiring interaction (eg.: re-sign in). `access_token`s are usually issued for a limited time. After they expire, the service verifying them will ignore the value. Instead of asking the user to sign in again to obtain a new `access_token`, certain providers support exchanging a `refresh_token` for a new `access_token`, renewing the expiry time. Let's see how this can be achieved.
 
 :::note
@@ -25,6 +28,20 @@ Using a JWT to store the `refresh_token` is less secure than saving it in a data
 Using the [jwt](../../reference/core/types#jwt) and [session](../../reference/core/types#session) callbacks, we can persist OAuth tokens and refresh them when they expire.
 
 Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request in the `refreshAccessToken()` function will vary between different providers, but the core logic should remain similar.
+
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js">
+
+  TODO Next.js
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)" default>
 
 ```ts
 import { Auth } from "@auth/core"
@@ -109,9 +126,26 @@ declare module "@auth/core/jwt" {
 }
 ```
 
+  </TabItem>
+</Tabs>
+
 #### Database strategy
 
 Using the database strategy is very similar, but instead of preserving the `access_token` and `refresh_token`, we save it, well, in the database.
+
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js">
+
+  What
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)" default>
 
 ```ts
 import { Auth } from "@auth/core"
@@ -195,6 +229,8 @@ declare module "@auth/core/jwt" {
   }
 }
 ```
+  </TabItem>
+</Tabs>
 
 ### Client Side
 

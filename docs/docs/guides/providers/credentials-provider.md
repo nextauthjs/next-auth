@@ -35,7 +35,7 @@ If you return an object it will be persisted to the JSON Web Token and the user 
 
 The Credentials provider's `authorize()` method also provides the request object as the second parameter (see the example below).
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 import CredentialsProvider from "next-auth/providers/credentials";
 ...
 providers: [
