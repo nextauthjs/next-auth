@@ -100,7 +100,7 @@ NextAuth.js provides [`useSession()`](/reference/react/#usesession) - a [React H
 
 ```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app"
 
 export default function App({
   Component,
@@ -218,7 +218,7 @@ The callback URL we insert should have the following pattern:
 
 In this case, given we want to try our authentication working locally on our machine and we're using **GitHub** as our OAuth provider, it'll be:
 
-<Tabs groupId="frameworks">
+<Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
 ```
@@ -274,7 +274,7 @@ Note that, for each provider, the configuration process will be similar to what 
 2. Create create your OAuth application within it
 3. Set the callback URL
 4. Get the Client ID and Generate a Client Secret
-:::
+   :::
 
 ## 3. Wiring all together
 
@@ -289,7 +289,7 @@ GITHUB_SECRET=67890
 
 Here is our server configuration file again:
 
-<Tabs groupId="frameworks">
+<Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
 ```ts title="pages/api/auth/[...nextauth].ts"
