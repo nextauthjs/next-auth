@@ -58,7 +58,7 @@
     "@auth/tsconfig": "workspace:*",
     "@prisma/client": "^5.2.0",
     "jest": "^27.4.3",
-    "mongodb": "^4.4.0",
+    "mongodb": "^4.17.0",
     "prisma": "^5.2.0"
   },
   "jest": {

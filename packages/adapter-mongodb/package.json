@@ -48,7 +48,7 @@
     "@auth/adapter-test": "workspace:*",
     "@auth/tsconfig": "workspace:*",
     "jest": "^27.4.3",
-    "mongodb": "^5.1.0"
+    "mongodb": "^4.17.0"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"
