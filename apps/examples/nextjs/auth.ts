@@ -42,7 +42,7 @@ declare module "next-auth/jwt" {
   }
 }
 
-const config = {
+export const config = {
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     Apple({ clientId: process.env.AUTH_APPLE_ID, clientSecret: process.env.AUTH_APPLE_SECRET }),
@@ -84,8 +84,6 @@ const config = {
     },
   },
 } satisfies NextAuthConfig
-
-export default config
 
 // Helper function to get session without passing config every time
 // https://next-auth.js.org/configuration/nextjs#getserversession
