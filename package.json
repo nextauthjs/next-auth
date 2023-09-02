@@ -249,6 +249,7 @@
       {
         "files": [
           "apps/dev/nextjs/pages/api/auth/[...nextauth].ts",
+          "apps/examples/nextjs/auth.ts",
           "docs/{sidebars,docusaurus.config}.js"
         ],
         "options": {
