@@ -17,5 +17,5 @@
     "declaration": true
   },
   "include": ["src/**/*"],
-  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
+  "exclude": ["*.js", "*.d.ts", "lib"]
 }
