@@ -12,7 +12,7 @@ If you want to pass data such as an Access Token or User ID to the browser when 
 
 You can specify a handler for any of the callbacks below.
 
-```js title="pages/api/auth/[...nextauth].js"s
+```js title="auth.js"
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       return true
@@ -35,7 +35,7 @@ The documentation below shows how to implement each callback, their default beha
 
 Use the `signIn()` callback to control if a user is allowed to sign in.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async signIn({ user, account, profile, email, credentials }) {
     const isAllowedToSignIn = true
@@ -79,7 +79,7 @@ By default only URLs on the same URL as the site are allowed, you can use the re
 
 The default redirect callback looks like this:
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async redirect({ url, baseUrl }) {
     // Allows relative callback URLs
@@ -107,7 +107,7 @@ Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`,
 
 The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async jwt({ token, account }) {
     // Persist the OAuth access_token to the token right after signin
@@ -132,7 +132,7 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 - When using database sessions, the User object is passed as an argument.
 - When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async session({ session, token, user }) {
     // Send properties to the client, like an access_token from a provider.

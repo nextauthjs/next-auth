@@ -7,6 +7,8 @@ import startPageImg from "./img/email-tutorial-start.png"
 import checkPageImg from "./img/email-tutorial-check.png"
 import mailboxImg from "./img/email-tutorial-mailbox.png"
 import loggedInImg from "./img/email-tutorial-logged.png"
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
 
 Aside from authenticating users in Auth.js via [OAuth](/getting-started/oauth-tutorial), you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
 
@@ -64,26 +66,43 @@ Note that we're also specifying from which domain email are going to be sent fro
 
 Nice! We're getting there. Now we need to read supply this values as the configuration for our Email Provider. Open `pages/api/auth/[...nextauth].ts` and do the following:
 
-```ts title="pages/api/auth/[...nextauth].ts"
-import NextAuth from "next-auth"
-import Email from "next-auth/providers/email"
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
 
-export default NextAuth({
-  providers: [
-    Email({
-      server: {
-        host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT),
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASSWORD,
+  
+  ```ts title="pages/api/auth/[...nextauth].ts"
+  import NextAuth from "next-auth"
+  import Email from "next-auth/providers/email"
+
+  export default NextAuth({
+    providers: [
+      Email({
+        server: {
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT),
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD,
+          },
         },
-      },
-      from: process.env.EMAIL_FROM,
-    }),
-  ],
-})
-```
+        from: process.env.EMAIL_FROM,
+      }),
+    ],
+  })
+  ```
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>
+
 
 ## 3. Setting up an adapter
 
@@ -139,30 +158,46 @@ export default clientPromise
 
 And now let's reference this new adapter from our Auth.js configuration file:
 
-```diff title="pages/api/auth/[...nextauth].ts"
-import NextAuth from "next-auth"
-import EmailProvider from "next-auth/providers/email"
-+ import { MongoDBAdapter } from "@auth/mongodb-adapter"
-+ import clientPromise from "../../../lib/mongodb/client"
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
 
-export default NextAuth({
-  secret: process.env.NEXTAUTH_SECRET,
-+ adapter: MongoDBAdapter(clientPromise),
-  providers: [
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD
-        }
-      },
-      from: process.env.EMAIL_FROM
-    }),
-  ],
-})
-```
+  ```diff title="pages/api/auth/[...nextauth].ts"
+  import NextAuth from "next-auth"
+  import EmailProvider from "next-auth/providers/email"
+  + import { MongoDBAdapter } from "@auth/mongodb-adapter"
+  + import clientPromise from "../../../lib/mongodb/client"
+
+  export default NextAuth({
+    secret: process.env.NEXTAUTH_SECRET,
+  + adapter: MongoDBAdapter(clientPromise),
+    providers: [
+      EmailProvider({
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: process.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD
+          }
+        },
+        from: process.env.EMAIL_FROM
+      }),
+    ],
+  })
+  ```
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit">
+    TODO SvelteKit
+  </TabItem>
+  <TabItem value="solidstart" label="SolidStart">
+    TODO SolidStart
+  </TabItem>
+  <TabItem value="core" label="Vanilla (No Framework)">
+    TODO Core
+  </TabItem>
+</Tabs>
+
 
 ## 4. Wiring all together
 

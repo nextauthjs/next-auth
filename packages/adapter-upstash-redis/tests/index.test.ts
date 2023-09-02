@@ -1,6 +1,6 @@
 import "isomorphic-fetch"
 import { Redis } from "@upstash/redis"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 import { hydrateDates, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 
