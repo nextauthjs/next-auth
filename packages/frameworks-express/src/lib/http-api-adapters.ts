@@ -86,7 +86,12 @@ export async function toExpressResponse(
     }
   })
 
-  res.status(response.status)
+  // Explicitly write the headers for content-type
+  // https://stackoverflow.com/a/59449326/13944042
+  res.writeHead(response.status, response.statusText, {
+    "Content-Type": response.headers.get("content-type") || "",
+  })
+
   res.write(await response.text())
   res.end()
 }
