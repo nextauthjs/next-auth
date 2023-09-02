@@ -1,7 +1,7 @@
 import { DgraphAdapter, format } from "../src"
 import { client as dgraphClient } from "../src/lib/client"
 import * as fragments from "../src/lib/graphql/fragments"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 import fs from "fs"
 import path from "path"
 

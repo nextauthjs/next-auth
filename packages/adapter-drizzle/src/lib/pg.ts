@@ -6,9 +6,9 @@ import {
   primaryKey,
   integer,
   PgTableFn,
+  PgDatabase,
 } from "drizzle-orm/pg-core"
 
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 export function createTables(pgTable: PgTableFn) {
@@ -68,7 +68,7 @@ export function createTables(pgTable: PgTableFn) {
 export type DefaultSchema = ReturnType<typeof createTables>
 
 export function pgDrizzleAdapter(
-  client: PostgresJsDatabase<Record<string, never>>,
+  client: InstanceType<typeof PgDatabase>,
   tableFn = defaultPgTableFn
 ): Adapter {
   const { users, accounts, sessions, verificationTokens } =

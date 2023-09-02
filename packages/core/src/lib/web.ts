@@ -35,7 +35,7 @@ export async function toInternalRequest(
     const url = new URL(req.url.replace(/\/$/, ""))
     // FIXME: Upstream issue in Next.js, pathname segments get included as part of the query string
     url.searchParams.delete("nextauth")
-    const { pathname } = url
+    const pathname = url.pathname.replace(/\/$/, "")
 
     const action = actions.find((a) => pathname.includes(a))
     if (!action) {

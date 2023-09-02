@@ -37,7 +37,7 @@ npm install next-auth
 ```
 
 :::info
-We are working on a new `@auth/nextjs` package that will make it easier to set up Auth.js with Next.js. Stay tuned! For now, you can use the `next-auth` package.
+We are working on a new release of `next-auth` that will make it easier to set up Auth.js with Next.js. You can follow the development [on this PR](https://github.com/nextauthjs/next-auth/pull/7443)
 :::
 
 ### Creating the server config
@@ -100,7 +100,7 @@ NextAuth.js provides [`useSession()`](/reference/react/#usesession) - a [React H
 
 ```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app"
 
 export default function App({
   Component,
@@ -156,7 +156,7 @@ export default function CamperVanPage() {
 
 ### Protecting API Routes
 
-To protect your API Routes (blocking unauthorized access to resources), you can use [`getServerSession()`](/reference/nextjs#getserversession) to know whether a session exists or not:
+To protect your API Routes (blocking unauthorized access to resources), you can use [`getServerSession()`](https://next-auth.js.org/configuration/nextjs#getserversession) to know whether a session exists or not:
 
 ```ts title="pages/api/movies/list.ts"
 import { getServerSession } from "next-auth/next"
@@ -338,7 +338,7 @@ The callback URL we insert should have the following pattern:
 
 In this case, given we want to try our authentication working locally on our machine and we're using **GitHub** as our OAuth provider, it'll be:
 
-<Tabs groupId="frameworks">
+<Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
 ```
@@ -394,7 +394,7 @@ Note that, for each provider, the configuration process will be similar to what 
 2. Create create your OAuth application within it
 3. Set the callback URL
 4. Get the Client ID and Generate a Client Secret
-:::
+   :::
 
 ## 3. Wiring all together
 
@@ -409,7 +409,7 @@ GITHUB_SECRET=67890
 
 Here is our server configuration file again:
 
-<Tabs groupId="frameworks">
+<Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
 ```ts title="pages/api/auth/[...nextauth].ts"
