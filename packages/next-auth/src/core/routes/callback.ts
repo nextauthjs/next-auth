@@ -370,13 +370,12 @@ export default async function callback(params: {
     }
 
     try {
-      // todo: Make checkIfUserIsNew work here as well
-
       const isAllowed = await callbacks.signIn({
         user,
         // @ts-expect-error
         account,
         credentials,
+        isNewUser: false,
       })
       if (!isAllowed) {
         return {
