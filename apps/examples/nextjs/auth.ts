@@ -114,7 +114,7 @@ export const config = {
     Netlify({ clientId: process.env.AUTH_NETLIFY_ID, clientSecret: process.env.AUTH_NETLIFY_SECRET }),
     Okta({ clientId: process.env.AUTH_OKTA_ID, clientSecret: process.env.AUTH_OKTA_SECRET }),
     Onelogin({ clientId: process.env.AUTH_ONELOGIN_ID, clientSecret: process.env.AUTH_ONELOGIN_SECRET }),
-    Osso({ clientId: process.env.AUTH_OSSO_ID, clientSecret: process.env.AUTH_OSSO_SECRET }),
+    Osso({ clientId: process.env.AUTH_OSSO_ID, clientSecret: process.env.AUTH_OSSO_SECRET, issuer: process.env.AUTH_OSSO_ISSUER }),
     Osu({ clientId: process.env.AUTH_OSU_ID, clientSecret: process.env.AUTH_OSU_SECRET }),
     Passage({ clientId: process.env.AUTH_PASSAGE_ID, clientSecret: process.env.AUTH_PASSAGE_SECRET }),
     Patreon({ clientId: process.env.AUTH_PATREON_ID, clientSecret: process.env.AUTH_PATREON_SECRET }),
@@ -239,6 +239,7 @@ declare global {
       AUTH_ONELOGIN_ID: string
       AUTH_ONELOGIN_SECRET: string
       AUTH_OSSO_ID: string
+      AUTH_OSSO_ISSUER: string
       AUTH_OSSO_SECRET: string
       AUTH_OSU_ID: string
       AUTH_OSU_SECRET: string
