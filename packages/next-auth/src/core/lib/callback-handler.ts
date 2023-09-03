@@ -9,6 +9,64 @@ import type { SessionToken } from "./cookie"
 import { OAuthConfig } from "src/providers"
 
 /**
+ * This function checks if a user is new and needs to be signed up, or if they
+ * are an existing user and need to be signed in. This is useful because it
+ * allows us to use this value when providing the isNewUser argument to the
+ * signIn callback.
+ */
+export async function checkIfUserIsNew(params: {
+  profile: User | AdapterUser | { email: string },
+  account: Account | null,
+  options: InternalOptions,
+}) {
+  const { profile: _profile, account, options } = params
+  // Input validation
+  if (!account?.providerAccountId || !account.type)
+    throw new Error("Missing or invalid provider account")
+  if (!["email", "oauth"].includes(account.type))
+    throw new Error("Provider not supported")
+
+  const {
+    adapter
+  } = options;
+
+  if (!adapter) {
+    return undefined
+  }
+
+  const {
+    getUserByAccount,
+    getUserByEmail,
+  } = adapter
+
+
+  const profile = _profile as AdapterUser
+
+  if (account.type === "email") {
+    const userByEmail = await getUserByEmail(profile.email)
+    if (userByEmail) return false
+    return true
+  } else if (account.type === "oauth") {
+    // If signing in with OAuth account, check to see if the account exists already
+    const userByAccount = await getUserByAccount({
+      providerAccountId: account.providerAccountId,
+      provider: account.provider,
+    })
+    if (userByAccount) {
+      return false
+    } else {
+      const userByEmail = profile.email
+        ? await getUserByEmail(profile.email)
+        : null
+      if (userByEmail) {
+        return false
+      }
+      return true
+    }
+  }
+}
+
+/**
  * This function handles the complex flow of signing users in, and either creating,
  * linking (or not linking) accounts depending on if the user is currently logged
  * in, if they have account already and the authentication mechanism they are using.
@@ -113,10 +171,10 @@ export default async function callbackHandler(params: {
     session = useJwtSession
       ? {}
       : await createSession({
-          sessionToken: await generateSessionToken(),
-          userId: user.id,
-          expires: fromDate(options.session.maxAge),
-        })
+        sessionToken: await generateSessionToken(),
+        userId: user.id,
+        expires: fromDate(options.session.maxAge),
+      })
 
     return { session, user, isNewUser }
   } else if (account.type === "oauth") {
@@ -143,10 +201,10 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-            sessionToken: await generateSessionToken(),
-            userId: userByAccount.id,
-            expires: fromDate(options.session.maxAge),
-          })
+          sessionToken: await generateSessionToken(),
+          userId: userByAccount.id,
+          expires: fromDate(options.session.maxAge),
+        })
 
       return { session, user: userByAccount, isNewUser }
     } else {
@@ -216,10 +274,10 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-            sessionToken: await generateSessionToken(),
-            userId: user.id,
-            expires: fromDate(options.session.maxAge),
-          })
+          sessionToken: await generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
 
       return { session, user, isNewUser: true }
     }

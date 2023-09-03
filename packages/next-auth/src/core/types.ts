@@ -285,7 +285,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
       verificationRequest?: boolean
     }
     /** If Credentials provider is used, it contains the user credentials */
-    credentials?: Record<string, CredentialInput>
+    credentials?: Record<string, CredentialInput>,
+    isNewUser?: boolean
   }) => Awaitable<string | boolean>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
@@ -319,21 +320,21 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   session: (
     params:
       | {
-          session: Session
-          /** Available when {@link SessionOptions.strategy} is set to `"jwt"` */
-          token: JWT
-          /** Available when {@link SessionOptions.strategy} is set to `"database"`. */
-          user: AdapterUser
-        } & {
-          /**
-           * Available when using {@link SessionOptions.strategy} `"database"`, this is the data
-           * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
-           *
-           * ⚠ Note, you should validate this data before using it.
-           */
-          newSession: any
-          trigger: "update"
-        }
+        session: Session
+        /** Available when {@link SessionOptions.strategy} is set to `"jwt"` */
+        token: JWT
+        /** Available when {@link SessionOptions.strategy} is set to `"database"`. */
+        user: AdapterUser
+      } & {
+        /**
+         * Available when using {@link SessionOptions.strategy} `"database"`, this is the data
+         * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+         *
+         * ⚠ Note, you should validate this data before using it.
+         */
+        newSession: any
+        trigger: "update"
+      }
   ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
@@ -489,7 +490,7 @@ export interface DefaultSession {
  * [`SessionProvider`](https://next-auth.js.org/getting-started/client#sessionprovider) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback)
  */
-export interface Session extends DefaultSession {}
+export interface Session extends DefaultSession { }
 
 export type SessionStrategy = "jwt" | "database"
 
@@ -545,7 +546,7 @@ export interface DefaultUser {
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
  * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
  */
-export interface User extends DefaultUser {}
+export interface User extends DefaultUser { }
 
 // Below are types that are only supposed be used by next-auth internally
 
@@ -565,9 +566,9 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
-  signinUrl: string
-  callbackUrl: string
-}
+    signinUrl: string
+    callbackUrl: string
+  }
 
 export type AuthAction =
   | "providers"
@@ -604,8 +605,8 @@ export interface InternalOptions<
   jwt: JWTOptions
   events: Partial<EventCallbacks>
   adapter: WithVerificationToken extends true
-    ? Adapter<WithVerificationToken>
-    : Adapter<WithVerificationToken> | undefined
+  ? Adapter<WithVerificationToken>
+  : Adapter<WithVerificationToken> | undefined
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
