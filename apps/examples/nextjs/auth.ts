@@ -116,7 +116,7 @@ export const config = {
     Onelogin({ clientId: process.env.AUTH_ONELOGIN_ID, clientSecret: process.env.AUTH_ONELOGIN_SECRET }),
     Osso({ clientId: process.env.AUTH_OSSO_ID, clientSecret: process.env.AUTH_OSSO_SECRET, issuer: process.env.AUTH_OSSO_ISSUER }),
     Osu({ clientId: process.env.AUTH_OSU_ID, clientSecret: process.env.AUTH_OSU_SECRET }),
-    Passage({ clientId: process.env.AUTH_PASSAGE_ID, clientSecret: process.env.AUTH_PASSAGE_SECRET }),
+    Passage({ clientId: process.env.AUTH_PASSAGE_ID, clientSecret: process.env.AUTH_PASSAGE_SECRET, issuer: process.env.AUTH_PASSAGE_ISSUER }),
     Patreon({ clientId: process.env.AUTH_PATREON_ID, clientSecret: process.env.AUTH_PATREON_SECRET }),
     Pinterest({ clientId: process.env.AUTH_PINTEREST_ID, clientSecret: process.env.AUTH_PINTEREST_SECRET }),
     Pipedrive({ clientId: process.env.AUTH_PIPEDRIVE_ID, clientSecret: process.env.AUTH_PIPEDRIVE_SECRET }),
@@ -244,6 +244,7 @@ declare global {
       AUTH_OSU_ID: string
       AUTH_OSU_SECRET: string
       AUTH_PASSAGE_ID: string
+      AUTH_PASSAGE_ISSUER: string
       AUTH_PASSAGE_SECRET: string
       AUTH_PATREON_ID: string
       AUTH_PATREON_SECRET: string
