@@ -1,6 +1,7 @@
 import getAuthorizationUrl from "../lib/oauth/authorization-url"
 import emailSignin from "../lib/email/signin"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
+import { checkIfUserIsNew } from "../lib/callback-handler"
 import type { RequestInternal, ResponseInternal } from ".."
 import type { InternalOptions } from "../types"
 import type { Account } from "../.."
@@ -70,10 +71,17 @@ export default async function signin(params: {
 
     // Check if user is allowed to sign in
     try {
+      const isNewUser = await checkIfUserIsNew({
+        profile: user,
+        account,
+        options
+      })
+
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,
         email: { verificationRequest: true },
+        isNewUser
       })
       if (!signInCallbackResponse) {
         return { redirect: `${url}/error?error=AccessDenied` }
