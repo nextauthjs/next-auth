@@ -9,6 +9,18 @@ import type { SessionToken } from "./cookie"
 import { OAuthConfig } from "src/providers"
 
 /**
+ *  This function validates the account object
+ */
+function accountValidation(account: Account | null) {
+  if (!account?.providerAccountId || !account.type)
+    throw new Error("Missing or invalid provider account")
+  if (!["email", "oauth"].includes(account.type))
+    throw new Error("Provider not supported")
+
+  return account
+}
+
+/**
  * This function checks if a user is new and needs to be signed up, or if they
  * are an existing user and need to be signed in. This is useful because it
  * allows us to use this value when providing the isNewUser argument to the
@@ -19,12 +31,9 @@ export async function checkIfUserIsNew(params: {
   account: Account | null
   options: InternalOptions
 }) {
-  const { profile: _profile, account, options } = params
-  // Input validation
-  if (!account?.providerAccountId || !account.type)
-    throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth"].includes(account.type))
-    throw new Error("Provider not supported")
+  const { profile: _profile, account: _account, options } = params
+
+  const account = accountValidation(_account)
 
   const { adapter } = options
 
@@ -35,29 +44,28 @@ export async function checkIfUserIsNew(params: {
   const { getUserByAccount, getUserByEmail } = adapter
 
   const profile = _profile as AdapterUser
+  const providerType = account.type as "oauth" | "email"
 
-  if (account.type === "email") {
-    const userByEmail = await getUserByEmail(profile.email)
-    if (userByEmail) return false
-    return true
-  } else if (account.type === "oauth") {
-    // If signing in with OAuth account, check to see if the account exists already
-    const userByAccount = await getUserByAccount({
-      providerAccountId: account.providerAccountId,
-      provider: account.provider,
-    })
-    if (userByAccount) {
-      return false
-    } else {
-      const userByEmail = profile.email
-        ? await getUserByEmail(profile.email)
-        : null
-      if (userByEmail) {
-        return false
-      }
-      return true
-    }
-  }
+  const userByEmail = await getUserByEmail(profile.email)
+
+  // if the user's email exists, it's not a new user
+  if (userByEmail) return false
+
+  // if the user's email doesn't exist and they are using the email
+  // provider, then they are a new user
+  if (providerType === "email") return true
+
+  // if they are using an OAuth provider, check if the account is already
+  // associated with a user account, if it is, then they are not a new user
+  const userByAccount = await getUserByAccount({
+    providerAccountId: account.providerAccountId,
+    provider: account.provider,
+  })
+  if (userByAccount) return false
+
+  // if they are using an OAuth provider and the account is not associated
+  // with a user account, then they are a new user
+  return true
 }
 
 /**
@@ -78,12 +86,9 @@ export default async function callbackHandler(params: {
   account: Account | null
   options: InternalOptions
 }) {
-  const { sessionToken, profile: _profile, account, options } = params
-  // Input validation
-  if (!account?.providerAccountId || !account.type)
-    throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth"].includes(account.type))
-    throw new Error("Provider not supported")
+  const { sessionToken, profile: _profile, account: _account, options } = params
+
+  const account = accountValidation(_account)
 
   const {
     adapter,
