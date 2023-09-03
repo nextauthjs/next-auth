@@ -128,14 +128,24 @@ export async function callback(params: {
           picture: user.image,
           sub: user.id?.toString(),
         }
-        const token = await callbacks.jwt({
-          token: defaultToken,
-          user,
-          account,
-          profile: OAuthProfile,
-          isNewUser,
-          trigger: isNewUser ? "signUp" : "signIn",
-        })
+        const token = await callbacks.jwt(
+          isNewUser
+            ? {
+                token: defaultToken,
+                user,
+                account,
+                isNewUser: true,
+                trigger: "signUp",
+              }
+            : {
+                token: defaultToken,
+                user,
+                account,
+                profile: OAuthProfile,
+                isNewUser: false,
+                trigger: "signIn",
+              }
+        )
 
         // Clear cookies if token is null
         if (token === null) {
@@ -240,13 +250,23 @@ export async function callback(params: {
           picture: loggedInUser.image,
           sub: loggedInUser.id?.toString(),
         }
-        const token = await callbacks.jwt({
-          token: defaultToken,
-          user: loggedInUser,
-          account,
-          isNewUser,
-          trigger: isNewUser ? "signUp" : "signIn",
-        })
+        const token = await callbacks.jwt(
+          isNewUser
+            ? {
+                token: defaultToken,
+                user: loggedInUser,
+                account,
+                isNewUser: true,
+                trigger: "signUp",
+              }
+            : {
+                token: defaultToken,
+                user: loggedInUser,
+                account,
+                isNewUser: false,
+                trigger: "signIn",
+              }
+        )
 
         // Clear cookies if token is null
         if (token === null) {

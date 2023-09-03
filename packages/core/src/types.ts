@@ -225,7 +225,10 @@ export interface SessionCallbackParams<N = any> {
   trigger?: "update"
 }
 
-export interface JwtCallbackParams<P = Profile, A = Account> {
+/**
+ * Represents the base parameters for a JWT callback.
+ */
+interface JwtCallbackBaseParams {
   /**
    * When `trigger` is `"signIn"` or `"signUp"`, it will be a subset of {@link JWT},
    * `name`, `email` and `image` will be included.
@@ -234,6 +237,20 @@ export interface JwtCallbackParams<P = Profile, A = Account> {
    */
   token: JWT
   /**
+   * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
+   * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+   *
+   * ⚠ Note, you should validate this data before using it.
+   */
+  session?: any
+}
+
+/**
+ * Represents the parameters for a JWT callback triggered by user sign-in.
+ */
+export interface JwtSignInCallbackParams<P = Profile, A = Account>
+  extends JwtCallbackBaseParams {
+  /**
    * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
    * @note available when `trigger` is `"signIn"` or `"signUp"`.
    *
@@ -241,17 +258,17 @@ export interface JwtCallbackParams<P = Profile, A = Account> {
    * - [Credentials Provider](https://authjs.dev/reference/core/providers_credentials)
    * - [User database model](https://authjs.dev/reference/adapters#user)
    */
-  user?: User | AdapterUser
+  user: User | AdapterUser
   /**
    * Contains information about the provider that was used to sign in.
    * Also includes {@link TokenSet}
    * @note available when `trigger` is `"signIn"` or `"signUp"`
    */
-  account?: A | null
+  account: A | null
   /**
    * The OAuth profile returned from your provider.
    * (In case of OIDC it will be the decoded ID Token or /userinfo response)
-   * @note available when `trigger` is `"signIn"`.
+   * @note available when `provider` is `oauth` or `oidc`, and `trigger` is `"signIn"`.
    */
   profile?: P
   /**
@@ -261,17 +278,66 @@ export interface JwtCallbackParams<P = Profile, A = Account> {
    * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
    * In case of the latter, `trigger` will be `undefined`.
    */
-  trigger?: "signIn" | "signUp" | "update"
+  trigger: "signIn"
   /** @deprecated use `trigger === "signUp"` instead */
-  isNewUser?: boolean
-  /**
-   * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
-   * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
-   *
-   * ⚠ Note, you should validate this data before using it.
-   */
-  session?: any
+  isNewUser: false
 }
+
+/**
+ * Represents the parameters for a JWT callback triggered by user sign-up.
+ */
+export interface JwtSignUpCallbackParams<A = Account>
+  extends JwtCallbackBaseParams {
+  /**
+   * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
+   * @note available when `trigger` is `"signIn"` or `"signUp"`.
+   *
+   * Resources:
+   * - [Credentials Provider](https://authjs.dev/reference/core/providers_credentials)
+   * - [User database model](https://authjs.dev/reference/adapters#user)
+   */
+  user: User | AdapterUser
+  /**
+   * Contains information about the provider that was used to sign in.
+   * Also includes {@link TokenSet}
+   * @note available when `trigger` is `"signIn"` or `"signUp"`
+   */
+  account: A | null
+  /**
+   * Check why was the jwt callback invoked. Possible reasons are:
+   * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
+   * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
+   * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+   * In case of the latter, `trigger` will be `undefined`.
+   */
+  trigger: "signUp"
+  /** @deprecated use `trigger === "signUp"` instead */
+  isNewUser: true
+}
+
+/**
+ * Represents the parameters for a JWT callback triggered by an update event.
+ */
+export interface JwtUpdateCallbackParams extends JwtCallbackBaseParams {
+  /**
+   * Check why was the jwt callback invoked. Possible reasons are:
+   * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
+   * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
+   * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+   * In case of the latter, `trigger` will be `undefined`.
+   */
+  trigger?: "update"
+  /** @deprecated use `trigger === "signUp"` instead */
+  isNewUser: false
+}
+
+/**
+ * Represents the parameters for a JWT callback.
+ */
+export type JwtCallbackParams<P = Profile, A = Account> =
+  | JwtSignInCallbackParams<P, A>
+  | JwtSignUpCallbackParams<A>
+  | JwtUpdateCallbackParams
 
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */
 export interface CallbacksOptions<P = Profile, A = Account> {

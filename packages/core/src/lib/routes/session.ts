@@ -42,6 +42,7 @@ export async function session(params: {
         token: decodedToken,
         ...(isUpdate && { trigger: "update" }),
         session: newSession,
+        isNewUser: false,
       })
 
       const newExpires = fromDate(sessionMaxAge)
