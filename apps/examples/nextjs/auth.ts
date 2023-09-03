@@ -84,7 +84,7 @@ export const config = {
     AzureB2C({ clientId: process.env.AUTH_AZUREB2C_ID, clientSecret: process.env.AUTH_AZUREB2C_SECRET }),
     Battlenet({ clientId: process.env.AUTH_BN_ID, clientSecret: process.env.AUTH_BN_SECRET, issuer: process.env.AUTH_BN_ISSUER }),
     Box({ clientId: process.env.AUTH_BOX_ID, clientSecret: process.env.AUTH_BOX_SECRET }),
-    BoxyHQSAML({ clientId: process.env.AUTH_BOXYHQSAML_ID, clientSecret: process.env.AUTH_BOXYHQSAML_SECRET }),
+    BoxyHQSAML({ clientId: process.env.AUTH_BOXYHQ_ID, clientSecret: process.env.AUTH_BOXYHQ_SECRET, issuer: process.env.AUTH_BOXYHQ_ISSUER }),
     Bungie({ clientId: process.env.AUTH_BUNGIE_ID, clientSecret: process.env.AUTH_BUNGIE_SECRET }),
     Cognito({ clientId: process.env.AUTH_COGNITO_ID, clientSecret: process.env.AUTH_COGNITO_SECRET }),
     Coinbase({ clientId: process.env.AUTH_COINBASE_ID, clientSecret: process.env.AUTH_COINBASE_SECRET }),
@@ -177,8 +177,9 @@ declare global {
       AUTH_BN_SECRET: string
       AUTH_BOX_ID: string
       AUTH_BOX_SECRET: string
-      AUTH_BOXYHQSAML_ID: string
-      AUTH_BOXYHQSAML_SECRET: string
+      AUTH_BOXYHQ_ID: string
+      AUTH_BOXYHQ_ISSUER: string
+      AUTH_BOXYHQ_SECRET: string
       AUTH_BUNGIE_ID: string
       AUTH_BUNGIE_SECRET: string
       AUTH_COGNITO_ID: string
