@@ -17,16 +17,6 @@ The **Credentials Provider** comes with a set of default options:
 
 You can override any of the options to suit your own use case.
 
-## Example - Web3 / Signin With Ethereum
-
-The credentials provider can also be used to integrate with a service like [Sign-in With Ethereum](https://login.xyz).
-
-For more information, check out the links below:
-
-- [Tutorial](https://docs.login.xyz/integrations/Auth.js)
-- [Example App Repo](https://github.com/spruceid/siwe-next-auth-example)
-- [Example App Demo](https://siwe-next-auth-example2.vercel.app/)
-
 ## Example - Username / Password
 
 :::caution
@@ -123,6 +113,16 @@ callbacks: {
   }
 }
 ```
+
+## Example - Web3 / Signin With Ethereum
+
+The credentials provider can also be used to integrate with a service like [Sign-in With Ethereum](https://login.xyz).
+
+For more information, check out the links below:
+
+- [Tutorial](https://docs.login.xyz/integrations/Auth.js)
+- [Example App Repo](https://github.com/spruceid/siwe-next-auth-example)
+- [Example App Demo](https://siwe-next-auth-example2.vercel.app/)
 
 ## Multiple providers
 
