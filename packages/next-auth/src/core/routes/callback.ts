@@ -171,8 +171,9 @@ export default async function callback(params: {
         // Note that the callback URL is preserved, so the journey can still be resumed
         if (isNewUser && pages.newUser) {
           return {
-            redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
-              }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+            redirect: `${pages.newUser}${
+              pages.newUser.includes("?") ? "&" : "?"
+            }callbackUrl=${encodeURIComponent(callbackUrl)}`,
             cookies,
           }
         }
@@ -316,8 +317,9 @@ export default async function callback(params: {
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
         return {
-          redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
-            }callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }callbackUrl=${encodeURIComponent(callbackUrl)}`,
           cookies,
         }
       }

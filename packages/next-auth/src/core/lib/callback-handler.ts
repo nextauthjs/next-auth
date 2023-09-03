@@ -15,9 +15,9 @@ import { OAuthConfig } from "src/providers"
  * signIn callback.
  */
 export async function checkIfUserIsNew(params: {
-  profile: User | AdapterUser | { email: string },
-  account: Account | null,
-  options: InternalOptions,
+  profile: User | AdapterUser | { email: string }
+  account: Account | null
+  options: InternalOptions
 }) {
   const { profile: _profile, account, options } = params
   // Input validation
@@ -26,19 +26,13 @@ export async function checkIfUserIsNew(params: {
   if (!["email", "oauth"].includes(account.type))
     throw new Error("Provider not supported")
 
-  const {
-    adapter
-  } = options;
+  const { adapter } = options
 
   if (!adapter) {
     return undefined
   }
 
-  const {
-    getUserByAccount,
-    getUserByEmail,
-  } = adapter
-
+  const { getUserByAccount, getUserByEmail } = adapter
 
   const profile = _profile as AdapterUser
 
@@ -171,10 +165,10 @@ export default async function callbackHandler(params: {
     session = useJwtSession
       ? {}
       : await createSession({
-        sessionToken: await generateSessionToken(),
-        userId: user.id,
-        expires: fromDate(options.session.maxAge),
-      })
+          sessionToken: await generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
 
     return { session, user, isNewUser }
   } else if (account.type === "oauth") {
@@ -201,10 +195,10 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-          sessionToken: await generateSessionToken(),
-          userId: userByAccount.id,
-          expires: fromDate(options.session.maxAge),
-        })
+            sessionToken: await generateSessionToken(),
+            userId: userByAccount.id,
+            expires: fromDate(options.session.maxAge),
+          })
 
       return { session, user: userByAccount, isNewUser }
     } else {
@@ -274,10 +268,10 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-          sessionToken: await generateSessionToken(),
-          userId: user.id,
-          expires: fromDate(options.session.maxAge),
-        })
+            sessionToken: await generateSessionToken(),
+            userId: user.id,
+            expires: fromDate(options.session.maxAge),
+          })
 
       return { session, user, isNewUser: true }
     }

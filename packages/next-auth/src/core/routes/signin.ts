@@ -74,14 +74,14 @@ export default async function signin(params: {
       const isNewUser = await checkIfUserIsNew({
         profile: user,
         account,
-        options
+        options,
       })
 
       const signInCallbackResponse = await callbacks.signIn({
         user,
         account,
         email: { verificationRequest: true },
-        isNewUser
+        isNewUser,
       })
       if (!signInCallbackResponse) {
         return { redirect: `${url}/error?error=AccessDenied` }
