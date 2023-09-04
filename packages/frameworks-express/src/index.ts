@@ -5,7 +5,7 @@
  * :::
  *
  * Express Auth is the official Express integration for Auth.js.
- * It provides a simple way to add authentication to your SvelteKit app in a few lines of code.
+ * It provides a simple way to add authentication to your Express app in a few lines of code.
  *
  * ## Installation
  * ```bash npm2yarn2pnpm
