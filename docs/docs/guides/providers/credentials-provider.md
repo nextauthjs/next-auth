@@ -94,24 +94,34 @@ callbacks: {
 
 ### Using a database
 
-You can also use the `jwt()` callback to interact with your database to regain some of the functionality from [more powerful providers](reference/core/providers):
+You can also use the `authorize()` callback to interact with your database to regain some of the functionality from [more powerful providers](reference/core/providers):
 
 ```js
-callbacks: {
-  async jwt(token, user) {
-    if (isNewUser) {
-      const userFromDb = await writeNewUserToDb()
-      return { token, user: userFromDb }
+...
+providers: [
+  CredentialsProvider({
+    ...
+    async authorize(credentials, req) {
+      let user = null
+
+      const saltedPasswordToCheck = passwordToSalt(credentials.password)
+      user = await getUserFromDb(credentials.username, credentials.password)
+
+      if (!user) {
+        const saltedPassword = passwordToSalt(credentials.password)
+        user = await addUserToDb(credentials.username, saltedPassword)
+      }
+
+      if (!user) {
+        throw new Error("User was not found and could not be created.")
+      }
+
+      return user
+
     }
-
-  if (user) {
-   const userFromDb = await getUserFromDb(user.id)
-   return {token, user: userFromDb}
-  }
-
-    throw new Error("A user was not found or was not able to be created.")
-  }
-}
+  })
+]
+...
 ```
 
 ## Example - Web3 / Signin With Ethereum
