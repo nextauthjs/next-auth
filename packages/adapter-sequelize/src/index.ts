@@ -301,10 +301,9 @@ export default function SequelizeAdapter(
     async deleteSession(sessionToken) {
       await sync()
 
-      const foundSession = await Session.findOne({ where: { sessionToken } })
-      const sessionData = foundSession?.get({ plain: true })
+      const session = await Session.findOne({ where: { sessionToken } })
       await Session.destroy({ where: { sessionToken } })
-      return sessionData
+      return session?.get({ plain: true })
     },
     async createVerificationToken(token) {
       await sync()
