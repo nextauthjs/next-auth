@@ -193,7 +193,7 @@ export function MongoDBAdapter(
         await db
       ).U.findOneAndUpdate({ _id }, { $set: user }, { returnDocument: "after" })
 
-      return from<AdapterUser>(result.value!)
+      return from<AdapterUser>(result!)
     },
     async deleteUser(id) {
       const userId = _id(id)
@@ -210,7 +210,7 @@ export function MongoDBAdapter(
       return account
     },
     async unlinkAccount(provider_providerAccountId) {
-      const { value: account } = await (
+      const account = await (
         await db
       ).A.findOneAndDelete(provider_providerAccountId)
       return from<AdapterAccount>(account!)
@@ -235,17 +235,17 @@ export function MongoDBAdapter(
     async updateSession(data) {
       const { _id, ...session } = to<AdapterSession>(data)
 
-      const result = await (
+      const updatedSession = await (
         await db
       ).S.findOneAndUpdate(
         { sessionToken: session.sessionToken },
         { $set: session },
         { returnDocument: "after" }
       )
-      return from<AdapterSession>(result.value!)
+      return from<AdapterSession>(updatedSession!)
     },
     async deleteSession(sessionToken) {
-      const { value: session } = await (
+      const session = await (
         await db
       ).S.findOneAndDelete({
         sessionToken,
@@ -257,14 +257,13 @@ export function MongoDBAdapter(
       return data
     },
     async useVerificationToken(identifier_token) {
-      const { value: verificationToken } = await (
+      const verificationToken = await (
         await db
       ).V.findOneAndDelete(identifier_token)
 
       if (!verificationToken) return null
-      // @ts-expect-error
-      delete verificationToken._id
-      return verificationToken
+      const { _id, ...rest } = verificationToken;
+      return rest;
     },
   }
 }

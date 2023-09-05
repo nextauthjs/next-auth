@@ -42,7 +42,7 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "mongodb": "^6 || ^5 || ^4"
+    "mongodb": "^6"
   },
   "devDependencies": {
     "@auth/adapter-test": "workspace:*",
