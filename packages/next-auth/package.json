@@ -42,6 +42,10 @@
       "types": "./react/index.d.ts",
       "default": "./react/index.js"
     },
+    "./core": {
+      "types": "./core/index.d.ts",
+      "default": "./core/index.js"
+    },
     "./next": {
       "types": "./next/index.d.ts",
       "default": "./next/index.js"
