@@ -42,13 +42,13 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "mongodb": "^5 || ^4"
+    "mongodb": "^6 || ^5 || ^4"
   },
   "devDependencies": {
     "@auth/adapter-test": "workspace:*",
     "@auth/tsconfig": "workspace:*",
     "jest": "^27.4.3",
-    "mongodb": "^4.17.0"
+    "mongodb": "^6.0.0"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"
