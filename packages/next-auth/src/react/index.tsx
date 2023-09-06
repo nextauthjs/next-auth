@@ -247,10 +247,7 @@ export async function signIn<
     isCredentials ? "callback" : "signin"
   }/${provider}`
 
-  const _params = authorizationParams
-    ? `?${new URLSearchParams(authorizationParams)}`
-    : ""
-  const _signInUrl = `${signInUrl}${_params}`
+  const _signInUrl = `${signInUrl}${authorizationParams ? `?${new URLSearchParams(authorizationParams)} : ""}`
 
   const res = await fetch(_signInUrl, {
     method: "post",
