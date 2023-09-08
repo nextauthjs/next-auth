@@ -26,7 +26,7 @@ export default function Google<P extends GoogleProfile>(
     name: "Google",
     type: "oauth",
     wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
-    authorization: { params: { scope: "openid email profile" } },
+    authorization: { params: { scope: "https://www.googleapis.com/auth/api-you-want https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile" } },
     idToken: true,
     checks: ["pkce", "state"],
     profile(profile) {
