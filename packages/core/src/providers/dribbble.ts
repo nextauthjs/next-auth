@@ -1,4 +1,14 @@
-import { OAuthConfig, OAuthUserConfig } from "."
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>Dribbble</b> integration.</span>
+ * <a href="https://dribbble.com">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/dribbble.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * @module providers/dribbble
+ */
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface DribbbleProfile extends Record<string, any> {
   id: number
@@ -8,62 +18,61 @@ export interface DribbbleProfile extends Record<string, any> {
 }
 
 /**
- * ## Documentation
  *
- * [Dribbble API](https://developer.dribbble.com) · [OAuth](https://developer.dribbble.com/v2/oauth/)
+ * Add Dribbble login to your page.
  *
- * ## Configuration
+ * ### Setup
  *
- * ### Register application
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/dribbble
+ * ```
+ *
+ * #### Configuration
+ *```js
+ * import Auth from "@auth/core"
+ * import Google from "@auth/core/providers/dribbble"
+ *
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [Dribbble({ clientId: DRIBBBLE_CLIENT_ID, clientSecret: DRIBBBLE_CLIENT_SECRET })],
+ * })
+ * ```
+ *
+ * ### Resources
+ *
+ *  - [Dribbble API](https://developer.dribbble.com)
+ *  - [Dribbble OAuth](https://developer.dribbble.com/v2/oauth/)
+ *  - [Dribbble Applications](https://dribbble.com/account/applications/new)
+ *
+ * ### Notes
+ *
+ * By default, Auth.js assumes that the GitHub provider is
+ * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
- * [`https://dribbble.com/account/applications/new`](https://dribbble.com/account/applications/new)
+ *
+ * The Dribbble provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/dribbble.ts).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ *
  * :::
  *
- * Provide the required details about your application:
+ * :::info **Disclaimer**
  *
- * - Name
- * - Description
- * - Website URL
- * - Callback URL
- *   - `https://example.com/api/auth/callback/dribbble` for production
- *   - `http://localhost:3000/api/auth/callback/dribbble` for development
+ * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
  *
- * Click ‘Register application’
+ * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+ * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+ * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  *
- * The following data is relevant for the next step:
- *
- * - Client ID
- * - Client Secret
- *
- * ### Set up the environment variables
- *
- * ```ini title=".env.local"
- * DRIBBBLE_CLIENT_ID=<copy Client ID value here>
- * DRIBBBLE_CLIENT_SECRET=<copy Client Secret value here>
- * ```
- *
- * ## Example
- *
- * ```js title="pages/api/auth/[...nextauth].js"
- * import DribbbleProvider from "next-auth/providers/dribbble"
- * ...
- * providers: [
- *   DribbbleProvider({
- *     clientId: process.env.DRIBBBLE_CLIENT_ID,
- *     clientSecret: process.env.DRIBBBLE_CLIENT_SECRET,
- *     scope: 'public upload'
- *   }),
- * ]
- * ...
- * ```
+ * :::
  *
  * :::tip
  * You can optionally set the scope to `public upload` for more advanced scenarios. If omitted, the default `public` scope will be used for authentication purposes.
  * :::
  */
 
-export default function DribbbleProvider<P extends DribbbleProfile>(
+export default function Dribbble<P extends DribbbleProfile>(
   options: OAuthUserConfig<P> & {
     /**
      * Reference: https://developer.dribbble.com/v2/oauth/#scopes
