@@ -22,7 +22,12 @@ import { BaseSQLiteDatabase, SQLiteTableFn } from "drizzle-orm/sqlite-core"
 import { mySqlDrizzleAdapter } from "./lib/mysql.js"
 import { pgDrizzleAdapter } from "./lib/pg.js"
 import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
-import { SqlFlavorOptions, TableFn } from "./lib/utils.js"
+import {
+  ClientFlavors,
+  MinimumSchema,
+  SqlFlavorOptions,
+  TableFn,
+} from "./lib/utils.js"
 import { is } from "drizzle-orm"
 
 import type { Adapter } from "@auth/core/adapters"
@@ -48,8 +53,11 @@ import type { Adapter } from "@auth/core/adapters"
  * ```
  * 
  * :::info
- * If you're using multi-project schemas, you can pass your table function as a second argument
+ * If you're using multi-project schemas, you can pass your table function as a second argument. 
+ * Alternatively, you can pass your tables as an object if your tables includes other 
+ * attributes you want to be returned from the adapter.
  * :::
+ * 
  *
  * ## Setup
  *
@@ -253,14 +261,23 @@ import type { Adapter } from "@auth/core/adapters"
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  table?: TableFn<SqlFlavor>
+  tableFnOrTables?: TableFn<SqlFlavor> | Partial<ClientFlavors<SqlFlavor>>
 ): Adapter {
   if (is(db, MySqlDatabase)) {
-    return mySqlDrizzleAdapter(db, table as MySqlTableFn)
+    return mySqlDrizzleAdapter(
+      db,
+      tableFnOrTables as MySqlTableFn | MinimumSchema["mysql"] | undefined
+    )
   } else if (is(db, PgDatabase)) {
-    return pgDrizzleAdapter(db, table as PgTableFn)
+    return pgDrizzleAdapter(
+      db,
+      tableFnOrTables as PgTableFn | MinimumSchema["pg"] | undefined
+    )
   } else if (is(db, BaseSQLiteDatabase)) {
-    return SQLiteDrizzleAdapter(db, table as SQLiteTableFn)
+    return SQLiteDrizzleAdapter(
+      db,
+      tableFnOrTables as SQLiteTableFn | MinimumSchema["sqlite"] | undefined
+    )
   }
 
   throw new Error(

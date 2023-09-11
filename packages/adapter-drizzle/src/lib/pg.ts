@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { MinimumSchema } from "./utils"
 
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("user", {
@@ -69,10 +70,15 @@ export type DefaultSchema = ReturnType<typeof createTables>
 
 export function pgDrizzleAdapter(
   client: InstanceType<typeof PgDatabase>,
-  tableFn = defaultPgTableFn
+  tableFnOrTables?: PgTableFn | Partial<MinimumSchema["pg"]>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const defaultTables = createTables(
+    typeof tableFnOrTables === "function" ? tableFnOrTables : defaultPgTableFn
+  )
+  const { users, accounts, sessions, verificationTokens } = {
+    ...defaultTables,
+    ...(typeof tableFnOrTables === "object" ? tableFnOrTables : {}),
+  }
 
   return {
     async createUser(data) {
