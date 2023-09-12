@@ -15,8 +15,23 @@ import type {
   NextAuthResponse,
 } from "../core/types"
 
+interface NextAuthContextParams {
+    nextauth: string[],
+    [key: string]: string | string[]
+}
+
 interface RouteHandlerContext {
-  params: { nextauth: string[] }
+  params: NextAuthContextParams
+}
+
+type ApiHandlerParams = [NextApiRequest, NextApiResponse, AuthOptions]
+type RouteHandlerParams = [NextRequest, RouteHandlerContext, AuthOptions]
+
+type HandlerParams = ApiHandlerParams | RouteHandlerParams
+
+// router type predict
+function isRouteHandler(handlerParams: HandlerParams): handlerParams is RouteHandlerParams {
+    return 'params' in handlerParams[1]
 }
 
 async function NextAuthApiHandler(
@@ -113,10 +128,15 @@ function NextAuth(
   res: NextApiResponse,
   options: AuthOptions
 ): any
+function NextAuth(
+    req: NextRequest,
+    context: RouteHandlerContext,
+    options: AuthOptions
+): any
 
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
+  ...args: [AuthOptions] | HandlerParams
 ) {
   if (args.length === 1) {
     return async (
@@ -138,7 +158,7 @@ function NextAuth(
     }
   }
 
-  if ((args[1] as any)?.params) {
+  if (isRouteHandler(args)) {
     return NextAuthRouteHandler(
       ...(args as unknown as Parameters<typeof NextAuthRouteHandler>)
     )
