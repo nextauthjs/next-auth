@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* stylelint-disable docusaurus/copyright-header */
 /**
  * Any CSS included here will be global. The classic template
@@ -104,7 +108,7 @@ html[data-theme="dark"] hr {
 
 /* Docusaurus announcementBar close button */
 .close {
-  color: inherit!important;
+  color: inherit !important;
 }
 
 .home-main .code {
