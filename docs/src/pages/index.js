@@ -9,6 +9,7 @@ import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
 import providers from "../../providers.json"
+import { Clerk } from "../components/clerk"
 
 const providersCount = Object.keys(providers).length + 2 // email, credentials
 const features = [
@@ -127,6 +128,7 @@ export default function Home() {
                 <h1 className="hero__title">{siteConfig.title}</h1>
                 <p className="hero__subtitle">{siteConfig.tagline}</p>
               </div>
+              <Clerk />
               <div className={styles.buttons}>
                 <a
                   className={classnames(
