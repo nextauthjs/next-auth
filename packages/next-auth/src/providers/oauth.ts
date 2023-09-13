@@ -89,6 +89,15 @@ export type UserinfoEndpointHandler = EndpointHandler<
   Profile
 >
 
+export interface OAuthProviderButtonStyles {
+  logo: string
+  logoDark: string
+  bg: string
+  bgDark: string
+  text: string
+  textDark: string
+}
+
 export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /**
    * OpenID Connect (OIDC) compliant providers can configure
@@ -100,6 +109,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
    * [Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414#section-3)
    */
   wellKnown?: string
+  jwks_endpoint?: string
   /**
    * The login process will be initiated by sending the user to this URL.
    *
@@ -133,6 +143,8 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   /** Read more at: https://github.com/panva/node-openid-client/tree/main/docs#customizing-http-requests */
   httpOptions?: HttpOptions
 
+  style?: OAuthProviderButtonStyles
+
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -145,15 +157,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   requestTokenUrl?: string
   profileUrl?: string
   encoding?: string
-  allowDangerousEmailAccountLinking?: boolean;
-}
-
-/** @internal */
-export interface InternalOAuthConfig<P>
-  extends Omit<OAuthConfig<P>, "authorization" | "token" | "userinfo"> {
-  authorization?: AuthorizationEndpointHandler
-  token?: TokenEndpointHandler
-  userinfo?: UserinfoEndpointHandler
+  allowDangerousEmailAccountLinking?: boolean
 }
 
 export type OAuthUserConfig<P> = Omit<

@@ -1,0 +1,53 @@
+{
+  "name": "@auth/supabase-adapter",
+  "version": "0.1.2",
+  "description": "Supabase adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Martin Sonnberger <martin.sonnberger@icloud.com>",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "supabase"
+  ],
+  "license": "ISC",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "./tests/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@supabase/supabase-js": "^2.0.5"
+  },
+  "devDependencies": {
+    "@auth/adapter-test": "workspace:^0.0.0",
+    "@auth/tsconfig": "workspace:^0.0.0",
+    "@supabase/supabase-js": "^2.0.5",
+    "jest": "^27.4.3"
+  },
+  "jest": {
+    "preset": "@auth/adapter-test/jest"
+  }
+}

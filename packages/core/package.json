@@ -1,0 +1,96 @@
+{
+  "name": "@auth/core",
+  "version": "0.14.0",
+  "description": "Authentication for the Web.",
+  "keywords": [
+    "authentication",
+    "authjs",
+    "jwt",
+    "oauth",
+    "oidc",
+    "passwordless",
+    "standard",
+    "vanilla",
+    "webapi"
+  ],
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Balázs Orbán <info@balazsorban.com>",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <yo@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>",
+    "Thang Huu Vu <hi@thvu.dev>",
+    "Iain Collins <me@iaincollins.com"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "lib",
+    "providers",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./errors": {
+      "types": "./errors.d.ts",
+      "import": "./errors.js"
+    },
+    "./jwt": {
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
+    },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    },
+    "./types": {
+      "types": "./types.d.ts"
+    }
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@panva/hkdf": "^1.0.4",
+    "cookie": "0.5.0",
+    "jose": "^4.11.1",
+    "oauth4webapi": "^2.0.6",
+    "preact": "10.11.3",
+    "preact-render-to-string": "5.2.3"
+  },
+  "peerDependencies": {
+    "nodemailer": "^6.8.0"
+  },
+  "peerDependenciesMeta": {
+    "nodemailer": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "pnpm css && pnpm providers && tsc",
+    "clean": "rm -rf *.js *.d.ts* lib providers",
+    "css": "node scripts/generate-css",
+    "dev": "pnpm css && pnpm providers && tsc -w",
+    "providers": "node scripts/generate-providers"
+  },
+  "devDependencies": {
+    "@auth/tsconfig": "workspace:*",
+    "@types/cookie": "0.5.1",
+    "@types/node": "18.11.10",
+    "@types/nodemailer": "6.4.6",
+    "@types/react": "18.0.37",
+    "autoprefixer": "10.4.13",
+    "postcss": "8.4.19",
+    "postcss-nested": "6.0.0"
+  }
+}

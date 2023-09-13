@@ -180,6 +180,14 @@ export default function Wikimedia<P extends WikimediaProfile>(
         email: profile.email,
       }
     },
+    style: {
+      logo: "/wikimedia.svg",
+      logoDark: "/wikimedia-dark.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#000",
+      textDark: "#fff",
+    },
     options,
   }
 }

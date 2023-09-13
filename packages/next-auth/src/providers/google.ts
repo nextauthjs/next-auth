@@ -37,6 +37,14 @@ export default function Google<P extends GoogleProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "/google.svg",
+      logoDark: "/google.svg",
+      bgDark: "#fff",
+      bg: "#fff",
+      text: "#000",
+      textDark: "#000",
+    },
     options,
   }
 }

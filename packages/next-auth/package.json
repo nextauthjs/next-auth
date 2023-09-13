@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.16.4",
+  "version": "4.22.1",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -50,29 +50,27 @@
     "lint": "eslint src config tests"
   },
   "files": [
-    "lib",
+    "client",
+    "core",
     "css",
     "jwt",
-    "react",
+    "lib",
     "next",
-    "client",
     "providers",
-    "core",
-    "index.d.ts",
-    "index.js",
-    "adapters.d.ts",
-    "middleware.d.ts",
-    "middleware.js",
-    "utils"
+    "react",
+    "src",
+    "utils",
+    "*.d.ts*",
+    "*.js"
   ],
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.16.3",
-    "@panva/hkdf": "^1.0.1",
+    "@babel/runtime": "^7.20.13",
+    "@panva/hkdf": "^1.0.2",
     "cookie": "^0.5.0",
-    "jose": "^4.9.3",
+    "jose": "^4.11.4",
     "oauth": "^0.9.15",
-    "openid-client": "^5.1.0",
+    "openid-client": "^5.4.0",
     "preact": "^10.6.3",
     "preact-render-to-string": "^5.1.19",
     "uuid": "^8.3.2"
@@ -97,7 +95,7 @@
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
     "@edge-runtime/jest-environment": "1.1.0-beta.35",
-    "@next-auth/tsconfig": "workspace:*",
+    "@auth/tsconfig": "workspace:*",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.21",
     "@testing-library/dom": "^8.13.0",
@@ -109,7 +107,7 @@
     "@types/node": "^17.0.42",
     "@types/nodemailer": "^6.4.4",
     "@types/oauth": "^0.9.1",
-    "@types/react": "^18.0.15",
+    "@types/react": "18.0.37",
     "@types/react-dom": "^18.0.6",
     "autoprefixer": "^10.4.7",
     "babel-plugin-jsx-pragmatic": "^1.0.2",
@@ -120,15 +118,12 @@
     "jest-environment-jsdom": "^28.1.1",
     "jest-watch-typeahead": "^1.1.0",
     "msw": "^0.42.3",
-    "next": "13.0.2",
+    "next": "13.3.0",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
     "react": "^18",
     "react-dom": "^18",
     "whatwg-fetch": "^3.6.2"
-  },
-  "engines": {
-    "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0"
   }
 }

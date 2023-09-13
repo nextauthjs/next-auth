@@ -1,0 +1,53 @@
+{
+  "name": "@auth/solid-start",
+  "description": "Authentication for SolidStart.",
+  "version": "0.1.1",
+  "type": "module",
+  "files": [
+    "client.*",
+    "index.*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./client": {
+      "types": "./client.d.ts",
+      "import": "./client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
+    "patch": "npm version patch --no-git-tag-version",
+    "clean": "rm -rf client.* index.*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@auth/core": "workspace:*",
+    "@solidjs/meta": "^0.28.0",
+    "@types/node": "^18.7.14",
+    "next-auth": "workspace:*",
+    "solid-js": "^1.5.7",
+    "solid-start": "^0.2.14",
+    "tsup": "^6.5.0",
+    "typescript": "5.2.2"
+  },
+  "peerDependencies": {
+    "@auth/core": "~0.2.2 || ^0.2.2",
+    "solid-js": "^1.5.7",
+    "solid-start": "^0.2.14"
+  },
+  "keywords": [
+    "SolidJS",
+    "SolidStart",
+    "Auth"
+  ],
+  "author": "OrJDev <orjdeveloper@gmail.com>",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "license": "ISC"
+}

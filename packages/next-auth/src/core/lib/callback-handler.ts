@@ -113,7 +113,7 @@ export default async function callbackHandler(params: {
     session = useJwtSession
       ? {}
       : await createSession({
-          sessionToken: generateSessionToken(),
+          sessionToken: await generateSessionToken(),
           userId: user.id,
           expires: fromDate(options.session.maxAge),
         })
@@ -143,7 +143,7 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-            sessionToken: generateSessionToken(),
+            sessionToken: await generateSessionToken(),
             userId: userByAccount.id,
             expires: fromDate(options.session.maxAge),
           })
@@ -181,11 +181,11 @@ export default async function callbackHandler(params: {
         ? await getUserByEmail(profile.email)
         : null
       if (userByEmail) {
-        const provider = options.provider as OAuthConfig<any>;
+        const provider = options.provider as OAuthConfig<any>
         if (provider?.allowDangerousEmailAccountLinking) {
-          // If you trust the oauth provider to correctly verify email addresses, you can opt-in to 
+          // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
           // account linking even when the user is not signed-in.
-          user = userByEmail;
+          user = userByEmail
         } else {
           // We end up here when we don't have an account with the same [provider].id *BUT*
           // we do already have an account with the same email address as the one in the
@@ -216,7 +216,7 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-            sessionToken: generateSessionToken(),
+            sessionToken: await generateSessionToken(),
             userId: user.id,
             expires: fromDate(options.session.maxAge),
           })

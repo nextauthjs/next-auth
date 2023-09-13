@@ -1,5 +1,5 @@
 import type { NextMiddleware, NextFetchEvent } from "next/server"
-import type { Awaitable, CookieOption, NextAuthOptions } from ".."
+import type { Awaitable, CookieOption, AuthOptions } from ".."
 import type { JWT, JWTOptions } from "../jwt"
 
 import { NextResponse, NextRequest } from "next/server"
@@ -20,7 +20,7 @@ export interface NextAuthMiddlewareOptions {
    * ---
    * [Documentation](https://next-auth.js.org/configuration/pages)
    */
-  pages?: NextAuthOptions["pages"]
+  pages?: AuthOptions["pages"]
 
   /**
    * You can override the default cookie names and options for any of the cookies
@@ -38,7 +38,7 @@ export interface NextAuthMiddlewareOptions {
    */
   cookies?: Partial<
     Record<
-      keyof Pick<keyof NextAuthOptions["cookies"], "sessionToken">,
+      keyof Pick<keyof AuthOptions["cookies"], "sessionToken">,
       Omit<CookieOption, "options">
     >
   >
@@ -146,7 +146,10 @@ async function handleMiddleware(
 
   // the user is not logged in, redirect to the sign-in page
   const signInUrl = new URL(`${basePath}${signInPage}`, origin)
-  signInUrl.searchParams.append("callbackUrl", `${basePath}${pathname}${search}`)
+  signInUrl.searchParams.append(
+    "callbackUrl",
+    `${basePath}${pathname}${search}`
+  )
   return NextResponse.redirect(signInUrl)
 }
 
@@ -170,7 +173,7 @@ export type WithAuthArgs =
 
 /**
  * Middleware that checks if the user is authenticated/authorized.
- * If if they aren't, they will be redirected to the login page.
+ * If they aren't, they will be redirected to the login page.
  * Otherwise, continue.
  *
  * @example

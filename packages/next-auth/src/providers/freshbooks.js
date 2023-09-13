@@ -17,6 +17,14 @@ export default function Freshbooks(options) {
         email: profile.response.email,
       }
     },
+    style: {
+      logo: "/freshbooks.svg",
+      logoDark: "/freshbooks-dark.svg",
+      bg: "#fff",
+      text: "#0075dd",
+      bgDark: "#0075dd",
+      textDark: "#fff",
+    },
     ...options,
   }
 }

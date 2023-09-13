@@ -64,7 +64,7 @@ export interface VkProfile {
       instagram?: string
     }
     photo_400?: string
-    wall_default?: 'owner' | 'all'
+    wall_default?: "owner" | "all"
     interests?: string
     books?: string
     tv?: string
@@ -114,7 +114,7 @@ export interface VkProfile {
         id: number
         images?: Array<{
           height?: number
-          type?: 's' | 'm' | 'x' | 'l' | 'o' | 'p' | 'q' | 'r' | 'y' | 'z' | 'w'
+          type?: "s" | "m" | "x" | "l" | "o" | "p" | "q" | "r" | "y" | "z" | "w"
           url?: string
           width?: number
         }>
@@ -129,7 +129,32 @@ export interface VkProfile {
           height: number
           url: string
           src?: string
-          type: 's' | 'm' | 'x' | 'o' | 'p' | 'q' | 'r' | 'k' | 'l' | 'y' | 'z' | 'c' | 'w' | 'a' | 'b' | 'e' | 'i' | 'd' | 'j' | 'temp' | 'h' | 'g' | 'n' | 'f' | 'max'
+          type:
+            | "s"
+            | "m"
+            | "x"
+            | "o"
+            | "p"
+            | "q"
+            | "r"
+            | "k"
+            | "l"
+            | "y"
+            | "z"
+            | "c"
+            | "w"
+            | "a"
+            | "b"
+            | "e"
+            | "i"
+            | "d"
+            | "j"
+            | "temp"
+            | "h"
+            | "g"
+            | "n"
+            | "f"
+            | "max"
           width: number
         }>
         text?: string
@@ -159,7 +184,7 @@ export interface VkProfile {
     occupation?: {
       id?: number
       name?: string
-      type?: 'work' | 'school' | 'university'
+      type?: "work" | "school" | "university"
     }
     career?: {
       group_id?: number
@@ -236,7 +261,7 @@ export interface VkProfile {
     relatives?: Array<{
       id?: number
       name?: string
-      type: 'parent' | 'child' | 'grandparent' | 'grandchild' | 'sibling'
+      type: "parent" | "child" | "grandparent" | "grandchild" | "sibling"
     }>
     counters?: {
       albums?: number
@@ -256,9 +281,9 @@ export interface VkProfile {
   }>
 }
 
-export default function VK<
-  P extends Record<string, any> = VkProfile
->(options: OAuthUserConfig<P>): OAuthConfig<P> {
+export default function VK<P extends Record<string, any> = VkProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   const apiVersion = "5.131" // https://vk.com/dev/versions
 
   return {
@@ -279,6 +304,14 @@ export default function VK<
         email: null,
         image: profile.photo_100,
       }
+    },
+    style: {
+      logo: "/vk.svg",
+      logoDark: "/vk-dark.svg",
+      bg: "#fff",
+      text: "#07F",
+      bgDark: "#07F",
+      textDark: "#fff",
     },
     options,
   }

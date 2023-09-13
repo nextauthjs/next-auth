@@ -1,8 +1,10 @@
 import "isomorphic-fetch"
 import { Redis } from "@upstash/redis"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 import { hydrateDates, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
+
+globalThis.crypto ??= require("node:crypto").webcrypto
 
 if (!process.env.UPSTASH_REDIS_URL || !process.env.UPSTASH_REDIS_KEY) {
   test("Skipping UpstashRedisAdapter tests, since required environment variables aren't available", () => {
@@ -27,6 +29,7 @@ const client = new Redis({
 runBasicTests({
   adapter: UpstashRedisAdapter(client, { baseKeyPrefix: "testApp:" }),
   db: {
+    disconnect: client.flushdb,
     async user(id: string) {
       const data = await client.get<object>(`testApp:user:${id}`)
       if (!data) return null
@@ -48,7 +51,7 @@ runBasicTests({
     },
     async verificationToken(where) {
       const data = await client.get<object>(
-        `testApp:user:token:${where.identifier}`
+        `testApp:user:token:${where.identifier}:${where.token}`
       )
       if (!data) return null
       return hydrateDates(data)

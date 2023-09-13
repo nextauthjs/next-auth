@@ -1,38 +1,41 @@
-import { NextAuthHandler } from "../core"
-import { detectHost } from "../utils/detect-host"
-import { setCookie } from "./utils"
+import { AuthHandler } from "../core"
+import { setCookie, getBody, toResponse } from "./utils"
 
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { NextAuthOptions, Session } from ".."
+import { type NextRequest } from "next/server"
+import type { AuthOptions, Session } from ".."
 import type {
-  NextAuthAction,
+  CallbacksOptions,
+  AuthAction,
   NextAuthRequest,
   NextAuthResponse,
 } from "../core/types"
 
-async function NextAuthNextHandler(
+interface RouteHandlerContext {
+  params: { nextauth: string[] }
+}
+
+async function NextAuthApiHandler(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ) {
   const { nextauth, ...query } = req.query
 
-  options.secret =
-    options.secret ?? options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
 
-  const handler = await NextAuthHandler({
+  const handler = await AuthHandler({
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
       body: req.body,
       query,
       cookies: req.cookies,
       headers: req.headers,
       method: req.method,
-      action: nextauth?.[0] as NextAuthAction,
+      action: nextauth?.[0] as AuthAction,
       providerId: nextauth?.[1],
       error: (req.query.error as string | undefined) ?? nextauth?.[1],
     },
@@ -60,52 +63,112 @@ async function NextAuthNextHandler(
   return res.send(handler.body)
 }
 
-function NextAuth(options: NextAuthOptions): any
+// @see https://beta.nextjs.org/docs/routing/route-handlers
+async function NextAuthRouteHandler(
+  req: NextRequest,
+  context: { params: { nextauth: string[] } },
+  options: AuthOptions
+) {
+  options.secret ??= process.env.NEXTAUTH_SECRET
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { headers, cookies } = require("next/headers")
+  const nextauth = context.params?.nextauth
+  const query = Object.fromEntries(req.nextUrl.searchParams)
+  const body = await getBody(req)
+  const internalResponse = await AuthHandler({
+    req: {
+      body,
+      query,
+      cookies: Object.fromEntries(
+        cookies()
+          .getAll()
+          .map((c) => [c.name, c.value])
+      ),
+      headers: Object.fromEntries(headers() as Headers),
+      method: req.method,
+      action: nextauth?.[0] as AuthAction,
+      providerId: nextauth?.[1],
+      error: query.error ?? nextauth?.[1],
+    },
+    options,
+  })
+
+  const response = toResponse(internalResponse)
+  const redirect = response.headers.get("Location")
+  if (body?.json === "true" && redirect) {
+    response.headers.delete("Location")
+    response.headers.set("Content-Type", "application/json")
+    return new Response(JSON.stringify({ url: redirect }), {
+      headers: response.headers,
+    })
+  }
+
+  return response
+}
+
+function NextAuth(options: AuthOptions): any
 function NextAuth(
   req: NextApiRequest,
   res: NextApiResponse,
-  options: NextAuthOptions
+  options: AuthOptions
 ): any
 
 /** The main entry point to next-auth */
 function NextAuth(
-  ...args:
-    | [NextAuthOptions]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
+  ...args: [AuthOptions] | [NextApiRequest, NextApiResponse, AuthOptions]
 ) {
   if (args.length === 1) {
-    return async (req: NextAuthRequest, res: NextAuthResponse) =>
-      await NextAuthNextHandler(req, res, args[0])
+    return async (
+      req: NextAuthRequest | NextRequest,
+      res: NextAuthResponse | RouteHandlerContext
+    ) => {
+      if ((res as unknown as any)?.params) {
+        return await NextAuthRouteHandler(
+          req as unknown as NextRequest,
+          res as RouteHandlerContext,
+          args[0]
+        )
+      }
+      return await NextAuthApiHandler(
+        req as NextApiRequest,
+        res as NextApiResponse,
+        args[0]
+      )
+    }
   }
 
-  return NextAuthNextHandler(args[0], args[1], args[2])
+  if ((args[1] as any)?.params) {
+    return NextAuthRouteHandler(
+      ...(args as unknown as Parameters<typeof NextAuthRouteHandler>)
+    )
+  }
+
+  return NextAuthApiHandler(...args)
 }
 
 export default NextAuth
 
-let experimentalWarningShown = false
 let experimentalRSCWarningShown = false
-export async function unstable_getServerSession(
-  ...args:
-    | [
-        GetServerSidePropsContext["req"],
-        GetServerSidePropsContext["res"],
-        NextAuthOptions
-      ]
-    | [NextApiRequest, NextApiResponse, NextAuthOptions]
-    | [NextAuthOptions]
-    | []
-): Promise<Session | null> {
-  if (!experimentalWarningShown && process.env.NODE_ENV !== "production") {
-    console.warn(
-      "[next-auth][warn][EXPERIMENTAL_API]",
-      "\n`unstable_getServerSession` is experimental and may be removed or changed in the future, as the name suggested.",
-      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
-      `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
-    )
-    experimentalWarningShown = true
-  }
 
+type GetServerSessionOptions = Partial<Omit<AuthOptions, "callbacks">> & {
+  callbacks?: Omit<AuthOptions["callbacks"], "session"> & {
+    session?: (...args: Parameters<CallbacksOptions["session"]>) => any
+  }
+}
+
+type GetServerSessionParams<O extends GetServerSessionOptions> =
+  | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"], O]
+  | [NextApiRequest, NextApiResponse, O]
+  | [O]
+  | []
+
+export async function getServerSession<
+  O extends GetServerSessionOptions,
+  R = O["callbacks"] extends { session: (...args: any[]) => infer U }
+    ? U
+    : Session
+>(...args: GetServerSessionParams<O>): Promise<R | null> {
   const isRSC = args.length === 0 || args.length === 1
   if (
     !experimentalRSCWarningShown &&
@@ -114,16 +177,17 @@ export async function unstable_getServerSession(
   ) {
     console.warn(
       "[next-auth][warn][EXPERIMENTAL_API]",
-      "\n`unstable_getServerSession` is used in a React Server Component.",
-      `\nhttps://next-auth.js.org/configuration/nextjs#unstable_getServerSession}`,
+      "\n`getServerSession` is used in a React Server Component.",
+      `\nhttps://next-auth.js.org/configuration/nextjs#getServerSession}`,
       `\nhttps://next-auth.js.org/warnings#EXPERIMENTAL_API`
     )
     experimentalRSCWarningShown = true
   }
 
-  let req, res, options: NextAuthOptions
+  let req, res, options: AuthOptions
   if (isRSC) {
-    options = args[0] ?? { providers: [] }
+    options = Object.assign({}, args[0], { providers: [] })
+
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { headers, cookies } = require("next/headers")
     req = {
@@ -138,15 +202,14 @@ export async function unstable_getServerSession(
   } else {
     req = args[0]
     res = args[1]
-    options = args[2]
+    options = Object.assign({}, args[2], { providers: [] })
   }
 
-  options.secret = options.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??= process.env.NEXTAUTH_SECRET
 
-  const session = await NextAuthHandler<Session | {} | string>({
+  const session = await AuthHandler<Session | {} | string>({
     options,
     req: {
-      host: detectHost(req.headers["x-forwarded-host"]),
       action: "session",
       method: "GET",
       cookies: req.cookies,
@@ -162,12 +225,31 @@ export async function unstable_getServerSession(
     if (status === 200) {
       // @ts-expect-error
       if (isRSC) delete body.expires
-      return body as Session
+      return body as R
     }
     throw new Error((body as any).message)
   }
 
   return null
+}
+
+let deprecatedWarningShown = false
+
+/** @deprecated renamed to `getServerSession` */
+export async function unstable_getServerSession<
+  O extends GetServerSessionOptions,
+  R = O["callbacks"] extends { session: (...args: any[]) => infer U }
+    ? U
+    : Session
+>(...args: GetServerSessionParams<O>): Promise<R | null> {
+  if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
+    console.warn(
+      "`unstable_getServerSession` has been renamed to `getServerSession`."
+    )
+    deprecatedWarningShown = true
+  }
+
+  return await getServerSession(...args)
 }
 
 declare global {

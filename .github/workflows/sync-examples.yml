@@ -9,10 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run GitHub File Sync
-        # Can update to v1 when https://github.com/BetaHuhn/repo-file-sync-action/issues/168 is resolved
-        uses: BetaHuhn/repo-file-sync-action@v1.16.5
+        uses: balazsorban44/repo-file-sync-action@master
         with:
-          GH_PAT: ${{ secrets.SYNC_EXAMPLE_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          IS_FINE_GRAINED: true
           SKIP_PR: true
+          ORIGINAL_MESSAGE: true

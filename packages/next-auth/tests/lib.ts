@@ -1,6 +1,6 @@
 import { createHash } from "crypto"
-import { NextAuthHandler } from "../src/core"
-import type { LoggerInstance, NextAuthOptions } from "../src"
+import { AuthHandler } from "../src/core"
+import type { LoggerInstance, AuthOptions } from "../src"
 import type { Adapter } from "../src/adapters"
 
 export const mockLogger: () => LoggerInstance = () => ({
@@ -17,7 +17,7 @@ interface HandlerOptions {
 }
 
 export async function handler(
-  options: NextAuthOptions,
+  options: AuthOptions,
   { prod, path, params, requestInit }: HandlerOptions
 ) {
   // @ts-expect-error
@@ -30,7 +30,7 @@ export async function handler(
   )
   const req = new Request(url, { headers: { host: "" }, ...requestInit })
   const logger = mockLogger()
-  const response = await NextAuthHandler({
+  const response = await AuthHandler({
     req,
     options: { secret: "secret", ...options, logger },
   })
@@ -63,6 +63,14 @@ export function mockAdapter(): Adapter {
     createVerificationToken: jest.fn(() => {}),
     useVerificationToken: jest.fn(() => {}),
     getUserByEmail: jest.fn(() => {}),
-  }
+  } as unknown as Adapter
   return adapter
+}
+
+export function compareDates(a: Date, b: Date) {
+  expect(a.getFullYear()).toEqual(b.getFullYear())
+  expect(a.getMonth()).toEqual(b.getMonth())
+  expect(a.getFullYear()).toEqual(b.getFullYear())
+  expect(a.getHours()).toEqual(b.getHours())
+  expect(a.getMinutes()).toEqual(b.getMinutes())
 }

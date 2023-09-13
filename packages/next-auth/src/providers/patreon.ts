@@ -29,6 +29,14 @@ export default function Patreon<P extends PatreonProfile>(
         image: profile.data.attributes.image_url,
       }
     },
+    style: {
+      logo: "/patreon.svg",
+      logoDark: "/patreon.svg",
+      bg: "#fff",
+      text: "#e85b46",
+      bgDark: "#000",
+      textDark: "#e85b46",
+    },
     options,
   }
 }

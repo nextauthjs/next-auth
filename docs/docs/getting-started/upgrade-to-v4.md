@@ -1,9 +1,8 @@
 ---
-id: upgrade-v4
 title: Upgrade Guide (v4)
 ---
 
-NextAuth.js version 4 includes a few breaking changes from the last major version (3.x). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4 release by following the next few migration steps.
+Auth.js version 4 includes a few breaking changes from the last major version (3.x). So we're here to help you upgrade your applications as smoothly as possible. It should be possible to upgrade from any version of 3.x to the latest 4 release by following the next few migration steps.
 
 :::note
 Version 4 has been released to GA 🚨
@@ -13,7 +12,7 @@ We encourage users to try it out and report any and all issues they come across.
 
 You can upgrade to the new version by running:
 
-```bash npm2yarn2pnpm
+```bash npm2yarn
 npm install next-auth
 ```
 
@@ -40,8 +39,8 @@ For example:
 
 We've also made the following changes to the names of the exports:
 
-- `setOptions`: Not exposed anymore, use [`SessionProvider` props](https://next-auth.js.org/getting-started/client#options)
-- `options`: Not exposed anymore, [use `SessionProvider` props](https://next-auth.js.org/getting-started/client#options)
+- `setOptions`: Not exposed anymore, use [`SessionProvider` props](/reference/react/#sessionprovider)
+- `options`: Not exposed anymore, [use `SessionProvider` props](/reference/react/#sessionprovider)
 - `session`: Renamed to `getSession`
 - `providers`: Renamed to `getProviders`
 - `csrfToken`: Renamed to `getCsrfToken`
@@ -108,7 +107,7 @@ The following new options are available when defining your Providers in the conf
 3. `userinfo` (replaces `profileUrl`)
 4. `issuer`(replaces `domain`)
 
-For more details on their usage, please see [options](/configuration/providers/oauth#options) section of the OAuth Provider documentation.
+For more details on their usage, please see [options](/reference/providers/oauth) section of the OAuth Provider documentation.
 
 When submitting a new OAuth provider to the repository, the `profile` callback is expected to only return these fields from now on: `id`, `name`, `email`, and `image`. If any of these are missing values, they should be set to `null`.
 
@@ -127,7 +126,7 @@ The `useSession` hook has been updated to return an object. This allows you to t
 + const loading = status === "loading"
 ```
 
-[Check the docs](https://next-auth.js.org/getting-started/client#usesession) for the possible values of both `session.status` and `session.data`.
+[Check the docs](/reference/react/#usesession) for the possible values of both `session.status` and `session.data`.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.18
 
@@ -180,7 +179,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 
 ## JWT configuration
 
-We have removed some of the [configuration options](/configuration/options) when using JSON Web Tokens, [here's the PR](https://github.com/nextauthjs/next-auth/pull/3039) for more context.
+We have removed some of the [configuration options](/reference/configuration/auth-config) when using JSON Web Tokens, [here's the PR](https://github.com/nextauthjs/next-auth/pull/3039) for more context.
 
 ```diff
 export default NextAuth({
@@ -223,7 +222,7 @@ export default NextAuth({
 The logger API has been simplified to use at most two parameters, where the second is usually an object (`metadata`) containing an `error` object. If you are not using the logger settings you can ignore this change.
 
 ```diff
-// [...nextauth.js]
+// [...Auth.js]
 import log from "some-logger-service"
 ...
 logger: {
@@ -240,7 +239,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 
 ## `nodemailer`
 
-Like `typeorm` and `prisma`, [`nodemailer`](https://npmjs.com/package/nodemailer) is no longer included as a dependency by default. If you are using the Email provider you must install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/configuration/providers/email#options-1#:~:text=sendVerificationRequest) callback. This reduces bundle size for those not actually using the Email provider. Remember, when using the Email provider, it is mandatory to also use a database adapter due to the fact that verification tokens need to be persisted longer term for the magic link functionality to work.
+Like `typeorm` and `prisma`, [`nodemailer`](https://npmjs.com/package/nodemailer) is no longer included as a dependency by default. If you are using the Email provider you must install it in your project manually, or use any other Email library in the [`sendVerificationRequest`](/guides/providers/email) callback. This reduces bundle size for those not actually using the Email provider. Remember, when using the Email provider, it is mandatory to also use a database adapter due to the fact that verification tokens need to be persisted longer term for the magic link functionality to work.
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.2
 
@@ -260,7 +259,7 @@ theme: {
 
 The hope is that with some minimal configuration / customization options, users won't immediately feel the need to replace the built-in pages with their own.
 
-More details and screenshots of the new theme options can be found under [configuration/pages](https://next-auth.js.org/configuration/pages#theming).
+More details and screenshots of the new theme options can be found under [custom pages tutorial](/guides/basics/pages).
 
 Introduced in https://github.com/nextauthjs/next-auth/pull/2788
 
@@ -270,7 +269,7 @@ The `session.jwt: boolean` option has been renamed to `session.strategy: "jwt" |
 
 1. No adapter, `strategy: "jwt"`: This is the default. The session is saved in a cookie and never persisted anywhere.
 2. With Adapter, `strategy: "database"`: If an Adapter is defined, this will be the implicit setting. No user config is needed.
-3. With Adapter, `strategy: "jwt"`: The user can explicitly instruct `next-auth` to use JWT even if a database is available. This can result in faster lookups in compromise of lowered security. Read more about: https://next-auth.js.org/faq#json-web-tokens
+3. With Adapter, `strategy: "jwt"`: The user can explicitly instruct `next-auth` to use JWT even if a database is available. This can result in faster lookups in compromise of lowered security. Read more about: https://authjs.dev/concepts/faq#json-web-tokens
 
 Example:
 
@@ -287,9 +286,9 @@ Introduced in https://github.com/nextauthjs/next-auth/pull/3144
 
 Most importantly, the core `next-auth` package no longer ships with `typeorm` or any other database adapter by default. This brings the default bundle size down significantly for those not needing to persist user data to a database.
 
-You can find the official Adapters in the `packages` directory in the primary monorepo ([nextauthjs/next-auth](https://github.com/nextauthjs/next-auth)). Although you can still [create your own](/tutorials/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
+You can find the official Adapters in the `packages` directory in the primary monorepo ([nextauthjs/next-auth](https://github.com/nextauthjs/next-auth)). Although you can still [create your own](/guides/adapters/creating-a-database-adapter) with a new, [simplified Adapter API](https://github.com/nextauthjs/next-auth/pull/2361).
 
-If you have a database that was created with a `3.x.x` or earlier version of NextAuth.js, you will need to run a migration to update the schema to the new version 4 database model. See the bottom of this migration guide for database specific migration examples.
+If you have a database that was created with a `3.x.x` or earlier version of Auth.js, you will need to run a migration to update the schema to the new version 4 database model. See the bottom of this migration guide for database specific migration examples.
 
 1. If you use the built-in TypeORM or Prisma adapters, these have been removed from the core `next-auth` package. Thankfully the migration is easy; you just need to install the external packages for your database and change the import in your `[...nextauth].js`.
 
@@ -311,7 +310,7 @@ export default NextAuth({
 
 3. The `typeorm-legacy` adapter has been upgraded to use the newer adapter API, but has retained the `typeorm-legacy` name. We aim to migrate this to individual lighter weight adapters for each database type in the future, or switch out `typeorm`.
 
-4. MongoDB has been moved to its own adapter under `@next-auth/mongodb-adapter`. See the [MongoDB Adapter docs](/adapters/mongodb).
+4. MongoDB has been moved to its own adapter under `@next-auth/mongodb-adapter`. See the [MongoDB Adapter docs](/reference/adapters/mongodb).
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8 and https://github.com/nextauthjs/next-auth/pull/2361
 
@@ -319,7 +318,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8
 
 **This does not require any changes from the user - these are adapter specific changes only**
 
-The Adapter API has been rewritten and significantly simplified in NextAuth.js v4. The adapters now have less work to do as some functionality has been migrated to the core of NextAuth, like hashing the [verification token](/adapters/models/#verification-token).
+The Adapter API has been rewritten and significantly simplified in NextAuth v4. The adapters now have less work to do as some functionality has been migrated to the core of NextAuth, like hashing the [verification token](/reference/adapters/models/#verification-token).
 
 If you are an adapter maintainer or are interested in writing your own adapter, you can find more information about this change in https://github.com/nextauthjs/next-auth/pull/2361 and release https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.22.
 
@@ -405,11 +404,11 @@ VerificationToken {
 </pre>
 </details>
 
-For more info, see the [Models page](/adapters/models).
+For more info, see the [Models page](/reference/adapters/models).
 
 ### Database migration
 
-NextAuth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
+Auth.js v4 has a slightly different database schema compared to v3. If you're using any of our adapters and want to upgrade, you can use on of the below schemas.
 
 They are designed to be run directly against the database itself. So instead of having one in Prisma syntax, one in TypeORM syntax, etc. we've decided to just make one for each underlying database type. i.e. one for Postgres, one for MySQL, one for MongoDB, etc.
 
@@ -425,7 +424,7 @@ RENAME COLUMN "provider_id" "provider"
 RENAME COLUMN "provider_account_id" "providerAccountId"
 DROP COLUMN "provider_type"
 DROP COLUMN "compound_id"
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -441,7 +440,7 @@ ADD COLUMN "oauth_token" varchar(255) NULL
 /* USER */
 ALTER TABLE users
 RENAME COLUMN "email_verified" "emailVerified"
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -451,7 +450,7 @@ RENAME COLUMN "session_token" "sessionToken"
 CHANGE "user_id" "userId" varchar(255)
 ADD CONSTRAINT fk_user_id FOREIGN KEY (userId) REFERENCES users(id)
 DROP COLUMN "access_token"
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 
@@ -459,7 +458,7 @@ DROP COLUMN "updated_at"
 ALTER TABLE verification_requests RENAME verification_tokens
 ALTER TABLE verification_tokens
 DROP COLUMN id
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 DROP COLUMN "created_at"
 DROP COLUMN "updated_at"
 ```
@@ -487,7 +486,7 @@ ALTER TABLE accounts ALTER COLUMN "providerAccountId" TYPE TEXT;
 ALTER TABLE accounts ADD CONSTRAINT fk_user_id FOREIGN KEY ("userId") REFERENCES users(id);
 ALTER TABLE accounts
 DROP COLUMN IF EXISTS "compound_id";
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE accounts
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -512,7 +511,7 @@ ALTER TABLE users ALTER COLUMN "email" TYPE TEXT;
 ALTER TABLE users ALTER COLUMN "image" TYPE TEXT;
 /* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
 ALTER TABLE users ALTER COLUMN "emailVerified" TYPE TEXT USING CAST(CAST(extract(epoch FROM "emailVerified") AS BIGINT)*1000 AS TEXT);
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE users
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -529,7 +528,7 @@ ALTER TABLE sessions ADD CONSTRAINT fk_user_id FOREIGN KEY ("userId") REFERENCES
 /* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
 ALTER TABLE sessions ALTER COLUMN "expires" TYPE TEXT USING CAST(CAST(extract(epoch FROM "expires") AS BIGINT)*1000 AS TEXT);
 ALTER TABLE sessions DROP COLUMN IF EXISTS "access_token";
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE sessions
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -542,7 +541,7 @@ ALTER TABLE verification_tokens ALTER COLUMN "identifier" TYPE TEXT;
 ALTER TABLE verification_tokens ALTER COLUMN "token" TYPE TEXT;
 /* Do conversion of TIMESTAMPTZ to BIGINT and then TEXT */
 ALTER TABLE verification_tokens ALTER COLUMN "expires" TYPE TEXT USING CAST(CAST(extract(epoch FROM "expires") AS BIGINT)*1000 AS TEXT);
-/* The following two timestamp columns have never been necessary for NextAuth.js to function, but can be kept if you want */
+/* The following two timestamp columns have never been necessary for Auth.js to function, but can be kept if you want */
 ALTER TABLE verification_tokens
 DROP COLUMN IF EXISTS "created_at",
 DROP COLUMN IF EXISTS "updated_at";
@@ -576,7 +575,7 @@ db.getCollection('sessions').updateMany({}, {
 
 ## Missing `secret`
 
-NextAuth.js used to generate a secret for convenience, when the user did not define one. This might have been useful in development, but can be a concern in production. We have always been clear about that in the docs, but from now on, if you forget to define a `secret` property in production, we will show the user an error page. Read more about this option [here](https://next-auth.js.org/configuration/options#secret)
+Auth.js used to generate a secret for convenience, when the user did not define one. This might have been useful in development, but can be a concern in production. We have always been clear about that in the docs, but from now on, if you forget to define a `secret` property in production, we will show the user an error page. Read more about this option [here](/reference/configuration/auth-config#secret)
 
 You can generate a secret to be placed in the `secret` configuration option via the following command:
 
@@ -584,7 +583,7 @@ You can generate a secret to be placed in the `secret` configuration option via 
 $ openssl rand -base64 32
 ```
 
-Therefore, your NextAuth.js config should look something like this:
+Therefore, your Auth.js config should look something like this:
 
 ```javascript title="/pages/api/auth/[...nextauth].js"
 ...
@@ -600,11 +599,11 @@ Introduced in https://github.com/nextauthjs/next-auth/issues/3143
 
 ## Session `strategy`
 
-We have always supported two different session strategies. The first being our most popular and default strategy - the JWT based one. The second is the database adapter persisted session strategy. Both have their advantages/disadvantages, you can learn more about them on the [FAQ](https://next-auth.js.org/faq) page.
+We have always supported two different session strategies. The first being our most popular and default strategy - the JWT based one. The second is the database adapter persisted session strategy. Both have their advantages/disadvantages, you can learn more about them on the [FAQ](/concepts/faq) page.
 
 Previously, the way you configured this was through the `jwt: boolean` flag in the `session` option. The names `session` and `jwt` might have been a bit overused in the options, and so for a clearer message, we renamed this option to `strategy: "jwt" | "database"`, it is still in the `session` object. This will hopefully better indicate the purpose of this option as well as make very explicit which type of session you are going to use.
 
-See the [`session` option docs](https://next-auth.js.org/configuration/options#session) for more details.
+See the [`session` option docs](/reference/configuration/auth-config#session) for more details.
 
 Introduced in https://github.com/nextauthjs/next-auth/pull/3144
 

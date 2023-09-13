@@ -49,6 +49,14 @@ export default function Slack<P extends SlackProfile>(
         image: profile.picture,
       }
     },
+    style: {
+      logo: "/slack.svg",
+      logoDark: "/slack.svg",
+      bg: "#fff",
+      text: "#000",
+      bgDark: "#000",
+      textDark: "#fff",
+    },
     options,
   }
 }

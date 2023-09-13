@@ -14,7 +14,7 @@ export const Account = {
   expires_at: { type: DataTypes.INTEGER },
   token_type: { type: DataTypes.STRING },
   scope: { type: DataTypes.STRING },
-  id_token: { type: DataTypes.STRING },
+  id_token: { type: DataTypes.TEXT },
   session_state: { type: DataTypes.STRING },
   userId: { type: DataTypes.UUID },
 }

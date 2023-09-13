@@ -1,0 +1,221 @@
+import * as jwt from "../jwt.js"
+import { createCallbackUrl } from "./callback-url.js"
+import * as cookie from "./cookie.js"
+import { createCSRFToken } from "./csrf-token.js"
+import { defaultCallbacks } from "./default-callbacks.js"
+import { AdapterError, EventError } from "../errors.js"
+import parseProviders from "./providers.js"
+import { logger, type LoggerInstance } from "./utils/logger.js"
+import parseUrl from "./utils/parse-url.js"
+
+import type {
+  AuthConfig,
+  EventCallbacks,
+  InternalOptions,
+  RequestInternal,
+} from "../types.js"
+
+interface InitParams {
+  url: URL
+  authOptions: AuthConfig
+  providerId?: string
+  action: InternalOptions["action"]
+  /** Callback URL value extracted from the incoming request. */
+  callbackUrl?: string
+  /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
+  csrfToken?: string
+  /** Is the incoming request a POST request? */
+  csrfDisabled: boolean
+  isPost: boolean
+  cookies: RequestInternal["cookies"]
+}
+
+/** Initialize all internal options and cookies. */
+export async function init({
+  authOptions,
+  providerId,
+  action,
+  url: reqUrl,
+  cookies: reqCookies,
+  callbackUrl: reqCallbackUrl,
+  csrfToken: reqCsrfToken,
+  csrfDisabled,
+  isPost,
+}: InitParams): Promise<{
+  options: InternalOptions
+  cookies: cookie.Cookie[]
+}> {
+  // TODO: move this to web.ts
+  const parsed = parseUrl(
+    reqUrl.origin +
+      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
+  )
+  const url = new URL(parsed.toString())
+
+  const { providers, provider } = parseProviders({
+    providers: authOptions.providers,
+    url,
+    providerId,
+    options: authOptions,
+  })
+
+  const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
+
+  let isOnRedirectProxy = false
+  if (
+    (provider?.type === "oauth" || provider?.type === "oidc") &&
+    provider.redirectProxyUrl
+  ) {
+    try {
+      isOnRedirectProxy =
+        new URL(provider.redirectProxyUrl).origin === url.origin
+    } catch {
+      throw new TypeError(
+        `redirectProxyUrl must be a valid URL. Received: ${provider.redirectProxyUrl}`
+      )
+    }
+  }
+
+  // User provided options are overridden by other options,
+  // except for the options with special handling above
+  const options: InternalOptions = {
+    debug: false,
+    pages: {},
+    theme: {
+      colorScheme: "auto",
+      logo: "",
+      brandColor: "",
+      buttonText: "",
+    },
+    // Custom options override defaults
+    ...authOptions,
+    // These computed settings can have values in userOptions but we override them
+    // and are request-specific.
+    url,
+    action,
+    // @ts-expect-errors
+    provider,
+    cookies: {
+      ...cookie.defaultCookies(
+        authOptions.useSecureCookies ?? url.protocol === "https:"
+      ),
+      // Allow user cookie options to override any cookie settings above
+      ...authOptions.cookies,
+    },
+    providers,
+    // Session options
+    session: {
+      // If no adapter specified, force use of JSON Web Tokens (stateless)
+      strategy: authOptions.adapter ? "database" : "jwt",
+      maxAge,
+      updateAge: 24 * 60 * 60,
+      generateSessionToken: () => crypto.randomUUID(),
+      ...authOptions.session,
+    },
+    // JWT options
+    jwt: {
+      // Asserted in assert.ts
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      secret: authOptions.secret!,
+      maxAge: authOptions.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
+      encode: jwt.encode,
+      decode: jwt.decode,
+      ...authOptions.jwt,
+    },
+    // Event messages
+    events: eventsErrorHandler(authOptions.events ?? {}, logger),
+    adapter: adapterErrorHandler(authOptions.adapter, logger),
+    // Callback functions
+    callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
+    logger,
+    callbackUrl: url.origin,
+    isOnRedirectProxy,
+  }
+
+  // Init cookies
+
+  const cookies: cookie.Cookie[] = []
+
+  if (!csrfDisabled) {
+    const {
+      csrfToken,
+      cookie: csrfCookie,
+      csrfTokenVerified,
+    } = await createCSRFToken({
+      options,
+      cookieValue: reqCookies?.[options.cookies.csrfToken.name],
+      isPost,
+      bodyValue: reqCsrfToken,
+    })
+
+    options.csrfToken = csrfToken
+    options.csrfTokenVerified = csrfTokenVerified
+
+    if (csrfCookie) {
+      cookies.push({
+        name: options.cookies.csrfToken.name,
+        value: csrfCookie,
+        options: options.cookies.csrfToken.options,
+      })
+    }
+  }
+
+  const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
+    options,
+    cookieValue: reqCookies?.[options.cookies.callbackUrl.name],
+    paramValue: reqCallbackUrl,
+  })
+  options.callbackUrl = callbackUrl
+  if (callbackUrlCookie) {
+    cookies.push({
+      name: options.cookies.callbackUrl.name,
+      value: callbackUrlCookie,
+      options: options.cookies.callbackUrl.options,
+    })
+  }
+
+  return { options, cookies }
+}
+
+type Method = (...args: any[]) => Promise<any>
+
+/** Wraps an object of methods and adds error handling. */
+function eventsErrorHandler(
+  methods: Partial<EventCallbacks>,
+  logger: LoggerInstance
+): Partial<EventCallbacks> {
+  return Object.keys(methods).reduce<any>((acc, name) => {
+    acc[name] = async (...args: any[]) => {
+      try {
+        const method: Method = methods[name as keyof Method]
+        return await method(...args)
+      } catch (e) {
+        logger.error(new EventError(e as Error))
+      }
+    }
+    return acc
+  }, {})
+}
+
+/** Handles adapter induced errors. */
+function adapterErrorHandler(
+  adapter: AuthConfig["adapter"],
+  logger: LoggerInstance
+) {
+  if (!adapter) return
+
+  return Object.keys(adapter).reduce<any>((acc, name) => {
+    acc[name] = async (...args: any[]) => {
+      try {
+        logger.debug(`adapter_${name}`, { args })
+        const method: Method = adapter[name as keyof Method]
+        return await method(...args)
+      } catch (e) {
+        const error = new AdapterError(e as Error)
+        logger.error(error)
+        throw error
+      }
+    }
+    return acc
+  }, {})
+}

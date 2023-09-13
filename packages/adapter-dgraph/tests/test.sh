@@ -21,7 +21,7 @@ dgraph/standalone
 
 echo "Waiting 15 sec for db to start..." && sleep 15
 
-head -n -1 src/graphql/schema.gql > tests/test.schema.gql
+head -n -1 src/lib/graphql/schema.gql > tests/test.schema.gql
 PUBLIC_KEY=$(sed 's/$/\\n/' tests/public.key | tr -d '\n')
 echo "# Dgraph.Authorization {\"VerificationKey\":\"$PUBLIC_KEY\",\"Namespace\":\"https://dgraph.io/jwt/claims\",\"Header\":\"Authorization\",\"Algo\":\"RS256\"}" >> tests/test.schema.gql
 

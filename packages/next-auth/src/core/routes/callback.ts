@@ -4,7 +4,7 @@ import { hashToken } from "../lib/utils"
 import getAdapterUserFromEmail from "../lib/email/getUserFromEmail"
 
 import type { InternalOptions } from "../types"
-import type { RequestInternal, OutgoingResponse } from ".."
+import type { RequestInternal, ResponseInternal } from ".."
 import type { Cookie, SessionStore } from "../lib/cookie"
 import type { User } from "../.."
 import type { AdapterSession } from "../../adapters"
@@ -18,7 +18,7 @@ export default async function callback(params: {
   headers: RequestInternal["headers"]
   cookies: RequestInternal["cookies"]
   sessionStore: SessionStore
-}): Promise<OutgoingResponse> {
+}): Promise<ResponseInternal> {
   const { options, query, body, method, headers, sessionStore } = params
   const {
     provider,
@@ -130,6 +130,7 @@ export default async function callback(params: {
             account,
             profile: OAuthProfile,
             isNewUser,
+            trigger: isNewUser ? "signUp" : "signIn",
           })
 
           // Encode token
@@ -269,6 +270,7 @@ export default async function callback(params: {
           user,
           account,
           isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
         })
 
         // Encode token
@@ -393,6 +395,7 @@ export default async function callback(params: {
       // @ts-expect-error
       account,
       isNewUser: false,
+      trigger: "signIn",
     })
 
     // Encode token

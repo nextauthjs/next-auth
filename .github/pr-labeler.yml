@@ -1,71 +1,27 @@
 # https://github.com/actions/labeler#create-githublabeleryml
-
-test:
-  - test/**/*
-  - types/tests/**/*
-
-providers:
-  - packages/next-auth/src/providers/**/*
-  - test/integration/**/*
-
-adapters:
-  - packages/next-auth/src/adapters.ts
-  - packages/adapter-*/**
-
-dgraph:
-  - packages/adapter-dgraph/**
-
-dynamodb:
-  - packages/adapter-dynamodb/**
-
-fauna:
-  - packages/adapter-fauna/**
-
-firebase:
-  - packages/adapter-firebase/**
-
-mikro-orm:
-  - packages/adapter-mikro-orm/**
-
-mongodb:
-  - packages/adapter-mongodb/**
-
-neo4j:
-  - packages/adapter-neo4j/**
-
-pouchdb:
-  - packages/adapter-pouchdb/**
-
-prisma:
-  - packages/adapter-prisma/**
-
-sequelize:
-  - packages/adapter-sequelize/**
-
-typeorm-legacy:
-  - packages/adapter-typeorm-legacy/**
-
-upstash-redis:
-  - packages/adapter-upstash-redis/**
-
-xata:
-  - packages/adapter-xata/**
-
-core:
-  - packages/next-auth/src/**/*
-
-style:
-  - packages/next-auth/src/css/**/*
-
-client:
-  - packages/next-auth/src/client/**/*
-  - packages/next-auth/src/react/**/*
-
-pages:
-  - packages/next-auth/src/core/pages/**/*
-
-TypeScript:
-  - packages/next-auth/src/**/types.ts
-
-documentation:
-  - packages/docs/docs/**/*
+adapters: ["packages/core/src/adapters.ts", "packages/adapter-*/**/*"]
+core: ["packages/core/src/**/*"]
+dgraph: ["packages/adapter-dgraph/**/*"]
+documentation: ["packages/docs/docs/**/*"]
+dynamodb: ["packages/adapter-dynamodb/**/*"]
+examples: ["apps/examples/**/*"]
+fauna: ["packages/adapter-fauna/**/*"]
+firebase: ["packages/adapter-firebase/**/*"]
+frameworks: ["packages/frameworks-*/**/*"]
+legacy: ["packages/next-auth/**/*"]
+mikro-orm: ["packages/adapter-mikro-orm/**/*"]
+mongodb: ["packages/adapter-mongodb/**/*"]
+neo4j: ["packages/adapter-neo4j/**/*"]
+playgrounds: ["apps/playgrounds/**/*"]
+pouchdb: ["packages/adapter-pouchdb/**/*"]
+prisma: ["packages/adapter-prisma/**/*"]
+kysely: ["packages/adapter-kysely/**/*"]
+providers: ["packages/core/src/providers/**/*"]
+sequelize: ["packages/adapter-sequelize/**/*"]
+solidjs: ["packages/frameworks-solid-start/**/*"]
+supabase: ["packages/adapter-supabase/**/*"]
+svelte: ["packages/frameworks-sveltekit/**/*"]
+test: ["**test**/*"]
+typeorm: ["packages/adapter-typeorm/**/*"]
+upstash-redis: ["packages/adapter-upstash-redis/**/*"]
+xata: ["packages/adapter-xata/**/*"]

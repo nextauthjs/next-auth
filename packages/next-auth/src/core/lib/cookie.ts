@@ -93,6 +93,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         sameSite: "lax",
         path: "/",
         secure: useSecureCookies,
+        maxAge: 60 * 15, // 15 minutes in seconds
       },
     },
     state: {
@@ -102,6 +103,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         sameSite: "lax",
         path: "/",
         secure: useSecureCookies,
+        maxAge: 60 * 15, // 15 minutes in seconds
       },
     },
     nonce: {

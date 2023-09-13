@@ -6,6 +6,11 @@
   margin-right: 1rem !important;
 }
 
+.navbar__logo {
+  width: 29px;
+  height: 32px;
+}
+
 .navbar__title {
   font-size: 1.2rem;
   margin-left: 0.2rem;
@@ -86,7 +91,7 @@ html[data-theme="dark"] .navbar__item.navbar__link[href*="npm"]:before {
   position: absolute;
   color: #000;
   top: -10px;
-  right: -45px;
+  right: 4px;
   font-size: 9px;
   background-color: #ccc;
   padding: 2px 5px;

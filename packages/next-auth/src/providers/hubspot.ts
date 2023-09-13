@@ -64,6 +64,14 @@ export default function HubSpot<P extends HubSpotProfile>(
         image: null,
       }
     },
+    style: {
+      logo: "/hubspot.svg",
+      logoDark: "/hubspot-dark.svg",
+      bg: "#fff",
+      text: "#ff7a59",
+      bgDark: "#ff7a59",
+      textDark: "#fff",
+    },
     options,
   }
 }

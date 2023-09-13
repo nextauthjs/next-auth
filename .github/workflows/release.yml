@@ -3,11 +3,62 @@ name: Release
 on:
   push:
     branches:
-      - "main"
-      - "beta"
-      - "next"
-      - "3.x"
+      - main
+      - beta
+      - next
+      - 3.x
   pull_request:
+  # TODO: Support latest releases
+  workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: Package name (npm)
+        options:
+          - "@auth/core"
+          - "@auth/dgraph-adapter"
+          - "@auth/drizzle-adapter"
+          - "@auth/dynamodb-adapter"
+          - "@auth/fauna-adapter"
+          - "@auth/firebase-adapter"
+          - "@auth/mikro-orm-adapter"
+          - "@auth/mongodb-adapter"
+          - "@auth/neo4j-adapter"
+          - "@auth/pouchdb-adapter"
+          - "@auth/prisma-adapter"
+          - "@auth/sequelize-adapter"
+          - "@auth/supabase-adapter"
+          - "@auth/typeorm-adapter"
+          - "@auth/upstash-redis-adapter"
+          - "@auth/xata-adapter"
+          - "next-auth"
+      # TODO: Infer from package name
+      path:
+        type: choice
+        description: Directory name (packages/*)
+        options:
+          - "core"
+          - "frameworks-nextjs"
+          - "adapter-dgraph"
+          - "adapter-drizzle"
+          - "adapter-dynamodb"
+          - "adapter-fauna"
+          - "adapter-firebase"
+          - "adapter-mikro-orm"
+          - "adapter-mongodb"
+          - "adapter-neo4j"
+          - "adapter-pouchdb"
+          - "adapter-prisma"
+          - "adapter-sequelize"
+          - "adapter-supabase"
+          - "adapter-typeorm"
+          - "adapter-upstash-redis"
+          - "adapter-xata"
+          - "next-auth"
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  FORCE_COLOR: true
 
 jobs:
   test:
@@ -15,13 +66,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Init
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: 7.5.1
+        uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -33,9 +82,26 @@ jobs:
         run: pnpm build
       - name: Run tests
         run: pnpm test
+        timeout-minutes: 15
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+      # - name: Run E2E tests
+      #   if: github.repository == 'nextauthjs/next-auth'
+      #   run: pnpm e2e
+      #   timeout-minutes: 15
+      #   env:
+      #     AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+      #     AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+      #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      #     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      # - name: Upload E2E artifacts
+      #   if: github.repository == 'nextauthjs/next-auth'
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: playwright-report
+      #     path: apps/dev/nextjs/playwright-report/
+      #     retention-days: 30
       # - name: Coverage
       #   uses: codecov/codecov-action@v1
       #   with:
@@ -49,13 +115,12 @@ jobs:
     environment: Production
     steps:
       - name: Init
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_PAT_CLASSIC }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: 7.5.1
+        uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -64,15 +129,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
-        run: |
-          git config --global user.email "balazsorban44@users.noreply.github.com"
-          git config --global user.name "Balázs Orbán"
-          pnpm release
+        run: pnpm release
         env:
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          NPM_TOKEN_PKG: ${{ secrets.NPM_TOKEN_PKG }}
-          NPM_TOKEN_ORG: ${{ secrets.NPM_TOKEN_ORG }}
+          # Use GH_PAT when this is fixed:
+          # https://github.com/github/roadmap/issues/622
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_CLASSIC }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
@@ -81,11 +143,9 @@ jobs:
     environment: Preview
     steps:
       - name: Init
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: 7.5.1
+        uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -100,19 +160,52 @@ jobs:
           PR_NUMBER: ${{ github.event.number }}
       - name: Publish to npm
         run: |
-          cd packages/next-auth
+          cd packages/core
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           pnpm publish --no-git-checks --access public --tag experimental
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_PKG }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Comment version on PR
-        uses: NejcZdovc/comment-pr@v1
+        uses: NejcZdovc/comment-pr@v2
         with:
           message:
-            "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/next-auth/v/${{ env.VERSION }})!\n \
-            ```sh\npnpm add next-auth@${{ env.VERSION }}\n```\n \
-            ```sh\nyarn add next-auth@${{ env.VERSION }}\n```\n \
-            ```sh\nnpm i next-auth@${{ env.VERSION }}\n```"
+            "🎉 Experimental release [published 📦️ on npm](https://npmjs.com/package/@auth/core/v/${{ env.VERSION }})!\n \
+            ```sh\npnpm add @auth/core@${{ env.VERSION }}\n```\n \
+            ```sh\nyarn add @auth/core@${{ env.VERSION }}\n```\n \
+            ```sh\nnpm i @auth/core@${{ env.VERSION }}\n```"
         env:
           VERSION: ${{ steps.determine-version.outputs.version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+  release-manual:
+    name: Publish manually
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Init
+        uses: actions/checkout@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Determine version
+        uses: ./.github/version-pr
+        id: determine-version
+        env:
+          PACKAGE_PATH: ${{ github.event.inputs.path }}
+      - name: Publish to npm
+        run: |
+          pnpm build
+          cd packages/$PACKAGE_PATH
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          pnpm publish --no-git-checks --access public --tag experimental
+          echo "🎉 Experimental release published 📦️ on npm: https://npmjs.com/package/${{ github.event.inputs.name }}/v/${{ env.VERSION }}"
+          echo "Install via: pnpm add ${{ github.event.inputs.name }}@${{ env.VERSION }}"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_PATH: ${{ github.event.inputs.path }}
+          VERSION: ${{ steps.determine-version.outputs.version }}

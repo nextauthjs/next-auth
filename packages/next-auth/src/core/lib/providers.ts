@@ -1,11 +1,7 @@
 import { merge } from "../../utils/merge"
 
-import type { InternalProvider } from "../types"
-import type {
-  InternalOAuthConfig,
-  OAuthConfig,
-  Provider,
-} from "../../providers"
+import type { InternalProvider, OAuthConfigInternal } from "../types"
+import type { OAuthConfig, Provider } from "../../providers"
 import type { InternalUrl } from "../../utils/parse-url"
 
 /**
@@ -59,7 +55,7 @@ function normalizeOAuthOptions(
   if (!oauthOptions) return
 
   const normalized = Object.entries(oauthOptions).reduce<
-    InternalOAuthConfig<Record<string, unknown>>
+    OAuthConfigInternal<Record<string, unknown>>
   >(
     (acc, [key, value]) => {
       if (
