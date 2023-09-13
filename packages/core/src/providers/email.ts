@@ -1,16 +1,30 @@
 import type { CommonProviderOptions } from "./index.js"
 import type { Awaitable, Theme } from "../types.js"
-
-import { Transport, TransportOptions, createTransport } from "nodemailer"
-import * as JSONTransport from "nodemailer/lib/json-transport/index.js"
-import * as SendmailTransport from "nodemailer/lib/sendmail-transport/index.js"
-import * as SESTransport from "nodemailer/lib/ses-transport/index.js"
-import * as SMTPTransport from "nodemailer/lib/smtp-transport/index.js"
-import * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
-import * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
+import type { Transport, TransportOptions } from "nodemailer"
+import type * as JSONTransport from "nodemailer/lib/json-transport/index.js"
+import type * as SendmailTransport from "nodemailer/lib/sendmail-transport/index.js"
+import type * as SESTransport from "nodemailer/lib/ses-transport/index.js"
+import type * as SMTPTransport from "nodemailer/lib/smtp-transport/index.js"
+import type * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
+import type * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
 
 // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html for the string
-type AllTransportOptions = string | SMTPTransport | SMTPTransport.Options | SMTPPool | SMTPPool.Options | SendmailTransport | SendmailTransport.Options | StreamTransport | StreamTransport.Options | JSONTransport | JSONTransport.Options | SESTransport | SESTransport.Options | Transport<any> | TransportOptions
+type AllTransportOptions =
+  | string
+  | SMTPTransport
+  | SMTPTransport.Options
+  | SMTPPool
+  | SMTPPool.Options
+  | SendmailTransport
+  | SendmailTransport.Options
+  | StreamTransport
+  | StreamTransport.Options
+  | JSONTransport
+  | JSONTransport.Options
+  | SESTransport
+  | SESTransport.Options
+  | Transport<any>
+  | TransportOptions
 
 export interface SendVerificationRequestParams {
   identifier: string
@@ -108,7 +122,6 @@ export interface EmailConfig extends CommonProviderOptions {
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
 }
-
 
 // TODO: Rename to Token provider
 // when started working on https://github.com/nextauthjs/next-auth/discussions/1465
@@ -355,6 +368,7 @@ export default function Email(config: EmailUserConfig): EmailConfig {
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
     async sendVerificationRequest(params) {
+      const { createTransport } = await import("nodemailer")
       const { identifier, url, provider, theme } = params
       const { host } = new URL(url)
       const transport = createTransport(provider.server)
