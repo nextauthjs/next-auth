@@ -3,6 +3,9 @@
 dgraph:
   - "@auth/dgraph-adapter"
 
+drizzle:
+  - "@auth/drizzle-adapter"
+
 dynamodb:
   - "@auth/dynamodb-adapter"
 
@@ -11,6 +14,9 @@ fauna:
 
 firebase:
   - "@auth/firebase-adapter"
+
+kysely:
+  - "@auth/kysely-adapter"
 
 mikro-orm:
   - "@auth/mikro-orm-adapter"

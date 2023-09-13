@@ -39,7 +39,7 @@ import Yandex from "@auth/core/providers/yandex"
 import Vk from "@auth/core/providers/vk"
 import Wikimedia from "@auth/core/providers/wikimedia"
 import WorkOS from "@auth/core/providers/workos"
-
+import ClickUp from '@auth/core/providers/click-up'
 // // Prisma
 // import { PrismaClient } from "@prisma/client"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -131,6 +131,7 @@ export const authConfig: AuthConfig = {
     Vk({ clientId: process.env.VK_ID, clientSecret: process.env.VK_SECRET }),
     Wikimedia({ clientId: process.env.WIKIMEDIA_ID, clientSecret: process.env.WIKIMEDIA_SECRET }),
     WorkOS({ clientId: process.env.WORKOS_ID, clientSecret: process.env.WORKOS_SECRET }),
+    ClickUp({ clientId: process.env.CLICK_UP_ID, clientSecret: process.env.CLICK_UP_SECRET })
   ],
   // debug: process.env.NODE_ENV !== "production",
 }

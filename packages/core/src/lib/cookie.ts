@@ -162,8 +162,8 @@ export class SessionStore {
    get value() {
     // Sort the chunks by their keys before joining
     const sortedKeys = Object.keys(this.#chunks).sort((a, b) => {
-      const aSuffix = parseInt(a.split(".")[1] || "0");
-      const bSuffix = parseInt(b.split(".")[1] || "0");
+      const aSuffix = parseInt(a.split(".").pop() || "0");
+      const bSuffix = parseInt(b.split(".").pop() || "0");
   
       return aSuffix - bSuffix;
     });

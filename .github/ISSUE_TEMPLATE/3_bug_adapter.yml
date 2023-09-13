@@ -22,9 +22,11 @@ body:
       options:
         - "Custom adapter"
         - "@auth/dgraph-adapter"
+        - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
         - "@auth/fauna-adapter"
         - "@auth/firebase-adapter"
+        - "@auth/kysely-adapter"
         - "@auth/mikro-orm-adapter"
         - "@auth/mongodb-adapter"
         - "@auth/neo4j-adapter"

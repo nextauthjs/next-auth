@@ -35,7 +35,7 @@
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.14",
     "tsup": "^6.5.0",
-    "typescript": "^4.8.2"
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
     "@auth/core": "~0.2.2 || ^0.2.2",

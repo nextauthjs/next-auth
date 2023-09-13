@@ -27,15 +27,15 @@
     "styled-components": "5.3.6"
   },
   "devDependencies": {
-    "@docusaurus/core": "2.3.1",
-    "@docusaurus/eslint-plugin": "2.3.1",
-    "@docusaurus/module-type-aliases": "2.3.1",
-    "@docusaurus/preset-classic": "2.3.1",
-    "@docusaurus/theme-common": "2.3.1",
-    "@docusaurus/theme-mermaid": "2.3.1",
-    "@docusaurus/types": "2.3.1",
+    "@docusaurus/core": "2.4.1",
+    "@docusaurus/eslint-plugin": "2.4.1",
+    "@docusaurus/module-type-aliases": "2.4.1",
+    "@docusaurus/preset-classic": "2.4.1",
+    "@docusaurus/theme-common": "2.4.1",
+    "@docusaurus/theme-mermaid": "2.4.1",
+    "@docusaurus/types": "2.4.1",
     "docusaurus-plugin-typedoc": "1.0.0-next.5",
-    "typedoc": "^0.24.4",
+    "typedoc": "^0.24.8",
     "typedoc-plugin-markdown": "4.0.0-next.6"
   },
   "browserslist": {

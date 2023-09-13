@@ -213,7 +213,25 @@ const docusaurusConfig = {
           breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
+          /**
+           *
+           * @param {{
+           *  version: string;
+           *  versionDocsDirPath: string;
+           *  docPath: string;
+           *  permalink: string;
+           *  locale: string;
+           *}} params
+           */
+          editUrl({ docPath }) {
+            // TODO: support other packages, fix directory links like "providers"
+            if (docPath.includes("reference/core")) {
+              const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
+              const base = `https://github.com/nextauthjs/next-auth/edit/main/packages/core/src/${file}`
+              return base
+            }
+            return "https://github.com/nextauthjs/next-auth/edit/main/docs"
+          },
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
@@ -265,9 +283,11 @@ const docusaurusConfig = {
       ? []
       : [
           typedocAdapter("Dgraph"),
+          typedocAdapter("Drizzle"),
           typedocAdapter("DynamoDB"),
           typedocAdapter("Fauna"),
           typedocAdapter("Firebase"),
+          typedocAdapter("Kysely"),
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),
           typedocAdapter("Neo4j"),
