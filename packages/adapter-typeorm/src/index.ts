@@ -288,6 +288,7 @@ export function TypeORMAdapter(
   const c = {
     dataSource,
     entities: {
+      ...entities,
       UserEntity: entities?.UserEntity ?? defaultEntities.UserEntity,
       SessionEntity: entities?.SessionEntity ?? defaultEntities.SessionEntity,
       AccountEntity: entities?.AccountEntity ?? defaultEntities.AccountEntity,
