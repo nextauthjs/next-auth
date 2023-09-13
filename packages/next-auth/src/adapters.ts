@@ -3,7 +3,7 @@ import { Account, User, Awaitable } from "."
 export interface AdapterUser extends User {
   id: string
   email: string
-  emailVerified?: Date | null
+  emailVerified: Date | null
 }
 
 export interface AdapterAccount extends Account {
@@ -62,18 +62,18 @@ export interface VerificationToken {
 export type Adapter<WithVerificationToken = boolean> = DefaultAdapter &
   (WithVerificationToken extends true
     ? {
-      createVerificationToken: (
-        verificationToken: VerificationToken
-      ) => Awaitable<VerificationToken | null | undefined>
-      /**
-       * Return verification token from the database
-       * and delete it so it cannot be used again.
-       */
-      useVerificationToken: (params: {
-        identifier: string
-        token: string
-      }) => Awaitable<VerificationToken | null>
-    }
+        createVerificationToken: (
+          verificationToken: VerificationToken
+        ) => Awaitable<VerificationToken | null | undefined>
+        /**
+         * Return verification token from the database
+         * and delete it so it cannot be used again.
+         */
+        useVerificationToken: (params: {
+          identifier: string
+          token: string
+        }) => Awaitable<VerificationToken | null>
+      }
     : {})
 
 export interface DefaultAdapter {
@@ -84,7 +84,9 @@ export interface DefaultAdapter {
   getUserByAccount: (
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ) => Awaitable<AdapterUser | null>
-  updateUser: (user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>) => Awaitable<AdapterUser>
+  updateUser: (
+    user: Partial<AdapterUser> & Pick<AdapterUser, "id">
+  ) => Awaitable<AdapterUser>
   /** @todo Implement */
   deleteUser?: (
     userId: string
