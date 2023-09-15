@@ -160,10 +160,10 @@ async function getProfile({
     return {
       profile,
       account: {
+        ...tokens,
         provider: provider.id,
         type: provider.type,
         providerAccountId: profile.id.toString(),
-        ...tokens,
       },
       OAuthProfile,
     }
