@@ -8,6 +8,7 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
   <a href="/reference/adapter/d1" class="adapter-card">
     <img src="/img/adapters/d1.svg" width="40" />
     <h4 class="adapter-card__title">D1 Adapter</h4>
+  </a>
   <a href="/reference/adapter/edgedb" class="adapter-card">
     <img src="/img/adapters/edgedb.svg" width="30" />
     <h4 class="adapter-card__title">EdgeDB Adapter</h4>
