@@ -2,16 +2,23 @@
 title: Overview
 ---
 
-Using a Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
+Using an Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
 
 <div class="adapter-card-list">
   <a href="/reference/adapter/d1" class="adapter-card">
     <img src="/img/adapters/d1.svg" width="40" />
     <h4 class="adapter-card__title">D1 Adapter</h4>
+  <a href="/reference/adapter/edgedb" class="adapter-card">
+    <img src="/img/adapters/edgedb.svg" width="30" />
+    <h4 class="adapter-card__title">EdgeDB Adapter</h4>
   </a>
   <a href="/reference/adapter/dgraph" class="adapter-card">
     <img src="/img/adapters/dgraph.png" width="30" />
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
+  </a>
+   <a href="/reference/adapter/drizzle" class="adapter-card">
+    <img src="/img/adapters/drizzle-orm.png" width="30" />
+    <h4 class="adapter-card__title">Drizzle Adapter</h4>
   </a>
   <a href="/reference/adapter/dynamodb" class="adapter-card">
     <img src="/img/adapters/dynamodb.png" width="30" />
@@ -24,6 +31,10 @@ Using a Auth.js / NextAuth.js adapter you can connect to any database service or
   <a href="/reference/adapter/firebase" class="adapter-card">
     <img src="/img/adapters/firebase.svg" width="40" />
     <h4 class="adapter-card__title">Firebase Adapter</h4>
+  </a>
+  <a href="/reference/adapter/kysely" class="adapter-card">
+    <img src="/img/adapters/kysely.svg" width="40" />
+    <h4 class="adapter-card__title">Kysely Adapter</h4>
   </a>
   <a href="/reference/adapter/mikro-orm" class="adapter-card">
     <img src="/img/adapters/mikro-orm.png" width="30" />
@@ -73,7 +84,7 @@ If you don't find an adapter for the database or service you use, you can always
 
 ## Models
 
-Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this. Each adapter's model/schema will be slightly adapted for its needs, but will look very much like this schema below:
+Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this:
 
 ```mermaid
 erDiagram
@@ -105,8 +116,6 @@ erDiagram
       string scope
       string id_token
       string session_state
-      string oauth_token_secret
-      string oauth_token
     }
     VerificationToken {
       string identifier
@@ -115,10 +124,10 @@ erDiagram
     }
 ```
 
-More information about each Model / Table can be found below.
+More information about each Model/Table can be found below.
 
 :::note
-You can [create your own adapter](/guides/adapters/creating-a-database-adapter) if you want to use Auth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
+You can [create your adapter](/guides/adapters/creating-a-database-adapter) if you want to use Auth.js with a database that is not supported out of the box, or you have to change fields on any of the models.
 :::
 
 ---
@@ -127,30 +136,31 @@ You can [create your own adapter](/guides/adapters/creating-a-database-adapter) 
 
 The User model is for information such as the user's name and email address.
 
-Email address is optional, but if one is specified for a User then it must be unique.
+Email address is optional, but if one is specified for a User, then it must be unique.
 
 :::note
-If a user first signs in with OAuth then their email address is automatically populated using the one from their OAuth profile, if the OAuth provider returns one.
+If a user first signs in with an OAuth provider, then their email address is automatically populated using the one from their OAuth profile if the OAuth provider returns one.
 
-This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in future (if the [Email Provider](/getting-started/email-tutorial) is configured).
+This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in the future (if the [Email Provider](/reference/core/providers_email) is configured).
 :::
 
-User creation in the database is automatic, and happens when the user is logging in for the first time with a provider. The default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
+User creation in the database is automatic and happens when the user is logging in for the first time with a provider.
+If the first sign-in is via the [OAuth Provider](/reference/core/providers_oauth), the default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
+
+If the first sign-in is via the [Email Provider](/reference/core/providers_email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
 
 ### Account
 
-The Account model is for information about OAuth accounts associated with a User. It will usually contain `access_token`, `id_token` and other OAuth specific data. [`TokenSet`](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-tokensetinput) from `openid-client` might give you an idea of all the fields.
-
-:::note
-In case of an OAuth 1.0 provider (like Twitter), you will have to look for `oauth_token` and `oauth_token_secret` string fields. GitHub also has an extra `refresh_token_expires_in` integer field. You have to make sure that your database schema includes these fields.
-:::
+The Account model is for information about OAuth accounts associated with a User
 
 A single User can have multiple Accounts, but each Account can only have one User.
 
-Linking Accounts to Users happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/concepts/faq#security) for more information why this is a requirement.
+Account creation in the database is automatic and happens when the user is logging in for the first time with a provider, or the [`Adapter.linkAccount`](/reference/core/adapters#linkaccount) method is invoked. The default data saved is `access_token`, `expires_at`, `refresh_token`, `id_token`, `token_type`, `scope` and `session_state`. You can save other fields or remove the ones you don't need by returning them in the [OAuth provider](/guides/providers/custom-provider)'s [`account()`](/reference/core/providers#account) callback.
+
+Linking Accounts to Users happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/concepts/faq#security) for more information on why this is a requirement.
 
 :::tip
-You can manually unlink accounts, if your adapter implements the `unlinkAccount` method. Make sure to take all the necessary security steps to avoid data loss.
+You can manually unlink accounts if your adapter implements the `unlinkAccount` method. Make sure to take all the necessary security steps to avoid data loss.
 :::
 
 :::note
@@ -164,7 +174,7 @@ The Session model is used for database sessions. It is not used if JSON Web Toke
 A single User can have multiple Sessions, each Session can only have one User.
 
 :::tip
-When a Session is read, we check if it's `expires` field indicates an invalid session, and delete it from the database. You can also do this clean-up periodically in the background to avoid our extra delete call to the database during an active session retrieval. This might result in a slight performance increase in a few cases.
+When a Session is read, we check if its `expires` field indicates an invalid session, and delete it from the database. You can also do this clean-up periodically in the background to avoid our extra delete call to the database during an active session retrieval. This might result in a slight performance increase in a few cases.
 :::
 
 ### Verification Token
@@ -173,7 +183,7 @@ The Verification Token model is used to store tokens for passwordless sign in.
 
 A single User can have multiple open Verification Tokens (e.g. to sign in to different devices).
 
-It has been designed to be extendable for other verification purposes in the future (e.g. 2FA / short codes).
+It has been designed to be extendable for other verification purposes in the future (e.g. 2FA / magic codes, etc.).
 
 :::note
 Auth.js makes sure that every token is usable only once, and by default has a short (1 day, can be configured by [`maxAge`](/guides/providers/email)) lifetime. If your user did not manage to finish the sign-in flow in time, they will have to start the sign-in process again.
@@ -185,7 +195,7 @@ Due to users forgetting or failing at the sign-in flow, you might end up with un
 
 ## RDBMS Naming Convention
 
-Auth.js / NextAuth.js uses `camelCase` for its own database rows, while respecting the conventional `snake_case` formatting for OAuth related values. If mixed casing is an issue for you, most adapters have a dedicated section on how to use a single naming convention.
+Auth.js / NextAuth.js uses `camelCase` for its database rows while respecting the conventional `snake_case` formatting for OAuth-related values. If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
 
 ## TypeScript
 

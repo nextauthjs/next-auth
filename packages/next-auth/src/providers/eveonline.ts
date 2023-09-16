@@ -17,8 +17,7 @@ export default function EVEOnline<P extends EVEOnlineProfile>(
     id: "eveonline",
     name: "EVE Online",
     type: "oauth",
-    authorization:
-      "https://login.eveonline.com/v2/oauth/authorize?scope=publicData",
+    authorization: "https://login.eveonline.com/v2/oauth/authorize?scope=publicData",
     token: "https://login.eveonline.com/v2/oauth/token",
     userinfo: "https://login.eveonline.com/oauth/verify",
     profile(profile) {

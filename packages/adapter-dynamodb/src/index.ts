@@ -9,12 +9,11 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dyanamodb-adapter
+ * npm install next-auth @auth/dynamodb-adapter
  * ```
  *
- * @module @next-auth/dyanamodb-adapter
+ * @module @auth/dynamodb-adapter
  */
-import { v4 as uuid } from "uuid"
 
 import type {
   BatchWriteCommandInput,
@@ -26,7 +25,7 @@ import type {
   AdapterAccount,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 export interface DynamoDBAdapterOptions {
   tableName?: string
@@ -53,12 +52,12 @@ export interface DynamoDBAdapterOptions {
  * import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
  * import NextAuth from "next-auth";
  * import Providers from "next-auth/providers";
- * import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
+ * import { DynamoDBAdapter } from "@auth/dynamodb-adapter"
  *
  * const config: DynamoDBClientConfig = {
  *   credentials: {
- *     accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY as string,
- *     secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY as string,
+ *     accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY,
+ *     secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY,
  *   },
  *   region: process.env.NEXT_AUTH_AWS_REGION,
  * };
@@ -187,7 +186,7 @@ export function DynamoDBAdapter(
     async createUser(data) {
       const user: AdapterUser = {
         ...(data as any),
-        id: uuid(),
+        id: crypto.randomUUID(),
       }
 
       await client.put({
@@ -266,9 +265,8 @@ export function DynamoDBAdapter(
       const data = await client.update({
         TableName,
         Key: {
-          // next-auth type is incorrect it should be Partial<AdapterUser> & {id: string} instead of just Partial<AdapterUser>
-          [pk]: `USER#${user.id as string}`,
-          [sk]: `USER#${user.id as string}`,
+          [pk]: `USER#${user.id}`,
+          [sk]: `USER#${user.id}`,
         },
         UpdateExpression,
         ExpressionAttributeNames,
@@ -312,7 +310,7 @@ export function DynamoDBAdapter(
     async linkAccount(data) {
       const item = {
         ...data,
-        id: uuid(),
+        id: crypto.randomUUID(),
         [pk]: `USER#${data.userId}`,
         [sk]: `ACCOUNT#${data.provider}#${data.providerAccountId}`,
         [GSI1PK]: `ACCOUNT#${data.provider}`,
@@ -376,7 +374,7 @@ export function DynamoDBAdapter(
     },
     async createSession(data) {
       const session = {
-        id: uuid(),
+        id: crypto.randomUUID(),
         ...data,
       }
       await client.put({

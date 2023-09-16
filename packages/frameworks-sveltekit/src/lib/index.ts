@@ -204,6 +204,7 @@
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
+import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
@@ -211,12 +212,13 @@ import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export async function getSession(
   req: Request,
-  config: AuthConfig
+  config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["getSession"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL("/api/auth/session", req.url)
+  const prefix = config.prefix ?? `${base}/auth`
+  const url = new URL(prefix + "/session", req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
 
@@ -235,7 +237,7 @@ export interface SvelteKitAuthConfig extends AuthConfig {
    * If you change the default value,
    * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
    *
-   * @default "/auth"
+   * @default `${base}/auth` - `base` is the base path of your SvelteKit app, configured in `svelte.config.js`.
    */
   prefix?: string
 }
@@ -259,7 +261,7 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
       typeof svelteKitAuthOptions === "object"
         ? svelteKitAuthOptions
         : await svelteKitAuthOptions(event)
-    const { prefix = "/auth" } = authOptions
+    const { prefix = `${base}/auth` } = authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
@@ -284,6 +286,7 @@ export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAut
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    options.prefix ??= `${base}/auth`
   }
   return AuthHandle(options)
 }

@@ -113,7 +113,7 @@ export default async function callbackHandler(params: {
     session = useJwtSession
       ? {}
       : await createSession({
-          sessionToken: generateSessionToken(),
+          sessionToken: await generateSessionToken(),
           userId: user.id,
           expires: fromDate(options.session.maxAge),
         })
@@ -143,7 +143,7 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-            sessionToken: generateSessionToken(),
+            sessionToken: await generateSessionToken(),
             userId: userByAccount.id,
             expires: fromDate(options.session.maxAge),
           })
@@ -216,7 +216,7 @@ export default async function callbackHandler(params: {
       session = useJwtSession
         ? {}
         : await createSession({
-            sessionToken: generateSessionToken(),
+            sessionToken: await generateSessionToken(),
             userId: user.id,
             expires: fromDate(options.session.maxAge),
           })

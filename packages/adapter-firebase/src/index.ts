@@ -12,10 +12,10 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/firebase-adapter firebase-admin
+ * npm install @auth/firebase-adapter firebase-admin
  * ```
  *
- * @module @next-auth/firebase-adapter
+ * @module @auth/firebase-adapter
  */
 
 import { type AppOptions, getApps, initializeApp } from "firebase-admin/app"
@@ -33,7 +33,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 /** Configure the Firebase Adapter. */
 export interface FirebaseAdapterConfig extends AppOptions {
@@ -52,7 +52,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
    * @example
    * ```ts title="pages/api/auth/[...nextauth].ts"
    * import NextAuth from "next-auth"
-   * import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+   * import { FirestoreAdapter } from "@auth/firebase-adapter"
    *
    * export default NextAuth({
    *  adapter: FirestoreAdapter({ namingStrategy: "snake_case" })
@@ -78,7 +78,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
  * @example
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
- * import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+ * import { FirestoreAdapter } from "@auth/firebase-adapter"
  *
  * export default NextAuth({
  *   adapter: FirestoreAdapter(),
@@ -95,7 +95,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
  * @example
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
- * import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+ * import { FirestoreAdapter } from "@auth/firebase-adapter"
  * import { cert } from "firebase-admin/app"
  *
  * export default NextAuth({
@@ -125,7 +125,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
  * @example
  * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
- * import { FirestoreAdapter } from "@next-auth/firebase-adapter"
+ * import { FirestoreAdapter } from "@auth/firebase-adapter"
  * import { firestore } from "lib/firestore"
  *
  * export default NextAuth({
@@ -428,7 +428,7 @@ export function collectionsFactory(
  *
  * @example
  * ```ts title="lib/firestore.ts"
- * import { initFirestore } from "@next-auth/firebase-adapter"
+ * import { initFirestore } from "@auth/firebase-adapter"
  * import { cert } from "firebase-admin/app"
  *
  * export const firestore = initFirestore({

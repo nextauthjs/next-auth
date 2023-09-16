@@ -88,7 +88,7 @@ export function assertConfig(
   }
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
-    options.useSecureCookies ?? url.protocol === "https://"
+    options.useSecureCookies ?? url.protocol === "https:"
   )
   const callbackUrlCookie =
     request.cookies?.[
@@ -101,7 +101,8 @@ export function assertConfig(
     )
   }
 
-  for (const provider of options.providers) {
+  for (const p of options.providers) {
+    const provider = typeof p === "function" ? p() : p
     if (
       (provider.type === "oauth" || provider.type === "oidc") &&
       !(provider.issuer ?? provider.options?.issuer)
@@ -127,7 +128,7 @@ export function assertConfig(
   if (hasCredentials) {
     const dbStrategy = options.session?.strategy === "database"
     const onlyCredentials = !options.providers.some(
-      (p) => p.type !== "credentials"
+      (p) => (typeof p === "function" ? p() : p).type !== "credentials"
     )
     if (dbStrategy && onlyCredentials) {
       return new UnsupportedStrategy(
@@ -135,9 +136,10 @@ export function assertConfig(
       )
     }
 
-    const credentialsNoAuthorize = options.providers.some(
-      (p) => p.type === "credentials" && !p.authorize
-    )
+    const credentialsNoAuthorize = options.providers.some((p) => {
+      const provider = typeof p === "function" ? p() : p
+      return provider.type === "credentials" && !provider.authorize
+    })
     if (credentialsNoAuthorize) {
       return new MissingAuthorize(
         "Must define an authorize() handler to use credentials authentication provider"

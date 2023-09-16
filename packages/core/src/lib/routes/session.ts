@@ -6,10 +6,13 @@ import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
 import type { SessionStore } from "../cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
-export async function session(
-  sessionStore: SessionStore,
+export async function session(params: {
   options: InternalOptions
-): Promise<ResponseInternal<Session | {}>> {
+  sessionStore: SessionStore
+  isUpdate?: boolean
+  newSession?: any
+}): Promise<ResponseInternal<Session | null>> {
+  const { options, sessionStore, newSession, isUpdate } = params
   const {
     adapter,
     jwt,
@@ -19,8 +22,8 @@ export async function session(
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
   } = options
 
-  const response: ResponseInternal<Session | {}> = {
-    body: {},
+  const response: ResponseInternal<Session | null> = {
+    body: null,
     headers: { "Content-Type": "application/json" },
     cookies: [],
   }
@@ -33,23 +36,24 @@ export async function session(
     try {
       const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
 
-      const newExpires = fromDate(sessionMaxAge)
-
-      // By default, only exposes a limited subset of information to the client
-      // as needed for presentation purposes (e.g. "you are logged in as...").
-      const session = {
-        user: {
-          name: decodedToken?.name,
-          email: decodedToken?.email,
-          image: decodedToken?.picture,
-        },
-        expires: newExpires.toISOString(),
-      }
+      if (!decodedToken) throw new Error("Invalid JWT")
 
       // @ts-expect-error
-      const token = await callbacks.jwt({ token: decodedToken })
+      const token = await callbacks.jwt({
+        token: decodedToken,
+        ...(isUpdate && { trigger: "update" }),
+        session: newSession,
+      })
+
+      const newExpires = fromDate(sessionMaxAge)
 
       if (token !== null) {
+        // By default, only exposes a limited subset of information to the client
+        // as needed for presentation purposes (e.g. "you are logged in as...").
+        const session = {
+          user: { name: token.name, email: token.email, image: token.picture },
+          expires: newExpires.toISOString(),
+        }
         // @ts-expect-error
         const newSession = await callbacks.session({ session, token })
 
@@ -125,14 +129,12 @@ export async function session(
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
         session: {
-          user: {
-            name: user.name,
-            email: user.email,
-            image: user.image,
-          },
+          user: { name: user.name, email: user.email, image: user.image },
           expires: session.expires.toISOString(),
         },
         user,
+        newSession,
+        ...(isUpdate ? { trigger: "update" } : {}),
       })
 
       // Return session payload as response

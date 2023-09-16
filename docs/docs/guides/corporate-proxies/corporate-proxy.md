@@ -24,7 +24,7 @@ index 77161bd..1082fba 100644
 
  var _openidClient = require("openid-client");
 
-+var HttpsProxyAgent = require("https-proxy-agent");
++import { HttpsProxyAgent } from 'https-proxy-agent';
 +
  async function openidClient(options) {
    const provider = options.provider;

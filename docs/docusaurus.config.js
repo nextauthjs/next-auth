@@ -7,7 +7,7 @@ const path = require("path")
 const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
-  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .filter((file) => file.endsWith(".ts"))
   .map((p) => `${coreSrc}/providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
@@ -213,7 +213,25 @@ const docusaurusConfig = {
           breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
+          /**
+           *
+           * @param {{
+           *  version: string;
+           *  versionDocsDirPath: string;
+           *  docPath: string;
+           *  permalink: string;
+           *  locale: string;
+           *}} params
+           */
+          editUrl({ docPath }) {
+            // TODO: support other packages, fix directory links like "providers"
+            if (docPath.includes("reference/core")) {
+              const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
+              const base = `https://github.com/nextauthjs/next-auth/edit/main/packages/core/src/${file}`
+              return base
+            }
+            return "https://github.com/nextauthjs/next-auth/edit/main/docs"
+          },
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
@@ -261,33 +279,28 @@ const docusaurusConfig = {
         },
       },
     ],
-    typedocAdapter("D1"),
-    typedocAdapter("Dgraph"),
-    typedocAdapter("DynamoDB"),
-    typedocAdapter("Fauna"),
-    typedocAdapter("Firebase"),
-    typedocAdapter("Mikro ORM"),
-    typedocAdapter("MongoDB"),
-    typedocAdapter("Neo4j"),
-    typedocAdapter("PouchDB"),
-    typedocAdapter("Prisma"),
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "typeorm",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: [`../packages/adapter-typeorm-legacy/src/index.ts`],
-        tsconfig: `../packages/adapter-typeorm-legacy/tsconfig.json`,
-        out: `reference/adapter/typeorm`,
-        sidebar: { indexLabel: "TypeORM" },
-      },
-    ],
-    typedocAdapter("Sequelize"),
-    typedocAdapter("Supabase"),
-    typedocAdapter("Upstash Redis"),
-    typedocAdapter("Xata"),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS
+      ? []
+      : [
+          typedocAdapter("D1"),
+          typedocAdapter("EdgeDb"),
+          typedocAdapter("Dgraph"),
+          typedocAdapter("Drizzle"),
+          typedocAdapter("DynamoDB"),
+          typedocAdapter("Fauna"),
+          typedocAdapter("Firebase"),
+          typedocAdapter("Kysely"),
+          typedocAdapter("Mikro ORM"),
+          typedocAdapter("MongoDB"),
+          typedocAdapter("Neo4j"),
+          typedocAdapter("PouchDB"),
+          typedocAdapter("Prisma"),
+          typedocAdapter("TypeORM"),
+          typedocAdapter("Sequelize"),
+          typedocAdapter("Supabase"),
+          typedocAdapter("Upstash Redis"),
+          typedocAdapter("Xata"),
+        ]),
   ],
 }
 

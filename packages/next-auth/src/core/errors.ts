@@ -72,16 +72,6 @@ export class InvalidCallbackUrl extends UnknownError {
   code = "INVALID_CALLBACK_URL_ERROR"
 }
 
-export class UnknownAction extends UnknownError {
-  name = "UnknownAction"
-  code = "UNKNOWN_ACTION_ERROR"
-}
-
-export class UntrustedHost extends UnknownError {
-  name = "UntrustedHost"
-  code = "UNTRUST_HOST_ERROR"
-}
-
 type Method = (...args: any[]) => Promise<any>
 
 export function upperSnake(s: string) {
