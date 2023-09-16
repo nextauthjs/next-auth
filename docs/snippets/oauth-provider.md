@@ -1,22 +1,20 @@
 Add $1 login to your page.
 
-## Example
-
 @example
 
 ```js
 import Auth from "@auth/core"
-import { $1 } from "@auth/core/providers/$2"
+import $1 from "@auth/core/providers/$2"
 
-const request = new Request("https://example.com")
-const resposne = await AuthHandler(request, {
-  providers: [$1({ clientId: "", clientSecret: "" })],
+const request = new Request(origin)
+const response = await Auth(request, {
+  providers: [$1({ clientId: $3CLIENT_ID, clientSecret: $3CLIENT_SECRET })],
 })
 ```
 
 ## Resources
 
-@see [Link 1](https://example.com)
+ - [$1 OAuth documentation](https://example.com)
 
 ## Notes
 

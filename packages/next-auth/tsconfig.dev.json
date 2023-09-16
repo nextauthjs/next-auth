@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "watch": true,
+    "emitDeclarationOnly": false
+  },
+  "watchOptions": {
+    "excludeDirectories": [
+      "lib",
+      "css",
+      "jwt",
+      "react",
+      "next",
+      "client",
+      "providers",
+      "core",
+      "utils"
+    ],
+    "excludeFiles": [
+      "index.d.ts",
+      "index.js",
+      "adapters.d.ts",
+      "middleware.d.ts",
+      "middleware.js"
+    ]
+  }
+}

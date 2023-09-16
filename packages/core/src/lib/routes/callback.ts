@@ -1,15 +1,20 @@
+import {
+  CallbackRouteError,
+  OAuthCallbackError,
+  Verification,
+} from "../../errors.js"
 import { handleLogin } from "../callback-handler.js"
-import { CallbackRouteError, Verification } from "../../errors.js"
 import { handleOAuth } from "../oauth/callback.js"
+import { handleState } from "../oauth/handle-state.js"
 import { createHash } from "../web.js"
-import { getAdapterUserFromEmail, handleAuthorized } from "./shared.js"
+import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"
 import type {
+  Account,
+  InternalOptions,
   RequestInternal,
   ResponseInternal,
-  InternalOptions,
-  Account,
 } from "../../types.js"
 import type { Cookie, SessionStore } from "../cookie.js"
 
@@ -43,26 +48,42 @@ export async function callback(params: {
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
+      const { proxyRedirect, randomState } = handleState(
+        query,
+        provider,
+        options.isOnRedirectProxy
+      )
+
+      if (proxyRedirect) {
+        logger.debug("proxy redirect", { proxyRedirect, randomState })
+        return { redirect: proxyRedirect }
+      }
+
       const authorizationResult = await handleOAuth(
         query,
         params.cookies,
-        options
+        options,
+        randomState
       )
 
       if (authorizationResult.cookies.length) {
         cookies.push(...authorizationResult.cookies)
       }
 
-      logger.debug("authroization result", authorizationResult)
+      logger.debug("authorization result", authorizationResult)
 
-      const { profile, account, OAuthProfile } = authorizationResult
+      const {
+        user: userFromProvider,
+        account,
+        profile: OAuthProfile,
+      } = authorizationResult
 
       // If we don't have a profile object then either something went wrong
       // or the user cancelled signing in. We don't know which, so we just
       // direct the user to the signin page for now. We could do something
       // else in future.
       // TODO: Handle user cancelling signin
-      if (!profile || !account || !OAuthProfile) {
+      if (!userFromProvider || !account || !OAuthProfile) {
         return { redirect: `${url}/signin`, cookies }
       }
 
@@ -70,7 +91,7 @@ export async function callback(params: {
       // Attempt to get Profile from OAuth provider details before invoking
       // signIn callback - but if no user object is returned, that is fine
       // (that just means it's a new user signing in for the first time).
-      let userOrProfile = profile
+      let userByAccountOrFromProvider
       if (adapter) {
         const { getUserByAccount } = adapter
         const userByAccount = await getUserByAccount({
@@ -78,11 +99,15 @@ export async function callback(params: {
           provider: provider.id,
         })
 
-        if (userByAccount) userOrProfile = userByAccount
+        if (userByAccount) userByAccountOrFromProvider = userByAccount
       }
 
       const unauthorizedOrError = await handleAuthorized(
-        { user: userOrProfile, account, profile: OAuthProfile },
+        {
+          user: userByAccountOrFromProvider,
+          account,
+          profile: OAuthProfile,
+        },
         options
       )
 
@@ -91,7 +116,7 @@ export async function callback(params: {
       // Sign user in
       const { user, session, isNewUser } = await handleLogin(
         sessionStore.value,
-        profile,
+        userFromProvider,
         account,
         options
       )
@@ -109,6 +134,7 @@ export async function callback(params: {
           account,
           profile: OAuthProfile,
           isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
         })
 
         // Clear cookies if token is null
@@ -139,8 +165,7 @@ export async function callback(params: {
         })
       }
 
-      // @ts-expect-error
-      await events.signIn?.({ user, account, profile, isNewUser })
+      await events.signIn?.({ user, account, profile: OAuthProfile, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -180,8 +205,11 @@ export async function callback(params: {
       const invalidInvite = !hasInvite || expired
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
-      // @ts-expect-error -- Verified in `assertConfig`.
-      const user = await getAdapterUserFromEmail(identifier, adapter)
+      const user = (await adapter!.getUserByEmail(identifier)) ?? {
+        id: identifier,
+        email: identifier,
+        emailVerified: null,
+      }
 
       const account: Account = {
         providerAccountId: user.email,
@@ -217,6 +245,7 @@ export async function callback(params: {
           user: loggedInUser,
           account,
           isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
         })
 
         // Clear cookies if token is null
@@ -264,7 +293,7 @@ export async function callback(params: {
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "credentials" && method === "POST") {
-      const credentials = body
+      const credentials = body ?? {}
 
       // TODO: Forward the original request as is, instead of reconstructing it
       Object.entries(query ?? {}).forEach(([k, v]) =>
@@ -313,6 +342,7 @@ export async function callback(params: {
         // @ts-expect-error
         account,
         isNewUser: false,
+        trigger: "signIn",
       })
 
       // Clear cookies if token is null
@@ -345,8 +375,18 @@ export async function callback(params: {
       cookies,
     }
   } catch (e) {
+    if (e instanceof OAuthCallbackError) {
+      logger.error(e)
+      // REVIEW: Should we expose original error= and error_description=
+      // Should we use a different name for error= then, since we already use it for all kind of errors?
+      url.searchParams.set("error", OAuthCallbackError.name)
+      url.pathname += "/signin"
+      return { redirect: url.toString(), cookies }
+    }
+
     const error = new CallbackRouteError(e as Error, { provider: provider.id })
 
+    logger.debug("callback route error details", { method, query, body })
     logger.error(error)
     url.searchParams.set("error", CallbackRouteError.name)
     url.pathname += "/error"

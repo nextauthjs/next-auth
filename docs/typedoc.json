@@ -1,23 +1,17 @@
 {
-  "excludeNotDocumented": true,
   "$schema": "https://typedoc.org/schema.json",
-  "allReflectionsHaveOwnDocument": true,
+  "cleanOutputDir": true,
   "disableSources": true,
-  "hideBreadcrumbs": true,
   "excludeExternals": true,
   "excludeInternal": true,
+  "excludeNotDocumented": true,
   "excludePrivate": true,
-  "cleanOutputDir": true,
   "excludeProtected": true,
+  "hideHierarchy": true,
   "gitRevision": "main",
+  "groupByReflections": false,
+  "hideBreadcrumbs": true,
   "hideGenerator": true,
-  "intentionallyNotExported": [
-    "ReturnTypes",
-    "CallbackParameters",
-    "JsonValue"
-  ],
-  "readme": "none",
-  "sort": ["kind", "static-first", "required-first", "alphabetical"],
   "kindSortOrder": [
     "Function",
     "TypeAlias",
@@ -41,5 +35,13 @@
     "IndexSignature",
     "GetSignature",
     "SetSignature"
+  ],
+  "readme": "none",
+  "reflectionsWithOwnFile": "none",
+  "sort": [
+    "kind",
+    "static-first",
+    "required-first",
+    "alphabetical"
   ]
 }

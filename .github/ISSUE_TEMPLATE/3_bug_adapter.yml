@@ -21,20 +21,22 @@ body:
       multiple: true
       options:
         - "Custom adapter"
-        - "@next-auth/dgraph-adapter"
-        - "@next-auth/dynamodb-adapter"
-        - "@next-auth/fauna-adapter"
-        - "@next-auth/firebase-adapter"
-        - "@next-auth/mikro-orm-adapter"
-        - "@next-auth/mongodb-adapter"
-        - "@next-auth/neo4j-adapter"
-        - "@next-auth/pouchdb-adapter"
-        - "@next-auth/prisma-adapter"
-        - "@next-auth/sequelize-adapter"
-        - "@next-auth/supabase-adapter"
-        - "@next-auth/typeorm-legacy-adapter"
-        - "@next-auth/upstash-redis-adapter"
-        - "@next-auth/xata-adapter"
+        - "@auth/dgraph-adapter"
+        - "@auth/drizzle-adapter"
+        - "@auth/dynamodb-adapter"
+        - "@auth/fauna-adapter"
+        - "@auth/firebase-adapter"
+        - "@auth/kysely-adapter"
+        - "@auth/mikro-orm-adapter"
+        - "@auth/mongodb-adapter"
+        - "@auth/neo4j-adapter"
+        - "@auth/pouchdb-adapter"
+        - "@auth/prisma-adapter"
+        - "@auth/sequelize-adapter"
+        - "@auth/supabase-adapter"
+        - "@auth/typeorm-adapter"
+        - "@auth/upstash-redis-adapter"
+        - "@auth/xata-adapter"
     validations:
       required: true
   - type: textarea
@@ -44,7 +46,7 @@ body:
         Run this command in your project's root folder and paste the result:
 
         ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth" && npx envinfo --npmPackages "@next-auth/*"
+        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth,@auth/*" && npx envinfo --npmPackages "@next-auth/*"
         ```
         Alternatively, if the above command did not work, we need the version of the following packages from your package.json: "next", "react", "next-auth" and your adapter. Please also mention your OS and Node.js version, as well as the browser you are using.
     validations:

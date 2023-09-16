@@ -1,4 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://fauna.com/features">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" height="30"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn2pnpm
+ * npm install @auth/fauna-adapter faunadb
+ * ```
+ *
+ * @module @auth/fauna-adapter
+ */
 import {
   Client as FaunaClient,
   ExprArg,
@@ -28,7 +44,7 @@ import {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 export const collections = {
   Users: Collection("users"),
@@ -108,6 +124,81 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
   }
 }
 
+/**
+ *
+ * ## Setup
+ *
+ * This is the Fauna Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+ *
+ * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
+ *
+ * ### Configure Auth.js
+ *
+ * ```javascript title="pages/api/auth/[...nextauth].js"
+ * import NextAuth from "next-auth"
+ * import { Client as FaunaClient } from "faunadb"
+ * import { FaunaAdapter } from "@auth/fauna-adapter"
+ *
+ * const client = new FaunaClient({
+ *   secret: "secret",
+ *   scheme: "http",
+ *   domain: "localhost",
+ *   port: 8443,
+ * })
+ *
+ * // For more information on each option (and a full list of options) go to
+ * // https://authjs.dev/reference/configuration/auth-options
+ * export default NextAuth({
+ *   // https://authjs.dev/reference/providers/
+ *   providers: [],
+ *   adapter: FaunaAdapter(client)
+ *   ...
+ * })
+ * ```
+ *
+ * ### Schema
+ *
+ * Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
+ *
+ * ```javascript
+ * CreateCollection({ name: "accounts" })
+ * CreateCollection({ name: "sessions" })
+ * CreateCollection({ name: "users" })
+ * CreateCollection({ name: "verification_tokens" })
+ * ```
+ *
+ * ```javascript
+ * CreateIndex({
+ *   name: "account_by_provider_and_provider_account_id",
+ *   source: Collection("accounts"),
+ *   unique: true,
+ *   terms: [
+ *     { field: ["data", "provider"] },
+ *     { field: ["data", "providerAccountId"] },
+ *   ],
+ * })
+ * CreateIndex({
+ *   name: "session_by_session_token",
+ *   source: Collection("sessions"),
+ *   unique: true,
+ *   terms: [{ field: ["data", "sessionToken"] }],
+ * })
+ * CreateIndex({
+ *   name: "user_by_email",
+ *   source: Collection("users"),
+ *   unique: true,
+ *   terms: [{ field: ["data", "email"] }],
+ * })
+ * CreateIndex({
+ *   name: "verification_token_by_identifier_and_token",
+ *   source: Collection("verification_tokens"),
+ *   unique: true,
+ *   terms: [{ field: ["data", "identifier"] }, { field: ["data", "token"] }],
+ * })
+ * ```
+ *
+ * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ **/
 export function FaunaAdapter(f: FaunaClient): Adapter {
   const { Users, Accounts, Sessions, VerificationTokens } = collections
   const {

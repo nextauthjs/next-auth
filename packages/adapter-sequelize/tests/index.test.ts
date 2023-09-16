@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 import SequelizeAdapter, { models } from "../src"
 
 const sequelize = new Sequelize({

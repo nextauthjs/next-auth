@@ -47,9 +47,8 @@ export default function Instagram(options) {
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/instagram.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/instagram.svg",
+      logo: "/instagram.svg",
+      logoDark: "/instagram.svg",
       bg: "#fff",
       text: "#000",
       bgDark: "#fff",
