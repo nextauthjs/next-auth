@@ -89,7 +89,7 @@ NEXTAUTH_SECRET="This is an example"
 `NEXTAUTH_SECRET` is a random string used by the library to encrypt tokens and email verification hashes, and **it's mandatory to keep things secure**! 🔥 🔐 . You can use:
 
 ```
-$ openssl rand -base64 32
+openssl rand -base64 32
 ```
 
 or https://generate-secret.vercel.app/32 to generate a random value for it.
@@ -242,7 +242,7 @@ AUTH_SECRET="This is an example"
 `AUTH_SECRET` is a random string used by the library to encrypt tokens and email verification hashes, and **it's mandatory to keep things secure**! 🔥 🔐 . You can use:
 
 ```
-$ openssl rand -base64 32
+openssl rand -base64 32
 ```
 
 or https://generate-secret.vercel.app/32 to generate a random value for it.
@@ -288,7 +288,7 @@ To protect your API Routes (blocking unauthorized access to resources), you can 
 ```ts title="routes/api/movies/+server.ts"
 import { json, error } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
- 
+
 export async function GET({ locals }: RequestEvent) {
   const session = await locals.getSession()
   if (!session?.user) {
@@ -429,7 +429,7 @@ export default NextAuth({
 Great! We're now ready to run our application locally. Start the Next.js app by running on your terminal the following command and navigating to [`http://localhost:3000`](http://localhost:3000):
 
 ```
-$ npm run next dev
+npm run next dev
 ```
 
   </TabItem>
@@ -448,7 +448,7 @@ export const handle = SvelteKitAuth({
 Great! We're now ready to run our application locally. Start the Svelte app by running on your terminal the following command and navigating to [`http://localhost:5173`](http://localhost:5173):
 
 ```
-$ npm run vite dev
+npm run vite dev
 ```
 
 
