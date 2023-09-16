@@ -103,6 +103,10 @@ export default function NextAuthProvider() {
 
 Instances of `useSession` will then have access to the session data and status. The `<SessionProvider />` also takes care of keeping the session updated and synced between browser tabs and windows.
 
+:::info
+If you are using the Next.js App Router plase note that the SessionProvider requires a client component and therefore cannot be set inside the root layout. For more details, check out the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts)
+:::
+
 :::tip
 Check out the [client documentation](/getting-started/client) to see how you can improve the user experience and page performance by using the NextAuth.js client.
 :::
