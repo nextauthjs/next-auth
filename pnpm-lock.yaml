@@ -434,13 +434,14 @@ importers:
         version: 27.5.1
 
   packages/adapter-edgedb:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@auth/adapter-test':
         specifier: workspace:^0.0.0
         version: link:../adapter-test
-      '@auth/core':
-        specifier: workspace:*
-        version: link:../core
       '@auth/tsconfig':
         specifier: workspace:^0.0.0
         version: link:../tsconfig
