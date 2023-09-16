@@ -56,11 +56,9 @@ async function up(db: D1Database) {
   // run the migration
   upSQLStatements.forEach(async (sql) => {
     try {
-      console.log("applying db migration sql", sql)
       const res = await db.prepare(sql).run()
-      console.log("migration result", res)
     } catch (e: any) {
-      console.log(e.cause?.message, e.message)
+      console.error(e.cause?.message, e.message)
     }
   })
 }
