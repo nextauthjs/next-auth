@@ -1,6 +1,6 @@
 {
   "name": "@auth/d1-adapter",
-  "version": "0.1.2",
+  "version": "0.1.0",
   "description": "A Cloudflare D1 adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -36,17 +36,16 @@
     "clean": "rm -rf dist",
     "test": "jest"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230321.0",
-    "@miniflare/d1": "^2.12.2",
     "@auth/adapter-test": "workspace:*",
     "@auth/tsconfig": "workspace:*",
+    "@cloudflare/workers-types": "^4.20230321.0",
+    "@miniflare/d1": "^2.12.2",
     "better-sqlite3": "^7.0.0",
-    "jest": "^27.0.3",
-    "next-auth": "workspace:*"
+    "jest": "^27.4.3"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

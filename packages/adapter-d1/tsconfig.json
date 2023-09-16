@@ -15,6 +15,6 @@
     "declarationMap": true,
     "declaration": true
   },
-  "include": ["src/**/*", "tests/migrations"],
+  "include": ["src/**/*"],
   "exclude": ["*.js", "*.d.ts"]
 }
