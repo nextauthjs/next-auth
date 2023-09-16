@@ -5,6 +5,10 @@ title: Overview
 Using an Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
 
 <div class="adapter-card-list">
+  <a href="/reference/adapter/edgedb" class="adapter-card">
+    <img src="/img/adapters/edgedb.svg" width="30" />
+    <h4 class="adapter-card__title">EdgeDB Adapter</h4>
+  </a>
   <a href="/reference/adapter/dgraph" class="adapter-card">
     <img src="/img/adapters/dgraph.png" width="30" />
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
