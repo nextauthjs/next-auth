@@ -75,7 +75,7 @@ runBasicTests({
       filter .sessionToken = <str>$sessionToken
       `, { sessionToken })
     },
-    async verificationToken({ token }) {
+    async verificationToken({ token, identifier }) {
       return await client.querySingle(`
       select VerificationToken {
         identifier,
@@ -83,7 +83,9 @@ runBasicTests({
         token,
       }
       filter .token = <str>$token
-      `, { token })
+      and
+        .identifier = <str>$identifier
+      `, { token, identifier })
     },
   },
 })
