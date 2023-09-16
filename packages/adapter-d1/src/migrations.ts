@@ -1,5 +1,7 @@
-export const up = [
-`CREATE TABLE IF NOT EXISTS "authjs_accounts" (
+import type { D1Database } from "."
+
+export const upSQLStatements = [
+  `CREATE TABLE IF NOT EXISTS "accounts" (
     "id" text NOT NULL,
     "userId" text NOT NULL DEFAULT NULL,
     "type" text NOT NULL DEFAULT NULL,
@@ -16,14 +18,14 @@ export const up = [
     "oauth_token" text DEFAULT NULL,
     PRIMARY KEY (id)
 );`,
-`CREATE TABLE IF NOT EXISTS "authjs_sessions" (
+  `CREATE TABLE IF NOT EXISTS "sessions" (
     "id" text NOT NULL,
     "sessionToken" text NOT NULL,
     "userId" text NOT NULL DEFAULT NULL,
     "expires" datetime NOT NULL DEFAULT NULL, 
     PRIMARY KEY (sessionToken)
 );`,
-`CREATE TABLE IF NOT EXISTS "authjs_users" (
+  `CREATE TABLE IF NOT EXISTS "users" (
     "id" text NOT NULL DEFAULT '',
     "name" text DEFAULT NULL,
     "email" text DEFAULT NULL,
@@ -31,23 +33,36 @@ export const up = [
     "image" text DEFAULT NULL, 
     PRIMARY KEY (id)
 );`,
-`CREATE TABLE IF NOT EXISTS "authjs_verification_tokens" (
+  `CREATE TABLE IF NOT EXISTS "verification_tokens" (
     "identifier" text NOT NULL,
     "token" text NOT NULL DEFAULT NULL,
     "expires" datetime NOT NULL DEFAULT NULL, 
     PRIMARY KEY (token)
-);`
-];
+);`,
+]
 
 export const down = [
-`DROP TABLE IF EXISTS "authjs_accounts";`,
-`DROP TABLE IF EXISTS "authjs_sessions";`,
-`DROP TABLE IF EXISTS "authjs_users";`,
-`DROP TABLE IF EXISTS "authjs_verification_token";`
-];
+  `DROP TABLE IF EXISTS "accounts";`,
+  `DROP TABLE IF EXISTS "sessions";`,
+  `DROP TABLE IF EXISTS "users";`,
+  `DROP TABLE IF EXISTS "verification_token";`,
+]
 
+/**
+ *
+ * @param db
+ */
+async function up(db: D1Database) {
+  // run the migration
+  upSQLStatements.forEach(async (sql) => {
+    try {
+      console.log("applying db migration sql", sql)
+      const res = await db.prepare(sql).run()
+      console.log("migration result", res)
+    } catch (e: any) {
+      console.log(e.cause?.message, e.message)
+    }
+  })
+}
 
-
-
-
-
+export { up }
