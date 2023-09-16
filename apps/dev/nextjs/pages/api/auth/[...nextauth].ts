@@ -72,7 +72,7 @@ import ClickUp from '@auth/core/providers/click-up'
 // })
 
 // // EdgeDB
-// import { EdgeDBAdapter } from "@next-auth/edgedb-adapter"
+// import { EdgeDBAdapter } from "@auth/edgedb-adapter"
 // import { createHttpClient } from "edgedb"
 // const client = createHttpClient()
 // const adapter = EdgeDBAdapter(client)

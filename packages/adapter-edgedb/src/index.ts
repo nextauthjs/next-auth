@@ -13,7 +13,7 @@
  * npm install @edgedb/generate --save-dev
  * ```
  *
- * @module @auth/edge-adapter
+ * @module @auth/edgedb-adapter
  */
 
 import type {
