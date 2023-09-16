@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.edgedb.com/">Edge DB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.edgedb.com/">
- *   <img style={{display: "block"}} src="/img/adapters/edgedb.png" width="38" />
+ *   <img style={{display: "block"}} src="/img/adapters/edgedb.svg" width="38" />
  *  </a>
  * </div>
  *
