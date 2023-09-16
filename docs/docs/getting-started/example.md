@@ -72,35 +72,6 @@ export default function App({
 }
 ```
 
-**Example when using the App Router**
-
-```jsx title="app/layout.jsx" showLineNumbers
-import NextAuthProvider from "./providers"
-
-export default function RootLayout({ children }) {
-  return (
-    <NextAuthProvider>
-        <html lang='en'>
-          <body>{children}</body>
-        </html>
-    </NextAuthProvider>
-  )
-}
-```
-
-Because the `use client` directive is not allowed in `layout.tsx` we use the `SessionProvider` inside of another component where you also
-can list all of your providers. Let's call the providers component `NextAuthProvider`:
-
-```jsx title="app/providers.jsx" showLineNumbers
-"use client"
-
-import { SessionProvider } from "next-auth/react"
-
-export default function NextAuthProvider() {
-  return <SessionProvider>{children}</SessionProvider>
-}
-```
-
 Instances of `useSession` will then have access to the session data and status. The `<SessionProvider />` also takes care of keeping the session updated and synced between browser tabs and windows.
 
 :::info
