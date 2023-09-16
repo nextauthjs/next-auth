@@ -1,4 +1,4 @@
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 import { EdgeDBAdapter } from "../src"
 import { createClient } from "edgedb"
 
