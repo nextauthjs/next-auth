@@ -134,14 +134,18 @@ export default function Component() {
     return (
       <>
         Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <button onClick={() => signOut()} type="button">
+          Sign out
+        </button>
       </>
     )
   }
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <button onClick={() => signIn()} type="button">
+        Sign in
+      </button>
     </>
   )
 }
