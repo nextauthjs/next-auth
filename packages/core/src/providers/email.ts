@@ -35,9 +35,9 @@ export interface SendVerificationRequestParams {
  *
  * [Custom email service with Auth.js](https://authjs.dev/guides/providers/email#custom-email-service)
  */
-export interface EmailConfig {
+export interface EmailUserConfig {
   server?: AllTransportOptions
-  type: "email"
+  type?: "email"
   /** @default `"Auth.js <no-reply@authjs.dev>"` */
   from?: string
   /**
