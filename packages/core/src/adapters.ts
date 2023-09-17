@@ -71,7 +71,7 @@
  *
  * ```ts title=my-adapter.ts
  * import { type Adapter } from "@auth/core/adapters"
- * import { PrismaAdapter } from "@next-auth/prisma-adapter"
+ * import { PrismaAdapter } from "@auth/prisma-adapter"
  * import { PrismaClient } from "@prisma/client"
  *
  * const prisma = new PrismaClient()
@@ -223,7 +223,7 @@ export interface Adapter {
   getUserByAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ): Awaitable<AdapterUser | null>
-  updateUser?(user: Partial<AdapterUser>): Awaitable<AdapterUser>
+  updateUser?(user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>): Awaitable<AdapterUser>
   /** @todo This method is currently not invoked yet. */
   deleteUser?(
     userId: string
@@ -269,4 +269,19 @@ export interface Adapter {
     identifier: string
     token: string
   }): Awaitable<VerificationToken | null>
+}
+
+// For compatibility with older versions of NextAuth.js
+// @ts-expect-error
+declare module "next-auth/adapters" {
+  type JsonObject = {
+    [Key in string]?: JsonValue
+  }
+  type JsonArray = JsonValue[]
+  type JsonPrimitive = string | number | boolean | null
+  type JsonValue = JsonPrimitive | JsonObject | JsonArray
+  interface AdapterAccount {
+    type: "oauth" | "email" | "oidc"
+    [key: string]: JsonValue | undefined
+  }
 }

@@ -13,13 +13,15 @@ import {
   Options,
   types,
 } from "@mikro-orm/core"
-import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
+
+globalThis.crypto ??= require("node:crypto").webcrypto
 
 @Entity()
 export class User implements defaultEntities.User {
   @PrimaryKey()
   @Property({ type: types.string })
-  id: string = randomUUID()
+  id: string = crypto.randomUUID()
 
   @Property({ type: types.string, nullable: true })
   name?: string
@@ -60,7 +62,7 @@ export class User implements defaultEntities.User {
 export class VeryImportantEntity {
   @PrimaryKey()
   @Property({ type: types.string })
-  id: string = randomUUID()
+  id: string = crypto.randomUUID()
 
   @Property({ type: types.boolean })
   important = true

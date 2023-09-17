@@ -153,7 +153,8 @@ export async function handleOAuth(
     }
 
     if (userinfo?.request) {
-      profile = await userinfo.request({ tokens, provider })
+      const _profile = await userinfo.request({ tokens, provider })
+      if (_profile instanceof Object) profile = _profile
     } else if (userinfo?.url) {
       const userinfoResponse = await o.userInfoRequest(
         as,
@@ -178,7 +179,14 @@ export async function handleOAuth(
     logger
   )
 
-  return { ...profileResult, cookies: resCookies }
+  const profileResult = await getUserAndAccount(
+    profile,
+    provider,
+    tokens,
+    logger
+  )
+
+  return { ...profileResult, profile, cookies: resCookies }
 }
 
 /** Returns profile, raw profile and auth provider details */
@@ -206,7 +214,6 @@ async function getUserAndProfile(
         providerAccountId: user.id.toString(),
         ...tokens,
       },
-      OAuthProfile,
     }
   } catch (e) {
     // If we didn't get a response either there was a problem with the provider

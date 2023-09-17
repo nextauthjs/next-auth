@@ -47,7 +47,7 @@ export async function AuthInternal<
       case "providers":
         return (await routes.providers(options.providers)) as any
       case "session": {
-        const session = await routes.session(sessionStore, options)
+        const session = await routes.session({ sessionStore, options })
         if (session.cookies) cookies.push(...session.cookies)
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
@@ -137,8 +137,7 @@ export async function AuthInternal<
       case "signin":
         if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
           const signin = await routes.signin(
-            request.query,
-            request.body,
+            request,
             options
           )
           if (signin.cookies) cookies.push(...signin.cookies)
@@ -177,6 +176,22 @@ export async function AuthInternal<
           return { ...callback, cookies }
         }
         break
+      case "session": {
+        if (options.csrfTokenVerified) {
+          const session = await routes.session({
+            options,
+            sessionStore,
+            newSession: request.body?.data,
+            isUpdate: true,
+          })
+          if (session.cookies) cookies.push(...session.cookies)
+          return { ...session, cookies } as any
+        }
+
+        // If CSRF token is invalid, return a 400 status code
+        // we should not redirect to a page as this is an API route
+        return { status: 400, cookies }
+      }
       default:
     }
   }
@@ -193,3 +208,14 @@ export async function AuthInternal<
  * passing this value to {@link AuthConfig.skipCSRFCheck}.
  */
 export const skipCSRFCheck = Symbol("skip-csrf-check")
+
+/**
+ * :::danger
+ * This option is intended for framework authors.
+ * :::
+ *
+ * Auth.js returns a web standard {@link Response} by default, but
+ * if you are implementing a framework you might want to get access to the raw internal response
+ * by passing this value to {@link AuthConfig.raw}.
+ */
+export const raw = Symbol("return-type-raw")

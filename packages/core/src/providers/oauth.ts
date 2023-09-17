@@ -31,7 +31,7 @@ type EndpointRequest<C, R, P> = (
       callbackUrl: string
     }
   }
-) => Awaitable<R>
+) => Awaitable<R> | void
 
 /** Gives granular control of the request to the given endpoint */
 interface AdvancedEndpointHandler<P extends UrlParams, C, R> {

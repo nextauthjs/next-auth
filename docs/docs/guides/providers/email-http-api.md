@@ -17,15 +17,15 @@ We will also refer to the [Prisma Adapter](/reference/adapter/prisma). A [databa
 
 ## Setup
 
-First, if you do not have a project using Auth.js, clone and set up a basic Auth.js project like the one [provided in](https://github.com/nextauthjs/next-auth-example.git) our example repo](https://github.com/nextauthjs/next-auth-example.git).
+First, if you do not have a project using Auth.js, clone and set up a basic Auth.js project like the one [provided in our example repo](https://github.com/nextauthjs/next-auth-example).
 
 - Install the [Prisma Adapter](/reference/adapter/prisma)
 - Generate an API key from your cloud Email provider of choice and add it to your `.env.*` file. For example, mine is going to be called `SENDGRID_API`
 - Add the following configuration to your configuration file:
 
-```js title="pages/api/auth/[...nextauth].ts"
+```js title="auth.ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
@@ -42,16 +42,15 @@ export const authOptions: NextAuthOptions = {
   ],
 }
 
-export default NextAuth(authOptions)
 ```
 
 Next, all that's left to do is call the HTTP endpoint from our cloud email provider and pass it the required metadata like the `to` address, the email `body`, and any other fields we may need to include.
 
 As mentioned earlier, we're going to be using SendGrid in this example, so the appropriate endpoint is `https://api.sendgrid.com/v3/mail/send` ([more info](https://docs.sendgrid.com/for-developers/sending-email/api-getting-started)). Therefore, we're going to pull out some of the important information from the `params` argument and use it in a `fetch()` call to the previously mentioned SendGrid API.
 
-```js title="pages/api/auth/[...nextauth].ts"
+```js title="auth.ts"
 import NextAuth, { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()

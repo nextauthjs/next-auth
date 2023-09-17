@@ -5,9 +5,21 @@ title: Overview
 Using an Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
 
 <div class="adapter-card-list">
+  <a href="/reference/adapter/d1" class="adapter-card">
+    <img src="/img/adapters/d1.svg" width="40" />
+    <h4 class="adapter-card__title">D1 Adapter</h4>
+  </a>
+  <a href="/reference/adapter/edgedb" class="adapter-card">
+    <img src="/img/adapters/edgedb.svg" width="30" />
+    <h4 class="adapter-card__title">EdgeDB Adapter</h4>
+  </a>
   <a href="/reference/adapter/dgraph" class="adapter-card">
     <img src="/img/adapters/dgraph.png" width="30" />
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
+  </a>
+   <a href="/reference/adapter/drizzle" class="adapter-card">
+    <img src="/img/adapters/drizzle-orm.png" width="30" />
+    <h4 class="adapter-card__title">Drizzle Adapter</h4>
   </a>
   <a href="/reference/adapter/dynamodb" class="adapter-card">
     <img src="/img/adapters/dynamodb.png" width="30" />
@@ -20,6 +32,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
   <a href="/reference/adapter/firebase" class="adapter-card">
     <img src="/img/adapters/firebase.svg" width="40" />
     <h4 class="adapter-card__title">Firebase Adapter</h4>
+  </a>
+  <a href="/reference/adapter/kysely" class="adapter-card">
+    <img src="/img/adapters/kysely.svg" width="40" />
+    <h4 class="adapter-card__title">Kysely Adapter</h4>
   </a>
   <a href="/reference/adapter/mikro-orm" class="adapter-card">
     <img src="/img/adapters/mikro-orm.png" width="30" />
@@ -66,7 +82,6 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
 :::info
 If you don't find an adapter for the database or service you use, you can always create one yourself. Have a look at our guide on [how to create a database adapter](/guides/adapters/creating-a-database-adapter).
 :::
-
 
 ## Models
 

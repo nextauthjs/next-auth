@@ -9,24 +9,24 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @prisma/client @next-auth/prisma-adapter
+ * npm install @prisma/client @auth/prisma-adapter
  * npm install prisma --save-dev
  * ```
  *
- * @module @next-auth/prisma-adapter
+ * @module @auth/prisma-adapter
  */
 import type { PrismaClient, Prisma } from "@prisma/client"
-import type { Adapter, AdapterAccount } from "next-auth/adapters"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 /**
  * ## Setup
  *
- * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
+ * Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object:
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { PrismaAdapter } from "@next-auth/prisma-adapter"
+ * import { PrismaAdapter } from "@auth/prisma-adapter"
  * import { PrismaClient } from "@prisma/client"
  *
  * const prisma = new PrismaClient()

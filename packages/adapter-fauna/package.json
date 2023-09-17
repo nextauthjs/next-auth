@@ -1,28 +1,30 @@
 {
-  "name": "@next-auth/fauna-adapter",
-  "version": "1.0.4",
-  "description": "Fauna Adapter for NextAuth",
+  "name": "@auth/fauna-adapter",
+  "version": "1.0.0",
+  "description": "Fauna Adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "author": "Bhanu Teja P",
   "contributors": [
-    {
-      "name": "Nico Domino",
-      "email": "yo@ndo.dev"
-    },
-    {
-      "name": "Balázs Orbán",
-      "email": "info@balazsorban.com"
-    }
+    "Nico Domino <yo@ndo.dev>",
+    "Balázs Orbán <info@balazsorban.com>"
   ],
-  "main": "dist/index.js",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -41,9 +43,11 @@
     "migrate": "fauna-schema-migrate generate",
     "test": "./tests/test.sh"
   },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "faunadb": "^4.3.0",
-    "next-auth": "^4"
+    "faunadb": "^4.3.0"
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.2.1",
@@ -54,6 +58,6 @@
     "next-auth": "workspace:*"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "@auth/adapter-test/jest"
   }
 }

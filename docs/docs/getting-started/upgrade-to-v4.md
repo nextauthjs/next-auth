@@ -580,7 +580,7 @@ Auth.js used to generate a secret for convenience, when the user did not define 
 You can generate a secret to be placed in the `secret` configuration option via the following command:
 
 ```bash
-$ openssl rand -base64 32
+openssl rand -base64 32
 ```
 
 Therefore, your Auth.js config should look something like this:
