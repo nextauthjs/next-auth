@@ -122,7 +122,7 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile
+  let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {
@@ -172,13 +172,6 @@ export async function handleOAuth(
       Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
   }
 
-  const profileResult = await getUserAndProfile(
-    profile,
-    provider,
-    tokens,
-    logger
-  )
-
   const profileResult = await getUserAndAccount(
     profile,
     provider,
@@ -189,8 +182,8 @@ export async function handleOAuth(
   return { ...profileResult, profile, cookies: resCookies }
 }
 
-/** Returns profile, raw profile and auth provider details */
-async function getUserAndProfile(
+/** Returns the user and account that is going to be created in the database */
+async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,

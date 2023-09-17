@@ -35,10 +35,9 @@ export interface SendVerificationRequestParams {
  *
  * [Custom email service with Auth.js](https://authjs.dev/guides/providers/email#custom-email-service)
  */
-export interface EmailConfig extends CommonProviderOptions {
+export interface EmailConfig {
+  server?: AllTransportOptions
   type: "email"
-  // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html
-  server?: string | SMTPTransportOptions
   /** @default `"Auth.js <no-reply@authjs.dev>"` */
   from?: string
   /**
@@ -320,7 +319,7 @@ export type EmailProviderType = "email"
  * ```
  *
  * ## Normalizing the email address
- * 
+ *
  * By default, Auth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
  * ```ts
  *   EmailProvider({

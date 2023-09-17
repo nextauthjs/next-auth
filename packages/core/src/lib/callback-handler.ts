@@ -158,7 +158,7 @@ export async function handleLogin(
     const { provider: p } = options as InternalOptions<"oauth" | "oidc">
     const { type, provider, providerAccountId, userId, ...tokenSet } = account
     const defaults = { providerAccountId, provider, type, userId }
-    account = Object.assign(p.account(tokenSet), defaults)
+    account = Object.assign(p.account(tokenSet) ?? {}, defaults)
 
     if (user) {
       // If the user is already signed in and the OAuth account isn't already associated

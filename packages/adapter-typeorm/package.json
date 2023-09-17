@@ -56,8 +56,8 @@
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.3",
-    "sqlite3": "^5.1.6",
-    "typeorm": "0.3.7",
+    "sqlite3": "^5.0.8",
+    "typeorm": "0.3.15",
     "typeorm-naming-strategies": "^4.1.0",
     "typescript": "5.2.2"
   },

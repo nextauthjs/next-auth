@@ -40,7 +40,7 @@
     "fake-smtp-server": "^0.8.0",
     "pg": "^8.7.3",
     "prisma": "^3",
-    "sqlite3": "^5.1.6",
+    "sqlite3": "^5.0.8",
     "typeorm": "0.3.7"
   }
 }

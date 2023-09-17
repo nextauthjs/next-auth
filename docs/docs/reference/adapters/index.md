@@ -85,7 +85,6 @@ If you don't find an adapter for the database or service you use, you can always
 
 ## Models
 
-
 Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will look something like this:
 
 ```mermaid
@@ -111,8 +110,13 @@ erDiagram
       string type
       string provider
       string providerAccountId
+      string refresh_token
       string access_token
+      int expires_at
+      string token_type
+      string scope
       string id_token
+      string session_state
     }
     VerificationToken {
       string identifier
@@ -141,7 +145,7 @@ If a user first signs in with an OAuth provider, then their email address is aut
 This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in the future (if the [Email Provider](/reference/core/providers_email) is configured).
 :::
 
-User creation in the database is automatic and happens when the user is logging in for the first time with a provider. 
+User creation in the database is automatic and happens when the user is logging in for the first time with a provider.
 If the first sign-in is via the [OAuth Provider](/reference/core/providers_oauth), the default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
 If the first sign-in is via the [Email Provider](/reference/core/providers_email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
@@ -152,7 +156,7 @@ The Account model is for information about OAuth accounts associated with a User
 
 A single User can have multiple Accounts, but each Account can only have one User.
 
-Account creation in the database is automatic and happens when the user is logging in for the first time with a provider, or the [`Adapter.linkAccount`](/reference/core/adapters#linkaccount) method is invoked. The default data saved is `access_token`, `refresh_token`, `id_token` and `expires_at`. You can save other fields by returning them in the [OAuth provider](/guides/providers/custom-provider)'s [`account()`](/reference/core/providers#account) callback.
+Account creation in the database is automatic and happens when the user is logging in for the first time with a provider, or the [`Adapter.linkAccount`](/reference/core/adapters#linkaccount) method is invoked. The default data saved is `access_token`, `expires_at`, `refresh_token`, `id_token`, `token_type`, `scope` and `session_state`. You can save other fields or remove the ones you don't need by returning them in the [OAuth provider](/guides/providers/custom-provider)'s [`account()`](/reference/core/providers#account) callback.
 
 Linking Accounts to Users happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/concepts/faq#security) for more information on why this is a requirement.
 
