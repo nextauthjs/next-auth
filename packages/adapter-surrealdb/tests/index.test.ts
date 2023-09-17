@@ -1,16 +1,19 @@
 import Surreal from "surrealdb.js"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 
 import { config } from "./common"
 
 const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
-  const db = new Surreal("http://localhost:8000/rpc")
+  const db = new Surreal();
   try {
-    await db.signin({
-      user: "test",
-      pass: "test",
+    await db.connect('http://0.0.0.0:8000/rpc', {
+      ns: "test",
+      db: "test",
+      auth: {
+        user: "test",
+        pass: "test",
+      }
     })
-    await db.use("test", "test")
     resolve(db)
   } catch (e) {
     reject(e)

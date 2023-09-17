@@ -5,8 +5,8 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
-import type { ProviderType } from "next-auth/providers"
+} from "@auth/core/adapters"
+import type { ProviderType } from "@auth/core/providers"
 
 type Document = Record<string, string | null | undefined> & { id: string }
 export type UserDoc = Document & { email: string }
@@ -91,7 +91,7 @@ export function SurrealDBAdapter(
     async createUser(user: Omit<AdapterUser, "id">) {
       const surreal = await client
       const doc = userToDoc(user)
-      const userDoc = await surreal.create("user", doc)
+      const userDoc = await surreal.create<UserDoc, Omit<UserDoc, "id">>("user", doc)
       const newUser = userDoc[0] !== undefined ? docToUser(userDoc[0]) : null
       return newUser
     },
@@ -108,7 +108,7 @@ export function SurrealDBAdapter(
         if (doc) {
           return docToUser(doc as unknown as UserDoc)
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async getUserByEmail(email: string) {
@@ -120,7 +120,7 @@ export function SurrealDBAdapter(
         )
         const doc = users[0].result?.[0]
         if (doc) return docToUser(doc as unknown as UserDoc)
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async getUserByAccount({
@@ -140,17 +140,18 @@ export function SurrealDBAdapter(
         const user = (users[0].result as unknown as AccountDoc<UserDoc>[])[0]
           ?.userId
         if (user) return docToUser(user)
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
       const surreal = await client
-      let updatedUser = await surreal.change<
-        Omit<UserDoc, "id">,
-        UserDoc,
-        string
-      >(`user:${user.id}`, user)
-      return docToUser(updatedUser as UserDoc)
+      const doc = { ...user, emailVerified: user.emailVerified?.toISOString(), id: undefined }
+      let updatedUser = await surreal.merge<UserDoc, Omit<UserDoc, "id">>(`user:${user.id}`, doc)
+      if (updatedUser.length) {
+        return docToUser(updatedUser[0])
+      } else {
+        return null
+      }
     },
     async deleteUser(userId: string) {
       const surreal = await client
@@ -169,7 +170,7 @@ export function SurrealDBAdapter(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch (e) {}
+      } catch (e) { }
 
       // delete session
       try {
@@ -185,7 +186,7 @@ export function SurrealDBAdapter(
           const sessionId = extractId(session.id)
           await surreal.delete(`session:${sessionId}`)
         }
-      } catch (e) {}
+      } catch (e) { }
 
       // delete user
       await surreal.delete(`user:${userId}`)
@@ -216,7 +217,7 @@ export function SurrealDBAdapter(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch (e) {}
+      } catch (e) { }
     },
     async createSession({
       sessionToken,
@@ -262,7 +263,7 @@ export function SurrealDBAdapter(
             }),
           }
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async updateSession(
@@ -280,11 +281,7 @@ export function SurrealDBAdapter(
         const sessionDoc = (sessions[0].result as unknown as SessionDoc[])[0]
         if (sessionDoc && session.expires) {
           const sessionId = extractId(sessionDoc.id)
-          let updatedSession = await surreal.change<
-            Omit<SessionDoc, "id">,
-            Omit<SessionDoc, "id">,
-            string
-          >(
+          let updatedSession = await surreal.merge<SessionDoc, Omit<SessionDoc, "id">>(
             `session:${sessionId}`,
             sessionToDoc({
               ...sessionDoc,
@@ -293,9 +290,13 @@ export function SurrealDBAdapter(
               expires: session.expires,
             })
           )
-          return docToSession(updatedSession as SessionDoc)
+          if (updatedSession.length) {
+            return docToSession(updatedSession[0])
+          } else {
+            return null
+          }
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async deleteSession(sessionToken: string) {
@@ -311,9 +312,10 @@ export function SurrealDBAdapter(
         const session = (sessions[0].result as unknown as SessionDoc[])[0]
         if (session) {
           const sessionId = extractId(session.id)
-          return await surreal.delete(`session:${sessionId}`)
+          await surreal.delete(`session:${sessionId}`)
+          return
         }
-      } catch (e) {}
+      } catch (e) { }
     },
     async createVerificationToken({
       identifier,
@@ -338,9 +340,7 @@ export function SurrealDBAdapter(
     }) {
       const surreal = await client
       try {
-        const tokens = await surreal.query<
-          (VerificationToken & { id: string })[]
-        >(
+        const tokens = await surreal.query<{ indetifier: string, expires: string, token: string, id: string }[]>(
           `SELECT *
            FROM verification_token
            WHERE identifier = $identifier
@@ -357,7 +357,7 @@ export function SurrealDBAdapter(
             token: vt.token,
           }
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
   }

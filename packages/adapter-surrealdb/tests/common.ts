@@ -1,5 +1,5 @@
 import type Surreal from "surrealdb.js"
-import { VerificationToken } from "next-auth/adapters"
+import { VerificationToken } from "@auth/core/adapters"
 
 import {
   SurrealDBAdapter,
@@ -55,7 +55,7 @@ export const config = (
     },
     async verificationToken({ identifier, token }) {
       const surreal = await clientPromise
-      const tokens = await surreal.query<VerificationToken[]>(
+      const tokens = await surreal.query<{ indetifier: string, expires: string, token: string, id: string }[]>(
         `SELECT *
          FROM verification_token
          WHERE identifier = $identifier
