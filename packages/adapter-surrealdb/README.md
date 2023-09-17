@@ -23,19 +23,18 @@ npm install surrealdb.js next-auth @next-auth/surrealdb-adapter@next
 ```js
 import { Surreal } from "surrealdb.js";
 
-const host = ...
-const port = ...
+const connectionString = ...
 const user = ...
 const pass = ...
 const ns = ...
 const db = ...
-const protocol = ...
 
 export const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
-  const db = new Surreal("${protocol}://${host}:${port}/rpc")
+  const db = new Surreal();
   try {
-    await db.signin({ user, pass })
-    await db.use(ns, db)
+    await db.connect(`${connectionString}/rpc`, {
+      ns, db, auth: { user, pass }
+    })
     resolve(db)
   } catch (e) {
     reject(e)
@@ -69,22 +68,23 @@ npm install surrealdb.js next-auth @next-auth/surrealdb-adapter@next
 import { ExperimentalSurrealHTTP } from "surrealdb.js"
 import fetch from "node-fetch"
 
-const host = ...
-const port = ...
+const connectionString = ...
 const user = ...
 const pass = ...
 const ns = ...
 const db = ...
-const protocol = ...
 
 const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
   try {
-    const db = new ExperimentalSurrealHTTP(
-      `${protocol}://${host}:${port}/sql`,
-      { fetch }
-    )
-    db.use(ns, db)
-    await db.signin({ user, pass })
+    const db = new ExperimentalSurrealHTTP(connectionString, {
+      fetch,
+      auth: {
+        user,
+        pass,
+      },
+      ns,
+      db,
+    })
     resolve(db)
   } catch (e) {
     reject(e)
