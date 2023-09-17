@@ -27,7 +27,7 @@ export const config = (
         const user = users[0]
         if (user.result?.[0] !== undefined)
           return docToUser(user.result[0] as unknown as UserDoc)
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async account({ provider, providerAccountId }) {
@@ -55,7 +55,7 @@ export const config = (
     },
     async verificationToken({ identifier, token }) {
       const surreal = await clientPromise
-      const tokens = await surreal.query<{ indetifier: string, expires: string, token: string, id: string }[]>(
+      const tokens = await surreal.query<[{ identifier: string, expires: string, token: string, id: string }[]]>(
         `SELECT *
          FROM verification_token
          WHERE identifier = $identifier

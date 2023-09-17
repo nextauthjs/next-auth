@@ -15,7 +15,7 @@ export type AccountDoc<T = string> = {
   userId: T
   refresh_token?: string
   access_token?: string
-  type: ProviderType
+  type: Extract<ProviderType, "oauth" | "oidc" | "email">
   provider: string
   providerAccountId: string
   expires_at?: number
@@ -32,8 +32,8 @@ export const docToUser = (doc: UserDoc): AdapterUser => ({
 })
 
 // Convert DB object to AdapterAccount
-export const docToAccount = (doc: AccountDoc): AdapterAccount => {
-  const account = {
+export const docToAccount = (doc: AccountDoc) => {
+  const account: AdapterAccount = {
     ...doc,
     id: extractId(doc.id),
     userId: doc.userId ? extractId(doc.userId) : "",
@@ -92,8 +92,10 @@ export function SurrealDBAdapter(
       const surreal = await client
       const doc = userToDoc(user)
       const userDoc = await surreal.create<UserDoc, Omit<UserDoc, "id">>("user", doc)
-      const newUser = userDoc[0] !== undefined ? docToUser(userDoc[0]) : null
-      return newUser
+      if (userDoc.length) {
+        return docToUser(userDoc[0])
+      }
+      throw new Error("User not created")
     },
     async getUser(id: string) {
       const surreal = await client
@@ -150,7 +152,7 @@ export function SurrealDBAdapter(
       if (updatedUser.length) {
         return docToUser(updatedUser[0])
       } else {
-        return null
+        throw new Error("User not updated")
       }
     },
     async deleteUser(userId: string) {
@@ -340,7 +342,7 @@ export function SurrealDBAdapter(
     }) {
       const surreal = await client
       try {
-        const tokens = await surreal.query<{ indetifier: string, expires: string, token: string, id: string }[]>(
+        const tokens = await surreal.query<[{ identifier: string, expires: string, token: string, id: string }[]]>(
           `SELECT *
            FROM verification_token
            WHERE identifier = $identifier
@@ -348,15 +350,17 @@ export function SurrealDBAdapter(
            LIMIT 1`,
           { identifier, verificationToken: token }
         )
-        const vt = tokens[0].result?.[0]
-        if (vt) {
-          await surreal.delete(vt.id)
-          return {
-            identifier: vt.identifier,
-            expires: new Date(vt.expires),
-            token: vt.token,
+        if (tokens.length && tokens[0].result) {
+          const vt = tokens[0].result[0]
+          if (vt) {
+            await surreal.delete(vt.id)
+            return {
+              identifier: vt.identifier,
+              expires: new Date(vt.expires),
+              token: vt.token,
+            }
           }
-        }
+        } else { return null }
       } catch (e) { }
       return null
     },
