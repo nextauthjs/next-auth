@@ -1,5 +1,5 @@
-import type Surreal from "surrealdb.js"
-import { VerificationToken } from "@auth/core/adapters"
+import Surreal, { ExperimentalSurrealHTTP } from "surrealdb.js"
+import fetch from "node-fetch"
 
 import {
   SurrealDBAdapter,
@@ -10,7 +10,7 @@ import {
 import type { UserDoc, AccountDoc, SessionDoc } from "../src/index"
 
 export const config = (
-  clientPromise: Promise<Surreal>
+  clientPromise: Promise<Surreal | ExperimentalSurrealHTTP<typeof fetch>>
 ) => ({
   adapter: SurrealDBAdapter(clientPromise),
   db: {
@@ -21,18 +21,18 @@ export const config = (
     async user(id: string) {
       const surreal = await clientPromise
       try {
-        const users = await surreal.query<UserDoc[]>("SELECT * FROM $user", {
+        const users = await surreal.query<[UserDoc[]]>("SELECT * FROM $user", {
           user: `user:${id}`,
         })
         const user = users[0]
         if (user.result?.[0] !== undefined)
-          return docToUser(user.result[0] as unknown as UserDoc)
+          return docToUser(user.result[0])
       } catch (e) { }
       return null
     },
     async account({ provider, providerAccountId }) {
       const surreal = await clientPromise
-      const accounts = await surreal.query<AccountDoc[]>(
+      const accounts = await surreal.query<[AccountDoc[]]>(
         `SELECT * FROM account WHERE provider = $provider AND providerAccountId = $providerAccountId`,
         { provider, providerAccountId }
       )
@@ -43,11 +43,11 @@ export const config = (
     },
     async session(sessionToken: string) {
       const surreal = await clientPromise
-      const sessions = await surreal.query<SessionDoc[]>(
+      const sessions = await surreal.query<[SessionDoc[]]>(
         `SELECT * FROM session WHERE sessionToken = $sessionToken`,
         { sessionToken }
       )
-      const session = (sessions[0]?.result as unknown as SessionDoc[])?.[0]
+      const session = sessions[0].result?.[0]
       if (session !== undefined) {
         return docToSession(session)
       }
