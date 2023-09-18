@@ -204,7 +204,10 @@ async function handleAuth(
 
   // Preserve cookies set by Auth.js Core
   const finalResponse = new Response(response?.body, response)
-  const authCookies = sessionResponse.headers.get("set-cookie")
+  const authCookies =
+    "getSetCookie" in sessionResponse.headers
+      ? sessionResponse.headers.getSetCookie()
+      : sessionResponse.headers.get("set-cookie")
   if (authCookies) finalResponse.headers.set("set-cookie", authCookies)
 
   return finalResponse
