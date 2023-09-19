@@ -139,7 +139,10 @@ export function initAuth(config: NextAuthConfig) {
       } = (await authResponse.json()) ?? {}
 
       // Preserve cookies set by Auth.js Core
-      const cookies = authResponse.headers.get("set-cookie")
+      const cookies =
+        "getSetCookie" in authResponse.headers
+          ? authResponse.headers.getSetCookie()
+          : authResponse.headers.get("set-cookie")
       if (cookies) response?.setHeader("set-cookie", cookies)
 
       return { user, expires, ...rest } satisfies Session
