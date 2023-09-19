@@ -31,7 +31,7 @@ export interface DribbbleProfile extends Record<string, any> {
  * #### Configuration
  *```js
  * import Auth from "@auth/core"
- * import Google from "@auth/core/providers/dribbble"
+ * import Dribbble from "@auth/core/providers/dribbble"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
