@@ -61,7 +61,7 @@ pnpm install
 4. Start the development server
 
 ```bash
-$ pnpm dev:docs
+pnpm dev:docs
 ```
 
 And thats all! Now you should have a local copy of this docs site running at [localhost:3000](http://localhost:3000)!
