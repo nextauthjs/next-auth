@@ -19,7 +19,7 @@ jobs:
           label-area-prefix: ""
           label-area-section: "[Provider|Adapter] type(.*)### Environment"
           label-comments: '{ "incomplete": ".github/invalid-reproduction.md" }'
-          reproduction-comment: ".github/invalid-link.md"
+          reproduction-comment: ".github/invalid-reproduction.md"
           reproduction-hosts: "github.com"
           reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
           reproduction-invalid-label: "invalid reproduction"
