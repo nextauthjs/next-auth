@@ -26,6 +26,7 @@ body:
         - "@auth/dynamodb-adapter"
         - "@auth/fauna-adapter"
         - "@auth/firebase-adapter"
+        - "@auth/hasura-adapter"
         - "@auth/kysely-adapter"
         - "@auth/mikro-orm-adapter"
         - "@auth/mongodb-adapter"
