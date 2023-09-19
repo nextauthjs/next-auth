@@ -1,0 +1,25 @@
+name: Triage issue
+on:
+  issues:
+    types: [labeled, opened]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nissuer
+        uses: balazsorban44/nissuer@1.3.5
+        with:
+          label-area-prefix: ""
+          label-area-section: "[Provider|Adapter] type(.*)### Environment"
+          label-comments: '{ "incomplete": ".github/invalid-reproduction.md" }'
+          reproduction-comment: ".github/invalid-link.md"
+          reproduction-hosts: "github.com"
+          reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
+          reproduction-invalid-label: "invalid reproduction"
