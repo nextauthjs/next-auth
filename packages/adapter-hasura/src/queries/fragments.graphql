@@ -7,6 +7,7 @@ fragment User on users {
 }
 
 fragment Session on sessions {
+  id
   userId
   expires
   sessionToken
@@ -21,12 +22,10 @@ fragment Account on accounts {
   provider
   expires_at
   token_type
-  oauth_token
   access_token
   refresh_token
   session_state
   providerAccountId
-  oauth_token_secret
 }
 
 fragment VerificationToken on verification_tokens {

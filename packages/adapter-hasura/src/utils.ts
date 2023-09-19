@@ -1,43 +1,47 @@
-type RecursivelyReplaceNullWithUndefined<T> = T extends null
-  ? undefined
-  : T extends Array<infer U>
-  ? Array<RecursivelyReplaceNullWithUndefined<U>>
-  : T extends Record<string, unknown>
-  ? { [K in keyof T]: RecursivelyReplaceNullWithUndefined<T[K]> }
-  : T
-
-/**
- * Replace all Null with undefined https://stackoverflow.com/a/72549576/4717424
- * @param obj T
- * @returns RecursivelyReplaceNullWithUndefined<T>
- */
-export function nullsToUndefined<T>(
-  obj: T
-): RecursivelyReplaceNullWithUndefined<T> {
-  if (obj === null || obj === undefined) {
-    return undefined as any
-  }
-
-  if ((obj as any).constructor.name === "Object" || Array.isArray(obj)) {
-    for (const key in obj) {
-      obj[key] = nullsToUndefined(obj[key]) as any
-    }
-  }
-  return obj as RecursivelyReplaceNullWithUndefined<T>
+export type NonNullify<T> = {
+  [K in keyof T]: T[K] extends null | infer U ? U : T[K]
 }
 
-export const transformDate = <T extends Record<string, unknown>>(
+type FormatToJS<T, K extends keyof T> = T[K] extends string
+  ? Omit<T, K> & Record<K, Date>
+  : Omit<T, K> & Record<K, Date | null>
+
+type FormatToDatabase<T, K extends keyof T> = T[K] extends Date
+  ? Omit<T, K> & Record<K, string>
+  : Omit<T, K> & Record<K, string | null>
+
+export function formatDateConversion<T, K extends keyof T>(
   object: T,
-  key: keyof T
-): T => {
+  key: K,
+  direction: "toJS"
+): FormatToJS<T, K>
+
+export function formatDateConversion<T, K extends keyof T>(
+  object: T,
+  key: K,
+  direction: "toDatabase"
+): FormatToDatabase<T, K>
+
+export function formatDateConversion<T, K extends keyof T>(
+  object: T,
+  key: K,
+  direction: "toJS" | "toDatabase"
+) {
   if (!object) return object
 
-  // if (object[key]) {
-  return {
-    ...object,
-    [key]: object[key] ? new Date(object[key] as string) : null,
-  }
-  // }
+  const value = object[key]
 
-  // return object;
+  if (value === undefined) return object
+
+  if (direction === "toJS") {
+    return {
+      ...object,
+      [key]: value ? new Date(value as string) : null,
+    } as FormatToJS<T, K>
+  } else {
+    return {
+      ...object,
+      [key]: value ? (value as unknown as Date).toISOString() : null,
+    } as FormatToDatabase<T, K>
+  }
 }

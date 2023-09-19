@@ -1,28 +1,36 @@
-import type { CodegenConfig } from '@graphql-codegen/cli';
+import type { CodegenConfig } from "@graphql-codegen/cli"
 
 const config: CodegenConfig = {
   overwrite: true,
   schema: [
     {
-      'http://localhost:8080/v1/graphql': {
+      "http://localhost:8080/v1/graphql": {
         headers: {
-          'x-hasura-admin-secret': 'myadminsecretkey',
+          "x-hasura-admin-secret": "myadminsecretkey",
         },
       },
     },
   ],
-  config: {
-    skipTypename: true,
-    enumsAsTypes: true,
-  },
+  emitLegacyCommonJSImports: false,
   documents: "src/**/*.graphql",
   generates: {
-    "src/gql/": {
+    "src/lib/": {
       preset: "client",
-      config: {},
-      plugins: []
-    }
-  }
-};
+      config: {
+        documentMode: "string",
+        skipTypename: true,
+        enumsAsTypes: true,
+        strictScalars: true,
+        useTypeImports: true,
+        scalars: {
+          timestamptz: "string",
+          uuid: "string",
+        },
+      },
+      plugins: [],
+    },
+  },
+  hooks: { afterAllFileWrite: ["prettier --write"] },
+}
 
-export default config;
+export default config

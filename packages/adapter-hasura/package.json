@@ -9,21 +9,25 @@
   },
   "contributors": [
     "Hasura Team",
-    "Amruth Pillai <im.amruth@gmail.com>"
+    "Amruth Pillai <im.amruth@gmail.com>",
+    "Arjun Yelamanchili"
   ],
   "license": "ISC",
   "keywords": [
+    "@auth",
     "authjs",
+    "Auth.js",
     "next-auth",
     "next.js",
     "oauth",
-    "kysely"
+    "hasura"
   ],
   "type": "module",
   "types": "./index.d.ts",
   "files": [
     "*.js",
     "*.d.ts*",
+    "lib",
     "src"
   ],
   "exports": {
@@ -39,11 +43,11 @@
   "scripts": {
     "test": "./tests/test.sh",
     "build": "tsc",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen-esm --config codegen.ts"
   },
   "peerDependencies": {
-    "graphql": "14 - 16",
-    "graphql-request": "^5"
+    "graphql": "^16",
+    "graphql-request": "^6"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -51,14 +55,13 @@
   "devDependencies": {
     "@auth/adapter-test": "workspace:*",
     "@auth/tsconfig": "workspace:*",
-    "@graphql-codegen/cli": "2.13.7",
-    "@graphql-codegen/client-preset": "1.1.1",
-    "@graphql-typed-document-node/core": "^3.1.1",
-    "@types/node": "^18.11.8",
-    "graphql": "^16.6.0",
-    "graphql-request": "^5.0.0",
-    "jest": "^29.2.2",
-    "typescript": "^4.8.4"
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.2.2"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

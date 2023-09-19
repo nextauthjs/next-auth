@@ -5,18 +5,16 @@ CREATE TABLE accounts (
     "providerAccountId" text NOT NULL,
     refresh_token text,
     access_token text,
-    expires_at bigint,
+    expires_at integer,
     token_type text,
     scope text,
     id_token text,
     session_state text,
-    oauth_token_secret text,
-    oauth_token text,
-    "userId" uuid NOT NULL,
-    refresh_token_expires_in bigint
+    "userId" uuid NOT NULL
 );
 
 CREATE TABLE sessions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     "sessionToken" text NOT NULL,
     "userId" uuid NOT NULL,
     expires timestamptz NOT NULL
@@ -64,7 +62,7 @@ ALTER TABLE ONLY accounts
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE CASCADE;
 
-INSERT INTO provider_type (value) VALUES ('credentials'), ('email'), ('oauth');
+INSERT INTO provider_type (value) VALUES ('credentials'), ('email'), ('oauth'), ('oidc');
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT "accounts_type_fkey" FOREIGN KEY ("type") REFERENCES public.provider_type(value) ON UPDATE RESTRICT ON DELETE RESTRICT;
