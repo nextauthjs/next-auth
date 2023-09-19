@@ -2,9 +2,9 @@ We could not detect a valid reproduction link. **Make sure to follow the bug rep
 
 ### Why was this issue closed?
 
-To be able to investigate, we need access to a reproduction to identify what triggered the issue. We need a link to a **public** GitHub repository. Example: ([NextAuth.js example repository](https://github.com/nextauthjs/next-auth-example).
+To be able to investigate, we need access to a reproduction to identify what triggered the issue. We need a link to a **public** GitHub repository. Example: ([NextAuth.js example repository](https://github.com/nextauthjs/next-auth-example)).
 
-The bug template that you filled out has a section called "Link to the code that reproduces this issue or a replay of the bug", which is where you should provide the link to the reproduction.
+The bug template that you filled out has a section called "Reproduction URL", which is where you should provide the link to the reproduction.
 
 - If you did not provide a link or the link you provided is not valid, we will close the issue.
 - If you provide a link to a private repository, we will close the issue.
