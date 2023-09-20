@@ -120,7 +120,7 @@
  */
 
 import { Auth, skipCSRFCheck, raw } from "@auth/core"
-import { cookies, headers } from "next/headers.js"
+import { cookies, headers } from "next/headers"
 import { detectOrigin, reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 
