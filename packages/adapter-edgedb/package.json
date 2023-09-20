@@ -1,18 +1,22 @@
 {
-  "name": "@auth/mongodb-adapter",
-  "version": "2.0.0",
-  "description": "MongoDB adapter for Auth.js",
+  "name": "@auth/edgedb-adapter",
+  "version": "0.2.0",
+  "description": "EdgeDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "author": "Balázs Orbán <info@balazsorban.com>",
+  "author": "Bruno Crosier",
+  "contributors": [
+    "Thang Huu Vu <hi@thvu.dev>"
+  ],
   "type": "module",
   "types": "./index.d.ts",
   "files": [
-    "*.js",
     "*.d.ts*",
+    "*.js",
+    "lib",
     "src"
   ],
   "exports": {
@@ -26,29 +30,29 @@
     "next-auth",
     "next.js",
     "oauth",
-    "mongodb",
-    "adapter"
+    "edgedb"
   ],
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test": "./tests/test.sh",
-    "test:watch": "./tests/test.sh -w",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "mongodb": "^6"
+    "edgedb": "^1.0.1"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
+    "@auth/adapter-test": "workspace:^0.0.0",
+    "@auth/tsconfig": "workspace:^0.0.0",
     "jest": "^27.4.3",
-    "mongodb": "^6.0.0"
+    "@auth/core": "workspace:*",
+    "typescript": "^4.7.4",
+    "edgedb": "^1.0.1"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

@@ -272,7 +272,7 @@ export default function Home() {
 }
 
 const svelteKitCode = `
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from '@auth/core/providers/github'
 import Facebook from '@auth/core/providers/facebook'
 import Google from '@auth/core/providers/google'
