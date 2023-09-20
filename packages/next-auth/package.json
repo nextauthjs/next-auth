@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "4.23.0",
+  "version": "4.23.1",
   "description": "Authentication for Next.js",
   "homepage": "https://next-auth.js.org",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -9,7 +9,7 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Thang Huu Vu <thvu@hey.com>"
+    "Thang Huu Vu <hi@thvu.dev>"
   ],
   "main": "index.js",
   "module": "index.js",
@@ -29,34 +29,34 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "default": "./index.js"
     },
     "./adapters": {
       "types": "./adapters.d.ts"
     },
     "./jwt": {
       "types": "./jwt/index.d.ts",
-      "import": "./jwt/index.js"
+      "default": "./jwt/index.js"
     },
     "./react": {
       "types": "./react/index.d.ts",
-      "import": "./react/index.js"
+      "default": "./react/index.js"
     },
     "./next": {
       "types": "./next/index.d.ts",
-      "import": "./next/index.js"
+      "default": "./next/index.js"
     },
     "./middleware": {
       "types": "./middleware.d.ts",
-      "import": "./middleware.js"
+      "default": "./middleware.js"
     },
     "./client/_utils": {
       "types": "./client/_utils.d.ts",
-      "import": "./client/_utils.js"
+      "default": "./client/_utils.js"
     },
     "./providers/*": {
       "types": "./providers/*.d.ts",
-      "import": "./providers/*.js"
+      "default": "./providers/*.js"
     }
   },
   "scripts": {
