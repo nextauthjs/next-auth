@@ -15,91 +15,92 @@ export function Clerk() {
   let isInView = useInView(inViewRef)
 
   return (
-    <section
-      ref={inViewRef}
-      className="h-[360px] w-full overflow-hidden py-8 sm:h-[480px]"
-    >
-      <div className="mx-auto flex h-full w-full max-w-6xl flex-col">
-        <div className="flex flex-1 items-center justify-center">
-          <AnimatedLogo />
-        </div>
-
-        <div className="relative isolate flex flex-1 flex-col items-center justify-between">
-          <div className="absolute -top-5 z-50 h-10 w-full [mask:linear-gradient(90deg,transparent,black_20%,black_80%,transparent)] before:absolute before:inset-0 before:top-5 before:h-[1px] before:bg-gradient-to-r before:from-[#AE48FF] before:via-[#6C47FF] before:via-[25%] before:to-[#18CCFC] before:opacity-50 before:blur-[2px] after:absolute after:inset-0 after:left-1/2 after:top-5 after:h-[1px] after:w-3/4 after:-translate-x-1/2 after:bg-gradient-to-r after:from-[#AE48FF] after:via-[#6C47FF] after:via-[25%] after:to-[#18CCFC] after:[mask:linear-gradient(90deg,transparent,black,black,transparent)]">
-            <motion.div
-              initial={{ x: "-100%" }}
-              animate={isInView ? { x: "100%" } : {}}
-              transition={{
-                delay: 2.5,
-                duration: isInView ? 1 : 0,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatDelay: 3,
-              }}
-              className="absolute inset-x-0 top-5 z-10 h-[1px] bg-gradient-to-l from-white/75 to-transparent to-50% dark:from-white/25"
-            />
+    <span className="tailwind">
+      <section
+        ref={inViewRef}
+        className="h-[360px] w-full overflow-hidden py-8 sm:h-[480px] pb-24 mb-24"
+      >
+        <div className="mx-auto flex h-full w-full max-w-6xl flex-col">
+          <div className="flex flex-1 items-center justify-center">
+            <AnimatedLogo />
           </div>
-          <div className="absolute inset-0 isolate -z-10 overflow-hidden before:absolute before:inset-0 before:bg-[url(/img/background-pattern.svg)] before:[mask:radial-gradient(ellipse_farthest-side_at_50%_-25vw,black,transparent)] dark:before:opacity-10">
-            <div className="absolute left-1/2 top-0 h-12 w-1/2 -translate-x-1/2 -translate-y-3/4 rounded-[50%] bg-gradient-to-r from-[#AE48FF] via-[#6C47FF] via-[25%] to-[#18CCFC] opacity-20 blur-xl" />
-          </div>
-
-          <h2>
-            <span className="sr-only">Clerk complete user management</span>
-          </h2>
-
-          <p className="text-center text-[17px] leading-relaxed tracking-tight dark:text-white">
-            More than authentication...
-            <br />
-            <span className="text-[17px] font-bold text-[#6C47FF] sm:text-[28px]">
-              Complete user management.
-            </span>
-          </p>
-
-          <div className="relative isolate">
-            <a
-              href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=09_01_2023"
-              className="relative isolate inline-flex h-8 items-center gap-1.5 rounded-[8px] px-4 text-[13px] font-semibold text-white before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:shadow-lg before:shadow-[rgb(100_48_247/0.3)] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[#6C47FF] after:shadow-[inset_0px_-8px_16px_-4px_#6430F7,inset_0px_0px_1px_1px_theme(colors.white/4%),inset_0px_1px_0px_theme(colors.white/10%),0px_0px_0px_1px_rgb(72_24_191/0.75)] dark:before:shadow-black"
-            >
-              <span className="z-20 flex items-center gap-1.5 bg-gradient-to-b from-white from-50% to-[#D7D4FF] bg-clip-text text-transparent drop-shadow-[0px_1px_1px_rgb(86_30_227/60%)]">
-                <span>Get started for free</span>
-                <ArrowIcon />
-              </span>
-            </a>
-
-            {[...Array(4)].map((_, i) => (
+          <div className="relative isolate flex flex-1 flex-col items-center justify-between">
+            <div className="absolute -top-5 z-50 h-10 w-full [mask:linear-gradient(90deg,transparent,black_20%,black_80%,transparent)] before:absolute before:inset-0 before:top-5 before:h-[1px] before:bg-gradient-to-r before:from-[#AE48FF] before:via-[#6C47FF] before:via-[25%] before:to-[#18CCFC] before:opacity-50 before:blur-[2px] after:absolute after:inset-0 after:left-1/2 after:top-5 after:h-[1px] after:w-3/4 after:-translate-x-1/2 after:bg-gradient-to-r after:from-[#AE48FF] after:via-[#6C47FF] after:via-[25%] after:to-[#18CCFC] after:[mask:linear-gradient(90deg,transparent,black,black,transparent)]">
               <motion.div
-                key={i}
-                className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[275%] w-[135%] rounded-[22px] border border-[#6C47FF]/[.15] dark:border-[#6C47FF]/25"
-                style={{ x: "-50%", y: "-50%" }}
-                initial={{ opacity: 0, scaleX: 0.75, scaleY: 0.4 }}
-                animate={
-                  isInView
-                    ? {
-                        opacity: [0, 1, 0],
-                        scaleX: 1,
-                        scaleY: 1,
-                      }
-                    : {}
-                }
-                transition={
-                  isInView
-                    ? {
-                        delay: i * 1,
-                        duration: 4,
-                        ease: "linear",
-                        repeat: Infinity,
-                        times: [0, 0.1, 1],
-                      }
-                    : {}
-                }
+                initial={{ x: "-100%" }}
+                animate={isInView ? { x: "100%" } : {}}
+                transition={{
+                  delay: 2.5,
+                  duration: isInView ? 1 : 0,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatDelay: 3,
+                }}
+                className="absolute inset-x-0 top-5 z-10 h-[1px] bg-gradient-to-l from-white/75 to-transparent to-50% dark:from-white/25"
               />
-            ))}
-          </div>
+            </div>
+            <div className="absolute inset-0 isolate -z-10 overflow-hidden before:absolute before:inset-0 before:bg-[url(/img/background-pattern.svg)] before:[mask:radial-gradient(ellipse_farthest-side_at_50%_-25vw,black,transparent)] dark:before:opacity-10">
+              <div className="absolute left-1/2 top-0 h-12 w-1/2 -translate-x-1/2 -translate-y-3/4 rounded-[50%] bg-gradient-to-r from-[#AE48FF] via-[#6C47FF] via-[25%] to-[#18CCFC] opacity-20 blur-xl" />
+            </div>
 
-          <div className="absolute left-1/2 top-0 -z-10 h-[140px] w-3/4 -translate-x-1/2 -translate-y-1/3 rotate-12 transform-gpu rounded-[50%] bg-gradient-to-r from-[#6C47FF] via-[#4818BF] via-25% to-sky-500 opacity-10 blur-3xl" />
+            <h2>
+              <span className="sr-only">Clerk complete user management</span>
+            </h2>
+
+            <p className="text-center text-[17px] leading-relaxed tracking-tight dark:text-white">
+              More than authentication...
+              <br />
+              <span className="text-[17px] font-bold text-[#6C47FF] sm:text-[28px]">
+                Complete user management.
+              </span>
+            </p>
+
+            <div className="relative isolate">
+              <a
+                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=09_01_2023"
+                className="relative isolate inline-flex h-8 items-center gap-1.5 rounded-[8px] px-4 text-[13px] font-semibold text-white before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:shadow-lg before:shadow-[rgb(100_48_247/0.3)] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[#6C47FF] after:shadow-[inset_0px_-8px_16px_-4px_#6430F7,inset_0px_0px_1px_1px_theme(colors.white/4%),inset_0px_1px_0px_theme(colors.white/10%),0px_0px_0px_1px_rgb(72_24_191/0.75)] dark:before:shadow-black"
+              >
+                <span className="z-20 flex items-center gap-1.5 bg-gradient-to-b from-white from-50% to-[#D7D4FF] bg-clip-text text-transparent drop-shadow-[0px_1px_1px_rgb(86_30_227/60%)]">
+                  <span>Get started for free</span>
+                  <ArrowIcon />
+                </span>
+              </a>
+
+              {[...Array(4)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[275%] w-[135%] rounded-[22px] border border-[#6C47FF]/[.15] dark:border-[#6C47FF]/25"
+                  style={{ x: "-50%", y: "-50%" }}
+                  initial={{ opacity: 0, scaleX: 0.75, scaleY: 0.4 }}
+                  animate={
+                    isInView
+                      ? {
+                          opacity: [0, 1, 0],
+                          scaleX: 1,
+                          scaleY: 1,
+                        }
+                      : {}
+                  }
+                  transition={
+                    isInView
+                      ? {
+                          delay: i * 1,
+                          duration: 4,
+                          ease: "linear",
+                          repeat: Infinity,
+                          times: [0, 0.1, 1],
+                        }
+                      : {}
+                  }
+                />
+              ))}
+            </div>
+
+            <div className="absolute left-1/2 top-0 -z-10 h-[140px] w-3/4 -translate-x-1/2 -translate-y-1/3 rotate-12 transform-gpu rounded-[50%] bg-gradient-to-r from-[#6C47FF] via-[#4818BF] via-25% to-sky-500 opacity-10 blur-3xl" />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </span>
   )
 }
 
@@ -146,7 +147,7 @@ export function AnimatedLogo() {
     once: true,
   })
 
-  let [isAnimationFinished, setIsAnimationFinished] = useState(false)
+  let [isAnimationFinished] = useState(false)
 
   let wrapperContainer = useAnimationControls()
   let iconContainer = useAnimationControls()
@@ -302,6 +303,8 @@ export function AnimatedLogo() {
       animate={wrapperContainer}
       className="relative isolate flex scale-75 items-center gap-2 sm:scale-100"
     >
+      <span className="text-center pr-6 font-bold">sponsored by</span>
+
       {!isAnimationFinished && (
         <motion.div
           style={{ x: "138%" }}

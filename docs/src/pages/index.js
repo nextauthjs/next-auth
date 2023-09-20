@@ -128,7 +128,7 @@ export default function Home() {
                 <h1 className="hero__title">{siteConfig.title}</h1>
                 <p className="hero__subtitle">{siteConfig.tagline}</p>
               </div>
-              <Clerk />
+
               <div className={styles.buttons}>
                 <a
                   className={classnames(
@@ -187,6 +187,7 @@ export default function Home() {
                   </h2>
                 </div>
               </div>
+              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
