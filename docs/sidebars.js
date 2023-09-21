@@ -56,6 +56,7 @@ module.exports = {
               { type: "doc", id: "reference/adapter/mikro-orm/index" },
               { type: "doc", id: "reference/adapter/mongodb/index" },
               { type: "doc", id: "reference/adapter/neo4j/index" },
+              { type: "doc", id: "reference/adapter/pg/index" },
               { type: "doc", id: "reference/adapter/pouchdb/index" },
               { type: "doc", id: "reference/adapter/prisma/index" },
               { type: "doc", id: "reference/adapter/sequelize/index" },

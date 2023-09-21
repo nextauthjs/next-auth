@@ -1,6 +1,6 @@
 {
   "name": "@auth/pg-adapter",
-  "description": "Vanilla Postgres adapter for next-auth.",
+  "description": "Postgres adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
