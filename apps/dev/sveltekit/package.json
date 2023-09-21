@@ -15,8 +15,8 @@
     "@sveltejs/kit": "next",
     "svelte": "3.55.0",
     "svelte-check": "2.10.2",
-    "typescript": "4.9.4",
-    "vite": "4.0.1"
+    "typescript": "5.2.2",
+    "vite": "4.0.5"
   },
   "dependencies": {
     "@auth/core": "workspace:*",

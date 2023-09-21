@@ -1,21 +1,20 @@
 import logger, { setLogger } from "../utils/logger"
-import { toInternalRequest, toResponse } from "../utils/web"
+import { detectOrigin } from "../utils/detect-origin"
+import * as routes from "./routes"
+import renderPage from "./pages"
 import { init } from "./init"
 import { assertConfig } from "./lib/assert"
 import { SessionStore } from "./lib/cookie"
-import renderPage from "./pages"
-import * as routes from "./routes"
 
-import { UntrustedHost } from "./errors"
+import type { AuthAction, AuthOptions } from "./types"
 import type { Cookie } from "./lib/cookie"
 import type { ErrorType } from "./pages/error"
-import type { AuthAction, AuthOptions } from "./types"
+import { parse as parseCookie } from "cookie"
 
-/** @internal */
 export interface RequestInternal {
-  url: URL
-  /** @default "GET" */
-  method: string
+  /** @default "http://localhost:3000" */
+  origin?: string
+  method?: string
   cookies?: Partial<Record<string, string>>
   headers?: Record<string, any>
   query?: Record<string, any>
@@ -25,29 +24,75 @@ export interface RequestInternal {
   error?: string
 }
 
-/** @internal */
+export interface NextAuthHeader {
+  key: string
+  value: string
+}
+
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] = any
 > {
   status?: number
-  headers?: Record<string, string>
+  headers?: NextAuthHeader[]
   body?: Body
   redirect?: string
   cookies?: Cookie[]
 }
 
-const configErrorMessage =
-  "There is a problem with the server configuration. Check the server logs for more information."
-
-async function AuthHandlerInternal<
-  Body extends string | Record<string, any> | any[]
->(params: {
-  req: RequestInternal
+export interface NextAuthHandlerParams {
+  req: Request | RequestInternal
   options: AuthOptions
-  /** REVIEW: Is this the best way to skip parsing the body in Node.js? */
-  parsedBody?: any
-}): Promise<ResponseInternal<Body>> {
-  const { options: authOptions, req } = params
+}
+
+async function getBody(req: Request): Promise<Record<string, any> | undefined> {
+  try {
+    return await req.json()
+  } catch {}
+}
+
+// TODO:
+async function toInternalRequest(
+  req: RequestInternal | Request
+): Promise<RequestInternal> {
+  if (req instanceof Request) {
+    const url = new URL(req.url)
+    // TODO: handle custom paths?
+    const nextauth = url.pathname.split("/").slice(3)
+    const headers = Object.fromEntries(req.headers)
+    const query: Record<string, any> = Object.fromEntries(url.searchParams)
+    query.nextauth = nextauth
+
+    return {
+      action: nextauth[0] as AuthAction,
+      method: req.method,
+      headers,
+      body: await getBody(req),
+      cookies: parseCookie(req.headers.get("cookie") ?? ""),
+      providerId: nextauth[1],
+      error: url.searchParams.get("error") ?? nextauth[1],
+      origin: detectOrigin(
+        headers["x-forwarded-host"] ?? headers.host,
+        headers["x-forwarded-proto"]
+      ),
+      query,
+    }
+  }
+
+  const { headers } = req
+  const host = headers?.["x-forwarded-host"] ?? headers?.host
+  req.origin = detectOrigin(host, headers?.["x-forwarded-proto"])
+
+  return req
+}
+
+export async function AuthHandler<
+  Body extends string | Record<string, any> | any[]
+>(params: NextAuthHandlerParams): Promise<ResponseInternal<Body>> {
+  const { options: authOptions, req: incomingRequest } = params
+
+  const req = await toInternalRequest(incomingRequest)
+
+  setLogger(authOptions.logger, authOptions.debug)
 
   const assertionResult = assertConfig({ options: authOptions, req })
 
@@ -59,10 +104,11 @@ async function AuthHandlerInternal<
 
     const htmlPages = ["signin", "signout", "error", "verify-request"]
     if (!htmlPages.includes(req.action) || req.method !== "GET") {
+      const message = `There is a problem with the server configuration. Check the server logs for more information.`
       return {
         status: 500,
-        headers: { "Content-Type": "application/json" },
-        body: { message: configErrorMessage } as any,
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        body: { message } as any,
       }
     }
     const { pages, theme } = authOptions
@@ -88,13 +134,13 @@ async function AuthHandlerInternal<
     }
   }
 
-  const { action, providerId, error, method } = req
+  const { action, providerId, error, method = "GET" } = req
 
   const { options, cookies } = await init({
     authOptions,
     action,
     providerId,
-    url: req.url,
+    origin: req.origin,
     callbackUrl: req.body?.callbackUrl ?? req.query?.callbackUrl,
     csrfToken: req.body?.csrfToken,
     cookies: req.cookies,
@@ -116,12 +162,11 @@ async function AuthHandlerInternal<
       case "session": {
         const session = await routes.session({ options, sessionStore })
         if (session.cookies) cookies.push(...session.cookies)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
       }
       case "csrf":
         return {
-          headers: { "Content-Type": "application/json" },
+          headers: [{ key: "Content-Type", value: "application/json" }],
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
@@ -194,7 +239,7 @@ async function AuthHandlerInternal<
   } else if (method === "POST") {
     switch (action) {
       case "signin":
-        // Verified CSRF Token required for all sign in routes
+        // Verified CSRF Token required for all sign-in routes
         if (options.csrfTokenVerified && options.provider) {
           const signin = await routes.signin({
             query: req.query,
@@ -237,7 +282,7 @@ async function AuthHandlerInternal<
           return { ...callback, cookies }
         }
         break
-      case "_log":
+      case "_log": {
         if (authOptions.logger) {
           try {
             const { code, level, ...metadata } = req.body ?? {}
@@ -248,6 +293,24 @@ async function AuthHandlerInternal<
           }
         }
         return {}
+      }
+      case "session": {
+        // Verified CSRF Token required for session updates
+        if (options.csrfTokenVerified) {
+          const session = await routes.session({
+            options,
+            sessionStore,
+            newSession: req.body?.data,
+            isUpdate: true,
+          })
+          if (session.cookies) cookies.push(...session.cookies)
+          return { ...session, cookies } as any
+        }
+
+        // If CSRF token is invalid, return a 400 status code
+        // we should not redirect to a page as this is an API route
+        return { status: 400, body: {} as any, cookies }
+      }
       default:
     }
   }
@@ -256,52 +319,4 @@ async function AuthHandlerInternal<
     status: 400,
     body: `Error: This action with HTTP ${method} is not supported by NextAuth.js` as any,
   }
-}
-
-/**
- * The core functionality of `next-auth`.
- * It receives a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request)
- * and returns a standard [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
- */
-export async function AuthHandler(
-  request: Request,
-  options: AuthOptions
-): Promise<Response> {
-  setLogger(options.logger, options.debug)
-
-  if (!options.trustHost) {
-    const error = new UntrustedHost(
-      `Host must be trusted. URL was: ${request.url}`
-    )
-    logger.error(error.code, error)
-
-    return new Response(JSON.stringify({ message: configErrorMessage }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    })
-  }
-
-  const req = await toInternalRequest(request)
-  if (req instanceof Error) {
-    logger.error((req as any).code, req)
-    return new Response(
-      `Error: This action with HTTP ${request.method} is not supported.`,
-      { status: 400 }
-    )
-  }
-  const internalResponse = await AuthHandlerInternal({ req, options })
-
-  const response = await toResponse(internalResponse)
-
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
-  const redirect = response.headers.get("Location")
-  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
-    response.headers.delete("Location")
-    response.headers.set("Content-Type", "application/json")
-    return new Response(JSON.stringify({ url: redirect }), {
-      headers: response.headers,
-    })
-  }
-  return response
 }

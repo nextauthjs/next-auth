@@ -1,11 +1,13 @@
 import { DgraphAdapter, format } from "../src"
-import { client as dgraphClient } from "../src/client"
-import * as fragments from "../src/graphql/fragments"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { client as dgraphClient } from "../src/lib/client"
+import * as fragments from "../src/lib/graphql/fragments"
+import { runBasicTests } from "@auth/adapter-test"
 import fs from "fs"
 import path from "path"
 
 import type { DgraphClientParams } from "../src"
+
+globalThis.fetch ??= require("undici").fetch
 
 const params: DgraphClientParams = {
   endpoint: "http://localhost:8080/graphql",

@@ -43,7 +43,7 @@ export async function signIn<
 
   // TODO: Handle custom base path
   // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const { csrfToken } = await $fetch("/api/auth/csrf")
+  const { csrfToken } = await $fetch<{ csrfToken: string }>("/api/auth/csrf")
 
   console.log(_signInUrl)
 
