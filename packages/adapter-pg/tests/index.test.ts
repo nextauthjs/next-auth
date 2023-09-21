@@ -2,10 +2,15 @@ import { runBasicTests } from "@auth/adapter-test"
 import PostgresAdapter, { mapExpiresAt } from "../src"
 import { Pool } from "pg"
 
-const connectionString = "postgresql://localhost/adapter-postgres-test"
+const POOL_SIZE = 20
 
 const client = new Pool({
-  connectionString,
+  host: "127.0.0.1",
+  database: "adapter-postgres-test",
+  user: "pg",
+  password: "pg",
+  port: 5432,
+  max: POOL_SIZE,
 })
 
 runBasicTests({

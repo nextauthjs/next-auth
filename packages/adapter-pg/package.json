@@ -37,8 +37,7 @@
     "access": "public"
   },
   "scripts": {
-    "init:default": "bash create-database-tables.sh",
-    "test": "pnpm init:default && jest",
+    "test": "./tests/test.sh",
     "build": "tsc"
   },
   "dependencies": {
