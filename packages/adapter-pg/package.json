@@ -1,19 +1,36 @@
 {
-  "name": "@next-auth/pg-adapter",
-  "description": "Postgres adapter for next-auth.",
-  "homepage": "https://next-auth.js.org",
+  "name": "@auth/pg-adapter",
+  "description": "Vanilla Postgres adapter for next-auth.",
+  "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Jake Coppinger",
-  "main": "dist/index.js",
+  "contributors": [
+    "Thang Huu Vu <hi@thvu.dev>"
+  ],
   "license": "ISC",
   "keywords": [
     "next-auth",
+    "@auth",
+    "Auth.js",
     "next.js",
     "oauth",
     "postgres"
+  ],
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
   ],
   "private": false,
   "publishConfig": {
@@ -24,22 +41,20 @@
     "test": "pnpm init:default && jest",
     "build": "tsc"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "next-auth": "^4"
+    "pg": "^8"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:^0.0.0",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
+    "@auth/adapter-test": "workspace:*",
+    "@auth/tsconfig": "workspace:*",
     "@types/pg": "^8.6.5",
     "jest": "^27.4.3",
-    "next-auth": "workspace:*",
     "pg": "^8.7.1"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "@auth/adapter-test/jest"
   }
 }

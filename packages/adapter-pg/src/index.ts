@@ -1,11 +1,16 @@
-import { Adapter, AdapterUser, VerificationToken, AdapterSession } from "next-auth/adapters";
-import { Pool } from "pg";
+import {
+  Adapter,
+  AdapterUser,
+  VerificationToken,
+  AdapterSession,
+} from "@auth/core/adapters"
+import { Pool } from "pg"
 
 /**
  * Convert the value of expires_at in an object to be a number.
  * It is stored as a BIGINT in the Postgres schema but it appears to be converted
  * to a string by the `pg` adapter.
- * 
+ *
  * @param account Account object. Account is not exported from `next-auth/adapters` like
  * other types are.
  * @returns Account object with all keys/values identical but the account value.
@@ -14,83 +19,104 @@ export function mapExpiresAt(account: any): any {
   const expires_at: number = parseInt(account.expires_at)
   return {
     ...account,
-    expires_at
+    expires_at,
   }
 }
 
 export default function PostgresAdapter(client: Pool): Adapter {
   return {
-    async createVerificationToken(verificationToken: VerificationToken): Promise<VerificationToken> {
-      const { identifier, expires, token } = verificationToken;
+    async createVerificationToken(
+      verificationToken: VerificationToken
+    ): Promise<VerificationToken> {
+      const { identifier, expires, token } = verificationToken
       const sql = `
         INSERT INTO verification_token ( identifier, expires, token ) 
         VALUES ($1, $2, $3)
-        `;
-      await client.query(sql, [identifier, expires, token]);
-      return verificationToken;
+        `
+      await client.query(sql, [identifier, expires, token])
+      return verificationToken
     },
-    async useVerificationToken({ identifier, token }: { identifier: string; token: string }):
-      Promise<VerificationToken> {
+    async useVerificationToken({
+      identifier,
+      token,
+    }: {
+      identifier: string
+      token: string
+    }): Promise<VerificationToken> {
       const sql = `delete from verification_token
       where identifier = $1 and token = $2
-      RETURNING identifier, expires, token `;
-      const result = await client.query(sql, [identifier, token]);
-      return result.rowCount !== 0 ? result.rows[0] : null;
+      RETURNING identifier, expires, token `
+      const result = await client.query(sql, [identifier, token])
+      return result.rowCount !== 0 ? result.rows[0] : null
     },
 
-    async createUser(user: Omit<AdapterUser, 'id'>) {
-      const { name, email, emailVerified, image } = user;
+    async createUser(user: Omit<AdapterUser, "id">) {
+      const { name, email, emailVerified, image } = user
       const sql = `
         INSERT INTO users (name, email, "emailVerified", image) 
         VALUES ($1, $2, $3, $4) 
-        RETURNING id, name, email, "emailVerified", image`;
-      const result = await client.query(sql, [name, email, emailVerified, image]);
-      return result.rows[0];
+        RETURNING id, name, email, "emailVerified", image`
+      const result = await client.query(sql, [
+        name,
+        email,
+        emailVerified,
+        image,
+      ])
+      return result.rows[0]
     },
     async getUser(id) {
-      const sql = `select * from users where id = $1`;
+      const sql = `select * from users where id = $1`
       try {
-        const result = await client.query(sql, [id]);
-        return result.rowCount === 0 ? null : result.rows[0];
+        const result = await client.query(sql, [id])
+        return result.rowCount === 0 ? null : result.rows[0]
       } catch (e) {
-        return null;
+        return null
       }
     },
     async getUserByEmail(email) {
-      const sql = `select * from users where email = $1`;
-      const result = await client.query(sql, [email]);
-      return result.rowCount !== 0 ? result.rows[0] : null;
+      const sql = `select * from users where email = $1`
+      const result = await client.query(sql, [email])
+      return result.rowCount !== 0 ? result.rows[0] : null
     },
-    async getUserByAccount({ providerAccountId, provider }): Promise<AdapterUser | null> {
+    async getUserByAccount({
+      providerAccountId,
+      provider,
+    }): Promise<AdapterUser | null> {
       const sql = `
           select u.* from users u join accounts a on u.id = a."userId"
           where 
           a.provider = $1 
           and 
-          a."providerAccountId" = $2`;
+          a."providerAccountId" = $2`
 
-      const result = await client.query(sql, [provider, providerAccountId]);
+      const result = await client.query(sql, [provider, providerAccountId])
       return result.rowCount !== 0 ? result.rows[0] : null
     },
     async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
-      const fetchSql = `select * from users where id = $1`;
-      const query1 = await client.query(fetchSql, [user.id]);
-      const oldUser = query1.rows[0];
+      const fetchSql = `select * from users where id = $1`
+      const query1 = await client.query(fetchSql, [user.id])
+      const oldUser = query1.rows[0]
 
       const newUser = {
         ...oldUser,
-        ...user
+        ...user,
       }
 
-      const { id, name, email, emailVerified, image } = newUser;
+      const { id, name, email, emailVerified, image } = newUser
       const updateSql = `
         UPDATE users set
         name = $2, email = $3, "emailVerified" = $4, image = $5
         where id = $1
         RETURNING name, id, email, "emailVerified", image
-      `;
-      const query2 = await client.query(updateSql, [id, name, email, emailVerified, image]);
-      return query2.rows[0];
+      `
+      const query2 = await client.query(updateSql, [
+        id,
+        name,
+        email,
+        emailVerified,
+        image,
+      ])
+      return query2.rows[0]
     },
     async linkAccount(account) {
       const sql = `
@@ -122,7 +148,7 @@ export default function PostgresAdapter(client: Pool): Adapter {
         scope,
         session_state,
         token_type
-      `;
+      `
 
       const params = [
         account.userId,
@@ -135,11 +161,11 @@ export default function PostgresAdapter(client: Pool): Adapter {
         account.id_token,
         account.scope,
         account.session_state,
-        account.token_type
-      ];
+        account.token_type,
+      ]
 
-      const result = await client.query(sql, params);
-      return mapExpiresAt(result.rows[0]);
+      const result = await client.query(sql, params)
+      return mapExpiresAt(result.rows[0])
     },
     async createSession({ sessionToken, userId, expires }) {
       if (userId === undefined) {
@@ -147,74 +173,82 @@ export default function PostgresAdapter(client: Pool): Adapter {
       }
       const sql = `insert into sessions ("userId", expires, "sessionToken")
       values ($1, $2, $3)
-      RETURNING id, "sessionToken", "userId", expires`;
+      RETURNING id, "sessionToken", "userId", expires`
 
-      const result = await client.query(sql, [userId, expires, sessionToken]);
-      return result.rows[0];
+      const result = await client.query(sql, [userId, expires, sessionToken])
+      return result.rows[0]
     },
 
     async getSessionAndUser(sessionToken: string | undefined): Promise<{
-      session: AdapterSession;
-      user: AdapterUser;
+      session: AdapterSession
+      user: AdapterUser
     } | null> {
       if (sessionToken === undefined) {
-        return null;
+        return null
       }
-      const result1 = await client.query(`select * from sessions where "sessionToken" = $1`,
-        [sessionToken]);
+      const result1 = await client.query(
+        `select * from sessions where "sessionToken" = $1`,
+        [sessionToken]
+      )
       if (result1.rowCount === 0) {
         return null
       }
-      let session: AdapterSession = result1.rows[0];
+      let session: AdapterSession = result1.rows[0]
 
-      const result2 = await client.query("select * from users where id = $1", [session.userId]);
+      const result2 = await client.query("select * from users where id = $1", [
+        session.userId,
+      ])
       if (result2.rowCount === 0) {
         return null
       }
-      const user = result2.rows[0];
+      const user = result2.rows[0]
       return {
         session,
         user,
-      };
+      }
     },
-    async updateSession(session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">):
-      Promise<AdapterSession | null | undefined> {
-      const { sessionToken } = session;
+    async updateSession(
+      session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+    ): Promise<AdapterSession | null | undefined> {
+      const { sessionToken } = session
       const result1 = await client.query(
-        `select * from sessions where "sessionToken" = $1`
-        , [sessionToken]);
+        `select * from sessions where "sessionToken" = $1`,
+        [sessionToken]
+      )
       if (result1.rowCount === 0) {
         return null
       }
-      const originalSession: AdapterSession = result1.rows[0];
+      const originalSession: AdapterSession = result1.rows[0]
 
       const newSession: AdapterSession = {
         ...originalSession,
-        ...session
+        ...session,
       }
       const sql = `
         UPDATE sessions set
         "userId" = $2, expires = $3
         where "sessionToken" = $1
-        `;
+        `
       const result = await client.query(sql, [
-        newSession.sessionToken, newSession.userId, newSession.expires
-      ]);
-      return result.rows[0];
+        newSession.sessionToken,
+        newSession.userId,
+        newSession.expires,
+      ])
+      return result.rows[0]
     },
     async deleteSession(sessionToken) {
-      const sql = `delete from sessions where "sessionToken" = $1`;
-      await client.query(sql, [sessionToken]);
+      const sql = `delete from sessions where "sessionToken" = $1`
+      await client.query(sql, [sessionToken])
     },
     async unlinkAccount(partialAccount) {
-      const { provider, providerAccountId } = partialAccount;
-      const sql = `delete from accounts where "providerAccountId" = $1 and provider = $2`;
-      await client.query(sql, [providerAccountId, provider]);
+      const { provider, providerAccountId } = partialAccount
+      const sql = `delete from accounts where "providerAccountId" = $1 and provider = $2`
+      await client.query(sql, [providerAccountId, provider])
     },
     async deleteUser(userId: string) {
-      await client.query(`delete from users where id = $1`, [userId]);
-      await client.query(`delete from sessions where "userId" = $1`, [userId]);
-      await client.query(`delete from accounts where "userId" = $1`, [userId]);
-    }
+      await client.query(`delete from users where id = $1`, [userId])
+      await client.query(`delete from sessions where "userId" = $1`, [userId])
+      await client.query(`delete from accounts where "userId" = $1`, [userId])
+    },
   }
 }
