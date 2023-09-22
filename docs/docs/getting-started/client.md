@@ -421,6 +421,19 @@ e.g.
 
 The URL must be considered valid by the [redirect callback handler](/configuration/callbacks#redirect-callback). By default it requires the URL to be an absolute URL at the same host name, or a relative url starting with a slash. If it does not match it will redirect to the homepage. You can define your own [redirect callback](/configuration/callbacks#redirect-callback) to allow other URLs.
 
+#### Redirecting using a POST request
+
+The `callbackUrl` can also be sent using an HTML <form> POST request.
+
+```html
+<form
+  method="post"
+  action="/api/auth/signin/email"
+>
+  <input name="callbackUrl" type="hidden" defaultValue="/foo" />
+</form>
+```
+
 ### Using the `redirect: false` option
 
 :::note
