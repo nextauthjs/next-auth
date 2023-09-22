@@ -293,6 +293,7 @@ const docusaurusConfig = {
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),
           typedocAdapter("Neo4j"),
+          typedocAdapter("PG"),
           typedocAdapter("PouchDB"),
           typedocAdapter("Prisma"),
           typedocAdapter("TypeORM"),
