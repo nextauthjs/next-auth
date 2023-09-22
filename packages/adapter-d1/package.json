@@ -21,7 +21,7 @@
     "d1"
   ],
   "type": "module",
-  "types": "dist/index.d.ts",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -39,7 +39,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist",
     "test": "jest"
   },
   "dependencies": {
