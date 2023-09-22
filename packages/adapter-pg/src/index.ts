@@ -9,7 +9,7 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @auth/pg-adapter
+ * npm install next-auth @auth/pg-adapter pg
  * ```
  *
  * @module @auth/pg-adapter
@@ -23,15 +23,6 @@ import type {
 } from "@auth/core/adapters"
 import type { Pool } from "pg"
 
-/**
- * Convert the value of expires_at in an object to be a number.
- * It is stored as a BIGINT in the Postgres schema but it appears to be converted
- * to a string by the `pg` adapter.
- *
- * @param account Account object. Account is not exported from `next-auth/adapters` like
- * other types are.
- * @returns Account object with all keys/values identical but the account value.
- */
 export function mapExpiresAt(account: any): any {
   const expires_at: number = parseInt(account.expires_at)
   return {
@@ -41,6 +32,8 @@ export function mapExpiresAt(account: any): any {
 }
 
 /**
+ * ## Setup
+ *
  * The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our doc page on [Database Models](http://localhost:3000/reference/adapters#models).
  * ```sql
  * CREATE TABLE verification_token
@@ -93,13 +86,11 @@ export function mapExpiresAt(account: any): any {
  *
  * ```
  *
- * ## Setup
- *
  *  ```bash npm2yarn2pnpm
  * npm install pg @auth/pg-adapter next-auth
  * ```
  *
- * ```typescript title="pages/api/auth/[...nextauth].ts"
+ * ```typescript title="auth.ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { PostgresAdapter } from "@auth/pg-adapter"
