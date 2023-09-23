@@ -31,7 +31,12 @@ import LinkedInProvider from "next-auth/providers/linkedin";
 providers: [
   LinkedInProvider({
     clientId: process.env.LINKEDIN_CLIENT_ID,
-    clientSecret: process.env.LINKEDIN_CLIENT_SECRET
+    clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+    authorization: {
+          params: { scope: 'openid profile email' },
+        },
+        issuer: 'https://www.linkedin.com',
+        jwks_endpoint: 'https://www.linkedin.com/oauth/openid/jwks',
   })
 ]
 ...
