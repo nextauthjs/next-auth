@@ -1,8 +1,8 @@
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 
 import { FirestoreAdapter, type FirebaseAdapterConfig } from "../src"
 import {
-  collestionsFactory,
+  collectionsFactory,
   initFirestore,
   getDoc,
   getOneDoc,
@@ -22,7 +22,7 @@ describe.each([
     const db = initFirestore(config)
     const preferSnakeCase = config.namingStrategy === "snake_case"
     const mapper = mapFieldsFactory(preferSnakeCase)
-    const C = collestionsFactory(db, preferSnakeCase)
+    const C = collectionsFactory(db, preferSnakeCase)
 
     for (const [name, collection] of Object.entries(C)) {
       test(`collection "${name}" should be empty`, async () => {

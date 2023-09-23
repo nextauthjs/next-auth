@@ -1,5 +1,5 @@
 {
-  "name": "@next-auth/adapter-test",
+  "name": "@auth/adapter-test",
   "version": "0.0.0",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "contributors": [
@@ -12,14 +12,15 @@
   "license": "ISC",
   "private": true,
   "devDependencies": {
+    "@auth/core": "workspace:*",
     "@babel/cli": "^7.14.3",
     "@babel/plugin-transform-runtime": "^7.14.3",
     "@babel/preset-env": "^7.14.2",
-    "@types/jest": "^26.0.23",
+    "@swc/core": "^1.2.198",
+    "@types/jest": "^29.5.2",
     "@types/nodemailer": "^6.4.4",
-    "jest": "^27.0.3",
-    "next-auth": "workspace:*",
+    "jest": "^29.5.0",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.2.4"
+    "typescript": "5.2.2"
   }
 }
