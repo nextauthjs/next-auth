@@ -289,6 +289,7 @@ const docusaurusConfig = {
           typedocAdapter("DynamoDB"),
           typedocAdapter("Fauna"),
           typedocAdapter("Firebase"),
+          typedocAdapter("Grafbase"),
           typedocAdapter("Kysely"),
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),

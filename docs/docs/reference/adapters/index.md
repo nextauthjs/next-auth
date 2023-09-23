@@ -33,6 +33,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/firebase.svg" width="40" />
     <h4 class="adapter-card__title">Firebase Adapter</h4>
   </a>
+  <a href="/reference/adapter/grafbase" class="adapter-card">
+    <img src="/img/adapters/grafbase.svg" width="40" />
+    <h4 class="adapter-card__title">Grafbase Adapter</h4>
+  </a>
   <a href="/reference/adapter/kysely" class="adapter-card">
     <img src="/img/adapters/kysely.svg" width="40" />
     <h4 class="adapter-card__title">Kysely Adapter</h4>
