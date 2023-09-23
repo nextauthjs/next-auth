@@ -1,109 +1,28 @@
 <p align="center">
-   <br/>
-   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
-   <h3 align="center"><b>SurrealDB Adapter</b> - NextAuth.js</h3>
+  <br/>
+  <a href="https://authjs.dev" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
+  </a>
+  <a href="https://surrealdb.com/" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/adapters/surrealdb.png"/>
+  </a>
+  <h3 align="center"><b>Surreal DB Adapter</b> - NextAuth.js / Auth.js</a></h3>
+  <p align="center" style="align: center;">
+    <a href="https://npm.im/@auth/surrealdb-adapter">
+      <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
+    </a>
+    <a href="https://npm.im/@auth/surrealdb-adapter">
+      <img alt="npm" src="https://img.shields.io/npm/v/@auth/surrealdb-adapter?color=green&label=@auth/surrealdb-adapter&style=flat-square">
+    </a>
+    <a href="https://www.npmtrends.com/@auth/surrealdb-adapter">
+      <img src="https://img.shields.io/npm/dm/@auth/surrealdb-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
+    </a>
+    <a href="https://github.com/nextauthjs/next-auth/stargazers">
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+    </a>
+  </p>
 </p>
 
-## Overview
+---
 
-This is the SurrealDB Adapter for [`auth.js`](https://authjs.dev). This package can only be used in conjunction with the primary `auth.js` package. It is not a standalone package.
-
-## Getting Started
-
-### RPC
-
-1. Install `surrealdb.js`, `next-auth` and `@next-auth/surrealdb-adapter`
-
-```js
-npm install surrealdb.js next-auth @next-auth/surrealdb-adapter@next
-```
-
-2. Add `lib/surrealdb.js`
-
-```js
-import { Surreal } from "surrealdb.js";
-
-const connectionString = ...
-const user = ...
-const pass = ...
-const ns = ...
-const db = ...
-
-export const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
-  const db = new Surreal();
-  try {
-    await db.connect(`${connectionString}/rpc`, {
-      ns, db, auth: { user, pass }
-    })
-    resolve(db)
-  } catch (e) {
-    reject(e)
-  }
-})
-```
-
-3. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
-
-```ts
-import NextAuth from "next-auth"
-import { clientPromise } from "../../../server/db/client";
-
-export default NextAuth({
-  adapter: SurrealDBAdapter(clientPromise),
-  ...
-})
-```
-
-### Restfull / HTTP
-
-1. Install `surrealdb.js`, `next-auth` and `@next-auth/surrealdb-adapter`
-
-```js
-npm install surrealdb.js next-auth @next-auth/surrealdb-adapter@next
-```
-
-2. Add `lib/surrealdb.js`
-
-```js
-import { ExperimentalSurrealHTTP } from "surrealdb.js"
-import fetch from "node-fetch"
-
-const connectionString = ...
-const user = ...
-const pass = ...
-const ns = ...
-const db = ...
-
-const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
-  try {
-    const db = new ExperimentalSurrealHTTP(connectionString, {
-      fetch,
-      auth: {
-        user,
-        pass,
-      },
-      ns,
-      db,
-    })
-    resolve(db)
-  } catch (e) {
-    reject(e)
-  }
-})
-```
-
-3. Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
-
-```ts
-import NextAuth from "next-auth"
-import { clientPromise } from "../../../server/db/client";
-
-export default NextAuth({
-  adapter: SurrealDBAdapter(clientPromise),
-  ...
-})
-```
-
-## License
-
-ISC
+Check out the documentation at [authjs.dev](https://authjs.dev/reference/adapter/surrealdb).
