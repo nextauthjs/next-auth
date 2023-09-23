@@ -596,6 +596,28 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
 
+  packages/adapter-pg:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@auth/adapter-test':
+        specifier: workspace:*
+        version: link:../adapter-test
+      '@auth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/pg':
+        specifier: ^8.6.5
+        version: 8.10.2
+      jest:
+        specifier: ^27.4.3
+        version: 27.5.1
+      pg:
+        specifier: ^8.7.1
+        version: 8.11.2
+
   packages/adapter-pouchdb:
     dependencies:
       '@auth/core':

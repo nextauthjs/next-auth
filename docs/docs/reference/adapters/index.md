@@ -49,6 +49,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/neo4j.svg" width="50" />
     <h4 class="adapter-card__title">Neo4j Adapter</h4>
   </a>
+  <a href="/reference/adapter/pg" class="adapter-card">
+    <img src="/img/adapters/pg.png" width="20" />
+    <h4 class="adapter-card__title">Postgres Adapter</h4>
+  </a>
   <a href="/reference/adapter/pouchdb" class="adapter-card">
     <img src="/img/adapters/pouchdb.svg" width="20" />
     <h4 class="adapter-card__title">PouchDB Adapter</h4>

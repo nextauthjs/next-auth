@@ -74,7 +74,6 @@ declare module "next-auth/jwt" {
 }
 
 export const config = {
-  // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     Apple({ clientId: process.env.AUTH_APPLE_ID, clientSecret: process.env.AUTH_APPLE_SECRET }),
     Atlassian({ clientId: process.env.AUTH_ATLASSIAN_ID, clientSecret: process.env.AUTH_ATLASSIAN_SECRET }),
