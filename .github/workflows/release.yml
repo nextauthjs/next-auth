@@ -21,6 +21,7 @@ on:
           - "@auth/dynamodb-adapter"
           - "@auth/fauna-adapter"
           - "@auth/firebase-adapter"
+          - "@auth/grafbase-adapter"
           - "@auth/mikro-orm-adapter"
           - "@auth/mongodb-adapter"
           - "@auth/neo4j-adapter"

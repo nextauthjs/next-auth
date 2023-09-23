@@ -4,7 +4,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import { GraphQLClient } from "graphql-request"
 
 import {
@@ -159,7 +159,11 @@ export function GrafbaseAdapter(options: GrafbaseClientOptions): Adapter {
       })
     },
     async createSession({ userId, ...payload }) {
-      const { sessionCreate } = await client.request(CreateSession, {
+      const { sessionCreate } = await client.request<{
+        sessionCreate: {
+          session: AdapterSession
+        }
+      }>(CreateSession, {
         input: {
           ...payload,
           user: {

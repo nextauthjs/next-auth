@@ -1,8 +1,5 @@
-import type { GrafbaseClientOptions } from "../src"
-
 import { GrafbaseAdapter } from "../src"
-// import * as GraphQL from "../src/grafbase"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "@auth/adapter-test"
 
 runBasicTests({
   adapter: GrafbaseAdapter({
