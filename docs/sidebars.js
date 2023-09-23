@@ -61,6 +61,7 @@ module.exports = {
               { type: "doc", id: "reference/adapter/prisma/index" },
               { type: "doc", id: "reference/adapter/sequelize/index" },
               { type: "doc", id: "reference/adapter/supabase/index" },
+              { type: "doc", id: "reference/adapter/surrealdb/index" },
               { type: "doc", id: "reference/adapter/typeorm/index" },
               { type: "doc", id: "reference/adapter/upstash-redis/index" },
               { type: "doc", id: "reference/adapter/xata/index" },

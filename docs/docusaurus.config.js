@@ -299,6 +299,7 @@ const docusaurusConfig = {
           typedocAdapter("TypeORM"),
           typedocAdapter("Sequelize"),
           typedocAdapter("Supabase"),
+          typedocAdapter("SurrealDB"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
         ]),

@@ -69,6 +69,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/supabase.svg" width="25" />
     <h4 class="adapter-card__title">Supabase Adapter</h4>
   </a>
+  <a href="/reference/adapter/surrealdb" class="adapter-card">
+    <img src="/img/adapters/surreal.png" width="25" />
+    <h4 class="adapter-card__title">SurrealDB Adapter</h4>
+  </a>
   <a href="/reference/adapter/typeorm" class="adapter-card">
     <img src="/img/adapters/typeorm.png" width="30" />
     <h4 class="adapter-card__title">TypeORM Adapter</h4>
