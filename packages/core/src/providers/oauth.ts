@@ -1,4 +1,4 @@
-import type { Client } from "oauth4webapi"
+import type { Client, HttpRequestOptions } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type {
   AuthConfig,
@@ -221,6 +221,7 @@ export interface OAuth2Config<Profile>
    */
   allowDangerousEmailAccountLinking?: boolean
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
+  httpOptions?: HttpRequestOptions
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values

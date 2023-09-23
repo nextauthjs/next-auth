@@ -105,7 +105,8 @@ export async function handleOAuth(
     client,
     codeGrantParams,
     redirect_uri,
-    codeVerifier ?? "auth" // TODO: review fallback code verifier
+    codeVerifier ?? "auth", // TODO: review fallback code verifier
+    provider.httpOptions
   )
 
   if (provider.token?.conform) {
@@ -159,7 +160,8 @@ export async function handleOAuth(
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
-        (tokens as any).access_token
+        (tokens as any).access_token,
+        provider.httpOptions
       )
       profile = await userinfoResponse.json()
     } else {
