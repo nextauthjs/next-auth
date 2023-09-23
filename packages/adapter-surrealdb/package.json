@@ -1,5 +1,5 @@
 {
-  "name": "@next-auth/surrealdb-adapter",
+  "name": "@auth/surrealdb-adapter",
   "version": "0.0.0",
   "description": "SurrealDB adapter for next-auth.",
   "homepage": "https://authjs.dev",

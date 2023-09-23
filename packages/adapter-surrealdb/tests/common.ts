@@ -16,6 +16,14 @@ export const config = (
   db: {
     async disconnect() {
       const surreal = await clientPromise
+      try {
+        await surreal.delete("account")
+        await surreal.delete("session")
+        await surreal.delete("verification_token")
+      } catch (e) {
+        console.log(e)
+      }
+      console.log("closing")
       if (surreal.close) surreal.close()
     },
     async user(id: string) {
@@ -25,9 +33,8 @@ export const config = (
           user: `user:${id}`,
         })
         const user = users[0]
-        if (user.result?.[0] !== undefined)
-          return docToUser(user.result[0])
-      } catch (e) { }
+        if (user.result?.[0] !== undefined) return docToUser(user.result[0])
+      } catch (e) {}
       return null
     },
     async account({ provider, providerAccountId }) {
@@ -55,7 +62,9 @@ export const config = (
     },
     async verificationToken({ identifier, token }) {
       const surreal = await clientPromise
-      const tokens = await surreal.query<[{ identifier: string, expires: string, token: string, id: string }[]]>(
+      const tokens = await surreal.query<
+        [{ identifier: string; expires: string; token: string; id: string }[]]
+      >(
         `SELECT *
          FROM verification_token
          WHERE identifier = $identifier
