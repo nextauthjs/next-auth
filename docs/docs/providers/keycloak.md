@@ -5,7 +5,11 @@ title: Keycloak
 
 ## Documentation
 
-https://www.keycloak.org/docs/latest/server_admin/#_oidc_clients
+[Official Keycloak Documentation](https://www.keycloak.org/docs/latest/server_admin/#_oidc_clients)
+
+For more details on creating an openid-connect client in Keycloak with "confidential" as the "Access Type", you can refer to the following resources:
+- [Keycloak Confidential Client Documentation](https://wjw465150.gitbooks.io/keycloak-documentation/content/server_admin/topics/clients/oidc/confidential.html)
+- [StackOverflow Discussion on Keycloak Client Secrets](https://stackoverflow.com/questions/44752273/do-keycloak-clients-have-a-client-secret/69726692#69726692)
 
 ## Configuration
 
@@ -34,8 +38,3 @@ providers: [
   })
 ]
 ...
-```
-
-:::note
-`issuer` should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`
-:::
