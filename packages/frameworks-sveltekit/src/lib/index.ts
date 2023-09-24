@@ -26,6 +26,23 @@
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
+ * 
+ * or to use sveltekit platform environment variables for platforms like Cloudflare
+ * 
+ * ```ts title="src/hooks.server.ts"
+ * import { SvelteKitAuth } from "@auth/sveltekit"
+ * import GitHub from "@auth/core/providers/github"
+ * import type { Handle } from "@sveltejs/kit";
+ *
+ * export const handle = SvelteKitAuth(async (event) => {
+ *   const authOptions = {
+ *     providers: [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
+ *     secret: event.platform.env.AUTH_SECRET,
+ *     trustHost: true
+ *   }
+ *   return authOptions
+ * }) satisfies Handle;
+ * ```
  *
  * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
@@ -71,7 +88,7 @@
  * ## Managing the session
  *
  * The above example checks for a session available in `$page.data.session`, however that needs to be set by us somewhere.
- * If you want this data to be available to all your routes you can add this to your root `+layout.server.ts` file.
+ * If you want this data to be available to all your routes you can add this to `src/routes/+layout.server.ts`.
  * The following code sets the session data in the `$page` store to be available to all routes.
  *
  * ```ts
@@ -113,7 +130,7 @@
  * This code sample already implements the correct method by using `const { session } = await parent();`
  * :::
  *
- * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propragate to leafs in the tree.
+ * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propagate to leafs in the tree.
  * Prefer to manually protect each route through the `+page.server.ts` file to avoid mistakes.
  * It is possible to force the layout file to run the load function on all routes, however that relies certain behaviours that can change and are not easily checked.
  * For more information about these caveats make sure to read this issue in the SvelteKit repository: https://github.com/sveltejs/kit/issues/6315
@@ -148,10 +165,7 @@
  * 	}
  *
  * 	// If the request is still here, just proceed as normally
- * 	const result = await resolve(event, {
- * 		transformPageChunk: ({ html }) => html
- * 	});
- * 	return result;
+ * 	return resolve(event);
  * }
  *
  * // First handle authentication, then authorization
@@ -187,9 +201,10 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import type { Handle } from "@sveltejs/kit"
+import type { Handle, RequestEvent } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
+import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
@@ -197,12 +212,13 @@ import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export async function getSession(
   req: Request,
-  config: AuthConfig
+  config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["getSession"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL("/api/auth/session", req.url)
+  const prefix = config.prefix ?? `${base}/auth`
+  const url = new URL(prefix + "/session", req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
 
@@ -219,9 +235,9 @@ export interface SvelteKitAuthConfig extends AuthConfig {
   /**
    * Defines the base path for the auth routes.
    * If you change the default value,
-   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers).
+   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
    *
-   * @default "/auth"
+   * @default `${base}/auth` - `base` is the base path of your SvelteKit app, configured in `svelte.config.js`.
    */
   prefix?: string
 }
@@ -237,8 +253,15 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
-  return function ({ event, resolve }) {
+type DynamicSvelteKitAuthConfig = (event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>
+
+function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+  return async function ({ event, resolve }) {
+    const authOptions =
+      typeof svelteKitAuthOptions === "object"
+        ? svelteKitAuthOptions
+        : await svelteKitAuthOptions(event)
+    const { prefix = `${base}/auth` } = authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
@@ -259,11 +282,13 @@ function AuthHandle(prefix: string, authOptions: AuthConfig): Handle {
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig): Handle {
-  const { prefix = "/auth", ...authOptions } = options
-  authOptions.secret ??= env.AUTH_SECRET
-  authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
-  return AuthHandle(prefix, authOptions)
+export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+  if (typeof options === "object") {
+    options.secret ??= env.AUTH_SECRET
+    options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    options.prefix ??= `${base}/auth`
+  }
+  return AuthHandle(options)
 }
 
 declare global {

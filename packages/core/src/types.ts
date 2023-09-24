@@ -61,20 +61,22 @@ import type {
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
 import type { Adapter, AdapterUser } from "./adapters.js"
+import { AuthConfig } from "./index.js"
+import type { JWT, JWTOptions } from "./jwt.js"
+import type { Cookie } from "./lib/cookie.js"
+import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
+  OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
-import type { JWT, JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/cookie.js"
-import type { LoggerInstance } from "./lib/utils/logger.js"
 
 export type { AuthConfig } from "./index.js"
-export type Awaitable<T> = T | PromiseLike<T>
 export type { LoggerInstance }
+export type Awaitable<T> = T | PromiseLike<T>
 
 /**
  * Change the theme of the built-in pages.
@@ -96,34 +98,84 @@ export interface Theme {
  */
 export type TokenSet = Partial<
   OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
->
+> & {
+  /**
+   * Date of when the `access_token` expires in seconds.
+   * This value is calculated from the `expires_in` value.
+   *
+   * @see https://www.ietf.org/rfc/rfc6749.html#section-4.2.2
+   */
+  expires_at?: number
+}
 
 /**
  * Usually contains information about the provider being used
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface Account extends Partial<OpenIDTokenEndpointResponse> {
+  /** Provider's id for this account. Eg.: "google" */
+  provider: string
   /**
    * This value depends on the type of the provider being used to create the account.
-   * - oauth: The OAuth account's id, returned from the `profile()` callback.
+   * - oauth/oidc: The OAuth account's id, returned from the `profile()` callback.
    * - email: The user's email address.
    * - credentials: `id` returned from the `authorize()` callback
    */
   providerAccountId: string
-  /** id of the user this account belongs to. */
-  userId?: string
-  /** id of the provider used for this account */
-  provider: string
   /** Provider's type for this account */
   type: ProviderType
+  /**
+   * id of the user this account belongs to
+   *
+   * @see https://authjs.dev/reference/adapters#user
+   */
+  userId?: string
+  /**
+   * Calculated value based on {@link OAuth2TokenEndpointResponse.expires_in}.
+   *
+   * It is the absolute timestamp (in seconds) when the {@link OAuth2TokenEndpointResponse.access_token} expires.
+   *
+   * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
+   *
+   * @see https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy
+   * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
+   */
+  expires_at?: number
 }
 
-/** The OAuth profile returned from your provider */
+/**
+ * The user info returned from your OAuth provider.
+ *
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+ */
 export interface Profile {
-  sub?: string
-  name?: string
-  email?: string
-  image?: string
+  sub?: string | null
+  name?: string | null
+  given_name?: string | null
+  family_name?: string | null
+  middle_name?: string | null
+  nickname?: string | null
+  preferred_username?: string | null
+  profile?: string | null
+  picture?: string | null | any
+  website?: string | null
+  email?: string | null
+  email_verified?: boolean | null
+  gender?: string | null
+  birthdate?: string | null
+  zoneinfo?: string | null
+  locale?: string | null
+  phone_number?: string | null
+  updated_at?: Date | string | number | null
+  address?: {
+    formatted?: string | null
+    street_address?: string | null
+    locality?: string | null
+    region?: string | null
+    postal_code?: string | null
+    country?: string | null
+  } | null
+  [claim: string]: unknown
 }
 
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */
@@ -186,40 +238,86 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * If you want to make something available you added to the token through the `jwt` callback,
    * you have to explicitly forward it here to make it available to the client.
    *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#session-callback) |
-   * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
-   * [`useSession`](https://authjs.dev/reference/react/#usesession) |
-   * [`getSession`](https://authjs.dev/reference/utilities/#getsession) |
-   *
+   * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
-  session: (params: {
-    session: Session
-    user: User | AdapterUser
-    token: JWT
-  }) => Awaitable<Session>
+  session: (
+    params:
+      | {
+          session: Session
+          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+          token: JWT
+          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+          user: AdapterUser
+        } & {
+          /**
+           * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
+           *
+           * :::note
+           * You should validate this data before using it.
+           * :::
+           */
+          newSession: any
+          trigger: "update"
+        }
+  ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
    * or updated (i.e whenever a session is accessed in the client).
    * Its content is forwarded to the `session` callback,
    * where you can control what should be returned to the client.
-   * Anything else will be kept inaccessible from the client.
+   * Anything else will be kept from your front-end.
    *
-   * Returning `null` will invalidate the JWT session by clearing
-   * the user's cookies. You'll still have to monitor and invalidate
-   * unexpired tokens from future requests yourself to prevent
-   * unauthorized access.
+   * The JWT is encrypted by default.
    *
-   * By default the JWT is encrypted.
-   *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
-   * [`session` callback](https://authjs.dev/guides/basics/callbacks#session-callback)
+   * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
+   * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
    */
   jwt: (params: {
+    /**
+     * When `trigger` is `"signIn"` or `"signUp"`, it will be a subset of {@link JWT},
+     * `name`, `email` and `image` will be included.
+     *
+     * Otherwise, it will be the full {@link JWT} for subsequent calls.
+     */
     token: JWT
-    user?: User | AdapterUser
-    account?: A | null
+    /**
+     * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
+     * @note available when `trigger` is `"signIn"` or `"signUp"`.
+     *
+     * Resources:
+     * - [Credentials Provider](https://authjs.dev/reference/core/providers_credentials)
+     * - [User database model](https://authjs.dev/reference/adapters#user)
+     */
+    user: User | AdapterUser
+    /**
+     * Contains information about the provider that was used to sign in.
+     * Also includes {@link TokenSet}
+     * @note available when `trigger` is `"signIn"` or `"signUp"`
+     */
+    account: A | null
+    /**
+     * The OAuth profile returned from your provider.
+     * (In case of OIDC it will be the decoded ID Token or /userinfo response)
+     * @note available when `trigger` is `"signIn"`.
+     */
     profile?: P
+    /**
+     * Check why was the jwt callback invoked. Possible reasons are:
+     * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
+     * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
+     * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+     * In case of the latter, `trigger` will be `undefined`.
+     */
+    trigger?: "signIn" | "signUp" | "update"
+    /** @deprecated use `trigger === "signUp"` instead */
     isNewUser?: boolean
+    /**
+     * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
+     * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+     *
+     * ⚠ Note, you should validate this data before using it.
+     */
+    session?: any
   }) => Awaitable<JWT | null>
 }
 
@@ -260,12 +358,12 @@ export interface EventCallbacks {
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
-   * - `token`: The JWT token for this session.
+   * - `token`: The JWT for this session.
    * - `session`: The session object from your adapter that is being ended.
    */
   signOut: (
     message:
-      | { session: Awaited<ReturnType<Adapter["deleteSession"]>> }
+      | { session: Awaited<ReturnType<Required<Adapter>["deleteSession"]>> }
       | { token: Awaited<ReturnType<JWTOptions["decode"]>> }
   ) => Awaitable<void>
   createUser: (message: { user: User }) => Awaitable<void>
@@ -278,7 +376,7 @@ export interface EventCallbacks {
   /**
    * The message object will contain one of these depending on
    * if you use JWT or database persisted sessions:
-   * - `token`: The JWT token for this session.
+   * - `token`: The JWT for this session.
    * - `session`: The session object from your adapter.
    */
   session: (message: { session: Session; token: JWT }) => Awaitable<void>
@@ -293,7 +391,7 @@ export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
 export type SignInPageErrorParam =
   | "Signin"
   | "OAuthSignin"
-  | "OAuthCallback"
+  | "OAuthCallbackError"
   | "OAuthCreateAccount"
   | "EmailCreateAccount"
   | "Callback"
@@ -349,53 +447,6 @@ export interface DefaultSession {
  */
 export interface Session extends DefaultSession {}
 
-export type SessionStrategy = "jwt" | "database"
-
-/** [Documentation](https://authjs.dev/reference/configuration/auth-config#session) */
-export interface SessionOptions {
-  /**
-   * Choose how you want to save the user session.
-   * The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
-   *
-   * If you use an `adapter` however, we default it to `"database"` instead.
-   * You can still force a JWT session by explicitly defining `"jwt"`.
-   *
-   * When using `"database"`, the session cookie will only contain a `sessionToken` value,
-   * which is used to look up the session in the database.
-   *
-   * [Documentation](https://authjs.dev/reference/configuration/auth-config#session) | [Adapter](https://authjs.dev/reference/configuration/auth-config#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
-   */
-  strategy: SessionStrategy
-  /**
-   * Relative time from now in seconds when to expire the session
-   *
-   * @default 2592000 // 30 days
-   */
-  maxAge: number
-  /**
-   * How often the session should be updated in seconds.
-   * If set to `0`, session is updated every time.
-   *
-   * @default 86400 // 1 day
-   */
-  updateAge: number
-  /**
-   * Generate a custom session token for database-based sessions.
-   * By default, a random UUID or string is generated depending on the Node.js version.
-   * However, you can specify your own custom string (such as CUID) to be used.
-   *
-   * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
-   */
-  generateSessionToken: () => string
-}
-
-export interface DefaultUser {
-  id: string
-  name?: string | null
-  email?: string | null
-  image?: string | null
-}
-
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
  * available in the `jwt` and `session` callbacks,
@@ -406,31 +457,66 @@ export interface DefaultUser {
  * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
  * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
-export interface User extends DefaultUser {}
+export interface User {
+  id: string
+  name?: string | null
+  email?: string | null
+  image?: string | null
+}
 
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
+  : T extends "oidc"
+  ? OIDCConfigInternal<any>
   : T extends "email"
   ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
   signinUrl: string
+  /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
 }
 
+/**
+ * Supported actions by Auth.js. Each action map to a REST API endpoint.
+ * Some actions have a `GET` and `POST` variant, depending on if the action
+ * changes the state of the server.
+ *
+ * - **`"callback"`**:
+ *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers_oauth).
+ *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers_credentials).
+ * - **`"csrf"`**: Returns the raw CSRF token, which is saved in a cookie (encrypted).
+ * It is used for CSRF protection, implementing the [double submit cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) technique.
+ * :::note
+ * Some frameworks have built-in CSRF protection and can therefore disable this action. In this case, the corresponding endpoint will return a 404 response. Read more at [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck).
+ * _⚠ We don't recommend manually disabling CSRF protection, unless you know what you're doing._
+ * :::
+ * - **`"error"`**: Renders the built-in error page.
+ * - **`"providers"`**: Returns a client-safe list of all configured providers.
+ * - **`"session"`**:
+ *   - **`GET**`: Returns the user's session if it exists, otherwise `null`.
+ *   - **`POST**`: Updates the user's session and returns the updated session.
+ * - **`"signin"`**:
+ *   - **`GET`**: Renders the built-in sign-in page.
+ *   - **`POST`**: Initiates the sign-in flow.
+ * - **`"signout"`**:
+ *   - **`GET`**: Renders the built-in sign-out page.
+ *   - **`POST`**: Initiates the sign-out flow. This will invalidate the user's session (deleting the cookie, and if there is a session in the database, it will be deleted as well).
+ * - **`"verify-request"`**: Renders the built-in verification request page.
+ */
 export type AuthAction =
+  | "callback"
+  | "csrf"
+  | "error"
   | "providers"
   | "session"
-  | "csrf"
   | "signin"
   | "signout"
-  | "callback"
   | "verify-request"
-  | "error"
 
 /** @internal */
 export interface RequestInternal {
@@ -447,7 +533,7 @@ export interface RequestInternal {
 
 /** @internal */
 export interface ResponseInternal<
-  Body extends string | Record<string, any> | any[] = any
+  Body extends string | Record<string, any> | any[] | null = any
 > {
   status?: number
   headers?: Headers | HeadersInit
@@ -456,7 +542,6 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
-// TODO: rename to AuthConfigInternal
 /** @internal */
 export interface InternalOptions<TProviderType = ProviderType> {
   providers: InternalProvider[]
@@ -469,12 +554,17 @@ export interface InternalOptions<TProviderType = ProviderType> {
   theme: Theme
   debug: boolean
   logger: LoggerInstance
-  session: Required<SessionOptions>
+  session: NonNullable<Required<AuthConfig["session"]>>
   pages: Partial<PagesOptions>
   jwt: JWTOptions
   events: Partial<EventCallbacks>
-  adapter: Adapter | undefined
+  adapter: Required<Adapter> | undefined
   callbacks: CallbacksOptions
   cookies: CookiesOptions
   callbackUrl: string
+  /**
+   * If true, the OAuth callback is being proxied by the server to the original URL.
+   * See also {@link OAuthConfigInternal.redirectProxyUrl}.
+   */
+  isOnRedirectProxy: boolean
 }

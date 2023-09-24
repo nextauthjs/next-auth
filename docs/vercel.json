@@ -1,21 +1,13 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
       ]
     }
   ],
@@ -67,62 +59,37 @@
     },
     {
       "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "sveltekit.authjs.dev"
-        }
-      ],
+      "has": [{ "type": "host", "value": "sveltekit.authjs.dev" }],
       "destination": "https://authjs.dev/reference/sveltekit"
     },
     {
       "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "solid-start.authjs.dev"
-        }
-      ],
+      "has": [{ "type": "host", "value": "solid-start.authjs.dev" }],
       "destination": "https://authjs.dev/reference/solid-start"
     },
     {
       "source": "/:path(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "errors.authjs.dev"
-        }
-      ],
+      "has": [{ "type": "host", "value": "errors.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
     {
       "source": "/:path(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "warnings.authjs.dev"
-        }
-      ],
+      "has": [{ "type": "host", "value": "warnings.authjs.dev" }],
       "destination": "https://authjs.dev/reference/warnings/:path*"
     },
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/adapters"
+    },
+    {
       "source": "/:path(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "adapters.authjs.dev"
-        }
-      ],
-      "destination": "https://authjs.dev/reference/adapters/:path*"
+      "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/adapter/:path*"
     },
     {
       "source": "/:path",
-      "has": [
-        {
-          "type": "host",
-          "value": "providers.authjs.dev"
-        }
-      ],
+      "has": [{ "type": "host", "value": "providers.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/providers_:path.default"
     }
   ]

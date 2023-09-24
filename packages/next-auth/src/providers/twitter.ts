@@ -120,9 +120,8 @@ export function TwitterLegacy<
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/twitter.svg",
-      logoDark:
-        "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/twitter-dark.svg",
+      logo: "/twitter.svg",
+      logoDark: "/twitter-dark.svg",
       bg: "#fff",
       text: "#1da1f2",
       bgDark: "#1da1f2",
@@ -216,9 +215,8 @@ export default function Twitter<
       },
       checks: ["pkce", "state"],
       style: {
-        logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/twitter.svg",
-        logoDark:
-          "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/twitter-dark.svg",
+        logo: "/twitter.svg",
+        logoDark: "/twitter-dark.svg",
         bg: "#fff",
         text: "#1da1f2",
         bgDark: "#1da1f2",

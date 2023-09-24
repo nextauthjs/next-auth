@@ -101,13 +101,13 @@ export default function Home() {
       .fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
-        const navLinks = document.getElementsByClassName(
-          "navbar__item navbar__link"
+        const githubLink = document.querySelector(
+          ".navbar__item.navbar__link[href*='github']"
         )
         const githubStat = document.createElement("span")
         githubStat.innerHTML = kFormatter(data.stargazers_count)
         githubStat.className = "github-counter"
-        navLinks[4].appendChild(githubStat)
+        githubLink.appendChild(githubStat)
       })
   }, [])
   return (
@@ -135,7 +135,7 @@ export default function Home() {
                   )}
                   href="https://next-auth-example.vercel.app"
                 >
-                  Live Demo (Next.js)
+                  Next.js Demo
                 </a>
                 <a
                   className={classnames(
@@ -144,7 +144,7 @@ export default function Home() {
                   )}
                   href="https://sveltekit-auth-example.vercel.app"
                 >
-                  Live Demo (SvelteKit)
+                  SvelteKit Demo
                 </a>
                 <a
                   className={classnames(
@@ -153,7 +153,7 @@ export default function Home() {
                   )}
                   href="https://auth-solid.vercel.app"
                 >
-                  Live Demo (SolidStart)
+                  SolidStart Demo
                 </a>
                 <Link
                   className={classnames(
@@ -269,7 +269,7 @@ export default function Home() {
 }
 
 const svelteKitCode = `
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from '@auth/core/providers/github'
 import Facebook from '@auth/core/providers/facebook'
 import Google from '@auth/core/providers/google'

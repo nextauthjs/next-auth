@@ -1,8 +1,27 @@
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
 
+const requiredMethods = [
+  "createUser",
+  "getUser",
+  "getUserByEmail",
+  "getUserByAccount",
+  "updateUser",
+  "linkAccount",
+  "createSession",
+  "getSessionAndUser",
+  "updateSession",
+  "deleteSession",
+]
 export interface TestOptions {
   adapter: Adapter
+  fixtures?: {
+    user?: any
+    session?: any
+    account?: any
+    sessionUpdateExpires?: Date
+    verificationTokenExpires?: Date
+  },
   db: {
     /** Generates UUID v4 by default. Use it to override how the test suite should generate IDs, like user id. */
     id?: () => string
@@ -31,21 +50,23 @@ export interface TestOptions {
      */
     verificationToken: (params: { identifier: string; token: string }) => any
   }
+  skipTests?: string[]
 }
-
+const testIf = (condition: boolean) => (condition ? test : test.skip)
 /**
  * A wrapper to run the most basic tests.
  * Run this at the top of your test file.
  * You can add additional tests below, if you wish.
  */
-export function runBasicTests(options: TestOptions) {
+export async function runBasicTests(options: TestOptions) {
   const id = options.db.id ?? randomUUID
   // Init
   beforeAll(async () => {
     await options.db.connect?.()
   })
 
-  const { adapter, db } = options
+  const { adapter: _adapter, db, skipTests } = options
+  const adapter = _adapter as Required<Adapter>
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
@@ -53,11 +74,11 @@ export function runBasicTests(options: TestOptions) {
     await options.db.disconnect?.()
   })
 
-  let user: any = {
+  let user: any = options.fixtures?.user ?? {
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
-    emailVerified: new Date(),
+    emailVerified: new Date()
   }
 
   if (process.env.CUSTOM_MODEL === "1") {
@@ -65,17 +86,17 @@ export function runBasicTests(options: TestOptions) {
     user.phone = "00000000000"
   }
 
-  const session: any = {
+  const session: any = options.fixtures?.session ?? {
     sessionToken: randomUUID(),
     expires: ONE_WEEK_FROM_NOW,
   }
 
-  const account: any = {
+  const account: any = options.fixtures?.account ?? {
     provider: "github",
     providerAccountId: randomUUID(),
     type: "oauth",
     access_token: randomUUID(),
-    expires_at: ONE_MONTH,
+    expires_at: ONE_MONTH / 1000,
     id_token: randomUUID(),
     refresh_token: randomUUID(),
     token_type: "bearer",
@@ -161,15 +182,17 @@ export function runBasicTests(options: TestOptions) {
   test("updateSession", async () => {
     let dbSession = await db.session(session.sessionToken)
 
-    expect(dbSession.expires.valueOf()).not.toBe(ONE_MONTH_FROM_NOW.valueOf())
+    const expires = options.fixtures?.sessionUpdateExpires ?? ONE_MONTH_FROM_NOW
+
+    expect(dbSession.expires.valueOf()).not.toBe(expires.valueOf())
 
     await adapter.updateSession({
       sessionToken: session.sessionToken,
-      expires: ONE_MONTH_FROM_NOW,
+      expires,
     })
 
     dbSession = await db.session(session.sessionToken)
-    expect(dbSession.expires.valueOf()).toBe(ONE_MONTH_FROM_NOW.valueOf())
+    expect(dbSession.expires.valueOf()).toBe(expires.valueOf())
   })
 
   test("linkAccount", async () => {
@@ -218,7 +241,7 @@ export function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: FIFTEEN_MINUTES_FROM_NOW,
+      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
@@ -237,7 +260,7 @@ export function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: FIFTEEN_MINUTES_FROM_NOW,
+      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
@@ -287,7 +310,7 @@ export function runBasicTests(options: TestOptions) {
     expect(dbAccount).toBeNull()
   })
 
-  test("deleteUser", async () => {
+  testIf(!skipTests?.includes("deleteUser"))("deleteUser", async () => {
     let dbUser = await db.user(user.id)
     expect(dbUser).toEqual(user)
 
