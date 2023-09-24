@@ -1,11 +1,11 @@
-import { runBasicTests } from "@next-auth/adapter-test"
-import { TableStorageAdapter } from "../src"
+import { runBasicTests } from "@auth/adapter-test"
 import {
   AzureNamedKeyCredential,
   TableServiceClient,
   TableClient,
 } from "@azure/data-tables"
-import { keys, UserById, VerificationToken } from "../src/types"
+import { keys, TableStorageAdapter, withoutKeys } from "../src"
+import type { AdapterUser, VerificationToken } from "@auth/core/adapters"
 
 const testAccount = {
   // default constants used by a dev instance of azurite
@@ -41,11 +41,11 @@ runBasicTests({
     },
     async user(id) {
       try {
-        const userById = await authClient.getEntity<UserById>(keys.userById, id)
-        const user = await authClient.getEntity(keys.user, userById.email)
+        const userById = await authClient.getEntity<AdapterUser>(keys.user, id)
 
-        return withoutKeys(user)
-      } catch {
+        return withoutKeys(userById)
+      } catch (e) {
+        console.error(e)
         return null
       }
     },
@@ -88,13 +88,3 @@ runBasicTests({
     },
   },
 })
-
-function withoutKeys(entity: any) {
-  delete entity.partitionKey
-  delete entity.rowKey
-  delete entity.etag
-  delete entity.timestamp
-  delete entity["odata.metadata"]
-
-  return entity
-}

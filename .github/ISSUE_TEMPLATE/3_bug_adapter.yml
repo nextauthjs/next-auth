@@ -21,6 +21,7 @@ body:
       multiple: true
       options:
         - "Custom adapter"
+        - "@auth/azure-tables-adapter"
         - "@auth/dgraph-adapter"
         - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
@@ -35,7 +36,6 @@ body:
         - "@auth/prisma-adapter"
         - "@auth/sequelize-adapter"
         - "@auth/supabase-adapter"
-        - "@auth/table-storage-adapter"
         - "@auth/typeorm-adapter"
         - "@auth/upstash-redis-adapter"
         - "@auth/xata-adapter"

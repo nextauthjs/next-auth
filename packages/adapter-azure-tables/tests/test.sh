@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=next-auth-table-storage-test
+CONTAINER_NAME=next-auth-azure-tables-test
 
 JEST_WATCH=false
 

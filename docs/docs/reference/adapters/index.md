@@ -5,6 +5,10 @@ title: Overview
 Using an Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
 
 <div class="adapter-card-list">
+  <a href="/reference/adapter/azure-tables" class="adapter-card">
+    <img src="/img/adapters/azure-tables.svg" width="40" />
+    <h4 class="adapter-card__title">Azure Table Storage Adapter</h4>
+  </a>
   <a href="/reference/adapter/d1" class="adapter-card">
     <img src="/img/adapters/d1.svg" width="40" />
     <h4 class="adapter-card__title">D1 Adapter</h4>

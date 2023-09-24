@@ -1,6 +1,7 @@
 # https://github.com/actions/labeler#create-githublabeleryml
 adapters: ["packages/core/src/adapters.ts", "packages/adapter-*/**/*"]
 core: ["packages/core/src/**/*"]
+azure-tables: ["packages/adapter-azure-tables/**/*"]
 dgraph: ["packages/adapter-dgraph/**/*"]
 documentation: ["packages/docs/docs/**/*"]
 dynamodb: ["packages/adapter-dynamodb/**/*"]
@@ -26,4 +27,3 @@ test: ["**test**/*"]
 typeorm: ["packages/adapter-typeorm/**/*"]
 upstash-redis: ["packages/adapter-upstash-redis/**/*"]
 xata: ["packages/adapter-xata/**/*"]
-table-storage: ["packages/adapter-table-storage/**/*"]
