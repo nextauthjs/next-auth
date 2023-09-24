@@ -724,15 +724,9 @@ importers:
       '@auth/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@types/node-fetch':
-        specifier: ^2.5.11
-        version: 2.6.2
       jest:
         specifier: ^27.4.3
         version: 27.5.1
-      node-fetch:
-        specifier: ^2.6.1
-        version: 2.6.9
 
   packages/adapter-test:
     devDependencies:
