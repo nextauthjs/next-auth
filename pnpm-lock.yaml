@@ -312,6 +312,25 @@ importers:
         specifier: 4.0.0-next.6
         version: 4.0.0-next.6(prettier@2.8.1)(typedoc@0.24.8)
 
+  packages/adapter-azure-tables:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@auth/adapter-test':
+        specifier: workspace:*
+        version: link:../adapter-test
+      '@auth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@azure/data-tables':
+        specifier: ^13.2.1
+        version: 13.2.2
+      jest:
+        specifier: ^27.4.3
+        version: 27.5.1
+
   packages/adapter-d1:
     dependencies:
       '@auth/core':
@@ -2543,6 +2562,31 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       tslib: 2.5.2
+    dev: true
+
+  /@azure/core-xml@1.3.4:
+    resolution: {integrity: sha512-B1xI79Ur/u+KR69fGTcsMNj8KDjBSqAy0Ys6Byy4Qm1CqoUy7gCT5A7Pej0EBWRskuH6bpCwrAnosfmQEalkcg==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      fast-xml-parser: 4.2.5
+      tslib: 2.5.2
+    dev: true
+
+  /@azure/data-tables@13.2.2:
+    resolution: {integrity: sha512-Dq2Aq0mMMF0BPzYQKdBY/OtO7VemP/foh6z+mJpUO1hRL+65C1rGQUJf20LJHotSyU8wHb4HJzOs+Z50GXSy1w==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@azure/core-auth': 1.3.2
+      '@azure/core-client': 1.6.0
+      '@azure/core-paging': 1.3.0
+      '@azure/core-rest-pipeline': 1.9.0
+      '@azure/core-tracing': 1.0.1
+      '@azure/core-xml': 1.3.4
+      '@azure/logger': 1.0.3
+      tslib: 2.5.2
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@azure/identity@1.5.2(debug@4.3.4):
@@ -18685,7 +18729,6 @@ packages:
     dependencies:
       strnum: 1.0.5
     dev: true
-    optional: true
 
   /fastq@1.15.0:
     resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
@@ -29705,7 +29748,6 @@ packages:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
     requiresBuild: true
     dev: true
-    optional: true
 
   /stubs@3.0.0:
     resolution: {integrity: sha512-PdHt7hHUJKxvTCgbKX9C1V/ftOcjJQgz8BZwNfV5c4B6dcGqlpelTbJ999jBGZ2jYiPAwcX5dP6oBwVlBlUbxw==}

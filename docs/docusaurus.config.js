@@ -282,6 +282,7 @@ const docusaurusConfig = {
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
+          typedocAdapter("Azure Tables"),
           typedocAdapter("D1"),
           typedocAdapter("EdgeDb"),
           typedocAdapter("Dgraph"),

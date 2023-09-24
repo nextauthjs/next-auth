@@ -21,6 +21,7 @@ body:
       multiple: true
       options:
         - "Custom adapter"
+        - "@auth/azure-tables-adapter"
         - "@auth/dgraph-adapter"
         - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
