@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>An official <a href="https://www.postgresql.org/">PostgreSQL</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.postgresql.org/">
- *   <img style={{display: "block"}} src="/img/adapters/pg.svg" width="48" />
+ *   <img style={{display: "block"}} src="/img/adapters/pg.png" width="48" />
  *  </a>
  * </div>
  *

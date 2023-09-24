@@ -47,6 +47,7 @@ module.exports = {
             link: { type: "doc", id: "reference/adapters/index" },
             items: [
               { type: "doc", id: "reference/adapter/azure-tables/index" },
+              { type: "doc", id: "reference/adapter/d1/index" },
               { type: "doc", id: "reference/adapter/edgedb/index" },
               { type: "doc", id: "reference/adapter/dgraph/index" },
               { type: "doc", id: "reference/adapter/drizzle/index" },
