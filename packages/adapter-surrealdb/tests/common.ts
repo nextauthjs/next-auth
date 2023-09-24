@@ -1,5 +1,4 @@
 import Surreal, { ExperimentalSurrealHTTP } from "surrealdb.js"
-import fetch from "node-fetch"
 
 import {
   SurrealDBAdapter,

@@ -48,11 +48,9 @@
     "surrealdb.js": "^0.9.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.11",
     "@auth/adapter-test": "workspace:*",
     "@auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3",
-    "node-fetch": "^2.6.1"
+    "jest": "^27.4.3"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"
