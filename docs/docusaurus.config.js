@@ -282,6 +282,7 @@ const docusaurusConfig = {
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
+          typedocAdapter("D1"),
           typedocAdapter("EdgeDb"),
           typedocAdapter("Dgraph"),
           typedocAdapter("Drizzle"),
@@ -292,11 +293,13 @@ const docusaurusConfig = {
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),
           typedocAdapter("Neo4j"),
+          typedocAdapter("PG"),
           typedocAdapter("PouchDB"),
           typedocAdapter("Prisma"),
           typedocAdapter("TypeORM"),
           typedocAdapter("Sequelize"),
           typedocAdapter("Supabase"),
+          typedocAdapter("SurrealDB"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
         ]),

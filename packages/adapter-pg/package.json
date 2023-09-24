@@ -1,58 +1,57 @@
 {
-  "name": "@auth/edgedb-adapter",
+  "name": "@auth/pg-adapter",
   "version": "0.2.0",
-  "description": "EdgeDB adapter for next-auth.",
+  "description": "Postgres adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "author": "Bruno Crosier",
+  "author": "Jake Coppinger",
   "contributors": [
     "Thang Huu Vu <hi@thvu.dev>"
   ],
-  "type": "module",
-  "types": "./index.d.ts",
-  "files": [
-    "*.d.ts*",
-    "*.js",
-    "lib",
-    "src"
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "postgres"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
     }
   },
-  "license": "ISC",
-  "keywords": [
-    "next-auth",
-    "next.js",
-    "oauth",
-    "edgedb"
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
   ],
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "tsc",
-    "test": "jest"
+    "test": "./tests/test.sh",
+    "build": "tsc"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "edgedb": "^1.0.1"
+    "pg": "^8"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:^0.0.0",
-    "@auth/tsconfig": "workspace:^0.0.0",
+    "@auth/adapter-test": "workspace:*",
+    "@auth/tsconfig": "workspace:*",
+    "@types/pg": "^8.6.5",
     "jest": "^27.4.3",
-    "@auth/core": "workspace:*",
-    "typescript": "^4.7.4",
-    "edgedb": "^1.0.1"
+    "pg": "^8.7.1"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"
