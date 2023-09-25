@@ -39,6 +39,7 @@ on:
         options:
           - "core"
           - "frameworks-nextjs"
+          - "adapter-edgedb"
           - "adapter-dgraph"
           - "adapter-drizzle"
           - "adapter-dynamodb"

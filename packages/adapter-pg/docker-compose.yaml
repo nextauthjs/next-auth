@@ -1,0 +1,13 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    container_name: pg-adapter
+    environment:
+      POSTGRES_DB: adapter-postgres-test
+      POSTGRES_USER: pg
+      POSTGRES_PASSWORD: pg
+    volumes:
+      - ./example-schema.sql:/docker-entrypoint-initdb.d/example-schema.sql
+    ports:
+      - 5432:5432

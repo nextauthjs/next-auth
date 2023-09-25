@@ -42,14 +42,15 @@ export async function getManager(options: {
   dataSource: string | DataSourceOptions
   entities: Entities
 }): Promise<EntityManager> {
-  const { dataSource, entities } = options
 
-  const config = {
-    ...parseDataSourceConfig(dataSource),
-    entities: Object.values(entities),
+  if (!_dataSource) {
+    const { dataSource, entities } = options
+    const config = {
+      ...parseDataSourceConfig(dataSource),
+      entities: Object.values(entities),
+    }
+    _dataSource = new DataSource(config)
   }
-
-  if (!_dataSource) _dataSource = new DataSource(config)
 
   const manager = _dataSource?.manager
 
@@ -58,7 +59,7 @@ export async function getManager(options: {
   }
 
   if (process.env.NODE_ENV !== "production") {
-    await updateConnectionEntities(_dataSource, config.entities)
+    await updateConnectionEntities(_dataSource, Object.values(options.entities))
   }
   return manager
 }
