@@ -10,15 +10,16 @@
  */
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
+/** @see https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2#response-body-schema */
 export interface LinkedInProfile extends Record<string, any> {
-  "sub": string,
-  "name": string,
-  "given_name": string,
-  "family_name": string,
-  "picture": string,
-  "locale": string,
-  "email": string,
-  "email_verified": boolean
+  sub: string,
+  name: string,
+  given_name: string,
+  family_name: string,
+  picture: string,
+  locale: string,
+  email: string,
+  email_verified: boolean
 }
 
 /**
