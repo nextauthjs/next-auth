@@ -8,17 +8,22 @@
  *
  * @module providers/linkedin
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
-export interface LinkedInProfile {
-  sub: string
-  name: string
-  email: string
-  picture: string
+/** @see https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2#response-body-schema */
+export interface LinkedInProfile extends Record<string, any> {
+  sub: string,
+  name: string,
+  given_name: string,
+  family_name: string,
+  picture: string,
+  locale: string,
+  email: string,
+  email_verified: boolean
 }
 
 /**
- * Add Linkedin login to your page.
+ * Add LinkedIn login to your page.
  *
  * ### Setup
  *
@@ -30,27 +35,27 @@ export interface LinkedInProfile {
  * #### Configuration
  *```js
  * import Auth from "@auth/core"
- * import Linkedin from "@auth/core/providers/linkedin"
+ * import LinkedIn from "@auth/core/providers/linkedin"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Linkedin({ clientId: LINKEDIN_CLIENT_ID, clientSecret: LINKEDIN_CLIENT_SECRET })],
+ *   providers: [LinkedIn({ clientId: LINKEDIN_CLIENT_ID, clientSecret: LINKEDIN_CLIENT_SECRET })],
  * })
  * ```
  *
  * ### Resources
  *
- *  - [Linkedin OAuth documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow)
- *  - [Linkedin app console](https://www.linkedin.com/developers/apps/)
+ *  - [LinkedIn OAuth documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow)
+ *  - [LinkedIn app console](https://www.linkedin.com/developers/apps/)
  *
  * ### Notes
  *
- * By default, Auth.js assumes that the Linkedin provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ * By default, Auth.js assumes that the LinkedIn provider is
+ * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
  * :::tip
  *
- * The Linkedin provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/linkedin.ts).
+ * The LinkedIn provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/linkedin.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
  * :::
@@ -66,14 +71,22 @@ export interface LinkedInProfile {
  * :::
  */
 export default function LinkedIn<P extends LinkedInProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+  options: OIDCUserConfig<P>
+): OIDCConfig<P> {
   return {
     id: "linkedin",
     name: "LinkedIn",
     type: "oidc",
-    client: {
-      token_endpoint_auth_method: "client_secret_post",
+    client: { token_endpoint_auth_method: "client_secret_post" },
+    issuer: "https://www.linkedin.com",
+    jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
+    async profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture
+      }
     },
     style: {
       logo: "/linkedin.svg",
