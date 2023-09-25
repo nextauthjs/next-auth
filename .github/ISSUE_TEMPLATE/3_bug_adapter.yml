@@ -1,6 +1,6 @@
 name: Bug report (Adapter)
 description: Create an adapter-specific report
-labels: [triage, adapters]
+labels: [triage, bug, adapters]
 body:
   - type: markdown
     attributes:
