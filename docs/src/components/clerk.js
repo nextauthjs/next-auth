@@ -20,7 +20,10 @@ export function Clerk() {
         ref={inViewRef}
         className="h-[360px] w-full overflow-hidden py-8 sm:h-[480px] pb-24 mb-24"
       >
-        <div className="mx-auto flex h-full w-full max-w-6xl flex-col">
+        <div className="relative mx-auto flex h-full w-full max-w-6xl flex-col">
+          <div className="absolute top-1 inline-flex w-fit self-center rounded-md border-black/[0.07] px-4 py-1 text-[13px] font-medium tracking-tight text-[#B2B2B2] shadow-[inset_0px_1px_2px_rgba(0,0,0,0.07),inset_1px_0px_2px_rgba(0,0,0,0.07),inset_-1px_0px_2px_rgba(0,0,0,0.07)] [mask:linear-gradient(black,black_50%,transparent)] dark:border-white/[0.07] dark:text-white dark:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.07),inset_1px_0px_2px_rgba(255,255,255,0.07),inset_-1px_0px_2px_rgba(255,255,255,0.07)] ">
+            Sponsored by
+          </div>
           <div className="flex flex-1 items-center justify-center">
             <AnimatedLogo />
           </div>
@@ -58,7 +61,7 @@ export function Clerk() {
             <div className="relative isolate">
               <a
                 href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=09_01_2023"
-                className="relative isolate inline-flex h-8 items-center gap-1.5 rounded-[8px] px-4 text-[13px] font-semibold text-white before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:shadow-lg before:shadow-[rgb(100_48_247/0.3)] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[#6C47FF] after:shadow-[inset_0px_-8px_16px_-4px_#6430F7,inset_0px_0px_1px_1px_theme(colors.white/4%),inset_0px_1px_0px_theme(colors.white/10%),0px_0px_0px_1px_rgb(72_24_191/0.75)] dark:before:shadow-black"
+                className="relative isolate inline-flex h-8 items-center gap-1.5 rounded-[8px] px-4 text-[13px] font-semibold text-white before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:shadow-lg before:shadow-[rgb(100_48_247/0.3)] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[#6C47FF] after:shadow-[inset_0px_-8px_16px_-4px_#6430F7,inset_0px_0px_1px_1px_theme(colors.white/4%),inset_0px_1px_0px_theme(colors.white/10%),0px_0px_0px_1px_rgb(72_24_191/0.15)] dark:before:shadow-black"
               >
                 <span className="z-20 flex items-center gap-1.5 bg-gradient-to-b from-white from-50% to-[#D7D4FF] bg-clip-text text-transparent drop-shadow-[0px_1px_1px_rgb(86_30_227/60%)]">
                   <span>Get started for free</span>
@@ -303,8 +306,6 @@ export function AnimatedLogo() {
       animate={wrapperContainer}
       className="relative isolate flex scale-75 items-center gap-2 sm:scale-100"
     >
-      <span className="text-center pr-6 font-bold">sponsored by</span>
-
       {!isAnimationFinished && (
         <motion.div
           style={{ x: "138%" }}
