@@ -4,11 +4,19 @@ interface Identifier {
   identifier: string
 }
 
-export interface LinkedInProfile extends Record<string, string> {
+interface Element {
+  identifiers?: Identifier[]
+}
+
+export interface LinkedInProfile extends Record<string, any> {
   id: string
-  name: string
-  email: string
-  image: string
+  localizedFirstName: string
+  localizedLastName: string
+  profilePicture: {
+    "displayImage~": {
+      elements?: Element[]
+    }
+  }
 }
 
 export default function LinkedIn<P extends LinkedInProfile>(
@@ -20,21 +28,31 @@ export default function LinkedIn<P extends LinkedInProfile>(
     type: "oauth",
     authorization: {
       url: "https://www.linkedin.com/oauth/v2/authorization",
-      params: { scope: "openid profile email" },
+      params: { scope: "r_liteprofile r_emailaddress" },
     },
     token: "https://www.linkedin.com/oauth/v2/accessToken",
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
-    userinfo: "https://api.linkedin.com/v2/userinfo",
-    issuer: "https://www.linkedin.com",
-    jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
-    async profile(profile) {
+    userinfo: {
+      url: "https://api.linkedin.com/v2/me",
+      params: {
+        projection: `(id,localizedFirstName,localizedLastName,profilePicture(displayImage~digitalmediaAsset:playableStreams))`,
+      },
+    },
+    async profile(profile, tokens) {
+      const emailResponse = await fetch(
+        "https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))",
+        { headers: { Authorization: `Bearer ${tokens.access_token}` } }
+      )
+      const emailData = await emailResponse.json()
       return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture
+        id: profile.id,
+        name: `${profile.localizedFirstName} ${profile.localizedLastName}`,
+        email: emailData?.elements?.[0]?.["handle~"]?.emailAddress,
+        image:
+          profile.profilePicture?.["displayImage~"]?.elements?.[0]
+            ?.identifiers?.[0]?.identifier,
       }
     },
     style: {
