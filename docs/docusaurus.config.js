@@ -225,10 +225,13 @@ const docusaurusConfig = {
            */
           editUrl({ docPath }) {
             // TODO: support other packages, fix directory links like "providers"
+            const base = "https://github.com/nextauthjs/next-auth/edit/main/packages"
             if (docPath.includes("reference/core")) {
               const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
-              const base = `https://github.com/nextauthjs/next-auth/edit/main/packages/core/src/${file}`
-              return base
+              return `${base}/core/src/${file}`
+            } else if (docPath.includes("reference/adapter/")) {
+              const file = docPath.split("reference/adapter/")[1].replace("index.md", "src/index.ts")
+              return `${base}/adapter-${file}`
             }
             return "https://github.com/nextauthjs/next-auth/edit/main/docs"
           },
