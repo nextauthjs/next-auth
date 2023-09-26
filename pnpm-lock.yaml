@@ -153,8 +153,8 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       typeorm:
-        specifier: 0.3.7
-        version: 0.3.7(pg@8.7.3)(sqlite3@5.0.8)
+        specifier: 0.3.17
+        version: 0.3.17(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
 
   apps/dev/nextjs-v4:
     dependencies:
@@ -350,8 +350,8 @@ importers:
         specifier: ^2.12.2
         version: 2.14.1
       better-sqlite3:
-        specifier: ^7.0.0
-        version: 7.6.2
+        specifier: ^8.6.0
+        version: 8.6.0
       jest:
         specifier: ^29.3.0
         version: 29.5.0(@types/node@17.0.45)
@@ -409,14 +409,14 @@ importers:
         specifier: ^8.3.3
         version: 8.3.4
       better-sqlite3:
-        specifier: ^8.4.0
-        version: 8.5.0
+        specifier: ^8.6.0
+        version: 8.6.0
       drizzle-kit:
         specifier: ^0.19.5
         version: 0.19.12
       drizzle-orm:
-        specifier: ^0.27.0
-        version: 0.27.2(@types/better-sqlite3@7.6.4)(better-sqlite3@8.5.0)(mysql2@3.6.0)(postgres@3.3.5)
+        specifier: ^0.28.6
+        version: 0.28.6(@types/better-sqlite3@7.6.4)(better-sqlite3@8.6.0)(mysql2@3.6.0)(postgres@3.3.5)
       jest:
         specifier: ^27.4.3
         version: 27.5.1
@@ -537,8 +537,8 @@ importers:
         specifier: ^8.6.5
         version: 8.10.2
       better-sqlite3:
-        specifier: ^8.2.0
-        version: 8.5.0
+        specifier: ^8.6.0
+        version: 8.6.0
       jest:
         specifier: ^27.4.3
         version: 27.5.1
@@ -808,11 +808,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       typeorm:
-        specifier: 0.3.15
-        version: 0.3.15(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
+        specifier: 0.3.17
+        version: 0.3.17(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
       typeorm-naming-strategies:
         specifier: ^4.1.0
-        version: 4.1.0(typeorm@0.3.15)
+        version: 4.1.0(typeorm@0.3.17)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -14016,16 +14016,8 @@ packages:
     dependencies:
       tweetnacl: 0.14.5
 
-  /better-sqlite3@7.6.2:
-    resolution: {integrity: sha512-S5zIU1Hink2AH4xPsN0W43T1/AJ5jrPh7Oy07ocuW/AKYYY02GWzz9NH0nbSMn/gw6fDZ5jZ1QsHt1BXAwJ6Lg==}
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      prebuild-install: 7.1.1
-    dev: true
-
-  /better-sqlite3@8.5.0:
-    resolution: {integrity: sha512-vbPcv/Hx5WYdyNg/NbcfyaBZyv9s/NVbxb7yCeC5Bq1pVocNxeL2tZmSu3Rlm4IEOTjYdGyzWQgyx0OSdORBzw==}
+  /better-sqlite3@8.6.0:
+    resolution: {integrity: sha512-jwAudeiTMTSyby+/SfbHDebShbmC2MCH8mU2+DXi0WJfv13ypEJm47cd3kljmy/H130CazEvkf2Li//ewcMJ1g==}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -16909,8 +16901,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.27.2(@types/better-sqlite3@7.6.4)(better-sqlite3@8.5.0)(mysql2@3.6.0)(postgres@3.3.5):
-    resolution: {integrity: sha512-ZvBvceff+JlgP7FxHKe0zOU9CkZ4RcOtibumIrqfYzDGuOeF0YUY0F9iMqYpRM7pxnLRfC+oO7rWOUH3T5oFQA==}
+  /drizzle-orm@0.28.6(@types/better-sqlite3@7.6.4)(better-sqlite3@8.6.0)(mysql2@3.6.0)(postgres@3.3.5):
+    resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -16972,7 +16964,7 @@ packages:
         optional: true
     dependencies:
       '@types/better-sqlite3': 7.6.4
-      better-sqlite3: 8.5.0
+      better-sqlite3: 8.6.0
       mysql2: 3.6.0
       postgres: 3.3.5
     dev: true
@@ -30961,16 +30953,16 @@ packages:
       typescript: 4.9.5
     dev: true
 
-  /typeorm-naming-strategies@4.1.0(typeorm@0.3.15):
+  /typeorm-naming-strategies@4.1.0(typeorm@0.3.17):
     resolution: {integrity: sha512-vPekJXzZOTZrdDvTl1YoM+w+sUIfQHG4kZTpbFYoTsufyv9NIBRe4Q+PdzhEAFA2std3D9LZHEb1EjE9zhRpiQ==}
     peerDependencies:
       typeorm: ^0.2.0 || ^0.3.0
     dependencies:
-      typeorm: 0.3.15(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
+      typeorm: 0.3.17(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
     dev: true
 
-  /typeorm@0.3.15(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8):
-    resolution: {integrity: sha512-R4JSw8QjDP1W+ypeRz/XrCXIqubrLSnNAzJAp9EQSQIPHTv+YmUHZis8g08lOwFpuhqL9m8jkPSz8GWEKlU/ow==}
+  /typeorm@0.3.17(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8):
+    resolution: {integrity: sha512-UDjUEwIQalO9tWw9O2A4GU+sT3oyoUXheHJy4ft+RFdnRdQctdQ34L9SqE2p7LdwzafHx1maxT+bqXON+Qnmig==}
     engines: {node: '>= 12.9.0'}
     hasBin: true
     peerDependencies:
@@ -31032,6 +31024,7 @@ packages:
       buffer: 6.0.3
       chalk: 4.1.2
       cli-highlight: 2.1.11
+      date-fns: 2.29.3
       debug: 4.3.4(supports-color@7.2.0)
       dotenv: 16.0.3
       glob: 8.1.0
