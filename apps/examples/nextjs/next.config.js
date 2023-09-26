@@ -1,10 +1,9 @@
 /** @type {import("next").NextConfig} */
 module.exports = {
   webpack(config) {
-    config.experiments = { ...config.experiments, topLevelAwait: true }
-    return config
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+    return config;
   },
-  experimental: { appDir: true },
+  experimental: { serverActions: true },
   typescript: { ignoreBuildErrors: true },
-  reactStrictMode: true,
-}
+};
