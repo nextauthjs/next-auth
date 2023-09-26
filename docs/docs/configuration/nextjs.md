@@ -157,22 +157,27 @@ Callbacks are asynchronous functions you can use to control what happens when an
 
 #### Description
 
-Specify URLs to be used if you want to create custom sign in, and error pages. Pages specified will override the corresponding built-in page.
+Specify URLs to be used if you want to create custom sign-in and error pages. The pages specified will override the corresponding built-in page.
 
 :::info
-This should match the `pages` configuration that's found in `[...nextauth].ts`.
+The `pages` configuration should match the same configuration in `[...nextauth].ts`. This is so that the `next-auth` Middleware is aware of your custom pages, so it won't end up redirecting to itself when an unauthenticated condition is met.
 :::
 
 #### Example (default value)
 
 ```js
-pages: {
-  signIn: '/api/auth/signin',
-  error: '/api/auth/error',
-}
+import { withAuth } from "next-auth/middleware"
+
+export default withAuth({
+  // Matches the pages config in `[...nextauth]`
+  pages: {
+    signIn: '/login',
+    error: '/error',
+  }
+})
 ```
 
-See the documentation for the [pages option](/configuration/pages) for more information.
+For more information, see the documentation for the [pages option](/configuration/pages).
 
 ---
 
@@ -182,7 +187,7 @@ See the documentation for the [pages option](/configuration/pages) for more info
 
 #### Description
 
-The same `secret` used in the [NextAuth.js config](/configuration/options#options).
+The same `secret` is used in the [NextAuth.js config](/configuration/options#options).
 
 #### Example (default value)
 
