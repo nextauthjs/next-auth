@@ -1,12 +1,39 @@
 import NextAuth from "next-auth"
-import Auth0 from "next-auth/providers/github"
-import Facebook from "next-auth/providers/facebook"
+import type { NextAuthConfig, User } from "next-auth"
+import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
-import Google from "next-auth/providers/google"
-import Twitter from "next-auth/providers/twitter"
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  CSRF_experimental,
-} = NextAuth({ providers: [GitHub, Auth0, Facebook, Google, Twitter] })
+declare module "next-auth" {
+  interface Session {
+    user: {
+      picture?: string
+    } & Omit<User, "id">
+  }
+}
+
+export const authConfig = {
+  debug: true,
+  providers: [
+    GitHub,
+    Credentials({
+      credentials: { password: { label: "Password", type: "password" } },
+      authorize(c) {
+        if (c.password !== "1") return null
+        return {
+          name: "Fill Murray",
+          email: "bill@fillmurray.com",
+          image: "https://www.fillmurray.com/64/64",
+          id: "1",
+        }
+      },
+    }),
+  ],
+  callbacks: {
+    authorized(params) {
+      return !!params.auth?.user
+    },
+  },
+} satisfies NextAuthConfig
+
+export const { handlers, auth, signIn, signOut, CSRF_experimental } =
+  NextAuth(authConfig)
