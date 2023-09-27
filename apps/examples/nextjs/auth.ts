@@ -85,7 +85,7 @@ export const config = {
     Box({ clientId: process.env.AUTH_BOX_ID, clientSecret: process.env.AUTH_BOX_SECRET }),
     BoxyHQSAML({ clientId: process.env.AUTH_BOXYHQ_ID, clientSecret: process.env.AUTH_BOXYHQ_SECRET, issuer: process.env.AUTH_BOXYHQ_ISSUER }),
     Bungie({ clientId: process.env.AUTH_BUNGIE_ID, clientSecret: process.env.AUTH_BUNGIE_SECRET }),
-    Cognito({ clientId: process.env.AUTH_COGNITO_ID, clientSecret: process.env.AUTH_COGNITO_SECRET }),
+    Cognito({ clientId: process.env.AUTH_COGNITO_ID, clientSecret: process.env.AUTH_COGNITO_SECRET, issuer: process.env.AUTH_COGNITO_ISSUER }),
     Coinbase({ clientId: process.env.AUTH_COINBASE_ID, clientSecret: process.env.AUTH_COINBASE_SECRET }),
     Discord({ clientId: process.env.AUTH_DISCORD_ID, clientSecret: process.env.AUTH_DISCORD_SECRET }),
     Dropbox({ clientId: process.env.AUTH_DROPBOX_ID, clientSecret: process.env.AUTH_DROPBOX_SECRET }),
@@ -182,6 +182,7 @@ declare global {
       AUTH_BUNGIE_ID: string
       AUTH_BUNGIE_SECRET: string
       AUTH_COGNITO_ID: string
+      AUTH_COGNITO_ISSUER: string
       AUTH_COGNITO_SECRET: string
       AUTH_COINBASE_ID: string
       AUTH_COINBASE_SECRET: string
