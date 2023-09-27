@@ -36,10 +36,6 @@ This tutorial assumes you have a Next.js application set up. If you don't, you c
 npm install next-auth
 ```
 
-:::info
-We are working on a new release of `next-auth` that will make it easier to set up Auth.js with Next.js. You can follow the development [on this PR](https://github.com/nextauthjs/next-auth/pull/7443)
-:::
-
 ### Creating the server config
 
 Create the following [API route](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes) file. This route contains the necessary configuration for NextAuth.js, as well as the dynamic route handler:
@@ -286,23 +282,24 @@ You can use the `$page.data.session` variable from anywhere on your page. Learn 
 To protect your API Routes (blocking unauthorized access to resources), you can use `locals.getSessions()` just like in the layouts file to know whether a session exists or not:
 
 ```ts title="routes/api/movies/+server.ts"
-import { json, error } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
+import { json, error } from "@sveltejs/kit"
+import type { RequestEvent } from "./$types"
 
 export async function GET({ locals }: RequestEvent) {
   const session = await locals.getSession()
   if (!session?.user) {
-    throw error(401, "You must sign in to view movies.");
+    throw error(401, "You must sign in to view movies.")
   }
 
   return json({
     movies: [
       { title: "Alien vs Predator", id: 1 },
       { title: "Reservoir Dogs", id: 2 },
-    ]
+    ],
   })
 }
 ```
+
   </TabItem>
   <TabItem value="solidstart" label="SolidStart">
 TODO: SolidStart
@@ -450,7 +447,6 @@ Great! We're now ready to run our application locally. Start the Svelte app by r
 ```
 npm run vite dev
 ```
-
 
   </TabItem>
   <TabItem value="solidstart" label="SolidStart">

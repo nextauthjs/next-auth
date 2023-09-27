@@ -30,10 +30,24 @@ function typedocAdapter(name) {
       entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
       tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
       out: `reference/adapter/${slug}`,
-      sidebar: {
-        indexLabel: name,
-      },
       ...typedocConfig,
+    },
+  ]
+}
+
+function typedocFramework(pkgDir, entrypoints) {
+  const id = pkgDir.replace("frameworks-", "")
+  return [
+    "docusaurus-plugin-typedoc",
+    {
+      ...typedocConfig,
+      id: id,
+      plugin: [require.resolve("./typedoc-mdn-links")],
+      watch: process.env.TYPEDOC_WATCH,
+      entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
+      tsconfig: `../packages/${pkgDir}/tsconfig.json`,
+      out: `reference/${id === "next-auth" ? "nextjs" : id}`,
+      skipIndexPage: true,
     },
   ]
 }
@@ -245,6 +259,11 @@ const docusaurusConfig = {
             },
           },
         },
+        async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
+          const sidebarItems = await defaultSidebarItemsGenerator(args)
+          const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index"]
+          return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
+        },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
         },
@@ -252,36 +271,8 @@ const docusaurusConfig = {
     ],
   ],
   plugins: [
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "core",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
-        tsconfig: "../packages/core/tsconfig.json",
-        out: "reference/core",
-        sidebar: {
-          indexLabel: "index",
-        },
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "sveltekit",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
-        tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
-        out: "reference/sveltekit",
-        sidebar: {
-          indexLabel: "index",
-        },
-      },
-    ],
+    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
+    typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
