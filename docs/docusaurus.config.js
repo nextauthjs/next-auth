@@ -227,7 +227,28 @@ const docusaurusConfig = {
           breadcrumbs: false,
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/nextauthjs/next-auth/edit/main/docs",
+          /**
+           *
+           * @param {{
+           *  version: string;
+           *  versionDocsDirPath: string;
+           *  docPath: string;
+           *  permalink: string;
+           *  locale: string;
+           *}} params
+           */
+          editUrl({ docPath }) {
+            // TODO: support other packages, fix directory links like "providers"
+            const base = "https://github.com/nextauthjs/next-auth/edit/main/packages"
+            if (docPath.includes("reference/core")) {
+              const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
+              return `${base}/core/src/${file}`
+            } else if (docPath.includes("reference/adapter/")) {
+              const file = docPath.split("reference/adapter/")[1].replace("index.md", "src/index.ts")
+              return `${base}/adapter-${file}`
+            }
+            return "https://github.com/nextauthjs/next-auth/edit/main/docs"
+          },
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
@@ -256,6 +277,9 @@ const docusaurusConfig = {
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
+          typedocAdapter("Azure Tables"),
+          typedocAdapter("D1"),
+          typedocAdapter("EdgeDb"),
           typedocAdapter("Dgraph"),
           typedocAdapter("Drizzle"),
           typedocAdapter("DynamoDB"),
@@ -265,11 +289,13 @@ const docusaurusConfig = {
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),
           typedocAdapter("Neo4j"),
+          typedocAdapter("PG"),
           typedocAdapter("PouchDB"),
           typedocAdapter("Prisma"),
           typedocAdapter("TypeORM"),
           typedocAdapter("Sequelize"),
           typedocAdapter("Supabase"),
+          typedocAdapter("SurrealDB"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
         ]),

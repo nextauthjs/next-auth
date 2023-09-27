@@ -9,7 +9,7 @@
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
-    "Thang Huu Vu <thvu@hey.com>"
+    "Thang Huu Vu <hi@thvu.dev>"
   ],
   "type": "module",
   "types": "./index.d.ts",
@@ -76,7 +76,7 @@
     "@auth/core": "workspace:experimental"
   },
   "peerDependencies": {
-    "next": "^13.4.13",
+    "next": "^13.5.3",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
@@ -87,7 +87,7 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
-    "next": "13.4.13",
+    "next": "13.5.3",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0",
     "typescript": "^4"

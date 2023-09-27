@@ -56,8 +56,8 @@ export interface DynamoDBAdapterOptions {
  *
  * const config: DynamoDBClientConfig = {
  *   credentials: {
- *     accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY as string,
- *     secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY as string,
+ *     accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY,
+ *     secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY,
  *   },
  *   region: process.env.NEXT_AUTH_AWS_REGION,
  * };

@@ -5,6 +5,18 @@ title: Overview
 Using an Auth.js / NextAuth.js adapter you can connect to any database service or even several different services at the same time. The following listed official adapters are created and maintained by the community:
 
 <div class="adapter-card-list">
+  <a href="/reference/adapter/azure-tables" class="adapter-card">
+    <img src="/img/adapters/azure-tables.svg" width="40" />
+    <h4 class="adapter-card__title">Azure Table Storage Adapter</h4>
+  </a>
+  <a href="/reference/adapter/d1" class="adapter-card">
+    <img src="/img/adapters/d1.svg" width="40" />
+    <h4 class="adapter-card__title">D1 Adapter</h4>
+  </a>
+  <a href="/reference/adapter/edgedb" class="adapter-card">
+    <img src="/img/adapters/edgedb.svg" width="30" />
+    <h4 class="adapter-card__title">EdgeDB Adapter</h4>
+  </a>
   <a href="/reference/adapter/dgraph" class="adapter-card">
     <img src="/img/adapters/dgraph.png" width="30" />
     <h4 class="adapter-card__title">Dgraph Adapter</h4>
@@ -41,6 +53,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/neo4j.svg" width="50" />
     <h4 class="adapter-card__title">Neo4j Adapter</h4>
   </a>
+  <a href="/reference/adapter/pg" class="adapter-card">
+    <img src="/img/adapters/pg.png" width="20" />
+    <h4 class="adapter-card__title">Postgres Adapter</h4>
+  </a>
   <a href="/reference/adapter/pouchdb" class="adapter-card">
     <img src="/img/adapters/pouchdb.svg" width="20" />
     <h4 class="adapter-card__title">PouchDB Adapter</h4>
@@ -56,6 +72,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
   <a href="/reference/adapter/supabase" class="adapter-card">
     <img src="/img/adapters/supabase.svg" width="25" />
     <h4 class="adapter-card__title">Supabase Adapter</h4>
+  </a>
+  <a href="/reference/adapter/surrealdb" class="adapter-card">
+    <img src="/img/adapters/surreal.png" width="25" />
+    <h4 class="adapter-card__title">SurrealDB Adapter</h4>
   </a>
   <a href="/reference/adapter/typeorm" class="adapter-card">
     <img src="/img/adapters/typeorm.png" width="30" />

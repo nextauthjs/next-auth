@@ -118,7 +118,7 @@ export default function AzureADB2C(
       return {
         id: profile.sub,
         name: profile.name,
-        email: profile.emails[0],
+        email: profile?.emails?.[0],
         image: null,
       }
     },

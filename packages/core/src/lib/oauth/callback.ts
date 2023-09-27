@@ -202,10 +202,10 @@ async function getUserAndAccount(
     return {
       user,
       account: {
+        ...tokens,
         provider: provider.id,
         type: provider.type,
         providerAccountId: user.id.toString(),
-        ...tokens,
       },
     }
   } catch (e) {

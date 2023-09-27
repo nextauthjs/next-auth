@@ -1,6 +1,6 @@
 name: Bug report (Provider)
 description: Create a provider-specific report
-labels: [triage, providers]
+labels: [triage, bug, providers]
 body:
   - type: markdown
     attributes:
@@ -31,14 +31,17 @@ body:
         - "Authentik"
         - "Azure Active Directory"
         - "Azure Active Directory B2C"
+        - "Azure DevOps"
         - "Battlenet"
         - "Beyond Identity"
         - "Box"
         - "Bungie"
+        - "ClickUp"
         - "Cognito"
         - "Coinbase"
         - "Descope"
         - "Discord"
+        - "Dribbble"
         - "Dropbox"
         - "EVE Online"
         - "Facebook"
@@ -57,6 +60,7 @@ body:
         - "LinkedIn"
         - "Mailchimp"
         - "Mail.ru"
+        - "Mastodon"
         - "Medium"
         - "Naver"
         - "Netlify"
@@ -72,6 +76,7 @@ body:
         - "Slack"
         - "Spotify"
         - "Strava"
+        - "Tiktok"
         - "Todoist"
         - "Trakt"
         - "Twitch"

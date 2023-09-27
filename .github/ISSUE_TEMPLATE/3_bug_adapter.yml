@@ -1,6 +1,6 @@
 name: Bug report (Adapter)
 description: Create an adapter-specific report
-labels: [triage, adapters]
+labels: [triage, bug, adapters]
 body:
   - type: markdown
     attributes:
@@ -21,16 +21,19 @@ body:
       multiple: true
       options:
         - "Custom adapter"
+        - "@auth/azure-tables-adapter"
+        - "@auth/edgedb-adapter"
+        - "@auth/d1-adapter"
         - "@auth/dgraph-adapter"
         - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
-        - "@auth/drizzle-adapter"
         - "@auth/fauna-adapter"
         - "@auth/firebase-adapter"
         - "@auth/kysely-adapter"
         - "@auth/mikro-orm-adapter"
         - "@auth/mongodb-adapter"
         - "@auth/neo4j-adapter"
+        - "@auth/pg-adapter"
         - "@auth/pouchdb-adapter"
         - "@auth/prisma-adapter"
         - "@auth/sequelize-adapter"
