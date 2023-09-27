@@ -1,9 +1,9 @@
-> The example repository is maintained from a [monorepo](https://github.com/nextauthjs/next-auth/tree/main/apps/example-nextjs). Pull Requests should be opened against [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth).
+> The example repository is maintained from a [monorepo](https://github.com/nextauthjs/next-auth/tree/main/apps/examples/nextjs). Pull Requests should be opened against [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth).
 
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
-   <h3 align="center">NextAuth.js v5 Example App</h3>
+   <h3 align="center">NextAuth.js Example App</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
@@ -29,6 +29,8 @@ NextAuth.js is a complete open source authentication solution.
 
 This is an example application that shows how `next-auth` is applied to a basic Next.js app.
 
+<!-- TODO: Remove v5 when merged -->
+
 The deployed version can be found at [`next-auth-v5-example.vercel.app`](https://next-auth-v5-example.vercel.app)
 
 ### About NextAuth.js
@@ -44,8 +46,8 @@ Go to [next-auth.js.org](https://authjs.dev) for more information and documentat
 ### 1. Clone the repository and install dependencies
 
 ```
-git clone https://github.com/nextauthjs/next-auth-v5-example.git
-cd next-auth-v5-example
+git clone https://github.com/nextauthjs/next-auth-example.git
+cd next-auth-example
 npm install
 ```
 
@@ -67,7 +69,7 @@ You **can** skip configuring a database and come back to it later if you want.
 
 For more information about setting up a database, please check out the following links:
 
-- Docs: [next-auth.js.org/adapters/overview](https://authjs.dev/reference/core/adapters)
+- Docs: [authjs.dev/reference/adapters](https://authjs.dev/reference/core/adapters)
 
 ### 3. Configure Authentication Providers
 

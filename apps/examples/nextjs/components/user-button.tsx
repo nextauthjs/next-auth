@@ -1,18 +1,17 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { auth } from "auth";
-import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Button } from "./ui/button"
+import { auth } from "auth"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import CustomLink from "./custom-link";
+} from "./ui/dropdown-menu"
+import { SignIn, SignOut } from "./auth-components"
 
 export default async function UserButton() {
-  const session = await auth();
+  const session = await auth()
   return session ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -39,14 +38,12 @@ export default async function UserButton() {
             </p>
           </div>
         </DropdownMenuLabel>
-        <CustomLink href="/api/auth/signout">
-          <DropdownMenuItem>Sign out</DropdownMenuItem>
-        </CustomLink>
+        <DropdownMenuItem>
+          <SignOut />
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ) : (
-    <Link href="api/auth/signin">
-      <Button>Sign In</Button>
-    </Link>
-  );
+    <SignIn />
+  )
 }

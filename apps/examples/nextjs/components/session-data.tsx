@@ -1,5 +1,5 @@
-import type { Session } from "next-auth";
-import CustomLink from "./custom-link";
+import type { Session } from "next-auth"
+import { SignIn } from "./auth-components"
 
 export default function SessionData({ session }: { session: Session | null }) {
   return session ? (
@@ -21,12 +21,10 @@ export default function SessionData({ session }: { session: Session | null }) {
       <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   ) : (
-    <p>
-      No session data.{" "}
-      <CustomLink href="/api/auth/signin" className="underline">
-        Sign In
-      </CustomLink>
-      .
-    </p>
-  );
+    <>
+      <p>
+        No session data, please <em>Sign In</em> first.
+      </p>
+    </>
+  )
 }

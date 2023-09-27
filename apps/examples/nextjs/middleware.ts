@@ -1,5 +1,5 @@
-import { auth } from "auth";
+import { auth } from "auth"
 
-export const middleware = auth;
+export const middleware = auth
 
-export const config = { matcher: ["/middleware-example"] };
+export const config = { matcher: ["/middleware-example"] }

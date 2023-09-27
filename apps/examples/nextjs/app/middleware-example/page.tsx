@@ -1,4 +1,4 @@
-import CustomLink from "@/components/custom-link";
+import CustomLink from "@/components/custom-link"
 
 export default function Page() {
   return (
@@ -16,5 +16,5 @@ export default function Page() {
         .
       </p>
     </div>
-  );
+  )
 }

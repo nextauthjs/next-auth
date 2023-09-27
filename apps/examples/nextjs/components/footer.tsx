@@ -1,4 +1,4 @@
-import CustomLink from "./custom-link";
+import CustomLink from "./custom-link"
 
 export default function Footer() {
   return (
@@ -12,5 +12,5 @@ export default function Footer() {
       </CustomLink>
       <CustomLink href="/policy">Policy</CustomLink>
     </footer>
-  );
+  )
 }

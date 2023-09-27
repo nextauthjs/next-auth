@@ -1,5 +1,5 @@
-import CustomLink from "@/components/custom-link";
-import packageJSON from "../package.json";
+import CustomLink from "@/components/custom-link"
+import packageJSON from "../package.json"
 
 export default function Index() {
   return (
@@ -30,5 +30,5 @@ export default function Index() {
         version: <em>next-auth@{packageJSON.dependencies["next-auth"]}</em>
       </p>
     </div>
-  );
+  )
 }

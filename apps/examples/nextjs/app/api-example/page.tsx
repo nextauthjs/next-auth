@@ -1,21 +1,21 @@
-"use client";
-import CustomLink from "@/components/custom-link";
-import { useEffect, useState } from "react";
+"use client"
+import CustomLink from "@/components/custom-link"
+import { useEffect, useState } from "react"
 
 export default function Page() {
-  const [data, setData] = useState();
+  const [data, setData] = useState()
   useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/protected");
-      const json = await res.json();
-      setData(json);
-    })();
-  }, []);
+    ;(async () => {
+      const res = await fetch("/api/protected")
+      const json = await res.json()
+      setData(json)
+    })()
+  }, [])
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">Route Handler Usage</h1>
       <p>
-        This page fetches data from an API {" "}
+        This page fetches data from an API{" "}
         <CustomLink href="https://nextjs.org/docs/app/building-your-application/routing/route-handlers">
           Route Handler
         </CustomLink>
@@ -30,5 +30,5 @@ export default function Page() {
         <code>{JSON.stringify(data, null, 2)}</code>
       </pre>
     </div>
-  );
+  )
 }

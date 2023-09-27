@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import Image from "next/image";
+import Image from "next/image"
 
-import { cn } from "@/lib/utils";
-import CustomLink from "./custom-link";
+import { cn } from "@/lib/utils"
+import CustomLink from "./custom-link"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,9 +12,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "./ui/navigation-menu";
-import React from "react";
-import { Button } from "./ui/button";
+} from "./ui/navigation-menu"
+import React from "react"
+import { Button } from "./ui/button"
 
 export function MainNav() {
   return (
@@ -53,7 +53,7 @@ export function MainNav() {
         </NavigationMenuList>
       </NavigationMenu>
     </div>
-  );
+  )
 }
 
 const ListItem = React.forwardRef<
@@ -78,6 +78,6 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  );
-});
-ListItem.displayName = "ListItem";
+  )
+})
+ListItem.displayName = "ListItem"
