@@ -179,7 +179,7 @@ async function handleAuth(
     })
   }
 
-  let response: Response = NextResponse.next?.()
+  let response: any = NextResponse.next?.()
 
   if (authorized instanceof Response) {
     // User returned a custom response, like redirecting to a page or 401, respect it
