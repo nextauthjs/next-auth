@@ -26782,8 +26782,8 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 3.54.0
-      svelte-preprocess: 4.10.7(svelte@3.54.0)(typescript@5.2.2)
-      typescript: 5.2.2
+      svelte-preprocess: 4.10.7(svelte@3.54.0)(typescript@4.9.5)
+      typescript: 4.9.5
     transitivePeerDependencies:
       - '@babel/core'
       - coffeescript
@@ -26843,7 +26843,7 @@ packages:
       svelte: 3.55.0
     dev: true
 
-  /svelte-preprocess@4.10.7(svelte@3.54.0)(typescript@5.2.2):
+  /svelte-preprocess@4.10.7(svelte@3.54.0)(typescript@4.9.5):
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -26891,7 +26891,7 @@ packages:
       sorcery: 0.10.0
       strip-indent: 3.0.0
       svelte: 3.54.0
-      typescript: 5.2.2
+      typescript: 4.9.5
     dev: true
 
   /svelte-preprocess@4.10.7(svelte@3.55.0)(typescript@5.2.2):
