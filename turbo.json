@@ -72,11 +72,6 @@
         "UPSTASH_REDIS_URL"
       ]
     },
-    "nextjs-example-app#dev": {
-      "dependsOn": [
-        "@auth/core#build"
-      ]
-    },
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
