@@ -1,1 +1,1 @@
-export * from "./http-api-adapters"
+export * from "./http-api-adapters.js"

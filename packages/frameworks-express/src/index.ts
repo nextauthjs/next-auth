@@ -149,7 +149,7 @@
 import { Auth } from "@auth/core"
 import type { AuthConfig, Session } from "@auth/core/types"
 import { Request as ExpressRequest, Response as ExpressResponse } from "express"
-import { toWebRequest, toExpressResponse } from "./lib"
+import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
 function ExpressAuthHandler(authConfig: AuthConfig) {
   return async (req: ExpressRequest, res: ExpressResponse) => {
