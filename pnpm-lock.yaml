@@ -156,70 +156,6 @@ importers:
         specifier: 0.3.17
         version: 0.3.17(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
 
-  apps/dev/nextjs-v4:
-    dependencies:
-      '@auth/fauna-adapter':
-        specifier: workspace:*
-        version: link:../../../packages/adapter-fauna
-      '@auth/prisma-adapter':
-        specifier: workspace:*
-        version: link:../../../packages/adapter-prisma
-      '@auth/supabase-adapter':
-        specifier: workspace:*
-        version: link:../../../packages/adapter-supabase
-      '@auth/typeorm-adapter':
-        specifier: workspace:*
-        version: link:../../../packages/adapter-typeorm
-      '@prisma/client':
-        specifier: ^3
-        version: 3.15.2(prisma@3.15.2)
-      '@supabase/supabase-js':
-        specifier: ^2.0.5
-        version: 2.0.5
-      faunadb:
-        specifier: ^4
-        version: 4.6.0
-      next:
-        specifier: 13.3.0
-        version: 13.3.0(@babel/core@7.18.5)(react-dom@18.2.0)(react@18.2.0)
-      next-auth:
-        specifier: workspace:*
-        version: link:../../../packages/next-auth
-      nodemailer:
-        specifier: ^6
-        version: 6.8.0
-      react:
-        specifier: ^18
-        version: 18.2.0
-      react-dom:
-        specifier: ^18
-        version: 18.2.0(react@18.2.0)
-    devDependencies:
-      '@types/jsonwebtoken':
-        specifier: ^8.5.5
-        version: 8.5.9
-      '@types/react':
-        specifier: ^18.0.37
-        version: 18.0.37
-      '@types/react-dom':
-        specifier: ^18.0.6
-        version: 18.0.6
-      fake-smtp-server:
-        specifier: ^0.8.0
-        version: 0.8.0
-      pg:
-        specifier: ^8.7.3
-        version: 8.7.3
-      prisma:
-        specifier: ^3
-        version: 3.15.2
-      sqlite3:
-        specifier: ^5.0.8
-        version: 5.0.8
-      typeorm:
-        specifier: 0.3.7
-        version: 0.3.7(pg@8.7.3)(sqlite3@5.0.8)
-
   apps/dev/sveltekit:
     dependencies:
       '@auth/core':
@@ -10239,6 +10175,7 @@ packages:
 
   /@next/env@13.3.0:
     resolution: {integrity: sha512-AjppRV4uG3No7L1plinoTQETH+j2F10TEnrMfzbTUYwze5sBUPveeeBAPZPm8OkJZ1epq9OyYKhZrvbD6/9HCQ==}
+    dev: true
 
   /@next/env@13.4.0:
     resolution: {integrity: sha512-LKofmUuxwGXk2OZJSSJ2SlJE62s6z+56aRsze7chc5TPoVouLR9liTiSWxzYuVzuxk0ui2wtIjyR2tcgS1dIyw==}
@@ -10250,6 +10187,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-darwin-arm64@13.4.0:
@@ -10267,6 +10205,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-darwin-x64@13.4.0:
@@ -10284,6 +10223,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm64-gnu@13.4.0:
@@ -10301,6 +10241,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-arm64-musl@13.4.0:
@@ -10318,6 +10259,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-x64-gnu@13.4.0:
@@ -10335,6 +10277,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-linux-x64-musl@13.4.0:
@@ -10352,6 +10295,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-arm64-msvc@13.4.0:
@@ -10369,6 +10313,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-ia32-msvc@13.4.0:
@@ -10386,6 +10331,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@next/swc-win32-x64-msvc@13.4.0:
@@ -11627,6 +11573,7 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.2
+    dev: true
 
   /@swc/helpers@0.5.1:
     resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
@@ -14491,6 +14438,7 @@ packages:
 
   /caniuse-lite@1.0.30001431:
     resolution: {integrity: sha512-zBUoFU0ZcxpvSt9IU66dXVT/3ctO1cy4y9cscs1szkPlcWb6pasYM144GqrUygUbT+k7cmUCW61cvskjcv0enQ==}
+    dev: true
 
   /caniuse-lite@1.0.30001492:
     resolution: {integrity: sha512-2efF8SAZwgAX1FJr87KWhvuJxnGJKOnctQa8xLOskAXNXq8oiuqgl6u1kk3fFpsp3GgvzlRjiK1sl63hNtFADw==}
@@ -25149,6 +25097,7 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+    dev: true
 
   /next@13.4.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-y3E+2ZjiVrphkz7zcJvd2rEG6miOekI8krPfWV4AZZ9TaF0LDuFdP/f+RQ5M9wRvsz6GWw8k8+7jsO860GxSqg==}
@@ -31036,87 +30985,6 @@ packages:
       sqlite3: 5.0.8
       tslib: 2.5.2
       uuid: 9.0.0
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /typeorm@0.3.7(pg@8.7.3)(sqlite3@5.0.8):
-    resolution: {integrity: sha512-MsPJeP6Zuwfe64c++l80+VRqpGEGxf0CkztIEnehQ+CMmQPSHjOnFbFxwBuZ2jiLqZTjLk2ZqQdVF0RmvxNF3Q==}
-    engines: {node: '>= 12.9.0'}
-    hasBin: true
-    peerDependencies:
-      '@google-cloud/spanner': ^5.18.0
-      '@sap/hana-client': ^2.12.25
-      better-sqlite3: ^7.1.2
-      hdb-pool: ^0.1.6
-      ioredis: ^5.0.4
-      mongodb: ^3.6.0
-      mssql: ^7.3.0
-      mysql2: ^2.2.5
-      oracledb: ^5.1.0
-      pg: ^8.5.1
-      pg-native: ^3.0.0
-      pg-query-stream: ^4.0.0
-      redis: ^3.1.1 || ^4.0.0
-      sql.js: ^1.4.0
-      sqlite3: ^5.0.3
-      ts-node: ^10.7.0
-      typeorm-aurora-data-api-driver: ^2.0.0
-    peerDependenciesMeta:
-      '@google-cloud/spanner':
-        optional: true
-      '@sap/hana-client':
-        optional: true
-      better-sqlite3:
-        optional: true
-      hdb-pool:
-        optional: true
-      ioredis:
-        optional: true
-      mongodb:
-        optional: true
-      mssql:
-        optional: true
-      mysql2:
-        optional: true
-      oracledb:
-        optional: true
-      pg:
-        optional: true
-      pg-native:
-        optional: true
-      pg-query-stream:
-        optional: true
-      redis:
-        optional: true
-      sql.js:
-        optional: true
-      sqlite3:
-        optional: true
-      ts-node:
-        optional: true
-      typeorm-aurora-data-api-driver:
-        optional: true
-    dependencies:
-      '@sqltools/formatter': 1.2.5
-      app-root-path: 3.1.0
-      buffer: 6.0.3
-      chalk: 4.1.2
-      cli-highlight: 2.1.11
-      date-fns: 2.29.3
-      debug: 4.3.4(supports-color@7.2.0)
-      dotenv: 16.0.3
-      glob: 7.2.3
-      js-yaml: 4.1.0
-      mkdirp: 1.0.4
-      pg: 8.7.3
-      reflect-metadata: 0.1.13
-      sha.js: 2.4.11
-      sqlite3: 5.0.8
-      tslib: 2.5.2
-      uuid: 8.3.2
-      xml2js: 0.4.23
       yargs: 17.7.2
     transitivePeerDependencies:
       - supports-color
