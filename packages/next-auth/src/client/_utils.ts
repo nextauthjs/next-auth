@@ -36,6 +36,7 @@ export async function fetchData<T = any>(
   { ctx, req = ctx?.req }: CtxOrReq = {}
 ): Promise<T | null> {
   const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`
+  let res: Response | null = null
   try {
     const options: RequestInit = {
       headers: {
@@ -49,12 +50,12 @@ export async function fetchData<T = any>(
       options.method = "POST"
     }
 
-    const res = await fetch(url, options)
+    res = await fetch(url, options)
     const data = await res.json()
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    logger.error("CLIENT_FETCH_ERROR", { error: error as Error, url })
+    logger.error("CLIENT_FETCH_ERROR", { error: error as Error, url, res })
     return null
   }
 }
