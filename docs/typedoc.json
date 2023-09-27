@@ -40,5 +40,10 @@
   "outputFileStrategy": "modules",
   "readme": "none",
   "skipErrorChecking": true,
-  "sort": ["kind", "static-first", "required-first", "alphabetical"]
+  "sort": [
+    "kind",
+    "static-first",
+    "required-first",
+    "alphabetical"
+  ]
 }
