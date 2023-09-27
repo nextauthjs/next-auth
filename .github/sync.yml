@@ -1,7 +1,0 @@
-# This is a legacy example pushed from the v4 branch
-nextauthjs/next-auth-example:
-  - source: apps/example-nextjs
-    dest: .
-    deleteOrphaned: true
-  - .github/FUNDING.yml
-  - LICENSE
