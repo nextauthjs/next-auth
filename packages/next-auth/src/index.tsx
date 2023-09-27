@@ -16,34 +16,27 @@
  *
  * The App Router embraces Server Actions that can be leveraged to decrease the amount of JavaScript sent to the browser.
  *
- * :::info
- * [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions) is **in alpha stage**. In the future, NextAuth.js will integrate with Server Actions and provide first-party APIs.
- * Until then, here is how you can use NextAuth.js to log in and log out without JavaScript.
- * :::
- *
  * ```ts title="app/auth-components.tsx"
- * import { CSRF_experimental } from "../auth"
+ * import { signIn, signOut } from "../auth"
  *
  * export function SignIn({ provider, ...props }: any) {
  *   return (
- *     <form action={`/api/auth/signin/${provider}`} method="post">
+ *     <form action={signIn(provider)}>
  *       <button {{...props}}/>
- *       <CSRF_experimental/>
  *     </form>
  *   )
  * }
  *
  * export function SignOut(props: any) {
  *   return (
- *     <form action="/api/auth/signout" method="post">
+ *     <form action={signOut}>
  *       <button {...props}/>
- *       <CSRF_experimental/>
  *     </form>
  *   )
  * }
  * ```
  *
- * Alternatively, you can create client components, using the `signIn()` and `signOut` methods:
+ * Alternatively, you can create client components, using the `signIn()` and `signOut` methods from the `next-auth/react` submodule:
  *
  * ```ts title="app/auth-components.tsx"
  * "use client"
@@ -284,39 +277,6 @@ export interface NextAuthResult {
     ((
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
-  /**
-   * Returns a hidden `<input>` field with a CSRF token, that can be used in signin/signout forms.
-   *
-   * Read more about signing in and signing out in the [NextAuth.js docs](nextjs.authjs.dev/reference/nextjs#signing-in-and-signing-out).
-   *
-   * :::info
-   * This API is not finalized yet. We are looking into
-   * [Server Action](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions) support which might make this method unnecessary in the future.
-   * :::
-   *
-   * @example
-   * ```ts title="app/page.ts"
-   * import { CSRF_experimental } from "../auth"
-   * async function SignIn({ id, ...props }: { id: string } & JSX.IntrinsicElements["button"]) {
-   *  return (
-   *    <form action={`/api/auth/signin/${id}`} method="post">
-   *      <button {...props} />
-   *      <CSRF_experimental />
-   *    </form>
-   *  )
-   * }
-   *
-   * async function SignOut({ id, ...props }: JSX.IntrinsicElements["button"]) {
-   *  return (
-   *    <form action="/api/auth/signout" method="post">
-   *      <button {...props} />
-   *      <CSRF_experimental />
-   *    </form>
-   *  )
-   * }
-   * ```
-   */
-  CSRF_experimental: () => Promise<ReturnType<React.FunctionComponent>>
   signIn: (
     provider?: string,
     params?: { redirectTo?: string; redirect?: boolean }
@@ -345,17 +305,6 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
     auth: initAuth(config),
-    async CSRF_experimental() {
-      const _headers = headers()
-      const url = `${detectOrigin(_headers).origin}/api/auth/csrf`
-      const value = await Auth(new Request(url, { headers: _headers }), config)
-        .then((res) => res.json())
-        .then((res) => res?.csrfToken)
-
-      if (!value) throw new Error("CSRF token could not be found.")
-
-      return <input type="hidden" name="csrfToken" value={value} />
-    },
     signIn(provider, params) {
       return async () => {
         "use server"
