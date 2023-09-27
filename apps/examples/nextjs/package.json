@@ -15,7 +15,8 @@
   "contributors": [
     "Balázs Orbán <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
-    "Lluis Agusti <hi@llu.lu>"
+    "Lluis Agusti <hi@llu.lu>",
+    "Thang Huu Vu <hi@thvu.dev>"
   ],
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.3",
@@ -27,7 +28,7 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.274.0",
     "next": "latest",
-    "next-auth": "0.0.0-manual.ffd05533",
+    "next-auth": "experimental",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",
