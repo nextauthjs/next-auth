@@ -258,11 +258,11 @@ const docusaurusConfig = {
               label: "experimental",
             },
           },
-        },
-        async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
-          const sidebarItems = await defaultSidebarItemsGenerator(args)
-          const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index"]
-          return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
+          async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
+            const sidebarItems = await defaultSidebarItemsGenerator(args)
+            const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index"]
+            return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
+          },
         },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
