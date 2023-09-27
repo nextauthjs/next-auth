@@ -124,7 +124,7 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
-import { NextRequest, NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 import { redirect } from "next/navigation"
 

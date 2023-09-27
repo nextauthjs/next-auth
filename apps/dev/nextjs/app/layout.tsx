@@ -7,7 +7,6 @@ import "./styles.css"
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html>
-      <head></head>
       <body>
         {/* @ts-expect-error */}
         <AppHeader />
