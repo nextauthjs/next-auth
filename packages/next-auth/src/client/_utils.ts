@@ -55,7 +55,8 @@ export async function fetchData<T = any>(
     if (!res.ok) throw data
     return Object.keys(data).length > 0 ? data : null // Return null if data empty
   } catch (error) {
-    logger.error("CLIENT_FETCH_ERROR", { error: error as Error, url, res })
+    const body = res ? await res.text() : null
+    logger.error("CLIENT_FETCH_ERROR", { error: error as Error, url, body })
     return null
   }
 }
