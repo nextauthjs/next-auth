@@ -3,17 +3,30 @@ import { defaultCollections, format, VolatileMongoDBAdapter, _id } from "../src"
 import { MongoClient } from "mongodb"
 
 const name = "test"
-const client = new MongoClient(`mongodb://localhost:27017/${name}`)
-const clientPromise = client.connect()
+// For the adapter-test:
+const clientPromise = new MongoClient(
+  `mongodb://localhost:27017/${name}`
+).connect()
+// For the VolatileMongoDBAdapter:
+const createClient = async () => {
+  const client = new MongoClient(`mongodb://localhost:27017/${name}`)
+  await client.connect()
+  return {
+    client,
+    close: () => client.close(),
+  }
+}
 
 runBasicTests({
-  adapter: VolatileMongoDBAdapter(clientPromise),
+  adapter: VolatileMongoDBAdapter(createClient),
   db: {
     async disconnect() {
+      const client = await clientPromise
       await client.db().dropDatabase()
       await client.close()
     },
     async user(id) {
+      const client = await clientPromise
       const user = await client
         .db()
         .collection(defaultCollections.Users)
@@ -23,6 +36,7 @@ runBasicTests({
       return format.from(user)
     },
     async account(provider_providerAccountId) {
+      const client = await clientPromise
       const account = await client
         .db()
         .collection(defaultCollections.Accounts)
@@ -31,6 +45,7 @@ runBasicTests({
       return format.from(account)
     },
     async session(sessionToken) {
+      const client = await clientPromise
       const session = await client
         .db()
         .collection(defaultCollections.Sessions)
@@ -39,6 +54,7 @@ runBasicTests({
       return format.from(session)
     },
     async verificationToken(identifier_token) {
+      const client = await clientPromise
       const token = await client
         .db()
         .collection(defaultCollections.VerificationTokens)
