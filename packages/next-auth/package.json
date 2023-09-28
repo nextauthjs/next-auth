@@ -86,7 +86,7 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
-    "next": "13.5.3",
+    "next": "13.5.4-canary.4",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0",
     "typescript": "^4"

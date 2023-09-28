@@ -4,7 +4,8 @@ import authConfig from "auth.config"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 
-const prisma = new PrismaClient()
+const prisma = globalThis.prisma ?? new PrismaClient()
+if (!globalThis.prisma) globalThis.prisma = prisma
 
 authConfig.providers.push(
   // Start server with `pnpm email`

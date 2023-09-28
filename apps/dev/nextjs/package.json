@@ -24,7 +24,7 @@
     "edgedb": "^1.0.1",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
-    "next": "13.5.4-canary.2",
+    "next": "13.5.4-canary.4",
     "next-auth": "workspace:*",
     "nodemailer": "^6.9.3",
     "react": "^18",
