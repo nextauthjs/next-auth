@@ -112,12 +112,12 @@
  * @module index
  */
 
-import { Auth, skipCSRFCheck, raw } from "@auth/core"
-import { cookies, headers } from "next/headers"
-import { detectOrigin, reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
+import { Auth } from "@auth/core"
+import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
+import { signIn, signOut, update } from "./lib/actions.js"
 
-import type { Session } from "@auth/core/types"
+import type { Account, Session, User } from "@auth/core/types"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -126,7 +126,6 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-import { redirect } from "next/navigation"
 
 export type {
   Account,
@@ -142,6 +141,11 @@ type AppRouteHandlers = Record<
 >
 
 export type { NextAuthConfig }
+
+export interface AuthSession extends Session {
+  user: User
+  accounts: Account[]
+}
 
 /**
  * The result of invoking {@link NextAuth|NextAuth}, initialized with the {@link NextAuthConfig}.
@@ -271,20 +275,23 @@ export interface NextAuthResult {
    * }
    * ```
    */
-  auth: ((...args: [NextApiRequest, NextApiResponse]) => Promise<Session>) &
-    ((...args: []) => Promise<Session>) &
-    ((...args: [GetServerSidePropsContext]) => Promise<Session>) &
+  auth: ((
+    ...args: [NextApiRequest, NextApiResponse]
+  ) => Promise<AuthSession | null>) &
+    ((...args: []) => Promise<AuthSession | null>) &
+    ((...args: [GetServerSidePropsContext]) => Promise<AuthSession | null>) &
     ((
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
   signIn: (
     provider?: string,
-    params?: { redirectTo?: string; redirect?: boolean }
-  ) => () => Promise<string | never>
-  signOut: (params?: {
+    options?: { redirectTo?: string; redirect?: boolean }
+  ) => (formData: FormData) => Promise<string | never> | void
+  signOut: (options?: {
     redirectTo?: string
     redirect?: boolean
-  }) => () => Promise<string | never>
+  }) => (formData: FormData) => Promise<string | never> | void
+  update: (data: Partial<AuthSession>) => Promise<AuthSession | null>
 }
 
 /**
@@ -305,61 +312,18 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
     auth: initAuth(config),
-    signIn(provider, params) {
+    signIn(provider, options) {
       return async () => {
         "use server"
-        const _headers = new Headers(headers())
-        _headers.set("Content-Type", "application/x-www-form-urlencoded")
-
-        const origin = detectOrigin(_headers)
-        const url = `${origin}/signin/${provider}`
-        const res = (await Auth(
-          new Request(url, {
-            method: "POST",
-            headers: _headers,
-            body: new URLSearchParams({
-              callbackUrl: params?.redirectTo ?? _headers.get("Referer") ?? "/",
-            }),
-          }),
-          { ...config, raw, skipCSRFCheck }
-        )) as any // TODO: fix return type when "raw" is set
-
-        for (const c of res?.cookies ?? []) {
-          cookies().set(c.name, c.value, c.options)
-        }
-
-        if (params?.redirect) return redirect(res.redirect)
-
-        return res.redirect
+        return signIn(provider, options, config)
       }
     },
-    signOut(params) {
+    signOut(options) {
       return async () => {
         "use server"
-        const _headers = new Headers(headers())
-        _headers.set("Content-Type", "application/x-www-form-urlencoded")
-
-        const origin = detectOrigin(_headers)
-        const url = `${origin}/signout`
-        const res = (await Auth(
-          new Request(url, {
-            method: "POST",
-            headers: _headers,
-            body: new URLSearchParams({
-              callbackUrl: params?.redirectTo ?? _headers.get("Referer") ?? "/",
-            }),
-          }),
-          { ...config, raw, skipCSRFCheck }
-        )) as any // TODO: fix return type when "raw" is set
-
-        for (const c of res?.cookies ?? []) {
-          cookies().set(c.name, c.value, c.options)
-        }
-
-        if (params?.redirect) return redirect(res.redirect)
-
-        return res.redirect
+        return signOut(options, config)
       }
     },
+    update: (data) => update(data, config),
   }
 }
