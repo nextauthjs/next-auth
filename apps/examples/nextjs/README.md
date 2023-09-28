@@ -29,9 +29,7 @@ NextAuth.js is a complete open source authentication solution.
 
 This is an example application that shows how `next-auth` is applied to a basic Next.js app.
 
-<!-- TODO: Remove v5 when merged -->
-
-The deployed version can be found at [`next-auth-v5-example.vercel.app`](https://next-auth-v5-example.vercel.app)
+The deployed version can be found at [`next-auth-example.vercel.app`](https://next-auth-example.vercel.app)
 
 ### About NextAuth.js
 

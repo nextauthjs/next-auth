@@ -20,7 +20,7 @@ export default function Page() {
           Route Handler
         </CustomLink>
         . The API is protected using the universal{" "}
-        <CustomLink href="https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/reference/nextjs#auth">
+        <CustomLink href="https://nextjs.authjs.dev#auth">
           <code>auth()</code>
         </CustomLink>{" "}
         method.

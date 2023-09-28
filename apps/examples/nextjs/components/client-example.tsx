@@ -48,7 +48,7 @@ export default function ClientExample() {
       <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
       <p>
         This page fetches session data client side using the{" "}
-        <CustomLink href="https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/reference/nextjs/react#usesession">
+        <CustomLink href="https://nextjs.authjs.dev/react#usesession">
           <code>useSession</code>
         </CustomLink>{" "}
         React Hook.
@@ -60,7 +60,7 @@ export default function ClientExample() {
         </CustomLink>{" "}
         directive at the top of the file to enable client side rendering, and
         the{" "}
-        <CustomLink href="https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/reference/nextjs/react#sessionprovider">
+        <CustomLink href="https://nextjs.authjs.dev/react#sessionprovider">
           <code>SessionProvider</code>
         </CustomLink>{" "}
         component in{" "}

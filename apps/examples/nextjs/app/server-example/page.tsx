@@ -13,7 +13,7 @@ export default async function Page() {
           React Server Component
         </CustomLink>
         . It gets the session data on the server using{" "}
-        <CustomLink href="https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/reference/nextjs#auth">
+        <CustomLink href="https://nextjs.authjs.dev#auth">
           <code>auth()</code>
         </CustomLink>{" "}
         method.

@@ -6,12 +6,12 @@ export default function Page() {
       <h1 className="text-3xl font-bold">Middleware usage</h1>
       <p>
         This page is protected by using the universal{" "}
-        <CustomLink href="https://auth-docs-git-feat-nextjs-auth-authjs.vercel.app/reference/nextjs#auth">
+        <CustomLink href="https://nextjs.authjs.dev#auth">
           <code>auth()</code>
         </CustomLink>{" "}
         method in{" "}
         <CustomLink href="https://nextjs.org/docs/app/building-your-application/routing/middleware">
-          Next.js middleware
+          Next.js Middleware
         </CustomLink>
         .
       </p>
