@@ -151,11 +151,7 @@ async function handleAuth(
 ) {
   const request = reqWithEnvUrl(args[0])
   const sessionResponse = await getSession(request.headers, config)
-  const {
-    user = null,
-    expires = null,
-    ...rest
-  } = (await sessionResponse.json()) ?? {}
+  const auth = await sessionResponse.json()
 
   // If we are handling a recognized NextAuth.js request,
   // don't require authorization to avoid an accidental redirect loop
@@ -170,10 +166,7 @@ async function handleAuth(
     !isNextAuthAction(request, config, basePath) &&
     config.callbacks?.authorized
   ) {
-    authorized = await config.callbacks.authorized({
-      request,
-      auth: { user, expires, ...rest },
-    })
+    authorized = await config.callbacks.authorized({ request, auth })
   }
 
   let response: any = NextResponse.next?.()
@@ -184,7 +177,7 @@ async function handleAuth(
   } else if (userMiddlewareOrRoute) {
     // Execute user's middleware/handler with the augmented request
     const augmentedReq = request as NextAuthRequest
-    augmentedReq.auth = { user, expires, ...rest }
+    augmentedReq.auth = auth
     response =
       // @ts-expect-error
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
