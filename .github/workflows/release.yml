@@ -54,6 +54,7 @@ on:
           - "adapter-supabase"
           - "adapter-typeorm"
           - "adapter-upstash-redis"
+          - "adapter-volatile-mongodb"
           - "adapter-xata"
           - "next-auth"
 env:

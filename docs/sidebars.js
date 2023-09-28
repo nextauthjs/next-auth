@@ -66,6 +66,7 @@ module.exports = {
               { type: "doc", id: "reference/adapter/surrealdb/index" },
               { type: "doc", id: "reference/adapter/typeorm/index" },
               { type: "doc", id: "reference/adapter/upstash-redis/index" },
+              { type: "doc", id: "reference/adapter/volatile-mongodb/index" },
               { type: "doc", id: "reference/adapter/xata/index" },
             ],
           },

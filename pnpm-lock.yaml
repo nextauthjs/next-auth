@@ -529,6 +529,25 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
 
+  packages/adapter-volatile-mongodb:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@auth/adapter-test':
+        specifier: workspace:*
+        version: link:../adapter-test
+      '@auth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      jest:
+        specifier: ^27.4.3
+        version: 27.5.1
+      mongodb:
+        specifier: ^6.0.0
+        version: 6.0.0
+
   packages/adapter-neo4j:
     dependencies:
       '@auth/core':
