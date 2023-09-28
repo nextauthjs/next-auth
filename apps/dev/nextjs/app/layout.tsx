@@ -8,7 +8,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html>
       <body>
-        {/* @ts-expect-error */}
         <AppHeader />
         <main>{props.children}</main>
         <Footer />
@@ -23,14 +22,12 @@ export async function AppHeader() {
     <Header
       session={session}
       signIn={
-        // @ts-expect-error
         <form action={signIn("github")}>
           <button className={styles.buttonPrimary}>Sign in</button>
         </form>
       }
       signOut={
-        // @ts-expect-error
-        <form action={signOut}>
+        <form action={signOut()}>
           <button className={styles.button}>Sign out</button>
         </form>
       }

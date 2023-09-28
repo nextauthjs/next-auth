@@ -14,7 +14,7 @@ export function SignIn({
 
 export function SignOut(props: React.ComponentPropsWithRef<typeof Button>) {
   return (
-    <form action={signOut} className="w-full">
+    <form action={signOut()} className="w-full">
       <Button variant="ghost" className="w-full p-0" {...props}>
         Sign Out
       </Button>
