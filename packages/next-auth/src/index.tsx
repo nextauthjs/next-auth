@@ -284,13 +284,13 @@ export interface NextAuthResult {
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
   signIn: (
-    provider?: string,
+    provider: string,
     options?: { redirectTo?: string; redirect?: boolean }
-  ) => (formData: FormData) => Promise<string | never> | void
+  ) => (formData?: FormData) => Promise<string | never> | void
   signOut: (options?: {
     redirectTo?: string
     redirect?: boolean
-  }) => (formData: FormData) => Promise<string | never> | void
+  }) => (formData?: FormData) => Promise<string | never> | void
   update: (data: Partial<AuthSession>) => Promise<AuthSession | null>
 }
 

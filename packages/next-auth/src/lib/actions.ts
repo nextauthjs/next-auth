@@ -18,11 +18,7 @@ export async function signIn(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  let url = `${detectOrigin(headers)}/signin`
-
-  if (provider) url += `/${provider}`
-  else redirect(config.pages?.signIn ?? url)
-
+  const url = `${detectOrigin(headers)}signin/${provider}`
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -44,7 +40,7 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = `${detectOrigin(headers)}/signout`
+  const url = `${detectOrigin(headers)}signout`
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -66,7 +62,7 @@ export async function update(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 
-  const url = `${detectOrigin(headers)}/session`
+  const url = `${detectOrigin(headers)}session`
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
 
