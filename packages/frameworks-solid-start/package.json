@@ -31,7 +31,6 @@
     "@auth/core": "workspace:*",
     "@solidjs/meta": "^0.28.0",
     "@types/node": "^18.7.14",
-    "next-auth": "workspace:*",
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.14",
     "tsup": "^6.5.0",
