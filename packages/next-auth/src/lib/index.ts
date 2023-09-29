@@ -136,7 +136,7 @@ export function initAuth(config: NextAuthConfig) {
       const auth = await authResponse.json()
 
       // Preserve cookies set by Auth.js Core
-      cloneSetCookie({ from: authResponse, to: response })
+      cloneSetCookie(authResponse, response)
 
       return auth satisfies AuthSession | null
     })
@@ -193,24 +193,17 @@ async function handleAuth(
 
   const finalResponse = new Response(response?.body, response)
   // Preserve cookies set by Auth.js Core
-  cloneSetCookie({ from: sessionResponse, to: finalResponse })
+  cloneSetCookie(sessionResponse, finalResponse)
 
   return finalResponse
 }
 
-/**
- * Mutates `to` with the set-cookie from `from`
- * Uses `getSetCookie` if available, otherwise falls back to `set-cookie`
- *
- * getSetCookie is missing from the types, but it's available on many platforms.
- */
-function cloneSetCookie({ from, to }: { from: Response; to: Response }) {
+/** Clone cookies from one response to another. */
+function cloneSetCookie(from: Response, to: Response) {
   const authCookies =
-    "getSetCookie" in from.headers
-      ? (from.headers.getSetCookie as any)()
-      : from.headers.get("set-cookie")
+    from.headers.getSetCookie?.() ?? from.headers.get("set-cookie")
 
-  if (!authCookies) return
+  if (!authCookies?.length) return
 
   if (Array.isArray(authCookies)) {
     authCookies.forEach((cookie) => to.headers.append("set-cookie", cookie))
