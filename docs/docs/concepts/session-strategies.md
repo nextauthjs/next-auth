@@ -44,6 +44,6 @@ When a user signs out, the session is deleted from the database, and the session
 
 ### Disadvantages
 
-- Database sessions need a roundtrip to your database, so they might be slower on scale unless your connections/databases are not accommodated for it
+- Database sessions need a roundtrip to your database, so they might be slower on scale unless your connections/databases are accommodated for it
 - Many database adapters are not yet compatible with the Edge, which would allow faster and cheaper session retrieval
 - Setting up a database takes more effort and requires extra services to manage compared to the stateless JWT strategy
