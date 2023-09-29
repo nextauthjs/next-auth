@@ -213,3 +213,7 @@ Auth.js / NextAuth.js uses `camelCase` for its database rows while respecting th
 ## TypeScript
 
 Check out the [`@auth/core/adapters` API Reference](/reference/core/adapters) documentation.
+
+## Create a custom adapter
+
+If you are using a database that we don't have an official adapter for, you can check out the [Creating a database adapter](/guides/adapters/creating-a-database-adapter) guide.

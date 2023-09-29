@@ -260,7 +260,7 @@ export interface SupabaseAdapterOptions {
  * For example, given the following public schema:
  *
  * ```sql
- * // Note: This table contains user data. Users should only be able to view and update their own data.
+ * -- Note: This table contains user data. Users should only be able to view and update their own data.
  * create table users (
  *   -- UUID from next_auth.users
  *   id uuid not null primary key,
@@ -276,7 +276,7 @@ export interface SupabaseAdapterOptions {
  * create policy "Can view own user data." on users for select using (next_auth.uid() = id);
  * create policy "Can update own user data." on users for update using (next_auth.uid() = id);
  *
- * // This trigger automatically creates a user entry when a new user signs up via NextAuth.
+ * -- This trigger automatically creates a user entry when a new user signs up via NextAuth.
  * create function public.handle_new_user()
  * returns trigger as $$
  * begin

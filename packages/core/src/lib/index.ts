@@ -136,10 +136,7 @@ export async function AuthInternal<
     switch (action) {
       case "signin":
         if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
-          const signin = await routes.signin(
-            request,
-            options
-          )
+          const signin = await routes.signin(request, options)
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
@@ -177,7 +174,7 @@ export async function AuthInternal<
         }
         break
       case "session": {
-        if (options.csrfTokenVerified) {
+        if (options.csrfTokenVerified || csrfDisabled) {
           const session = await routes.session({
             options,
             sessionStore,
