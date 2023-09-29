@@ -46,6 +46,9 @@ export class UserEntity {
 
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[]
+
+  @OneToMany(() => AddressEntity, (address) => address.userId)
+  addresses!: AddressEntity[]
 }
 
 @Entity({ name: "accounts" })
@@ -127,4 +130,26 @@ export class VerificationTokenEntity {
 
   @Column({ transformer: transformer.date })
   expires!: string
+}
+
+// Added a new custom address entity
+@Entity({ name: "addresses" })
+export class AddressEntity {
+  @PrimaryGeneratedColumn("uuid")
+  id!: string
+
+  @Column({ type: "varchar", nullable: true })
+  street!: string | null
+  
+  @Column({ type: "varchar" })
+  city!: string | null
+
+  @Column({ type: "varchar" })
+  state!: string | null
+
+  @Column({ type: "varchar", nullable: true })
+  zip!: string | null
+
+  @ManyToOne(() => UserEntity, (user) => user.addresses)
+  user!: UserEntity
 }
