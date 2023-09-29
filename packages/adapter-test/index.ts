@@ -1,6 +1,5 @@
 import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
-import { AddressEntity } from "../adapter-typeorm/tests/custom-entities"
 
 const requiredMethods = [
   "createUser",
@@ -335,26 +334,6 @@ export async function runBasicTests(options: TestOptions) {
     })
     // Account should not exist after user is deleted
     expect(dbAccount).toBeNull()
-  })
-
-  test("updateUserAddress", async () => {
-    
-    let address = new AddressEntity()
-    address.street = "1234 Main St"
-    address.city = "Anywhere"
-    address.state = "CA"
-    address.zip = "90210"
-
-    const returnedUser = await adapter.updateUser({
-      id: user.id,
-      addresses: [ address],
-    })
-
-    const dbUser = await db.user(user.id)
-    expect(dbUser.addresses[0].street).toBe(address.street)
-    expect(dbUser.addresses[0].city).toBe(address.city)
-    expect(dbUser.addresses[0].state).toBe(address.state)
-    expect(dbUser.addresses[0].zip).toBe(address.zip)
   })
 }
 
