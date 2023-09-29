@@ -89,6 +89,6 @@
     "next": "13.5.4-canary.4",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0",
-    "typescript": "^4"
+    "typescript": "5.2.2"
   }
 }

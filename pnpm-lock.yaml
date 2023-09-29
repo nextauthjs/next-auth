@@ -941,8 +941,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       typescript:
-        specifier: ^4
-        version: 4.9.5
+        specifier: 5.2.2
+        version: 5.2.2
 
   packages/tsconfig: {}
 
