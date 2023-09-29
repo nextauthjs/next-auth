@@ -47,7 +47,7 @@
     "typescript": "5.2.2"
   },
   "engines": {
-    "node": "^16.13.0 || ^18.12.0"
+    "node": "^18.18.0 || ^20.8.0"
   },
   "packageManager": "pnpm@8.7.1",
   "funding": [
