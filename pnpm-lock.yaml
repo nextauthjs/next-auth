@@ -109,9 +109,6 @@ importers:
       next:
         specifier: 13.4.0
         version: 13.4.0(react-dom@18.2.0)(react@18.2.0)
-      next-auth:
-        specifier: workspace:*
-        version: link:../../../packages/next-auth
       nodemailer:
         specifier: ^6
         version: 6.8.0
@@ -774,15 +771,9 @@ importers:
       dotenv:
         specifier: ^10.0.0
         version: 10.0.0
-      isomorphic-fetch:
-        specifier: 3.0.0
-        version: 3.0.0
       jest:
         specifier: ^27.4.3
         version: 27.5.1
-      next-auth:
-        specifier: workspace:*
-        version: link:../next-auth
 
   packages/adapter-xata:
     dependencies:
@@ -866,9 +857,6 @@ importers:
       '@types/node':
         specifier: ^18.7.14
         version: 18.11.10
-      next-auth:
-        specifier: workspace:*
-        version: link:../next-auth
       solid-js:
         specifier: ^1.5.7
         version: 1.6.6
@@ -900,9 +888,6 @@ importers:
       '@sveltejs/package':
         specifier: ^1.0.0
         version: 1.0.1(svelte@3.54.0)(typescript@5.2.2)
-      next-auth:
-        specifier: workspace:*
-        version: link:../next-auth
       svelte:
         specifier: ^3.54.0
         version: 3.54.0
