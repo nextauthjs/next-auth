@@ -40,6 +40,36 @@
     --color-button-active-border: #666;
     --color-separator: #444;
   }
+
+  button,
+  a.button {
+    color: var(--provider-dark-color, var(--color-primary));
+    background-color: var(--provider-dark-bg, var(--color-background));
+    &:hover {
+      background-color: rgba(var(--provider-dark-bg), 0.8);
+    }
+  }
+  #provider-logo {
+    display: none !important;
+  }
+  #provider-logo-dark {
+    width: 25px;
+    display: block !important;
+  }
+}
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -53,8 +83,6 @@ body {
 
 h1 {
   font-weight: 400;
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
   color: var(--color-text);
 }
 
@@ -92,8 +120,6 @@ input[type] {
 }
 
 p {
-  margin: 0 0 1.5rem 0;
-  padding: 0 1rem;
   font-size: 1.1rem;
   line-height: 2rem;
 }
@@ -115,10 +141,9 @@ button span {
 
 button,
 a.button {
-  margin: 0 0 0.75rem 0;
   padding: 0.75rem 1rem;
   color: var(--provider-color, var(--color-primary));
-  background-color: var(--provider-bg, var(--color-background-card));
+  background-color: var(--provider-bg);
   font-size: 1.1rem;
   min-height: 62px;
   border-color: rgba(0, 0, 0, 0.1);
@@ -130,12 +155,14 @@ a.button {
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 450px) {
-    font-size: 0.9rem;
-  }
-
   &:hover {
+    opacity: 0.9;
     cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+    border: 1px solid;
+    border-color: var(--provider-info);
   }
   &:active {
     cursor: pointer;
@@ -153,21 +180,6 @@ a.button {
   color: var(--button-text-color, var(--color-info-text));
   background-color: var(--brand-color, var(--color-info));
   width: 100%;
-}
-
-@media (prefers-color-scheme: dark) {
-  button,
-  a.button {
-    color: var(--provider-dark-color, var(--color-primary));
-    background-color: var(--provider-dark-bg, var(--color-background));
-  }
-  #provider-logo {
-    display: none !important;
-  }
-  #provider-logo-dark {
-    width: 25px;
-    display: block !important;
-  }
 }
 
 a.site {
@@ -189,6 +201,7 @@ a.site {
   place-items: center;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 
   > div {
     text-align: center;
@@ -213,6 +226,20 @@ a.site {
     margin-left: auto;
     margin-right: auto;
     display: block;
+  }
+
+  .title {
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .description {
+    margin-bottom: 1rem;
   }
 
   hr {
@@ -258,30 +285,43 @@ a.site {
     button {
       width: 100%;
     }
+  }
 
-    max-width: 300px;
+  .oauth-providers {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .oauth-providers__horizontal {
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .provider {
+      button {
+        margin: 0;
+        width: 64px;
+        height: 64px;
+      }
+    }
   }
 }
 
 .logo {
   display: inline-block;
   max-width: 150px;
-  margin-top: 20px;
-  margin-bottom: 25px;
+  margin: 1.25rem 0;
   max-height: 70px;
 }
 
 .card {
-  @media screen and (min-width: 450px) {
-    width: 350px;
-  }
-  @media screen and (max-width: 450px) {
-    width: 200px;
-  }
-  margin: 20px 0 20px 0;
   background-color: var(--color-background-card);
-  border-radius: 30px;
-  padding: 20px 50px;
+  border-radius: 2rem;
+  padding: 1.25rem 2rem;
 
   .header {
     color: var(--color-primary);
@@ -290,4 +330,28 @@ a.site {
 
 .section-header {
   color: var(--color-text);
+}
+
+@media screen and (min-width: 450px) {
+  .card {
+    margin: 2rem 0;
+    width: 368px;
+  }
+}
+@media screen and (max-width: 450px) {
+  .card {
+    margin: 1rem 0;
+    width: 343px;
+  }
+  .signin {
+    .oauth-providers__horizontal {
+      .provider {
+        button {
+          width: 56px;
+          height: 56px;
+          min-height: auto;
+        }
+      }
+    }
+  }
 }

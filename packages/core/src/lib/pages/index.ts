@@ -40,7 +40,10 @@ type RenderPageParams = {
  */
 export default function renderPage(params: RenderPageParams) {
   const { url, theme, query, cookies } = params
-
+  if (theme) {
+    theme.logo ||= "https://authjs.dev/img/logo/logo-sm.webp"
+    theme.brandName ||= "NextAuth.js"
+  }
   return {
     signin(props?: any) {
       return send({
