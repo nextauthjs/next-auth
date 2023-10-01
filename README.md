@@ -77,9 +77,9 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
 
 <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=callout">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="{on-dark-image-github-url-here}">
-    <source media="(prefers-color-scheme: light)" srcset="{on-light-image-github-url-here}">
-    <img alt="Clerk – Authentication & User Management" src="{on-light-image-github-url-here}" width="830">
+    <source media="(prefers-color-scheme: dark)" srcset="https://authjs.dev/img/clerk-readme-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://authjs.dev/img/clerk-readme-light.png">
+    <img alt="Clerk – Authentication & User Management" src="https://authjs.dev/img/clerk-readme-light.png" width="830">
   </picture>
 </a>
 
