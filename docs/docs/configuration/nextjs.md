@@ -7,13 +7,13 @@ You can create a helper function so you don't need to pass `authOptions` around:
 
 ```ts title=auth.ts
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
-import type { NextAuthOptions as NextAuthConfig } from "next-auth"
+import type { NextAuthOptions } from "next-auth"
 import { getServerSession } from "next-auth"
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const config = {
-  providers: []
+  providers: [], // rest of your config
 } satisfies NextAuthOptions
 
 // Use it in server contexts
