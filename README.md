@@ -75,6 +75,14 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
 
 ### Support
 
+<a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=callout">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="{on-dark-image-github-url-here}">
+    <source media="(prefers-color-scheme: light)" srcset="{on-light-image-github-url-here}">
+    <img alt="Clerk – Authentication & User Management" src="{on-light-image-github-url-here}" width="830">
+  </picture>
+</a>
+
 We have an [OpenCollective](https://opencollective.com/nextauth) for individuals and companies looking to contribute financially to the project!
 
 <!--sponsors start-->
