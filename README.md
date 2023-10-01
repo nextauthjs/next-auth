@@ -73,7 +73,9 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
 <a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss"></a>
 </div>
 
-### Support
+### Sponsors
+
+Sponsored by
 
 <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=callout">
   <picture>
@@ -83,7 +85,7 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
   </picture>
 </a>
 
-We have an [OpenCollective](https://opencollective.com/nextauth) for individuals and companies looking to contribute financially to the project!
+We have an [OpenCollective](https://opencollective.com/nextauth) for companies and individuals looking to contribute financially to the project!
 
 <!--sponsors start-->
 <table>
