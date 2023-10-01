@@ -21,6 +21,7 @@ export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePr
   return getServerSession(...args, config)
 }
 ```
+:::
 
 When calling from the server-side i.e. in Route Handlers, React Server Components, API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` on server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
 
