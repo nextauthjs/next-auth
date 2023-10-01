@@ -37,7 +37,7 @@
     "./providers/*": "./providers/*.js"
   },
   "scripts": {
-    "build": "pnpm clean && pnpm build:js && pnpm build:css",
+    "build": "echo 'Check out the v4 branch'; exit 0",
     "build:js": "pnpm clean && pnpm generate-providers && pnpm tsc --project tsconfig.json && babel --config-file ./config/babel.config.js src --out-dir . --extensions \".tsx,.ts,.js,.jsx\"",
     "clean": "rm -rf coverage client css utils providers core jwt react next index.d.ts index.js adapters.d.ts middleware.d.ts middleware.js",
     "build:css": "postcss --config config/postcss.config.js src/**/*.css --base src --dir . && node config/wrap-css.js",

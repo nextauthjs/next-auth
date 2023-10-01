@@ -30,10 +30,24 @@ function typedocAdapter(name) {
       entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
       tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
       out: `reference/adapter/${slug}`,
-      sidebar: {
-        indexLabel: name,
-      },
       ...typedocConfig,
+    },
+  ]
+}
+
+function typedocFramework(pkgDir, entrypoints) {
+  const id = pkgDir.replace("frameworks-", "")
+  return [
+    "docusaurus-plugin-typedoc",
+    {
+      ...typedocConfig,
+      id: id,
+      plugin: [require.resolve("./typedoc-mdn-links")],
+      watch: process.env.TYPEDOC_WATCH,
+      entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
+      tsconfig: `../packages/${pkgDir}/tsconfig.json`,
+      out: `reference/${id === "next-auth" ? "nextjs" : id}`,
+      skipIndexPage: true,
     },
   ]
 }
@@ -225,10 +239,13 @@ const docusaurusConfig = {
            */
           editUrl({ docPath }) {
             // TODO: support other packages, fix directory links like "providers"
+            const base = "https://github.com/nextauthjs/next-auth/edit/main/packages"
             if (docPath.includes("reference/core")) {
               const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
-              const base = `https://github.com/nextauthjs/next-auth/edit/main/packages/core/src/${file}`
-              return base
+              return `${base}/core/src/${file}`
+            } else if (docPath.includes("reference/adapter/")) {
+              const file = docPath.split("reference/adapter/")[1].replace("index.md", "src/index.ts")
+              return `${base}/adapter-${file}`
             }
             return "https://github.com/nextauthjs/next-auth/edit/main/docs"
           },
@@ -241,6 +258,11 @@ const docusaurusConfig = {
               label: "experimental",
             },
           },
+          async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
+            const sidebarItems = await defaultSidebarItemsGenerator(args)
+            const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index"]
+            return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
+          },
         },
         theme: {
           customCss: require.resolve("./src/css/index.css"),
@@ -249,39 +271,12 @@ const docusaurusConfig = {
     ],
   ],
   plugins: [
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "core",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].map((e) => `${coreSrc}/${e}`).concat(providers),
-        tsconfig: "../packages/core/tsconfig.json",
-        out: "reference/core",
-        sidebar: {
-          indexLabel: "index",
-        },
-      },
-    ],
-    [
-      "docusaurus-plugin-typedoc",
-      {
-        ...typedocConfig,
-        id: "sveltekit",
-        plugin: [require.resolve("./typedoc-mdn-links")],
-        watch: process.env.TYPEDOC_WATCH,
-        entryPoints: ["index.ts", "client.ts"].map((e) => `../packages/frameworks-sveltekit/src/lib/${e}`),
-        tsconfig: "../packages/frameworks-sveltekit/tsconfig.json",
-        out: "reference/sveltekit",
-        sidebar: {
-          indexLabel: "index",
-        },
-      },
-    ],
+    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
+    typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
+          typedocAdapter("Azure Tables"),
           typedocAdapter("D1"),
           typedocAdapter("EdgeDb"),
           typedocAdapter("Dgraph"),
@@ -293,11 +288,13 @@ const docusaurusConfig = {
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),
           typedocAdapter("Neo4j"),
+          typedocAdapter("PG"),
           typedocAdapter("PouchDB"),
           typedocAdapter("Prisma"),
           typedocAdapter("TypeORM"),
           typedocAdapter("Sequelize"),
           typedocAdapter("Supabase"),
+          typedocAdapter("SurrealDB"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
         ]),

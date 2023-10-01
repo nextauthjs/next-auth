@@ -38,10 +38,10 @@
     "@docusaurus/theme-common": "2.4.1",
     "@docusaurus/theme-mermaid": "2.4.1",
     "@docusaurus/types": "2.4.1",
-    "docusaurus-plugin-typedoc": "1.0.0-next.5",
+    "docusaurus-plugin-typedoc": "1.0.0-next.13",
     "postcss-nested": "^6.0.1",
     "typedoc": "^0.24.8",
-    "typedoc-plugin-markdown": "4.0.0-next.6"
+    "typedoc-plugin-markdown": "4.0.0-next.16"
   },
   "browserslist": {
     "production": [

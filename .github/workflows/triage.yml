@@ -14,10 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Nissuer
-        uses: balazsorban44/nissuer@1.3.5
+        uses: balazsorban44/nissuer@1.5.0
         with:
           label-area-prefix: ""
           label-area-section: "[Provider|Adapter] type(.*)### Environment"
           label-comments: '{ "incomplete": ".github/invalid-reproduction.md" }'
           reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
           reproduction-invalid-label: "invalid reproduction"
+          reproduction-issue-labels: "bug"

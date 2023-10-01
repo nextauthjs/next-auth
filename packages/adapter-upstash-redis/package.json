@@ -49,9 +49,7 @@
     "@types/uuid": "^8.3.3",
     "@upstash/redis": "^1.0.1",
     "dotenv": "^10.0.0",
-    "isomorphic-fetch": "3.0.0",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*"
+    "jest": "^27.4.3"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

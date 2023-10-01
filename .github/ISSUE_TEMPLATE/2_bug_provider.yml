@@ -1,6 +1,6 @@
 name: Bug report (Provider)
 description: Create a provider-specific report
-labels: [triage, providers]
+labels: [triage, bug, providers]
 body:
   - type: markdown
     attributes:
