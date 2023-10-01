@@ -519,6 +519,10 @@ where `data.url` is the validated URL you can redirect the user to without any f
 
 ## SessionProvider
 
+:::note
+If you are using the App Router, we encourage you to use [`getServerSession`](/configuration/nextjs#getserversession) in server contexts instead. (`SessionProvider` *can* be used in the App Router, which might be the easier choice if you are migrating from pages.)
+:::
+
 Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://react.dev/learn/passing-data-deeply-with-context) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
 
 ```jsx title="pages/_app.js"
