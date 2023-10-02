@@ -6,10 +6,11 @@ This section of the documentation contains the API reference for all the officia
 
 ## Roadmap
 
-Here are the _state_ of planned and released packages under the `@auth/*` scope. This is not an exhaustive list, but the set of packages that we would like to focus on, to begin with.
+Here are the _state_ of planned and released packages under the `@auth/*` and `@next-auth/*` scope, as well as `next-auth`. This is not an exhaustive list, but the set of packages that we would like to focus on, to begin with.
 
 |        Feature         |  Status  |
 | ---------------------- | -------- |
+| `next-auth`            | Release (stable). See [docs](https://next-auth.js.org) |
 | `@auth/*-adapter`      | Released (stable). Fully compatible with `next-auth` and all `@auth/*` libraries.   |
 | `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`. See above.  |
 | `@auth/core`           | Released (experimental). |

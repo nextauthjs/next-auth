@@ -3,14 +3,15 @@
   "cleanOutputDir": true,
   "disableSources": true,
   "excludeExternals": true,
+  "excludeGroups": true,
   "excludeInternal": true,
   "excludeNotDocumented": true,
   "excludePrivate": true,
   "excludeProtected": true,
-  "hideHierarchy": true,
   "gitRevision": "main",
-  "groupByReflections": false,
   "hideBreadcrumbs": true,
+  "hideHierarchy": true,
+  "hideKindPrefix": true,
   "hideGenerator": true,
   "kindSortOrder": [
     "Function",
@@ -36,8 +37,9 @@
     "GetSignature",
     "SetSignature"
   ],
+  "outputFileStrategy": "modules",
   "readme": "none",
-  "reflectionsWithOwnFile": "none",
+  "skipErrorChecking": true,
   "sort": [
     "kind",
     "static-first",
