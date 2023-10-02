@@ -42,8 +42,7 @@
   },
   "scripts": {
     "test": "./tests/test.sh",
-    "build": "tsc",
-    "codegen": "graphql-codegen-esm --config codegen.ts"
+    "build": "./codegen.sh && tsc"
   },
   "peerDependencies": {
     "graphql": "^16",

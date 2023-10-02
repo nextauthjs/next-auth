@@ -68,7 +68,6 @@ import type {
 } from "./lib/graphql"
 import { formatDateConversion } from "./utils"
 import type { NonNullify } from "./utils"
-import { log } from "console"
 
 interface HasuraAdapterArgs {
   endpoint: string
@@ -153,13 +152,9 @@ interface HasuraAdapterArgs {
  *       ADD CONSTRAINT "accounts_type_fkey" FOREIGN KEY ("type") REFERENCES public.provider_type(value) ON UPDATE RESTRICT ON DELETE RESTRICT;
  *   ```
  *
- *1. [Track all the tables and relationships in Hasura](https://hasura.io/docs/latest/schema/postgres/using-existing-database/#step-1-track-tablesviews)
- *
- *1. Install the necessary packages
- *
- *   ```bash npm2yarn2pnpm
- *   npm install next-auth @next-auth/hasura-adapter graphql graphql-request
- *   ```
+ * :::info
+ * Tips: [Track all the tables and relationships in Hasura](https://hasura.io/docs/latest/schema/postgres/using-existing-database/#step-1-track-tablesviews)
+ * :::
  *
  *1. Configure your NextAuth.js to use the Hasura Adapter:
  *
