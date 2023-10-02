@@ -203,7 +203,7 @@ export default NextAuth({
     jwt({ token, trigger, session }) {
       if (trigger === "update" && session?.name) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
-        token.name = session
+        token.name = session.name
       }
       return token
     }
