@@ -135,8 +135,6 @@ jobs:
           # Please upvote https://github.com/orgs/community/discussions/13836
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          DRY_RUN: 1
-          VERBOSE: 1
   release-pr:
     name: Publish PR
     runs-on: ubuntu-latest
