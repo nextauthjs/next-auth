@@ -13,7 +13,6 @@ function easeOut(x) {
 export function Clerk() {
   let inViewRef = useRef(null)
   let isInView = useInView(inViewRef)
-
   return (
     <span className="tailwind">
       <section
@@ -59,51 +58,46 @@ export function Clerk() {
             </p>
 
             <div className="relative isolate">
-            <a
-              href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=09_01_2023"
-              className="relative isolate inline-flex h-8 items-center gap-1.5 rounded-[8px] px-4 text-[13px] font-semibold text-white before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:shadow-lg before:shadow-[rgb(100_48_247/0.3)] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[#6C47FF] after:shadow-[inset_0px_-8px_16px_-4px_#6430F7,inset_0px_0px_1px_1px_theme(colors.white/4%),inset_0px_1px_0px_theme(colors.white/10%),0px_0px_0px_1px_#6C47FF] dark:before:shadow-black"
-            >
-              <span className="z-20 flex items-center gap-1.5 bg-gradient-to-b from-white from-50% to-[#D7D4FF] bg-clip-text text-transparent drop-shadow-[0px_1px_1px_rgb(86_30_227/60%)]">
-                <span>Get started for free</span>
-                <ArrowIcon />
-              </span>
-            </a>
+              <a
+                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=09_01_2023"
+                className="relative isolate inline-flex h-8 items-center gap-1.5 rounded-[8px] px-4 text-[13px] font-semibold text-white before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:shadow-lg before:shadow-[rgb(100_48_247/0.3)] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[#6C47FF] after:shadow-[inset_0px_-8px_16px_-4px_#6430F7,inset_0px_0px_1px_1px_theme(colors.white/4%),inset_0px_1px_0px_theme(colors.white/10%),0px_0px_0px_1px_#6C47FF] dark:before:shadow-black"
+              >
+                <span className="z-20 flex items-center gap-1.5 bg-gradient-to-b from-white from-50% to-[#D7D4FF] bg-clip-text text-transparent drop-shadow-[0px_1px_1px_rgb(86_30_227/60%)]">
+                  <span>Get started for free</span>
+                  <ArrowIcon />
+                </span>
+              </a>
 
-            {[...Array(4)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[275%] w-[135%] rounded-[22px] border border-[#6C47FF]/[.15] dark:border-[#6C47FF]/25"
-                style={{ x: '-50%', y: '-50%' }}
-                initial={{ opacity: 0, scaleX: 0.75, scaleY: 0.4 }}
-                animate={
-                  isInView
-                    ? {
-                        opacity: [0, 1, 0],
-                        scaleX: 1,
-                        scaleY: 1,
-                      }
-                    : {}
-                }
-                transition={
-                  isInView
-                    ? {
-                        delay: i * 1,
-                        duration: 4,
-                        ease: 'linear',
-                        repeat: Infinity,
-                        times: [0, 0.1, 1],
-                      }
-                    : {}
-                }
-              />
-            ))}
-          </div>
+              {[0, 1, 2, 3].map((i) => (
+                <Ring key={i} i={i} isInView={isInView} />
+              ))}
+            </div>
 
             <div className="absolute left-1/2 top-0 -z-10 h-[140px] w-3/4 -translate-x-1/2 -translate-y-1/3 rotate-12 transform-gpu rounded-[50%] bg-gradient-to-r from-[#6C47FF] via-[#4818BF] via-25% to-sky-500 opacity-10 blur-3xl" />
           </div>
         </div>
       </section>
     </span>
+  )
+}
+
+function Ring({ i, isInView }) {
+  const transition = {
+    delay: i * 1,
+    duration: 4,
+    ease: "linear",
+    repeat: Infinity,
+    times: [0, 0.1, 1],
+  }
+
+  return (
+    <motion.div
+      className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[275%] w-[135%] rounded-[22px] border border-[#6C47FF]/[.15] dark:border-[#6C47FF]/25"
+      style={{ x: "-50%", y: "-50%" }}
+      initial={{ opacity: 0, scaleX: 0.75, scaleY: 0.4 }}
+      animate={isInView ? { opacity: [0, 1, 0], scaleX: 1, scaleY: 1 } : {}}
+      transition={isInView ? transition : {}}
+    />
   )
 }
 
