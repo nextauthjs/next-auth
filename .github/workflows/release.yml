@@ -121,22 +121,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT_CLASSIC }}
+          # Please upvote https://github.com/orgs/community/discussions/13836
+          token: ${{ secrets.GH_PAT }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
         run: pnpm release
         env:
-          # Use GH_PAT when this is fixed:
-          # https://github.com/github/roadmap/issues/622
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_CLASSIC }}
+          # Please upvote https://github.com/orgs/community/discussions/13836
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-pr:
     name: Publish PR

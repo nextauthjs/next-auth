@@ -149,6 +149,7 @@ export async function Auth(
     response.headers.delete("Location")
     response.headers.set("Content-Type", "application/json")
     return new Response(JSON.stringify({ url: redirect }), {
+      status: internalResponse.status,
       headers: response.headers,
     })
   }
