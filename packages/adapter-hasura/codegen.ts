@@ -2,15 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli"
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: [
-    {
-      "http://localhost:8080/v1/graphql": {
-        headers: {
-          "x-hasura-admin-secret": "myadminsecretkey",
-        },
-      },
-    },
-  ],
+  schema: "schema.graphql",
   emitLegacyCommonJSImports: false,
   documents: "src/**/*.graphql",
   generates: {
