@@ -82,11 +82,15 @@ body {
 }
 
 h1 {
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
   font-weight: 400;
   color: var(--color-text);
 }
 
 p {
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
   color: var(--color-text);
 }
 
@@ -210,7 +214,6 @@ a.site {
 
 .error {
   a.button {
-    display: inline-block;
     padding-left: 2rem;
     padding-right: 2rem;
     margin-top: 0.5rem;
@@ -236,10 +239,6 @@ a.site {
       margin: 0;
       padding: 0;
     }
-  }
-
-  .description {
-    margin-bottom: 1rem;
   }
 
   hr {
