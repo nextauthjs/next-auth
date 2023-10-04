@@ -156,5 +156,7 @@ export const handle = SvelteKitAuth({
   theme: {
     providersLayout: "horizontal",
     brandName: "SvelteKit Auth",
+
+    logo: "https://authjs.dev/img/logo/logo-sm.webp",
   },
 })
