@@ -247,7 +247,7 @@ const docusaurusConfig = {
               const file = docPath.split("reference/adapter/")[1].replace("index.md", "src/index.ts")
               return `${base}/adapter-${file}`
             }
-            return "https://github.com/nextauthjs/next-auth/edit/main/docs"
+            return `https://github.com/nextauthjs/next-auth/edit/main/docs/docs/${docPath}`
           },
           lastVersion: "current",
           showLastUpdateAuthor: true,

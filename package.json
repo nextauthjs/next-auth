@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
-    "@balazsorban/monorepo-release": "0.1.8",
+    "@balazsorban/monorepo-release": "0.2.4",
     "@types/jest": "^28.1.3",
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "5.47.0",
@@ -62,7 +62,7 @@
   ],
   "pnpm": {
     "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.1.8": "patches/@balazsorban__monorepo-release@0.1.8.patch"
+      "@balazsorban/monorepo-release@0.2.4": "patches/@balazsorban__monorepo-release@0.2.4.patch"
     }
   },
   "eslintIgnore": [
