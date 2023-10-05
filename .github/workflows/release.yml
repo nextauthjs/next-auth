@@ -69,7 +69,7 @@ jobs:
       - name: Init
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
