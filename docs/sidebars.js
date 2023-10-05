@@ -6,9 +6,9 @@ const clerk = {
   value: `
   <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=callout">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/img/clerk-sidebar-light.svg">
-      <source media="(prefers-color-scheme: light)" srcset="/img/clerk-sidebar-dark.svg">
-      <img alt="Clerk – Authentication & User Management" src="/img/clerk-sidebar-dark.svg">
+      <source media="(prefers-color-scheme: dark)" srcset="/img/clerk-sidebar-light.png">
+      <source media="(prefers-color-scheme: light)" srcset="/img/clerk-sidebar-dark.png">
+      <img alt="Clerk – Authentication & User Management" src="/img/clerk-sidebar-dark.png">
     </picture>
   </a>`,
   defaultStyle: true,
