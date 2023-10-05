@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@balazsorban/monorepo-release@0.3.0':
+  '@balazsorban/monorepo-release@0.3.1':
     hash: lwil2v6lrmyuiogkuptpgelrem
-    path: patches/@balazsorban__monorepo-release@0.3.0.patch
+    path: patches/@balazsorban__monorepo-release@0.3.1.patch
 
 importers:
 
@@ -17,8 +17,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       '@balazsorban/monorepo-release':
-        specifier: 0.3.0
-        version: 0.3.0(patch_hash=lwil2v6lrmyuiogkuptpgelrem)
+        specifier: 0.3.1
+        version: 0.3.1(patch_hash=lwil2v6lrmyuiogkuptpgelrem)
       '@types/jest':
         specifier: ^28.1.3
         version: 28.1.3
@@ -6973,8 +6973,8 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
-  /@balazsorban/monorepo-release@0.3.0(patch_hash=lwil2v6lrmyuiogkuptpgelrem):
-    resolution: {integrity: sha512-WsUNsAUKafHAzu9rN9NUC9ZeAbQQg6mIzpEcEHKopWu6mC9qvK2wp8rztjak84WKhZLTJpKVKbwDxwl2NhspWw==}
+  /@balazsorban/monorepo-release@0.3.1(patch_hash=lwil2v6lrmyuiogkuptpgelrem):
+    resolution: {integrity: sha512-ZMd6WVcUkGFYTkqPMTxAeNGrIfMZneKiIDOo1gC/NqWjGSC69zVCFQDASKPwWitJoYj3qWIlL9PXFiQ0J0ikGQ==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     dependencies:
