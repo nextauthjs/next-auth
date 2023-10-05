@@ -28,8 +28,6 @@ import {
   TableEntityResult,
 } from "@azure/data-tables"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 export const keys = {
   user: "user",
   userByEmail: "userByEmail",
