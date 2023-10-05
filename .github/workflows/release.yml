@@ -79,6 +79,9 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Peek
+        run: pnpm peek
+        if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       - name: Build
         run: pnpm build
       - name: Run tests
