@@ -21,12 +21,13 @@
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "release": "release",
+    "peek": "pnpm release --peek",
     "version:pr": "node ./config/version-pr",
     "e2e": "turbo run e2e --filter=next-auth-app"
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
-    "@balazsorban/monorepo-release": "0.2.4",
+    "@balazsorban/monorepo-release": "0.3.0",
     "@types/jest": "^28.1.3",
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "5.47.0",
@@ -60,11 +61,6 @@
       "url": "https://opencollective.com/nextauth"
     }
   ],
-  "pnpm": {
-    "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.2.4": "patches/@balazsorban__monorepo-release@0.2.4.patch"
-    }
-  },
   "eslintIgnore": [
     ".eslintrc.js",
     ".cache-loader",
@@ -265,5 +261,10 @@
         }
       }
     ]
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@balazsorban/monorepo-release@0.3.0": "patches/@balazsorban__monorepo-release@0.3.0.patch"
+    }
   }
 }

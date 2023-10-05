@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@balazsorban/monorepo-release@0.2.4':
-    hash: 5tj43pohdiiztyxh7rvgp45gjq
-    path: patches/@balazsorban__monorepo-release@0.2.4.patch
+  '@balazsorban/monorepo-release@0.3.0':
+    hash: lwil2v6lrmyuiogkuptpgelrem
+    path: patches/@balazsorban__monorepo-release@0.3.0.patch
 
 importers:
 
@@ -17,8 +17,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       '@balazsorban/monorepo-release':
-        specifier: 0.2.4
-        version: 0.2.4(patch_hash=5tj43pohdiiztyxh7rvgp45gjq)
+        specifier: 0.3.0
+        version: 0.3.0(patch_hash=lwil2v6lrmyuiogkuptpgelrem)
       '@types/jest':
         specifier: ^28.1.3
         version: 28.1.3
@@ -2656,13 +2656,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/highlight': 7.18.6
-
-  /@babel/code-frame@7.18.6:
-    resolution: {integrity: sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/highlight': 7.18.6
-    dev: false
 
   /@babel/code-frame@7.21.4:
     resolution: {integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==}
@@ -6926,7 +6919,7 @@ packages:
     resolution: {integrity: sha512-WM5ZNN3JITQIq9tFZaw1ojLU3WgWdtkxnhM1AegMS+PvHjkM5IXjmYEGY7yukz5XS4sJyEf2VzWjI8uAavhxBQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.21.4
       '@babel/generator': 7.20.14
       '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-function-name': 7.19.0
@@ -6980,8 +6973,8 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
-  /@balazsorban/monorepo-release@0.2.4(patch_hash=5tj43pohdiiztyxh7rvgp45gjq):
-    resolution: {integrity: sha512-cRUq62+Ui4wL1Bq5fXqh3oIYdBdK8sI+JXR/MfbP+2K8ntdCAhcU/LfuR5FQE/Zzxmm7JAkBqHP0OMAr/KYYDw==}
+  /@balazsorban/monorepo-release@0.3.0(patch_hash=lwil2v6lrmyuiogkuptpgelrem):
+    resolution: {integrity: sha512-WsUNsAUKafHAzu9rN9NUC9ZeAbQQg6mIzpEcEHKopWu6mC9qvK2wp8rztjak84WKhZLTJpKVKbwDxwl2NhspWw==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     dependencies:
@@ -9988,7 +9981,7 @@ packages:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.5.1
+      semver: 7.5.4
       tar: 6.1.13
     transitivePeerDependencies:
       - encoding
@@ -10429,7 +10422,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.5.1
+      semver: 7.5.4
     dev: true
     optional: true
 
@@ -10439,7 +10432,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.5.1
+      semver: 7.5.4
     dev: true
     optional: true
 
@@ -12594,7 +12587,7 @@ packages:
       debug: 4.3.4(supports-color@7.2.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
@@ -12615,7 +12608,7 @@ packages:
       debug: 4.3.4(supports-color@7.2.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
@@ -12636,7 +12629,7 @@ packages:
       debug: 4.3.4(supports-color@7.2.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -12657,7 +12650,7 @@ packages:
       debug: 4.3.4(supports-color@7.2.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
@@ -12696,7 +12689,7 @@ packages:
       eslint: 8.30.0
       eslint-scope: 5.1.1
       eslint-utils: 3.0.0(eslint@8.30.0)
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -12716,7 +12709,7 @@ packages:
       eslint: 8.30.0
       eslint-scope: 5.1.1
       eslint-utils: 3.0.0(eslint@8.30.0)
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -14306,7 +14299,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.5.1
+      semver: 7.5.4
     dev: true
 
   /bundle-require@3.1.2(esbuild@0.15.16):
@@ -15408,7 +15401,7 @@ packages:
       postcss-modules-scope: 3.0.0(postcss@8.4.19)
       postcss-modules-values: 4.0.0(postcss@8.4.19)
       postcss-value-parser: 4.2.0
-      semver: 7.5.1
+      semver: 7.5.4
       webpack: 5.75.0
     dev: true
 
@@ -18407,7 +18400,7 @@ packages:
       pump: 3.0.0
       qs: 6.11.0
       raw-body: 2.5.1
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -19137,7 +19130,7 @@ packages:
       memfs: 3.4.6
       minimatch: 3.1.2
       schema-utils: 2.7.0
-      semver: 7.5.1
+      semver: 7.5.4
       tapable: 1.1.3
       typescript: 4.9.5
       webpack: 5.75.0
@@ -22695,7 +22688,7 @@ packages:
       jest-util: 27.5.1
       natural-compare: 1.4.0
       pretty-format: 27.5.1
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -22726,7 +22719,7 @@ packages:
       jest-util: 28.1.3
       natural-compare: 1.4.0
       pretty-format: 28.1.3
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -22757,7 +22750,7 @@ packages:
       jest-util: 29.5.0
       natural-compare: 1.4.0
       pretty-format: 29.5.0
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -23433,7 +23426,7 @@ packages:
       jws: 3.2.2
       lodash: 4.17.21
       ms: 2.1.3
-      semver: 7.5.1
+      semver: 7.5.4
     dev: true
 
   /jsprim@1.4.2:
@@ -25249,7 +25242,7 @@ packages:
     engines: {node: '>=10'}
     requiresBuild: true
     dependencies:
-      semver: 7.5.1
+      semver: 7.5.4
     dev: true
 
   /node-abort-controller@2.0.0:
@@ -25319,7 +25312,7 @@ packages:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.5.1
+      semver: 7.5.4
       tar: 6.1.13
       which: 2.0.2
     transitivePeerDependencies:
@@ -25341,7 +25334,7 @@ packages:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.5.1
+      semver: 7.5.4
       tar: 6.1.13
       which: 2.0.2
     transitivePeerDependencies:
@@ -25490,7 +25483,7 @@ packages:
     dependencies:
       execa: 6.1.0
       parse-package-name: 1.0.0
-      semver: 7.5.1
+      semver: 7.5.4
       validate-npm-package-name: 4.0.0
     dev: true
 
@@ -26466,7 +26459,7 @@ packages:
       cosmiconfig: 7.0.1
       klona: 2.0.5
       postcss: 8.4.19
-      semver: 7.5.1
+      semver: 7.5.4
       webpack: 5.75.0
     dev: true
 
@@ -27573,7 +27566,7 @@ packages:
       jsdoc: 3.6.11
       minimist: 1.2.6
       protobufjs: 7.1.2
-      semver: 7.5.1
+      semver: 7.5.4
       tmp: 0.2.1
       uglify-js: 3.17.4
     dev: true
@@ -31400,7 +31393,7 @@ packages:
       is-yarn-global: 0.3.0
       latest-version: 5.1.0
       pupa: 2.1.1
-      semver: 7.5.1
+      semver: 7.5.4
       semver-diff: 3.1.1
       xdg-basedir: 4.0.0
     dev: true

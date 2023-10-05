@@ -1,12 +1,11 @@
 diff --git a/dist/publish.js b/dist/publish.js
-index 9ff19090801bbd6791f6ad29a0ae27bc77bd14fd..50c042c08abd010ed580d76e25cbe4af493fe56b 100644
+index 09a0c10584159beefa7a915ad92d46601da5ad45..01959c09b98ef8e7b1c2c6c481add782457e6921 100644
 --- a/dist/publish.js
 +++ b/dist/publish.js
-@@ -53,8 +53,9 @@ export async function publish(packages, options) {
-             log.info(`Creating git tag.`);
+@@ -55,7 +55,9 @@ export async function publish(packages, options) {
              execSync(`git tag ${gitTag}`);
              execSync("git push --tags");
--            log.info(`Creating GitHub release notes.`);
+             log.info(`Creating GitHub release notes.`);
 -            execSync(`gh release create ${gitTag} --notes '${changelog}'`);
 +            const prerelease = name.startsWith("@auth") ? "--prerelease " : ""
 +            console.log(`Creating GitHub release notes${prerelease ? " (as prerelease)" : ""}`);
