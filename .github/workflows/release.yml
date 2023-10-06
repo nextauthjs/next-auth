@@ -31,6 +31,7 @@ on:
           - "@auth/typeorm-adapter"
           - "@auth/upstash-redis-adapter"
           - "@auth/xata-adapter"
+          - "@auth/memory-adapter"
           - "next-auth"
       # TODO: Infer from package name
       path:
@@ -55,6 +56,7 @@ on:
           - "adapter-typeorm"
           - "adapter-upstash-redis"
           - "adapter-xata"
+          - "adapter-memory"
           - "next-auth"
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}

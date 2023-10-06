@@ -1,4 +1,5 @@
-import type { Adapter } from "@auth/core/adapters"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { Account, Authenticator } from "@auth/core/types"
 import { createHash, randomUUID } from "crypto"
 
 const requiredMethods = [
@@ -21,7 +22,7 @@ export interface TestOptions {
     account?: any
     sessionUpdateExpires?: Date
     verificationTokenExpires?: Date
-  },
+  }
   db: {
     /** Generates UUID v4 by default. Use it to override how the test suite should generate IDs, like user id. */
     id?: () => string
@@ -49,10 +50,22 @@ export interface TestOptions {
      * based on the user identifier and the verification token (hashed).
      */
     verificationToken: (params: { identifier: string; token: string }) => any
+    /**
+     * A simple query function that returns an authenticator directly from the db.
+     *
+     * Optional to avoid breaking existing adapters' tests.
+     */
+    authenticators?: (credentialID: Authenticator["credentialID"]) => any
   }
   skipTests?: string[]
+  /**
+   * Defaults to false. If true, also tests the new Authenticator methods
+   * This prevents current adapters from breaking suddently before they
+   * implement the new methods.
+   */
+  testAuthenticatorMethods?: boolean
 }
-const testIf = (condition: boolean) => (condition ? test : test.skip)
+const testIf = (condition?: boolean) => (condition ? test : test.skip)
 /**
  * A wrapper to run the most basic tests.
  * Run this at the top of your test file.
@@ -65,7 +78,7 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.connect?.()
   })
 
-  const { adapter: _adapter, db, skipTests } = options
+  const { adapter: _adapter, db, skipTests, testAuthenticatorMethods } = options
   const adapter = _adapter as Required<Adapter>
 
   afterAll(async () => {
@@ -78,7 +91,7 @@ export async function runBasicTests(options: TestOptions) {
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
-    emailVerified: new Date()
+    emailVerified: new Date(),
   }
 
   if (process.env.CUSTOM_MODEL === "1") {
@@ -241,7 +254,8 @@ export async function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
+      expires:
+        options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
@@ -260,7 +274,8 @@ export async function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
+      expires:
+        options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
@@ -283,10 +298,164 @@ export async function runBasicTests(options: TestOptions) {
     expect(dbVerificationToken2).toBeNull()
   })
 
+  testIf(testAuthenticatorMethods)("Authenticator methods exist", () => {
+    const requiredMethods: (keyof Adapter)[] = [
+      "createAuthenticator",
+      "getAuthenticator",
+      "listAuthenticatorsByAccountId",
+      "deleteAuthenticator",
+      "updateAuthenticatorCounter",
+      // This isn't and authenticator method, but it's only used by it's flows
+      "listLinkedAccounts",
+    ]
+    requiredMethods.forEach((method) => {
+      expect(adapter).toHaveProperty(method)
+    })
+  })
+
+  testIf(testAuthenticatorMethods)("listLinkedAccounts", async () => {
+    const userId = randomUUID()
+
+    const account1: AdapterAccount = {
+      userId,
+      provider: "github",
+      providerAccountId: randomUUID(),
+      type: "oauth",
+    }
+    const account2: AdapterAccount = {
+      userId,
+      provider: "google",
+      providerAccountId: randomUUID(),
+      type: "oauth",
+    }
+
+    const before = await adapter.listLinkedAccounts(userId)
+    expect(before).not.toBeNull()
+    expect(before).toEqual([])
+
+    await adapter.linkAccount(account1)
+    await adapter.linkAccount(account2)
+
+    const after = await adapter.listLinkedAccounts(userId)
+    expect(after).not.toBeNull()
+    expect(after).toHaveLength(2)
+    expect(after?.map((a) => a.providerAccountId)).toContain(
+      account1.providerAccountId
+    )
+    expect(after?.map((a) => a.providerAccountId)).toContain(
+      account2.providerAccountId
+    )
+  })
+
+  testIf(testAuthenticatorMethods)("createAuthenticator", async () => {
+    const credentialID = new Uint8Array(32)
+
+    const authenticator: Authenticator = {
+      credentialID,
+      credentialPublicKey: new Uint8Array(32),
+      credentialBackedUp: false,
+      credentialDeviceType: "singleDevice",
+      providerAccountId: randomUUID(),
+      counter: 0,
+    }
+
+    await adapter.createAuthenticator(authenticator)
+
+    const dbAuthenticator =
+      db.authenticators && (await db.authenticators(credentialID))
+    expect(dbAuthenticator).toEqual(authenticator)
+  })
+
+  testIf(testAuthenticatorMethods)("getAuthenticator", async () => {
+    const credentialID = new Uint8Array(32)
+
+    const authenticator: Authenticator = {
+      credentialID,
+      credentialPublicKey: new Uint8Array(32),
+      credentialBackedUp: false,
+      credentialDeviceType: "singleDevice",
+      providerAccountId: randomUUID(),
+      counter: 0,
+    }
+
+    await adapter.createAuthenticator(authenticator)
+
+    const getAuthenticator = await adapter.getAuthenticator(credentialID)
+    expect(getAuthenticator).toEqual(authenticator)
+  })
+
+  testIf(testAuthenticatorMethods)("updateAuthenticatorCounter", async () => {
+    const credentialID = new Uint8Array(32)
+
+    const authenticator: Authenticator = {
+      credentialID,
+      credentialPublicKey: new Uint8Array(32),
+      credentialBackedUp: false,
+      credentialDeviceType: "singleDevice",
+      providerAccountId: randomUUID(),
+      counter: 0,
+    }
+
+    await adapter.createAuthenticator(authenticator)
+
+    const updatedAuthenticator = await adapter.updateAuthenticatorCounter(
+      authenticator,
+      42
+    )
+    expect(updatedAuthenticator).not.toBeNull()
+    expect(updatedAuthenticator).toEqual({ ...authenticator, counter: 42 })
+  })
+
+  testIf(testAuthenticatorMethods)(
+    "listAuthenticatorsByAccountId",
+    async () => {
+      const credentialID = new Uint8Array(32)
+      const credentialID2 = new Uint8Array(16)
+      const providerAccountId = randomUUID()
+
+      const authenticator1: Authenticator = {
+        credentialID,
+        credentialPublicKey: new Uint8Array(32),
+        credentialBackedUp: false,
+        credentialDeviceType: "singleDevice",
+        providerAccountId,
+        counter: 0,
+      }
+      const authenticator2: Authenticator = {
+        credentialID: credentialID2,
+        credentialPublicKey: new Uint8Array(32),
+        credentialBackedUp: false,
+        credentialDeviceType: "singleDevice",
+        providerAccountId,
+        counter: 0,
+      }
+
+      const before = await adapter.listAuthenticatorsByAccountId(
+        providerAccountId
+      )
+      expect(before).not.toBeNull()
+      expect(before).toEqual([])
+
+      await adapter.createAuthenticator(authenticator1)
+      await adapter.createAuthenticator(authenticator2)
+
+      const after = await adapter.listAuthenticatorsByAccountId(
+        providerAccountId
+      )
+      expect(after).not.toBeNull()
+      expect(after).toHaveLength(2)
+      expect(after?.map((a) => a.credentialID)).toContain(credentialID)
+      expect(after?.map((a) => a.credentialID)).toContain(credentialID2)
+    }
+  )
+
   // Future methods
   // These methods are not yet invoked in the core, but built-in adapters must implement them
   test("Future methods exist", () => {
-    const requiredMethods = ["unlinkAccount", "deleteUser"]
+    const requiredMethods: (keyof Adapter)[] = ["unlinkAccount", "deleteUser"]
+    if (testAuthenticatorMethods) {
+      requiredMethods.push("deleteAuthenticator")
+    }
     requiredMethods.forEach((method) => {
       expect(adapter).toHaveProperty(method)
     })
@@ -334,6 +503,26 @@ export async function runBasicTests(options: TestOptions) {
     })
     // Account should not exist after user is deleted
     expect(dbAccount).toBeNull()
+  })
+
+  testIf(testAuthenticatorMethods)("deleteAuthenticator", async () => {
+    const credentialID = new Uint8Array(32)
+    const authenticator: Authenticator = {
+      credentialID,
+      credentialPublicKey: new Uint8Array(32),
+      credentialBackedUp: false,
+      credentialDeviceType: "singleDevice",
+      providerAccountId: randomUUID(),
+      counter: 0,
+    }
+
+    await adapter.createAuthenticator(authenticator)
+
+    await adapter.deleteAuthenticator(credentialID)
+
+    const dbAuthenticator =
+      db.authenticators && (await db.authenticators(credentialID))
+    expect(dbAuthenticator).toBeNull()
   })
 }
 

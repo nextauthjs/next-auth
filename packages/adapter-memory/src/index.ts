@@ -1,0 +1,250 @@
+import {
+  Adapter,
+  AdapterAccount,
+  AdapterAuthenticator,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "@auth/core/adapters"
+
+export type Memory = {
+  users: Map<string, AdapterUser>
+  accounts: Map<string, AdapterAccount>
+  sessions: Map<string, AdapterSession>
+  verificationTokens: Map<string, VerificationToken>
+  authenticators: Map<string, AdapterAuthenticator>
+}
+
+export function initMemory(): Memory {
+  return {
+    users: new Map<string, AdapterUser>(),
+    accounts: new Map<string, AdapterAccount>(),
+    sessions: new Map<string, AdapterSession>(),
+    verificationTokens: new Map<string, VerificationToken>(),
+    authenticators: new Map<string, AdapterAuthenticator>(),
+  }
+}
+
+export default function MemoryAdapter(memory?: Memory): Adapter {
+  const { users, accounts, sessions, verificationTokens, authenticators } =
+    memory ?? initMemory()
+
+  // Create the adapter object first
+  // and then populate it. This allows
+  // us to call adapter functions from
+  // within.
+  const adapter: Adapter = {}
+
+  // Assign all functions in place
+  Object.assign(adapter, {
+    async createUser(user) {
+      const newUser = { ...user, id: makeid(32) }
+      users.set(newUser.id, newUser)
+
+      return newUser
+    },
+    async getUser(id) {
+      return users.get(id) ?? null
+    },
+    async getUserByEmail(email) {
+      return (
+        Array.from(users.values()).find((user) => user.email === email) ?? null
+      )
+    },
+    async getUserByAccount(providerAccountId) {
+      const account = accounts.get(providerAccountId.providerAccountId)
+      if (!account) return null
+
+      return users.get(account.userId) ?? null
+    },
+    async updateUser(user) {
+      const currentUser = users.get(user.id)
+      if (!currentUser) throw new Error("User not found")
+
+      const updatedUser = { ...currentUser, ...user }
+      users.set(user.id, updatedUser)
+
+      return updatedUser
+    },
+    async deleteUser(id) {
+      const user = users.get(id)
+      if (!user) return
+
+      // Delete sessions
+      if (!adapter.deleteSession)
+        throw new Error("Adapter does not implement deleteSession!")
+      const { deleteSession } = adapter
+      sessions.forEach(async (session) => {
+        if (session.userId === user.id) {
+          await deleteSession(session.sessionToken)
+        }
+      })
+
+      // Delete accounts
+      if (!adapter.unlinkAccount)
+        throw new Error("Adapter does not implement unlinkAccount!")
+      const { unlinkAccount } = adapter
+      accounts.forEach(async (account) => {
+        if (account.userId === user.id) {
+          await unlinkAccount(account)
+        }
+      })
+
+      // Delete verification tokens
+      if (!adapter.useVerificationToken)
+        throw new Error("Adapter does not implement useVerificationToken!")
+      const { useVerificationToken } = adapter
+      verificationTokens.forEach(async (verificationToken) => {
+        if (verificationToken.identifier === user.email) {
+          await useVerificationToken(verificationToken)
+        }
+      })
+
+      // Delete user
+      users.delete(id)
+
+      return
+    },
+    async linkAccount(account) {
+      accounts.set(account.providerAccountId, account)
+
+      return account
+    },
+    async unlinkAccount(account) {
+      // Find account
+      const currentAccount = accounts.get(account.providerAccountId)
+      if (!currentAccount) return
+
+      // Delete authenticators
+      if (!adapter.deleteAuthenticator)
+        throw new Error("Adapter does not implement deleteAuthenticator!")
+      const { deleteAuthenticator } = adapter
+      authenticators.forEach(async (authenticator) => {
+        if (authenticator.providerAccountId === account.providerAccountId) {
+          await deleteAuthenticator(authenticator.credentialID)
+        }
+      })
+
+      // Delete account
+      accounts.delete(currentAccount.providerAccountId)
+
+      return
+    },
+    async listLinkedAccounts(userId) {
+      return Array.from(accounts.values()).filter(
+        (account) => account.userId === userId
+      )
+    },
+    async createSession(session) {
+      sessions.set(session.sessionToken, session)
+
+      return session
+    },
+    async getSessionAndUser(sessionToken) {
+      const session = sessions.get(sessionToken)
+      if (!session) return null
+
+      // Remove if expired
+      if (session.expires < new Date()) {
+        if (!adapter.deleteSession)
+          throw new Error("Adapter does not implement deleteSession!")
+        await adapter.deleteSession(sessionToken)
+
+        return null
+      }
+
+      const user = users.get(session.userId)
+      if (!user) return null
+
+      return { session, user }
+    },
+    async updateSession(session) {
+      const currentSession = sessions.get(session.sessionToken)
+      if (!currentSession) throw new Error("Session not found")
+
+      const updatedSession = { ...currentSession, ...session }
+      sessions.set(session.sessionToken, updatedSession)
+
+      return updatedSession
+    },
+    async deleteSession(sessionToken) {
+      sessions.delete(sessionToken)
+
+      return
+    },
+    async createVerificationToken(verificationToken) {
+      verificationTokens.set(verificationToken.token, verificationToken)
+
+      return verificationToken
+    },
+    async useVerificationToken(params) {
+      const { token } = params
+
+      // Find verification token
+      const verificationToken = verificationTokens.get(token)
+      if (!verificationToken) return null
+
+      // Delete used verification token
+      verificationTokens.delete(token)
+
+      return verificationToken
+    },
+    async createAuthenticator(authenticator) {
+      const b64ID = asBase64(authenticator.credentialID)
+
+      authenticators.set(b64ID, authenticator)
+
+      return authenticator
+    },
+    async updateAuthenticatorCounter(authenticator, newCounter) {
+      const b64ID = asBase64(authenticator.credentialID)
+
+      // Find authenticator
+      const currentAuthenticator = authenticators.get(b64ID)
+      if (!currentAuthenticator) throw new Error("Authenticator not found")
+
+      // Update counter
+      const updatedAuthenticator = {
+        ...currentAuthenticator,
+        counter: newCounter,
+      }
+      authenticators.set(b64ID, updatedAuthenticator)
+
+      return updatedAuthenticator
+    },
+    async listAuthenticatorsByAccountId(accountId) {
+      return Array.from(authenticators.values()).filter(
+        (authenticator) => authenticator.providerAccountId === accountId
+      )
+    },
+    async getAuthenticator(credentialId) {
+      const b64ID = asBase64(credentialId)
+
+      return authenticators.get(b64ID) ?? null
+    },
+    async deleteAuthenticator(credentialId) {
+      const b64ID = asBase64(credentialId)
+
+      return authenticators.delete(b64ID)
+    },
+  } as Adapter)
+
+  return adapter
+}
+
+function makeid(length: number) {
+  let result = ""
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  const charactersLength = characters.length
+  let counter = 0
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    counter += 1
+  }
+  return result
+}
+
+export function asBase64(buffer: Uint8Array): string {
+  return Buffer.from(buffer).toString("base64")
+}
