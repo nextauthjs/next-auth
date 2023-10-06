@@ -296,6 +296,7 @@ const docusaurusConfig = {
           typedocAdapter("Supabase"),
           typedocAdapter("SurrealDB"),
           typedocAdapter("Upstash Redis"),
+          typedocAdapter("Cloudflare Workers KV"),
           typedocAdapter("Xata"),
         ]),
   ],
