@@ -1,0 +1,57 @@
+{
+  "name": "@auth/workerskv-adapter",
+  "version": "0.2.1",
+  "description": "A Cloudflare Workers KV adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Troy Dack <troy@dack.com.au>",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "cloudflare",
+    "workers",
+    "kv"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@auth/adapter-test": "workspace:*",
+    "@auth/tsconfig": "workspace:*",
+    "@cloudflare/workers-types": "^4.20230321.0",
+    "@miniflare/storage-memory": "^2.14.1",
+    "@miniflare/kv": "^2.12.2",
+    "jest": "^29.3.0"
+  },
+  "jest": {
+    "preset": "@auth/adapter-test/jest"
+  }
+}
