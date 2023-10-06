@@ -85,6 +85,10 @@ Using an Auth.js / NextAuth.js adapter you can connect to any database service o
     <img src="/img/adapters/upstash-redis.svg" width="30" />
     <h4 class="adapter-card__title">Upstash Adapter</h4>
   </a>
+  <a href="/reference/adapter/workerskv" class="adapter-card">
+    <img src="/img/adapters/workerskv.svg" width="30" />
+    <h4 class="adapter-card__title">Cloudflare Workers KV Adapter</h4>
+  </a>
   <a href="/reference/adapter/xata" class="adapter-card">
     <img src="/img/adapters/xata.svg" width="20" />
     <h4 class="adapter-card__title">Xata Adapter</h4>
