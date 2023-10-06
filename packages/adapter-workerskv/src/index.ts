@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Unofficial <a href="https://www.cloudflare.com/en-au/developer-platform/workers-kv/">Cloudflare KV</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://developers.cloudflare.com/workers/runtime-apis/kv/">
- *      <img style={{display: "block"}} src="/img/adapters/kv.svg" width="48" />
+ *      <img style={{display: "block"}} src="/img/adapters/workerskv.svg" width="48" />
  *  </a>
  * </div>
  *
