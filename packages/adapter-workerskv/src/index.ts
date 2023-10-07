@@ -185,9 +185,7 @@ export function CloudflareKVAdapter(
   }
 
   const getAccount = async (id: string) => {
-    const account = await client.get<AdapterAccount>(accountKeyPrefix + id, {
-      type: "json",
-    })
+    const account = await getObject<AdapterAccount>(accountKeyPrefix + id)
     if (!account) return null
     return hydrateDates(account)
   }
@@ -203,9 +201,7 @@ export function CloudflareKVAdapter(
   }
 
   const getSession = async (id: string) => {
-    const session = await client.get<AdapterSession>(sessionKeyPrefix + id, {
-      type: "json",
-    })
+    const session = await getObject<AdapterSession>(sessionKeyPrefix + id)
     if (!session) return null
     return hydrateDates(session)
   }
@@ -220,9 +216,7 @@ export function CloudflareKVAdapter(
   }
 
   const getUser = async (id: string) => {
-    const user = await client.get<AdapterUser>(userKeyPrefix + id, {
-      type: "json",
-    })
+    const user = await getObject<AdapterUser>(userKeyPrefix + id)
     if (!user) return null
     return hydrateDates(user)
   }
@@ -236,9 +230,7 @@ export function CloudflareKVAdapter(
     },
     getUser,
     async getUserByEmail(email) {
-      const userId = await client.get<string>(emailKeyPrefix + email, {
-        type: "json",
-      })
+      const userId = await getObject<string>(emailKeyPrefix + email)
       if (!userId) {
         return null
       }
@@ -293,9 +285,7 @@ export function CloudflareKVAdapter(
         ":" +
         verificationToken.token
 
-      const token = await client.get<VerificationToken>(tokenKey, {
-        type: "json",
-      })
+      const token = await getObject<VerificationToken>(tokenKey)
       if (!token) return null
 
       await client.delete(tokenKey)
@@ -316,13 +306,9 @@ export function CloudflareKVAdapter(
       const user = await getUser(userId)
       if (!user) return
       const accountByUserKey = accountByUserIdPrefix + userId
-      const accountKey = await client.get<string>(accountByUserKey, {
-        type: "json",
-      })
+      const accountKey = await getObject<string>(accountByUserKey)
       const sessionByUserIdKey = sessionByUserIdKeyPrefix + userId
-      const sessionKey = await client.get<string>(sessionByUserIdKey, {
-        type: "json",
-      })
+      const sessionKey = await getObject<string>(sessionByUserIdKey)
       await client.delete(userKeyPrefix + userId)
       await client.delete(`${emailKeyPrefix}${user.email as string}`)
       await client.delete(accountKey as string)
