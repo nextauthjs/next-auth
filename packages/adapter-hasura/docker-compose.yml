@@ -17,8 +17,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-        restart: true
-    restart: always
     environment:
       ## postgres database to store Hasura metadata
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
