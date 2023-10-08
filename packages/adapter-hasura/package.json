@@ -44,10 +44,6 @@
     "test": "./tests/test.sh",
     "build": "graphql-codegen-esm --config codegen.ts && tsc"
   },
-  "peerDependencies": {
-    "graphql": "^16",
-    "graphql-request": "^6"
-  },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
@@ -57,8 +53,6 @@
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "graphql": "^16.8.1",
-    "graphql-request": "^6.1.0",
     "jest": "^29.7.0",
     "typescript": "^5.2.2"
   },
