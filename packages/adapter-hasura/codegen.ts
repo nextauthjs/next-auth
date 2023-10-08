@@ -2,7 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli"
 
 export default {
   overwrite: true,
-  schema: "src/schema.graphql",
+  schema: "schema.gql",
   emitLegacyCommonJSImports: false,
   documents: "src/queries/*.graphql",
   generates: {
