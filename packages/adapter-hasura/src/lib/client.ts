@@ -22,21 +22,14 @@ export class HasuraClientError extends Error {
   }
 }
 
-export function client(params: HasuraAdapterClient) {
-  if (!params.adminSecret) {
+export function client({ adminSecret, endpoint }: HasuraAdapterClient) {
+  if (!adminSecret)
     throw new TypeError("Hasura client error: Please provide an adminSecret")
-  }
-  if (!params.endpoint) {
+
+  if (!endpoint)
     throw new TypeError(
       "Hasura client error: Please provide a graphql endpoint"
     )
-  }
-
-  const { endpoint, adminSecret } = params
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    "x-hasura-admin-secret": adminSecret,
-  }
 
   return {
     async run<
@@ -46,7 +39,10 @@ export function client(params: HasuraAdapterClient) {
     >(query: Q, variables?: V): Promise<T> {
       const response = await fetch(endpoint, {
         method: "POST",
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+          "x-hasura-admin-secret": adminSecret,
+        },
         body: JSON.stringify({ query, variables }),
       })
 
