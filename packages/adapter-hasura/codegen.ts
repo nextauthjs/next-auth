@@ -1,12 +1,12 @@
 import type { CodegenConfig } from "@graphql-codegen/cli"
 
-const config: CodegenConfig = {
+export default {
   overwrite: true,
-  schema: "schema.graphql",
+  schema: "src/schema.graphql",
   emitLegacyCommonJSImports: false,
-  documents: "src/**/*.graphql",
+  documents: "src/queries/*.graphql",
   generates: {
-    "src/lib/": {
+    "src/lib/generated/": {
       preset: "client",
       config: {
         documentMode: "string",
@@ -19,10 +19,6 @@ const config: CodegenConfig = {
           uuid: "string",
         },
       },
-      plugins: [],
     },
   },
-  hooks: { afterAllFileWrite: ["prettier --write"] },
-}
-
-export default config
+} satisfies CodegenConfig
