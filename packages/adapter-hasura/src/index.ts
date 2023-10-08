@@ -17,8 +17,11 @@
 
 import type { Adapter } from "@auth/core/adapters"
 
-import { client as hasuraClient, type HasuraAdapterClient } from "./lib/client"
-import { useFragment } from "./lib/generated"
+import {
+  client as hasuraClient,
+  type HasuraAdapterClient,
+} from "./lib/client.js"
+import { useFragment } from "./lib/generated/index.js"
 import {
   AccountFragmentDoc,
   CreateAccountDocument,
@@ -37,7 +40,7 @@ import {
   UpdateUserDocument,
   UserFragmentDoc,
   VerificationTokenFragmentDoc,
-} from "./lib/generated/graphql"
+} from "./lib/generated/graphql.js"
 
 /**
  *
