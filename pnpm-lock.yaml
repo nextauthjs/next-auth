@@ -716,7 +716,7 @@ importers:
         specifier: workspace:*
         version: link:../core
       surrealdb.js:
-        specifier: ^0.9.0
+        specifier: ^0.9.1
         version: 0.9.1
     devDependencies:
       '@auth/adapter-test':

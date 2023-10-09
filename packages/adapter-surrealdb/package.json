@@ -45,7 +45,7 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "surrealdb.js": "^0.9.0"
+    "surrealdb.js": "^0.9.1"
   },
   "devDependencies": {
     "@auth/adapter-test": "workspace:*",
