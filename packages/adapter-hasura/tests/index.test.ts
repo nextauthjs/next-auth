@@ -1,7 +1,6 @@
 import { runBasicTests } from "@auth/adapter-test"
-import { GraphQLClient } from "graphql-request"
-import { HasuraAdapter } from "../src"
-import { useFragment } from "../src/lib"
+import { HasuraAdapter, format } from "../src"
+import { useFragment } from "../src/lib/generated"
 import {
   AccountFragmentDoc,
   DeleteAllDocument,
@@ -12,23 +11,12 @@ import {
   SessionFragmentDoc,
   UserFragmentDoc,
   VerificationTokenFragmentDoc,
-} from "../src/lib/graphql"
-import type {
-  GetAccountQuery,
-  GetAccountQueryVariables,
-  GetSessionQuery,
-  GetSessionQueryVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
-  GetVerificationTokenQuery,
-  GetVerificationTokenQueryVariables,
-} from "../src/lib/graphql"
-import { formatDateConversion } from "../src/utils"
+} from "../src/lib/generated/graphql"
+import { client as hasuraClient } from "../src/lib/client"
 
-const client = new GraphQLClient("http://localhost:8080/v1/graphql", {
-  headers: {
-    "x-hasura-admin-secret": "myadminsecretkey",
-  },
+const client = hasuraClient({
+  endpoint: "http://localhost:8080/v1/graphql",
+  adminSecret: "myadminsecretkey",
 })
 
 runBasicTests({
@@ -37,73 +25,38 @@ runBasicTests({
     endpoint: "http://localhost:8080/v1/graphql",
   }),
   db: {
-    connect: async () => {
-      await client.request(DeleteAllDocument.toString())
+    async connect() {
+      await client.run(DeleteAllDocument)
     },
-    disconnect: async () => {
-      await client.request(DeleteAllDocument.toString())
+    async disconnect() {
+      await client.run(DeleteAllDocument)
     },
-    user: async (id) => {
-      const variables: GetUserQueryVariables = { id }
-      const { users_by_pk } = await client.request<GetUserQuery>(
-        GetUserDocument.toString(),
-        variables
-      )
+    async user(id) {
+      const { users_by_pk } = await client.run(GetUserDocument, { id })
       const user = useFragment(UserFragmentDoc, users_by_pk)
-
-      return user ? formatDateConversion(user, "emailVerified", "toJS") : null
+      return format.from(user)
     },
-    account: async ({ providerAccountId, provider }) => {
-      const variables: GetAccountQueryVariables = {
-        provider,
-        providerAccountId,
-      }
-      const { accounts } = await client.request<GetAccountQuery>(
-        GetAccountDocument.toString(),
-        variables
-      )
+    async account(params) {
+      const { accounts } = await client.run(GetAccountDocument, params)
 
-      const account = useFragment(AccountFragmentDoc, accounts?.[0])
-      return account ?? null
+      return useFragment(AccountFragmentDoc, accounts?.[0]) ?? null
     },
-    session: async (sessionToken) => {
-      const variables: GetSessionQueryVariables = {
+    async session(sessionToken) {
+      const { sessions_by_pk } = await client.run(GetSessionDocument, {
         sessionToken,
-      }
-      const { sessions_by_pk } = await client.request<GetSessionQuery>(
-        GetSessionDocument.toString(),
-        variables
-      )
-      if (!sessions_by_pk) {
-        return null
-      }
+      })
 
-      return formatDateConversion(
-        useFragment(SessionFragmentDoc, sessions_by_pk),
-        "expires",
-        "toJS"
-      )
+      return format.from(useFragment(SessionFragmentDoc, sessions_by_pk))
     },
-    verificationToken: async ({ identifier, token }) => {
-      const variables: GetVerificationTokenQueryVariables = {
-        identifier,
-        token,
-      }
-      const { verification_tokens } =
-        await client.request<GetVerificationTokenQuery>(
-          GetVerificationTokenDocument.toString(),
-          variables
-        )
+    async verificationToken(params) {
+      const { verification_tokens } = await client.run(
+        GetVerificationTokenDocument,
+        params
+      )
       const verificationToken = verification_tokens?.[0]
 
-      if (!verificationToken) {
-        return null
-      }
-
-      return formatDateConversion(
-        useFragment(VerificationTokenFragmentDoc, verificationToken),
-        "expires",
-        "toJS"
+      return format.from(
+        useFragment(VerificationTokenFragmentDoc, verificationToken)
       )
     },
   },

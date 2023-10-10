@@ -9,15 +9,19 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @auth/hasura-adapter graphql graphql-request
+ * npm install @auth/hasura-adapter
  * ```
  *
  * @module @auth/hasura-adapter
  */
 
-import { GraphQLClient } from "graphql-request"
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { useFragment } from "./lib"
+import type { Adapter } from "@auth/core/adapters"
+
+import {
+  client as hasuraClient,
+  type HasuraAdapterClient,
+} from "./lib/client.js"
+import { useFragment } from "./lib/generated/index.js"
 import {
   AccountFragmentDoc,
   CreateAccountDocument,
@@ -36,50 +40,13 @@ import {
   UpdateUserDocument,
   UserFragmentDoc,
   VerificationTokenFragmentDoc,
-} from "./lib/graphql"
-import type {
-  AccountFragment,
-  CreateAccountMutation,
-  CreateAccountMutationVariables,
-  CreateSessionMutation,
-  CreateSessionMutationVariables,
-  CreateUserMutation,
-  CreateUserMutationVariables,
-  CreateVerificationTokenMutation,
-  CreateVerificationTokenMutationVariables,
-  DeleteAccountMutation,
-  DeleteAccountMutationVariables,
-  DeleteSessionMutation,
-  DeleteSessionMutationVariables,
-  DeleteUserMutation,
-  DeleteUserMutationVariables,
-  DeleteVerificationTokenMutation,
-  DeleteVerificationTokenMutationVariables,
-  GetSessionAndUserQuery,
-  GetSessionAndUserQueryVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
-  GetUsersQuery,
-  GetUsersQueryVariables,
-  UpdateSessionMutation,
-  UpdateSessionMutationVariables,
-  UpdateUserMutation,
-  UpdateUserMutationVariables,
-} from "./lib/graphql"
-import { formatDateConversion } from "./utils"
-import type { NonNullify } from "./utils"
-
-interface HasuraAdapterArgs {
-  endpoint: string
-  adminSecret: string
-  graphqlRequestOptions?: any
-}
+} from "./lib/generated/graphql.js"
 
 /**
  *
  * ## Setup
  *
- * 1. Create the next-auth schema in your database using SQL.
+ * 1. Create the Auth.js schema in your database using SQL.
  *
  *   ```sql
  *   CREATE TABLE accounts (
@@ -156,338 +123,184 @@ interface HasuraAdapterArgs {
  * Tips: [Track all the tables and relationships in Hasura](https://hasura.io/docs/latest/schema/postgres/using-existing-database/#step-1-track-tablesviews)
  * :::
  *
- *1. Configure your NextAuth.js to use the Hasura Adapter:
+ * 2. Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
  *
  *   ```javascript title="pages/api/auth/[...nextauth].js"
  *   import NextAuth from "next-auth"
- *   import { HasuraAdapter } from "@next-auth/hasura-adapter"
+ *   import { HasuraAdapter } from "@auth/hasura-adapter"
  *
- *   // For more information on each option (and a full list of options) go to
- *   // https://next-auth.js.org/configuration/options
- *   export default nextAuth({
- *   adapter: HasuraAdapter({
+ *   export default NextAuth({
+ *     adapter: HasuraAdapter({
  *       endpoint: "<Hasura-GraphQL-endpoint>",
  *       adminSecret: "<admin-secret>",
- *       graphqlRequestOptions: {
- *       // Optional graphql-request options
- *       },
- *   }),
+ *     }),
  *   ...
  *   })
  *   ```
- *
- *## Passing dynamic headers
- *
- *If you use [graphql-request's dynamic headers feature](https://github.com/prisma-labs/graphql-request#passing-dynamic-headers-to-the-client), you are responsible for passing the 'X-Hasura-Admin-Secret' header
- *
- *```js
- *export default nextAuth({
- *  adapter: HasuraAdapter({
- *    endpoint: "<Hasura-GraphQL-endpoint>",
- *    adminSecret: "<admin-secret>",
- *    graphqlRequestOptions: {
- *      headers: () => ({
- *        "X-Hasura-Admin-Secret": "<admin-secret>",
- *        // your headers here
- *      }),
- *    },
- *  }),
- *  ...
- *})
- *```
-
  */
-export const HasuraAdapter = ({
-  endpoint,
-  adminSecret,
-  graphqlRequestOptions,
-}: HasuraAdapterArgs): Adapter => {
-  const client = new GraphQLClient(endpoint, {
-    fetch: fetch ?? undefined,
-    ...graphqlRequestOptions,
-    headers:
-      graphqlRequestOptions?.headers instanceof Function
-        ? graphqlRequestOptions?.headers
-        : {
-            ...graphqlRequestOptions?.headers,
-            "x-hasura-admin-secret": adminSecret,
-          },
-  })
+export function HasuraAdapter(client: HasuraAdapterClient): Adapter {
+  const c = hasuraClient(client)
 
   return {
-    // User
-    createUser: async (newUser) => {
-      const variables: CreateUserMutationVariables = {
-        data: formatDateConversion(newUser, "emailVerified", "toDatabase"),
-      }
-      const { insert_users_one } = await client.request<CreateUserMutation>(
-        CreateUserDocument.toString(),
-        variables
-      )
-      const user = useFragment(UserFragmentDoc, insert_users_one)
+    async createUser(newUser) {
+      const { insert_users_one } = await c.run(CreateUserDocument, {
+        data: format.to<any>(newUser),
+      })
 
-      if (!user) {
-        throw new Error("Error creating user")
-      }
-      return formatDateConversion(user, "emailVerified", "toJS")
+      return format.from(useFragment(UserFragmentDoc, insert_users_one), true)
     },
-    getUser: async (id) => {
-      const variables: GetUserQueryVariables = { id }
-      const { users_by_pk } = await client.request<GetUserQuery>(
-        GetUserDocument.toString(),
-        variables
-      )
-      const user = useFragment(UserFragmentDoc, users_by_pk)
+    async getUser(id) {
+      const { users_by_pk } = await c.run(GetUserDocument, { id })
 
-      return user ? formatDateConversion(user, "emailVerified", "toJS") : null
+      return format.from(useFragment(UserFragmentDoc, users_by_pk))
     },
-    getUserByEmail: async (email) => {
-      const variables: GetUsersQueryVariables = {
+    async getUserByEmail(email) {
+      const { users } = await c.run(GetUsersDocument, {
         where: { email: { _eq: email } },
-      }
-      const { users } = await client.request<GetUsersQuery>(
-        GetUsersDocument.toString(),
-        variables
-      )
+      })
 
-      const user = useFragment(UserFragmentDoc, users?.[0])
-
-      if (!user) return null
-
-      return user ? formatDateConversion(user, "emailVerified", "toJS") : null
+      return format.from(useFragment(UserFragmentDoc, users?.[0]))
     },
-    getUserByAccount: async ({ providerAccountId, provider }) => {
-      const variables: GetUsersQueryVariables = {
+    async getUserByAccount({ providerAccountId, provider }) {
+      const { users } = await c.run(GetUsersDocument, {
         where: {
           accounts: {
             provider: { _eq: provider },
             providerAccountId: { _eq: providerAccountId },
           },
         },
-      }
-      const { users } = await client.request<GetUsersQuery>(
-        GetUsersDocument.toString(),
-        variables
-      )
-      const user = useFragment(UserFragmentDoc, users?.[0])
+      })
 
-      if (!user) return null
-
-      return user ? formatDateConversion(user, "emailVerified", "toJS") : null
+      return format.from(useFragment(UserFragmentDoc, users?.[0]))
     },
-    updateUser: async ({ id, ...data }) => {
-      const variables: UpdateUserMutationVariables = {
+    async updateUser({ id, ...data }) {
+      const { update_users_by_pk } = await c.run(UpdateUserDocument, {
         id,
-        data: formatDateConversion(data, "emailVerified", "toDatabase"),
-      }
-      const { update_users_by_pk } = await client.request<UpdateUserMutation>(
-        UpdateUserDocument.toString(),
-        variables
+        data: format.to<any>(data),
+      })
+
+      return format.from(useFragment(UserFragmentDoc, update_users_by_pk), true)
+    },
+    async deleteUser(id) {
+      const { delete_users_by_pk } = await c.run(DeleteUserDocument, { id })
+
+      return format.from<any, true>(
+        useFragment(UserFragmentDoc, delete_users_by_pk),
+        true
       )
-      const user = useFragment(UserFragmentDoc, update_users_by_pk)
-
-      if (!user) {
-        throw new Error("Error updating user")
-      }
-
-      return formatDateConversion(user, "emailVerified", "toJS")
     },
-    deleteUser: async (id) => {
-      const variables: DeleteUserMutationVariables = {
-        id,
-      }
-      const { delete_users_by_pk } = await client.request<DeleteUserMutation>(
-        DeleteUserDocument.toString(),
-        variables
+    async createSession(data) {
+      const { insert_sessions_one } = await c.run(CreateSessionDocument, {
+        data: format.to<any>(data),
+      })
+
+      return format.from(
+        useFragment(SessionFragmentDoc, insert_sessions_one),
+        true
       )
-      const user = useFragment(UserFragmentDoc, delete_users_by_pk)
-
-      if (!user) {
-        throw new Error("Error deleting user")
-      }
-      return formatDateConversion(user, "emailVerified", "toJS")
     },
-    // Session
-    createSession: async (data) => {
-      const variables: CreateSessionMutationVariables = {
-        data: formatDateConversion(data, "expires", "toDatabase"),
-      }
-      const { insert_sessions_one } =
-        await client.request<CreateSessionMutation>(
-          CreateSessionDocument.toString(),
-          variables
-        )
-      const session = useFragment(SessionFragmentDoc, insert_sessions_one)
-
-      if (!session) {
-        throw new Error("Error creating session")
-      }
-      session.expires
-      return formatDateConversion(session, "expires", "toJS")
-    },
-    getSessionAndUser: async (sessionToken) => {
-      const variables: GetSessionAndUserQueryVariables = {
+    async getSessionAndUser(sessionToken) {
+      const { sessions } = await c.run(GetSessionAndUserDocument, {
         sessionToken,
-      }
-      const { sessions } = await client.request<GetSessionAndUserQuery>(
-        GetSessionAndUserDocument.toString(),
-        variables
-      )
-      const session = sessions?.[0]
+      })
+      const sessionAndUser = sessions?.[0]
+      if (!sessionAndUser) return null
 
-      if (!session) {
-        return null
-      }
-
-      const { user, ...sessionData } = session
+      const { user, ...session } = sessionAndUser
 
       return {
-        session: formatDateConversion(
-          useFragment(SessionFragmentDoc, sessionData),
-          "expires",
-          "toJS"
-        ),
-        user: formatDateConversion(
-          useFragment(UserFragmentDoc, user),
-          "emailVerified",
-          "toJS"
-        ),
+        session: format.from(useFragment(SessionFragmentDoc, session), true),
+        user: format.from(useFragment(UserFragmentDoc, user), true),
       }
     },
-    updateSession: async ({ sessionToken, ...data }) => {
-      const variables: UpdateSessionMutationVariables = {
+    async updateSession({ sessionToken, ...data }) {
+      const { update_sessions } = await c.run(UpdateSessionDocument, {
         sessionToken,
-        data: formatDateConversion(data, "expires", "toDatabase"),
-      }
-      const { update_sessions } = await client.request<UpdateSessionMutation>(
-        UpdateSessionDocument.toString(),
-        variables
-      )
+        data: format.to<any>(data),
+      })
       const session = update_sessions?.returning?.[0]
 
-      if (!session) {
-        return null
-      }
-
-      return formatDateConversion(
-        useFragment(SessionFragmentDoc, session),
-        "expires",
-        "toJS"
-      )
+      return format.from(useFragment(SessionFragmentDoc, session))
     },
-    deleteSession: async (sessionToken) => {
-      const variables: DeleteSessionMutationVariables = {
+    async deleteSession(sessionToken) {
+      const { delete_sessions } = await c.run(DeleteSessionDocument, {
         sessionToken,
-      }
-      const { delete_sessions } = await client.request<DeleteSessionMutation>(
-        DeleteSessionDocument.toString(),
-        variables
-      )
+      })
       const session = delete_sessions?.returning?.[0]
 
-      if (!session) {
-        return null
-      }
-
-      return formatDateConversion(
-        useFragment(SessionFragmentDoc, session),
-        "expires",
-        "toJS"
-      )
+      return format.from<any>(useFragment(SessionFragmentDoc, session))
     },
-    // Account
-    linkAccount: async (data) => {
-      const variables: CreateAccountMutationVariables = { data }
-      const { insert_accounts_one } =
-        await client.request<CreateAccountMutation>(
-          CreateAccountDocument.toString(),
-          variables
-        )
+    async linkAccount(data) {
+      const { insert_accounts_one } = await c.run(CreateAccountDocument, {
+        data,
+      })
 
-      if (!insert_accounts_one) {
-        return
-      }
-
-      const account = useFragment(
-        AccountFragmentDoc,
-        insert_accounts_one
-      ) as NonNullify<
-        Omit<AccountFragment, "type"> & { type: "email" | "oauth" | "oidc" }
-      >
-      if (account) {
-        return account as AdapterAccount
-      }
+      return useFragment(AccountFragmentDoc, insert_accounts_one) as any
     },
-    unlinkAccount: async ({ providerAccountId, provider }) => {
-      const variables: DeleteAccountMutationVariables = {
-        provider,
-        providerAccountId,
-      }
-      const { delete_accounts } = await client.request<DeleteAccountMutation>(
-        DeleteAccountDocument.toString(),
-        variables
-      )
+    async unlinkAccount(params) {
+      const { delete_accounts } = await c.run(DeleteAccountDocument, params)
       const account = delete_accounts?.returning[0]
 
-      if (!account) {
-        return undefined
-      }
-
-      const accountFragment = useFragment(
-        AccountFragmentDoc,
-        account
-      ) as NonNullify<
-        Omit<AccountFragment, "type"> & { type: "email" | "oauth" | "oidc" }
-      >
-      if (accountFragment) {
-        return accountFragment as AdapterAccount
-      }
+      return useFragment(AccountFragmentDoc, account) as any
     },
-    // Verification Token
-    createVerificationToken: async (data) => {
-      const variables: CreateVerificationTokenMutationVariables = {
-        data: formatDateConversion(data, "expires", "toDatabase"),
-      }
-      const { insert_verification_tokens_one } =
-        await client.request<CreateVerificationTokenMutation>(
-          CreateVerificationTokenDocument.toString(),
-          variables
-        )
+    async createVerificationToken(data) {
+      const { insert_verification_tokens_one } = await c.run(
+        CreateVerificationTokenDocument,
+        { data: format.to<any>(data) }
+      )
 
-      if (!insert_verification_tokens_one) {
-        return null
-      }
-
-      return formatDateConversion(
+      return format.from(
         useFragment(
           VerificationTokenFragmentDoc,
           insert_verification_tokens_one
-        ),
-        "expires",
-        "toJS"
+        )
       )
     },
-    useVerificationToken: async ({ identifier, token }) => {
-      const variables: DeleteVerificationTokenMutationVariables = {
-        identifier,
-        token,
-      }
-      const { delete_verification_tokens } =
-        await client.request<DeleteVerificationTokenMutation>(
-          DeleteVerificationTokenDocument.toString(),
-          variables
-        )
+    async useVerificationToken(params) {
+      const { delete_verification_tokens } = await c.run(
+        DeleteVerificationTokenDocument,
+        params
+      )
       const verificationToken = delete_verification_tokens?.returning?.[0]
 
-      if (!verificationToken) {
-        return null
-      }
-
-      return formatDateConversion(
-        useFragment(VerificationTokenFragmentDoc, verificationToken),
-        "expires",
-        "toJS"
+      return format.from(
+        useFragment(VerificationTokenFragmentDoc, verificationToken)
       )
     },
   }
+}
+
+// https://github.com/honeinc/is-iso-date/blob/master/index.js
+const isoDateRE =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+
+function isDate(value: any) {
+  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
+}
+
+export const format = {
+  from<T, B extends boolean = false>(
+    object?: Record<string, any> | null | undefined,
+    throwIfNullish?: B
+  ): B extends true ? T : T | null {
+    if (!object) {
+      if (throwIfNullish) throw new Error("Object is nullish")
+      return null as any
+    }
+
+    const newObject: Record<string, unknown> = {}
+
+    for (const [key, value] of Object.entries(object))
+      newObject[key] = isDate(value) ? new Date(value) : value
+
+    return newObject as T
+  },
+  to<T>(object: Record<string, any>): T {
+    const newObject: Record<string, unknown> = {}
+
+    for (const [key, value] of Object.entries(object))
+      newObject[key] = value instanceof Date ? value.toISOString() : value
+
+    return newObject as T
+  },
 }

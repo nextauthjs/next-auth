@@ -487,12 +487,6 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: ^3.2.0
         version: 3.2.0(graphql@16.8.1)
-      graphql:
-        specifier: ^16.8.1
-        version: 16.8.1
-      graphql-request:
-        specifier: ^6.1.0
-        version: 6.1.0(graphql@16.8.1)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.16.3)

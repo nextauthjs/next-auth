@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Start Hasura
-docker-compose up -d
+docker compose up -d
 
 echo "Waiting 5 sec for Hasura to start..."
 sleep 5
