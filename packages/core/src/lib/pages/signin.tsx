@@ -111,9 +111,8 @@ export default function SigninPage(props: {
                       height={24}
                       width={24}
                       id="provider-logo"
-                      src={`${
-                        provider.style.logo.startsWith("/") ? logos : ""
-                      }${provider.style.logo}`}
+                      src={`${provider.style.logo.startsWith("/") ? logos : ""
+                        }${provider.style.logo}`}
                     />
                   )}
                   {provider.style?.logoDark && (
@@ -122,19 +121,19 @@ export default function SigninPage(props: {
                       height={24}
                       width={24}
                       id="provider-logo-dark"
-                      src={`${
-                        provider.style.logo.startsWith("/") ? logos : ""
-                      }${provider.style.logoDark}`}
+                      src={`${provider.style.logo.startsWith("/") ? logos : ""
+                        }${provider.style.logoDark}`}
                     />
                   )}
                   <span>Sign in with {provider.name}</span>
                 </button>
               </form>
             ) : null}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "email" || provider.type === "credentials" || provider.type === "otp") &&
               i > 0 &&
               providers[i - 1].type !== "email" &&
-              providers[i - 1].type !== "credentials" && <hr />}
+              providers[i - 1].type !== "credentials" &&
+              providers[i - 1].type !== "otp" && <hr />}
             {provider.type === "email" && (
               <form action={provider.signinUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -154,6 +153,34 @@ export default function SigninPage(props: {
                   required
                 />
                 <button type="submit">Sign in with {provider.name}</button>
+              </form>
+            )}
+            {provider.type === "otp" && (
+              <form action={provider.signinUrl} method="POST">
+              {/* <form action={provider.signinUrl} method="POST"> */}
+                <input type="hidden" name="csrfToken" value={csrfToken} />
+                <div>
+                  <label
+                    className="section-header"
+                    htmlFor={`identifier-input-for-${provider.id}-provider`}
+                  >
+                    {provider.identifierInput.label ?? provider.name}
+                  </label>
+
+                  <input
+                    name="identifier"
+                    id={`identifier-input-for-${provider.id}-provider`}
+                    type={provider.identifierInput.type ?? "text"}
+                    placeholder={
+                      provider.identifierInput.placeholder ?? ""
+                    }
+                    // todo: fix this override
+                    {...provider.identifierInput as any}
+                  />
+                </div>
+                <button type="submit">
+                  Send OTP
+                </button>
               </form>
             )}
             {provider.type === "credentials" && (
@@ -185,7 +212,7 @@ export default function SigninPage(props: {
                 </button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "email" || provider.type === "credentials" || provider.type === "otp") &&
               i + 1 < providers.length && <hr />}
           </div>
         ))}

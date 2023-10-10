@@ -1,4 +1,5 @@
 import emailSignin from "../email/signin.js"
+import otpSignIn from "../otp/signin.js"
 import { SignInError } from "../../errors.js"
 import { getAuthorizationUrl } from "../oauth/authorization-url.js"
 import { handleAuthorized } from "./shared.js"
@@ -17,7 +18,7 @@ import type {
  */
 export async function signin(
   request: RequestInternal,
-  options: InternalOptions<"oauth" | "oidc" | "email">
+  options: InternalOptions<"oauth" | "oidc" | "email" | "otp">
 ): Promise<ResponseInternal> {
   const { query, body } = request
   const { url, logger, provider } = options
@@ -50,11 +51,38 @@ export async function signin(
 
       const redirect = await emailSignin(email, options, request)
       return { redirect }
+    } else if (provider.type === "otp") {
+      // OTP TODO: enable non-email based OTP account creation
+      const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
+      const email = normalizer(body?.identifier)
+
+      const user = (await options.adapter!.getUserByEmail(email)) ?? {
+        id: email,
+        email,
+        emailVerified: null,
+      }
+
+      const account: Account = {
+        providerAccountId: email,
+        userId: user.id,
+        type: "email",
+        provider: provider.id,
+      }
+
+      const unauthorizedOrError = await handleAuthorized(
+        { user, account, email: { verificationRequest: true } },
+        options
+      )
+      if (unauthorizedOrError) return unauthorizedOrError
+
+      const redirect = await otpSignIn(email, options, request)
+      return { redirect }
     }
     return { redirect: `${url}/signin` }
   } catch (e) {
     const error = new SignInError(e as Error, { provider: provider.id })
     logger.error(error)
+    // todo: add otp handling here
     const code = provider.type === "email" ? "EmailSignin" : "OAuthSignin"
     url.searchParams.set("error", code)
     url.pathname += "/signin"

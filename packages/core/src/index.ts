@@ -79,7 +79,6 @@ export async function Auth(
   config: AuthConfig
 ): Promise<Response> {
   setLogger(config.logger, config.debug)
-
   const internalRequest = await toInternalRequest(request)
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
@@ -96,7 +95,7 @@ export async function Auth(
   } else if (assertionResult instanceof Error) {
     // Bail out early if there's an error in the user config
     logger.error(assertionResult)
-    const htmlPages = ["signin", "signout", "error", "verify-request"]
+    const htmlPages = ["signin", "signout", "error", "verify-request", "verify-otp"]
     if (
       !htmlPages.includes(internalRequest.action) ||
       internalRequest.method !== "GET"
@@ -247,6 +246,7 @@ export interface AuthConfig {
    *     signOut: '/auth/signout',
    *     error: '/auth/error',
    *     verifyRequest: '/auth/verify-request',
+   *     verifyOTP: '/auth/verify-otp',
    *     newUser: '/auth/new-user'
    *   }
    * ```

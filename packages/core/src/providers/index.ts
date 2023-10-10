@@ -6,6 +6,8 @@ import type {
 } from "./credentials.js"
 import type EmailProvider from "./email.js"
 import type { EmailConfig, EmailProviderType } from "./email.js"
+import type OTPProvider from "./otp.js"
+import type { OTPConfig, OTPProviderType } from "./otp.js"
 import type {
   OAuth2Config,
   OAuthConfig,
@@ -16,6 +18,7 @@ import type {
 export * from "./credentials.js"
 export * from "./email.js"
 export * from "./oauth.js"
+export * from "./otp.js"
 
 /**
  * Providers passed to Auth.js must define one of these types.
@@ -25,7 +28,7 @@ export * from "./oauth.js"
  * @see [Email or Passwordless Authentication](https://authjs.dev/concepts/oauth)
  * @see [Credentials-based Authentication](https://authjs.dev/concepts/credentials)
  */
-export type ProviderType = "oidc" | "oauth" | "email" | "credentials"
+export type ProviderType = "oidc" | "oauth" | "email" | "credentials" | "otp"
 
 /** Shared across all {@link ProviderType} */
 export interface CommonProviderOptions {
@@ -63,11 +66,23 @@ interface InternalProviderOptions {
  * @see [Credentials guide](https://authjs.dev/guides/providers/credentials)
  */
 export type Provider<P extends Profile = any> = (
-  | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig) &
+  | ((
+      | OIDCConfig<P>
+      | OAuth2Config<P>
+      | EmailConfig
+      | CredentialsConfig
+      | OTPConfig
+    ) &
       InternalProviderOptions)
   | ((
       ...args: any
-    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig) &
+    ) => (
+      | OAuth2Config<P>
+      | OIDCConfig<P>
+      | EmailConfig
+      | CredentialsConfig
+      | OTPConfig
+    ) &
       InternalProviderOptions)
 ) &
   InternalProviderOptions
@@ -77,7 +92,8 @@ export type BuiltInProviders = Record<
   (config: Partial<OAuthConfig<any>>) => OAuthConfig<any>
 > &
   Record<CredentialsProviderType, typeof CredentialsProvider> &
-  Record<EmailProviderType, typeof EmailProvider>
+  Record<EmailProviderType, typeof EmailProvider> &
+  Record<OTPProviderType, typeof OTPProvider>
 
 export type AppProviders = Array<
   Provider | ReturnType<BuiltInProviders[keyof BuiltInProviders]>
@@ -88,6 +104,6 @@ export interface AppProvider extends CommonProviderOptions {
   callbackUrl: string
 }
 
-export type RedirectableProviderType = "email" | "credentials"
+export type RedirectableProviderType = "email" | "credentials" | "otp"
 
 export type BuiltInProviderType = RedirectableProviderType | OAuthProviderType

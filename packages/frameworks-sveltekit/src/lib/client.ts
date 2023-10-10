@@ -54,7 +54,8 @@ export async function signIn<
   // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
   const isEmail = providerId === "email"
-  const isSupportingReturn = isCredentials || isEmail
+  const isOTP = providerId === "otp"
+  const isSupportingReturn = isCredentials || isEmail || isOTP
 
   const basePath = base ?? ""
   const signInUrl = `${basePath}/auth/${
@@ -83,6 +84,7 @@ export async function signIn<
 
   const data = await res.clone().json()
 
+  // OTP TODO: handle otp here
   if (redirect || !isSupportingReturn) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
     window.location.href = data.url ?? callbackUrl

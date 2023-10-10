@@ -19,7 +19,6 @@ export async function AuthInternal<
   authOptions: AuthConfig
 ): Promise<ResponseInternal<Body>> {
   const { action, providerId, error, method } = request
-
   const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
 
   const { options, cookies } = await init({
@@ -103,7 +102,22 @@ export async function AuthInternal<
           return { redirect: pages.verifyRequest, cookies }
         }
         return render.verifyRequest()
+      case "verify-otp":
+
+          if (pages.verifyOTP) {
+            let verifyOTPUrl = `${pages.verifyOTP}${
+              pages.verifyOTP.includes("?") ? "&" : "?"
+            }${new URLSearchParams({ callbackUrl: options.callbackUrl })}`
+            if (error)
+              verifyOTPUrl = `${verifyOTPUrl}&${new URLSearchParams({ error })}`
+            return { redirect: verifyOTPUrl, cookies }
+          }
+  
+          return render.verifyOTP()
       case "error":
+        // TODO: determine if/when these should be redirected to /verify-otp
+
+
         // These error messages are displayed in line on the sign in page
         // TODO: verify these. We should redirect these to signin directly, instead of
         // first to error and then to signin.
@@ -151,6 +165,8 @@ export async function AuthInternal<
         return { redirect: `${options.url}/signout?csrf=true`, cookies }
       case "callback":
         if (options.provider) {
+          // OTP TODO: do otp tokens need csrf?
+
           // Verified CSRF Token required for credentials providers only
           if (
             options.provider.type === "credentials" &&

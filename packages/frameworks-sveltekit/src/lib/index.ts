@@ -250,6 +250,7 @@ const actions: AuthAction[] = [
   "signout",
   "callback",
   "verify-request",
+  "verify-otp",
   "error",
 ]
 
