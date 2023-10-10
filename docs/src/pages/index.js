@@ -8,6 +8,7 @@ import CodeBlock from "@theme/CodeBlock"
 import ProviderMarquee from "../components/ProviderMarquee"
 import Seo from "./seo"
 import styles from "./index.module.css"
+import { Clerk } from "../components/clerk"
 
 const features = [
   {
@@ -152,6 +153,7 @@ function Home() {
                   </h2>
                 </div>
               </div>
+              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
