@@ -153,6 +153,37 @@ importers:
         specifier: 0.3.17
         version: 0.3.17(mssql@7.3.5)(pg@8.7.3)(sqlite3@5.0.8)
 
+  apps/dev/otp-example:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../../../packages/core
+      '@auth/sveltekit':
+        specifier: workspace:*
+        version: link:../../../packages/frameworks-sveltekit
+      '@sendgrid/mail':
+        specifier: ^7.7.0
+        version: 7.7.0
+    devDependencies:
+      '@sveltejs/adapter-auto':
+        specifier: next
+        version: 1.0.0-next.91(@sveltejs/kit@1.0.0-next.589)
+      '@sveltejs/kit':
+        specifier: next
+        version: 1.0.0-next.589(svelte@3.55.0)(vite@4.0.5)
+      svelte:
+        specifier: 3.55.0
+        version: 3.55.0
+      svelte-check:
+        specifier: 2.10.2
+        version: 2.10.2(svelte@3.55.0)
+      typescript:
+        specifier: 5.2.2
+        version: 5.2.2
+      vite:
+        specifier: 4.0.5
+        version: 4.0.5(@types/node@18.16.3)
+
   apps/dev/sveltekit:
     dependencies:
       '@auth/core':
@@ -2713,7 +2744,7 @@ packages:
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       lodash: 4.17.21
-      resolve: 1.22.1
+      resolve: 1.22.6
       semver: 5.7.1
       source-map: 0.5.7
     transitivePeerDependencies:
@@ -3017,7 +3048,7 @@ packages:
       '@babel/helper-plugin-utils': 7.21.5
       debug: 4.3.4(supports-color@7.2.0)
       lodash.debounce: 4.0.8
-      resolve: 1.22.1
+      resolve: 1.22.6
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -3033,7 +3064,7 @@ packages:
       '@babel/helper-plugin-utils': 7.21.5
       debug: 4.3.4(supports-color@7.2.0)
       lodash.debounce: 4.0.8
-      resolve: 1.22.1
+      resolve: 1.22.6
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -3049,7 +3080,7 @@ packages:
       '@babel/helper-plugin-utils': 7.21.5
       debug: 4.3.4(supports-color@7.2.0)
       lodash.debounce: 4.0.8
-      resolve: 1.22.1
+      resolve: 1.22.6
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -10663,6 +10694,33 @@ packages:
       unist-util-visit: 2.0.3
     dev: false
 
+  /@sendgrid/client@7.7.0:
+    resolution: {integrity: sha512-SxH+y8jeAQSnDavrTD0uGDXYIIkFylCo+eDofVmZLQ0f862nnqbC3Vd1ej6b7Le7lboyzQF6F7Fodv02rYspuA==}
+    engines: {node: 6.* || 8.* || >=10.*}
+    dependencies:
+      '@sendgrid/helpers': 7.7.0
+      axios: 0.26.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /@sendgrid/helpers@7.7.0:
+    resolution: {integrity: sha512-3AsAxfN3GDBcXoZ/y1mzAAbKzTtUZ5+ZrHOmWQ279AuaFXUNCh9bPnRpN504bgveTqoW+11IzPg3I0WVgDINpw==}
+    engines: {node: '>= 6.0.0'}
+    dependencies:
+      deepmerge: 4.3.0
+    dev: false
+
+  /@sendgrid/mail@7.7.0:
+    resolution: {integrity: sha512-5+nApPE9wINBvHSUxwOxkkQqM/IAAaBYoP9hw7WwgDNQPxraruVqHizeTitVtKGiqWCKm2mnjh4XGN3fvFLqaw==}
+    engines: {node: 6.* || 8.* || >=10.*}
+    dependencies:
+      '@sendgrid/client': 7.7.0
+      '@sendgrid/helpers': 7.7.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /@shelf/jest-dynamodb@2.2.4(@aws-sdk/client-dynamodb@3.113.0)(@aws-sdk/lib-dynamodb@3.113.0)(@aws-sdk/util-dynamodb@3.113.0):
     resolution: {integrity: sha512-OAnkP5sPcIoqL+q/tpp54psuK1gssm+nZLOHRy0S1eyAZGmuqiYAUzyAvmH5AhyqvDPSEHFkIkfbqlp1+KpHgw==}
     engines: {node: '>=14'}
@@ -13580,6 +13638,14 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: true
+
+  /axios@0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
+    dependencies:
+      follow-redirects: 1.15.1(debug@4.3.4)
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /babel-jest@26.6.3(@babel/core@7.22.1):
     resolution: {integrity: sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==}
@@ -19150,7 +19216,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.4(supports-color@7.2.0)
-    dev: true
 
   /for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -20752,6 +20817,7 @@ packages:
     resolution: {integrity: sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==}
     dependencies:
       has: 1.0.3
+    dev: true
 
   /is-core-module@2.13.0:
     resolution: {integrity: sha512-Z7dk6Qo8pOCp3l4tsX2C5ZVas4V+UxwQodwZhLopL91TX8UyyHEXafPcyoeeWuLrwzHcr3igO78wNLwHJHsMCQ==}
@@ -22418,7 +22484,7 @@ packages:
       jest-pnp-resolver: 1.2.2(jest-resolve@27.5.1)
       jest-util: 27.5.1
       jest-validate: 27.5.1
-      resolve: 1.22.1
+      resolve: 1.22.6
       resolve.exports: 1.1.0
       slash: 3.0.0
     dev: true
@@ -22433,7 +22499,7 @@ packages:
       jest-pnp-resolver: 1.2.2(jest-resolve@28.1.1)
       jest-util: 28.1.3
       jest-validate: 28.1.1
-      resolve: 1.22.1
+      resolve: 1.22.6
       resolve.exports: 1.1.0
       slash: 3.0.0
     dev: true
@@ -22448,7 +22514,7 @@ packages:
       jest-pnp-resolver: 1.2.2(jest-resolve@29.5.0)
       jest-util: 29.5.0
       jest-validate: 29.5.0
-      resolve: 1.22.1
+      resolve: 1.22.6
       resolve.exports: 2.0.2
       slash: 3.0.0
     dev: true
@@ -25486,7 +25552,7 @@ packages:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.22.1
+      resolve: 1.22.6
       semver: 5.7.1
       validate-npm-package-license: 3.0.4
 
@@ -25495,7 +25561,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       hosted-git-info: 4.1.0
-      is-core-module: 2.11.0
+      is-core-module: 2.13.0
       semver: 7.5.4
       validate-npm-package-license: 3.0.4
     dev: true
@@ -27173,15 +27239,6 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /postcss@8.4.24:
-    resolution: {integrity: sha512-M0RzbcI0sO/XJNucsGjvWU9ERWxb/ytp1w6dKtxTKgixdtQDq4rmx/g8W1hnaheq9jgwL/oyEdH5Bc4WwJKMqg==}
-    engines: {node: ^10 || ^12 || >=14}
-    dependencies:
-      nanoid: 3.3.6
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
-    dev: true
-
   /postcss@8.4.31:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
@@ -28195,14 +28252,14 @@ packages:
     resolution: {integrity: sha512-HFM8rkZ+i3zrV+4LQjwQ0W+ez98pApMGM3HUrN04j3CqzPOzl9nmP15Y8YXNm8QHGv/eacOVEjqhmWpkRV0NAw==}
     engines: {node: '>= 0.10'}
     dependencies:
-      resolve: 1.22.1
+      resolve: 1.22.6
     dev: true
 
   /rechoir@0.8.0:
     resolution: {integrity: sha512-/vxpCXddiX8NGfGO/mTafwjq4aFa/71pvamip0++IQk3zG8cbCj0fifNPrjjF1XMXUne91jL9OoxmdykoEtifQ==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      resolve: 1.22.1
+      resolve: 1.22.6
     dev: true
 
   /recursive-readdir@2.2.2:
@@ -28504,6 +28561,7 @@ packages:
       is-core-module: 2.11.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
+    dev: true
 
   /resolve@1.22.6:
     resolution: {integrity: sha512-njhxM7mV12JfufShqGy3Rz8j11RPdLy4xi15UurGJeoHLfJpVXKdh3ueuOqbYUcDZnffr6X739JBo5LzyahEsw==}
@@ -30146,8 +30204,8 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 3.54.0
-      svelte-preprocess: 4.10.7(svelte@3.54.0)(typescript@5.2.2)
-      typescript: 5.2.2
+      svelte-preprocess: 4.10.7(svelte@3.54.0)(typescript@4.9.5)
+      typescript: 4.9.5
     transitivePeerDependencies:
       - '@babel/core'
       - coffeescript
@@ -30174,8 +30232,8 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 3.55.0
-      svelte-preprocess: 4.10.7(svelte@3.55.0)(typescript@5.2.2)
-      typescript: 5.2.2
+      svelte-preprocess: 4.10.7(svelte@3.55.0)(typescript@4.9.5)
+      typescript: 4.9.5
     transitivePeerDependencies:
       - '@babel/core'
       - coffeescript
@@ -30207,7 +30265,7 @@ packages:
       svelte: 3.55.0
     dev: true
 
-  /svelte-preprocess@4.10.7(svelte@3.54.0)(typescript@5.2.2):
+  /svelte-preprocess@4.10.7(svelte@3.54.0)(typescript@4.9.5):
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -30255,10 +30313,10 @@ packages:
       sorcery: 0.10.0
       strip-indent: 3.0.0
       svelte: 3.54.0
-      typescript: 5.2.2
+      typescript: 4.9.5
     dev: true
 
-  /svelte-preprocess@4.10.7(svelte@3.55.0)(typescript@5.2.2):
+  /svelte-preprocess@4.10.7(svelte@3.55.0)(typescript@4.9.5):
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -30306,7 +30364,7 @@ packages:
       sorcery: 0.10.0
       strip-indent: 3.0.0
       svelte: 3.55.0
-      typescript: 5.2.2
+      typescript: 4.9.5
     dev: true
 
   /svelte2tsx@0.5.22(svelte@3.54.0)(typescript@5.2.2):
@@ -31932,8 +31990,8 @@ packages:
     dependencies:
       '@types/node': 18.16.3
       esbuild: 0.16.4
-      postcss: 8.4.24
-      resolve: 1.22.1
+      postcss: 8.4.31
+      resolve: 1.22.6
       rollup: 3.15.0
     optionalDependencies:
       fsevents: 2.3.2
