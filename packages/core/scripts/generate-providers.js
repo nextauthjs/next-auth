@@ -5,7 +5,7 @@ const providersPath = join(process.cwd(), "src/providers")
 
 const files = readdirSync(providersPath, "utf8")
 
-const nonOAuthFile = ["oauth-types", "oauth", "index", "email", "credentials"]
+const nonOAuthFile = ["oauth-types", "oauth", "index", "email", "credentials", "otp"]
 const providers = files.map((file) => {
   const strippedProviderName = file.substring(0, file.indexOf("."))
   return `"${strippedProviderName}"`

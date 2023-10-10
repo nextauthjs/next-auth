@@ -292,6 +292,119 @@ export async function callback(params: {
 
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
+    } else if (provider.type === "otp" && method === "POST") {
+      const token = body?.token as string | undefined
+      const identifier = body?.identifier as string | undefined
+
+      if (!token || !identifier) {
+        const e = new TypeError(
+          "Missing identifier or token. Todo: improve this error!",
+          { cause: { hasToken: !!token, hasEmail: !!identifier } }
+        )
+        e.name = "Configuration"
+        throw e
+      }
+
+      const secret = provider.secret ?? options.secret
+      // @ts-expect-error -- Verified in `assertConfig`.
+      const invite = await adapter.useVerificationToken({
+        identifier,
+        token: await createHash(`${token}${secret}`),
+      })
+
+      const hasInvite = !!invite
+      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
+      const invalidInvite = !hasInvite || expired
+      if (invalidInvite) throw new Verification({ hasInvite, expired })
+
+      const user = (await adapter!.getUserByEmail(identifier)) ?? {
+        id: identifier,
+        email: identifier,
+        emailVerified: null,
+      }
+
+      const account: Account = {
+        providerAccountId: user.email,
+        userId: user.id,
+        type: "email" as const,
+        provider: provider.id,
+      }
+
+      // Check if user is allowed to sign in
+      const unauthorizedOrError = await handleAuthorized(
+        { user, account },
+        options
+      )
+
+      if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
+
+      // Sign user in
+      const {
+        user: loggedInUser,
+        session,
+        isNewUser,
+      } = await handleLogin(sessionStore.value, user, account, options)
+
+      if (useJwtSession) {
+        const defaultToken = {
+          name: loggedInUser.name,
+          email: loggedInUser.email,
+          picture: loggedInUser.image,
+          sub: loggedInUser.id?.toString(),
+        }
+        const token = await callbacks.jwt({
+          token: defaultToken,
+          user: loggedInUser,
+          account,
+          isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
+        })
+
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+          cookies.push(...sessionCookies)
+        }
+      } else {
+        // Save Session Token in cookie
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: (session as AdapterSession).sessionToken,
+          options: {
+            ...options.cookies.sessionToken.options,
+            expires: (session as AdapterSession).expires,
+          },
+        })
+      }
+
+      await events.signIn?.({ user: loggedInUser, account, isNewUser })
+
+      // Handle first logins on new accounts
+      // e.g. option to send users to a new account landing page on initial login
+      // Note that the callback URL is preserved, so the journey can still be resumed
+      if (isNewUser && pages.newUser) {
+        return {
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }${new URLSearchParams({ callbackUrl })}`,
+          cookies,
+        }
+      }
+
+      return { redirect: '/', cookies }
+      // Callback URL is already verified at this point, so safe to use if specified
+      // return { redirect: callbackUrl, cookies }
     } else if (provider.type === "credentials" && method === "POST") {
       const credentials = body ?? {}
 

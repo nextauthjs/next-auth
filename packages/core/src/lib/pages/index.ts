@@ -4,6 +4,7 @@ import SigninPage from "./signin.js"
 import SignoutPage from "./signout.js"
 import css from "./styles.js"
 import VerifyRequestPage from "./verify-request.js"
+import VerifyOTPPage from "./verify-otp.js"
 
 import type {
   ErrorPageParam,
@@ -40,7 +41,6 @@ type RenderPageParams = {
  */
 export default function renderPage(params: RenderPageParams) {
   const { url, theme, query, cookies } = params
-
   return {
     signin(props?: any) {
       return send({
@@ -52,7 +52,7 @@ export default function renderPage(params: RenderPageParams) {
           providers: params.providers?.filter(
             (provider) =>
               // Always render oauth and email type providers
-              ["email", "oauth", "oidc"].includes(provider.type) ||
+              ["email", "oauth", "oidc", "otp"].includes(provider.type) ||
               // Only render credentials type provider if credentials are defined
               (provider.type === "credentials" && provider.credentials) ||
               // Don't render other provider types
@@ -85,6 +85,23 @@ export default function renderPage(params: RenderPageParams) {
         theme,
         html: VerifyRequestPage({ url, theme, ...props }),
         title: "Verify Request",
+      })
+    },
+    verifyOTP(props?: any) {
+      return send({
+        cookies,
+        theme,
+        html: VerifyOTPPage({
+          url,
+          theme,
+          // todo: which of these do we need?
+          csrfToken: params.csrfToken,
+          callbackUrl: params.callbackUrl,
+          providers: params.providers,
+          ...query,
+          ...props,
+        }),
+        title: "Verify OTP",
       })
     },
     error(props?: { error?: ErrorPageParam }) {

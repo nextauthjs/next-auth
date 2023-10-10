@@ -72,6 +72,7 @@ import type {
   OAuthConfigInternal,
   OIDCConfigInternal,
   ProviderType,
+  OTPConfig
 } from "./providers/index.js"
 
 export type { AuthConfig } from "./index.js"
@@ -421,6 +422,7 @@ export interface PagesOptions {
    */
   error: string
   verifyRequest: string
+  verifyOTP: string
   /** If set, new users will be directed here on first sign in */
   newUser: string
 }
@@ -473,6 +475,8 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OIDCConfigInternal<any>
   : T extends "email"
   ? EmailConfig
+  : T extends "otp"
+  ? OTPConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {
@@ -507,6 +511,7 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
  *   - **`GET`**: Renders the built-in sign-out page.
  *   - **`POST`**: Initiates the sign-out flow. This will invalidate the user's session (deleting the cookie, and if there is a session in the database, it will be deleted as well).
  * - **`"verify-request"`**: Renders the built-in verification request page.
+ * - **`"verify-otp"`**: Renders the built-in otp verification request page.
  */
 export type AuthAction =
   | "callback"
@@ -517,6 +522,7 @@ export type AuthAction =
   | "signin"
   | "signout"
   | "verify-request"
+  | "verify-otp"
 
 /** @internal */
 export interface RequestInternal {

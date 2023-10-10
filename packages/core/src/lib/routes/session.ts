@@ -160,6 +160,5 @@ export async function session(params: {
   } catch (e) {
     logger.error(new SessionTokenError(e as Error))
   }
-
   return response
 }

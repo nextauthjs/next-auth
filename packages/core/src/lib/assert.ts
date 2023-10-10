@@ -36,6 +36,7 @@ function isValidHttpUrl(url: string, baseUrl: string) {
 
 let hasCredentials = false
 let hasEmail = false
+let hasOTP = false
 
 const emailMethods = [
   "createVerificationToken",
@@ -123,6 +124,7 @@ export function assertConfig(
 
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
+    else if (provider.type === "otp") hasOTP = true
   }
 
   if (hasCredentials) {
@@ -149,7 +151,7 @@ export function assertConfig(
 
   const { adapter, session } = options
   if (
-    hasEmail ||
+    hasEmail || hasOTP ||
     session?.strategy === "database" ||
     (!session?.strategy && adapter)
   ) {
@@ -159,7 +161,13 @@ export function assertConfig(
       if (!adapter)
         return new MissingAdapter("Email login requires an adapter.")
       methods = emailMethods
-    } else {
+    } 
+    if (hasOTP) {
+      if (!adapter)
+        return new MissingAdapter("OTP login requires an adapter.")
+      methods = emailMethods
+    } 
+    else {
       if (!adapter)
         return new MissingAdapter("Database session requires an adapter.")
       methods = sessionMethods
