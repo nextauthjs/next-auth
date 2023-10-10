@@ -146,7 +146,6 @@ export const sessionToDoc = (
  *
  * ```js
  * import { ExperimentalSurrealHTTP } from "surrealdb.js"
- * import fetch from "node-fetch"
  *
  * const connectionString = ... // i.e. "http://0.0.0.0:8000"
  * const user = ...

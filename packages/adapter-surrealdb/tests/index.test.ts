@@ -1,6 +1,5 @@
 import Surreal, { ExperimentalSurrealHTTP } from "surrealdb.js"
 import { runBasicTests } from "@auth/adapter-test"
-import fetch from "node-fetch"
 
 import { config } from "./common"
 
