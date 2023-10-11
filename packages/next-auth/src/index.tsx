@@ -12,65 +12,6 @@
  * npm install next-auth@5 @auth/core
  * ```
  *
- * ## Signing in and signing out
- *
- * The App Router embraces Server Actions that can be leveraged to decrease the amount of JavaScript sent to the browser.
- *
- * ```ts title="app/auth-components.tsx"
- * import { signIn, signOut } from "../auth"
- *
- * export function SignIn({ provider, ...props }: any) {
- *   return (
- *     <form action={signIn(provider)}>
- *       <button {{...props}}/>
- *     </form>
- *   )
- * }
- *
- * export function SignOut(props: any) {
- *   return (
- *     <form action={signOut}>
- *       <button {...props}/>
- *     </form>
- *   )
- * }
- * ```
- *
- * Alternatively, you can create client components, using the `signIn()` and `signOut` methods from the `next-auth/react` submodule:
- *
- * ```ts title="app/auth-components.tsx"
- * "use client"
- * import { signIn, signOut } from "next-auth/react"
- *
- * export function SignIn({provider, ...props}: any) {
- *   return <button {...props} onClick={() => signIn(provider)}/>
- * }
- *
- * export function SignOut(props: any) {
- *   return <button {...props} onClick={() => signOut()}/>
- * }
- * ```
- *
- * Then, you could for example use it like this:
- *
- * ```ts title=app/page.tsx
- * import { SignIn, SignOut } from "./auth-components"
- *
- * export default async function Page() {
- *   const session = await auth()
- *   if (session) {
- *     return (
- *       <>
- *         <pre>{JSON.stringify(session, null, 2)}</pre>
- *         <SignOut>Sign out</SignOut>
- *       </>
- *     )
- *   }
- *   return <SignIn provider="github">Sign in with GitHub</SignIn>
- * }
- * ```
- *
- *
  * ## Environment variable inferrence
  *
  * `NEXTAUTH_URL` and `NEXTAUTH_SECRET` have been inferred since v4.
