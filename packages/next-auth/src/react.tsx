@@ -1,6 +1,8 @@
 /**
  *
- * Client-side methods for NextAuth.js.
+ * NextAuth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
+ *
+ * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://nextjs.authjs.dev#methods)
  *
  * @module react
  */
