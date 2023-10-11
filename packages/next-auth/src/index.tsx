@@ -126,6 +126,7 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+import type { BuiltInProviderType } from "./providers/index.js"
 
 export type {
   Account,
@@ -283,14 +284,60 @@ export interface NextAuthResult {
     ((
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
-  signIn: (
-    provider: string,
-    options?: { redirectTo?: string; redirect?: boolean }
-  ) => Promise<string | never> | void
-  signOut: (options?: {
+  /**
+   * Sign in with a provider.
+   *
+   * @example
+   * ```ts title="app/layout.tsx"
+   * import { signIn } from "../auth"
+   *
+   * export default function Layout() {
+   *  return (
+   *
+   *   <form action={async () => {
+   *     "use server"
+   *     await signIn("github")
+   *   }}>
+   *    <button>Sign in with GitHub</button>
+   *  </form>
+   * )
+   * ```
+   */
+  signIn<R extends boolean = true>(
+    /** Provider to sign in to */
+    provider?: BuiltInProviderType | (string & {}), // See: https://github.com/microsoft/TypeScript/issues/29729
+    options?: {
+      /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+      redirectTo?: string
+      /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+      redirect?: R
+    }
+  ): Promise<R extends false ? any : never>
+  /**
+   * Sign out the user.
+   *
+   * @example
+   * ```ts title="app/layout.tsx"
+   * import { signOut } from "../auth"
+   *
+   * export default function Layout() {
+   *  return (
+   *
+   *   <form action={async () => {
+   *     "use server"
+   *     await signOut()
+   *   }}>
+   *    <button>Sign out</button>
+   *  </form>
+   * )
+   * ```
+   */
+  signOut<R extends boolean = true>(options?: {
+    /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
     redirectTo?: string
-    redirect?: boolean
-  }) => Promise<string | never> | void
+    /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
+    redirect?: R
+  }): Promise<R extends false ? any : never>
   update: (data: Partial<AuthSession>) => Promise<AuthSession | null>
 }
 

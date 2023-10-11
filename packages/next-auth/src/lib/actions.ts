@@ -13,21 +13,39 @@ export async function signIn(
   options: SignInParams[1],
   config: NextAuthConfig
 ) {
+  let foundProvider: string | undefined = undefined
+  for (const p of config.providers)
+    foundProvider = (typeof p === "function" ? p() : p).type
+
   const headers = new Headers(nextHeaders())
+  const {
+    redirect: shouldRedirect = true,
+    redirectTo: callbackUrl = headers.get("Referer") ?? "/",
+    ...rest
+  } = options ?? {}
+  const base = `${detectOrigin(headers)}/signin`
+  let url = `${base}/${provider}`
+
+  if (!foundProvider) {
+    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
+    if (shouldRedirect) redirect(url)
+    return url
+  }
+
+  if (foundProvider === "credentials") {
+    url = url.replace("signin", "callback")
+  }
+
   headers.set("Content-Type", "application/x-www-form-urlencoded")
-
-  const url = `${detectOrigin(headers)}/signin/${provider}`
-  const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
-  const body = new URLSearchParams({ callbackUrl })
+  const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-
   const res: any = await Auth(req, { ...config, raw, skipCSRFCheck })
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (options?.redirect ?? true) return redirect(res.redirect)
+  if (shouldRedirect) return redirect(res.redirect)
 
-  return res.redirect
+  return res
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>
@@ -49,7 +67,7 @@ export async function signOut(
 
   if (options?.redirect ?? true) return redirect(res.redirect)
 
-  return res.redirect
+  return res
 }
 
 type UpdateParams = Parameters<NextAuthResult["update"]>
