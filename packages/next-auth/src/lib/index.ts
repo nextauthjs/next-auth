@@ -62,7 +62,7 @@ export interface NextAuthConfig extends AuthConfig {
 /** Server-side method to read the session. */
 async function getSession(headers: Headers, config: NextAuthConfig) {
   const origin = detectOrigin(headers)
-  const request = new Request(`${origin}/api/auth/session`, {
+  const request = new Request(`${origin}/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
   config.useSecureCookies ??= origin.protocol === "https:"
@@ -103,7 +103,10 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
 
 export function initAuth(config: NextAuthConfig) {
   return (...args: WithAuthArgs) => {
-    if (!args.length) return getSession(headers(), config).then((r) => r.json())
+    if (!args.length) {
+      // React Server Components
+      return getSession(headers(), config).then((r) => r.json())
+    }
     if (args[0] instanceof Request) {
       // middleare.ts
       // export { auth as default } from "auth"
@@ -156,10 +159,7 @@ async function handleAuth(
   // don't require authorization to avoid an accidental redirect loop
   let authorized: boolean | NextResponse | undefined = true
 
-  // Infer basePath from NEXTAUTH_URL if provided, default to /api/auth
-  const { pathname: basePath } = new URL(
-    process.env.NEXTAUTH_URL ?? "http://a/api/auth"
-  )
+  const { pathname: basePath } = request.nextUrl
 
   if (
     !isNextAuthAction(request, config, basePath) &&
@@ -182,7 +182,8 @@ async function handleAuth(
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
       NextResponse.next()
   } else if (!authorized) {
-    const signInPage = config.pages?.signIn ?? "/api/auth/signin"
+    const signInPage =
+      config.pages?.signIn ?? `${request.nextUrl.basePath}}/signin`
     if (request.nextUrl.pathname !== signInPage) {
       // Redirect to signin page by default if not authorized
       request.nextUrl.pathname = signInPage

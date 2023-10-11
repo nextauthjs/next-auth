@@ -1,5 +1,3 @@
-"use server"
-
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers"
 import { redirect } from "next/navigation"
@@ -18,7 +16,7 @@ export async function signIn(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = `${detectOrigin(headers)}signin/${provider}`
+  const url = `${detectOrigin(headers)}/signin/${provider}`
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -27,7 +25,7 @@ export async function signIn(
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (options?.redirect) return redirect(res.redirect)
+  if (options?.redirect ?? true) return redirect(res.redirect)
 
   return res.redirect
 }
@@ -40,7 +38,7 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = `${detectOrigin(headers)}signout`
+  const url = `${detectOrigin(headers)}/signout`
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -49,7 +47,7 @@ export async function signOut(
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (options?.redirect) return redirect(res.redirect)
+  if (options?.redirect ?? true) return redirect(res.redirect)
 
   return res.redirect
 }
