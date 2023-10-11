@@ -22,12 +22,22 @@ export async function AppHeader() {
     <Header
       session={session}
       signIn={
-        <form action={signIn("github")}>
+        <form
+          action={async () => {
+            "use server"
+            await signIn("github")
+          }}
+        >
           <button className={styles.buttonPrimary}>Sign in</button>
         </form>
       }
       signOut={
-        <form action={signOut()}>
+        <form
+          action={async () => {
+            "use server"
+            await signOut()
+          }}
+        >
           <button className={styles.button}>Sign out</button>
         </form>
       }

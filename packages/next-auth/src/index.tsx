@@ -286,11 +286,11 @@ export interface NextAuthResult {
   signIn: (
     provider: string,
     options?: { redirectTo?: string; redirect?: boolean }
-  ) => (formData?: FormData) => Promise<string | never> | void
+  ) => Promise<string | never> | void
   signOut: (options?: {
     redirectTo?: string
     redirect?: boolean
-  }) => (formData?: FormData) => Promise<string | never> | void
+  }) => Promise<string | never> | void
   update: (data: Partial<AuthSession>) => Promise<AuthSession | null>
 }
 
@@ -313,17 +313,13 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     // @ts-expect-error
     auth: initAuth(config),
     signIn(provider, options) {
-      return async () => {
-        "use server"
-        return signIn(provider, options, config)
-      }
+      return signIn(provider, options, config)
     },
     signOut(options) {
-      return async () => {
-        "use server"
-        return signOut(options, config)
-      }
+      return signOut(options, config)
     },
-    update: (data) => update(data, config),
+    update(data) {
+      return update(data, config)
+    },
   }
 }
