@@ -11,12 +11,9 @@ type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
   provider: SignInParams[0],
   options: SignInParams[1],
+  authorizationParams: SignInParams[2],
   config: NextAuthConfig
 ) {
-  let foundProvider: string | undefined = undefined
-  for (const p of config.providers)
-    foundProvider = (typeof p === "function" ? p() : p).type
-
   const headers = new Headers(nextHeaders())
   const {
     redirect: shouldRedirect = true,
@@ -24,7 +21,23 @@ export async function signIn(
     ...rest
   } = options ?? {}
   const base = `${detectOrigin(headers)}/signin`
-  let url = `${base}/${provider}`
+
+  if (!provider) {
+    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
+    if (shouldRedirect) redirect(url)
+    return url
+  }
+
+  let url = `${base}/${provider}?${new URLSearchParams(authorizationParams)}`
+  let foundProvider: SignInParams[0] | undefined = undefined
+
+  for (const _provider of config.providers) {
+    const { id } = typeof _provider === "function" ? _provider?.() : _provider
+    if (id === provider) {
+      foundProvider = id
+      break
+    }
+  }
 
   if (!foundProvider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
@@ -43,9 +56,11 @@ export async function signIn(
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (shouldRedirect) return redirect(res.redirect)
+  const error = new URL(res.redirect).searchParams.get("error")
+  if (error) throw new Error(error)
 
-  return res
+  if (shouldRedirect) return redirect(res.redirect)
+  return res.redirect
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>
