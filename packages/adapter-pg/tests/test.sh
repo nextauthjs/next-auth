@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-docker-compose up -d
+docker run --name pg-adapter \
+  -d \
+  -e POSTGRES_DB=adapter-postgres-test \
+  -e POSTGRES_USER=pg \
+  -e POSTGRES_PASSWORD=pg \
+  -p 5432:5432 \
+  -v "$(pwd)"/schema.sql:/docker-entrypoint-initdb.d/schema.sql \
+  postgres:latest
 
 echo "waiting 10 seconds for databases to start..."
 sleep 10

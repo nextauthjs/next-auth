@@ -21,6 +21,7 @@ on:
           - "@auth/dynamodb-adapter"
           - "@auth/fauna-adapter"
           - "@auth/firebase-adapter"
+          - "@auth/hasura-adapter"
           - "@auth/mikro-orm-adapter"
           - "@auth/mongodb-adapter"
           - "@auth/neo4j-adapter"
@@ -45,6 +46,7 @@ on:
           - "adapter-dynamodb"
           - "adapter-fauna"
           - "adapter-firebase"
+          - "adapter-hasura"
           - "adapter-mikro-orm"
           - "adapter-mongodb"
           - "adapter-neo4j"
@@ -69,7 +71,7 @@ jobs:
       - name: Init
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
@@ -79,6 +81,9 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Peek
+        run: pnpm peek
+        if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       - name: Build
         run: pnpm build
       - name: Run tests

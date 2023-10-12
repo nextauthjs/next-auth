@@ -7,6 +7,8 @@ import {
 import { keys, TableStorageAdapter, withoutKeys } from "../src"
 import type { AdapterUser, VerificationToken } from "@auth/core/adapters"
 
+globalThis.crypto ??= require("node:crypto").webcrypto
+
 const testAccount = {
   // default constants used by a dev instance of azurite
   name: "devstoreaccount1",
