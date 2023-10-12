@@ -15,20 +15,22 @@
   "license": "ISC",
   "dependencies": {
     "@auth/core": "workspace:*",
+    "@auth/edgedb-adapter": "workspace:*",
     "@auth/fauna-adapter": "workspace:*",
     "@auth/prisma-adapter": "workspace:*",
     "@auth/supabase-adapter": "workspace:*",
     "@auth/typeorm-adapter": "workspace:*",
     "@prisma/client": "^3",
+    "edgedb": "^1.0.1",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
     "next": "13.4.0",
-    "next-auth": "workspace:*",
     "nodemailer": "^6",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@edgedb/generate": "^0.0.4",
     "@playwright/test": "1.29.2",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/react": "18.0.37",
@@ -38,6 +40,6 @@
     "pg": "^8.7.3",
     "prisma": "^3",
     "sqlite3": "^5.0.8",
-    "typeorm": "0.3.7"
+    "typeorm": "0.3.17"
   }
 }

@@ -71,6 +71,12 @@ import ClickUp from '@auth/core/providers/click-up'
 //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
 // })
 
+// // EdgeDB
+// import { EdgeDBAdapter } from "@auth/edgedb-adapter"
+// import { createHttpClient } from "edgedb"
+// const client = createHttpClient()
+// const adapter = EdgeDBAdapter(client)
+
 export const authConfig: AuthConfig = {
   // adapter,
   debug: process.env.NODE_ENV !== "production",

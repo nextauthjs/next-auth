@@ -9,6 +9,7 @@ import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
 import providers from "../../providers.json"
+import { Clerk } from "../components/clerk"
 
 const providersCount = Object.keys(providers).length + 2 // email, credentials
 const features = [
@@ -127,6 +128,7 @@ export default function Home() {
                 <h1 className="hero__title">{siteConfig.title}</h1>
                 <p className="hero__subtitle">{siteConfig.tagline}</p>
               </div>
+
               <div className={styles.buttons}>
                 <a
                   className={classnames(
@@ -185,6 +187,7 @@ export default function Home() {
                   </h2>
                 </div>
               </div>
+              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
@@ -269,7 +272,7 @@ export default function Home() {
 }
 
 const svelteKitCode = `
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from '@auth/core/providers/github'
 import Facebook from '@auth/core/providers/facebook'
 import Google from '@auth/core/providers/google'

@@ -69,6 +69,16 @@
     },
     {
       "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/nextjs"
+    },
+    {
+      "source": "/v5",
+      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
+      "destination": "https://authjs.dev/guides/upgrade-to-v5"
+    },
+    {
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "errors.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
