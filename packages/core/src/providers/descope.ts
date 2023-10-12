@@ -13,9 +13,9 @@
 
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
-/** The returned user profile from Descope when using the profile callback. 
+/** The returned user profile from Descope when using the profile callback.
  * [See Load User](https://docs.descope.com/api/openapi/usermanagement/operation/LoadUser/)
-*/
+ */
 export interface DescopeProfile {
   /** The user's unique Descope ID */
   sub: string
@@ -108,11 +108,8 @@ export default function Descope(
     issuer: `https://api.descope.com/${config.clientId}`,
     style: {
       logo: "/descope.svg",
-      logoDark: "/descope.svg",
       bg: "#1C1C23",
       text: "#ffffff",
-      bgDark: "#1C1C23",
-      textDark: "#ffffff",
     },
     options: config,
   }

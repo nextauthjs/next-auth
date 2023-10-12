@@ -77,6 +77,20 @@ export const handle = SvelteKitAuth({
     strategy: "jwt",
   },
   providers: [
+    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
+    Credentials({
+      credentials: { password: { label: "Password", type: "password" } },
+      async authorize(credentials) {
+        if (credentials.password !== "pw") return null
+        return {
+          name: "Fill Murray",
+          email: "bill@fillmurray.com",
+          image: "https://www.fillmurray.com/64/64",
+          id: "1",
+          foo: "",
+        }
+      },
+    }),
     Google({
       clientId: GOOGLE_ID,
       clientSecret: GOOGLE_SECRET,
@@ -138,25 +152,8 @@ export const handle = SvelteKitAuth({
       clientId: AZURE_AD_ID,
       clientSecret: AZURE_AD_SECRET,
     }),
-    Credentials({
-      credentials: { password: { label: "Password", type: "password" } },
-      async authorize(credentials) {
-        if (credentials.password !== "pw") return null
-        return {
-          name: "Fill Murray",
-          email: "bill@fillmurray.com",
-          image: "https://www.fillmurray.com/64/64",
-          id: "1",
-          foo: "",
-        }
-      },
-    }),
-    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
   ],
   theme: {
-    providersLayout: "horizontal",
-    brandName: "SvelteKit Auth",
-
     logo: "https://authjs.dev/img/logo/logo-sm.webp",
   },
 })

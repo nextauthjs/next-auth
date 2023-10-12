@@ -89,8 +89,6 @@ export interface Theme {
   logo?: string
   brandColor?: string
   buttonText?: string
-  brandName?: string
-  providersLayout?: "vertical" | "horizontal"
 }
 
 /**

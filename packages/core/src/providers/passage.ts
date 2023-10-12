@@ -91,11 +91,8 @@ export default function Passage(
     client: { token_endpoint_auth_method: "client_secret_basic" },
     style: {
       logo: "/passage.svg",
-      logoDark: "/passage.svg",
       bg: "#fff",
-      bgDark: "#fff",
       text: "#000",
-      textDark: "#000",
     },
     options: config,
   }

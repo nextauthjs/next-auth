@@ -86,12 +86,9 @@ export default function BeyondIdentity(
       }
     },
     style: {
-      logo: "/beyondidentity.svg",
-      logoDark: "/beyondidentity-dark.svg",
-      bg: "#fff",
-      bgDark: "#5077c5",
-      text: "#5077c5",
-      textDark: "#fff",
+      logo: "/beyondidentity-dark.svg",
+      bg: "#5077c5",
+      text: "#fff",
     },
     options: config,
   }

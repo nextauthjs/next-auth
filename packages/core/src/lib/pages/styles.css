@@ -9,6 +9,7 @@
 .__next-auth-theme-auto,
 .__next-auth-theme-light {
   --color-background: #ececec;
+  --color-background-hover: rgba(236, 236, 236, 0.8);
   --color-background-card: #fff;
   --color-text: #000;
   --color-primary: #444;
@@ -20,6 +21,7 @@
 
 .__next-auth-theme-dark {
   --color-background: #161b22;
+  --color-background-hover: rgba(22, 27, 34, 0.8);
   --color-background-card: #0d1117;
   --color-text: #fff;
   --color-primary: #ccc;
@@ -32,6 +34,7 @@
 @media (prefers-color-scheme: dark) {
   .__next-auth-theme-auto {
     --color-background: #161b22;
+    --color-background-hover: rgba(22, 27, 34, 0.8);
     --color-background-card: #0d1117;
     --color-text: #fff;
     --color-primary: #ccc;
@@ -46,7 +49,10 @@
     color: var(--provider-dark-color, var(--color-primary));
     background-color: var(--provider-dark-bg, var(--color-background));
     &:hover {
-      background-color: rgba(var(--provider-dark-bg), 0.8);
+      background-color: var(
+        --provider-dark-bg-hover,
+        var(--color-background-hover)
+      ) !important;
     }
   }
   #provider-logo {
@@ -160,7 +166,7 @@ a.button {
   justify-content: center;
 
   &:hover {
-    opacity: 0.9;
+    background-color: var(--provider-bg-hover, var(--color-background-hover));
     cursor: pointer;
   }
   &:focus {
@@ -286,27 +292,8 @@ a.site {
     }
   }
 
-  .oauth-providers {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-  }
-
-  .oauth-providers__horizontal {
-    width: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .provider {
-      button {
-        margin: 0;
-        width: 64px;
-        height: 64px;
-      }
-    }
+  .provider + .provider {
+    margin-top: 1rem;
   }
 }
 
@@ -341,16 +328,5 @@ a.site {
   .card {
     margin: 1rem 0;
     width: 343px;
-  }
-  .signin {
-    .oauth-providers__horizontal {
-      .provider {
-        button {
-          width: 56px;
-          height: 56px;
-          min-height: auto;
-        }
-      }
-    }
   }
 }

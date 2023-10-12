@@ -151,36 +151,36 @@ export interface TiktokProfile extends Record<string, any> {
  *  - [Tiktok app console](https://developers.tiktok.com/)
  *  - [Tiktok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
  *  - [Avaliable Scopes](https://developers.tiktok.com/doc/tiktok-api-scopes/)
- *  
+ *
  *
  * ### Notes
  *
  * :::tip
- * 
+ *
  * Production applications cannot use localhost URLs to sign in with Tiktok. You need add the domain and Callback/Redirect url's to your Tiktok app and have them review and approved by the Tiktok Team.
- * 
+ *
  * :::
  *
  * :::tip
- * 
+ *
  * Email address is not supported by Tiktok.
- * 
+ *
  * :::
  *
  * :::tip
- * 
+ *
  * Client_ID will be the Client Key in the Tiktok Application
- * 
+ *
  * :::
  *
  * By default, Auth.js assumes that the Tiktok provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
- * 
+ *
  * The Tiktok provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/tiktok.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
- * 
+ *
  * :::
  *
  * :::info **Disclaimer**
@@ -257,12 +257,9 @@ export default function Tiktok<P extends TiktokProfile>(
       }
     },
     style: {
-      logo: "/tiktok.svg",
-      logoDark: "/tiktok-dark.svg",
-      bg: "#fff",
-      bgDark: "#000",
-      text: "#000",
-      textDark: "#fff",
+      logo: "/tiktok-dark.svg",
+      bg: "#000",
+      text: "#fff",
     },
     options,
   }

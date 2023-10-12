@@ -108,14 +108,9 @@ export default function Dribbble<P extends DribbbleProfile>(
     },
 
     style: {
-      // Light mode
-      logo: "/dribbble.svg",
-      text: "#ea4c89",
-      bg: "#fff",
-      // Dark mode
-      logoDark: "/dribbble-dark.svg",
-      textDark: "#fff",
-      bgDark: "#000",
+      logo: "/dribbble-dark.svg",
+      text: "#fff",
+      bg: "#000",
     },
 
     options,

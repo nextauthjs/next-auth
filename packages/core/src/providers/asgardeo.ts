@@ -112,12 +112,9 @@ export default function Asgardeo(
     type: "oidc",
     wellKnown: `${config?.issuer}/oauth2/token/.well-known/openid-configuration`,
     style: {
-      logo: "/asgardeo.svg",
-      logoDark: "/asgardeo-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
+      logo: "/asgardeo-dark.svg",
+      bg: "#000",
+      text: "#fff",
     },
     options: config,
   }
