@@ -171,8 +171,8 @@ export default function Apple<P extends AppleProfile>(
     },
     style: {
       logo: "/apple-dark.svg",
-      text: "#000",
-      bg: "#fff",
+      text: "#fff",
+      bg: "#000",
     },
     options,
   }

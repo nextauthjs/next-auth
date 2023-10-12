@@ -147,7 +147,7 @@ export default function SigninPage(props: {
                   )}
                   <button
                     type="submit"
-                    className="button 123"
+                    className="button"
                     style={{
                       "--provider-bg": bg,
                       "--provider-dark-bg": bgDark,
@@ -201,7 +201,9 @@ export default function SigninPage(props: {
                     placeholder="email@example.com"
                     required
                   />
-                  <button type="submit">Sign in with {provider.name}</button>
+                  <button id="submitButton" type="submit">
+                    Sign in with {provider.name}
+                  </button>
                 </form>
               )}
               {provider.type === "credentials" && (

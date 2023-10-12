@@ -3,6 +3,7 @@
   --border-radius: 0.5rem;
   --color-error: #c94b4b;
   --color-info: #157efb;
+  --color-info-hover: #0f6ddb;
   --color-info-text: #fff;
 }
 
@@ -190,6 +191,13 @@ a.button {
   color: var(--button-text-color, var(--color-info-text));
   background-color: var(--brand-color, var(--color-info));
   width: 100%;
+
+  &:hover {
+    background-color: var(
+      --button-hover-bg,
+      var(--colo r-info-hover)
+    ) !important;
+  }
 }
 
 a.site {
@@ -235,16 +243,6 @@ a.site {
     margin-left: auto;
     margin-right: auto;
     display: block;
-  }
-
-  .title {
-    align-items: center;
-    margin-bottom: 1.5rem;
-
-    h1 {
-      margin: 0;
-      padding: 0;
-    }
   }
 
   hr {
