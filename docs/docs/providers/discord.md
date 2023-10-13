@@ -32,3 +32,21 @@ providers: [
 ]
 ...
 ```
+
+Here is an example on how you can add more score and permission.
+
+## Example
+
+```js
+import DiscordProvider from "next-auth/providers/discord";
+...
+providers: [
+  DiscordProvider({
+    clientId: process.env.DISCORD_CLIENT_ID,
+    clientSecret: process.env.DISCORD_CLIENT_SECRET,
+    authorization:
+        "Url with extra scopes an permissions for your application to function",
+  })
+]
+...
+```
