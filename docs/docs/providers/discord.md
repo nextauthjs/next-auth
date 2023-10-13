@@ -33,7 +33,7 @@ providers: [
 ...
 ```
 
-Here is an example on how you can add more score and permission.
+Here is an example on how you can add more scopes and permissions.
 
 ## Example
 
