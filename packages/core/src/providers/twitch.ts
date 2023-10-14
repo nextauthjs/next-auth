@@ -113,7 +113,7 @@ export default function Twitch(
         }
       },
     },
-    style: { logo: "/twitch-dark.svg", bg: "#65459B", text: "#fff" },
+    style: { logo: "/twitch.svg", bg: "#65459B", text: "#fff" },
     options: config,
   }
 }

@@ -98,7 +98,7 @@ export default function Okta<P extends OktaProfile>(
     id: "okta",
     name: "Okta",
     type: "oidc",
-    style: { logo: "/okta-dark.svg", bg: "#000", text: "#fff" },
+    style: { logo: "/okta.svg", bg: "#000", text: "#fff" },
     options,
   }
 }

@@ -166,7 +166,7 @@ export default function WorkOS<P extends WorkOSProfile>(
         image: profile.raw_attributes.picture ?? null,
       }
     },
-    style: { logo: "/workos-dark.svg", bg: "#6363f1", text: "#fff" },
+    style: { logo: "/workos.svg", bg: "#6363f1", text: "#fff" },
     options,
   }
 }

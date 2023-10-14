@@ -111,7 +111,7 @@ export default function TodoistProvider<P extends TodoistProfile>(
         image: profile.avatar_big,
       }
     },
-    style: { logo: "/todoist-dark.svg", text: "#000", bg: "#E44332" },
+    style: { logo: "/todoist.svg", text: "#000", bg: "#E44332" },
     options,
   }
 }

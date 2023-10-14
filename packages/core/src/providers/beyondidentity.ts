@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#5077c5", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Beyond Identity</b> integration.</span>
  * <a href="https://www.beyondidentity.com/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/beyondidentity-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/beyondidentity.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -86,7 +86,7 @@ export default function BeyondIdentity(
       }
     },
     style: {
-      logo: "/beyondidentity-dark.svg",
+      logo: "/beyondidentity.svg",
       bg: "#5077c5",
       text: "#fff",
     },

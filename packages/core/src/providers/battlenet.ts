@@ -91,7 +91,7 @@ export default function BattleNet<P extends BattleNetProfile>(
         image: null,
       }
     },
-    style: { logo: "/battlenet-dark.svg", bg: "#148eff", text: "#fff" },
+    style: { logo: "/battlenet.svg", bg: "#148eff", text: "#fff" },
     options,
   }
 }

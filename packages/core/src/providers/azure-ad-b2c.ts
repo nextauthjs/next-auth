@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Azure AD B2C</b> integration.</span>
  * <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -122,7 +122,7 @@ export default function AzureADB2C(
         image: null,
       }
     },
-    style: { logo: "/azure-dark.svg", text: "#fff", bg: "#0072c6" },
+    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
     options,
   }
 }

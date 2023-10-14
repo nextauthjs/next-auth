@@ -257,7 +257,7 @@ export default function Tiktok<P extends TiktokProfile>(
       }
     },
     style: {
-      logo: "/tiktok-dark.svg",
+      logo: "/tiktok.svg",
       bg: "#000",
       text: "#fff",
     },

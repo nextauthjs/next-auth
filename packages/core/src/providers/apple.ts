@@ -4,7 +4,7 @@
  *  Built-in sign in with <b>Apple</b> integration.
  * </span>
  * <a href="https://apple.com" style={{backgroundColor: "black", padding: "12px", borderRadius: "100%" }}>
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/apple-dark.svg" width="24"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/apple.svg" width="24"/>
  * </a>
  * </div>
  *
@@ -170,7 +170,7 @@ export default function Apple<P extends AppleProfile>(
       }
     },
     style: {
-      logo: "/apple-dark.svg",
+      logo: "/apple.svg",
       text: "#fff",
       bg: "#000",
     },

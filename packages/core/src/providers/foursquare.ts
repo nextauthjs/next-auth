@@ -90,7 +90,7 @@ export default function Foursquare(
       }
     },
     style: {
-      logo: "/foursquare-dark.svg",
+      logo: "/foursquare.svg",
       bg: "#000",
       text: "#fff",
     },

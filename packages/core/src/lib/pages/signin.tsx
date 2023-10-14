@@ -156,6 +156,7 @@ export default function SigninPage(props: {
                       "--provider-bg-hover": hexToRgba(bg, 0.8),
                       "--provider-dark-bg-hover": hexToRgba(bgDark, 0.8),
                     }}
+                    role="button"
                   >
                     {logo && (
                       <img
@@ -201,7 +202,7 @@ export default function SigninPage(props: {
                     placeholder="email@example.com"
                     required
                   />
-                  <button id="submitButton" type="submit">
+                  <button id="submitButton" type="submit" role="button">
                     Sign in with {provider.name}
                   </button>
                 </form>
@@ -230,7 +231,7 @@ export default function SigninPage(props: {
                       </div>
                     )
                   })}
-                  <button id="submitButton" type="submit">
+                  <button id="submitButton" type="submit" role="button">
                     Sign in with {provider.name}
                   </button>
                 </form>

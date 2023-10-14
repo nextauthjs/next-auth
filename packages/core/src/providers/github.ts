@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>GitHub</b> integration.</span>
  * <a href="https://github.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/github-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/github.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -168,7 +168,7 @@ export default function GitHub(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/github-dark.svg", bg: "#24292f", text: "#fff" },
+    style: { logo: "/github.svg", bg: "#24292f", text: "#fff" },
     options: config,
   }
 }
