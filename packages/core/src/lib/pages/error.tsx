@@ -70,11 +70,9 @@ export default function ErrorPage(props: ErrorProps) {
         </div>
       ),
       signin: (
-        <p>
-          <a className="button" href={signinPageUrl}>
-            Sign in
-          </a>
-        </p>
+        <a className="button" href={signinPageUrl}>
+          Sign in
+        </a>
       ),
     },
   }

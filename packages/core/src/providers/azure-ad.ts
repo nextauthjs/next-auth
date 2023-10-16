@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Azure AD</b> integration.</span>
  * <a href="https://learn.microsoft.com/en-us/azure/active-directory">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -133,7 +133,7 @@ export default function AzureAD<P extends AzureADProfile>(
     wellKnown: `${rest.issuer}}/.well-known/openid-configuration?appid=${options.clientId}`,
     authorization: {
       params: {
-        scope: 'openid profile email User.Read',
+        scope: "openid profile email User.Read",
       },
     },
     async profile(profile, tokens) {
@@ -161,14 +161,7 @@ export default function AzureAD<P extends AzureADProfile>(
         image: image ?? null,
       }
     },
-    style: {
-      logo: "/azure.svg",
-      logoDark: "/azure-dark.svg",
-      bg: "#fff",
-      text: "#0072c6",
-      bgDark: "#0072c6",
-      textDark: "#fff",
-    },
+    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
     options: rest,
   }
 }
