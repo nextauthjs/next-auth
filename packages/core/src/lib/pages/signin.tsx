@@ -210,6 +210,13 @@ export default function SigninPage(props: {
               {provider.type === "credentials" && (
                 <form action={provider.callbackUrl} method="POST">
                   <input type="hidden" name="csrfToken" value={csrfToken} />
+                  {callbackUrl && (
+                    <input
+                      type="hidden"
+                      name="callbackUrl"
+                      value={callbackUrl}
+                    />
+                  )}
                   {Object.keys(provider.credentials).map((credential) => {
                     return (
                       <div key={`input-group-${provider.id}`}>
