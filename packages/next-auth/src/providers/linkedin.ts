@@ -55,14 +55,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
             ?.identifiers?.[0]?.identifier,
       }
     },
-    style: {
-      logo: "/linkedin.svg",
-      logoDark: "/linkedin-dark.svg",
-      bg: "#fff",
-      text: "#069",
-      bgDark: "#069",
-      textDark: "#fff",
-    },
+    style: { logo: "/linkedin.svg", bg: "#069", text: "#fff" },
     options,
   }
 }

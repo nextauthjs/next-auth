@@ -36,14 +36,7 @@ export default function Twitch<P extends TwitchProfile>(
         image: profile.picture,
       }
     },
-    style: {
-      logo: "/twitch.svg",
-      logoDark: "/twitch-dark.svg",
-      bg: "#fff",
-      text: "#65459B",
-      bgDark: "#65459B",
-      textDark: "#fff",
-    },
+    style: { logo: "/twitch.svg", bg: "#65459B", text: "#fff" },
     options,
   }
 }

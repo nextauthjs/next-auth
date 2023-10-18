@@ -48,11 +48,8 @@ export default function Instagram(options) {
     },
     style: {
       logo: "/instagram.svg",
-      logoDark: "/instagram.svg",
       bg: "#fff",
       text: "#000",
-      bgDark: "#fff",
-      textDark: "#000",
     },
     options,
   }

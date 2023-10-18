@@ -53,6 +53,7 @@ export const authOptions: NextAuthOptions = {
   ],
   theme: {
     colorScheme: "light",
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
   callbacks: {
     async jwt({ token }) {
