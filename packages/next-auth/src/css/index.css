@@ -188,10 +188,7 @@ a.button {
   width: 100%;
 
   &:hover {
-    background-color: var(
-      --button-hover-bg,
-      var(--colo r-info-hover)
-    ) !important;
+    background-color: var(--button-hover-bg, var(--color-info-hover)) !important;
   }
 }
 
