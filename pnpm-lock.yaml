@@ -334,9 +334,6 @@ importers:
       typescript:
         specifier: 5.2.2
         version: 5.2.2
-      undici:
-        specifier: 5.22.1
-        version: 5.22.1
 
   packages/adapter-drizzle:
     dependencies:
