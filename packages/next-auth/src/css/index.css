@@ -50,10 +50,7 @@
     color: var(--provider-dark-color, var(--color-primary));
     background-color: var(--provider-dark-bg, var(--color-background));
     &:hover {
-      background-color: var(
-        --provider-dark-bg-hover,
-        var(--color-background-hover)
-      ) !important;
+      background-color: var(--provider-dark-bg-hover, var(--color-background-hover)) !important;
     }
   }
   #provider-logo {
