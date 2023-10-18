@@ -43,14 +43,7 @@ export default function Keycloak<P extends KeycloakProfile>(
         image: profile.picture,
       }
     },
-    style: {
-      logo: "/keycloak.svg",
-      logoDark: "/keycloak.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#fff",
-      textDark: "#000",
-    },
+    style: { logo: "/keycloak.svg", bg: "#fff", text: "#000" },
     options,
   }
 }

@@ -53,14 +53,7 @@ export default function TodoistProvider<P extends TodoistProfile>(
         image: profile.avatar_big,
       }
     },
-    style: {
-      logo: "/todoist.svg",
-      logoDark: "/todoist.svg",
-      bg: "#fff",
-      text: "#E44332",
-      bgDark: "#000",
-      textDark: "#E44332",
-    },
+    style: { logo: "/todoist.svg", text: "#000", bg: "#E44332" },
     ...options,
   }
 }

@@ -33,14 +33,7 @@ export default function LINE<P extends LineProfile>(
     client: {
       id_token_signed_response_alg: "HS256",
     },
-    style: {
-      logo: "/line.svg",
-      logoDark: "/line.svg",
-      bg: "#fff",
-      text: "#00C300",
-      bgDark: "#00C300",
-      textDark: "#fff",
-    },
+    style: { logo: "/line.svg", bg: "#00C300", text: "#fff" },
     options,
   }
 }

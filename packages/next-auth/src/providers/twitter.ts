@@ -119,14 +119,7 @@ export function TwitterLegacy<
         ),
       }
     },
-    style: {
-      logo: "/twitter.svg",
-      logoDark: "/twitter-dark.svg",
-      bg: "#fff",
-      text: "#1da1f2",
-      bgDark: "#1da1f2",
-      textDark: "#fff",
-    },
+    style: { logo: "/twitter.svg", bg: "#1da1f2", text: "#fff" },
     options,
   }
 }
@@ -214,14 +207,7 @@ export default function Twitter<
         }
       },
       checks: ["pkce", "state"],
-      style: {
-        logo: "/twitter.svg",
-        logoDark: "/twitter-dark.svg",
-        bg: "#fff",
-        text: "#1da1f2",
-        bgDark: "#1da1f2",
-        textDark: "#fff",
-      },
+      style: { logo: "/twitter.svg", bg: "#1da1f2", text: "#fff" },
       options,
     }
   }

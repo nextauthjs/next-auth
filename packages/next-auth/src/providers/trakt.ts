@@ -51,14 +51,7 @@ export default function Trakt<P extends TraktUser>(
         image: profile.images.avatar.full, // trakt does not allow hotlinking
       }
     },
-    style: {
-      logo: "/trakt.svg",
-      logoDark: "/trakt-dark.svg",
-      bg: "#fff",
-      text: "#ED2224",
-      bgDark: "#ED2224",
-      textDark: "#fff",
-    },
+    style: { logo: "/trakt.svg", bg: "#ED2224", text: "#fff" },
     options,
   }
 }

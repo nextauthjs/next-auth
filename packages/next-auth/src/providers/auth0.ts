@@ -26,14 +26,7 @@ export default function Auth0<P extends Auth0Profile>(
         image: profile.picture,
       }
     },
-    style: {
-      logo: "/auth0.svg",
-      logoDark: "/auth0-dark.svg",
-      bg: "#fff",
-      text: "#EB5424",
-      bgDark: "#EB5424",
-      textDark: "#fff",
-    },
+    style: { logo: "/auth0.svg", text: "#fff", bg: "#EB5424" },
     options,
   }
 }

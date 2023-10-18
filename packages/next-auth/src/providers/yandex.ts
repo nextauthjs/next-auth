@@ -144,11 +144,8 @@ export default function Yandex(
     },
     style: {
       logo: "/yandex.svg",
-      logoDark: "/yandex.svg",
       bg: "#ffcc00",
       text: "#000",
-      bgDark: "#ffcc00",
-      textDark: "#000",
     },
     options,
   }
