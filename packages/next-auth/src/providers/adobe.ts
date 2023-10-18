@@ -31,19 +31,13 @@ export default function Adobe<P extends AdobeProfile>(
     authorization: {
       url: 'https://ims-na1.adobelogin.com/ims/authorize/v2',
       params: {
-        redirect_uri:
-          process.env.NODE_ENV === 'development'
-            ? 'https://localhost:3001/api/auth/callback/adobe'
-            : process.env.VERCEL_URL
-            ? process.env.VERCEL_URL + '/api/auth/callback/adobe'
-            : '',
-        scope: 'openid address creative_sdk email profile'
+        scope: 'openid address creative_sdk email profile',
+        redirect_uri: ''
       }
     },
     idToken: true,
     token: 'https://ims-na1.adobelogin.com/ims/token/v3',
     userinfo: 'https://ims-na1.adobelogin.com/ims/userinfo/v2',
-    scope: ['AdobeID', 'openid', 'address', 'creative_sdk', 'email', 'profile'],
     issuer: 'https://ims-na1.adobelogin.com',
     profile(adobeStockProfile) {
       return {
@@ -73,6 +67,13 @@ export default function Adobe<P extends AdobeProfile>(
     //   process.env.NODE_ENV === 'development'
     //     ? 'https://localhost:3001/api/auth/callback/adobe'
     //     : undefined,
+    // authorization: {
+    //   url: 'https://ims-na1.adobelogin.com/ims/authorize/v2',
+    //   params: {
+    //     scope: 'openid address creative_sdk email profile',
+    //     redirect_uri: ''
+    //   }
+    // },
     // clientId: process.env.ADOBE_CLIENT_ID,
     // clientSecret: process.env.ADOBE_CLIENT_SECRET
   }
