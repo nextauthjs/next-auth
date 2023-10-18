@@ -5,7 +5,7 @@
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
-    "build": "turbo run build --filter=next-auth --filter=@next-auth/* --no-deps",
+    "build": "turbo run build --filter=next-auth --no-deps",
     "lint": "turbo run lint --filter=!next-auth-docs --parallel",
     "test": "turbo run test --concurrency=1 --filter=!@next-auth/pouchdb-adapter --filter=!@next-auth/upstash-redis-adapter --filter=!next-auth-* --filter=[HEAD^1]",
     "clean": "turbo run clean --no-cache",
