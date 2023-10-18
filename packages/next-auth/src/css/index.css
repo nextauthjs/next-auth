@@ -170,11 +170,6 @@ a.button {
     background-color: var(--provider-bg-hover, var(--color-background-hover));
     cursor: pointer;
   }
-  /* &:focus {
-    outline: none;
-    border: 1px solid;
-    border-color: var(--color-info);
-  } */
   &:active {
     cursor: pointer;
   }
