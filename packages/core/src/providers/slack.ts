@@ -105,14 +105,7 @@ export default function Slack<P extends SlackProfile>(
     name: "Slack",
     type: "oidc",
     issuer: "https://slack.com",
-    style: {
-      logo: "/slack.svg",
-      logoDark: "/slack.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
-    },
+    style: { logo: "/slack.svg", bg: "#000", text: "#fff" },
     options,
   }
 }

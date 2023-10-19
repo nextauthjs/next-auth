@@ -50,7 +50,7 @@
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
   },
-  "packageManager": "pnpm@8.7.1",
+  "packageManager": "pnpm@8.9.2",
   "funding": [
     {
       "type": "github",
