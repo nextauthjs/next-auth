@@ -183,6 +183,8 @@ And now let's reference this new adapter from our Auth.js configuration file:
         from: process.env.EMAIL_FROM
       }),
     ],
+    // if using https://next-auth.js.org/configuration/nextjs#middleware, uncomment below
+    // session: { strategy: "jwt" },
   })
   ```
 
