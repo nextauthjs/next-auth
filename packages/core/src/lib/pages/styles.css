@@ -50,10 +50,7 @@
     color: var(--provider-dark-color, var(--color-primary));
     background-color: var(--provider-dark-bg, var(--color-background));
     &:hover {
-      background-color: var(
-        --provider-dark-bg-hover,
-        var(--color-background-hover)
-      ) !important;
+      background-color: var(--provider-dark-bg-hover, var(--color-background-hover)) !important;
     }
   }
   #provider-logo {
@@ -170,11 +167,6 @@ a.button {
     background-color: var(--provider-bg-hover, var(--color-background-hover));
     cursor: pointer;
   }
-  /* &:focus {
-    outline: none;
-    border: 1px solid;
-    border-color: var(--color-info);
-  } */
   &:active {
     cursor: pointer;
   }
@@ -193,10 +185,7 @@ a.button {
   width: 100%;
 
   &:hover {
-    background-color: var(
-      --button-hover-bg,
-      var(--colo r-info-hover)
-    ) !important;
+    background-color: var(--button-hover-bg, var(--color-info-hover)) !important;
   }
 }
 
