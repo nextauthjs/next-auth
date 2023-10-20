@@ -4,7 +4,8 @@
     <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
   </a>
   <a href="https://astra.datastax.com/" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/astradb.png"/>
+    <!-- <img height="64px" src="https://authjs.dev/img/adapters/astradb.png"/> -->
+    <img height="64px" src="./astradb.png"/>
   </a>
   <h3 align="center"><b>Astra Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
