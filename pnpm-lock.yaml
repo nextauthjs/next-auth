@@ -260,7 +260,7 @@ importers:
         specifier: 4.0.0-next.16
         version: 4.0.0-next.16(prettier@2.8.1)(typedoc@0.24.8)
 
-  packages/adapter-astradb:
+  packages/adapter-astra-db:
     dependencies:
       '@auth/core':
         specifier: workspace:*

@@ -1,5 +1,5 @@
 {
-  "name": "@auth/astradb-adapter",
+  "name": "@auth/astra-db-adapter",
   "version": "0.0.1",
   "description": "Astra adapter for next-auth.",
   "homepage": "https://authjs.dev",
@@ -18,7 +18,7 @@
     "Auth.js",
     "next.js",
     "oauth",
-    "astradb"
+    "astra-db"
   ],
   "type": "module",
   "exports": {
