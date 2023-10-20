@@ -2,17 +2,17 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>An official <a href="https://astra.datastax.com/">Astra DB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://astra.datastax.com/">
- *   <img style={{display: "block"}} src="/img/adapters/astra.png" width="48" />
+ *   <img style={{display: "block"}} src="/img/adapters/astradb.png" width="48" />
  *  </a>
  * </div>
  *
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @auth/astra-adapter
+ * npm install next-auth @auth/astradb-adapter
  * ```
  *
- * @module @auth/astra-adapter
+ * @module @auth/astradb-adapter
  */
 
 /**
@@ -50,7 +50,7 @@
 /**
  * ### JsonApiConfig (config) required for the Adapter | JsonApiConfig.ts
  * ------------------------------------------------------------------------------
-  import { JsonApiConfig } from ""@auth/astra-adapter/types"
+  import { JsonApiConfig } from ""@auth/astradb-adapter/types"
 
   export const jsonApiConfig: JsonApiConfig = {
     ASTRA_DB_ID: process.env.ASTRA_DB_ID || '',

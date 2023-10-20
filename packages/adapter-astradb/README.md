@@ -4,18 +4,18 @@
     <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
   </a>
   <a href="https://astra.datastax.com/" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/astra.png"/>
+    <img height="64px" src="https://authjs.dev/img/adapters/astradb.png"/>
   </a>
   <h3 align="center"><b>Astra Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
-    <a href="https://npm.im/@auth/astra-adapter">
+    <a href="https://npm.im/@auth/astradb-adapter">
       <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
     </a>
-    <a href="https://npm.im/@auth/astra-adapter">
-      <img alt="npm" src="https://img.shields.io/npm/v/@auth/astra-adapter?color=green&label=@auth/astra-adapter&style=flat-square">
+    <a href="https://npm.im/@auth/astradb-adapter">
+      <img alt="npm" src="https://img.shields.io/npm/v/@auth/astradb-adapter?color=green&label=@auth/astradb-adapter&style=flat-square">
     </a>
-    <a href="https://www.npmtrends.com/@auth/astra-adapter">
-      <img src="https://img.shields.io/npm/dm/@auth/astra-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
+    <a href="https://www.npmtrends.com/@auth/astradb-adapter">
+      <img src="https://img.shields.io/npm/dm/@auth/astradb-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
       <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
@@ -25,4 +25,4 @@
 
 ---
 
-Check out the documentation at [authjs.dev](https://authjs.dev/reference/adapter/astra).
+Check out the documentation at [authjs.dev](https://authjs.dev/reference/adapter/astradb).

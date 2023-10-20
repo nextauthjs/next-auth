@@ -1,5 +1,5 @@
 {
-  "name": "@auth/astra-adapter",
+  "name": "@auth/astradb-adapter",
   "version": "0.0.1",
   "description": "Astra adapter for next-auth.",
   "homepage": "https://authjs.dev",
@@ -7,7 +7,7 @@
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "author": "Syed Hakeem Abbas",
+  "author": "DataStax",
   "contributors": [
     "Syed Hakeem Abbas <hakeemsyd@gmail.com>"
   ],
@@ -18,7 +18,7 @@
     "Auth.js",
     "next.js",
     "oauth",
-    "astra"
+    "astradb"
   ],
   "type": "module",
   "exports": {

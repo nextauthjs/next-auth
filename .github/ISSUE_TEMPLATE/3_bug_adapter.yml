@@ -42,7 +42,7 @@ body:
         - "@auth/typeorm-adapter"
         - "@auth/upstash-redis-adapter"
         - "@auth/xata-adapter"
-        - "@auth/astra-adapter"
+        - "@auth/astradb-adapter"
     validations:
       required: true
   - type: textarea
