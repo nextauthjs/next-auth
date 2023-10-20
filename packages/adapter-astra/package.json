@@ -43,7 +43,6 @@
   "dependencies": {
     "@auth/core": "workspace:*",
     "axios": "^1.5.1",
-    "cassandra-driver": "^4.7.2",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {

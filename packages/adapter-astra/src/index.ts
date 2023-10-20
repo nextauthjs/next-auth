@@ -9,7 +9,7 @@
  * ## Installation
  *
  * ```bash npm2yarn2pnpm
- * npm install next-auth @auth/astra-adapter cassandra-driver
+ * npm install next-auth @auth/astra-adapter
  * ```
  *
  * @module @auth/astra-adapter
