@@ -74,6 +74,9 @@ declare module "next-auth/jwt" {
 }
 
 export const config = {
+  theme: {
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+  },
   providers: [
     Apple({ clientId: process.env.AUTH_APPLE_ID, clientSecret: process.env.AUTH_APPLE_SECRET }),
     Atlassian({ clientId: process.env.AUTH_ATLASSIAN_ID, clientSecret: process.env.AUTH_ATLASSIAN_SECRET }),
