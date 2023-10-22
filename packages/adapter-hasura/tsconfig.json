@@ -13,9 +13,13 @@
     "strictNullChecks": true,
     "stripInternal": true,
     "declarationMap": true,
-    "declaration": true,
-    "verbatimModuleSyntax": true
+    "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["*.js", "*.d.ts"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "*.js",
+    "*.d.ts",
+  ]
 }

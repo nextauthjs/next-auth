@@ -4,7 +4,7 @@
 const clerk = {
   type: "html",
   value: `
-  <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=callout">
+  <a href="https://clerk.com?utm_source=sponsorship&utm_medium=docs&utm_campaign=authjs&utm_content=callout">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="/img/clerk-sidebar-light.png">
       <source media="(prefers-color-scheme: light)" srcset="/img/clerk-sidebar-dark.png">

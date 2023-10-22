@@ -78,11 +78,8 @@ export default function Box(
     },
     style: {
       logo: "/box.svg",
-      logoDark: "/box-dark.svg",
-      bg: "#fff",
-      text: "#0075C9",
-      bgDark: "#0075C9",
-      textDark: "#fff",
+      bg: "#0075C9",
+      text: "#fff",
     },
     options,
   }
