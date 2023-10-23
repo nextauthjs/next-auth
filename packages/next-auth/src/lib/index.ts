@@ -65,7 +65,6 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
   const request = new Request(`${origin}/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
-  config.useSecureCookies ??= origin.protocol === "https:"
 
   return Auth(request, {
     ...config,
