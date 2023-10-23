@@ -497,6 +497,7 @@ export function SessionProvider(props: SessionProviderProps) {
   )
 
   return (
+    // @ts-expect-error
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
   )
 }

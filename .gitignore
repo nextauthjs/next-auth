@@ -34,6 +34,7 @@ packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 packages/*/lib
+packages/**/generated
 
 # Development app
 apps/dev/src/css

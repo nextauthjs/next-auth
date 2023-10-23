@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/ClickUp
+ * @module providers/click-up
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -92,11 +92,8 @@ export default function ClickUp(
     },
     style: {
       logo: "/click-up.svg",
-      logoDark: "/click-up.svg",
-      bg: "#fff",
-      bgDark: "#24292f",
-      text: "#000",
-      textDark: "#fff",
+      bg: "#24292f",
+      text: "#fff",
     },
     options: config,
   }

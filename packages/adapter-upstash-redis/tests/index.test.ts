@@ -1,4 +1,3 @@
-import "isomorphic-fetch"
 import { Redis } from "@upstash/redis"
 import { runBasicTests } from "@auth/adapter-test"
 import { hydrateDates, UpstashRedisAdapter } from "../src"

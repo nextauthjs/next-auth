@@ -8,7 +8,7 @@ const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
   .filter((file) => file.endsWith(".ts"))
-  .map((p) => `${coreSrc}/providers/${p}`)
+  .map((p) => `providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
 // @ts-expect-error
@@ -247,7 +247,7 @@ const docusaurusConfig = {
               const file = docPath.split("reference/adapter/")[1].replace("index.md", "src/index.ts")
               return `${base}/adapter-${file}`
             }
-            return "https://github.com/nextauthjs/next-auth/edit/main/docs"
+            return `https://github.com/nextauthjs/next-auth/edit/main/docs/docs/${docPath}`
           },
           lastVersion: "current",
           showLastUpdateAuthor: true,
@@ -271,7 +271,7 @@ const docusaurusConfig = {
     ],
   ],
   plugins: [
-    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
+    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].concat(providers)),
     typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
     typedocFramework("next-auth", ["index.tsx", "react.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
@@ -285,6 +285,7 @@ const docusaurusConfig = {
           typedocAdapter("DynamoDB"),
           typedocAdapter("Fauna"),
           typedocAdapter("Firebase"),
+          typedocAdapter("Hasura"),
           typedocAdapter("Kysely"),
           typedocAdapter("Mikro ORM"),
           typedocAdapter("MongoDB"),

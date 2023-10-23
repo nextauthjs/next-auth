@@ -382,14 +382,7 @@ export default function VK<P extends Record<string, any> = VkProfile>(
         image: profile.photo_100,
       }
     },
-    style: {
-      logo: "/vk.svg",
-      logoDark: "/vk-dark.svg",
-      bg: "#fff",
-      text: "#07F",
-      bgDark: "#07F",
-      textDark: "#fff",
-    },
+    style: { logo: "/vk.svg", bg: "#07F", text: "#fff" },
     options,
   }
 }
