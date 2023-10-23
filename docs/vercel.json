@@ -98,9 +98,14 @@
       "destination": "https://authjs.dev/reference/adapter/:path*"
     },
     {
-      "source": "/:path",
+      "source": "/",
       "has": [{ "type": "host", "value": "providers.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/core/providers_:path.default"
+      "destination": "https://authjs.dev/getting-started/providers"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "providers.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/core/providers_:path"
     },
     {
       "source": "/getting-started/upgrade-to-v4",

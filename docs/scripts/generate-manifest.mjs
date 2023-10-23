@@ -1,7 +1,12 @@
 import { join } from "path"
 import { readdir, readFile, writeFile } from "fs/promises"
 
-const frameworks = {}
+// TODO: Autogenerate
+const frameworks = [
+  { id: "nextjs", name: "NextAuth.js", url: "next-auth-example" },
+  { id: "sveltekit", name: "SvelteKit Auth", url: "sveltekit-auth-example" },
+  { id: "solidstart", name: "SolidStart Auth", url: "auth-solid" },
+]
 
 // TODO: Autogenerate
 // const packagesPath = join(process.cwd(), "../packages")

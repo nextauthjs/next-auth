@@ -1,5 +1,6 @@
 ---
 title: Database Adapters
+sidebar_position: 2
 ---
 
 import { adapters } from "../../manifest.json"
@@ -16,11 +17,11 @@ On how to use Auth.js with other databases, check out the [creating a database a
 
 Below you can see a list of official adapters that are distributed as their own packages under the `@auth/{name}-adapter` namespace. Their source code is available in their various adapters package directories at [`nextauthjs/next-auth`](https://github.com/nextauthjs/next-auth/tree/main/packages)
 
-<div class="adapter-card-list">
+<div class="card-list">
   {Object.entries(adapters).map(([id, [name, img]]) => (
-    <a href={`/reference/adapter/${id}`} class="adapter-card">
+    <a href={`/reference/adapter/${id}`} class="card">
       <img src={`/img/adapters/${img || `${id}.svg`}`} width="40" />
-      <h4 class="adapter-card__title">{name} Adapter</h4>
+      <h4 class="card__title">{name} Adapter</h4>
     </a>
   ))}
 </div>

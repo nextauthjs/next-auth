@@ -1,5 +1,6 @@
 ---
 title: Login Providers
+sidebar_position: 1
 ---
 
 import { providers } from "../../../manifest.json"
@@ -18,14 +19,14 @@ See the [documentation for adapters](/reference/adapters) for more information o
 
 The following listed official providers are created and maintained by the community:
 
-<div class="adapter-card-list">
+<div class="card-list">
   {Object.entries(providers).map(([id, name]) => (
     <a
       href={`/reference/core/providers_${id.replaceAll("-", "_")}`}
-      class="adapter-card"
+      class="card"
     >
       <img src={`/img/providers/${id}.svg`} width="40" />
-      <h4 class="adapter-card__title">{name}</h4>
+      <h4 class="card__title">{name}</h4>
     </a>
   ))}
 </div>
