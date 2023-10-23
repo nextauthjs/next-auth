@@ -4,8 +4,7 @@ import authConfig from "auth.config"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 
-const prisma = globalThis.prisma ?? new PrismaClient()
-if (!globalThis.prisma) globalThis.prisma = prisma
+globalThis.prisma ??= new PrismaClient()
 
 authConfig.providers.push(
   // Start server with `pnpm email`
@@ -14,7 +13,7 @@ authConfig.providers.push(
 )
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(globalThis.prisma),
   session: { strategy: "jwt" },
   ...authConfig,
 })
