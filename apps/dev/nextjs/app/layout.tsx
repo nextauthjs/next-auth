@@ -1,4 +1,4 @@
-import { auth, signIn, signOut } from "auth"
+import { auth, signIn, signOut, update } from "auth"
 import Footer from "components/footer"
 import { Header } from "components/header"
 import styles from "components/header.module.css"
@@ -10,6 +10,16 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <AppHeader />
         <main>{props.children}</main>
+        <div>
+          <form
+            action={async () => {
+              "use server"
+              update({ user: { name: "New Name" } })
+            }}
+          >
+            <button>Update name</button>
+          </form>
+        </div>
         <Footer />
       </body>
     </html>
