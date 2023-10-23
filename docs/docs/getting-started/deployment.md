@@ -2,43 +2,47 @@
 title: Deployment
 ---
 
-Auth.js can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
+Auth.js relies strictly on standard Web APIs, so it can be deployed anywhere you can deploy a JavaScript application. Auth.js is fully compatible with Edge runtimes too.
 
-1. Auth.js environment variables
+By default, it uses the [JWT session strategy](/concepts/session-strategies#jwt) so it does not require a database to be configured.
 
-   - `NEXTAUTH_SECRET`
-   - `NEXTAUTH_URL`
+## Environment Variables
 
-2. Auth.js API Route and its configuration (`/pages/api/auth/[...nextauth].js`).
-   - OAuth Provider `clientId` / `clientSecret`
+:::tip
+For consistency, we recommend prefixing all Auth.js environment variables with `AUTH_`. This way we can autodetect them, and it's they can also be distinguished from other environment variables.
+:::
 
-Deploying a modern JavaScript application using Auth.js consists of making sure your environment variables are set correctly as well as the configuration in the Auth.js API route is setup, as well as any configuration (like Callback URLs, etc.) are correctly done in your OAuth provider(s) themselves.
+Auth.js libraries require you to set a `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a random string of at least 32 characters. On Linux systems, you can generate a suitable string using the command `openssl rand -base64 32`. You can also use a tool like [generate-secret.vercel.app](https://generate-secret.vercel.app/32) to generate a random value.
 
-See below for more detailed provider settings.
+If you are using an [OAuth Provider](/getting-started/providers), your provider will have a `clientId` and `clientSecret` that you will need to set as environment variables as well. In case of OIDC, a third `issuer` option is required.
 
-## Vercel
+:::info
+Some Auth.js libraries can infer environment variables without passing them explicitly. For example, the Next.js library can infer the `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` environment variables as the `clientId` and `clientSecret` options for the GitHub provider. See the API reference for your framework to learn more about this feature.
+:::
 
-1. Make sure to expose the Vercel [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) in your project settings. This way, we can detect the environment. (Setting `NEXTAUTH_URL` environment variable on Vercel is **unnecessary**).
-2. Create a `NEXTAUTH_SECRET` environment variable for both Production and Preview environments.
-   a. You can use `openssl rand -base64 32` or https://generate-secret.vercel.app/32 to generate a random value.
-3. Add your provider's client ID and client secret to environment variables. _(Skip this step if not using an [OAuth Provider](/reference/providers/index))_
-4. Deploy!
+## Serverless
 
-Example repository: https://github.com/nextauthjs/next-auth-example
+Hosting services like Vercel and Netlify are great for deploying Auth.js apps. The following steps should help you get started:
 
-A few notes about deploying to Vercel. The environment variables are read server-side, so you **should not** prefix them with `NEXT_PUBLIC_` to avoid accidentally bundling a secret in the client-side JavaScript code.
+1. Create the required [environment variebles](#environment-variables) for the desired deploy environments.
+2. In case of an OAuth provider, set the callback URL for the provider to `https://yourdomain.com/api/auth/callback/provider` (replace `yourdomain.com` with your domain and `provider` with the provider name, eg.: `github`).
+3. Deploy!
 
-### Securing a preview deployment
+## Self-hosted
+
+Auth.js can also be deployed anywhere you can deploy your framework of your choice. Check out the framework's documentation on self-hosting.
+
+## Securing a preview deployment
 
 Most OAuth providers cannot be configured with multiple callback URLs or using a wildcard.
 
 However, Auth.js **supports Preview deployments**, even **with OAuth providers**:
 
-1. Determine a stable deployment URL. Eg.: A deployment whose URL does not change between builds, for example. `auth.yourdomain.com` (using a subdomain is not a requirement, this can simply be the main site's URL too.),
-2. Set `AUTH_REDIRECT_PROXY_URL` to that URL, adding the path up until your `[...nextauth]` route. Eg.: (`https://auth.yourdomain.com/api/auth`)
+1. Determine a stable deployment URL. Eg.: A deployment whose URL does not change between builds, for example. `auth.yourdomain.com` (using a subdomain is not a requirement, this can be the main site's URL too, for example.)
+2. Set `AUTH_REDIRECT_PROXY_URL` to that URL, with the base path up to your `[...nextauth]` route. Eg.: (`https://auth.yourdomain.com/api/auth`)
 3. For your OAuth provider, set the callback URL using the stable deployment URL. Eg.: For GitHub `https://auth.yourdomain.com/api/auth/callback/github`)
 
-:::info
+:::note
 To support preview deployments, the `AUTH_SECRET` value needs to be the same for the stable deployment and deployments that will need OAuth support.
 :::
 
@@ -64,13 +68,3 @@ See also:
 <li><a href="https://www.ietf.org/rfc/rfc6749.html#section-4.1.1">OAuth 2.0 specification: `state` query parameter</a></li>
 </ul>
 </details>
-
-## Netlify
-
-Netlify is very similar to Vercel in that you can deploy a Next.js project without almost any extra work.
-
-To set up Auth.js correctly here, you will want to make sure you add your `NEXTAUTH_SECRET` environment variable in the project settings. If you are using the [Essential Next.js Build Plugin](https://github.com/netlify/netlify-plugin-nextjs) within your project, you **do not** need to set the `NEXTAUTH_URL` environment variable as it is set automatically as part of the build process.
-
-Netlify also exposes some [system environment variables](https://docs.netlify.com/configure-builds/environment-variables/) from which you can check which `NODE_ENV` you are currently in and much more.
-
-After this, make sure you either have your OAuth provider set up correctly with `clientId` / `clientSecret`'s and callback URLs.
