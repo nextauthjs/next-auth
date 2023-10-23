@@ -136,4 +136,31 @@ Due to users forgetting or failing at the sign-in flow, you might end up with un
 
 ## TypeScript
 
-Check out the [`@auth/core/adapters` API Reference](/reference/core/adapters) documentation.
+Official adapters are all written in TypeScript. If you're writing your own custom Adapter, you can take advantage of the types that comes with `@auth/core` to make sure your implementation conforms to what's expected:
+
+```ts
+import type { Adapter } from "@auth/core/adapters"
+
+function MyAdapter(): Adapter {
+  return {
+    // your adapter methods here
+  }
+}
+```
+
+When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+
+```js
+/** @return { import("@auth/core/adapters").Adapter } */
+function MyAdapter() {
+  return {
+    // your adapter methods here
+  }
+}
+```
+
+:::note
+This will work in code editors with a strong TypeScript integration like VSCode or WebStorm. It might not work if you're using more lightweight editors like VIM or Atom.
+:::
+
+For more information, check out the [`@auth/core/adapters` API Reference](/reference/core/adapters).
