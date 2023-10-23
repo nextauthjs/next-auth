@@ -298,7 +298,7 @@ const docusaurusConfig = {
           typedocAdapter("SurrealDB"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
-          typedocAdapter("Astra"),
+          typedocAdapter("Astra DB"),
         ]),
   ],
 }

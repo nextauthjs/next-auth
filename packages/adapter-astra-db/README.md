@@ -7,7 +7,7 @@
     <!-- <img height="64px" src="https://authjs.dev/img/adapters/astra-db.png"/> -->
     <img height="64px" src="./astra-db.png"/>
   </a>
-  <h3 align="center"><b>Astra Adapter</b> - NextAuth.js / Auth.js</a></h3>
+  <h3 align="center"><b>Astra DB Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
     <a href="https://npm.im/@auth/astra-db-adapter">
       <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
