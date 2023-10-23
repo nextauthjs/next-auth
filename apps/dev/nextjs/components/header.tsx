@@ -1,4 +1,4 @@
-import type { AuthSession, Session } from "next-auth"
+import type { Session } from "next-auth"
 import Link from "next/link"
 import styles from "./header.module.css"
 
@@ -7,7 +7,7 @@ export function Header({
   signIn,
   signOut,
 }: {
-  session: AuthSession | Session | null
+  session: Session | null
   signIn: any
   signOut: any
 }) {

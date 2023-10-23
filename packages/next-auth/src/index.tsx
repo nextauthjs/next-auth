@@ -58,7 +58,7 @@ import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
-import type { Account, Session, User } from "@auth/core/types"
+import type { Session } from "@auth/core/types"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -83,11 +83,6 @@ type AppRouteHandlers = Record<
 >
 
 export type { NextAuthConfig }
-
-export interface AuthSession extends Session {
-  user: User
-  accounts: Account[]
-}
 
 /**
  * The result of invoking {@link NextAuth|NextAuth}, initialized with the {@link NextAuthConfig}.
@@ -219,9 +214,9 @@ export interface NextAuthResult {
    */
   auth: ((
     ...args: [NextApiRequest, NextApiResponse]
-  ) => Promise<AuthSession | null>) &
-    ((...args: []) => Promise<AuthSession | null>) &
-    ((...args: [GetServerSidePropsContext]) => Promise<AuthSession | null>) &
+  ) => Promise<Session | null>) &
+    ((...args: []) => Promise<Session | null>) &
+    ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
     ((
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
@@ -285,7 +280,9 @@ export interface NextAuthResult {
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
   }): Promise<R extends false ? any : never>
-  update: (data: Partial<AuthSession>) => Promise<AuthSession | null>
+  update: (
+    data: Partial<Session | { user: Partial<Session["user"]> }>
+  ) => Promise<Session | null>
 }
 
 /**

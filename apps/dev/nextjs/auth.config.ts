@@ -14,7 +14,7 @@ declare module "next-auth" {
     user: {
       /** The user's postal address. */
       address: string
-    }
+    } & User
   }
 
   interface User {

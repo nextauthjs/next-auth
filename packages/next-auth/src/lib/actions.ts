@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { detectOrigin } from "./env.js"
 
 import type { NextAuthConfig } from "./index.js"
-import type { AuthSession, NextAuthResult } from "../index.js"
+import type { NextAuthResult, Session } from "../index.js"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -89,7 +89,7 @@ type UpdateParams = Parameters<NextAuthResult["update"]>
 export async function update(
   data: UpdateParams[0],
   config: NextAuthConfig
-): Promise<AuthSession | null> {
+): Promise<Session | null> {
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 

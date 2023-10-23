@@ -3,7 +3,7 @@ import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 import { detectOrigin, reqWithEnvUrl } from "./env.js"
 
-import type { AuthAction, Awaitable } from "@auth/core/types"
+import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -11,7 +11,6 @@ import type {
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
-import type { AuthSession } from "../index.js"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends AuthConfig {
@@ -54,7 +53,7 @@ export interface NextAuthConfig extends AuthConfig {
       /** The request to be authorized. */
       request: NextRequest
       /** The authenticated user or token, if any. */
-      auth: AuthSession | null
+      auth: Session | null
     }) => Awaitable<boolean | NextResponse | undefined>
   }
 }
@@ -86,7 +85,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
 }
 
 export interface NextAuthRequest extends NextRequest {
-  auth: AuthSession | null
+  auth: Session | null
 }
 
 export type NextAuthMiddleware = (
@@ -146,7 +145,7 @@ export function initAuth(config: NextAuthConfig) {
       // Preserve cookies set by Auth.js Core
       cloneSetCookie(authResponse, response)
 
-      return auth satisfies AuthSession | null
+      return auth satisfies Session | null
     })
   }
 }
