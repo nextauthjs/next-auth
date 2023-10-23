@@ -39,7 +39,7 @@
     },
     {
       "source": "/schemas/adapters",
-      "destination": "/adapters/overview",
+      "destination": "/getting-started/adapters",
       "permanent": true
     },
     {
@@ -90,7 +90,7 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/adapters"
+      "destination": "https://authjs.dev/getting-started/adapters"
     },
     {
       "source": "/:path(.*)",
@@ -101,6 +101,11 @@
       "source": "/:path",
       "has": [{ "type": "host", "value": "providers.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/providers_:path.default"
+    },
+    {
+      "source": "/getting-started/upgrade-to-v4",
+      "destination": "https://next-auth.js.org/getting-started/upgrade-v4",
+      "permanent": true
     }
   ]
 }

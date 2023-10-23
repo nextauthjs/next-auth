@@ -2,11 +2,11 @@
 title: Email authentication
 ---
 
-import smtpConfig from "./img/dashboard-smtp.png"
-import startPageImg from "./img/email-tutorial-start.png"
-import checkPageImg from "./img/email-tutorial-check.png"
-import mailboxImg from "./img/email-tutorial-mailbox.png"
-import loggedInImg from "./img/email-tutorial-logged.png"
+import smtpConfig from "../img/dashboard-smtp.png"
+import startPageImg from "../img/email-tutorial-start.png"
+import checkPageImg from "../img/email-tutorial-check.png"
+import mailboxImg from "../img/email-tutorial-mailbox.png"
+import loggedInImg from "../img/email-tutorial-logged.png"
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
@@ -69,27 +69,26 @@ Nice! We're getting there. Now we need to read supply this values as the configu
 <Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
-  
-  ```ts title="pages/api/auth/[...nextauth].ts"
-  import NextAuth from "next-auth"
-  import Email from "next-auth/providers/email"
+```ts title="pages/api/auth/[...nextauth].ts"
+import NextAuth from "next-auth"
+import Email from "next-auth/providers/email"
 
-  export default NextAuth({
-    providers: [
-      Email({
-        server: {
-          host: process.env.SMTP_HOST,
-          port: Number(process.env.SMTP_PORT),
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASSWORD,
-          },
+export default NextAuth({
+  providers: [
+    Email({
+      server: {
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASSWORD,
         },
-        from: process.env.EMAIL_FROM,
-      }),
-    ],
-  })
-  ```
+      },
+      from: process.env.EMAIL_FROM,
+    }),
+  ],
+})
+```
 
   </TabItem>
   <TabItem value="sveltekit" label="SvelteKit">
@@ -102,7 +101,6 @@ Nice! We're getting there. Now we need to read supply this values as the configu
     TODO Core
   </TabItem>
 </Tabs>
-
 
 ## 3. Setting up an adapter
 
@@ -161,30 +159,30 @@ And now let's reference this new adapter from our Auth.js configuration file:
 <Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
-  ```diff title="pages/api/auth/[...nextauth].ts"
-  import NextAuth from "next-auth"
-  import EmailProvider from "next-auth/providers/email"
-  + import { MongoDBAdapter } from "@auth/mongodb-adapter"
-  + import clientPromise from "../../../lib/mongodb/client"
+```diff title="pages/api/auth/[...nextauth].ts"
+import NextAuth from "next-auth"
+import EmailProvider from "next-auth/providers/email"
++ import { MongoDBAdapter } from "@auth/mongodb-adapter"
++ import clientPromise from "../../../lib/mongodb/client"
 
-  export default NextAuth({
-    secret: process.env.NEXTAUTH_SECRET,
-  + adapter: MongoDBAdapter(clientPromise),
-    providers: [
-      EmailProvider({
-        server: {
-          host: process.env.EMAIL_SERVER_HOST,
-          port: process.env.EMAIL_SERVER_PORT,
-          auth: {
-            user: process.env.EMAIL_SERVER_USER,
-            pass: process.env.EMAIL_SERVER_PASSWORD
-          }
-        },
-        from: process.env.EMAIL_FROM
-      }),
-    ],
-  })
-  ```
+export default NextAuth({
+  secret: process.env.NEXTAUTH_SECRET,
++ adapter: MongoDBAdapter(clientPromise),
+  providers: [
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD
+        }
+      },
+      from: process.env.EMAIL_FROM
+    }),
+  ],
+})
+```
 
   </TabItem>
   <TabItem value="sveltekit" label="SvelteKit">
@@ -197,7 +195,6 @@ And now let's reference this new adapter from our Auth.js configuration file:
     TODO Core
   </TabItem>
 </Tabs>
-
 
 ## 4. Wiring all together
 

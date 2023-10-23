@@ -2,7 +2,7 @@
 title: Deployment
 ---
 
-Deploying Auth.js only requires a few steps. It can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
+Auth.js can be run anywhere a Next.js application can. Therefore, in a default configuration using only JWT session strategy, i.e. without a database, you will only need these few things in addition to your application:
 
 1. Auth.js environment variables
 
@@ -30,7 +30,7 @@ A few notes about deploying to Vercel. The environment variables are read server
 
 ### Securing a preview deployment
 
-Most OAuth providers cannot be configured with multiple callback URLs or using a wildcard. 
+Most OAuth providers cannot be configured with multiple callback URLs or using a wildcard.
 
 However, Auth.js **supports Preview deployments**, even **with OAuth providers**:
 
@@ -59,6 +59,7 @@ When a user initiates an OAuth sign-in flow on a preview deployment, we save its
 Then, the OAuth provider will redirect the user to the stable deployment, which then will verify the `state` parameter and redirect the user to the preview deployment URL if the `state` is valid. This is secured by relying on the same server-side `AUTH_SECRET` for the stable deployment and the preview deployment.
 
 See also:
+
 <ul>
 <li><a href="https://www.ietf.org/rfc/rfc6749.html#section-4.1.1">OAuth 2.0 specification: `state` query parameter</a></li>
 </ul>

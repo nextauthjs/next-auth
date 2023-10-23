@@ -45,7 +45,7 @@ module.exports = {
           {
             type: "category",
             label: "Database Adapters",
-            link: { type: "doc", id: "reference/adapters/index" },
+            collapsed: false,
             items: [
               { type: "doc", id: "reference/adapter/azure-tables/index" },
               { type: "doc", id: "reference/adapter/d1/index" },
