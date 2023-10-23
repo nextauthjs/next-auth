@@ -25,11 +25,7 @@ declare module "next-auth" {
 export default {
   debug: false,
   providers: [
-    GitHub({
-      clientId: process.env.AUTH_GITHUB_ID,
-      clientSecret: process.env.AUTH_GITHUB_SECRET,
-      account() {},
-    }),
+    GitHub({ account() {} }),
     Auth0,
     Facebook,
     Google,

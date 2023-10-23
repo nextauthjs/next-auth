@@ -14,15 +14,16 @@ export function setEnvDefaults(config: NextAuthConfig) {
   )
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
   config.providers = config.providers.map((p) => {
-    if (typeof p !== "function") return p
-    const provider = p()
-    if (provider.type === "oauth" || provider.type === "oidc") {
-      const ID = provider.id.toUpperCase()
-      provider.clientId ??= process.env[`AUTH_${ID}_ID`]
-      provider.clientSecret ??= process.env[`AUTH_${ID}_SECRET`]
-      provider.issuer ??= process.env[`AUTH_${ID}_ISSUER`]
+    const finalProvider = typeof p === "function" ? p() : p
+    if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
+      const ID = finalProvider.id.toUpperCase()
+      finalProvider.clientId ??= process.env[`AUTH_${ID}_ID`]
+      finalProvider.clientSecret ??= process.env[`AUTH_${ID}_SECRET`]
+      if (finalProvider.type === "oidc") {
+        finalProvider.issuer ??= process.env[`AUTH_${ID}_ISSUER`]
+      }
     }
-    return provider
+    return finalProvider
   })
 }
 
