@@ -1,7 +1,7 @@
 {
   "name": "@auth/astra-db-adapter",
   "version": "0.0.1",
-  "description": "Astra adapter for next-auth.",
+  "description": "Astra DB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
