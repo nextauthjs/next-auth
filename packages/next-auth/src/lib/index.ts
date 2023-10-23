@@ -72,8 +72,14 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
       ...config.callbacks,
       // Since we are server-side, we don't need to filter out the session data
       // See https://nextjs.authjs.dev/v5#authenticating-server-side
-      session({ session, user, token }) {
-        return { ...session, user: user ?? token }
+      // TODO: Taint the session data to prevent accidental leakage to the client
+      // https://react.dev/reference/react/experimental_taintObjectReference
+      async session(...args) {
+        const session =
+          // If the user defined a custom session callback, use that instead
+          (await config.callbacks?.session?.(...args)) ?? args[0].session
+        const user = args[0].user ?? args[0].token
+        return { user, ...session } satisfies Session
       },
     },
   })
