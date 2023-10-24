@@ -4,14 +4,14 @@
   "name": "docs",
   "scripts": {
     "start": "TYPEDOC_WATCH=true docusaurus start --no-open",
-    "dev": "pnpm providers && pnpm snippets && pnpm start",
-    "build": "pnpm providers && docusaurus build",
+    "dev": "pnpm manifest && pnpm snippets && pnpm start",
+    "build": "pnpm manifest && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "providers": "node scripts/generate-providers.mjs",
+    "manifest": "node scripts/generate-manifest.mjs",
     "snippets": "node scripts/generate-snippets.mjs"
   },
   "dependencies": {
