@@ -1,6 +1,6 @@
 // This is an example of to protect an API route
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../auth/[...nextauth]"
+import { authOptions } from "/app/api/auth/[...nextauth]/route"
 
 export default async (req, res) => {
   const session = await getServerSession(req, res, authOptions)
