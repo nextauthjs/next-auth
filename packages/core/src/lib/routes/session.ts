@@ -125,13 +125,7 @@ export async function session(params: {
 
       // Pass Session through to the session callback
       const sessionPayload = await callbacks.session({
-        // By default, only exposes a limited subset of information to the client
-        // as needed for presentation purposes (e.g. "you are logged in as...").
-        session: {
-          // @ts-expect-error missing `id`.
-          user: { name: user.name, email: user.email, image: user.image },
-          expires: session.expires.toISOString(),
-        },
+        session,
         user,
         newSession,
         ...(isUpdate ? { trigger: "update" } : {}),
