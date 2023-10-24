@@ -54,7 +54,7 @@ export interface NextAuthConfig extends AuthConfig {
       request: NextRequest
       /** The authenticated user or token, if any. */
       auth: Session | null
-    }) => Awaitable<boolean | NextResponse | undefined>
+    }) => Awaitable<boolean | NextResponse | Response | undefined>
   }
 }
 
@@ -159,7 +159,7 @@ async function handleAuth(
   const sessionResponse = await getSession(request.headers, config)
   const auth = await sessionResponse.json()
 
-  let authorized: boolean | NextResponse | undefined = true
+  let authorized: boolean | NextResponse | Response | undefined = true
 
   if (config.callbacks?.authorized) {
     authorized = await config.callbacks.authorized({ request, auth })
