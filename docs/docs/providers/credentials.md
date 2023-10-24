@@ -19,7 +19,7 @@ The functionality provided for credentials based authentication is intentionally
 
 The **Credentials Provider** comes with a set of default options:
 
-- [Credentials Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/credentials.ts)
+- [Credentials Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/credentials.ts)
 
 You can override any of the options to suit your own use case.
 
