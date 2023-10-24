@@ -7,10 +7,10 @@ import TabItem from "@theme/TabItem"
 
 NextAuth.js version 5 is a complete rewrite of the package, but we made sure to introduce as little breaking changes as possible. For anything else, we summed up the necessary changes in this guide.
 
-Upgrade to the latest version by running:
+Try it out by running:
 
 ```bash npm2yarn2pnpm
-npm install next-auth@latest
+npm install next-auth@beta
 ```
 
 ## New Features
@@ -44,15 +44,18 @@ An example of the new configuration file format is as follows, as you can see it
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 
-export const { handlers: { GET, POST }, auth } = NextAuth({
-  providers: [ GitHub ],
+export const {
+  handlers: { GET, POST },
+  auth,
+} = NextAuth({
+  providers: [GitHub],
 })
 ```
 
 This then allows you to import the functions exported from this file elsewhere in your codebase via import statements like one of the following.
 
 ```ts
-import { auth } from '../path-to-config/auth'
+import { auth } from "../path-to-config/auth"
 ```
 
 The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a 1-line handler for `GET` and `POST` requests for those paths.
@@ -74,18 +77,20 @@ When using `auth()`, the [`session()` callback](/reference/core/types#session) i
 
 See the table below for a summary of the changes, and click on the links to learn more about each one.
 
-| Where                                     | v4                                                    | v5                               |
-| ----------------------------------------- | ----------------------------------------------------- | -------------------------------- |
-| [Server Component](?authentication-method=server-component#authenticate-methods)     | `getServerSession(authOptions)`                       | `auth()` call                    |
-| [Middleware](?authentication-method=middleware#authenticate-methods)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
-| [Client Component](?authentication-method=client-component#authenticate-methods)     | `useSession()` hook                                   | `useSession()` hook              |
-| [Route Handler](/reference/nextjs#in-route-handlers)           | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)       | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)       | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)       | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| Where                                                                                  | v4                                                    | v5                               |
+| -------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
+| [Server Component](?authentication-method=server-component#authenticate-methods)       | `getServerSession(authOptions)`                       | `auth()` call                    |
+| [Middleware](?authentication-method=middleware#authenticate-methods)                   | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| [Client Component](?authentication-method=client-component#authenticate-methods)       | `useSession()` hook                                   | `useSession()` hook              |
+| [Route Handler](/reference/nextjs#in-route-handlers)                                   | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)                               | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
 | [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
 | [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
+
 ### Authentication methods
+
 <Tabs groupId="authentication-method" queryString>
 <TabItem value="api-route" label="API Route (Node.js)">
 
@@ -150,7 +155,7 @@ For advanced use cases, you can use `auth` as a wrapper for your Middleware:
 ```ts title="middleware.ts"
 import { auth } from "./auth"
 
-export default auth(req => {
+export default auth((req) => {
   // req.auth
 })
 
@@ -158,7 +163,6 @@ export default auth(req => {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
-
 ```
 
 Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
@@ -205,6 +209,7 @@ Beginning with `next-auth` v5, you should now install database adapters from the
 This is because Database Adapters don't rely on any Next.js features, so it made sense to move them to this new scope.
 
 Example:
+
 ```diff
 - npm install @next-auth/prisma-adapter
 + npm install @auth/prisma-adapter
@@ -253,7 +258,7 @@ import GitHub from "next-auth/providers/github"
 import type { NextAuthConfig } from "next-auth"
 
 export default {
-  providers: [ GitHub ],
+  providers: [GitHub],
 } satisfies NextAuthConfig
 ```
 
@@ -291,7 +296,6 @@ Please follow up with your database/ORM's maintainer to see if they are planning
 
 - `NextAuthOptions` is renamed to `NextAuthConfig`
 - `Adapter` from `next-auth/adapters` is moved to `@auth/core/adapters`. If you are creating a custom adapter, use `@auth/core` instead of `next-auth`.
-
 
 ## Summary
 
