@@ -38,9 +38,9 @@ Let's look at `Session` for example:
 
 ```ts
 // auth.ts
-import NextAuth, { type DefaultSession } from "next-auth"
+import { type DefaultSession } from "next-auth"
 
-declare module "@auth/core" {
+declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
