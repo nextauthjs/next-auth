@@ -51,8 +51,10 @@ export interface SendVerificationRequestParams {
  * [Custom email service with Auth.js](https://authjs.dev/guides/providers/email#custom-email-service)
  */
 export interface EmailUserConfig extends Record<string, unknown> {
+  id?: string
   server?: AllTransportOptions
   type?: "email"
+  name?: string
   /** @default `"Auth.js <no-reply@authjs.dev>"` */
   from?: string
   /**
@@ -102,9 +104,9 @@ export interface EmailUserConfig extends Record<string, unknown> {
 
 export interface EmailConfig extends CommonProviderOptions {
   // defaults
-  id: "email"
+  id: string
   type: "email"
-  name: "Email"
+  name: string
   server: AllTransportOptions
   from: string
   maxAge: number
@@ -362,9 +364,9 @@ export type EmailProviderType = "email"
  */
 export default function Email(config: EmailUserConfig): EmailConfig {
   return {
-    id: "email",
+    id: config.id || "email",
     type: "email",
-    name: "Email",
+    name:  config.name || "Email",
     server: { host: "localhost", port: 25, auth: { user: "", pass: "" } },
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
