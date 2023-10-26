@@ -98,6 +98,10 @@ export default async function Page() {
 }
 ```
 
+:::info
+In contrast to `useSession`, which will return a `session` object whether or not a user has logged in (whether or not cookies are present), `getServerSession` only returns a `session` object when a user has logged in (only when authenticated cookies are present), otherwise, it returns `null`.
+:::
+
 :::warning
 Currently, the underlying Next.js `cookies()` method [only provides read access](https://beta.nextjs.org/docs/api-reference/cookies) to the request cookies. This means that the `expires` value is stripped away from `session` in Server Components. Furthermore, there is a hard expiry on sessions, after which the user will be required to sign in again. (The default expiry is 30 days).
 :::
