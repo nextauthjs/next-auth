@@ -70,8 +70,6 @@ Learn how to implement passwordless/magic link authentication with database stor
 
 > The final version of the project's code can be found on [Github](https://github.com/AlterClassIO/magic-next-auth). You can use it as a starting point for any Next.js app that requires passwordless authentication.
 
-> You can also preview the example live [here](https://magic-next-auth.vercel.app/).
-
 This tutorial covers:
 
 - Configuring Next.js, Auth.js, and Fauna to work together seamlessly

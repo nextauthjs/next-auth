@@ -1,8 +1,18 @@
 diff --git a/dist/publish.js b/dist/publish.js
-index 09a0c10584159beefa7a915ad92d46601da5ad45..01959c09b98ef8e7b1c2c6c481add782457e6921 100644
+index 09a0c10584159beefa7a915ad92d46601da5ad45..bbb63c7e687c1ca4b715b3a80a512d973a729da7 100644
 --- a/dist/publish.js
 +++ b/dist/publish.js
-@@ -55,7 +55,9 @@ export async function publish(packages, options) {
+@@ -22,6 +22,9 @@ export async function publish(packages, options) {
+         await pkgJson.update(pkg.relativeDir, { version: pkg.newVersion });
+         log.info("package.json file has been written, publishing.");
+         let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org --no-git-checks`;
++        if(pkg.name === "next-auth") {
++            npmPublish += " --tag beta";
++        }
+         if (dryRun) {
+             npmPublish += " --dry-run";
+             if (!options.verbose)
+@@ -55,7 +58,9 @@ export async function publish(packages, options) {
              execSync(`git tag ${gitTag}`);
              execSync("git push --tags");
              log.info(`Creating GitHub release notes.`);

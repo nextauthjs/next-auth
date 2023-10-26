@@ -14,23 +14,6 @@
       ],
       "outputMode": "new-only"
     },
-    "next-auth#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "client/**",
-        "core/**",
-        "css/**",
-        "jwt/**",
-        "next/**",
-        "providers/**",
-        "react/**",
-        "*.js",
-        "*.d.ts"
-      ],
-      "outputMode": "new-only"
-    },
     "@auth/core#build": {
       "dependsOn": [
         "^build"
@@ -56,6 +39,18 @@
         "index.*"
       ],
       "outputMode": "new-only"
+    },
+    "next-auth#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "lib/**",
+        "providers/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts*"
+      ]
     },
     "clean": {
       "cache": false
@@ -140,9 +135,10 @@
       "outputs": [
         ".docusaurus/**/*",
         "build/**/*",
+        "docs/reference/adapter/**",
         "docs/reference/core/**/*",
-        "docs/reference/sveltekit/**/*",
-        "docs/reference/adapter/**"
+        "docs/reference/nextjs/**/*",
+        "docs/reference/sveltekit/**/*"
       ]
     }
   }
