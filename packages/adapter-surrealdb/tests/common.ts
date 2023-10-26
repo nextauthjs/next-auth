@@ -15,6 +15,13 @@ export const config = (
   db: {
     async disconnect() {
       const surreal = await clientPromise
+      try {
+        await surreal.delete("account")
+        await surreal.delete("session")
+        await surreal.delete("verification_token")
+      } catch (e) {
+        console.log(e)
+      }
       if (surreal.close) surreal.close()
     },
     async user(id: string) {

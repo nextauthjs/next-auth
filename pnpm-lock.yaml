@@ -710,8 +710,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       surrealdb.js:
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: ^0.9.1
+        version: 0.9.1
     devDependencies:
       '@auth/adapter-test':
         specifier: workspace:*
@@ -29344,8 +29344,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /surrealdb.js@0.9.0:
-    resolution: {integrity: sha512-JV1lSzeSF4GftfxSvrOd0fDAw0AwRTSTsn+smp4BzhVuvcfJH/2zceEMwsMLzQcUao386pq4xk5JKoieayFJqQ==}
+  /surrealdb.js@0.9.1:
+    resolution: {integrity: sha512-Lw7gds+u5966ng00/yOOkeW90VFj2tI5YNZ1cY7t9fyl9yEEcrFOkR5djqXwuJ1V3ORVORP5l+Hv2N6Sfgh5PQ==}
     dependencies:
       unws: 0.2.4(ws@8.14.1)
       ws: 8.14.1
