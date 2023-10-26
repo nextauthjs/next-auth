@@ -90,7 +90,7 @@
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
-    "postcss": "8.4.19",
+    "postcss": "8.4.31",
     "postcss-nested": "6.0.0"
   }
 }
