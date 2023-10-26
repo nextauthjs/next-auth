@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/ClickUp
+ * @module providers/click-up
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"

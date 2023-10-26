@@ -8,7 +8,7 @@ const coreSrc = "../packages/core/src"
 const providers = fs
   .readdirSync(path.join(__dirname, coreSrc, "/providers"))
   .filter((file) => file.endsWith(".ts"))
-  .map((p) => `${coreSrc}/providers/${p}`)
+  .map((p) => `providers/${p}`)
 
 const typedocConfig = require("./typedoc.json")
 // @ts-expect-error
@@ -260,7 +260,7 @@ const docusaurusConfig = {
           },
           async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
             const sidebarItems = await defaultSidebarItemsGenerator(args)
-            const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index"]
+            const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index", "reference/nextjs/index"]
             return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
           },
         },
@@ -271,8 +271,9 @@ const docusaurusConfig = {
     ],
   ],
   plugins: [
-    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"]),
+    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].concat(providers)),
     typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
+    typedocFramework("next-auth", ["index.tsx", "react.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [

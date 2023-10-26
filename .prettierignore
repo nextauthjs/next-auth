@@ -23,7 +23,7 @@ build
 docs/docs/reference/core
 docs/docs/reference/sveltekit
 static
-docs/providers.json
+docs/manifest.json
 
 # --------------- Packages ---------------
 
@@ -31,6 +31,7 @@ coverage
 dist
 packages/**/*.cjs
 packages/**/*.js
+!packages/*/scripts/*.js
 
 # @auth/core
 packages/core/src/providers/oauth-types.ts
