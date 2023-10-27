@@ -11,7 +11,7 @@ body:
 
         ### Important :exclamation:
 
-        _Providing incorrect/insufficient information or skipping steps to reproduce the issue will result in closing the issue and/or converting to a discussion without further explanation._
+        _Providing incorrect/insufficient information or skipping steps to reproduce the issue may result in closing the issue or converting to a discussion without further explanation._
 
         If you have a generic question specific to your project, it is best asked in Discussions under the [Questions category](https://github.com/nextauthjs/next-auth/discussions/new?category=Questions)
   # Let's wait with this until adoption in other frameworks.
