@@ -303,13 +303,13 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
     auth: initAuth(config),
-    signIn(provider, options, authorizationParams) {
+    signIn: (provider, options, authorizationParams) => {
       return signIn(provider, options, authorizationParams, config)
     },
-    signOut(options) {
+    signOut: (options) => {
       return signOut(options, config)
     },
-    update(data) {
+    update: (data) => {
       return update(data, config)
     },
   }
