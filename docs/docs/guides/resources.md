@@ -20,10 +20,6 @@ title: Community resources
 
 - This tutorial walks one through adding Auth.js to an existing project. Including setting up the OAuth client id and secret, adding the API routes for authentication, protecting pages and API routes behind that authentication, etc.
 
-#### [Adding social authentication support to a Next.js app](https://getstarted.sh/bulletproof-next/add-social-authentication) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
-
-- A tutorial by Arunoda Susirpiala. Checkout [GetStarted](https://getstarted.sh/) for more examples.
-
 #### [How to Authenticate Next.js Apps with Twitter & Auth.js](https://spacejelly.dev/posts/how-to-authenticate-next-js-apps-with-twitter-nextauth-js/) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
 - Learn how to add Twitter authentication and login to a Next.js app both client-side and server-side with Auth.js.
