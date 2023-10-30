@@ -5,7 +5,6 @@ title: Initialization
 
 The main entry point of NextAuth.js is the `NextAuth` method that you import from `next-auth`. It handles different types of requests, as defined in the [REST API](../getting-started/rest-api.md) section.
 
-
 :::info
 NextAuth.js cannot use the run [Edge Runtime](https://nextjs.org/docs/api-reference/edge-runtime) for initialization. The upcoming [`@auth/nextjs` library](https://authjs.dev/reference/nextjs) (which will replace `next-auth`) on the other hand will be fully compatible.
 :::
@@ -13,6 +12,7 @@ NextAuth.js cannot use the run [Edge Runtime](https://nextjs.org/docs/api-refere
 You can initialize NextAuth.js in a few different ways.
 
 ## Simple initialization
+
 ### API Routes (`pages`)
 
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
@@ -61,7 +61,6 @@ Instead, `NextAuth` will receive the first two arguments of a Route Handler, and
 :::
 
 If you have a specific use case and need to make NextAuth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].ts` config file is just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)**.
-
 
 That said, you can initialize NextAuth.js like this:
 
@@ -148,7 +147,7 @@ export default async function auth(req, res) {
 }
 ```
 
-For more details on all available actions and which methods are supported, please check out the [REST API documentation](/getting-started/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/index.ts)
+For more details on all available actions and which methods are supported, please check out the [REST API documentation](/getting-started/rest-api) or the appropriate area in [the source code](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/index.ts)
 
 This way of initializing `NextAuth` is very powerful, but should be used sparingly.
 

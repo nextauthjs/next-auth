@@ -19,7 +19,7 @@ You need to have an APP in your Developer Account as described at https://develo
 
 The **HubSpot Provider** comes with a set of default options:
 
-- [HubSpot Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/hubspot.ts)
+- [HubSpot Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/hubspot.ts)
 
 You can override any of the options to suit your own use case.
 
@@ -40,4 +40,3 @@ providers: [
 :::warning
 The **Redirect URL** under the **Auth** tab on the HubSpot App Settings page must match the callback url which would be http://localhost:3000/api/auth/callback/hubspot for local development. Only one callback URL per Client ID and Client Secret pair is allowed, so it might be easier to create a new app for local development then fiddle with the url changes.  
 :::
-

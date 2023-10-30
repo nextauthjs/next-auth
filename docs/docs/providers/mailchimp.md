@@ -15,7 +15,7 @@ https://admin.mailchimp.com/account/oauth2/client/
 
 The **Mailchimp Provider** comes with a set of default options:
 
-- [Mailchimp Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/mailchimp.js)
+- [Mailchimp Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/mailchimp.js)
 
 You can override any of the options to suit your own use case.
 

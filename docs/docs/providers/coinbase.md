@@ -15,7 +15,7 @@ https://www.coinbase.com/settings/api
 
 The **Coinbase Provider** comes with a set of default options:
 
-- [Coinbase Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/coinbase.js)
+- [Coinbase Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/coinbase.js)
 
 You can override any of the options to suit your own use case.
 

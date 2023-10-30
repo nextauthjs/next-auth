@@ -22,7 +22,7 @@ Make sure to enable **dev mode** in ZITADEL console to allow redirects for local
 
 The **ZITADEL Provider** comes with a set of default options:
 
-- [ZITADEL Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/zitadel.ts)
+- [ZITADEL Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/zitadel.ts)
 
 You can override any of the options to suit your own use case.
 

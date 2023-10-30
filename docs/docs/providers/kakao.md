@@ -15,7 +15,7 @@ https://developers.kakao.com/docs/latest/en/kakaologin/common
 
 The **Kakao Provider** comes with a set of default options:
 
-- [Kakao Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/kakao.ts)
+- [Kakao Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/kakao.ts)
 
 You can override any of the options to suit your own use case.
 

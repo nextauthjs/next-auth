@@ -15,7 +15,7 @@ https://dashboard.workos.com
 
 The **WorkOS Provider** comes with a set of default options:
 
-- [WorkOS Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/workos.ts)
+- [WorkOS Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/workos.ts)
 
 You can override any of the options to suit your own use case.
 

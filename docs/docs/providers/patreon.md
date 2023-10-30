@@ -17,7 +17,7 @@ Create a API v2 client on [Patreon Platform](https://www.patreon.com/portal/regi
 
 The **Patreon Provider** comes with a set of default options:
 
-- [Patreon Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/patreon.ts)
+- [Patreon Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/patreon.ts)
 
 You can override any of the options to suit your own use case.
 

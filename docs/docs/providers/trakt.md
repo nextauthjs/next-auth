@@ -17,7 +17,7 @@ Start by creating an OAuth app on Trakt for [production](https://trakt.tv/oauth/
 
 The **Trakt Provider** comes with a set of default options:
 
-- [Trakt Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/trakt.ts)
+- [Trakt Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/trakt.ts)
 
 You can override any of the options to suit your own use case.
 
