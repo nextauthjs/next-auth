@@ -1,6 +1,6 @@
 ---
 id: osu
-title: Osu!
+title: osu!
 ---
 
 ## Documentation
