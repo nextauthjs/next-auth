@@ -26,7 +26,7 @@ OAuth providers spend significant amounts of money, time, and engineering effort
 
 - abuse detection (bot-protection, rate-limiting)
 - password management (password reset, credential stuffing, rotation)
-- data security (encrpytion/alting, strength validation)
+- data security (encryption/salting, strength validation)
 
 and much more for authentication solutions. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
 
