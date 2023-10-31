@@ -77,7 +77,7 @@ For more information about setting up a database, please check out the following
 
 e.g. For Google OAuth you would use: `http://localhost:3000/api/auth/callback/google`
 
-A list of configured providers and their callback URLs is available from the endpoint `api/auth/providers`. You can find more information at https://authjs.dev/getting-started/oauth-tutorial
+A list of configured providers and their callback URLs is available from the endpoint `api/auth/providers`. You can find more information at https://authjs.dev/getting-started/providers/oauth-tutorial
 
 1. You can also choose to specify an SMTP server for passwordless sign in via email.
 

@@ -10,6 +10,9 @@ const swcConfig = {
 
 /** @type {import("jest").Config} */
 module.exports = {
+  globals: {
+    fetch: global.fetch,
+  },
   transform: {
     ".(ts|tsx)$": ["@swc/jest", swcConfig],
     ".(js|jsx)$": ["@swc/jest", swcConfig],
