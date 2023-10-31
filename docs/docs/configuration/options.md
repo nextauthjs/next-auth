@@ -310,7 +310,7 @@ events: {
 
 #### Description
 
-By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](https://authjs.dev/reference/adapters).
+By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](https://next-auth.js.org/adapters).
 
 ---
 
