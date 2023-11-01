@@ -953,7 +953,7 @@ importers:
   packages/next-auth:
     dependencies:
       '@auth/core':
-        specifier: workspace:experimental
+        specifier: workspace:*
         version: link:../core
     devDependencies:
       '@types/react':
