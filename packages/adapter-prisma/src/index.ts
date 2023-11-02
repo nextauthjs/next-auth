@@ -261,7 +261,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     async useVerificationToken(identifier_token) {
       try {
         const verificationToken = await p.verificationToken.delete({
-          where: { identifier_token },
+          where: identifier_token ,
         })
         // @ts-expect-errors // MongoDB needs an ID, but we don't
         if (verificationToken.id) delete verificationToken.id
