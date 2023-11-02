@@ -72,7 +72,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:experimental"
+    "@auth/core": "workspace:*"
   },
   "peerDependencies": {
     "next": "^14",
