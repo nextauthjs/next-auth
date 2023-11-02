@@ -22,7 +22,7 @@
     "framer-motion": "^10.16.4",
     "mdx-mermaid": "1.2.2",
     "mermaid": "9.0.1",
-    "postcss": "^8.4.29",
+    "postcss": "^8.4.31",
     "prism-react-renderer": "1.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
