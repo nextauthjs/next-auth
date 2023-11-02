@@ -86,14 +86,11 @@ export function mapExpiresAt(account: any): any {
  *
  * ```
  *
- *  ```bash npm2yarn2pnpm
- * npm install pg @auth/pg-adapter next-auth
- * ```
  *
  * ```typescript title="auth.ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { PostgresAdapter } from "@auth/pg-adapter"
+ * import PostgresAdapter from "@auth/pg-adapter"
  * import { Pool } from 'pg'
  *
  * const pool = new Pool({
