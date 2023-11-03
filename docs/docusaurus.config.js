@@ -276,6 +276,7 @@ const docusaurusConfig = {
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
+          typedocAdapter("Astra DB"),
           typedocAdapter("Azure Tables"),
           typedocAdapter("D1"),
           typedocAdapter("Dgraph"),
@@ -298,7 +299,6 @@ const docusaurusConfig = {
           typedocAdapter("TypeORM"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
-          typedocAdapter("Astra DB"),
         ]),
   ],
 }

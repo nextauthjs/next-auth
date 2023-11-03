@@ -275,6 +275,12 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
 
+  packages/adapter-astra-db:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/adapter-azure-tables:
     dependencies:
       '@auth/core':

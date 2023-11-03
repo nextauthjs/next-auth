@@ -52,6 +52,7 @@ module.exports = {
             label: "Database Adapters",
             collapsed: false,
             items: [
+              { type: "doc", id: "reference/adapter/astra-db/index" },
               { type: "doc", id: "reference/adapter/azure-tables/index" },
               { type: "doc", id: "reference/adapter/d1/index" },
               { type: "doc", id: "reference/adapter/edgedb/index" },

@@ -24,6 +24,7 @@ const frameworks = [
 // }, {})
 
 const adapters = {
+  "astra-db": ["Astra DB", "astra-db.png"],
   "azure-tables": ["Azure Tables Storage"],
   d1: ["D1"],
   dgraph: ["Dgraph", "dgraph.png"],

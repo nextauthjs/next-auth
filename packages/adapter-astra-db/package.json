@@ -1,8 +1,8 @@
 {
   "name": "@auth/astra-db-adapter",
   "version": "0.0.1",
-  "description": "Astra DB adapter for next-auth.",
-  "homepage": "https://authjs.dev",
+  "description": "Astra DB adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/astra-db",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
@@ -37,23 +37,14 @@
     "access": "public"
   },
   "scripts": {
-    "test": "./tests/test.sh",
+    "clean": "rm ./index*",
+    "test": "jest",
     "build": "tsc"
   },
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "axios": "^1.5.1",
-    "dotenv": "^16.3.1"
-  },
-  "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3"
+    "@auth/core": "workspace:*"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest",
-    "transformIgnorePatterns": [
-      "./node_modules/(?!axios)/"
-    ]
+    "preset": "@auth/adapter-test/jest"
   }
 }
