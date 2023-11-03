@@ -15,7 +15,6 @@
     "@auth/core": "workspace:*",
     "@swc/core": "^1.2.198",
     "@swc/jest": "^0.2.29",
-    "@types/jest": "^29.5.2",
     "@types/nodemailer": "^6.4.4"
   }
 }

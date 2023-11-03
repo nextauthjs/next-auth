@@ -42,8 +42,6 @@
     "@supabase/supabase-js": "^2.0.5"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:^0.0.0",
-    "@auth/tsconfig": "workspace:^0.0.0",
     "@supabase/supabase-js": "^2.0.5"
   },
   "jest": {
