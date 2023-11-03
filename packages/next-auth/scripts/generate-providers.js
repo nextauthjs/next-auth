@@ -12,11 +12,12 @@ try {
   for (const file of files) {
     const destinationPath = resolve(destinationDir, file)
     const provider = file.substring(0, file.indexOf("."))
-    const content = `export * from "@auth/core/providers/${provider}"
-export { default } from "@auth/core/providers/${provider}"`.replace(
-      /\/index$/g,
-      ""
-    )
+    let content = `export * from "@auth/core/providers/${provider}"`
+    if (provider !== "index") {
+      content += `\nexport { default } from "@auth/core/providers/${provider}"`
+    }
+
+    content = content.replace(/\/index/g, "")
     await fs.writeFile(destinationPath, content)
   }
   console.log("All files copied successfully!")
