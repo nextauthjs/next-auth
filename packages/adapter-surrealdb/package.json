@@ -47,9 +47,6 @@
   "peerDependencies": {
     "surrealdb.js": "^0.9.1"
   },
-  "devDependencies": {
-    "jest": "^27.4.3"
-  },
   "jest": {
     "preset": "@auth/adapter-test/jest"
   }
