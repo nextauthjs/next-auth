@@ -75,7 +75,6 @@ module.exports = {
               { type: "doc", id: "reference/adapter/typeorm/index" },
               { type: "doc", id: "reference/adapter/upstash-redis/index" },
               { type: "doc", id: "reference/adapter/xata/index" },
-              { type: "doc", id: "reference/adapter/astra-db/index" },
             ],
           },
         ]),
