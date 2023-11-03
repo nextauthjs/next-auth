@@ -72,7 +72,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:experimental"
+    "@auth/core": "workspace:*"
   },
   "peerDependencies": {
     "next": "^14",
@@ -85,6 +85,7 @@
     }
   },
   "devDependencies": {
+    "@auth/tsconfig": "workspace:*",
     "@types/react": "18.0.37",
     "next": "^14.0.0",
     "nodemailer": "^6.9.3",

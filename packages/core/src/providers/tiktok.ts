@@ -8,7 +8,7 @@
  *
  * @module providers/tiktok
  */
-import { TokenSet } from "src/types.js"
+import { TokenSet } from "../types.js"
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
