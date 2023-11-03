@@ -22,7 +22,7 @@ const baseUrl = `https://${api.dbId}-${api.region}.apps.astra.datastax.com/api/j
 const sessions = `${baseUrl}/${defaultCollections.sessions}`
 const users = `${baseUrl}/${defaultCollections.users}`
 const accounts = `${baseUrl}/${defaultCollections.accounts}`
-const tokens = `${baseUrl}/${defaultCollections.tokens}`
+const tokens = `${baseUrl}/${defaultCollections.verificationTokens}`
 
 function init(body: any) {
   return {
@@ -52,29 +52,36 @@ runBasicTests({
         )
       )
     },
-    session(sessionToken) {
+    async session(sessionToken) {
       return format.from(
-        fetch(sessions, init({ findOne: { filter: { sessionToken } } })).then(
-          (res) => res.json()
-        )
+        await fetch(
+          sessions,
+          init({ findOne: { filter: { sessionToken } } })
+        ).then((res) => res.json())
       )
     },
-    user(_id: string) {
+    async user(_id: string) {
       return format.from(
-        fetch(users, init({ findOne: { filter: { _id } } })).then((res) =>
+        await fetch(users, init({ findOne: { filter: { _id } } })).then((res) =>
           res.json()
         )
       )
     },
-    account(filter) {
+    async account(filter) {
       return format.from(
-        fetch(accounts, init({ findOne: { filter } })).then((res) => res.json())
+        await fetch(accounts, init({ findOne: { filter } })).then((res) =>
+          res.json()
+        )
       )
     },
-    verificationToken(filter) {
-      return format.from(
-        fetch(tokens, init({ findOne: { filter } })).then((res) => res.json())
+    async verificationToken(filter) {
+      const token = format.from(
+        await fetch(tokens, init({ findOne: { filter } })).then((res) =>
+          res.json()
+        )
       )
+      delete token?.id
+      return token
     },
   },
 })

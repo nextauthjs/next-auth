@@ -15,14 +15,20 @@
  * @module @auth/astra-db-adapter
  */
 
-import type { Adapter } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "@auth/core/adapters"
 
 export interface AstraDBConfig {
   collections?: {
     users?: string
     sessions?: string
     accounts?: string
-    tokens?: string
+    verificationTokens?: string
   }
   api: {
     dbId: string
@@ -36,21 +42,46 @@ export const defaultCollections = {
   users: "users",
   sessions: "sessions",
   accounts: "accounts",
-  tokens: "verificationtokens",
+  verificationTokens: "verificationTokens",
 } satisfies AstraDBConfig["collections"]
+
+interface AstraResponse<T> {
+  data?: { document: T | null }
+  errors: { message: string; errorCode: string }[]
+  status: any
+}
+
+// https://github.com/honeinc/is-iso-date/blob/master/index.js
+const isoDateRE =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+
+function isDate(value: unknown): value is string | number {
+  if (typeof value !== "string") return false
+  return isoDateRE.test(value) && !isNaN(Date.parse(value))
+}
 
 export const format = {
   /** Takes a DB response and returns a plain old JavaScript object */
-  from<T = Record<string, unknown>>(object: Record<string, any>): T {
-    const newObject: Record<string, unknown> = {}
-    for (const key in object) {
-      const value = object[key]
-      if (value?.value && typeof value.value === "string") {
-        newObject[key] = new Date(value.value)
-      } else {
-        newObject[key] = value
-      }
+  from<T = Record<string, unknown>>(
+    object: AstraResponse<T>,
+    includeId: boolean = true
+  ): T | null {
+    if (object.errors?.length) {
+      const e = new Error(object.errors[0].message)
+      e.cause = object.errors
+      throw e
     }
+
+    if (!object.data?.document) return null
+
+    const newObject: Record<string, unknown> = {}
+    for (const key in object.data.document) {
+      const value = object.data.document[key]
+      if (key === "_id") newObject["id"] = value
+      else if (isDate(value)) newObject[key] = new Date(value)
+      else newObject[key] = value
+    }
+    if (!includeId) delete newObject.id
     return newObject as T
   },
 }
@@ -128,7 +159,7 @@ function fetchClient(api: AstraDBConfig["api"]) {
 export function AstraDBAdapter(config: AstraDBConfig): Adapter {
   const { api } = config
   const collections = { ...defaultCollections, ...config.collections }
-  const { users, accounts, sessions, tokens } = collections
+  const { users, accounts, sessions, verificationTokens: tokens } = collections
   const client = fetchClient(api)
 
   return {
@@ -141,7 +172,7 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
             options: { returnDocument: "after", upsert: true },
           },
         })
-      )
+      )!
     },
     async getUser(_id) {
       return format.from(
@@ -163,28 +194,31 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
             options: { returnDocument: "after", upsert: false },
           },
         })
-      )
+      )!
     },
-    async createSession(session) {
-      return format.from(
-        await client.request(sessions, { insertOne: { document: session } })
-      )
+    async createSession(document) {
+      const { status } = await client.request(sessions, {
+        insertOne: { document },
+      })
+      return { ...document, id: status.insertedId }
     },
     async getSessionAndUser(sessionToken) {
-      const session = format.from(
+      const session = format.from<AdapterSession>(
         await client.request(sessions, {
           findOne: { filter: { sessionToken } },
         })
       )
       if (!session) return null
 
-      const user = format.from(
+      const user = format.from<AdapterUser>(
         await client.request(users, {
           findOne: { filter: { _id: session.userId } },
         })
       )
 
-      return { session, user } as any
+      if (!user) return null
+
+      return { session, user }
     },
     async updateSession(session) {
       const { sessionToken } = session
@@ -200,37 +234,43 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
     },
     async deleteSession(sessionToken) {
       const requests = [
-        client.request(sessions, { findOne: { sessionToken } }),
-        client.request(sessions, { deleteMany: { sessionToken } }),
+        client.request(sessions, { findOne: { filter: { sessionToken } } }),
+        client.request(sessions, { deleteOne: { filter: { sessionToken } } }),
       ]
-      return format.from((await Promise.all(requests))[0]) as any
-    },
-    async createVerificationToken(verificationToken) {
-      return format.from(
-        await client.request(tokens, {
-          insertOne: { document: verificationToken },
-        })
+
+      return (
+        format.from<AdapterSession>((await Promise.all(requests))[0]) ?? null
       )
+    },
+    async createVerificationToken(document) {
+      await client.request(tokens, { insertOne: { document } })
+      return document
     },
     async useVerificationToken(filter) {
       const requests = [
         client.request(tokens, { findOne: { filter } }),
         client.request(tokens, { deleteMany: { filter } }),
       ]
-      return format.from((await Promise.all(requests))[0])
+      return format.from<VerificationToken>(
+        (await Promise.all(requests))[0],
+        false
+      )
     },
-    async linkAccount(account) {
-      return format.from(
-        await client.request(accounts, { insertOne: { document: account } })
-      ) as any
+    async linkAccount(document) {
+      const { status } = await client.request(accounts, {
+        insertOne: { document },
+      })
+      return { ...document, id: status.insertedId }
     },
     async getUserByAccount(filter) {
-      const account = await client.request(accounts, { findOne: { filter } })
+      const account = format.from(
+        await client.request(accounts, { findOne: { filter } })
+      )
       if (!account) return null
 
       return format.from(
         await client.request(users, {
-          findOne: { filter: { _id: account.userId ?? "" } },
+          findOne: { filter: { _id: account.userId } },
         })
       )
     },
@@ -239,7 +279,7 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
         client.request(accounts, { findOne: { filter } }),
         client.request(accounts, { deleteMany: { filter } }),
       ]
-      return format.from((await Promise.all(requests))[0]) as any
+      return format.from<AdapterAccount>((await Promise.all(requests))[0])!
     },
     async deleteUser(userId) {
       const requests = [
@@ -247,7 +287,7 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
         client.request(accounts, { deleteMany: { filter: { userId } } }),
         client.request(sessions, { deleteMany: { filter: { userId } } }),
       ]
-      return format.from((await Promise.all(requests))[0]) as any
+      return format.from<AdapterUser>((await Promise.all(requests))[0])
     },
   }
 }
