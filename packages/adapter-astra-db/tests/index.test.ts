@@ -3,17 +3,13 @@ import { AstraDBAdapter, format, defaultCollections } from "../src"
 import type { AstraDBConfig } from "../src"
 
 if (!process.env.ASTRA_DB_ID) throw new TypeError("ASTRA_DB_ID is missing")
-if (!process.env.ASTRA_DB_REGION)
-  throw new TypeError("ASTRA_DB_REGION is missing")
-if (!process.env.ASTRA_DB_KEYSPACE)
-  throw new TypeError("ASTRA_DB_KEYSPACE is missing")
 if (!process.env.ASTRA_DB_APPLICATION_TOKEN)
   throw new TypeError("ASTRA_DB_APPLICATION_TOKEN is missing")
 
 const api = {
   dbId: process.env.ASTRA_DB_ID,
-  region: process.env.ASTRA_DB_REGION,
-  keyspace: process.env.ASTRA_DB_KEYSPACE,
+  region: "us-east-2",
+  keyspace: "test",
   token: process.env.ASTRA_DB_APPLICATION_TOKEN,
 } satisfies AstraDBConfig["api"]
 
