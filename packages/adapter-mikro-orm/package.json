@@ -46,8 +46,6 @@
   "devDependencies": {
     "@mikro-orm/core": "^5",
     "@mikro-orm/sqlite": "^5",
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
     "jest": "^29"
   },
   "dependencies": {
