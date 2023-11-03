@@ -45,8 +45,6 @@
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
     "@cloudflare/workers-types": "^4.20230321.0",
     "@miniflare/d1": "^2.12.2",
     "better-sqlite3": "^8.6.0",

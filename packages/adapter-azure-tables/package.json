@@ -48,9 +48,6 @@
     "@azure/data-tables": "^13.2.1"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3",
     "@azure/data-tables": "^13.2.1"
   },
   "jest": {
