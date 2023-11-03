@@ -10,8 +10,6 @@
   "excludeProtected": true,
   "gitRevision": "main",
   "hideBreadcrumbs": true,
-  "hideHierarchy": true,
-  "hideKindPrefix": true,
   "hideGenerator": true,
   "kindSortOrder": [
     "Function",
@@ -27,7 +25,6 @@
     "Variable",
     "Accessor",
     "Method",
-    "ObjectLiteral",
     "Parameter",
     "TypeParameter",
     "TypeLiteral",
