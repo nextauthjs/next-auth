@@ -92,27 +92,29 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
-      # - name: Run E2E tests
-      #   if: github.repository == 'nextauthjs/next-auth'
-      #   run: pnpm e2e
-      #   timeout-minutes: 15
-      #   env:
-      #     AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
-      #     AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
-      #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      #     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      # - name: Upload E2E artifacts
-      #   if: github.repository == 'nextauthjs/next-auth'
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: playwright-report
-      #     path: apps/dev/nextjs/playwright-report/
-      #     retention-days: 30
-      # - name: Coverage
-      #   uses: codecov/codecov-action@v1
-      #   with:
-      #     directory: ./coverage
-      #     fail_ci_if_error: false
+          ASTRA_DB_ID: ${{ secrets.ASTRA_DB_ID }}
+          ASTRA_DB_APPLICATION_TOKEN: ${{ secrets.ASTRA_DB_APPLICATION_TOKEN }}
+    # - name: Run E2E tests
+    #   if: github.repository == 'nextauthjs/next-auth'
+    #   run: pnpm e2e
+    #   timeout-minutes: 15
+    #   env:
+    #     AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+    #     AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+    #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    #     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    # - name: Upload E2E artifacts
+    #   if: github.repository == 'nextauthjs/next-auth'
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: playwright-report
+    #     path: apps/dev/nextjs/playwright-report/
+    #     retention-days: 30
+    # - name: Coverage
+    #   uses: codecov/codecov-action@v1
+    #   with:
+    #     directory: ./coverage
+    #     fail_ci_if_error: false
   # release-branch:
   #   name: Publish branch
   #   runs-on: ubuntu-latest
