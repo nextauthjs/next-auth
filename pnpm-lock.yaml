@@ -947,6 +947,9 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
+      '@auth/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/react':
         specifier: 18.0.37
         version: 18.0.37
