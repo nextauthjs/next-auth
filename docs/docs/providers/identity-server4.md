@@ -15,7 +15,7 @@ https://identityserver4.readthedocs.io/en/latest/
 
 The **IdentityServer4 Provider** comes with a set of default options:
 
-- [IdentityServer4 Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/identity-server4.js)
+- [IdentityServer4 Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/identity-server4.js)
 
 You can override any of the options to suit your own use case.
 

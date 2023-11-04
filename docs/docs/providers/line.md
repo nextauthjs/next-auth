@@ -15,7 +15,7 @@ https://developers.line.biz/console/
 
 The **Line Provider** comes with a set of default options:
 
-- [Line Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/line.ts)
+- [Line Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/line.ts)
 
 You can override any of the options to suit your own use case.
 

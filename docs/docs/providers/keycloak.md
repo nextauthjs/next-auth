@@ -17,7 +17,7 @@ Create an openid-connect client in Keycloak with "confidential" as the "Access T
 
 The **Keycloak Provider** comes with a set of default options:
 
-- [Keycloak Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/keycloak.ts)
+- [Keycloak Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/keycloak.ts)
 
 You can override any of the options to suit your own use case.
 

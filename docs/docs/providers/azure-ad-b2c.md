@@ -26,7 +26,7 @@ https://docs.microsoft.com/azure/active-directory-b2c/tutorial-create-tenant
 
 The **Azure Active Directory Provider** comes with a set of default options:
 
-- [Azure Active Directory Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/azure-ad-b2c.ts)
+- [Azure Active Directory Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/azure-ad-b2c.ts)
 
 You can override any of the options to suit your own use case.
 
