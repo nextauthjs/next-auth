@@ -2,7 +2,7 @@
  *
  * NextAuth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
  *
- * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://nextjs.authjs.dev#methods)
+ * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://authjs.dev/guides/upgrade-to-v5#methods)
  *
  * @module react
  */
@@ -404,7 +404,9 @@ export function SessionProvider(props: SessionProviderProps) {
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
-        logger.error(new ClientSessionError(error.message, error))
+        logger.error(
+          new ClientSessionError((error as Error).message, error as any)
+        )
       } finally {
         setLoading(false)
       }
@@ -471,7 +473,7 @@ export function SessionProvider(props: SessionProviderProps) {
         : session
         ? "authenticated"
         : "unauthenticated",
-      async update(data) {
+      async update(data: any) {
         if (loading || !session) return
         setLoading(true)
         const newSession = await fetchData<Session>(

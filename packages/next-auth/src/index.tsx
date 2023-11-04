@@ -1,10 +1,5 @@
 /**
- *
- * :::warning Note
- * This is the documentation for `next-auth@latest`. Check out the documentation of v4 [here](https://next-auth.js.org).
- * :::
- *
- * If you are looking for the migration guide, visit the [`next-auth@latest` Migration Guide](https://nextjs.authjs.dev/v5).
+ * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/guides/upgrade-to-v5)._
  *
  * ## Installation
  *

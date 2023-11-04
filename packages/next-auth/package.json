@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.0",
+  "version": "5.0.0-beta.3",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -72,10 +72,10 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:experimental"
+    "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "next": "^13.5.3",
+    "next": "^14",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
@@ -86,9 +86,8 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
-    "next": "13.5.7-canary.17",
+    "next": "^14.0.0",
     "nodemailer": "^6.9.3",
-    "react": "^18.2.0",
-    "typescript": "5.2.2"
+    "react": "^18.2.0"
   }
 }

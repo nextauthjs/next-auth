@@ -236,18 +236,16 @@ NextAuth.js v5 does not introduce any breaking changes to the database schema. H
 
 Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were required to be added to the `account` table. This is no longer the case, and you can remove it if you are not using it. If you do, make sure to return it via the new [`account()` callback](/reference/core/providers#account).
 
-### Edge compatibility
+## Edge compatibility
 
-:::note
-If you are using a sufficiently fast and Edge-compatible database ORM/library, you can ignore this section.
-:::
+While NextAuth.js strictly uses standard Web APIs (and thus can run in any environments that supports that), some libraries/ORM packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files. The following is an example of how to do this with a database adapter.
 
 NextAuth.js supports two session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy.
 
 Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it, by forcing a JWT session strategy:
 
 :::note
-The following is only a convention we chose, the filenames/structure have no important meaning, as long as you import the correct files in the correct places.
+The following filenames are only a convention we chose, the filenames/structure can be anything you like.
 :::
 
 1. Create an `auth.config.ts` file with your config and export it:

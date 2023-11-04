@@ -43,9 +43,6 @@
     "sequelize": "^6.6.5"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3",
     "sequelize": "^6.6.5"
   },
   "jest": {

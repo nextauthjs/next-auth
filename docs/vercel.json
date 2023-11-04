@@ -64,6 +64,11 @@
     },
     {
       "source": "/",
+      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/nextjs"
+    },
+    {
+      "source": "/",
       "has": [{ "type": "host", "value": "solid-start.authjs.dev" }],
       "destination": "https://authjs.dev/reference/solid-start"
     },
