@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```

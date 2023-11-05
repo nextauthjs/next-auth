@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @supabase/supabase-js @auth/supabase-adapter
  * ```
  *
@@ -213,7 +213,7 @@ export interface SupabaseAdapterOptions {
  *
  * To sign the JWT use the `jsonwebtoken` package:
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install jsonwebtoken
  * ```
  *

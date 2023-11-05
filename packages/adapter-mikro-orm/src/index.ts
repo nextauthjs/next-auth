@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @mikro-orm/core @auth/mikro-orm-adapter
  * ```
  *

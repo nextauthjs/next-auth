@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install next-auth @auth/pg-adapter pg
  * ```
  *
@@ -86,7 +86,7 @@ export function mapExpiresAt(account: any): any {
  *
  * ```
  *
- *  ```bash npm2yarn2pnpm
+ *  ```bash npm2yarn
  * npm install pg @auth/pg-adapter next-auth
  * ```
  *
