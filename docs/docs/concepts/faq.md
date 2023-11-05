@@ -21,7 +21,7 @@ It is not commercial software and is not associated with a commercial organizati
 </summary>
 <p>
 
-You can use Auth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See our [using a database adapter guide](/guides/adapters/using-a-database-adapter)).
+You can use Auth.js with MySQL, MariaDB, Postgres, MongoDB and SQLite or without a database. (See our [using a database adapter guide](/getting-started/adapters)).
 
 You can use also Auth.js with any database using a custom database adapter, or by using a custom credentials authentication provider - e.g. to support signing in with a username and password stored in an existing database.
 
@@ -35,7 +35,7 @@ You can use also Auth.js with any database using a custom database adapter, or b
 <p>
 
 <p>Auth.js includes built-in support for signing in with&nbsp;
-(See also: <a href="/reference/providers/oauth-builtin">Providers</a>)
+(See also: <a href="/reference/core/providers">Providers</a>)
 </p>
 
 Auth.js also supports email for passwordless sign-in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
@@ -70,7 +70,7 @@ Auth.js is designed for use with Next.js and Serverless.
 
 If you are using a different framework for your website, you can create a website that handles sign-in with Next.js and then access those sessions on a website that does not use Next.js as long as the websites are on the same domain.
 
-If you use Auth.js on a website with a different subdomain than the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/reference/configuration/auth-config#cookies))
+If you use Auth.js on a website with a different subdomain than the rest of your website (e.g. `auth.example.com` vs `www.example.com`) you will need to set a custom cookie domain policy for the Session Token cookie. (See also: [Cookies](/reference/core#cookies))
 
 Auth.js does not currently support automatically signing into sites on different top-level domains (e.g. `www.example.com` vs `www.example.org`) using a single session.
 

@@ -47,7 +47,7 @@ To support preview deployments, the `AUTH_SECRET` value needs to be the same for
 :::
 
 :::note
-If you are storing users in a [database](reference/adapters), we recommend using a different OAuth app for development/production so that you don't mix your test and production user base.
+If you are storing users in a [database](/reference/core/adapters), we recommend using a different OAuth app for development/production so that you don't mix your test and production user base.
 :::
 
 <details>

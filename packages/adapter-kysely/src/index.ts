@@ -126,7 +126,7 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  * })
  * ```
  *
- * Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/reference/adapters#models) required by Auth.js.
+ * Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/reference/core/adapters#models) required by Auth.js.
  *
  * ```ts title="db.ts"
  * import { PostgresDialect } from "kysely"
@@ -270,7 +270,7 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  *   await db.schema.dropTable("VerificationToken").ifExists().execute()
  * }
  * ```
- * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/adapters#models).
+ * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/core/adapters#models).
  *
  * For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://kysely.dev/docs/migrations).
  * 

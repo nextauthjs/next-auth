@@ -70,7 +70,7 @@ export { format }
  * This approach is not secure or for production use, and does not require a `jwtSecret`.
  * :::
  *
- * > This schema is adapted for use in Dgraph and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Dgraph and based upon our main [schema](https://authjs.dev/reference/core/adapters)
  *
  * #### Example
  *

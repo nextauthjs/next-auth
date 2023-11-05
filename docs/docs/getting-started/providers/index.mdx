@@ -7,13 +7,13 @@ import { providers } from "../../../manifest.json"
 
 Using an Auth.js / NextAuth.js provider....
 
-- [Using a database adapter](/guides/adapters/using-a-database-adapter)
+- [Using a database adapter](/getting-started/adapters)
 - [Creating your own database adapter](/guides/adapters/creating-a-database-adapter)
 - [Learn: Database session strategy](/concepts/session-strategies#database)
 
 ## How to use an adapter
 
-See the [documentation for adapters](/reference/adapters) for more information on advanced configuration, including how to use Auth.js with other databases using a [custom adapter](/guides/adapters/creating-a-database-adapter).
+See the [documentation for adapters](/reference/core/adapters) for more information on advanced configuration, including how to use Auth.js with other databases using a [custom adapter](/guides/adapters/creating-a-database-adapter).
 
 ## Official providers
 
@@ -22,7 +22,7 @@ The following listed official providers are created and maintained by the commun
 <div class="card-list">
   {Object.entries(providers).map(([id, name]) => (
     <a
-      href={`/reference/core/providers_${id.replaceAll("-", "_")}`}
+      href={`/reference/core/providers/${id}`}
       class="card"
     >
       <img src={`/img/providers/${id}.svg`} width="40" />
