@@ -1,81 +1,78 @@
 // @ts-check
-
 const fs = require("fs")
 const path = require("path")
 
-// list providers entries from @auth/core/providers/*.ts
-const coreSrc = "../packages/core/src"
-const providers = fs
-  .readdirSync(path.join(__dirname, coreSrc, "/providers"))
-  .filter((file) => file.endsWith(".ts"))
-  .map((p) => `providers/${p}`)
+const { typedocFramework, typedocAdapter } = require("./typedoc")
 
-const typedocConfig = require("./typedoc.json")
-// @ts-expect-error
-delete typedocConfig.$schema
+const repo = { org: "nextauthjs", repo: "next-auth" }
+const metadata = { url: "https://authjs.dev", title: "Auth.js", tagline: "Authentication for the Web." }
 
-/**
- * @param {string} name
- * @returns Record<[string, any]>
- */
-function typedocAdapter(name) {
-  const slug = name.toLowerCase().replace(" ", "-")
+// TODO: Autogenerate from manifest.json + package.json#exports
+/** @type {(Parameters<typeof typedocFramework>)[]} */
+const frameworks = [
+  [
+    "core",
+    [
+      "index.ts",
+      "adapters.ts",
+      "errors.ts",
+      "jwt.ts",
+      "types.ts",
+      // list of provider entries from @auth/core/providers/*
+      ...fs
+        .readdirSync(path.join(__dirname, "../packages/core/src", "/providers"))
+        .filter((file) => file.endsWith(".ts"))
+        .map((p) => `providers/${p}`),
+    ],
+  ],
+  ["frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]],
+  ["next-auth", ["index.tsx", "react.tsx", "jwt.ts", "next.ts", "types.ts", "middleware.ts"]],
+]
 
-  return [
-    "docusaurus-plugin-typedoc",
-    {
-      id: slug,
-      plugin: [require.resolve("./typedoc-mdn-links")],
-      watch: process.env.TYPEDOC_WATCH,
-      entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
-      tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
-      out: `docs/reference/adapter/${slug}`,
-      ...typedocConfig,
-    },
-  ]
-}
-
-function typedocFramework(pkgDir, entrypoints) {
-  const id = pkgDir.replace("frameworks-", "")
-  return [
-    "docusaurus-plugin-typedoc",
-    {
-      ...typedocConfig,
-      id: id,
-      plugin: [require.resolve("./typedoc-mdn-links")],
-      watch: process.env.TYPEDOC_WATCH,
-      entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
-      tsconfig: `../packages/${pkgDir}/tsconfig.json`,
-      out: `docs/reference/${id === "next-auth" ? "nextjs" : id}`,
-    },
-  ]
-}
+// TODO: Autogenerate from manifest.json
+/** @type {(Parameters<typeof typedocAdapter>[0])[]} */
+const adapters = [
+  "Azure Tables",
+  "D1",
+  "Dgraph",
+  "Drizzle",
+  "DynamoDB",
+  "EdgeDb",
+  "Fauna",
+  "Firebase",
+  "Hasura",
+  "Kysely",
+  "Mikro ORM",
+  "MongoDB",
+  "Neo4j",
+  "PG",
+  "PouchDB",
+  "Prisma",
+  "Sequelize",
+  "Supabase",
+  "SurrealDB",
+  "TypeORM",
+  "Upstash Redis",
+  "Xata",
+]
 
 /** @type {import("@docusaurus/types").Config} */
-const docusaurusConfig = {
-  markdown: {
-    mermaid: true,
-  },
-  themes: ["@docusaurus/theme-mermaid"],
-  title: "Auth.js",
-  tagline: "Authentication for the Web.",
-  url: "https://authjs.dev",
+module.exports = {
+  ...metadata,
+  organizationName: repo.org,
+  projectName: repo.repo,
   baseUrl: "/",
+  markdown: { mermaid: true },
+  themes: ["@docusaurus/theme-mermaid"],
   favicon: "img/favicon.ico",
   trailingSlash: false,
-  organizationName: "nextauthjs",
-  // TODO: remove this once ready
+  // TODO: remove this once all links are fixed
   onBrokenLinks: "log",
-  projectName: "next-auth",
   themeConfig: {
     prism: {
       theme: require("prism-react-renderer/themes/nightOwl"),
       magicComments: [
-        {
-          className: "theme-code-block-highlighted-line",
-          line: "highlight-next-line",
-          block: { start: "highlight-start", end: "highlight-end" },
-        },
+        { className: "theme-code-block-highlighted-line", line: "highlight-next-line", block: { start: "highlight-start", end: "highlight-end" } },
       ],
     },
     algolia: {
@@ -87,63 +84,22 @@ const docusaurusConfig = {
       externalUrlRegex: "authjs\\.dev|next-auth\\.js\\.org",
     },
     navbar: {
-      title: "Auth.js",
-      logo: {
-        alt: "Auth.js Logo",
-        src: "img/logo/logo-xs.webp",
-      },
+      title: metadata.title,
+      logo: { alt: "Auth.js Logo", src: "img/logo/logo-xs.webp" },
       items: [
-        {
-          to: "/getting-started/introduction",
-          activeBasePath: "/getting-started/",
-          label: "Getting started",
-          position: "left",
-        },
-        {
-          to: "/guides",
-          activeBasePath: "/guides",
-          label: "Guides",
-          position: "left",
-        },
-        {
-          to: "/reference",
-          activeBasePath: "/reference",
-          label: "API Reference",
-          position: "left",
-        },
-        {
-          to: "/concepts/faq",
-          activeBasePath: "/concepts",
-          label: "Concepts",
-          position: "left",
-        },
-        {
-          to: "/security",
-          activeBasePath: "/security",
-          label: "Security",
-          position: "left",
-        },
+        { to: "/getting-started/introduction", activeBasePath: "/getting-started/", label: "Getting started", position: "left" },
+        { to: "/guides", activeBasePath: "/guides", label: "Guides", position: "left" },
+        { to: "/reference", activeBasePath: "/reference", label: "API Reference", position: "left" },
+        { to: "/concepts/faq", activeBasePath: "/concepts", label: "Concepts", position: "left" },
+        { to: "/security", activeBasePath: "/security", label: "Security", position: "left" },
         {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
-          dropdownItemsAfter: [
-            {
-              to: "https://github.com/nextauthjs/next-auth/releases",
-              label: "All Releases",
-            },
-          ],
+          dropdownItemsAfter: [{ to: "https://github.com/nextauthjs/next-auth/releases", label: "All Releases" }],
         },
-        {
-          to: "https://www.npmjs.com/package/next-auth",
-          label: "npm",
-          position: "right",
-        },
-        {
-          to: "https://github.com/nextauthjs/next-auth",
-          label: "GitHub",
-          position: "right",
-        },
+        { to: "https://www.npmjs.com/package/next-auth", label: "npm", position: "right" },
+        { to: "https://github.com/nextauthjs/next-auth", label: "GitHub", position: "right" },
       ],
     },
     announcementBar: {
@@ -158,10 +114,7 @@ const docusaurusConfig = {
         {
           title: "About Auth.js",
           items: [
-            {
-              label: "Introduction",
-              to: "/getting-started/introduction",
-            },
+            { label: "Introduction", to: "/getting-started/introduction" },
             {
               html: `
             <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=authjs&utm_campaign=oss">
@@ -179,44 +132,23 @@ const docusaurusConfig = {
         {
           title: "Download",
           items: [
-            {
-              label: "GitHub",
-              to: "https://github.com/nextauthjs/next-auth",
-            },
-            {
-              label: "NPM",
-              to: "https://www.npmjs.com/package/next-auth",
-            },
+            { label: "GitHub", to: "https://github.com/nextauthjs/next-auth" },
+            { label: "NPM", to: "https://www.npmjs.com/package/next-auth" },
           ],
         },
         {
           title: "Acknowledgements",
           items: [
-            {
-              label: "Contributors",
-              to: "/contributors",
-            },
-            {
-              label: "Sponsors",
-              to: "https://opencollective.com/nextauth",
-            },
-            {
-              label: "Images by unDraw",
-              to: "https://undraw.co/",
-            },
+            { label: "Contributors", to: "/contributors" },
+            { label: "Sponsors", to: "https://opencollective.com/nextauth" },
+            { label: "Images by unDraw", to: "https://undraw.co/" },
           ],
         },
       ],
       copyright: `Auth.js &copy; Balázs Orbán ${new Date().getFullYear()}`,
     },
-    colorMode: {
-      respectPrefersColorScheme: true,
-    },
-    docs: {
-      sidebar: {
-        autoCollapseCategories: true,
-      },
-    },
+    colorMode: { respectPrefersColorScheme: true },
+    docs: { sidebar: { autoCollapseCategories: true } },
   },
   presets: [
     [
@@ -252,126 +184,31 @@ const docusaurusConfig = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm],
-          versions: {
-            current: {
-              label: "experimental",
-            },
-          },
+          versions: { current: { label: "experimental" } },
           async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
             const sidebarItems = await defaultSidebarItemsGenerator(args)
             const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index", "reference/nextjs/index"]
             return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
           },
         },
-        theme: {
-          customCss: require.resolve("./src/css/index.css"),
-        },
+        theme: { customCss: require.resolve("./src/css/index.css") },
       },
     ],
   ],
   plugins: [
-    typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].concat(providers)),
-    typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
-    typedocFramework("next-auth", ["index.tsx", "react.tsx", "jwt.ts", "next.ts", "types.ts", "middleware.ts"]),
-    ...(process.env.TYPEDOC_SKIP_ADAPTERS
-      ? []
-      : [
-          typedocAdapter("Azure Tables"),
-          typedocAdapter("D1"),
-          typedocAdapter("Dgraph"),
-          typedocAdapter("Drizzle"),
-          typedocAdapter("DynamoDB"),
-          typedocAdapter("EdgeDb"),
-          typedocAdapter("Fauna"),
-          typedocAdapter("Firebase"),
-          typedocAdapter("Hasura"),
-          typedocAdapter("Kysely"),
-          typedocAdapter("Mikro ORM"),
-          typedocAdapter("MongoDB"),
-          typedocAdapter("Neo4j"),
-          typedocAdapter("PG"),
-          typedocAdapter("PouchDB"),
-          typedocAdapter("Prisma"),
-          typedocAdapter("Sequelize"),
-          typedocAdapter("Supabase"),
-          typedocAdapter("SurrealDB"),
-          typedocAdapter("TypeORM"),
-          typedocAdapter("Upstash Redis"),
-          typedocAdapter("Xata"),
-        ]),
+    ...frameworks.map((framework) => typedocFramework(...framework)),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS ? [] : adapters.map((name) => typedocAdapter(name))),
+  ],
+  headTags: [
+    { tagName: "meta", attributes: { charSet: "utf-8" } },
+    { tagName: "link", attributes: { rel: "canonical", href: metadata.url } },
+    { tagName: "meta", attributes: { property: "og:title", content: metadata.title } },
+    { tagName: "meta", attributes: { property: "og:description", content: metadata.tagline } },
+    { tagName: "meta", attributes: { property: "og:image", content: `${metadata.url}/img/og-image.png` } },
+    { tagName: "meta", attributes: { property: "og:url", content: metadata.url } },
+    { tagName: "meta", attributes: { name: "twitter:card", content: "summary_large_image" } },
+    { tagName: "meta", attributes: { name: "twitter:title", content: metadata.title } },
+    { tagName: "meta", attributes: { name: "twitter:description", content: metadata.tagline } },
+    { tagName: "meta", attributes: { name: "twitter:image", content: `${metadata.url}/img/og-image.png` } },
   ],
 }
-
-docusaurusConfig.headTags = [
-  {
-    tagName: "meta",
-    attributes: {
-      charSet: "utf-8",
-    },
-  },
-  {
-    tagName: "link",
-    attributes: {
-      rel: "canonical",
-      href: docusaurusConfig.url,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:title",
-      content: docusaurusConfig.title,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:description",
-      content: docusaurusConfig.tagline,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:image",
-      content: `${docusaurusConfig.url}/img/og-image.png`,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      property: "og:url",
-      content: docusaurusConfig.url,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:card",
-      content: "summary_large_image",
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:title",
-      content: docusaurusConfig.title,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:description",
-      content: docusaurusConfig.tagline,
-    },
-  },
-  {
-    tagName: "meta",
-    attributes: {
-      name: "twitter:image",
-      content: `${docusaurusConfig.url}/img/og-image.png`,
-    },
-  },
-]
-
-module.exports = docusaurusConfig
