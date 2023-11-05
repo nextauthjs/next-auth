@@ -1,14 +1,19 @@
-// @ts-check
-const fs = require("fs")
-const path = require("path")
+import fs from "fs"
+import path from "path"
+import { typedocFramework, typedocAdapter } from "./typedoc-utils"
+import { themes } from "prism-react-renderer"
+import pkgManagerPlugin from "@docusaurus/remark-plugin-npm2yarn"
 
-const { typedocFramework, typedocAdapter } = require("./typedoc")
+import type { Config } from "@docusaurus/types"
 
 const repo = { org: "nextauthjs", repo: "next-auth" }
-const metadata = { url: "https://authjs.dev", title: "Auth.js", tagline: "Authentication for the Web." }
+const metadata = {
+  url: "https://authjs.dev",
+  title: "Auth.js",
+  tagline: "Authentication for the Web.",
+}
 
 // TODO: Autogenerate from manifest.json + package.json#exports
-/** @type {(Parameters<typeof typedocFramework>)[]} */
 const frameworks = [
   [
     "core",
@@ -26,11 +31,20 @@ const frameworks = [
     ],
   ],
   ["frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]],
-  ["next-auth", ["index.tsx", "react.tsx", "jwt.ts", "next.ts", "types.ts", "middleware.ts"]],
-]
+  [
+    "next-auth",
+    [
+      "index.tsx",
+      "react.tsx",
+      "jwt.ts",
+      "next.ts",
+      "types.ts",
+      "middleware.ts",
+    ],
+  ],
+] satisfies Parameters<typeof typedocFramework>[]
 
 // TODO: Autogenerate from manifest.json
-/** @type {(Parameters<typeof typedocAdapter>[0])[]} */
 const adapters = [
   "Azure Tables",
   "D1",
@@ -54,15 +68,21 @@ const adapters = [
   "TypeORM",
   "Upstash Redis",
   "Xata",
-]
+] satisfies Parameters<typeof typedocAdapter>[0][]
 
-/** @type {import("@docusaurus/types").Config} */
-module.exports = {
+export default {
   ...metadata,
   organizationName: repo.org,
   projectName: repo.repo,
   baseUrl: "/",
-  markdown: { mermaid: true },
+  markdown: {
+    mermaid: true,
+    mdx1Compat: {
+      comments: true,
+      admonitions: true,
+      headingIds: true,
+    },
+  },
   themes: ["@docusaurus/theme-mermaid"],
   favicon: "img/favicon.ico",
   trailingSlash: false,
@@ -70,9 +90,13 @@ module.exports = {
   onBrokenLinks: "log",
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/nightOwl"),
+      theme: themes.nightOwl,
       magicComments: [
-        { className: "theme-code-block-highlighted-line", line: "highlight-next-line", block: { start: "highlight-start", end: "highlight-end" } },
+        {
+          className: "theme-code-block-highlighted-line",
+          line: "highlight-next-line",
+          block: { start: "highlight-start", end: "highlight-end" },
+        },
       ],
     },
     algolia: {
@@ -87,19 +111,57 @@ module.exports = {
       title: metadata.title,
       logo: { alt: "Auth.js Logo", src: "img/logo/logo-xs.webp" },
       items: [
-        { to: "/getting-started/introduction", activeBasePath: "/getting-started/", label: "Getting started", position: "left" },
-        { to: "/guides", activeBasePath: "/guides", label: "Guides", position: "left" },
-        { to: "/reference", activeBasePath: "/reference", label: "API Reference", position: "left" },
-        { to: "/concepts/faq", activeBasePath: "/concepts", label: "Concepts", position: "left" },
-        { to: "/security", activeBasePath: "/security", label: "Security", position: "left" },
+        {
+          to: "/getting-started/introduction",
+          activeBasePath: "/getting-started/",
+          label: "Getting started",
+          position: "left",
+        },
+        {
+          to: "/guides",
+          activeBasePath: "/guides",
+          label: "Guides",
+          position: "left",
+        },
+        {
+          to: "/reference",
+          activeBasePath: "/reference",
+          label: "API Reference",
+          position: "left",
+        },
+        {
+          to: "/concepts/faq",
+          activeBasePath: "/concepts",
+          label: "Concepts",
+          position: "left",
+        },
+        {
+          to: "/security",
+          activeBasePath: "/security",
+          label: "Security",
+          position: "left",
+        },
         {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
-          dropdownItemsAfter: [{ to: "https://github.com/nextauthjs/next-auth/releases", label: "All Releases" }],
+          dropdownItemsAfter: [
+            {
+              to: "https://github.com/nextauthjs/next-auth/releases",
+              label: "All Releases",
+            },
+          ],
         },
-        { to: "https://www.npmjs.com/package/next-auth", label: "npm", position: "right" },
-        { to: "https://github.com/nextauthjs/next-auth", label: "GitHub", position: "right" },
+        {
+          to: "https://www.npmjs.com/package/next-auth",
+          label: "npm",
+          position: "right",
+        },
+        {
+          to: "https://github.com/nextauthjs/next-auth",
+          label: "GitHub",
+          position: "right",
+        },
       ],
     },
     announcementBar: {
@@ -170,12 +232,18 @@ module.exports = {
            */
           editUrl({ docPath }) {
             // TODO: support other packages, fix directory links like "providers"
-            const base = "https://github.com/nextauthjs/next-auth/edit/main/packages"
+            const base =
+              "https://github.com/nextauthjs/next-auth/edit/main/packages"
             if (docPath.includes("reference/core")) {
-              const file = docPath.split("reference/core/")[1].replace(".md", ".ts").replace("_", "/")
+              const file = docPath
+                .split("reference/core/")[1]
+                .replace(".md", ".ts")
+                .replace("_", "/")
               return `${base}/core/src/${file}`
             } else if (docPath.includes("reference/adapter/")) {
-              const file = docPath.split("reference/adapter/")[1].replace("index.md", "src/index.ts")
+              const file = docPath
+                .split("reference/adapter/")[1]
+                .replace("index.md", "src/index.ts")
               return `${base}/adapter-${file}`
             }
             return `https://github.com/nextauthjs/next-auth/edit/main/docs/docs/${docPath}`
@@ -183,12 +251,22 @@ module.exports = {
           lastVersion: "current",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          remarkPlugins: [require("@sapphire/docusaurus-plugin-npm2yarn2pnpm").npm2yarn2pnpm],
+          remarkPlugins: [[pkgManagerPlugin, { sync: true }]],
           versions: { current: { label: "experimental" } },
-          async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
+          async sidebarItemsGenerator({
+            defaultSidebarItemsGenerator,
+            ...args
+          }) {
             const sidebarItems = await defaultSidebarItemsGenerator(args)
-            const sidebarIdsToOmit = ["reference/core/index", "reference/sveltekit/index", "reference/solidstart/index", "reference/nextjs/index"]
-            return sidebarItems.filter((sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id))
+            const sidebarIdsToOmit = [
+              "reference/core/index",
+              "reference/sveltekit/index",
+              "reference/solidstart/index",
+              "reference/nextjs/index",
+            ]
+            return sidebarItems.filter(
+              (sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id)
+            )
           },
         },
         theme: { customCss: require.resolve("./src/css/index.css") },
@@ -197,18 +275,50 @@ module.exports = {
   ],
   plugins: [
     ...frameworks.map((framework) => typedocFramework(...framework)),
-    ...(process.env.TYPEDOC_SKIP_ADAPTERS ? [] : adapters.map((name) => typedocAdapter(name))),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS
+      ? []
+      : adapters.map((name) => typedocAdapter(name))),
   ],
   headTags: [
     { tagName: "meta", attributes: { charSet: "utf-8" } },
     { tagName: "link", attributes: { rel: "canonical", href: metadata.url } },
-    { tagName: "meta", attributes: { property: "og:title", content: metadata.title } },
-    { tagName: "meta", attributes: { property: "og:description", content: metadata.tagline } },
-    { tagName: "meta", attributes: { property: "og:image", content: `${metadata.url}/img/og-image.png` } },
-    { tagName: "meta", attributes: { property: "og:url", content: metadata.url } },
-    { tagName: "meta", attributes: { name: "twitter:card", content: "summary_large_image" } },
-    { tagName: "meta", attributes: { name: "twitter:title", content: metadata.title } },
-    { tagName: "meta", attributes: { name: "twitter:description", content: metadata.tagline } },
-    { tagName: "meta", attributes: { name: "twitter:image", content: `${metadata.url}/img/og-image.png` } },
+    {
+      tagName: "meta",
+      attributes: { property: "og:title", content: metadata.title },
+    },
+    {
+      tagName: "meta",
+      attributes: { property: "og:description", content: metadata.tagline },
+    },
+    {
+      tagName: "meta",
+      attributes: {
+        property: "og:image",
+        content: `${metadata.url}/img/og-image.png`,
+      },
+    },
+    {
+      tagName: "meta",
+      attributes: { property: "og:url", content: metadata.url },
+    },
+    {
+      tagName: "meta",
+      attributes: { name: "twitter:card", content: "summary_large_image" },
+    },
+    {
+      tagName: "meta",
+      attributes: { name: "twitter:title", content: metadata.title },
+    },
+    {
+      tagName: "meta",
+      attributes: { name: "twitter:description", content: metadata.tagline },
+    },
+    {
+      tagName: "meta",
+      attributes: {
+        name: "twitter:image",
+        content: `${metadata.url}/img/og-image.png`,
+      },
+    },
   ],
-}
+} satisfies Config

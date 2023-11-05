@@ -1,7 +1,13 @@
-// @ts-check
+import type { PluginOptions } from "typedoc-plugin-markdown"
+import type { TypeDocOptions } from "typedoc"
 
-/** @type {Partial<(import("typedoc-plugin-markdown").PluginOptions | import("typedoc").TypeDocOptions) & {id: string}>} */
-const typedocConfig = {
+type TypeDocConfig = Partial<
+  (PluginOptions | TypeDocOptions) & {
+    id: string
+  }
+>
+
+const defaultConfig = {
   watch: !!process.env.TYPEDOC_WATCH,
   plugin: [require.resolve("./typedoc-mdn-links")],
   cleanOutputDir: true,
@@ -42,40 +48,29 @@ const typedocConfig = {
   readme: "none",
   skipErrorChecking: true,
   sort: ["kind", "static-first", "required-first", "alphabetical"],
-}
+} satisfies TypeDocConfig
 
-/**
- * @param {string} name
- * @returns {[string, import("@docusaurus/types").PluginOptions]}
- */
-module.exports.typedocAdapter = (name) => {
+export function typedocAdapter(name: string) {
   const id = name.toLowerCase().replace(" ", "-")
 
-  /** @type {typeof typedocConfig} */
   const options = {
-    ...typedocConfig,
+    ...defaultConfig,
     id,
     entryPoints: [`../packages/adapter-${id}/src/index.ts`],
     tsconfig: `../packages/adapter-${id}/tsconfig.json`,
     out: `docs/reference/adapter/${id}`,
-  }
+  } satisfies TypeDocConfig
   return ["docusaurus-plugin-typedoc", options]
 }
 
-/**
- * @param {string} pkgDir
- * @param {string[]} entrypoints
- * @returns {[string, import("@docusaurus/types").PluginOptions]}
- */
-module.exports.typedocFramework = (pkgDir, entrypoints) => {
+export function typedocFramework(pkgDir: string, entrypoints: string[]) {
   const id = pkgDir.replace("frameworks-", "")
-  /** @type {typeof typedocConfig} */
   const options = {
-    ...typedocConfig,
+    ...defaultConfig,
     id,
     entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
     tsconfig: `../packages/${pkgDir}/tsconfig.json`,
     out: `docs/reference/${id === "next-auth" ? "nextjs" : id}`,
-  }
+  } satisfies TypeDocConfig
   return ["docusaurus-plugin-typedoc", options]
 }
