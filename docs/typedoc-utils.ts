@@ -1,4 +1,4 @@
-import type { PluginOptions } from "typedoc-plugin-markdown"
+import type { PluginOptions } from "docusaurus-plugin-typedoc"
 import type { TypeDocOptions } from "typedoc"
 
 type TypeDocConfig = Partial<
@@ -52,7 +52,6 @@ const defaultConfig = {
 
 export function typedocAdapter(name: string) {
   const id = name.toLowerCase().replace(" ", "-")
-
   const options = {
     ...defaultConfig,
     id,
@@ -65,12 +64,20 @@ export function typedocAdapter(name: string) {
 
 export function typedocFramework(pkgDir: string, entrypoints: string[]) {
   const id = pkgDir.replace("frameworks-", "")
+  const folderId = id === "next-auth" ? "nextjs" : id
   const options = {
     ...defaultConfig,
     id,
     entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
     tsconfig: `../packages/${pkgDir}/tsconfig.json`,
-    out: `docs/reference/${id === "next-auth" ? "nextjs" : id}`,
+    out: `docs/reference/${folderId}`,
+    sidebar: {
+      filteredIds: [
+        `reference/${folderId}`,
+        `reference/${folderId}/index`,
+        `reference/${folderId}/module.index`,
+      ],
+    },
   } satisfies TypeDocConfig
   return ["docusaurus-plugin-typedoc", options]
 }

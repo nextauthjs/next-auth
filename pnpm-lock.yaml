@@ -266,8 +266,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(react-dom@18.2.0)(react@18.2.0)
       docusaurus-plugin-typedoc:
-        specifier: 1.0.0-next.19
-        version: 1.0.0-next.19(typedoc-plugin-markdown@4.0.0-next.25)
+        specifier: 1.0.0-next.20
+        version: 1.0.0-next.20(typedoc-plugin-markdown@4.0.0-next.25)
       postcss-nested:
         specifier: ^6.0.1
         version: 6.0.1(postcss@8.4.31)
@@ -14272,8 +14272,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /docusaurus-plugin-typedoc@1.0.0-next.19(typedoc-plugin-markdown@4.0.0-next.25):
-    resolution: {integrity: sha512-BmLNXqJE6BIMjUl2gEzvb85JUMuFFZyDx6QISkiQCRwtiZ17xBgltR6oX73h7WZ0wwvtjlQJRCa/huenqeFUnw==}
+  /docusaurus-plugin-typedoc@1.0.0-next.20(typedoc-plugin-markdown@4.0.0-next.25):
+    resolution: {integrity: sha512-eD2SUGJdSfE2LrMKeYFftVOoIM8BBkZQRqQaGHrquDTJSMOkk2snt+5SP3AgFfCf4iI2Ly8on0cDFfoVfPVb8Q==}
     peerDependencies:
       typedoc-plugin-markdown: '>=4.0.0-next.24'
     dependencies:

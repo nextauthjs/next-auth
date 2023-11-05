@@ -40,7 +40,7 @@
     "@docusaurus/theme-mermaid": "3.0.0",
     "@docusaurus/tsconfig": "3.0.0",
     "@docusaurus/types": "3.0.0",
-    "docusaurus-plugin-typedoc": "1.0.0-next.19",
+    "docusaurus-plugin-typedoc": "1.0.0-next.20",
     "postcss-nested": "^6.0.1",
     "typedoc": "0.25.3",
     "typedoc-plugin-markdown": "4.0.0-next.25",
