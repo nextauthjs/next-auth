@@ -54,6 +54,7 @@ import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Session } from "@auth/core/types"
+import type { BuiltInProviderType } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -62,7 +63,6 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-import type { BuiltInProviderType } from "./providers/index.js"
 
 export type {
   Account,
