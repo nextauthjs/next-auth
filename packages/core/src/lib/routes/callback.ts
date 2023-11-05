@@ -128,14 +128,24 @@ export async function callback(params: {
           picture: user.image,
           sub: user.id?.toString(),
         }
-        const token = await callbacks.jwt({
-          token: defaultToken,
-          user,
-          account,
-          profile: OAuthProfile,
-          isNewUser,
-          trigger: isNewUser ? "signUp" : "signIn",
-        })
+        const token = await callbacks.jwt(
+          isNewUser
+            ? {
+                token: defaultToken,
+                user,
+                account,
+                isNewUser: true,
+                trigger: "signUp",
+              }
+            : {
+                token: defaultToken,
+                user,
+                account,
+                profile: OAuthProfile,
+                isNewUser: false,
+                trigger: "signIn",
+              }
+        )
 
         // Clear cookies if token is null
         if (token === null) {
@@ -240,13 +250,23 @@ export async function callback(params: {
           picture: loggedInUser.image,
           sub: loggedInUser.id?.toString(),
         }
-        const token = await callbacks.jwt({
-          token: defaultToken,
-          user: loggedInUser,
-          account,
-          isNewUser,
-          trigger: isNewUser ? "signUp" : "signIn",
-        })
+        const token = await callbacks.jwt(
+          isNewUser
+            ? {
+                token: defaultToken,
+                user: loggedInUser,
+                account,
+                isNewUser: true,
+                trigger: "signUp",
+              }
+            : {
+                token: defaultToken,
+                user: loggedInUser,
+                account,
+                isNewUser: false,
+                trigger: "signIn",
+              }
+        )
 
         // Clear cookies if token is null
         if (token === null) {
@@ -318,7 +338,7 @@ export async function callback(params: {
       /** @type {import("src").Account} */
       const account = {
         providerAccountId: user.id,
-        type: "credentials",
+        type: "credentials" as const,
         provider: provider.id,
       }
 
@@ -339,7 +359,6 @@ export async function callback(params: {
       const token = await callbacks.jwt({
         token: defaultToken,
         user,
-        // @ts-expect-error
         account,
         isNewUser: false,
         trigger: "signIn",
@@ -363,7 +382,6 @@ export async function callback(params: {
         cookies.push(...sessionCookies)
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account })
 
       return { redirect: callbackUrl, cookies }
