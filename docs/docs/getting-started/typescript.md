@@ -78,7 +78,7 @@ export const { auth } = NextAuth({
 
 #### Popular interfaces to augment
 
-Module augmentation is not limitied to specific interfaces. You can augment almost anything, but here are some of the more common interfaces that you might need to override in based on your use-case:
+Module augmentation is not limited to specific interfaces. You can augment almost anything, but here are some of the more common interfaces that you might need to override in based on your use-case:
 
 ```ts
 declare module "@auth/core" {
