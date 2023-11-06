@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install edgedb @auth/edgedb-adapter
  * npm install @edgedb/generate --save-dev
  * ```
@@ -25,54 +25,54 @@ import type {
 import type { Client } from "edgedb"
 
 /**
- * 
+ *
  * To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the separate `@auth/edgedb-adapter` package:
- * 
- * ```bash npm2yarn2pnpm
+ *
+ * ```bash npm2yarn
  * npm install edgedb @auth/edgedb-adapter
  * npm install @edgedb/generate --save-dev
  * ```
- * 
+ *
  * ## Installation
- * 
- * First, ensure you have the EdgeDB CLI installed. 
- * 
+ *
+ * First, ensure you have the EdgeDB CLI installed.
+ *
  * Follow the instructions below, or read the [EdgeDB quickstart](https://www.edgedb.com/docs/intro/quickstart) to install the EdgeDB CLI and initialize a project
- * 
+ *
  * ### Linux or macOS
  * ```bash
  * curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com | sh
  * ```
- * 
+ *
  * ### Windows
  * ```powershell
  * iwr https://ps1.edgedb.com -useb | iex
  * ```
- * 
+ *
  * Check that the CLI is available with the `edgedb --version` command. If you get a `Command not found` error, you may need to open a new terminal window before the `edgedb` command is available.
- * 
+ *
  * Once the CLI is installed, initialize a project from the application’s root directory. You’ll be presented with a series of prompts.
- * 
+ *
  * ```bash
  * edgedb project init
  * ```
- * 
+ *
  * This process will spin up an EdgeDB instance and [“link”](https://www.edgedb.com/docs/cli/edgedb_instance/edgedb_instance_link#edgedb-instance-link) it with your current directory. As long as you’re inside that directory, CLI commands and client libraries will be able to connect to the linked instance automatically, without additional configuration.
- * 
+ *
  * ## Setup
- * 
+ *
  * ### NextAuth.js configuration
- * 
+ *
  * Configure your NextAuth.js to use the EdgeDB Adapter:
- * 
+ *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { EdgeDBAdapter } from "@auth/edgedb-adapter"
  * import { createClient } from "edgedb"
- * 
+ *
  * const client = createClient()
- * 
+ *
  * export default NextAuth({
  *   adapter: EdgeDBAdapter(client),
  *   providers: [
@@ -83,13 +83,13 @@ import type { Client } from "edgedb"
  *   ],
  * })
  * ```
- * 
+ *
  * ### Create the EdgeDB schema
- * 
+ *
  * Replace the contents of the auto-generated file in `dbschema/default.esdl` with the following:
- * 
+ *
  * > This schema is adapted for use in EdgeDB and based upon our main [schema](/adapters/models)
- * 
+ *
  * ```json title="default.esdl"
  * module default {
  *     type User {
@@ -100,12 +100,12 @@ import type { Client } from "edgedb"
  *         property emailVerified -> datetime;
  *         property image -> str;
  *         multi link accounts := .<user[is Account];
- *         multi link sessions := .<user[is Session]; 
+ *         multi link sessions := .<user[is Session];
  *         property createdAt -> datetime {
  *             default := datetime_current();
  *         };
  *     }
- * 
+ *
  *     type Account {
  *        required property userId := .user.id;
  *        required property type -> str;
@@ -126,10 +126,10 @@ import type { Client } from "edgedb"
  *        property createdAt -> datetime {
  *             default := datetime_current();
  *         };
- * 
+ *
  *        constraint exclusive on ((.provider, .providerAccountId))
  *     }
- * 
+ *
  *     type Session {
  *         required property sessionToken -> str {
  *             constraint exclusive;
@@ -143,7 +143,7 @@ import type { Client } from "edgedb"
  *             default := datetime_current();
  *         };
  *     }
- * 
+ *
  *     type VerificationToken {
  *         required property identifier -> str;
  *         required property token -> str {
@@ -153,43 +153,43 @@ import type { Client } from "edgedb"
  *         property createdAt -> datetime {
  *             default := datetime_current();
  *         };
- * 
+ *
  *         constraint exclusive on ((.identifier, .token))
  *     }
  * }
- * 
+ *
  * # Disable the application of access policies within access policies
  * # themselves. This behavior will become the default in EdgeDB 3.0.
  * # See: https://www.edgedb.com/docs/reference/ddl/access_policies#nonrecursive
  * using future nonrecursive_access_policies;
  * ```
- * 
+ *
  * ### Migrate the database schema
- * 
+ *
  * Create a migration
- * 
+ *
  * ```
  * edgedb migration create
  * ```
- * 
+ *
  * Apply the migration
- * 
+ *
  * ```
  * edgedb migrate
  * ```
- * 
+ *
  * To learn more about [EdgeDB migrations](https://www.edgedb.com/docs/intro/migrations#generate-a-migration), check out the [Migrations docs](https://www.edgedb.com/docs/intro/migrations).
- * 
+ *
  * ### Generate the query builder
- * 
- * ```npm2yarn2pnpm
+ *
+ * ```npm2yarn
  * npx @edgedb/generate edgeql-js
  * ```
- * 
+ *
  * This will generate the [query builder](https://www.edgedb.com/docs/clients/js/querybuilder) so that you can write fully typed EdgeQL queries with TypeScript in a code-first way.
- * 
+ *
  * For example
- * 
+ *
  * ```ts
  * const query = e.select(e.User, () => ({
  *         id: true,
@@ -199,9 +199,9 @@ import type { Client } from "edgedb"
  *         image: true,
  *         filter_single: { email: 'johndoe@example.com' },
  *       }));
- * 
+ *
  * return await query.run(client);
- * 
+ *
  * // Return type:
  * // {
  * //     id: string;
@@ -210,49 +210,49 @@ import type { Client } from "edgedb"
  * //     image: string | null;
  * //     name: string | null;
  * // } | null
- * 
+ *
  * ```
- * 
- * 
+ *
+ *
  * ## Deploying
- * 
+ *
  * ### Deploy EdgeDB
- * 
+ *
  * First deploy an EdgeDB instance on your preferred cloud provider:
- * 
+ *
  * [AWS](https://www.edgedb.com/docs/guides/deployment/aws_aurora_ecs)
- * 
+ *
  * [Google Cloud](https://www.edgedb.com/docs/guides/deployment/gcp)
- * 
+ *
  * [Azure](https://www.edgedb.com/docs/guides/deployment/azure_flexibleserver)
- * 
+ *
  * [DigitalOcean](https://www.edgedb.com/docs/guides/deployment/digitalocean)
- * 
+ *
  * [Fly.io](https://www.edgedb.com/docs/guides/deployment/fly_io)
- * 
+ *
  * [Docker](https://www.edgedb.com/docs/guides/deployment/docker) (cloud-agnostic)
- * 
+ *
  * ### Find your instance’s DSN
- * 
+ *
  * The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud you are deploying to.
- * 
+ *
  * ### Set an environment variable
- * 
+ *
  * ```env title=".env"
  * EDGEDB_DSN=edgedb://johndoe:supersecure@myhost.com:420
  * ```
- * 
+ *
  * ### Update the client
- * 
+ *
  * ```diff title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { EdgeDBAdapter } from "@auth/edgedb-adapter"
  * import { createClient } from "edgedb"
- * 
+ *
  * - const client = createClient()
  * + const client = createClient({ dsn: process.env.EDGEDB_DSN })
- * 
+ *
  * export default NextAuth({
  *   adapter: EdgeDBAdapter(client),
  *   providers: [
@@ -263,21 +263,21 @@ import type { Client } from "edgedb"
  *   ],
  * })
  * ```
- * 
- * 
- * 
+ *
+ *
+ *
  * ### Apply migrations
- * 
+ *
  * Use the DSN to apply migrations against your remote instance.
- * 
+ *
  * ```bash
  * edgedb migrate --dsn <your-instance-dsn>
  * ```
- * 
+ *
  * ### Set up a `prebuild` script
- * 
+ *
  * Add the following `prebuild` script to your `package.json`. When your hosting provider initializes the build, it will trigger this script which will generate the query builder. The `npx @edgedb/generate edgeql-js` command will read the value of the `EDGEDB_DSN` environment variable, connect to the database, and generate the query builder before your hosting provider starts building the project.
- * 
+ *
  * ```diff title="package.json"
  * "scripts": {
  *   "dev": "next dev",
@@ -287,7 +287,7 @@ import type { Client } from "edgedb"
  * +  "prebuild": "npx @edgedb/generate edgeql-js"
  * },
  * ```
- * 
+ *
  */
 export function EdgeDBAdapter(client: Client): Adapter {
   return {
