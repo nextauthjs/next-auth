@@ -86,7 +86,7 @@ function normalizeOAuth(
 
 /**
  * Returns basic user profile from the userinfo response/`id_token` claims.
- * @see https://authjs.dev/reference/adapters#user
+ * @see https://authjs.dev/reference/core/adapters#user
  * @see https://openid.net/specs/openid-connect-core-1_0.html#IDToken
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
  */
@@ -105,7 +105,7 @@ const defaultProfile: ProfileCallback<Profile> = (profile) => {
  * Returns basic OAuth/OIDC values from the token response.
  * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
  * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
- * @see https://authjs.dev/reference/adapters#account
+ * @see https://authjs.dev/reference/core/adapters#account
  */
 const defaultAccount: AccountCallback = (account) => {
   return stripUndefined({

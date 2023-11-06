@@ -130,7 +130,7 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  *
  * This is the Fauna Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
  *
- * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
+ * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/core/adapters/fauna](https://authjs.dev/reference/core/adapters/fauna).
  *
  * ### Configure Auth.js
  *
@@ -197,7 +197,7 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  * })
  * ```
  *
- * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  **/
 export function FaunaAdapter(f: FaunaClient): Adapter {
   const { Users, Accounts, Sessions, VerificationTokens } = collections

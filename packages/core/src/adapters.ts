@@ -10,7 +10,7 @@
  * based session store (`strategy: "jwt"`),
  * but you can also use a database adapter to store the session in a database.
  *
- * Before you continue, Auth.js has a list of {@link https://authjs.dev/reference/adapters/overview official database adapters}. If your database is listed there, you
+ * Before you continue, Auth.js has a list of {@link https://authjs.dev/reference/core/getting-started/adapters official database adapters}. If your database is listed there, you
  * probably do not need to create your own. If you are using a data solution that cannot be integrated with an official adapter, this module will help you create a compatible adapter.
  *
  * :::caution Note
@@ -85,6 +85,53 @@
  * const response = await Auth(request, { adapter, ... })
  * ```
  *
+ * ## Models
+ * 
+ * Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will have a similar structure to the graph below. Each model can be extended with additional fields.
+ * 
+ * :::note
+ * Auth.js / NextAuth.js uses `camelCase` for its database rows while respecting the conventional `snake_case` formatting for OAuth-related values. If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
+ * :::
+ * 
+ * ```mermaid
+ * erDiagram
+ *     User ||--|{ Account : ""
+ *     User {
+ *       string id
+ *       string name
+ *       string email
+ *       timestamp emailVerified
+ *       string image
+ *     }
+ *     User ||--|{ Session : ""
+ *     Session {
+ *       string id
+ *       timestamp expires
+ *       string sessionToken
+ *       string userId
+ *     }
+ *     Account {
+ *       string id
+ *       string userId
+ *       string type
+ *       string provider
+ *       string providerAccountId
+ *       string refresh_token
+ *       string access_token
+ *       int expires_at
+ *       string token_type
+ *       string scope
+ *       string id_token
+ *       string session_state
+ *     }
+ *     User ||--|{ VerificationToken : ""
+ *     VerificationToken {
+ *       string identifier
+ *       string token
+ *       timestamp expires
+ *     }
+ * ```
+ * 
  * ## Testing
  *
  * There is a test suite [available](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-test)
@@ -133,7 +180,7 @@ export interface AdapterUser extends User {
   /** The user's email address. */
   email: string
   /**
-   * Whether the user has verified their email address via an [Email provider](https://authjs.dev/reference/core/providers_email).
+   * Whether the user has verified their email address via an [Email provider](https://authjs.dev/reference/core/providers/email).
    * It is `null` if the user has not signed in with the Email provider yet, or the date of the first successful signin.
    */
   emailVerified: Date | null
@@ -144,7 +191,7 @@ export interface AdapterUser extends User {
  *
  * There are two types of accounts:
  * - OAuth/OIDC accounts, which are created when a user signs in with an OAuth provider.
- * - Email accounts, which are created when a user signs in with an [Email provider](https://authjs.dev/reference/core/providers_email).
+ * - Email accounts, which are created when a user signs in with an [Email provider](https://authjs.dev/reference/core/providers/email).
  *
  * One user can have multiple accounts.
  */
@@ -181,7 +228,7 @@ export interface AdapterSession {
 
 /**
  * A verification token is a temporary token that is used to sign in a user via their email address.
- * It is created when a user signs in with an [Email provider](https://authjs.dev/reference/core/providers_email).
+ * It is created when a user signs in with an [Email provider](https://authjs.dev/reference/core/providers/email).
  * When the user clicks the link in the email, the token and email is sent back to the server
  * where it is hashed and compared to the value in the database.
  * If the tokens and emails match, and the token hasn't expired yet, the user is signed in.
@@ -232,7 +279,7 @@ export interface Adapter {
   ): Promise<void> | Awaitable<AdapterUser | null | undefined>
   /**
    * This method is invoked internally (but optionally can be used for manual linking).
-   * It creates an [Account](https://authjs.dev/reference/adapters#models) in the database.
+   * It creates an [Account](https://authjs.dev/reference/core/adapters#models) in the database.
    */
   linkAccount?(
     account: AdapterAccount

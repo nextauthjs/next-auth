@@ -110,7 +110,7 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "providers.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/core/providers_:path"
+      "destination": "https://authjs.dev/reference/core/providers/:path"
     },
     {
       "source": "/getting-started/upgrade-to-v4",

@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/boxyhq-saml
+ * @module providers/boxyhq-saml-oidc
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 

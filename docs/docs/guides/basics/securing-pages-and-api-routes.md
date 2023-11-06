@@ -49,7 +49,7 @@ export { default } from "next-auth/middleware"
 
 Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/pages/admin/_middleware.js` would protect all pages under `/admin`.
 
-For the time being, the `withAuth` middleware only supports `"jwt"` as a [session strategy](/reference/configuration/auth-config#session).
+For the time being, the `withAuth` middleware only supports `"jwt"` as a [session strategy](/reference/core/module.index#authconfig#session).
 
 More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
 
@@ -163,5 +163,5 @@ You can use the `getToken()` helper function in any application as long as you s
 :::note
 Pass `getToken` the same value for `secret` as specified in `pages/api/auth/[...nextauth].js`.
 
-See [the documentation for the JWT option](/reference/configuration/auth-config#jwt) for more information.
+See [the documentation for the JWT option](/reference/core/module.index#authconfig#jwt) for more information.
 :::

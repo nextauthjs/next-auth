@@ -95,7 +95,7 @@ export interface EmailUserConfig extends Record<string, unknown> {
    * By default, we treat email addresses as all lower case,
    * but you can override this function to change this behavior.
    *
-   * [Normalizing the email address](https://authjs.dev/reference/core/providers_email#normalizing-the-email-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
+   * [Normalizing the email address](https://authjs.dev/reference/core/providers/email#normalizing-the-email-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
    */
   normalizeIdentifier?: (identifier: string) => string
 }
@@ -207,7 +207,7 @@ export type EmailProviderType = "email"
  * ],
  * ```
  *
- * 4. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/adapters) for storing the Email verification token.
+ * 4. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/core/adapters) for storing the Email verification token.
  *
  * 5. You can now sign in with an email address at `/api/auth/signin`.
  *

@@ -5,7 +5,7 @@ sidebar_position: 2
 
 import manifest from "../../manifest.json"
 
-An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc. Adapters are optional, unless you need to persist user information in your own database, or you want to implement certain flows. The [Email Provider](/getting-started/email-tutorial) requires an adapter to be able to save [Verification Tokens](#verification-token).
+An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc. Adapters are optional, unless you need to persist user information in your own database, or you want to implement certain flows. The [Email Provider](/getting-started/providers/email-tutorial) requires an adapter to be able to save [Verification Tokens](#verification-token).
 
 On how to use Auth.js with other databases, check out the [creating a database adapter](/guides/adapters/creating-a-database-adapter) guide.
 
@@ -84,13 +84,13 @@ Email address is optional, but if one is specified for a User, then it must be u
 :::note
 If a user first signs in with an OAuth provider, then their email address is automatically populated using the one from their OAuth profile if the OAuth provider returns one.
 
-This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in the future (if the [Email Provider](/reference/core/providers_email) is configured).
+This provides a way to contact users and for users to maintain access to their account and sign in using email in the event they are unable to sign in with the OAuth provider in the future (if the [Email Provider](/reference/core/providers/email) is configured).
 :::
 
 User creation in the database is automatic and happens when the user is logging in for the first time with a provider.
-If the first sign-in is via the [OAuth Provider](/reference/core/providers_oauth), the default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
+If the first sign-in is via the [OAuth Provider](/reference/core/providers/oauth), the default data saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra fields in your [OAuth provider](/guides/providers/custom-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
-If the first sign-in is via the [Email Provider](/reference/core/providers_email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
+If the first sign-in is via the [Email Provider](/reference/core/providers/email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
 
 ### Account
 

@@ -87,8 +87,8 @@ import type { Client } from "edgedb"
  * ### Create the EdgeDB schema
  *
  * Replace the contents of the auto-generated file in `dbschema/default.esdl` with the following:
- *
- * > This schema is adapted for use in EdgeDB and based upon our main [schema](/adapters/models)
+ * 
+ * > This schema is adapted for use in EdgeDB and based upon our main [schema](https://authjs.dev/getting-started/adapters#models)
  *
  * ```json title="default.esdl"
  * module default {

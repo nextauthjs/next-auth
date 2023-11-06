@@ -67,7 +67,7 @@ You **can** skip configuring a database and come back to it later if you want.
 
 For more information about setting up a database, please check out the following links:
 
-- Docs: [authjs.dev/reference/adapters](https://authjs.dev/reference/core/adapters)
+- Docs: [authjs.dev/reference/core/adapters](https://authjs.dev/reference/core/adapters)
 
 ### 3. Configure Authentication Providers
 
@@ -98,7 +98,7 @@ npm run start
 
 ### 5. Preparing for Production
 
-Follow the [Deployment documentation](https://authjs.dev/guides/basics/deployment)
+Follow the [Deployment documentation](https://authjs.dev/getting-started/deployment)
 
 ## Acknowledgements
 

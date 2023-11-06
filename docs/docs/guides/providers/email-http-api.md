@@ -13,7 +13,7 @@ The following guide is written for `next-auth` (NextAuth.js), but it should work
 There is a built-in Email provider with which you could connect to the SMTP server of your choice to send "magic link" emails for sign-in purposes. However, the Email provider can also be used with HTTP-based email services, like AWS SES, Postmark, Sendgrid, etc. In this guide, we are going to explain how to use our Email magic link provider with any of the more modern HTTP-based Email APIs.
 
 For this example, we will be using [SendGrid](https://sendgrid.com), but any email service providing an HTTP API or JS client library will work.
-We will also refer to the [Prisma Adapter](/reference/adapter/prisma). A [database adapter](/adapters/overview) is a requirement for the Email provider.
+We will also refer to the [Prisma Adapter](/reference/adapter/prisma). A [database adapter](/getting-started/adapters) is a requirement for the Email provider.
 
 ## Setup
 
@@ -98,11 +98,11 @@ export const authOptions: NextAuthOptions = {
 }
 ```
 
-And that's all we need to do to send Emails via an HTTP API! Note here that the example is only using `text/plain` as the body type. You'll probably want to change that to `text/html` and pass in a nice-looking HTML email. See, for example, our `html` function in [the Auth.js docs](/providers/email#customizing-emails).
+And that's all we need to do to send Emails via an HTTP API! Note here that the example is only using `text/plain` as the body type. You'll probably want to change that to `text/html` and pass in a nice-looking HTML email. See, for example, our `html` function in [the Auth.js docs](/reference/core/providers/email#customizing-emails).
 
 To sign in via this custom provider, you would refer to it by the `id` in when you are calling the sign-in method, for example: `signIn('sendgrid', { email: 'user@company.com' })`.
 
 ## References
 
-- [Email provider documentation with HTML generation and more](/reference/core/modules/providers_email)
+- [Email provider documentation with HTML generation and more](/reference/core/providers/email)
 - [SendGrid JSON Body documentation](https://docs.sendgrid.com/api-reference/mail-send/mail-send#body)
