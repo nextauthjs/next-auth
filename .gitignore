@@ -30,13 +30,6 @@ dist
 .cache-loader
 packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
-packages/next-auth/client
-packages/next-auth/css
-packages/next-auth/utils
-packages/next-auth/core
-packages/next-auth/jwt
-packages/next-auth/react
-packages/next-auth/next
 packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
@@ -81,7 +74,7 @@ test.schema.gql
 
 # docusaurus
 docs/.docusaurus
-docs/providers.json
+docs/manifest.json
 
 # Core
 packages/core/src/providers/oauth-types.ts
@@ -90,7 +83,13 @@ packages/core/providers
 packages/core/src/lib/pages/styles.ts
 docs/docs/reference/core
 docs/docs/reference/sveltekit
+docs/docs/reference/nextjs
 
+# Next.js
+packages/next-auth/lib
+packages/next-auth/providers
+# copied from @auth/core
+packages/next-auth/src/providers
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*

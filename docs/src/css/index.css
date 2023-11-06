@@ -63,7 +63,7 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "providers.css";
 @import "navbar.css";
 @import "search.css";
-@import "adapters.css";
+@import "cards.css";
 
 a {
   font-weight: 600;

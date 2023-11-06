@@ -1,6 +1,6 @@
 {
   "name": "@auth/supabase-adapter",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Supabase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -42,10 +42,7 @@
     "@supabase/supabase-js": "^2.0.5"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:^0.0.0",
-    "@auth/tsconfig": "workspace:^0.0.0",
-    "@supabase/supabase-js": "^2.0.5",
-    "jest": "^27.4.3"
+    "@supabase/supabase-js": "^2.0.5"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

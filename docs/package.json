@@ -4,14 +4,14 @@
   "name": "docs",
   "scripts": {
     "start": "TYPEDOC_WATCH=true docusaurus start --no-open",
-    "dev": "pnpm providers && pnpm snippets && pnpm start",
-    "build": "pnpm providers && docusaurus build",
+    "dev": "pnpm manifest && pnpm snippets && pnpm start",
+    "build": "pnpm manifest && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "providers": "node scripts/generate-providers.mjs",
+    "manifest": "node scripts/generate-manifest.mjs",
     "snippets": "node scripts/generate-snippets.mjs"
   },
   "dependencies": {
@@ -38,10 +38,11 @@
     "@docusaurus/theme-common": "2.4.1",
     "@docusaurus/theme-mermaid": "2.4.1",
     "@docusaurus/types": "2.4.1",
-    "docusaurus-plugin-typedoc": "1.0.0-next.13",
+    "docusaurus-plugin-typedoc": "1.0.0-next.19",
     "postcss-nested": "^6.0.1",
-    "typedoc": "^0.24.8",
-    "typedoc-plugin-markdown": "4.0.0-next.16"
+    "typedoc": "0.25.3",
+    "typedoc-plugin-markdown": "4.0.0-next.25",
+    "typescript": "5.2.2"
   },
   "browserslist": {
     "production": [

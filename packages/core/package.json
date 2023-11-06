@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -84,7 +84,6 @@
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
-    "@auth/tsconfig": "workspace:*",
     "@types/cookie": "0.5.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
