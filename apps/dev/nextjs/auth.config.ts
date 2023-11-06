@@ -1,12 +1,12 @@
-import type { NextAuthConfig } from "next-auth"
-import Auth0 from "next-auth/providers/auth0"
-import Credentials from "next-auth/providers/credentials"
-import Facebook from "next-auth/providers/facebook"
-import GitHub from "next-auth/providers/github"
-import Google from "next-auth/providers/google"
-import Twitter from "next-auth/providers/twitter"
+import type { NextAuthConfig } from "@auth/nextjs"
+import Auth0 from "@auth/nextjs/providers/auth0"
+import Credentials from "@auth/nextjs/providers/credentials"
+import Facebook from "@auth/nextjs/providers/facebook"
+import GitHub from "@auth/nextjs/providers/github"
+import Google from "@auth/nextjs/providers/google"
+import Twitter from "@auth/nextjs/providers/twitter"
 
-declare module "next-auth" {
+declare module "@auth/nextjs" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */

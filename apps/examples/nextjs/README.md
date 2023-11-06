@@ -3,21 +3,21 @@
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
-   <h3 align="center">NextAuth.js Example App</h3>
+   <h3 align="center">Auth.js with Next.js Example App</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <a href="https://npm.im/next-auth">
+      <a href="https://npm.im/@auth/nextjs">
         <img alt="npm" src="https://img.shields.io/npm/v/next-auth?color=green&label=next-auth">
       </a>
       <a href="https://bundlephobia.com/result?p=next-auth-example">
         <img src="https://img.shields.io/bundlephobia/minzip/next-auth?label=next-auth" alt="Bundle Size"/>
       </a>
-      <a href="https://www.npmtrends.com/next-auth">
+      <a href="https://www.npmtrends.com/@auth/nextjs">
         <img src="https://img.shields.io/npm/dm/next-auth?label=next-auth%20downloads" alt="Downloads" />
       </a>
-      <a href="https://npm.im/next-auth">
+      <a href="https://npm.im/@auth/nextjs">
         <img src="https://img.shields.io/badge/npm-TypeScript-blue" alt="TypeScript" />
       </a>
    </p>
@@ -25,19 +25,19 @@
 
 ## Overview
 
-NextAuth.js is a complete open source authentication solution.
+Auth.js is a complete open source authentication solution.
 
-This is an example application that shows how `next-auth` is applied to a basic Next.js app.
+This is an example application that shows how `@auth/nextjs` is applied to a basic Next.js app.
 
 The deployed version can be found at [`next-auth-example.vercel.app`](https://next-auth-example.vercel.app)
 
-### About NextAuth.js
+### About Auth.js
 
-NextAuth.js is an easy to implement, full-stack (client/server) open source authentication library originally designed for [Next.js](https://nextjs.org) and [Serverless](https://vercel.com). Our goal is to [support even more frameworks](https://github.com/nextauthjs/next-auth/issues/2294) in the future.
+Auth.js is an easy to implement, full-stack (client/server) open source authentication library originally designed for [Next.js](https://nextjs.org) and [Serverless](https://vercel.com). Our goal is to [support even more frameworks](https://github.com/nextauthjs/next-auth/issues/2294) in the future.
 
-Go to [next-auth.js.org](https://authjs.dev) for more information and documentation.
+Go to [authjs.dev](https://authjs.dev) for more information and documentation.
 
-> _NextAuth.js is not officially associated with Vercel or Next.js._
+> _Auth.js is not officially associated with Vercel or Next.js._
 
 ## Getting Started
 
@@ -61,7 +61,7 @@ Add details for one or more providers (e.g. Google, Twitter, GitHub, Email, etc)
 
 #### Database
 
-A database is needed to persist user accounts and to support email sign in. However, you can still use NextAuth.js for authentication without a database by using OAuth for authentication. If you do not specify a database, [JSON Web Tokens](https://jwt.io/introduction) will be enabled by default.
+A database is needed to persist user accounts and to support email sign in. However, you can still use Auth.js for authentication without a database by using OAuth for authentication. If you do not specify a database, [JSON Web Tokens](https://jwt.io/introduction) will be enabled by default.
 
 You **can** skip configuring a database and come back to it later if you want.
 
@@ -105,7 +105,7 @@ Follow the [Deployment documentation](https://authjs.dev/getting-started/deploym
 <a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
 <img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
 </a>
-<p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire NextAuth.js Team</p>
+<p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire Auth.js Team</p>
 
 ## License
 

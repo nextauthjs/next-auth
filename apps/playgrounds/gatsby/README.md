@@ -8,7 +8,7 @@
    Open Source. Full Stack. Own Your Data.
    </p>
    <p align="center" style="align: center;">
-      <a href="https://npm.im/next-auth">
+      <a href="https://npm.im/@auth/nextjs">
         <img alt="npm" src="https://img.shields.io/npm/v/@auth/core?color=green&label=@auth/core&style=flat-square">
       </a>
       <a href="https://bundlephobia.com/result?p=@auth/core">

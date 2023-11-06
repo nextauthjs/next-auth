@@ -1,6 +1,6 @@
 // If your deployment environment supports Gatsby Functions, you won't need the root `api` folder, only this.
 
-import NextAuth from "next-auth"
+import NextAuth from "@auth/nextjs"
 import { authConfig } from "../../nextauth.config"
 
 export default async function handler(req, res) {

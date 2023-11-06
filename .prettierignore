@@ -41,9 +41,9 @@ packages/core/src/lib/pages/styles.ts
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
 
-# next-auth
-packages/next-auth/src/providers/oauth-types.ts
-packages/next-auth/css/index.css
+# @auth/nextjs
+packages/frameworks-nextjs/src/providers/oauth-types.ts
+packages/frameworks-nextjs/css/index.css
 
 
 # Adapters

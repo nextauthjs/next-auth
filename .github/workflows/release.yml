@@ -32,7 +32,7 @@ on:
           - "@auth/typeorm-adapter"
           - "@auth/upstash-redis-adapter"
           - "@auth/xata-adapter"
-          - "next-auth"
+          - "@auth/nextjs"
       # TODO: Infer from package name
       path:
         type: choice
@@ -57,7 +57,6 @@ on:
           - "adapter-typeorm"
           - "adapter-upstash-redis"
           - "adapter-xata"
-          - "next-auth"
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}

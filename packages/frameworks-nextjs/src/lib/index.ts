@@ -12,7 +12,7 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
-/** Configure NextAuth.js. */
+/** Configure Auth.js. */
 export interface NextAuthConfig extends AuthConfig {
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
@@ -173,7 +173,7 @@ async function handleAuth(
 
     const redirect = authorized.headers.get("Location")
     const { pathname } = request.nextUrl
-    // If the user is redirecting to the same NextAuth.js action path as the current request,
+    // If the user is redirecting to the same Auth.js action path as the current request,
     // don't allow the redirect to prevent an infinite loop
     if (
       redirect &&

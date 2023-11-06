@@ -1,6 +1,6 @@
 {
   "private": true,
-  "description": "An example project for NextAuth.js with Next.js",
+  "description": "An example project for Auth.js with Next.js",
   "repository": "https://github.com/nextauthjs/next-auth-example.git",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
@@ -28,7 +28,7 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.274.0",
     "next": "latest",
-    "next-auth": "experimental",
+    "@auth/nextjs": "experimental",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",

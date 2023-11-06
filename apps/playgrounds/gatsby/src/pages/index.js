@@ -1,14 +1,14 @@
 import * as React from "react"
 import Layout from "../components/layout"
 
-import { useSession } from "next-auth/react"
+import { useSession } from @auth/nextjs/react"
 
 export default function Home() {
   const session = useSession()
 
   return (
     <Layout>
-      <h1>NextAuth.js Example</h1>
+      <h1>Next.js Auth Example</h1>
       <p>
         An example site to demonstrate how to use{" "}
         <a href="https://authjs.dev">Auth.js</a> for authentication in Gatsby.

@@ -25,7 +25,7 @@
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
     "next": "13.5.7-canary.17",
-    "next-auth": "workspace:*",
+    "@auth/nextjs": "workspace:*",
     "nodemailer": "^6.9.3",
     "react": "^18",
     "react-dom": "^18"

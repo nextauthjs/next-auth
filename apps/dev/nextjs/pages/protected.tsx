@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
+import { useSession } from "@auth/nextjs/react"
 
 export default function Page() {
   const { status } = useSession({ required: true })

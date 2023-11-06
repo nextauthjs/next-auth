@@ -4,14 +4,14 @@
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install next-auth@5 @auth/core
+ * npm install @auth/nextjs@5 @auth/core
  * ```
  *
  * ## Environment variable inferrence
  *
  * `NEXTAUTH_URL` and `NEXTAUTH_SECRET` have been inferred since v4.
  *
- * Since NextAuth.js v5 can also automatically infer environment variables that are prefiexed with `AUTH_`.
+ * Since Auth.js for Next.js v5 can also automatically infer environment variables that are prefiexed with `AUTH_`.
  *
  * For example `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
  *
@@ -26,8 +26,8 @@
  * To add social login to your app, the configuration becomes:
  *
  * ```ts title="auth.ts"
- * import NextAuth from "next-auth"
- * import GitHub from "next-auth/providers/GitHub"
+ * import NextAuth from "@auth/nextjs"
+ * import GitHub from "@auth/nextjs/providers/GitHub"
  * export const { handlers, auth } = NextAuth({ providers: [ GitHub ] })
  * ```
  *
@@ -40,7 +40,7 @@
  * ```
  *
  * :::tip
- * In production, `AUTH_SECRET` is a required environment variable - if not set, NextAuth.js will throw an error. See [MissingSecretError](https://authjs.dev/reference/core/errors#missingsecret) for more details.
+ * In production, `AUTH_SECRET` is a required environment variable - if not set, Auth.js will throw an error. See [MissingSecretError](https://authjs.dev/reference/core/errors#missingsecret) for more details.
  * :::
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
@@ -81,14 +81,14 @@ export type { NextAuthConfig }
 
 /**
  * The result of invoking {@link NextAuth|NextAuth}, initialized with the {@link NextAuthConfig}.
- * It contains methods to set up and interact with NextAuth.js in your Next.js app.
+ * It contains methods to set up and interact with Auth.js in your Next.js app.
  */
 export interface NextAuthResult {
   /**
-   * The NextAuth.js [Route Handler](https://beta.nextjs.org/docs/routing/route-handlers) methods. These are used to expose an endpoint for OAuth/Email providers,
+   * The Auth.js [Route Handler](https://beta.nextjs.org/docs/routing/route-handlers) methods. These are used to expose an endpoint for OAuth/Email providers,
    * as well as REST API endpoints (such as `/api/auth/session`) that can be contacted from the client.
    *
-   * After initializing NextAuth.js in `auth.ts`,
+   * After initializing Auth.js in `auth.ts`,
    * re-export these methods.
    *
    * In `app/api/auth/[...nextauth]/route.ts`:
@@ -105,8 +105,8 @@ export interface NextAuthResult {
    */
   handlers: AppRouteHandlers
   /**
-   * A universal method to interact with NextAuth.js in your Next.js app.
-   * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Server Components, Route Handlers (`app/`), and Edge or Node.js API Routes (`pages/`).
+   * A universal method to interact with Auth.js in your Next.js app.
+   * After initializing Auth.js in `auth.ts`, use this method in Middleware, Server Components, Route Handlers (`app/`), and Edge or Node.js API Routes (`pages/`).
    *
    * #### In Middleware
    *
@@ -281,11 +281,11 @@ export interface NextAuthResult {
 }
 
 /**
- *  Initialize NextAuth.js.
+ *  Initialize Auth.js.
  *
  *  @example
  * ```ts title="auth.ts"
- * import NextAuth from "next-auth"
+ * import NextAuth from "@auth/nextjs"
  * import GitHub from "@auth/core/providers/github"
  *
  * export const { handlers, auth } = NextAuth({ providers: [GitHub] })

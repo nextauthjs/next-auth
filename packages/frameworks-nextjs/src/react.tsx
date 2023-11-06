@@ -1,6 +1,6 @@
 /**
  *
- * NextAuth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
+ * Auth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
  *
  * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://authjs.dev/guides/upgrade-to-v5#methods)
  *
@@ -127,7 +127,7 @@ export function useSession<R extends boolean>(
   const value: SessionContextValue<R> = React.useContext(SessionContext)
   if (!value && process.env.NODE_ENV !== "production") {
     throw new Error(
-      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+      "[auth]: `useSession` must be wrapped in a <SessionProvider />"
     )
   }
 

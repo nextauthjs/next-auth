@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth from "@auth/nextjs"
 import authConfig from "auth.config"
 
 export const middleware = NextAuth(authConfig).auth

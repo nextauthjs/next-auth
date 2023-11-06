@@ -28,8 +28,8 @@ dist
 # Generated files
 .docusaurus
 .cache-loader
-packages/next-auth/providers
-packages/next-auth/src/providers/oauth-types.ts
+packages/frameworks-nextjs/providers
+packages/frameworks-nextjs/src/providers/oauth-types.ts
 packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
@@ -86,10 +86,10 @@ docs/docs/reference/sveltekit
 docs/docs/reference/nextjs
 
 # Next.js
-packages/next-auth/lib
-packages/next-auth/providers
+packages/frameworks-nextjs/lib
+packages/frameworks-nextjs/providers
 # copied from @auth/core
-packages/next-auth/src/providers
+packages/frameworks-nextjs/src/providers
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import * as React from "react"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "@auth/nextjs/react"
 
 export default function Page() {
   const [response, setResponse] =

@@ -1,6 +1,6 @@
 "use client"
 
-import { signIn, useSession } from "next-auth/react"
+import { signIn, useSession } from "@auth/nextjs/react"
 
 export default function Client() {
   const { data: session, update, status } = useSession()

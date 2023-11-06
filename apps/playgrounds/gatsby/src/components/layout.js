@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as styles from "./layout.module.css"
 
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "@auth/nextjs/react"
 
 export default function Layout({ children }) {
   const session = useSession()

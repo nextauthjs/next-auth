@@ -1,7 +1,7 @@
-import GitHubProvider from "next-auth/providers/github"
-import CredentialsProvider from "next-auth/providers/credentials"
+import GitHubProvider from "@auth/nextjs/providers/github"
+import CredentialsProvider from "@auth/nextjs/providers/credentials"
 
-/** @type {import("next-auth").NextAuthOptions} */
+/** @type {import("@auth/nextjs").NextAuthOptions} */
 export const authConfig = {
   providers: [
     CredentialsProvider({

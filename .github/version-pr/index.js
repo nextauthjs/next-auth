@@ -5,7 +5,7 @@ const core = require("@actions/core")
 try {
   const packageJSONPath = path.join(
     process.cwd(),
-    `packages/${process.env.PACKAGE_PATH || "next-auth"}/package.json`
+    `packages/${process.env.PACKAGE_PATH || "@auth/nextjs"}/package.json`
   )
   const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"))
 

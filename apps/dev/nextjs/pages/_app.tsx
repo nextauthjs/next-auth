@@ -1,4 +1,4 @@
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react"
+import { SessionProvider, signIn, signOut, useSession } from "@auth/nextjs/react"
 import "./styles.css"
 import { Header } from "components/header"
 import styles from "components/header.module.css"

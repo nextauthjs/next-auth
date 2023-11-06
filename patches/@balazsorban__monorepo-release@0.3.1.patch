@@ -6,7 +6,7 @@ index 09a0c10584159beefa7a915ad92d46601da5ad45..bbb63c7e687c1ca4b715b3a80a512d97
          await pkgJson.update(pkg.relativeDir, { version: pkg.newVersion });
          log.info("package.json file has been written, publishing.");
          let npmPublish = `pnpm publish --access public --registry=https://registry.npmjs.org --no-git-checks`;
-+        if(pkg.name === "next-auth") {
++        if(pkg.name === "@auth/nextjs") {
 +            npmPublish += " --tag beta";
 +        }
          if (dryRun) {

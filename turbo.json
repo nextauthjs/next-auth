@@ -40,7 +40,7 @@
       ],
       "outputMode": "new-only"
     },
-    "next-auth#build": {
+    "@auth/nextjs#build": {
       "dependsOn": [
         "^build"
       ],
@@ -99,7 +99,7 @@
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
-        "next-auth#build",
+        "@auth/nextjs#build",
         "^build"
       ],
       "cache": false
@@ -131,7 +131,7 @@
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
-        "next-auth#build",
+        "@auth/nextjs#build",
         "^build"
       ],
       "outputs": [

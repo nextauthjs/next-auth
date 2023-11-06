@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import Email from "next-auth/providers/email"
+import NextAuth from "@auth/nextjs"
+import Email from "@auth/nextjs/providers/email"
 import authConfig from "auth.config"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "@auth/prisma-adapter"
