@@ -216,6 +216,7 @@ export default {
     [
       "@docusaurus/preset-classic",
       {
+        gtag: { trackingID: "AW-11313383806", anonymizeIP: true },
         docs: {
           breadcrumbs: false,
           routeBasePath: "/",
