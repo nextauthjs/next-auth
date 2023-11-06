@@ -118,8 +118,8 @@
       "permanent": true
     },
     {
-      "source": "/reference/core/providers_:slug*",
-      "destination": "/reference/core/providers/:slug*",
+      "source": "/reference/core/providers_:slug(.*)",
+      "destination": "/reference/core/providers/:slug",
       "permanent": true
     }
   ]
