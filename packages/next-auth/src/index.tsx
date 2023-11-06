@@ -54,6 +54,7 @@ import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Session } from "@auth/core/types"
+import type { BuiltInProviderType } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -62,7 +63,6 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-import type { BuiltInProviderType } from "./providers/index.js"
 
 export type {
   Account,
@@ -233,7 +233,7 @@ export interface NextAuthResult {
    * )
    * ```
    */
-  signIn<
+  signIn: <
     P extends BuiltInProviderType | (string & {}),
     R extends boolean = true
   >(
@@ -250,7 +250,7 @@ export interface NextAuthResult {
       | Record<string, string>
       | string
       | URLSearchParams
-  ): Promise<R extends false ? any : never>
+  ) => Promise<R extends false ? any : never>
   /**
    * Sign out the user.
    *
@@ -269,12 +269,12 @@ export interface NextAuthResult {
    * )
    * ```
    */
-  signOut<R extends boolean = true>(options?: {
+  signOut: <R extends boolean = true>(options?: {
     /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
     redirectTo?: string
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
-  }): Promise<R extends false ? any : never>
+  }) => Promise<R extends false ? any : never>
   update: (
     data: Partial<Session | { user: Partial<Session["user"]> }>
   ) => Promise<Session | null>
@@ -298,13 +298,13 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
     auth: initAuth(config),
-    signIn(provider, options, authorizationParams) {
+    signIn: (provider, options, authorizationParams) => {
       return signIn(provider, options, authorizationParams, config)
     },
-    signOut(options) {
+    signOut: (options) => {
       return signOut(options, config)
     },
-    update(data) {
+    update: (data) => {
       return update(data, config)
     },
   }

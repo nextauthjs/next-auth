@@ -47,11 +47,6 @@
     "edgedb": "^1.0.1"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:^0.0.0",
-    "@auth/tsconfig": "workspace:^0.0.0",
-    "jest": "^27.4.3",
-    "@auth/core": "workspace:*",
-    "typescript": "^4.7.4",
     "edgedb": "^1.0.1"
   },
   "jest": {

@@ -29,7 +29,7 @@ function typedocAdapter(name) {
       watch: process.env.TYPEDOC_WATCH,
       entryPoints: [`../packages/adapter-${slug}/src/index.ts`],
       tsconfig: `../packages/adapter-${slug}/tsconfig.json`,
-      out: `reference/adapter/${slug}`,
+      out: `docs/reference/adapter/${slug}`,
       ...typedocConfig,
     },
   ]
@@ -46,8 +46,7 @@ function typedocFramework(pkgDir, entrypoints) {
       watch: process.env.TYPEDOC_WATCH,
       entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
       tsconfig: `../packages/${pkgDir}/tsconfig.json`,
-      out: `reference/${id === "next-auth" ? "nextjs" : id}`,
-      skipIndexPage: true,
+      out: `docs/reference/${id === "next-auth" ? "nextjs" : id}`,
     },
   ]
 }
@@ -273,16 +272,16 @@ const docusaurusConfig = {
   plugins: [
     typedocFramework("core", ["index.ts", "adapters.ts", "errors.ts", "jwt.ts", "types.ts"].concat(providers)),
     typedocFramework("frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]),
-    typedocFramework("next-auth", ["index.tsx", "react.tsx", "jwt.ts", "adapters.ts", "next.ts", "types.ts", "middleware.ts"]),
+    typedocFramework("next-auth", ["index.tsx", "react.tsx", "jwt.ts", "next.ts", "types.ts", "middleware.ts"]),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : [
           typedocAdapter("Azure Tables"),
           typedocAdapter("D1"),
-          typedocAdapter("EdgeDb"),
           typedocAdapter("Dgraph"),
           typedocAdapter("Drizzle"),
           typedocAdapter("DynamoDB"),
+          typedocAdapter("EdgeDb"),
           typedocAdapter("Fauna"),
           typedocAdapter("Firebase"),
           typedocAdapter("Hasura"),
@@ -293,10 +292,10 @@ const docusaurusConfig = {
           typedocAdapter("PG"),
           typedocAdapter("PouchDB"),
           typedocAdapter("Prisma"),
-          typedocAdapter("TypeORM"),
           typedocAdapter("Sequelize"),
           typedocAdapter("Supabase"),
           typedocAdapter("SurrealDB"),
+          typedocAdapter("TypeORM"),
           typedocAdapter("Upstash Redis"),
           typedocAdapter("Xata"),
         ]),
