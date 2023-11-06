@@ -32,17 +32,13 @@ You can use also Auth.js with any database using a custom database adapter, or b
 <summary>
   <h3 style={{display: "inline-block"}}>What authentication services does Auth.js support?</h3>
 </summary>
-<p>
 
-<p>Auth.js includes built-in support for signing in with&nbsp;
-(See also: <a href="/reference/core/providers">Providers</a>)
-</p>
+Auth.js includes built-in support for signing in with (See also: [Providers](/reference/core/providers))
 
 Auth.js also supports email for passwordless sign-in, which is useful for account recovery or for people who are not able to use an account with the configured OAuth services (e.g. due to service outage, account suspension or otherwise becoming locked out of an account).
 
 You can also use a custom-based provider to support signing in with a username and password stored in an external database and/or using two-factor authentication.
 
-</p>
 </details>
 
 <details>
@@ -204,4 +200,3 @@ Ultimately if your request is not accepted or is not actively in development, yo
 
 </p>
 </details>
-

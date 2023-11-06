@@ -9,7 +9,7 @@ NextAuth.js version 5 is a complete rewrite of the package, but we made sure to 
 
 Try it out by running:
 
-```bash npm2yarn2pnpm
+```bash npm2yarn
 npm install next-auth@beta
 ```
 

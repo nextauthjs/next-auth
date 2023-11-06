@@ -3,7 +3,7 @@ title: Login Providers
 sidebar_position: 1
 ---
 
-import { providers } from "../../../manifest.json"
+import manifest from "../../../manifest.json"
 
 Using an Auth.js / NextAuth.js provider....
 
@@ -20,7 +20,7 @@ See the [documentation for adapters](/reference/core/adapters) for more informat
 The following listed official providers are created and maintained by the community:
 
 <div class="card-list">
-  {Object.entries(providers).map(([id, name]) => (
+  {Object.entries(manifest.providers).map(([id, name]) => (
     <a
       href={`/reference/core/providers/${id}`}
       class="card"

@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install kysely @auth/kysely-adapter
  * ```
  *
@@ -104,7 +104,7 @@ function to<T extends Partial<ReturnData<null>>, K extends keyof T>(
  * 
  * This adapter supports the same first party dialects that Kysely (as of v0.24.2) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
  * 
- *  ```bash npm2yarn2pnpm
+ *  ```bash npm2yarn
  * npm install pg
  * npm install --save-dev @types/pg
  * ```

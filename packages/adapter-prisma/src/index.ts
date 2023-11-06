@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.</p>
+ *  Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.
  *  <a href="https://www.prisma.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/prisma.svg" width="38" />
  *  </a>
@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @prisma/client @auth/prisma-adapter
  * npm install prisma --save-dev
  * ```

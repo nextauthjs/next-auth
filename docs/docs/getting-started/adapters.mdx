@@ -3,7 +3,7 @@ title: Database Adapters
 sidebar_position: 2
 ---
 
-import { adapters } from "../../manifest.json"
+import manifest from "../../manifest.json"
 
 An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc. Adapters are optional, unless you need to persist user information in your own database, or you want to implement certain flows. The [Email Provider](/getting-started/providers/email-tutorial) requires an adapter to be able to save [Verification Tokens](#verification-token).
 
@@ -18,7 +18,7 @@ If you don't find an adapter for the database or service you use, you can always
 :::
 
 <div class="card-list">
-  {Object.entries(adapters).map(([id, [name, img]]) => (
+  {Object.entries(manifest.adapters).map(([id, [name, img]]) => (
     <a href={`/reference/adapter/${id}`} class="card">
       <img src={`/img/adapters/${img || `${id}.svg`}`} width="40" />
       <h4 class="card__title">{name} Adapter</h4>

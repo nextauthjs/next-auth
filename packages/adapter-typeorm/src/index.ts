@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/typeorm-adapter typeorm
  * ```
  *
@@ -42,7 +42,6 @@ export async function getManager(options: {
   dataSource: string | DataSourceOptions
   entities: Entities
 }): Promise<EntityManager> {
-
   if (!_dataSource) {
     const { dataSource, entities } = options
     const config = {

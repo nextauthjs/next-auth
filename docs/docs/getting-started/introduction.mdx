@@ -3,14 +3,14 @@ title: Introduction
 sidebar_position: 0
 ---
 
-import { providers, adapters, frameworks } from "../../manifest.json"
+import manifest from "../../manifest.json"
 
 ## About Auth.js
 
 Auth.js is a complete open-source authentication solution for web applications. Check out the live demos of Auth.js in action:
 
 <div class="card-list">
-  {frameworks.map(({ id, name, url, logo }) => (
+  {manifest.frameworks.map(({ id, name, url, logo }) => (
     <a href={`https://${url}.vercel.app`} class="card">
       <img src={`/img/frameworks/${id}.svg`} width="40" />
       <h4 class="card__title">{name}</h4>
@@ -29,10 +29,10 @@ Continue to our guides to see how to use Auth.js for authentication:
 ### Features
 
 - Built in support for
-  <b> {Object.keys(providers).length}+ </b>
+  <b> {Object.keys(manifest.providers).length}+ </b>
   popular services (Google, Facebook, Auth0, Apple…)
 - Built-in support for
-  <b> {Object.keys(adapters).length}+ </b>
+  <b> {Object.keys(manifest.adapters).length}+ </b>
   databases/ORMs (MySQL, Postgres, Prisma, Drizzle…)
 - Built-in email/passwordless/magic link authentication
 - Use with _any_ [OAuth 2](https://www.ietf.org/rfc/rfc6749.html) or [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html) provider
