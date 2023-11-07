@@ -6,4 +6,4 @@ export const GET = auth((req) => {
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })
-})
+}) as any // TODO: Fix `auth()` return type

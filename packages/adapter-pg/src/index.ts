@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install next-auth @auth/pg-adapter pg
  * ```
  *
@@ -34,7 +34,7 @@ export function mapExpiresAt(account: any): any {
 /**
  * ## Setup
  *
- * The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our doc page on [Database Models](http://localhost:3000/reference/adapters#models).
+ * The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our doc page on [Database Models](https://authjs.dev/reference/core/adapters#models).
  * ```sql
  * CREATE TABLE verification_token
  * (
@@ -85,7 +85,6 @@ export function mapExpiresAt(account: any): any {
  * );
  *
  * ```
- *
  *
  * ```typescript title="auth.ts"
  * import NextAuth from "next-auth"

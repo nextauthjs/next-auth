@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install next-auth @auth/dynamodb-adapter
  * ```
  *
@@ -102,7 +102,7 @@ export interface DynamoDBAdapterOptions {
  * - Querying relations is faster than with multi-table schemas (for eg. retrieving all sessions for a user).
  * - Only one table needs to be replicated if you want to go multi-region.
  *
- * > This schema is adapted for use in DynamoDB and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in DynamoDB and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * ![DynamoDB Table](https://i.imgur.com/hGZtWDq.png)
  *

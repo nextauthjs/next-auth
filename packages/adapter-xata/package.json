@@ -43,11 +43,7 @@
     "@xata.io/client": ">=0.13.0"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:^0.0.0",
-    "@auth/tsconfig": "workspace:^0.0.0",
-    "jest": "^27.4.3",
-    "@xata.io/client": "^0.13.0",
-    "typescript": "5.2.2"
+    "@xata.io/client": "^0.13.0"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

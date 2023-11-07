@@ -41,13 +41,7 @@
     "test": "./tests/test.sh"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "@types/jest": "^26.0.24",
-    "@types/jsonwebtoken": "^8.5.5",
-    "jest": "^27.4.3",
-    "ts-jest": "^27.0.3",
-    "typescript": "5.2.2"
+    "@types/jsonwebtoken": "^8.5.5"
   },
   "dependencies": {
     "@auth/core": "workspace:*",
