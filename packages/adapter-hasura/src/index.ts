@@ -61,7 +61,7 @@ import {
  *       scope text,
  *       id_token text,
  *       session_state text,
- *       "userId" uuid NOT NULL,
+ *       "userId" uuid NOT NULL
  *   );
  *
  *   CREATE TABLE sessions (
