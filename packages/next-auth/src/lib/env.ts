@@ -4,7 +4,7 @@ import type { headers } from "next/headers"
 import type { NextAuthConfig } from "./index.js"
 
 export function setEnvDefaults(config: NextAuthConfig) {
-  config.secret ??= process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
+  config.secret ??= process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
   config.trustHost ??= !!(
     process.env.AUTH_URL ??
     process.env.NEXTAUTH_URL ??
