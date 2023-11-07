@@ -4,7 +4,7 @@
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install next-auth@5 @auth/core
+ * npm install next-auth@beta
  * ```
  *
  * ## Environment variable inferrence
