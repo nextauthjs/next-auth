@@ -9,7 +9,9 @@ export function SignIn({
     <form
       action={async () => {
         "use server"
-        await signIn(provider)
+        const url = await signIn(provider, { redirect: false })
+        // TODO: fix in next-auth
+        redirect(url.replace("signin", "api/auth/signin"))
       }}
     >
       <Button {...props}>Sign In</Button>
