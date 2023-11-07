@@ -39,7 +39,7 @@ Most OAuth providers cannot be configured with multiple callback URLs or using a
 However, Auth.js **supports Preview deployments**, even **with OAuth providers**:
 
 1. Determine a stable deployment URL. Eg.: A deployment whose URL does not change between builds, for example. `auth.yourdomain.com` (using a subdomain is not a requirement, this can be the main site's URL too, for example.)
-2. Set `AUTH_REDIRECT_PROXY_URL` to that URL in both projects, including the path from where Auth.js handles the routes. Eg.: (`https://auth.yourdomain.com/api/auth`)
+2. Set `AUTH_REDIRECT_PROXY_URL` to that stable deployment URL, including the path from where Auth.js handles the routes. Eg.: (`https://auth.yourdomain.com/api/auth`)
 3. For your OAuth provider, set the callback URL using the stable deployment URL. Eg.: For GitHub `https://auth.yourdomain.com/api/auth/callback/github`)
 
 :::note
