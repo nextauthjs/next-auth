@@ -3,11 +3,7 @@
   "description": "Proxy for Auth.js hosted examples",
   "private": true,
   "type": "module",
-  "scripts": {},
   "dependencies": {
     "@auth/core": "latest"
-  },
-  "devDependencies": {
-    "vercel": "^32.5.0"
   }
 }
