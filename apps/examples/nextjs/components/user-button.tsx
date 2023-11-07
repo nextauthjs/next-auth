@@ -12,18 +12,19 @@ import { SignIn, SignOut } from "./auth-components"
 
 export default async function UserButton() {
   const session = await auth()
-  return session ? (
+  if (!session?.user) return <SignIn />
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative w-8 h-8 rounded-full">
           <Avatar className="w-8 h-8">
-            {session.user?.picture && (
+            {session.user.image && (
               <AvatarImage
-                src={session.user?.picture}
-                alt={session.user?.name ?? ""}
+                src={session.user.image}
+                alt={session.user.name ?? ""}
               />
             )}
-            <AvatarFallback>{session.user?.email}</AvatarFallback>
+            <AvatarFallback>{session.user.email}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -31,10 +32,10 @@ export default async function UserButton() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {session.user?.name}
+              {session.user.name}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {session.user?.email}
+              {session.user.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -43,7 +44,5 @@ export default async function UserButton() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : (
-    <SignIn />
   )
 }

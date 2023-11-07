@@ -9,9 +9,9 @@ import CustomLink from "./custom-link"
 
 const UpdateForm = () => {
   const { data: session, update } = useSession()
-  const [name, setName] = useState(session?.user.name ?? "")
+  const [name, setName] = useState(session?.user?.name ?? "")
 
-  if (!session) return null
+  if (!session?.user) return null
   return (
     <>
       <h2 className="text-xl font-bold">Updating the session</h2>

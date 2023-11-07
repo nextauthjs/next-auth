@@ -14,7 +14,7 @@ export function setEnvDefaults(config: NextAuthConfig) {
   )
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
   config.providers = config.providers.map((p) => {
-    const finalProvider = typeof p === "function" ? p() : p
+    const finalProvider = typeof p === "function" ? p({}) : p
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
       const ID = finalProvider.id.toUpperCase()
       finalProvider.clientId ??= process.env[`AUTH_${ID}_ID`]

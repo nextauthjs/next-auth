@@ -4,12 +4,14 @@ import { SessionProvider } from "next-auth/react"
 
 export default async function ClientPage() {
   const session = await auth()
+  // TODO: Look into https://react.dev/reference/react/experimental_taintObjectReference
+  // filter out sensitive data before passing to client.
   if (session?.user) {
     session.user = {
       name: session.user.name,
       email: session.user.email,
-      picture: session.user.picture,
-    } // filter out sensitive data
+      image: session.user.image,
+    }
   }
 
   return (
