@@ -1,5 +1,6 @@
 import { signIn, signOut } from "auth"
 import { Button } from "./ui/button"
+import { redirect } from "next/navigation"
 
 export function SignIn({
   provider,
