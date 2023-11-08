@@ -472,7 +472,7 @@ cookies: {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
-      secure: useSecureCookies,
+      secure: true,
       maxAge: 900
     }
   },
@@ -482,7 +482,7 @@ cookies: {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
-      secure: useSecureCookies,
+      secure: true,
       maxAge: 900
     },
   },
@@ -492,7 +492,7 @@ cookies: {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
-      secure: useSecureCookies,
+      secure: true,
     },
   },
 }
