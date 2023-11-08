@@ -23,7 +23,7 @@ build
 docs/docs/reference/core
 docs/docs/reference/sveltekit
 static
-docs/manifest.json
+docs/manifest.mjs
 
 # --------------- Packages ---------------
 

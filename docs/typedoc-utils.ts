@@ -1,7 +1,7 @@
 import type { PluginOptions } from "docusaurus-plugin-typedoc"
 import type { TypeDocOptions } from "typedoc"
 
-import { adapters, frameworks } from "./manifest.json"
+import { adapters, frameworks } from "./manifest.mjs"
 
 type TypeDocConfig = Partial<
   (PluginOptions | TypeDocOptions) & {

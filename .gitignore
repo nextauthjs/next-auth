@@ -74,7 +74,7 @@ test.schema.gql
 
 # docusaurus
 docs/.docusaurus
-docs/manifest.json
+docs/manifest.mjs
 
 # Core
 packages/core/src/providers/oauth-types.ts

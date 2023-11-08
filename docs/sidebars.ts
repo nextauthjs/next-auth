@@ -2,7 +2,7 @@ import {
   PropSidebarItemHtml,
   SidebarsConfig,
 } from "@docusaurus/plugin-content-docs"
-import { adapters, frameworks } from "./manifest.json"
+import { adapters, frameworks } from "./manifest.mjs"
 
 const clerk = {
   type: "html",
