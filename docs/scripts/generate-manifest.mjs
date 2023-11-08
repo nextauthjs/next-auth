@@ -1,3 +1,4 @@
+// @ts-check
 import { join } from "path"
 import { readdir, readFile, writeFile } from "fs/promises"
 

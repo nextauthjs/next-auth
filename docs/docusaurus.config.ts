@@ -1,7 +1,7 @@
 import { typedocFramework, typedocAdapter } from "./typedoc-utils"
 import { themes } from "prism-react-renderer"
 import pkgManagerPlugin from "@docusaurus/remark-plugin-npm2yarn"
-import { frameworks, adapters } from "./manifest.mjs"
+import manifest from "./manifest.mjs"
 
 import type { Config } from "@docusaurus/types"
 
@@ -202,7 +202,7 @@ export default {
             ...args
           }) {
             const sidebarItems = await defaultSidebarItemsGenerator(args)
-            const sidebarIdsToOmit = frameworks.map(
+            const sidebarIdsToOmit = manifest.frameworks.map(
               (f) => `reference/${f.id}/index`
             )
             return sidebarItems.filter(
@@ -215,8 +215,10 @@ export default {
     ],
   ],
   plugins: [
-    ...frameworks.map(typedocFramework),
-    ...(process.env.TYPEDOC_SKIP_ADAPTERS ? [] : adapters.map(typedocAdapter)),
+    ...manifest.frameworks.map(typedocFramework),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS
+      ? []
+      : manifest.adapters.map(typedocAdapter)),
   ],
   headTags: [
     { tagName: "meta", attributes: { charSet: "utf-8" } },

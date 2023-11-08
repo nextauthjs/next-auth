@@ -1,7 +1,9 @@
+// @ts-check
+
 import type { PluginOptions } from "docusaurus-plugin-typedoc"
 import type { TypeDocOptions } from "typedoc"
 
-import { adapters, frameworks } from "./manifest.mjs"
+import manifest from "./manifest.mjs"
 
 type TypeDocConfig = Partial<
   (PluginOptions | TypeDocOptions) & {
@@ -52,7 +54,7 @@ const defaultConfig = {
   sort: ["kind", "static-first", "required-first", "alphabetical"],
 } satisfies TypeDocConfig
 
-export function typedocAdapter({ id }: typeof adapters[number]) {
+export function typedocAdapter({ id }: typeof manifest.adapters[number]) {
   const options = {
     ...defaultConfig,
     id,
@@ -67,7 +69,7 @@ export function typedocFramework({
   packageDir,
   entrypoints,
   id,
-}: typeof frameworks[number]) {
+}: typeof manifest.frameworks[number]) {
   const options = {
     ...defaultConfig,
     id,
