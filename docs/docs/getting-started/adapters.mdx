@@ -18,7 +18,7 @@ If you don't find an adapter for the database or service you use, you can always
 :::
 
 <div class="card-list">
-  {Object.entries(manifest.adapters).map(([id, [name, img]]) => (
+  {manifest.adapters.map(({ id, name, img }) => (
     <a href={`/reference/adapter/${id}`} class="card">
       <img src={`/img/adapters/${img || `${id}.svg`}`} width="40" />
       <h4 class="card__title">{name} Adapter</h4>

@@ -82,14 +82,13 @@ packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
 docs/docs/reference/core
-docs/docs/reference/sveltekit
-docs/docs/reference/nextjs
 
 # Next.js
 packages/next-auth/lib
 packages/next-auth/providers
 # copied from @auth/core
 packages/next-auth/src/providers
+docs/docs/reference/nextjs
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*
@@ -98,6 +97,11 @@ packages/frameworks-sveltekit/.svelte-kit
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
+docs/docs/reference/sveltekit
+
+# SolidStart
+docs/docs/reference/solidstart
+
 
 # Adapters
 docs/docs/reference/adapter

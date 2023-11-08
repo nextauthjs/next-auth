@@ -1,8 +1,7 @@
-import fs from "fs"
-import path from "path"
 import { typedocFramework, typedocAdapter } from "./typedoc-utils"
 import { themes } from "prism-react-renderer"
 import pkgManagerPlugin from "@docusaurus/remark-plugin-npm2yarn"
+import { frameworks, adapters } from "./manifest.json"
 
 import type { Config } from "@docusaurus/types"
 
@@ -12,63 +11,6 @@ const metadata = {
   title: "Auth.js",
   tagline: "Authentication for the Web.",
 }
-
-// TODO: Autogenerate from manifest.json + package.json#exports
-const frameworks = [
-  [
-    "core",
-    [
-      "index.ts",
-      "adapters.ts",
-      "errors.ts",
-      "jwt.ts",
-      "types.ts",
-      // list of provider entries from @auth/core/providers/*
-      ...fs
-        .readdirSync(path.join(__dirname, "../packages/core/src", "/providers"))
-        .filter((file) => file.endsWith(".ts"))
-        .map((p) => `providers/${p}`),
-    ],
-  ],
-  ["frameworks-sveltekit", ["lib/index.ts", "lib/client.ts"]],
-  [
-    "next-auth",
-    [
-      "index.tsx",
-      "react.tsx",
-      "jwt.ts",
-      "next.ts",
-      "types.ts",
-      "middleware.ts",
-    ],
-  ],
-] satisfies Parameters<typeof typedocFramework>[]
-
-// TODO: Autogenerate from manifest.json
-const adapters = [
-  "Azure Tables",
-  "D1",
-  "Dgraph",
-  "Drizzle",
-  "DynamoDB",
-  "EdgeDb",
-  "Fauna",
-  "Firebase",
-  "Hasura",
-  "Kysely",
-  "Mikro ORM",
-  "MongoDB",
-  "Neo4j",
-  "PG",
-  "PouchDB",
-  "Prisma",
-  "Sequelize",
-  "Supabase",
-  "SurrealDB",
-  "TypeORM",
-  "Upstash Redis",
-  "Xata",
-] satisfies Parameters<typeof typedocAdapter>[0][]
 
 export default {
   ...metadata,
@@ -260,14 +202,11 @@ export default {
             ...args
           }) {
             const sidebarItems = await defaultSidebarItemsGenerator(args)
-            const sidebarIdsToOmit = [
-              "reference/core/index",
-              "reference/sveltekit/index",
-              "reference/solidstart/index",
-              "reference/nextjs/index",
-            ]
+            const sidebarIdsToOmit = frameworks.map(
+              (f) => `reference/${f.id}/index`
+            )
             return sidebarItems.filter(
-              (sidebarItem) => !sidebarIdsToOmit.includes(sidebarItem.id)
+              ({ id }) => !sidebarIdsToOmit.includes(id)
             )
           },
         },
@@ -276,10 +215,8 @@ export default {
     ],
   ],
   plugins: [
-    ...frameworks.map((framework) => typedocFramework(...framework)),
-    ...(process.env.TYPEDOC_SKIP_ADAPTERS
-      ? []
-      : adapters.map((name) => typedocAdapter(name))),
+    ...frameworks.map(typedocFramework),
+    ...(process.env.TYPEDOC_SKIP_ADAPTERS ? [] : adapters.map(typedocAdapter)),
   ],
   headTags: [
     { tagName: "meta", attributes: { charSet: "utf-8" } },
