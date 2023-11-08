@@ -10,7 +10,8 @@ Here are the _state_ of planned and released packages under the `@auth/*` and `@
 
 |        Feature         |  Status  |
 | ---------------------- | -------- |
-| `next-auth`            | Release (stable). See [docs](/reference/nextjs) |
+| `next-auth`            | Released (beta). See [docs](/reference/nextjs) |
+| `next-auth`            | Released (v4). See [docs](https://next-auth.js.org) |
 | `@auth/*-adapter`      | Released (stable). Fully compatible with `next-auth` and all `@auth/*` libraries.   |
 | `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`. See above.  |
 | `@auth/core`           | Released (experimental). |
