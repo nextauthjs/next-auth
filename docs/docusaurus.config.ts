@@ -220,6 +220,7 @@ export default {
         docs: {
           breadcrumbs: false,
           routeBasePath: "/",
+          numberPrefixParser: false,
           sidebarPath: require.resolve("./sidebars.js"),
           /**
            *
