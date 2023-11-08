@@ -23,7 +23,7 @@ Here are the _state_ of planned and released packages under the `@auth/*` and `@
 | `@auth/nuxt`           | Planned, [help needed](#help-needed). Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/) |
 
 :::info
-`next-auth` is still the official package for Next.js. The documentation is at [next-auth.js.org](https://next-auth.js.org), while guides are being migrated over to the new documentation page. A major refactor of `next-auth` is on the way, you can [follow this PR](https://github.com/nextauthjs/next-auth/pull/7443) for updates.
+The NextAuth.js v4 documentation is at [next-auth.js.org](https://next-auth.js.org), while v5+ will be available [here](/reference/nextjs). Guides are being migrated over to the new documentation page and are gradually being updated to showcase all the framework integrations.
 :::
 
 ### Help needed
