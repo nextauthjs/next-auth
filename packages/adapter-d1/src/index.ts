@@ -12,7 +12,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install next-auth @auth/d1-adapter
  * ```
  *

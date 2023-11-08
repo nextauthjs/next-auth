@@ -63,7 +63,7 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "providers.css";
 @import "navbar.css";
 @import "search.css";
-@import "adapters.css";
+@import "cards.css";
 
 a {
   font-weight: 600;
@@ -288,4 +288,15 @@ html[data-theme="dark"] #carbonads > span {
 html[data-theme="dark"] #carbonads .carbon-poweredby {
   color: #aaa;
   background: #1e2021;
+}
+
+.theme-doc-markdown.markdown {
+  > p:first-of-type {
+    :last-child {
+      img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
 }

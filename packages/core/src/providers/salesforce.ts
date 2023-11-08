@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/saleforce
+ * @module providers/salesforce
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 

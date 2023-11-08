@@ -4,7 +4,7 @@
  *  Built-in sign in with <b>Asgardeo</b> integration.
  * </span>
  * <a href="https://wso2.com/asgardeo/" style={{backgroundColor: "#ECEFF1", padding: "12px", borderRadius: "100%" }}>
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/asgardeo-dark.svg" width="24"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/asgardeo.svg" width="24"/>
  * </a>
  * </div>
  *
@@ -113,11 +113,8 @@ export default function Asgardeo(
     wellKnown: `${config?.issuer}/oauth2/token/.well-known/openid-configuration`,
     style: {
       logo: "/asgardeo.svg",
-      logoDark: "/asgardeo-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
+      bg: "#000",
+      text: "#fff",
     },
     options: config,
   }

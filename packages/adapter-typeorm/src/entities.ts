@@ -18,7 +18,7 @@ const transformer: Record<"date" | "bigint", ValueTransformer> = {
   },
 }
 
-@Entity({ name: "users" })
+@Entity("UserEntity", { name: "users" })
 export class UserEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string
@@ -35,14 +35,14 @@ export class UserEntity {
   @Column({ type: "varchar", nullable: true })
   image!: string | null
 
-  @OneToMany(() => SessionEntity, (session) => session.userId)
+  @OneToMany<SessionEntity>("SessionEntity", (session) => session.userId)
   sessions!: SessionEntity[]
 
-  @OneToMany(() => AccountEntity, (account) => account.userId)
+  @OneToMany<AccountEntity>("AccountEntity", (account) => account.userId)
   accounts!: AccountEntity[]
 }
 
-@Entity({ name: "accounts" })
+@Entity("AccountEntity", { name: "accounts" })
 export class AccountEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string
@@ -84,13 +84,13 @@ export class AccountEntity {
   @Column({ type: "varchar", nullable: true })
   session_state!: string | null
 
-  @ManyToOne(() => UserEntity, (user) => user.accounts, {
+  @ManyToOne<UserEntity>("UserEntity", (user) => user.accounts, {
     createForeignKeyConstraints: true,
   })
   user!: UserEntity
 }
 
-@Entity({ name: "sessions" })
+@Entity("SessionEntity", { name: "sessions" })
 export class SessionEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string
@@ -104,11 +104,11 @@ export class SessionEntity {
   @Column({ transformer: transformer.date })
   expires!: string
 
-  @ManyToOne(() => UserEntity, (user) => user.sessions)
+  @ManyToOne<UserEntity>("UserEntity", (user) => user.sessions)
   user!: UserEntity
 }
 
-@Entity({ name: "verification_tokens" })
+@Entity("VerificationTokenEntity", { name: "verification_tokens" })
 export class VerificationTokenEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string

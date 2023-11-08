@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
@@ -53,7 +53,7 @@ import type { Adapter } from "@auth/core/adapters"
  *
  * ## Setup
  *
- * First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/adapters#models). You can select your favorite SQL flavor below and copy it.
+ * First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/core/adapters#models). You can select your favorite SQL flavor below and copy it.
  * Additionally, you may extend the schema from the minimum requirements to suit your needs.
  *
  * - [Postgres](#postgres)

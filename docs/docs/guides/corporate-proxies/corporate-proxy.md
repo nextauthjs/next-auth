@@ -50,7 +50,7 @@ After applying this patch, we can add then add the proxy connecting string via t
 
 ### OAuth Provider Issue
 
-If you're having trouble with your [OAuth provider](/reference/providers/oauth-builtin) when using the `https-proxy-agent`, you may be using a provider which requires an extra request to, for example, fetch the users profile picture. In cases like these, you'll have to add the proxy workaround to your provider config as well. Below is an example of how to do that for the **AzureAD** provider, but it should work with any other provider:
+If you're having trouble with your [OAuth provider](/reference/core/providers) when using the `https-proxy-agent`, you may be using a provider which requires an extra request to, for example, fetch the users profile picture. In cases like these, you'll have to add the proxy workaround to your provider config as well. Below is an example of how to do that for the **AzureAD** provider, but it should work with any other provider:
 
 ```diff
 diff --git a/node_modules/next-auth/providers/azure-ad.js b/node_modules/next-auth/providers/azure-ad.js

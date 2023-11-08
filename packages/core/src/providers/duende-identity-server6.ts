@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/duende-identity-server6
+ * @module providers/duende-identityserver6
  */
 import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 

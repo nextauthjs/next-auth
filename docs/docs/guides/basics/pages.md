@@ -35,7 +35,7 @@ We purposefully restrict the returned error codes for increased security.
 
 The following errors are passed as error query parameters to the default or overridden error page:
 
-- **Configuration**: There is a problem with the server configuration. Check if your [options](/reference/configuration/auth-config) are correct.
+- **Configuration**: There is a problem with the server configuration. Check if your [options](/reference/core/module.index#authconfig) are correct.
 - **AccessDenied**: Usually occurs, when you restricted access through the [`signIn` callback](/guides/basics/callbacks#sign-in-callback), or [`redirect` callback](/guides/basics/callbacks#redirect-callback)
 - **Verification**: Related to the Email provider. The token has expired or has already been used
 - **Default**: Catch all, will apply, if none of the above matched
@@ -53,15 +53,15 @@ The following errors are passed as error query parameters to the default or over
 - **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/routes/callback.ts)
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
 - **EmailSignin**: Sending the e-mail with the verification token failed
-- **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/getting-started/credentials-tutorial). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
-- **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](/reference/react/#usesession) for configuration.
+- **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/getting-started/providers/credentials-tutorial). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+- **SessionRequired**: The content of this page requires you to be signed in at all times. See [useSession](reference/nextjs/react/#usesession) for configuration.
 - **Default**: Catch all, will apply, if none of the above matched
 
 Example: `/auth/signin?error=Default`
 
 ## Theming
 
-By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme.colorScheme` option](/reference/configuration/auth-config#theme).
+By default, the built-in pages will follow the system theme, utilizing the [`prefer-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) Media Query. You can override this to always use a dark or light theme, through the [`theme.colorScheme` option](/reference/core/module.index#authconfig#theme).
 
 In addition, you can define the background color and text color of the button with the `theme.brandColor` and `theme.buttonText` options. You can also define a URL to a logo in `theme.logo` which will be rendered at the top of the card.
 

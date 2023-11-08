@@ -4,7 +4,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/core
  * ```
  *
@@ -81,7 +81,7 @@ export type Awaitable<T> = T | PromiseLike<T>
 /**
  * Change the theme of the built-in pages.
  *
- * [Documentation](https://authjs.dev/reference/configuration/auth-config#theme) |
+ * [Documentation](https://authjs.dev/reference/core/module.index#authconfig#theme) |
  * [Pages](https://authjs.dev/guides/basics/pages)
  */
 export interface Theme {
@@ -127,7 +127,7 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   /**
    * id of the user this account belongs to
    *
-   * @see https://authjs.dev/reference/adapters#user
+   * @see https://authjs.dev/reference/core/adapters#user
    */
   userId?: string
   /**
@@ -285,8 +285,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
      * @note available when `trigger` is `"signIn"` or `"signUp"`.
      *
      * Resources:
-     * - [Credentials Provider](https://authjs.dev/reference/core/providers_credentials)
-     * - [User database model](https://authjs.dev/reference/adapters#user)
+     * - [Credentials Provider](https://authjs.dev/reference/core/providers/credentials)
+     * - [User database model](https://authjs.dev/reference/core/adapters#user)
      */
     user: User | AdapterUser
     /**
@@ -321,13 +321,13 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   }) => Awaitable<JWT | null>
 }
 
-/** [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) */
+/** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookieOption {
   name: string
   options: CookieSerializeOptions
 }
 
-/** [Documentation](https://authjs.dev/reference/configuration/auth-config#cookies) */
+/** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookiesOptions {
   sessionToken: CookieOption
   callbackUrl: CookieOption
@@ -428,11 +428,7 @@ export interface PagesOptions {
 type ISODateString = string
 
 export interface DefaultSession {
-  user?: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  }
+  user?: User
   expires: ISODateString
 }
 
@@ -440,9 +436,9 @@ export interface DefaultSession {
  * Returned by `useSession`, `getSession`, returned by the `session` callback
  * and also the shape received as a prop on the `SessionProvider` React Context
  *
- * [`useSession`](https://authjs.dev/reference/react/#usesession) |
+ * [`useSession`](https://authjs.devreference/nextjs/react/#usesession) |
  * [`getSession`](https://authjs.dev/reference/utilities#getsession) |
- * [`SessionProvider`](https://authjs.dev/reference/react#sessionprovider) |
+ * [`SessionProvider`](https://authjs.devreference/nextjs/react#sessionprovider) |
  * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
  */
 export interface Session extends DefaultSession {}
@@ -487,8 +483,8 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
  * changes the state of the server.
  *
  * - **`"callback"`**:
- *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers_oauth).
- *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers_credentials).
+ *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers/oauth).
+ *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers/credentials).
  * - **`"csrf"`**: Returns the raw CSRF token, which is saved in a cookie (encrypted).
  * It is used for CSRF protection, implementing the [double submit cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) technique.
  * :::note

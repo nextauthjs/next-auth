@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/typeorm-adapter typeorm
  * ```
  *
@@ -42,7 +42,6 @@ export async function getManager(options: {
   dataSource: string | DataSourceOptions
   entities: Entities
 }): Promise<EntityManager> {
-
   if (!_dataSource) {
     const { dataSource, entities } = options
     const config = {
@@ -90,7 +89,7 @@ export async function getManager(options: {
  *
  * If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
  *
- * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * 1. Create a file containing your modified entities:
  *

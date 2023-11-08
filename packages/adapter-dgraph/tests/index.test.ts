@@ -7,8 +7,6 @@ import path from "path"
 
 import type { DgraphClientParams } from "../src"
 
-globalThis.fetch ??= require("undici").fetch
-
 const params: DgraphClientParams = {
   endpoint: "http://localhost:8080/graphql",
   authToken: "test",
