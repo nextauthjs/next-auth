@@ -81,7 +81,7 @@ export type Awaitable<T> = T | PromiseLike<T>
 /**
  * Change the theme of the built-in pages.
  *
- * [Documentation](https://authjs.dev/reference/core/module.index#authconfig#theme) |
+ * [Documentation](https://authjs.dev/reference/core#authconfig#theme) |
  * [Pages](https://authjs.dev/guides/basics/pages)
  */
 export interface Theme {

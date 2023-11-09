@@ -1,5 +1,9 @@
+// @ts-check
+
 import type { PluginOptions } from "docusaurus-plugin-typedoc"
 import type { TypeDocOptions } from "typedoc"
+
+import manifest from "./manifest.mjs"
 
 type TypeDocConfig = Partial<
   (PluginOptions | TypeDocOptions) & {
@@ -50,8 +54,7 @@ const defaultConfig = {
   sort: ["kind", "static-first", "required-first", "alphabetical"],
 } satisfies TypeDocConfig
 
-export function typedocAdapter(name: string) {
-  const id = name.toLowerCase().replace(" ", "-")
+export function typedocAdapter({ id }: typeof manifest.adapters[number]) {
   const options = {
     ...defaultConfig,
     id,
@@ -62,20 +65,22 @@ export function typedocAdapter(name: string) {
   return ["docusaurus-plugin-typedoc", options]
 }
 
-export function typedocFramework(pkgDir: string, entrypoints: string[]) {
-  const id = pkgDir.replace("frameworks-", "")
-  const folderId = id === "next-auth" ? "nextjs" : id
+export function typedocFramework({
+  packageDir,
+  entrypoints,
+  id,
+}: typeof manifest.frameworks[number]) {
   const options = {
     ...defaultConfig,
     id,
-    entryPoints: entrypoints.map((e) => `../packages/${pkgDir}/src/${e}`),
-    tsconfig: `../packages/${pkgDir}/tsconfig.json`,
-    out: `docs/reference/${folderId}`,
+    entryPoints: entrypoints.map((e) => `../packages/${packageDir}/src/${e}`),
+    tsconfig: `../packages/${packageDir}/tsconfig.json`,
+    out: `docs/reference/${id}`,
     sidebar: {
       filteredIds: [
-        `reference/${folderId}`,
-        `reference/${folderId}/index`,
-        `reference/${folderId}/module.index`,
+        `reference/${id}`,
+        `reference/${id}/index`,
+        `reference/${id}/module.index`,
       ],
     },
   } satisfies TypeDocConfig

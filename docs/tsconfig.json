@@ -1,6 +1,6 @@
 {
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "baseUrl": "."
+    "target": "ESNext"
   },
 }

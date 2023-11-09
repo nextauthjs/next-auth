@@ -5,10 +5,8 @@ title: Custom Initialization
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
-
 <Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
-
 
 In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
 
@@ -28,7 +26,7 @@ export default NextAuth({
 })
 ```
 
-Here, you only need to pass your [options](/reference/core/module.index#authconfig) to `NextAuth`, and `NextAuth` does the rest.
+Here, you only need to pass your [options](/reference/core#authconfig) to `NextAuth`, and `NextAuth` does the rest.
 
 This is the preferred initialization in tutorials/other parts of the documentation, as it simplifies the code and reduces potential errors in the authentication flow.
 
@@ -50,7 +48,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 }
 ```
 
-The `...` section will still be your [options](/reference/core/module.index#authconfig), but you now have the possibility to execute/modify certain things on the request.
+The `...` section will still be your [options](/reference/core#authconfig), but you now have the possibility to execute/modify certain things on the request.
 
 You could for example log the request, add headers, read `query` or `body` parameters, whatever you would do in an API route.
 

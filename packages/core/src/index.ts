@@ -204,7 +204,7 @@ export interface AuthConfig {
      * When using `"database"`, the session cookie will only contain a `sessionToken` value,
      * which is used to look up the session in the database.
      *
-     * [Documentation](https://authjs.dev/reference/core/module.index#authconfig#session) | [Adapter](https://authjs.dev/reference/core/module.index#authconfig#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
+     * [Documentation](https://authjs.dev/reference/core#authconfig#session) | [Adapter](https://authjs.dev/reference/core#authconfig#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
      */
     strategy?: "jwt" | "database"
     /**

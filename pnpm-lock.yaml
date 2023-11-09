@@ -266,8 +266,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(react-dom@18.2.0)(react@18.2.0)
       docusaurus-plugin-typedoc:
-        specifier: 1.0.0-next.20
-        version: 1.0.0-next.20(typedoc-plugin-markdown@4.0.0-next.25)
+        specifier: 1.0.0-next.21
+        version: 1.0.0-next.21(typedoc-plugin-markdown@4.0.0-next.27)
       postcss-nested:
         specifier: ^6.0.1
         version: 6.0.1(postcss@8.4.31)
@@ -275,8 +275,8 @@ importers:
         specifier: 0.25.3
         version: 0.25.3(typescript@5.2.2)
       typedoc-plugin-markdown:
-        specifier: 4.0.0-next.25
-        version: 4.0.0-next.25(typedoc@0.25.3)
+        specifier: 4.0.0-next.27
+        version: 4.0.0-next.27(typedoc@0.25.3)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -14272,12 +14272,12 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /docusaurus-plugin-typedoc@1.0.0-next.20(typedoc-plugin-markdown@4.0.0-next.25):
-    resolution: {integrity: sha512-eD2SUGJdSfE2LrMKeYFftVOoIM8BBkZQRqQaGHrquDTJSMOkk2snt+5SP3AgFfCf4iI2Ly8on0cDFfoVfPVb8Q==}
+  /docusaurus-plugin-typedoc@1.0.0-next.21(typedoc-plugin-markdown@4.0.0-next.27):
+    resolution: {integrity: sha512-vDrhNsRJocr92Cw5JQk2GWCZHQ4Ns97PAI0z6wzkPlo4wZ+fLjJ9F+REH8MTfcqvLH5/o1X157XPKYQwTi/baQ==}
     peerDependencies:
-      typedoc-plugin-markdown: '>=4.0.0-next.24'
+      typedoc-plugin-markdown: '>=4.0.0-next.26'
     dependencies:
-      typedoc-plugin-markdown: 4.0.0-next.25(typedoc@0.25.3)
+      typedoc-plugin-markdown: 4.0.0-next.27(typedoc@0.25.3)
     dev: true
 
   /dom-converter@0.2.0:
@@ -27378,10 +27378,10 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typedoc-plugin-markdown@4.0.0-next.25(typedoc@0.25.3):
-    resolution: {integrity: sha512-OAucyztjyTcJhpyH8lK3r6W/9lGYxRnEphmphAi8CLL4pBqzA9A00OaOWt4ybkcFBnB8zNIZ4SGCz1sk9NBA3g==}
+  /typedoc-plugin-markdown@4.0.0-next.27(typedoc@0.25.3):
+    resolution: {integrity: sha512-Fj5coKfoL8JLvrxyzkZYo4Roz/fl6BuFfDO+xh8w4ftTar14nmIUN5e02Q8ilRiB7XDRE8MCx9A/JywpfP+U0Q==}
     peerDependencies:
-      typedoc: '>=0.25.0'
+      typedoc: 0.25.x
     dependencies:
       typedoc: 0.25.3(typescript@5.2.2)
     dev: true

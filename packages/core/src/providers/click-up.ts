@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/clickup
+ * @module providers/click-up
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -73,7 +73,7 @@ export default function ClickUp(
   config: OAuthUserConfig<ClickUpProfile>
 ): OAuthConfig<ClickUpProfile> {
   return {
-    id: "clickup",
+    id: "click-up",
     name: "ClickUp",
     type: "oauth",
     authorization: "https://app.clickup.com/api",

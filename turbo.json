@@ -140,6 +140,7 @@
         "docs/reference/adapter/**",
         "docs/reference/core/**/*",
         "docs/reference/nextjs/**/*",
+        "docs/reference/solidstart/**/*",
         "docs/reference/sveltekit/**/*"
       ]
     }

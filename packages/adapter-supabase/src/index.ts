@@ -74,7 +74,7 @@ export interface SupabaseAdapterOptions {
  * import { SupabaseAdapter } from "@auth/supabase-adapter"
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/core/module.index#authconfig
+ * // https://authjs.dev/reference/core#authconfig
  * export default NextAuth({
  *   // https://authjs.dev/reference/core/providers
  *   providers: [...],
