@@ -30,9 +30,10 @@ export async function signCookie(
   expires.setTime(expires.getTime() + maxAge * 1000)
   const token: any = { value }
   if (type === "state" && data) token.data = data
+  const name = cookies[type].name
   return {
-    name: cookies[type].name,
-    value: await encode({ ...options.jwt, maxAge, token }),
+    name,
+    value: await encode({ ...options.jwt, maxAge, token, salt: name }),
     options: { ...cookies[type].options, expires },
   }
 }
@@ -75,6 +76,7 @@ export const pkce = {
     const value = await decode<CheckPayload>({
       ...options.jwt,
       token: codeVerifier,
+      salt: options.cookies.pkceCodeVerifier.name,
     })
 
     if (!value?.value)
@@ -156,6 +158,7 @@ export const state = {
     const encodedState = await decode<CheckPayload>({
       ...options.jwt,
       token: state,
+      salt: options.cookies.state.name,
     })
 
     if (!encodedState?.value)
@@ -210,7 +213,11 @@ export const nonce = {
     const nonce = cookies?.[options.cookies.nonce.name]
     if (!nonce) throw new InvalidCheck("Nonce cookie was missing.")
 
-    const value = await decode<CheckPayload>({ ...options.jwt, token: nonce })
+    const value = await decode<CheckPayload>({
+      ...options.jwt,
+      token: nonce,
+      salt: options.cookies.nonce.name,
+    })
 
     if (!value?.value)
       throw new InvalidCheck("Nonce value could not be parsed.")
