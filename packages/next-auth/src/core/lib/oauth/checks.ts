@@ -21,11 +21,17 @@ export async function signCookie(
 
   logger.debug(`CREATE_${type.toUpperCase()}`, { value, maxAge })
 
+  const { name } = cookies[type]
   const expires = new Date()
   expires.setTime(expires.getTime() + maxAge * 1000)
   return {
-    name: cookies[type].name,
-    value: await jwt.encode({ ...options.jwt, maxAge, token: { value } }),
+    name,
+    value: await jwt.encode({
+      ...options.jwt,
+      maxAge,
+      token: { value },
+      salt: name,
+    }),
     options: { ...cookies[type].options, expires },
   }
 }
@@ -71,16 +77,18 @@ export const pkce = {
     if (!codeVerifier)
       throw new TypeError("PKCE code_verifier cookie was missing.")
 
+    const { name } = options.cookies.pkceCodeVerifier
     const value = (await jwt.decode({
       ...options.jwt,
       token: codeVerifier,
+      salt: name,
     })) as any
 
     if (!value?.value)
       throw new TypeError("PKCE code_verifier value could not be parsed.")
 
     resCookies.push({
-      name: options.cookies.pkceCodeVerifier.name,
+      name,
       value: "",
       options: { ...options.cookies.pkceCodeVerifier.options, maxAge: 0 },
     })
@@ -121,12 +129,17 @@ export const state = {
 
     if (!state) throw new TypeError("State cookie was missing.")
 
-    const value = (await jwt.decode({ ...options.jwt, token: state })) as any
+    const { name } = options.cookies.state
+    const value = (await jwt.decode({
+      ...options.jwt,
+      token: state,
+      salt: name,
+    })) as any
 
     if (!value?.value) throw new TypeError("State value could not be parsed.")
 
     resCookies.push({
-      name: options.cookies.state.name,
+      name,
       value: "",
       options: { ...options.cookies.state.options, maxAge: 0 },
     })
@@ -166,12 +179,17 @@ export const nonce = {
     const nonce = cookies?.[options.cookies.nonce.name]
     if (!nonce) throw new TypeError("Nonce cookie was missing.")
 
-    const value = (await jwt.decode({ ...options.jwt, token: nonce })) as any
+    const { name } = options.cookies.nonce
+    const value = (await jwt.decode({
+      ...options.jwt,
+      token: nonce,
+      salt: name,
+    })) as any
 
     if (!value?.value) throw new TypeError("Nonce value could not be parsed.")
 
     resCookies.push({
-      name: options.cookies.nonce.name,
+      name,
       value: "",
       options: { ...options.cookies.nonce.options, maxAge: 0 },
     })
