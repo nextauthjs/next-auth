@@ -50,7 +50,7 @@ For more information, follow the [FusionAuth 5-minute setup guide](https://fusio
 In the OAuth settings for your application, configure the following.
 
 - Redirect URL
-  - https://localhost:3000/api/auth/callback/fusionauth
+  - http://localhost:3000/api/auth/callback/fusionauth
 - Enabled grants
   - Make sure _Authorization Code_ is enabled.
 
