@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@balazsorban/monorepo-release@0.3.1':
-    hash: k2rd2cfbuebwysidpak4ju23xq
+    hash: jwqbwknpdjbuidjz24xxlo7tdm
     path: patches/@balazsorban__monorepo-release@0.3.1.patch
 
 importers:
@@ -24,7 +24,7 @@ importers:
         version: link:packages/tsconfig
       '@balazsorban/monorepo-release':
         specifier: 0.3.1
-        version: 0.3.1(patch_hash=k2rd2cfbuebwysidpak4ju23xq)
+        version: 0.3.1(patch_hash=jwqbwknpdjbuidjz24xxlo7tdm)
       '@types/jest':
         specifier: ^29.5.7
         version: 29.5.7
@@ -5355,7 +5355,7 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
-  /@balazsorban/monorepo-release@0.3.1(patch_hash=k2rd2cfbuebwysidpak4ju23xq):
+  /@balazsorban/monorepo-release@0.3.1(patch_hash=jwqbwknpdjbuidjz24xxlo7tdm):
     resolution: {integrity: sha512-ZMd6WVcUkGFYTkqPMTxAeNGrIfMZneKiIDOo1gC/NqWjGSC69zVCFQDASKPwWitJoYj3qWIlL9PXFiQ0J0ikGQ==}
     engines: {node: '>=18.18.0'}
     hasBin: true
