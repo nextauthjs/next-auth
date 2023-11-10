@@ -61,10 +61,10 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@panva/hkdf": "^1.0.4",
+    "@panva/hkdf": "^1.1.1",
     "cookie": "0.5.0",
-    "jose": "^4.11.1",
-    "oauth4webapi": "^2.0.6",
+    "jose": "^5.1.0",
+    "oauth4webapi": "^2.3.0",
     "preact": "10.11.3",
     "preact-render-to-string": "5.2.3"
   },
