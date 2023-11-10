@@ -14,7 +14,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*",
     "@auth/edgedb-adapter": "workspace:*",
     "@auth/fauna-adapter": "workspace:*",
     "@auth/prisma-adapter": "workspace:*",
@@ -24,7 +23,7 @@
     "edgedb": "^1.0.1",
     "@supabase/supabase-js": "^2.0.5",
     "faunadb": "^4",
-    "next": "13.5.7-canary.17",
+    "next": "14.0.3-canary.1",
     "next-auth": "workspace:*",
     "nodemailer": "^6.9.3",
     "react": "^18",

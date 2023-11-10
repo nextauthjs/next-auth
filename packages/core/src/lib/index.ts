@@ -36,7 +36,7 @@ export async function AuthInternal<
 
   const sessionStore = new SessionStore(
     options.cookies.sessionToken,
-    request,
+    request.cookies,
     options.logger
   )
 
