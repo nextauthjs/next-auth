@@ -1,34 +1,36 @@
+// TODO: Make this file smaller
+
 import {
+  AuthorizedCallbackError,
   CallbackRouteError,
+  MissingProvider,
   OAuthCallbackError,
   Verification,
-} from "../../errors.js"
-import { handleLogin } from "../callback-handler.js"
-import { handleOAuth } from "../oauth/callback.js"
-import { handleState } from "../oauth/handle-state.js"
-import { createHash } from "../web.js"
-import { handleAuthorized } from "./shared.js"
+} from "../../../errors.js"
+import { handleLoginOrRegister } from "./handle-login.js"
+import { handleOAuth } from "./oauth/callback.js"
+import { handleState } from "./oauth/checks.js"
+import { createHash } from "../../utils/web.js"
 
-import type { AdapterSession } from "../../adapters.js"
+import type { AdapterSession } from "../../../adapters.js"
 import type {
   Account,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../types.js"
-import type { Cookie, SessionStore } from "../cookie.js"
+} from "../../../types.js"
+import type { Cookie, SessionStore } from "../../utils/cookie.js"
 
 /** Handle callbacks from login services */
-export async function callback(params: {
-  options: InternalOptions
-  query: RequestInternal["query"]
-  method: Required<RequestInternal>["method"]
-  body: RequestInternal["body"]
-  headers: RequestInternal["headers"]
-  cookies: RequestInternal["cookies"]
-  sessionStore: SessionStore
-}): Promise<ResponseInternal> {
-  const { options, query, body, method, headers, sessionStore } = params
+export async function callback(
+  request: RequestInternal,
+  options: InternalOptions,
+  sessionStore: SessionStore,
+  cookies: Cookie[]
+): Promise<ResponseInternal> {
+  if (!options.provider)
+    throw new MissingProvider("Callback route called without provider")
+  const { query, body, method, headers } = request
   const {
     provider,
     adapter,
@@ -41,8 +43,6 @@ export async function callback(params: {
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
   } = options
-
-  const cookies: Cookie[] = []
 
   const useJwtSession = sessionStrategy === "jwt"
 
@@ -61,7 +61,7 @@ export async function callback(params: {
 
       const authorizationResult = await handleOAuth(
         query,
-        params.cookies,
+        request.cookies,
         options,
         randomState
       )
@@ -113,8 +113,7 @@ export async function callback(params: {
 
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
 
-      // Sign user in
-      const { user, session, isNewUser } = await handleLogin(
+      const { user, session, isNewUser } = await handleLoginOrRegister(
         sessionStore.value,
         userFromProvider,
         account,
@@ -232,7 +231,12 @@ export async function callback(params: {
         user: loggedInUser,
         session,
         isNewUser,
-      } = await handleLogin(sessionStore.value, user, account, options)
+      } = await handleLoginOrRegister(
+        sessionStore.value,
+        user,
+        account,
+        options
+      )
 
       if (useJwtSession) {
         const defaultToken = {
@@ -394,5 +398,26 @@ export async function callback(params: {
     url.searchParams.set("error", CallbackRouteError.name)
     url.pathname += "/error"
     return { redirect: url.toString(), cookies }
+  }
+}
+
+async function handleAuthorized(
+  params: any,
+  { url, logger, callbacks: { signIn } }: InternalOptions
+) {
+  try {
+    const authorized = await signIn(params)
+    if (!authorized) {
+      url.pathname += "/error"
+      logger.debug("User not authorized", params)
+      url.searchParams.set("error", "AccessDenied")
+      return { status: 403 as const, redirect: url.toString() }
+    }
+  } catch (e) {
+    url.pathname += "/error"
+    const error = new AuthorizedCallbackError(e as Error)
+    logger.error(error)
+    url.searchParams.set("error", "Configuration")
+    return { status: 500 as const, redirect: url.toString() }
   }
 }

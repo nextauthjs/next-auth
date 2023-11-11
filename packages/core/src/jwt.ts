@@ -38,7 +38,7 @@
 
 import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, jwtDecrypt } from "jose"
-import { SessionStore } from "./lib/cookie.js"
+import { SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"

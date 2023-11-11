@@ -63,7 +63,7 @@ import type {
 import type { Adapter, AdapterUser } from "./adapters.js"
 import { AuthConfig } from "./index.js"
 import type { JWT, JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/cookie.js"
+import type { Cookie } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,
@@ -181,14 +181,13 @@ export interface Profile {
 /** [Documentation](https://authjs.dev/guides/basics/callbacks) */
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
-   * Control whether a user is allowed to sign in or not.
+   * Controls whether a user is allowed to sign in or not.
    * Returning `true` continues the sign-in flow, while
-   * returning `false` redirects to the {@link PagesOptions.error error page}.
-   * The `error` {@link ErrorPageParam parameter} is set to `AccessDenied`.
+   * returning `false` throws an `AuthorizedCallbackError`.
+   * The `reason` property is set to `"AccessDenied"` and the `status` property is set to `403`.
    *
-   * Unhandled errors are redirected to the error page
-   * The `error` parameter is set to `Configuration`.
-   * an `AuthorizedCallbackError` is logged on the server.
+   * Unhandled errors will throw an `AuthorizedCallbackError`.
+   * The `reason` property is set to `Configuration` and the `status` property is set to `500`.
    *
    * @see https://authjs.dev/reference/errors#authorizedcallbackerror
    * @todo rename to `authorized`
@@ -477,6 +476,14 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   callbackUrl: string
 }
 
+export interface PublicProvider {
+  id: string
+  name: string
+  type: string
+  signinUrl: string
+  callbackUrl: string
+}
+
 /**
  * Supported actions by Auth.js. Each action map to a REST API endpoint.
  * Some actions have a `GET` and `POST` variant, depending on if the action
@@ -527,7 +534,7 @@ export interface RequestInternal {
   error?: string
 }
 
-/** @internal */
+// Should only be used by frameworks
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] | null = any
 > {
@@ -545,6 +552,10 @@ export interface InternalOptions<TProviderType = ProviderType> {
   action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string
+  /**
+   * `true` if the [Double-submit CSRF check](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf) was succesful
+   * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
+   */
   csrfTokenVerified?: boolean
   secret: string
   theme: Theme

@@ -1,6 +1,9 @@
 import * as checks from "./checks.js"
 import * as o from "oauth4webapi"
-import { OAuthCallbackError, OAuthProfileParseError } from "../../errors.js"
+import {
+  OAuthCallbackError,
+  OAuthProfileParseError,
+} from "../../../../errors.js"
 
 import type {
   Account,
@@ -9,9 +12,9 @@ import type {
   Profile,
   RequestInternal,
   TokenSet,
-} from "../../types.js"
-import type { OAuthConfigInternal } from "../../providers/index.js"
-import type { Cookie } from "../cookie.js"
+} from "../../../../types.js"
+import type { OAuthConfigInternal } from "../../../../providers/index.js"
+import type { Cookie } from "../../../utils/cookie.js"
 
 /**
  * Handles the following OAuth steps.
@@ -122,7 +125,7 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {} 
+  let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {

@@ -1,5 +1,5 @@
-import { OAuthProfileParseError } from "../errors.js"
-import { merge } from "./utils/merge.js"
+import { OAuthProfileParseError } from "../../errors.js"
+import { merge } from "./merge.js"
 
 import type {
   AccountCallback,
@@ -9,8 +9,8 @@ import type {
   OAuthUserConfig,
   ProfileCallback,
   Provider,
-} from "../providers/index.js"
-import type { AuthConfig, InternalProvider, Profile } from "../types.js"
+} from "../../providers/index.js"
+import type { AuthConfig, InternalProvider, Profile } from "../../types.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider

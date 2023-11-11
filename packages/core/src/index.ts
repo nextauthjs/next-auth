@@ -36,12 +36,12 @@
  * @module index
  */
 
-import { assertConfig } from "./lib/assert.js"
-import { ErrorPageLoop } from "./errors.js"
+import { assertConfig } from "./lib/utils/assert.js"
+import { AuthError, ErrorPageLoop } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
-import { toInternalRequest, toResponse } from "./lib/web.js"
+import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter } from "./adapters.js"
 import type {
@@ -49,12 +49,24 @@ import type {
   CookiesOptions,
   EventCallbacks,
   PagesOptions,
+  RequestInternal,
+  ResponseInternal,
   Theme,
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
 export { skipCSRFCheck, raw }
+
+export async function Auth(
+  request: Request,
+  config: AuthConfig
+): Promise<ResponseInternal>
+
+export async function Auth(
+  request: Request,
+  config: Omit<AuthConfig, "raw">
+): Promise<Response>
 
 /**
  * Core functionality provided by Auth.js.
@@ -75,12 +87,14 @@ export { skipCSRFCheck, raw }
  * @see [Documentation](https://authjs.dev)
  */
 export async function Auth(
-  request: Request,
+  request: Request | RequestInternal,
   config: AuthConfig
-): Promise<Response> {
+): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
-  const internalRequest = await toInternalRequest(request)
+  const internalRequest =
+    request instanceof Request ? await toInternalRequest(request) : request
+
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
     return new Response(
@@ -128,28 +142,39 @@ export async function Auth(
         )
       }
       const render = renderPage({ theme })
-      const page = render.error({ error: "Configuration" })
+      const page = render.error("Configuration")
       return toResponse(page)
     }
 
     return Response.redirect(`${pages.error}?error=Configuration`)
   }
 
-  const internalResponse = await AuthInternal(internalRequest, config)
+  const isRaw = config.raw === raw
+  let rawResponse: ResponseInternal
+  try {
+    rawResponse = await AuthInternal(internalRequest, config)
+    if (isRaw) return rawResponse
+  } catch (e) {
+    const error = e as Error
+    if (error instanceof AuthError && isRaw) throw error
+    const name = (error.cause as any)?.reason ?? "Configuration"
+    const status = (error.cause as any)?.status ?? 500
+    // TODO: handle errors with redirect to signin/error pages
+    // NOTE: If the CSRF check failed for POST/session, return a 400 status code
+    // we should not redirect to a page as this is an API route
+    return {}
+  }
 
-  // @ts-expect-error TODO: Fix return type
-  if (config.raw === raw) return internalResponse
-
-  const response = await toResponse(internalResponse)
+  const response = await toResponse(rawResponse)
 
   // If the request expects a return URL, send it as JSON
   // instead of doing an actual redirect.
   const redirect = response.headers.get("Location")
-  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
+  if (request.headers?.has("X-Auth-Return-Redirect") && redirect) {
     response.headers.delete("Location")
     response.headers.set("Content-Type", "application/json")
     return new Response(JSON.stringify({ url: redirect }), {
-      status: internalResponse.status,
+      status: rawResponse.status,
       headers: response.headers,
     })
   }

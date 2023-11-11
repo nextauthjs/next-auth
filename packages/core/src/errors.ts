@@ -26,11 +26,13 @@ export class AuthError extends Error {
  */
 export class AdapterError extends AuthError {}
 
-/** @todo */
+/**
+ * Happens when the user is not authorized to access a route after executing the `signIn` callback.
+ */
 export class AuthorizedCallbackError extends AuthError {}
 
 /**
- * This error occurs when the user cannot finish the sign-in process.
+ * This error occurs when the user cannot finish login.
  * Depending on the provider type, this could have happened for multiple reasons.
  *
  * :::tip
@@ -147,8 +149,11 @@ export class OAuthProfileParseError extends AuthError {}
 export class SessionTokenError extends AuthError {}
 
 /**
- * This error occurs when the user cannot initiate the sign-in process.
- * Depending on the provider type, this could have happened for multiple reasons.
+ * Happens when login by [OAuth](https://authjs.dev/getting-started/providers/oauth-tutorial) could not be started.
+ *
+ * Possible causes are:
+ * - The Authorization Server is not compliant with the [OAuth 2.0](https://www.ietf.org/rfc/rfc6749.html) or the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
+ *   Check the details in the error message.
  *
  * :::tip
  * Check out `[auth][details]` in the error message to know which provider failed.
@@ -157,21 +162,20 @@ export class SessionTokenError extends AuthError {}
  * [auth][details]: { "provider": "github" }
  * ```
  * :::
+ */
+export class OAuthSignInError extends AuthError {}
+
+/**
+ * Happens when the login by an [Email provider](https://authjs.dev/getting-started/providers/email-tutorial) could not be started.
  *
- * For an [OAuth provider](https://authjs.dev/reference/core/providers/oauth), possible causes are:
- * - The Authorization Server is not compliant with the [OAuth 2.0 specifcation](https://www.ietf.org/rfc/rfc6749.html)
- *   Check the details in the error message.
- * - A runtime error occurred in Auth.js. This should be reported as a bug.
- *
- * For an [Email provider](https://authjs.dev/reference/core/providers/email), possible causes are:
+ * Possible causes are:
  * - The email sent from the client is invalid, could not be normalized by [`EmailConfig.normalizeIdentifier`](https://authjs.dev/reference/core/providers/email#normalizeidentifier)
  * - The provided email/token combination has expired:
  *   Ask the user to log in again.
  * - There was an error with the database:
  *   Check the database logs.
- *
  */
-export class SignInError extends AuthError {}
+export class EmailSignInError extends AuthError {}
 
 /** @todo */
 export class SignOutError extends AuthError {}
@@ -195,3 +199,7 @@ export class UntrustedHost extends AuthError {}
  * or because it token has expired. Ask the user to log in again.
  */
 export class Verification extends AuthError {}
+
+export class MissingCSRF extends AuthError {}
+
+export class MissingProvider extends AuthError {}

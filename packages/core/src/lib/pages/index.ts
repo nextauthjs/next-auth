@@ -10,8 +10,10 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
+  InternalProvider,
+  PublicProvider,
 } from "../../types.js"
-import type { Cookie } from "../cookie.js"
+import type { Cookie } from "../utils/cookie.js"
 
 function send({ html, title, status, cookies, theme }: any): ResponseInternal {
   return {
@@ -30,19 +32,54 @@ type RenderPageParams = {
 } & Partial<
   Pick<
     InternalOptions,
-    "url" | "callbackUrl" | "csrfToken" | "providers" | "theme"
+    "url" | "callbackUrl" | "csrfToken" | "providers" | "theme" | "pages"
   >
 >
 
 /**
- * Unless the user defines their [own pages](https://authjs.dev/guides/basics/pages),
+ * Unless the user defines their [own pages](https://authjs.dev/reference/core#pages),
  * we render a set of default ones, using Preact SSR.
  */
 export default function renderPage(params: RenderPageParams) {
-  const { url, theme, query, cookies } = params
+  const { url, theme, query, cookies, pages } = params
 
   return {
-    signin(props?: any) {
+    csrf(skip: boolean, options: InternalOptions, cookies: Cookie[]) {
+      if (!skip) {
+        return {
+          headers: { "Content-Type": "application/json" },
+          body: { csrfToken: options.csrfToken },
+          cookies,
+        }
+      }
+      options.logger.warn("csrf-disabled")
+      cookies.push({
+        name: options.cookies.csrfToken.name,
+        value: "",
+        options: { ...options.cookies.csrfToken.options, maxAge: 0 },
+      })
+      return { status: 404, cookies }
+    },
+    providers(providers: InternalProvider[]) {
+      return {
+        headers: { "Content-Type": "application/json" },
+        body: providers.reduce<Record<string, PublicProvider>>(
+          (acc, { id, name, type, signinUrl, callbackUrl }) => {
+            acc[id] = { id, name, type, signinUrl, callbackUrl }
+            return acc
+          },
+          {}
+        ),
+      }
+    },
+    signin(error: any) {
+      if (pages?.signIn) {
+        let signinUrl = `${pages.signIn}${
+          pages.signIn.includes("?") ? "&" : "?"
+        }${new URLSearchParams({ callbackUrl: params.callbackUrl ?? "/" })}`
+        if (error) signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
+        return { redirect: signinUrl, cookies }
+      }
       return send({
         cookies,
         theme,
@@ -59,27 +96,25 @@ export default function renderPage(params: RenderPageParams) {
               false
           ),
           callbackUrl: params.callbackUrl,
-          theme,
+          theme: params.theme,
+          error,
           ...query,
-          ...props,
         }),
         title: "Sign In",
       })
     },
-    signout(props?: any) {
+    signout() {
+      if (pages?.signOut) return { redirect: pages.signOut, cookies }
       return send({
         cookies,
         theme,
-        html: SignoutPage({
-          csrfToken: params.csrfToken,
-          url,
-          theme,
-          ...props,
-        }),
+        html: SignoutPage({ csrfToken: params.csrfToken, url, theme }),
         title: "Sign Out",
       })
     },
     verifyRequest(props?: any) {
+      if (pages?.verifyRequest)
+        return { redirect: pages.verifyRequest, cookies }
       return send({
         cookies,
         theme,
@@ -87,11 +122,35 @@ export default function renderPage(params: RenderPageParams) {
         title: "Verify Request",
       })
     },
-    error(props?: { error?: ErrorPageParam }) {
+    error(error?: string) {
+      // These error messages are displayed in line on the sign in page
+      // TODO: verify these. We should redirect these to signin directly, instead of
+      // first to error and then to signin.
+      if (
+        [
+          "Signin",
+          "OAuthCreateAccount",
+          "EmailCreateAccount",
+          "Callback",
+          "OAuthAccountNotLinked",
+          "SessionRequired",
+        ].includes(error ?? "")
+      ) {
+        return { redirect: `${url}/signin?error=${error}`, cookies }
+      }
+      if (pages?.error) {
+        return {
+          redirect: `${pages.error}${
+            pages.error.includes("?") ? "&" : "?"
+          }error=${error}`,
+          cookies,
+        }
+      }
       return send({
         cookies,
         theme,
-        ...ErrorPage({ url, theme, ...props }),
+        // @ts-expect-error fix error type
+        ...ErrorPage({ url, theme, error }),
         title: "Error",
       })
     },

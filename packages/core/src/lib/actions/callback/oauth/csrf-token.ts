@@ -1,6 +1,7 @@
-import { createHash, randomString } from "./web.js"
+import { createHash, randomString } from "../../../utils/web.js"
 
-import type { InternalOptions } from "../types.js"
+import type { InternalOptions } from "../../../../types.js"
+import { MissingCSRF } from "../../../../errors.js"
 interface CreateCSRFTokenParams {
   options: InternalOptions
   cookieValue?: string
@@ -51,4 +52,8 @@ export async function createCSRFToken({
   const cookie = `${csrfToken}|${csrfTokenHash}`
 
   return { cookie, csrfToken }
+}
+
+export function validateCSRF(verified: boolean = false) {
+  if (!verified) throw new MissingCSRF("CSRF token was missing during signout.")
 }
