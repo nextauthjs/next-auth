@@ -309,20 +309,20 @@ export function TypeORMAdapter(
     // @ts-expect-error
     createUser: async (data) => {
       const m = await getManager(c)
-      const user = await m.save(c.entities.UserEntity, data)
+      const user = await m.save(c.entities.UserEntity.name, data)
       return user
     },
     // @ts-expect-error
     async getUser(id) {
       const m = await getManager(c)
-      const user = await m.findOne(c.entities.UserEntity, { where: { id } })
+      const user = await m.findOne(c.entities.UserEntity.name, { where: { id } })
       if (!user) return null
       return { ...user }
     },
     // @ts-expect-error
     async getUserByEmail(email) {
       const m = await getManager(c)
-      const user = await m.findOne(c.entities.UserEntity, { where: { email } })
+      const user = await m.findOne(c.entities.UserEntity.name, { where: { email } })
       if (!user) return null
       return { ...user }
     },
@@ -330,7 +330,7 @@ export function TypeORMAdapter(
       const m = await getManager(c)
       // @ts-expect-error
       const account = await m.findOne<AdapterAccount & { user: AdapterUser }>(
-        c.entities.AccountEntity,
+        c.entities.AccountEntity.name,
         // @ts-expect-error
         { where: provider_providerAccountId, relations: ["user"] }
       )
@@ -340,36 +340,36 @@ export function TypeORMAdapter(
     // @ts-expect-error
     async updateUser(data) {
       const m = await getManager(c)
-      const user = await m.save(c.entities.UserEntity, data)
+      const user = await m.save(c.entities.UserEntity.name, data)
       return user
     },
     async deleteUser(id) {
       const m = await getManager(c)
       await m.transaction(async (tm) => {
-        await tm.delete(c.entities.AccountEntity, { userId: id })
-        await tm.delete(c.entities.SessionEntity, { userId: id })
-        await tm.delete(c.entities.UserEntity, { id })
+        await tm.delete(c.entities.AccountEntity.name, { userId: id })
+        await tm.delete(c.entities.SessionEntity.name, { userId: id })
+        await tm.delete(c.entities.UserEntity.name, { id })
       })
     },
     async linkAccount(data) {
       const m = await getManager(c)
-      const account = await m.save(c.entities.AccountEntity, data)
+      const account = await m.save(c.entities.AccountEntity.name, data)
       return account
     },
     async unlinkAccount(providerAccountId) {
       const m = await getManager(c)
-      await m.delete<AdapterAccount>(c.entities.AccountEntity, providerAccountId)
+      await m.delete<AdapterAccount>(c.entities.AccountEntity.name, providerAccountId)
     },
     async createSession(data) {
       const m = await getManager(c)
-      const session = await m.save(c.entities.SessionEntity, data)
+      const session = await m.save(c.entities.SessionEntity.name, data)
       return session
     },
     async getSessionAndUser(sessionToken) {
       const m = await getManager(c)
       const sessionAndUser = await m.findOne<
         AdapterSession & { user: AdapterUser }
-      >(c.entities.SessionEntity, { where: { sessionToken }, relations: ["user"] })
+      >(c.entities.SessionEntity.name, { where: { sessionToken }, relations: ["user"] })
 
       if (!sessionAndUser) return null
       const { user, ...session } = sessionAndUser
@@ -377,17 +377,17 @@ export function TypeORMAdapter(
     },
     async updateSession(data) {
       const m = await getManager(c)
-      await m.update(c.entities.SessionEntity, { sessionToken: data.sessionToken }, data)
+      await m.update(c.entities.SessionEntity.name, { sessionToken: data.sessionToken }, data)
       // TODO: Try to return?
       return null
     },
     async deleteSession(sessionToken) {
       const m = await getManager(c)
-      await m.delete(c.entities.SessionEntity, { sessionToken })
+      await m.delete(c.entities.SessionEntity.name, { sessionToken })
     },
     async createVerificationToken(data) {
       const m = await getManager(c)
-      const verificationToken = await m.save(c.entities.VerificationTokenEntity, data)
+      const verificationToken = await m.save(c.entities.VerificationTokenEntity.name, data)
       // @ts-expect-error
       delete verificationToken.id
       return verificationToken
@@ -395,13 +395,13 @@ export function TypeORMAdapter(
     // @ts-expect-error
     async useVerificationToken(identifier_token) {
       const m = await getManager(c)
-      const verificationToken = await m.findOne(c.entities.VerificationTokenEntity, {
+      const verificationToken = await m.findOne(c.entities.VerificationTokenEntity.name, {
         where: identifier_token,
       })
       if (!verificationToken) {
         return null
       }
-      await m.delete(c.entities.VerificationTokenEntity, identifier_token)
+      await m.delete(c.entities.VerificationTokenEntity.name, identifier_token)
       // @ts-expect-error
       delete verificationToken.id
       return verificationToken
