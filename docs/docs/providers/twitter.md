@@ -40,8 +40,8 @@ providers: [
 :::tip
 You must enable the _"Request email address from users"_ option in your app permissions if you want to obtain the users email address.
 :::
-
-![twitter](https://user-images.githubusercontent.com/55143799/168702338-a95912a7-b689-4680-aa2c-6306fe3c2ec7.jpeg)
+![twitter1](https://i.imgur.com/fdzU9k6.png)
+![twitter2](https://user-images.githubusercontent.com/55143799/168702338-a95912a7-b689-4680-aa2c-6306fe3c2ec7.jpeg)
 
 ## OAuth 2.0
 
