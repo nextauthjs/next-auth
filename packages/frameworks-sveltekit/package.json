@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",

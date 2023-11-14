@@ -141,8 +141,9 @@ export async function callback(params: {
         if (token === null) {
           cookies.push(...sessionStore.clean())
         } else {
+          const salt = options.cookies.sessionToken.name
           // Encode token
-          const newToken = await jwt.encode({ ...jwt, token })
+          const newToken = await jwt.encode({ ...jwt, token, salt })
 
           // Set cookie expiry date
           const cookieExpires = new Date()
@@ -252,8 +253,9 @@ export async function callback(params: {
         if (token === null) {
           cookies.push(...sessionStore.clean())
         } else {
+          const salt = options.cookies.sessionToken.name
           // Encode token
-          const newToken = await jwt.encode({ ...jwt, token })
+          const newToken = await jwt.encode({ ...jwt, token, salt })
 
           // Set cookie expiry date
           const cookieExpires = new Date()
@@ -349,8 +351,9 @@ export async function callback(params: {
       if (token === null) {
         cookies.push(...sessionStore.clean())
       } else {
+        const salt = options.cookies.sessionToken.name
         // Encode token
-        const newToken = await jwt.encode({ ...jwt, token })
+        const newToken = await jwt.encode({ ...jwt, token, salt })
 
         // Set cookie expiry date
         const cookieExpires = new Date()

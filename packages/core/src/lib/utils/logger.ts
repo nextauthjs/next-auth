@@ -5,7 +5,7 @@ export type WarningCode = "debug-enabled" | "csrf-disabled"
 /**
  * Override any of the methods, and the rest will use the default logger.
  *
- * [Documentation](https://authjs.dev/reference/configuration/auth-config#logger)
+ * [Documentation](https://authjs.dev/reference/core#authconfig#logger)
  */
 export interface LoggerInstance extends Record<string, Function> {
   warn: (code: WarningCode) => void

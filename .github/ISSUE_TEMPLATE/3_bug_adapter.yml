@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
-        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/adapters/overview) related issue!
+        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/getting-started/adapters) related issue!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
         ### Important :exclamation:

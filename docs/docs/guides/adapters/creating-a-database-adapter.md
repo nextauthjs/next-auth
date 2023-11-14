@@ -2,7 +2,7 @@
 title: Creating a database adapter
 ---
 
-Custom adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. The only requirement is that your database can support the [models](/reference/adapters#models) that Auth.js expects.
+Custom adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. The only requirement is that your database can support the [models](/reference/core/adapters#models) that Auth.js expects.
 
 _See the code below for a practical example._
 

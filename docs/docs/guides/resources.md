@@ -105,7 +105,7 @@ This tutorial covers:
 #### [Create a Auth.js Custom Adapter with HarperDB & Next.js](https://spacejelly.dev/posts/how-to-create-a-nextauth-js-custom-adapter-with-harperdb-next-js/) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 
 - Use a custom database in a Custom Adapter for persisted Auth.js sessions using HarperDB as an example.
-- Video tutorial also available: <https://www.youtube.com/watch?v=pu7xBv7sZ8s>
+- Video tutorial also available: https://www.youtube.com/watch?v=pu7xBv7sZ8s
 
 #### [Using Auth.js with Prisma and PlanetScale serverless databases](https://github.com/planetscale/nextjs-planetscale-starter) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
 

@@ -21,7 +21,8 @@ export async function signout(
 
   try {
     if (session.strategy === "jwt") {
-      const token = await jwt.decode({ ...jwt, token: sessionToken })
+      const salt = options.cookies.sessionToken.name
+      const token = await jwt.decode({ ...jwt, token: sessionToken, salt })
       await events.signOut?.({ token })
     } else {
       const session = await options.adapter?.deleteSession(sessionToken)

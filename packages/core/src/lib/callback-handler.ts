@@ -72,7 +72,8 @@ export async function handleLogin(
   if (sessionToken) {
     if (useJwtSession) {
       try {
-        session = await jwt.decode({ ...jwt, token: sessionToken })
+        const salt = options.cookies.sessionToken.name
+        session = await jwt.decode({ ...jwt, token: sessionToken, salt })
         if (session && "sub" in session && session.sub) {
           user = await getUser(session.sub)
         }
