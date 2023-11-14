@@ -112,7 +112,7 @@ Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`,
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
 - The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
 
-The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and if you are using a database. You can persist data such as User ID, OAuth Access Token in this token, see the example below for `access_token` and `user.id`. To expose it on the client side, check out the [`session()` callback](#session-callback) as well.
+The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and if you are using a database. You can persist data such as User ID in this token, see the example below for `user.id`. To expose it on the client side, check out the [`session()` callback](#session-callback) as well.
 
 ```js title="pages/api/auth/[...nextauth].js"
 ...
@@ -146,8 +146,7 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 ...
 callbacks: {
   async session({ session, token, user }) {
-    // Send properties to the client, like an access_token and user id from a provider.
-    session.accessToken = token.accessToken
+    // Send properties to the client, like an user id from a provider.
     session.user.id = token.id
     
     return session
@@ -167,4 +166,10 @@ The session object is not persisted server side, even when using database sessio
 If you need to persist session data server side, you can use the `accessToken` returned for the session as a key - and connect to the database in the `session()` callback to access it. Session `accessToken` values do not rotate and are valid as long as the session is valid.
 
 If using JSON Web Tokens instead of database sessions, you should use the User ID or a unique key stored in the token (you will need to generate a key for this yourself on sign in, as access tokens for sessions are not generated when using JSON Web Tokens).
+:::
+
+:::warning
+It is not advised to expose the `access_token` in the session callback. This would give client side javascript access to it by using `useSession`. This information is stored in an HTTP only cookie by design. 
+
+There would be serious security implications if any third party node modules or injected scripts (e.g. tracking scripts injected via Google Tagmanager) gets comprimised and are able to access your users `access_token`.
 :::
