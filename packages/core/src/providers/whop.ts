@@ -87,7 +87,7 @@ export default function Whop<P extends WhopProfile>(
       }
     },
     style: {
-      logo: "/google.svg",
+      logo: "/whop.svg",
       bg: "#fff",
       text: "#FF6243",
     },
