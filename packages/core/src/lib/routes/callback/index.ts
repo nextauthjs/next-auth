@@ -3,9 +3,8 @@ import {
   OAuthCallbackError,
   Verification,
 } from "../../../errors.js"
-import { handleLogin } from "./handle-login.js"
+import { handleLoginOrRegister } from "./handle-login.js"
 import { handleOAuth } from "../../oauth/callback.js"
-import { handleState } from "../../oauth/handle-state.js"
 import { createHash } from "../../utils/web.js"
 import { handleAuthorized } from "../shared.js"
 
@@ -17,6 +16,7 @@ import type {
   ResponseInternal,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
+import { handleState } from "../../oauth/checks.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {
@@ -114,7 +114,7 @@ export async function callback(params: {
       if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
 
       // Sign user in
-      const { user, session, isNewUser } = await handleLogin(
+      const { user, session, isNewUser } = await handleLoginOrRegister(
         sessionStore.value,
         userFromProvider,
         account,
@@ -232,7 +232,12 @@ export async function callback(params: {
         user: loggedInUser,
         session,
         isNewUser,
-      } = await handleLogin(sessionStore.value, user, account, options)
+      } = await handleLoginOrRegister(
+        sessionStore.value,
+        user,
+        account,
+        options
+      )
 
       if (useJwtSession) {
         const defaultToken = {

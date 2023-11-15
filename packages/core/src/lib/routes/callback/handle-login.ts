@@ -23,7 +23,7 @@ import type { SessionToken } from "../../utils/cookie.js"
  * done prior to this handler being called to avoid additional complexity in this
  * handler.
  */
-export async function handleLogin(
+export async function handleLoginOrRegister(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   _account: AdapterAccount | Account | null,
