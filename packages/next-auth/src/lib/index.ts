@@ -191,7 +191,7 @@ async function handleAuth(
       NextResponse.next()
   } else if (!authorized) {
     const signInPage =
-      config.pages?.signIn ?? `${request.nextUrl.basePath}}/signin`
+      config.pages?.signIn ?? `${request.nextUrl.basePath}/signin`
     if (request.nextUrl.pathname !== signInPage) {
       // Redirect to signin page by default if not authorized
       request.nextUrl.pathname = signInPage

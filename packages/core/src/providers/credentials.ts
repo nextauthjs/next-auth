@@ -87,7 +87,7 @@ export type CredentialsProviderType = "Credentials"
  *
  * ```js
  * callbacks: {
- *   async jwt(token, user, account, profile, isNewUser) {
+ *   async jwt({ token, user, account, profile, isNewUser }) {
  *     if (user) {
  *       token.id = user.id
  *     }
