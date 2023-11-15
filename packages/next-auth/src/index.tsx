@@ -63,6 +63,7 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+export { AuthError } from "@auth/core/errors"
 
 export type {
   Account,
@@ -239,12 +240,14 @@ export interface NextAuthResult {
   >(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
-    options?: {
-      /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-      redirectTo?: string
-      /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-      redirect?: R
-    } & Record<string, any>,
+    options?:
+      | FormData
+      | ({
+          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          redirectTo?: string
+          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+          redirect?: R
+        } & Record<string, any>),
     authorizationParams?:
       | string[][]
       | Record<string, string>

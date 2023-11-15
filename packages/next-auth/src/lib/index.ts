@@ -13,7 +13,7 @@ import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/ap
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 /** Configure NextAuth.js. */
-export interface NextAuthConfig extends AuthConfig {
+export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
    * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
@@ -81,7 +81,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
         return { user, ...session } satisfies Session
       },
     },
-  })
+  }) as Promise<Response>
 }
 
 export interface NextAuthRequest extends NextRequest {
