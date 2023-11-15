@@ -15,7 +15,7 @@ import type {
  * For OAuth, redirects to the provider's authorization URL.
  * For Email, sends an email with a sign in link.
  */
-export async function signin(
+export async function signIn(
   request: RequestInternal,
   options: InternalOptions<"oauth" | "oidc" | "email">
 ): Promise<ResponseInternal> {

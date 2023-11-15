@@ -1,5 +1,5 @@
 export { callback } from "./callback"
 export { providers } from "./providers.js"
 export { session } from "./session.js"
-export { signin } from "./signin/index.js"
-export { signout } from "./signout.js"
+export { signIn } from "./signin"
+export { signOut } from "./signout.js"

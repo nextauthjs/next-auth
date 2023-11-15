@@ -134,7 +134,7 @@ export async function AuthInternal(
     switch (action) {
       case "signin":
         if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
-          const signin = await actions.signin(request, options)
+          const signin = await actions.signIn(request, options)
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
@@ -142,7 +142,7 @@ export async function AuthInternal(
         return { redirect: `${options.url}/signin?csrf=true`, cookies }
       case "signout":
         if (csrfDisabled || options.csrfTokenVerified) {
-          const signout = await actions.signout(sessionStore, options)
+          const signout = await actions.signOut(sessionStore, options)
           if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
         }
