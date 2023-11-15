@@ -123,21 +123,6 @@ export default function renderPage(params: RenderPageParams) {
       })
     },
     error(error?: string) {
-      // These error messages are displayed in line on the sign in page
-      // TODO: verify these. We should redirect these to signin directly, instead of
-      // first to error and then to signin.
-      if (
-        [
-          "Signin",
-          "OAuthCreateAccount",
-          "EmailCreateAccount",
-          "Callback",
-          "OAuthAccountNotLinked",
-          "SessionRequired",
-        ].includes(error ?? "")
-      ) {
-        return { redirect: `${url}/signin?error=${error}`, cookies }
-      }
       if (pages?.error) {
         return {
           redirect: `${pages.error}${
