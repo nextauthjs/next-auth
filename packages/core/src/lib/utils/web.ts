@@ -32,7 +32,7 @@ const actions: AuthAction[] = [
 
 export async function toInternalRequest(
   req: Request
-): Promise<RequestInternal | AuthError> {
+): Promise<RequestInternal | Error> {
   try {
     // TODO: url.toString() should not include action and providerId
     // see init.ts

@@ -49,7 +49,6 @@ import type {
   CookiesOptions,
   EventCallbacks,
   PagesOptions,
-  RequestInternal,
   ResponseInternal,
   Theme,
 } from "./types.js"
@@ -87,17 +86,16 @@ export async function Auth(
  * @see [Documentation](https://authjs.dev)
  */
 export async function Auth(
-  request: Request | RequestInternal,
+  request: Request,
   config: AuthConfig
 ): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
-  const internalRequest =
-    request instanceof Request ? await toInternalRequest(request) : request
+  const internalRequest = await toInternalRequest(request)
 
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
-    return new Response(
+    return Response.json(
       `Error: This action with HTTP ${request.method} is not supported.`,
       { status: 400 }
     )
@@ -156,13 +154,21 @@ export async function Auth(
     if (isRaw) return rawResponse
   } catch (e) {
     const error = e as Error
-    if (error instanceof AuthError && isRaw) throw error
-    const name = (error.cause as any)?.reason ?? "Configuration"
-    const status = (error.cause as any)?.status ?? 500
-    // TODO: handle errors with redirect to signin/error pages
-    // NOTE: If the CSRF check failed for POST/session, return a 400 status code
-    // we should not redirect to a page as this is an API route
-    return {}
+    logger.error(error)
+
+    const isAuthError = error instanceof AuthError
+    if (isAuthError && isRaw) throw error
+
+    // If the CSRF check failed for POST/session, return a 400 status code.
+    // We should not redirect to a page as this is an API route
+    if (request.method === "POST" && internalRequest.action === "session")
+      return Response.json(null, { status: 400 })
+
+    const params = new URLSearchParams({
+      error: isAuthError ? error.name : "Configuration",
+    })
+    const location = `${config.pages?.error ?? "/api/auth/error"}?${params}`
+    return Response.redirect(location)
   }
 
   const response = await toResponse(rawResponse)

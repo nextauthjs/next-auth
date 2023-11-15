@@ -30,15 +30,14 @@ export async function sendToken(
     provider: provider.id,
   }
 
+  let authorized
   try {
     const params = { user, account, email: { verificationRequest: true } }
-    const authorized = await callbacks.signIn(params)
-    if (!authorized) {
-      throw new AuthorizedCallbackError("AccessDenied")
-    }
+    authorized = await callbacks.signIn(params)
   } catch (e) {
     throw new AuthorizedCallbackError(e as Error)
   }
+  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
 
   const { callbackUrl, theme } = options
   const token =

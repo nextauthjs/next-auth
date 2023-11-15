@@ -1,22 +1,26 @@
-interface ErrorCause extends Record<string, unknown> {}
+type ErrorOptions = Error | Record<string, unknown>
 
 export class AuthError extends Error {
-  constructor(message: string | Error | ErrorCause, cause?: ErrorCause) {
+  cause?: Record<string, unknown> & { err?: Error }
+  constructor(
+    message?: string | Error | ErrorOptions,
+    errorOptions?: ErrorOptions
+  ) {
     if (message instanceof Error) {
       super(undefined, {
-        cause: { err: message, ...(message.cause as any), ...cause },
+        cause: { err: message, ...(message.cause as any), ...errorOptions },
       })
     } else if (typeof message === "string") {
-      if (cause instanceof Error) {
-        cause = { err: cause, ...(cause.cause as any) }
+      if (errorOptions instanceof Error) {
+        errorOptions = { err: errorOptions, ...(errorOptions.cause as any) }
       }
-      super(message, cause)
+      super(message, errorOptions)
     } else {
       super(undefined, message)
     }
     Error.captureStackTrace?.(this, this.constructor)
-    this.name =
-      message instanceof AuthError ? message.name : this.constructor.name
+    const url = `https://errors.authjs.dev#${this.name.toLowerCase()}`
+    this.message += `Read more at ${url}`
   }
 }
 
@@ -80,6 +84,9 @@ export class EventError extends AuthError {}
 
 /** @todo */
 export class InvalidCallbackUrl extends AuthError {}
+
+/** @todo */
+export class InvalidCredentials extends AuthError {}
 
 /** @todo */
 export class InvalidEndpoints extends AuthError {}
@@ -191,15 +198,16 @@ export class UnknownAction extends AuthError {}
 export class UnsupportedStrategy extends AuthError {}
 
 /** @todo */
+export class InvalidProvider extends AuthError {}
+
+/** @todo */
 export class UntrustedHost extends AuthError {}
 
 /**
  * The user's email/token combination was invalid.
  * This could be because the email/token combination was not found in the database,
- * or because it token has expired. Ask the user to log in again.
+ * or because the token has expired. Ask the user to log in again.
  */
 export class Verification extends AuthError {}
 
 export class MissingCSRF extends AuthError {}
-
-export class MissingProvider extends AuthError {}
