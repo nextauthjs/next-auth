@@ -1,7 +1,7 @@
 import * as jwt from "../jwt.js"
 import { createCallbackUrl } from "./utils/callback-url.js"
 import * as cookie from "./utils/cookie.js"
-import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
+import { createCSRFToken } from "./routes/callback/oauth/csrf-token.js"
 
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"

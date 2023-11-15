@@ -1,5 +1,5 @@
 import { parse as parseCookie, serialize } from "cookie"
-import { AuthError, UnknownAction } from "../../errors.js"
+import { UnknownAction } from "../../errors.js"
 
 import type {
   AuthAction,
