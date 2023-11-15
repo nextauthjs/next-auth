@@ -167,7 +167,10 @@ export async function Auth(
     const params = new URLSearchParams({
       error: isAuthError ? error.name : "Configuration",
     })
-    const location = `${config.pages?.error ?? "/api/auth/error"}?${params}`
+
+    const location = `${internalRequest.url.origin}${
+      config.pages?.error ?? "/api/auth/error"
+    }?${params}`
     return Response.redirect(location)
   }
 
