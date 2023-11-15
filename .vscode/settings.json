@@ -1,7 +1,4 @@
 {
-  "files.exclude": {
-    "packages/core/{lib,providers,*.js,*.d.ts,*.d.ts.map}": true,
-  },
   "typescript.tsdk": "node_modules/typescript/lib",
   "openInGitHub.remote.branch": "main"
 }
