@@ -63,7 +63,7 @@ import type {
 import type { Adapter, AdapterUser } from "./adapters.js"
 import { AuthConfig } from "./index.js"
 import type { JWT, JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/cookie.js"
+import type { Cookie } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialInput,

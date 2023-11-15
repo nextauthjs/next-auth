@@ -1,7 +1,7 @@
 import { SignOutError } from "../../errors.js"
 
 import type { InternalOptions, ResponseInternal } from "../../types.js"
-import type { SessionStore } from "../cookie.js"
+import type { SessionStore } from "../utils/cookie.js"
 
 /**
  * Destroys the session.

@@ -2,21 +2,21 @@ import {
   CallbackRouteError,
   OAuthCallbackError,
   Verification,
-} from "../../errors.js"
-import { handleLogin } from "../callback-handler.js"
-import { handleOAuth } from "../oauth/callback.js"
-import { handleState } from "../oauth/handle-state.js"
-import { createHash } from "../utils/web.js"
-import { handleAuthorized } from "./shared.js"
+} from "../../../errors.js"
+import { handleLogin } from "./handle-login.js"
+import { handleOAuth } from "../../oauth/callback.js"
+import { handleState } from "../../oauth/handle-state.js"
+import { createHash } from "../../utils/web.js"
+import { handleAuthorized } from "../shared.js"
 
-import type { AdapterSession } from "../../adapters.js"
+import type { AdapterSession } from "../../../adapters.js"
 import type {
   Account,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../types.js"
-import type { Cookie, SessionStore } from "../cookie.js"
+} from "../../../types.js"
+import type { Cookie, SessionStore } from "../../utils/cookie.js"
 
 /** Handle callbacks from login services */
 export async function callback(params: {

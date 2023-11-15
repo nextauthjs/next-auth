@@ -8,7 +8,7 @@ import type {
   InternalOptions,
   RequestInternal,
 } from "../../types.js"
-import type { Cookie } from "../cookie.js"
+import type { Cookie } from "../utils/cookie.js"
 
 interface CheckPayload {
   value: string

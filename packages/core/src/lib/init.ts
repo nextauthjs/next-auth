@@ -1,8 +1,7 @@
 import * as jwt from "../jwt.js"
 import { createCallbackUrl } from "./utils/callback-url.js"
-import * as cookie from "./cookie.js"
-import { createCSRFToken } from "./csrf-token.js"
-import { defaultCallbacks } from "./default-callbacks.js"
+import * as cookie from "./utils/cookie.js"
+import { createCSRFToken } from "./routes/callback/oauth/csrf-token.js"
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
@@ -10,6 +9,7 @@ import parseUrl from "./utils/parse-url.js"
 
 import type {
   AuthConfig,
+  CallbacksOptions,
   EventCallbacks,
   InternalOptions,
   RequestInternal,
@@ -28,6 +28,23 @@ interface InitParams {
   csrfDisabled: boolean
   isPost: boolean
   cookies: RequestInternal["cookies"]
+}
+
+export const defaultCallbacks: CallbacksOptions = {
+  signIn() {
+    return true
+  },
+  redirect({ url, baseUrl }) {
+    if (url.startsWith("/")) return `${baseUrl}${url}`
+    else if (new URL(url).origin === baseUrl) return url
+    return baseUrl
+  },
+  session({ session }) {
+    return session
+  },
+  jwt({ token }) {
+    return token
+  },
 }
 
 /** Initialize all internal options and cookies. */
