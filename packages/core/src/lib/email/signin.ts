@@ -1,4 +1,4 @@
-import { createHash, randomString, toRequest } from "../web.js"
+import { createHash, randomString, toRequest } from "../utils/web.js"
 
 import type { InternalOptions, RequestInternal } from "../../types.js"
 /**

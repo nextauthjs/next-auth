@@ -1,10 +1,10 @@
 import * as jwt from "../jwt.js"
-import { createCallbackUrl } from "./callback-url.js"
+import { createCallbackUrl } from "./utils/callback-url.js"
 import * as cookie from "./cookie.js"
 import { createCSRFToken } from "./csrf-token.js"
 import { defaultCallbacks } from "./default-callbacks.js"
 import { AdapterError, EventError } from "../errors.js"
-import parseProviders from "./providers.js"
+import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
 import parseUrl from "./utils/parse-url.js"
 

@@ -6,7 +6,7 @@ import {
 import { handleLogin } from "../callback-handler.js"
 import { handleOAuth } from "../oauth/callback.js"
 import { handleState } from "../oauth/handle-state.js"
-import { createHash } from "../web.js"
+import { createHash } from "../utils/web.js"
 import { handleAuthorized } from "./shared.js"
 
 import type { AdapterSession } from "../../adapters.js"

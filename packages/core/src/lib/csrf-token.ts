@@ -1,4 +1,4 @@
-import { createHash, randomString } from "./web.js"
+import { createHash, randomString } from "./utils/web.js"
 
 import type { InternalOptions } from "../types.js"
 interface CreateCSRFTokenParams {
