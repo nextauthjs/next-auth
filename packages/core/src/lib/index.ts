@@ -2,10 +2,10 @@ import { UnknownAction } from "../errors.js"
 import { SessionStore } from "./utils/cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
-import * as actions from "./actions/index.js"
+import * as actions from "./routes/index.js"
 
 import type { AuthConfig, RequestInternal, ResponseInternal } from "../types.js"
-import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
+import { validateCSRF } from "./routes/callback/oauth/csrf-token.js"
 
 /** @internal */
 export async function AuthInternal(

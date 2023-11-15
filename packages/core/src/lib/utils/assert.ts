@@ -1,4 +1,4 @@
-import { defaultCookies } from "../cookie.js"
+import { defaultCookies } from "./cookie.js"
 import {
   InvalidCallbackUrl,
   InvalidEndpoints,
