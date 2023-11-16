@@ -66,7 +66,6 @@ const content = JSON.stringify(
     ],
     // TODO: Autogenerate
     adapters: [
-      { id: "libsql", name: "libSQL / Turso" },
       { id: "azure-tables", name: "Azure Tables Storage" },
       { id: "d1", name: "D1" },
       { id: "dgraph", name: "Dgraph", img: "dgraph.png" },
@@ -77,6 +76,7 @@ const content = JSON.stringify(
       { id: "firebase", name: "Firebase" },
       { id: "hasura", name: "Hasura" },
       { id: "kysely", name: "Kysely" },
+      { id: "libsql", name: "libSQL / Turso", img: "libsql.png" },
       { id: "mikro-orm", name: "Mikro ORM", img: "mikro-orm.png" },
       { id: "mongodb", name: "MongoDB" },
       { id: "neo4j", name: "Neo4j" },
