@@ -56,6 +56,14 @@ const content = JSON.stringify(
         entrypoints: ["lib/index.ts", "lib/client.ts"],
       },
       {
+        id: "express",
+        packageName: "@auth/express",
+        packageDir: "frameworks-express",
+        name: "Express Auth",
+        url: "express-auth-example",
+        entrypoints: ["index.ts"],
+      },
+      {
         id: "solidstart",
         packageName: "@auth/solid-start",
         packageDir: "frameworks-solid-start",

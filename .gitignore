@@ -83,8 +83,6 @@ packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
 docs/docs/reference/core
-docs/docs/reference/sveltekit
-docs/docs/reference/express
 
 # Next.js
 packages/next-auth/lib
@@ -104,6 +102,10 @@ docs/docs/reference/sveltekit
 
 # SolidStart
 docs/docs/reference/solidstart
+
+
+# Express
+docs/docs/reference/express
 
 
 # Adapters
