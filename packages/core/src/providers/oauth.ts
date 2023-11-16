@@ -106,6 +106,8 @@ export interface OAuthProviderButtonStyles {
   textDark: string
 }
 
+export type OAuth2Check = 'pkce' | 'state' | 'none'
+
 /** TODO: Document */
 export interface OAuth2Config<Profile>
   extends CommonProviderOptions,
@@ -173,7 +175,7 @@ export interface OAuth2Config<Profile>
    * [RFC 6749 - The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1.1) |
    * [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) |
    */
-  checks?: Array<"pkce" | "state" | "none">
+  checks?: Array<OAuth2Check>
   clientId?: string
   clientSecret?: string
   /**
@@ -207,6 +209,8 @@ export interface OAuth2Config<Profile>
   options?: OAuthUserConfig<Profile>
 }
 
+export type OidcCheck = OAuth2Check | "nonce"
+
 /**
  * Extension of the {@link OAuth2Config}.
  *
@@ -215,7 +219,7 @@ export interface OAuth2Config<Profile>
 export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
-  checks?: OAuth2Config<Profile>["checks"] & Array<"nonce">
+  checks?: Array<OidcCheck>
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
