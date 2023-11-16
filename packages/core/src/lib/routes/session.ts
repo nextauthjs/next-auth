@@ -3,7 +3,7 @@ import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
 import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
-import type { SessionStore } from "../cookie.js"
+import type { SessionStore } from "../utils/cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(params: {

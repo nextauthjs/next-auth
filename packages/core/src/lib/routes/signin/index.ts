@@ -1,21 +1,21 @@
-import emailSignin from "../email/signin.js"
-import { SignInError } from "../../errors.js"
-import { getAuthorizationUrl } from "../oauth/authorization-url.js"
-import { handleAuthorized } from "./shared.js"
+import emailSignin from "./send-token.js"
+import { SignInError } from "../../../errors.js"
+import { getAuthorizationUrl } from "./authorization-url.js"
+import { handleAuthorized } from "../shared.js"
 
 import type {
   Account,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../types.js"
+} from "../../../types.js"
 
 /**
  * Initiates the sign in process for OAuth and Email flows .
  * For OAuth, redirects to the provider's authorization URL.
  * For Email, sends an email with a sign in link.
  */
-export async function signin(
+export async function signIn(
   request: RequestInternal,
   options: InternalOptions<"oauth" | "oidc" | "email">
 ): Promise<ResponseInternal> {

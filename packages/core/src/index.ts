@@ -36,12 +36,12 @@
  * @module index
  */
 
-import { assertConfig } from "./lib/assert.js"
+import { assertConfig } from "./lib/utils/assert.js"
 import { ErrorPageLoop } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
-import { toInternalRequest, toResponse } from "./lib/web.js"
+import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter } from "./adapters.js"
 import type {

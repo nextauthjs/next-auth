@@ -1,8 +1,8 @@
 import { UnknownAction } from "../errors.js"
-import { SessionStore } from "./cookie.js"
+import { SessionStore } from "./utils/cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
-import * as routes from "./routes/index.js"
+import * as actions from "./routes/index.js"
 
 import type {
   AuthConfig,
@@ -12,9 +12,7 @@ import type {
 } from "../types.js"
 
 /** @internal */
-export async function AuthInternal<
-  Body extends string | Record<string, any> | any[]
->(
+export async function AuthInternal(
   request: RequestInternal,
   authOptions: AuthConfig
 ): Promise<ResponseInternal<Body>> {
@@ -45,9 +43,9 @@ export async function AuthInternal<
     const { pages } = options
     switch (action) {
       case "providers":
-        return (await routes.providers(options.providers)) as any
+        return (await actions.providers(options.providers)) as any
       case "session": {
-        const session = await routes.session({ sessionStore, options })
+        const session = await actions.session({ sessionStore, options })
         if (session.cookies) cookies.push(...session.cookies)
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { ...session, cookies } as any
@@ -85,7 +83,7 @@ export async function AuthInternal<
         return render.signout()
       case "callback":
         if (options.provider) {
-          const callback = await routes.callback({
+          const callback = await actions.callback({
             body: request.body,
             query: request.query,
             headers: request.headers,
@@ -136,7 +134,7 @@ export async function AuthInternal<
     switch (action) {
       case "signin":
         if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
-          const signin = await routes.signin(request, options)
+          const signin = await actions.signIn(request, options)
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
         }
@@ -144,7 +142,7 @@ export async function AuthInternal<
         return { redirect: `${options.url}/signin?csrf=true`, cookies }
       case "signout":
         if (csrfDisabled || options.csrfTokenVerified) {
-          const signout = await routes.signout(sessionStore, options)
+          const signout = await actions.signOut(sessionStore, options)
           if (signout.cookies) cookies.push(...signout.cookies)
           return { ...signout, cookies }
         }
@@ -160,7 +158,7 @@ export async function AuthInternal<
             return { redirect: `${options.url}/signin?csrf=true`, cookies }
           }
 
-          const callback = await routes.callback({
+          const callback = await actions.callback({
             body: request.body,
             query: request.query,
             headers: request.headers,
@@ -175,7 +173,7 @@ export async function AuthInternal<
         break
       case "session": {
         if (options.csrfTokenVerified || csrfDisabled) {
-          const session = await routes.session({
+          const session = await actions.session({
             options,
             sessionStore,
             newSession: request.body?.data,
