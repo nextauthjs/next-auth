@@ -75,6 +75,7 @@
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/libsql-adapter#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
@@ -107,6 +108,7 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/libsql-adapter#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",

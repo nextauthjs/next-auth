@@ -438,6 +438,16 @@ importers:
         specifier: ^8.10.0
         version: 8.11.2
 
+  packages/adapter-libsql:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@libsql/client':
+        specifier: ^0.3.6
+        version: 0.3.6
+
   packages/adapter-mikro-orm:
     dependencies:
       '@auth/core':
@@ -7522,7 +7532,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@graphql-tools/utils': 10.0.6(graphql@16.8.1)
-      '@types/ws': 8.5.3
+      '@types/ws': 8.5.8
       graphql: 16.8.1
       graphql-ws: 5.14.1(graphql@16.8.1)
       isomorphic-ws: 5.0.0(ws@8.14.1)
@@ -7558,7 +7568,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@graphql-tools/utils': 10.0.6(graphql@16.8.1)
-      '@types/ws': 8.5.3
+      '@types/ws': 8.5.8
       graphql: 16.8.1
       isomorphic-ws: 5.0.0(ws@8.14.1)
       tslib: 2.6.2
@@ -7909,7 +7919,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -8032,7 +8042,7 @@ packages:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.19
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       chalk: 4.1.2
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
@@ -8199,6 +8209,106 @@ packages:
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
+
+  /@libsql/client@0.3.6:
+    resolution: {integrity: sha512-3Mc4ZDI7X5ZLkMxX5XijiBeqhvyrny356lcj/KVVIeMXt9j6g4l+CRIsUvgcsyCAOUHqWqh0+TjI91bCKmdW+w==}
+    dependencies:
+      '@libsql/hrana-client': 0.5.5
+      js-base64: 3.7.5
+      libsql: 0.1.34
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: true
+
+  /@libsql/darwin-arm64@0.1.34:
+    resolution: {integrity: sha512-Wv8jvkj/fUAO8DF3A4HaddCMldUUpKcg/WW1sY95FNsSHOxktyxqU80jAp/tCuZ85GQIJozvgSr51/ARIC0gsw==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@libsql/darwin-x64@0.1.34:
+    resolution: {integrity: sha512-2NQXD9nUzC08hg7FdcZLq5uTEwGz1KbD7YvUzQb/psO1lO/E/p83wl1es1082+Pp0z5pSPDWQeRTuccD41L+3w==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@libsql/hrana-client@0.5.5:
+    resolution: {integrity: sha512-i+hDBpiV719poqEiHupUUZYKJ9YSbCRFe5Q2PQ0v3mHIftePH6gayLjp2u6TXbqbO/Dv6y8yyvYlBXf/kFfRZA==}
+    dependencies:
+      '@libsql/isomorphic-fetch': 0.1.10
+      '@libsql/isomorphic-ws': 0.1.5
+      js-base64: 3.7.5
+      node-fetch: 3.3.2
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: true
+
+  /@libsql/isomorphic-fetch@0.1.10:
+    resolution: {integrity: sha512-dH0lMk50gKSvEKD78xWMu60SY1sjp1sY//iFLO0XMmBwfVfG136P9KOk06R4maBdlb8KMXOzJ1D28FR5ZKnHTA==}
+    dependencies:
+      '@types/node-fetch': 2.6.2
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+    dev: true
+
+  /@libsql/isomorphic-ws@0.1.5:
+    resolution: {integrity: sha512-DtLWIH29onUYR00i0GlQ3UdcTRC6EP4u9w/h9LxpUZJWRMARk6dQwZ6Jkd+QdwVpuAOrdxt18v0K2uIYR3fwFg==}
+    dependencies:
+      '@types/ws': 8.5.8
+      ws: 8.14.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
+  /@libsql/linux-arm64-gnu@0.1.34:
+    resolution: {integrity: sha512-r3dY1FDYZ7eX5HX7HyAoYSqK5FPugj5NSB5Bt/nz+ygBWdXASgSKxkE/RqjJIM59vXwv300iJX9qhR5fXv8sTw==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@libsql/linux-arm64-musl@0.1.34:
+    resolution: {integrity: sha512-9AE/eNb9eQRcNsLxqtpLJxVEoIMmItrdwqJDImPJtOp10rhp4U0x/9RGKerl9Mg3ObVj676pyhAR2KzyudrOfQ==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@libsql/linux-x64-gnu@0.1.34:
+    resolution: {integrity: sha512-o8toY1Txstjt13fBhZbFe8sNAW6OaS6qVcp1Bd6bHkCLSBLZ6pjJmwzQN8rFv9QFBPAnaKP3lI4vaOXXw7huTA==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@libsql/linux-x64-musl@0.1.34:
+    resolution: {integrity: sha512-EldEmcAxxNPSCjJ73oFxg81PDDIpDbPqK/QOrhmmGYLvYwrnQtVRUIbARf80JQvcy6bCxOO/Q9dh6wGhnyHyYA==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@libsql/win32-x64-msvc@0.1.34:
+    resolution: {integrity: sha512-jnv0qfVMnrVv00r+wUOe6DHrHuao9y1w1lN543cV2J1JdQNJT/eSZzhyZFSlS3T2ZUvXfZfZ5GeL8U18IAID6w==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -8493,6 +8603,10 @@ packages:
     requiresBuild: true
     dependencies:
       sparse-bitfield: 3.0.3
+    dev: true
+
+  /@neon-rs/load@0.0.4:
+    resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
     dev: true
 
   /@next/env@14.0.3-canary.1:
@@ -10474,6 +10588,7 @@ packages:
 
   /@types/unist@2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
+    requiresBuild: true
 
   /@types/unist@3.0.1:
     resolution: {integrity: sha512-ue/hDUpPjC85m+PM9OQDMZr3LywT+CT6mPsQq8OJtCLiERkGRcQUFvu9XASF5XWqyZFXbf15lvb3JFJ4dRLWPg==}
@@ -13768,6 +13883,11 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
+  /data-uri-to-buffer@4.0.1:
+    resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
+    engines: {node: '>= 12'}
+    dev: true
+
   /dataloader@2.2.2:
     resolution: {integrity: sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==}
     dev: true
@@ -14066,6 +14186,11 @@ packages:
 
   /detect-libc@2.0.1:
     resolution: {integrity: sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==}
+    engines: {node: '>=8'}
+    dev: true
+
+  /detect-libc@2.0.2:
+    resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
     dev: true
 
@@ -16213,6 +16338,14 @@ packages:
       xml-js: 1.6.11
     dev: true
 
+  /fetch-blob@3.2.0:
+    resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
+    engines: {node: ^12.20 || >= 14.13}
+    dependencies:
+      node-domexception: 1.0.0
+      web-streams-polyfill: 3.2.1
+    dev: true
+
   /fetch-cookie@0.11.0:
     resolution: {integrity: sha512-BQm7iZLFhMWFy5CZ/162sAGjBfdNWb7a8LEqqnzsHFhxT/X/SVj/z2t2nu3aJvjlbQkrAlTUApplPRjWyH4mhA==}
     engines: {node: '>=8'}
@@ -16585,6 +16718,13 @@ packages:
   /format@0.2.2:
     resolution: {integrity: sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==}
     engines: {node: '>=0.4.x'}
+    dev: true
+
+  /formdata-polyfill@4.0.10:
+    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
+    engines: {node: '>=12.20.0'}
+    dependencies:
+      fetch-blob: 3.2.0
     dev: true
 
   /forwarded@0.2.0:
@@ -18885,7 +19025,7 @@ packages:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.5
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       anymatch: 3.1.3
       fb-watchman: 2.0.1
       graceful-fs: 4.2.10
@@ -18991,7 +19131,7 @@ packages:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.10
@@ -19022,7 +19162,7 @@ packages:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       chalk: 4.1.2
       cjs-module-lexer: 1.2.2
       collect-v8-coverage: 1.0.1
@@ -19074,7 +19214,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.10
@@ -19099,7 +19239,7 @@ packages:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -19120,7 +19260,7 @@ packages:
     resolution: {integrity: sha512-eIz2msL/EzL9UFTFFx7jBTkeZfku0yUAyZZZmJ93H2TYEiroIx2PQjEXcwYtYl8zXCxb+PAmA2hLIt/6ZEkPHw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@types/node': 20.8.10
+      '@types/node': 18.11.10
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -19201,6 +19341,10 @@ packages:
   /joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
+    dev: true
+
+  /js-base64@3.7.5:
+    resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
     dev: true
 
   /js-beautify@1.14.4:
@@ -19773,6 +19917,23 @@ packages:
 
   /libsodium@0.7.10:
     resolution: {integrity: sha512-eY+z7hDrDKxkAK+QKZVNv92A5KYkxfvIshtBJkmg5TSiCnYqZP3i9OO9whE79Pwgm4jGaoHgkM4ao/b9Cyu4zQ==}
+    dev: true
+
+  /libsql@0.1.34:
+    resolution: {integrity: sha512-LGofp7z7gi1Td6vu2GxaA4WyvSPEkuFn0f/ePSti1TsAlBU0LWxdk+bj9D8nqswzxiqe5wpAyTLhVzTIYSyXEA==}
+    cpu: [x64, arm64]
+    os: [darwin, linux, win32]
+    dependencies:
+      '@neon-rs/load': 0.0.4
+      detect-libc: 2.0.2
+    optionalDependencies:
+      '@libsql/darwin-arm64': 0.1.34
+      '@libsql/darwin-x64': 0.1.34
+      '@libsql/linux-arm64-gnu': 0.1.34
+      '@libsql/linux-arm64-musl': 0.1.34
+      '@libsql/linux-x64-gnu': 0.1.34
+      '@libsql/linux-x64-musl': 0.1.34
+      '@libsql/win32-x64-msvc': 0.1.34
     dev: true
 
   /lilconfig@2.0.6:
@@ -22015,6 +22176,11 @@ packages:
     resolution: {integrity: sha512-73sE9+3UaLYYFmDsFZnqCInzPyh3MqIwZO9cw58yIqAZhONrrabrYyYe3TuIqtIiOuTXVhsGau8hcrhhwSsDIQ==}
     dev: true
 
+  /node-domexception@1.0.0:
+    resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
+    engines: {node: '>=10.5.0'}
+    dev: true
+
   /node-emoji@1.11.0:
     resolution: {integrity: sha512-wo2DpQkQp7Sjm2A0cq+sN7EHKO6Sl0ctXeBdFZrL9T9+UywORbufTcTZxom8YqpLQt/FqNMUkOpkZrJVYSKD3A==}
     dependencies:
@@ -22051,6 +22217,27 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: true
+
+  /node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+    dependencies:
+      whatwg-url: 5.0.0
+    dev: true
+
+  /node-fetch@3.3.2:
+    resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      data-uri-to-buffer: 4.0.1
+      fetch-blob: 3.2.0
+      formdata-polyfill: 4.0.10
     dev: true
 
   /node-forge@1.3.1:

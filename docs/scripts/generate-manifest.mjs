@@ -66,6 +66,7 @@ const content = JSON.stringify(
     ],
     // TODO: Autogenerate
     adapters: [
+      { id: "libsql", name: "libSQL / Turso" },
       { id: "azure-tables", name: "Azure Tables Storage" },
       { id: "d1", name: "D1" },
       { id: "dgraph", name: "Dgraph", img: "dgraph.png" },

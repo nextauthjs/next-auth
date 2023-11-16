@@ -21,6 +21,7 @@ body:
       multiple: true
       options:
         - "Custom adapter"
+        - "@auth/libsql-adapter"
         - "@auth/azure-tables-adapter"
         - "@auth/edgedb-adapter"
         - "@auth/d1-adapter"
