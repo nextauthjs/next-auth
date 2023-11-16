@@ -45,7 +45,7 @@ describe("Integration test with login and getSession", () => {
   })
 
   it("Should return the session with username after logging in", async () => {
-    let expectations: Function = () => {}
+    let expectations = () => {}
 
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
@@ -71,11 +71,11 @@ describe("Integration test with login and getSession", () => {
     // Parse cookies for csrf token and callback url
     const csrfTokenCookie = extractCookieValue(
       response.headers["set-cookie"],
-      "next-auth.csrf-token"
+      "authjs.csrf-token"
     )
     const callbackCookie = extractCookieValue(
       response.headers["set-cookie"],
-      "next-auth.callback-url"
+      "authjs.callback-url"
     )
     const csrfTokenValue = csrfTokenCookie.split("%")[0].split("=")[1]
 
@@ -92,7 +92,7 @@ describe("Integration test with login and getSession", () => {
     // Parse cookie for session token
     const sessionTokenCookie = extractCookieValue(
       responseCredentials.headers["set-cookie"],
-      "next-auth.session-token"
+      "authjs.session-token"
     )
 
     // Call test route
