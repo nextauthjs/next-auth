@@ -61,10 +61,10 @@ export async function AuthInternal(
       case "callback":
         if (options.provider.type === "credentials")
           // Verified CSRF Token required for credentials providers only
-          validateCSRF(csrfTokenVerified)
+          validateCSRF(action, csrfTokenVerified)
         return await actions.callback(request, options, sessionStore, cookies)
       case "session":
-        validateCSRF(csrfTokenVerified)
+        validateCSRF(action, csrfTokenVerified)
         return await actions.session(
           options,
           sessionStore,
@@ -73,11 +73,11 @@ export async function AuthInternal(
           request.body?.data
         )
       case "signin":
-        validateCSRF(csrfTokenVerified)
+        validateCSRF(action, csrfTokenVerified)
         return await actions.signIn(request, cookies, options)
 
       case "signout":
-        validateCSRF(csrfTokenVerified)
+        validateCSRF(action, csrfTokenVerified)
         return await actions.signOut(cookies, sessionStore, options)
       default:
     }
