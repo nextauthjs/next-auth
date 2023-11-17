@@ -21,7 +21,7 @@ export class AuthError extends Error {
     this.name = this.constructor.name
     Error.captureStackTrace?.(this, this.constructor)
     const url = `https://errors.authjs.dev#${this.name.toLowerCase()}`
-    this.message += `. Read more at ${url}`
+    this.message += `${this.message ? " ." : ""}Read more at ${url}`
   }
 }
 
@@ -87,7 +87,9 @@ export class EventError extends AuthError {}
 export class InvalidCallbackUrl extends AuthError {}
 
 /** @todo */
-export class InvalidCredentials extends AuthError {}
+export class InvalidCredentials extends AuthError {
+  type = "InvalidCredentials"
+}
 
 /** @todo */
 export class InvalidEndpoints extends AuthError {}
