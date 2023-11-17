@@ -4,7 +4,7 @@ import {
   AuthError,
   AuthorizedCallbackError,
   CallbackRouteError,
-  InvalidCredentials,
+  CredentialsSignin,
   InvalidProvider,
   Verification,
 } from "../../../errors.js"
@@ -302,7 +302,7 @@ export async function callback(
         new Request(url, { headers, method, body: JSON.stringify(body) })
       )
 
-      if (!user) throw new InvalidCredentials()
+      if (!user) throw new CredentialsSignin()
 
       const account = {
         providerAccountId: user.id,

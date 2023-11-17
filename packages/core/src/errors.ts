@@ -1,6 +1,10 @@
 type ErrorOptions = Error | Record<string, unknown>
 
 export class AuthError extends Error {
+  /** @internal Used to brand errors instead of using `this.constructor.name`, which might be minified during builds. */
+  type: string
+  /** Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page. */
+  kind?: "signIn" | "error"
   cause?: Record<string, unknown> & { err?: Error }
   constructor(
     message?: string | Error | ErrorOptions,
@@ -19,22 +23,35 @@ export class AuthError extends Error {
       super(undefined, message)
     }
     this.name = this.constructor.name
+    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/3841
+    this.type = this.constructor.type ?? "AuthError"
+    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/3841
+    this.kind = this.constructor.kind ?? "error"
+
     Error.captureStackTrace?.(this, this.constructor)
-    const url = `https://errors.authjs.dev#${this.name.toLowerCase()}`
+    const url = `https://errors.authjs.dev#${this.type.toLowerCase()}`
     this.message += `${this.message ? " ." : ""}Read more at ${url}`
   }
+}
+
+export class SignInError extends AuthError {
+  static kind = "signIn"
 }
 
 /**
  * @todo
  * One of the database `Adapter` methods failed.
  */
-export class AdapterError extends AuthError {}
+export class AdapterError extends AuthError {
+  static type = "AdapterError"
+}
 
 /**
  * Happens when the user is not authorized to access a route after executing the `signIn` callback.
  */
-export class AuthorizedCallbackError extends AuthError {}
+export class AuthorizedCallbackError extends AuthError {
+  static type = "AuthorizedCallbackError"
+}
 
 /**
  * This error occurs when the user cannot finish login.
@@ -75,42 +92,67 @@ export class AuthorizedCallbackError extends AuthError {}
  * It will show the original stack trace.
  * :::
  */
-export class CallbackRouteError extends AuthError {}
-
-/** @todo */
-export class ErrorPageLoop extends AuthError {}
-
-/** @todo */
-export class EventError extends AuthError {}
-
-/** @todo */
-export class InvalidCallbackUrl extends AuthError {}
-
-/** @todo */
-export class InvalidCredentials extends AuthError {
-  type = "InvalidCredentials"
+export class CallbackRouteError extends AuthError {
+  static type = "CallbackRouteError"
 }
 
 /** @todo */
-export class InvalidEndpoints extends AuthError {}
+export class ErrorPageLoop extends AuthError {
+  static type = "ErrorPageLoop"
+}
 
 /** @todo */
-export class InvalidCheck extends AuthError {}
+export class EventError extends AuthError {
+  static type = "EventError"
+}
 
 /** @todo */
-export class JWTSessionError extends AuthError {}
+export class InvalidCallbackUrl extends AuthError {
+  static type = "InvalidCallbackUrl"
+}
+
+/**
+ * The `authorize` callback returned `null` in the [Credentials provider](https://authjs.dev/getting-started/providers/credentials-tutorial).
+ * We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+ */
+export class CredentialsSignin extends SignInError {
+  static type = "CredentialsSignin"
+}
 
 /** @todo */
-export class MissingAdapter extends AuthError {}
+export class InvalidEndpoints extends AuthError {
+  static type = "InvalidEndpoints"
+}
 
 /** @todo */
-export class MissingAdapterMethods extends AuthError {}
+export class InvalidCheck extends AuthError {
+  static type = "InvalidCheck"
+}
 
 /** @todo */
-export class MissingAPIRoute extends AuthError {}
+export class JWTSessionError extends AuthError {
+  static type = "JWTSessionError"
+}
 
 /** @todo */
-export class MissingAuthorize extends AuthError {}
+export class MissingAdapter extends AuthError {
+  static type = "MissingAdapter"
+}
+
+/** @todo */
+export class MissingAdapterMethods extends AuthError {
+  static type = "MissingAdapterMethods"
+}
+
+/** @todo */
+export class MissingAPIRoute extends AuthError {
+  static type = "MissingAPIRoute"
+}
+
+/** @todo */
+export class MissingAuthorize extends AuthError {
+  static type = "MissingAuthorize"
+}
 
 /**
  * Auth.js requires a secret to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
@@ -128,14 +170,18 @@ export class MissingAuthorize extends AuthError {}
  *
  * :::
  */
-export class MissingSecret extends AuthError {}
+export class MissingSecret extends AuthError {
+  static type = "MissingSecret"
+}
 
 /**
  * @todo
  * Thrown when an Email address is already associated with an account
  * but the user is trying an OAuth account that is not linked to it.
  */
-export class OAuthAccountNotLinked extends AuthError {}
+export class OAuthAccountNotLinked extends SignInError {
+  static type = "OAuthAccountNotLinked"
+}
 
 /**
  * Thrown when an OAuth provider returns an error during the sign in process.
@@ -143,20 +189,28 @@ export class OAuthAccountNotLinked extends AuthError {}
  *
  * For a full list of possible reasons, check out the specification [Authorization Code Grant: Error Response](https://www.rfc-editor.org/rfc/rfc6749#section-4.1.2.1)
  */
-export class OAuthCallbackError extends AuthError {}
+export class OAuthCallbackError extends SignInError {
+  static type = "OAuthCallbackError"
+}
 
 /** @todo */
-export class OAuthCreateUserError extends AuthError {}
+export class OAuthCreateUserError extends AuthError {
+  static type = "OAuthCreateUserError"
+}
 
 /**
  * This error occurs during an OAuth sign in attempt when the provdier's
  * response could not be parsed. This could for example happen if the provider's API
  * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers/oauth#profile) method is not implemented correctly.
  */
-export class OAuthProfileParseError extends AuthError {}
+export class OAuthProfileParseError extends AuthError {
+  static type = "OAuthProfileParseError"
+}
 
 /** @todo */
-export class SessionTokenError extends AuthError {}
+export class SessionTokenError extends AuthError {
+  static type = "SessionTokenError"
+}
 
 /**
  * Happens when login by [OAuth](https://authjs.dev/getting-started/providers/oauth-tutorial) could not be started.
@@ -173,7 +227,9 @@ export class SessionTokenError extends AuthError {}
  * ```
  * :::
  */
-export class OAuthSignInError extends AuthError {}
+export class OAuthSignInError extends SignInError {
+  static type = "OAuthSignInError"
+}
 
 /**
  * Happens when the login by an [Email provider](https://authjs.dev/getting-started/providers/email-tutorial) could not be started.
@@ -185,32 +241,48 @@ export class OAuthSignInError extends AuthError {}
  * - There was an error with the database:
  *   Check the database logs.
  */
-export class EmailSignInError extends AuthError {}
+export class EmailSignInError extends SignInError {
+  static type = "EmailSignInError"
+}
 
 /** @todo */
-export class SignOutError extends AuthError {}
+export class SignOutError extends AuthError {
+  static type = "SignOutError"
+}
 
 /**
  * Auth.js was requested to handle an operation that it does not support.
  *
  * See [`AuthAction`](https://authjs.dev/reference/core/types#authaction) for the supported actions.
  */
-export class UnknownAction extends AuthError {}
+export class UnknownAction extends AuthError {
+  static type = "UnknownAction"
+}
 
 /** @todo */
-export class UnsupportedStrategy extends AuthError {}
+export class UnsupportedStrategy extends AuthError {
+  static type = "UnsupportedStrategy"
+}
 
 /** @todo */
-export class InvalidProvider extends AuthError {}
+export class InvalidProvider extends AuthError {
+  static type = "InvalidProvider"
+}
 
 /** @todo */
-export class UntrustedHost extends AuthError {}
+export class UntrustedHost extends AuthError {
+  static type = "UntrustedHost"
+}
 
 /**
  * The user's email/token combination was invalid.
  * This could be because the email/token combination was not found in the database,
  * or because the token has expired. Ask the user to log in again.
  */
-export class Verification extends AuthError {}
+export class Verification extends AuthError {
+  static type = "Verification"
+}
 
-export class MissingCSRF extends AuthError {}
+export class MissingCSRF extends AuthError {
+  static type = "MissingCSRF"
+}

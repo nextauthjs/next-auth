@@ -34,7 +34,8 @@ export async function toInternalRequest(
   req: Request
 ): Promise<RequestInternal | Error> {
   try {
-    let url = new URL(req.url.replace(/\/$/, ""))
+    let originalUrl = new URL(req.url.replace(/\/$/, ""))
+    let url = new URL(originalUrl)
     const pathname = url.pathname.replace(/\/$/, "")
 
     const action = actions.find((a) => pathname.includes(a))
@@ -42,7 +43,9 @@ export async function toInternalRequest(
       throw new UnknownAction(`Cannot detect action in pathname (${pathname}).`)
     }
 
-    url = new URL(url.href.replace(`/${action}`, ""))
+    // Remove anything after the basepath
+    const re = new RegExp(`/${action}.*`)
+    url = new URL(url.href.replace(re, ""))
 
     if (req.method !== "GET" && req.method !== "POST") {
       throw new UnknownAction("Only GET and POST requests are supported.")
@@ -66,8 +69,8 @@ export async function toInternalRequest(
       headers: Object.fromEntries(req.headers),
       body: req.body ? await getBody(req) : undefined,
       cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
-      error: url.searchParams.get("error") ?? undefined,
-      query: Object.fromEntries(url.searchParams),
+      error: originalUrl.searchParams.get("error") ?? undefined,
+      query: Object.fromEntries(originalUrl.searchParams),
     }
   } catch (e) {
     return e as Error

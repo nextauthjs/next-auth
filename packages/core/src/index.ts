@@ -166,14 +166,14 @@ export async function Auth(
     if (request.method === "POST" && internalRequest.action === "session")
       return Response.json(null, { status: 400 })
 
-    const params = new URLSearchParams({
-      error: isAuthError ? error.name : "Configuration",
-    })
+    const type = isAuthError ? error.type : "Configuration"
+    const page = (isAuthError && error.kind) || "error"
+    const params = new URLSearchParams({ error: type })
+    const path =
+      config.pages?.[page] ??
+      `${internalRequest.url.pathname}/${page.toLowerCase()}`
 
-    // TODO: Some errors should redirect to /signin. See https://authjs.dev/guides/basics/pages#sign-in-page
-    const url = `${internalRequest.url.origin}${
-      config.pages?.error ?? `${internalRequest.url.pathname}/error`
-    }?${params}`
+    const url = `${internalRequest.url.origin}${path}?${params}`
 
     if (isRedirect) return Response.json({ url })
 

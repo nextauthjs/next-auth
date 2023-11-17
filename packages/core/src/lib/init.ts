@@ -53,7 +53,7 @@ export async function init({
   authOptions,
   providerId,
   action,
-  url: reqUrl,
+  url,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -63,13 +63,6 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  // TODO: move this to web.ts
-  const parsed = parseUrl(
-    reqUrl.origin +
-      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
-  )
-  const url = new URL(parsed.toString())
-
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,

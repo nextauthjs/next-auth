@@ -20,7 +20,8 @@ const reset = "\x1b[0m"
 
 export const logger: LoggerInstance = {
   error(error) {
-    console.error(`${red}[auth][error]${reset} ${error.name}: ${error.message}`)
+    const name = error instanceof AuthError ? error.type : error.name
+    console.error(`${red}[auth][error]${reset} ${name}: ${error.message}`)
     if (
       error.cause &&
       typeof error.cause === "object" &&
