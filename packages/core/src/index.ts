@@ -147,17 +147,19 @@ export async function Auth(
     return Response.redirect(`${pages.error}?error=Configuration`)
   }
 
+  const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
   const isRaw = config.raw === raw
-  let rawResponse: ResponseInternal
+  let response: Response
   try {
-    rawResponse = await AuthInternal(internalRequest, config)
+    const rawResponse = await AuthInternal(internalRequest, config)
     if (isRaw) return rawResponse
+    response = await toResponse(rawResponse)
   } catch (e) {
     const error = e as Error
     logger.error(error)
 
     const isAuthError = error instanceof AuthError
-    if (isAuthError && isRaw) throw error
+    if (isAuthError && isRaw && !isRedirect) throw error
 
     // If the CSRF check failed for POST/session, return a 400 status code.
     // We should not redirect to a page as this is an API route
@@ -168,26 +170,19 @@ export async function Auth(
       error: isAuthError ? error.name : "Configuration",
     })
 
-    const location = `${internalRequest.url.origin}${
-      config.pages?.error ?? "/api/auth/error"
+    // TODO: Some errors should redirect to /signin. See https://authjs.dev/guides/basics/pages#sign-in-page
+    const url = `${internalRequest.url.origin}${
+      config.pages?.error ?? `${internalRequest.url.pathname}/error`
     }?${params}`
-    return Response.redirect(location)
+
+    if (isRedirect) return Response.json({ url })
+
+    return Response.redirect(url)
   }
 
-  const response = await toResponse(rawResponse)
-
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
   const redirect = response.headers.get("Location")
-  if (request.headers?.has("X-Auth-Return-Redirect") && redirect) {
-    response.headers.delete("Location")
-    response.headers.set("Content-Type", "application/json")
-    return new Response(JSON.stringify({ url: redirect }), {
-      status: rawResponse.status,
-      headers: response.headers,
-    })
-  }
-  return response
+  if (!isRedirect || !redirect) return response
+  return Response.json({ url: redirect }, { headers: response.headers })
 }
 
 /**
