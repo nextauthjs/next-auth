@@ -147,7 +147,9 @@ export async function init({
 
   const cookies: cookie.Cookie[] = []
 
-  if (!csrfDisabled) {
+  if (csrfDisabled) {
+    options.csrfTokenVerified = true
+  } else {
     const {
       csrfToken,
       cookie: csrfCookie,
@@ -169,8 +171,6 @@ export async function init({
         options: options.cookies.csrfToken.options,
       })
     }
-  } else {
-    options.csrfTokenVerified = true
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
