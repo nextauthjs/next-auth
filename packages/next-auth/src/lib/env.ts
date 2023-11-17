@@ -1,5 +1,5 @@
-import { NextRequest } from "next/server"
-import type { headers } from "next/headers"
+import { NextRequest } from "next/server.js"
+import type { headers } from "next/headers.js"
 
 import type { NextAuthConfig } from "./index.js"
 

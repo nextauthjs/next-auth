@@ -1,6 +1,6 @@
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
-import { headers as nextHeaders, cookies } from "next/headers"
-import { redirect } from "next/navigation"
+import { headers as nextHeaders, cookies } from "next/headers.js"
+import { redirect } from "next/navigation.js"
 
 import { detectOrigin } from "./env.js"
 

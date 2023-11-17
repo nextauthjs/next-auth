@@ -1,6 +1,6 @@
 import { Auth, type AuthConfig } from "@auth/core"
-import { headers } from "next/headers"
-import { NextResponse } from "next/server"
+import { headers } from "next/headers.js"
+import { NextResponse } from "next/server.js"
 import { detectOrigin, reqWithEnvUrl } from "./env.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -9,8 +9,8 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
-import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
+import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
+import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server.js"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends AuthConfig {
