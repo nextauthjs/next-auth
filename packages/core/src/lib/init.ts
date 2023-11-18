@@ -147,6 +147,9 @@ export async function init({
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
+    experimental: {
+      ...authOptions.experimental,
+    }
   }
 
   // Init cookies
