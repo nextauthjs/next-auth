@@ -50,12 +50,12 @@ function hexToRgba(hex?: string, alpha = 1) {
 }
 
 export default function SigninPage(props: {
-  csrfToken: string
-  providers: InternalProvider[]
-  callbackUrl: string
-  email: string
+  csrfToken?: string
+  providers?: InternalProvider[]
+  callbackUrl?: string
+  email?: string
   error?: SignInPageErrorParam
-  theme: Theme
+  theme?: Theme
 }) {
   const {
     csrfToken,
@@ -66,14 +66,14 @@ export default function SigninPage(props: {
     error: errorType,
   } = props
 
-  if (typeof document !== "undefined" && theme.brandColor) {
+  if (typeof document !== "undefined" && theme?.brandColor) {
     document.documentElement.style.setProperty(
       "--brand-color",
       theme.brandColor
     )
   }
 
-  if (typeof document !== "undefined" && theme.buttonText) {
+  if (typeof document !== "undefined" && theme?.buttonText) {
     document.documentElement.style.setProperty(
       "--button-text-color",
       theme.buttonText
@@ -89,14 +89,14 @@ export default function SigninPage(props: {
 
   return (
     <div className="signin">
-      {theme.brandColor && (
+      {theme?.brandColor && (
         <style
           dangerouslySetInnerHTML={{
             __html: `:root {--brand-color: ${theme.brandColor}}`,
           }}
         />
       )}
-      {theme.buttonText && (
+      {theme?.buttonText && (
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -113,7 +113,7 @@ export default function SigninPage(props: {
             <p>{error}</p>
           </div>
         )}
-        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+        {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {providers.map((provider, i) => {
           let bg, text, logo, logoDark, bgDark, textDark
           if (provider.type === "oauth" || provider.type === "oidc") {

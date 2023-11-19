@@ -11,7 +11,7 @@ import type {
   RequestInternal,
   ResponseInternal,
 } from "../../types.js"
-import type { Cookie } from "../cookie.js"
+import type { Cookie } from "../utils/cookie.js"
 
 function send({ html, title, status, cookies, theme }: any): ResponseInternal {
   return {

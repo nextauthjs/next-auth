@@ -11,7 +11,7 @@ import type {
   TokenSet,
 } from "../../types.js"
 import type { OAuthConfigInternal } from "../../providers/index.js"
-import type { Cookie } from "../cookie.js"
+import type { Cookie } from "../utils/cookie.js"
 
 /**
  * Handles the following OAuth steps.
@@ -122,7 +122,7 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {} 
+  let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
   if (provider.type === "oidc") {

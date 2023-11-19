@@ -1,12 +1,12 @@
-import * as checks from "./checks.js"
+import * as checks from "../../oauth/checks.js"
 import * as o from "oauth4webapi"
 
 import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../types.js"
-import type { Cookie } from "../cookie.js"
+} from "../../../types.js"
+import type { Cookie } from "../../utils/cookie.js"
 
 /**
  * Generates an authorization/request token URL.

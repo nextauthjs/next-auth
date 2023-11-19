@@ -1,7 +1,7 @@
 import { SignOutError } from "../../errors.js"
 
 import type { InternalOptions, ResponseInternal } from "../../types.js"
-import type { SessionStore } from "../cookie.js"
+import type { SessionStore } from "../utils/cookie.js"
 
 /**
  * Destroys the session.
@@ -10,7 +10,7 @@ import type { SessionStore } from "../cookie.js"
  * In any case, the session cookie is cleared and
  * {@link EventCallbacks.signOut} is emitted.
  */
-export async function signout(
+export async function signOut(
   sessionStore: SessionStore,
   options: InternalOptions
 ): Promise<ResponseInternal> {
