@@ -197,7 +197,7 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
  *
- * @module index
+ * @module @auth/sveltekit
  */
 
 /// <reference types="@sveltejs/kit" />

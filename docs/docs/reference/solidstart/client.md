@@ -2,7 +2,7 @@
 
 ## signIn()
 
-> **signIn**\<`P`\>(`providerId`?, `options`?, `authorizationParams`?): `Promise`\<`undefined` \| [`Response`]( https://developer.mozilla.org/en-US/docs/Web/API/Response )\>
+> **signIn**\<`P`\>(`providerId`?, `options`?, `authorizationParams`?): `Promise`\< `undefined` \| [`Response`]( https://developer.mozilla.org/en-US/docs/Web/API/Response ) \>
 
 Client-side method to initiate a signin flow
 or send the user to the signin page listing all possible providers.
@@ -20,7 +20,7 @@ signIn("provider") // example: signIn("github")
 
 ### Parameters
 
-▪ **providerId?**: `LiteralUnion`\<`P` extends `RedirectableProviderType` ? `P` \| `BuiltInProviderType` : `BuiltInProviderType`, `string`\>
+▪ **providerId?**: `LiteralUnion`\< `P` extends `RedirectableProviderType` ? `P` \| `BuiltInProviderType` : `BuiltInProviderType`, `string` \>
 
 ▪ **options?**: `SignInOptions`
 
@@ -28,13 +28,13 @@ signIn("provider") // example: signIn("github")
 
 ### Returns
 
-`Promise`\<`undefined` \| [`Response`]( https://developer.mozilla.org/en-US/docs/Web/API/Response )\>
+`Promise`\< `undefined` \| [`Response`]( https://developer.mozilla.org/en-US/docs/Web/API/Response ) \>
 
 ***
 
 ## signOut()
 
-> **signOut**(`options`?): `Promise`\<`void`\>
+> **signOut**(`options`?): `Promise`\< `void` \>
 
 Signs the user out, by removing the session cookie.
 Automatically adds the CSRF token to the request.
@@ -46,16 +46,16 @@ signOut()
 
 ### Parameters
 
-▪ **options?**: `SignOutParams`\<`true`\>
+▪ **options?**: `SignOutParams`\< `true` \>
 
 ### Returns
 
-`Promise`\<`void`\>
+`Promise`\< `void` \>
 
 ***
 
 ## SignInAuthorizationParams
 
-> **SignInAuthorizationParams**: `string` \| `string`[][] \| `Record`\<`string`, `string`\> \| [`URLSearchParams`]( https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams )
+> **SignInAuthorizationParams**: `string` \| `string`[][] \| `Record`\< `string`, `string` \> \| [`URLSearchParams`]( https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams )
 
 Match `inputType` of `new URLSearchParams(inputType)`

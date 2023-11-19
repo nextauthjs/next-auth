@@ -33,7 +33,7 @@
  * - [Getting started](https://authjs.dev/getting-started/introduction)
  * - [Most common use case guides](https://authjs.dev/guides)
  *
- * @module index
+ * @module @auth/core
  */
 
 import { assertConfig } from "./lib/utils/assert.js"

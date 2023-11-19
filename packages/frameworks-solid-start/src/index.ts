@@ -15,7 +15,7 @@
  *
  * We recommended to using [create-jd-app](https://github.com/OrJDev/create-jd-app)
  *
- * @module index
+ * @module @auth/solid-start
  */
 
 import { Auth } from "@auth/core"
