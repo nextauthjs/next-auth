@@ -41,7 +41,7 @@ export class AuthorizedCallbackError extends AuthError {}
  * ```
  * :::
  *
- * For an [OAuth provider](https://authjs.dev/reference/core/providers_oauth), possible causes are:
+ * For an [OAuth provider](https://authjs.dev/reference/core/providers/oauth), possible causes are:
  * - The user denied access to the application
  * - There was an error parsing the OAuth Profile:
  *   Check out the provider's `profile` or `userinfo.request` method to make sure
@@ -49,7 +49,7 @@ export class AuthorizedCallbackError extends AuthError {}
  * - The `signIn` or `jwt` callback methods threw an uncaught error:
  *   Check the callback method implementations.
  *
- * For an [Email provider](https://authjs.dev/reference/core/providers_email), possible causes are:
+ * For an [Email provider](https://authjs.dev/reference/core/providers/email), possible causes are:
  * - The provided email/token combination was invalid/missing:
  *   Check if the provider's `sendVerificationRequest` method correctly sends the email.
  * - The provided email/token combination has expired:
@@ -57,7 +57,7 @@ export class AuthorizedCallbackError extends AuthError {}
  * - There was an error with the database:
  *   Check the database logs.
  *
- * For a [Credentials provider](https://authjs.dev/reference/core/providers_credentials), possible causes are:
+ * For a [Credentials provider](https://authjs.dev/reference/core/providers/credentials), possible causes are:
  * - The `authorize` method threw an uncaught error:
  *   Check the provider's `authorize` method.
  * - The `signIn` or `jwt` callback methods threw an uncaught error:
@@ -139,7 +139,7 @@ export class OAuthCreateUserError extends AuthError {}
 /**
  * This error occurs during an OAuth sign in attempt when the provdier's
  * response could not be parsed. This could for example happen if the provider's API
- * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers_oauth#profile) method is not implemented correctly.
+ * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers/oauth#profile) method is not implemented correctly.
  */
 export class OAuthProfileParseError extends AuthError {}
 
@@ -158,13 +158,13 @@ export class SessionTokenError extends AuthError {}
  * ```
  * :::
  *
- * For an [OAuth provider](https://authjs.dev/reference/core/providers_oauth), possible causes are:
+ * For an [OAuth provider](https://authjs.dev/reference/core/providers/oauth), possible causes are:
  * - The Authorization Server is not compliant with the [OAuth 2.0 specifcation](https://www.ietf.org/rfc/rfc6749.html)
  *   Check the details in the error message.
  * - A runtime error occurred in Auth.js. This should be reported as a bug.
  *
- * For an [Email provider](https://authjs.dev/reference/core/providers_email), possible causes are:
- * - The email sent from the client is invalid, could not be normalized by [`EmailConfig.normalizeIdentifier`](https://authjs.dev/reference/core/providers_email#normalizeidentifier)
+ * For an [Email provider](https://authjs.dev/reference/core/providers/email), possible causes are:
+ * - The email sent from the client is invalid, could not be normalized by [`EmailConfig.normalizeIdentifier`](https://authjs.dev/reference/core/providers/email#normalizeidentifier)
  * - The provided email/token combination has expired:
  *   Ask the user to log in again.
  * - There was an error with the database:

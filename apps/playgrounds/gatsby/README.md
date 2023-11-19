@@ -64,7 +64,7 @@ You **can** skip configuring a database and come back to it later if you want.
 
 For more information about setting up a database, please check out the following links:
 
-- Docs: [authjs.dev/reference/adapters/overview](https://authjs.dev/reference/adapters/overview)
+- Docs: [authjs.dev/reference/core/adapters](https://authjs.dev/reference/core/adapters)
 
 ### 3. Configure Authentication Providers
 
@@ -74,7 +74,7 @@ For more information about setting up a database, please check out the following
 
 e.g. For Google OAuth you would use: `http://localhost:3000/api/auth/callback/google`
 
-A list of configured providers and their callback URLs is available from the endpoint `/api/auth/providers`. You can find more information at [authjs.dev/reference/providers/oauth-builtin](https://authjs.dev/reference/providers/oauth-builtin).
+A list of configured providers and their callback URLs is available from the endpoint `/api/auth/providers`. You can find more information at [authjs.dev/reference/core/providers](https://authjs.dev/reference/core/providers).
 
 3. You can also choose to specify an SMTP server for passwordless sign in via email.
 
@@ -95,7 +95,7 @@ npm run start
 
 ### 5. Preparing for Production
 
-Follow the [Deployment documentation](https://authjs.dev/guides/basics/deployment)
+Follow the [Deployment documentation](https://authjs.dev/getting-started/deployment)
 
 ## Acknowledgements
 

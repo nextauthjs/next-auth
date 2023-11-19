@@ -1,6 +1,6 @@
 {
   "name": "@auth/fauna-adapter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Fauna Adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -51,10 +51,7 @@
   },
   "devDependencies": {
     "@fauna-labs/fauna-schema-migrate": "^2.1.3",
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "faunadb": "^4.3.0",
-    "jest": "^27.4.3"
+    "faunadb": "^4.3.0"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"

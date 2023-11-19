@@ -3,7 +3,7 @@ import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
 import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
-import type { SessionStore } from "../cookie.js"
+import type { SessionStore } from "../utils/cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(params: {
@@ -34,13 +34,14 @@ export async function session(params: {
 
   if (sessionStrategy === "jwt") {
     try {
-      const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
+      const salt = options.cookies.sessionToken.name
+      const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
 
-      if (!decodedToken) throw new Error("Invalid JWT")
+      if (!payload) throw new Error("Invalid JWT")
 
       // @ts-expect-error
       const token = await callbacks.jwt({
-        token: decodedToken,
+        token: payload,
         ...(isUpdate && { trigger: "update" }),
         session: newSession,
       })
@@ -61,10 +62,7 @@ export async function session(params: {
         response.body = newSession
 
         // Refresh JWT expiry by re-signing it, with an updated expiry date
-        const newToken = await jwt.encode({
-          ...jwt,
-          token,
-        })
+        const newToken = await jwt.encode({ ...jwt, token, salt })
 
         // Set cookie, to also update expiry date on cookie
         const sessionCookies = sessionStore.chunk(newToken, {

@@ -1,15 +1,15 @@
-import { OAuthAccountNotLinked } from "../errors.js"
-import { fromDate } from "./utils/date.js"
+import { OAuthAccountNotLinked } from "../../../errors.js"
+import { fromDate } from "../../utils/date.js"
 
 import type {
   AdapterAccount,
   AdapterSession,
   AdapterUser,
-} from "../adapters.js"
-import type { Account, InternalOptions, User } from "../types.js"
-import type { JWT } from "../jwt.js"
-import type { OAuthConfig } from "../providers/index.js"
-import type { SessionToken } from "./cookie.js"
+} from "../../../adapters.js"
+import type { Account, InternalOptions, User } from "../../../types.js"
+import type { JWT } from "../../../jwt.js"
+import type { OAuthConfig } from "../../../providers/index.js"
+import type { SessionToken } from "../../utils/cookie.js"
 
 /**
  * This function handles the complex flow of signing users in, and either creating,
@@ -23,7 +23,7 @@ import type { SessionToken } from "./cookie.js"
  * done prior to this handler being called to avoid additional complexity in this
  * handler.
  */
-export async function handleLogin(
+export async function handleLoginOrRegister(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   _account: AdapterAccount | Account | null,
@@ -72,7 +72,8 @@ export async function handleLogin(
   if (sessionToken) {
     if (useJwtSession) {
       try {
-        session = await jwt.decode({ ...jwt, token: sessionToken })
+        const salt = options.cookies.sessionToken.name
+        session = await jwt.decode({ ...jwt, token: sessionToken, salt })
         if (session && "sub" in session && session.sub) {
           user = await getUser(session.sub)
         }

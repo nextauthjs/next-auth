@@ -278,7 +278,7 @@ export async function signIn<
     return
   }
 
-  const error = new URL(data.url).searchParams.get("error")
+  const error = new URL(data.url, baseUrl).searchParams.get("error")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -404,7 +404,9 @@ export function SessionProvider(props: SessionProviderProps) {
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
-        logger.error(new ClientSessionError(error.message, error))
+        logger.error(
+          new ClientSessionError((error as Error).message, error as any)
+        )
       } finally {
         setLoading(false)
       }
@@ -471,7 +473,7 @@ export function SessionProvider(props: SessionProviderProps) {
         : session
         ? "authenticated"
         : "unauthenticated",
-      async update(data) {
+      async update(data: any) {
         if (loading || !session) return
         setLoading(true)
         const newSession = await fetchData<Session>(

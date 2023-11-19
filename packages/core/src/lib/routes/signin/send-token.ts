@@ -1,6 +1,6 @@
-import { createHash, randomString, toRequest } from "../web.js"
+import { createHash, randomString, toRequest } from "../../utils/web.js"
 
-import type { InternalOptions, RequestInternal } from "../../types.js"
+import type { InternalOptions, RequestInternal } from "../../../types.js"
 /**
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter)

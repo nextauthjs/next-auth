@@ -75,15 +75,12 @@
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/prisma-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/sveltekit#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
-        "@auth/edgedb-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
         "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
         "@auth/hasura-adapter#build",
@@ -93,12 +90,16 @@
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "next-auth#build",
         "^build"
       ],
       "cache": false
@@ -106,15 +107,12 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/prisma-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/sveltekit#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
-        "@auth/edgedb-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
         "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
         "@auth/hasura-adapter#build",
@@ -124,12 +122,16 @@
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "next-auth#build",
         "^build"
       ],
       "outputs": [
@@ -138,6 +140,7 @@
         "docs/reference/adapter/**",
         "docs/reference/core/**/*",
         "docs/reference/nextjs/**/*",
+        "docs/reference/solidstart/**/*",
         "docs/reference/sveltekit/**/*"
       ]
     }

@@ -1,11 +1,16 @@
-import type { CookieOption, CookiesOptions, LoggerInstance } from "../types.js"
+import type {
+  CookieOption,
+  CookiesOptions,
+  LoggerInstance,
+  RequestInternal,
+} from "../../types.js"
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie
 // import { serialize } from "cookie"
 // console.log(
 //   "Cookie estimated to be ",
-//   serialize(`__Secure.next-auth.session-token.0`, "", {
+//   serialize(`__Secure.authjs.session-token.0`, "", {
 //     expires: new Date(),
 //     httpOnly: true,
 //     maxAge: Number.MAX_SAFE_INTEGER,
@@ -19,7 +24,7 @@ import type { CookieOption, CookiesOptions, LoggerInstance } from "../types.js"
 
 const ALLOWED_COOKIE_SIZE = 4096
 // Based on commented out section above
-const ESTIMATED_EMPTY_COOKIE_SIZE = 163
+const ESTIMATED_EMPTY_COOKIE_SIZE = 160
 const CHUNK_SIZE = ALLOWED_COOKIE_SIZE - ESTIMATED_EMPTY_COOKIE_SIZE
 
 // REVIEW: Is there any way to defer two types of strings?
@@ -55,7 +60,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
   return {
     // default cookie options
     sessionToken: {
-      name: `${cookiePrefix}next-auth.session-token`,
+      name: `${cookiePrefix}authjs.session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -64,7 +69,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
       },
     },
     callbackUrl: {
-      name: `${cookiePrefix}next-auth.callback-url`,
+      name: `${cookiePrefix}authjs.callback-url`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -75,7 +80,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
     csrfToken: {
       // Default to __Host- for CSRF token for additional protection if using useSecureCookies
       // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
-      name: `${useSecureCookies ? "__Host-" : ""}next-auth.csrf-token`,
+      name: `${useSecureCookies ? "__Host-" : ""}authjs.csrf-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -84,7 +89,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
       },
     },
     pkceCodeVerifier: {
-      name: `${cookiePrefix}next-auth.pkce.code_verifier`,
+      name: `${cookiePrefix}authjs.pkce.code_verifier`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -94,7 +99,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
       },
     },
     state: {
-      name: `${cookiePrefix}next-auth.state`,
+      name: `${cookiePrefix}authjs.state`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -104,7 +109,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
       },
     },
     nonce: {
-      name: `${cookiePrefix}next-auth.nonce`,
+      name: `${cookiePrefix}authjs.nonce`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -128,30 +133,18 @@ export class SessionStore {
 
   constructor(
     option: CookieOption,
-    req: Partial<{ cookies: any; headers: any }>,
+    cookies: RequestInternal["cookies"],
     logger: LoggerInstance | Console
   ) {
     this.#logger = logger
     this.#option = option
+    if (!cookies) return
 
-    const { cookies } = req
-    const { name: cookieName } = option
+    const { name: sessionCookiePrefix } = option
 
-    if (typeof cookies?.getAll === "function") {
-      // Next.js ^v13.0.1 (Edge Env)
-      for (const { name, value } of cookies.getAll()) {
-        if (name.startsWith(cookieName)) {
-          this.#chunks[name] = value
-        }
-      }
-    } else if (cookies instanceof Map) {
-      for (const name of cookies.keys()) {
-        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
-      }
-    } else {
-      for (const name in cookies) {
-        if (name.startsWith(cookieName)) this.#chunks[name] = cookies[name]
-      }
+    for (const [name, value] of Object.entries(cookies)) {
+      if (!name.startsWith(sessionCookiePrefix) || !value) continue
+      this.#chunks[name] = value
     }
   }
 
@@ -159,17 +152,17 @@ export class SessionStore {
    * The JWT Session or database Session ID
    * constructed from the cookie chunks.
    */
-   get value() {
+  get value() {
     // Sort the chunks by their keys before joining
     const sortedKeys = Object.keys(this.#chunks).sort((a, b) => {
-      const aSuffix = parseInt(a.split(".").pop() || "0");
-      const bSuffix = parseInt(b.split(".").pop() || "0");
-  
-      return aSuffix - bSuffix;
-    });
-  
+      const aSuffix = parseInt(a.split(".").pop() || "0")
+      const bSuffix = parseInt(b.split(".").pop() || "0")
+
+      return aSuffix - bSuffix
+    })
+
     // Use the sorted keys to join the chunks in the correct order
-    return sortedKeys.map(key => this.#chunks[key]).join("");
+    return sortedKeys.map((key) => this.#chunks[key]).join("")
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */

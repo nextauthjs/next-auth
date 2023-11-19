@@ -72,7 +72,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
       // Since we are server-side, we don't need to filter out the session data
       // See https://authjs.dev/guides/upgrade-to-v5/v5#authenticating-server-side
       // TODO: Taint the session data to prevent accidental leakage to the client
-      // https://react.dev/reference/react/experimental_taintObjectReference
+      // https://react.devreference/nextjs/react/experimental_taintObjectReference
       async session(...args) {
         const session =
           // If the user defined a custom session callback, use that instead
@@ -191,7 +191,7 @@ async function handleAuth(
       NextResponse.next()
   } else if (!authorized) {
     const signInPage =
-      config.pages?.signIn ?? `${request.nextUrl.basePath}}/signin`
+      config.pages?.signIn ?? `${request.nextUrl.basePath}/signin`
     if (request.nextUrl.pathname !== signInPage) {
       // Redirect to signin page by default if not authorized
       request.nextUrl.pathname = signInPage

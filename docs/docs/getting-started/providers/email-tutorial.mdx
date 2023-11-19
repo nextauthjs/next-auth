@@ -10,7 +10,7 @@ import loggedInImg from "../img/email-tutorial-logged.png"
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
-Aside from authenticating users in Auth.js via [OAuth](/getting-started/oauth-tutorial), you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
+Aside from authenticating users in Auth.js via [OAuth](/getting-started/providers/oauth-tutorial), you can also enable the option to authenticate them via "magic links". These are links that are sent to the user's email and when clicking on them they'll sign up the user automatically.
 
 Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
 
@@ -21,14 +21,14 @@ The Email provider can be used in conjunction with (or instead of) one or more O
 On initial sign in, a **Verification Token** is sent to the email address provided. By default this token **is valid for 24 hours**. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
 :::tip
-The Email Provider can be used with both JSON Web Tokens and database sessions, but you [must configure a database adapter](/guides/adapters/using-a-database-adapter) to use it. It is not possible to enable email sign in without using a database.
+The Email Provider can be used with both JSON Web Tokens and database sessions, but you [must configure a database adapter](/getting-started/adapters) to use it. It is not possible to enable email sign in without using a database.
 :::
 
 ## 1. Installing `nodemailer`
 
 [`nodemailer`](https://www.npmjs.com/package/nodemailer) is a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/) when using the Email Provider. This means we need to install before we can start sending emails:
 
-```bash npm2yarn2pnpm
+```bash npm2yarn
 npm install -D nodemailer
 ```
 
@@ -112,7 +112,7 @@ For this tutorial, we're going to use the **MongoDB** adapter, but any of the ot
 
 First, let's start by installing the adapter package:
 
-```bash npm2yarn2pnpm
+```bash npm2yarn
 npm install -D  @auth/mongodb-adapter mongodb
 ```
 

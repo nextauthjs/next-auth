@@ -83,11 +83,11 @@ export type CredentialsProviderType = "Credentials"
  *
  * :::
  *
- * See the [callbacks documentation](/reference/configuration/auth-config#callbacks) for more information on how to interact with the token. For example, you can add additional information to the token by returning an object from the `jwt()` callback:
+ * See the [callbacks documentation](/reference/core#authconfig#callbacks) for more information on how to interact with the token. For example, you can add additional information to the token by returning an object from the `jwt()` callback:
  *
  * ```js
  * callbacks: {
- *   async jwt(token, user, account, profile, isNewUser) {
+ *   async jwt({ token, user, account, profile, isNewUser }) {
  *     if (user) {
  *       token.id = user.id
  *     }

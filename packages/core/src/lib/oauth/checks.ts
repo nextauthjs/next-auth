@@ -8,7 +8,8 @@ import type {
   InternalOptions,
   RequestInternal,
 } from "../../types.js"
-import type { Cookie } from "../cookie.js"
+import type { Cookie } from "../utils/cookie.js"
+import { OAuthConfigInternal } from "../../providers/oauth.js"
 
 interface CheckPayload {
   value: string
@@ -30,9 +31,10 @@ export async function signCookie(
   expires.setTime(expires.getTime() + maxAge * 1000)
   const token: any = { value }
   if (type === "state" && data) token.data = data
+  const name = cookies[type].name
   return {
-    name: cookies[type].name,
-    value: await encode({ ...options.jwt, maxAge, token }),
+    name,
+    value: await encode({ ...options.jwt, maxAge, token, salt: name }),
     options: { ...cookies[type].options, expires },
   }
 }
@@ -75,6 +77,7 @@ export const pkce = {
     const value = await decode<CheckPayload>({
       ...options.jwt,
       token: codeVerifier,
+      salt: options.cookies.pkceCodeVerifier.name,
     })
 
     if (!value?.value)
@@ -156,6 +159,7 @@ export const state = {
     const encodedState = await decode<CheckPayload>({
       ...options.jwt,
       token: state,
+      salt: options.cookies.state.name,
     })
 
     if (!encodedState?.value)
@@ -210,7 +214,11 @@ export const nonce = {
     const nonce = cookies?.[options.cookies.nonce.name]
     if (!nonce) throw new InvalidCheck("Nonce cookie was missing.")
 
-    const value = await decode<CheckPayload>({ ...options.jwt, token: nonce })
+    const value = await decode<CheckPayload>({
+      ...options.jwt,
+      token: nonce,
+      salt: options.cookies.nonce.name,
+    })
 
     if (!value?.value)
       throw new InvalidCheck("Nonce value could not be parsed.")
@@ -224,4 +232,33 @@ export const nonce = {
 
     return value.value
   },
+}
+
+/**
+ * When the authorization flow contains a state, we check if it's a redirect proxy
+ * and if so, we return the random state and the original redirect URL.
+ */
+export function handleState(
+  query: RequestInternal["query"],
+  provider: OAuthConfigInternal<any>,
+  isOnRedirectProxy: InternalOptions["isOnRedirectProxy"]
+) {
+  let randomState: string | undefined
+  let proxyRedirect: string | undefined
+
+  if (provider.redirectProxyUrl && !query?.state) {
+    throw new InvalidCheck(
+      "Missing state in query, but required for redirect proxy"
+    )
+  }
+
+  const state = decodeState(query?.state)
+  randomState = state?.random
+
+  if (isOnRedirectProxy) {
+    if (!state?.origin) return { randomState }
+    proxyRedirect = `${state.origin}?${new URLSearchParams(query)}`
+  }
+
+  return { randomState, proxyRedirect }
 }
