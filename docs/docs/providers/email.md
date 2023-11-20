@@ -99,7 +99,7 @@ providers: [
 ],
 ```
 
-3. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/adapters) for storing the Email verification token.
+3. Do not forget to setup one of the database [adapters](https://authjs.dev/getting-started/adapters) for storing the Email verification token.
 
 4. You can now sign in with an email address at `/api/auth/signin`.
 
