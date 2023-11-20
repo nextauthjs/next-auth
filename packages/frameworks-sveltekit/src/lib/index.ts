@@ -231,7 +231,7 @@ export async function getSession(
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends AuthConfig {
+export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Defines the base path for the auth routes.
    * If you change the default value,

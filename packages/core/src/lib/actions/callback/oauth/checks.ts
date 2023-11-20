@@ -1,15 +1,15 @@
 import * as jose from "jose"
 import * as o from "oauth4webapi"
-import { InvalidCheck } from "../../errors.js"
-import { decode, encode } from "../../jwt.js"
+import { InvalidCheck } from "../../../../errors.js"
+import { decode, encode } from "../../../../jwt.js"
 
 import type {
   CookiesOptions,
   InternalOptions,
   RequestInternal,
-} from "../../types.js"
-import type { Cookie } from "../utils/cookie.js"
-import { OAuthConfigInternal } from "../../providers/oauth.js"
+} from "../../../../types.js"
+import type { Cookie } from "../../../utils/cookie.js"
+import type { OAuthConfigInternal } from "../../../../providers/oauth.js"
 
 interface CheckPayload {
   value: string
