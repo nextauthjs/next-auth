@@ -1,6 +1,6 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Osu!</b> integration.</span>
+ * <span>Built-in <b>osu!</b> integration.</span>
  * <a href="https://osu.ppy.sh/home">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/osu.svg" height="48" />
  * </a>
@@ -60,7 +60,7 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
 }
 
 /**
- * Add Osu login to your page.
+ * Add osu! login to your page.
  *
  * ### Setup
  *
@@ -72,7 +72,7 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
  * #### Configuration
  *```js
  * import Auth from "@auth/core"
- * import Osu! from "@auth/core/providers/osu"
+ * import Osu from "@auth/core/providers/osu"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
@@ -82,8 +82,8 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
  *
  * ### Resources
  *
- *  - [Osu OAuth documentation](https://osu.ppy.sh/docs/index.html#authentication)
- *  - [Osu app console](https://osu.ppy.sh/home/account/edit#new-oauth-application)
+ *  - [osu! OAuth documentation](https://osu.ppy.sh/docs/index.html#authentication)
+ *  - [osu! app console](https://osu.ppy.sh/home/account/edit#new-oauth-application)
  *
  * ### Notes
  *
@@ -92,13 +92,13 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
  *
  * :::note
  *
- * Osu! does not provide a user email.
+ * osu! does not provide a user email.
  *
  * :::
  *
  * :::tip
  *
- * The Osu provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/osu.ts).
+ * The osu! provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/osu.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
  * :::
@@ -118,7 +118,7 @@ export default function Osu<P extends OsuProfile>(
 ): OAuthConfig<P> {
   return {
     id: "osu",
-    name: "Osu!",
+    name: "osu!",
     type: "oauth",
     token: "https://osu.ppy.sh/oauth/token",
     authorization: "https://osu.ppy.sh/oauth/authorize?scope=identify",

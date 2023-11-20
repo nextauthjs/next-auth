@@ -1,7 +1,7 @@
 import { SignOutError } from "../../errors.js"
 
 import type { InternalOptions, ResponseInternal } from "../../types.js"
-import type { SessionStore } from "../utils/cookie.js"
+import type { Cookie, SessionStore } from "../utils/cookie.js"
 
 /**
  * Destroys the session.
@@ -11,13 +11,14 @@ import type { SessionStore } from "../utils/cookie.js"
  * {@link EventCallbacks.signOut} is emitted.
  */
 export async function signOut(
+  cookies: Cookie[],
   sessionStore: SessionStore,
   options: InternalOptions
 ): Promise<ResponseInternal> {
   const { jwt, events, callbackUrl: redirect, logger, session } = options
 
   const sessionToken = sessionStore.value
-  if (!sessionToken) return { redirect }
+  if (!sessionToken) return { redirect, cookies }
 
   try {
     if (session.strategy === "jwt") {
@@ -32,5 +33,7 @@ export async function signOut(
     logger.error(new SignOutError(e as Error))
   }
 
-  return { redirect, cookies: sessionStore.clean() }
+  cookies.push(...sessionStore.clean())
+
+  return { redirect, cookies }
 }

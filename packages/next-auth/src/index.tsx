@@ -45,7 +45,7 @@
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
- * @module index
+ * @module next-auth
  */
 
 import { Auth } from "@auth/core"
@@ -63,6 +63,7 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+export { AuthError } from "@auth/core/errors"
 
 export type {
   Account,
@@ -216,7 +217,9 @@ export interface NextAuthResult {
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
   /**
-   * Sign in with a provider.
+   * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
+   *
+   * By default, the user is redirected to the current page after signing in. You can override this behavior by setting the `redirectTo` option.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -232,6 +235,29 @@ export interface NextAuthResult {
    *   </form>
    * )
    * ```
+   *
+   * If an error occurs during signin, an instance of {@link AuthError} will be thrown. You can catch it like this:
+   * ```ts title="app/layout.tsx"
+   * import { AuthError } from "next-auth"
+   * import { signIn } from "../auth"
+   *
+   * export default function Layout() {
+   *  return (
+   *    <form action={async (formData) => {
+   *      "use server"
+   *      try {
+   *        await signIn("credentials", formData)
+   *     } catch(error) {
+   *       if (error instanceof AuthError) // Handle auth errors
+   *       throw error // Rethrow all other errors
+   *     }
+   *    }}>
+   *     <button>Sign in</button>
+   *   </form>
+   *  )
+   * }
+   * ```
+   *
    */
   signIn: <
     P extends BuiltInProviderType | (string & {}),
@@ -239,12 +265,14 @@ export interface NextAuthResult {
   >(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
-    options?: {
-      /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-      redirectTo?: string
-      /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-      redirect?: R
-    } & Record<string, any>,
+    options?:
+      | FormData
+      | ({
+          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          redirectTo?: string
+          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+          redirect?: R
+        } & Record<string, any>),
     authorizationParams?:
       | string[][]
       | Record<string, string>
@@ -252,7 +280,10 @@ export interface NextAuthResult {
       | URLSearchParams
   ) => Promise<R extends false ? any : never>
   /**
-   * Sign out the user.
+   * Sign out the user. If the session was created using a database strategy, the session will be removed from the database and the related cookie is invalidated.
+   * If the session was created using a JWT, the cookie is invalidated.
+   *
+   * By default the user is redirected to the current page after signing out. You can override this behavior by setting the `redirectTo` option.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -268,6 +299,8 @@ export interface NextAuthResult {
    *   </form>
    * )
    * ```
+   *
+   *
    */
   signOut: <R extends boolean = true>(options?: {
     /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */

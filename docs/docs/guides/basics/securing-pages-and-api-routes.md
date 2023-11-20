@@ -14,7 +14,7 @@ The methods `getSession()` and `getToken()` both return an `object` if a session
 
 ### Client Side
 
-If data on a page is fetched using calls to secure API routes - i.e. routes that use `getSession(`)`or`getToken()`to access the session - you can use the`useSession` React Hook to secure pages.
+If data on a page is fetched using calls to secure API routes - i.e. routes that use `getSession()` or `getToken()` to access the session - you can use the `useSession` React Hook to secure pages.
 
 ```js title="pages/client-side-example.js"
 import { useSession, getSession } from "next-auth/react"

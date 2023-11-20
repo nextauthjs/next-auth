@@ -2,20 +2,16 @@ import { UnknownAction } from "../errors.js"
 import { SessionStore } from "./utils/cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
-import * as actions from "./routes/index.js"
+import * as actions from "./actions"
+import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
 
-import type {
-  AuthConfig,
-  ErrorPageParam,
-  RequestInternal,
-  ResponseInternal,
-} from "../types.js"
+import type { AuthConfig, RequestInternal, ResponseInternal } from "../types.js"
 
 /** @internal */
 export async function AuthInternal(
   request: RequestInternal,
   authOptions: AuthConfig
-): Promise<ResponseInternal<Body>> {
+): Promise<ResponseInternal> {
   const { action, providerId, error, method } = request
 
   const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
@@ -40,153 +36,49 @@ export async function AuthInternal(
 
   if (method === "GET") {
     const render = renderPage({ ...options, query: request.query, cookies })
-    const { pages } = options
     switch (action) {
-      case "providers":
-        return (await actions.providers(options.providers)) as any
-      case "session": {
-        const session = await actions.session({ sessionStore, options })
-        if (session.cookies) cookies.push(...session.cookies)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        return { ...session, cookies } as any
-      }
-      case "csrf": {
-        if (csrfDisabled) {
-          options.logger.warn("csrf-disabled")
-          cookies.push({
-            name: options.cookies.csrfToken.name,
-            value: "",
-            options: { ...options.cookies.csrfToken.options, maxAge: 0 },
-          })
-          return { status: 404, cookies }
-        }
-        return {
-          headers: { "Content-Type": "application/json" },
-          body: { csrfToken: options.csrfToken } as any,
-          cookies,
-        }
-      }
-      case "signin":
-        if (pages.signIn) {
-          let signinUrl = `${pages.signIn}${
-            pages.signIn.includes("?") ? "&" : "?"
-          }${new URLSearchParams({ callbackUrl: options.callbackUrl })}`
-          if (error)
-            signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
-          return { redirect: signinUrl, cookies }
-        }
-
-        return render.signin()
-      case "signout":
-        if (pages.signOut) return { redirect: pages.signOut, cookies }
-
-        return render.signout()
       case "callback":
-        if (options.provider) {
-          const callback = await actions.callback({
-            body: request.body,
-            query: request.query,
-            headers: request.headers,
-            cookies: request.cookies,
-            method,
-            options,
-            sessionStore,
-          })
-          if (callback.cookies) cookies.push(...callback.cookies)
-          return { ...callback, cookies }
-        }
-        break
-      case "verify-request":
-        if (pages.verifyRequest) {
-          return { redirect: pages.verifyRequest, cookies }
-        }
-        return render.verifyRequest()
+        return await actions.callback(request, options, sessionStore, cookies)
+      case "csrf":
+        return render.csrf(csrfDisabled, options, cookies)
       case "error":
-        // These error messages are displayed in line on the sign in page
-        // TODO: verify these. We should redirect these to signin directly, instead of
-        // first to error and then to signin.
-        if (
-          [
-            "Signin",
-            "OAuthCreateAccount",
-            "EmailCreateAccount",
-            "Callback",
-            "OAuthAccountNotLinked",
-            "SessionRequired",
-          ].includes(error as string)
-        ) {
-          return { redirect: `${options.url}/signin?error=${error}`, cookies }
-        }
-
-        if (pages.error) {
-          return {
-            redirect: `${pages.error}${
-              pages.error.includes("?") ? "&" : "?"
-            }error=${error}`,
-            cookies,
-          }
-        }
-
-        return render.error({ error: error as ErrorPageParam })
+        return render.error(error)
+      case "providers":
+        return render.providers(options.providers)
+      case "session":
+        return await actions.session(options, sessionStore, cookies)
+      case "signin":
+        return render.signin(error)
+      case "signout":
+        return render.signout()
+      case "verify-request":
+        return render.verifyRequest()
       default:
     }
   } else {
+    const { csrfTokenVerified } = options
     switch (action) {
-      case "signin":
-        if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
-          const signin = await actions.signIn(request, options)
-          if (signin.cookies) cookies.push(...signin.cookies)
-          return { ...signin, cookies }
-        }
-
-        return { redirect: `${options.url}/signin?csrf=true`, cookies }
-      case "signout":
-        if (csrfDisabled || options.csrfTokenVerified) {
-          const signout = await actions.signOut(sessionStore, options)
-          if (signout.cookies) cookies.push(...signout.cookies)
-          return { ...signout, cookies }
-        }
-        return { redirect: `${options.url}/signout?csrf=true`, cookies }
       case "callback":
-        if (options.provider) {
+        if (options.provider.type === "credentials")
           // Verified CSRF Token required for credentials providers only
-          if (
-            options.provider.type === "credentials" &&
-            !csrfDisabled &&
-            !options.csrfTokenVerified
-          ) {
-            return { redirect: `${options.url}/signin?csrf=true`, cookies }
-          }
+          validateCSRF(action, csrfTokenVerified)
+        return await actions.callback(request, options, sessionStore, cookies)
+      case "session":
+        validateCSRF(action, csrfTokenVerified)
+        return await actions.session(
+          options,
+          sessionStore,
+          cookies,
+          true,
+          request.body?.data
+        )
+      case "signin":
+        validateCSRF(action, csrfTokenVerified)
+        return await actions.signIn(request, cookies, options)
 
-          const callback = await actions.callback({
-            body: request.body,
-            query: request.query,
-            headers: request.headers,
-            cookies: request.cookies,
-            method,
-            options,
-            sessionStore,
-          })
-          if (callback.cookies) cookies.push(...callback.cookies)
-          return { ...callback, cookies }
-        }
-        break
-      case "session": {
-        if (options.csrfTokenVerified || csrfDisabled) {
-          const session = await actions.session({
-            options,
-            sessionStore,
-            newSession: request.body?.data,
-            isUpdate: true,
-          })
-          if (session.cookies) cookies.push(...session.cookies)
-          return { ...session, cookies } as any
-        }
-
-        // If CSRF token is invalid, return a 400 status code
-        // we should not redirect to a page as this is an API route
-        return { status: 400, cookies }
-      }
+      case "signout":
+        validateCSRF(action, csrfTokenVerified)
+        return await actions.signOut(cookies, sessionStore, options)
       default:
     }
   }
