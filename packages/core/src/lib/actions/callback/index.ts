@@ -1,12 +1,17 @@
+// TODO: Make this file smaller
+
 import {
+  AuthError,
+  AuthorizedCallbackError,
   CallbackRouteError,
-  OAuthCallbackError,
+  CredentialsSignin,
+  InvalidProvider,
   Verification,
 } from "../../../errors.js"
 import { handleLoginOrRegister } from "./handle-login.js"
-import { handleOAuth } from "../../oauth/callback.js"
+import { handleOAuth } from "./oauth/callback.js"
+import { handleState } from "./oauth/checks.js"
 import { createHash } from "../../utils/web.js"
-import { handleAuthorized } from "../shared.js"
 
 import type { AdapterSession } from "../../../adapters.js"
 import type {
@@ -16,19 +21,17 @@ import type {
   ResponseInternal,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
-import { handleState } from "../../oauth/checks.js"
 
 /** Handle callbacks from login services */
-export async function callback(params: {
-  options: InternalOptions
-  query: RequestInternal["query"]
-  method: Required<RequestInternal>["method"]
-  body: RequestInternal["body"]
-  headers: RequestInternal["headers"]
-  cookies: RequestInternal["cookies"]
-  sessionStore: SessionStore
-}): Promise<ResponseInternal> {
-  const { options, query, body, method, headers, sessionStore } = params
+export async function callback(
+  request: RequestInternal,
+  options: InternalOptions,
+  sessionStore: SessionStore,
+  cookies: Cookie[]
+): Promise<ResponseInternal> {
+  if (!options.provider)
+    throw new InvalidProvider("Callback route called without provider")
+  const { query, body, method, headers } = request
   const {
     provider,
     adapter,
@@ -41,8 +44,6 @@ export async function callback(params: {
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
   } = options
-
-  const cookies: Cookie[] = []
 
   const useJwtSession = sessionStrategy === "jwt"
 
@@ -61,7 +62,7 @@ export async function callback(params: {
 
       const authorizationResult = await handleOAuth(
         query,
-        params.cookies,
+        request.cookies,
         options,
         randomState
       )
@@ -91,29 +92,24 @@ export async function callback(params: {
       // Attempt to get Profile from OAuth provider details before invoking
       // signIn callback - but if no user object is returned, that is fine
       // (that just means it's a new user signing in for the first time).
-      let userByAccountOrFromProvider
+      let userByAccount
       if (adapter) {
         const { getUserByAccount } = adapter
-        const userByAccount = await getUserByAccount({
+        userByAccount = await getUserByAccount({
           providerAccountId: account.providerAccountId,
           provider: provider.id,
         })
-
-        if (userByAccount) userByAccountOrFromProvider = userByAccount
       }
 
-      const unauthorizedOrError = await handleAuthorized(
+      await handleAuthorized(
         {
-          user: userByAccountOrFromProvider,
+          user: userByAccount ?? userFromProvider,
           account,
           profile: OAuthProfile,
         },
-        options
+        options.callbacks.signIn
       )
 
-      if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
-
-      // Sign user in
       const { user, session, isNewUser } = await handleLoginOrRegister(
         sessionStore.value,
         userFromProvider,
@@ -219,13 +215,7 @@ export async function callback(params: {
         provider: provider.id,
       }
 
-      // Check if user is allowed to sign in
-      const unauthorizedOrError = await handleAuthorized(
-        { user, account },
-        options
-      )
-
-      if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
+      await handleAuthorized({ user, account }, options.callbacks.signIn)
 
       // Sign user in
       const {
@@ -311,30 +301,19 @@ export async function callback(params: {
         // prettier-ignore
         new Request(url, { headers, method, body: JSON.stringify(body) })
       )
-      if (!user) {
-        return {
-          status: 401,
-          redirect: `${url}/error?${new URLSearchParams({
-            error: "CredentialsSignin",
-            provider: provider.id,
-          })}`,
-          cookies,
-        }
-      }
 
-      /** @type {import("src").Account} */
+      if (!user) throw new CredentialsSignin()
+
       const account = {
         providerAccountId: user.id,
         type: "credentials",
         provider: provider.id,
-      }
+      } satisfies Account
 
-      const unauthorizedOrError = await handleAuthorized(
+      await handleAuthorized(
         { user, account, credentials },
-        options
+        options.callbacks.signIn
       )
-
-      if (unauthorizedOrError) return { ...unauthorizedOrError, cookies }
 
       const defaultToken = {
         name: user.name,
@@ -346,7 +325,6 @@ export async function callback(params: {
       const token = await callbacks.jwt({
         token: defaultToken,
         user,
-        // @ts-expect-error
         account,
         isNewUser: false,
         trigger: "signIn",
@@ -371,33 +349,31 @@ export async function callback(params: {
         cookies.push(...sessionCookies)
       }
 
-      // @ts-expect-error
       await events.signIn?.({ user, account })
 
       return { redirect: callbackUrl, cookies }
     }
 
-    return {
-      status: 500,
-      body: `Error: Callback for provider type ${provider.type} not supported`,
-      cookies,
-    }
+    throw new InvalidProvider(
+      `Callback for provider type (${provider.type}) is not supported`
+    )
   } catch (e) {
-    if (e instanceof OAuthCallbackError) {
-      logger.error(e)
-      // REVIEW: Should we expose original error= and error_description=
-      // Should we use a different name for error= then, since we already use it for all kind of errors?
-      url.searchParams.set("error", OAuthCallbackError.name)
-      url.pathname += "/signin"
-      return { redirect: url.toString(), cookies }
-    }
-
+    if (e instanceof AuthError) throw e
     const error = new CallbackRouteError(e as Error, { provider: provider.id })
-
     logger.debug("callback route error details", { method, query, body })
-    logger.error(error)
-    url.searchParams.set("error", CallbackRouteError.name)
-    url.pathname += "/error"
-    return { redirect: url.toString(), cookies }
+    throw error
+  }
+}
+
+async function handleAuthorized(
+  params: Parameters<InternalOptions["callbacks"]["signIn"]>[0],
+  signIn: InternalOptions["callbacks"]["signIn"]
+) {
+  try {
+    const authorized = await signIn(params)
+    if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  } catch (e) {
+    if (e instanceof AuthError) throw e
+    throw new AuthorizedCallbackError(e as Error)
   }
 }

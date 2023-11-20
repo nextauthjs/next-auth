@@ -37,7 +37,7 @@
  */
 
 import { assertConfig } from "./lib/utils/assert.js"
-import { ErrorPageLoop } from "./errors.js"
+import { AuthError, ErrorPageLoop } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
@@ -49,12 +49,23 @@ import type {
   CookiesOptions,
   EventCallbacks,
   PagesOptions,
+  ResponseInternal,
   Theme,
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
 export { skipCSRFCheck, raw }
+
+export async function Auth(
+  request: Request,
+  config: AuthConfig
+): Promise<ResponseInternal>
+
+export async function Auth(
+  request: Request,
+  config: Omit<AuthConfig, "raw">
+): Promise<Response>
 
 /**
  * Core functionality provided by Auth.js.
@@ -77,13 +88,14 @@ export { skipCSRFCheck, raw }
 export async function Auth(
   request: Request,
   config: AuthConfig
-): Promise<Response> {
+): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
   const internalRequest = await toInternalRequest(request)
+
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
-    return new Response(
+    return Response.json(
       `Error: This action with HTTP ${request.method} is not supported.`,
       { status: 400 }
     )
@@ -128,32 +140,49 @@ export async function Auth(
         )
       }
       const render = renderPage({ theme })
-      const page = render.error({ error: "Configuration" })
+      const page = render.error("Configuration")
       return toResponse(page)
     }
 
     return Response.redirect(`${pages.error}?error=Configuration`)
   }
 
-  const internalResponse = await AuthInternal(internalRequest, config)
+  const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
+  const isRaw = config.raw === raw
+  let response: Response
+  try {
+    const rawResponse = await AuthInternal(internalRequest, config)
+    if (isRaw) return rawResponse
+    response = await toResponse(rawResponse)
+  } catch (e) {
+    const error = e as Error
+    logger.error(error)
 
-  // @ts-expect-error TODO: Fix return type
-  if (config.raw === raw) return internalResponse
+    const isAuthError = error instanceof AuthError
+    if (isAuthError && isRaw && !isRedirect) throw error
 
-  const response = await toResponse(internalResponse)
+    // If the CSRF check failed for POST/session, return a 400 status code.
+    // We should not redirect to a page as this is an API route
+    if (request.method === "POST" && internalRequest.action === "session")
+      return Response.json(null, { status: 400 })
 
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
-  const redirect = response.headers.get("Location")
-  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
-    response.headers.delete("Location")
-    response.headers.set("Content-Type", "application/json")
-    return new Response(JSON.stringify({ url: redirect }), {
-      status: internalResponse.status,
-      headers: response.headers,
-    })
+    const type = isAuthError ? error.type : "Configuration"
+    const page = (isAuthError && error.kind) || "error"
+    const params = new URLSearchParams({ error: type })
+    const path =
+      config.pages?.[page] ??
+      `${internalRequest.url.pathname}/${page.toLowerCase()}`
+
+    const url = `${internalRequest.url.origin}${path}?${params}`
+
+    if (isRedirect) return Response.json({ url })
+
+    return Response.redirect(url)
   }
-  return response
+
+  const redirect = response.headers.get("Location")
+  if (!isRedirect || !redirect) return response
+  return Response.json({ url: redirect }, { headers: response.headers })
 }
 
 /**

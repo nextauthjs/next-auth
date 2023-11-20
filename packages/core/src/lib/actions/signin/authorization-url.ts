@@ -1,11 +1,7 @@
-import * as checks from "../../oauth/checks.js"
+import * as checks from "../callback/oauth/checks.js"
 import * as o from "oauth4webapi"
 
-import type {
-  InternalOptions,
-  RequestInternal,
-  ResponseInternal,
-} from "../../../types.js"
+import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
 
 /**
@@ -16,7 +12,7 @@ import type { Cookie } from "../../utils/cookie.js"
 export async function getAuthorizationUrl(
   query: RequestInternal["query"],
   options: InternalOptions<"oauth" | "oidc">
-): Promise<ResponseInternal> {
+) {
   const { logger, provider } = options
 
   let url = provider.authorization?.url
