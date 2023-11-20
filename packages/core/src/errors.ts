@@ -245,7 +245,16 @@ export class EmailSignInError extends SignInError {
   static type = "EmailSignInError"
 }
 
-/** @todo */
+/**
+ * Represents an error that occurs during the sign-out process. This error
+ * is logged when there are issues in terminating a user's session, either
+ * by failing to delete the session from the database (in database session
+ * strategies) or encountering issues during other parts of the sign-out
+ * process, such as emitting sign-out events or clearing session cookies.
+ *
+ * The session cookie(s) are emptied even if this error is logged.
+ *
+ */
 export class SignOutError extends AuthError {
   static type = "SignOutError"
 }
@@ -283,6 +292,16 @@ export class Verification extends AuthError {
   static type = "Verification"
 }
 
-export class MissingCSRF extends AuthError {
+/**
+ * Error for missing CSRF tokens in client-side actions (`signIn`, `signOut`, `useSession#update`).
+ * Thrown when actions lack the double submit cookie, essential for CSRF protection.
+ *
+ * CSRF ([Cross-Site Request Forgery](https://owasp.org/www-community/attacks/csrf))
+ * is an attack leveraging authenticated user credentials for unauthorized actions.
+ *
+ * Double submit cookie pattern, a CSRF defense, requires matching values in a cookie
+ * and request parameter. More on this at [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/Security/CSRF).
+ */
+export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"
 }
