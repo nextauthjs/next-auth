@@ -45,7 +45,7 @@
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
- * @module index
+ * @module next-auth
  */
 
 import { Auth } from "@auth/core"
