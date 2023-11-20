@@ -3,7 +3,7 @@ id: adapters
 title: Adapters
 ---
 
-Visit the [authjs.dev](https://authjs.dev/reference/adapters) page for the up-to-date documentation.
+Visit the [authjs.dev](https://authjs.dev/getting-started/adapters) page for the up-to-date documentation.
 
 - [Dgraph](https://authjs.dev/reference/adapter/dgraph)
 - [Drizzle](https://authjs.dev/reference/adapter/drizzle)
