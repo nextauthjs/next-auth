@@ -43,11 +43,12 @@ export function detectOrigin(h: Headers | ReturnType<typeof headers>) {
 export function reqWithEnvUrl(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
   if (!url) return req
-  const nonBase = req.nextUrl.href.replace(req.nextUrl.origin, "")
+  // const nonBase = req.nextUrl.href.replace(req.nextUrl.origin, "")
   const base = new URL(url).origin
   // REVIEW: Bug in Next.js?: TypeError: next_dist_server_web_exports_next_request__WEBPACK_IMPORTED_MODULE_0__ is not a constructor
   // return new NextRequest(new URL(nonBase, base), req)
-  const _url = new URL(nonBase, base)
+  const _url = req.nextUrl.clone()
+  _url.href = req.nextUrl.href.replace(req.nextUrl.origin, base)
   const _req = new Request(_url, req) as any
   _req.nextUrl = _url
   return _req
