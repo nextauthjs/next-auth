@@ -97,7 +97,7 @@ export async function init({
     // JWT options
     jwt: {
       secret, // Use application secret if no keys specified
-      maxAge, // same as session maxAge,
+      maxAge: authOptions.session?.maxAge ?? maxAge, // same as session maxAge,
       encode: jwt.encode,
       decode: jwt.decode,
       ...authOptions.jwt,
