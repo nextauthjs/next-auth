@@ -4,7 +4,7 @@ import type { InternalOptions } from "../types"
 import type { ResponseInternal } from ".."
 import type { Session } from "../.."
 import type { SessionStore } from "../lib/cookie"
-
+import type { JWT } from "src/jwt"
 interface SessionParams {
   options: InternalOptions
   sessionStore: SessionStore
@@ -42,9 +42,14 @@ export default async function session(
 
   if (sessionStrategy === "jwt") {
     try {
-      const decodedToken = await jwt.decode({ ...jwt, token: sessionToken })
+      const decodedToken = (await jwt.decode({
+        ...jwt,
+        token: sessionToken,
+      })) as JWT & { exp: number }
 
       if (!decodedToken) throw new Error("JWT invalid")
+
+      const sessionUpdateAge = options.session.updateAge
 
       // @ts-expect-error
       const token = await callbacks.jwt({
@@ -53,42 +58,78 @@ export default async function session(
         session: newSession,
       })
 
-      const newExpires = fromDate(sessionMaxAge)
+      const sessionIsDueToBeUpdatedDate =
+        decodedToken.exp * 1000 - sessionMaxAge * 1000 + sessionUpdateAge * 1000
 
-      // By default, only exposes a limited subset of information to the client
-      // as needed for presentation purposes (e.g. "you are logged in as...").
-
-      // @ts-expect-error Property 'user' is missing in type
-      const updatedSession = await callbacks.session({
-        session: {
-          user: {
-            name: decodedToken?.name,
-            email: decodedToken?.email,
-            image: decodedToken?.picture,
+      // renew session only if sessionIsDueToBeUpdatedDate
+      if (sessionIsDueToBeUpdatedDate > Date.now()) {
+        // recreate the same session and return back to the user
+        // @ts-expect-error Property 'user' is missing in type
+        const currentSession = await callbacks.session({
+          session: {
+            user: {
+              name: decodedToken?.name,
+              email: decodedToken?.email,
+              image: decodedToken?.picture,
+            },
+            expires: new Date(
+              (decodedToken.exp as number) * 1000
+            ).toISOString(),
           },
-          expires: newExpires.toISOString(),
-        },
-        token,
-      })
+          token,
+        })
 
-      // Return session payload as response
-      response.body = updatedSession
+        // bind currentSession to the http response body
+        response.body = currentSession
 
-      // Refresh JWT expiry by re-signing it, with an updated expiry date
-      const newToken = await jwt.encode({
-        ...jwt,
-        token,
-        maxAge: options.session.maxAge,
-      })
+        // emit to session callback
+        await events.session?.({
+          session: currentSession,
+          token,
+        })
+      }
+      // handle case if jwt exp required updated per session option of 'updateAge'
+      else {
+        const newExpires = new Date(
+          // get new exp date and zero out mili-second since jwt's exp precision is only upto second.
+          Math.floor(fromDate(sessionMaxAge).valueOf() / 1000) * 1000
+        )
 
-      // Set cookie, to also update expiry date on cookie
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: newExpires,
-      })
+        // By default, only exposes a limited subset of information to the client
+        // as needed for presentation purposes (e.g. "you are logged in as...").
 
-      response.cookies?.push(...sessionCookies)
+        // @ts-expect-error Property 'user' is missing in type
+        const updatedSession = await callbacks.session({
+          session: {
+            user: {
+              name: decodedToken?.name,
+              email: decodedToken?.email,
+              image: decodedToken?.picture,
+            },
+            expires: newExpires.toISOString(),
+          },
+          token,
+        })
 
-      await events.session?.({ session: updatedSession, token })
+        // Return session payload as response
+        response.body = updatedSession
+
+        // Refresh JWT expiry by re-signing it, with an updated expiry date
+        const newToken = await jwt.encode({
+          ...jwt,
+          token,
+          maxAge: options.session.maxAge,
+        })
+
+        // Set cookie, to also update expiry date on cookie
+        const sessionCookies = sessionStore.chunk(newToken, {
+          expires: newExpires,
+        })
+
+        response.cookies?.push(...sessionCookies)
+
+        await events.session?.({ session: updatedSession, token })
+      }
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
       logger.error("JWT_SESSION_ERROR", error as Error)
@@ -98,8 +139,7 @@ export default async function session(
   } else {
     try {
       // @ts-expect-error -- adapter is checked to be defined in `init`
-      const { getSessionAndUser, deleteSession, updateSession } =
-        adapter
+      const { getSessionAndUser, deleteSession, updateSession } = adapter
       let userAndSession = await getSessionAndUser(sessionToken)
 
       // If session has expired, clean up the database
