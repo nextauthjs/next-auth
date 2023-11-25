@@ -1,7 +1,8 @@
 import * as jwt from "../jwt.js"
 import { createCallbackUrl } from "./utils/callback-url.js"
 import * as cookie from "./utils/cookie.js"
-import { createCSRFToken } from "./routes/callback/oauth/csrf-token.js"
+import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
+
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
@@ -52,7 +53,7 @@ export async function init({
   authOptions,
   providerId,
   action,
-  url: reqUrl,
+  url,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -62,13 +63,6 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  // TODO: move this to web.ts
-  const parsed = parseUrl(
-    reqUrl.origin +
-      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, "")
-  )
-  const url = new URL(parsed.toString())
-
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,
@@ -156,7 +150,9 @@ export async function init({
 
   const cookies: cookie.Cookie[] = []
 
-  if (!csrfDisabled) {
+  if (csrfDisabled) {
+    options.csrfTokenVerified = true
+  } else {
     const {
       csrfToken,
       cookie: csrfCookie,

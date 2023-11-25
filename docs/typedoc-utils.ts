@@ -59,6 +59,7 @@ export function typedocAdapter({ id }: typeof manifest.adapters[number]) {
     ...defaultConfig,
     id,
     entryPoints: [`../packages/adapter-${id}/src/index.ts`],
+    entryModule: id,
     tsconfig: `../packages/adapter-${id}/tsconfig.json`,
     out: `docs/reference/adapter/${id}`,
   } satisfies TypeDocConfig
@@ -70,19 +71,14 @@ export function typedocFramework({
   entrypoints,
   id,
 }: typeof manifest.frameworks[number]) {
+  const packageName = require(`../packages/${packageDir}/package.json`).name
   const options = {
     ...defaultConfig,
     id,
     entryPoints: entrypoints.map((e) => `../packages/${packageDir}/src/${e}`),
+    entryModule: packageName,
     tsconfig: `../packages/${packageDir}/tsconfig.json`,
     out: `docs/reference/${id}`,
-    sidebar: {
-      filteredIds: [
-        `reference/${id}`,
-        `reference/${id}/index`,
-        `reference/${id}/module.index`,
-      ],
-    },
   } satisfies TypeDocConfig
   return ["docusaurus-plugin-typedoc", options]
 }
