@@ -6,6 +6,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [],
   test: {
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['./src/test-setup.ts'],
   },
 })
