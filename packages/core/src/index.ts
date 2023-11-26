@@ -211,7 +211,6 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `AUTH_SECRET` or `NEXTAUTH_SECRET` from environment variables.
    * To generate a random string, you can use the following command:
    *
    * - On Unix systems, type `openssl rand -hex 32` in the terminal
@@ -367,7 +366,15 @@ export interface AuthConfig {
    * @default {}
    */
   cookies?: Partial<CookiesOptions>
-  /** @todo */
+  /**
+   * Auth.js relies on the incoming request's `host` header to function correctly. For this reason this property needs to be set to `true`.
+   *
+   * Make sure that your deployment platform sets the `host` header safely.
+   *
+   * :::note
+   * Official Auth.js-based libraries will attempt to set this value automatically for some deployment platforms (eg.: Vercel) that are known to set the `host` header safely.
+   * :::
+   */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
   raw?: typeof raw
