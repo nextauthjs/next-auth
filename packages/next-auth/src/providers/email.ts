@@ -1,16 +1,31 @@
 import { Transport, TransportOptions, createTransport } from "nodemailer"
-import * as JSONTransport from "nodemailer/lib/json-transport.js"
+import * as JSONTransport from "nodemailer/lib/json-transport/index.js"
 import * as SendmailTransport from "nodemailer/lib/sendmail-transport/index.js"
-import * as SESTransport from "nodemailer/lib/ses-transport.js"
+import * as SESTransport from "nodemailer/lib/ses-transport/index.js"
 import * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
-import * as SMTPTransport from "nodemailer/lib/smtp-transport.js"
-import * as StreamTransport from "nodemailer/lib/stream-transport.js"
+import * as SMTPTransport from "nodemailer/lib/smtp-transport/index.js"
+import * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
 import type { Awaitable } from ".."
 import type { CommonProviderOptions } from "."
 import type { Theme } from "../core/types"
 
 // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html for the string
-type AllTransportOptions = string | SMTPTransport | SMTPTransport.Options | SMTPPool | SMTPPool.Options | SendmailTransport | SendmailTransport.Options | StreamTransport | StreamTransport.Options | JSONTransport | JSONTransport.Options | SESTransport | SESTransport.Options | Transport<any> | TransportOptions
+type AllTransportOptions =
+  | string
+  | SMTPTransport
+  | SMTPTransport.Options
+  | SMTPPool
+  | SMTPPool.Options
+  | SendmailTransport
+  | SendmailTransport.Options
+  | StreamTransport
+  | StreamTransport.Options
+  | JSONTransport
+  | JSONTransport.Options
+  | SESTransport
+  | SESTransport.Options
+  | Transport<any>
+  | TransportOptions
 
 export interface SendVerificationRequestParams {
   identifier: string
