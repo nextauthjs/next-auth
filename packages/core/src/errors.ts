@@ -1,9 +1,21 @@
 type ErrorOptions = Error | Record<string, unknown>
 
+/**
+ * Base error class for all Auth.js errors.
+ * It's optimized to be printed in the server logs in a nicely formatted way
+ * via the [`logger.error`](https://authjs.dev/reference/core#logger) option.
+ */
 export class AuthError extends Error {
-  /** @internal Used to brand errors instead of using `this.constructor.name`, which might be minified during builds. */
+  /**
+   * Used to brand errors instead of using `this.constructor.name`, which might be minified during builds.
+   * @internal
+   */
   type: string
-  /** Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page. */
+  /**
+   * Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page.
+   * Default is `"error"`.
+   * @internal
+   */
   kind?: "signIn" | "error"
   cause?: Record<string, unknown> & { err?: Error }
   constructor(
@@ -39,15 +51,25 @@ export class SignInError extends AuthError {
 }
 
 /**
- * @todo
- * One of the database `Adapter` methods failed.
+ * One of the database [`Adapter` methods](https://auithjs.dev/reference/core/adapters#methods)
+ * failed during execution.
+ *
+ * :::tip
+ * If `debug: true` is set, you can check out `[auth][debug]` in the logs to learn more about the failed adapter method execution.
+ * @example
+ * ```sh
+ * [auth][debug]: adapter_getUserByEmail
+ * { "args": [undefined] }
+ * ```
+ * :::
  */
 export class AdapterError extends AuthError {
   static type = "AdapterError"
 }
 
 /**
- * Happens when the user is not authorized to access a route after executing the `signIn` callback.
+ * Thrown when the execution of the [`signIn` callback](https://authjs.dev/reference/core/types#signin) fails
+ * or if it returns `false`.
  */
 export class AuthorizedCallbackError extends AuthError {
   static type = "AuthorizedCallbackError"
@@ -58,7 +80,7 @@ export class AuthorizedCallbackError extends AuthError {
  * Depending on the provider type, this could have happened for multiple reasons.
  *
  * :::tip
- * Check out `[auth][details]` in the error message to know which provider failed.
+ * Check out `[auth][details]` in the logs to know which provider failed.
  * @example
  * ```sh
  * [auth][details]: { "provider": "github" }
@@ -96,17 +118,40 @@ export class CallbackRouteError extends AuthError {
   static type = "CallbackRouteError"
 }
 
-/** @todo */
+/**
+ * Thrown when Auth.js is misconfigured and accidentally tried to require authentication on a custom error page.
+ * To prevent an infinite loop, Auth.js will instead render its default error page.
+ *
+ * To fix this, make sure that the `error` page does not require authentication.
+ *
+ * Learn more at [Guide: Error pages](https://authjs.dev/guides/basics/pages)
+ */
 export class ErrorPageLoop extends AuthError {
   static type = "ErrorPageLoop"
 }
 
-/** @todo */
+/**
+ * One of the [`events` methods](https://authjs.dev/reference/core/types#eventcallbacks)
+ * failed during execution.
+ *
+ * Make sure that the `events` methods are implemented correctly and uncaught errors are handled.
+ *
+ * Learn more at [`events`](https://authjs.dev/reference/core/types#eventcallbacks)
+ */
 export class EventError extends AuthError {
   static type = "EventError"
 }
 
-/** @todo */
+/**
+ * Thrown when Auth.js is unable to verify a `callbackUrl` value.
+ * The browser either disabled cookies or the `callbackUrl` is not a valid URL.
+ *
+ * Somebody might have tried to manipulate the callback URL that Auth.js uses to redirect the user back to the configured `callbackUrl`/page.
+ * This could be a malicious hacker trying to redirect the user to a phishing site.
+ * To prevent this, Auth.js checks if the callback URL is valid and throws this error if it is not.
+ *
+ * There is no action required, but it might be an indicator that somebody is trying to attack your application.
+ */
 export class InvalidCallbackUrl extends AuthError {
   static type = "InvalidCallbackUrl"
 }
@@ -119,37 +164,69 @@ export class CredentialsSignin extends SignInError {
   static type = "CredentialsSignin"
 }
 
-/** @todo */
+/**
+ * One of the configured OAuth or OIDC providers is missing the `authorization`, `token` or `userinfo`, or `issuer` configuration.
+ * To perform OAuth or OIDC sign in, at least one of these endpoints is required.
+ *
+ * Learn more at [`OAuth2Config`](https://authjs.dev/reference/core/providers#oauth2configprofile) or [Guide: OAuth Provider](https://authjs.dev/guides/providers/custom-provider)
+ */
 export class InvalidEndpoints extends AuthError {
   static type = "InvalidEndpoints"
 }
 
-/** @todo */
+/**
+ * Thrown when a PKCE, state or nonce OAuth check could not be performed.
+ * This could happen if the OAuth provider is configured incorrectly or if the browser is blocking cookies.
+ *
+ * Learn more at [`checks`](https://authjs.dev/reference/core/providers#checks)
+ */
 export class InvalidCheck extends AuthError {
   static type = "InvalidCheck"
 }
 
-/** @todo */
+/**
+ * Logged on the server when Auth.js could not decode or encode a JWT-based (`strategy: "jwt"`) session.
+ *
+ * Possible causes are either a misconfigured `secret` or a malformed JWT or `encode/decode` methods.
+ *
+ * :::note
+ * When this error is logged, the session cookie is destroyed.
+ * :::
+ *
+ * Learn more at [`secret`](https://authjs.dev/reference/core#secret), [`jwt.encode`](https://authjs.dev/reference/core/jwt#encode) or [`jwt.decode`](https://authjs.dev/reference/core/jwt#decode) for more information.
+ */
 export class JWTSessionError extends AuthError {
   static type = "JWTSessionError"
 }
 
-/** @todo */
+/**
+ * Thrown if Auth.js is misonfigured. This could happen if you configured an Email provider but did not set up a database adapter,
+ * or tried using a `strategy: "database"` session without a database adapter.
+ * In both cases, make sure you either remove the configuration or add the missing adapter.
+ *
+ * Learn more at [Database Adapters](https://authjs.dev/getting-started/adapters), [Email provider](https://authjs.dev/reference/core/providers/email) or [Concept: Database session strategy](https://authjs.dev/concepts/session-strategies#database)
+ */
 export class MissingAdapter extends AuthError {
   static type = "MissingAdapter"
 }
 
-/** @todo */
+/**
+ * Thrown similarily to [`MissingAdapter`](https://authjs.dev/reference/core/errors#missingadapter), but only some required methods were missing.
+ *
+ * Make sure you either remove the configuration or add the missing methods to the adapter.
+ *
+ * Learn more at [Database Adapters](https://authjs.dev/reference/core/adapters)
+ */
 export class MissingAdapterMethods extends AuthError {
   static type = "MissingAdapterMethods"
 }
 
-/** @todo */
-export class MissingAPIRoute extends AuthError {
-  static type = "MissingAPIRoute"
-}
-
-/** @todo */
+/**
+ * Thrown when a Credentials provider is missing the `authorize` configuration.
+ * To perform credentials sign in, the `authorize` method is required.
+ *
+ * Learn more at [Credentials provider](https://authjs.dev/reference/core/providers/credentials)
+ */
 export class MissingAuthorize extends AuthError {
   static type = "MissingAuthorize"
 }
@@ -175,9 +252,16 @@ export class MissingSecret extends AuthError {
 }
 
 /**
- * @todo
  * Thrown when an Email address is already associated with an account
  * but the user is trying an OAuth account that is not linked to it.
+ *
+ * For security reasons, Auth.js does not automatically link OAuth accounts to existing accounts if the user is not signed in.
+ *
+ * :::tip
+ * If you trust the OAuth provider to have verified the user's email address,
+ * you can enable automatic account linking by setting [`allowDangerousEmailAccountLinking: true`](https://authjs.dev/reference/core/providers#allowdangerousemailaccountlinking)
+ * in the provider configuration.
+ * :::
  */
 export class OAuthAccountNotLinked extends SignInError {
   static type = "OAuthAccountNotLinked"
@@ -193,11 +277,6 @@ export class OAuthCallbackError extends SignInError {
   static type = "OAuthCallbackError"
 }
 
-/** @todo */
-export class OAuthCreateUserError extends AuthError {
-  static type = "OAuthCreateUserError"
-}
-
 /**
  * This error occurs during an OAuth sign in attempt when the provdier's
  * response could not be parsed. This could for example happen if the provider's API
@@ -207,7 +286,13 @@ export class OAuthProfileParseError extends AuthError {
   static type = "OAuthProfileParseError"
 }
 
-/** @todo */
+/**
+ * Logged on the server when Auth.js could not retrieve a session from the database (`strategy: "database"`).
+ *
+ * The database adapter might be misconfigured or the database is not reachable.
+ *
+ * Learn more at [Concept: Database session strategy](https://authjs.dev/concepts/session-strategies#database)
+ */
 export class SessionTokenError extends AuthError {
   static type = "SessionTokenError"
 }
@@ -220,7 +305,7 @@ export class SessionTokenError extends AuthError {
  *   Check the details in the error message.
  *
  * :::tip
- * Check out `[auth][details]` in the error message to know which provider failed.
+ * Check out `[auth][details]` in the logs to know which provider failed.
  * @example
  * ```sh
  * [auth][details]: { "provider": "github" }
@@ -268,17 +353,31 @@ export class UnknownAction extends AuthError {
   static type = "UnknownAction"
 }
 
-/** @todo */
+/**
+ * Thrown when a Credentials provider is present but the JWT strategy (`strategy: "jwt"`) is not enabled.
+ *
+ * Learn more at [`strategy`](https://authjs.dev/reference/core#strategy) or [Credentials provider](https://authjs.dev/reference/core/providers/credentials)
+ */
 export class UnsupportedStrategy extends AuthError {
   static type = "UnsupportedStrategy"
 }
 
-/** @todo */
+/** Thrown when the callback endpoint was incorrectly called without a provider. */
 export class InvalidProvider extends AuthError {
   static type = "InvalidProvider"
 }
 
-/** @todo */
+/**
+ * Thrown when the `trustHost` option was not set to `true`.
+ *
+ * Auth.js requires the `trustHost` option to be set to `true` since it's relying on the request headers' `host` value.
+ *
+ * :::note
+ * Official Auth.js libraries might attempt to automatically set the `trustHost` option to `true` if the request is coming from a trusted host on a trusted platform.
+ * :::
+ *
+ * Learn more at [`trustHost`](https://authjs.dev/reference/core#trusthost) or [Guide: Deployment](https://authjs.dev/getting-started/deployment)
+ */
 export class UntrustedHost extends AuthError {
   static type = "UntrustedHost"
 }
