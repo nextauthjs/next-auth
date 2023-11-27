@@ -11,7 +11,7 @@ Azure Active Directory returns the following fields on `Account`:
 - `ext_expires_in` (number)
 - `access_token` (string).
 
-Remember to add these fields to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+Remember to add these fields to your database schema, in case if you are using an [Adapter](https://authjs.dev/getting-started/adapters).
 :::
 
 ## Documentation
