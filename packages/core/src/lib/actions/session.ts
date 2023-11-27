@@ -3,16 +3,16 @@ import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
 import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
-import type { SessionStore } from "../utils/cookie.js"
+import type { Cookie, SessionStore } from "../utils/cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
-export async function session(params: {
-  options: InternalOptions
-  sessionStore: SessionStore
-  isUpdate?: boolean
+export async function session(
+  options: InternalOptions,
+  sessionStore: SessionStore,
+  cookies: Cookie[],
+  isUpdate?: boolean,
   newSession?: any
-}): Promise<ResponseInternal<Session | null>> {
-  const { options, sessionStore, newSession, isUpdate } = params
+): Promise<ResponseInternal<Session | null>> {
   const {
     adapter,
     jwt,
@@ -25,7 +25,7 @@ export async function session(params: {
   const response: ResponseInternal<Session | null> = {
     body: null,
     headers: { "Content-Type": "application/json" },
-    cookies: [],
+    cookies,
   }
 
   const sessionToken = sessionStore.value

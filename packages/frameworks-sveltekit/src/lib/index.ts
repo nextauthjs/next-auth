@@ -197,7 +197,7 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
  *
- * @module index
+ * @module @auth/sveltekit
  */
 
 /// <reference types="@sveltejs/kit" />
@@ -231,7 +231,7 @@ export async function getSession(
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends AuthConfig {
+export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Defines the base path for the auth routes.
    * If you change the default value,
@@ -304,7 +304,7 @@ declare global {
       getSession(): Promise<Session | null>
     }
     interface PageData {
-      session: Session | null
+      session?: Session | null
     }
   }
 }

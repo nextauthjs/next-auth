@@ -15,7 +15,7 @@
  *
  * We recommended to using [create-jd-app](https://github.com/OrJDev/create-jd-app)
  *
- * @module index
+ * @module @auth/solid-start
  */
 
 import { Auth } from "@auth/core"
@@ -255,7 +255,7 @@ export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
   req: Request,
-  options: AuthConfig
+  options: Omit<AuthConfig, "raw">
 ): GetSessionResult {
   options.secret ??= process.env.AUTH_SECRET
   options.trustHost ??= true

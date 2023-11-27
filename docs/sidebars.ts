@@ -28,7 +28,7 @@ export default {
     ...manifest.frameworks.map((framework) => ({
       type: "category",
       label: framework.packageName,
-      link: { type: "doc", id: `reference/${framework.id}/module.index` },
+      link: { type: "doc", id: `reference/${framework.id}/index` },
       items: require(`./docs/reference/${framework.id}/typedoc-sidebar.cjs`),
     })),
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
