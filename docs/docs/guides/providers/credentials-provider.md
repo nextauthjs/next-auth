@@ -40,7 +40,8 @@ If you return an object it will be persisted to the JSON Web Token and the user 
 
 - If you return `null` then an error will be displayed advising the user to check their details.
 
-- If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
+- You cannot throw an error from here due to security concerns as explained here
+  [https://github.com/nextauthjs/next-auth/issues/5839#issuecomment-1321112134](https://github.com/nextauthjs/next-auth/issues/5839#issuecomment-1321112134)
 
 The Credentials provider's `authorize()` method also provides the request object as the second parameter. Here's an example that handles these concerns.
 
@@ -70,7 +71,8 @@ providers: [
         // If you return null then an error will be displayed advising the user to check their details.
         return null
 
-        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        // You cannot reject or throw an error from here due to security issues as explained here
+        // [https://github.com/nextauthjs/next-auth/issues/5839#issuecomment-1321112134](https://github.com/nextauthjs/next-auth/issues/5839#issuecomment-1321112134)
       }
     }
   })
