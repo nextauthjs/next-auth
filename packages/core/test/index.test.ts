@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest"
-import { Auth, AuthConfig } from "./index.js"
-import GitHub from "./providers/github"
+import { Auth, AuthConfig } from "../src/index.js"
+import GitHub from "../src/providers/github.js"
 import {
   AUTH_SECRET,
   SESSION_ACTION,
   SESSION_COOKIE_NAME,
-} from "./test/constants.js"
-import { decode, encode } from "./jwt.js"
+} from "./constants.js"
+import { decode, encode } from "../src/jwt.js"
 import { parse } from "cookie"
 
 const authConfig: AuthConfig = {
@@ -66,13 +66,10 @@ describe("JWT session", () => {
     const response = (await Auth(request, authConfig)) as Response
     const bodySession = await response.json()
 
-    let cookies = {} as Record<string, string>
-    for (const [name, value] of response.headers.entries()) {
-      if (name === "set-cookie") {
-        const cookie = parse(value)
-        cookies = { ...cookies, ...cookie }
-      }
+    let cookies = response.headers.getSetCookie().reduce<Record<string, string>>((acc, cookie) => {
+      return { ...acc, ...parse(cookie) }
     }
+    , {})
     const sessionToken = cookies[SESSION_COOKIE_NAME]
     const decoded = await decode<{
       // TODO: This shouldn't be necessary?

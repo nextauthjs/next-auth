@@ -31,7 +31,6 @@ dist
 packages/next-auth/providers
 packages/next-auth/src/providers/oauth-types.ts
 packages/*/*.js
-!vite.config.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 packages/*/lib
@@ -109,3 +108,6 @@ docs/docs/reference/adapter
 
 ## Drizzle migration folder
 .drizzle
+
+## Test files
+!vitest.config.js
