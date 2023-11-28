@@ -1,6 +1,5 @@
 import { signIn, signOut } from "auth"
 import { Button } from "./ui/button"
-import { redirect } from "next/navigation"
 
 export function SignIn({
   provider,
@@ -10,9 +9,7 @@ export function SignIn({
     <form
       action={async () => {
         "use server"
-        const url = await signIn(provider, { redirect: false })
-        // TODO: fix in next-auth
-        redirect(url.replace("signin", "api/auth/signin"))
+        await signIn(provider)
       }}
     >
       <Button {...props}>Sign In</Button>

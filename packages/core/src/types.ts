@@ -178,19 +178,27 @@ export interface Profile {
   [claim: string]: unknown
 }
 
-/** [Documentation](https://authjs.dev/guides/basics/callbacks) */
+// TODO: rename `signIn` to `authorized`
+
+/** Override the default session creation flow of Auth.js */
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
    * Controls whether a user is allowed to sign in or not.
    * Returning `true` continues the sign-in flow, while
-   * returning `false` throws an `AuthorizedCallbackError`.
-   * The `reason` property is set to `"AccessDenied"` and the `status` property is set to `403`.
+   * returning `false` throws an `AuthorizedCallbackError` with the message `"AccessDenied"`.
    *
-   * Unhandled errors will throw an `AuthorizedCallbackError`.
-   * The `reason` property is set to `Configuration` and the `status` property is set to `500`.
+   * Unhandled errors will throw an `AuthorizedCallbackError` with the message set to the original error.
    *
-   * @see https://authjs.dev/reference/errors#authorizedcallbackerror
-   * @todo rename to `authorized`
+   * @see [`AuthorizedCallbackError`](https://authjs.dev/reference/errors#authorizedcallbackerror)
+   *
+   * @example
+   * ```ts
+   * callbacks: {
+   *  async signIn({ profile }) {
+   *   // Only allow sign in for users with email addresses ending with "yourdomain.com"
+   *   return profile?.email?.endsWith("@yourdomain.com")
+   * }
+   * ```
    */
   signIn: (params: {
     user: User | AdapterUser
