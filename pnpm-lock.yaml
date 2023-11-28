@@ -719,7 +719,7 @@ importers:
   packages/next-auth:
     dependencies:
       '@auth/core':
-        specifier: 0.18.3
+        specifier: workspace:*
         version: link:../core
     devDependencies:
       '@types/react':
