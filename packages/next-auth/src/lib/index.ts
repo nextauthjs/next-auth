@@ -142,8 +142,8 @@ export function initAuth(config: NextAuthConfig) {
     ).then(async (authResponse) => {
       const auth = await authResponse.json()
 
-      // Preserve cookies set by Auth.js Core
-      cloneSetCookie(authResponse, response)
+      for (const cookie of authResponse.headers.getSetCookie())
+        response.headers.append("set-cookie", cookie)
 
       return auth satisfies Session | null
     })
@@ -201,24 +201,12 @@ async function handleAuth(
   }
 
   const finalResponse = new Response(response?.body, response)
-  // Preserve cookies set by Auth.js Core
-  cloneSetCookie(sessionResponse, finalResponse)
+
+  // Preserve cookies from the session response
+  for (const cookie of sessionResponse.headers.getSetCookie())
+    finalResponse.headers.append("set-cookie", cookie)
 
   return finalResponse
-}
-
-/** Clone cookies from one response to another. */
-function cloneSetCookie(from: Response, to: Response) {
-  const authCookies =
-    from.headers.getSetCookie?.() ?? from.headers.get("set-cookie")
-
-  if (!authCookies?.length) return
-
-  if (Array.isArray(authCookies)) {
-    authCookies.forEach((cookie) => to.headers.append("set-cookie", cookie))
-  } else {
-    to.headers.set("set-cookie", authCookies)
-  }
 }
 
 function isSameAuthAction(
