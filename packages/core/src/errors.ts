@@ -1,16 +1,42 @@
 type ErrorOptions = Error | Record<string, unknown>
 
+type ErrorType =
+  | "AdapterError"
+  | "AuthorizedCallbackError"
+  | "CallbackRouteError"
+  | "ErrorPageLoop"
+  | "EventError"
+  | "InvalidCallbackUrl"
+  | "CredentialsSignin"
+  | "InvalidEndpoints"
+  | "InvalidCheck"
+  | "JWTSessionError"
+  | "MissingAdapter"
+  | "MissingAdapterMethods"
+  | "MissingAuthorize"
+  | "MissingSecret"
+  | "OAuthAccountNotLinked"
+  | "OAuthCallbackError"
+  | "OAuthProfileParseError"
+  | "SessionTokenError"
+  | "OAuthSignInError"
+  | "EmailSignInError"
+  | "SignOutError"
+  | "UnknownAction"
+  | "UnsupportedStrategy"
+  | "InvalidProvider"
+  | "UntrustedHost"
+  | "Verification"
+  | "MissingCSRF"
+
 /**
  * Base error class for all Auth.js errors.
  * It's optimized to be printed in the server logs in a nicely formatted way
  * via the [`logger.error`](https://authjs.dev/reference/core#logger) option.
  */
 export class AuthError extends Error {
-  /**
-   * Used to brand errors instead of using `this.constructor.name`, which might be minified during builds.
-   * @internal
-   */
-  type: string
+  /** The error type. Used to identify the error in the logs. */
+  type: ErrorType
   /**
    * Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page.
    * Default is `"error"`.
