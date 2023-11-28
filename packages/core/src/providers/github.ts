@@ -69,6 +69,13 @@ export interface GitHubProfile {
 }
 
 /**
+ * You can customize GitHub's baseUrl to your own GitHub Enterprise Server.
+ */
+export interface GitHubUserConfig extends OAuthUserConfig<GitHubProfile> {
+  baseUrl?: string
+}
+
+/**
  * Add GitHub login to your page and make requests to [GitHub APIs](https://docs.github.com/en/rest).
  *
  * ### Setup
@@ -120,19 +127,24 @@ export interface GitHubProfile {
  * :::
  */
 export default function GitHub(
-  config: OAuthUserConfig<GitHubProfile>
+  config: GitHubUserConfig
 ): OAuthConfig<GitHubProfile> {
+  const baseUrl = config.baseUrl || "https://github.com"
+  const apiBaseUrl = config.baseUrl
+    ? `${config.baseUrl}/api/v3`
+    : "https://api.github.com"
+
   return {
     id: "github",
     name: "GitHub",
     type: "oauth",
     authorization: {
-      url: "https://github.com/login/oauth/authorize",
+      url: `${baseUrl}/login/oauth/authorize`,
       params: { scope: "read:user user:email" },
     },
-    token: "https://github.com/login/oauth/access_token",
+    token: `${baseUrl}/login/oauth/access_token`,
     userinfo: {
-      url: "https://api.github.com/user",
+      url: `${apiBaseUrl}/user`,
       async request({ tokens, provider }) {
         const profile = await fetch(provider.userinfo?.url as URL, {
           headers: {
@@ -144,7 +156,7 @@ export default function GitHub(
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
-          const res = await fetch("https://api.github.com/user/emails", {
+          const res = await fetch(`${apiBaseUrl}/user/emails`, {
             headers: {
               Authorization: `Bearer ${tokens.access_token}`,
               "User-Agent": "authjs",
