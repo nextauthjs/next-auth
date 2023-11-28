@@ -22,7 +22,7 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = authUrl(detectOrigin(headers), "signin", config.pages?.signIn)
+  const base = authUrl(detectOrigin(headers), "signin")
 
   if (!provider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
@@ -70,7 +70,7 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = authUrl(detectOrigin(headers), "signout", config.pages?.signOut)
+  const url = authUrl(detectOrigin(headers), "signout")
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -104,8 +104,8 @@ export async function update(
 }
 
 /** Determine an action's URL */
-function authUrl(base: URL, action: string, configPathname?: string) {
-  let pathname = configPathname
+function authUrl(base: URL, action: string) {
+  let pathname
   if (base.pathname === "/") pathname ??= `/api/auth/${action}`
   else pathname ??= `${base.pathname}/${action}`
   return new URL(pathname, base.origin)
