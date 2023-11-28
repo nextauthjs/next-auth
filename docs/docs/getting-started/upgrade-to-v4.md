@@ -319,7 +319,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8
 
 **This does not require any changes from the user - these are adapter specific changes only**
 
-The Adapter API has been rewritten and significantly simplified in NextAuth.js v4. The adapters now have less work to do as some functionality has been migrated to the core of NextAuth, like hashing the [verification token](https://authjs.dev/reference/adapters#verification-token).
+The Adapter API has been rewritten and significantly simplified in NextAuth.js v4. The adapters now have less work to do as some functionality has been migrated to the core of NextAuth, like hashing the [verification token](https://authjs.dev/getting-started/adapters#verification-token).
 
 If you are an adapter maintainer or are interested in writing your own adapter, you can find more information about this change in https://github.com/nextauthjs/next-auth/pull/2361 and release https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.22.
 
