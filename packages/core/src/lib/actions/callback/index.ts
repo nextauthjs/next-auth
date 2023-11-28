@@ -21,6 +21,7 @@ import type {
   ResponseInternal,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
+import { fromDate } from "../../utils/date.js"
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -315,38 +316,58 @@ export async function callback(
         options.callbacks.signIn
       )
 
-      const defaultToken = {
-        name: user.name,
-        email: user.email,
-        picture: user.image,
-        sub: user.id?.toString(),
-      }
-
-      const token = await callbacks.jwt({
-        token: defaultToken,
-        user,
-        account,
-        isNewUser: false,
-        trigger: "signIn",
-      })
-
-      // Clear cookies if token is null
-      if (token === null) {
-        cookies.push(...sessionStore.clean())
-      } else {
-        const salt = options.cookies.sessionToken.name
-        // Encode token
-        const newToken = await jwt.encode({ ...jwt, token, salt })
-
-        // Set cookie expiry date
-        const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-        const sessionCookies = sessionStore.chunk(newToken, {
-          expires: cookieExpires,
+      const session = useJwtSession
+      ? {}
+      : await adapter!.createSession({
+          sessionToken: options.session.generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
         })
 
-        cookies.push(...sessionCookies)
+      
+      if (useJwtSession) {
+        const defaultToken = {
+          name: user.name,
+          email: user.email,
+          picture: user.image,
+          sub: user.id?.toString(),
+        }
+        const token = await callbacks.jwt({
+          token: defaultToken,
+          user,
+          account,
+          isNewUser: false,
+          trigger: "signIn",
+        })
+
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          const salt = options.cookies.sessionToken.name
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token, salt })
+  
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+  
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+  
+          cookies.push(...sessionCookies)
+        }
+      } else {
+        // Save Session Token in cookie
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: (session as AdapterSession).sessionToken,
+          options: {
+            ...options.cookies.sessionToken.options,
+            expires: (session as AdapterSession).expires,
+          },
+        })
       }
 
       await events.signIn?.({ user, account })
