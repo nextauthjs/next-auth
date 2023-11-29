@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Nissuer
-        uses: balazsorban44/nissuer@1.5.0
+        uses: balazsorban44/nissuer@1.8.0
         with:
           label-area-prefix: ""
           label-area-section: "[Provider|Adapter] type(.*)### Environment"
@@ -22,3 +22,4 @@ jobs:
           reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
           reproduction-invalid-label: "invalid reproduction"
           reproduction-issue-labels: "bug"
+          reproduction-blocklist: "github.com/.*/next-auth-example.*"
