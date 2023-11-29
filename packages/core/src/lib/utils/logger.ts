@@ -26,7 +26,7 @@ export const logger: LoggerInstance = {
       error.cause &&
       typeof error.cause === "object" &&
       "err" in error.cause &&
-      error.cause.err instanceof AuthError
+      error.cause.err instanceof Error
     ) {
       const { err, ...data } = error.cause
       console.error(`${red}[auth][cause]${reset}:`, err.stack)
