@@ -45,10 +45,10 @@
     "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
   },
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "@libsql/client": "0.4.0-pre.2"
+    "@auth/core": "workspace:*"
   },
   "devDependencies": {
+    "@libsql/client": "0.4.0-pre.2",
     "@types/better-sqlite3": "^7.6.4",
     "@types/uuid": "^8.3.3",
     "better-sqlite3": "^8.6.0",
