@@ -22,4 +22,4 @@ jobs:
           reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
           reproduction-invalid-label: "invalid reproduction"
           reproduction-issue-labels: "bug"
-          reproduction-blocklist: "github.com/.*/next-auth-example.*"
+          reproduction-blocklist: "github.com/nextauthjs.*"
