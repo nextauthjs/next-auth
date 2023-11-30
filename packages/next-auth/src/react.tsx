@@ -276,7 +276,7 @@ export async function signIn<
     return
   }
 
-  const error = new URLSearchParams(data.url?.split("?")[1]).get("error")
+  const error = new URL(data.url).get("error")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
