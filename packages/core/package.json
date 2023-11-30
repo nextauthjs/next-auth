@@ -30,7 +30,8 @@
     "*.d.ts*",
     "lib",
     "providers",
-    "src"
+    "src",
+    "!vitest.config.js"
   ],
   "exports": {
     ".": {
