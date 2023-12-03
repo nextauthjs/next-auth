@@ -11,6 +11,8 @@ import {
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
+import crypto from "node:crypto"
+
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("user", {
     id: text("id").notNull().primaryKey(),
@@ -38,7 +40,7 @@ export function createTables(pgTable: PgTableFn) {
       session_state: text("session_state"),
     },
     (account) => ({
-      compoundKey: primaryKey(account.provider, account.providerAccountId),
+      compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] }),
     })
   )
 
@@ -58,7 +60,7 @@ export function createTables(pgTable: PgTableFn) {
       expires: timestamp("expires", { mode: "date" }).notNull(),
     },
     (vt) => ({
-      compoundKey: primaryKey(vt.identifier, vt.token),
+      compoundKey: primaryKey({ columns: [vt.identifier, vt.token]}),
     })
   )
 
