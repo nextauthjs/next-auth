@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@hattip/adapter-node": "^0.0.35",
-    "requrl": "^3.0.2"
+    "@hattip/adapter-node": "^0.0.35"
   }
 }
