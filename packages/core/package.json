@@ -30,7 +30,8 @@
     "*.d.ts*",
     "lib",
     "providers",
-    "src"
+    "src",
+    "!vitest.config.js"
   ],
   "exports": {
     ".": {
@@ -81,6 +82,7 @@
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
+    "test": "vitest",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
@@ -90,6 +92,8 @@
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
-    "postcss-nested": "6.0.0"
+    "postcss-nested": "6.0.0",
+    "vite": "^5.0.2",
+    "vitest": "^0.25.3"
   }
 }
