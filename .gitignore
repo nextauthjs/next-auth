@@ -109,3 +109,6 @@ docs/docs/reference/adapter
 
 ## Drizzle migration folder
 .drizzle
+
+## Test files
+!vitest.config.js
