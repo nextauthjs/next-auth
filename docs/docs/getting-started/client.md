@@ -275,7 +275,7 @@ export default function Page() {
 ## getSession()
 
 - Client Side: **Yes**
-- Server Side: **No** (See: [`getServerSession()`](/configuration/nextjs#unstable_getserversession)
+- Server Side: **No** (See: [`getServerSession()`](/configuration/nextjs#getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
