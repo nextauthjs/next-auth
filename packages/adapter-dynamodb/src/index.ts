@@ -406,7 +406,7 @@ export function DynamoDBAdapter(
         },
       })
       if (!data.Items?.length) return null
-      const { pk, sk } = data.Items[0] as any
+      const sessionRecord = data.Items[0] as any
       const {
         UpdateExpression,
         ExpressionAttributeNames,
@@ -414,7 +414,10 @@ export function DynamoDBAdapter(
       } = generateUpdateExpression(session)
       const res = await client.update({
         TableName,
-        Key: { pk, sk },
+        Key: {
+          [pk]: sessionRecord[pk],
+          [sk]: sessionRecord[sk],
+        },
         UpdateExpression,
         ExpressionAttributeNames,
         ExpressionAttributeValues,
@@ -438,11 +441,14 @@ export function DynamoDBAdapter(
       })
       if (!data?.Items?.length) return null
 
-      const { pk, sk } = data.Items[0]
+      const sessionRecord = data.Items[0]
 
       const res = await client.delete({
         TableName,
-        Key: { pk, sk },
+        Key: {
+          [pk]: sessionRecord[pk],
+          [sk]: sessionRecord[sk],
+        },
         ReturnValues: "ALL_OLD",
       })
       return format.from<AdapterSession>(res.Attributes)
