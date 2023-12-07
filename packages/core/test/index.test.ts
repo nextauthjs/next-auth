@@ -89,7 +89,7 @@ describe("JWT session", () => {
     })
     expect(defaultCallbacks.jwt).toHaveBeenCalledWith({
       token: expectedToken,
-      session: undefined, // should this be undefined?
+      session: undefined
     })
     expect(defaultCallbacks.session).toHaveBeenCalledWith({
       session: expectedSession,
@@ -248,7 +248,6 @@ describe("Database session", () => {
 
     const now = Date.now()
     vi.setSystemTime(now)
-    const updatedExpires = new Date(now + 30 * 24 * 60 * 60 * 1000) // 30 days
     const currentExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
 
     const expectedSessionToken = randomString(32)
@@ -334,7 +333,6 @@ describe("Database session", () => {
 
     const now = Date.now()
     vi.setSystemTime(now)
-    const updatedExpires = new Date(now + 30 * 24 * 60 * 60 * 1000) // 30 days
     const currentExpires = new Date(Date.now() - 24 * 60 * 60 * 1000) // 1 day ago
 
     const expectedSessionToken = randomString(32)
