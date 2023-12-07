@@ -169,6 +169,9 @@ export interface DefaultJWT extends Record<string, unknown> {
   email?: string | null
   picture?: string | null
   sub?: string
+  iat?: number
+  exp?: number
+  jti?: string
 }
 
 /**
