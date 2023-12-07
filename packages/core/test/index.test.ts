@@ -9,7 +9,7 @@ import {
 import { decode, encode } from "../src/jwt.js"
 import { parse } from "cookie"
 import { defaultCallbacks } from "../src/lib/init.js"
-import { Adapter, AdapterSession } from "../src/adapters.js"
+import { Adapter } from "../src/adapters.js"
 import { randomString } from "../src/lib/utils/web.js"
 
 const authConfig: AuthConfig = {
@@ -21,7 +21,7 @@ const authConfig: AuthConfig = {
 describe("JWT session", () => {
   it("should return a valid JWT session response", async () => {
     const authEvents: AuthConfig["events"] = {
-      session: () => {},
+      session: vi.fn(),
     }
     vi.spyOn(authEvents, "session")
     authConfig.events = authEvents
@@ -29,12 +29,16 @@ describe("JWT session", () => {
     vi.spyOn(defaultCallbacks, "jwt")
     vi.spyOn(defaultCallbacks, "session")
 
-    const expectedSession = {
+    const now = Date.now()
+    vi.setSystemTime(now)
+    const expectedExpires = new Date(now + 30 * 24 * 60 * 60 * 1000) // 30 days
+
+    const expectedUser = {
       name: "test",
       email: "test@test.com",
       picture: "https://test.com/test.png",
     }
-    const expectedSessionInBody = {
+    const expectedUserInBody = {
       name: "test",
       email: "test@test.com",
       image: "https://test.com/test.png",
@@ -42,15 +46,21 @@ describe("JWT session", () => {
     const encoded = await encode({
       salt: SESSION_COOKIE_NAME,
       secret: AUTH_SECRET,
-      token: expectedSession,
+      token: expectedUser,
     })
+    const expectedToken = {
+      ...expectedUser,
+      exp: expect.any(Number),
+      iat: expect.any(Number),
+      jti: expect.any(String),
+    }
     const request = new Request(SESSION_ACTION, {
       headers: {
         cookie: `${SESSION_COOKIE_NAME}=${encoded}`,
       },
     })
     const response = (await Auth(request, authConfig)) as Response
-    const bodySession = await response.json()
+    const actualBodySession = await response.json()
 
     let cookies = response.headers
       .getSetCookie()
@@ -58,25 +68,33 @@ describe("JWT session", () => {
         return { ...acc, ...parse(cookie) }
       }, {})
     const sessionToken = cookies[SESSION_COOKIE_NAME]
-    const decoded = await decode<{
-      // TODO: This shouldn't be necessary?
-      exp: number
-      iat: number
-      jti: string
-    }>({
+    const actualToken = await decode({
       salt: SESSION_COOKIE_NAME,
       secret: AUTH_SECRET,
       token: sessionToken,
     })
 
-    const { exp, iat, jti, ...actualSession } = decoded || {}
+    const { exp, iat, jti, ...actualUser } = actualToken || {}
 
-    expect(actualSession).toEqual(expectedSession)
-    expect(bodySession.user).toEqual(expectedSessionInBody)
-    expect(bodySession.expires).toBeDefined()
-    expect(authConfig.events?.session).toHaveBeenCalledOnce()
-    expect(defaultCallbacks.jwt).toHaveBeenCalledOnce()
-    expect(defaultCallbacks.session).toHaveBeenCalledOnce()
+    const expectedSession = {
+      user: expectedUserInBody,
+      expires: expectedExpires.toISOString(),
+    }
+
+    expect(actualUser).toEqual(expectedUser)
+    expect(actualBodySession).toEqual(expectedSession)
+    expect(authConfig.events?.session).toHaveBeenCalledWith({
+      session: expectedSession,
+      token: expectedToken,
+    })
+    expect(defaultCallbacks.jwt).toHaveBeenCalledWith({
+      token: expectedToken,
+      session: undefined, // should this be undefined?
+    })
+    expect(defaultCallbacks.session).toHaveBeenCalledWith({
+      session: expectedSession,
+      token: expectedToken,
+    })
   })
   it("should return null if no JWT session in the requests cookies", async () => {
     const request = new Request(SESSION_ACTION)
@@ -94,40 +112,15 @@ describe("JWT session", () => {
     const actual = await response.json()
     expect(actual).toEqual(null)
   })
-})
-
-describe("Database session", () => {
-  it("should return a valid database session response", async () => {
-    const authEvents: AuthConfig["events"] = {
-      session: () => {},
-    }
-    vi.spyOn(authEvents, "session")
-    authConfig.events = authEvents
-
-    vi.spyOn(defaultCallbacks, "jwt")
-    vi.spyOn(defaultCallbacks, "session")
-
-    const expectedSessionUser = {
+  it("should throw invalid JWT error if salt is invalid", async () => {
+    const expectedSession = {
       name: "test",
       email: "test@test.com",
-      image: "https://test.com/test.png",
+      picture: "https://test.com/test.png",
     }
-    const expectedSessionUserInBody = {
-      name: "test",
-      email: "test@test.com",
-      image: "https://test.com/test.png",
-    }
-    // 1 day from now
-    const currentExpires = new Date(Date.now() + 24 * 60 * 60 * 1000)
-    const expectedToken = randomString(32)
-    const expectedSession: AdapterSession = {
-      sessionToken: expectedToken,
-      userId: "userId",
-      expires: currentExpires,
-    }
-
+    const invalidSalt = "__Secure-authjs.session-token-invalid"
     const encoded = await encode({
-      salt: SESSION_COOKIE_NAME,
+      salt: invalidSalt,
       secret: AUTH_SECRET,
       token: expectedSession,
     })
@@ -136,59 +129,272 @@ describe("Database session", () => {
         cookie: `${SESSION_COOKIE_NAME}=${encoded}`,
       },
     })
-    const mockAdapter: Adapter = {
-      getSessionAndUser: vi.fn().mockResolvedValue({
-        session: expectedSession,
-        user: expectedSessionUser,
-      }),
-      deleteSession: vi.fn().mockResolvedValue(null),
-      updateSession: vi.fn().mockResolvedValue(null),
+    // spy on logger
+    const logger = {
+      error: vi.fn(),
+    }
+    vi.spyOn(logger, "error").mockImplementation((e) =>
+      console.log("JWT error: ", e)
+    )
+    authConfig.logger = logger
+    const response = (await Auth(request, authConfig)) as Response
+    const actual = await response.json()
 
-      // not needed for this test but required for the assertion
-      createUser: vi.fn().mockResolvedValue(null),
-      getUser: vi.fn().mockResolvedValue(null),
-      getUserByAccount: vi.fn().mockResolvedValue(null),
-      getUserByEmail: vi.fn().mockResolvedValue(null),
-      updateUser: vi.fn().mockResolvedValue(null),
-      linkAccount: vi.fn().mockResolvedValue(null),
-      createSession: vi.fn().mockResolvedValue(null),
+    expect(logger.error).toHaveBeenCalledOnce()
+    expect(actual).toEqual(null)
+  })
+  it("should update session expiry if ")
+})
+
+describe("Database session", () => {
+  it("should return a valid database session in the response, and update the session in the database", async () => {
+    const authEvents: AuthConfig["events"] = {
+      session: vi.fn(),
+    }
+    vi.spyOn(authEvents, "session")
+    authConfig.events = authEvents
+
+    vi.spyOn(defaultCallbacks, "jwt")
+    vi.spyOn(defaultCallbacks, "session")
+
+    const now = Date.now()
+    vi.setSystemTime(now)
+    const updatedExpires = new Date(now + 30 * 24 * 60 * 60 * 1000) // 30 days
+    const currentExpires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 1 day from now
+
+    const expectedSessionToken = randomString(32)
+    const expectedUser = {
+      name: "test",
+      email: "test@test.com",
+      image: "https://test.com/test.png",
     }
 
+    const mockAdapter: Adapter = {
+      getSessionAndUser: vi.fn().mockResolvedValue({
+        session: {
+          sessionToken: expectedSessionToken,
+          userId: randomString(32),
+          expires: currentExpires,
+        },
+        user: expectedUser,
+      }),
+      deleteSession: vi.fn(),
+      updateSession: vi.fn(),
+
+      // not needed for this test but required for the assertion
+      createUser: vi.fn(),
+      getUser: vi.fn(),
+      getUserByAccount: vi.fn(),
+      getUserByEmail: vi.fn(),
+      updateUser: vi.fn(),
+      linkAccount: vi.fn(),
+      createSession: vi.fn(),
+    }
     authConfig.adapter = mockAdapter
+
+    const request = new Request(SESSION_ACTION, {
+      headers: {
+        cookie: `${SESSION_COOKIE_NAME}=${expectedSessionToken}`,
+      },
+    })
+
     const response = (await Auth(request, authConfig)) as Response
-    const bodySession = await response.json()
+    const actual = await response.json()
 
     let cookies = response.headers
       .getSetCookie()
       .reduce<Record<string, string>>((acc, cookie) => {
         return { ...acc, ...parse(cookie) }
       }, {})
-    const sessionToken = cookies[SESSION_COOKIE_NAME]
-    const decoded = await decode<{
-      // TODO: This shouldn't be necessary?
-      exp: number
-      iat: number
-      jti: string
-    }>({
-      salt: SESSION_COOKIE_NAME,
-      secret: AUTH_SECRET,
-      token: sessionToken,
+    const actualSessionToken = cookies[SESSION_COOKIE_NAME]
+
+    expect(mockAdapter.getSessionAndUser).toHaveBeenCalledWith(
+      expectedSessionToken
+    )
+    expect(mockAdapter.deleteSession).not.toHaveBeenCalled()
+    expect(mockAdapter.updateSession).toHaveBeenCalledWith({
+      sessionToken: expectedSessionToken,
+      expires: updatedExpires,
+    })
+    expect(defaultCallbacks.session).toHaveBeenCalledWith({
+      newSession: undefined,
+      session: {
+        user: expectedUser,
+        expires: currentExpires.toISOString(),
+      },
+      user: expectedUser,
+    })
+    expect(authConfig.events?.session).toHaveBeenCalledWith({
+      session: {
+        user: expectedUser,
+        expires: currentExpires.toISOString(),
+      },
+    })
+    expect(defaultCallbacks.jwt).not.toHaveBeenCalled()
+
+    expect(actualSessionToken).toEqual(expectedSessionToken)
+    expect(actual.user).toEqual(expectedUser)
+    expect(actual.expires).toEqual(currentExpires.toISOString())
+  })
+  it("should return a valid database session in the response, and not updating the session in the database", async () => {
+    const authEvents: AuthConfig["events"] = {
+      session: vi.fn(),
+    }
+    vi.spyOn(authEvents, "session")
+    authConfig.events = authEvents
+
+    vi.spyOn(defaultCallbacks, "jwt")
+    vi.spyOn(defaultCallbacks, "session")
+
+    const now = Date.now()
+    vi.setSystemTime(now)
+    const updatedExpires = new Date(now + 30 * 24 * 60 * 60 * 1000) // 30 days
+    const currentExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+
+    const expectedSessionToken = randomString(32)
+    const expectedUser = {
+      name: "test",
+      email: "test@test.com",
+      image: "https://test.com/test.png",
+    }
+
+    const mockAdapter: Adapter = {
+      getSessionAndUser: vi.fn().mockResolvedValue({
+        session: {
+          sessionToken: expectedSessionToken,
+          userId: randomString(32),
+          expires: currentExpires,
+        },
+        user: expectedUser,
+      }),
+      deleteSession: vi.fn(),
+      updateSession: vi.fn(),
+
+      // not needed for this test but required for the assertion
+      createUser: vi.fn(),
+      getUser: vi.fn(),
+      getUserByAccount: vi.fn(),
+      getUserByEmail: vi.fn(),
+      updateUser: vi.fn(),
+      linkAccount: vi.fn(),
+      createSession: vi.fn(),
+    }
+    authConfig.adapter = mockAdapter
+
+    const request = new Request(SESSION_ACTION, {
+      headers: {
+        cookie: `${SESSION_COOKIE_NAME}=${expectedSessionToken}`,
+      },
     })
 
-    const { exp, iat, jti, ...actualSession } = decoded || {}
+    const response = (await Auth(request, authConfig)) as Response
+    const actual = await response.json()
 
-    expect(mockAdapter.getSessionAndUser).toHaveBeenCalledOnce()
+    let cookies = response.headers
+      .getSetCookie()
+      .reduce<Record<string, string>>((acc, cookie) => {
+        return { ...acc, ...parse(cookie) }
+      }, {})
+    const actualSessionToken = cookies[SESSION_COOKIE_NAME]
+
+    expect(mockAdapter.getSessionAndUser).toHaveBeenCalledWith(
+      expectedSessionToken
+    )
     expect(mockAdapter.deleteSession).not.toHaveBeenCalled()
-    expect(mockAdapter.updateSession).toHaveBeenCalled()
-    expect(defaultCallbacks.session).toHaveBeenCalledOnce()
-    expect(authConfig.events?.session).toHaveBeenCalledOnce()
-    expect(defaultCallbacks.jwt).not.toHaveBeenCalledOnce()
+    expect(mockAdapter.updateSession).not.toHaveBeenCalled()
+    expect(defaultCallbacks.session).toHaveBeenCalledWith({
+      newSession: undefined,
+      session: {
+        user: expectedUser,
+        expires: currentExpires.toISOString(),
+      },
+      user: expectedUser,
+    })
+    expect(authConfig.events?.session).toHaveBeenCalledWith({
+      session: {
+        user: expectedUser,
+        expires: currentExpires.toISOString(),
+      },
+    })
+    expect(defaultCallbacks.jwt).not.toHaveBeenCalled()
 
-    expect({
-      ...actualSession,
-      expires: new Date((actualSession as AdapterSession).expires),
-    }).toEqual(expectedSession)
-    expect(bodySession.user).toEqual(expectedSessionUserInBody)
-    expect(bodySession.expires).toEqual(currentExpires.toISOString())
+    expect(actualSessionToken).toEqual(expectedSessionToken)
+    expect(actual.user).toEqual(expectedUser)
+    expect(actual.expires).toEqual(currentExpires.toISOString())
+  })
+  it("should return null in the response, and delete the session", async () => {
+    const authEvents: AuthConfig["events"] = {
+      session: vi.fn(),
+    }
+    vi.spyOn(authEvents, "session")
+    authConfig.events = authEvents
+
+    vi.spyOn(defaultCallbacks, "jwt")
+    vi.spyOn(defaultCallbacks, "session")
+
+    const now = Date.now()
+    vi.setSystemTime(now)
+    const updatedExpires = new Date(now + 30 * 24 * 60 * 60 * 1000) // 30 days
+    const currentExpires = new Date(Date.now() - 24 * 60 * 60 * 1000) // 1 day ago
+
+    const expectedSessionToken = randomString(32)
+    const expectedUser = {
+      name: "test",
+      email: "test@test.com",
+      image: "https://test.com/test.png",
+    }
+
+    const mockAdapter: Adapter = {
+      getSessionAndUser: vi.fn().mockResolvedValue({
+        session: {
+          sessionToken: expectedSessionToken,
+          userId: randomString(32),
+          expires: currentExpires,
+        },
+        user: expectedUser,
+      }),
+      deleteSession: vi.fn(),
+      updateSession: vi.fn(),
+
+      // not needed for this test but required for the assertion
+      createUser: vi.fn(),
+      getUser: vi.fn(),
+      getUserByAccount: vi.fn(),
+      getUserByEmail: vi.fn(),
+      updateUser: vi.fn(),
+      linkAccount: vi.fn(),
+      createSession: vi.fn(),
+    }
+    authConfig.adapter = mockAdapter
+
+    const request = new Request(SESSION_ACTION, {
+      headers: {
+        cookie: `${SESSION_COOKIE_NAME}=${expectedSessionToken}`,
+      },
+    })
+
+    const response = (await Auth(request, authConfig)) as Response
+    const actual = await response.json()
+
+    let cookies = response.headers
+      .getSetCookie()
+      .reduce<Record<string, string>>((acc, cookie) => {
+        return { ...acc, ...parse(cookie) }
+      }, {})
+    const actualSessionToken = cookies[SESSION_COOKIE_NAME]
+
+    expect(mockAdapter.getSessionAndUser).toHaveBeenCalledWith(
+      expectedSessionToken
+    )
+    expect(mockAdapter.deleteSession).toHaveBeenCalledWith(
+      expectedSessionToken
+    )
+    expect(mockAdapter.updateSession).not.toHaveBeenCalled()
+    expect(defaultCallbacks.session).not.toHaveBeenCalled()
+    expect(authConfig.events?.session).not.toHaveBeenCalled()
+    expect(defaultCallbacks.jwt).not.toHaveBeenCalled()
+
+    expect(actualSessionToken).toEqual("")
+    expect(actual).toEqual(null)
   })
 })
