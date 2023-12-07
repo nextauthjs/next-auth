@@ -55,8 +55,12 @@ export async function session(
           user: { name: token.name, email: token.email, image: token.picture },
           expires: newExpires.toISOString(),
         }
-        // @ts-expect-error
-        const newSession = await callbacks.session({ session, token })
+        const newSession = await callbacks.session({
+          // @ts-expect-error
+          session,
+          token,
+          sessionToken,
+        })
 
         // Return session payload as response
         response.body = newSession
@@ -130,6 +134,7 @@ export async function session(
           user: { name: user.name, email: user.email, image: user.image },
           expires: session.expires.toISOString(),
         },
+        sessionToken,
         user,
         newSession,
         ...(isUpdate ? { trigger: "update" } : {}),

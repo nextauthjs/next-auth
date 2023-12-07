@@ -251,6 +251,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     params:
       | {
           session: Session
+          sessionToken: string
           /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
           token: JWT
           /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
