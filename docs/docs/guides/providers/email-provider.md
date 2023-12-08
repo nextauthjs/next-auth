@@ -46,7 +46,7 @@ Create an `.env` file to the root of your project and add the connection string 
 
 Now you can add the email provider like this:
 
-```js {3} title="pages/api/auth/[...nextauth].js"
+```js {3} title="auth.js"
 import EmailProvider from "next-auth/providers/email";
 ...
 providers: [
@@ -71,7 +71,7 @@ EMAIL_FROM=noreply@example.com
 
 Now you can add the provider settings to the NextAuth options object in the Email Provider.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 import EmailProvider from "next-auth/providers/email";
 ...
 providers: [
@@ -89,9 +89,9 @@ providers: [
 ],
 ```
 
-3. Do not forget to setup one of the database [adapters](/reference/adapters/overview) for storing the Email verification token.
+1. Do not forget to setup one of the database [adapters](/reference/core/adapters) for storing the Email verification token.
 
-4. You can now sign in with an email address at `/api/auth/signin`.
+2. You can now sign in with an email address at `/api/auth/signin`.
 
 A user account (i.e. an entry in the Users table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they use the link in the email.
 
@@ -101,7 +101,7 @@ You can fully customize the sign in email that is sent by passing a custom funct
 
 e.g.
 
-```js {3} title="pages/api/auth/[...nextauth].js"
+```js {3} title="auth.js"
 import EmailProvider from "next-auth/providers/email";
 ...
 providers: [
@@ -206,7 +206,7 @@ If you want to generate great looking email client compatible HTML with React, c
 
 By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it:
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 providers: [
   EmailProvider({
     async generateVerificationToken() {

@@ -2,19 +2,16 @@
 title: Creating a database adapter
 ---
 
-Using a custom adapter you can connect to any database back-end or even several different databases. Official adapters created and maintained by our community can be found in the [adapters](https://github.com/nextauthjs/next-auth/tree/main/packages) packages. Feel free to add a custom adapter from your project to the repository, or even become a maintainer of a certain adapter. Custom adapters can still be created and used in a project without being added to the repository.
+Custom adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. The only requirement is that your database can support the [models](/reference/core/adapters#models) that Auth.js expects.
 
-## How to create an adapter
-
-For more information about the data these methods need to manage see [models](/reference/adapters#models).
-
-_See the code below for practical example._
+_See the code below for a practical example._
 
 ### Example code
 
 ```ts
-/** @return { import("next-auth/adapters").Adapter } */
-export default function MyAdapter(client, options = {}) {
+import type { Adapter } from '@auth/core/adapters'
+
+export function MyAdapter(client, options = {}): Adapter {
   return {
     async createUser(user) {
       return
@@ -64,7 +61,7 @@ export default function MyAdapter(client, options = {}) {
 
 ### Required methods
 
-These methods are required for all sign in flows:
+These methods are required for all sign-in flows:
 
 - `createUser`
 - `getUser`
@@ -77,7 +74,7 @@ These methods are required for all sign in flows:
 - `deleteSession`
 - `updateUser`
 
-These methods are required to support email / passwordless sign in:
+These methods are required to support email / passwordless sign-in:
 
 - `createVerificationToken`
 - `useVerificationToken`
@@ -88,3 +85,8 @@ These methods will be required in a future release, but are not yet invoked:
 
 - `deleteUser`
 - `unlinkAccount`
+
+### Useful resources
+
+- [Official adapters' source code](https://github.com/nextauthjs/next-auth/tree/main/packages)
+- [`Adapter` interface](/reference/core/adapters#adapter)

@@ -87,7 +87,7 @@ export default function DuendeIdentityServer6<P extends DuendeISUser>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
-    id: "duende-identityserver6",
+    id: "duende-identity-server6",
     name: "DuendeIdentityServer6",
     type: "oidc",
     options,

@@ -247,14 +247,7 @@ export default function Wikimedia<P extends WikimediaProfile>(
         image: null,
       }
     },
-    style: {
-      logo: "/wikimedia.svg",
-      logoDark: "/wikimedia-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
-    },
+    style: { logo: "/wikimedia.svg", bg: "#000", text: "#fff" },
     options,
   }
 }

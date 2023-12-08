@@ -10,7 +10,22 @@ import * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
 import * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
 
 // TODO: Make use of https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html for the string
-type AllTransportOptions = string | SMTPTransport | SMTPTransport.Options | SMTPPool | SMTPPool.Options | SendmailTransport | SendmailTransport.Options | StreamTransport | StreamTransport.Options | JSONTransport | JSONTransport.Options | SESTransport | SESTransport.Options | Transport<any> | TransportOptions
+type AllTransportOptions =
+  | string
+  | SMTPTransport
+  | SMTPTransport.Options
+  | SMTPPool
+  | SMTPPool.Options
+  | SendmailTransport
+  | SendmailTransport.Options
+  | StreamTransport
+  | StreamTransport.Options
+  | JSONTransport
+  | JSONTransport.Options
+  | SESTransport
+  | SESTransport.Options
+  | Transport<any>
+  | TransportOptions
 
 export interface SendVerificationRequestParams {
   identifier: string
@@ -35,7 +50,7 @@ export interface SendVerificationRequestParams {
  *
  * [Custom email service with Auth.js](https://authjs.dev/guides/providers/email#custom-email-service)
  */
-export interface EmailUserConfig {
+export interface EmailUserConfig extends Record<string, unknown> {
   server?: AllTransportOptions
   type?: "email"
   /** @default `"Auth.js <no-reply@authjs.dev>"` */
@@ -80,7 +95,7 @@ export interface EmailUserConfig {
    * By default, we treat email addresses as all lower case,
    * but you can override this function to change this behavior.
    *
-   * [Normalizing the email address](https://authjs.dev/reference/core/providers_email#normalizing-the-email-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
+   * [Normalizing the email address](https://authjs.dev/reference/core/providers/email#normalizing-the-email-address) | [RFC 2821](https://tools.ietf.org/html/rfc2821) | [Email syntax](https://en.wikipedia.org/wiki/Email_address#Syntax)
    */
   normalizeIdentifier?: (identifier: string) => string
 }
@@ -108,7 +123,6 @@ export interface EmailConfig extends CommonProviderOptions {
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
 }
-
 
 // TODO: Rename to Token provider
 // when started working on https://github.com/nextauthjs/next-auth/discussions/1465
@@ -193,7 +207,7 @@ export type EmailProviderType = "email"
  * ],
  * ```
  *
- * 4. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/adapters) for storing the Email verification token.
+ * 4. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/core/adapters) for storing the Email verification token.
  *
  * 5. You can now sign in with an email address at `/api/auth/signin`.
  *

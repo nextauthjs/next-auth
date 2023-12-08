@@ -11,7 +11,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/core @auth/sveltekit
  * ```
  *
@@ -26,9 +26,9 @@
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
- * 
+ *
  * or to use sveltekit platform environment variables for platforms like Cloudflare
- * 
+ *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/core/providers/github"
@@ -197,13 +197,14 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
  *
- * @module index
+ * @module @auth/sveltekit
  */
 
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
+import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
@@ -216,7 +217,7 @@ export async function getSession(
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const prefix = config.prefix ?? "/auth"
+  const prefix = config.prefix ?? `${base}/auth`
   const url = new URL(prefix + "/session", req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
@@ -230,13 +231,13 @@ export async function getSession(
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends AuthConfig {
+export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Defines the base path for the auth routes.
    * If you change the default value,
    * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
    *
-   * @default "/auth"
+   * @default `${base}/auth` - `base` is the base path of your SvelteKit app, configured in `svelte.config.js`.
    */
   prefix?: string
 }
@@ -252,15 +253,19 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>
+type DynamicSvelteKitAuthConfig = (
+  event: RequestEvent
+) => PromiseLike<SvelteKitAuthConfig>
 
-function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+function AuthHandle(
+  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   return async function ({ event, resolve }) {
     const authOptions =
       typeof svelteKitAuthOptions === "object"
         ? svelteKitAuthOptions
         : await svelteKitAuthOptions(event)
-    const { prefix = "/auth" } = authOptions
+    const { prefix = `${base}/auth` } = authOptions
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
@@ -281,10 +286,13 @@ function AuthHandle(svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKit
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
-export function SvelteKitAuth(options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig): Handle {
+export function SvelteKitAuth(
+  options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+): Handle {
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    options.prefix ??= `${base}/auth`
   }
   return AuthHandle(options)
 }
@@ -296,7 +304,7 @@ declare global {
       getSession(): Promise<Session | null>
     }
     interface PageData {
-      session: Session | null
+      session?: Session | null
     }
   }
 }

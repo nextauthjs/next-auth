@@ -22,7 +22,7 @@ This can be done by simply returning a `200` response on `HEAD` requests at the 
 
 For example
 
-```jsx title="/pages/api/auth/[...nextauth].js"
+```jsx title="auth.js"
 import type { NextApiRequest, NextApiResponse } from "next"
 import NextAuth from "next-auth"
 

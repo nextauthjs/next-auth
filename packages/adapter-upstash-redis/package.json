@@ -1,6 +1,6 @@
 {
   "name": "@auth/upstash-redis-adapter",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "description": "Upstash adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -44,14 +44,9 @@
     "@upstash/redis": "^1.0.1"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
     "@types/uuid": "^8.3.3",
     "@upstash/redis": "^1.0.1",
-    "dotenv": "^10.0.0",
-    "isomorphic-fetch": "3.0.0",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*"
+    "dotenv": "^10.0.0"
   },
   "jest": {
     "preset": "@auth/adapter-test/jest"
