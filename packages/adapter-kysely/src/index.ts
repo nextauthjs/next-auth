@@ -18,18 +18,17 @@
 import { Kysely, SqliteAdapter } from "kysely"
 
 import type { Adapter } from "@auth/core/adapters"
-import type { GeneratedAlways } from "kysely"
 
 export interface Database {
   User: {
-    id: GeneratedAlways<string>
+    id: string
     name: string | null
     email: string
     emailVerified: Date | string | null
     image: string | null
   }
   Account: {
-    id: GeneratedAlways<string>
+    id: string
     userId: string
     type: string
     provider: string
@@ -43,7 +42,7 @@ export interface Database {
     session_state: string | null
   }
   Session: {
-    id: GeneratedAlways<string>
+    id: string
     userId: string
     sessionToken: string
     expires: Date | string
@@ -284,7 +283,12 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
 
   return {
     async createUser(data) {
-      const userData = format.from(data, "emailVerified", isSqlite)
+      const userData = Object.assign(
+        format.from(data, "emailVerified", isSqlite),
+        {
+          id: crypto.randomUUID(),
+        }
+      )
       const query = db.insertInto("User").values(userData)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
@@ -348,7 +352,10 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       await db.deleteFrom("User").where("User.id", "=", userId).execute()
     },
     async linkAccount(account) {
-      await db.insertInto("Account").values(account).executeTakeFirstOrThrow()
+      await db
+        .insertInto("Account")
+        .values({ ...account, id: crypto.randomUUID() })
+        .executeTakeFirstOrThrow()
     },
     async unlinkAccount({ providerAccountId, provider }) {
       await db
@@ -358,7 +365,12 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
         .executeTakeFirstOrThrow()
     },
     async createSession(data) {
-      const sessionData = format.from(data, "expires", isSqlite)
+      const sessionData = Object.assign(
+        format.from(data, "expires", isSqlite),
+        {
+          id: crypto.randomUUID(),
+        }
+      )
       const query = db.insertInto("Session").values(sessionData)
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
