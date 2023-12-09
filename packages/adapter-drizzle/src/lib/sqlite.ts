@@ -81,19 +81,23 @@ export function SQLiteDrizzleAdapter(
         .returning()
         .get()
     },
-    getUser(data) {
-      return client.select().from(users).where(eq(users.id, data)).get() ?? null
-    },
-    getUserByEmail(data) {
-      return (
-        client.select().from(users).where(eq(users.email, data)).get() ?? null
+    async getUser(data) {
+      const result = await Promise.resolve(
+        client.select().from(users).where(eq(users.id, data)).get()
       )
+      return result ?? null
+    },
+    async getUserByEmail(data) {
+      const result = await Promise.resolve(
+        client.select().from(users).where(eq(users.email, data)).get()
+      )
+      return result ?? null
     },
     createSession(data) {
       return client.insert(sessions).values(data).returning().get()
     },
-    getSessionAndUser(data) {
-      return (
+    async getSessionAndUser(data) {
+      const x = await Promise.resolve(
         client
           .select({
             session: sessions,
@@ -102,35 +106,40 @@ export function SQLiteDrizzleAdapter(
           .from(sessions)
           .where(eq(sessions.sessionToken, data))
           .innerJoin(users, eq(users.id, sessions.userId))
-          .get() ?? null
+          .get()
       )
+      return x ?? null
     },
-    updateUser(data) {
+    async updateUser(data) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      return client
-        .update(users)
-        .set(data)
-        .where(eq(users.id, data.id))
-        .returning()
-        .get()
+      const result = await Promise.resolve(
+        client
+          .update(users)
+          .set(data)
+          .where(eq(users.id, data.id))
+          .returning()
+          .get()
+      )
+      return result ?? null
     },
-    updateSession(data) {
-      return client
-        .update(sessions)
-        .set(data)
-        .where(eq(sessions.sessionToken, data.sessionToken))
-        .returning()
-        .get()
+    async updateSession(data) {
+      const result = await Promise.resolve(
+        client
+          .update(sessions)
+          .set(data)
+          .where(eq(sessions.sessionToken, data.sessionToken))
+          .returning()
+          .get()
+      )
+      return result ?? null
     },
-    linkAccount(rawAccount) {
-      const updatedAccount = client
-        .insert(accounts)
-        .values(rawAccount)
-        .returning()
-        .get()
+    async linkAccount(rawAccount) {
+      const updatedAccount = await Promise.resolve(
+        client.insert(accounts).values(rawAccount).returning().get()
+      )
 
       const account: AdapterAccount = {
         ...updatedAccount,
@@ -146,36 +155,41 @@ export function SQLiteDrizzleAdapter(
 
       return account
     },
-    getUserByAccount(account) {
-      const results = client
-        .select()
-        .from(accounts)
-        .leftJoin(users, eq(users.id, accounts.userId))
-        .where(
-          and(
-            eq(accounts.provider, account.provider),
-            eq(accounts.providerAccountId, account.providerAccountId)
+    async getUserByAccount(account) {
+      const x = await Promise.resolve(
+        client
+          .select()
+          .from(accounts)
+          .leftJoin(users, eq(users.id, accounts.userId))
+          .where(
+            and(
+              eq(accounts.provider, account.provider),
+              eq(accounts.providerAccountId, account.providerAccountId)
+            )
           )
-        )
-        .get()
-
-      return results?.user ?? null
+          .get()
+      )
+      return x?.user ?? null
     },
-    deleteSession(sessionToken) {
-      return (
+    async deleteSession(sessionToken) {
+      const x = await Promise.resolve(
         client
           .delete(sessions)
           .where(eq(sessions.sessionToken, sessionToken))
           .returning()
-          .get() ?? null
+          .get()
       )
+      return x ?? null
     },
-    createVerificationToken(token) {
-      return client.insert(verificationTokens).values(token).returning().get()
+    async createVerificationToken(token) {
+      const result = await Promise.resolve(
+        client.insert(verificationTokens).values(token).returning().get()
+      )
+      return result ?? null
     },
-    useVerificationToken(token) {
+    async useVerificationToken(token) {
       try {
-        return (
+        const result = await Promise.resolve(
           client
             .delete(verificationTokens)
             .where(
@@ -185,25 +199,31 @@ export function SQLiteDrizzleAdapter(
               )
             )
             .returning()
-            .get() ?? null
+            .get()
         )
+        return result ?? null
       } catch (err) {
         throw new Error("No verification token found.")
       }
     },
-    deleteUser(id) {
-      return client.delete(users).where(eq(users.id, id)).returning().get()
+    async deleteUser(id) {
+      const result = await Promise.resolve(
+        client.delete(users).where(eq(users.id, id)).returning().get()
+      )
+      return result ?? null
     },
-    unlinkAccount(account) {
-      client
-        .delete(accounts)
-        .where(
-          and(
-            eq(accounts.providerAccountId, account.providerAccountId),
-            eq(accounts.provider, account.provider)
+    async unlinkAccount(account) {
+      await Promise.resolve(
+        client
+          .delete(accounts)
+          .where(
+            and(
+              eq(accounts.providerAccountId, account.providerAccountId),
+              eq(accounts.provider, account.provider)
+            )
           )
-        )
-        .run()
+          .run()
+      )
 
       return undefined
     },
