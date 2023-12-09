@@ -53,7 +53,7 @@
     "@types/uuid": "^8.3.3",
     "better-sqlite3": "^8.6.0",
     "drizzle-kit": "^0.19.5",
-    "drizzle-orm": "^0.28.6",
+    "drizzle-orm": "^0.29.1",
     "mysql2": "^3.2.0",
     "postgres": "^3.3.4"
   },
@@ -61,3 +61,4 @@
     "preset": "@auth/adapter-test/jest"
   }
 }
+
