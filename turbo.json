@@ -75,6 +75,7 @@
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/libsql-adapter#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
@@ -106,8 +107,8 @@
     },
     "docs#build": {
       "dependsOn": [
-        "@auth/core#build",
         "@auth/azure-tables-adapter#build",
+        "@auth/core#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
@@ -117,6 +118,7 @@
         "@auth/firebase-adapter#build",
         "@auth/hasura-adapter#build",
         "@auth/kysely-adapter#build",
+        "@auth/libsql-adapter#build",
         "@auth/mikro-orm-adapter#build",
         "@auth/mongodb-adapter#build",
         "@auth/neo4j-adapter#build",

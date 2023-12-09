@@ -1,0 +1,14 @@
+{
+    "extends": "@auth/tsconfig/tsconfig.base.json",
+    "compilerOptions": {
+      "outDir": ".",
+      "rootDir": "src",
+    },
+    "exclude": [
+      "*.js",
+      "*.d.ts",
+    ],
+    "include": [
+      "src/**/*"
+    ],
+  }

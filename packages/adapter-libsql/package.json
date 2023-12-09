@@ -1,0 +1,54 @@
+{
+  "name": "@auth/libsql-adapter",
+  "version": "0.1.0",
+  "description": "A libSQL adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Adrian Scehura <adrian.scehura@gmail.com>",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "libsql",
+    "turso"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "jest": {
+    "preset": "@auth/adapter-test/jest"
+  },
+  "devDependencies": {
+    "@libsql/client": "^0.3.6"
+  },
+  "peerDependencies": {
+    "@libsql/client": "^0.3.6"
+  }
+}
