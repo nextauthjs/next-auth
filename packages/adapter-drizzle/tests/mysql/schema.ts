@@ -14,4 +14,4 @@ export const { users, accounts, sessions, verificationTokens } =
   createTables(mysqlTable)
 export const schema = { users, accounts, sessions, verificationTokens }
 
-export const db = drizzle(poolConnection, { schema })
+export const db = drizzle(poolConnection, { schema, mode: "default" })
