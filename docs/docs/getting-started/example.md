@@ -30,7 +30,7 @@ If you're using [Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-ha
 
 ```javascript title="pages/api/auth/[...nextauth].js" showLineNumbers
 import NextAuth from "next-auth"
-import Github from "next-auth/providers/github"
+import Github as GitHubProvider from "next-auth/providers/github"
 
 export const authOptions = {
   // Configure one or more authentication providers
