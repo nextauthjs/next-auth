@@ -63,6 +63,8 @@ import GitHub from "next-auth/providers/github"
 // import Zoho from "next-auth/providers/zoho"
 // import Zoom from "next-auth/providers/zoom"
 
+// NextAuthOptions has been renamed to NextAuthConfig since v5
+// If you are using a version prior to v5, use NextAuthOptions instead
 import type { NextAuthConfig } from "next-auth"
 
 export const config = {
