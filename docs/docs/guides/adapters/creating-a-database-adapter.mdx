@@ -10,42 +10,38 @@ An Auth.js adapter is a function that receives an ORM/database client and return
 
 ## User management
 
-:::info
 Auth.js differentiates between users and accounts. A user can have multiple accounts. An account is created for each provider type the user signs in with for the first time. For example, if a user signs in with Google and then with Facebook, they will have two accounts, one for each provider. The first provider the user signs in with will also be used to create the user object. See the [`profile()` provider method](/reference/core/providers#profile).
-:::
 
-### Adapter methods
+### Methods and models
 
-So for the most basic use case, you will need to implement the following methods:
+<div style={{display: "grid", gridTemplateColumns: "1fr 1fr", placeItems: 'center'}}>
+  <span>
+    - [`createUser`](/reference/core/adapters#createuser)
+    - [`getUser`](/reference/core/adapters#getuser)
+    - [`getUserByAccount`](/reference/core/adapters#getuserbyaccount)
+    - [`updateUser`](/reference/core/adapters#updateuser)
+    - [`linkAccount`](/reference/core/adapters#linkaccount)
 
-- [`createUser`](/reference/core/adapters#createuser)
-- [`getUser`](/reference/core/adapters#getuser)
-- [`getUserByAccount`](/reference/core/adapters#getuserbyaccount)
-- [`updateUser`](/reference/core/adapters#updateuser)
-- [`linkAccount`](/reference/core/adapters#linkaccount)
+    Not yet invoked by Auth.js:
+    - [_`deleteUser`_](/reference/core/adapters#deleteuser)
+    - [_`unlinkAccount`_](/reference/core/adapters#unlinkaccount)
+  </span>
+  ```mermaid
+  erDiagram
+      User ||--|{ Account : ""
+      User {
+        string id
+      }
+      Account {
+        string userId
+        string type
+        string provider
+        string providerAccountId
+      }
+  ```
+</div>
 
-The following methods are currently optional as they aren't invoked by Auth.js yet, but recommended:
-
-- [`deleteUser`](/reference/core/adapters#deleteuser)
-- [`unlinkAccount`](/reference/core/adapters#unlinkaccount)
-
-### Database models
-
-The most basic user management model only needs the following tables/columns:
-
-```mermaid
-erDiagram
-    User ||--|{ Account : ""
-    User {
-      string id
-    }
-    Account {
-      string userId
-      string type
-      string provider
-      string providerAccountId
-    }
-```
+See also: [User](/getting-started/adapters#user) and [Account](/getting-started/adapters#account) models.
 
 :::note
 Although Auth.js doesn't require it, for basic display purposes, we recommend adding the following columns to the `User` table as well: `name`, `email`, `image`. You can configure the columns via the [`profile()` provider method](/reference/core/providers#profile). If you don't need to save these properties, create an empty `profile() {}` method.
@@ -55,45 +51,46 @@ Although Auth.js doesn't require it, for basic display purposes, we recommend ad
 Although Auth.js doesn't require it, the `Account` table typically saves tokens retrieved from the provider. You can configure the columns via the [`account()` provider method](/reference/core/providers#account). If you don't need to save tokens, create an empty `account() {}` method.
 :::
 
-See also: [User](/getting-started/adapters#user) and [Account](/getting-started/adapters#account) models.
 
 ## Database session management
 
 Auth.js can manage sessions in two ways. Learn about them and their advantages and disadvantages at [Concepts: Session strategies](/concepts/session-strategies).
 
-### Adapter methods
+### Methods and models
+
+<div style={{display: "grid", gridTemplateColumns: "1fr 1fr", placeItems: 'center'}}>
+  <span>
+    - [`createSession`](/reference/core/adapters#createsession)
+    - [`getSessionAndUser`](/reference/core/adapters#getsessionanduser)
+    - [`updateSession`](/reference/core/adapters#updatesession)
+    - [`deleteSession`](/reference/core/adapters#deletesession)
+  </span>
+  ```mermaid
+  erDiagram
+      User ||--|{ Account : ""
+      User {
+        string id
+      }
+      User ||--|{ Session : ""
+      Session {
+        string id
+        timestamp expires
+        string sessionToken
+        string userId
+      }
+      Account {
+        string userId
+        string type
+        string provider
+        string providerAccountId
+      }
+  ```
+</div>
 
 If you want to use database sessions, you will need to implement the following methods:
 
-- [`createSession`](/reference/core/adapters#createsession)
-- [`getSessionAndUser`](/reference/core/adapters#getsessionanduser)
-- [`updateSession`](/reference/core/adapters#updatesession)
-- [`deleteSession`](/reference/core/adapters#deletesession)
-
-### Database models
 
 To add database session management, you will need to expand your database tables/columns as follows:
-
-```mermaid
-erDiagram
-    User ||--|{ Account : ""
-    User {
-      string id
-    }
-    User ||--|{ Session : ""
-    Session {
-      string id
-      timestamp expires
-      string sessionToken
-      string userId
-    }
-    Account {
-      string userId
-      string type
-      string provider
-      string providerAccountId
-    }
-```
 
 See also: [Session](/getting-started/adapters#session) models.
 
@@ -101,36 +98,36 @@ See also: [Session](/getting-started/adapters#session) models.
 
 When you want to support email/passwordless login, Auth.js uses a database to store temporary verification tokens that are tied to a user's email address.
 
-### Adapter methods
 
-- [`getUserByEmail`](/reference/core/adapters#getuserbyemail)
-- [`createVerificationToken`](/reference/core/adapters#createverificationtoken)
-- [`useVerificationToken`](/reference/core/adapters#useverificationtoken)
+### Methods and models
 
-### Database models
-
-To add verification token support, expand your database tables/columns as follows. Notice the `emailVerified` column in the `User` table and the `VerificationToken` table:
-
-```mermaid
-erDiagram
-    User ||--|{ Account : ""
-    User {
-      string id
-      timestamp emailVerified
-    }
-    Account {
-      string userId
-      string type
-      string provider
-      string providerAccountId
-    }
-    User ||--|{ VerificationToken : ""
-    VerificationToken {
-      string identifier
-      string token
-      timestamp expires
-    }
-```
+<div style={{display: "grid", gridTemplateColumns: "1fr 1fr", placeItems: 'center'}}>
+  <span>
+    - [`getUserByEmail`](/reference/core/adapters#getuserbyemail)
+    - [`createVerificationToken`](/reference/core/adapters#createverificationtoken)
+    - [`useVerificationToken`](/reference/core/adapters#useverificationtoken)
+  </span>
+  ```mermaid
+  erDiagram
+      User ||--|{ Account : ""
+      User {
+        string id
+        timestamp emailVerified
+      }
+      Account {
+        string userId
+        string type
+        string provider
+        string providerAccountId
+      }
+      User ||--|{ VerificationToken : ""
+      VerificationToken {
+        string identifier
+        string token
+        timestamp expires
+      }
+  ```
+</div>
 
 See [Verification Token](/getting-started/adapters#verification-token) models
 
