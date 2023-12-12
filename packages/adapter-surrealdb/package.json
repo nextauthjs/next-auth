@@ -1,6 +1,6 @@
 {
   "name": "@auth/surrealdb-adapter",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "SurrealDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
