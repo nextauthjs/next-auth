@@ -58,6 +58,7 @@ export async function handleLoginOrRegister(
     getUserByAccount,
     getUserByEmail,
     linkAccount,
+    linkAccountOverride,
     createSession,
     getSessionAndUser,
     deleteSession,
@@ -137,7 +138,13 @@ export async function handleLoginOrRegister(
         return { session, user, isNewUser }
       }
       // If the user is currently signed in, but the new account they are signing in
-      // with is already associated with another user, then we cannot link them
+      // with is already associated with another user, then we try to call linkAccountOverride
+      const overridedUser = await linkAccountOverride(user, account)
+      if (overridedUser) {
+        return { session, user: overridedUser, isNewUser }
+      }
+
+      // If the return value is falsy, we cannot link them
       // and need to return an error.
       throw new OAuthAccountNotLinked(
         "The account is already associated with another user",
