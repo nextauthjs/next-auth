@@ -16,9 +16,6 @@ importers:
       '@actions/core':
         specifier: ^1.10.0
         version: 1.10.0
-      '@auth/adapter-test':
-        specifier: workspace:*
-        version: link:packages/adapter-test
       '@balazsorban/monorepo-release':
         specifier: 0.3.1
         version: 0.3.1(patch_hash=jwqbwknpdjbuidjz24xxlo7tdm)
@@ -553,18 +550,6 @@ importers:
       surrealdb.js:
         specifier: ^0.9.1
         version: 0.9.1
-
-  packages/adapter-test:
-    devDependencies:
-      '@auth/core':
-        specifier: workspace:*
-        version: link:../core
-      '@swc/core':
-        specifier: ^1.3.95
-        version: 1.3.95
-      '@swc/jest':
-        specifier: ^0.2.29
-        version: 0.2.29(@swc/core@1.3.95)
 
   packages/adapter-typeorm:
     dependencies:
