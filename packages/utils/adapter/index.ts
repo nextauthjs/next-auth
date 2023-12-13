@@ -74,7 +74,8 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.disconnect?.()
   })
 
-  let user: any = options.fixtures?.user ?? {
+  let user = options.fixtures?.user ?? {
+    id: id(),
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
