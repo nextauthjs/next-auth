@@ -198,15 +198,6 @@ export function UpstashRedisAdapter(
     return hydrateDates(session)
   }
 
-  const setUser = async (
-    id: string,
-    user: AdapterUser
-  ): Promise<AdapterUser> => {
-    await setObjectAsJson(userKeyPrefix + id, user)
-    await client.set(`${emailKeyPrefix}${user.email as string}`, id)
-    return user
-  }
-
   const getUser = async (id: string) => {
     const user = await client.get<AdapterUser>(userKeyPrefix + id)
     if (!user) return null
@@ -215,10 +206,11 @@ export function UpstashRedisAdapter(
 
   return {
     async createUser(user) {
-      const id = crypto.randomUUID()
-      // TypeScript thinks the emailVerified field is missing
-      // but all fields are copied directly from user, so it's there
-      return await setUser(id, { ...user, id })
+      await Promise.all([
+        setObjectAsJson(userKeyPrefix + user.id, user),
+        client.set(`${emailKeyPrefix}${user.email}`, user.id),
+      ])
+      return user
     },
     getUser,
     async getUserByEmail(email) {
@@ -235,10 +227,14 @@ export function UpstashRedisAdapter(
       if (!dbAccount) return null
       return await getUser(dbAccount.userId)
     },
-    async updateUser(updates) {
-      const userId = updates.id as string
-      const user = await getUser(userId)
-      return await setUser(userId, { ...(user as AdapterUser), ...updates })
+    async updateUser(partialUser) {
+      const user = await getUser(partialUser.id)
+      const newUser = { ...user, ...partialUser }
+      await Promise.all([
+        setObjectAsJson(userKeyPrefix + user.id, newUser),
+        client.set(`${emailKeyPrefix}${user.email}`, user.id),
+      ])
+      return newUser
     },
     async linkAccount(account) {
       const id = `${account.provider}:${account.providerAccountId}`

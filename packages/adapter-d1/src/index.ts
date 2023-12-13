@@ -248,15 +248,14 @@ export function D1Adapter(db: D1Database): Adapter {
 
   return {
     async createUser(user) {
-      const id: string = crypto.randomUUID()
       const createBindings = [
-        id,
+        user.id,
         user.name,
         user.email,
         user.emailVerified?.toISOString(),
         user.image,
       ]
-      const getBindings = [id]
+      const getBindings = [user.id]
 
       const newUser = await createRecord<AdapterUser>(
         db,
