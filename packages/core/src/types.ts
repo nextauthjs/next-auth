@@ -340,14 +340,15 @@ export interface CookieOption {
 }
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
-export interface CookiesOptions {
-  sessionToken: CookieOption
-  callbackUrl: CookieOption
-  csrfToken: CookieOption
-  pkceCodeVerifier: CookieOption
-  state: CookieOption
-  nonce: CookieOption
-}
+export type CookieType =
+  | "sessionToken"
+  | "callbackUrl"
+  | "csrfToken"
+  | "pkceCodeVerifier"
+  | "state"
+  | "nonce"
+
+export type CookiesOptions = Record<CookieType, CookieOption>
 
 /**
  *  The various event callbacks you can register for from next-auth

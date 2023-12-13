@@ -106,13 +106,11 @@ export async function init({
     action,
     // @ts-expect-errors
     provider,
-    cookies: {
-      ...cookie.defaultCookies(
-        authOptions.useSecureCookies ?? url.protocol === "https:"
-      ),
-      // Allow user cookie options to override any cookie settings above
-      ...authOptions.cookies,
-    },
+    // Allow user cookie options to deep-override any cookie settings
+    cookies: cookie.makeCookiesOptions(
+      authOptions.useSecureCookies ?? url.protocol === "https:",
+      authOptions.cookies
+    ),
     providers,
     // Session options
     session: {

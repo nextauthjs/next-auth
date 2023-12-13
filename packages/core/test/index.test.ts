@@ -11,12 +11,47 @@ import { parse } from "cookie"
 import { defaultCallbacks } from "../src/lib/init.js"
 import { Adapter } from "../src/adapters.js"
 import { randomString } from "../src/lib/utils/web.js"
+import { makeCookiesOptions } from "../lib/utils/cookie"
 
 const authConfig: AuthConfig = {
   providers: [GitHub],
   trustHost: true,
   secret: AUTH_SECRET,
 }
+
+describe("makeCookiesOptions", () => {
+  it("ensure secure defaults", () => {
+    const cookies = makeCookiesOptions(true)
+
+    expect(cookies.sessionToken.name).toBe("__Secure-authjs.session-token")
+    expect(cookies.callbackUrl.name).toBe("__Secure-authjs.callback-url")
+    expect(cookies.csrfToken.name).toBe("__Host-authjs.csrf-token")
+    expect(cookies.pkceCodeVerifier.name).toBe(
+      "__Secure-authjs.pkce.code_verifier"
+    )
+    expect(cookies.state.name).toBe("__Secure-authjs.state")
+    expect(cookies.nonce.name).toBe("__Secure-authjs.nonce")
+
+    for (const cookie of Object.values(cookies)) {
+      expect(cookie.options.httpOnly).toBe(true)
+      expect(cookie.options.secure).toBe(true)
+      expect(cookie.options.sameSite).toBe("lax")
+    }
+  })
+  it("merge options", () => {
+    const cookies = makeCookiesOptions(true, {
+      sessionToken: { options: { domain: ".myapp.com" } },
+      callbackUrl: { name: "myapp.callback-url" },
+    })
+
+    expect(cookies.sessionToken.name).toBe("__Secure-authjs.session-token")
+    expect(cookies.sessionToken.options.httpOnly).toBe(true)
+    expect(cookies.sessionToken.options.secure).toBe(true)
+    expect(cookies.sessionToken.options.sameSite).toBe("lax")
+    expect(cookies.sessionToken.options.domain).toBe(".myapp.com")
+    expect(cookies.callbackUrl.name).toBe("myapp.callback-url")
+  })
+})
 
 describe("JWT session", () => {
   it("should return a valid JWT session response", async () => {
