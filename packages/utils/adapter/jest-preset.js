@@ -9,14 +9,14 @@ const swcConfig = {
 }
 
 /** @type {import("jest").Config} */
-module.exports = {
+// @ts-expect-error FIXME
+export default {
   transform: {
     "^.+\\.(t|j)s$": ["@swc/jest", swcConfig],
   },
   rootDir: ".",
   // coverageDirectory: "<rootDir>/coverage/",
   // collectCoverageFrom: ["<rootDir>/packages/*/src/**/*.{ts,tsx}"],
-  testURL: "http://localhost/",
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },

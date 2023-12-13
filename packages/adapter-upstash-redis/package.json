@@ -49,6 +49,6 @@
     "dotenv": "^10.0.0"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

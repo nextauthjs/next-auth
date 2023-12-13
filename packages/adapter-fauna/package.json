@@ -54,6 +54,6 @@
     "faunadb": "^4.3.0"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

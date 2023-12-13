@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import {
   db,

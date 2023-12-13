@@ -50,6 +50,6 @@
     "edgedb": "^1.0.1"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

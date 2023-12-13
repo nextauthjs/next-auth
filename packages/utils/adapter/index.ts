@@ -21,7 +21,7 @@ export interface TestOptions {
     account?: any
     sessionUpdateExpires?: Date
     verificationTokenExpires?: Date
-  },
+  }
   db: {
     /** Generates UUID v4 by default. Use it to override how the test suite should generate IDs, like user id. */
     id?: () => string
@@ -78,7 +78,7 @@ export async function runBasicTests(options: TestOptions) {
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
-    emailVerified: new Date()
+    emailVerified: new Date(),
   }
 
   if (process.env.CUSTOM_MODEL === "1") {
@@ -241,7 +241,8 @@ export async function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
+      expires:
+        options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
@@ -260,7 +261,8 @@ export async function runBasicTests(options: TestOptions) {
     const verificationToken = {
       token: hashedToken,
       identifier,
-      expires: options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
+      expires:
+        options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
     }
     await adapter.createVerificationToken?.(verificationToken)
 
