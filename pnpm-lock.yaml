@@ -161,9 +161,6 @@ importers:
 
   apps/dev/sveltekit:
     dependencies:
-      '@auth/core':
-        specifier: workspace:*
-        version: link:../../../packages/core
       '@auth/sveltekit':
         specifier: workspace:*
         version: link:../../../packages/frameworks-sveltekit

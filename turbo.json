@@ -35,6 +35,7 @@
       ],
       "outputs": [
         ".svelte-kit/**",
+        "providers/**",
         "client.*",
         "index.*"
       ],
