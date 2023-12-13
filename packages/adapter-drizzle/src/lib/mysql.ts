@@ -84,9 +84,16 @@ export function mySqlDrizzleAdapter(
     createTables(tableFn)
 
   return {
-    async createUser(user) {
-      await client.insert(users).values(user)
-      return user
+    async createUser(data) {
+      const id = crypto.randomUUID()
+
+      await client.insert(users).values({ ...data, id })
+
+      return await client
+        .select()
+        .from(users)
+        .where(eq(users.id, id))
+        .then((res) => res[0])
     },
     async getUser(data) {
       const thing =

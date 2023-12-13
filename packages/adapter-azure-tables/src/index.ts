@@ -94,19 +94,24 @@ export function withoutKeys<T>(
 export const TableStorageAdapter = (client: TableClient): Adapter => {
   return {
     async createUser(user) {
+      const id = crypto.randomUUID()
+      const newUser = {
+        ...user,
+        id,
+      }
       await Promise.all([
         client.createEntity({
-          ...user,
+          ...newUser,
           partitionKey: keys.userByEmail,
           rowKey: user.email,
         }),
         client.createEntity({
-          ...user,
+          ...newUser,
           partitionKey: keys.user,
-          rowKey: user.id,
+          rowKey: id,
         }),
       ])
-      return user
+      return newUser
     },
     async getUser(id: string) {
       try {

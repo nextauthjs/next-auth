@@ -311,8 +311,10 @@ export function TypeORMAdapter(
       const m = await getManager(c)
       await m.connection.close()
     },
-    async createUser(user) {
-      await getManager(c).then((m) => m.save(UserEntityName, user))
+    // @ts-expect-error
+    createUser: async (data) => {
+      const m = await getManager(c)
+      const user = await m.save(UserEntityName, data)
       return user
     },
     // @ts-expect-error
@@ -380,11 +382,7 @@ export function TypeORMAdapter(
     },
     async updateSession(data) {
       const m = await getManager(c)
-      await m.update(
-        SessionEntityName,
-        { sessionToken: data.sessionToken },
-        data
-      )
+      await m.update(SessionEntityName, { sessionToken: data.sessionToken }, data)
       // TODO: Try to return?
       return null
     },

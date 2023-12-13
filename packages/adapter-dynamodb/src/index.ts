@@ -183,7 +183,12 @@ export function DynamoDBAdapter(
   const GSI1SK = options?.indexSortKey ?? "GSI1SK"
 
   return {
-    async createUser(user) {
+    async createUser(data) {
+      const user: AdapterUser = {
+        ...(data as any),
+        id: crypto.randomUUID(),
+      }
+
       await client.put({
         TableName,
         Item: format.to({
