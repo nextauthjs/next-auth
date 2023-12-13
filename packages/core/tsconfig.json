@@ -1,5 +1,5 @@
 {
-  "extends": "@auth/utils/tsconfig.json",
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",

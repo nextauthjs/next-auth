@@ -51,6 +51,6 @@
     "@auth/core": "workspace:*"
   },
   "jest": {
-    "preset": "@auth/utils/adapter"
+    "preset": "utils/adapter"
   }
 }

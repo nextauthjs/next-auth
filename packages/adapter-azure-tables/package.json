@@ -51,6 +51,6 @@
     "@azure/data-tables": "^13.2.1"
   },
   "jest": {
-    "preset": "@auth/utils/adapter"
+    "preset": "utils/adapter"
   }
 }

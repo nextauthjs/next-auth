@@ -50,6 +50,6 @@
     "better-sqlite3": "^8.6.0"
   },
   "jest": {
-    "preset": "@auth/utils/adapter"
+    "preset": "utils/adapter"
   }
 }

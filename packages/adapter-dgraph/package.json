@@ -48,6 +48,6 @@
     "jsonwebtoken": "^8.5.1"
   },
   "jest": {
-    "preset": "@auth/utils/adapter"
+    "preset": "utils/adapter"
   }
 }

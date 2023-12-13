@@ -46,6 +46,6 @@
     "@xata.io/client": "^0.13.0"
   },
   "jest": {
-    "preset": "@auth/utils/adapter"
+    "preset": "utils/adapter"
   }
 }

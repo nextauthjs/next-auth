@@ -59,6 +59,6 @@
     "prisma": "^5.2.0"
   },
   "jest": {
-    "preset": "@auth/utils/adapter"
+    "preset": "utils/adapter"
   }
 }

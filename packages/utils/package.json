@@ -1,5 +1,5 @@
 {
-  "name": "@auth/utils",
+  "name": "utils",
   "private": true,
   "version": "0.0.0",
   "devDependencies": {

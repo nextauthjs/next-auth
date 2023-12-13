@@ -19,9 +19,6 @@ importers:
       '@auth/adapter-test':
         specifier: workspace:*
         version: link:packages/adapter-test
-      '@auth/utils':
-        specifier: workspace:*
-        version: link:packages/utils
       '@balazsorban/monorepo-release':
         specifier: 0.3.1
         version: 0.3.1(patch_hash=jwqbwknpdjbuidjz24xxlo7tdm)
@@ -82,6 +79,9 @@ importers:
       typescript:
         specifier: 5.2.2
         version: 5.2.2
+      utils:
+        specifier: workspace:*
+        version: link:packages/utils
 
   apps/dev/nextjs:
     dependencies:
