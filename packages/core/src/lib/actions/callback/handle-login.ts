@@ -106,9 +106,8 @@ export async function handleLoginOrRegister(
       user = await updateUser({ id: userByEmail.id, emailVerified: new Date() })
       await events.updateUser?.({ user })
     } else {
-      const { id: _, ...newUser } = { ...profile, emailVerified: new Date() }
       // Create user account if there isn't one for the email address already
-      user = await createUser(newUser)
+      user = await createUser({ ...profile, emailVerified: new Date() })
       await events.createUser?.({ user })
       isNewUser = true
     }
@@ -217,8 +216,7 @@ export async function handleLoginOrRegister(
       // If no account matching the same [provider].id or .email exists, we can
       // create a new account for the user, link it to the OAuth account and
       // create a new session for them so they are signed in with it.
-      const { id: _, ...newUser } = { ...profile, emailVerified: null }
-      user = await createUser(newUser)
+      user = await createUser({ ...profile, emailVerified: null })
     }
     await events.createUser?.({ user })
 
