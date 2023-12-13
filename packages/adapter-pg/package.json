@@ -51,6 +51,6 @@
     "pg": "^8.7.1"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "@auth/utils/adapter"
   }
 }

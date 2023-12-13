@@ -79,6 +79,6 @@
     }
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "@auth/utils/adapter"
   }
 }

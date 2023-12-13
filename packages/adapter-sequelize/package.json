@@ -46,6 +46,6 @@
     "sequelize": "^6.6.5"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "@auth/utils/adapter"
   }
 }

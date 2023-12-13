@@ -45,6 +45,6 @@
     "@supabase/supabase-js": "^2.0.5"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "@auth/utils/adapter"
   }
 }
