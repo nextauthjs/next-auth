@@ -1,10 +1,18 @@
 // Use this script to re-export all providers from core in Auth.js frameworks
 
 import fs from "fs/promises"
-import { resolve } from "path"
+import { resolve, join } from "path"
+import { parseArgs } from "node:util"
 
 const sourceDir = resolve(process.cwd(), "../core/src/providers")
-const destinationDir = resolve(process.cwd(), "src/providers")
+
+const args = parseArgs({
+  args: process.argv.slice(2),
+  options: { out: { type: "string", default: "src" } },
+})
+const { out } = args.values
+
+const destinationDir = resolve(process.cwd(), join(out, "providers"))
 const nonProvider = ["oauth-types.ts", "oauth.ts"]
 try {
   await fs.mkdir(destinationDir, { recursive: true })

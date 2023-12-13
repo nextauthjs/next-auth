@@ -1,5 +1,5 @@
 import Surreal, { ExperimentalSurrealHTTP } from "surrealdb.js"
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 
 import { config } from "./common"
 

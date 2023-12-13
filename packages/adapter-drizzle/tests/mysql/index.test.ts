@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import { db, sessions, verificationTokens, accounts, users } from "./schema"
 import { eq, and } from "drizzle-orm"

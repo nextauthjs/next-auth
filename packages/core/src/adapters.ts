@@ -86,13 +86,13 @@
  * ```
  *
  * ## Models
- * 
+ *
  * Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will have a similar structure to the graph below. Each model can be extended with additional fields.
- * 
+ *
  * :::note
  * Auth.js / NextAuth.js uses `camelCase` for its database rows while respecting the conventional `snake_case` formatting for OAuth-related values. If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
  * :::
- * 
+ *
  * ```mermaid
  * erDiagram
  *     User ||--|{ Account : ""
@@ -131,10 +131,10 @@
  *       timestamp expires
  *     }
  * ```
- * 
+ *
  * ## Testing
  *
- * There is a test suite [available](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-test)
+ * There is a test suite [available](https://github.com/nextauthjs/next-auth/tree/main/packages/utils/adapter/index.ts)
  * to ensure that your adapter is compatible with Auth.js.
  *
  * ## Known issues
