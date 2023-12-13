@@ -12,14 +12,14 @@
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install @auth/core @auth/sveltekit
+ * npm install @auth/sveltekit
  * ```
  *
  * ## Usage
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const handle = SvelteKitAuth({
@@ -31,7 +31,7 @@
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
  * export const handle = SvelteKitAuth(async (event) => {
@@ -150,7 +150,7 @@
  *
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
- * import GitHub from '@auth/core/providers/github';
+ * import GitHub from '@auth/sveltekit/providers/github';
  * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
  * import { redirect, type Handle } from '@sveltejs/kit';
  * import { sequence } from '@sveltejs/kit/hooks';

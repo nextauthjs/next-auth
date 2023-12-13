@@ -23,12 +23,13 @@
     "Iain Collins <me@iaincollins.com>"
   ],
   "scripts": {
-    "build": "pnpm clean && pnpm check && svelte-package && node ./scripts/postbuild.js && rm -rf package",
+    "build": "pnpm clean && pnpm providers && pnpm check && svelte-package && node ./scripts/postbuild.js && rm -rf package",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "clean": "rm -rf client.* index.* package",
+    "clean": "rm -rf client.* index.* package src/lib/providers",
     "dev": "svelte-package -w",
     "preview": "vite preview",
+    "providers": "node ../utils/scripts/providers.js --out src/lib",
     "test:unit": "vitest"
   },
   "devDependencies": {
@@ -54,6 +55,7 @@
   "files": [
     "client.*",
     "index.*",
+    "providers",
     "src"
   ],
   "exports": {
