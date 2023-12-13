@@ -27,7 +27,7 @@
  * })
  * ```
  *
- * or to use sveltekit platform environment variables for platforms like Cloudflare
+ * or to use SvelteKit platform environment variables for platforms like Cloudflare
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
@@ -44,11 +44,11 @@
  * }) satisfies Handle;
  * ```
  *
- * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
+ * Remember to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
+ * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
  * ```
  * [origin]/auth/callback/[provider]
  * ```
