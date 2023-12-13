@@ -8,11 +8,11 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/sequelize-adapter sequelize
+ * ```bash npm2yarn
+ * npm install next-auth @auth/sequelize-adapter sequelize
  * ```
  *
- * @module @next-auth/sequelize-adapter
+ * @module @auth/sequelize-adapter
  */
 import type {
   Adapter,
@@ -20,13 +20,14 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import { Sequelize, Model, ModelCtor } from "sequelize"
-import * as defaultModels from "./models"
+import * as defaultModels from "./models.js"
 
 export { defaultModels as models }
 
 // @see https://sequelize.org/master/manual/typescript.html
+//@ts-expect-error
 interface AccountInstance
   extends Model<AdapterAccount, Partial<AdapterAccount>>,
     AdapterAccount {}
@@ -70,14 +71,14 @@ export interface SequelizeAdapterOptions {
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import SequelizeAdapter from "@next-auth/sequelize-adapter"
+ * import SequelizeAdapter from "@auth/sequelize-adapter"
  * import { Sequelize } from "sequelize"
  *
  * // https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database
  * const sequelize = new Sequelize("yourconnectionstring")
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-config
+ * // https://authjs.dev/reference/core#authconfig
  * export default NextAuth({
  *   // https://authjs.dev/reference/providers/
  *   providers: [],
@@ -87,13 +88,13 @@ export interface SequelizeAdapterOptions {
  *
  * ### Updating the database schema
  *
- * By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://authjs.dev/reference/adapters/models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
+ * By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://authjs.dev/reference/core/adapters/models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
  *
- * > This schema is adapted for use in Sequelize and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Sequelize and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * ```js
  * import NextAuth from "next-auth"
- * import SequelizeAdapter from "@next-auth/sequelize-adapter"
+ * import SequelizeAdapter from "@auth/sequelize-adapter"
  * import Sequelize from 'sequelize'
  *
  * const sequelize = new Sequelize("sqlite::memory:")
@@ -117,7 +118,7 @@ export interface SequelizeAdapterOptions {
  *
  * ```js
  * import NextAuth from "next-auth"
- * import SequelizeAdapter, { models } from "@next-auth/sequelize-adapter"
+ * import SequelizeAdapter, { models } from "@auth/sequelize-adapter"
  * import Sequelize, { DataTypes } from "sequelize"
  *
  * const sequelize = new Sequelize("sqlite::memory:")
@@ -218,6 +219,7 @@ export default function SequelizeAdapter(
       await sync()
 
       const accountInstance = await Account.findOne({
+        // @ts-expect-error
         where: { provider, providerAccountId },
       })
 
@@ -299,7 +301,9 @@ export default function SequelizeAdapter(
     async deleteSession(sessionToken) {
       await sync()
 
+      const session = await Session.findOne({ where: { sessionToken } })
       await Session.destroy({ where: { sessionToken } })
+      return session?.get({ plain: true })
     },
     async createVerificationToken(token) {
       await sync()

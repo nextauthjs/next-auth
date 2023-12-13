@@ -1,15 +1,16 @@
 import * as jwt from "../jwt.js"
-import { createCallbackUrl } from "./callback-url.js"
-import * as cookie from "./cookie.js"
-import { createCSRFToken } from "./csrf-token.js"
-import { defaultCallbacks } from "./default-callbacks.js"
+import { createCallbackUrl } from "./utils/callback-url.js"
+import * as cookie from "./utils/cookie.js"
+import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
+
 import { AdapterError, EventError } from "../errors.js"
-import parseProviders from "./providers.js"
+import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
 import parseUrl from "./utils/parse-url.js"
 
 import type {
   AuthConfig,
+  CallbacksOptions,
   EventCallbacks,
   InternalOptions,
   RequestInternal,
@@ -30,12 +31,29 @@ interface InitParams {
   cookies: RequestInternal["cookies"]
 }
 
+export const defaultCallbacks: CallbacksOptions = {
+  signIn() {
+    return true
+  },
+  redirect({ url, baseUrl }) {
+    if (url.startsWith("/")) return `${baseUrl}${url}`
+    else if (new URL(url).origin === baseUrl) return url
+    return baseUrl
+  },
+  session({ session }) {
+    return session
+  },
+  jwt({ token }) {
+    return token
+  },
+}
+
 /** Initialize all internal options and cookies. */
 export async function init({
   authOptions,
   providerId,
   action,
-  url: reqUrl,
+  url,
   cookies: reqCookies,
   callbackUrl: reqCallbackUrl,
   csrfToken: reqCsrfToken,
@@ -46,20 +64,36 @@ export async function init({
   cookies: cookie.Cookie[]
 }> {
   // TODO: move this to web.ts
-  const parsed = parseUrl(
-    reqUrl.origin +
-      reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, ""),
-    authOptions.prefix
-  )
-  const url = new URL(parsed.toString())
+  // const parsed = parseUrl(
+  //   reqUrl.origin +
+  //     reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, ""),
+  //   authOptions.prefix
+  // )
+  // const url = new URL(parsed.toString())
 
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,
     providerId,
+    options: authOptions,
   })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
+
+  let isOnRedirectProxy = false
+  if (
+    (provider?.type === "oauth" || provider?.type === "oidc") &&
+    provider.redirectProxyUrl
+  ) {
+    try {
+      isOnRedirectProxy =
+        new URL(provider.redirectProxyUrl).origin === url.origin
+    } catch {
+      throw new TypeError(
+        `redirectProxyUrl must be a valid URL. Received: ${provider.redirectProxyUrl}`
+      )
+    }
+  }
 
   // User provided options are overridden by other options,
   // except for the options with special handling above
@@ -114,13 +148,16 @@ export async function init({
     callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
     logger,
     callbackUrl: url.origin,
+    isOnRedirectProxy,
   }
 
   // Init cookies
 
   const cookies: cookie.Cookie[] = []
 
-  if (!csrfDisabled) {
+  if (csrfDisabled) {
+    options.csrfTokenVerified = true
+  } else {
     const {
       csrfToken,
       cookie: csrfCookie,

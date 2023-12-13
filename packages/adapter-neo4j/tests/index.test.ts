@@ -1,8 +1,10 @@
 import * as neo4j from "neo4j-driver"
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import statements from "./resources/statements"
 
 import { Neo4jAdapter, format } from "../src"
+
+globalThis.crypto ??= require("node:crypto").webcrypto
 
 const driver = neo4j.driver(
   "bolt://localhost",

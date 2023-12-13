@@ -1,17 +1,14 @@
 {
-  "extends": "@next-auth/tsconfig/tsconfig.adapters.json",
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "allowSyntheticDefaultImports": true,
     "outDir": ".",
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "skipDefaultLibCheck": true,
-    "strictNullChecks": true,
-    "stripInternal": true,
-    "declarationMap": true,
-    "declaration": true
+    "rootDir": "src",
   },
-  "exclude": ["tests", "jest.config.js"]
+  "exclude": [
+    "*.js",
+    "*.d.ts",
+  ],
+  "include": [
+    "src/**/*"
+  ],
 }

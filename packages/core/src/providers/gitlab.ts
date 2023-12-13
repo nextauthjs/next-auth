@@ -1,3 +1,13 @@
+/**
+ * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>GitLab</b> integration.</span>
+ * <a href="https://gitlab.com">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/gitlab.svg" height="48" width="48"/>
+ * </a>
+ * </div>
+ *
+ * @module providers/gitlab
+ */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface GitLabProfile extends Record<string, any> {
@@ -48,30 +58,36 @@ export interface GitLabProfile extends Record<string, any> {
 /**
  * Add GitLab login to your page.
  *
- * ## Example
+ * ### Setup
  *
- * @example
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/gitlab
+ * ```
  *
- * ```js
+ * #### Configuration
+ *```js
  * import Auth from "@auth/core"
  * import GitLab from "@auth/core/providers/gitlab"
  *
- * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
- *   providers: [
- *     GitLab({clientId: "", clientSecret: ""})
- *   ]
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [GitLab({ clientId: GITLAB_CLIENT_ID, clientSecret: GITLAB_CLIENT_SECRET })],
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
- * @see [Link 1](https://example.com)
+ *  - [GitLab OAuth documentation](https://docs.gitlab.com/ee/api/oauth2.html)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the GitLab provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ *
+ * :::tip
+ * Enable the `read_user` option in scope if you want to save the users email address on sign up.
+ * :::
  *
  * :::tip
  *
@@ -108,14 +124,7 @@ export default function GitLab<P extends GitLabProfile>(
         image: profile.avatar_url,
       }
     },
-    style: {
-      logo: "/gitlab.svg",
-      logoDark: "/gitlab-dark.svg",
-      bg: "#fff",
-      text: "#FC6D26",
-      bgDark: "#FC6D26",
-      textDark: "#fff",
-    },
+    style: { logo: "/gitlab.svg", bg: "#FC6D26", text: "#fff" },
     options,
   }
 }

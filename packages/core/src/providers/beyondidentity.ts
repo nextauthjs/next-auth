@@ -2,11 +2,10 @@
  * <div style={{backgroundColor: "#5077c5", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Beyond Identity</b> integration.</span>
  * <a href="https://www.beyondidentity.com/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/beyondidentity-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/beyondidentity.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/beyondidentity
  */
 
@@ -27,27 +26,27 @@ export interface BeyondIdentityProfile {
 /**
  * Add Beyond Identity login to your page.
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
  * import BeyondIdentity from "@auth/core/providers/beyondidentity"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BeyondIdentity({ clientId: "", clientSecret: "", issuer: "" })],
+ *   providers: [BeyondIdentity({ clientId: BEYOND_IDENTITY_CLIENT_ID, clientSecret: BEYOND_IDENTITY_CLIENT_SECRET, issuer: BEYOND_IDENTITY_ISSUER })],
  * })
  * ```
  *
  * ---
  *
- * ## Resources
+ * ### Resources
  *
  * - [Beyond Identity Developer Docs](https://developer.beyondidentity.com/)
  *
  * ---
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the BeyondIdentity provider is
  * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
@@ -88,11 +87,8 @@ export default function BeyondIdentity(
     },
     style: {
       logo: "/beyondidentity.svg",
-      logoDark: "/beyondidentity-dark.svg",
-      bg: "#fff",
-      bgDark: "#5077c5",
-      text: "#5077c5",
-      textDark: "#fff",
+      bg: "#5077c5",
+      text: "#fff",
     },
     options: config,
   }

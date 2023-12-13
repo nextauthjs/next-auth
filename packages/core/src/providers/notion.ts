@@ -6,7 +6,6 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/notion
  */
 
@@ -60,29 +59,29 @@ const NOTION_API_VERSION = "2022-06-28"
 /**
  * Add Notion login to your page.
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
  * import Notion from "@auth/core/providers/notion"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Notion({ clientId: "", clientSecret: "", redirectUri: "" })],
+ *   providers: [Notion({ clientId: NOTION_CLIENT_ID, clientSecret: NOTION_CLIENT_SECRET, redirectUri: NOTION_CLIENT_REDIRECT_URI })],
  * })
  * ```
  *
  * ---
  *
- * ## Resources
+ * ### Resources
  * - [Notion Docs](https://developers.notion.com/docs)
  * - [Notion Authorization Docs](https://developers.notion.com/docs/authorization)
  * - [Notion Integrations](https://www.notion.so/my-integrations)
  *
  * ---
  *
- * ## Notes
- * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details. 
+ * ### Notes
+ * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.
  * You must provide a `clientId` and `clientSecret` to use this provider, as-well as a redirect URI (due to this being required by Notion endpoint to fetch tokens).
  *
  * :::tip
@@ -153,14 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
         image: profile.avatar_url,
       }
     },
-    style: {
-      logo: "/notion.svg",
-      logoDark: "/notion.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#fff",
-      textDark: "#000",
-    },
+    style: { logo: "/notion.svg", bg: "#fff", text: "#000" },
     options,
   }
 }

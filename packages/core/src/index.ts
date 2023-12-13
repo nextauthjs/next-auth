@@ -13,7 +13,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/core
  * ```
  *
@@ -33,15 +33,15 @@
  * - [Getting started](https://authjs.dev/getting-started/introduction)
  * - [Most common use case guides](https://authjs.dev/guides)
  *
- * @module index
+ * @module @auth/core
  */
 
-import { assertConfig } from "./lib/assert.js"
-import { ErrorPageLoop } from "./errors.js"
-import { AuthInternal, skipCSRFCheck } from "./lib/index.js"
+import { assertConfig } from "./lib/utils/assert.js"
+import { AuthError, ErrorPageLoop } from "./errors.js"
+import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
-import { toInternalRequest, toResponse } from "./lib/web.js"
+import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter } from "./adapters.js"
 import type {
@@ -49,12 +49,23 @@ import type {
   CookiesOptions,
   EventCallbacks,
   PagesOptions,
+  ResponseInternal,
   Theme,
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
-export { skipCSRFCheck }
+export { skipCSRFCheck, raw }
+
+export async function Auth(
+  request: Request,
+  config: AuthConfig
+): Promise<ResponseInternal>
+
+export async function Auth(
+  request: Request,
+  config: Omit<AuthConfig, "raw">
+): Promise<Response>
 
 /**
  * Core functionality provided by Auth.js.
@@ -77,13 +88,14 @@ export { skipCSRFCheck }
 export async function Auth(
   request: Request,
   config: AuthConfig
-): Promise<Response> {
+): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
   const internalRequest = await toInternalRequest(request)
+
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
-    return new Response(
+    return Response.json(
       `Error: This action with HTTP ${request.method} is not supported.`,
       { status: 400 }
     )
@@ -128,28 +140,49 @@ export async function Auth(
         )
       }
       const render = renderPage({ theme })
-      const page = render.error({ error: "Configuration" })
+      const page = render.error("Configuration")
       return toResponse(page)
     }
 
     return Response.redirect(`${pages.error}?error=Configuration`)
   }
 
-  const internalResponse = await AuthInternal(internalRequest, config)
+  const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
+  const isRaw = config.raw === raw
+  let response: Response
+  try {
+    const rawResponse = await AuthInternal(internalRequest, config)
+    if (isRaw) return rawResponse
+    response = await toResponse(rawResponse)
+  } catch (e) {
+    const error = e as Error
+    logger.error(error)
 
-  const response = await toResponse(internalResponse)
+    const isAuthError = error instanceof AuthError
+    if (isAuthError && isRaw && !isRedirect) throw error
 
-  // If the request expects a return URL, send it as JSON
-  // instead of doing an actual redirect.
-  const redirect = response.headers.get("Location")
-  if (request.headers.has("X-Auth-Return-Redirect") && redirect) {
-    response.headers.delete("Location")
-    response.headers.set("Content-Type", "application/json")
-    return new Response(JSON.stringify({ url: redirect }), {
-      headers: response.headers,
-    })
+    // If the CSRF check failed for POST/session, return a 400 status code.
+    // We should not redirect to a page as this is an API route
+    if (request.method === "POST" && internalRequest.action === "session")
+      return Response.json(null, { status: 400 })
+
+    const type = isAuthError ? error.type : "Configuration"
+    const page = (isAuthError && error.kind) || "error"
+    const params = new URLSearchParams({ error: type })
+    const path =
+      config.pages?.[page] ??
+      `${internalRequest.url.pathname}/${page.toLowerCase()}`
+
+    const url = `${internalRequest.url.origin}${path}?${params}`
+
+    if (isRedirect) return Response.json({ url })
+
+    return Response.redirect(url)
   }
-  return response
+
+  const redirect = response.headers.get("Location")
+  if (!isRedirect || !redirect) return response
+  return Response.json({ url: redirect }, { headers: response.headers })
 }
 
 /**
@@ -178,7 +211,6 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `AUTH_SECRET` or `NEXTAUTH_SECRET` from environment variables.
    * To generate a random string, you can use the following command:
    *
    * - On Unix systems, type `openssl rand -hex 32` in the terminal
@@ -200,7 +232,7 @@ export interface AuthConfig {
      * When using `"database"`, the session cookie will only contain a `sessionToken` value,
      * which is used to look up the session in the database.
      *
-     * [Documentation](https://authjs.dev/reference/configuration/auth-config#session) | [Adapter](https://authjs.dev/reference/configuration/auth-config#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
+     * [Documentation](https://authjs.dev/reference/core#authconfig#session) | [Adapter](https://authjs.dev/reference/core#authconfig#adapter) | [About JSON Web Tokens](https://authjs.dev/reference/faq#json-web-tokens)
      */
     strategy?: "jwt" | "database"
     /**
@@ -334,7 +366,15 @@ export interface AuthConfig {
    * @default {}
    */
   cookies?: Partial<CookiesOptions>
-  /** @todo */
+  /**
+   * Auth.js relies on the incoming request's `host` header to function correctly. For this reason this property needs to be set to `true`.
+   *
+   * Make sure that your deployment platform sets the `host` header safely.
+   *
+   * :::note
+   * Official Auth.js-based libraries will attempt to set this value automatically for some deployment platforms (eg.: Vercel) that are known to set the `host` header safely.
+   * :::
+   */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
   /**
@@ -345,4 +385,37 @@ export interface AuthConfig {
    * @default "/api/auth"
    */
   prefix?: string
+  raw?: typeof raw
+  /**
+   * When set, during an OAuth sign-in flow,
+   * the `redirect_uri` of the authorization request
+   * will be set based on this value.
+   *
+   * This is useful if your OAuth Provider only supports a single `redirect_uri`
+   * or you want to use OAuth on preview URLs (like Vercel), where you don't know the final deployment URL beforehand.
+   *
+   * The url needs to include the full path up to where Auth.js is initialized.
+   *
+   * @note This will auto-enable the `state` {@link OAuth2Config.checks} on the provider.
+   *
+   * @example
+   * ```
+   * "https://authjs.example.com/api/auth"
+   * ```
+   *
+   * You can also override this individually for each provider.
+   *
+   * @example
+   * ```ts
+   * GitHub({
+   *   ...
+   *   redirectProxyUrl: "https://github.example.com/api/auth"
+   * })
+   * ```
+   *
+   * @default `AUTH_REDIRECT_PROXY_URL` environment variable
+   *
+   * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/getting-started/deployment#securing-a-preview-deployment)
+   */
+  redirectProxyUrl?: string
 }

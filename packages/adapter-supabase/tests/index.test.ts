@@ -1,12 +1,12 @@
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { format, SupabaseAdapter } from "../src"
 import { createClient } from "@supabase/supabase-js"
 import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
-import type { Account } from "next-auth"
+} from "@auth/core/adapters"
+import type { Account } from "@auth/core/types"
 
 const url = process.env.SUPABASE_URL ?? "http://localhost:54321"
 const secret =

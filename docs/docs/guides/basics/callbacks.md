@@ -12,7 +12,7 @@ If you want to pass data such as an Access Token or User ID to the browser when 
 
 You can specify a handler for any of the callbacks below.
 
-```js title="pages/api/auth/[...nextauth].js"s
+```js title="auth.js"
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       return true
@@ -35,7 +35,7 @@ The documentation below shows how to implement each callback, their default beha
 
 Use the `signIn()` callback to control if a user is allowed to sign in.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async signIn({ user, account, profile, email, credentials }) {
     const isAllowedToSignIn = true
@@ -68,7 +68,7 @@ When using Auth.js without a database, the user object will always be a prototyp
 :::note
 Redirects returned by this callback cancel the authentication flow. Only redirect to error pages that, for example, tell the user why they're not allowed to sign in.
 
-To redirect to a page after a successful sign in, please use [the `callbackUrl` option](/reference/utilities/#specifying-a-callbackurl) or [the redirect callback](/reference/configuration/auth-config#callbacks).
+To redirect to a page after a successful sign in, please use [the redirect callback](/reference/core#authconfig#callbacks).
 :::
 
 ## Redirect callback
@@ -79,7 +79,7 @@ By default only URLs on the same URL as the site are allowed, you can use the re
 
 The default redirect callback looks like this:
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async redirect({ url, baseUrl }) {
     // Allows relative callback URLs
@@ -98,16 +98,16 @@ The redirect callback may be invoked more than once in the same flow.
 ## JWT callback
 
 This callback is called whenever a JSON Web Token is created (i.e. at sign
-in) or updated (i.e whenever a session is accessed in the client). The returned value will be [encrypted](/reference/configuration/auth-config#jwt), and it is stored in a cookie.
+in) or updated (i.e whenever a session is accessed in the client). The returned value will be [encrypted](/reference/core#authconfig#jwt), and it is stored in a cookie.
 
-Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `unstable_getServerSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/reference/configuration/auth-config#session). This method is not invoked when you persist sessions in a database.
+Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `getServerSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/reference/core#authconfig#session). This method is not invoked when you persist sessions in a database.
 
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
 - The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
 
 The contents _user_, _account_, _profile_ and _isNewUser_ will vary depending on the provider and on if you are using a database or not. You can persist data such as User ID, OAuth Access Token in this token. To make it available in the browser, check out the [`session()` callback](#session-callback) as well.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async jwt({ token, account }) {
     // Persist the OAuth access_token to the token right after signin
@@ -132,7 +132,7 @@ e.g. `getSession()`, `useSession()`, `/api/auth/session`
 - When using database sessions, the User object is passed as an argument.
 - When using JSON Web Tokens for sessions, the JWT payload is provided instead.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 callbacks: {
   async session({ session, token, user }) {
     // Send properties to the client, like an access_token from a provider.

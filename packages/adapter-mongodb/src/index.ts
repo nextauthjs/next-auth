@@ -8,11 +8,11 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/mongodb-adapter mongodb
+ * ```bash npm2yarn
+ * npm install @auth/mongodb-adapter mongodb
  * ```
  *
- * @module @next-auth/mongodb-adapter
+ * @module @auth/mongodb-adapter
  */
 import { ObjectId } from "mongodb"
 
@@ -22,7 +22,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import type { MongoClient } from "mongodb"
 
 /** This is the interface of the MongoDB adapter options. */
@@ -132,7 +132,7 @@ export function _id(hex?: string) {
  *
  * ```js
  * import NextAuth from "next-auth"
- * import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+ * import { MongoDBAdapter } from "@auth/mongodb-adapter"
  * import clientPromise from "../../../lib/mongodb"
  *
  * // For more information on each option (and a full list of options) go to
@@ -193,7 +193,7 @@ export function MongoDBAdapter(
         await db
       ).U.findOneAndUpdate({ _id }, { $set: user }, { returnDocument: "after" })
 
-      return from<AdapterUser>(result.value!)
+      return from<AdapterUser>(result!)
     },
     async deleteUser(id) {
       const userId = _id(id)
@@ -210,7 +210,7 @@ export function MongoDBAdapter(
       return account
     },
     async unlinkAccount(provider_providerAccountId) {
-      const { value: account } = await (
+      const account = await (
         await db
       ).A.findOneAndDelete(provider_providerAccountId)
       return from<AdapterAccount>(account!)
@@ -235,17 +235,17 @@ export function MongoDBAdapter(
     async updateSession(data) {
       const { _id, ...session } = to<AdapterSession>(data)
 
-      const result = await (
+      const updatedSession = await (
         await db
       ).S.findOneAndUpdate(
         { sessionToken: session.sessionToken },
         { $set: session },
         { returnDocument: "after" }
       )
-      return from<AdapterSession>(result.value!)
+      return from<AdapterSession>(updatedSession!)
     },
     async deleteSession(sessionToken) {
-      const { value: session } = await (
+      const session = await (
         await db
       ).S.findOneAndDelete({
         sessionToken,
@@ -257,14 +257,13 @@ export function MongoDBAdapter(
       return data
     },
     async useVerificationToken(identifier_token) {
-      const { value: verificationToken } = await (
+      const verificationToken = await (
         await db
       ).V.findOneAndDelete(identifier_token)
 
       if (!verificationToken) return null
-      // @ts-expect-error
-      delete verificationToken._id
-      return verificationToken
+      const { _id, ...rest } = verificationToken
+      return rest
     },
   }
 }

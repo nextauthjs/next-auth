@@ -1,4 +1,4 @@
-import { runBasicTests } from "@next-auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import {
   createIndexes,
   PouchDBAdapter,
@@ -10,13 +10,14 @@ import {
 import PouchDB from "pouchdb"
 import find from "pouchdb-find"
 import memoryAdapter from "pouchdb-adapter-memory"
-import { ulid } from "ulid"
 import {
   AdapterAccount,
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
+
+globalThis.crypto ??= require("node:crypto").webcrypto
 
 // pouchdb setup
 PouchDB.plugin(memoryAdapter).plugin(find)
@@ -31,7 +32,7 @@ PouchDB.on("destroyed", function () {
 const disconnect = async () => {
   if (!pouchdbIsDestroyed) await pouchdb.destroy()
 }
-pouchdb = new PouchDB(ulid(), { adapter: "memory" })
+pouchdb = new PouchDB(crypto.randomUUID(), { adapter: "memory" })
 
 // Basic tests
 runBasicTests({

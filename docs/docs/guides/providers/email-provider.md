@@ -30,7 +30,7 @@ You can override any of the options to suit your own use case.
 ## Configuration
 
 1. Auth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Email Provider. Run `npm install nodemailer` or `yarn add nodemailer`.
-2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
+2. You will need an SMTP account; such as [the official Nodemailer recommended service](https://nodemailer.com/about/#example) of [Forward Email](https://forwardemail.net).
 3. There are two ways to configure the SMTP server connection.
 
 You can either use a connection string or a `nodemailer` configuration object.
@@ -40,13 +40,13 @@ You can either use a connection string or a `nodemailer` configuration object.
 Create an `.env` file to the root of your project and add the connection string and email address.
 
 ```js title=".env" {1}
-	EMAIL_SERVER=smtp://username:password@smtp.example.com:587
-	EMAIL_FROM=noreply@example.com
+	EMAIL_SERVER=smtp://username:password@smtp.forwardemail.net:587
+	EMAIL_FROM=support@example.com
 ```
 
 Now you can add the email provider like this:
 
-```js {3} title="pages/api/auth/[...nextauth].js"
+```js {3} title="auth.js"
 import EmailProvider from "next-auth/providers/email";
 ...
 providers: [
@@ -64,14 +64,14 @@ In your `.env` file in the root of your project simply add the configuration obj
 ```js title=".env"
 EMAIL_SERVER_USER=username
 EMAIL_SERVER_PASSWORD=password
-EMAIL_SERVER_HOST=smtp.example.com
+EMAIL_SERVER_HOST=smtp.forwardemail.net
 EMAIL_SERVER_PORT=587
 EMAIL_FROM=noreply@example.com
 ```
 
 Now you can add the provider settings to the NextAuth options object in the Email Provider.
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 import EmailProvider from "next-auth/providers/email";
 ...
 providers: [
@@ -89,9 +89,9 @@ providers: [
 ],
 ```
 
-3. Do not forget to setup one of the database [adapters](/reference/adapters/overview) for storing the Email verification token.
+1. Do not forget to setup one of the database [adapters](/reference/core/adapters) for storing the Email verification token.
 
-4. You can now sign in with an email address at `/api/auth/signin`.
+2. You can now sign in with an email address at `/api/auth/signin`.
 
 A user account (i.e. an entry in the Users table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they use the link in the email.
 
@@ -101,7 +101,7 @@ You can fully customize the sign in email that is sent by passing a custom funct
 
 e.g.
 
-```js {3} title="pages/api/auth/[...nextauth].js"
+```js {3} title="auth.js"
 import EmailProvider from "next-auth/providers/email";
 ...
 providers: [
@@ -112,6 +112,7 @@ providers: [
       identifier: email,
       url,
       provider: { server, from },
+      request // for example can be used to get the user agent (`request.headers.get("user-agent")`) to parse and pass on to the user in the email so they can be more confident they originated the request
     }) {
       /* your function */
     },
@@ -205,7 +206,7 @@ If you want to generate great looking email client compatible HTML with React, c
 
 By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it:
 
-```js title="pages/api/auth/[...nextauth].js"
+```js title="auth.js"
 providers: [
   EmailProvider({
     async generateVerificationToken() {

@@ -8,11 +8,11 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/dynamodb-adapter @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb
+ * ```bash npm2yarn
+ * npm install @mikro-orm/core @auth/mikro-orm-adapter
  * ```
  *
- * @module @next-auth/dynamodb-adapter
+ * @module @auth/mikro-orm-adapter
  */
 import type {
   Connection,
@@ -20,11 +20,11 @@ import type {
   Options as ORMOptions,
 } from "@mikro-orm/core"
 
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 
 import { MikroORM, wrap } from "@mikro-orm/core"
 
-import * as defaultEntities from "./entities"
+import * as defaultEntities from "./lib/entities.js"
 
 export { defaultEntities }
 
@@ -35,7 +35,7 @@ export { defaultEntities }
  *
  * ```typescript title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
- * import { MikroOrmAdapter } from "@next-auth/mikro-orm-adapter"
+ * import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
  *
  * export default NextAuth({
  *   adapter: MikroOrmAdapter({
@@ -54,7 +54,7 @@ export { defaultEntities }
  *
  * The MikroORM adapter ships with its own set of entities. If you'd like to extend them, you can optionally pass them to the adapter.
  *
- * > This schema is adapted for use in MikroORM and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in MikroORM and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * ```typescript title="pages/api/auth/[...nextauth].ts"
  * import config from "config/mikro-orm.ts"
@@ -67,7 +67,7 @@ export { defaultEntities }
  *   Property,
  *   Unique,
  * } from "@mikro-orm/core"
- * import { defaultEntities } from "@next-auth/mikro-orm-adapter"
+ * import { defaultEntities } from "@auth/mikro-orm-adapter"
  *
  * const { Account, Session } = defaultEntities
  *
@@ -124,7 +124,7 @@ export { defaultEntities }
  *
  * ```typescript title="config/mikro-orm.ts"
  * import { Options } from "@mikro-orm/core";
- * import { defaultEntities } from "@next-auth/mikro-orm-adapter"
+ * import { defaultEntities } from "@auth/mikro-orm-adapter"
  *
  * const config: Options = {
  *   ...
@@ -186,7 +186,6 @@ export function MikroOrmAdapter<
      * Method used in testing. You won't need to call this in your app.
      * @internal
      */
-    // @ts-expect-error
     async __disconnect() {
       const em = await getEM()
       await em.getConnection().close()
@@ -240,6 +239,7 @@ export function MikroOrmAdapter<
 
       return wrap(user).toObject()
     },
+    // @ts-expect-error
     async linkAccount(data) {
       const em = await getEM()
       const user = await em.findOne(UserModel, { id: data.userId })
@@ -251,6 +251,7 @@ export function MikroOrmAdapter<
 
       return wrap(account).toObject()
     },
+    // @ts-expect-error
     async unlinkAccount(provider_providerAccountId) {
       const em = await getEM()
       const account = await em.findOne(AccountModel, {

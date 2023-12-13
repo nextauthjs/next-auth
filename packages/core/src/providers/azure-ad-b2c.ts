@@ -2,11 +2,10 @@
  * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Azure AD B2C</b> integration.</span>
  * <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/azure-ad-b2c
  */
 
@@ -60,7 +59,7 @@ export interface AzureADB2CProfile {
  *   - Identity Provider Access Token
  *   - User's Object ID
  *
- * ## Example
+ * @example
  *
  * ```ts
  * import { Auth } from "@auth/core"
@@ -75,13 +74,13 @@ export interface AzureADB2CProfile {
  *
  * ---
  *
- * ## Resources
+ * ### Resources
  *
  * - [Azure Active Directory B2C documentation](https://learn.microsoft.com/en-us/azure/active-directory-b2c)
  *
  * ---
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the Azure AD B2C provider is
  * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
@@ -119,18 +118,11 @@ export default function AzureADB2C(
       return {
         id: profile.sub,
         name: profile.name,
-        email: profile.emails[0],
+        email: profile?.emails?.[0],
         image: null,
       }
     },
-    style: {
-      logo: "/azure.svg",
-      logoDark: "/azure-dark.svg",
-      bg: "#fff",
-      text: "#0072c6",
-      bgDark: "#0072c6",
-      textDark: "#fff",
-    },
+    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
     options,
   }
 }

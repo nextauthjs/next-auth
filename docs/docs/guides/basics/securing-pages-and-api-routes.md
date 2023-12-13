@@ -2,19 +2,19 @@
 title: Securing Pages & API routes
 ---
 
-You can easily protect client and server side rendered pages and API routes with Auth.js.
+You can protect client and server-side rendered pages and API routes with Auth.js.
 
 _You can find working examples of the approaches shown below in the [example project](https://github.com/nextauthjs/next-auth-example/)._
 
 :::tip
-The methods `getSession()` and `getToken()` both return an `object` if a session is valid and `null` if a session is invalid or has expired.
+The methods `getSession()` and `getToken()` both return an `object` if a session is valid and `null` if a session is not valid or has expired.
 :::
 
 ## Securing Pages
 
 ### Client Side
 
-If data on a page is fetched using calls to secure API routes - i.e. routes which use `getSession()` or `getToken()` to access the session - you can use the `useSession` React Hook to secure pages.
+If data on a page is fetched using calls to secure API routes - i.e. routes that use `getSession()` or `getToken()` to access the session - you can use the `useSession` React Hook to secure pages.
 
 ```js title="pages/client-side-example.js"
 import { useSession, getSession } from "next-auth/react"
@@ -41,7 +41,7 @@ export default function Page() {
 
 ### Next.js (Middleware)
 
-With Auth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
+With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.js` file in your root `pages` directory which looks like this.
 
 ```js title="/middleware.js"
 export { default } from "next-auth/middleware"
@@ -49,15 +49,15 @@ export { default } from "next-auth/middleware"
 
 Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/pages/admin/_middleware.js` would protect all pages under `/admin`.
 
-For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](/reference/configuration/auth-config#session).
+For the time being, the `withAuth` middleware only supports `"jwt"` as a [session strategy](/reference/core#authconfig#session).
 
-More details can be found [here](/reference/nextjs/#middleware).
+More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
 
 ### Server Side
 
-You can protect server side rendered pages using the `unstable_getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
+You can protect server-side rendered pages using the `unstable_getServerSession` method. This is different from the old `getSession()` method, in that it does not do an extra fetch out over the internet to confirm data from itself, increasing performance significantly.
 
-You need to add this to every server rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
+You need to add this to every server-rendered page you want to protect. Be aware, `unstable_getServerSession` takes slightly different arguments than the method it is replacing, `getSession`.
 
 ```js title="pages/server-side-example.js"
 import { unstable_getServerSession } from "next-auth/next"
@@ -136,7 +136,7 @@ export default async (req, res) => {
 
 ### Using getToken()
 
-If you are using JSON Web Tokens you can use the `getToken()` helper to access the contents of the JWT without having to handle JWT decryption / verification yourself. This method can only be used server side.
+If you are using JSON Web Tokens you can use the `getToken()` helper to access the contents of the JWT without having to handle JWT decryption/verification yourself. This method can only be used server side.
 
 ```js title="pages/api/get-token-example.js"
 // This is an example of how to read a JSON Web Token from an API route
@@ -157,11 +157,11 @@ export default async (req, res) => {
 ```
 
 :::tip
-You can use the `getToken()` helper function in any application as long as you set the `NEXTAUTH_URL` environment variable and the application is able to read the JWT cookie (e.g. is on the same domain).
+You can use the `getToken()` helper function in any application as long as you set the `NEXTAUTH_URL` environment variable and the application can read the JWT cookie (e.g. is on the same domain).
 :::
 
 :::note
 Pass `getToken` the same value for `secret` as specified in `pages/api/auth/[...nextauth].js`.
 
-See [the documentation for the JWT option](/reference/configuration/auth-config#jwt) for more information.
+See [the documentation for the JWT option](/reference/core#authconfig#jwt) for more information.
 :::

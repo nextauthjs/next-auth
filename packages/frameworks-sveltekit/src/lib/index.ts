@@ -2,7 +2,7 @@
  *
  *
  * :::warning
- * `@auth/sveltekit` is currently experimental. The API _will_ change in the future.
+ * `@auth/sveltekit` is currently experimental. The API _might_ change.
  * :::
  *
  * SvelteKit Auth is the official SvelteKit integration for Auth.js.
@@ -11,15 +11,15 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install @auth/core @auth/sveltekit
+ * ```bash npm2yarn
+ * npm install @auth/sveltekit
  * ```
  *
  * ## Usage
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const handle = SvelteKitAuth({
@@ -31,7 +31,7 @@
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
  * export const handle = SvelteKitAuth(async (event) => {
@@ -44,11 +44,11 @@
  * }) satisfies Handle;
  * ```
  *
- * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
+ * Remember to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
+ * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
  * ```
  * [origin]/auth/callback/[provider]
  * ```
@@ -150,7 +150,7 @@
  *
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
- * import GitHub from '@auth/core/providers/github';
+ * import GitHub from '@auth/sveltekit/providers/github';
  * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
  * import { redirect, type Handle } from '@sveltejs/kit';
  * import { sequence } from '@sveltejs/kit/hooks';
@@ -197,13 +197,14 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
  *
- * @module index
+ * @module @auth/sveltekit
  */
 
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 
 import { dev } from "$app/environment"
+import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth, skipCSRFCheck } from "@auth/core"
@@ -217,7 +218,8 @@ export async function getSession(
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL(`${config.prefix}/session`, req.url)
+  const prefix = config.prefix ?? `${base}/auth`
+  const url = new URL(prefix + "/session", req.url)
   const request = new Request(url, { headers: req.headers })
   const response = await Auth(request, config)
 
@@ -249,13 +251,13 @@ export async function getProviders(
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends AuthConfig {
+export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Defines the base path for the auth routes.
    * If you change the default value,
    * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
    *
-   * @default "/auth"
+   * @default `${base}/auth` - `base` is the base path of your SvelteKit app, configured in `svelte.config.js`.
    */
   prefix?: string
 }
@@ -321,6 +323,7 @@ export function SvelteKitAuth(
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    options.prefix ??= `${base}/auth`
   }
   return AuthHandle(options)
 }

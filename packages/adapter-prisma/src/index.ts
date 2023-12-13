@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.</p>
+ *  Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.
  *  <a href="https://www.prisma.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/prisma.svg" width="38" />
  *  </a>
@@ -8,25 +8,25 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @prisma/client @next-auth/prisma-adapter
+ * ```bash npm2yarn
+ * npm install @prisma/client @auth/prisma-adapter
  * npm install prisma --save-dev
  * ```
  *
- * @module @next-auth/prisma-adapter
+ * @module @auth/prisma-adapter
  */
 import type { PrismaClient, Prisma } from "@prisma/client"
-import type { Adapter, AdapterAccount } from "next-auth/adapters"
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
 /**
  * ## Setup
  *
- * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
+ * Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object:
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { PrismaAdapter } from "@next-auth/prisma-adapter"
+ * import { PrismaAdapter } from "@auth/prisma-adapter"
  * import { PrismaClient } from "@prisma/client"
  *
  * const prisma = new PrismaClient()
@@ -42,13 +42,11 @@ import type { Adapter, AdapterAccount } from "next-auth/adapters"
  * })
  * ```
  *
- * ## Advanced usage
- *
  * ### Create the Prisma schema from scratch
  *
  * You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
  *
- * > This schema is adapted for use in Prisma and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Prisma and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * ```json title="schema.prisma"
  * datasource db {
