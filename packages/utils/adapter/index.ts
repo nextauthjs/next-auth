@@ -1,4 +1,4 @@
-import type { Adapter, AdapterSession, AdapterUser } from "@auth/core/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
 
 const requiredMethods = [
@@ -74,15 +74,13 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.disconnect?.()
   })
 
-  let user: any =
-    options.fixtures?.user ??
-    ({
-      id: id(),
-      email: "fill@murray.com",
-      image: "https://www.fillmurray.com/460/300",
-      name: "Fill Murray",
-      emailVerified: new Date(),
-    } satisfies AdapterUser)
+  let user = options.fixtures?.user ?? {
+    id: id(),
+    email: "fill@murray.com",
+    image: "https://www.fillmurray.com/460/300",
+    name: "Fill Murray",
+    emailVerified: new Date(),
+  }
 
   if (process.env.CUSTOM_MODEL === "1") {
     user.role = "admin"
