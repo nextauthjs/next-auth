@@ -1,4 +1,4 @@
-// This is needed as a workaround to Drizzle truncating millisecond precision.
+// This work is needed as workaround to Drizzle truncating millisecond precision.
 // https://github.com/drizzle-team/drizzle-orm/pull/668
 
 import { randomUUID } from "utils/adapter"
