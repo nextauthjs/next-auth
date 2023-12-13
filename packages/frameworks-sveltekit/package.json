@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.3.9",
+  "version": "0.3.16",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -39,7 +39,6 @@
     "svelte": "^3.54.0",
     "svelte-check": "^2.9.2",
     "tslib": "^2.4.1",
-    "typescript": "5.2.2",
     "vite": "^4.0.5",
     "vitest": "^0.25.3"
   },

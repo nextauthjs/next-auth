@@ -4,7 +4,7 @@
  *  Built-in sign in with <b>Apple</b> integration.
  * </span>
  * <a href="https://apple.com" style={{backgroundColor: "black", padding: "12px", borderRadius: "100%" }}>
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/apple-dark.svg" width="24"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/apple.svg" width="24"/>
  * </a>
  * </div>
  *
@@ -115,8 +115,8 @@ export interface AppleProfile extends Record<string, any> {
  * export default NextAuth({
  *   providers: [
  *     AppleProvider({
- *       clientId: process.env.GITHUB_ID,
- *       clientSecret: process.env.GITHUB_SECRET,
+ *       clientId: process.env.APPLE_ID,
+ *       clientSecret: process.env.APPLE_SECRET,
  *     }),
  *   ],
  * })
@@ -171,11 +171,8 @@ export default function Apple<P extends AppleProfile>(
     },
     style: {
       logo: "/apple.svg",
-      logoDark: "/apple-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
+      text: "#fff",
+      bg: "#000",
     },
     options,
   }

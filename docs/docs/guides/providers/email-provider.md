@@ -89,9 +89,9 @@ providers: [
 ],
 ```
 
-3. Do not forget to setup one of the database [adapters](/reference/adapters/overview) for storing the Email verification token.
+1. Do not forget to setup one of the database [adapters](/reference/core/adapters) for storing the Email verification token.
 
-4. You can now sign in with an email address at `/api/auth/signin`.
+2. You can now sign in with an email address at `/api/auth/signin`.
 
 A user account (i.e. an entry in the Users table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they use the link in the email.
 

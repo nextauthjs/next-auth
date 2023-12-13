@@ -1,6 +1,7 @@
 /* Set min-height to avoid page reflow while session loading */
 .signedInStatus {
-  display: block;
+  display: flex;
+  align-items: center;
   min-height: 4rem;
   width: 100%;
 }
@@ -25,16 +26,13 @@
 
 .signedInText,
 .notSignedInText {
-  position: absolute;
   padding-top: 0.8rem;
-  left: 1rem;
-  right: 6.5rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: inherit;
   z-index: 1;
   line-height: 1.3rem;
+  flex: 1;
 }
 
 .signedInText {
@@ -47,6 +45,7 @@
   float: left;
   height: 2.8rem;
   width: 2.8rem;
+  margin-right: 1rem;
   background-color: white;
   background-size: cover;
   background-repeat: no-repeat;
@@ -54,10 +53,11 @@
 
 .button,
 .buttonPrimary {
-  float: right;
-  margin-right: -0.4rem;
+  justify-self: end;
   font-weight: 500;
   border-radius: 0.3rem;
+  border: none;
+  font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1.4rem;

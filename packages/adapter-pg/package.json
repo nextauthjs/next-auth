@@ -1,6 +1,6 @@
 {
   "name": "@auth/pg-adapter",
-  "version": "0.2.1",
+  "version": "0.2.8",
   "description": "Postgres adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -47,10 +47,7 @@
     "pg": "^8"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
     "@types/pg": "^8.6.5",
-    "jest": "^27.4.3",
     "pg": "^8.7.1"
   },
   "jest": {
