@@ -29,7 +29,6 @@
     "clean": "rm -rf client.* index.* package",
     "dev": "svelte-package -w",
     "preview": "vite preview",
-    "providers": "node ../utils/scripts/providers.js --out src/lib",
     "test:unit": "vitest"
   },
   "devDependencies": {
