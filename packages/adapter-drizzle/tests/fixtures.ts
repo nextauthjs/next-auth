@@ -1,4 +1,4 @@
-// This work is needed as workaround to Drizzle truncating millisecond precision.
+// This is needed as a workaround to Drizzle truncating millisecond precision.
 // https://github.com/drizzle-team/drizzle-orm/pull/668
 
 import { randomUUID } from "utils/adapter"
@@ -17,6 +17,7 @@ ONE_MONTH_FROM_NOW.setMilliseconds(0)
 
 export const fixtures = {
   user: {
+    id: randomUUID(),
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
