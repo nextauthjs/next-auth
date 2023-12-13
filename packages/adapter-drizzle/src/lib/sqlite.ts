@@ -74,12 +74,8 @@ export function SQLiteDrizzleAdapter(
     createTables(tableFn)
 
   return {
-    async createUser(data) {
-      return await client
-        .insert(users)
-        .values({ ...data, id: crypto.randomUUID() })
-        .returning()
-        .get()
+    async createUser(user) {
+      return await client.insert(users).values(user).returning().get()
     },
     async getUser(data) {
       const result = await client
