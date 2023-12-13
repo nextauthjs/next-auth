@@ -2,7 +2,7 @@
  *
  *
  * :::warning
- * `@auth/sveltekit` is currently experimental. The API _will_ change in the future.
+ * `@auth/sveltekit` is currently experimental. The API _might_ change.
  * :::
  *
  * SvelteKit Auth is the official SvelteKit integration for Auth.js.
