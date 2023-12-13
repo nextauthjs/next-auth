@@ -263,7 +263,7 @@ export interface VerificationToken {
  * :::
  */
 export interface Adapter {
-  createUser?(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
+  createUser?(user: AdapterUser): Awaitable<AdapterUser>
   getUser?(id: string): Awaitable<AdapterUser | null>
   getUserByEmail?(email: string): Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
