@@ -10,17 +10,19 @@ import type { NextAuthResult, Session } from "../index.js"
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
   provider: SignInParams[0],
-  options: SignInParams[1],
+  options: SignInParams[1] = {},
   authorizationParams: SignInParams[2],
   config: NextAuthConfig
 ) {
   const headers = new Headers(nextHeaders())
   const {
     redirect: shouldRedirect = true,
-    redirectTo: callbackUrl = headers.get("Referer") ?? "/",
+    redirectTo,
     ...rest
-  } = options ?? {}
-  const base = `${detectOrigin(headers)}/signin`
+  } = options instanceof FormData ? Object.fromEntries(options) : options
+
+  const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
+  const base = authUrl(detectOrigin(headers), "signin")
 
   if (!provider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
@@ -52,15 +54,12 @@ export async function signIn(
   headers.set("Content-Type", "application/x-www-form-urlencoded")
   const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-  const res: any = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  const error = new URL(res.redirect).searchParams.get("error")
-  if (error) throw new Error(error)
-
-  if (shouldRedirect) return redirect(res.redirect)
-  return res.redirect
+  if (shouldRedirect) return redirect(res.redirect!)
+  return res.redirect as any
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>
@@ -71,21 +70,21 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = `${detectOrigin(headers)}/signout`
+  const url = authUrl(detectOrigin(headers), "signout")
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
 
-  const res: any = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (options?.redirect ?? true) return redirect(res.redirect)
+  if (options?.redirect ?? true) return redirect(res.redirect!)
 
-  return res
+  return res as any
 }
 
-type UpdateParams = Parameters<NextAuthResult["update"]>
+type UpdateParams = Parameters<NextAuthResult["unstable_update"]>
 export async function update(
   data: UpdateParams[0],
   config: NextAuthConfig
@@ -93,7 +92,7 @@ export async function update(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 
-  const url = `${detectOrigin(headers)}session`
+  const url = authUrl(detectOrigin(headers), "session")
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
 
@@ -102,4 +101,12 @@ export async function update(
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
   return res.body
+}
+
+/** Determine an action's URL */
+function authUrl(base: URL, action: string) {
+  let pathname
+  if (base.pathname === "/") pathname ??= `/api/auth/${action}`
+  else pathname ??= `${base.pathname}/${action}`
+  return new URL(pathname, base.origin)
 }

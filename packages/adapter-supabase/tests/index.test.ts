@@ -1,4 +1,4 @@
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { format, SupabaseAdapter } from "../src"
 import { createClient } from "@supabase/supabase-js"
 import type {

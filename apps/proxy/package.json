@@ -1,0 +1,9 @@
+{
+  "name": "proxy",
+  "description": "Proxy for Auth.js hosted examples",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@auth/core": "latest"
+  }
+}

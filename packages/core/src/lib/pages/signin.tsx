@@ -4,23 +4,20 @@ import type {
   Theme,
 } from "../../types.js"
 
-const signinErrors: Record<
-  Lowercase<SignInPageErrorParam | "default">,
-  string
-> = {
+const signinErrors: Record<SignInPageErrorParam | "default", string> = {
   default: "Unable to sign in.",
-  signin: "Try signing in with a different account.",
-  oauthsignin: "Try signing in with a different account.",
-  oauthcallbackerror: "Try signing in with a different account.",
-  oauthcreateaccount: "Try signing in with a different account.",
-  emailcreateaccount: "Try signing in with a different account.",
-  callback: "Try signing in with a different account.",
-  oauthaccountnotlinked:
+  Signin: "Try signing in with a different account.",
+  OAuthSignin: "Try signing in with a different account.",
+  OAuthCallbackError: "Try signing in with a different account.",
+  OAuthCreateAccount: "Try signing in with a different account.",
+  EmailCreateAccount: "Try signing in with a different account.",
+  Callback: "Try signing in with a different account.",
+  OAuthAccountNotLinked:
     "To confirm your identity, sign in with the same account you used originally.",
-  emailsignin: "The e-mail could not be sent.",
-  credentialssignin:
+  EmailSignin: "The e-mail could not be sent.",
+  CredentialsSignin:
     "Sign in failed. Check the details you provided are correct.",
-  sessionrequired: "Please sign in to access this page.",
+  SessionRequired: "Please sign in to access this page.",
 }
 function hexToRgba(hex?: string, alpha = 1) {
   if (!hex) {
@@ -50,12 +47,12 @@ function hexToRgba(hex?: string, alpha = 1) {
 }
 
 export default function SigninPage(props: {
-  csrfToken: string
-  providers: InternalProvider[]
-  callbackUrl: string
-  email: string
+  csrfToken?: string
+  providers?: InternalProvider[]
+  callbackUrl?: string
+  email?: string
   error?: SignInPageErrorParam
-  theme: Theme
+  theme?: Theme
 }) {
   const {
     csrfToken,
@@ -66,37 +63,34 @@ export default function SigninPage(props: {
     error: errorType,
   } = props
 
-  if (typeof document !== "undefined" && theme.brandColor) {
+  if (typeof document !== "undefined" && theme?.brandColor) {
     document.documentElement.style.setProperty(
       "--brand-color",
       theme.brandColor
     )
   }
 
-  if (typeof document !== "undefined" && theme.buttonText) {
+  if (typeof document !== "undefined" && theme?.buttonText) {
     document.documentElement.style.setProperty(
       "--button-text-color",
       theme.buttonText
     )
   }
 
-  const error =
-    errorType &&
-    (signinErrors[errorType.toLowerCase() as Lowercase<SignInPageErrorParam>] ??
-      signinErrors.default)
+  const error = errorType && (signinErrors[errorType] ?? signinErrors.default)
 
   const providerLogoPath = "https://authjs.dev/img/providers"
 
   return (
     <div className="signin">
-      {theme.brandColor && (
+      {theme?.brandColor && (
         <style
           dangerouslySetInnerHTML={{
             __html: `:root {--brand-color: ${theme.brandColor}}`,
           }}
         />
       )}
-      {theme.buttonText && (
+      {theme?.buttonText && (
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -113,7 +107,7 @@ export default function SigninPage(props: {
             <p>{error}</p>
           </div>
         )}
-        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+        {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {providers.map((provider, i) => {
           let bg, text, logo, logoDark, bgDark, textDark
           if (provider.type === "oauth" || provider.type === "oidc") {

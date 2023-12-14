@@ -69,12 +69,12 @@ Behind the scenes, this creates all the relevant OAuth API routes within `/api/a
 
 can be handled by NextAuth.js. In this way, NextAuth.js stays in charge of the whole application's authentication request/response flow.
 
-NextAuth.js is fully customizable - [our guides section](/guides/overview) teaches you how to set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/configuration/auth-config).
+NextAuth.js is fully customizable - [our guides section](/guides) teaches you how to set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/core#authconfig).
 :::
 
 ### Adding environment variables
 
-You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
+You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/providers/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
 
 In your project root, create a `.env.local` file and add the `NEXTAUTH_SECRET` environment variable:
 
@@ -92,7 +92,7 @@ or https://generate-secret.vercel.app/32 to generate a random value for it.
 
 ### Exposing the session via `SessionProvider`:
 
-NextAuth.js provides [`useSession()`](/reference/react/#usesession) - a [React Hooks](https://reactjs.org/docs/hooks-intro.html) to access the session data and status. To use it first you'll need to expose the session context - [`<SessionProvider />`](/reference/react/#sessionprovider) - at the top level of your application:
+NextAuth.js provides [`useSession()`](reference/nextjs/react/#usesession) - a [React Hooks](https://reactjs.org/docs/hooks-intro.html) to access the session data and status. To use it first you'll need to expose the session context - [`<SessionProvider />`](reference/nextjs/react/#sessionprovider) - at the top level of your application:
 
 ```ts title="pages/_app.tsx"
 import { SessionProvider } from "next-auth/react"
@@ -113,7 +113,7 @@ export default function App({
 Instances of `useSession` (more on it in the next section) will have access to the session data and status. The `<SessionProvider />` also keep the session updated and synced between browser tabs and windows. 💪🏽
 
 :::tip
-Check our [client docs](/reference/react/) to learn all the available options for handling sessions on the browser.
+Check our [client docs](reference/nextjs/react/) to learn all the available options for handling sessions on the browser.
 :::
 
 ### Consuming the session via hooks
@@ -222,12 +222,12 @@ Behind the scenes, this creates all the relevant OAuth API routes within `/api/a
 
 can be handled by Auth.js. In this way, Auth.js stays in charge of the whole application's authentication request/response flow.
 
-Auth.js is fully customizable - [our guides section](/guides/overview) teaches you how to set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/configuration/auth-config).
+Auth.js is fully customizable - [our guides section](/guides) teaches you how to set it up to handle auth in different ways. All the possible configuration options are [listed here](/reference/core#authconfig).
 :::
 
 ### Adding environment variables
 
-You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
+You may notice we are using environment variables in the code example above. We take the value of `GITHUB_ID` and `GITHUB_SECRET` from the GitHub Developer OAuth Portal. See [Configuring OAuth Provider](/getting-started/providers/oauth-tutorial#2-configuring-oauth-provider) section on how to get those.
 
 In your project root, create a `.env.local` file and add the `AUTH_SECRET` environment variable:
 
@@ -249,7 +249,7 @@ Auth.js provides us a getSession, function to access the session data and status
 
 ```ts
 import type { LayoutServerLoad } from './$types';
- *
+
 export const load: LayoutServerLoad = async (event) => {
   return {
     session: await event.locals.getSession()
@@ -503,4 +503,4 @@ In production, this needs to be set as an environment variable on the service yo
 To set environment variables on Vercel, you can use the [dashboard](https://vercel.com/dashboard) or the `vercel env pull` [command](https://vercel.com/docs/build-step#development-environment-variables).
 :::
 
-For more information please check out our [deployment page](/guides/basics/deployment).
+For more information please check out our [deployment page](/getting-started/deployment).

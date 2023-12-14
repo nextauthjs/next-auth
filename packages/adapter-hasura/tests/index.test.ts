@@ -1,4 +1,4 @@
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { HasuraAdapter, format } from "../src"
 import { useFragment } from "../src/lib/generated"
 import {

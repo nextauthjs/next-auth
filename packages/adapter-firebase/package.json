@@ -1,6 +1,6 @@
 {
   "name": "@auth/firebase-adapter",
-  "version": "1.0.3",
+  "version": "1.0.9",
   "description": "Firebase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",

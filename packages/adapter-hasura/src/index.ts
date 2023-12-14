@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/hasura-adapter
  * ```
  *
@@ -61,7 +61,7 @@ import {
  *       scope text,
  *       id_token text,
  *       session_state text,
- *       "userId" uuid NOT NULL,
+ *       "userId" uuid NOT NULL
  *   );
  *
  *   CREATE TABLE sessions (

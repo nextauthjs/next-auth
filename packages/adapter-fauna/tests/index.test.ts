@@ -1,5 +1,5 @@
 import { collections, FaunaAdapter, format, indexes, query } from "../src"
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { Client as FaunaClient, Get, Match, Ref } from "faunadb"
 
 const client = new FaunaClient({

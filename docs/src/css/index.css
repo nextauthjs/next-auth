@@ -289,3 +289,14 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   color: #aaa;
   background: #1e2021;
 }
+
+.theme-doc-markdown.markdown {
+  > p:first-of-type {
+    :last-child {
+      img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
+}
