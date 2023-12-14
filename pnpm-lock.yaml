@@ -16,12 +16,6 @@ importers:
       '@actions/core':
         specifier: ^1.10.0
         version: 1.10.0
-      '@auth/adapter-test':
-        specifier: workspace:*
-        version: link:packages/adapter-test
-      '@auth/tsconfig':
-        specifier: workspace:*
-        version: link:packages/tsconfig
       '@balazsorban/monorepo-release':
         specifier: 0.3.1
         version: 0.3.1(patch_hash=jwqbwknpdjbuidjz24xxlo7tdm)
@@ -82,6 +76,9 @@ importers:
       typescript:
         specifier: 5.2.2
         version: 5.2.2
+      utils:
+        specifier: workspace:*
+        version: link:packages/utils
 
   apps/dev/nextjs:
     dependencies:
@@ -164,9 +161,6 @@ importers:
 
   apps/dev/sveltekit:
     dependencies:
-      '@auth/core':
-        specifier: workspace:*
-        version: link:../../../packages/core
       '@auth/sveltekit':
         specifier: workspace:*
         version: link:../../../packages/frameworks-sveltekit
@@ -554,18 +548,6 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
 
-  packages/adapter-test:
-    devDependencies:
-      '@auth/core':
-        specifier: workspace:*
-        version: link:../core
-      '@swc/core':
-        specifier: ^1.3.95
-        version: 1.3.95
-      '@swc/jest':
-        specifier: ^0.2.29
-        version: 0.2.29(@swc/core@1.3.95)
-
   packages/adapter-typeorm:
     dependencies:
       '@auth/core':
@@ -744,7 +726,17 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
 
-  packages/tsconfig: {}
+  packages/utils:
+    devDependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+      '@swc/core':
+        specifier: ^1.3.95
+        version: 1.3.95
+      '@swc/jest':
+        specifier: ^0.2.29
+        version: 0.2.29(@swc/core@1.3.95)
 
 packages:
 

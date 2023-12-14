@@ -61,7 +61,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "dev": "pnpm providers && tsc -w",
-    "providers": "node scripts/generate-providers"
+    "providers": "node ../utils/scripts/providers"
   },
   "files": [
     "*.d.ts*",

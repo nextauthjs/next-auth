@@ -29,7 +29,8 @@ dist
 .docusaurus
 .cache-loader
 packages/next-auth/providers
-packages/next-auth/src/providers/oauth-types.ts
+# copied from @auth/core
+packages/frameworks-*/**/providers
 packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map

@@ -249,13 +249,18 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   session: (
     params:
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        } & {
+      | (
+          | {
+              session: Session
+              /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+              user: AdapterUser
+            }
+          | {
+              session: Session
+              /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+              token: JWT
+            }
+        ) & {
           /**
            * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
            *
@@ -264,7 +269,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
            * :::
            */
           newSession: any
-          trigger: "update"
+          trigger?: "update"
         }
   ) => Awaitable<Session | DefaultSession>
   /**
@@ -336,12 +341,12 @@ export interface CookieOption {
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookiesOptions {
-  sessionToken: CookieOption
-  callbackUrl: CookieOption
-  csrfToken: CookieOption
-  pkceCodeVerifier: CookieOption
-  state: CookieOption
-  nonce: CookieOption
+  sessionToken: Partial<CookieOption>
+  callbackUrl: Partial<CookieOption>
+  csrfToken: Partial<CookieOption>
+  pkceCodeVerifier: Partial<CookieOption>
+  state: Partial<CookieOption>
+  nonce: Partial<CookieOption>
 }
 
 /**
@@ -461,7 +466,7 @@ export interface Session extends DefaultSession {}
  * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
 export interface User {
-  id: string
+  id?: string
   name?: string | null
   email?: string | null
   image?: string | null
@@ -575,7 +580,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   events: Partial<EventCallbacks>
   adapter: Required<Adapter> | undefined
   callbacks: CallbacksOptions
-  cookies: CookiesOptions
+  cookies: Record<keyof CookiesOptions, CookieOption>
   callbackUrl: string
   /**
    * If true, the OAuth callback is being proxied by the server to the original URL.

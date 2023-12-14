@@ -86,13 +86,13 @@
  * ```
  *
  * ## Models
- * 
+ *
  * Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will have a similar structure to the graph below. Each model can be extended with additional fields.
- * 
+ *
  * :::note
  * Auth.js / NextAuth.js uses `camelCase` for its database rows while respecting the conventional `snake_case` formatting for OAuth-related values. If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
  * :::
- * 
+ *
  * ```mermaid
  * erDiagram
  *     User ||--|{ Account : ""
@@ -131,10 +131,10 @@
  *       timestamp expires
  *     }
  * ```
- * 
+ *
  * ## Testing
  *
- * There is a test suite [available](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-test)
+ * There is a test suite [available](https://github.com/nextauthjs/next-auth/tree/main/packages/utils/adapter/index.ts)
  * to ensure that your adapter is compatible with Auth.js.
  *
  * ## Known issues
@@ -263,23 +263,53 @@ export interface VerificationToken {
  * :::
  */
 export interface Adapter {
-  createUser?(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
+  /**
+   * Creates a user in the database and returns it.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   */
+  createUser?(user: AdapterUser): Awaitable<AdapterUser>
+  /**
+   * Returns a user from the database via the user id.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   */
   getUser?(id: string): Awaitable<AdapterUser | null>
+  /**
+   * Returns a user from the database via the user's email address.
+   *
+   * See also [Verification tokens](https://authjs.dev/guides/adapters/creating-a-database-adapter#verification-tokens)
+   */
   getUserByEmail?(email: string): Awaitable<AdapterUser | null>
-  /** Using the provider id and the id of the user for a specific account, get the user. */
+  /**
+   * Using the provider id and the id of the user for a specific account, get the user.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   */
   getUserByAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ): Awaitable<AdapterUser | null>
+  /**
+   * Updates a user in the database and returns it.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   */
   updateUser?(
     user: Partial<AdapterUser> & Pick<AdapterUser, "id">
   ): Awaitable<AdapterUser>
-  /** @todo This method is currently not invoked yet. */
+  /**
+   * @todo This method is currently not invoked yet.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   */
   deleteUser?(
     userId: string
   ): Promise<void> | Awaitable<AdapterUser | null | undefined>
   /**
    * This method is invoked internally (but optionally can be used for manual linking).
    * It creates an [Account](https://authjs.dev/reference/core/adapters#models) in the database.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
    */
   linkAccount?(
     account: AdapterAccount
@@ -298,31 +328,58 @@ export interface Adapter {
   unlinkAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
   ): Promise<void> | Awaitable<AdapterAccount | undefined>
-  /** Creates a session for the user and returns it. */
+  /**
+   * Creates a session for the user and returns it.
+   *
+   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   */
   createSession?(session: {
     sessionToken: string
     userId: string
     expires: Date
   }): Awaitable<AdapterSession>
+  /**
+   * Returns a session and a userfrom the database in one go.
+   *
+   * :::tip
+   * If the database supports joins, it's recommended to reduce the number of database queries.
+   * :::
+   *
+   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   */
   getSessionAndUser?(
     sessionToken: string
   ): Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
+  /**
+   * Updates a session in the database and returns it.
+   *
+   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   */
   updateSession?(
     session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
   ): Awaitable<AdapterSession | null | undefined>
   /**
    * Deletes a session from the database. It is preferred that this method also
    * returns the session that is being deleted for logging purposes.
+   *
+   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
    */
   deleteSession?(
     sessionToken: string
   ): Promise<void> | Awaitable<AdapterSession | null | undefined>
+  /**
+   * Creates a verification token and returns it.
+   *
+   * See also [Verification tokens](https://authjs.dev/guides/adapters/creating-a-database-adapter#verification-tokens)
+   */
   createVerificationToken?(
     verificationToken: VerificationToken
   ): Awaitable<VerificationToken | null | undefined>
   /**
-   * Return verification token from the database and delete it so it cannot be
-   * used again.
+   * Return verification token from the database and deletes it
+   * so it can only be used once.
+   *
+   * See also [Verification tokens](https://authjs.dev/guides/adapters/creating-a-database-adapter#verification-tokens)
    */
   useVerificationToken?(params: {
     identifier: string

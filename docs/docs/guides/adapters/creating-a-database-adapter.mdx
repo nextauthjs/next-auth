@@ -140,7 +140,7 @@ When all of the below steps are done, you are ready to submit a PR to our [repos
 If you created an adapter and want us to distribute it as an official package, please make sure it meets the following requirements. Check out this [existing adapter](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-prisma) to learn about the package structure, required files, test setup, config, etc.
 
 1. The Adapter _must_ implement all methods of the [`Adapter` interface](/reference/core/adapters#adapter)
-1. [Adapter tests](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-test) _must_ be included and _must_ pass. Docker is favored over services, to make CI resilient to network errors and to reduce the number of GitHub Action Secrets (which also lets us run these tests in fork PRs)
+1. [Adapter tests](https://github.com/nextauthjs/next-auth/tree/main/packages/utils/adapter/index.ts) _must_ be included and _must_ pass. Docker is favored over services, to make CI resilient to network errors and to reduce the number of GitHub Action Secrets (which also lets us run these tests in fork PRs)
 1. The Adapter _must_ follow these coding styles
 
    - Written in TypeScript
