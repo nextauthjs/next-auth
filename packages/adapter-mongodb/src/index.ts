@@ -52,38 +52,31 @@ export const defaultCollections: Required<
 }
 
 export const format = {
-  /** Takes a mongoDB object and returns a plain old JavaScript object */
-  from<T = Record<string, unknown>>(object: Record<string, any>): T {
-    const newObject: Record<string, unknown> = {}
-    for (const key in object) {
-      const value = object[key]
-      if (key === "_id") {
-        newObject.id = value.toHexString()
-      } else if (key === "userId") {
-        newObject[key] = value.toHexString()
-      } else {
-        newObject[key] = value
-      }
-    }
-    return newObject as T
-  },
-  /** Takes a plain old JavaScript object and turns it into a mongoDB object */
-  to<T = Record<string, unknown>>(object: Record<string, any>) {
-    const newObject: Record<string, unknown> = {
-      _id: _id(object.id),
-    }
-    for (const key in object) {
-      const value = object[key]
-      if (key === "userId") newObject[key] = _id(value)
-      else if (key === "id") continue
+  /** Takes an object that's coming from a database and converts it to plain JavaScript. */
+  from<T extends Record<string, any> | null>(object: T, withId?: boolean) {
+    if (!object) return null
+    const newObject: any = {}
+    for (const [key, value] of Object.entries(object))
+      if (key === "_id") newObject.id = value.toHexString()
+      else if (key === "userId") newObject[key] = value.toHexString()
       else newObject[key] = value
-    }
-    return newObject as T & { _id: ObjectId }
+    if (!withId) delete newObject.id
+    return newObject
+  },
+  /** Takes an object that's coming from Auth.js and prepares it to be written to the database. */
+  to<T extends Record<string, any>>(object: T) {
+    const newObject: any = {}
+    for (const [key, value] of Object.entries(object))
+      if (key === "id") newObject._id = _id(value)
+      else if (key === "userId") newObject[key] = _id(value)
+      else newObject[key] = value
+    return newObject as NonNullable<T>
   },
 }
 
 /** @internal */
-export function _id(hex?: string) {
+export function _id(hex?: any) {
+  if (hex instanceof ObjectId) return hex
   if (hex?.length !== 24) return new ObjectId()
   return new ObjectId(hex)
 }
@@ -147,94 +140,79 @@ export function MongoDBAdapter(
   client: Promise<MongoClient>,
   options: MongoDBAdapterOptions = {}
 ): Adapter {
-  const { collections } = options
   const { from, to } = format
+  const c = { ...defaultCollections, ...options.collections }
 
-  const db = (async () => {
-    const _db = (await client).db(options.databaseName)
-    const c = { ...defaultCollections, ...collections }
+  const db = client.then((db) => {
+    const _db = db.db(options.databaseName)
     return {
       U: _db.collection<AdapterUser>(c.Users),
       A: _db.collection<AdapterAccount>(c.Accounts),
       S: _db.collection<AdapterSession>(c.Sessions),
       V: _db.collection<VerificationToken>(c?.VerificationTokens),
     }
-  })()
+  })
 
   return {
     async createUser(data) {
-      const user = to<AdapterUser>(data)
+      const user = to(data)
       await (await db).U.insertOne(user)
-      return from<AdapterUser>(user)
+      return from(user, true)
     },
     async getUser(id) {
-      const user = await (await db).U.findOne({ _id: _id(id) })
-      if (!user) return null
-      return from<AdapterUser>(user)
+      return from(await (await db).U.findOne({ _id: _id(id) }), true)
     },
     async getUserByEmail(email) {
-      const user = await (await db).U.findOne({ email })
-      if (!user) return null
-      return from<AdapterUser>(user)
+      return from(await (await db).U.findOne({ email }), true)
     },
     async getUserByAccount(provider_providerAccountId) {
       const account = await (await db).A.findOne(provider_providerAccountId)
       if (!account) return null
-      const user = await (
-        await db
-      ).U.findOne({ _id: new ObjectId(account.userId) })
+      const user = await (await db).U.findOne({ _id: _id(account.userId) })
       if (!user) return null
-      return from<AdapterUser>(user)
+      return from(user, true)
     },
     async updateUser(data) {
-      const { _id, ...user } = to<AdapterUser>(data)
-
-      const result = await (
+      const user = await (
         await db
-      ).U.findOneAndUpdate({ _id }, { $set: user }, { returnDocument: "after" })
-
-      return from<AdapterUser>(result!)
+      ).U.findOneAndUpdate(
+        { _id: _id(data.id) },
+        { $set: data },
+        { returnDocument: "after" }
+      )
+      return from(user, true)
     },
     async deleteUser(id) {
-      const userId = _id(id)
+      const userId: any = _id(id)
       const m = await db
-      await Promise.all([
-        m.A.deleteMany({ userId: userId as any }),
-        m.S.deleteMany({ userId: userId as any }),
-        m.U.deleteOne({ _id: userId }),
+      const [user] = await Promise.all([
+        m.U.findOneAndDelete({ _id: userId }),
+        m.A.deleteMany({ userId }),
+        m.S.deleteMany({ userId }),
       ])
+      return from(user, true)
     },
-    linkAccount: async (data) => {
-      const account = to<AdapterAccount>(data)
-      await (await db).A.insertOne(account)
+    async linkAccount(account) {
+      await (await db).A.insertOne(to(account))
       return account
     },
     async unlinkAccount(provider_providerAccountId) {
       const account = await (
         await db
       ).A.findOneAndDelete(provider_providerAccountId)
-      return from<AdapterAccount>(account!)
+      return from(account)
     },
     async getSessionAndUser(sessionToken) {
       const session = await (await db).S.findOne({ sessionToken })
       if (!session) return null
-      const user = await (
-        await db
-      ).U.findOne({ _id: new ObjectId(session.userId) })
-      if (!user) return null
-      return {
-        user: from<AdapterUser>(user),
-        session: from<AdapterSession>(session),
-      }
+      const user = await (await db).U.findOne({ _id: _id(session.userId) })
+      return { user: from(user, true), session: from(session) }
     },
-    async createSession(data) {
-      const session = to<AdapterSession>(data)
-      await (await db).S.insertOne(session)
-      return from<AdapterSession>(session)
+    async createSession(session) {
+      await (await db).S.insertOne(to(session))
+      return session
     },
-    async updateSession(data) {
-      const { _id, ...session } = to<AdapterSession>(data)
-
+    async updateSession(session) {
       const updatedSession = await (
         await db
       ).S.findOneAndUpdate(
@@ -242,28 +220,17 @@ export function MongoDBAdapter(
         { $set: session },
         { returnDocument: "after" }
       )
-      return from<AdapterSession>(updatedSession!)
+      return from(updatedSession)
     },
     async deleteSession(sessionToken) {
-      const session = await (
-        await db
-      ).S.findOneAndDelete({
-        sessionToken,
-      })
-      return from<AdapterSession>(session!)
+      return from(await (await db).S.findOneAndDelete({ sessionToken }))
     },
-    async createVerificationToken(data) {
-      await (await db).V.insertOne(to(data))
-      return data
+    async createVerificationToken(verificationToken) {
+      await (await db).V.insertOne(to(verificationToken))
+      return verificationToken
     },
-    async useVerificationToken(identifier_token) {
-      const verificationToken = await (
-        await db
-      ).V.findOneAndDelete(identifier_token)
-
-      if (!verificationToken) return null
-      const { _id, ...rest } = verificationToken
-      return rest
+    async useVerificationToken(params) {
+      return from(await (await db).V.findOneAndDelete(params))
     },
   }
 }

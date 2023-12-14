@@ -14,38 +14,37 @@ runBasicTests({
       await client.close()
     },
     async user(id) {
-      const user = await client
-        .db()
-        .collection(defaultCollections.Users)
-        .findOne({ _id: _id(id) })
-
-      if (!user) return null
-      return format.from(user)
+      return format.from(
+        await client
+          .db()
+          .collection(defaultCollections.Users)
+          .findOne({ _id: _id(id) }),
+        true
+      )
     },
     async account(provider_providerAccountId) {
-      const account = await client
-        .db()
-        .collection(defaultCollections.Accounts)
-        .findOne(provider_providerAccountId)
-      if (!account) return null
-      return format.from(account)
+      return format.from(
+        await client
+          .db()
+          .collection(defaultCollections.Accounts)
+          .findOne(provider_providerAccountId)
+      )
     },
     async session(sessionToken) {
-      const session = await client
-        .db()
-        .collection(defaultCollections.Sessions)
-        .findOne({ sessionToken })
-      if (!session) return null
-      return format.from(session)
+      return format.from(
+        await client
+          .db()
+          .collection(defaultCollections.Sessions)
+          .findOne({ sessionToken })
+      )
     },
     async verificationToken(identifier_token) {
-      const token = await client
-        .db()
-        .collection(defaultCollections.VerificationTokens)
-        .findOne(identifier_token)
-      if (!token) return null
-      const { _id, ...rest } = token
-      return rest
+      return format.from(
+        await client
+          .db()
+          .collection(defaultCollections.VerificationTokens)
+          .findOne(identifier_token)
+      )
     },
   },
 })
