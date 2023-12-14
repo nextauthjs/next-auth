@@ -106,9 +106,10 @@ export async function init({
     action,
     // @ts-expect-errors
     provider,
-    // Allow user cookie options to deep-override any cookie settings
-    cookies: cookie.makeCookiesOptions(
-      authOptions.useSecureCookies ?? url.protocol === "https:",
+    cookies: merge(
+      cookie.defaultCookies(
+        authOptions.useSecureCookies ?? url.protocol === "https:"
+      ),
       authOptions.cookies
     ),
     providers,

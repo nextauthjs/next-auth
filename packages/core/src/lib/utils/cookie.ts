@@ -1,5 +1,4 @@
 import type {
-  CookieType,
   CookieOption,
   CookiesOptions,
   LoggerInstance,
@@ -119,23 +118,6 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
       },
     },
   }
-}
-
-export function makeCookiesOptions(
-  useSecureCookies: boolean,
-  options?: { [K in CookieType]?: Partial<CookieOption> }
-): CookiesOptions {
-  const cookies = defaultCookies(useSecureCookies)
-
-  if (!options) return cookies
-
-  for (const [key, value] of Object.entries(options)) {
-    const cookie = cookies[key as keyof CookiesOptions]
-    cookie.name = value.name || cookie.name
-    cookie.options = { ...cookie.options, ...value.options }
-  }
-
-  return cookies
 }
 
 export interface Cookie extends CookieOption {
