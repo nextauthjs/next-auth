@@ -7,6 +7,7 @@ import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
 import parseUrl from "./utils/parse-url.js"
+import { merge } from "./utils/merge.js"
 
 import type {
   AuthConfig,
@@ -15,7 +16,6 @@ import type {
   InternalOptions,
   RequestInternal,
 } from "../types.js"
-import { merge } from "./utils/merge.js"
 
 interface InitParams {
   url: URL
