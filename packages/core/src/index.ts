@@ -352,9 +352,9 @@ export interface AuthConfig {
    */
   useSecureCookies?: boolean
   /**
-   * You can override the default cookie names and options for any of the cookies used by NextAuth.js.
-   * You can specify one or more cookies with custom properties,
-   * but if you specify custom options for a cookie you must provide all the options for that cookie.
+   * You can override the default cookie names and options for any of the cookies used by Auth.js.
+   * You can specify one or more cookies with custom properties
+   * and missing options will use the default values defined by Auth.js.
    * If you use this feature, you will likely want to create conditional behavior
    * to support setting different cookies policies in development and production builds,
    * as you will be opting out of the built-in dynamic policy.

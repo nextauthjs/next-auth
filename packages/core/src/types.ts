@@ -341,12 +341,12 @@ export interface CookieOption {
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookiesOptions {
-  sessionToken: CookieOption
-  callbackUrl: CookieOption
-  csrfToken: CookieOption
-  pkceCodeVerifier: CookieOption
-  state: CookieOption
-  nonce: CookieOption
+  sessionToken: Partial<CookieOption>
+  callbackUrl: Partial<CookieOption>
+  csrfToken: Partial<CookieOption>
+  pkceCodeVerifier: Partial<CookieOption>
+  state: Partial<CookieOption>
+  nonce: Partial<CookieOption>
 }
 
 /**
@@ -580,7 +580,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   events: Partial<EventCallbacks>
   adapter: Required<Adapter> | undefined
   callbacks: CallbacksOptions
-  cookies: CookiesOptions
+  cookies: Record<keyof CookiesOptions, CookieOption>
   callbackUrl: string
   /**
    * If true, the OAuth callback is being proxied by the server to the original URL.
