@@ -108,8 +108,8 @@ export async function getToken(
   const {
     secureCookie,
     cookieName = secureCookie
-      ? "__Secure-auth.session-token"
-      : "auth.session-token",
+      ? "__Secure-authjs.session-token"
+      : "authjs.session-token",
     decode: _decode = decode,
     salt = cookieName,
     secret,
