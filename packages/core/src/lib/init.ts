@@ -15,6 +15,7 @@ import type {
   InternalOptions,
   RequestInternal,
 } from "../types.js"
+import { merge } from "./utils/merge.js"
 
 interface InitParams {
   url: URL
