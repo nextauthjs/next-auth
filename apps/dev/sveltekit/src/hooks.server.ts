@@ -4,7 +4,7 @@ import Credentials from "@auth/sveltekit/providers/credentials"
 import Facebook from "@auth/sveltekit/providers/facebook"
 import Auth0 from "@auth/sveltekit/providers/auth0"
 import Discord from "@auth/sveltekit/providers/discord"
-import Email from "@auth/sveltekit/providers/email"
+// import Email from "@auth/sveltekit/providers/email"
 import Google from "@auth/sveltekit/providers/google"
 import Twitter from "@auth/sveltekit/providers/twitter"
 import LinkedIn from "@auth/sveltekit/providers/linkedin"
@@ -71,13 +71,14 @@ const adapter = TestAdapter({
     return Promise.resolve()
   },
 })
+
 export const handle = SvelteKitAuth({
-  adapter,
+  // adapter,
   session: {
     strategy: "jwt",
   },
   providers: [
-    Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
+    // Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" }),
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {

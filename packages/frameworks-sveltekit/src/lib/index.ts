@@ -219,9 +219,9 @@ export async function getSession(
   config.trustHost ??= true
 
   const prefix = config.prefix ?? `${base}/auth`
-  const url = new URL(prefix + "/session", req.url)
+  const url = new URL(`${prefix}/session`, req.url)
   const request = new Request(url, { headers: req.headers })
-  const response = await Auth(request, config)
+  const response = await Auth(request, config) as Response
 
   const { status = 200 } = response
   const data = await response.json()
@@ -238,9 +238,10 @@ export async function getProviders(
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
-  const url = new URL(`${config.prefix}/providers`, req.url)
+  const prefix = config.prefix ?? `${base}/auth`
+  const url = new URL(`${prefix}/providers`, req.url)
   const request = new Request(url, { headers: req.headers })
-  const response = await Auth(request, config)
+  const response = (await Auth(request, config)) as Response
 
   const { status = 200 } = response
   const data = await response.json()
@@ -309,7 +310,7 @@ function AuthHandle(
       return resolve(event)
     }
 
-    return Auth(request, authOptions)
+    return Auth(request, authOptions) as unknown as Response
   }
 }
 

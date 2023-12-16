@@ -6,7 +6,6 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
-import parseUrl from "./utils/parse-url.js"
 
 import type {
   AuthConfig,
@@ -63,14 +62,6 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  // TODO: move this to web.ts
-  // const parsed = parseUrl(
-  //   reqUrl.origin +
-  //     reqUrl.pathname.replace(`/${action}`, "").replace(`/${providerId}`, ""),
-  //   authOptions.prefix
-  // )
-  // const url = new URL(parsed.toString())
-
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,
