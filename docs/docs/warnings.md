@@ -53,7 +53,7 @@ Disable this warning by setting `synchronize: false` in your typeorm config
 
 Example:
 
-```js title="/pages/api/auth/[...nextauth].js"
+```js title="/pages/api/auth/[...nextauth]/route.js"
 adapter: TypeORMLegacyAdapter({
   type: 'mysql',
   username: process.env.DATABASE_USERNAME,
