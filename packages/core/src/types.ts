@@ -440,6 +440,7 @@ export interface PagesOptions {
 type ISODateString = string
 
 export interface DefaultSession {
+  id?: string
   user?: User
   expires: ISODateString
 }
