@@ -251,7 +251,10 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     params:
       | (
           | {
-              session: Session
+              session: Session & {
+                /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+                id: string;
+              }
               /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
               user: AdapterUser
             }

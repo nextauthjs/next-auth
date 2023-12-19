@@ -207,7 +207,7 @@ export interface AdapterSession {
   /**
    * Session id. Only used when using `"database"` `AuthConfig.strategy` option.
    */
-  id?: string;
+  id: string;
   /**
    * A randomly generated value that is used to look up the session in the database
    * when using `"database"` `AuthConfig.strategy` option.
