@@ -82,6 +82,7 @@ const content = JSON.stringify(
       { id: "pg", name: "pg", img: "pg.png" },
       { id: "pouchdb", name: "PouchDB" },
       { id: "prisma", name: "Prisma" },
+      { id: "redis", name: "Redis" },
       { id: "sequelize", name: "Sequelize" },
       { id: "supabase", name: "Supabase" },
       { id: "surrealdb", name: "SurrealDB", img: "surreal.png" },

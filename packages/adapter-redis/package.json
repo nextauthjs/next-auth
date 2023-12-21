@@ -1,0 +1,51 @@
+{
+  "name": "@auth/redis-adapter",
+  "version": "1.0.11",
+  "description": "Redis adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/redis",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "nbifrye <nbifrye@gmail.com>",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "redis"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "./tests/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "redis": "^4.6.12"
+  },
+  "devDependencies": {
+    "redis": "^4.6.12"
+  },
+  "jest": {
+    "preset": "utils/adapter"
+  }
+}
