@@ -1,6 +1,6 @@
 {
   "name": "@auth/kysely-adapter",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Kysely adapter for Auth.js",
   "homepage": "https://authjs.dev/reference/adapter/kysely",
   "repository": "https://github.com/nextauthjs/next-auth",
