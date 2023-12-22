@@ -1,7 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBAdapter } from "../src"
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { format } from "../src/"
 const config = {
   endpoint: "http://127.0.0.1:8000",
