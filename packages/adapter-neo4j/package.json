@@ -1,6 +1,6 @@
 {
   "name": "@auth/neo4j-adapter",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "neo4j adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -51,6 +51,6 @@
     "@auth/core": "workspace:*"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

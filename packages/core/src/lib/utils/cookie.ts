@@ -55,7 +55,7 @@ export type SessionToken<T extends "jwt" | "database" = "jwt"> = T extends "jwt"
  *
  * @TODO Review cookie settings (names, options)
  */
-export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
+export function defaultCookies(useSecureCookies: boolean) {
   const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options
@@ -117,7 +117,7 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
         secure: useSecureCookies,
       },
     },
-  }
+  } as const satisfies CookiesOptions
 }
 
 export interface Cookie extends CookieOption {

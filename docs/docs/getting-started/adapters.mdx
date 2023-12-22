@@ -5,7 +5,7 @@ sidebar_position: 2
 
 import manifest from "../../manifest.mjs"
 
-An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc. Adapters are optional, unless you need to persist user information in your own database, or you want to implement certain flows. The [Email Provider](/getting-started/providers/email-tutorial) requires an adapter to be able to save [Verification Tokens](#verification-token).
+An **Adapter** in Auth.js connects your application to whatever database or backend system you want to use to store data for users, their accounts, sessions, etc. Adapters are optional, unless you need to persist user information in your own database, or you want to implement certain flows. For example, the [Email Provider](/getting-started/providers/email-tutorial) requires an adapter to be able to save [Verification Tokens](#verification-token).
 
 On how to use Auth.js with other databases, check out the [creating a database adapter](/guides/adapters/creating-a-database-adapter) guide.
 
@@ -26,13 +26,13 @@ If you don't find an adapter for the database or service you use, you can always
   ))}
 </div>
 
+---
+
 ## Models
 
 Auth.js can be used with any database. Models tell you what structures Auth.js expects from your database. Models will vary slightly depending on which adapter you use, but in general, will have a similar structure to the graph below. Each model can be extended with additional fields.
 
-:::note
-Auth.js / NextAuth.js uses `camelCase` for its database rows while respecting the conventional `snake_case` formatting for OAuth-related values. If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
-:::
+Below is the most common structure of the models, but note that you can implement a much simpler structure, based on your use case. More details in the [creating a database adapter](/guides/adapters/creating-a-database-adapter) guide.
 
 ```mermaid
 erDiagram
@@ -52,7 +52,6 @@ erDiagram
       string userId
     }
     Account {
-      string id
       string userId
       string type
       string provider
@@ -72,6 +71,10 @@ erDiagram
       timestamp expires
     }
 ```
+
+:::note
+Auth.js libraries use `camelCase` for its database rows while respecting the conventional `snake_case` formatting for OAuth-related values. If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
+:::
 
 ---
 
