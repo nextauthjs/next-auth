@@ -308,7 +308,7 @@ export interface NextAuthResult {
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
   }) => Promise<R extends false ? any : never>
-  update: (
+  unstable_update: (
     data: Partial<Session | { user: Partial<Session["user"]> }>
   ) => Promise<Session | null>
 }
@@ -337,7 +337,7 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     signOut: (options) => {
       return signOut(options, config)
     },
-    update: (data) => {
+    unstable_update: (data) => {
       return update(data, config)
     },
   }

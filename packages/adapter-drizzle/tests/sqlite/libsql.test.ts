@@ -1,14 +1,20 @@
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
-import { db, accounts, sessions, users, verificationTokens } from "./schema"
+import {
+  db,
+  accounts,
+  sessions,
+  users,
+  verificationTokens,
+} from "./schema.libsql"
 import { eq, and } from "drizzle-orm"
-import { fixtures } from "../fixtures"
 
 globalThis.crypto ??= require("node:crypto").webcrypto
 
+const orNull = <T>(x: T | null | undefined): NonNullable<T> | null => x ?? null
+
 runBasicTests({
   adapter: DrizzleAdapter(db),
-  fixtures,
   db: {
     connect: async () => {
       await Promise.all([
@@ -26,18 +32,15 @@ runBasicTests({
         db.delete(users),
       ])
     },
-    user: async (id) =>
-      db
-        .select()
-        .from(users)
-        .where(eq(users.id, id))
-        .then((res) => res[0] ?? null),
+    user: (id) =>
+      db.select().from(users).where(eq(users.id, id)).get().then(orNull),
     session: (sessionToken) =>
       db
         .select()
         .from(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
-        .then((res) => res[0] ?? null),
+        .get()
+        .then(orNull),
     account: (provider_providerAccountId) => {
       return db
         .select()
@@ -48,7 +51,8 @@ runBasicTests({
             provider_providerAccountId.providerAccountId
           )
         )
-        .then((res) => res[0] ?? null)
+        .get()
+        .then(orNull)
     },
     verificationToken: (identifier_token) =>
       db
@@ -60,6 +64,6 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         )
-        .then((res) => res[0] ?? null),
+        .get() ?? null,
   },
 })

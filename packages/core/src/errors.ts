@@ -77,7 +77,7 @@ export class SignInError extends AuthError {
 }
 
 /**
- * One of the database [`Adapter` methods](https://auithjs.dev/reference/core/adapters#methods)
+ * One of the database [`Adapter` methods](https://authjs.dev/reference/core/adapters#methods)
  * failed during execution.
  *
  * :::tip

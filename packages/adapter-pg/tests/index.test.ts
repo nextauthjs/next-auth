@@ -1,4 +1,4 @@
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import PostgresAdapter, { mapExpiresAt } from "../src"
 import { Pool } from "pg"
 
