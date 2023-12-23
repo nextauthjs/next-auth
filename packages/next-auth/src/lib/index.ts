@@ -79,7 +79,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
           (await config.callbacks?.session?.(...args)) ?? args[0].session
         // @ts-expect-error either user or token will be defined
         const user = args[0].user ?? args[0].token
-        return { user, ...session } satisfies Session
+        return { ...session, user } satisfies Session
       },
     },
   }) as Promise<Response>
