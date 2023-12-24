@@ -1,17 +1,14 @@
 {
-  "extends": "@auth/tsconfig/tsconfig.base.json",
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "outDir": ".",
     "rootDir": "src",
-    "lib": [
-      "ESNext"
-    ]
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
     "*.js",
     "*.d.ts",
-  ]
+  ],
+  "include": [
+    "src/**/*"
+  ],
 }
