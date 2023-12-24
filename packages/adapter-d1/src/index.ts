@@ -7,12 +7,12 @@
  * </div>
  *
  * ## Warning
- * This adapter is not developed or maintained by Clouflare and they haven't declared the D1 api stable.  The author will make an effort to keep this adapter up to date.
+ * This adapter is not developed or maintained by Cloudflare and they haven't declared the D1 api stable.  The author will make an effort to keep this adapter up to date.
  * The adapter is compatible with the D1 api as of March 22, 2023.
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install next-auth @auth/d1-adapter
  * ```
  *

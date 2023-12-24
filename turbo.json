@@ -14,23 +14,6 @@
       ],
       "outputMode": "new-only"
     },
-    "next-auth#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "client/**",
-        "core/**",
-        "css/**",
-        "jwt/**",
-        "next/**",
-        "providers/**",
-        "react/**",
-        "*.js",
-        "*.d.ts"
-      ],
-      "outputMode": "new-only"
-    },
     "@auth/core#build": {
       "dependsOn": [
         "^build"
@@ -52,10 +35,23 @@
       ],
       "outputs": [
         ".svelte-kit/**",
+        "providers/**",
         "client.*",
         "index.*"
       ],
       "outputMode": "new-only"
+    },
+    "next-auth#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "lib/**",
+        "providers/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts*"
+      ]
     },
     "clean": {
       "cache": false
@@ -80,29 +76,31 @@
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/prisma-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/sveltekit#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
-        "@auth/edgedb-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
         "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
+        "@auth/hasura-adapter#build",
         "@auth/kysely-adapter#build",
         "@auth/mikro-orm-adapter#build",
         "@auth/mongodb-adapter#build",
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "next-auth#build",
         "^build"
       ],
       "cache": false
@@ -110,37 +108,41 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/prisma-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/sveltekit#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
-        "@auth/edgedb-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
         "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
+        "@auth/hasura-adapter#build",
         "@auth/kysely-adapter#build",
         "@auth/mikro-orm-adapter#build",
         "@auth/mongodb-adapter#build",
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
         "@auth/typeorm-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "next-auth#build",
         "^build"
       ],
       "outputs": [
         ".docusaurus/**/*",
         "build/**/*",
+        "docs/reference/adapter/**",
         "docs/reference/core/**/*",
-        "docs/reference/sveltekit/**/*",
-        "docs/reference/adapter/**"
+        "docs/reference/nextjs/**/*",
+        "docs/reference/solidstart/**/*",
+        "docs/reference/sveltekit/**/*"
       ]
     }
   }

@@ -69,7 +69,7 @@ With this strategy, if you want to update the role, the user needs to be forced 
 
 ### With Database
 
-When you have a database, you can save the user role on the [User model](/reference/adapters/models#user). The below example is showing you how to do this with Prisma, but the idea is the same for all adapters.
+When you have a database, you can save the user role on the [User model](/reference/core/adapters#adapteruser). The below example is showing you how to do this with Prisma, but the idea is the same for all adapters.
 
 First, add a `role` column to the User model.
 
@@ -148,6 +148,6 @@ When using Next.js and JWT, you can alternatively also use [Middleware](https://
 
 - [Concepts: Session strategies](/concepts/session-strategies)
 - [Next.js: Middleware](https://next-auth.js.org/configuration/nextjs#wrap-middleware)
-- [Adapters: User model](/reference/adapters/models#user)
-- [Adapters: Prisma adapter](/reference/adapters/prisma)
+- [Adapters: User model](/reference/core/adapters/#adapteruser)
+- [Adapters: Prisma adapter](/reference/adapter/prisma)
 - [TypeScript](/getting-started/typescript)

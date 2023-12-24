@@ -4,7 +4,7 @@
  *  Built-in sign in with <b>Auth0</b> integration.
  * </span>
  * <a href="https://auth0.com" style={{backgroundColor: "black", padding: "12px", borderRadius: "100%" }}>
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/auth0-dark.svg" width="24"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/auth0.svg" width="24"/>
  * </a>
  * </div>
  *
@@ -123,14 +123,7 @@ export default function Auth0(
     id: "auth0",
     name: "Auth0",
     type: "oidc",
-    style: {
-      logo: "/auth0.svg",
-      logoDark: "/auth0-dark.svg",
-      bg: "#fff",
-      text: "#EB5424",
-      bgDark: "#EB5424",
-      textDark: "#fff",
-    },
+    style: { logo: "/auth0.svg", text: "#fff", bg: "#EB5424" },
     options: config,
   }
 }

@@ -1,4 +1,4 @@
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { EdgeDBAdapter } from "../src"
 import { createClient } from "edgedb"
 
@@ -10,7 +10,7 @@ if (process.env.CI) {
   process.exit(0)
 }
 
-const client = createClient();
+const client = createClient()
 
 runBasicTests({
   adapter: EdgeDBAdapter(client),
@@ -32,7 +32,8 @@ runBasicTests({
       `)
     },
     user: async (id) => {
-      return await client.querySingle(`
+      return await client.querySingle(
+        `
       select User {
         id,
         email,
@@ -40,10 +41,13 @@ runBasicTests({
         name,
         image
       } filter .id = <uuid>$id
-      `, { id })
+      `,
+        { id }
+      )
     },
     account: async ({ providerAccountId, provider }) => {
-      return await client.querySingle(`
+      return await client.querySingle(
+        `
       select Account {
         provider,
         providerAccountId,
@@ -62,10 +66,13 @@ runBasicTests({
         .providerAccountId = <str>$providerAccountId
       and
         .provider = <str>$provider 
-      `, { providerAccountId, provider })
+      `,
+        { providerAccountId, provider }
+      )
     },
     session: async (sessionToken) => {
-      return await client.querySingle(`
+      return await client.querySingle(
+        `
       select Session {
         userId,
         id,
@@ -73,10 +80,13 @@ runBasicTests({
         sessionToken,
       }
       filter .sessionToken = <str>$sessionToken
-      `, { sessionToken })
+      `,
+        { sessionToken }
+      )
     },
     async verificationToken({ token, identifier }) {
-      return await client.querySingle(`
+      return await client.querySingle(
+        `
       select VerificationToken {
         identifier,
         expires,
@@ -85,7 +95,9 @@ runBasicTests({
       filter .token = <str>$token
       and
         .identifier = <str>$identifier
-      `, { token, identifier })
+      `,
+        { token, identifier }
+      )
     },
   },
 })

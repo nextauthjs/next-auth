@@ -40,7 +40,7 @@ When a user signs out, the session is deleted from the database, and the session
 ### Advantages
 
 - Database sessions can be at any time modified server-side, so you can implement features that might be more difficult - but not impossible - using the JWT strategy, etc.: "sign out everywhere", or limiting concurrent logins
-- Auth.js has no opinion on the type of database you are using, we have a big list of [official database adapters](/reference/adapters), but you can [implement your own](guides/adapters/creating-a-database-adapter) as well
+- Auth.js has no opinion on the type of database you are using, we have a big list of [official database adapters](/reference/core/adapters), but you can [implement your own](guides/adapters/creating-a-database-adapter) as well
 
 ### Disadvantages
 

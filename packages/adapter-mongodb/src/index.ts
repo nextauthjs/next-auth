@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/mongodb-adapter mongodb
  * ```
  *
@@ -262,8 +262,8 @@ export function MongoDBAdapter(
       ).V.findOneAndDelete(identifier_token)
 
       if (!verificationToken) return null
-      const { _id, ...rest } = verificationToken;
-      return rest;
+      const { _id, ...rest } = verificationToken
+      return rest
     },
   }
 }

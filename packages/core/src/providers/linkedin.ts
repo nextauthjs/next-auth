@@ -12,13 +12,13 @@ import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 /** @see https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2#response-body-schema */
 export interface LinkedInProfile extends Record<string, any> {
-  sub: string,
-  name: string,
-  given_name: string,
-  family_name: string,
-  picture: string,
-  locale: string,
-  email: string,
+  sub: string
+  name: string
+  given_name: string
+  family_name: string
+  picture: string
+  locale: string
+  email: string
   email_verified: boolean
 }
 
@@ -85,17 +85,10 @@ export default function LinkedIn<P extends LinkedInProfile>(
         id: profile.sub,
         name: profile.name,
         email: profile.email,
-        image: profile.picture
+        image: profile.picture,
       }
     },
-    style: {
-      logo: "/linkedin.svg",
-      logoDark: "/linkedin-dark.svg",
-      bg: "#fff",
-      text: "#069",
-      bgDark: "#069",
-      textDark: "#fff",
-    },
+    style: { logo: "/linkedin.svg", bg: "#069", text: "#fff" },
     options,
   }
 }

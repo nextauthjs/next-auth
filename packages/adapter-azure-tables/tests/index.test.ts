@@ -1,4 +1,4 @@
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import {
   AzureNamedKeyCredential,
   TableServiceClient,
@@ -6,6 +6,8 @@ import {
 } from "@azure/data-tables"
 import { keys, TableStorageAdapter, withoutKeys } from "../src"
 import type { AdapterUser, VerificationToken } from "@auth/core/adapters"
+
+globalThis.crypto ??= require("node:crypto").webcrypto
 
 const testAccount = {
   // default constants used by a dev instance of azurite
