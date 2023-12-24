@@ -9,7 +9,7 @@ By default, it uses the [JWT session strategy](/concepts/session-strategies#jwt)
 ## Environment Variables
 
 :::tip
-For consistency, we recommend prefixing all Auth.js environment variables with `AUTH_`. This way we can autodetect them, and it's they can also be distinguished from other environment variables.
+For consistency, we recommend prefixing all Auth.js environment variables with `AUTH_`. This way, we can autodetect and distinguish them from other environment variables.
 :::
 
 Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a random string of at least 32 characters. On Linux systems, you can generate a suitable string using the command `openssl rand -base64 32`. You can also use a tool like [generate-secret.vercel.app](https://generate-secret.vercel.app/32) to generate a random value.
