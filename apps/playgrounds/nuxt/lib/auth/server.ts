@@ -1,7 +1,6 @@
 import { AuthConfig, Session } from "@auth/core/types"
 import { Auth } from "@auth/core"
-import { fromNodeMiddleware, H3Event } from "h3"
-import getURL from "requrl"
+import { fromNodeMiddleware, getRequestURL, H3Event } from "h3"
 import { createMiddleware } from "@hattip/adapter-node"
 
 export function NuxtAuthHandler(options: AuthConfig) {
@@ -25,7 +24,7 @@ export async function getSession(
   const headers = getRequestHeaders(event)
   const nodeHeaders = new Headers()
 
-  const url = new URL("/api/auth/session", getURL(event.node.req))
+  const url = new URL("/api/auth/session", getRequestURL(event))
 
   Object.keys(headers).forEach((key) => {
     nodeHeaders.append(key, headers[key] as any)

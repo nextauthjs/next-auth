@@ -96,11 +96,8 @@ export default function Reddit(
     checks: ["state"],
     style: {
       logo: "/reddit.svg",
-      bg: "#fff",
-      text: "#000",
-      logoDark: "/reddit.svg",
-      bgDark: "#000",
-      textDark: "#fff",
+      bg: "#000",
+      text: "#fff",
     },
     options: config,
   }
