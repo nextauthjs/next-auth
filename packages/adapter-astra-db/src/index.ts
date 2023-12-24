@@ -24,17 +24,42 @@ import type {
 } from "@auth/core/adapters"
 
 export interface AstraDBConfig {
+  dbId?: string
+  /** @see https://docs.datastax.com/en/astra-serverless/docs/plan/regions.html */
+  region?:
+    | "ap-east-1"
+    | "ap-south-1"
+    | "ap-southeast-1"
+    | "ap-southeast-2"
+    | "asia-northeast1"
+    | "asia-south1"
+    | "australia-southeast1"
+    | "eu-central-1"
+    | "eu-west-1"
+    | "eu-west-2"
+    | "europe-west1"
+    | "europe-west2"
+    | "europe-west3"
+    | "europe-west4"
+    | "northamerica-northeast1"
+    | "northamerica-northeast2"
+    | "sa-east-1"
+    | "us-central1"
+    | "us-east-1"
+    | "us-east-2"
+    | "us-east1"
+    | "us-east4"
+    | "us-west-2"
+    | "us-west1"
+    | "us-west4"
+  /** @default authjs*/
+  keyspace?: string
+  token?: string
   collections?: {
     users?: string
     sessions?: string
     accounts?: string
     verificationTokens?: string
-  }
-  api: {
-    dbId: string
-    region: string
-    keyspace: string
-    token: string
   }
 }
 
@@ -64,7 +89,8 @@ export const format = {
   /** Takes a DB response and returns a plain old JavaScript object */
   from<T = Record<string, unknown>>(
     object: AstraResponse<T>,
-    includeId: boolean = true
+    /** If set to `true` the `id` property is not stripped. */
+    includeId: boolean = false
   ): T | null {
     if (object.errors?.length) {
       const e = new Error(object.errors[0].message)
@@ -87,24 +113,24 @@ export const format = {
 }
 
 /** Fetch data from the DataStax API */
-function fetchClient(api: AstraDBConfig["api"]) {
-  const baseUrl = `https://${api.dbId}-${api.region}.apps.astra.datastax.com/api/json/v1/${api.keyspace}`
+export function client(api: AstraDBConfig) {
+  const { dbId, region, token, keyspace = "authjs" } = api
+  if (!dbId) throw new TypeError("Astra DB Adapter is mising `dbId`")
+  if (!region) throw new TypeError("Astra DB Adapter is mising `region`")
+  if (!token) throw new TypeError("Astra DB Adapter is mising `token`")
+
+  const baseUrl = `https://${dbId}-${region}.apps.astra.datastax.com/api/json/v1/${keyspace}`
   return {
-    request(collection: string, data: any) {
-      const url = new URL(`${baseUrl}/${collection}`)
-      return fetch(url, {
+    async request(collection: string | null, data: unknown) {
+      const url = new URL(`${baseUrl}/${collection ?? ""}`)
+      return await fetch(url.href.replace(/\/$/, ""), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-cassandra-token": api.token,
+          "x-cassandra-token": token,
         },
         body: JSON.stringify(data),
-      })
-        .then((res) => res.json())
-        .catch((error) => {
-          console.error(error)
-          throw new Error("TODO: Handle errors")
-        })
+      }).then((res) => res.json())
     },
   }
 }
@@ -112,20 +138,22 @@ function fetchClient(api: AstraDBConfig["api"]) {
 /**
  * ## Setup
  *
- * Require the mentioned collections in the Cassandra Database:
+ * Require the necessary collections in the Cassandra Database:
  * "users"
  * "sessions"
  * "accounts"
  * "tokens"
  *
- * How to create the required collections:
- * cURL request
+ * :::note
+ * You might not need all of these collections, based on your requirements. [Learn more](https://authjs.dev/guides/adapters/creating-a-database-adapter).
+ *
+ * To create the required collections, you can for example use cURL:
  *
  * ```bash
  * #!/bin/bash
  * export ASTRA_DB_ID="6ab0646e-c8d3-4976-8b0e-8b48e3144725"
- * export ASTRA_DB_REGION="europe-west1"
- * export ASTRA_DB_KEYSPACE="test"
+ * export ASTRA_DB_REGION="eu-west-1"
+ * export ASTRA_DB_KEYSPACE="authjs"
  * export ASTRA_DB_APPLICATION_TOKEN="AstraCS:PZXoTjamJFkjmkWcAQSAPwGd:61ed0a6c81f437dedcbdd04c23b96b006cdf05973d0c671952454bd23c6f456c"
  * export ASTRA_URL="https://$ASTRA_DB_ID-$ASTRA_DB_REGION.apps.astra.datastax.com/api/json/v1/$ASTRA_DB_KEYSPACE"
  * collections=("users" "accounts" "sessions" "tokens")
@@ -138,82 +166,106 @@ function fetchClient(api: AstraDBConfig["api"]) {
  * done
  * ```
  *
- * ### required environment variables:
- * ASTRA_DB_ID
- * ASTRA_DB_REGION
- * ASTRA_DB_KEYSPACE
- * ASTRA_DB_APPLICATION_TOKEN
- *
- * ### JsonApiConfig (config) required for the Adapter | JsonApiConfig.ts
  * ```ts
- * import type { JsonApiConfig } from ""@auth/astra-db-adapter"
+ * import NextAuth from "next-auth"
+ * import { AstraDBAdapter } from "@auth/astra-db-adapter"
  *
- * export const jsonApiConfig: JsonApiConfig = {
- *   ASTRA_DB_ID: process.env.ASTRA_DB_ID || '',
- *   ASTRA_DB_REGION: process.env.ASTRA_DB_REGION || '',
- *   ASTRA_DB_KEYSPACE: process.env.ASTRA_DB_KEYSPACE || '',
- *   ASTRA_DB_APPLICATION_TOKEN: process.env.ASTRA_DB_APPLICATION_TOKEN || ''
- * }
+ * export default NextAuth({
+ *   adapter: AstraDBAdapter({
+ *     dbId: process.env.ASTRA_DB_ID,
+ *     token: process.env.ASTRA_DB_APPLICATION_TOKEN,
+ *     region: "eu-west-1",
+ *     keyspace: "authjs",
+ *   }),
+ * })
  * ```
  */
 export function AstraDBAdapter(config: AstraDBConfig): Adapter {
-  const { api } = config
-  const collections = { ...defaultCollections, ...config.collections }
+  const { collections: _collections, ...api } = config
+  const collections = { ...defaultCollections, ..._collections }
   const { users, accounts, sessions, verificationTokens: tokens } = collections
-  const client = fetchClient(api)
+  const { request } = client(api)
 
   return {
     async createUser(user) {
-      return format.from(
-        await client.request(users, {
-          findOneAndUpdate: {
-            filter: { email: user.email },
-            update: { $set: user },
-            options: { returnDocument: "after", upsert: true },
-          },
-        })
-      )!
+      await request(users, {
+        findOneAndUpdate: {
+          filter: { email: user.email },
+          update: { $set: user },
+          options: { returnDocument: "after", upsert: true },
+        },
+      })
+      return user
     },
-    async getUser(_id) {
+    async getUser(id) {
       return format.from(
-        await client.request(users, { findOne: { filter: { _id } } })
+        await request(users, { findOne: { filter: { _id: id } } }),
+        true
       )
     },
     async getUserByEmail(email) {
       return format.from(
-        await client.request(users, { findOne: { filter: { email } } })
+        await request(users, { findOne: { filter: { email } } }),
+        true
+      )
+    },
+    async getUserByAccount(filter) {
+      const account = format.from(
+        await request(accounts, { findOne: { filter } })
+      )
+      if (!account) return null
+
+      return format.from(
+        await request(users, { findOne: { filter: { _id: account.userId } } }),
+        true
       )
     },
     async updateUser(user) {
       const { id: _id, ...rest } = user
       return format.from(
-        await client.request(users, {
+        await request(users, {
           findOneAndUpdate: {
             filter: { _id },
             update: { $set: rest },
             options: { returnDocument: "after", upsert: false },
           },
-        })
+        }),
+        true
       )!
     },
-    async createSession(document) {
-      const { status } = await client.request(sessions, {
-        insertOne: { document },
-      })
-      return { ...document, id: status.insertedId }
+    async deleteUser(userId) {
+      const requests = [
+        request(users, { deleteMany: { filter: { _id: userId } } }),
+        request(accounts, { deleteMany: { filter: { userId } } }),
+        request(sessions, { deleteMany: { filter: { userId } } }),
+      ]
+      return format.from<AdapterUser>((await Promise.all(requests))[0])
+    },
+    async linkAccount(account) {
+      await request(accounts, { insertOne: { document: account } })
+      return account
+    },
+    async unlinkAccount(filter) {
+      const requests = [
+        request(accounts, { findOne: { filter } }),
+        request(accounts, { deleteMany: { filter } }),
+      ]
+      return format.from<AdapterAccount>((await Promise.all(requests))[0])!
+    },
+    async createSession(session) {
+      await request(sessions, { insertOne: { document: session } })
+      return session
     },
     async getSessionAndUser(sessionToken) {
       const session = format.from<AdapterSession>(
-        await client.request(sessions, {
-          findOne: { filter: { sessionToken } },
-        })
+        await request(sessions, { findOne: { filter: { sessionToken } } })
       )
+
       if (!session) return null
 
       const user = format.from<AdapterUser>(
-        await client.request(users, {
-          findOne: { filter: { _id: session.userId } },
-        })
+        await request(users, { findOne: { filter: { _id: session.userId } } }),
+        true
       )
 
       if (!user) return null
@@ -223,7 +275,7 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
     async updateSession(session) {
       const { sessionToken } = session
       return format.from(
-        await client.request(sessions, {
+        await request(sessions, {
           findOneAndUpdate: {
             filter: { sessionToken },
             update: { $set: session },
@@ -234,60 +286,22 @@ export function AstraDBAdapter(config: AstraDBConfig): Adapter {
     },
     async deleteSession(sessionToken) {
       const requests = [
-        client.request(sessions, { findOne: { filter: { sessionToken } } }),
-        client.request(sessions, { deleteOne: { filter: { sessionToken } } }),
+        request(sessions, { findOne: { filter: { sessionToken } } }),
+        request(sessions, { deleteOne: { filter: { sessionToken } } }),
       ]
 
-      return (
-        format.from<AdapterSession>((await Promise.all(requests))[0]) ?? null
-      )
+      return format.from<AdapterSession>((await Promise.all(requests))[0])
     },
-    async createVerificationToken(document) {
-      await client.request(tokens, { insertOne: { document } })
-      return document
+    async createVerificationToken(verificationToken) {
+      await request(tokens, { insertOne: { document: verificationToken } })
+      return verificationToken
     },
     async useVerificationToken(filter) {
       const requests = [
-        client.request(tokens, { findOne: { filter } }),
-        client.request(tokens, { deleteMany: { filter } }),
+        request(tokens, { findOne: { filter } }),
+        request(tokens, { deleteMany: { filter } }),
       ]
-      return format.from<VerificationToken>(
-        (await Promise.all(requests))[0],
-        false
-      )
-    },
-    async linkAccount(document) {
-      const { status } = await client.request(accounts, {
-        insertOne: { document },
-      })
-      return { ...document, id: status.insertedId }
-    },
-    async getUserByAccount(filter) {
-      const account = format.from(
-        await client.request(accounts, { findOne: { filter } })
-      )
-      if (!account) return null
-
-      return format.from(
-        await client.request(users, {
-          findOne: { filter: { _id: account.userId } },
-        })
-      )
-    },
-    async unlinkAccount(filter) {
-      const requests = [
-        client.request(accounts, { findOne: { filter } }),
-        client.request(accounts, { deleteMany: { filter } }),
-      ]
-      return format.from<AdapterAccount>((await Promise.all(requests))[0])!
-    },
-    async deleteUser(userId) {
-      const requests = [
-        client.request(users, { deleteMany: { filter: { _id: userId } } }),
-        client.request(accounts, { deleteMany: { filter: { userId } } }),
-        client.request(sessions, { deleteMany: { filter: { userId } } }),
-      ]
-      return format.from<AdapterUser>((await Promise.all(requests))[0])
+      return format.from<VerificationToken>((await Promise.all(requests))[0])
     },
   }
 }
