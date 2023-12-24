@@ -148,7 +148,7 @@ export interface OAuth2Config<Profile>
    *
    * Defaults to: `id`, `email`, `name`, `image`
    *
-   * @see [Database Adapter: User model](https://authjs.dev/reference/adapters#user)
+   * @see [Database Adapter: User model](https://authjs.dev/reference/core/adapters#user)
    */
   profile?: ProfileCallback<Profile>
   /**
@@ -156,8 +156,8 @@ export interface OAuth2Config<Profile>
    * It is used to create the account associated with a user in the database.
    *
    * :::note
-   * You need to adjust your database's [Account model](https://authjs.dev/reference/adapters#account) to match the returned properties.
-   * Check out the documentation of your [database adapter](https://authjs.dev/reference/adapters) for more information.
+   * You need to adjust your database's [Account model](https://authjs.dev/reference/core/adapters#account) to match the returned properties.
+   * Check out the documentation of your [database adapter](https://authjs.dev/reference/core/adapters) for more information.
    * :::
    *
    * Defaults to: `access_token`, `id_token`, `refresh_token`, `expires_at`, `scope`, `token_type`, `session_state`
@@ -181,7 +181,7 @@ export interface OAuth2Config<Profile>
    * })
    * ```
    *
-   * @see [Database Adapter: Account model](https://authjs.dev/reference/adapters#account)
+   * @see [Database Adapter: Account model](https://authjs.dev/reference/core/adapters#account)
    * @see https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
    * @see https://www.ietf.org/rfc/rfc6749.html#section-5.1
    */
@@ -239,7 +239,9 @@ export interface OAuth2Config<Profile>
 export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
-  checks?: OAuth2Config<Profile>["checks"] & Array<"nonce">
+  checks?: Array<
+    Exclude<OAuth2Config<Profile>["checks"], undefined>[number] | "nonce"
+  >
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>

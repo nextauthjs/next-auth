@@ -1,4 +1,4 @@
-import { randomUUID, runBasicTests } from "@auth/adapter-test"
+import { randomUUID, runBasicTests } from "utils/adapter"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
 import { ObjectId } from "mongodb"

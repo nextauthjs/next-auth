@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis"
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { hydrateDates, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 

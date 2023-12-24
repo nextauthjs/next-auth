@@ -1,8 +1,9 @@
-import { auth, signIn, signOut, update } from "auth"
+import { auth, signIn, signOut, unstable_update as update } from "auth"
 import Footer from "components/footer"
 import { Header } from "components/header"
 import styles from "components/header.module.css"
 import "./styles.css"
+import { AuthError } from "next-auth"
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
@@ -33,11 +34,19 @@ export async function AppHeader() {
       session={session}
       signIn={
         <form
-          action={async () => {
+          action={async (formData) => {
             "use server"
-            await signIn("github")
+            try {
+              await signIn("credentials", formData)
+            } catch (error) {
+              if (error instanceof AuthError) {
+                console.log(error)
+              }
+              throw error
+            }
           }}
         >
+          <input name="password" />
           <button className={styles.buttonPrimary}>Sign in</button>
         </form>
       }

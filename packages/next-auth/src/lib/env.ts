@@ -4,7 +4,7 @@ import type { headers } from "next/headers"
 import type { NextAuthConfig } from "./index.js"
 
 export function setEnvDefaults(config: NextAuthConfig) {
-  config.secret ??= process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
+  config.secret ??= process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
   config.trustHost ??= !!(
     process.env.AUTH_URL ??
     process.env.NEXTAUTH_URL ??
@@ -14,7 +14,7 @@ export function setEnvDefaults(config: NextAuthConfig) {
   )
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
   config.providers = config.providers.map((p) => {
-    const finalProvider = typeof p === "function" ? p() : p
+    const finalProvider = typeof p === "function" ? p({}) : p
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
       const ID = finalProvider.id.toUpperCase()
       finalProvider.clientId ??= process.env[`AUTH_${ID}_ID`]
@@ -43,11 +43,11 @@ export function detectOrigin(h: Headers | ReturnType<typeof headers>) {
 export function reqWithEnvUrl(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
   if (!url) return req
-  const nonBase = req.nextUrl.href.replace(req.nextUrl.origin, "")
   const base = new URL(url).origin
   // REVIEW: Bug in Next.js?: TypeError: next_dist_server_web_exports_next_request__WEBPACK_IMPORTED_MODULE_0__ is not a constructor
   // return new NextRequest(new URL(nonBase, base), req)
-  const _url = new URL(nonBase, base)
+  const _url = req.nextUrl.clone()
+  _url.href = req.nextUrl.href.replace(req.nextUrl.origin, base)
   const _req = new Request(_url, req) as any
   _req.nextUrl = _url
   return _req

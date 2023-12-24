@@ -1,7 +1,7 @@
 {
   "name": "@auth/solid-start",
   "description": "Authentication for SolidStart.",
-  "version": "0.1.2",
+  "version": "0.1.9",
   "type": "module",
   "files": [
     "client.*",
@@ -27,8 +27,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "devDependencies": {
-    "@auth/core": "workspace:*",
     "@solidjs/meta": "^0.28.0",
     "@types/node": "^18.7.14",
     "solid-js": "^1.5.7",
@@ -36,7 +38,6 @@
     "tsup": "^6.5.0"
   },
   "peerDependencies": {
-    "@auth/core": "~0.2.2 || ^0.2.2",
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.14"
   },

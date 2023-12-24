@@ -9,7 +9,7 @@ NextAuth.js version 5 is a complete rewrite of the package, but we made sure to 
 
 Try it out by running:
 
-```bash npm2yarn2pnpm
+```bash npm2yarn
 npm install next-auth@beta
 ```
 
@@ -18,7 +18,7 @@ npm install next-auth@beta
 First, let's see what is new!
 
 - App Router-first (`pages/` still supported).
-- OAuth support on preview deployments: [Read more](/guides/basics/deployment#securing-a-preview-deployment).
+- OAuth support on preview deployments: [Read more](/getting-started/deployment#securing-a-preview-deployment).
 - Simplified set up (shared config, inferred [env variables](/reference/nextjs#environment-variable-inferrence)).
 - Fully Edge-compatible, thanks to rewriting on top of Auth.js. [Read more](/reference/core).
 - Universal `auth()`. Remember a single method, and authenticate anywhere. Replaces `getServerSession`, `getSession`, `withAuth`, `getToken` and `useSession` in most cases. [Read more](#authenticating-server-side).
@@ -72,22 +72,22 @@ NextAuth.js has had a few different ways to authenticate server-side in the past
 Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
 
 :::note
-When using `auth()`, the [`session()` callback](/reference/core/types#session) is ignored. `auth()` will expose anything returned from the [`jwt()` callback](reference/core/types#jwt) or if using a [`"database"` strategy](/reference/core#session), from the [User](/reference/adapters#user). This is because the `session()` callback was designed to protect you from exposing sensitive information to the client, but when using `auth()` you are always on the server.
+When using `auth()`, the [`session()` callback](/reference/core/types#session) is ignored. `auth()` will expose anything returned from the [`jwt()` callback](reference/core/types#jwt) or if using a [`"database"` strategy](/reference/core#session), from the [User](/reference/core/adapters#adapteruser). This is because the `session()` callback was designed to protect you from exposing sensitive information to the client, but when using `auth()` you are always on the server.
 :::
 
 See the table below for a summary of the changes, and click on the links to learn more about each one.
 
 | Where                                                                                  | v4                                                    | v5                               |
 | -------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
-| [Server Component](?authentication-method=server-component#authenticate-methods)       | `getServerSession(authOptions)`                       | `auth()` call                    |
-| [Middleware](?authentication-method=middleware#authenticate-methods)                   | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
-| [Client Component](?authentication-method=client-component#authenticate-methods)       | `useSession()` hook                                   | `useSession()` hook              |
+| [Server Component](/reference/nextjs#in-server-components)                             | `getServerSession(authOptions)`                       | `auth()` call                    |
+| [Middleware](/reference/nextjs#in-middleware)                                          | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| [Client Component](/reference/nextjs/react#usesession)                                 | `useSession()` hook                                   | `useSession()` hook              |
 | [Route Handler](/reference/nextjs#in-route-handlers)                                   | _Previously not supported_                            | `auth()` wrapper                 |
 | [API Route (Edge)](/reference/nextjs#in-edge-api-routes)                               | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
-| [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
-| [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
+| [API Route (Node.js)](/reference/nextjs#in-api-routes)                                 | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [API Route (Node.js)](/reference/nextjs#in-api-routes)                                 | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| [getServerSideProps](/reference/nextjs#in-getserversideprops)                          | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
+| [getServerSideProps](/reference/nextjs#in-api-routes)                                  | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
 
 ### Authentication methods
 
@@ -215,7 +215,7 @@ Example:
 + npm install @auth/prisma-adapter
 ```
 
-Check out the [Adapters docs](/reference/adapters) for a list of official adapters, or the [Create a database adapter](/guides/adapters/creating-a-database-adapter) guide to learn how to create your own.
+Check out the [Adapters docs](/reference/core/adapters) for a list of official adapters, or the [Create a database adapter](/guides/adapters/creating-a-database-adapter) guide to learn how to create your own.
 
 ### Adapter type
 

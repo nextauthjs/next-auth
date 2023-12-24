@@ -8,10 +8,10 @@ import classnames from "classnames"
 import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
-import { providers } from "../../manifest.json"
+import manifest from "../../manifest.mjs"
 import { Clerk } from "../components/clerk"
 
-const providersCount = Object.keys(providers).length + 2 // email, credentials
+const providersCount = Object.keys(manifest.providers).length + 2 // email, credentials
 const features = [
   {
     title: "Easy",
@@ -271,7 +271,7 @@ export default function Home() {
 
 const svelteKitCode = `
 import { SvelteKitAuth } from "@auth/sveltekit"
-import GitHub from '@auth/core/providers/github'
+import GitHub from '@auth/sveltekit/providers/github'
 import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
 export const handle = SvelteKitAuth({
   providers: [
