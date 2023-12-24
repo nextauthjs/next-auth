@@ -26,6 +26,7 @@ import type {
 export interface AstraDBConfig {
   dbId?: string
   /** @see https://docs.datastax.com/en/astra-serverless/docs/plan/regions.html */
+  /** @default "us-east-2" */
   region?:
     | "ap-east-1"
     | "ap-south-1"
@@ -114,7 +115,7 @@ export const format = {
 
 /** Fetch data from the DataStax API */
 export function client(api: AstraDBConfig) {
-  const { dbId, region, token, keyspace = "authjs" } = api
+  const { dbId, region = "us-east-2", token, keyspace = "authjs" } = api
   if (!dbId) throw new TypeError("Astra DB Adapter is mising `dbId`")
   if (!region) throw new TypeError("Astra DB Adapter is mising `region`")
   if (!token) throw new TypeError("Astra DB Adapter is mising `token`")
@@ -146,8 +147,9 @@ export function client(api: AstraDBConfig) {
  *
  * :::note
  * You might not need all of these collections, based on your requirements. [Learn more](https://authjs.dev/guides/adapters/creating-a-database-adapter).
+ * :::
  *
- * To create the required collections, you can for example use cURL:
+ * To create the required collections, you can use cURL for example:
  *
  * ```bash
  * #!/bin/bash
@@ -160,7 +162,7 @@ export function client(api: AstraDBConfig) {
  * for collection in "${collections[@]}"
  * do
  *   curl -X POST "$ASTRA_URL" \
- *       -H "x-cassandra-token: {{ASTRA_DB_APPLICATION_TOKEN}}" \
+ *       -H "x-cassandra-token: $ASTRA_DB_APPLICATION_TOKEN" \
  *       -H "Content-Type: application/json" \
  *       -d "{\"createCollection\": {\"name\": \"$collection\"}}"
  * done
