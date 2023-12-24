@@ -178,20 +178,27 @@ export interface Profile {
   [claim: string]: unknown
 }
 
-/** [Documentation](https://authjs.dev/guides/basics/callbacks) */
+// TODO: rename `signIn` to `authorized`
+
+/** Override the default session creation flow of Auth.js */
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
-   * Control whether a user is allowed to sign in or not.
+   * Controls whether a user is allowed to sign in or not.
    * Returning `true` continues the sign-in flow, while
-   * returning `false` redirects to the {@link PagesOptions.error error page}.
-   * The `error` {@link ErrorPageParam parameter} is set to `AccessDenied`.
+   * returning `false` throws an `AuthorizedCallbackError` with the message `"AccessDenied"`.
    *
-   * Unhandled errors are redirected to the error page
-   * The `error` parameter is set to `Configuration`.
-   * an `AuthorizedCallbackError` is logged on the server.
+   * Unhandled errors will throw an `AuthorizedCallbackError` with the message set to the original error.
    *
-   * @see https://authjs.dev/reference/errors#authorizedcallbackerror
-   * @todo rename to `authorized`
+   * @see [`AuthorizedCallbackError`](https://authjs.dev/reference/errors#authorizedcallbackerror)
+   *
+   * @example
+   * ```ts
+   * callbacks: {
+   *  async signIn({ profile }) {
+   *   // Only allow sign in for users with email addresses ending with "yourdomain.com"
+   *   return profile?.email?.endsWith("@yourdomain.com")
+   * }
+   * ```
    */
   signIn: (params: {
     user: User | AdapterUser
@@ -242,13 +249,18 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    */
   session: (
     params:
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        } & {
+      | (
+          | {
+              session: Session
+              /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+              user: AdapterUser
+            }
+          | {
+              session: Session
+              /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+              token: JWT
+            }
+        ) & {
           /**
            * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
            *
@@ -257,7 +269,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
            * :::
            */
           newSession: any
-          trigger: "update"
+          trigger?: "update"
         }
   ) => Awaitable<Session | DefaultSession>
   /**
@@ -329,12 +341,12 @@ export interface CookieOption {
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookiesOptions {
-  sessionToken: CookieOption
-  callbackUrl: CookieOption
-  csrfToken: CookieOption
-  pkceCodeVerifier: CookieOption
-  state: CookieOption
-  nonce: CookieOption
+  sessionToken: Partial<CookieOption>
+  callbackUrl: Partial<CookieOption>
+  csrfToken: Partial<CookieOption>
+  pkceCodeVerifier: Partial<CookieOption>
+  state: Partial<CookieOption>
+  nonce: Partial<CookieOption>
 }
 
 /**
@@ -454,7 +466,7 @@ export interface Session extends DefaultSession {}
  * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
 export interface User {
-  id: string
+  id?: string
   name?: string | null
   email?: string | null
   image?: string | null
@@ -474,6 +486,14 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
   : never) & {
   signinUrl: string
   /** @example `"https://example.com/api/auth/callback/id"` */
+  callbackUrl: string
+}
+
+export interface PublicProvider {
+  id: string
+  name: string
+  type: string
+  signinUrl: string
   callbackUrl: string
 }
 
@@ -527,7 +547,7 @@ export interface RequestInternal {
   error?: string
 }
 
-/** @internal */
+// Should only be used by frameworks
 export interface ResponseInternal<
   Body extends string | Record<string, any> | any[] | null = any
 > {
@@ -545,6 +565,10 @@ export interface InternalOptions<TProviderType = ProviderType> {
   action: AuthAction
   provider: InternalProvider<TProviderType>
   csrfToken?: string
+  /**
+   * `true` if the [Double-submit CSRF check](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf) was succesful
+   * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
+   */
   csrfTokenVerified?: boolean
   secret: string
   theme: Theme
@@ -556,7 +580,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   events: Partial<EventCallbacks>
   adapter: Required<Adapter> | undefined
   callbacks: CallbacksOptions
-  cookies: CookiesOptions
+  cookies: Record<keyof CookiesOptions, CookieOption>
   callbackUrl: string
   /**
    * If true, the OAuth callback is being proxied by the server to the original URL.

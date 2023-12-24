@@ -192,7 +192,7 @@ export async function getCsrfToken() {
     __NEXTAUTH,
     logger
   )
-  return response?.csrfToken
+  return response?.csrfToken ?? ""
 }
 
 type ProvidersType = Record<
@@ -251,21 +251,19 @@ export async function signIn<
     isCredentials ? "callback" : "signin"
   }/${provider}`
 
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
-
-  const res = await fetch(_signInUrl, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
-    },
-    // @ts-expect-error
-    body: new URLSearchParams({
-      ...options,
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-    }),
-  })
+  const csrfToken = await getCsrfToken()
+  const res = await fetch(
+    `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Auth-Return-Redirect": "1",
+      },
+      // @ts-expect-error
+      body: new URLSearchParams({ ...options, csrfToken, callbackUrl }),
+    }
+  )
 
   const data = await res.json()
 
@@ -278,7 +276,7 @@ export async function signIn<
     return
   }
 
-  const error = new URL(data.url, baseUrl).searchParams.get("error")
+  const error = new URL(data.url).searchParams.get("error")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -301,19 +299,15 @@ export async function signOut<R extends boolean = true>(
 ): Promise<R extends true ? undefined : SignOutResponse> {
   const { callbackUrl = window.location.href } = options ?? {}
   const baseUrl = apiBaseUrl(__NEXTAUTH)
-  const fetchOptions = {
+  const csrfToken = await getCsrfToken()
+  const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error
-    body: new URLSearchParams({
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-    }),
-  }
-  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
+    body: new URLSearchParams({ csrfToken, callbackUrl }),
+  })
   const data = await res.json()
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })

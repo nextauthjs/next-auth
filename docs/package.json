@@ -40,10 +40,10 @@
     "@docusaurus/theme-mermaid": "3.0.0",
     "@docusaurus/tsconfig": "3.0.0",
     "@docusaurus/types": "3.0.0",
-    "docusaurus-plugin-typedoc": "1.0.0-next.21",
+    "docusaurus-plugin-typedoc": "1.0.0-next.22",
     "postcss-nested": "^6.0.1",
     "typedoc": "0.25.3",
-    "typedoc-plugin-markdown": "4.0.0-next.27",
+    "typedoc-plugin-markdown": "4.0.0-next.29",
     "typescript": "5.2.2"
   },
   "browserslist": {

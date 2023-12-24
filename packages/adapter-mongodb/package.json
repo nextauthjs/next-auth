@@ -1,6 +1,6 @@
 {
   "name": "@auth/mongodb-adapter",
-  "version": "2.0.4",
+  "version": "2.0.10",
   "description": "MongoDB adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -48,6 +48,6 @@
     "mongodb": "^6.0.0"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

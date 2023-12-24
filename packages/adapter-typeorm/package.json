@@ -1,6 +1,6 @@
 {
   "name": "@auth/typeorm-adapter",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "TypeORM adapter for Auth.js.",
   "homepage": "https://authjs.dev/reference/adapter/typeorm",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -79,6 +79,6 @@
     }
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }
