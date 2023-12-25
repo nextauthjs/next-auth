@@ -277,6 +277,10 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
+      '@datastax/astra-db-ts':
+        specifier: ^0.1.2
+        version: 0.1.2
 
   packages/adapter-azure-tables:
     dependencies:
@@ -5694,6 +5698,19 @@ packages:
       colorspace: 1.1.4
       enabled: 2.0.0
       kuler: 2.0.0
+    dev: true
+
+  /@datastax/astra-db-ts@0.1.2:
+    resolution: {integrity: sha512-JfgQCjNuyqJ4ki38pWBBz9oR/UJHJDruqjSLAZp0sjFr17asr2QMNsNTiW30otNqjA+mWBy9lS6x+mFXESvr0Q==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      axios: 1.6.2
+      bson: 6.2.0
+      winston: 3.7.2
+    transitivePeerDependencies:
+      - debug
     dev: true
 
   /@discoveryjs/json-ext@0.5.7:
@@ -13019,6 +13036,16 @@ packages:
       - debug
     dev: true
 
+  /axios@1.6.2:
+    resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
+    dependencies:
+      follow-redirects: 1.15.1(debug@4.3.4)
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /axobject-query@3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
     dependencies:
@@ -13544,6 +13571,11 @@ packages:
 
   /bson@6.0.0:
     resolution: {integrity: sha512-FoWvdELfF2wQaUo8S/a1Rh2BDwJEUancDDnzdTpYymJTZjmvRpLWoqRPelKn+XSeh5D4YddWDG66cLtEhGGvcg==}
+    engines: {node: '>=16.20.1'}
+    dev: true
+
+  /bson@6.2.0:
+    resolution: {integrity: sha512-ID1cI+7bazPDyL9wYy9GaQ8gEEohWvcUl/Yf0dIdutJxnmInEEyCsb4awy/OiBfall7zBA179Pahi3vCdFze3Q==}
     engines: {node: '>=16.20.1'}
     dev: true
 

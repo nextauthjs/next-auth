@@ -108,7 +108,7 @@ export const format = {
 }
 
 /** Fetch data from the DataStax API */
-export function client(api: AstraDBConfig) {
+function client(api: AstraDBConfig) {
   const { dbId, region = "us-east-2", token, keyspace = "authjs" } = api
   if (!dbId) throw new TypeError("Astra DB Adapter is mising `dbId`")
   if (!region) throw new TypeError("Astra DB Adapter is mising `region`")

@@ -1,6 +1,7 @@
 import { runBasicTests } from "utils/adapter"
-import { AstraDBAdapter, format, defaultCollections, client } from "../src"
+import { AstraDBAdapter, format, defaultCollections } from "../src"
 import type { AstraDBConfig } from "../src"
+import { AstraDB } from "@datastax/astra-db-ts"
 
 jest.setTimeout(30000) // Collection creation might be slow
 
@@ -18,37 +19,34 @@ const users = `${baseUrl}/${defaultCollections.users}`
 const accounts = `${baseUrl}/${defaultCollections.accounts}`
 const tokens = `${baseUrl}/${defaultCollections.verificationTokens}`
 
-const { request } = client(api)
+const astra = new AstraDB(api.token, api.dbId, api.region, api.keyspace)
 
 runBasicTests({
   adapter: AstraDBAdapter(api),
   db: {
     async connect() {
-      for await (const name of Object.keys(defaultCollections)) {
-        await request(null, { createCollection: { name } })
-      }
+      for await (const name of Object.keys(defaultCollections))
+        await astra.createCollection(name)
     },
     async disconnect() {
-      for await (const name of Object.keys(defaultCollections)) {
-        await request(null, { deleteCollection: { name } })
-      }
-    },
-    async session(sessionToken) {
-      return format.from(
-        await request(sessions, { findOne: { filter: { sessionToken } } })
-      )
+      for await (const name of Object.keys(defaultCollections))
+        await astra.dropCollection(name)
     },
     async user(_id: string) {
-      return format.from(
-        await request(users, { findOne: { filter: { _id } } }),
-        true
-      )
+      const collection = await astra.collection(users)
+      return format.from(await collection.findOne({ _id }), true)
     },
     async account(filter) {
-      return format.from(await request(accounts, { findOne: { filter } }))
+      const collection = await astra.collection(accounts)
+      return format.from(await collection.findOne({ filter }))
+    },
+    async session(sessionToken) {
+      const collection = await astra.collection(sessions)
+      return format.from(await collection.findOne({ filter: { sessionToken } }))
     },
     async verificationToken(filter) {
-      return format.from(await request(tokens, { findOne: { filter } }))
+      const collection = await astra.collection(tokens)
+      return format.from(await collection.findOne({ filter }))
     },
   },
 })

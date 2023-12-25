@@ -46,5 +46,8 @@
   },
   "jest": {
     "preset": "utils/adapter"
+  },
+  "devDependencies": {
+    "@datastax/astra-db-ts": "^0.1.2"
   }
 }
