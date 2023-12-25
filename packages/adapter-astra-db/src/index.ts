@@ -89,15 +89,15 @@ function isDate(value: unknown): value is string | number {
 export const format = {
   /** Takes a DB response and returns a plain old JavaScript object */
   from<T = Record<string, unknown>>(
-    object: AstraResponse<T>["data"] | null,
+    object: Record<string, any> | null,
     /** If set to `true` the `id` property is not stripped. */
     includeId: boolean = false
   ): T | null {
-    if (!object?.document) return null
+    if (!object) return null
 
     const newObject: Record<string, unknown> = {}
-    for (const key in object.document) {
-      const value = object.document[key]
+    for (const key in object) {
+      const value = object[key]
       if (key === "_id") newObject["id"] = value
       else if (isDate(value)) newObject[key] = new Date(value)
       else newObject[key] = value
@@ -136,7 +136,7 @@ export function client(api: AstraDBConfig) {
         throw error
       }
 
-      return json.data ?? null
+      return json.data?.document ?? json.data ?? null
     },
   }
 }
