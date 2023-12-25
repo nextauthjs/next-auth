@@ -2,6 +2,8 @@ import { runBasicTests } from "utils/adapter"
 import { AstraDBAdapter, format, defaultCollections, client } from "../src"
 import type { AstraDBConfig } from "../src"
 
+jest.setTimeout(30000) // Collection creation might be slow
+
 const api = {
   dbId: process.env.ASTRA_DB_ID,
   token: process.env.ASTRA_DB_APPLICATION_TOKEN,
