@@ -24,18 +24,14 @@ runBasicTests({
   adapter: AstraDBAdapter(api),
   db: {
     async connect() {
-      await Promise.all(
-        Object.keys(defaultCollections).map((name) =>
-          request(null, { createCollection: { name } })
-        )
-      )
+      for await (const name of Object.keys(defaultCollections)) {
+        await request(null, { createCollection: { name } })
+      }
     },
     async disconnect() {
-      await Promise.all(
-        Object.keys(defaultCollections).map((name) =>
-          request(null, { deleteCollection: { name } })
-        )
-      )
+      for await (const name of Object.keys(defaultCollections)) {
+        await request(null, { deleteCollection: { name } })
+      }
     },
     async session(sessionToken) {
       return format.from(
