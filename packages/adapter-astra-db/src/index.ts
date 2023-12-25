@@ -72,7 +72,7 @@ export const defaultCollections = {
 } satisfies AstraDBConfig["collections"]
 
 interface AstraResponse<T> {
-  data?: { document: T | null }
+  data: { document: T | null }
   errors: { message: string; errorCode: string }[]
   status: any
 }
@@ -89,21 +89,15 @@ function isDate(value: unknown): value is string | number {
 export const format = {
   /** Takes a DB response and returns a plain old JavaScript object */
   from<T = Record<string, unknown>>(
-    object: AstraResponse<T>,
+    object: AstraResponse<T>["data"] | null,
     /** If set to `true` the `id` property is not stripped. */
     includeId: boolean = false
   ): T | null {
-    if (object.errors?.length) {
-      const e = new Error(object.errors[0].message)
-      e.cause = object.errors
-      throw e
-    }
-
-    if (!object.data?.document) return null
+    if (!object?.document) return null
 
     const newObject: Record<string, unknown> = {}
-    for (const key in object.data.document) {
-      const value = object.data.document[key]
+    for (const key in object.document) {
+      const value = object.document[key]
       if (key === "_id") newObject["id"] = value
       else if (isDate(value)) newObject[key] = new Date(value)
       else newObject[key] = value
@@ -124,14 +118,25 @@ export function client(api: AstraDBConfig) {
   return {
     async request(collection: string | null, data: unknown) {
       const url = new URL(`${baseUrl}/${collection ?? ""}`)
-      return await fetch(url.href.replace(/\/$/, ""), {
+      const response = await fetch(url.href.replace(/\/$/, ""), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-cassandra-token": token,
         },
         body: JSON.stringify(data),
-      }).then((res) => res.json())
+      })
+
+      const json: AstraResponse<any> = await response.json()
+
+      if (json.errors?.length) {
+        const error = new Error(json.errors[0].message)
+        error.cause = json.errors
+        console.error(error)
+        throw error
+      }
+
+      return json.data ?? null
     },
   }
 }
