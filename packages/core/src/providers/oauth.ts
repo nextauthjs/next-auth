@@ -59,7 +59,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
 export type EndpointHandler<
   P extends UrlParams,
   C = any,
-  R = any
+  R = any,
 > = AdvancedEndpointHandler<P, C, R>
 
 export type AuthorizationEndpointHandler =

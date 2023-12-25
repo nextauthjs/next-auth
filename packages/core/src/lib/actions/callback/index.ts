@@ -162,7 +162,12 @@ export async function callback(
         })
       }
 
-      await events.signIn?.({ user, account, profile: OAuthProfile, isNewUser })
+      await events.signIn?.({
+        user,
+        account,
+        profile: OAuthProfile,
+        isNewUser,
+      })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login

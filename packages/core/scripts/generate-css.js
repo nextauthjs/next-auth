@@ -8,10 +8,9 @@ import postCssNested from "postcss-nested"
 const from = path.join(process.cwd(), "src/lib/pages/styles.css")
 const css = fs.readFileSync(from)
 
-const processedCss = await postcss([
-  autoprefixer,
-  postCssNested,
-]).process(css, { from })
+const processedCss = await postcss([autoprefixer, postCssNested]).process(css, {
+  from,
+})
 
 fs.writeFileSync(
   path.join(process.cwd(), "src/lib/pages/styles.ts"),

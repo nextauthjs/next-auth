@@ -103,7 +103,10 @@ export async function handleLoginOrRegister(
       }
 
       // Update emailVerified property on the user object
-      user = await updateUser({ id: userByEmail.id, emailVerified: new Date() })
+      user = await updateUser({
+        id: userByEmail.id,
+        emailVerified: new Date(),
+      })
       await events.updateUser?.({ user })
     } else {
       // Create user account if there isn't one for the email address already
