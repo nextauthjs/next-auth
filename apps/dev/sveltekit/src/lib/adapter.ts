@@ -57,7 +57,7 @@ export function TestAdapter(client: DB): Adapter {
 
   const setSession = async (
     id: string,
-    session: AdapterSession
+    session: AdapterSession,
   ): Promise<AdapterSession> => {
     const sessionKey = sessionKeyPrefix + id
     await setObjectAsJson(sessionKey, session)
@@ -73,7 +73,7 @@ export function TestAdapter(client: DB): Adapter {
 
   const setUser = async (
     id: string,
-    user: AdapterUser
+    user: AdapterUser,
   ): Promise<AdapterUser> => {
     await setObjectAsJson(userKeyPrefix + id, user)
     await client.setItem(`${emailKeyPrefix}${user.email as string}`, id)
@@ -103,7 +103,7 @@ export function TestAdapter(client: DB): Adapter {
     },
     async getUserByAccount(account) {
       const dbAccount = await getAccount(
-        `${account.provider}:${account.providerAccountId}`
+        `${account.provider}:${account.providerAccountId}`,
       )
       if (!dbAccount) return null
       return await getUser(dbAccount.userId)
@@ -139,7 +139,7 @@ export function TestAdapter(client: DB): Adapter {
           verificationToken.identifier +
           ":" +
           verificationToken.token,
-        verificationToken
+        verificationToken,
       )
       return verificationToken
     },
@@ -163,7 +163,7 @@ export function TestAdapter(client: DB): Adapter {
       const accountKey = `${accountKeyPrefix}${id}`
       await client.deleteItems(
         accountKey,
-        `${accountByUserIdPrefix} + ${dbAccount.userId as string}`
+        `${accountByUserIdPrefix} + ${dbAccount.userId as string}`,
       )
     },
     async deleteUser(userId) {
@@ -179,7 +179,7 @@ export function TestAdapter(client: DB): Adapter {
         accountKey as string,
         accountByUserKey,
         sessionKey as string,
-        sessionByUserIdKey
+        sessionByUserIdKey,
       )
     },
   }

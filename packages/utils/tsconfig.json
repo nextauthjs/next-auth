@@ -16,8 +16,6 @@
     "strictNullChecks": true,
     "stripInternal": true,
     "target": "ES2020",
-    "lib": [
-      "ESNext"
-    ]
-  },
+    "lib": ["ESNext"]
+  }
 }

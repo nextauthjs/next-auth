@@ -17,7 +17,7 @@ import type {
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
