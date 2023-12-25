@@ -15,7 +15,7 @@ Check out the [Database Adapters: TypeScript](/getting-started/adapters#typescri
 
 ## Module Augmentation
 
-Auth.js libraries come with certain interfaces that are shared across submodules and different Auth.js libraries (For example: `next-auth` and `@auth/prisma-adapter` will rely on types from `@auth/core`).
+Auth.js libraries come with certain interfaces that are shared across submodules and different Auth.js libraries (For example: `next-auth` and `@auth/prisma-adapter` will rely on types from `@auth/core/types`).
 
 Good examples of such interfaces are `Session` or `User`. You can use TypeScript's [Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to extend these types to add your own properties.
 
@@ -40,7 +40,7 @@ Let's look at `Session` for example:
 // auth.ts
 import NextAuth, { type DefaultSession } from "next-auth"
 
-declare module "@auth/core" {
+declare module "@auth/core/types" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
@@ -81,7 +81,7 @@ export const { auth } = NextAuth({
 Module augmentation is not limited to specific interfaces. You can augment almost anything, but here are some of the more common interfaces that you might need to override in based on your use-case:
 
 ```ts
-declare module "@auth/core" {
+declare module "@auth/core/types" {
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
    * or the second parameter of the `session` callback, when using a database.
