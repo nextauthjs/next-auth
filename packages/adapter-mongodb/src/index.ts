@@ -169,7 +169,7 @@ export function MongoDBAdapter(
       A: _db.collection<AdapterAccount>(c.Accounts),
       S: _db.collection<AdapterSession>(c.Sessions),
       V: _db.collection<VerificationToken>(c?.VerificationTokens),
-      onClose: async () => {
+      [Symbol.asyncDispose]: async () => {
         await options.onClose?.(_client)
       },
     }
@@ -178,163 +178,106 @@ export function MongoDBAdapter(
   return {
     async createUser(data) {
       const user = to<AdapterUser>(data)
-      const db = await createDb()
-      try {
-        await db.U.insertOne(user)
-        return from<AdapterUser>(user)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      await db.U.insertOne(user)
+      return from<AdapterUser>(user)
     },
     async getUser(id) {
-      const db = await createDb()
-      try {
-        const user = await db.U.findOne({ _id: _id(id) })
-        if (!user) return null
-        return from<AdapterUser>(user)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const user = await db.U.findOne({ _id: _id(id) })
+      if (!user) return null
+      return from<AdapterUser>(user)
     },
     async getUserByEmail(email) {
-      const db = await createDb()
-      try {
-        const user = await db.U.findOne({ email })
-        if (!user) return null
-        return from<AdapterUser>(user)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const user = await db.U.findOne({ email })
+      if (!user) return null
+      return from<AdapterUser>(user)
     },
     async getUserByAccount(provider_providerAccountId) {
-      const db = await createDb()
-      try {
-        const account = await db.A.findOne(provider_providerAccountId)
-        if (!account) return null
-        const user = await db.U.findOne({ _id: new ObjectId(account.userId) })
-        if (!user) return null
-        return from<AdapterUser>(user)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const account = await db.A.findOne(provider_providerAccountId)
+      if (!account) return null
+      const user = await db.U.findOne({ _id: new ObjectId(account.userId) })
+      if (!user) return null
+      return from<AdapterUser>(user)
     },
     async updateUser(data) {
       const { _id, ...user } = to<AdapterUser>(data)
-      const db = await createDb()
-      try {
-        const result = await db.U.findOneAndUpdate(
-          { _id },
-          { $set: user },
-          { returnDocument: "after" }
-        )
+      await using db = await createDb()
+      const result = await db.U.findOneAndUpdate(
+        { _id },
+        { $set: user },
+        { returnDocument: "after" }
+      )
 
-        return from<AdapterUser>(result!)
-      } finally {
-        await db.onClose()
-      }
+      return from<AdapterUser>(result!)
     },
     async deleteUser(id) {
       const userId = _id(id)
-      const db = await createDb()
-      try {
-        await Promise.all([
-          db.A.deleteMany({ userId: userId as any }),
-          db.S.deleteMany({ userId: userId as any }),
-          db.U.deleteOne({ _id: userId }),
-        ])
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      await Promise.all([
+        db.A.deleteMany({ userId: userId as any }),
+        db.S.deleteMany({ userId: userId as any }),
+        db.U.deleteOne({ _id: userId }),
+      ])
     },
     linkAccount: async (data) => {
       const account = to<AdapterAccount>(data)
-      const db = await createDb()
-      try {
-        await db.A.insertOne(account)
-        return account
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      await db.A.insertOne(account)
+      return account
     },
     async unlinkAccount(provider_providerAccountId) {
-      const db = await createDb()
-      try {
-        const account = await db.A.findOneAndDelete(provider_providerAccountId)
-        return from<AdapterAccount>(account!)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const account = await db.A.findOneAndDelete(provider_providerAccountId)
+      return from<AdapterAccount>(account!)
     },
     async getSessionAndUser(sessionToken) {
-      const db = await createDb()
-      try {
-        const session = await db.S.findOne({ sessionToken })
-        if (!session) return null
-        const user = await db.U.findOne({ _id: new ObjectId(session.userId) })
-        if (!user) return null
-        return {
-          user: from<AdapterUser>(user),
-          session: from<AdapterSession>(session),
-        }
-      } finally {
-        await db.onClose()
+      await using db = await createDb()
+      const session = await db.S.findOne({ sessionToken })
+      if (!session) return null
+      const user = await db.U.findOne({ _id: new ObjectId(session.userId) })
+      if (!user) return null
+      return {
+        user: from<AdapterUser>(user),
+        session: from<AdapterSession>(session),
       }
     },
     async createSession(data) {
       const session = to<AdapterSession>(data)
-      const db = await createDb()
-      try {
-        await db.S.insertOne(session)
-        return from<AdapterSession>(session)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      await db.S.insertOne(session)
+      return from<AdapterSession>(session)
     },
     async updateSession(data) {
       const { _id, ...session } = to<AdapterSession>(data)
-      const db = await createDb()
-      try {
-        const updatedSession = await db.S.findOneAndUpdate(
-          { sessionToken: session.sessionToken },
-          { $set: session },
-          { returnDocument: "after" }
-        )
-        return from<AdapterSession>(updatedSession!)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const updatedSession = await db.S.findOneAndUpdate(
+        { sessionToken: session.sessionToken },
+        { $set: session },
+        { returnDocument: "after" }
+      )
+      return from<AdapterSession>(updatedSession!)
     },
     async deleteSession(sessionToken) {
-      const db = await createDb()
-      try {
-        const session = await db.S.findOneAndDelete({
-          sessionToken,
-        })
-        return from<AdapterSession>(session!)
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const session = await db.S.findOneAndDelete({
+        sessionToken,
+      })
+      return from<AdapterSession>(session!)
     },
     async createVerificationToken(data) {
-      const db = await createDb()
-      try {
-        await db.V.insertOne(to(data))
-        return data
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      await db.V.insertOne(to(data))
+      return data
     },
     async useVerificationToken(identifier_token) {
-      const db = await createDb()
-      try {
-        const verificationToken = await db.V.findOneAndDelete(identifier_token)
-
-        if (!verificationToken) return null
-        const { _id, ...rest } = verificationToken
-        return rest
-      } finally {
-        await db.onClose()
-      }
+      await using db = await createDb()
+      const verificationToken = await db.V.findOneAndDelete(identifier_token)
+      if (!verificationToken) return null
+      const { _id, ...rest } = verificationToken
+      return rest
     },
   }
 }
