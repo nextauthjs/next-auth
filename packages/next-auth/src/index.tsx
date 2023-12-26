@@ -261,7 +261,7 @@ export interface NextAuthResult {
    */
   signIn: <
     P extends BuiltInProviderType | (string & {}),
-    R extends boolean = true
+    R extends boolean = true,
   >(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729

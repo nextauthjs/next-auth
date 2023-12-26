@@ -4,9 +4,7 @@ beforeAll(() => {
   globalThis.crypto ??= require("node:crypto").webcrypto
 })
 
-
-afterAll(() => {
-})
+afterAll(() => {})
 
 beforeEach(() => {
   vi.useFakeTimers()
