@@ -6,6 +6,7 @@ import { detectOrigin } from "./env.js"
 
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
+import { ProviderType } from "../providers/index.js"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -31,23 +32,28 @@ export async function signIn(
   }
 
   let url = `${base}/${provider}?${new URLSearchParams(authorizationParams)}`
-  let foundProvider: SignInParams[0] | undefined = undefined
+  let foundProviderId: SignInParams[0] | undefined = undefined
+  let foundProviderType: ProviderType | undefined = undefined
 
   for (const _provider of config.providers) {
-    const { id } = typeof _provider === "function" ? _provider?.() : _provider
+    const { options, ...defaults } =
+      typeof _provider === "function" ? _provider?.() : _provider
+    const id = (options?.id ?? defaults.id) as string
+    const type = (options?.type ?? defaults.type) as ProviderType
     if (id === provider) {
-      foundProvider = id
+      foundProviderId = id
+      foundProviderType = type
       break
     }
   }
 
-  if (!foundProvider) {
+  if (!foundProviderId) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
     if (shouldRedirect) redirect(url)
     return url
   }
 
-  if (foundProvider === "credentials") {
+  if (foundProviderType === "credentials") {
     url = url.replace("signin", "callback")
   }
 
