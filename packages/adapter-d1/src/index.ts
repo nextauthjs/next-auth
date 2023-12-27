@@ -239,8 +239,8 @@ export async function deleteRecord(
  * ```
  *
  *
- * You can also initialize your tables manually.  Look in [init.ts](https://github.com/nextauthjs/next-auth/packages/adapter-d1/src/migrations/init.ts) for the relevant sql.
- * Paste and run the SQL into your D1 dashboard query tool.
+ * You can also initialize your tables manually.  Look in [migrations.ts](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-d1/src/migrations.ts) for the relevant sql.
+ * Paste and execute the SQL from within your D1 database's console in the [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/workers/d1).
  *
  **/
 export function D1Adapter(db: D1Database): Adapter {
