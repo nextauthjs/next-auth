@@ -27,15 +27,15 @@ export type SqlFlavorOptions =
 export type ClientFlavors<Flavor> = Flavor extends AnyMySqlDatabase
   ? MinimumSchema["mysql"]
   : Flavor extends AnyPgDatabase
-  ? MinimumSchema["pg"]
-  : Flavor extends AnySQLiteDatabase
-  ? MinimumSchema["sqlite"]
-  : never
+    ? MinimumSchema["pg"]
+    : Flavor extends AnySQLiteDatabase
+      ? MinimumSchema["sqlite"]
+      : never
 
 export type TableFn<Flavor> = Flavor extends AnyMySqlDatabase
   ? MySqlTableFn
   : Flavor extends AnyPgDatabase
-  ? PgTableFn
-  : Flavor extends AnySQLiteDatabase
-  ? SQLiteTableFn
-  : AnySQLiteTable
+    ? PgTableFn
+    : Flavor extends AnySQLiteDatabase
+      ? SQLiteTableFn
+      : AnySQLiteTable

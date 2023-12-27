@@ -142,14 +142,7 @@ export default function Mattermost<P extends MattermostProfile>(
         image: null,
       }
     },
-    style: {
-      logo: "/mattermost.svg",
-      logoDark: "/mattermost-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
-    },
+    style: { logo: "/mattermost.svg", bg: "#000", text: "#fff" },
     options: rest,
   }
 }

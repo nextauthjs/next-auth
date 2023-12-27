@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install next-auth @auth/azure-tables-adapter
  * ```
  *
@@ -73,7 +73,7 @@ export function withoutKeys<T>(
  * // For more information on each option (and a full list of options) go to
  * // https://authjs.dev/reference/configuration/auth-options
  * export default const authConfig = {
- *   // https://authjs.dev/reference/providers/oauth-builtin
+ *   // https://authjs.dev/reference/core/providers
  *   providers: [
  *     // ...
  *   ],

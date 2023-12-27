@@ -19,7 +19,7 @@ export default NextAuth({
         return { role: profile.role ?? "user", ... }
       },
       ...
-    })  
+    })
   ],
 })
 ```
@@ -29,6 +29,7 @@ To determine the user's role, you can either add your logic or if your provider 
 :::
 
 ## Persisting the role
+
 ### With JWT
 
 When you don't have a database configured, the role will be persisted in a cookie, by using the `jwt()` callback. On sign-in, the `role` property is exposed from the `profile` callback on the `user` object. Persist the `user.role` value by assigning it to `token.role`. That's it!
@@ -46,7 +47,7 @@ export default NextAuth({
         return { role: profile.role ?? "user", ... }
       },
       ...
-    })  
+    })
   ],
   // highlight-start
   callbacks: {
@@ -69,7 +70,7 @@ With this strategy, if you want to update the role, the user needs to be forced 
 
 ### With Database
 
-When you have a database, you can save the user role on the [User model](/reference/adapters/models#user). The below example is showing you how to do this with Prisma, but the idea is the same for all adapters.
+When you have a database, you can save the user role on the [User model](/reference/core/adapters#adapteruser). The below example is showing you how to do this with Prisma, but the idea is the same for all adapters.
 
 First, add a `role` column to the User model.
 
@@ -105,7 +106,7 @@ export default NextAuth({
         return { role: profile.role ?? "user", ... }
       }
       ...
-    })  
+    })
   ],
   // highlight-start
   callbacks: {
@@ -148,6 +149,6 @@ When using Next.js and JWT, you can alternatively also use [Middleware](https://
 
 - [Concepts: Session strategies](/concepts/session-strategies)
 - [Next.js: Middleware](https://next-auth.js.org/configuration/nextjs#wrap-middleware)
-- [Adapters: User model](/reference/adapters/models#user)
-- [Adapters: Prisma adapter](/reference/adapters/prisma)
+- [Adapters: User model](/reference/core/adapters/#adapteruser)
+- [Adapters: Prisma adapter](/reference/adapter/prisma)
 - [TypeScript](/getting-started/typescript)

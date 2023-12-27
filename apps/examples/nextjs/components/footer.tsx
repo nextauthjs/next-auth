@@ -1,28 +1,16 @@
-import Link from "next/link"
-import styles from "./footer.module.css"
-import packageJSON from "../package.json"
+import CustomLink from "./custom-link"
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
-      <hr />
-      <ul className={styles.navItems}>
-        <li className={styles.navItem}>
-          <a href="https://next-auth.js.org">Documentation</a>
-        </li>
-        <li className={styles.navItem}>
-          <a href="https://www.npmjs.com/package/next-auth">NPM</a>
-        </li>
-        <li className={styles.navItem}>
-          <a href="https://github.com/nextauthjs/next-auth-example">GitHub</a>
-        </li>
-        <li className={styles.navItem}>
-          <Link href="/policy">Policy</Link>
-        </li>
-        <li className={styles.navItem}>
-          <em>next-auth@{packageJSON.dependencies["next-auth"]}</em>
-        </li>
-      </ul>
+    <footer className="flex flex-col w-full px-4 mx-0 my-4 space-y-1 text-sm md:max-w-3xl md:my-12 md:mx-auto sm:px-6 md:h-5 md:items-center md:space-y-0 md:space-x-4 md:flex-row">
+      <CustomLink href="https://nextjs.authjs.dev">Documentation</CustomLink>
+      <CustomLink href="https://www.npmjs.com/package/next-auth">
+        NPM
+      </CustomLink>
+      <CustomLink href="https://github.com/nextauthjs/next-auth/tree/main/apps/examples/nextjs">
+        Source on GitHub
+      </CustomLink>
+      <CustomLink href="/policy">Policy</CustomLink>
     </footer>
   )
 }

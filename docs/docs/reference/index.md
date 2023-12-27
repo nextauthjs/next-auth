@@ -8,21 +8,22 @@ This section of the documentation contains the API reference for all the officia
 
 Here are the _state_ of planned and released packages under the `@auth/*` and `@next-auth/*` scope, as well as `next-auth`. This is not an exhaustive list, but the set of packages that we would like to focus on, to begin with.
 
-|        Feature         |  Status  |
-| ---------------------- | -------- |
-| `next-auth`            | Release (stable). See [docs](https://next-auth.js.org) |
-| `@auth/*-adapter`      | Released (stable). Fully compatible with `next-auth` and all `@auth/*` libraries.   |
-| `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`. See above.  |
-| `@auth/core`           | Released (experimental). |
-| `@auth/sveltekit`      | Released (experimental, [help needed](#help-needed)). |
-| `@auth/solid-start`    | Released (experimental, [help needed](#help-needed)). Community package: [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth) |
-| `@auth/express`        | [Planned](https://github.com/nextauthjs/next-auth/issues/8257). |
-| `@auth/remix`          | Planned, [help needed](#help-needed). |
-| `@auth/astro`          | Planned, [help needed](#help-needed). |
+| Feature                | Status                                                                                                                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `next-auth`            | Released (beta). See [docs](/reference/nextjs)                                                                                                                                         |
+| `next-auth`            | Released (v4). See [docs](https://next-auth.js.org)                                                                                                                                    |
+| `@auth/*-adapter`      | Released (stable). Fully compatible with `next-auth` and all `@auth/*` libraries.                                                                                                      |
+| `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`. See above.                                                                                                                       |
+| `@auth/core`           | Released (experimental).                                                                                                                                                               |
+| `@auth/sveltekit`      | Released (experimental, [help needed](#help-needed)).                                                                                                                                  |
+| `@auth/solid-start`    | Released (experimental, [help needed](#help-needed)). Community package: [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth)                                  |
+| `@auth/express`        | [Planned](https://github.com/nextauthjs/next-auth/issues/8257).                                                                                                                        |
+| `@auth/remix`          | Planned, [help needed](#help-needed).                                                                                                                                                  |
+| `@auth/astro`          | Planned, [help needed](#help-needed).                                                                                                                                                  |
 | `@auth/nuxt`           | Planned, [help needed](#help-needed). Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/) |
 
 :::info
-`next-auth` is still the official package for Next.js. The documentation is at [next-auth.js.org](https://next-auth.js.org), while guides are being migrated over to the new documentation page. A major refactor of `next-auth` is on the way, you can [follow this PR](https://github.com/nextauthjs/next-auth/pull/7443) for updates.
+The NextAuth.js v4 documentation is at [next-auth.js.org](https://next-auth.js.org), while v5+ will be available [here](/reference/nextjs). Guides are being migrated over to the new documentation page and are gradually being updated to showcase all the framework integrations.
 :::
 
 ### Help needed
