@@ -144,6 +144,17 @@ export interface CampusUser {
   created_at: string
   updated_at: string | null
 }
+
+export interface Image {
+  link: string,
+  versions: {
+    micro: string,
+    small: string,
+    medium: string,
+    large: string,
+  }
+}
+
 export interface FortyTwoProfile extends UserData, Record<string, any> {
   groups: Array<{ id: string; name: string }>
   cursus_users: CursusUser[]
@@ -159,6 +170,7 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
   roles: Array<{ id: string; name: string }>
   campus: Campus[]
   campus_users: CampusUser[]
+  image: Image
   user: any | null
 }
 
@@ -231,7 +243,7 @@ export default function FortyTwo<P extends FortyTwoProfile>(
         id: profile.id.toString(),
         name: profile.usual_full_name,
         email: profile.email,
-        image: profile.image_url,
+        image: profile.image.link,
       }
     },
     options,
