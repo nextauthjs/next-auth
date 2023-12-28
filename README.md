@@ -18,11 +18,16 @@
       <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="Github Stable Release" />
     </a>
   </p>
+  <p align="center">
+    Auth.js is a set of open-source packages that are built on Web Standard APIs for authentication in modern applications with any framework on any platform in any JS runtime.
+  </p>
+  <p align="center">
+    See <a href="https://authjs.dev">authjs.dev</a> for our framework-specific libraries, or check out <a href="https://next-auth.js.org">next-auth.js.org</a> for next-auth (Next.js).
+  </p>
+  <p align="center">
+    Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+  </p>
 </p>
-
-Auth.js is a set of open-source packages that are built on Web Standard APIs for authentication in modern applications with any framework on any platform in any JS runtime.
-
-See [authjs.dev](https://authjs.dev) for our framework-specific libraries, or check out [next-auth.js.org](https://next-auth.js.org) for `next-auth` (Next.js).
 
 ## Features
 
@@ -75,15 +80,6 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
 
 ### Sponsors
 
-<a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=callout">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/static/img/clerk-readme-light.png">
-    <source media="(prefers-color-scheme: light)" srcset="docs/static/img/clerk-readme-dark.png">
-    <img alt="Clerk – Authentication & User Management" src="docs/static/img/clerk-readme-dark.png" width="830">
-  </picture>
-</a>
-<br><br>
-
 We have an [OpenCollective](https://opencollective.com/nextauth) for companies and individuals looking to contribute financially to the project!
 
 <!--sponsors start-->
@@ -91,62 +87,62 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
   <tbody>
     <tr>
       <td align="center" valign="top">
+        <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=sponsor" target="_blank">
+          <img width="95" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
+        </a><br />
+        <div>Clerk</div><br />
+        <sub>💎 Diamond Financial Sponsor</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/14985020?v=4" alt="Vercel Logo" />
+          <img width="95" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
         </a><br />
         <div>Vercel</div><br />
         <sub>🥉 Bronze Financial Sponsor <br /> ☁️ Infrastructure Support</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://prisma.io" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/17219288?v=4" alt="Prisma Logo" />
+          <img width="95" src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4" alt="Prisma Logo" />
         </a><br />
         <div>Prisma</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://clerk.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
-        </a><br />
-        <div>Clerk</div><br />
-        <sub>🥉 Bronze Financial Sponsor</sub>
-      </td>
-      <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
+          <img width="95" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
         </a><br />
         <div>Lowdefy</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://workos.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
+          <img width="95" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
         </a><br />
         <div>WorkOS</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://www.descope.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/97479186?v=4" alt="Descope Logo" />
+          <img width="95" src="https://avatars.githubusercontent.com/u/97479186?s=200&v=4" alt="Descope Logo" />
         </a><br />
         <div>Descope</div><br />
         <sub>🥉 Bronze Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
-          <img width="128px" src="https://avatars.githubusercontent.com/u/25982255?v=4" alt="Checkly Logo" />
+          <img width="95" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
         </a><br />
         <div>Checkly</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://superblog.ai/" target="_blank">
-          <img width="128px" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
+          <img width="95" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
         </a><br />
         <div>superblog</div><br />
         <sub>☁️ Infrastructure Support</sub>
       </td>
-    </tr><tr></tr>
+    </tr>
   </tbody>
 </table>
 <br />
