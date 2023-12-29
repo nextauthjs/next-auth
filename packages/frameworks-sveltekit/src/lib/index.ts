@@ -208,12 +208,32 @@ import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type { AuthAction, AuthConfig, Session, CookieOption } from "@auth/core/types"
 
-export async function getSession(
+export interface Cookie extends CookieOption {
+  value: string
+}
+
+const parseCookies = (cookies): Record<string, Record<string, string>> => {
+  return cookies.reduce((accumulator, cookie) => {
+    const headerValue = cookie.pop()
+
+    if (!headerValue) return;
+    const cookieParameters = headerValue.split(';')
+    const [name, value] = cookieParameters.shift()?.split('=') ?? [];
+    const options = cookieParameters.reduce((accumulator, parameter) => {
+      const [name, value] = parameter.split('=')
+      return { [name]: value ?? true, ...accumulator }
+    }, {});
+
+    return { [name]: { value, options }, ...accumulator }
+  }, {})
+}
+
+export async function getSessionWithSetCookies(
   req: Request,
   config: SvelteKitAuthConfig
-): ReturnType<App.Locals["getSession"]> {
+): ReturnType<App.Locals["getSessionWithSetCookies"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
@@ -226,9 +246,20 @@ export async function getSession(
   const data = await response.json()
 
   if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data
+  if (status === 200) return {
+    session: data,
+    cookies: parseCookies(Array.from(response.headers).filter(([headerName]) => headerName === 'set-cookie'))
+  }
   throw new Error(data.message)
 }
+
+
+export async function getSession(req: Request, config: SvelteKitAuthConfig) {
+  const data = await getSessionWithSetCookies(req, config)
+
+  return data?.session
+}
+
 
 /** Configure the {@link SvelteKitAuth} method. */
 export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
@@ -260,7 +291,7 @@ type DynamicSvelteKitAuthConfig = (
 function AuthHandle(
   svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
 ): Handle {
-  return async function ({ event, resolve }) {
+  return async function({ event, resolve }) {
     const authOptions =
       typeof svelteKitAuthOptions === "object"
         ? svelteKitAuthOptions
@@ -269,6 +300,8 @@ function AuthHandle(
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
+    event.locals.getSessionWithSetCookies ??= () => getSessionWithSetCookies(request, authOptions)
+
 
     const action = url.pathname
       .slice(prefix.length + 1)
@@ -302,6 +335,8 @@ declare global {
   namespace App {
     interface Locals {
       getSession(): Promise<Session | null>
+      getSessionWithSetCookies(): Promise<{ session: Session, cookies: Record<string, Record<string, string>> } | null>
+
     }
     interface PageData {
       session?: Session | null
