@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm"
 import type { DataSourceOptions } from "typeorm"
-import type { TestOptions } from "@next-auth/adapter-test"
+import type { TestOptions } from "utils/adapter"
 import * as defaultEntities from "../src/entities"
 import { parseDataSourceConfig } from "../src/utils"
 

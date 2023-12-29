@@ -6,6 +6,8 @@
 .env.development.local
 .env.test.local
 .env.production.local
+packages/*/.npmrc
+
 
 npm-debug.log*
 yarn-debug.log*
@@ -27,18 +29,13 @@ dist
 .docusaurus
 .cache-loader
 packages/next-auth/providers
-packages/next-auth/src/providers/oauth-types.ts
-packages/next-auth/client
-packages/next-auth/css
-packages/next-auth/utils
-packages/next-auth/core
-packages/next-auth/jwt
-packages/next-auth/react
-packages/next-auth/next
+# copied from @auth/core
+packages/frameworks-*/**/providers
 packages/*/*.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 packages/*/lib
+packages/**/generated
 
 # Development app
 apps/dev/src/css
@@ -65,6 +62,7 @@ packages/adapter-prisma/prisma/dev.db
 packages/adapter-prisma/prisma/migrations
 db.sqlite
 packages/adapter-supabase/supabase/.branches
+packages/adapter-drizzle/.drizzle
 
 # Tests
 coverage
@@ -77,7 +75,7 @@ test.schema.gql
 
 # docusaurus
 docs/.docusaurus
-docs/providers.json
+docs/manifest.mjs
 
 # Core
 packages/core/src/providers/oauth-types.ts
@@ -85,8 +83,13 @@ packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts
 docs/docs/reference/core
-docs/docs/reference/sveltekit
 
+# Next.js
+packages/next-auth/lib
+packages/next-auth/providers
+# copied from @auth/core
+packages/next-auth/src/providers
+docs/docs/reference/nextjs
 
 # SvelteKit
 packages/frameworks-sveltekit/index.*
@@ -95,7 +98,17 @@ packages/frameworks-sveltekit/.svelte-kit
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.js.timestamp-*
 packages/frameworks-sveltekit/vite.config.ts.timestamp-*
+docs/docs/reference/sveltekit
+
+# SolidStart
+docs/docs/reference/solidstart
+
 
 # Adapters
-
 docs/docs/reference/adapter
+
+## Drizzle migration folder
+.drizzle
+
+## Test files
+!vitest.config.js

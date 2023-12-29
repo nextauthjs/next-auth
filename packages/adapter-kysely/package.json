@@ -1,0 +1,53 @@
+{
+  "name": "@auth/kysely-adapter",
+  "version": "0.1.11",
+  "description": "Kysely adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/kysely",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "mwojtul <mark.wojtul@gmail.com> (https://github.com/mwojtul)",
+  "license": "ISC",
+  "keywords": [
+    "authjs",
+    "next-auth",
+    "next.js",
+    "oauth",
+    "kysely"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "./tests/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "kysely": "^0.26.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.3",
+    "@types/pg": "^8.6.5",
+    "better-sqlite3": "^8.6.0",
+    "kysely": "^0.24.2",
+    "mysql2": "^3.2.0",
+    "pg": "^8.10.0"
+  },
+  "jest": {
+    "preset": "utils/adapter"
+  }
+}

@@ -4,10 +4,10 @@ sidebar_label: Custom JWT encoding
 ---
 
 :::warning
-If you use middleware to protect routes, make sure the same method is also set in the [`_middleware.ts` options](/reference/nextjs/#custom-jwt-decode-method)
+If you use middleware to protect routes, make sure the same method is also set in the [`middleware.ts` options](https://next-auth.js.org/configuration/nextjs#custom-jwt-decode-method)
 :::
 
-Auth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behaviour. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
+Auth.js uses encrypted JSON Web Tokens ([JWE](https://datatracker.ietf.org/doc/html/rfc7516)) by default. Unless you have a good reason, we recommend keeping this behavior. Although you can override this using the `encode` and `decode` methods. Both methods must be defined at the same time.
 
 ```js
 jwt: {

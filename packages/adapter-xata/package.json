@@ -1,6 +1,6 @@
 {
   "name": "@auth/xata-adapter",
-  "version": "0.1.0",
+  "version": "0.1.10",
   "description": "Xata adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -43,13 +43,9 @@
     "@xata.io/client": ">=0.13.0"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:^0.0.0",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
-    "jest": "^27.4.3",
-    "@xata.io/client": "^0.13.0",
-    "typescript": "^4.7.4"
+    "@xata.io/client": "^0.13.0"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

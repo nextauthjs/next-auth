@@ -1,6 +1,6 @@
 {
   "name": "@auth/mikro-orm-adapter",
-  "version": "1.0.1",
+  "version": "1.0.11",
   "description": "MikroORM adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -45,15 +45,12 @@
   },
   "devDependencies": {
     "@mikro-orm/core": "^5",
-    "@mikro-orm/sqlite": "^5",
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
-    "jest": "^29"
+    "@mikro-orm/sqlite": "^5"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

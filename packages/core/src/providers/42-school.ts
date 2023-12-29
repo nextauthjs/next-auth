@@ -144,6 +144,17 @@ export interface CampusUser {
   created_at: string
   updated_at: string | null
 }
+
+export interface Image {
+  link: string,
+  versions: {
+    micro: string,
+    small: string,
+    medium: string,
+    large: string,
+  }
+}
+
 export interface FortyTwoProfile extends UserData, Record<string, any> {
   groups: Array<{ id: string; name: string }>
   cursus_users: CursusUser[]
@@ -159,6 +170,7 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
   roles: Array<{ id: string; name: string }>
   campus: Campus[]
   campus_users: CampusUser[]
+  image: Image
   user: any | null
 }
 
@@ -191,7 +203,7 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  *
  *
  * :::note
- * 42 returns a field on `Account` called `created_at` which is a number. See the [docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests). Make sure to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+ * 42 returns a field on `Account` called `created_at` which is a number. See the [docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests). Make sure to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/core/adapters).
  * :::
  * By default, Auth.js assumes that the 42School provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -231,7 +243,7 @@ export default function FortyTwo<P extends FortyTwoProfile>(
         id: profile.id.toString(),
         name: profile.usual_full_name,
         email: profile.email,
-        image: profile.image_url,
+        image: profile.image.link,
       }
     },
     options,

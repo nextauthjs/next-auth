@@ -16,14 +16,15 @@ export interface GoogleProfile extends Record<string, any> {
   email: string
   email_verified: boolean
   exp: number
-  family_name: string
+  family_name?: string
   given_name: string
-  hd: string
+  hd?: string
   iat: number
   iss: string
-  jti: string
+  jti?: string
+  locale?: string
   name: string
-  nbf: number
+  nbf?: number
   picture: string
   sub: string
 }
@@ -141,14 +142,7 @@ export default function Google<P extends GoogleProfile>(
     name: "Google",
     type: "oidc",
     issuer: "https://accounts.google.com",
-    style: {
-      logo: "/google.svg",
-      logoDark: "/google.svg",
-      bgDark: "#fff",
-      bg: "#fff",
-      text: "#000",
-      textDark: "#000",
-    },
+    style: { logo: "/google.svg", bg: "#fff", text: "#000" },
     options,
   }
 }

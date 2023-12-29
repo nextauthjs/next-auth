@@ -1,7 +1,7 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>VK</b> integration.</span>
- * <a href="www.vk.com/">
+ * <a href="https://vk.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/vk.svg" height="48" />
  * </a>
  * </div>
@@ -382,14 +382,7 @@ export default function VK<P extends Record<string, any> = VkProfile>(
         image: profile.photo_100,
       }
     },
-    style: {
-      logo: "/vk.svg",
-      logoDark: "/vk-dark.svg",
-      bg: "#fff",
-      text: "#07F",
-      bgDark: "#07F",
-      textDark: "#fff",
-    },
+    style: { logo: "/vk.svg", bg: "#07F", text: "#fff" },
     options,
   }
 }
