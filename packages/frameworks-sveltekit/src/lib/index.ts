@@ -208,11 +208,7 @@ import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session, CookieOption } from "@auth/core/types"
-
-export interface Cookie extends CookieOption {
-  value: string
-}
+import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 const parseCookies = (cookies): Record<string, Record<string, string>> => {
   return cookies.reduce((accumulator, cookie) => {
