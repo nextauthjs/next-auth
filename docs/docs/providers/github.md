@@ -4,7 +4,7 @@ title: GitHub
 ---
 
 :::note
-GitHub returns a field on `Account` called `refresh_token_expires_in` which is a number. See their [docs](https://docs.github.com/en/developers/apps/building-github-apps/refreshing-user-to-server-access-tokens#response). Remember to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+GitHub returns a field on `Account` called `refresh_token_expires_in` which is a number. See their [docs](https://docs.github.com/en/developers/apps/building-github-apps/refreshing-user-to-server-access-tokens#response). Remember to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/getting-started/adapters).
 :::
 
 ## Documentation
@@ -19,7 +19,7 @@ https://github.com/settings/apps
 
 The **GitHub Provider** comes with a set of default options:
 
-- [GitHub Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/github.ts)
+- [GitHub Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/github.ts)
 
 You can override any of the options to suit your own use case.
 

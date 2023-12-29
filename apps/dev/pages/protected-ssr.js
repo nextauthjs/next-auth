@@ -1,6 +1,6 @@
 // This is an example of how to protect content using server rendering
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]"
+import { authOptions } from "/app/api/auth/[...nextauth]/route"
 import Layout from "../components/layout"
 import AccessDenied from "../components/access-denied"
 

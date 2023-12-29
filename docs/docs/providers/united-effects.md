@@ -15,7 +15,7 @@ https://core.unitedeffects.com
 
 The **United Effects Provider** comes with a set of default options:
 
-- [United Effects Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/united-effects.ts)
+- [United Effects Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/united-effects.ts)
 
 You can override any of the options to suit your own use case.
 

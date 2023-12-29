@@ -15,7 +15,7 @@ https://www.bungie.net/en/Application
 
 The **Bungie Provider** comes with a set of default options:
 
-- [Bungie Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/bungie.js)
+- [Bungie Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/bungie.js)
 
 You can override any of the options to suit your own use case.
 

@@ -19,7 +19,7 @@ Check out the [documentation](https://boxyhq.com/docs/jackson/saml-flow#2-saml-c
 
 The **BoxyHQ SAML Provider** comes with a set of default options:
 
-- [BoxyHQ Provider options](https://github.com/nextauthjs/next-auth/tree/main/packages/next-auth/src/providers/boxyhq-saml.ts)
+- [BoxyHQ Provider options](https://github.com/nextauthjs/next-auth/tree/v4/packages/next-auth/src/providers/boxyhq-saml.ts)
 
 You can override any of the options to suit your own use case.
 

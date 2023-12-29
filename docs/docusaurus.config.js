@@ -177,6 +177,7 @@ module.exports = {
     [
       "@docusaurus/preset-classic",
       {
+        gtag: { trackingID: "AW-11313383806", anonymizeIP: true },
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),

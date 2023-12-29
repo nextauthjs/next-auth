@@ -19,7 +19,7 @@ https://gitlab.com/-/profile/applications
 
 The **Gitlab Provider** comes with a set of default options:
 
-- [Gitlab Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/gitlab.ts)
+- [Gitlab Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/gitlab.ts)
 
 You can override any of the options to suit your own use case.
 

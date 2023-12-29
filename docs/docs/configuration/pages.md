@@ -44,11 +44,11 @@ Example: `/auth/error?error=Configuration`
 
 The following errors are passed as error query parameters to the default or overridden sign-in page:
 
-- **OAuthSignin**: Error in constructing an authorization URL ([1](https://github.com/nextauthjs/next-auth/blob/457952bb5abf08b09861b0e5da403080cd5525be/src/server/lib/signin/oauth.js), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)),
-- **OAuthCallback**: Error in handling the response ([1](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/callback.ts), [2](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/lib/oauth/state-handler.ts)) from an OAuth provider.
+- **OAuthSignin**: Error in constructing an authorization URL ([1](https://github.com/nextauthjs/next-auth/blob/457952bb5abf08b09861b0e5da403080cd5525be/src/server/lib/signin/oauth.js), [2](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/lib/oauth/state-handler.ts)),
+- **OAuthCallback**: Error in handling the response ([1](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/lib/oauth/callback.ts), [2](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/lib/oauth/pkce-handler.ts), [3](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/lib/oauth/state-handler.ts)) from an OAuth provider.
 - **OAuthCreateAccount**: Could not create OAuth provider user in the database.
 - **EmailCreateAccount**: Could not create email provider user in the database.
-- **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/routes/callback.ts)
+- **Callback**: Error in the [OAuth callback handler route](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/routes/callback.ts)
 - **OAuthAccountNotLinked**: If the email on the account is already linked, but not with this OAuth account
 - **EmailSignin**: Sending the e-mail with the verification token failed
 - **CredentialsSignin**: The `authorize` callback returned `null` in the [Credentials provider](/providers/credentials). We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
@@ -78,12 +78,17 @@ In addition, you can define a `theme.brandColor` to define a custom accent color
 In order to get the available authentication providers and the URLs to use for them, you can make a request to the API endpoint `/api/auth/providers`:
 
 ```tsx title="pages/auth/signin.tsx"
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next"
 import { getProviders, signIn } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]"
 
-export default function SignIn({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn({
+  providers,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       {Object.values(providers).map((provider) => (
@@ -98,17 +103,17 @@ export default function SignIn({ providers }: InferGetServerSidePropsType<typeof
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  
+  const session = await getServerSession(context.req, context.res, authOptions)
+
   // If the user is already logged in, redirect.
   // Note: Make sure not to redirect to the same page
   // To avoid an infinite loop!
   if (session) {
-    return { redirect: { destination: "/" } };
+    return { redirect: { destination: "/" } }
   }
 
-  const providers = await getProviders();
-  
+  const providers = await getProviders()
+
   return {
     props: { providers: providers ?? [] },
   }
@@ -122,10 +127,15 @@ There is another, more fully styled example signin page available [here](https:/
 If you create a custom sign in form for email sign in, you will need to submit both fields for the **email** address and **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/signin/email**.
 
 ```tsx title="pages/auth/email-signin.tsx"
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next"
 import { getCsrfToken } from "next-auth/react"
 
-export default function SignIn({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn({
+  csrfToken,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <form method="post" action="/api/auth/signin/email">
       <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
@@ -157,10 +167,15 @@ signIn("email", { email: "jsmith@example.com" })
 If you create a sign in form for credentials based authentication, you will need to pass a **csrfToken** from **/api/auth/csrf** in a POST request to **/api/auth/callback/credentials**.
 
 ```tsx title="pages/auth/credentials-signin.tsx"
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next"
 import { getCsrfToken } from "next-auth/react"
 
-export default function SignIn({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn({
+  csrfToken,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <form method="post" action="/api/auth/callback/credentials">
       <input name="csrfToken" type="hidden" defaultValue={csrfToken} />

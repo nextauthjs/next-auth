@@ -15,8 +15,9 @@ const now = () => (Date.now() / 1000) | 0
 
 /** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
 export async function encode(params: JWTEncodeParams) {
-  const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  /** @note empty `salt` means a session token. See {@link JWTEncodeParams.salt}. */
+  const { token = {}, secret, maxAge = DEFAULT_MAX_AGE, salt = "" } = params
+  const encryptionSecret = await getDerivedEncryptionKey(secret, salt)
   return await new EncryptJWT(token)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
     .setIssuedAt()
@@ -27,9 +28,10 @@ export async function encode(params: JWTEncodeParams) {
 
 /** Decodes a NextAuth.js issued JWT. */
 export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
-  const { token, secret } = params
+  /** @note empty `salt` means a session token. See {@link JWTDecodeParams.salt}. */
+  const { token, secret, salt = "" } = params
   if (!token) return null
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  const encryptionSecret = await getDerivedEncryptionKey(secret, salt)
   const { payload } = await jwtDecrypt(token, encryptionSecret, {
     clockTolerance: 15,
   })
@@ -116,12 +118,15 @@ export async function getToken<R extends boolean = false>(
   }
 }
 
-async function getDerivedEncryptionKey(secret: string | Buffer) {
+async function getDerivedEncryptionKey(
+  keyMaterial: string | Buffer,
+  salt: string
+) {
   return await hkdf(
     "sha256",
-    secret,
-    "",
-    "NextAuth.js Generated Encryption Key",
+    keyMaterial,
+    salt,
+    `NextAuth.js Generated Encryption Key${salt ? ` (${salt})` : ""}`,
     32
   )
 }

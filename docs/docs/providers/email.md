@@ -15,7 +15,6 @@ The Email provider can be used in conjunction with (or instead of) one or more O
 
 On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
-
 If someone provides the email address of an _existing account_ when signing in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
 
 :::tip
@@ -26,7 +25,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
 
 The **Email Provider** comes with a set of default options:
 
-- [Email Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/email.ts)
+- [Email Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/email.ts)
 
 You can override any of the options to suit your own use case.
 
@@ -100,7 +99,7 @@ providers: [
 ],
 ```
 
-3. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/adapters) for storing the Email verification token.
+3. Do not forget to setup one of the database [adapters](https://authjs.dev/getting-started/adapters) for storing the Email verification token.
 
 4. You can now sign in with an email address at `/api/auth/signin`.
 
@@ -161,7 +160,7 @@ async function sendVerificationRequest(params) {
  *
  * @note We don't add the email address to avoid needing to escape it, if you do, remember to sanitize it!
  */
-function html(params: { url: string; host: string; theme: Theme }) {
+function html(params: { url: string, host: string, theme: Theme }) {
   const { url, host, theme } = params
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
@@ -210,7 +209,7 @@ function html(params: { url: string; host: string; theme: Theme }) {
 }
 
 /** Email Text body (fallback for email clients that don't render HTML, e.g. feature phones) */
-function text({ url, host }: { url: string; host: string }) {
+function text({ url, host }: { url: string, host: string }) {
   return `Sign in to ${host}\n${url}\n\n`
 }
 ```
@@ -236,51 +235,51 @@ providers: [
 ## Normalizing the email address
 
 By default, NextAuth.js will normalize the email address. It treats values as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, eg. when looking up users by e-mail from databases.) and also removes any secondary email address that was passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `EmailProvider`. The following example shows the default behavior:
-```ts
-  EmailProvider({
-    // ...
-    normalizeIdentifier(identifier: string): string {
-      // Get the first two elements only,
-      // separated by `@` from user input.
-      let [local, domain] = identifier.toLowerCase().trim().split("@")
-      // The part before "@" can contain a ","
-      // but we remove it on the domain part
-      domain = domain.split(",")[0]
-      return `${local}@${domain}`
 
-      // You can also throw an error, which will redirect the user
-      // to the error page with error=EmailSignin in the URL
-      // if (identifier.split("@").length > 2) {
-      //   throw new Error("Only one email allowed")
-      // }
-    },
-  })
+```ts
+EmailProvider({
+  // ...
+  normalizeIdentifier(identifier: string): string {
+    // Get the first two elements only,
+    // separated by `@` from user input.
+    let [local, domain] = identifier.toLowerCase().trim().split("@")
+    // The part before "@" can contain a ","
+    // but we remove it on the domain part
+    domain = domain.split(",")[0]
+    return `${local}@${domain}`
+
+    // You can also throw an error, which will redirect the user
+    // to the error page with error=EmailSignin in the URL
+    // if (identifier.split("@").length > 2) {
+    //   throw new Error("Only one email allowed")
+    // }
+  },
+})
 ```
 
 :::warning
 Always make sure this returns a single e-mail address, even if multiple ones were passed in.
 :::
 
-
 ## Sending Magic Links To Existing Users
 
-You can ensure that only existing users are sent a magic login link. You will need to grab the email the user entered and check your database to see if the email already exists in the "User" collection in your database. If it exists, it will send the user a magic link but otherwise, you can send the user to another page, such as "/register". 
+You can ensure that only existing users are sent a magic login link. You will need to grab the email the user entered and check your database to see if the email already exists in the "User" collection in your database. If it exists, it will send the user a magic link but otherwise, you can send the user to another page, such as "/register".
 
-  ```js title="pages/api/auth/[...nextauth].js"
-  import User from "../../../models/User"; 
-  import db from "../../../utils/db"; 
-  ...
-  callbacks: {
-    async signIn({ user, account, email }) { 
-      await db.connect(); 
-      const userExists = await User.findOne({ 
-        email: user.email,  //the user object has an email property, which contains the email the user entered.
-      });
-      if (userExists) {
-        return true;   //if the email exists in the User collection, email them a magic login link
-      } else {
-        return "/register"; 
-      }
-    },
-   ...
-  ``` 
+```js title="pages/api/auth/[...nextauth].js"
+import User from "../../../models/User";
+import db from "../../../utils/db";
+...
+callbacks: {
+  async signIn({ user, account, email }) {
+    await db.connect();
+    const userExists = await User.findOne({
+      email: user.email,  //the user object has an email property, which contains the email the user entered.
+    });
+    if (userExists) {
+      return true;   //if the email exists in the User collection, email them a magic login link
+    } else {
+      return "/register";
+    }
+  },
+ ...
+```

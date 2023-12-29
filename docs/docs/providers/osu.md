@@ -1,6 +1,6 @@
 ---
 id: osu
-title: Osu!
+title: osu!
 ---
 
 ## Documentation
@@ -13,14 +13,14 @@ https://osu.ppy.sh/home/account/edit#new-oauth-application
 
 ## Options
 
-The **Osu Provider** comes with a set of default options:
+The **osu! Provider** comes with a set of default options:
 
-- [Osu Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/osu.ts)
+- [osu! Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/osu.ts)
 
 You can override any of the options to suit your own use case.
 
 :::note
-Osu! does **not** provide a user email!
+osu! does **not** provide a user email!
 :::
 
 ## Example

@@ -15,7 +15,7 @@ https://developer.box.com/guides/sso-identities-and-app-users/connect-okta-to-ap
 
 The **Box Provider** comes with a set of default options:
 
-- [Box Provider options](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/box.js)
+- [Box Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/box.js)
 
 You can override any of the options to suit your own use case.
 

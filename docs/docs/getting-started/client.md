@@ -172,18 +172,14 @@ export default function Page() {
     return (
       <>
         <p>Signed in as {session.user.name}</p>
-        
+
         {/* Update the value by sending it to the backend. */}
-        <button onClick={() => update({ name: "John Doe" })}>
-          Edit name
-        </button>
+        <button onClick={() => update({ name: "John Doe" })}>Edit name</button>
         {/*
-          * Only trigger a session update, assuming you already updated the value server-side.
-          * All `useSession().data` references will be updated.
-          */}
-        <button onClick={() => update()}>
-          Edit name
-        </button>
+         * Only trigger a session update, assuming you already updated the value server-side.
+         * All `useSession().data` references will be updated.
+         */}
+        <button onClick={() => update()}>Edit name</button>
       </>
     )
   }
@@ -245,7 +241,7 @@ The `update()` method won't sync between tabs as the `refetchInterval` and `refe
 :::
 
 ```tsx title="pages/profile.tsx"
-import {useEffect} from "react"
+import { useEffect } from "react"
 import { useSession } from "next-auth/react"
 
 export default function Page() {
@@ -263,24 +259,23 @@ export default function Page() {
   // Listen for when the page is visible, if the user switches tabs
   // and makes our tab visible again, re-fetch the session
   useEffect(() => {
-    const visibilityHandler = () => document.visibilityState === "visible" && update()
+    const visibilityHandler = () =>
+      document.visibilityState === "visible" && update()
     window.addEventListener("visibilitychange", visibilityHandler, false)
-    return () => window.removeEventListener("visibilitychange", visibilityHandler, false)
+    return () =>
+      window.removeEventListener("visibilitychange", visibilityHandler, false)
   }, [update])
 
-  return (
-    <pre>
-      {JSON.stringify(session, null, 2)}
-    </pre>
-  )
+  return <pre>{JSON.stringify(session, null, 2)}</pre>
 }
 ```
+
 ---
 
 ## getSession()
 
 - Client Side: **Yes**
-- Server Side: **No** (See: [`getServerSession()`](/configuration/nextjs#unstable_getserversession)
+- Server Side: **No** (See: [`getServerSession()`](/configuration/nextjs#getserversession)
 
 NextAuth.js provides a `getSession()` helper which should be called **client side only** to return the current active session.
 
@@ -288,7 +283,7 @@ On the server side, **this is still available to use**, however, we recommend us
 
 This helper is helpful in case you want to read the session outside of the context of React.
 
-When called, `getSession()` will send a request to `/api/auth/session` and returns a promise with a [session object](https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/core/types.ts#L407-L425), or `null` if no session exists.
+When called, `getSession()` will send a request to `/api/auth/session` and returns a promise with a [session object](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/core/types.ts#L407-L425), or `null` if no session exists.
 
 ```js
 async function myFunction() {
@@ -520,7 +515,7 @@ where `data.url` is the validated URL you can redirect the user to without any f
 ## SessionProvider
 
 :::note
-If you are using the App Router, we encourage you to use [`getServerSession`](/configuration/nextjs#getserversession) in server contexts instead. (`SessionProvider` *can* be used in the App Router, which might be the easier choice if you are migrating from pages.)
+If you are using the App Router, we encourage you to use [`getServerSession`](/configuration/nextjs#getserversession) in server contexts instead. (`SessionProvider` _can_ be used in the App Router, which might be the easier choice if you are migrating from pages.)
 :::
 
 Using the supplied `<SessionProvider>` allows instances of `useSession()` to share the session object across components, by using [React Context](https://react.dev/learn/passing-data-deeply-with-context) under the hood. It also takes care of keeping the session updated and synced between tabs/windows.
@@ -579,8 +574,8 @@ export default function App({
   return (
     <SessionProvider
       session={session}
-      // In case you use a custom path and your app lives at "/cool-app" rather than at the root "/"
-      basePath="cool-app"
+      // Default base path if your app lives at the root "/"
+      basePath="/"
       // Re-fetch session every 5 minutes
       refetchInterval={5 * 60}
       // Re-fetches session when window is focused
@@ -633,11 +628,13 @@ See [**the Next.js documentation**](https://nextjs.org/docs/advanced-features/cu
 :::
 
 ### Custom base path
+
 When your Next.js application uses a custom base path, set the `NEXTAUTH_URL` environment variable to the route to the API endpoint in full - as in the example below and as explained [here](/configuration/options#nextauth_url).
 
 Also, make sure to pass the `basePath` page prop to the `<SessionProvider>` – as in the example below – so your custom base path is fully configured and used by NextAuth.js.
 
 #### Example
+
 In this example, the custom base path used is `/custom-route`.
 
 ```

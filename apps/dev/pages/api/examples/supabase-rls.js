@@ -1,7 +1,7 @@
 // This is an example of how to query data from Supabase with RLS.
 // Learn more about Row Levele Security (RLS): https://supabase.com/docs/guides/auth/row-level-security
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../auth/[...nextauth]"
+import { authOptions } from "/app/api/auth/[...nextauth]/route"
 import { createClient } from "@supabase/supabase-js"
 
 export default async (req, res) => {
