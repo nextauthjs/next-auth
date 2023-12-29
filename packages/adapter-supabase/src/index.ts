@@ -350,6 +350,7 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
   const supabase = createClient<Database, "next_auth">(url, secret, {
     db: { schema: "next_auth" },
     global: { headers: { "X-Client-Info": "@auth/supabase-adapter" } },
+    auth: { persistSession: false },
   })
   return {
     async createUser(user) {
