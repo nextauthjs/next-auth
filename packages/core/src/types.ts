@@ -248,25 +248,29 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
   session: (
-    params:
+    params: (
+      | {
+          session: Session
+          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+          user: AdapterUser
+        }
       | {
           session: Session
           sessionToken: string
           /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
           token: JWT
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        } & {
-          /**
-           * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
-           *
-           * :::note
-           * You should validate this data before using it.
-           * :::
-           */
-          newSession: any
-          trigger: "update"
         }
+    ) & {
+      /**
+       * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
+       *
+       * :::note
+       * You should validate this data before using it.
+       * :::
+       */
+      newSession: any
+      trigger?: "update"
+    }
   ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
@@ -337,12 +341,12 @@ export interface CookieOption {
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookiesOptions {
-  sessionToken: CookieOption
-  callbackUrl: CookieOption
-  csrfToken: CookieOption
-  pkceCodeVerifier: CookieOption
-  state: CookieOption
-  nonce: CookieOption
+  sessionToken: Partial<CookieOption>
+  callbackUrl: Partial<CookieOption>
+  csrfToken: Partial<CookieOption>
+  pkceCodeVerifier: Partial<CookieOption>
+  state: Partial<CookieOption>
+  nonce: Partial<CookieOption>
 }
 
 /**
@@ -462,7 +466,7 @@ export interface Session extends DefaultSession {}
  * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
 export interface User {
-  id: string
+  id?: string
   name?: string | null
   email?: string | null
   image?: string | null
@@ -474,12 +478,12 @@ export interface User {
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
-  ? OIDCConfigInternal<any>
-  : T extends "email"
-  ? EmailConfig
-  : T extends "credentials"
-  ? CredentialsConfig
-  : never) & {
+    ? OIDCConfigInternal<any>
+    : T extends "email"
+      ? EmailConfig
+      : T extends "credentials"
+        ? CredentialsConfig
+        : never) & {
   signinUrl: string
   /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
@@ -545,7 +549,7 @@ export interface RequestInternal {
 
 // Should only be used by frameworks
 export interface ResponseInternal<
-  Body extends string | Record<string, any> | any[] | null = any
+  Body extends string | Record<string, any> | any[] | null = any,
 > {
   status?: number
   headers?: Headers | HeadersInit
@@ -576,7 +580,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   events: Partial<EventCallbacks>
   adapter: Required<Adapter> | undefined
   callbacks: CallbacksOptions
-  cookies: CookiesOptions
+  cookies: Record<keyof CookiesOptions, CookieOption>
   callbackUrl: string
   /**
    * If true, the OAuth callback is being proxied by the server to the original URL.

@@ -89,7 +89,7 @@ describe("JWT session", () => {
     })
     expect(defaultCallbacks.jwt).toHaveBeenCalledWith({
       token: expectedToken,
-      session: undefined
+      session: undefined,
     })
     expect(defaultCallbacks.session).toHaveBeenCalledWith({
       session: expectedSession,
@@ -384,9 +384,7 @@ describe("Database session", () => {
     expect(mockAdapter.getSessionAndUser).toHaveBeenCalledWith(
       expectedSessionToken
     )
-    expect(mockAdapter.deleteSession).toHaveBeenCalledWith(
-      expectedSessionToken
-    )
+    expect(mockAdapter.deleteSession).toHaveBeenCalledWith(expectedSessionToken)
     expect(mockAdapter.updateSession).not.toHaveBeenCalled()
     expect(defaultCallbacks.session).not.toHaveBeenCalled()
     expect(authConfig.events?.session).not.toHaveBeenCalled()

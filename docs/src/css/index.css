@@ -281,8 +281,11 @@ html[data-theme="dark"] #carbonads .carbon-text {
 
 html[data-theme="dark"] #carbonads > span {
   background: #1a1a1a;
-  box-shadow: 0 0 1px hsl(0deg 0% 0% / 9%), 0 0 2px hsl(0deg 0% 0% / 9%),
-    0 0 4px hsl(0deg 0% 0% / 9%), 0 0 8px hsl(0deg 0% 0% / 9%);
+  box-shadow:
+    0 0 1px hsl(0deg 0% 0% / 9%),
+    0 0 2px hsl(0deg 0% 0% / 9%),
+    0 0 4px hsl(0deg 0% 0% / 9%),
+    0 0 8px hsl(0deg 0% 0% / 9%);
 }
 
 html[data-theme="dark"] #carbonads .carbon-poweredby {

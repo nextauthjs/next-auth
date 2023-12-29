@@ -1,6 +1,6 @@
 {
   "name": "@auth/prisma-adapter",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "Prisma adapter for Auth.js",
   "homepage": "https://authjs.dev/reference/adapter/prisma",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -59,6 +59,6 @@
     "prisma": "^5.2.0"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

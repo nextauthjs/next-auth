@@ -214,7 +214,7 @@ export async function getProviders() {
  * Handles CSRF protection.
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   provider?: LiteralUnion<
     P extends RedirectableProviderType
@@ -465,8 +465,8 @@ export function SessionProvider(props: SessionProviderProps) {
       status: loading
         ? "loading"
         : session
-        ? "authenticated"
-        : "unauthenticated",
+          ? "authenticated"
+          : "unauthenticated",
       async update(data: any) {
         if (loading || !session) return
         setLoading(true)

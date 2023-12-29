@@ -25,6 +25,7 @@ Auth.js differentiates between users and accounts. A user can have multiple acco
     Not yet invoked by Auth.js:
     - [_`deleteUser`_](/reference/core/adapters#deleteuser)
     - [_`unlinkAccount`_](/reference/core/adapters#unlinkaccount)
+
   </span>
   ```mermaid
   erDiagram
@@ -50,7 +51,6 @@ Although Auth.js doesn't require it, for basic display purposes, we recommend ad
 :::note
 Although Auth.js doesn't require it, the `Account` table typically saves tokens retrieved from the provider. You can configure the columns via the [`account()` provider method](/reference/core/providers#account). If you don't need to save tokens, create an empty `account() {}` method.
 :::
-
 
 ## Database session management
 
@@ -89,7 +89,6 @@ Auth.js can manage sessions in two ways. Learn about them and their advantages a
 
 If you want to use database sessions, you will need to implement the following methods:
 
-
 To add database session management, you will need to expand your database tables/columns as follows:
 
 See also: [Session](/getting-started/adapters#session) models.
@@ -97,7 +96,6 @@ See also: [Session](/getting-started/adapters#session) models.
 ## Verification tokens
 
 When you want to support email/passwordless login, Auth.js uses a database to store temporary verification tokens that are tied to a user's email address.
-
 
 ### Methods and models
 
@@ -140,7 +138,7 @@ When all of the below steps are done, you are ready to submit a PR to our [repos
 If you created an adapter and want us to distribute it as an official package, please make sure it meets the following requirements. Check out this [existing adapter](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-prisma) to learn about the package structure, required files, test setup, config, etc.
 
 1. The Adapter _must_ implement all methods of the [`Adapter` interface](/reference/core/adapters#adapter)
-1. [Adapter tests](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-test) _must_ be included and _must_ pass. Docker is favored over services, to make CI resilient to network errors and to reduce the number of GitHub Action Secrets (which also lets us run these tests in fork PRs)
+1. [Adapter tests](https://github.com/nextauthjs/next-auth/tree/main/packages/utils/adapter/index.ts) _must_ be included and _must_ pass. Docker is favored over services, to make CI resilient to network errors and to reduce the number of GitHub Action Secrets (which also lets us run these tests in fork PRs)
 1. The Adapter _must_ follow these coding styles
 
    - Written in TypeScript

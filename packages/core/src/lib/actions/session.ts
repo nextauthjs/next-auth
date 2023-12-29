@@ -130,7 +130,6 @@ export async function session(
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
         session: {
-          // @ts-expect-error missing `id`.
           user: { name: user.name, email: user.email, image: user.image },
           expires: session.expires.toISOString(),
         },
