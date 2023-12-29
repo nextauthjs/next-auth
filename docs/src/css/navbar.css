@@ -48,13 +48,17 @@
 
 .navbar__search-input:focus {
   outline: none;
-  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
-    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  box-shadow:
+    rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px;
   transition: box-shadow 350ms ease-in-out;
 }
 html[data-theme="dark"] .navbar__search-input:focus {
-  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
-    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  box-shadow:
+    rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px;
 }
 
 html[data-theme="dark"] .navbar__item.navbar__link[href*="github"]:before {
