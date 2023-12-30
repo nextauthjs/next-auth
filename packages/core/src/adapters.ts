@@ -268,7 +268,7 @@ export interface Adapter {
    *
    * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
    */
-  createUser?(user: AdapterUser): Awaitable<AdapterUser>
+  createUser?(user: Omit<AdapterUser, "id">): Awaitable<AdapterUser>
   /**
    * Returns a user from the database via the user id.
    *
