@@ -86,6 +86,7 @@ const content = JSON.stringify(
       { id: "supabase", name: "Supabase" },
       { id: "surrealdb", name: "SurrealDB", img: "surreal.png" },
       { id: "typeorm", name: "TypeORM", img: "typeorm.png" },
+      { id: "unstorage", name: "Unstorage" },
       { id: "upstash-redis", name: "Upstash Redis" },
       { id: "xata", name: "Xata" },
     ],

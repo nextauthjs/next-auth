@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.upstash.com/redis">Upstash Redis</a> adapter for Auth.js / NextAuth.js.</p>
- *  <a href="https://docs.upstash.com/redis">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/upstash-redis.svg" width="60"/>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://unstorage.unjs.io/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/unstorage.svg" width="60"/>
  *  </a>
  * </div>
  *

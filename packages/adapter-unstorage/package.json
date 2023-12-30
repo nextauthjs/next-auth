@@ -1,13 +1,13 @@
 {
-  "name": "@auth/upstash-redis-adapter",
-  "version": "1.0.11",
-  "description": "Upstash adapter for Auth.js.",
+  "name": "@auth/unstorage-adapter",
+  "version": "1.0.0",
+  "description": "Unstorage adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "author": "github.com/kay-is",
+  "author": "nbifrye <nbifrye@gmail.com>",
   "type": "module",
   "types": "./index.d.ts",
   "files": [
@@ -26,8 +26,7 @@
     "next-auth",
     "next.js",
     "oauth",
-    "upstash",
-    "redis"
+    "unstorage"
   ],
   "private": false,
   "publishConfig": {
