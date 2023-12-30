@@ -40,12 +40,11 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@upstash/redis": "^1.0.1"
+    "unstorage": "^1.10.1"
   },
   "devDependencies": {
     "@types/uuid": "^8.3.3",
-    "@upstash/redis": "^1.0.1",
-    "dotenv": "^10.0.0"
+    "unstorage": "^1.10.1"
   },
   "jest": {
     "preset": "utils/adapter"
