@@ -21,7 +21,7 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "@auth/core/adapters"
-import type { Storage } from "unstorage"
+import type { Storage, StorageValue } from "unstorage"
 
 /** This is the interface of the Unstorage adapter options. */
 export interface UnstorageAdapterOptions {
@@ -57,6 +57,12 @@ export interface UnstorageAdapterOptions {
    * The prefix for the `verificationToken` key
    */
   verificationTokenKeyPrefix?: string
+  /**
+   * Use `getItemRaw/setItemRaw` instead of `getItem/setItem`.
+   *
+   * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
+   */
+  useItemRaw?: boolean
 }
 
 export const defaultOptions = {
@@ -68,6 +74,7 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
+  useItemRaw: false,
 }
 
 const isoDateRE =
@@ -141,6 +148,24 @@ export function hydrateDates(json: object) {
  *   ...
  * })
  * ```
+ *
+ * ### Using getItemRaw/setItemRaw instead of getItem/setItem
+ *
+ * If you are using storage that supports JSON, you can make it use `getItemRaw/setItemRaw` instead of `getItem/setItem`.
+ *
+ * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
+ *
+ * You can enable this functionality by passing `useItemRaw: true` (default: false) in the `options` object as the second argument to the adapter factory function.
+ *
+ * Example:
+ *
+ * ```js
+ * export default NextAuth({
+ *   ...
+ *   adapter: UnstorageAdapter(storage, {useItemRaw: true})
+ *   ...
+ * })
+ * ```
  */
 export function UnstorageAdapter(
   storage: Storage,
@@ -163,18 +188,39 @@ export function UnstorageAdapter(
   const verificationTokenKeyPrefix =
     baseKeyPrefix + mergedOptions.verificationTokenKeyPrefix
 
-  const setObjectAsJson = async (key: string, obj: any) =>
-    await storage.setItem(key, JSON.stringify(obj))
+  async function getItem<T extends StorageValue>(key: string) {
+    if (mergedOptions.useItemRaw) {
+      return await storage.getItemRaw<T>(key)
+    } else {
+      return await storage.getItem<T>(key)
+    }
+  }
+
+  async function setItem(key: string, value: string) {
+    if (mergedOptions.useItemRaw) {
+      return await storage.setItemRaw(key, value)
+    } else {
+      return await storage.setItem(key, value)
+    }
+  }
+
+  const setObjectAsJson = async (key: string, obj: any) => {
+    if (mergedOptions.useItemRaw) {
+      await storage.setItemRaw(key, obj)
+    } else {
+      await storage.setItem(key, JSON.stringify(obj))
+    }
+  }
 
   const setAccount = async (id: string, account: AdapterAccount) => {
     const accountKey = accountKeyPrefix + id
     await setObjectAsJson(accountKey, account)
-    await storage.setItem(accountByUserIdPrefix + account.userId, accountKey)
+    await setItem(accountByUserIdPrefix + account.userId, accountKey)
     return account
   }
 
   const getAccount = async (id: string) => {
-    const account = await storage.getItem<AdapterAccount>(accountKeyPrefix + id)
+    const account = await getItem<AdapterAccount>(accountKeyPrefix + id)
     if (!account) return null
     return hydrateDates(account)
   }
@@ -185,12 +231,12 @@ export function UnstorageAdapter(
   ): Promise<AdapterSession> => {
     const sessionKey = sessionKeyPrefix + id
     await setObjectAsJson(sessionKey, session)
-    await storage.setItem(sessionByUserIdKeyPrefix + session.userId, sessionKey)
+    await setItem(sessionByUserIdKeyPrefix + session.userId, sessionKey)
     return session
   }
 
   const getSession = async (id: string) => {
-    const session = await storage.getItem<AdapterSession>(sessionKeyPrefix + id)
+    const session = await getItem<AdapterSession>(sessionKeyPrefix + id)
     if (!session) return null
     return hydrateDates(session)
   }
@@ -200,12 +246,12 @@ export function UnstorageAdapter(
     user: AdapterUser
   ): Promise<AdapterUser> => {
     await setObjectAsJson(userKeyPrefix + id, user)
-    await storage.setItem(`${emailKeyPrefix}${user.email as string}`, id)
+    await setItem(`${emailKeyPrefix}${user.email as string}`, id)
     return user
   }
 
   const getUser = async (id: string) => {
-    const user = await storage.getItem<AdapterUser>(userKeyPrefix + id)
+    const user = await getItem<AdapterUser>(userKeyPrefix + id)
     if (!user) return null
     return hydrateDates(user)
   }
@@ -219,7 +265,7 @@ export function UnstorageAdapter(
     },
     getUser,
     async getUserByEmail(email) {
-      const userId = await storage.getItem<string>(emailKeyPrefix + email)
+      const userId = await getItem<string>(emailKeyPrefix + email)
       if (!userId) {
         return null
       }
@@ -274,7 +320,7 @@ export function UnstorageAdapter(
         ":" +
         verificationToken.token
 
-      const token = await storage.getItem<VerificationToken>(tokenKey)
+      const token = await getItem<VerificationToken>(tokenKey)
       if (!token) return null
 
       await storage.removeItem(tokenKey)
@@ -295,9 +341,9 @@ export function UnstorageAdapter(
       const user = await getUser(userId)
       if (!user) return
       const accountByUserKey = accountByUserIdPrefix + userId
-      const accountKey = await storage.getItem<string>(accountByUserKey)
+      const accountKey = await getItem<string>(accountByUserKey)
       const sessionByUserIdKey = sessionByUserIdKeyPrefix + userId
-      const sessionKey = await storage.getItem<string>(sessionByUserIdKey)
+      const sessionKey = await getItem<string>(sessionByUserIdKey)
       await storage.removeItem(userKeyPrefix + userId)
       await storage.removeItem(`${emailKeyPrefix}${user.email as string}`)
       await storage.removeItem(accountKey as string)
