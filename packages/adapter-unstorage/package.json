@@ -33,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "jest",
+    "test": "./tests/test.sh",
     "build": "tsc"
   },
   "dependencies": {
