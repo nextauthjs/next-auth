@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install drizzle-orm @auth/drizzle-adapter
  * npm install drizzle-kit --save-dev
  * ```
@@ -53,7 +53,7 @@ import type { Adapter } from "@auth/core/adapters"
  *
  * ## Setup
  *
- * First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/adapters#models). You can select your favorite SQL flavor below and copy it.
+ * First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/core/adapters#models). You can select your favorite SQL flavor below and copy it.
  * Additionally, you may extend the schema from the minimum requirements to suit your needs.
  *
  * - [Postgres](#postgres)
@@ -98,7 +98,7 @@ import type { Adapter } from "@auth/core/adapters"
  *   session_state: text("session_state"),
  * },
  * (account) => ({
- *   compoundKey: primaryKey(account.provider, account.providerAccountId),
+ *   compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] }),
  * })
  * )
  *
@@ -118,7 +118,7 @@ import type { Adapter } from "@auth/core/adapters"
  *    expires: timestamp("expires", { mode: "date" }).notNull(),
  *  },
  *  (vt) => ({
- *    compoundKey: primaryKey(vt.identifier, vt.token),
+ *    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
  *  })
  * )
  * ```
@@ -157,7 +157,7 @@ import type { Adapter } from "@auth/core/adapters"
  *    expires_at: int("expires_at"),
  *   token_type: varchar("token_type", { length: 255 }),
  *   scope: varchar("scope", { length: 255 }),
- *   id_token: varchar("id_token", { length: 255 }),
+ *   id_token: varchar("id_token", { length: 2048 }),
  *   session_state: varchar("session_state", { length: 255 }),
  * },
  * (account) => ({

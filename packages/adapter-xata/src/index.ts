@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * # Install Auth.js and the Xata adapter
  * npm install @auth/xata-adapter
  *

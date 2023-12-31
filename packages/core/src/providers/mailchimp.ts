@@ -78,11 +78,8 @@ export default function Mailchimp(
     },
     style: {
       logo: "/mailchimp.svg",
-      logoDark: "/mailchimp-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
+      bg: "#000",
+      text: "#fff",
     },
     options: config,
   }

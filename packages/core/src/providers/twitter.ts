@@ -148,7 +148,7 @@ export interface TwitterProfile {
  * ### Notes
  *
  * Twitter is currently the only built-in provider using the OAuth 1.0 spec.
- * This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+ * This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/core/adapters).
  *
  * :::tip
  *
@@ -197,14 +197,7 @@ export default function Twitter(
         image: data.profile_image_url,
       }
     },
-    style: {
-      logo: "/twitter.svg",
-      logoDark: "/twitter-dark.svg",
-      bg: "#fff",
-      text: "#1da1f2",
-      bgDark: "#1da1f2",
-      textDark: "#fff",
-    },
+    style: { logo: "/twitter.svg", bg: "#1da1f2", text: "#fff" },
     options: config,
   }
 }
