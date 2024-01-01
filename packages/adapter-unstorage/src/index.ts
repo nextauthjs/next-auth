@@ -214,8 +214,10 @@ export function UnstorageAdapter(
 
   const setAccount = async (id: string, account: AdapterAccount) => {
     const accountKey = accountKeyPrefix + id
-    await setObjectAsJson(accountKey, account)
-    await setItem(accountByUserIdPrefix + account.userId, accountKey)
+    await Promise.all([
+      setObjectAsJson(accountKey, account),
+      setItem(accountByUserIdPrefix + account.userId, accountKey),
+    ])
     return account
   }
 
@@ -230,8 +232,10 @@ export function UnstorageAdapter(
     session: AdapterSession
   ): Promise<AdapterSession> => {
     const sessionKey = sessionKeyPrefix + id
-    await setObjectAsJson(sessionKey, session)
-    await setItem(sessionByUserIdKeyPrefix + session.userId, sessionKey)
+    await Promise.all([
+      setObjectAsJson(sessionKey, session),
+      setItem(sessionByUserIdKeyPrefix + session.userId, sessionKey),
+    ])
     return session
   }
 
@@ -245,8 +249,10 @@ export function UnstorageAdapter(
     id: string,
     user: AdapterUser
   ): Promise<AdapterUser> => {
-    await setObjectAsJson(userKeyPrefix + id, user)
-    await setItem(`${emailKeyPrefix}${user.email as string}`, id)
+    await Promise.all([
+      setObjectAsJson(userKeyPrefix + id, user),
+      setItem(`${emailKeyPrefix}${user.email as string}`, id),
+    ])
     return user
   }
 
@@ -332,10 +338,12 @@ export function UnstorageAdapter(
       const dbAccount = await getAccount(id)
       if (!dbAccount) return
       const accountKey = `${accountKeyPrefix}${id}`
-      await storage.removeItem(accountKey)
-      await storage.removeItem(
-        `${accountByUserIdPrefix} + ${dbAccount.userId as string}`
-      )
+      await Promise.all([
+        storage.removeItem(accountKey),
+        storage.removeItem(
+          `${accountByUserIdPrefix} + ${dbAccount.userId as string}`
+        ),
+      ])
     },
     async deleteUser(userId) {
       const user = await getUser(userId)
@@ -344,12 +352,14 @@ export function UnstorageAdapter(
       const accountKey = await getItem<string>(accountByUserKey)
       const sessionByUserIdKey = sessionByUserIdKeyPrefix + userId
       const sessionKey = await getItem<string>(sessionByUserIdKey)
-      await storage.removeItem(userKeyPrefix + userId)
-      await storage.removeItem(`${emailKeyPrefix}${user.email as string}`)
-      await storage.removeItem(accountKey as string)
-      await storage.removeItem(accountByUserKey)
-      await storage.removeItem(sessionKey as string)
-      await storage.removeItem(sessionByUserIdKey)
+      await Promise.all([
+        storage.removeItem(userKeyPrefix + userId),
+        storage.removeItem(`${emailKeyPrefix}${user.email as string}`),
+        storage.removeItem(accountKey as string),
+        storage.removeItem(accountByUserKey),
+        storage.removeItem(sessionKey as string),
+        storage.removeItem(sessionByUserIdKey),
+      ])
     },
   }
 }
