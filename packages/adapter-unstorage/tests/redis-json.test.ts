@@ -44,12 +44,8 @@ const redisJSONDriver = defineDriver((options: RedisClientOptions) => {
     },
     async setItemRaw(key, value, _opts) {
       let ttl = _opts?.ttl
-      if (ttl) {
-        await (await getRedisClient()).json.set(key, "$", value)
-        await (await getRedisClient()).expire(key, ttl)
-      } else {
-        await (await getRedisClient()).json.set(key, "$", value)
-      }
+      await (await getRedisClient()).json.set(key, "$", value)
+      if (ttl) await (await getRedisClient()).expire(key, ttl)
     },
     async removeItem(key, _opts) {
       await (await getRedisClient()).del(key)
