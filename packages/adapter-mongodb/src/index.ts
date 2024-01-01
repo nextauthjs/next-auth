@@ -52,8 +52,10 @@ export interface MongoDBAdapterOptions {
   databaseName?: string
   /**
    * Callback function for managing the closing of the MongoDB client.
-   * Useful for serverless environments like Vercel or AWS Lambda,
-   * where the management of persistent connections could cause problems.
+   * This could be useful in serverless environments, especially when `client`
+   * is provided as a function returning Promise<MongoClient>, not just a simple promise.
+   * It allows for more sophisticated management of database connections,
+   * addressing persistence, container reuse, and connection closure issues.
    */
   onClose?: (client: MongoClient) => Promise<void>
 }
@@ -162,7 +164,8 @@ export function _id(hex?: string) {
 export function MongoDBAdapter(
   /**
    * The MongoDB client. You can either pass a promise that resolves to a `MongoClient` or a function that returns a promise that resolves to a `MongoClient`.
-   * The function is useful for serverless environments like Vercel or AWS Lambda, where you probably want to create a new connection for each request and close it afterwards or handle more complex caching logic.
+   * Using a function that returns a `Promise<MongoClient>` could be useful in serverless environments, particularly when combined with `options.onClose`, to efficiently handle database connections and address challenges with persistence, container reuse, and connection closure.
+   * These functions enable either straightforward open-close database connections or more complex caching and connection reuse strategies.
    */
   client: Promise<MongoClient> | (() => Promise<MongoClient>),
   options: MongoDBAdapterOptions = {}
