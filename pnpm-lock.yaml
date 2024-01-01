@@ -678,6 +678,12 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+      '@types/cookie':
+        specifier: 0.6.0
+        version: 0.6.0
+      cookie:
+        specifier: 0.6.0
+        version: 0.6.0
     devDependencies:
       '@playwright/test':
         specifier: 1.29.2
@@ -12496,6 +12502,7 @@ packages:
   /agent-base@7.1.0:
     resolution: {integrity: sha512-o/zjMZRhJxny7OyEF+Op8X+efiELC7k7yOjMzgfzVqOzXqkBkWI79YoTdOtsuWd5BWhAGAuOY/Xa6xpiaWXiNg==}
     engines: {node: '>= 14'}
+    requiresBuild: true
     dependencies:
       debug: 4.3.4(supports-color@5.5.0)
     transitivePeerDependencies:
@@ -12635,6 +12642,7 @@ packages:
   /ansi-regex@6.0.1:
     resolution: {integrity: sha512-n5M855fKb2SsfMIiFFoVrABHJC8QtHwVx+mHWP3QcEqBHYienj5dHSgjbxtC0WEZXYt4wcD6zrQElDPhFuZgfA==}
     engines: {node: '>=12'}
+    requiresBuild: true
     dev: true
 
   /ansi-sequence-parser@1.1.0:
@@ -15974,6 +15982,7 @@ packages:
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
+    requiresBuild: true
     dev: true
 
   /ecc-jsbn@0.1.2:
@@ -16027,6 +16036,7 @@ packages:
 
   /emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+    requiresBuild: true
     dev: true
 
   /emojilib@2.4.0:

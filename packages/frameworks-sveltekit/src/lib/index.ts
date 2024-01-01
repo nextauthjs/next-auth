@@ -209,22 +209,29 @@ import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type { CookieSerializeOptions } from "cookie"
 
-const parseCookies = (cookies): Record<string, Record<string, string>> => {
-  return cookies.reduce((accumulator, cookie) => {
-    const headerValue = cookie.pop()
+interface SetCookie { value: string; options: CookieSerializeOptions & { path: string }; }
 
-    if (!headerValue) return;
-    const cookieParameters = headerValue.split(';')
-    const [name, value] = cookieParameters.shift()?.split('=') ?? [];
-    const options = cookieParameters.reduce((accumulator, parameter) => {
-      const [name, value] = parameter.split('=')
-      return { [name]: value ?? true, ...accumulator }
-    }, {});
+const parseCookies = (cookies: string[]) => cookies.reduce((accumulator, headerValue) => {
 
-    return { [name]: { value, options }, ...accumulator }
-  }, {})
-}
+  if (!headerValue) {
+    return accumulator;
+  }
+  const cookieParameters = headerValue.split(';')
+  const [name, value] = cookieParameters.shift()?.split('=') ?? [];
+  const options = cookieParameters.reduce((accumulator2, parameter) => {
+    const [name, value] = parameter.split('=');
+    const camelCaseName = camelize(name.trim());
+    if (camelCaseName === 'expires') {
+      const expires = new Date(value);
+      return { ...accumulator2, expires };
+    }
+    return { ...accumulator2, [camelCaseName]: value ?? true };
+  }, { path: '/' });
+
+  return { [name]: { value, options }, ...accumulator }
+}, {} as Record<string, SetCookie>);
 
 export async function getSessionWithSetCookies(
   req: Request,
@@ -244,7 +251,7 @@ export async function getSessionWithSetCookies(
   if (!data || !Object.keys(data).length) return null
   if (status === 200) return {
     session: data,
-    cookies: parseCookies(Array.from(response.headers).filter(([headerName]) => headerName === 'set-cookie'))
+    cookies: parseCookies(response.headers.getSetCookie())
   }
   throw new Error(data.message)
 }
