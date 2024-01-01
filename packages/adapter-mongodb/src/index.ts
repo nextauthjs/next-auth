@@ -25,6 +25,16 @@ import type {
 } from "@auth/core/adapters"
 import type { MongoClient } from "mongodb"
 
+/**
+ * This adapter uses https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management.
+ * This feature is very new and requires runtime polyfills for `Symbol.asyncDispose` in order to work properly in all environments.
+ * It is also required to set in the `tsconfig.json` file the compilation target to `es2022` or below and configure the `lib` option to include `esnext` or `esnext.disposable`.
+ *
+ * You can find more information about this feature and the polyfills in the link above.
+ */
+// @ts-expect-error read only property is not assignable
+Symbol.asyncDispose ??= Symbol("Symbol.asyncDispose")
+
 /** This is the interface of the MongoDB adapter options. */
 export interface MongoDBAdapterOptions {
   /**
