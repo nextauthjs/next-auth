@@ -233,10 +233,10 @@ const parseCookies = (cookies: string[]) => cookies.reduce((accumulator, headerV
   return { [name]: { value, options }, ...accumulator }
 }, {} as Record<string, SetCookie>);
 
-export async function getSessionWithSetCookies(
+export async function getSession(
   req: Request,
   config: SvelteKitAuthConfig
-): ReturnType<App.Locals["getSessionWithSetCookies"]> {
+): ReturnType<App.Locals["getSession"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
@@ -255,14 +255,6 @@ export async function getSessionWithSetCookies(
   }
   throw new Error(data.message)
 }
-
-
-export async function getSession(req: Request, config: SvelteKitAuthConfig) {
-  const data = await getSessionWithSetCookies(req, config)
-
-  return data?.session
-}
-
 
 /** Configure the {@link SvelteKitAuth} method. */
 export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
@@ -303,8 +295,6 @@ function AuthHandle(
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
-    event.locals.getSessionWithSetCookies ??= () => getSessionWithSetCookies(request, authOptions)
-
 
     const action = url.pathname
       .slice(prefix.length + 1)
@@ -337,9 +327,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace App {
     interface Locals {
-      getSession(): Promise<Session | null>
-      getSessionWithSetCookies(): Promise<{ session: Session, cookies: Record<string, Record<string, string>> } | null>
-
+      getSession(): Promise<{ session: Session, cookies: Record<string, Record<string, string>> } | null>
     }
     interface PageData {
       session?: Session | null
