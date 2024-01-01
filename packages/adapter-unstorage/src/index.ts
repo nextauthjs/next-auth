@@ -265,8 +265,6 @@ export function UnstorageAdapter(
   return {
     async createUser(user) {
       const id = crypto.randomUUID()
-      // TypeScript thinks the emailVerified field is missing
-      // but all fields are copied directly from user, so it's there
       return await setUser(id, { ...user, id })
     },
     getUser,
@@ -331,7 +329,6 @@ export function UnstorageAdapter(
 
       await storage.removeItem(tokenKey)
       return hydrateDates(token)
-      // return reviveFromJson(token)
     },
     async unlinkAccount(account) {
       const id = `${account.provider}:${account.providerAccountId}`
