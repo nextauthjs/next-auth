@@ -47,33 +47,6 @@ title: Community resources
 
 ## Fullstack
 
-#### [Build a FullStack App with Next.js, Auth.js, Supabase & Prisma](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
-
-In this [free course](https://themodern.dev/courses/build-a-fullstack-app-with-nextjs-supabase-and-prisma-322389284337222224), you'll learn how to build a full-stack app using the following technologies:
-
-- **Next.js** - The React framework for building the UI of the app and the REST API
-- **Auth.js** - For implementing passwordless and OAuth authentication
-- **Supabase** - For persisting the app data into a PostgreSQL database and storing media files
-- **Prisma** - For making it easy to read and write data from our app from and to the database
-
-The app that we'll work on in this course is called **_SupaVacation_**. It is an online marketplace for vacation rentals where users can browse through all the properties for rent, bookmark their favorite ones, and even rent their own properties.
-
-> Here's [a live demo](https://supa-vacation.vercel.app/) of the app's final version. It is what your app should look likes after completing this course. Feel free to play with it to get an overview of all the features you'll be working on.
-
-#### [Magic Link Authentication in Next.js with NextAuth and Fauna](https://alterclass.io/tutorials/magic-link-authentication-in-nextjs-with-nextauth-and-fauna) <svg xmlns="http://www.w3.org/2000/svg" style={{ marginLeft: '5px', marginBottom:'-6px'}} height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>External</title> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /> </svg>
-
-Learn how to implement passwordless/magic link authentication with database storage in your Next.js projects using NextAuth and Fauna DB.
-
-> The final version of the project's code can be found on [Github](https://github.com/AlterClassIO/magic-next-auth). You can use it as a starting point for any Next.js app that requires passwordless authentication.
-
-This tutorial covers:
-
-- Configuring Next.js, Auth.js, and Fauna to work together seamlessly
-- Using Next.js dynamic API routes to handle authentication requests
-- Using Fauna and the Fauna Adapter for `next-auth` to persist users, email sign in tokens, and sessions
-- Creating custom login and confirmation pages with React + Tailwind CSS
-- Customizing the sign-in email and sending a welcome email to new users
-
 #### [Passwordless Authentication with Next.js, Prisma, and next-auth](https://dev.to/prisma/passwordless-authentication-with-next-js-prisma-and-next-auth-5g8g) <svg style={{ marginLeft: '5px', marginBottom:'-6px'}} width="30" height="25" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="40" rx="3" style={{ fill: '#000' }}></rect><path d="M19.099 23.508c0 1.31-.423 2.388-1.27 3.234-.838.839-1.942 1.258-3.312 1.258h-4.403V12.277h4.492c1.31 0 2.385.423 3.224 1.27.846.838 1.269 1.912 1.269 3.223v6.738zm-2.808 0V16.77c0-.562-.187-.981-.562-1.258-.374-.285-.748-.427-1.122-.427h-1.685v10.107h1.684c.375 0 .75-.138 1.123-.415.375-.285.562-.708.562-1.27zM28.185 28h-5.896c-.562 0-1.03-.187-1.404-.561-.375-.375-.562-.843-.562-1.404V14.243c0-.562.187-1.03.562-1.404.374-.375.842-.562 1.404-.562h5.896v2.808H23.13v3.65h3.088v2.808h-3.088v3.65h5.054V28zm7.12 0c-.936 0-1.684-.655-2.246-1.965l-3.65-13.758h3.089l2.807 10.804 2.808-10.804H41.2l-3.65 13.758C36.99 27.345 36.241 28 35.305 28z" style={{ fill: '#fff' }}></path></svg>
 
 - In this post, you'll learn how to add passwordless authentication to your Next.js app using Prisma and next-auth. By the end of this tutorial, your users will be able to log in to your app with either their GitHub account or a Slack-styled magic link sent right to their Email inbox. By Xiaoru Li.

@@ -164,7 +164,12 @@ export function SQLiteDrizzleAdapter(
           )
         )
         .get()
-      return result?.user ?? null
+
+      if (!results) {
+        return null;
+      }
+      return Promise.resolve(results).then((results) => results.user)
+
     },
     async deleteSession(sessionToken) {
       const result = await client
