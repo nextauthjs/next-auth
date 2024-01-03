@@ -30,9 +30,11 @@ export const authConfig = {
   ],
 }
 
-const extractCookieValue = (headerArray: any[], name: string) => {
-  const cookieStringFull = headerArray.find((header) => header.includes(name))
-  return name + cookieStringFull.split(name)[1].split(";")[0]
+const extractCookieValue = (cookieHeader: string | string[], name: string) => {
+  const cookieStringFull = Array.isArray(cookieHeader)
+    ? cookieHeader.find((header) => header.includes(name))
+    : cookieHeader
+  return name + cookieStringFull?.split(name)[1].split(";")[0]
 }
 
 describe("Integration test with login and getSession", () => {
