@@ -101,6 +101,27 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵☁️</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://fusionauth.io" target="_blank">
+          <img width="95" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
+        </a><br />
+        <div>FusionAuth</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://www.beyondidentity.com" target="_blank">
+          <img width="95" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
+        </a><br />
+        <div>Beyond Identity</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://stytch.com" target="_blank">
+          <img width="95" src="https://avatars.githubusercontent.com/u/69983493?s=200&v=4" alt="Stytch Logo" />
+        </a><br />
+        <div>Stytch</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://prisma.io" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4" alt="Prisma Logo" />
         </a><br />
@@ -121,6 +142,8 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>WorkOS</div>
         <sub>💵</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://www.descope.com" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/97479186?s=200&v=4" alt="Descope Logo" />
