@@ -19,7 +19,7 @@
     </a>
   </p>
   <p align="center">
-    Auth.js is a set of open-source packages that are built on Web Standard APIs for authentication in modern applications with any framework on any platform in any JS runtime.
+    Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
   </p>
   <p align="center">
     See <a href="https://authjs.dev">authjs.dev</a> for our framework-specific libraries, or check out <a href="https://next-auth.js.org">next-auth.js.org</a> for next-auth (Next.js).
