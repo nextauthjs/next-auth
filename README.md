@@ -91,7 +91,7 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
           <img width="95" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
         </a><br />
         <div>Clerk</div><br />
-        <sub>💎 Diamond Financial Sponsor</sub>
+        <sub>Financial Sponsor</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
