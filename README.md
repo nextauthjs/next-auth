@@ -5,7 +5,7 @@
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
   <p align="center" style="align: center;">
-    <a href="https://npm.im/@auth/prisma-adapter">
+    <a href="https://npm.im/@auth/core">
       <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
     </a>
     <a href="https://www.npmtrends.com/next-auth">
@@ -90,61 +90,65 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=sponsor" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
         </a><br />
-        <div>Clerk</div><br />
-        <sub>Financial Sponsor</sub>
+        <div>Clerk</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://vercel.com" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
         </a><br />
-        <div>Vercel</div><br />
-        <sub>🥉 Bronze Financial Sponsor <br /> ☁️ Infrastructure Support</sub>
+        <div>Vercel</div>
+        <sub>💵☁️</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://prisma.io" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4" alt="Prisma Logo" />
         </a><br />
-        <div>Prisma</div><br />
-        <sub>🥉 Bronze Financial Sponsor</sub>
+        <div>Prisma</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
         </a><br />
-        <div>Lowdefy</div><br />
-        <sub>🥉 Bronze Financial Sponsor</sub>
+        <div>Lowdefy</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://workos.com" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
         </a><br />
-        <div>WorkOS</div><br />
-        <sub>🥉 Bronze Financial Sponsor</sub>
+        <div>WorkOS</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://www.descope.com" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/97479186?s=200&v=4" alt="Descope Logo" />
         </a><br />
-        <div>Descope</div><br />
-        <sub>🥉 Bronze Financial Sponsor</sub>
+        <div>Descope</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img width="95" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
         </a><br />
-        <div>Checkly</div><br />
-        <sub>☁️ Infrastructure Support</sub>
+        <div>Checkly</div>
+        <sub>☁️</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://superblog.ai/" target="_blank">
           <img width="95" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
         </a><br />
-        <div>superblog</div><br />
-        <sub>☁️ Infrastructure Support</sub>
+        <div>superblog</div>
+        <sub>☁️</sub>
       </td>
     </tr>
   </tbody>
 </table>
+
+- 💵 Financial Sponsor
+- ☁️ Infrastructure Support
+
 <br />
 <!--sponsors end-->
 
