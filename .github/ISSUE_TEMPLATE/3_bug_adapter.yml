@@ -40,6 +40,7 @@ body:
         - "@auth/sequelize-adapter"
         - "@auth/supabase-adapter"
         - "@auth/typeorm-adapter"
+        - "@auth/unstorage-adapter"
         - "@auth/upstash-redis-adapter"
         - "@auth/xata-adapter"
     validations:
