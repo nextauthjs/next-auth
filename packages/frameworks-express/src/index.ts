@@ -151,7 +151,7 @@ import type { AuthConfig, Session } from "@auth/core/types"
 import { Request as ExpressRequest, Response as ExpressResponse } from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
-function ExpressAuthHandler(authConfig: AuthConfig) {
+function ExpressAuthHandler(authConfig: Omit<AuthConfig, "raw">) {
   return async (req: ExpressRequest, res: ExpressResponse) => {
     const request = toWebRequest(req)
     const response = await Auth(request, authConfig)
@@ -179,7 +179,7 @@ export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
   req: ExpressRequest,
-  options: AuthConfig
+  options: Omit<AuthConfig, "raw">
 ): GetSessionResult {
   options.secret ??= process.env.AUTH_SECRET
   options.trustHost ??= true
