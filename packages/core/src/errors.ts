@@ -304,7 +304,7 @@ export class OAuthCallbackError extends SignInError {
 }
 
 /**
- * This error occurs during an OAuth sign in attempt when the provdier's
+ * This error occurs during an OAuth sign in attempt when the provider's
  * response could not be parsed. This could for example happen if the provider's API
  * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers/oauth#profile) method is not implemented correctly.
  */
