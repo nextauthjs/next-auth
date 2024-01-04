@@ -151,6 +151,14 @@ import type { AuthConfig, Session } from "@auth/core/types"
 import { Request as ExpressRequest, Response as ExpressResponse } from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
+
 function ExpressAuthHandler(authConfig: Omit<AuthConfig, "raw">) {
   return async (req: ExpressRequest, res: ExpressResponse) => {
     const request = toWebRequest(req)
