@@ -40,16 +40,10 @@ Let's look at `Session` for example:
 // auth.ts
 import NextAuth, { type DefaultSession } from "next-auth"
 
-declare module "@auth/core/types" {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
-  interface Session {
-    user: {
-      /** The user's postal address. */
-      address: string
-      // By default, TypeScript merges new interface properties and overwrite existing ones. In this case, the default session user properties will be overwritten, with the new one defined above. To keep the default session user properties, you need to add them back into the newly declared interface
-    } & DefaultSession["user"] // To keep the default types
+declare module "next-auth" {
+  interface User {
+    /** The user's postal address. */
+    address: string
   }
 }
 
@@ -69,33 +63,30 @@ export const { auth } = NextAuth({
 
 ```ts
 // app.d.ts
-import type { DefaultSession } from '@auth/core/types';
+import "@auth/sveltekit"
 
-declare module '@auth/core/types' {
-	/**
-	 * Returned by `useSession`, `getSession`, and the callbacks session function.
-	 */
-	interface Session extends DefaultSession {
-		user: {
-			/** The user's postal address. */
-			adddress: string;
-
-			/**
-			 * By default, TypeScript merges new interface properties and overwrite existing ones.
-			 * In this case, the default session user properties will be overwritten, with the new one defined above.
-			 * To keep the default session user properties, you need to add them back into the newly declared interface.
-			 */
-		} & DefaultSession['user'];
-	}
+declare module "@auth/sveltekit" {
+  interface User {
+    /** comment **/
+    userId: string
+  }
 }
 ```
 
   </TabItem>
   <TabItem value="solidstart" label="SolidStart">
-    TODO SolidStart
+
+```
+  TODO SolidStart
+```
+
   </TabItem>
   <TabItem value="core" label="Vanilla (No Framework)">
-    TODO Core
+
+```
+  TODO Core
+```
+
   </TabItem>
 </Tabs>
 
@@ -103,8 +94,15 @@ declare module '@auth/core/types' {
 
 Module augmentation is not limited to specific interfaces. You can augment almost anything, but here are some of the more common interfaces that you might need to override in based on your use-case:
 
+<Tabs groupId="frameworks" queryString>
+  <TabItem value="next" label="Next.js" default>
+
 ```ts
-declare module "@auth/core/types" {
+// auth.ts
+import "next-auth"
+
+// Declare your framework library
+declare module "next-auth" {
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
    * or the second parameter of the `session` callback, when using a database.
@@ -122,10 +120,7 @@ declare module "@auth/core/types" {
   interface Session {}
 }
 
-// The `JWT` interface can be found in the `next-auth/jwt` submodule
-import { JWT } from "@auth/core/jwt"
-
-declare module "@auth/core/jwt" {
+declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
@@ -133,6 +128,44 @@ declare module "@auth/core/jwt" {
   }
 }
 ```
+
+  </TabItem>
+  <TabItem value="sveltekit" label="SvelteKit" default>
+
+```ts
+// app.d.ts
+import "@auth/sveltekit"
+
+// Declare your framework library
+declare module "@auth/sveltekit" {
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
+  interface User {}
+  /**
+   * The shape of the account object returned in the OAuth providers' `account` callback,
+   * Usually contains information about the provider being used, like OAuth tokens (`access_token`, etc).
+   */
+  interface Account {}
+
+  /**
+   * Returned by `useSession`, `auth`, contains information about the active session.
+   */
+  interface Session {}
+}
+
+declare module "@auth/sveltekit/jwt" {
+  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
+  interface JWT {
+    /** OpenID ID Token */
+    idToken?: string
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
 
 The module declaration can be added to any file that is [included](https://www.typescriptlang.org/tsconfig#include) in your project.
 
