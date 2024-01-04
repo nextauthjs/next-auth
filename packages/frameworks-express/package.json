@@ -19,7 +19,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf lib index.*",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
+    "providers": "node ../utils/scripts/providers.js --out src/lib"
   },
   "publishConfig": {
     "access": "public"

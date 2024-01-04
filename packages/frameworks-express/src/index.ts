@@ -9,14 +9,14 @@
  *
  * ## Installation
  * ```bash npm2yarn2pnpm
- * npm install @auth/core @auth/express
+ * npm install @auth/express
  * ```
  *
  * ## Usage
  *
  * ```ts title="src/routes/auth.route.ts"
  * import { ExpressAuth } from "@auth/express"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/express/providers/github"
  * import express from "express"
  *
  * const app = express()
