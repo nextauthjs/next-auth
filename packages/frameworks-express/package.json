@@ -7,12 +7,20 @@
     "*.js",
     "*.d.ts*",
     "lib",
+    "providers",
     "src"
   ],
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
+    },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
     },
     "./package.json": "./package.json"
   },
