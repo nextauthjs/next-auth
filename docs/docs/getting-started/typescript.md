@@ -31,7 +31,7 @@ With module augmentation, you defined the types once, and you can be sure that t
 
 </details>
 
-Let's look at `Session` for example:
+Let's look at `User` for example:
 
 <Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
