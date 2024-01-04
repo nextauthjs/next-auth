@@ -27,7 +27,7 @@ The interfaces that are shared across submodules are not passed to Auth.js libra
 
 Whenever these types are used, the functions always expect to return these formats. With generics, one might be able to override the type in one place, but not the other, which would cause the types to be out of sync with the implementation.
 
-With module augmentation, you defined the types once, and you can be sure that they are always the same where it's expected.
+With module augmentation, you define the types once, and you can be sure that they are always the same where it's expected.
 
 </details>
 
