@@ -77,6 +77,19 @@ declare module "@auth/sveltekit" {
     userId: string
   }
 }
+
+// hooks.server.ts
+export const handleAuth = SvelteKitAuth({
+  providers,
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (token) {
+        session.user.userId = token.sub
+      }
+      return session
+    },
+  },
+})
 ```
 
   </TabItem>
