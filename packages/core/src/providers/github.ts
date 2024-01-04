@@ -69,9 +69,12 @@ export interface GitHubProfile {
 }
 
 /**
- * You can customize GitHub's baseUrl to your own GitHub Enterprise Server.
+ * Configuration for usage with GitHub Enterprise Server.
  */
-export interface GitHubUserConfig extends OAuthUserConfig<GitHubProfile> {
+export interface GitHubEnterpriseServerConfig {
+  /**
+   * Customize our own GitHub Enterprise Server.
+   */
   baseUrl?: string
 }
 
@@ -127,7 +130,7 @@ export interface GitHubUserConfig extends OAuthUserConfig<GitHubProfile> {
  * :::
  */
 export default function GitHub(
-  config: GitHubUserConfig
+  config: OAuthUserConfig<GitHubProfile> & GitHubEnterpriseServerConfig
 ): OAuthConfig<GitHubProfile> {
   const baseUrl = config.baseUrl || "https://github.com"
   const apiBaseUrl = config.baseUrl
