@@ -43,7 +43,7 @@
     "supertest": "^6.3.3",
     "ts-jest": "29.0.0-next.1",
     "typescript": "^4.8.2",
-    "undici": "5.22.1"
+    "undici": "5.26.2"
   },
   "peerDependencies": {
     "express": "^4.18.2"
