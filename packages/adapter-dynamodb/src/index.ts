@@ -406,7 +406,7 @@ export function DynamoDBAdapter(
         },
       })
       if (!data.Items?.length) return null
-      const sessionRecord = data.Items[0] as any
+      const sessionRecord = data.Items[0]
       const {
         UpdateExpression,
         ExpressionAttributeNames,
