@@ -38,7 +38,7 @@ Let's look at `Session` for example:
 
 ```ts
 // auth.ts
-import NextAuth, { type DefaultSession } from "next-auth"
+import NextAuth from "next-auth"
 
 declare module "next-auth" {
   interface User {
