@@ -113,7 +113,7 @@ export function initAuth(config: NextAuthConfig) {
       return getSession(headers(), config).then((r) => r.json())
     }
     if (args[0] instanceof Request) {
-      // middleare.ts
+      // middleware.ts
       // export { auth as default } from "auth"
       const req = args[0]
       const ev = args[1]

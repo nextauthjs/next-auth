@@ -153,7 +153,7 @@ export function SQLiteDrizzleAdapter(
       return account
     },
     async getUserByAccount(account) {
-      const result = await client
+      const results = await client
         .select()
         .from(accounts)
         .leftJoin(users, eq(users.id, accounts.userId))
