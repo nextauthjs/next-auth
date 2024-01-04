@@ -38,8 +38,7 @@
  *       }),
  *     ],
  *   })
- *  ],
- * }))
+ * )
  * ```
  *
  * Don't forget to set the `AUTH_SECRET` environment variable. This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
@@ -99,8 +98,6 @@
  * ### Per Route
  * To protect a single route, simply add the middleware to the route as follows:
  * ```ts title="app.ts"
- * // ...
- *
  * // This route is protected
  * app.get("/profile", authenticatedUser, (req, res) => {
  *   const { session } = res.locals
@@ -134,6 +131,7 @@
  * Then we mount the router as follows:
  * ```ts title="app.ts"
  * import protected from "./routes/protected.route"
+ *
  * app.use("/protected", protected)
  * ```
  *
@@ -143,7 +141,7 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-express/src/lib/index.ts).
  * :::
  *
- * @module index
+ * @module @auth/express
  */
 
 import { Auth } from "@auth/core"
