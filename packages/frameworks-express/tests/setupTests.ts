@@ -1,4 +1,1 @@
-import { webcrypto } from "crypto"
-
-// @ts-expect-error
-globalThis.crypto ??= webcrypto
+globalThis.crypto ??= require("crypto").webcrypto
