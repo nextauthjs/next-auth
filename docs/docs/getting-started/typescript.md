@@ -173,14 +173,6 @@ declare module "@auth/sveltekit" {
    */
   interface Session {}
 }
-
-declare module "@auth/sveltekit/jwt" {
-  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
-  interface JWT {
-    /** OpenID ID Token */
-    idToken?: string
-  }
-}
 ```
 
   </TabItem>
