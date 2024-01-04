@@ -52,7 +52,13 @@ export const { auth } = NextAuth({
     session({ session, token, user }) {
       // session.user.address is now a valid property, and will be type-checked
       // in places like `useSession().data.user` or `auth().user`
-      return session
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          address: user.address,
+        },
+      }
     },
   },
 })
