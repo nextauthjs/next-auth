@@ -9,7 +9,6 @@ import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
 import manifest from "../../manifest.mjs"
-import { Clerk } from "../components/clerk"
 
 const providersCount = Object.keys(manifest.providers).length + 2 // email, credentials
 const features = [
@@ -168,6 +167,12 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+            <span className={styles.heroClerk}>
+              sponsored by{" "}
+              <Link to="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=09_01_2023">
+                Clerk
+              </Link>
+            </span>
             <div className="hero-marquee">
               <ProviderMarquee />
             </div>
@@ -187,7 +192,6 @@ export default function Home() {
                   </h2>
                 </div>
               </div>
-              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
