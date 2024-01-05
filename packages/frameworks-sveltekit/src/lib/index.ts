@@ -207,9 +207,6 @@ import { env } from "$env/dynamic/private"
 import { Auth } from "@auth/core"
 import { parse } from "cookie"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
-import type { CookieSerializeOptions } from "cookie"
-
-interface SetCookie { value: string; options: CookieSerializeOptions & { path: string }; }
 
 export type {
   Account,
@@ -219,10 +216,10 @@ export type {
   User,
 } from "@auth/core/types"
 
-export async function getSession(
+export async function unstable_getSessionWithCookies(
   req: Request,
   config: SvelteKitAuthConfig
-): ReturnType<App.Locals["getSession"]> {
+): ReturnType<App.Locals["unstable_getSessionWithCookies"]> {
   config.secret ??= env.AUTH_SECRET
   config.trustHost ??= true
 
@@ -237,9 +234,18 @@ export async function getSession(
   if (!data || !Object.keys(data).length) return null
   if (status === 200) return {
     session: data,
-    cookies: parse(response.headers.getSetCookie())
+    cookies: parse(response.headers.get('set-cookie') as string)
   }
   throw new Error(data.message)
+}
+
+export async function getSession(
+  req: Request,
+  config: SvelteKitAuthConfig
+): ReturnType<App.Locals["getSession"]> {
+  const data = await unstable_getSessionWithCookies(req, config)
+
+  return data?.session ?? null
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
@@ -313,7 +319,8 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace App {
     interface Locals {
-      getSession(): Promise<{ session: Session, cookies: Record<string, Record<string, string>> } | null>
+      unstable_getSessionWithCookies(): Promise<{ session: Session, cookies: Record<string, string> } | null>
+      getSession(): Promise<Session | null>
     }
     interface PageData {
       session?: Session | null
