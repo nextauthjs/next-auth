@@ -12,6 +12,7 @@ import type {
   Profile,
   RequestInternal,
   TokenSet,
+  User,
 } from "../../../../types.js"
 import type { OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
@@ -193,14 +194,12 @@ async function getUserAndAccount(
   logger: LoggerInstance
 ) {
   try {
-    const user = await provider.profile(OAuthProfile, tokens)
-    user.email = user.email?.toLowerCase()
-
-    if (!user.id) {
-      throw new TypeError(
-        `User id is missing in ${provider.name} OAuth profile response`
-      )
-    }
+    const userFromProfile = await provider.profile(OAuthProfile, tokens)
+    const user = {
+      ...userFromProfile,
+      id: userFromProfile.id?.toString() ?? crypto.randomUUID(),
+      email: userFromProfile.email?.toLowerCase(),
+    } satisfies User
 
     return {
       user,

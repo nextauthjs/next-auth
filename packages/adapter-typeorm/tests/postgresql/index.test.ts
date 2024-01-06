@@ -1,4 +1,4 @@
-import { runBasicTests } from "../../../adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { TypeORMAdapter } from "../../src"
 import { db } from "../helpers"
 

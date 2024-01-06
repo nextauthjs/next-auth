@@ -84,7 +84,9 @@ html[data-theme="dark"] .hero {
   margin-bottom: 0.5rem;
   padding: 0;
   border: none;
-  text-shadow: 0 0.1rem 0 rgba(255, 255, 255, 1), 0 0 8rem rgba(0, 0, 0, 0.5);
+  text-shadow:
+    0 0.1rem 0 rgba(255, 255, 255, 1),
+    0 0 8rem rgba(0, 0, 0, 0.5);
 }
 
 @media screen and (min-width: 689px) {
@@ -95,7 +97,8 @@ html[data-theme="dark"] .hero {
 }
 
 html[data-theme="dark"] .hero .hero__title {
-  text-shadow: 0 0.1rem 0 rgba(255, 255, 255, 0.1),
+  text-shadow:
+    0 0.1rem 0 rgba(255, 255, 255, 0.1),
     0 0 5rem rgba(255, 255, 255, 0.5);
 }
 

@@ -14,7 +14,7 @@ const response = await Auth(request, {
 
 ## Resources
 
- - [$1 OAuth documentation](https://example.com)
+- [$1 OAuth documentation](https://example.com)
 
 ## Notes
 

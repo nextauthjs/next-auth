@@ -59,7 +59,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
 export type EndpointHandler<
   P extends UrlParams,
   C = any,
-  R = any
+  R = any,
 > = AdvancedEndpointHandler<P, C, R>
 
 export type AuthorizationEndpointHandler =
@@ -239,7 +239,9 @@ export interface OAuth2Config<Profile>
 export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
-  checks?: OAuth2Config<Profile>["checks"] & Array<"nonce">
+  checks?: Array<
+    Exclude<OAuth2Config<Profile>["checks"], undefined>[number] | "nonce"
+  >
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>

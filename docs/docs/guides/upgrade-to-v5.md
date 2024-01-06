@@ -77,17 +77,17 @@ When using `auth()`, the [`session()` callback](/reference/core/types#session) i
 
 See the table below for a summary of the changes, and click on the links to learn more about each one.
 
-| Where                                                                                  | v4                                                    | v5                               |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
-| [Server Component](?authentication-method=server-component#authenticate-methods)       | `getServerSession(authOptions)`                       | `auth()` call                    |
-| [Middleware](?authentication-method=middleware#authenticate-methods)                   | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
-| [Client Component](?authentication-method=client-component#authenticate-methods)       | `useSession()` hook                                   | `useSession()` hook              |
-| [Route Handler](/reference/nextjs#in-route-handlers)                                   | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)                               | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
-| [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
-| [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
+| Where                                                         | v4                                                    | v5                               |
+| ------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
+| [Server Component](/reference/nextjs#in-server-components)    | `getServerSession(authOptions)`                       | `auth()` call                    |
+| [Middleware](/reference/nextjs#in-middleware)                 | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| [Client Component](/reference/nextjs/react#usesession)        | `useSession()` hook                                   | `useSession()` hook              |
+| [Route Handler](/reference/nextjs#in-route-handlers)          | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)      | _Previously not supported_                            | `auth()` wrapper                 |
+| [API Route (Node.js)](/reference/nextjs#in-api-routes)        | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| [API Route (Node.js)](/reference/nextjs#in-api-routes)        | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| [getServerSideProps](/reference/nextjs#in-getserversideprops) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
+| [getServerSideProps](/reference/nextjs#in-api-routes)         | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
 
 ### Authentication methods
 

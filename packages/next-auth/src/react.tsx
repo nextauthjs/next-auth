@@ -214,7 +214,7 @@ export async function getProviders() {
  * Handles CSRF protection.
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   provider?: LiteralUnion<
     P extends RedirectableProviderType
@@ -276,7 +276,7 @@ export async function signIn<
     return
   }
 
-  const error = new URL(data.url, baseUrl).searchParams.get("error")
+  const error = new URL(data.url).searchParams.get("error")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -465,8 +465,8 @@ export function SessionProvider(props: SessionProviderProps) {
       status: loading
         ? "loading"
         : session
-        ? "authenticated"
-        : "unauthenticated",
+          ? "authenticated"
+          : "unauthenticated",
       async update(data: any) {
         if (loading || !session) return
         setLoading(true)

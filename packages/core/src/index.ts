@@ -211,7 +211,6 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * If not specified, it falls back to `AUTH_SECRET` or `NEXTAUTH_SECRET` from environment variables.
    * To generate a random string, you can use the following command:
    *
    * - On Unix systems, type `openssl rand -hex 32` in the terminal
@@ -353,9 +352,9 @@ export interface AuthConfig {
    */
   useSecureCookies?: boolean
   /**
-   * You can override the default cookie names and options for any of the cookies used by NextAuth.js.
-   * You can specify one or more cookies with custom properties,
-   * but if you specify custom options for a cookie you must provide all the options for that cookie.
+   * You can override the default cookie names and options for any of the cookies used by Auth.js.
+   * You can specify one or more cookies with custom properties
+   * and missing options will use the default values defined by Auth.js.
    * If you use this feature, you will likely want to create conditional behavior
    * to support setting different cookies policies in development and production builds,
    * as you will be opting out of the built-in dynamic policy.
@@ -367,7 +366,15 @@ export interface AuthConfig {
    * @default {}
    */
   cookies?: Partial<CookiesOptions>
-  /** @todo */
+  /**
+   * Auth.js relies on the incoming request's `host` header to function correctly. For this reason this property needs to be set to `true`.
+   *
+   * Make sure that your deployment platform sets the `host` header safely.
+   *
+   * :::note
+   * Official Auth.js-based libraries will attempt to set this value automatically for some deployment platforms (eg.: Vercel) that are known to set the `host` header safely.
+   * :::
+   */
   trustHost?: boolean
   skipCSRFCheck?: typeof skipCSRFCheck
   raw?: typeof raw
