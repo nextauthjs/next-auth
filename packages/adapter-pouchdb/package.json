@@ -1,6 +1,6 @@
 {
   "name": "@auth/pouchdb-adapter",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "PouchDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
