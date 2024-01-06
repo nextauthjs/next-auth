@@ -17,7 +17,7 @@ Here are the _state_ of planned and released packages under the `@auth/*` and `@
 | `@auth/core`           | Released (experimental).                                                                                                                                                               |
 | `@auth/sveltekit`      | Released (experimental, [help needed](#help-needed)).                                                                                                                                  |
 | `@auth/solid-start`    | Released (experimental, [help needed](#help-needed)). Community package: [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth)                                  |
-| `@auth/express`        | Released (experimental, [help needed](#help-needed)).                                                                                                                         |
+| `@auth/express`        | Released (experimental, [help needed](#help-needed)). See [docs](/reference/express)                                                                                                    |
 | `@auth/remix`          | Planned, [help needed](#help-needed).                                                                                                                                                  |
 | `@auth/astro`          | Planned, [help needed](#help-needed).                                                                                                                                                  |
 | `@auth/nuxt`           | Planned, [help needed](#help-needed). Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/) |
