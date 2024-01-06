@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "esModuleInterop": true,
+    "target": "esnext",
+    "noImplicitAny": true,
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
