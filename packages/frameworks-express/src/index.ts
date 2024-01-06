@@ -16,7 +16,7 @@
  *
  * ```ts title="src/routes/auth.route.ts"
  * import { ExpressAuth } from "@auth/express"
- * import GitHub from "@auth/express/providers/github"
+ * import GitHub from "@auth/express/lib/providers/github"
  * import express from "express"
  *
  * const app = express()
