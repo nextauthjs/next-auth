@@ -51,3 +51,13 @@ pnpm start
 ## Environment Variables
 
 Once deployed, kindly ensure you set all [required environment variables](https://authjs.dev/getting-started/deployment#environment-variables) in the `Environment` section of your Render service.
+
+## Node.js Compatibility
+
+The minimum version of Node.js required to run this example is Node.js v17.6.0, which includes support for Fetch API and Web Crypto API through the `--experimental-fetch` and `--experimental-webcrypto` flags, respectively.
+
+These Node.js APIs are required by the `auth/core` package.
+
+If you are using a version of Node.js for which both APIs are no longer experimental (i.e from v19.0.0 and above), you may remove the experimental flags from scripts in your `package.json`.
+
+If you are using a version of Node.js that does not support any flags, you may use polyfills for the Fetch and Web Crypto APIs.
