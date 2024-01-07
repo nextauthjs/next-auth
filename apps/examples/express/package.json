@@ -8,19 +8,13 @@
   "scripts": {
     "start": "node --experimental-fetch --experimental-global-webcrypto --experimental-specifier-resolution=node dist/server.js",
     "build": "pnpm build:ts && pnpm build:css",
-    "build:watch": "pnpm build:ts:watch & pnpm build:css:watch",
     "build:ts": "tsc",
-    "build:ts:watch": "tsc -w",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
-    "build:css:watch": "pnpm build:css -w",
-    "e2e:prepare": "playwright install",
-    "e2e": "playwright test",
+    "build:watch": "pnpm build:ts -w & pnpm build:css -w",
     "dev": "concurrently -k -p \"[{name}]\" -n \"Build,Node\" -c \"cyan.bold,green.bold\" \"pnpm run build:watch\" \"pnpm run dev:node\"",
     "dev:node": "nodemon --experimental-fetch --experimental-global-webcrypto dist/server.js",
-    "lint": "eslint src/*.ts",
-    "lint:fix": "pnpm lint --fix",
-    "prettier": "prettier src/*.ts",
-    "prettier:fix": "pnpm prettier --write"
+    "lint": "eslint src/*.ts --fix",
+    "prettier": "prettier src/*.ts --write"
   },
   "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
   "license": "MIT",
