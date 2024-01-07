@@ -6,7 +6,7 @@ This section of the documentation contains the API reference for all the officia
 
 ## Integrations
 
-Here are the _state_ of planned and released packages under the `@auth/*` and `@next-auth/*` scope, as well as `next-auth`. It also includes community created and maintained packages. Packages listed as "Planned" are something we'd love help with! See the [#helpneeded]() section below.
+Here are the _state_ of planned and released packages under the `@auth/*` and `@next-auth/*` scope, as well as `next-auth`. It also includes community created and maintained packages. Packages listed as "Planned" are something we'd love help with! See the [help needed](#help-needed) section below.
 
 | Feature                | Status                                                                                                                                                                                 |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
