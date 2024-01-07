@@ -15,7 +15,7 @@
     "build:css:watch": "pnpm build:css -w",
     "e2e:prepare": "playwright install",
     "e2e": "playwright test",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"pnpm run build:watch\" \"pnpm run dev:node\"",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"Build,Node\" -c \"cyan.bold,green.bold\" \"pnpm run build:watch\" \"pnpm run dev:node\"",
     "dev:node": "nodemon --experimental-fetch --experimental-global-webcrypto dist/server.js",
     "lint": "eslint src/*.ts",
     "lint:fix": "pnpm lint --fix",
