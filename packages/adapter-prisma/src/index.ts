@@ -233,11 +233,11 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
     deleteUser: (id) => p.user.delete({ where: { id } }),
     linkAccount: (data) =>
-      p.account.create({ data }) as unknown as AdapterAccount,
+      p.account.create({ data }) as unknown as Promise<AdapterAccount>,
     unlinkAccount: (provider_providerAccountId) =>
       p.account.delete({
         where: { provider_providerAccountId },
-      }) as unknown as AdapterAccount,
+      }) as unknown as Promise<AdapterAccount>,
     async getSessionAndUser(sessionToken) {
       const userAndSession = await p.session.findUnique({
         where: { sessionToken },
