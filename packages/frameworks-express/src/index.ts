@@ -43,7 +43,7 @@
  *
  * Don't forget to set the `AUTH_SECRET` environment variable. This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
- * You will also need to load the environment variables into the Node.js environment. You can do this using a package like [`dotenv`](https://www.npmjs.com/package/dotenv).
+ * You will also need to load the environment variables into your runtime environment. For example in Node.js with a package like [`dotenv`](https://www.npmjs.com/package/dotenv) or `Deno.env` in Deno.
  *
  * ### Provider Configuration
  * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
