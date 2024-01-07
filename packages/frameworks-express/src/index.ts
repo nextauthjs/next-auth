@@ -8,7 +8,7 @@
  * It provides a simple way to add authentication to your Express app in a few lines of code.
  *
  * ## Installation
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/express
  * ```
  *
@@ -53,7 +53,7 @@
  * ```
  *
  * ## Signing in and signing out
- * Once your application is mounted you can sign in or out by making requests to the following [REST API endpoints](https://next-auth.js.org/getting-started/rest-api) from your client-side code.
+ * Once your application is mounted you can sign in or out by making requests to the following [REST API endpoints](https://authjs.dev/reference/core/types#authaction) from your client-side code.
  * NB: Make sure to include the `csrfToken` in the request body for all sign-in and sign-out requests.
  *
  * ## Managing the session
@@ -134,12 +134,6 @@
  *
  * app.use("/protected", protected)
  * ```
- *
- * ## Notes
- *
- * :::info
- * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-express/src/lib/index.ts).
- * :::
  *
  * @module @auth/express
  */
