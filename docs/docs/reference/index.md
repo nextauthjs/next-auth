@@ -14,13 +14,13 @@ Here are the _state_ of planned and released packages under the `@auth/*` and `@
 | `next-auth`            | Released (v4). See [docs](https://next-auth.js.org)                                                                                                                                    |
 | `@auth/*-adapter`      | Released (stable). Fully compatible with `next-auth` and all `@auth/*` libraries.                                                                                                      |
 | `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`. See above.                                                                                                                       |
-| `@auth/core`           | Released (experimental).                                                                                                                                                               |
-| `@auth/sveltekit`      | Released (experimental, [help needed](#help-needed)).                                                                                                                                  |
-| `@auth/solid-start`    | Released (experimental, [help needed](#help-needed)). Community package: [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth)                                  |
-| `@auth/express`        | Released (experimental, [help needed](#help-needed)).                                                                                                                         |
-| `@auth/remix`          | Planned, [help needed](#help-needed).                                                                                                                                                  |
-| `@auth/astro`          | Planned, [help needed](#help-needed).                                                                                                                                                  |
-| `@auth/nuxt`           | Planned, [help needed](#help-needed). Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/) |
+| `@auth/core`           | Released (experimental). See [docs](/reference/core)                                                                                                                                   |
+| `@auth/sveltekit`      | Released (experimental). See [docs](/reference/sveltekit)                                                                                                                              |
+| `@auth/solid-start`    | Released (experimental). See [docs](/reference/solidstart) Community package: [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth)                              |
+| `@auth/express`        | Released (experimental). See [docs](/reference/express)                                                                                                                                |
+| `@auth/remix`          | Planned.                                                                                                                                                                               |
+| `@auth/astro`          | Planned.                                                                                                                                                                               |
+| `@auth/nuxt`           | Planned. Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/)                              |
 
 :::info
 The NextAuth.js v4 documentation is at [next-auth.js.org](https://next-auth.js.org), while v5+ will be available [here](/reference/nextjs). Guides are being migrated over to the new documentation page and are gradually being updated to showcase all the framework integrations.

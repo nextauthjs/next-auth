@@ -586,4 +586,5 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * See also {@link OAuthConfigInternal.redirectProxyUrl}.
    */
   isOnRedirectProxy: boolean
+  experimental: Record<string, boolean>
 }
