@@ -1,7 +1,9 @@
 import "./globals.js"
+import * as dotenv from "dotenv"
 
-import { app } from "./app.js"
+dotenv.config({ path: __dirname + "/../.env" })
 
+const { app } = await import("./app.js")
 const port = app.get("port")
 
 const server = app.listen(port, onListening)

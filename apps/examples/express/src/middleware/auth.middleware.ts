@@ -1,6 +1,6 @@
 import { getSession } from "@auth/express"
 import { NextFunction, Request, Response } from "express"
-import { authConfig } from "../config/auth.js"
+import { authConfig } from "../config/auth.config.js"
 
 export async function authenticatedUser(
   req: Request,

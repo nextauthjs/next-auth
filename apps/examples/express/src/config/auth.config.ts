@@ -1,7 +1,18 @@
-import CredentialsProvider from "@auth/core/providers/credentials"
+import Credentials from "@auth/core/providers/credentials"
+import GitHub from "@auth/core/providers/github"
+import Google from "@auth/core/providers/google"
+
 export const authConfig = {
   providers: [
-    CredentialsProvider({
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+    }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
+    Credentials({
       name: "Credentials",
       credentials: {
         username: {

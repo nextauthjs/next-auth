@@ -5,16 +5,14 @@ import * as path from "path"
 import {
   errorHandler,
   errorNotFoundHandler,
-} from "./middleware/error-handler.js"
+} from "./middleware/error.middleware.js"
 
-import { authenticatedUser, currentSession } from "./middleware/auth.js"
+import {
+  authenticatedUser,
+  currentSession,
+} from "./middleware/auth.middleware.js"
 import { ExpressAuth } from "@auth/express"
-import { authConfig } from "./config/auth.js"
-
-import * as dotenv from "dotenv"
-
-// Load environment variables
-dotenv.config({ path: __dirname + "/../.env" })
+import { authConfig } from "./config/auth.config.js"
 
 // Create Express server
 export const app = express()
