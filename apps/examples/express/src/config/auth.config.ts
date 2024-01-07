@@ -23,7 +23,8 @@ export const authConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const name = (credentials.username as string) || "John Smith"
+        const name = credentials.username as string
+        // Provide your own logic here to validate credentials
         const user = {
           id: "1",
           name,
