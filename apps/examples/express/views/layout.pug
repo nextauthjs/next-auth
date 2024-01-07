@@ -6,14 +6,15 @@ html
   body(class="flex flex-col items-center dark:bg-black dark:text-white")
     div(class="flex w-[90%] max-w-2xl flex-col justify-start gap-2")
       div(
-        class="mb-2 flex items-baseline justify-between gap-2 rounded-b-md bg-gray-100 p-2 pl-4 dark:bg-gray-800"
+        class="mb-2 flex items-center justify-between gap-2 rounded-b-md bg-gray-100 p-2 pl-4 dark:bg-gray-800"
       )
         if session
-          if session.user.image
-            span(style=`background-image: url('${session.user.image}')`)
-          span
-            | Signed in as #{ ' ' }
-            strong= session.user.email || session.user.name
+          div(class="flex flex-row items-center gap-2")
+            if session.user.image
+              img(src=`${session.user.image}`, class="h-8 w-8 rounded-full")
+            span
+              | Signed in as #{ ' ' }
+              strong= session.user.email || session.user.name
           a(
             class="rounded-md bg-blue-600 px-5 py-2.5 font-medium text-white",
             href="/api/auth/signout"
