@@ -42,4 +42,4 @@ More information can be found at: https://opencollective.com/nextauth
 
 - In 2021, efforts have started to move NextAuth.js to other frameworks and to support as many databases and providers as possible.
 
-- In 2022, Auth.js was born which separated the core authentication logic from the Next.js framework and added support for any new frameworks.
+- In 2022, <a href="https://github.com/balazsorban44">Balázs Orbán</a> created Auth.js based on NextAuth.js, a runtime/framework independent core library that is the base of all Auth.js libraries going forward. 

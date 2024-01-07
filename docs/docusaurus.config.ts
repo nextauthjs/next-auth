@@ -144,7 +144,7 @@ export default {
           title: "Acknowledgements",
           items: [
             { label: "Contributors", to: "/contributors" },
-            { label: "Sponsors", to: "https://opencollective.com/nextauth" },
+            { label: "Sponsors", to: "/sponsors" },
             { label: "Images by unDraw", to: "https://undraw.co/" },
           ],
         },

@@ -1,13 +1,10 @@
 /**
- *
- *
  * :::warning
  * `@auth/sveltekit` is currently experimental. The API _might_ change.
  * :::
  *
  * SvelteKit Auth is the official SvelteKit integration for Auth.js.
  * It provides a simple way to add authentication to your SvelteKit app in a few lines of code.
- *
  *
  * ## Installation
  *
@@ -209,6 +206,14 @@ import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
 
 export async function getSession(
   req: Request,
