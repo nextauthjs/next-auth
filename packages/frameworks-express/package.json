@@ -1,7 +1,7 @@
 {
   "name": "@auth/express",
   "description": "Authentication for Express.",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "type": "module",
   "files": [
     "*.js",
@@ -28,7 +28,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
-    "providers": "node ../utils/scripts/providers.js --out src/lib"
+    "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {
     "access": "public"
