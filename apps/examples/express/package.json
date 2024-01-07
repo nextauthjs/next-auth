@@ -29,7 +29,6 @@
     "@auth/express": "workspace:*",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "http-errors": "^1.7.1",
     "morgan": "^1.9.1",
     "pug": "^3.0.2",
     "tailwindcss": "^3.3.3"
@@ -38,7 +37,6 @@
     "@playwright/test": "1.37.1",
     "@prettier/plugin-pug": "^3.0.0",
     "@types/express": "4.17.17",
-    "@types/http-errors": "1.8.2",
     "@types/morgan": "1.9.4",
     "@types/node": "14.18.53",
     "@types/pug": "^2.0.10",
