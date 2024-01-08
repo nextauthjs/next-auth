@@ -54,10 +54,20 @@ Once deployed, kindly ensure you set all [required environment variables](https:
 
 ## Node.js Compatibility
 
-The minimum version of Node.js required to run this example is Node.js v17.6.0, which includes support for Fetch API and Web Crypto API through the `--experimental-fetch` and `--experimental-webcrypto` flags, respectively.
+The recommended version of Node.js to use in this example is Node.js v20.0.0.
 
-These Node.js APIs are required by the `auth/core` package.
+If you are using a version of Node.js lower than this (for example the minimum supported node version v18.0.0), you may need to enable Web Crypto API via the `--experimental-webcrypto` flag in the `start` and `dev` scripts of your `package.json` file.
 
-If you are using a version of Node.js for which both APIs are no longer experimental (i.e from v19.0.0 and above), you may remove the experimental flags from scripts in your `package.json`.
+Instead of using the experimental flag, you may use the following polyfill:
 
-If you are using a version of Node.js that does not support any flags, you may use polyfills for the Fetch and Web Crypto APIs.
+```ts
+// polyfill.cts
+globalThis.crypto ??= require("crypto").webcrypto
+```
+
+And then import it within a top-level file in the application:
+
+```ts
+// server.ts
+import "./polyfill.cjs"
+```
