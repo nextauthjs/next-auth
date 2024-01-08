@@ -21,7 +21,7 @@ Here are the _state_ of planned and released packages under the `@auth/*` and `@
 | `@auth/remix`          | Planned.                                                                                                                                                                               |
 | `@auth/astro`          | Planned.                                                                                                                                                                               |
 | `@auth/nuxt`           | Planned. Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/)                              |
-| `@builder.io/qwik-auth`| Community package.                                                                                                                                                                               |
+| `@builder.io/qwik-auth`| Community package: [qwik integrations](https://qwik.builder.io/docs/integrations/authjs/#authjs)                                                                                       |
 
 :::info
 The NextAuth.js v4 documentation is at [next-auth.js.org](https://next-auth.js.org), while v5+ will be available [here](/reference/nextjs). Guides are being migrated over to the new documentation page and are gradually being updated to showcase all the framework integrations.
