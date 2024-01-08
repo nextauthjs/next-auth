@@ -2,17 +2,19 @@
   "name": "express-auth-app",
   "version": "1.0.0",
   "type": "module",
-  "description": "Express + Auth.js Developer app",
-  "main": "server.js",
+  "description": "Express Auth example app",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "private": true,
   "scripts": {
-    "start": "node --experimental-fetch --experimental-global-webcrypto --experimental-specifier-resolution=node dist/server.js",
+    "start": "node dist/server.js",
     "build": "pnpm build:ts && pnpm build:css",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
     "build:watch": "pnpm build:ts -w & pnpm build:css -w",
     "dev": "concurrently -k -p \"[{name}]\" -n \"Build,Node\" -c \"cyan.bold,green.bold\" \"pnpm run build:watch\" \"pnpm run dev:node\"",
-    "dev:node": "nodemon --experimental-fetch --experimental-global-webcrypto dist/server.js",
+    "dev:node": "nodemon dist/server.js",
     "lint": "eslint src/*.ts --fix",
     "prettier": "prettier src/*.ts --write"
   },
