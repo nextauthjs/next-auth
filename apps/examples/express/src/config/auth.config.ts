@@ -1,7 +1,8 @@
+import { AuthConfig } from "@auth/core"
 import GitHub from "@auth/core/providers/github"
 import Google from "@auth/core/providers/google"
 
-export const authConfig = {
+export const authConfig: AuthConfig = {
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
