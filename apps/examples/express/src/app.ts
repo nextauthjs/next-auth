@@ -44,6 +44,8 @@ app.use(express.json())
 app.use(currentSession)
 
 // Set up ExpressAuth to handle authentication
+// IMPORTANT: It is highly encouraged set up rate limiting on this route especially if
+// it is served or hosted by a traditional server (compared to a serverless function)
 app.use("/api/auth/*", ExpressAuth(authConfig))
 
 // Routes
