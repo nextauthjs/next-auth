@@ -410,4 +410,13 @@ export interface AuthConfig {
    * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/getting-started/deployment#securing-a-preview-deployment)
    */
   redirectProxyUrl?: string
+
+  /**
+   * 
+   * Use this option to enable experimental features.
+   * When enabled, it will print a warning message to the console.
+   * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
+   * @default {}
+   */
+  experimental?: Record<string, boolean>
 }
