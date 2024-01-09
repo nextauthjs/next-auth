@@ -64,6 +64,14 @@ const content = JSON.stringify(
         entrypoints: ["index.ts"],
       },
       {
+        id: "fastify",
+        packageName: "@auth/fastify",
+        packageDir: "frameworks-fastify",
+        name: "Fastify Auth",
+        url: "fastify-auth-example",
+        entrypoints: ["index.ts"],
+      },
+      {
         id: "solidstart",
         packageName: "@auth/solid-start",
         packageDir: "frameworks-solid-start",
