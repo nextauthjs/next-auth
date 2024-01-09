@@ -5,7 +5,7 @@
    <a href="https://authjs.dev" target="_blank">
    <img height="64" src="https://authjs.dev/img/logo/logo-sm.png" />
    </a>
-   <a href="https://kit.svelte.dev" target="_blank">
+   <a href="https://expressjs.com" target="_blank">
    <img height="64" src="https://i.cloudup.com/zfY6lL7eFa-3000x3000.png" />
    </a>
    <h3 align="center"><b>Express Auth</b> - Example App</h3>
