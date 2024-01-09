@@ -1,0 +1,248 @@
+{
+  "up": [
+    [
+      "create_collection",
+      {
+        "name": "users",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "nullable": false,
+              "default": {
+                "func": "uuid",
+                "args": null
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "email": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "emailVerified": {
+            "type": "date",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "image": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          }
+        }
+      }
+    ],
+    [
+      "create_collection",
+      {
+        "name": "accounts",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "nullable": false,
+              "default": {
+                "func": "uuid",
+                "args": null
+              }
+            }
+          },
+          "userId": {
+            "type": "string",
+            "options": {}
+          },
+          "user": {
+            "type": "query",
+            "query": {
+              "collectionName": "users",
+              "where": [
+                [
+                  "id",
+                  "=",
+                  "$userId"
+                ]
+              ]
+            }
+          },
+          "type": {
+            "type": "string",
+            "options": {}
+          },
+          "provider": {
+            "type": "string",
+            "options": {}
+          },
+          "providerAccountId": {
+            "type": "string",
+            "options": {}
+          },
+          "refresh_token": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "access_token": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "expires_at": {
+            "type": "number",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "token_type": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "scope": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "id_token": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          },
+          "session_state": {
+            "type": "string",
+            "options": {
+              "nullable": true,
+              "default": null
+            }
+          }
+        }
+      }
+    ],
+    [
+      "create_collection",
+      {
+        "name": "sessions",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "nullable": false,
+              "default": {
+                "func": "uuid",
+                "args": null
+              }
+            }
+          },
+          "userId": {
+            "type": "string",
+            "options": {}
+          },
+          "user": {
+            "type": "query",
+            "query": {
+              "collectionName": "users",
+              "where": [
+                [
+                  "id",
+                  "=",
+                  "$userId"
+                ]
+              ]
+            }
+          },
+          "expires": {
+            "type": "date",
+            "options": {}
+          },
+          "sessionToken": {
+            "type": "string",
+            "options": {}
+          }
+        }
+      }
+    ],
+    [
+      "create_collection",
+      {
+        "name": "verificationTokens",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "nullable": false,
+              "default": {
+                "func": "uuid",
+                "args": null
+              }
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "options": {}
+          },
+          "token": {
+            "type": "string",
+            "options": {}
+          },
+          "expires": {
+            "type": "date",
+            "options": {}
+          }
+        }
+      }
+    ]
+  ],
+  "down": [
+    [
+      "drop_collection",
+      {
+        "name": "verificationTokens"
+      }
+    ],
+    [
+      "drop_collection",
+      {
+        "name": "sessions"
+      }
+    ],
+    [
+      "drop_collection",
+      {
+        "name": "accounts"
+      }
+    ],
+    [
+      "drop_collection",
+      {
+        "name": "users"
+      }
+    ]
+  ],
+  "version": 1704397700335,
+  "parent": 0,
+  "name": "add_collections"
+}
