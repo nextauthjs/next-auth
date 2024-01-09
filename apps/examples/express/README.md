@@ -38,7 +38,6 @@ You can instantly deploy this example to [Vercel](https://vercel.com?utm_source=
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/nextauthjs/express-auth-example&project-name=express-auth-example&repository-name=express-auth-example)
 
-
 ## Environment Variables
 
 Once deployed, kindly ensure you set all [required environment variables](https://authjs.dev/getting-started/deployment#environment-variables) in the `Environment` section of your Render service.
