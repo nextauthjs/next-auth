@@ -96,6 +96,7 @@
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
         "@auth/sveltekit#build",
+        "@auth/triplit-adapter#build",
         "@auth/typeorm-adapter#build",
         "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",

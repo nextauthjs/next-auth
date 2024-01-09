@@ -1,0 +1,49 @@
+{
+  "name": "@auth/triplit-adapter",
+  "version": "0.0.1",
+  "description": "Triplit adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Will Ernst <wernst@users.noreply.github.com>",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "triplit"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "./tests/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@triplit/client": "^0.3.72"
+  },
+  "devDependencies": {
+    "@triplit/cli": "^0.4.12",
+    "@triplit/client": "^0.3.72",
+    "@triplit/db": "^0.3.55"
+  }
+}
