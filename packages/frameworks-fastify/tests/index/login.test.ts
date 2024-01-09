@@ -1,4 +1,4 @@
-import Fastify from "fastify"
+import Fastify, { LightMyRequestResponse } from "fastify"
 import formbodyParser from "@fastify/formbody"
 import { FastifyAuth, getSession } from "../../src/index.js"
 
@@ -30,7 +30,7 @@ export const authConfig = {
   ],
 }
 
-const extractCookieValue = (cookies: {name: string, value: string}[], name: string) => {
+const extractCookieValue = (cookies: LightMyRequestResponse['cookies'], name: string) => {
   const cookie = cookies.find(({name: _name}) => _name === name)
   return cookie?.value
 };
@@ -82,7 +82,7 @@ describe("Integration test with login and getSession", () => {
       url: '/api/auth/callback/credentials',
       cookies: {
         'authjs.csrf-token': csrfTokenCookie,
-        'authjs.callback-url': decodeURIComponent(callbackCookie),
+        'authjs.callback-url': callbackCookie,
       },
       payload: {
         csrfToken: csrfTokenValue,
@@ -104,7 +104,7 @@ describe("Integration test with login and getSession", () => {
       },
       cookies: {
         'authjs.csrf-token': csrfTokenCookie,
-        'authjs.callback-url': decodeURIComponent(callbackCookie),
+        'authjs.callback-url': callbackCookie,
         'authjs.session-token': sessionTokenCookie,
       },
     })
