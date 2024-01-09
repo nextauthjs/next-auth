@@ -19,7 +19,6 @@
   "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@auth/core": "latest",
     "@auth/express": "latest",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
