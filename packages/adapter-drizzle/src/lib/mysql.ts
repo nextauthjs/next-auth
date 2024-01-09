@@ -5,14 +5,19 @@ import {
   mysqlTable as defaultMySqlTableFn,
   primaryKey,
   varchar,
-  MySqlTableFn,
-  MySqlDatabase,
+  type MySqlTableFn,
+  type MySqlDatabase,
 } from "drizzle-orm/mysql-core"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
+import type { AnyMySqlDatabase } from "./utils"
+import type { DrizzleAdapterConfig } from "../index"
 
-export function createTables(mySqlTable: MySqlTableFn) {
-  const users = mySqlTable("user", {
+export function createTables(
+  mySqlTable: MySqlTableFn,
+  namingStrategy: "snake_case" | "camelCase" | "PascalCase" = "camelCase"
+) {
+  const users = mySqlTable(namingStrategy === "PascalCase" ? "User" : "user", {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
     email: varchar("email", { length: 255 }).notNull(),
@@ -24,7 +29,7 @@ export function createTables(mySqlTable: MySqlTableFn) {
   })
 
   const accounts = mySqlTable(
-    "account",
+    namingStrategy === "PascalCase" ? "Account" : "account",
     {
       userId: varchar("userId", { length: 255 })
         .notNull()
@@ -49,18 +54,25 @@ export function createTables(mySqlTable: MySqlTableFn) {
     })
   )
 
-  const sessions = mySqlTable("session", {
-    sessionToken: varchar("sessionToken", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("userId", { length: 255 })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  })
+  const sessions = mySqlTable(
+    namingStrategy === "PascalCase" ? "Session" : "session",
+    {
+      sessionToken: varchar("sessionToken", { length: 255 })
+        .notNull()
+        .primaryKey(),
+      userId: varchar("userId", { length: 255 })
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+      expires: timestamp("expires", { mode: "date" }).notNull(),
+    }
+  )
 
   const verificationTokens = mySqlTable(
-    "verificationToken",
+    namingStrategy === "PascalCase"
+      ? "VerificationToken"
+      : namingStrategy === "camelCase"
+      ? "verificationToken"
+      : "verification_token",
     {
       identifier: varchar("identifier", { length: 255 }).notNull(),
       token: varchar("token", { length: 255 }).notNull(),
@@ -78,10 +90,15 @@ export type DefaultSchema = ReturnType<typeof createTables>
 
 export function mySqlDrizzleAdapter(
   client: InstanceType<typeof MySqlDatabase>,
-  tableFn = defaultMySqlTableFn
+  config?: DrizzleAdapterConfig<AnyMySqlDatabase>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const tableFn = config?.tableFn ?? defaultMySqlTableFn
+  const namingStrategy = config?.namingStrategy ?? "camelCase"
+
+  const { users, accounts, sessions, verificationTokens } = createTables(
+    tableFn,
+    namingStrategy
+  )
 
   return {
     async createUser(data) {
@@ -184,7 +201,13 @@ export function mySqlDrizzleAdapter(
         return null
       }
 
-      return dbAccount.user
+      return (
+        "user" in dbAccount
+          ? dbAccount.user
+          : "User" in dbAccount
+          ? dbAccount.User
+          : null
+      ) as AdapterUser | null
     },
     async deleteSession(sessionToken) {
       const session =

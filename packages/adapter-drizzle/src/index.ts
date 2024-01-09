@@ -16,16 +16,51 @@
  * @module @auth/drizzle-adapter
  */
 
-import { MySqlDatabase, MySqlTableFn } from "drizzle-orm/mysql-core"
-import { PgDatabase, PgTableFn } from "drizzle-orm/pg-core"
-import { BaseSQLiteDatabase, SQLiteTableFn } from "drizzle-orm/sqlite-core"
+import { MySqlDatabase } from "drizzle-orm/mysql-core"
+import { PgDatabase } from "drizzle-orm/pg-core"
+import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 import { mySqlDrizzleAdapter } from "./lib/mysql.js"
 import { pgDrizzleAdapter } from "./lib/pg.js"
 import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
-import { SqlFlavorOptions, TableFn } from "./lib/utils.js"
+import type {
+  AnyMySqlDatabase,
+  AnyPgDatabase,
+  AnySQLiteDatabase,
+  SqlFlavorOptions,
+  TableFn,
+} from "./lib/utils.js"
 import { is } from "drizzle-orm"
 
 import type { Adapter } from "@auth/core/adapters"
+
+/** Configure the Drizzle Adapter. */
+export interface DrizzleAdapterConfig<SqlFlavor> {
+  /**
+   * The function used to create database tables.
+   *
+   * By default, the adapter will use `mysqlTable` for MySQL databases, `pgTable` for Postgres databases, and `sqliteTable` for SQLite databases.
+   *
+   */
+  tableFn?: TableFn<SqlFlavor>
+  /**
+   * Use this option to force the adapter to use a specific naming strategy for your database tables.
+   *
+   * By default, the adapter will use `camelCase` for all databases.
+   *
+   * @example
+   * ```ts title="pages/api/auth/[...nextauth].ts"
+   * import NextAuth from "next-auth"
+   * import { DrizzleAdapter } from "@auth/drizzle-adapter"
+   * import { db } from "./schema"
+   *
+   * export default NextAuth({
+   *  adapter: DrizzleAdapter({ namingStrategy: "snake_case" })
+   *  // ...
+   * })
+   * ```
+   */
+  namingStrategy?: "snake_case" | "camelCase" | "PascalCase"
+}
 
 /**
  * Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
@@ -46,7 +81,7 @@ import type { Adapter } from "@auth/core/adapters"
  *   ],
  * })
  * ```
- * 
+ *
  * :::info
  * If you're using multi-project schemas, you can pass your table function as a second argument
  * :::
@@ -257,14 +292,20 @@ import type { Adapter } from "@auth/core/adapters"
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  table?: TableFn<SqlFlavor>
+  config?: DrizzleAdapterConfig<SqlFlavor>
 ): Adapter {
   if (is(db, MySqlDatabase)) {
-    return mySqlDrizzleAdapter(db, table as MySqlTableFn)
+    return mySqlDrizzleAdapter(
+      db,
+      config as DrizzleAdapterConfig<AnyMySqlDatabase>
+    )
   } else if (is(db, PgDatabase)) {
-    return pgDrizzleAdapter(db, table as PgTableFn)
+    return pgDrizzleAdapter(db, config as DrizzleAdapterConfig<AnyPgDatabase>)
   } else if (is(db, BaseSQLiteDatabase)) {
-    return SQLiteDrizzleAdapter(db, table as SQLiteTableFn)
+    return SQLiteDrizzleAdapter(
+      db,
+      config as DrizzleAdapterConfig<AnySQLiteDatabase>
+    )
   }
 
   throw new Error(

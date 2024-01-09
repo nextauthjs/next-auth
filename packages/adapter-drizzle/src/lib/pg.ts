@@ -5,14 +5,19 @@ import {
   text,
   primaryKey,
   integer,
-  PgTableFn,
-  PgDatabase,
+  type PgTableFn,
+  type PgDatabase,
 } from "drizzle-orm/pg-core"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
+import type { AnyPgDatabase } from "./utils"
+import type { DrizzleAdapterConfig } from "../index"
 
-export function createTables(pgTable: PgTableFn) {
-  const users = pgTable("user", {
+export function createTables(
+  pgTable: PgTableFn,
+  namingStrategy: "snake_case" | "camelCase" | "PascalCase" = "camelCase"
+) {
+  const users = pgTable(namingStrategy === "PascalCase" ? "User" : "user", {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
@@ -21,7 +26,7 @@ export function createTables(pgTable: PgTableFn) {
   })
 
   const accounts = pgTable(
-    "account",
+    namingStrategy === "PascalCase" ? "Account" : "account",
     {
       userId: text("userId")
         .notNull()
@@ -42,16 +47,23 @@ export function createTables(pgTable: PgTableFn) {
     })
   )
 
-  const sessions = pgTable("session", {
-    sessionToken: text("sessionToken").notNull().primaryKey(),
-    userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  })
+  const sessions = pgTable(
+    namingStrategy === "PascalCase" ? "Session" : "session",
+    {
+      sessionToken: text("sessionToken").notNull().primaryKey(),
+      userId: text("userId")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+      expires: timestamp("expires", { mode: "date" }).notNull(),
+    }
+  )
 
   const verificationTokens = pgTable(
-    "verificationToken",
+    namingStrategy === "PascalCase"
+      ? "VerificationToken"
+      : namingStrategy === "camelCase"
+      ? "verificationToken"
+      : "verification_token",
     {
       identifier: text("identifier").notNull(),
       token: text("token").notNull(),
@@ -69,10 +81,15 @@ export type DefaultSchema = ReturnType<typeof createTables>
 
 export function pgDrizzleAdapter(
   client: InstanceType<typeof PgDatabase>,
-  tableFn = defaultPgTableFn
+  config?: DrizzleAdapterConfig<AnyPgDatabase>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const tableFn = config?.tableFn ?? defaultPgTableFn
+  const namingStrategy = config?.namingStrategy ?? "camelCase"
+
+  const { users, accounts, sessions, verificationTokens } = createTables(
+    tableFn,
+    namingStrategy
+  )
 
   return {
     async createUser(data) {
@@ -174,7 +191,13 @@ export function pgDrizzleAdapter(
         return null
       }
 
-      return dbAccount.user
+      return (
+        "user" in dbAccount
+          ? dbAccount.user
+          : "User" in dbAccount
+          ? dbAccount.User
+          : null
+      ) as AdapterUser | null
     },
     async deleteSession(sessionToken) {
       const session = await client
