@@ -78,6 +78,11 @@
       "destination": "https://authjs.dev/reference/express"
     },
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "fastify.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/fastify"
+    },
+    {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
       "destination": "https://authjs.dev/reference/nextjs"
