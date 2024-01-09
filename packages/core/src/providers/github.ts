@@ -132,7 +132,7 @@ export interface GitHubEnterpriseServerConfig {
 export default function GitHub(
   config: OAuthUserConfig<GitHubProfile> & GitHubEnterpriseServerConfig
 ): OAuthConfig<GitHubProfile> {
-  const baseUrl = config.baseUrl || "https://github.com"
+  const baseUrl = config.baseUrl ?? "https://github.com"
   const apiBaseUrl = config.baseUrl
     ? `${config.baseUrl}/api/v3`
     : "https://api.github.com"
