@@ -69,16 +69,6 @@ export interface GitHubProfile {
 }
 
 /**
- * Configuration for usage with GitHub Enterprise Server.
- */
-export interface GitHubEnterpriseServerConfig {
-  /**
-   * Customize our own GitHub Enterprise Server.
-   */
-  baseUrl?: string
-}
-
-/**
  * Add GitHub login to your page and make requests to [GitHub APIs](https://docs.github.com/en/rest).
  *
  * ### Setup
@@ -130,11 +120,17 @@ export interface GitHubEnterpriseServerConfig {
  * :::
  */
 export default function GitHub(
-  config: OAuthUserConfig<GitHubProfile> & GitHubEnterpriseServerConfig
+  config: OAuthUserConfig<GitHubProfile> & {
+    /** Configuration for usage with [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started). */
+    enterprise?: {
+      /** The base URL of your GitHub Enterprise Server instance. */
+      baseUrl?: string
+    }
+  }
 ): OAuthConfig<GitHubProfile> {
-  const baseUrl = config.baseUrl ?? "https://github.com"
-  const apiBaseUrl = config.baseUrl
-    ? `${config.baseUrl}/api/v3`
+  const baseUrl = config.enterprise?.baseUrl ?? "https://github.com"
+  const apiBaseUrl = config.enterprise?.baseUrl
+    ? `${config.enterprise?.baseUrl}/api/v3`
     : "https://api.github.com"
 
   return {
