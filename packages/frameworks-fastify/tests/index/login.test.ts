@@ -1,0 +1,114 @@
+import Fastify from "fastify"
+import formbodyParser from "@fastify/formbody"
+import { FastifyAuth, getSession } from "../../src/index.js"
+
+import CredentialsProvider from "@auth/core/providers/credentials"
+export const authConfig = {
+  secret: "secret",
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "jsmith",
+        },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, req) {
+        const name = (credentials.username as string) || "John Smith"
+        const user = {
+          id: "1",
+          name,
+          email: name.replace(" ", "") + "@example.com",
+        }
+
+        return user
+      },
+    }),
+  ],
+}
+
+const extractCookieValue = (cookies: {name: string, value: string}[], name: string) => {
+  const cookie = cookies.find(({name: _name}) => _name === name)
+  return cookie?.value
+};
+
+describe("Integration test with login and getSession", () => {
+  let fastify: ReturnType<typeof Fastify>
+
+  beforeEach(() => {
+    fastify = Fastify()
+  })
+
+  it("Should return the session with username after logging in", async () => {
+    let expectations = async () => {}
+
+    fastify.register(formbodyParser)
+
+    fastify.register(FastifyAuth(authConfig), { prefix: '/api/auth' });
+
+    fastify.post('/test', async (request, reply) => {
+      const session = await getSession(request, authConfig);
+
+      expectations = async () => {
+        expect(session?.user?.name).toEqual('johnsmith');
+      };
+
+      return 'OK';
+    });
+
+    await fastify.ready();
+
+    // Get signin page
+    const response = await fastify.inject({
+      method: 'GET',
+      url: '/api/auth/signin',
+      headers: {
+        'X-Test-Header': 'foo',
+        'Accept': 'application/json',
+      },
+    });
+
+    // Parse cookies for csrf token and callback url
+    const csrfTokenCookie = extractCookieValue(response.cookies, 'authjs.csrf-token') ?? '';
+    const callbackCookie = extractCookieValue(response.cookies, 'authjs.callback-url') ?? '';
+    const csrfTokenValue = csrfTokenCookie?.split("|")[0] ?? ''
+
+    // Sign in
+    const responseCredentials = await fastify.inject({
+      method: 'POST',
+      url: '/api/auth/callback/credentials',
+      cookies: {
+        'authjs.csrf-token': csrfTokenCookie,
+        'authjs.callback-url': decodeURIComponent(callbackCookie),
+      },
+      payload: {
+        csrfToken: csrfTokenValue,
+        username: 'johnsmith',
+        password: 'ABC123',
+      },
+    });
+
+    // Parse cookie for session token
+    const sessionTokenCookie = extractCookieValue(responseCredentials.cookies, 'authjs.session-token') ?? '';
+
+    // Call test route
+    await fastify.inject({
+      method: 'POST',
+      url: '/test',
+      headers: {
+        'X-Test-Header': 'foo',
+        'Accept': 'application/json',
+      },
+      cookies: {
+        'authjs.csrf-token': csrfTokenCookie,
+        'authjs.callback-url': decodeURIComponent(callbackCookie),
+        'authjs.session-token': sessionTokenCookie,
+      },
+    })
+
+    await expectations()
+  })
+})
