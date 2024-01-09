@@ -11,6 +11,11 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/types/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/types/**/*.ts",
+    "api/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

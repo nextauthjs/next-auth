@@ -22,7 +22,7 @@ export const app = express()
 app.set("port", process.env.PORT || 3000)
 
 // Set up views engine and path
-// @ts-ignore (See https://stackoverflow.com/questions/45342307/error-cannot-find-module-pug)
+// @ts-expect-error (See https://stackoverflow.com/questions/45342307/error-cannot-find-module-pug)
 app.engine("pug", pug.__express)
 app.set("views", path.join(__dirname, "../views"))
 app.set("view engine", "pug")
@@ -34,7 +34,9 @@ app.enable("trust proxy")
 app.use(logger("dev"))
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "../public")))
+// NB: Uncomment this out if you want Express to serve static files for you vs. using a
+// hosting provider which does so for you (for example through a CDN).
+// app.use(express.static(path.join(__dirname, "../public")))
 
 // Parse incoming requests data
 app.use(express.urlencoded({ extended: true }))
@@ -72,3 +74,4 @@ app.get("/", async (req: Request, res: Response) => {
 // Error handlers
 app.use(errorNotFoundHandler)
 app.use(errorHandler)
+

@@ -34,19 +34,10 @@ This is the official Express Auth example for [Auth.js](https://express.authjs.d
 
 ## Getting started
 
-You can easily deploy this example to [Render.com](https://render.com/) by creating a new Web Service on Render, granting access to your repository, and applying the following settings:
+You can instantly deploy this example to [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=express-auth-example) by clicking the following button.
 
-#### Build
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/nextauthjs/express-auth-example&project-name=express-auth-example&repository-name=express-auth-example)
 
-```sh
-pnpm install; pnpm build
-```
-
-#### Start
-
-```sh
-pnpm start
-```
 
 ## Environment Variables
 
