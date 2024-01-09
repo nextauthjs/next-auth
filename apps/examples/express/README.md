@@ -40,7 +40,7 @@ You can instantly deploy this example to [Vercel](https://vercel.com?utm_source=
 
 ## Environment Variables
 
-Once deployed, kindly ensure you set all [required environment variables](https://authjs.dev/getting-started/deployment#environment-variables) in the `Environment` section of your Render service.
+Once deployed, kindly ensure you set all [required environment variables](https://authjs.dev/getting-started/deployment#environment-variables) in the `Environment` section of your hosting service.
 
 ## Node.js Compatibility
 
