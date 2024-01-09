@@ -16,7 +16,7 @@ export function setEnvDefaults(config: NextAuthConfig) {
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      const ID = finalProvider.id.toUpperCase()
+      const ID = finalProvider.id.toUpperCase().replaceAll("-", "_")
       finalProvider.clientId ??= process.env[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= process.env[`AUTH_${ID}_SECRET`]
       if (finalProvider.type === "oidc") {

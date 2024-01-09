@@ -94,16 +94,16 @@ export default function Twitch(
             )
           } else if (Array.isArray(body.scope)) {
             body.scope = body.scope.join(" ")
-            return new Response(JSON.stringify(body), response)
+            return Response.json(body, response)
           } else if ("scope" in body) {
             delete body.scope
-            return new Response(JSON.stringify(body), response)
+            return Response.json(body, response)
           }
         } else {
           const { message: error_description, error } = body
           if (typeof error !== "string") {
-            return new Response(
-              JSON.stringify({ error: "invalid_request", error_description }),
+            return Response.json(
+              { error: "invalid_request", error_description },
               response
             )
           }

@@ -8,7 +8,7 @@
  *
  * @module providers/azure-ad
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface AzureADProfile extends Record<string, any> {
   sub: string
@@ -92,8 +92,8 @@ export interface AzureADProfile extends Record<string, any> {
  *
  * ### Notes
  *
- * By default, Auth.js assumes that the AzureAd provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ * By default, Auth.js assumes that the Azure AD provider is
+ * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
  * :::tip
  *
@@ -113,7 +113,7 @@ export interface AzureADProfile extends Record<string, any> {
  * :::
  */
 export default function AzureAD<P extends AzureADProfile>(
-  options: OAuthUserConfig<P> & {
+  options: OIDCUserConfig<P> & {
     /**
      * https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
      *
@@ -123,19 +123,14 @@ export default function AzureAD<P extends AzureADProfile>(
     /** @default "common" */
     tenantId?: string
   }
-): OAuthConfig<P> {
+): OIDCConfig<P> {
   const { tenantId = "common", profilePhotoSize = 48, ...rest } = options
   rest.issuer ??= `https://login.microsoftonline.com/${tenantId}/v2.0`
   return {
     id: "azure-ad",
     name: "Azure Active Directory",
     type: "oidc",
-    wellKnown: `${rest.issuer}/.well-known/openid-configuration?appid=${options.clientId}`,
-    authorization: {
-      params: {
-        scope: "openid profile email User.Read",
-      },
-    },
+    authorization: { params: { scope: "openid profile email User.Read" } },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
       const response = await fetch(

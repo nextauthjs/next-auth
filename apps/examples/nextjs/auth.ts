@@ -1,36 +1,36 @@
 import NextAuth from "next-auth"
 
-// import Apple from "next-auth/providers/apple"
+import Apple from "next-auth/providers/apple"
 // import Atlassian from "next-auth/providers/atlassian"
-// import Auth0 from "next-auth/providers/auth0"
+import Auth0 from "next-auth/providers/auth0"
 // import Authentik from "next-auth/providers/authentik"
-// import AzureAD from "next-auth/providers/azure-ad"
+import AzureAD from "next-auth/providers/azure-ad"
 // import AzureB2C from "next-auth/providers/azure-ad-b2c"
 // import Battlenet from "next-auth/providers/battlenet"
 // import Box from "next-auth/providers/box"
-// import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
+import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 // import Bungie from "next-auth/providers/bungie"
-// import Cognito from "next-auth/providers/cognito"
+import Cognito from "next-auth/providers/cognito"
 // import Coinbase from "next-auth/providers/coinbase"
-// import Discord from "next-auth/providers/discord"
+import Discord from "next-auth/providers/discord"
 // import Dropbox from "next-auth/providers/dropbox"
-// import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
+import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
 // import Eveonline from "next-auth/providers/eveonline"
-// import Facebook from "next-auth/providers/facebook"
+import Facebook from "next-auth/providers/facebook"
 // import Faceit from "next-auth/providers/faceit"
 // import FortyTwoSchool from "next-auth/providers/42-school"
 // import Foursquare from "next-auth/providers/foursquare"
 // import Freshbooks from "next-auth/providers/freshbooks"
 // import Fusionauth from "next-auth/providers/fusionauth"
 import GitHub from "next-auth/providers/github"
-// import Gitlab from "next-auth/providers/gitlab"
-// import Google from "next-auth/providers/google"
+import Gitlab from "next-auth/providers/gitlab"
+import Google from "next-auth/providers/google"
 // import Hubspot from "next-auth/providers/hubspot"
 // import Instagram from "next-auth/providers/instagram"
 // import Kakao from "next-auth/providers/kakao"
 // import Keycloak from "next-auth/providers/keycloak"
 // import Line from "next-auth/providers/line"
-// import LinkedIn from "next-auth/providers/linkedin"
+import LinkedIn from "next-auth/providers/linkedin"
 // import Mailchimp from "next-auth/providers/mailchimp"
 // import Mailru from "next-auth/providers/mailru"
 // import Medium from "next-auth/providers/medium"
@@ -40,28 +40,28 @@ import GitHub from "next-auth/providers/github"
 // import Onelogin from "next-auth/providers/onelogin"
 // import Osso from "next-auth/providers/osso"
 // import Osu from "next-auth/providers/osu"
-// import Passage from "next-auth/providers/passage"
+import Passage from "next-auth/providers/passage"
 // import Patreon from "next-auth/providers/patreon"
 // import Pinterest from "next-auth/providers/pinterest"
 // import Pipedrive from "next-auth/providers/pipedrive"
 // import Reddit from "next-auth/providers/reddit"
 // import Salesforce from "next-auth/providers/salesforce"
-// import Slack from "next-auth/providers/slack"
-// import Spotify from "next-auth/providers/spotify"
+import Slack from "next-auth/providers/slack"
+import Spotify from "next-auth/providers/spotify"
 // import Strava from "next-auth/providers/strava"
 // import Todoist from "next-auth/providers/todoist"
 // import Trakt from "next-auth/providers/trakt"
-// import Twitch from "next-auth/providers/twitch"
-// import Twitter from "next-auth/providers/twitter"
+import Twitch from "next-auth/providers/twitch"
+import Twitter from "next-auth/providers/twitter"
 // import UnitedEffects from "next-auth/providers/united-effects"
 // import Vk from "next-auth/providers/vk"
 // import Wikimedia from "next-auth/providers/wikimedia"
 // import Wordpress from "next-auth/providers/wordpress"
-// import WorkOS from "next-auth/providers/workos"
+import WorkOS from "next-auth/providers/workos"
 // import Yandex from "next-auth/providers/yandex"
 // import Zitadel from "next-auth/providers/zitadel"
 // import Zoho from "next-auth/providers/zoho"
-// import Zoom from "next-auth/providers/zoom"
+import Zoom from "next-auth/providers/zoom"
 
 import type { NextAuthConfig } from "next-auth"
 
@@ -69,12 +69,13 @@ export const config = {
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
+  debug: true,
   providers: [
-    // Apple,
+    Apple,
     // Atlassian,
-    // Auth0,
+    Auth0,
     // Authentik,
-    // AzureAD,
+    AzureAD({ tenantId: process.env.AZURE_AD_TENANT_ID }),
     // AzureB2C,
     // Battlenet,
     // Box,
@@ -86,21 +87,21 @@ export const config = {
     // Dropbox,
     // DuendeIDS6,
     // Eveonline,
-    // Facebook,
+    Facebook,
     // Faceit,
     // FortyTwoSchool,
     // Foursquare,
     // Freshbooks,
     // Fusionauth,
     GitHub,
-    // Gitlab,
-    // Google,
+    Gitlab,
+    Google,
     // Hubspot,
     // Instagram,
     // Kakao,
     // Keycloak,
     // Line,
-    // LinkedIn,
+    LinkedIn,
     // Mailchimp,
     // Mailru,
     // Medium,

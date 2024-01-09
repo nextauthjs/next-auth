@@ -48,7 +48,11 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
    */
   request?: EndpointRequest<C, R, P>
-  /** @internal */
+  /**
+   * @internal
+   * The Provider implements the specification in a non-conforming way. This function will be called to conform to the specification.
+   * Make sure to warn in the conformant cases so we can remove this function for fixed providers.
+   */
   conform?: (response: Response) => Awaitable<Response | undefined>
 }
 
@@ -257,7 +261,10 @@ export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
   OAuthEndpointType | "redirectProxyUrl"
 > & {
-  authorization?: { url: URL }
+  authorization?: {
+    url: URL /** @internal */
+    conform?: AuthorizationEndpointHandler["conform"]
+  }
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]

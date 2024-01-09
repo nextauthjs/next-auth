@@ -8,7 +8,7 @@
  *
  * @module providers/gitlab
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface GitLabProfile extends Record<string, any> {
   id: number
@@ -78,16 +78,12 @@ export interface GitLabProfile extends Record<string, any> {
  *
  * ### Resources
  *
- *  - [GitLab OAuth documentation](https://docs.gitlab.com/ee/api/oauth2.html)
+ * - [OpenID Connect identity](https://docs.gitlab.com/ee/integration/openid_connect_provider.html)
  *
  * ### Notes
  *
  * By default, Auth.js assumes that the GitLab provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- *
- * :::tip
- * Enable the `read_user` option in scope if you want to save the users email address on sign up.
- * :::
+ * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
  * :::tip
  *
@@ -107,23 +103,13 @@ export interface GitLabProfile extends Record<string, any> {
  * :::
  */
 export default function GitLab<P extends GitLabProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+  options: OIDCUserConfig<P>
+): OIDCConfig<P> {
   return {
     id: "gitlab",
     name: "GitLab",
-    type: "oauth",
-    authorization: "https://gitlab.com/oauth/authorize?scope=read_user",
-    token: "https://gitlab.com/oauth/token",
-    userinfo: "https://gitlab.com/api/v4/user",
-    profile(profile) {
-      return {
-        id: profile.id.toString(),
-        name: profile.name ?? profile.username,
-        email: profile.email,
-        image: profile.avatar_url,
-      }
-    },
+    type: "oidc",
+    issuer: "https://gitlab.com",
     style: { logo: "/gitlab.svg", bg: "#FC6D26", text: "#fff" },
     options,
   }

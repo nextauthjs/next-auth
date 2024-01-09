@@ -78,7 +78,21 @@ export default function LinkedIn<P extends LinkedInProfile>(
     name: "LinkedIn",
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_post" },
-    issuer: "https://www.linkedin.com",
+    authorization: {
+      async conform(response) {
+        if (!response.ok) return
+        const result = await response.json()
+        if (result.issuer === "https://www.linkedin.com/oauth") {
+          console.warn(
+            "response body `issuer` matched configured `issuer`. Redundant workaround, please open an issue."
+          )
+          return
+        }
+        result.issuer = "https://www.linkedin.com/oauth"
+        return Response.json(result, response)
+      },
+    },
+    issuer: "https://www.linkedin.com/oauth",
     jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
     async profile(profile) {
       return {
