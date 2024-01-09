@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./tests/test.sh"
+    "test": "jest"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

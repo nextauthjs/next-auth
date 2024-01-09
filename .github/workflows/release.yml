@@ -26,6 +26,7 @@ on:
           - "@auth/mongodb-adapter"
           - "@auth/neo4j-adapter"
           - "@auth/pouchdb-adapter"
+          - "@auth/pocketbase-adapter"
           - "@auth/prisma-adapter"
           - "@auth/sequelize-adapter"
           - "@auth/supabase-adapter"

@@ -1,34 +1,191 @@
-import { runBasicTests } from "@next-auth/adapter-test"
+
+import { runBasicTests } from "utils/adapter"
 import { PocketbaseAdapter } from "../src"
-import { format } from "../src/pocketbase.utils"
+import { format } from "../src"
 import type {
   AdapterAccount,
   VerificationToken,
   AdapterUser,
   AdapterSession,
-} from "next-auth/src/adapters"
+} from "@auth/core/adapters"
 import type {
   PocketBaseAccount,
   PocketBaseSession,
   PocketBaseUser,
   PocketBaseVerificationToken,
-} from "../src/pocketbase.types"
-
-import "cross-fetch/polyfill"
+} from "../src"
 
 import Pocketbase from "pocketbase"
 const pb = new Pocketbase("http://127.0.0.1:8090")
 
+const initCollections = async () => {
+  await pb.admins.authWithPassword('username@test.com', '123456123456');
+
+  // create base collection
+  const users = await pb.collections.create({
+      name: 'users',
+      type: 'base',
+      schema: [
+          {
+              name: 'name',
+              type: 'text',
+              required: false,
+          },
+          {
+              name: 'email',
+              type: 'email',
+              required: false,
+          },
+          {
+              name: 'emailVerified',
+              type: 'date',
+              required: false,
+          },
+          {
+              name: 'image',
+              type: 'url',
+              required: false,
+          }
+      ],
+  });
+
+  const verificationTokens = await pb.collections.create({
+    name: 'verificationTokens',
+    type: 'base',
+    schema: [
+      {
+        name: "identifier",
+        type: "text",
+        required: true,
+      },
+      {
+        name: "token",
+        type: "text",
+        required: true,
+      },
+      {
+        name: "expires",
+        type: "date",
+        required: true,
+      }
+    ],
+  });
+
+  const sessions = await pb.collections.create({
+    name: 'sessions',
+    type: 'base',
+    schema: [
+      {
+        name: 'userId',
+        type: 'relation',
+        required: true,
+        options: {
+          collectionId: users.id,
+          cascadeDelete: true,
+          maxSelect: 1,
+          displayFields: null,
+        },
+      },
+      {
+        name: 'sessionToken',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'expires',
+        type: 'date',
+        required: true,
+      },
+    ],
+  });
+
+  const accounts = await pb.collections.create({
+    name: 'accounts',
+    type: 'base',
+    schema: [
+      {
+        name: 'userId',
+        type: 'relation',
+        required: true,
+        options: {
+          collectionId: users.id,
+          cascadeDelete: true,
+          maxSelect: 1,
+          displayFields: null,
+        },
+      },
+      {
+        name: 'type',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'provider',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'providerAccountId',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'refresh_token',
+        type: 'text',
+        required: false,
+      },
+      {
+        name: 'access_token',
+        type: 'text',
+        required: false,
+      },
+      {
+        name: 'expires_at',
+        type: 'number',
+        required: false,
+      },
+      {
+        name: 'token_type',
+        type: 'text',
+        required: false,
+      },
+      {
+        name: 'scope',
+        type: 'text',
+        required: false,
+      },
+      {
+        name: 'id_token',
+        type: 'text',
+        required: false,
+      },
+      {
+        name: 'session_state',
+        type: 'text',
+        required: false,
+      }
+    ],
+  });
+
+  return [users, verificationTokens, sessions, accounts]
+}
+
+initCollections().then(collections => {
+
 runBasicTests({
-  adapter: PocketbaseAdapter(pb, {
-    username: "",
-    password: "",
+  adapter: PocketbaseAdapter({
+    client: pb,
+    collections,
+    options: {
+    username: "username@test.com",
+    password: "123456",
+  }
   }),
   db: {
     async session(sessionToken) {
       try {
         const pb_session = await pb
-          .collection("next_auth_session")
+          .collection("sessions")
           .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
 
         if (pb_session.code) throw new Error("could not find session")
@@ -41,7 +198,7 @@ runBasicTests({
     async user(id) {
       try {
         const pb_user = await pb
-          .collection("next_auth_user")
+          .collection("users")
           .getOne<PocketBaseUser>(id)
         if (pb_user.code) throw new Error("could not find user")
 
@@ -53,7 +210,7 @@ runBasicTests({
     async account({ provider, providerAccountId }) {
       try {
         const pb_account = await pb
-          .collection("next_auth_account")
+          .collection("accounts")
           .getFirstListItem<PocketBaseAccount>(
             `provider="${provider}" && providerAccountId="${providerAccountId}"`
           )
@@ -72,7 +229,7 @@ runBasicTests({
     async verificationToken({ identifier, token }) {
       try {
         const pb_veriToken = await pb
-          .collection("next_auth_verificationToken")
+          .collection("verificationTokens")
           .getFirstListItem<PocketBaseVerificationToken>(
             `identifier="${identifier}" && token="${token}"`
           )
@@ -90,4 +247,6 @@ runBasicTests({
       }
     },
   },
+})
+
 })

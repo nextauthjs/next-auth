@@ -4,25 +4,179 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/src/adapters"
+} from "@auth/core/adapters"
 import type Pocketbase from "pocketbase"
-import type {
-  PocketbaseAdapterOptions,
-  PocketBaseAccount,
-  PocketBaseSession,
-  PocketBaseUser,
-  PocketBaseVerificationToken,
-} from "./pocketbase.types"
-import { adminLogin, checkCollections, format } from "./pocketbase.utils"
+import { type Collection, type Record as PBRecord } from "pocketbase"
 
-export const PocketbaseAdapter = (
-  client: Pocketbase,
+export interface PocketbaseAdapterOptions {
+  username: string
+  password: string
+}
+
+export type PocketBaseUser = PBRecord & {
+  name: string
+  image: string
+  email: string
+  emailVerified: string
+  code?: number
+}
+
+export type PocketBaseSession = PBRecord & {
+  expires: string
+  sessionToken: string
+  userId: string
+  code?: number
+}
+
+export type PocketBaseAccount = PBRecord & {
+  userId: string
+  type: string
+  provider: string
+  providerAccountId: string
+  refresh_token: string
+  access_token: string
+  expires_at: string
+  token_type: string
+  scope: string
+  id_token: string
+  session_state: string
+  oauth_token_secret: string
+  oauth_token: string
+  code?: number
+}
+
+export type PocketBaseVerificationToken = PBRecord & {
+  identifier: string
+  token: string
+  expires: string
+  code?: number
+}
+
+export type PocketBaseAdapterProps = {
+  client: Pocketbase
   options: PocketbaseAdapterOptions
-): Adapter => {
+  collections: Collection[]
+}
+
+
+const PB_RECORD_KEYS = [
+  "created",
+  "updated",
+  "clone",
+  "code",
+  "collectionId",
+  "collectionName",
+  "expand",
+  "export",
+  "isNew",
+  "load",
+]
+
+const NEXTAUTH_TABLE_NAMES = [
+  "next_auth_user",
+  "next_auth_account",
+  "next_auth_session",
+  "next_auth_verificationToken",
+]
+
+function isDate(date: any) {
+  return (
+    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
+  )
+}
+
+export function format<TAdapterType>(obj: Record<string, any>): TAdapterType {
+  for (const [key, value] of Object.entries(obj)) {
+    if (isDate(value)) {
+      obj[key] = new Date(value)
+    }
+
+    if (PB_RECORD_KEYS.includes(key)) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete obj[key]
+    }
+  }
+
+  return obj as TAdapterType
+}
+
+export async function adminLogin(
+  pb: Pocketbase,
+  options: PocketbaseAdapterOptions
+): Promise<any> {
+  return await pb.admins.authWithPassword(options.username, options.password)
+}
+
+async function initCollections(
+  { client, collections, options }: PocketBaseAdapterProps,
+) {
+  try {
+    await adminLogin(client, options)
+    await client.collections.import(collections, false)
+  } catch (_) {
+    throw new Error(
+      "could not automatically create the default next_auth collections"
+    )
+  }
+}
+
+export async function checkCollections(
+  { client, collections, options }: PocketBaseAdapterProps,
+) {
+  try {
+    await adminLogin(client, options)
+
+    const collectionNames = (
+      await client.collections.getFullList(200, {
+        sort: "-created",
+      })
+    ).map((collection) => collection.name)
+
+    // if all of the table names are NOT present in pocketbase, create them.
+    if (!NEXTAUTH_TABLE_NAMES.every((name) => collectionNames.includes(name))) {
+      await initCollections({client, collections, options})
+    }
+  } catch (e) {
+    throw new Error("error creating collections in pocketbase")
+  }
+}
+
+/**
+ * 
+## Setup
+ * Configure Auth.js to use the PocketBase Adapter:
+ *
+ * ```javascript title="pages/api/auth/[...nextauth].js"
+ * import NextAuth from "next-auth"
+ * import GoogleProvider from "next-auth/providers/google"
+ * import { PocketBaseAdapter } from "@auth/pocketbase-adapter"
+ * import collections from "./collections" // the collections created in pocketbase
+ *
+ * const pb = new Pocketbase(process.env.POCKETBASE_URL)
+ *
+ * export default NextAuth({
+ *   adapter: PocketBaseAdapter({
+ *    client: pb,
+ *    collections,
+ *    options: {
+ *      username: process.env.PB_USERNAME,
+ *      password: process.env.PB_PASSWORD,
+ *    },
+ *   }),
+ *   providers: [
+ *     GoogleProvider({
+ *       clientId: process.env.GOOGLE_CLIENT_ID,
+ *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+ *     }),
+ *   ],
+ * })
+ * ```
+ */
+export const PocketbaseAdapter = ({ client, collections, options }: PocketBaseAdapterProps): Adapter => {
   return {
     async createUser(user) {
       try {
-        await checkCollections(client, options)
+        await checkCollections({ client, collections, options })
 
         const pb_user = await client
           .collection("next_auth_user")
@@ -128,7 +282,7 @@ export const PocketbaseAdapter = (
     },
     async linkAccount(account) {
       try {
-        await checkCollections(client, options)
+        await checkCollections({ client, collections, options })
 
         const pb_account = await client
           .collection("next_auth_account")
@@ -150,7 +304,7 @@ export const PocketbaseAdapter = (
     },
     async createSession(session) {
       try {
-        await checkCollections(client, options)
+        await checkCollections({ client, collections, options })
 
         const pb_session = await client
           .collection("next_auth_session")
@@ -245,7 +399,7 @@ export const PocketbaseAdapter = (
     },
     async createVerificationToken(verificationToken) {
       try {
-        await checkCollections(client, options)
+        await checkCollections({ client, collections, options })
 
         const pb_veriToken = await client
           .collection("next_auth_verificationToken")
@@ -317,9 +471,7 @@ export const PocketbaseAdapter = (
         await client
           .collection("next_auth_account")
           .delete(pb_account.id)
-          .then((_) => null)
       } catch (_) {
-        return null
       }
     },
   }
