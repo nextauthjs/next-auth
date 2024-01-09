@@ -16,19 +16,20 @@
  *
  * ```ts title="src/routes/auth.route.ts"
  * import { FastifyAuth } from "@auth/fastify"
+ * import formbodyParser from "@fastify/formbody"
+ * import httpProxy from "@fastify/http-proxy"
  * import GitHub from "@auth/fastify/providers/github"
  * import Fastify from "fastify"
  *
  * const fastify = Fastify();
  *
  * // Make sure to use a form body parser so Auth.js can receive data from the client
- * fastify.register(require('fastify-formbody'));
+ * fastify.register(formbodyParser)
  *
  * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
- * fastify.register(require('fastify-http-proxy'), {
- *   upstream: 'https://your-upstream-url.com',
+ * fastify.register(httpProxy, {
+ *   upstream: 'https://my-api.example.com',
  *   http2: false, // Set to true if your upstream supports http2
- *   trustProxy: true
  * });
  *
  * fastify.register(
@@ -143,9 +144,8 @@
 
 import { Auth } from "@auth/core"
 import type { AuthConfig, Session } from "@auth/core/types"
-import type { FastifyRequest, FastifyReply, FastifyPluginAsync, FastifyPlugin } from 'fastify'
+import type { FastifyRequest, FastifyPluginAsync } from 'fastify'
 import { toWebRequest, toFastifyReply } from "./lib/index.js"
-import fastify from "fastify"
 
 export type {
   Account,
