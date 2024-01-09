@@ -127,7 +127,7 @@ export default function renderPage(params: RenderPageParams) {
         return {
           redirect: `${pages.error}${
             pages.error.includes("?") ? "&" : "?"
-          }error=${error}`,
+          }error=${encodeURIComponent(error)}`,
           cookies,
         }
       }
