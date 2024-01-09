@@ -16,9 +16,6 @@ Thumbs.db
 # Ignore built ts files
 dist/**/*
 
+# Ignore built css files
 /public/css/output.css
 
-/test-results/
-/playwright-report/
-/playwright/.cache/
-/playwright-screenshots/
