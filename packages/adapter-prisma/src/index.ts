@@ -98,6 +98,7 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  * }
  *
  * model VerificationToken {
+ *   id         String  @id @default(auto()) @map("_id") @db.ObjectId
  *   identifier String
  *   token      String   @unique
  *   expires    DateTime
@@ -208,6 +209,7 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  * }
  *
  * model VerificationToken {
+ *   id         String  @id @default(auto()) @map("_id") @db.ObjectId
  *   identifier String
  *   token      String   @unique
  *   expires    DateTime
