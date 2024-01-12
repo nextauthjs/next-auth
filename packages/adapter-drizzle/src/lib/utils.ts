@@ -8,6 +8,28 @@ import type { DefaultSchema as PgSchema } from "./pg.js"
 import type { DefaultSchema as MySqlSchema } from "./mysql.js"
 import type { DefaultSchema as SQLiteSchema } from "./sqlite.js"
 
+// Naming strategy
+export const names = {
+  snake_case: {
+    user: "user",
+    account: "account",
+    session: "session",
+    verificationToken: "verification_token",
+  },
+  camelCase: {
+    user: "user",
+    account: "account",
+    session: "session",
+    verificationToken: "verificationToken",
+  },
+  PascalCase: {
+    user: "User",
+    account: "Account",
+    session: "Session",
+    verificationToken: "VerificationToken",
+  },
+}
+
 export type AnyMySqlDatabase = MySqlDatabase<any, any>
 export type AnyPgDatabase = PgDatabase<any, any, any>
 export type AnySQLiteDatabase = BaseSQLiteDatabase<any, any, any, any>

@@ -10,14 +10,14 @@ import {
 } from "drizzle-orm/pg-core"
 
 import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
-import type { AnyPgDatabase } from "./utils"
+import { names, type AnyPgDatabase } from "./utils"
 import type { DrizzleAdapterConfig } from "../index"
 
 export function createTables(
   pgTable: PgTableFn,
   namingStrategy: "snake_case" | "camelCase" | "PascalCase" = "camelCase"
 ) {
-  const users = pgTable(namingStrategy === "PascalCase" ? "User" : "user", {
+  const users = pgTable(names[namingStrategy].user, {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
@@ -26,7 +26,7 @@ export function createTables(
   })
 
   const accounts = pgTable(
-    namingStrategy === "PascalCase" ? "Account" : "account",
+    names[namingStrategy].account,
     {
       userId: text("userId")
         .notNull()
@@ -47,23 +47,16 @@ export function createTables(
     })
   )
 
-  const sessions = pgTable(
-    namingStrategy === "PascalCase" ? "Session" : "session",
-    {
-      sessionToken: text("sessionToken").notNull().primaryKey(),
-      userId: text("userId")
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      expires: timestamp("expires", { mode: "date" }).notNull(),
-    }
-  )
+  const sessions = pgTable(names[namingStrategy].session, {
+    sessionToken: text("sessionToken").notNull().primaryKey(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  })
 
   const verificationTokens = pgTable(
-    namingStrategy === "PascalCase"
-      ? "VerificationToken"
-      : namingStrategy === "camelCase"
-      ? "verificationToken"
-      : "verification_token",
+    names[namingStrategy].verificationToken,
     {
       identifier: text("identifier").notNull(),
       token: text("token").notNull(),
@@ -191,13 +184,7 @@ export function pgDrizzleAdapter(
         return null
       }
 
-      return (
-        "user" in dbAccount
-          ? dbAccount.user
-          : "User" in dbAccount
-          ? dbAccount.User
-          : null
-      ) as AdapterUser | null
+      return dbAccount[names[namingStrategy].user] as AdapterUser | null
     },
     async deleteSession(sessionToken) {
       const session = await client

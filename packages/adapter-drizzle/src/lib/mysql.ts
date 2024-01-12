@@ -10,14 +10,14 @@ import {
 } from "drizzle-orm/mysql-core"
 
 import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
-import type { AnyMySqlDatabase } from "./utils"
+import { names, type AnyMySqlDatabase } from "./utils"
 import type { DrizzleAdapterConfig } from "../index"
 
 export function createTables(
   mySqlTable: MySqlTableFn,
   namingStrategy: "snake_case" | "camelCase" | "PascalCase" = "camelCase"
 ) {
-  const users = mySqlTable(namingStrategy === "PascalCase" ? "User" : "user", {
+  const users = mySqlTable(names[namingStrategy].user, {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
     email: varchar("email", { length: 255 }).notNull(),
@@ -29,7 +29,7 @@ export function createTables(
   })
 
   const accounts = mySqlTable(
-    namingStrategy === "PascalCase" ? "Account" : "account",
+    names[namingStrategy].account,
     {
       userId: varchar("userId", { length: 255 })
         .notNull()
@@ -54,25 +54,18 @@ export function createTables(
     })
   )
 
-  const sessions = mySqlTable(
-    namingStrategy === "PascalCase" ? "Session" : "session",
-    {
-      sessionToken: varchar("sessionToken", { length: 255 })
-        .notNull()
-        .primaryKey(),
-      userId: varchar("userId", { length: 255 })
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      expires: timestamp("expires", { mode: "date" }).notNull(),
-    }
-  )
+  const sessions = mySqlTable(names[namingStrategy].session, {
+    sessionToken: varchar("sessionToken", { length: 255 })
+      .notNull()
+      .primaryKey(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  })
 
   const verificationTokens = mySqlTable(
-    namingStrategy === "PascalCase"
-      ? "VerificationToken"
-      : namingStrategy === "camelCase"
-      ? "verificationToken"
-      : "verification_token",
+    names[namingStrategy].verificationToken,
     {
       identifier: varchar("identifier", { length: 255 }).notNull(),
       token: varchar("token", { length: 255 }).notNull(),
@@ -201,13 +194,7 @@ export function mySqlDrizzleAdapter(
         return null
       }
 
-      return (
-        "user" in dbAccount
-          ? dbAccount.user
-          : "User" in dbAccount
-          ? dbAccount.User
-          : null
-      ) as AdapterUser | null
+      return dbAccount[names[namingStrategy].user] as AdapterUser | null
     },
     async deleteSession(sessionToken) {
       const session =

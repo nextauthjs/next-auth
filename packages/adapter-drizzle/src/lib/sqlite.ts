@@ -9,14 +9,14 @@ import {
 } from "drizzle-orm/sqlite-core"
 
 import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
-import type { AnySQLiteDatabase } from "./utils"
+import { names, type AnySQLiteDatabase } from "./utils"
 import type { DrizzleAdapterConfig } from "../index"
 
 export function createTables(
   sqliteTable: SQLiteTableFn,
   namingStrategy: "snake_case" | "camelCase" | "PascalCase" = "camelCase"
 ) {
-  const users = sqliteTable(namingStrategy === "PascalCase" ? "User" : "user", {
+  const users = sqliteTable(names[namingStrategy].user, {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
@@ -25,7 +25,7 @@ export function createTables(
   })
 
   const accounts = sqliteTable(
-    namingStrategy === "PascalCase" ? "Account" : "account",
+    names[namingStrategy].account,
     {
       userId: text("userId")
         .notNull()
@@ -46,23 +46,16 @@ export function createTables(
     })
   )
 
-  const sessions = sqliteTable(
-    namingStrategy === "PascalCase" ? "Session" : "session",
-    {
-      sessionToken: text("sessionToken").notNull().primaryKey(),
-      userId: text("userId")
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-    }
-  )
+  const sessions = sqliteTable(names[namingStrategy].session, {
+    sessionToken: text("sessionToken").notNull().primaryKey(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  })
 
   const verificationTokens = sqliteTable(
-    namingStrategy === "PascalCase"
-      ? "VerificationToken"
-      : namingStrategy === "camelCase"
-        ? "verificationToken"
-        : "verification_token",
+    names[namingStrategy].verificationToken,
     {
       identifier: text("identifier").notNull(),
       token: text("token").notNull(),
@@ -186,12 +179,7 @@ export function SQLiteDrizzleAdapter(
         return null
       }
       return Promise.resolve(results).then(
-        (results) =>
-          ("user" in results
-            ? results.user
-            : "User" in results
-              ? results.User
-              : null) as AdapterUser | null
+        (results) => results[names[namingStrategy].user] as AdapterUser | null
       )
     },
     async deleteSession(sessionToken) {
