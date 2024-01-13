@@ -40,9 +40,6 @@
       "types": "./react.d.ts",
       "import": "./react.js"
     },
-    "./types": {
-      "types": "./types.d.ts"
-    },
     "./package.json": "./package.json"
   },
   "keywords": [
