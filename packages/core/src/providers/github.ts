@@ -128,9 +128,9 @@ export default function GitHub(
     }
   }
 ): OAuthConfig<GitHubProfile> {
-  const baseUrl = config.enterprise?.baseUrl ?? "https://github.com"
-  const apiBaseUrl = config.enterprise?.baseUrl
-    ? `${config.enterprise?.baseUrl}/api/v3`
+  const baseUrl = config?.enterprise?.baseUrl ?? "https://github.com"
+  const apiBaseUrl = config?.enterprise?.baseUrl
+    ? `${config?.enterprise?.baseUrl}/api/v3`
     : "https://api.github.com"
 
   return {
