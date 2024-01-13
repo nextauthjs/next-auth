@@ -167,12 +167,15 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <span className={styles.heroClerk}>
+            <div className={styles.heroClerk}>
               Looking for a hosted alternative?
-              <a href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta" target="_blank">
+              <a
+                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                target="_blank"
+              >
                 Try Clerk →
               </a>
-            </span>
+            </div>
             <div className="hero-marquee">
               <ProviderMarquee />
             </div>
