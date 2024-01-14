@@ -3,16 +3,16 @@ import type {
   AdapterAccount,
   AdapterSession,
   AdapterUser,
-  VerificationToken,
 } from "@auth/core/adapters"
-import type Pocketbase from "pocketbase"
-import { type Collection, type Record as PBRecord } from "pocketbase"
+import type PocketBase from "pocketbase"
+import { type Record as PBRecord } from "pocketbase"
 
-export interface PocketbaseAdapterOptions {
+export interface PocketBaseAdapterOptions {
   username: string
   password: string
 }
 
+/** @internal */
 export type PocketBaseUser = PBRecord & {
   name: string
   image: string
@@ -21,6 +21,7 @@ export type PocketBaseUser = PBRecord & {
   code?: number
 }
 
+/** @internal */
 export type PocketBaseSession = PBRecord & {
   expires: string
   sessionToken: string
@@ -28,6 +29,7 @@ export type PocketBaseSession = PBRecord & {
   code?: number
 }
 
+/** @internal */
 export type PocketBaseAccount = PBRecord & {
   userId: string
   type: string
@@ -45,19 +47,13 @@ export type PocketBaseAccount = PBRecord & {
   code?: number
 }
 
+/** @internal */
 export type PocketBaseVerificationToken = PBRecord & {
   identifier: string
   token: string
   expires: string
   code?: number
 }
-
-export type PocketBaseAdapterProps = {
-  client: Pocketbase
-  options: PocketbaseAdapterOptions
-  collections: Collection[]
-}
-
 
 const PB_RECORD_KEYS = [
   "created",
@@ -72,73 +68,41 @@ const PB_RECORD_KEYS = [
   "load",
 ]
 
-const NEXTAUTH_TABLE_NAMES = [
-  "next_auth_user",
-  "next_auth_account",
-  "next_auth_session",
-  "next_auth_verificationToken",
-]
-
-function isDate(date: any) {
-  return (
-    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
-  )
+// https://github.com/honeinc/is-iso-date/blob/master/index.js
+const isoDateRE =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+function isDate(value: any) {
+  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
-export function format<TAdapterType>(obj: Record<string, any>): TAdapterType {
-  for (const [key, value] of Object.entries(obj)) {
-    if (isDate(value)) {
-      obj[key] = new Date(value)
-    }
-
-    if (PB_RECORD_KEYS.includes(key)) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete obj[key]
-    }
-  }
-
-  return obj as TAdapterType
+/** @internal */
+export const format = {
+  /** Takes an object that's coming from a database and converts it to plain JavaScript. */
+  from<T>(object: Record<string, any> = {}, includeId?: boolean): T {
+    const newObject: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(object))
+      if (key === "id" && !includeId) continue
+      else if (PB_RECORD_KEYS.includes(key)) continue
+      else if (typeof value === "string" && isDate(value?.replace(" ", "T")))
+        newObject[key] = new Date(value)
+      else newObject[key] = value
+    return newObject as T
+  },
+  /** Takes an object that's coming from Auth.js and prepares it to be written to the database. */
+  to<T>(object: Record<string, any>): T {
+    const newObject: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(object))
+      if (value instanceof Date) newObject[key] = value.toISOString()
+      else newObject[key] = value
+    return newObject as T
+  },
 }
 
-export async function adminLogin(
-  pb: Pocketbase,
-  options: PocketbaseAdapterOptions
+async function adminLogin(
+  pb: PocketBase,
+  options: PocketBaseAdapterOptions
 ): Promise<any> {
   return await pb.admins.authWithPassword(options.username, options.password)
-}
-
-async function initCollections(
-  { client, collections, options }: PocketBaseAdapterProps,
-) {
-  try {
-    await adminLogin(client, options)
-    await client.collections.import(collections, false)
-  } catch (_) {
-    throw new Error(
-      "could not automatically create the default next_auth collections"
-    )
-  }
-}
-
-export async function checkCollections(
-  { client, collections, options }: PocketBaseAdapterProps,
-) {
-  try {
-    await adminLogin(client, options)
-
-    const collectionNames = (
-      await client.collections.getFullList(200, {
-        sort: "-created",
-      })
-    ).map((collection) => collection.name)
-
-    // if all of the table names are NOT present in pocketbase, create them.
-    if (!NEXTAUTH_TABLE_NAMES.every((name) => collectionNames.includes(name))) {
-      await initCollections({client, collections, options})
-    }
-  } catch (e) {
-    throw new Error("error creating collections in pocketbase")
-  }
 }
 
 /**
@@ -150,18 +114,15 @@ export async function checkCollections(
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { PocketBaseAdapter } from "@auth/pocketbase-adapter"
- * import collections from "./collections" // the collections created in pocketbase
  *
  * const pb = new Pocketbase(process.env.POCKETBASE_URL)
  *
  * export default NextAuth({
- *   adapter: PocketBaseAdapter({
- *    client: pb,
- *    collections,
- *    options: {
+ *   adapter: PocketBaseAdapter(
+ *    pb,
+ *    {
  *      username: process.env.PB_USERNAME,
  *      password: process.env.PB_PASSWORD,
- *    },
  *   }),
  *   providers: [
  *     GoogleProvider({
@@ -172,44 +133,29 @@ export async function checkCollections(
  * })
  * ```
  */
-export const PocketbaseAdapter = ({ client, collections, options }: PocketBaseAdapterProps): Adapter => {
+export const PocketBaseAdapter = (
+  client: PocketBase,
+  options: PocketBaseAdapterOptions
+): Adapter => {
+  const { from, to } = format
   return {
     async createUser(user) {
-      try {
-        await checkCollections({ client, collections, options })
+      await client.collection("users").create<PocketBaseUser>(to(user))
 
-        const pb_user = await client
-          .collection("next_auth_user")
-          .create<PocketBaseUser>({
-            ...user,
-            emailVerified: user.emailVerified?.toISOString().replace("T", " "),
-          })
-
-        if (pb_user.code)
-          throw new Error(
-            "error creating user in database - see pocketbase logs"
-          )
-
-        return format<AdapterUser>(pb_user)
-      } catch (_) {
-        throw new Error("error creating user - see pocketbase logs")
-      }
+      return user
     },
     async getUser(id) {
       try {
         await adminLogin(client, options)
 
         const pb_user = await client
-          .collection("next_auth_user")
+          .collection("users")
           .getOne<PocketBaseUser>(id)
 
-        if (pb_user.code)
-          throw new Error(
-            "error getting user from database - see pocketbase logs"
-          )
+        if (pb_user.code) return null
 
-        return format<AdapterUser>(pb_user)
-      } catch (_) {
+        return from(pb_user, true)
+      } catch {
         return null
       }
     },
@@ -218,16 +164,13 @@ export const PocketbaseAdapter = ({ client, collections, options }: PocketBaseAd
         await adminLogin(client, options)
 
         const pb_user = await client
-          .collection("next_auth_user")
+          .collection("users")
           .getFirstListItem<PocketBaseUser>(`email="${email}"`)
 
-        if (pb_user.code)
-          throw new Error(
-            "error getting user from database using email filter - see pocketbase logs"
-          )
+        if (pb_user.code) return null
 
-        return format<AdapterUser>(pb_user)
-      } catch (_) {
+        return from(pb_user, true)
+      } catch {
         return null
       }
     },
@@ -236,185 +179,114 @@ export const PocketbaseAdapter = ({ client, collections, options }: PocketBaseAd
         await adminLogin(client, options)
 
         const pb_account = await client
-          .collection("next_auth_account")
+          .collection("accounts")
           .getFirstListItem<PocketBaseAccount>(
             `provider="${provider}" && providerAccountId="${providerAccountId}"`
           )
 
-        if (pb_account.code)
-          throw new Error(
-            "error getting user from database by account filter - see pocketbase logs"
-          )
+        if (pb_account.code) return null
 
         const pb_user = await client
-          .collection("next_auth_user")
+          .collection("users")
           .getOne<PocketBaseUser>(pb_account.userId)
 
-        if (pb_user.code)
-          throw new Error(
-            "error getting user from database within account filter function - see pocketbase logs"
-          )
+        if (pb_user.code) return null
 
-        return format<AdapterUser>(pb_user)
-      } catch (_) {
+        return from(pb_user, true)
+      } catch {
         return null
       }
     },
     async updateUser(user) {
-      try {
-        await adminLogin(client, options)
+      await adminLogin(client, options)
 
-        const pb_user = await client
-          .collection("next_auth_user")
-          .update<PocketBaseUser>(user.id as string, {
-            ...user,
-            email_verified: user.emailVerified?.toISOString().replace("T", " "),
-          })
-        if (pb_user.code)
-          throw new Error(
-            "error updating user in database - see pocketbase logs"
-          )
+      const pb_user = await client
+        .collection("users")
+        .update<PocketBaseUser>(user.id, to(user))
 
-        return format<AdapterUser>(pb_user)
-      } catch (_) {
-        throw new Error("error updating user - see pocketbase logs")
-      }
+      return from(pb_user, true)
     },
     async linkAccount(account) {
-      try {
-        await checkCollections({ client, collections, options })
+      const pb_account = await client
+        .collection("accounts")
+        .create<PocketBaseAccount>({
+          ...account,
+        })
 
-        const pb_account = await client
-          .collection("next_auth_account")
-          .create<PocketBaseAccount>({
-            ...account,
-          })
+      if (pb_account.code) return null
 
-        if (pb_account.code)
-          throw new Error(
-            "error linking account in database - see pocketbase logs"
-          )
-
-        return format<AdapterAccount>(pb_account)
-      } catch (_) {
-        throw new Error(
-          "error creating account in database - see pocketbase logs"
-        )
-      }
+      return from<AdapterAccount>(pb_account)
     },
     async createSession(session) {
-      try {
-        await checkCollections({ client, collections, options })
+      const pb_session = await client
+        .collection("sessions")
+        .create<PocketBaseSession>({
+          ...session,
+          expires: session.expires.toISOString().replace("T", " "),
+        })
 
-        const pb_session = await client
-          .collection("next_auth_session")
-          .create<PocketBaseSession>({
-            ...session,
-            expires: session.expires.toISOString().replace("T", " "),
-          })
-
-        if (pb_session.code)
-          throw new Error(
-            "error creating session in database - see pocketbase logs"
-          )
-
-        return format<AdapterSession>(pb_session)
-      } catch (error) {
-        throw new Error(
-          "error creating session in database - see pocketbase logs"
-        )
-      }
+      return from(pb_session)
     },
     async getSessionAndUser(sessionToken) {
       try {
         await adminLogin(client, options)
 
         const pb_session = await client
-          .collection("next_auth_session")
+          .collection("sessions")
           .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
 
-        if (pb_session.code)
-          throw new Error(
-            "error retrieving session from database - see pocketbase logs"
-          )
+        if (pb_session.code) return null
 
         const pb_user = await client
-          .collection("next_auth_user")
+          .collection("users")
           .getOne<PocketBaseUser>(pb_session.userId)
 
-        if (pb_user.code)
-          throw new Error(
-            "error getting user from database within getSessionAndUser func - see pocketbase logs"
-          )
+        if (pb_user.code) return null
 
-        const session = format<AdapterSession>(pb_session)
-        const user = format<AdapterUser>(pb_user)
         return {
-          session,
-          user,
+          session: from<AdapterSession>(pb_session),
+          user: from<AdapterUser>(pb_user, true),
         }
-      } catch (_) {
+      } catch {
         return null
       }
     },
     async updateSession(session) {
-      try {
-        await adminLogin(client, options)
+      await adminLogin(client, options)
 
-        const record = await client
-          .collection("next_auth_session")
-          .getFirstListItem<PocketBaseSession>(
-            `sessionToken="${session.sessionToken}"`
-          )
+      const record = await client
+        .collection("sessions")
+        .getFirstListItem<PocketBaseSession>(
+          `sessionToken="${session.sessionToken}"`
+        )
 
-        const pb_session = await client
-          .collection("next_auth_session")
-          .update<PocketBaseSession>(record.id, {
-            ...session,
-            expires: session.expires?.toISOString().replace("T", " "),
-          })
+      const pb_session = await client
+        .collection("sessions")
+        .update<PocketBaseSession>(record.id, to(session))
 
-        if (pb_session.code)
-          throw new Error(
-            "error updating session in database - see pocketbase logs"
-          )
+      if (pb_session.code) return null
 
-        return format<AdapterSession>(pb_session)
-      } catch (_) {
-        return null
-      }
+      return from(pb_session)
     },
     async deleteSession(sessionToken) {
-      try {
-        await adminLogin(client, options)
+      await adminLogin(client, options)
 
-        const record = await client
-          .collection("next_auth_session")
-          .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
+      const record = await client
+        .collection("sessions")
+        .getFirstListItem<PocketBaseSession>(`sessionToken="${sessionToken}"`)
 
-        await client.collection("next_auth_session").delete(record.id)
-      } catch (_) {
-        return null
-      }
+      await client.collection("sessions").delete(record.id)
     },
     async createVerificationToken(verificationToken) {
       try {
-        await checkCollections({ client, collections, options })
-
         const pb_veriToken = await client
-          .collection("next_auth_verificationToken")
-          .create<PocketBaseVerificationToken>({
-            ...verificationToken,
-            expires: verificationToken.expires.toISOString().replace("T", " "),
-          })
+          .collection("verificationTokens")
+          .create<PocketBaseVerificationToken>(to(verificationToken))
 
-        if (pb_veriToken.code)
-          throw new Error(
-            "error creating verificationToken in database - see pocketbase logs"
-          )
+        if (pb_veriToken.code) return null
 
-        return format<VerificationToken>(pb_veriToken)
-      } catch (_) {
+        return verificationToken
+      } catch {
         return null
       }
     },
@@ -423,30 +295,25 @@ export const PocketbaseAdapter = ({ client, collections, options }: PocketBaseAd
         await adminLogin(client, options)
 
         const pb_veriToken = await client
-          .collection("next_auth_verificationToken")
+          .collection("verificationTokens")
           .getFirstListItem<PocketBaseVerificationToken>(
             `identifier="${identifier}" && token="${token}"`
           )
 
-        if (pb_veriToken.code)
-          throw new Error(
-            "error finding verification Token within database - see pocketbase logs"
-          )
+        if (pb_veriToken.code) return null
 
         const success = await client
-          .collection("next_auth_verificationToken")
+          .collection("verificationTokens")
           .delete(pb_veriToken.id)
 
         if (success) {
           // @ts-expect-error internal id's are not to be returned with the rest of the token
-          const { id, ...returnVal } = format<VerificationToken>(pb_veriToken)
+          const { id, ...returnVal } = from(pb_veriToken)
           return returnVal
         } else {
-          throw new Error(
-            "unable to delete verificationToken from database - see pocketbase logs"
-          )
+          return null
         }
-      } catch (_) {
+      } catch {
         return null
       }
     },
@@ -454,27 +321,24 @@ export const PocketbaseAdapter = ({ client, collections, options }: PocketBaseAd
       await adminLogin(client, options)
 
       await client
-        .collection("next_auth_user")
+        .collection("users")
         .delete(userId)
-        .catch((_) => null)
+        .catch(() => null)
     },
     async unlinkAccount({ provider, providerAccountId }) {
       try {
         await adminLogin(client, options)
 
         const pb_account = await client
-          .collection("next_auth_account")
+          .collection("accounts")
           .getFirstListItem<PocketBaseAccount>(
             `providerAccountId="${providerAccountId} && provider=${provider}"`
           )
 
-        await client
-          .collection("next_auth_account")
-          .delete(pb_account.id)
-      } catch (_) {
+        await client.collection("accounts").delete(pb_account.id)
+      } catch {
+        return
       }
     },
   }
 }
-
-export { PocketbaseAdapter as default }
