@@ -4,6 +4,7 @@ import authConfig from "auth.config"
 // import { PrismaClient } from "@prisma/client"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
 import Auth0 from "next-auth/providers/auth0"
+import { NextRequest } from "next/server"
 
 // globalThis.prisma ??= new PrismaClient()
 
@@ -15,9 +16,14 @@ import Auth0 from "next-auth/providers/auth0"
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(
   (request) => {
-    console.log({ authRequest: request })
-    if (process.env.NODE_ENV === "development") {
-      authConfig.providers.push(Auth0)
+    console.log(request?.nextUrl)
+    if (request?.nextUrl.searchParams.get("test")) {
+      return {
+        // adapter: PrismaAdapter(globalThis.prisma),
+        session: { strategy: "jwt" },
+        ...authConfig,
+        providers: [],
+      }
     }
     return {
       // adapter: PrismaAdapter(globalThis.prisma),

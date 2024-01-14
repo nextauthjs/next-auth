@@ -332,7 +332,7 @@ export interface NextAuthResult {
 export default function NextAuth(
   config:
     | NextAuthConfig
-    | ((request: NextRequest | { headers: Headers }) => NextAuthConfig)
+    | ((request: NextRequest | undefined) => NextAuthConfig)
 ): NextAuthResult {
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {
@@ -347,7 +347,7 @@ export default function NextAuth(
         if (!args.length) {
           // React Server Components
           const _headers = headers()
-          const _config = config({ headers: _headers })
+          const _config = config(undefined) // Review: Should we pass headers() here instead?
           setEnvDefaults(_config)
 
           return getSession(_headers, _config).then((r) => r.json()) as any
@@ -358,6 +358,7 @@ export default function NextAuth(
           // export { auth as default } from "auth"
           const req = args[0]
           const ev = args[1]
+          // @ts-expect-error
           const _config = config(req)
           setEnvDefaults(_config)
 
@@ -396,12 +397,12 @@ export default function NextAuth(
       },
 
       signIn: (provider, options, authorizationParams) => {
-        const _config = config({ headers: headers() })
+        const _config = config(undefined)
         setEnvDefaults(_config)
         return signIn(provider, options, authorizationParams, _config)
       },
       signOut: (options) => {
-        const _config = config({ headers: headers() })
+        const _config = config(undefined)
         setEnvDefaults(_config)
         return signOut(options, _config)
       },
