@@ -50,7 +50,7 @@
 
 import { Auth } from "@auth/core"
 import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
-import { initAuth } from "./lib/index.js"
+import { getSession, handleAuth, initAuth, isReqWrapper } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Session } from "@auth/core/types"
@@ -61,8 +61,13 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
-import type { NextRequest } from "next/server"
-import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+import { NextRequest } from "next/server"
+import type {
+  NextAuthConfig,
+  NextAuthMiddleware,
+  NextAuthRequest,
+} from "./lib/index.js"
+import { headers } from "next/headers"
 export { AuthError } from "@auth/core/errors"
 
 export type {
@@ -324,7 +329,87 @@ export interface NextAuthResult {
  * export const { handlers, auth } = NextAuth({ providers: [GitHub] })
  * ```
  */
-export default function NextAuth(config: NextAuthConfig): NextAuthResult {
+export default function NextAuth(
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | { headers: Headers }) => NextAuthConfig)
+): NextAuthResult {
+  if (typeof config === "function") {
+    const httpHandler = (req: NextRequest) => {
+      const _config = config(req)
+      setEnvDefaults(_config)
+      return Auth(reqWithEnvUrl(req), _config)
+    }
+
+    return {
+      handlers: { GET: httpHandler, POST: httpHandler } as const,
+      auth: (...args: any[]) => {
+        if (!args.length) {
+          // React Server Components
+          const _headers = headers()
+          const _config = config({ headers: _headers })
+          setEnvDefaults(_config)
+
+          return getSession(_headers, _config).then((r) => r.json()) as any
+        }
+
+        if (args[0] instanceof Request) {
+          // middleware.ts inline
+          // export { auth as default } from "auth"
+          const req = args[0]
+          const ev = args[1]
+          const _config = config(req)
+          setEnvDefaults(_config)
+
+          // @ts-expect-error - possible bug in Next.js,
+          // args[0] is supposed to be NextRequest but the instanceof check is failing.
+          return handleAuth([req, ev], _config)
+        }
+
+        if (isReqWrapper(args[0])) {
+          // middleware.ts wrapper/router.ts
+          // import { auth } from "auth"
+          // export default auth((req) => { console.log(req.auth) }})
+          const userMiddlewareOrRoute = args[0]
+          return async (
+            ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
+          ) => {
+            return handleAuth(args, config(args[0]), userMiddlewareOrRoute)
+          }
+        }
+        // API Routes, getServerSideProps
+        const request = "req" in args[0] ? args[0].req : args[0]
+        const response: any = "res" in args[0] ? args[0].res : args[1]
+        const _config = config(request)
+        setEnvDefaults(_config)
+
+        return getSession(new Headers(request.headers), _config).then(
+          async (authResponse) => {
+            const auth = await authResponse.json()
+
+            for (const cookie of authResponse.headers.getSetCookie())
+              response.headers.append("set-cookie", cookie)
+
+            return auth satisfies Session | null
+          }
+        )
+      },
+
+      signIn: (provider, options, authorizationParams) => {
+        const _config = config({ headers: headers() })
+        setEnvDefaults(_config)
+        return signIn(provider, options, authorizationParams, _config)
+      },
+      signOut: (options) => {
+        const _config = config({ headers: headers() })
+        setEnvDefaults(_config)
+        return signOut(options, _config)
+      },
+      unstable_update: (data) => {
+        throw new Error("unstable_update is not implemented")
+      },
+    }
+  }
   setEnvDefaults(config)
   const httpHandler = (req: NextRequest) => Auth(reqWithEnvUrl(req), config)
   return {

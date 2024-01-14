@@ -22,14 +22,15 @@ declare module "next-auth" {
   }
 }
 
-export default {
+const authConfig: NextAuthConfig = {
   debug: false,
+  trustHost: true,
   providers: [
     GitHub({ account() {} }),
-    Auth0,
-    Facebook,
-    Google,
-    Twitter,
+    // Auth0,
+    // Facebook,
+    // Google,
+    // Twitter,
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       authorize(c) {
@@ -49,4 +50,6 @@ export default {
       return token
     },
   },
-} satisfies NextAuthConfig
+}
+
+export default authConfig

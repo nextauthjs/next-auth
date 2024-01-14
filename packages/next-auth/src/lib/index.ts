@@ -58,8 +58,8 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   }
 }
 
-/** Server-side method to read the session. */
-async function getSession(headers: Headers, config: NextAuthConfig) {
+/** @internal Server-side method to read the session. */
+export async function getSession(headers: Headers, config: NextAuthConfig) {
   const origin = detectOrigin(headers)
   const request = new Request(`${origin}/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
@@ -102,7 +102,10 @@ export type WithAuthArgs =
   | [GetServerSidePropsContext]
   | []
 
-function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
+/** @internal */
+export function isReqWrapper(
+  arg: any
+): arg is NextAuthMiddleware | AppRouteHandlerFn {
   return typeof arg === "function"
 }
 
@@ -113,7 +116,7 @@ export function initAuth(config: NextAuthConfig) {
       return getSession(headers(), config).then((r) => r.json())
     }
     if (args[0] instanceof Request) {
-      // middleware.ts
+      // middleware.ts inline
       // export { auth as default } from "auth"
       const req = args[0]
       const ev = args[1]
@@ -121,7 +124,7 @@ export function initAuth(config: NextAuthConfig) {
     }
 
     if (isReqWrapper(args[0])) {
-      // middleware.ts/router.ts
+      // middleware.ts wrapper/router.ts
       // import { auth } from "auth"
       // export default auth((req) => { console.log(req.auth) }})
       const userMiddlewareOrRoute = args[0]
@@ -151,7 +154,8 @@ export function initAuth(config: NextAuthConfig) {
   }
 }
 
-async function handleAuth(
+/** @internal */
+export async function handleAuth(
   args: Parameters<NextMiddleware | AppRouteHandlerFn>,
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
