@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  if session
+    h1(class="mb-2 text-3xl font-medium") Protected page
+    p
+      | This is a protected content. You can access this content because you are
+      | signed in.
+    p Session expiry: #{ session.expires ? session.expires : '' }
+  else
+    h1(class="mb-2 text-3xl font-medium") Access Denied
+    p
+      | You must be #{ ' ' }
+      a(href="/api/auth/signin", class="underline") signed in
+      | #{ ' ' } to view this page
