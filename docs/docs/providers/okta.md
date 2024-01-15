@@ -15,6 +15,13 @@ The **Okta Provider** comes with a set of default options:
 
 You can override any of the options to suit your own use case.
 
+## Configuration
+
+The "Authorized redirect URIs" used when creating the credentials must include your full domain and end in the callback path. For example;
+
+- For production: https://{YOUR_DOMAIN}/api/auth/callback/okta
+- For development: http://localhost:3000/api/auth/callback/okta
+
 ## Example
 
 ```js
