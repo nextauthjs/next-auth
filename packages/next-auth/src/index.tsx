@@ -66,12 +66,12 @@ import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError } from "@auth/core/errors"
 
 export type {
-  Account,
-  DefaultSession,
-  Profile,
   Session,
+  Account,
+  Profile,
+  DefaultSession,
   User,
-} from "./types.js"
+} from "@auth/core/types"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",
