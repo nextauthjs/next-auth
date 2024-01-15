@@ -248,18 +248,13 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
   session: (
-    params: (
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        }
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-        }
-    ) & {
+    params: {
+      session: Session
+      /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+      user?: AdapterUser
+      /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+      token?: JWT
+    } & {
       /**
        * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
        *
