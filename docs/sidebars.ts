@@ -7,8 +7,8 @@ import { existsSync } from "fs"
 
 const clerk: PropSidebarItemLink = {
   type: "link",
-  href: "https://clerk.com?utm_source=sponsorship&utm_medium=docs&utm_campaign=authjs&utm_content=callout",
-  label: "Clerk (hosted auth)",
+  href: "https://clerk.com?utm_source=sponsorship&utm_medium=docs&utm_campaign=authjs&utm_content=nav",
+  label: "Hosted Auth (Clerk)",
 }
 
 export default {
