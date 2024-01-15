@@ -13,7 +13,7 @@ import {
   AdapterAccount,
 } from "@auth/core/adapters"
 import { D1Database, D1DatabaseAPI } from "@miniflare/d1"
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import Database from "better-sqlite3"
 
 globalThis.crypto ??= require("node:crypto").webcrypto

@@ -1,16 +1,11 @@
 {
-  "extends": "@auth/tsconfig/tsconfig.base.json",
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "outDir": ".",
-    "rootDir": "./src",
+    "rootDir": "./src"
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "*.js",
-    "*.d.ts",
-  ],
+  "include": ["./src/**/*"],
+  "exclude": ["*.js", "*.d.ts"]
 }

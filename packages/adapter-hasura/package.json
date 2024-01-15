@@ -1,6 +1,6 @@
 {
   "name": "@auth/hasura-adapter",
-  "version": "0.2.5",
+  "version": "0.2.13",
   "description": "Hasura adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -53,6 +53,6 @@
     "@graphql-typed-document-node/core": "^3.2.0"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

@@ -27,7 +27,7 @@
  *
  * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
- * import GitHub from "next-auth/providers/GitHub"
+ * import GitHub from "next-auth/providers/github"
  * export const { handlers, auth } = NextAuth({ providers: [ GitHub ] })
  * ```
  *
@@ -45,7 +45,7 @@
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
- * @module index
+ * @module next-auth
  */
 
 import { Auth } from "@auth/core"
@@ -66,12 +66,12 @@ import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError } from "@auth/core/errors"
 
 export type {
-  Account,
-  DefaultSession,
-  Profile,
   Session,
+  Account,
+  Profile,
+  DefaultSession,
   User,
-} from "./types.js"
+} from "@auth/core/types"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",
@@ -261,7 +261,7 @@ export interface NextAuthResult {
    */
   signIn: <
     P extends BuiltInProviderType | (string & {}),
-    R extends boolean = true
+    R extends boolean = true,
   >(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
@@ -308,7 +308,7 @@ export interface NextAuthResult {
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
   }) => Promise<R extends false ? any : never>
-  update: (
+  unstable_update: (
     data: Partial<Session | { user: Partial<Session["user"]> }>
   ) => Promise<Session | null>
 }
@@ -337,7 +337,7 @@ export default function NextAuth(config: NextAuthConfig): NextAuthResult {
     signOut: (options) => {
       return signOut(options, config)
     },
-    update: (data) => {
+    unstable_update: (data) => {
       return update(data, config)
     },
   }

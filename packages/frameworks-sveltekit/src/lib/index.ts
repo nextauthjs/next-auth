@@ -1,25 +1,22 @@
 /**
- *
- *
  * :::warning
- * `@auth/sveltekit` is currently experimental. The API _will_ change in the future.
+ * `@auth/sveltekit` is currently experimental. The API _might_ change.
  * :::
  *
  * SvelteKit Auth is the official SvelteKit integration for Auth.js.
  * It provides a simple way to add authentication to your SvelteKit app in a few lines of code.
  *
- *
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install @auth/core @auth/sveltekit
+ * npm install @auth/sveltekit
  * ```
  *
  * ## Usage
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const handle = SvelteKitAuth({
@@ -27,11 +24,11 @@
  * })
  * ```
  *
- * or to use sveltekit platform environment variables for platforms like Cloudflare
+ * or to use SvelteKit platform environment variables for platforms like Cloudflare
  *
  * ```ts title="src/hooks.server.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
  * export const handle = SvelteKitAuth(async (event) => {
@@ -44,11 +41,11 @@
  * }) satisfies Handle;
  * ```
  *
- * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
+ * Remember to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
+ * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
  * ```
  * [origin]/auth/callback/[provider]
  * ```
@@ -150,7 +147,7 @@
  *
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
- * import GitHub from '@auth/core/providers/github';
+ * import GitHub from '@auth/sveltekit/providers/github';
  * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
  * import { redirect, type Handle } from '@sveltejs/kit';
  * import { sequence } from '@sveltejs/kit/hooks';
@@ -197,7 +194,7 @@
  * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
  * :::
  *
- * @module index
+ * @module @auth/sveltekit
  */
 
 /// <reference types="@sveltejs/kit" />
@@ -209,6 +206,14 @@ import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
 
 export async function getSession(
   req: Request,
@@ -304,7 +309,7 @@ declare global {
       getSession(): Promise<Session | null>
     }
     interface PageData {
-      session: Session | null
+      session?: Session | null
     }
   }
 }

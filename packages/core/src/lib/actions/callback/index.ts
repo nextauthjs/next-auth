@@ -162,7 +162,12 @@ export async function callback(
         })
       }
 
-      await events.signIn?.({ user, account, profile: OAuthProfile, isNewUser })
+      await events.signIn?.({
+        user,
+        account,
+        profile: OAuthProfile,
+        isNewUser,
+      })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
@@ -203,7 +208,7 @@ export async function callback(
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
       const user = (await adapter!.getUserByEmail(identifier)) ?? {
-        id: identifier,
+        id: crypto.randomUUID(),
         email: identifier,
         emailVerified: null,
       }
@@ -296,11 +301,15 @@ export async function callback(
       Object.entries(query ?? {}).forEach(([k, v]) =>
         url.searchParams.set(k, v)
       )
-      const user = await provider.authorize(
+      const userFromAuthorize = await provider.authorize(
         credentials,
         // prettier-ignore
         new Request(url, { headers, method, body: JSON.stringify(body) })
       )
+      const user = userFromAuthorize && {
+        ...userFromAuthorize,
+        id: userFromAuthorize?.id?.toString() ?? crypto.randomUUID(),
+      }
 
       if (!user) throw new CredentialsSignin()
 
@@ -319,7 +328,7 @@ export async function callback(
         name: user.name,
         email: user.email,
         picture: user.image,
-        sub: user.id?.toString(),
+        sub: user.id,
       }
 
       const token = await callbacks.jwt({

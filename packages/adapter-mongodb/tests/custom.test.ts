@@ -1,4 +1,4 @@
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import { defaultCollections, format, MongoDBAdapter, _id } from "../src"
 import { MongoClient } from "mongodb"
 const name = "custom-test"

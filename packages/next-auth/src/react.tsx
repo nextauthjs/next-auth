@@ -184,7 +184,6 @@ export async function getSession(params?: GetSessionParams) {
  * required to make requests that changes state. (e.g. signing in or out, or updating the session).
  *
  * [CSRF Prevention: Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie)
- * @internal
  */
 export async function getCsrfToken() {
   const response = await fetchData<{ csrfToken: string }>(
@@ -203,7 +202,6 @@ type ProvidersType = Record<
 /**
  * Returns a client-safe configuration object of the currently
  * available providers.
- * @internal
  */
 export async function getProviders() {
   return fetchData<ProvidersType>("providers", __NEXTAUTH, logger)
@@ -214,7 +212,7 @@ export async function getProviders() {
  * Handles CSRF protection.
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   provider?: LiteralUnion<
     P extends RedirectableProviderType
@@ -276,7 +274,7 @@ export async function signIn<
     return
   }
 
-  const error = new URL(data.url, baseUrl).searchParams.get("error")
+  const error = new URL(data.url).searchParams.get("error")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -465,8 +463,8 @@ export function SessionProvider(props: SessionProviderProps) {
       status: loading
         ? "loading"
         : session
-        ? "authenticated"
-        : "unauthenticated",
+          ? "authenticated"
+          : "unauthenticated",
       async update(data: any) {
         if (loading || !session) return
         setLoading(true)

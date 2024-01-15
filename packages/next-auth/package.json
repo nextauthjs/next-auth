@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.3",
+  "version": "5.0.0-beta.4",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -40,9 +40,6 @@
       "types": "./react.d.ts",
       "import": "./react.js"
     },
-    "./types": {
-      "types": "./types.d.ts"
-    },
     "./package.json": "./package.json"
   },
   "keywords": [
@@ -61,7 +58,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "dev": "pnpm providers && tsc -w",
-    "providers": "node scripts/generate-providers"
+    "providers": "node ../utils/scripts/providers"
   },
   "files": [
     "*.d.ts*",

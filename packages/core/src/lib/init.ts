@@ -7,6 +7,7 @@ import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
 import parseUrl from "./utils/parse-url.js"
+import { merge } from "./utils/merge.js"
 
 import type {
   AuthConfig,
@@ -106,13 +107,12 @@ export async function init({
     action,
     // @ts-expect-errors
     provider,
-    cookies: {
-      ...cookie.defaultCookies(
+    cookies: merge(
+      cookie.defaultCookies(
         authOptions.useSecureCookies ?? url.protocol === "https:"
       ),
-      // Allow user cookie options to override any cookie settings above
-      ...authOptions.cookies,
-    },
+      authOptions.cookies
+    ),
     providers,
     // Session options
     session: {
@@ -141,6 +141,9 @@ export async function init({
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
+    experimental: {
+      ...authOptions.experimental,
+    }
   }
 
   // Init cookies

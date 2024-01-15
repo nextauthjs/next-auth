@@ -19,21 +19,24 @@ export async function sendToken(
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const email = normalizer(body?.email)
 
-  const defaultUser = { id: email, email, emailVerified: null }
+  const defaultUser = { id: crypto.randomUUID(), email, emailVerified: null }
   const user = ((await adapter!.getUserByEmail(email)) ??
     defaultUser) satisfies AdapterUser
 
-  const account: Account = {
+  const account = {
     providerAccountId: email,
     userId: user.id,
     type: "email",
     provider: provider.id,
-  }
+  } satisfies Account
 
   let authorized
   try {
-    const params = { user, account, email: { verificationRequest: true } }
-    authorized = await callbacks.signIn(params)
+    authorized = await callbacks.signIn({
+      user,
+      account,
+      email: { verificationRequest: true },
+    })
   } catch (e) {
     throw new AuthorizedCallbackError(e as Error)
   }

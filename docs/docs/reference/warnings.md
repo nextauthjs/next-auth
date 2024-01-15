@@ -5,7 +5,6 @@ title: Warnings
 
 A list of warnings from Auth.js that need your attention.
 
-
 ## Debug enabled
 
 The `debug` option was evaluated to `true`. It adds extra logs in the terminal which is useful in development, but since it can print sensitive information about users, make sure to set this to `false` in production. In Node.js environments, you can for example set `debug: process.env.NODE_ENV !== "production"`. Consult with your runtime/framework on how to set this value correctly.

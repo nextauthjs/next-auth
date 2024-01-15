@@ -248,13 +248,13 @@ or https://generate-secret.vercel.app/32 to generate a random value for it.
 Auth.js provides us a getSession, function to access the session data and status, to call from the `event.locals` variable. We can now just call it and add it to our `$page` store.
 
 ```ts
-import type { LayoutServerLoad } from './$types';
- *
+import type { LayoutServerLoad } from "./$types"
+
 export const load: LayoutServerLoad = async (event) => {
   return {
-    session: await event.locals.getSession()
-  };
-};
+    session: await event.locals.getSession(),
+  }
+}
 ```
 
 ### Consuming the session via page store

@@ -73,6 +73,11 @@
       "destination": "https://authjs.dev/reference/solid-start"
     },
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "express.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/express"
+    },
+    {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
       "destination": "https://authjs.dev/reference/nextjs"

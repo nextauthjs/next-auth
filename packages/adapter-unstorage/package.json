@@ -1,0 +1,53 @@
+{
+  "name": "@auth/unstorage-adapter",
+  "version": "1.1.1",
+  "description": "Unstorage adapter for Auth.js.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "nbifrye <nbifrye@gmail.com>",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "unstorage"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "./tests/test.sh",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "unstorage": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.3",
+    "redis": "^4.6.12",
+    "unstorage": "^1.10.1"
+  },
+  "jest": {
+    "preset": "utils/adapter"
+  }
+}

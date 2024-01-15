@@ -100,7 +100,7 @@ The redirect callback may be invoked more than once in the same flow.
 This callback is called whenever a JSON Web Token is created (i.e. at sign
 in) or updated (i.e whenever a session is accessed in the client). The returned value will be [encrypted](/reference/core#authconfig#jwt), and it is stored in a cookie.
 
-Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `unstable_getServerSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/reference/core#authconfig#session). This method is not invoked when you persist sessions in a database.
+Requests to `/api/auth/signin`, `/api/auth/session` and calls to `getSession()`, `getServerSession()`, `useSession()` will invoke this function, but only if you are using a [JWT session](/reference/core#authconfig#session). This method is not invoked when you persist sessions in a database.
 
 - As with database persisted session expiry times, token expiry time is extended whenever a session is active.
 - The arguments _user_, _account_, _profile_ and _isNewUser_ are only passed the first time this callback is called on a new session, after the user signs in. In subsequent calls, only `token` will be available.
