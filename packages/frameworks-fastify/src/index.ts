@@ -156,18 +156,16 @@ export type {
 } from "@auth/core/types"
 
 function FastifyAuthPlugin(authConfig: Omit<AuthConfig, "raw">): FastifyPluginAsync {
-
   return async (fastify, opts) => {
-    fastify.post("/*", async (request, reply) => {
-      const response = await Auth(toWebRequest(request), authConfig)
-      return toFastifyReply(response, reply)
-    })
-
-    fastify.get("/*", async (request, reply) => {
-      const response = await Auth(toWebRequest(request), authConfig)
-      return toFastifyReply(response, reply)
-    })
-  }
+    fastify.route({
+      method: ['GET', 'POST'],
+      url: '/*',
+      handler: async (request, reply) => {
+        const response = await Auth(toWebRequest(request), authConfig);
+        return toFastifyReply(response, reply);
+      }
+    });
+  };
 }
 
 export function FastifyAuth(
