@@ -2,7 +2,7 @@
 title: Creating a database adapter
 ---
 
-Auth.js adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. (We welcome PRs for new adapters! See the [checklist](#official-adapter-checklist) below.)
+Auth.js adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. (We welcome PRs for new adapters! See the [guidelines](#official-adapter-guidelines) below.)
 
 Auth.js adapters are very flexible, and you can implement only the methods you need, and only create the database tables/columns that are actually going to be used.
 
@@ -129,7 +129,7 @@ When you want to support email/passwordless login, Auth.js uses a database to st
 
 See also: [Verification Token](/getting-started/adapters#verification-token) models.
 
-## Official adapter checklist
+## Official adapter guidelines
 
 :::info
 When all of the below steps are done, you are ready to submit a PR to our [repository](https://github.com/nextauthjs/next-auth).
@@ -147,6 +147,7 @@ If you created an adapter and want us to distribute it as an official package, p
    - Configured as an ES module (ESM)
    - Documented via JSDoc comments
    - Have at least one named export exported from its main module. (For example `export function MyAdapter(): Adapter {}`)
+   - collection/table names should follow the convention (plural/singular, camelCase/snake_case) of the underlying ORM/database docs/conventions
 
 1. Configure the monorepo to help us maintain the package
 
