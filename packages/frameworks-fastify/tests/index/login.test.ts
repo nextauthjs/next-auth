@@ -12,12 +12,12 @@ export const authConfig = {
         username: {
           label: "Username",
           type: "text",
-          placeholder: "jsmith",
+          placeholder: "username",
         },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const name = (credentials.username as string) || "John Smith"
+        const name = (credentials.username as string) || "Default Name"
         const user = {
           id: "1",
           name,
@@ -74,7 +74,19 @@ describe("Integration test with login and getSession", () => {
     // Parse cookies for csrf token and callback url
     const csrfTokenCookie = extractCookieValue(response.cookies, 'authjs.csrf-token') ?? '';
     const callbackCookie = extractCookieValue(response.cookies, 'authjs.callback-url') ?? '';
-    const csrfTokenValue = csrfTokenCookie?.split("|")[0] ?? ''
+    const csrfFromCookie = csrfTokenCookie?.split("|")[0] ?? ''
+
+    // Get csrf token. We could just strip the csrf cookie but this tests the csrf endpoint as well.
+    const responseCsrf = await fastify.inject({
+      method: 'GET',
+      url: '/api/auth/csrf',
+      headers: { 'Accept': 'application/json' },
+      cookies: { 'authjs.csrf-token': csrfTokenCookie },
+    });
+    const csrfTokenValue = JSON.parse(responseCsrf.body).csrfToken;
+
+    // Check that csrf tokens are the same
+    expect(csrfTokenValue).toEqual(csrfFromCookie);
 
     // Sign in
     const responseCredentials = await fastify.inject({
