@@ -75,10 +75,7 @@ export type TriplitAdapterConnectionOptions = {
  *         schema: S.Schema({
  *             id: S.Id(),
  *             userId: S.String(),
- *             user: S.Query({
- *                 collectionName: "users" as const,
- *                 where: [["id", "=", "$userId"]],
- *             }),
+ *             user: S.RelationById("users", "$userId"),
  *             type: S.String(),
  *             provider: S.String(),
  *             providerAccountId: S.String(),
@@ -95,10 +92,7 @@ export type TriplitAdapterConnectionOptions = {
  *         schema: S.Schema({
  *             id: S.Id(),
  *             userId: S.String(),
- *             user: S.Query({
- *                 collectionName: "users" as const,
- *                 where: [["id", "=", "$userId"]],
- *             }),
+ *             S.RelationById("users", "$userId"),
  *             expires: S.Date(),
  *             sessionToken: S.String(),
  *         }),
@@ -237,7 +231,7 @@ export function TriplitAdapter(
         // We could make schema optional and do a manual join here
         include: { user: null },
       })
-      return account?.user?.get(account.userId) ?? null
+      return account?.user ?? null
     },
     async updateUser(user) {
       const { id, ...rest } = user
@@ -277,8 +271,7 @@ export function TriplitAdapter(
         include: { user: null },
       })
       if (!sessionWithUser) return null
-      const { user: userMap, ...session } = sessionWithUser
-      const user = userMap?.get(session.userId)
+      const { user, ...session } = sessionWithUser
       if (!user) return null
       return { session, user }
     },
