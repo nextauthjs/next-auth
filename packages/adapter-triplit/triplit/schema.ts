@@ -14,10 +14,7 @@ export const schema = {
     schema: S.Schema({
       id: S.Id(),
       userId: S.String(),
-      user: S.Query({
-        collectionName: "users" as const,
-        where: [["id", "=", "$userId"]],
-      }),
+      user: S.RelationById("users", "$userId"),
       type: S.String(),
       provider: S.String(),
       providerAccountId: S.String(),
@@ -34,10 +31,7 @@ export const schema = {
     schema: S.Schema({
       id: S.Id(),
       userId: S.String(),
-      user: S.Query({
-        collectionName: "users" as const,
-        where: [["id", "=", "$userId"]],
-      }),
+      user: S.RelationById("users", "$userId"),
       expires: S.Date(),
       sessionToken: S.String(),
     }),

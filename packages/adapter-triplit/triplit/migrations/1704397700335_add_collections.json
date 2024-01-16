@@ -76,7 +76,8 @@
                   "$userId"
                 ]
               ]
-            }
+            },
+            "cardinality": "one"
           },
           "type": {
             "type": "string",
@@ -172,7 +173,8 @@
                   "$userId"
                 ]
               ]
-            }
+            },
+            "cardinality": "one"
           },
           "expires": {
             "type": "date",
