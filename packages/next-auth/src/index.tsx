@@ -55,7 +55,6 @@
  * export const { handlers, auth } = NextAuth(req => {
  *  if (req) {
  *   console.log(req) // do something with the request
- *   return { providers: [ GitHub ] }
  *  }
  *  return { providers: [ GitHub ] }
  * })
@@ -82,11 +81,7 @@ import type {
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import { NextRequest } from "next/server"
-import type {
-  LazyNextAuthConfig,
-  NextAuthConfig,
-  NextAuthRequest,
-} from "./lib/index.js"
+import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError } from "@auth/core/errors"
 
 export type {
@@ -363,7 +358,7 @@ export interface NextAuthResult {
  * ```
  */
 export default function NextAuth(
-  config: NextAuthConfig | LazyNextAuthConfig
+  config: NextAuthConfig | ((request: Request | undefined) => NextAuthConfig)
 ): NextAuthResult {
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {

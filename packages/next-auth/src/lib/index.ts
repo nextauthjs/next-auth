@@ -58,12 +58,7 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   }
 }
 
-export type LazyNextAuthConfig = (
-  request: NextRequest | undefined
-) => NextAuthConfig
-
-/** @internal Server-side method to read the session. */
-export async function getSession(headers: Headers, config: NextAuthConfig) {
+async function getSession(headers: Headers, config: NextAuthConfig) {
   const origin = detectOrigin(headers)
   const request = new Request(`${origin}/session`, {
     headers: { cookie: headers.get("cookie") ?? "" },
@@ -106,15 +101,14 @@ export type WithAuthArgs =
   | [GetServerSidePropsContext]
   | []
 
-/** @internal */
-export function isReqWrapper(
-  arg: any
-): arg is NextAuthMiddleware | AppRouteHandlerFn {
+function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
   return typeof arg === "function"
 }
 
 export function initAuth(
-  config: NextAuthConfig | LazyNextAuthConfig,
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | undefined) => NextAuthConfig),
   onLazyLoad?: (config: NextAuthConfig) => void // To set the default env vars
 ) {
   if (typeof config === "function") {
@@ -215,8 +209,7 @@ export function initAuth(
   }
 }
 
-/** @internal */
-export async function handleAuth(
+async function handleAuth(
   args: Parameters<NextMiddleware | AppRouteHandlerFn>,
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
