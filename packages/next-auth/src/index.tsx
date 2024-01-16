@@ -46,7 +46,7 @@
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
  * ## Lazy initialization
- * You can also initialize NextAuth.js lazily, which allows you to access the request object in the configuration in some cases, like App route, middleware, or API routes and `getServerSideProps`.
+ * You can also initialize NextAuth.js lazily (previously known as advanced intialization), which allows you to access the request context in the configuration in some cases, like Route Handlers, Middleware, API Routes or `getServerSideProps`.
  * The above example becomes:
  *
  * ```ts title="auth.ts"
@@ -61,7 +61,7 @@
  * ```
  *
  * :::tip
- * This is useful if you want to customize the configuration based on the request, for example, to add a different provider based on the request URL's `searchParams`.
+ * This is useful if you want to customize the configuration based on the request, for example, to add a different provider in staging/dev environments.
  * :::
  *
  * @module next-auth
@@ -80,7 +80,7 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
-import { NextRequest } from "next/server"
+import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError } from "@auth/core/errors"
 
