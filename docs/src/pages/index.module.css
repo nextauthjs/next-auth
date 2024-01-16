@@ -116,6 +116,10 @@
   text-align: center;
 }
 
+[data-theme="dark"] .heroClerk {
+  color: #fff;
+}
+
 .heroClerk {
   display: flex;
   align-items: center;
@@ -127,8 +131,4 @@
     position: relative;
     z-index: 1000;
   }
-}
-
-[data-theme="dark"] .heroClerk {
-  color: #fff;
 }
