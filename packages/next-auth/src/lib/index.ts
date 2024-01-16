@@ -58,6 +58,10 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   }
 }
 
+export type LazyNextAuthConfig = (
+  request: NextRequest | undefined
+) => NextAuthConfig
+
 /** @internal Server-side method to read the session. */
 export async function getSession(headers: Headers, config: NextAuthConfig) {
   const origin = detectOrigin(headers)
@@ -109,7 +113,64 @@ export function isReqWrapper(
   return typeof arg === "function"
 }
 
-export function initAuth(config: NextAuthConfig) {
+export function initAuth(
+  config: NextAuthConfig | LazyNextAuthConfig,
+  onLazyLoad?: (config: NextAuthConfig) => void // To set the default env vars
+) {
+  if (typeof config === "function") {
+    return (...args: WithAuthArgs) => {
+      if (!args.length) {
+        // React Server Components
+        const _headers = headers()
+        const _config = config(undefined) // Review: Should we pass headers() here instead?
+        onLazyLoad?.(_config)
+
+        return getSession(_headers, _config).then((r) => r.json())
+      }
+
+      if (args[0] instanceof Request) {
+        // middleware.ts inline
+        // export { auth as default } from "auth"
+        const req = args[0]
+        const ev = args[1]
+        const _config = config(req)
+        onLazyLoad?.(_config)
+
+        // args[0] is supposed to be NextRequest but the instanceof check is failing.
+        return handleAuth([req, ev], _config)
+      }
+
+      if (isReqWrapper(args[0])) {
+        // middleware.ts wrapper/route.ts
+        // import { auth } from "auth"
+        // export default auth((req) => { console.log(req.auth) }})
+        const userMiddlewareOrRoute = args[0]
+        return async (
+          ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
+        ) => {
+          return handleAuth(args, config(args[0]), userMiddlewareOrRoute)
+        }
+      }
+      // API Routes, getServerSideProps
+      const request = "req" in args[0] ? args[0].req : args[0]
+      const response: any = "res" in args[0] ? args[0].res : args[1]
+      // @ts-expect-error -- request is NextRequest
+      const _config = config(request)
+      onLazyLoad?.(_config)
+
+      // @ts-expect-error -- request is NextRequest
+      return getSession(new Headers(request.headers), _config).then(
+        async (authResponse) => {
+          const auth = await authResponse.json()
+
+          for (const cookie of authResponse.headers.getSetCookie())
+            response.headers.append("set-cookie", cookie)
+
+          return auth satisfies Session | null
+        }
+      )
+    }
+  }
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
@@ -124,7 +185,7 @@ export function initAuth(config: NextAuthConfig) {
     }
 
     if (isReqWrapper(args[0])) {
-      // middleware.ts wrapper/router.ts
+      // middleware.ts wrapper/route.ts
       // import { auth } from "auth"
       // export default auth((req) => { console.log(req.auth) }})
       const userMiddlewareOrRoute = args[0]

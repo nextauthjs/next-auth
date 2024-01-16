@@ -7,11 +7,11 @@
  * npm install next-auth@beta
  * ```
  *
- * ## Environment variable inferrence
+ * ## Environment variable inference
  *
  * `NEXTAUTH_URL` and `NEXTAUTH_SECRET` have been inferred since v4.
  *
- * Since NextAuth.js v5 can also automatically infer environment variables that are prefiexed with `AUTH_`.
+ * Since NextAuth.js v5 can also automatically infer environment variables that are prefixed with `AUTH_`.
  *
  * For example `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
  *
@@ -45,12 +45,32 @@
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
+ * ## Lazy initialization
+ * You can also initialize NextAuth.js lazily, which allows you to access the request object in the configuration in some cases, like App route, middleware, or API routes and `getServerSideProps`.
+ * The above example becomes:
+ *
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "next-auth/providers/github"
+ * export const { handlers, auth } = NextAuth(req => {
+ *  if (req) {
+ *   console.log(req) // do something with the request
+ *   return { providers: [ GitHub ] }
+ *  }
+ *  return { providers: [ GitHub ] }
+ * })
+ * ```
+ *
+ * :::tip
+ * This is useful if you want to customize the configuration based on the request, for example, to add a different provider based on the request URL's `searchParams`.
+ * :::
+ *
  * @module next-auth
  */
 
 import { Auth } from "@auth/core"
 import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
-import { getSession, handleAuth, initAuth, isReqWrapper } from "./lib/index.js"
+import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Session } from "@auth/core/types"
@@ -63,11 +83,10 @@ import type {
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import { NextRequest } from "next/server"
 import type {
+  LazyNextAuthConfig,
   NextAuthConfig,
-  NextAuthMiddleware,
   NextAuthRequest,
 } from "./lib/index.js"
-import { headers } from "next/headers"
 export { AuthError } from "@auth/core/errors"
 
 export type {
@@ -328,11 +347,23 @@ export interface NextAuthResult {
  *
  * export const { handlers, auth } = NextAuth({ providers: [GitHub] })
  * ```
+ *
+ * Lazy initialization:
+ * @example
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "@auth/core/providers/github"
+ *
+ * export const { handlers, auth } = NextAuth((req) => {
+ *   console.log(req) // do something with the request
+ *   return {
+ *     providers: [GitHub],
+ *   },
+ * })
+ * ```
  */
 export default function NextAuth(
-  config:
-    | NextAuthConfig
-    | ((request: NextRequest | undefined) => NextAuthConfig)
+  config: NextAuthConfig | LazyNextAuthConfig
 ): NextAuthResult {
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {
@@ -343,58 +374,8 @@ export default function NextAuth(
 
     return {
       handlers: { GET: httpHandler, POST: httpHandler } as const,
-      auth: (...args: any[]) => {
-        if (!args.length) {
-          // React Server Components
-          const _headers = headers()
-          const _config = config(undefined) // Review: Should we pass headers() here instead?
-          setEnvDefaults(_config)
-
-          return getSession(_headers, _config).then((r) => r.json()) as any
-        }
-
-        if (args[0] instanceof Request) {
-          // middleware.ts inline
-          // export { auth as default } from "auth"
-          const req = args[0]
-          const ev = args[1]
-          // @ts-expect-error
-          const _config = config(req)
-          setEnvDefaults(_config)
-
-          // @ts-expect-error - possible bug in Next.js,
-          // args[0] is supposed to be NextRequest but the instanceof check is failing.
-          return handleAuth([req, ev], _config)
-        }
-
-        if (isReqWrapper(args[0])) {
-          // middleware.ts wrapper/router.ts
-          // import { auth } from "auth"
-          // export default auth((req) => { console.log(req.auth) }})
-          const userMiddlewareOrRoute = args[0]
-          return async (
-            ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
-          ) => {
-            return handleAuth(args, config(args[0]), userMiddlewareOrRoute)
-          }
-        }
-        // API Routes, getServerSideProps
-        const request = "req" in args[0] ? args[0].req : args[0]
-        const response: any = "res" in args[0] ? args[0].res : args[1]
-        const _config = config(request)
-        setEnvDefaults(_config)
-
-        return getSession(new Headers(request.headers), _config).then(
-          async (authResponse) => {
-            const auth = await authResponse.json()
-
-            for (const cookie of authResponse.headers.getSetCookie())
-              response.headers.append("set-cookie", cookie)
-
-            return auth satisfies Session | null
-          }
-        )
-      },
+      // @ts-expect-error
+      auth: initAuth(config, (c) => setEnvDefaults(c)),
 
       signIn: (provider, options, authorizationParams) => {
         const _config = config(undefined)
@@ -407,7 +388,9 @@ export default function NextAuth(
         return signOut(options, _config)
       },
       unstable_update: (data) => {
-        throw new Error("unstable_update is not implemented")
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return update(data, _config)
       },
     }
   }

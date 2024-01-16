@@ -3,8 +3,6 @@ import NextAuth from "next-auth"
 import authConfig from "auth.config"
 // import { PrismaClient } from "@prisma/client"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
-import Auth0 from "next-auth/providers/auth0"
-import { NextRequest } from "next/server"
 
 // globalThis.prisma ??= new PrismaClient()
 
@@ -16,7 +14,6 @@ import { NextRequest } from "next/server"
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(
   (request) => {
-    console.log(request?.nextUrl)
     if (request?.nextUrl.searchParams.get("test")) {
       return {
         // adapter: PrismaAdapter(globalThis.prisma),
