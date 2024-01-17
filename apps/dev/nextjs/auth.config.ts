@@ -32,11 +32,11 @@ export default {
         }
       },
     }),
-    process.env.GITHUB_ID && (await import("next-auth/providers/github")).default,
-    process.env.GOOGLE_ID && (await import("next-auth/providers/google")).default,
-    process.env.FACEBOOK_ID && (await import("next-auth/providers/facebook")).default,
-    process.env.AUTH0_ID && (await import("next-auth/providers/auth0")).default,
-    process.env.TWITTER_ID && (await import("next-auth/providers/twitter")).default
+    process.env.GITHUB_ID && (await import("next-auth/providers/github")).default({}),
+    process.env.GOOGLE_ID && (await import("next-auth/providers/google")).default({}),
+    process.env.FACEBOOK_ID && (await import("next-auth/providers/facebook")).default({}),
+    process.env.AUTH0_ID && (await import("next-auth/providers/auth0")).default({}),
+    process.env.TWITTER_ID && (await import("next-auth/providers/twitter")).default({})
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
