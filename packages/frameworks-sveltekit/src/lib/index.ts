@@ -276,7 +276,6 @@ export function SvelteKitAuth(
         : await svelteKitAuthOptions(event)
     const { prefix = `${base}/auth` } = authOptions
 
-    console.log("SVELTEKITAUTH", env.AUTH_SECRET, env.AUTH_REDIRECT_PROXY_URL)
     authOptions.secret ??= env.AUTH_SECRET
     authOptions.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
     authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
