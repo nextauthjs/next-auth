@@ -8,43 +8,39 @@ import Auth0 from "@auth/sveltekit/providers/auth0"
 import Discord from "@auth/sveltekit/providers/discord"
 import Twitch from "@auth/sveltekit/providers/twitch"
 import Pinterest from "@auth/sveltekit/providers/pinterest"
-import VK from "@auth/sveltekit/providers/vk"
 
 import {
-  GITHUB_ID,
-  GITHUB_SECRET,
-  LINKEDIN_ID,,
-  LINKEDIN_SECRET,
-  GOOGLE_ID,
-  GOOGLE_SECRET,
-  FACEBOOK_ID,
-  FACEBOOK_SECRET,
-  TWITTER_ID,
-  TWITTER_SECRET,
-  AUTH0_ID,
-  AUTH0_SECRET,
-  AUTH0_ISSUER,
-  DISCORD_ID,
-  DISCORD_SECRET,
-  TWITCH_ID,
-  TWITCH_SECRET,
-  PINTEREST_ID,
-  PINTEREST_SECRET,
-  VK_ID,
-  VK_SECRET
+  AUTH_GITHUB_ID,
+  AUTH_GITHUB_SECRET,
+  AUTH_LINKEDIN_ID,,
+  AUTH_LINKEDIN_SECRET,
+  AUTH_GOOGLE_ID,
+  AUTH_GOOGLE_SECRET,
+  AUTH_FACEBOOK_ID,
+  AUTH_FACEBOOK_SECRET,
+  AUTH_TWITTER_ID,
+  AUTH_TWITTER_SECRET,
+  AUTH_AUTH0_ID,
+  AUTH_AUTH0_SECRET,
+  AUTH_AUTH0_ISSUER,
+  AUTH_DISCORD_ID,
+  AUTH_DISCORD_SECRET,
+  AUTH_TWITCH_ID,
+  AUTH_TWITCH_SECRET,
+  AUTH_PINTEREST_ID,
+  AUTH_PINTEREST_SECRET
 } from "$env/static/private"
 
 export const handle = SvelteKitAuth({
   providers: [
-    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
-    LinkedIn({ clientId: LINKEDIN_ID, clientSecret: LINKEDIN_SECRET }),
-    Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET }),
-    Facebook({ clientId: FACEBOOK_ID, clientSecret: FACEBOOK_SECRET }),
-    Twitter({ clientId: TWITTER_ID, clientSecret: TWITTER_SECRET }),
-    Auth0({ clientId: AUTH0_ID, clientSecret: AUTH0_SECRET, issuer: AUTH0_ISSUER }),
-    Discord({ clientId: DISCORD_ID, clientSecret: DISCORD_SECRET }),
-    Twitch({ clientId: TWITCH_ID, clientSecret: TWITCH_SECRET }),
-    Pinterest({ clientId: PINTEREST_ID, clientSecret: PINTEREST_SECRET }),
-    VK({ clientId: VK_ID, clientSecret: VK_SECRET })
+    GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
+    LinkedIn({ clientId: AUTH_LINKEDIN_ID, clientSecret: AUTH_LINKEDIN_SECRET }),
+    Google({ clientId: AUTH_GOOGLE_ID, clientSecret: AUTH_GOOGLE_SECRET }),
+    Facebook({ clientId: AUTH_FACEBOOK_ID, clientSecret: AUTH_FACEBOOK_SECRET }),
+    Twitter({ clientId: AUTH_TWITTER_ID, clientSecret: AUTH_TWITTER_SECRET }),
+    Auth0({ clientId: AUTH_AUTH0_ID, clientSecret: AUTH_AUTH0_SECRET, issuer: AUTH_AUTH0_ISSUER }),
+    Discord({ clientId: AUTH_DISCORD_ID, clientSecret: AUTH_DISCORD_SECRET }),
+    Twitch({ clientId: AUTH_TWITCH_ID, clientSecret: AUTH_TWITCH_SECRET }),
+    Pinterest({ clientId: AUTH_PINTEREST_ID, clientSecret: AUTH_PINTEREST_SECRET }),
   ],
 })
