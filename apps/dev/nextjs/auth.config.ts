@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
-type Providers = any[]
+type Providers = NextAuthConfig["providers"]
 
 declare module "next-auth" {
   /**
@@ -69,7 +69,7 @@ if (process.env.TWITTER_ID && process.env.TWITTER_SECRET) {
   );
 }
 
-const authConfig: NextAuthConfig = {
+const authConfig = {
   debug: false,
   trustHost: true,
   providers,
@@ -80,3 +80,5 @@ const authConfig: NextAuthConfig = {
     },
   },
 } satisfies NextAuthConfig
+
+export default authConfig 
