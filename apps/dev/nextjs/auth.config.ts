@@ -17,7 +17,7 @@ declare module "next-auth" {
   }
 }
 
-const authConfig = {
+export default {
   debug: false,
   trustHost: true,
   providers: [
@@ -46,5 +46,3 @@ const authConfig = {
     },
   },
 } satisfies NextAuthConfig
-
-export default authConfig 
