@@ -24,7 +24,7 @@ export interface CognitoProfile extends Record<string, any> {
  *
  * #### Callback URL
  * ```
- * https://example.com/api/auth/callback/cognito
+ * https://example.com/auth/callback/cognito
  * ```
  *
  * #### Configuration
