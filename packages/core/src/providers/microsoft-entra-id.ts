@@ -18,7 +18,7 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
 }
 
 /**
- * Add AzureAd login to your page.
+ * Add MicrosoftEntraID login to your page.
  *
  * ### Setup
  *
@@ -76,7 +76,7 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
  * In `pages/api/auth/[...nextauth].js` find or add the `MicrosoftEntraID` entries:
  *
  * ```js
- * import AzureADProvider from "next-auth/providers/microsoft-entra-id";
+ * import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
  *
  * ...
  * providers: [
