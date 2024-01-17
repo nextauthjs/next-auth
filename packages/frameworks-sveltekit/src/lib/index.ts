@@ -262,7 +262,11 @@ type DynamicSvelteKitAuthConfig = (
   event: RequestEvent
 ) => PromiseLike<SvelteKitAuthConfig>
 
-function AuthHandle(
+/**
+ * The main entry point to `@auth/sveltekit`
+ * @see https://sveltekit.authjs.dev
+ */
+export function SvelteKitAuth(
   svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
 ): Handle {
   return async function ({ event, resolve }) {
@@ -271,6 +275,12 @@ function AuthHandle(
         ? svelteKitAuthOptions
         : await svelteKitAuthOptions(event)
     const { prefix = `${base}/auth` } = authOptions
+
+    console.log("SVELTEKITAUTH", env.AUTH_SECRET, env.AUTH_REDIRECT_PROXY_URL)
+    authOptions.secret ??= env.AUTH_SECRET
+    authOptions.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
+    authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+
     const { url, request } = event
 
     event.locals.getSession ??= () => getSession(request, authOptions)
@@ -285,22 +295,6 @@ function AuthHandle(
 
     return Auth(request, authOptions)
   }
-}
-
-/**
- * The main entry point to `@auth/sveltekit`
- * @see https://sveltekit.authjs.dev
- */
-export function SvelteKitAuth(
-  options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
-): Handle {
-  if (typeof options === "object") {
-    options.secret ??= env.AUTH_SECRET
-    options.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
-    options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
-    options.prefix ??= `${base}/auth`
-  }
-  return AuthHandle(options)
 }
 
 declare global {
