@@ -296,6 +296,7 @@ export function SvelteKitAuth(
 ): Handle {
   if (typeof options === "object") {
     options.secret ??= env.AUTH_SECRET
+    options.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
     options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
     options.prefix ??= `${base}/auth`
   }
