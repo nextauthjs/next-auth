@@ -130,7 +130,7 @@ export type TriplitAdapterConnectionOptions = {
  * // For more information on each option (and a full list of options) go to
  * // https://authjs.dev/reference/configuration/auth-options
  * export default NextAuth({
- *     // https://authjs.dev/reference/core/providers
+ *  // https://authjs.dev/reference/core/providers
  *  providers: [...],
  *   adapter: TriplitAdapter({...}),
  *   session: {
@@ -150,13 +150,16 @@ export type TriplitAdapterConnectionOptions = {
  *       if (user) {
  *         token["x-triplit-user-id"] = user.id
  *       }
- *       token["x-triplit-project-id"] = process.env.NEXT_PUBLIC_PROJECT_ID
+ *       token["x-triplit-project-id"] = process.env.TRIPLIT_PROJECT_ID
  *       token["x-triplit-token-type"] = "external"
  *       return token
  *     },
  *     async session({ session, token, user }) {
  *       if (process.env.NEXTAUTH_SECRET) {
  *         session.token = await signToken(token, process.env.NEXTAUTH_SECRET)
+ *       }
+ *       if (session.user) {
+ *         session.user.id = token[“x-triplit-user-id”]
  *       }
  *       return session
  *     },
