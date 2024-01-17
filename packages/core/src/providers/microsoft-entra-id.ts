@@ -47,7 +47,7 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
  *
  * ### To allow specific Active Directory users access:
  *
- * - In https://portal.azure.com/ search for "Microsoft Entra ID", and select your organization.
+ * - In https://entra.microsoft.com/ select Identity from the left bar menu.
  * - Next, go to "App Registration" in the left menu, and create a new one.
  * - Pay close attention to "Who can use this application or access this API?"
  *   - This allows you to scope access to specific types of user accounts
