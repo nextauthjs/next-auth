@@ -31,8 +31,6 @@ import {
   AUTH_PINTEREST_SECRET,
 } from "$env/static/private"
 
-console.log("Testing example app")
-
 export const handle = SvelteKitAuth({
   providers: [
     GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
