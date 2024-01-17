@@ -43,10 +43,21 @@ export default {
       },
     }),
   ],
+  pages: {
+    signIn: "/auth/signin",
+  },
   callbacks: {
     jwt({ token, trigger, session }) {
       if (trigger === "update") token.name = session.user.name
       return token
+    },
+    authorized({ request }) {
+      console.log("authorized request: ", request.nextUrl.pathname)
+      if (request.nextUrl.pathname === "/auth/signin") {
+        // console.log("authorized request: ", request)
+        return true
+      }
+      return false
     },
   },
 } satisfies NextAuthConfig
