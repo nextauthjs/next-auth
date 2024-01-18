@@ -27,7 +27,7 @@ function encodeJson(obj: Record<string, any>) {
 /**
  * Encodes an Fastify Request body based on the content type header.
  */
-function encodeRequestBody(req: FastifyRequest) : string {
+function encodeRequestBody(req: FastifyRequest) : string | undefined {
   const contentType = req.headers["content-type"]
   if (typeof req.body === 'object' && req.body !== null) {
     if (contentType?.includes("application/x-www-form-urlencoded")) {
@@ -39,7 +39,11 @@ function encodeRequestBody(req: FastifyRequest) : string {
     }
   }
 
-  return req.body as string
+  if (typeof req.body === 'string') {
+    return req.body;
+  }
+
+  return undefined;
 }
 
 /**

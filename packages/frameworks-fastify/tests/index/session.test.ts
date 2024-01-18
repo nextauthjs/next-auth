@@ -36,7 +36,7 @@ describe("getSession", () => {
   it("Should return the mocked session from the Auth response", async () => {
     let expectations: Function = () => {}
 
-    fastify.post("/", async (request, reply) => {
+    fastify.get("/", async (request, reply) => {
       const session = await getSession(request, {
         providers: [],
         secret: "secret",
@@ -44,20 +44,21 @@ describe("getSession", () => {
 
       expectations = async () => {
         expect(session).toEqual(sessionJson)
+        return true
       }
 
       return "OK"
     })
 
-    await fastify.inject({
-      method: 'POST',
-      url: '/',
-      headers: {
-        'X-Test-Header': 'foo',
-        'Content-Type': 'application/json',
-      }
-    });
+    await fastify.ready()
 
-    await expectations()
+    const res = await fastify.inject({
+      method: "GET",
+      url: "/",
+    })
+
+    expect(res.statusCode).toEqual(200)
+    const expectationResult = await expectations()
+    expect(expectationResult).toEqual(true)
   })
 })

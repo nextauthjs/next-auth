@@ -1,6 +1,7 @@
 import Fastify from "fastify"
 import type { FastifyRequest } from 'fastify';
 import { encodeUrlEncoded, toWebRequest } from "../../src/lib"
+import formbodyParser from "@fastify/formbody"
 
 function expectMatchingRequestHeaders(req: FastifyRequest, request: Request) {
   for (let headerName in req.headers) {
@@ -25,6 +26,8 @@ async function expectMatchingUrlEncodedRequestBody(
   expect(req.body).not.toBeNull();
   if (typeof req.body === 'object' && req.body !== null) {
     expect(body).toEqual(encodeUrlEncoded(req.body))
+  } else {
+    fail("req.body is not an object or is null");
   }
 }
 
@@ -43,35 +46,46 @@ describe("toWebRequest", () => {
 
       expectations = async () => {
         expectMatchingRequestHeaders(req, request)
+        return true
       }
 
       return "OK"
     })
 
-    await fastify.inject({
+    await fastify.ready();
+
+    const res = await fastify.inject({
       method: 'POST',
       url: '/',
       headers: {
         'X-Test-Header': 'foo',
         'Content-Type': 'application/json',
-      }
+      },
+      payload: {},
     });
 
-    await expectations()
+    expect(res.statusCode).toEqual(200);
+
+    const expectationResult = await expectations()
+    expect(expectationResult).toEqual(true)
   })
 
   it("adapts request with json encoded body", async () => {
     let expectations: Function = () => {}
 
+
     fastify.post("/", async (req, reply) => {
       const request = toWebRequest(req)
 
       expectations = async () => {
-        expectMatchingJsonRequestBody(req, request)
+        await expectMatchingJsonRequestBody(req, request)
+        return true
       }
 
       return "OK"
     })
+
+    await fastify.ready();
 
     const data = {
       name: "Rexford",
@@ -86,29 +100,33 @@ describe("toWebRequest", () => {
       payload: data,
     });
 
-    await expectations()
+    const expectationResult = await expectations()
+    expect(expectationResult).toEqual(true)
   })
 
   it("adapts request with url-encoded body", async () => {
     let expectations: Function = () => {}
 
-
+    fastify.register(formbodyParser);
     fastify.post("/", async (req, reply) => {
       const request = toWebRequest(req)
 
       expectations = async () => {
-        expectMatchingUrlEncodedRequestBody(req, request)
+        await expectMatchingUrlEncodedRequestBody(req, request)
+        return true
       }
 
       return "OK"
     })
+
+    await fastify.ready();
 
     const data = {
       name: "Rexford",
       nums: [1, 2, 3],
     }
     
-    await fastify.inject({
+    const res = await fastify.inject({
       method: 'POST',
       url: '/',
       headers: {
@@ -117,6 +135,9 @@ describe("toWebRequest", () => {
       payload: encodeUrlEncoded(data),
     });
 
-    await expectations()
+    expect(res.statusCode).toEqual(200);
+
+    const expectationResult = await expectations()
+    expect(expectationResult).toEqual(true)
   })
 })
