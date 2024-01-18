@@ -1,22 +1,20 @@
-// Source: https://stackoverflow.com/a/34749873/5364135
-
-/** Simple object check */
-function isObject(item: any): boolean {
-  return item && typeof item === "object" && !Array.isArray(item)
-}
+import isPlainObject from 'is-plain-obj';
 
 /** Deep merge two objects */
 export function merge(target: any, ...sources: any[]): any {
   if (!sources.length) return target
   const source = sources.shift()
 
-  if (isObject(target) && isObject(source)) {
+  if (isPlainObject(target) && isPlainObject(source)) {
     for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, { [key]: {} })
+      if (isPlainObject(source[key])) {
+        if (!target[key]) {
+          target[key] = {}
+        }
+
         merge(target[key], source[key])
       } else {
-        Object.assign(target, { [key]: source[key] })
+        target[key] = source[key]
       }
     }
   }
