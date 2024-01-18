@@ -36,11 +36,14 @@ describe("toWebResponse", () => {
       return toFastifyReply(webResponse, reply)
     })
 
+    await fastify.ready();
+
     const res = await fastify.inject({
       method: 'POST',
       url: '/',
     });
 
+    expect(res.statusCode).toEqual(200);
     expectMatchingResponseHeaders(webResponse, res)
     expect(res.body).toEqual(JSON.stringify({ name: "Rexford" }))
   })
