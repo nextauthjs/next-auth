@@ -200,7 +200,7 @@
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 
-import { dev } from "$app/environment"
+import { dev, building } from "$app/environment"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
@@ -219,7 +219,7 @@ export async function getSession(
   req: Request,
   config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["getSession"]> {
-  config.secret ??= env.AUTH_SECRET
+  setEnvDefaults(env, config)
   config.trustHost ??= true
 
   const prefix = config.prefix ?? `${base}/auth`
@@ -258,31 +258,23 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (
-  event: RequestEvent
-) => PromiseLike<SvelteKitAuthConfig>
-
 /**
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
 export function SvelteKitAuth(
-  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+  config:
+    | SvelteKitAuthConfig
+    | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
 ): Handle {
   return async function ({ event, resolve }) {
-    const authOptions =
-      typeof svelteKitAuthOptions === "object"
-        ? svelteKitAuthOptions
-        : await svelteKitAuthOptions(event)
-    const { prefix = `${base}/auth` } = authOptions
-
-    authOptions.secret ??= env.AUTH_SECRET
-    authOptions.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
-    authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    const _config = typeof config === "object" ? config : await config(event)
+    setEnvDefaults(env, _config)
+    const { prefix = `${base}/auth` } = _config
 
     const { url, request } = event
 
-    event.locals.getSession ??= () => getSession(request, authOptions)
+    event.locals.getSession ??= () => getSession(request, _config)
 
     const action = url.pathname
       .slice(prefix.length + 1)
@@ -292,7 +284,7 @@ export function SvelteKitAuth(
       return resolve(event)
     }
 
-    return Auth(request, authOptions)
+    return Auth(request, _config)
   }
 }
 
@@ -312,4 +304,31 @@ declare module "$env/dynamic/private" {
   export const AUTH_SECRET: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
+}
+
+export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
+  if (building) return
+
+  config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
+  config.secret ??= env.AUTH_SECRET
+  config.trustHost ??= !!(
+    env.AUTH_URL ??
+    env.NEXTAUTH_URL ??
+    env.AUTH_TRUST_HOST ??
+    env.VERCEL ??
+    env.NODE_ENV !== "production" ??
+    dev
+  )
+  config.providers = config.providers.map((p) => {
+    const finalProvider = typeof p === "function" ? p({}) : p
+    if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
+      const ID = finalProvider.id.toUpperCase()
+      finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
+      finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
+      if (finalProvider.type === "oidc") {
+        finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
+      }
+    }
+    return finalProvider
+  })
 }
