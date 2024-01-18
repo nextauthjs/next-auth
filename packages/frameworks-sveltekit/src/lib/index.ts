@@ -307,7 +307,6 @@ declare module "$env/dynamic/private" {
 }
 
 export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
-  if (dev) config.trustHost ??= true
   if (building) return
 
   config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
@@ -317,7 +316,8 @@ export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
     env.NEXTAUTH_URL ??
     env.AUTH_TRUST_HOST ??
     env.VERCEL ??
-    env.NODE_ENV !== "production"
+    env.NODE_ENV !== "production" ??
+    dev
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
