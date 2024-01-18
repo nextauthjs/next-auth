@@ -173,6 +173,7 @@ export function FastifyAuth(
 ): ReturnType<typeof FastifyAuthPlugin> {
   const { ...authOptions } = config
   authOptions.secret ??= process.env.AUTH_SECRET
+  authOptions.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
   authOptions.trustHost ??= !!(
     process.env.AUTH_TRUST_HOST ??
     process.env.VERCEL ??
