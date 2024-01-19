@@ -170,8 +170,7 @@ export async function Auth(
     const page = (isAuthError && error.kind) || "error"
     const params = new URLSearchParams({ error: type })
     const path =
-      config.pages?.[page] ??
-      `${internalRequest.url.pathname}/${page.toLowerCase()}`
+      config.pages?.[page] ?? `${config.basePath}/${page.toLowerCase()}`
 
     const url = `${internalRequest.url.origin}${path}?${params}`
 
