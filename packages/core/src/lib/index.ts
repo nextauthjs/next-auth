@@ -48,7 +48,7 @@ export async function AuthInternal(
       case "session":
         return await actions.session(options, sessionStore, cookies)
       case "signin":
-        return render.signin(error)
+        return render.signin(providerId, error)
       case "signout":
         return render.signout()
       case "verify-request":
