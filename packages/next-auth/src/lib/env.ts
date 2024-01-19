@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server"
-import type { headers } from "next/headers"
 
 import type { NextAuthConfig } from "./index.js"
 
@@ -33,18 +32,6 @@ export function setEnvDefaults(config: NextAuthConfig) {
     }
     return finalProvider
   })
-}
-
-/**
- * Extract the origin from `NEXTAUTH_URL` or `AUTH_URL`
- * environment variables, or the request's headers.
- */
-export function detectOrigin(h: Headers | ReturnType<typeof headers>) {
-  const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
-  if (url) return new URL(url)
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
-  return new URL(`${protocol}://${host}`)
 }
 
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
