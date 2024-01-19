@@ -1,10 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
-import Auth0 from "next-auth/providers/auth0"
 import Credentials from "next-auth/providers/credentials"
-import Facebook from "next-auth/providers/facebook"
-import GitHub from "next-auth/providers/github"
-import Google from "next-auth/providers/google"
-import Twitter from "next-auth/providers/twitter"
 
 declare module "next-auth" {
   /**
@@ -25,11 +20,6 @@ declare module "next-auth" {
 export default {
   debug: false,
   providers: [
-    GitHub({ account() {} }),
-    Auth0,
-    Facebook,
-    Google,
-    Twitter,
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       authorize(c) {
@@ -42,22 +32,16 @@ export default {
         }
       },
     }),
-  ],
-  pages: {
-    signIn: "/auth/signin",
-  },
+    process.env.AUTH_GITHUB_ID && (await import("next-auth/providers/github")).default,
+    process.env.AUTH_GOOGLE_ID && (await import("next-auth/providers/google")).default,
+    process.env.AUTH_FACEBOOK_ID && (await import("next-auth/providers/facebook")).default,
+    process.env.AUTH_AUTH0_ID && (await import("next-auth/providers/auth0")).default,
+    process.env.AUTH_TWITTER_ID && (await import("next-auth/providers/twitter")).default
+  ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
       if (trigger === "update") token.name = session.user.name
       return token
-    },
-    authorized({ request }) {
-      console.log("authorized request: ", request.nextUrl.pathname)
-      if (request.nextUrl.pathname === "/auth/signin") {
-        // console.log("authorized request: ", request)
-        return true
-      }
-      return false
     },
   },
 } satisfies NextAuthConfig
