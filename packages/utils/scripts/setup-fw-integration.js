@@ -59,4 +59,39 @@ let packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf8"))
 packageJson.name = `@auth/frameworks-${id}`
 await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2))
 
+// Update redirects in vercel.json
+const vercelJsonPath = path.join(__dirname, "../../..", "docs", "vercel.json")
+let vercelJson = JSON.parse(await fs.readFile(vercelJsonPath, "utf8"))
+vercelJson.redirects = [
+  ...vercelJson.redirects,
+  {
+    source: "/",
+    has: [{ type: "host", value: `${id}.authjs.dev` }],
+    destination: `https://authjs.dev/reference/${id}`,
+  },
+]
+await fs.writeFile(vercelJsonPath, JSON.stringify(vercelJson, null, 2))
+
+// add a new line in pr-labeler.yml
+const prLabelerPath = path.join(
+  __dirname,
+  "../../..",
+  ".github",
+  "pr-labeler.yml"
+)
+let prLabeler = await fs.readFile(prLabelerPath, "utf8")
+const newEntry = 'frameworkId: ["packages/frameworks-frameworkId/**/*"]\n'
+prLabeler += newEntry
+// replace frameworkId with the id
+prLabeler = prLabeler.replace(/frameworkId/g, id)
+
+await fs.writeFile(prLabelerPath, prLabeler)
+
+const generateManifestPath = path.join(
+  __dirname,
+  "../../..",
+  "scripts",
+  "generate-manifest.mjs"
+)
+
 console.log("✅ Success. Please run `pnpm i` to install dependencies.")
