@@ -5,6 +5,14 @@ import type { NextAuthConfig } from "./index.js"
 
 export function setEnvDefaults(config: NextAuthConfig) {
   config.secret ??= process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
+  try {
+    const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+    if (url) config.basePath = new URL(url).pathname
+  } catch {
+  } finally {
+    config.basePath ??= "/api/auth"
+  }
+
   config.trustHost ??= !!(
     process.env.AUTH_URL ??
     process.env.NEXTAUTH_URL ??
