@@ -358,7 +358,9 @@ export interface NextAuthResult {
  * ```
  */
 export default function NextAuth(
-  config: NextAuthConfig | ((request: Request | undefined) => NextAuthConfig)
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | undefined) => NextAuthConfig)
 ): NextAuthResult {
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {
