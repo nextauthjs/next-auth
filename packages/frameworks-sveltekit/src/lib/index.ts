@@ -279,13 +279,12 @@ export function SvelteKitAuth(
 
     const action = url.pathname
       .slice(_config.basePath.length + 1)
-      .split("/")[0] as AuthAction
+      .split("/")[0]
 
-    if (!isAction(action) || !url.pathname.startsWith(_config.basePath + "/")) {
-      return resolve(event)
+    if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
+        return Auth(request, _config)
     }
-
-    return Auth(request, _config)
+    return resolve(event)
   }
 }
 
@@ -299,9 +298,7 @@ declare global {
   namespace App {
     interface Locals {
       auth(): Promise<Session | null>
-      /**
-       * @deprecated Use `auth` instead.
-       */
+      /** @deprecated Use `auth` instead. */
       getSession(): Promise<Session | null>
     }
     interface PageData {

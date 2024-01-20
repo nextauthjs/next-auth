@@ -119,7 +119,7 @@ export function randomString(size: number) {
   return Array.from(bytes).reduce(r, "")
 }
 
-export function isAction(action: string): action is AuthAction {
+function isAction(action: string): action is AuthAction {
   return actions.includes(action as AuthAction)
 }
 
