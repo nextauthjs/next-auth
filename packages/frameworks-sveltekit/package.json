@@ -38,6 +38,7 @@
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/package": "^1.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@types/set-cookie-parser": "^2.4.7",
     "svelte": "^4.0.0",
     "svelte-check": "^3.4.3",
     "tslib": "^2.4.1",
@@ -45,11 +46,12 @@
     "vitest": "^1.0.0"
   },
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "set-cookie-parser": "^2.6.0"
   },
   "peerDependencies": {
-    "svelte": "^3.54.0 || ^4.0.0",
-    "@sveltejs/kit": "^1.0.0 || ^2.0.0"
+    "@sveltejs/kit": "^1.0.0 || ^2.0.0",
+    "svelte": "^3.54.0 || ^4.0.0"
   },
   "type": "module",
   "types": "./index.d.ts",
@@ -57,6 +59,7 @@
     "client.*",
     "index.*",
     "providers",
+    "vendored",
     "src"
   ],
   "exports": {
