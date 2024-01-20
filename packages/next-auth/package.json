@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.4",
+  "version": "5.0.0-beta.5",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -39,9 +39,6 @@
     "./react": {
       "types": "./react.d.ts",
       "import": "./react.js"
-    },
-    "./types": {
-      "types": "./types.d.ts"
     },
     "./package.json": "./package.json"
   },

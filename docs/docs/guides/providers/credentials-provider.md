@@ -82,7 +82,7 @@ See the [callbacks documentation](/reference/core#authconfig#callbacks) for more
 
 ```js
 callbacks: {
-  async jwt(token, user, account, profile, isNewUser) {
+  async jwt({ token, user, account, profile, isNewUser }) {
     if (user) {
       token.id = user.id
     }

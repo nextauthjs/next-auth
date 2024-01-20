@@ -2,11 +2,11 @@ import { Auth, raw, skipCSRFCheck } from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { detectOrigin } from "./env.js"
-
+import type { AuthAction } from "@auth/core/types.js"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
-import { ProviderType } from "../providers/index.js"
+import type { ProviderType } from "../providers/index.js"
+import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -23,7 +23,7 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = authUrl(detectOrigin(headers), "signin")
+  const base = createActionURL("signin", headers, config.basePath)
 
   if (!provider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
@@ -76,7 +76,7 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = authUrl(detectOrigin(headers), "signout")
+  const url = createActionURL("signout", headers, config.basePath)
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -98,7 +98,7 @@ export async function update(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 
-  const url = authUrl(detectOrigin(headers), "session")
+  const url = createActionURL("session", headers, config.basePath)
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
 
@@ -109,10 +109,25 @@ export async function update(
   return res.body
 }
 
-/** Determine an action's URL */
-function authUrl(base: URL, action: string) {
-  let pathname
-  if (base.pathname === "/") pathname ??= `/api/auth/${action}`
-  else pathname ??= `${base.pathname}/${action}`
-  return new URL(pathname, base.origin)
+/**
+ * Extract the origin and base path from either `AUTH_URL` or `NEXTAUTH_URL` environment variables,
+ * or the request's headers and the {@link NextAuthConfig.basePath} option.
+ */
+export function createActionURL(
+  action: AuthAction,
+  h: Headers | ReturnType<typeof headers>,
+  basePath?: string
+) {
+  const envUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+  if (envUrl) {
+    const { origin, pathname } = new URL(envUrl)
+    const separator = pathname.endsWith("/") ? "" : "/"
+    return `${origin}${pathname}${separator}${action}`
+  }
+  const host = h.get("x-forwarded-host") ?? h.get("host")
+  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
+  // @ts-expect-error `basePath` value is default'ed to "/api/auth" in `setEnvDefaults`
+  const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
+  const separator = pathname.endsWith("/") ? "" : "/"
+  return `${origin}${pathname}${separator}${action}`
 }

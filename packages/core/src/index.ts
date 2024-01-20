@@ -91,7 +91,7 @@ export async function Auth(
 ): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
-  const internalRequest = await toInternalRequest(request)
+  const internalRequest = await toInternalRequest(request, config)
 
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
@@ -170,8 +170,7 @@ export async function Auth(
     const page = (isAuthError && error.kind) || "error"
     const params = new URLSearchParams({ error: type })
     const path =
-      config.pages?.[page] ??
-      `${internalRequest.url.pathname}/${page.toLowerCase()}`
+      config.pages?.[page] ?? `${config.basePath}/${page.toLowerCase()}`
 
     const url = `${internalRequest.url.origin}${path}?${params}`
 
@@ -410,4 +409,18 @@ export interface AuthConfig {
    * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/getting-started/deployment#securing-a-preview-deployment)
    */
   redirectProxyUrl?: string
+
+  /**
+   * Use this option to enable experimental features.
+   * When enabled, it will print a warning message to the console.
+   * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
+   * @default {}
+   */
+  experimental?: Record<string, boolean>
+  /**
+   * The base path of the Auth.js API endpoints.
+   *
+   * @default "/auth"
+   */
+  basePath?: string
 }
