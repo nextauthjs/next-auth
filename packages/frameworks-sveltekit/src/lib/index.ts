@@ -270,7 +270,6 @@ export function SvelteKitAuth(
   return async function ({ event, resolve }) {
     const _config = typeof config === "object" ? config : await config(event)
     setEnvDefaults(env, _config)
-    _config.basePath ??= `${base}/auth`
 
     const { url, request } = event
 
@@ -278,11 +277,14 @@ export function SvelteKitAuth(
     event.locals.getSession ??= event.locals.auth
 
     const action = url.pathname
-      .slice(_config.basePath.length + 1)
+      .slice(
+        // @ts-expect-error - basePath is defined in setEnvDefaults
+        _config.basePath.length + 1
+      )
       .split("/")[0]
 
     if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
-        return Auth(request, _config)
+      return Auth(request, _config)
     }
     return resolve(event)
   }
@@ -317,11 +319,11 @@ export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
   if (building) return
 
   try {
-    const url = env.AUTH_URL ?? base
+    const url = env.AUTH_URL
     if (url) config.basePath = new URL(url).pathname
   } catch {
   } finally {
-    config.basePath ??= "/auth"
+    config.basePath ??= `${base}/auth`
   }
 
   config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
