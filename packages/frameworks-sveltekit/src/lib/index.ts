@@ -227,7 +227,7 @@ async function auth(
   const basePath = config.basePath ?? `${base}/auth`
   const url = new URL(basePath + "/session", req.url)
   const request = new Request(url, {
-    headers: { cookie: headers.get("cookie") ?? "" },
+    headers: { cookie: req.headers.get("cookie") ?? "" },
   })
   const response = await Auth(request, config)
 
