@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import type { AuthAction } from "@auth/core/types.js"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
+import type { ProviderType } from "../providers/index.js"
 import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
@@ -22,32 +23,39 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = createActionURL("signin", headers, config.basePath)
+  const signInURL = createActionURL("signin", headers, config.basePath)
 
   if (!provider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(url)
-    return url
+    signInURL.searchParams.append("callbackUrl", callbackUrl)
+    if (shouldRedirect) redirect(signInURL.toString())
+    return signInURL.toString()
   }
 
-  let url = `${base}/${provider}?${new URLSearchParams(authorizationParams)}`
-  let foundProvider: SignInParams[0] | undefined = undefined
+  let url = `${signInURL}/${provider}?${new URLSearchParams(
+    authorizationParams
+  )}`
+  let foundProvider: { id?: SignInParams[0]; type?: ProviderType } = {}
 
-  for (const _provider of config.providers) {
-    const { id } = typeof _provider === "function" ? _provider?.() : _provider
+  for (const providerConfig of config.providers) {
+    const { options, ...defaults } =
+      typeof providerConfig === "function" ? providerConfig() : providerConfig
+    const id = (options?.id as string | undefined) ?? defaults.id
     if (id === provider) {
-      foundProvider = id
+      foundProvider = {
+        id,
+        type: (options?.type as ProviderType | undefined) ?? defaults.type,
+      }
       break
     }
   }
 
-  if (!foundProvider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
+  if (!foundProvider.id) {
+    const url = `${signInURL}?${new URLSearchParams({ callbackUrl })}`
     if (shouldRedirect) redirect(url)
     return url
   }
 
-  if (foundProvider === "credentials") {
+  if (foundProvider.type === "credentials") {
     url = url.replace("signin", "callback")
   }
 
@@ -111,17 +119,17 @@ export function createActionURL(
   action: AuthAction,
   h: Headers | ReturnType<typeof headers>,
   basePath?: string
-) {
+): URL {
   const envUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
   if (envUrl) {
     const { origin, pathname } = new URL(envUrl)
     const separator = pathname.endsWith("/") ? "" : "/"
-    return `${origin}${pathname}${separator}${action}`
+    return new URL(`${origin}${pathname}${separator}${action}`)
   }
   const host = h.get("x-forwarded-host") ?? h.get("host")
   const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
   // @ts-expect-error `basePath` value is default'ed to "/api/auth" in `setEnvDefaults`
   const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
   const separator = pathname.endsWith("/") ? "" : "/"
-  return `${origin}${pathname}${separator}${action}`
+  return new URL(`${origin}${pathname}${separator}${action}`)
 }
