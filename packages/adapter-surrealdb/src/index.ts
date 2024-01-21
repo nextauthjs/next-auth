@@ -380,7 +380,10 @@ export function SurrealDBAdapter<T>(
         expires,
       }
       const result = await surreal.create("session", doc)
-      return result[0] ?? null
+      return {
+        ...result[0],
+        expires: new Date(result[0].expires),
+      } ?? null
     },
     async getSessionAndUser(sessionToken: string) {
       const surreal = await client
