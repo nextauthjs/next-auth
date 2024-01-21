@@ -281,6 +281,7 @@ export function SurrealDBAdapter<T>(
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
+      if(!user.id) throw new Error("User id is required")
       const surreal = await client
       const doc = {
         ...user,
@@ -368,22 +369,15 @@ export function SurrealDBAdapter<T>(
       sessionToken,
       userId,
       expires,
-    }: {
-      sessionToken: string
-      userId: string
-      expires: Date
     }) {
       const surreal = await client
-      const doc = {
+      const doc = sessionToDoc({
         sessionToken,
         userId: `user:${toSurrealId(userId)}`,
         expires,
-      }
-      const result = await surreal.create("session", doc)
-      return {
-        ...result[0],
-        expires: new Date(result[0].expires),
-      } ?? null
+      });
+      const result = await surreal.create<SessionDoc, Omit<SessionDoc, "id">>("session", doc)
+      return docToSession(result[0]) ?? null
     },
     async getSessionAndUser(sessionToken: string) {
       const surreal = await client
