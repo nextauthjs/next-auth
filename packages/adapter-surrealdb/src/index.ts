@@ -107,11 +107,7 @@ export const sessionToDoc = (
 }
 
 export const toSurrealId = (id: string) => {
-  // if Without annotation, text record IDs can contain letters, numbers and _ characters.
-  if (/^[a-zA-Z0-9_]+$/.test(id)) {
-    return id
-    // already escaped id with "⟨ID⟩"
-  } else if (/^⟨.+⟩$/.test(id)) {
+  if (/^⟨.+⟩$/.test(id)) {
     return id
   } else {
     return `⟨${id}⟩`
@@ -126,9 +122,9 @@ export const toId = (surrealId: string) => {
  * ## Setup
  *
  * The SurrealDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `SurrealDBClient` that is connected already. Below you can see an example how to do this.
- * 
+ *
  * ### Versions
- * 
+ *
  * | surrealdb.js version | Adapter version |
  * | -------------------- | --------------- |
  * | <= 0.9.1             | 0.2.10          |
@@ -152,8 +148,8 @@ export const toId = (surrealId: string) => {
  *   const db = new Surreal();
  *   try {
  *     await db.connect(`${connectionString}/rpc`, {
- *       namespace, 
- *       database, 
+ *       namespace,
+ *       database,
  *       auth: { username, password }
  *     })
  *     resolve(db)
@@ -184,7 +180,7 @@ export const toId = (surrealId: string) => {
  *   try {
  *     const db = new ExperimentalSurrealHTTP(connectionString, {
  *       fetch,
- *       namespace, 
+ *       namespace,
  *       database,
  *       auth: { username, password }
  *     })
@@ -281,7 +277,7 @@ export function SurrealDBAdapter<T>(
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
-      if(!user.id) throw new Error("User id is required")
+      if (!user.id) throw new Error("User id is required")
       const surreal = await client
       const doc = {
         ...user,
@@ -365,18 +361,17 @@ export function SurrealDBAdapter<T>(
         }
       } catch (e) {}
     },
-    async createSession({
-      sessionToken,
-      userId,
-      expires,
-    }) {
+    async createSession({ sessionToken, userId, expires }) {
       const surreal = await client
       const doc = sessionToDoc({
         sessionToken,
         userId: `user:${toSurrealId(userId)}`,
         expires,
-      });
-      const result = await surreal.create<SessionDoc, Omit<SessionDoc, "id">>("session", doc)
+      })
+      const result = await surreal.create<SessionDoc, Omit<SessionDoc, "id">>(
+        "session",
+        doc
+      )
       return docToSession(result[0]) ?? null
     },
     async getSessionAndUser(sessionToken: string) {
