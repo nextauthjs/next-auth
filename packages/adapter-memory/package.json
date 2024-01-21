@@ -41,12 +41,8 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {},
-  "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3"
-  },
+  "devDependencies": {},
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

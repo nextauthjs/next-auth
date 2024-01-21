@@ -423,6 +423,12 @@ importers:
         specifier: ^8.10.0
         version: 8.11.2
 
+  packages/adapter-memory:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/adapter-mikro-orm:
     dependencies:
       '@auth/core':

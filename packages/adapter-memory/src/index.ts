@@ -1,3 +1,22 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  Official Memory adapter for Auth.js / NextAuth.js.
+ *  <img style={{display: "block"}} width="38" src="https://www.svgrepo.com/show/276812/ram-memory-ram.svg"/>
+ * </div>
+ * 
+ * ---
+ * In-memory adapter for Auth.js / NextAuth.js. This adapter is **not** recommended for production use, but is useful for testing and development.
+ * 
+ * All data is stored in memory and is lost when the server reloads.
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @auth/memory-adapter
+ * ```
+ *
+ * @module @auth/memory-adapter
+ */
 import {
   Adapter,
   AdapterAccount,
@@ -7,6 +26,10 @@ import {
   VerificationToken,
 } from "@auth/core/adapters"
 
+
+/**
+ * Represents the in-memory data structure for the adapter.
+ */
 export type Memory = {
   users: Map<string, AdapterUser>
   accounts: Map<string, AdapterAccount>
@@ -15,6 +38,10 @@ export type Memory = {
   authenticators: Map<string, AdapterAuthenticator>
 }
 
+/**
+ * Initializes a new instance of the Memory object.
+ * @returns A Memory object with empty maps for users, accounts, sessions, verification tokens, and authenticators.
+ */
 export function initMemory(): Memory {
   return {
     users: new Map<string, AdapterUser>(),
@@ -25,14 +52,60 @@ export function initMemory(): Memory {
   }
 }
 
+/**
+ * ## Setup
+ *
+ * Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object:
+ *
+ * ```js title="pages/api/auth/[...nextauth].js"
+ * import NextAuth from "next-auth"
+ * import GoogleProvider from "next-auth/providers/google"
+ * import { MemoryAdapter } from "@auth/memory-adapter"
+ *
+ *
+ * export default NextAuth({
+ *   adapter: MemoryAdapter(),
+ *   providers: [
+ *     GoogleProvider({
+ *       clientId: process.env.GOOGLE_CLIENT_ID,
+ *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+ *     }),
+ *   ],
+ * })
+ * ```
+ * 
+ * ### Providing initial data
+ * 
+ * You can optionally provide initial data to the adapter by passing a `Memory` object to the `MemoryAdapter` function.
+ * This allows you to pre-populate the database with data that is restored when the server reloads. Any changes made to
+ * the database will be lost when the server reloads.
+ * 
+ * ```js title="pages/api/auth/[...nextauth].js"
+ * import NextAuth from "next-auth"
+ * // ... providers
+ * import { MemoryAdapter, initMemory } from "@auth/memory-adapter"
+ * 
+ * const memory = initMemory()
+ * memory.users.set("123", {
+ *   id: "123",
+ *   name: "John Doe",
+ *   email: "user@example.com",
+ *   emailVerified: null,
+ * })
+ * // ... add more initial data
+ * 
+ * export default NextAuth({
+ *   adapter: MemoryAdapter(memory),
+ *   providers: [] // ... providers
+ * })
+ * 
+ **/
 export default function MemoryAdapter(memory?: Memory): Adapter {
   const { users, accounts, sessions, verificationTokens, authenticators } =
     memory ?? initMemory()
 
-  // Create the adapter object first
-  // and then populate it. This allows
-  // us to call adapter functions from
-  // within.
+  // Create the adapter object first and then populate it.
+  // This allows us to call adapter functions from within.
   const adapter: Adapter = {}
 
   // Assign all functions in place
@@ -232,16 +305,23 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
   return adapter
 }
 
+/**
+ * Generates a random string of the specified length.
+ * @param length The length of the generated string.
+ * @returns The randomly generated string.
+ */
 function makeid(length: number) {
   let result = ""
-  const characters =
+  const alphabet =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  const charactersLength = characters.length
-  let counter = 0
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    counter += 1
+
+  // Build a string of the specified length by randomly selecting
+  // characters from the alphabet at each iteration.
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * alphabet.length)
+    result += alphabet.charAt(randomIndex)
   }
+
   return result
 }
 

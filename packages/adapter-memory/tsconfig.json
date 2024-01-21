@@ -1,5 +1,5 @@
 {
-  "extends": "@auth/tsconfig/tsconfig.base.json",
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
@@ -15,6 +15,11 @@
     "declarationMap": true,
     "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["*.js", "*.d.ts"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "*.js",
+    "*.d.ts"
+  ]
 }
