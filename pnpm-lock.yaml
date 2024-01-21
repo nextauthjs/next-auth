@@ -516,7 +516,7 @@ importers:
         version: link:../core
       surrealdb.js:
         specifier: ^0.9.1
-        version: 0.10.1
+        version: 0.11.0
 
   packages/adapter-typeorm:
     dependencies:
@@ -23875,8 +23875,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /surrealdb.js@0.10.1:
-    resolution: {integrity: sha512-GMLwnhqMkDQrpBkovK6PHHvvs/8QEW57FnWAA0H31ZhaEN1aFC1EvweIZUTF5UWzSEM3f0+WA3QU1ogTqViuUw==}
+  /surrealdb.js@0.11.0:
+    resolution: {integrity: sha512-x/Qd0UYyNilwY27JZlWgP8NsCdBzDtextRzP9oIm7xO27qsZvE5Rh4wnYN0xD68zgRAE4W8Jsufbm+hKbaGsTg==}
     dependencies:
       unws: 0.2.4(ws@8.16.0)
       ws: 8.16.0
