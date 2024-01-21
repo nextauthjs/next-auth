@@ -1,0 +1,6 @@
+{
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    "target": "ESNext"
+  }
+}

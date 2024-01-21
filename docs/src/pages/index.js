@@ -8,10 +8,9 @@ import classnames from "classnames"
 import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
-import providers from "../../providers.json"
-import { Clerk } from "../components/clerk"
+import manifest from "../../manifest.mjs"
 
-const providersCount = Object.keys(providers).length + 2 // email, credentials
+const providersCount = Object.keys(manifest.providers).length + 2 // email, credentials
 const features = [
   {
     title: "Easy",
@@ -168,6 +167,15 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+            <div className={styles.heroClerk}>
+              Looking for a hosted alternative?
+              <a
+                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                target="_blank"
+              >
+                Try Clerk →
+              </a>
+            </div>
             <div className="hero-marquee">
               <ProviderMarquee />
             </div>
@@ -187,7 +195,6 @@ export default function Home() {
                   </h2>
                 </div>
               </div>
-              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
@@ -219,9 +226,7 @@ export default function Home() {
               <div className="row">
                 <div className="col col--6">
                   <div className="code">
-                    <div className="code-heading">
-                      Next.js <span>/pages/api/auth/[...nextauth].ts</span>
-                    </div>
+                    <div className="code-heading">Next.js</div>
                     <CodeBlock className="prism-code language-js">
                       {nextJsCode}
                     </CodeBlock>
@@ -273,64 +278,40 @@ export default function Home() {
 
 const svelteKitCode = `
 import { SvelteKitAuth } from "@auth/sveltekit"
-import GitHub from '@auth/core/providers/github'
-import Facebook from '@auth/core/providers/facebook'
-import Google from '@auth/core/providers/google'
-
-import { 
-  GITHUB_ID,
-  GITHUB_SECRET,
-  FACEBOOK_ID,
-  FACEBOOK_SECRET,
-  GOOGLE_ID,
-  GOOGLE_SECRET
-} from "$env/static/private"
-
+import GitHub from '@auth/sveltekit/providers/github'
+import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
 export const handle = SvelteKitAuth({
   providers: [
-    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
-    Facebook({ clientId: FACEBOOK_ID, clientSecret: FACEBOOK_SECRET }),
-    Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
+    GitHub({
+      clientId: GITHUB_ID,
+      clientSecret: GITHUB_SECRET
+    })
   ],
 })
 `.trim()
 
-const solidStartCode =
-  `import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
-import GitHub from "@auth/core/providers/github";
-
-export const authOpts: SolidAuthConfig = {
-  providers: [
-    GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-  ],
-  debug: false,
-};
-
-export const { GET, POST } = SolidAuth(authOpts);`.trim()
-
-const nextJsCode = `
-import NextAuth from 'next-auth'
-import GitHub from 'next-auth/providers/github'
-import Facebook from 'next-auth/providers/facebook'
-import Google from 'next-auth/providers/google'
-
-export default NextAuth({
+const solidStartCode = `import { SolidAuth } from "@auth/solid-start"
+import GitHub from "@auth/core/providers/github"
+export const { GET, POST } = SolidAuth({
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET
-    }),
-    Facebook({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET
-    }),
-    Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
     })
   ]
-})
+})`.trim()
+
+const nextJsCode = `
+// auth.ts
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+export const { auth, handlers } = NextAuth({ providers: [ GitHub ] })
+
+// middleware.ts
+export { auth as default } from "auth"
+
+// app/api/auth/[...nextauth].ts
+import { handlers } from "auth"
+export const { GET, POST } = handlers
+export const runtime = "edge"
 `.trim()

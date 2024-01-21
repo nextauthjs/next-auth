@@ -35,10 +35,14 @@ export type SignInAuthorizationParams =
  * or send the user to the signin page listing all possible providers.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#signin)
+ * ```ts
+ * import { signIn } from "@auth/solid-start/client"
+ * signIn()
+ * signIn("provider") // example: signIn("github")
+ * ```
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
@@ -96,7 +100,10 @@ export async function signIn<
  * Signs the user out, by removing the session cookie.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#signout)
+ * ```ts
+ * import { signOut } from "@auth/solid-start/client"
+ * signOut()
+ * ```
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}

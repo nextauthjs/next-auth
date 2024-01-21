@@ -13,7 +13,7 @@ It comes with the constraint that users authenticated in this manner are not per
 
 The **Credentials Provider** comes with a set of default options:
 
-- [Credentials Provider options](/reference/core/providers_credentials)
+- [Credentials Provider options](/reference/core/providers/credentials)
 
 You can override any of the options to suit your own use case.
 
@@ -24,10 +24,9 @@ The functionality provided for credentials-based authentication is intentionally
 
 OAuth providers spend significant amounts of money, time, and engineering effort to build:
 
-- bot-protection
-- rate-limiting
-- password management
-- data security
+- abuse detection (bot-protection, rate-limiting)
+- password management (password reset, credential stuffing, rotation)
+- data security (encryption/salting, strength validation)
 
 and much more for authentication solutions. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
 
@@ -79,11 +78,11 @@ providers: [
 ...
 ```
 
-See the [callbacks documentation](/reference/configuration/auth-config#callbacks) for more information on how to interact with the token. For example, you can add additional information to the token by returning an object from the `jwt()` callback:
+See the [callbacks documentation](/reference/core#authconfig#callbacks) for more information on how to interact with the token. For example, you can add additional information to the token by returning an object from the `jwt()` callback:
 
 ```js
 callbacks: {
-  async jwt(token, user, account, profile, isNewUser) {
+  async jwt({ token, user, account, profile, isNewUser }) {
     if (user) {
       token.id = user.id
     }

@@ -1,17 +1,11 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- * <span>
- *  Official <b>Firebase</b> adapter for Auth.js / NextAuth.js,
- *  using the <a href="https://firebase.google.com/docs/admin/setup">Firebase Admin SDK</a>
- *  &nbsp;and <a href="https://firebase.google.com/docs/firestore">Firestore</a>.</span>
- * <a href="https://firebase.google.com/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/firebase.svg" height="48" width="48"/>
- * </a>
- * </div>
+ * Official **Firebase** adapter for Auth.js / NextAuth.js, using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
+ * and [Firestore](https://firebase.google.com/docs/firestore).
+ * [![Firestore logo](https://authjs.dev/img/adapters/firebase.svg)](https://firebase.google.com)
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/firebase-adapter firebase-admin
  * ```
  *
