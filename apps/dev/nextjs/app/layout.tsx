@@ -1,4 +1,4 @@
-import { auth, signIn, signOut, unstable_update as update } from "auth"
+import { auth, signIn, signOut, update } from "auth"
 import Footer from "components/footer"
 import { Header } from "components/header"
 import styles from "components/header.module.css"

@@ -12,8 +12,8 @@ import authConfig from "auth.config"
 //   Email({ server: "smtp://127.0.0.1:1025?tls.rejectUnauthorized=false" })
 // )
 
-export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(
-  (request) => {
+export const { handlers, auth, signIn, signOut, update, unstable_auth } =
+  NextAuth((request) => {
     if (request?.nextUrl.searchParams.get("test")) {
       return {
         // adapter: PrismaAdapter(globalThis.prisma),
@@ -27,8 +27,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(
       session: { strategy: "jwt" },
       ...authConfig,
     }
-  }
-)
+  })
 
 // export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 //   // adapter: PrismaAdapter(globalThis.prisma),
