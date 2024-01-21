@@ -21,6 +21,7 @@ const testConfig: AuthConfig = {
   providers: [GitHub],
   trustHost: true,
   secret: AUTH_SECRET,
+  basePath: "/api/auth",
 }
 
 let authConfig: AuthConfig

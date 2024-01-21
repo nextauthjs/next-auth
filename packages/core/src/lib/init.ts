@@ -6,7 +6,6 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
-import parseUrl from "./utils/parse-url.js"
 import { merge } from "./utils/merge.js"
 
 import type {
