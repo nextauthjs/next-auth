@@ -71,6 +71,7 @@ import { Auth } from "@auth/core"
 import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
+import { initFutureAuth } from "./lib/future/index.js"
 
 import type { Session } from "@auth/core/types"
 import type { BuiltInProviderType } from "@auth/core/providers"
@@ -79,9 +80,11 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+import { AppRouteHandlerFn, AppRouteHandlers } from "./lib/types.js"
+import { type AuthData } from "./lib/future/index.js"
+
 export { AuthError } from "@auth/core/errors"
 
 export type {
@@ -91,11 +94,6 @@ export type {
   DefaultSession,
   User,
 } from "@auth/core/types"
-
-type AppRouteHandlers = Record<
-  "GET" | "POST",
-  (req: NextRequest) => Promise<Response>
->
 
 export type { NextAuthConfig }
 
@@ -327,9 +325,27 @@ export interface NextAuthResult {
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
   }) => Promise<R extends false ? any : never>
-  unstable_update: (
+  update: (
     data: Partial<Session | { user: Partial<Session["user"]> }>
   ) => Promise<Session | null>
+  /**
+   * Experimental version of `auth()` that reliably returns a structured {@link AuthData} object.
+   *
+   * Enable this feature by setting `experimental.structuredAuth` to `true` in your config.
+   *
+   * @note This method is experimental and may change in the future.
+   *
+   */
+  unstable_auth: () => Promise<AuthData | null>
+  /**
+   * Experimental version of `update()` that receives a structured {@link AuthData} object.
+   *
+   * Enable this feature by setting `experimental.structuredAuth` to `true` in your config.
+   *
+   * @note This method is experimental and may change in the future.
+   *
+   */
+  unstable_update: (data: Partial<AuthData>) => Promise<AuthData | null>
 }
 
 /**
@@ -372,7 +388,7 @@ export default function NextAuth(
     return {
       handlers: { GET: httpHandler, POST: httpHandler } as const,
       // @ts-expect-error
-      auth: initAuth(config, (c) => setEnvDefaults(c)),
+      auth: initAuth(config, setEnvDefaults),
 
       signIn: (provider, options, authorizationParams) => {
         const _config = config(undefined)
@@ -384,10 +400,14 @@ export default function NextAuth(
         setEnvDefaults(_config)
         return signOut(options, _config)
       },
-      unstable_update: (data) => {
+      update: (data) => {
         const _config = config(undefined)
         setEnvDefaults(_config)
         return update(data, _config)
+      },
+      unstable_auth: initFutureAuth(config, setEnvDefaults),
+      unstable_update: () => {
+        throw new TypeError("Not yet implemented.")
       },
     }
   }
@@ -403,8 +423,12 @@ export default function NextAuth(
     signOut: (options) => {
       return signOut(options, config)
     },
-    unstable_update: (data) => {
+    update: (data) => {
       return update(data, config)
+    },
+    unstable_auth: initFutureAuth(config),
+    unstable_update: () => {
+      throw new TypeError("Not yet implemented.")
     },
   }
 }

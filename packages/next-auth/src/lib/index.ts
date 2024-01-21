@@ -12,6 +12,7 @@ import type {
 } from "next"
 import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
+import type { AuthData } from "./future/index.js"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
@@ -57,6 +58,10 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
       auth: Session | null
     }) => Awaitable<boolean | NextResponse | Response | undefined>
   }
+  experimental?: AuthConfig["experimental"] & {
+    /** Enable `unstable_auth` and `unstable_update` that return/modify {@link AuthData} instead of {@link Session}. */
+    structuredAuth: boolean
+  }
 }
 
 async function getSession(headers: Headers, config: NextAuthConfig) {
@@ -93,17 +98,15 @@ export function initAuth(
   config:
     | NextAuthConfig
     | ((request: NextRequest | undefined) => NextAuthConfig),
-  onLazyLoad?: (config: NextAuthConfig) => void // To set the default env vars
+  onLazyInit?: (config: NextAuthConfig) => void // To set the default env vars
 ) {
   if (typeof config === "function") {
     return (...args: WithAuthArgs) => {
       if (!args.length) {
         // React Server Components
-        const _headers = headers()
         const _config = config(undefined) // Review: Should we pass headers() here instead?
-        onLazyLoad?.(_config)
-
-        return getSession(_headers, _config).then((r) => r.json())
+        onLazyInit?.(_config)
+        return getSession(headers(), _config).then((r) => r.json())
       }
 
       if (args[0] instanceof Request) {
@@ -112,7 +115,7 @@ export function initAuth(
         const req = args[0]
         const ev = args[1]
         const _config = config(req)
-        onLazyLoad?.(_config)
+        onLazyInit?.(_config)
 
         // args[0] is supposed to be NextRequest but the instanceof check is failing.
         return handleAuth([req, ev], _config)
@@ -134,7 +137,7 @@ export function initAuth(
       const response: any = "res" in args[0] ? args[0].res : args[1]
       // @ts-expect-error -- request is NextRequest
       const _config = config(request)
-      onLazyLoad?.(_config)
+      onLazyInit?.(_config)
 
       // @ts-expect-error -- request is NextRequest
       return getSession(new Headers(request.headers), _config).then(
