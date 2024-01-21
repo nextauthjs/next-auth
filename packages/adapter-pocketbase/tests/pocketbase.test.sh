@@ -14,7 +14,8 @@ do
 done
 
 docker build -t pocketbase-test .
-docker run -d --rm -p 8080:8080 --name ${CONTAINER_NAME} pocketbase-test
+# index.test.ts expects PocketBase to be ran from port 8090
+docker run -d --rm -p 8090:8080 --name ${CONTAINER_NAME} pocketbase-test
 
 if $JEST_WATCH; then
     # Run jest in watch mode

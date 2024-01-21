@@ -88,6 +88,7 @@ const content = JSON.stringify(
       { id: "mongodb", name: "MongoDB" },
       { id: "neo4j", name: "Neo4j" },
       { id: "pg", name: "pg", img: "pg.png" },
+      { id: "pocketbase", name: "pocketbase" },
       { id: "pouchdb", name: "PouchDB" },
       { id: "prisma", name: "Prisma" },
       { id: "sequelize", name: "Sequelize" },
