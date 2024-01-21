@@ -515,7 +515,7 @@ importers:
         specifier: workspace:*
         version: link:../core
       surrealdb.js:
-        specifier: ^0.9.1
+        specifier: ^0.11.0
         version: 0.11.0
 
   packages/adapter-typeorm:
