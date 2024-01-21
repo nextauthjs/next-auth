@@ -4,7 +4,6 @@
  *  <img style={{display: "block"}} width="38" src="https://www.svgrepo.com/show/276812/ram-memory-ram.svg"/>
  * </div>
  * 
- * ---
  * In-memory adapter for Auth.js / NextAuth.js. This adapter is **not** recommended for production use, but is useful for testing and development.
  * 
  * All data is stored in memory and is lost when the server reloads.
@@ -20,7 +19,6 @@
 import {
   Adapter,
   AdapterAccount,
-  AdapterAuthenticator,
   AdapterSession,
   AdapterUser,
   VerificationToken,
@@ -35,12 +33,11 @@ export type Memory = {
   accounts: Map<string, AdapterAccount>
   sessions: Map<string, AdapterSession>
   verificationTokens: Map<string, VerificationToken>
-  authenticators: Map<string, AdapterAuthenticator>
 }
 
 /**
  * Initializes a new instance of the Memory object.
- * @returns A Memory object with empty maps for users, accounts, sessions, verification tokens, and authenticators.
+ * @returns A Memory object with empty maps for users, accounts, sessions, etc.
  */
 export function initMemory(): Memory {
   return {
@@ -48,7 +45,6 @@ export function initMemory(): Memory {
     accounts: new Map<string, AdapterAccount>(),
     sessions: new Map<string, AdapterSession>(),
     verificationTokens: new Map<string, VerificationToken>(),
-    authenticators: new Map<string, AdapterAuthenticator>(),
   }
 }
 
@@ -82,26 +78,26 @@ export function initMemory(): Memory {
  * 
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * // ... providers
  * import { MemoryAdapter, initMemory } from "@auth/memory-adapter"
  * 
+ * // Initialize an empty Memory object
  * const memory = initMemory()
+ * // Add some data to it
  * memory.users.set("123", {
  *   id: "123",
  *   name: "John Doe",
  *   email: "user@example.com",
  *   emailVerified: null,
  * })
- * // ... add more initial data
  * 
  * export default NextAuth({
  *   adapter: MemoryAdapter(memory),
- *   providers: [] // ... providers
+ *   // ...
  * })
- * 
+ * ```
  **/
-export default function MemoryAdapter(memory?: Memory): Adapter {
-  const { users, accounts, sessions, verificationTokens, authenticators } =
+export function MemoryAdapter(memory?: Memory): Adapter {
+  const { users, accounts, sessions, verificationTokens } =
     memory ?? initMemory()
 
   // Create the adapter object first and then populate it.
@@ -188,16 +184,6 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
       const currentAccount = accounts.get(account.providerAccountId)
       if (!currentAccount) return
 
-      // Delete authenticators
-      if (!adapter.deleteAuthenticator)
-        throw new Error("Adapter does not implement deleteAuthenticator!")
-      const { deleteAuthenticator } = adapter
-      authenticators.forEach(async (authenticator) => {
-        if (authenticator.providerAccountId === account.providerAccountId) {
-          await deleteAuthenticator(authenticator.credentialID)
-        }
-      })
-
       // Delete account
       accounts.delete(currentAccount.providerAccountId)
 
@@ -268,44 +254,6 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
       verificationTokens.delete(token)
 
       return verificationToken
-    },
-    async createAuthenticator(authenticator: AdapterAuthenticator) {
-      const b64ID = asBase64(authenticator.credentialID)
-
-      authenticators.set(b64ID, authenticator)
-
-      return authenticator
-    },
-    async updateAuthenticatorCounter(authenticator: AdapterAuthenticator, newCounter: number) {
-      const b64ID = asBase64(authenticator.credentialID)
-
-      // Find authenticator
-      const currentAuthenticator = authenticators.get(b64ID)
-      if (!currentAuthenticator) throw new Error("Authenticator not found")
-
-      // Update counter
-      const updatedAuthenticator = {
-        ...currentAuthenticator,
-        counter: newCounter,
-      }
-      authenticators.set(b64ID, updatedAuthenticator)
-
-      return updatedAuthenticator
-    },
-    async listAuthenticatorsByAccountId(accountId: string) {
-      return Array.from(authenticators.values()).filter(
-        (authenticator) => authenticator.providerAccountId === accountId
-      )
-    },
-    async getAuthenticator(credentialId: Uint8Array) {
-      const b64ID = asBase64(credentialId)
-
-      return authenticators.get(b64ID) ?? null
-    },
-    async deleteAuthenticator(credentialId: Uint8Array) {
-      const b64ID = asBase64(credentialId)
-
-      return authenticators.delete(b64ID)
     },
   } as Adapter)
 

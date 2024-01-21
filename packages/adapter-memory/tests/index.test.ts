@@ -1,5 +1,5 @@
 import { runBasicTests } from "utils/adapter"
-import MemoryAdapter, { asBase64, initMemory } from "../src"
+import { MemoryAdapter, asBase64, initMemory } from "../src"
 
 const memory = initMemory()
 

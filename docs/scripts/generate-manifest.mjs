@@ -84,6 +84,7 @@ const content = JSON.stringify(
       { id: "firebase", name: "Firebase" },
       { id: "hasura", name: "Hasura" },
       { id: "kysely", name: "Kysely" },
+      { id: "memory", name: "Memory Adapter" },
       { id: "mikro-orm", name: "Mikro ORM", img: "mikro-orm.png" },
       { id: "mongodb", name: "MongoDB" },
       { id: "neo4j", name: "Neo4j" },
