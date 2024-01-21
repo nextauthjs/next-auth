@@ -1,5 +1,10 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import GitHub from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
+import Facebook from "next-auth/providers/facebook"
+import Auth0 from "next-auth/providers/auth0"
+import Twitter from "next-auth/providers/twitter"
 
 declare module "next-auth" {
   /**
@@ -32,11 +37,11 @@ export default {
         }
       },
     }),
-    process.env.AUTH_GITHUB_ID && (await import("next-auth/providers/github")).default,
-    process.env.AUTH_GOOGLE_ID && (await import("next-auth/providers/google")).default,
-    process.env.AUTH_FACEBOOK_ID && (await import("next-auth/providers/facebook")).default,
-    process.env.AUTH_AUTH0_ID && (await import("next-auth/providers/auth0")).default,
-    process.env.AUTH_TWITTER_ID && (await import("next-auth/providers/twitter")).default
+    GitHub,
+    Google,
+    Facebook,
+    Auth0,
+    Twitter,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
@@ -44,4 +49,5 @@ export default {
       return token
     },
   },
+  basePath: "/auth",
 } satisfies NextAuthConfig

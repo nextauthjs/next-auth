@@ -25,7 +25,8 @@ export default function parseProviders(params: {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
-  const { url, providerId, options } = params
+  const { providerId, options } = params
+  const url = new URL(options.basePath ?? "/auth", params.url.origin)
 
   const providers = params.providers.map((p) => {
     const provider = typeof p === "function" ? p() : p
