@@ -110,27 +110,27 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
   // Assign all functions in place
   Object.assign(adapter, {
-    async createUser(user) {
+    async createUser(user: AdapterUser) {
       const newUser = { ...user, id: makeid(32) }
       users.set(newUser.id, newUser)
 
       return newUser
     },
-    async getUser(id) {
+    async getUser(id: string) {
       return users.get(id) ?? null
     },
-    async getUserByEmail(email) {
+    async getUserByEmail(email: string) {
       return (
         Array.from(users.values()).find((user) => user.email === email) ?? null
       )
     },
-    async getUserByAccount(providerAccountId) {
+    async getUserByAccount(providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">) {
       const account = accounts.get(providerAccountId.providerAccountId)
       if (!account) return null
 
       return users.get(account.userId) ?? null
     },
-    async updateUser(user) {
+    async updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       const currentUser = users.get(user.id)
       if (!currentUser) throw new Error("User not found")
 
@@ -139,7 +139,7 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return updatedUser
     },
-    async deleteUser(id) {
+    async deleteUser(id: string) {
       const user = users.get(id)
       if (!user) return
 
@@ -178,12 +178,12 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return
     },
-    async linkAccount(account) {
+    async linkAccount(account: AdapterAccount) {
       accounts.set(account.providerAccountId, account)
 
       return account
     },
-    async unlinkAccount(account) {
+    async unlinkAccount(account: Pick<AdapterAccount, "provider" | "providerAccountId">) {
       // Find account
       const currentAccount = accounts.get(account.providerAccountId)
       if (!currentAccount) return
@@ -203,17 +203,21 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return
     },
-    async listLinkedAccounts(userId) {
+    async listLinkedAccounts(userId: string) {
       return Array.from(accounts.values()).filter(
         (account) => account.userId === userId
       )
     },
-    async createSession(session) {
+    async createSession(session: {
+      sessionToken: string
+      userId: string
+      expires: Date
+    }) {
       sessions.set(session.sessionToken, session)
 
       return session
     },
-    async getSessionAndUser(sessionToken) {
+    async getSessionAndUser(sessionToken: string) {
       const session = sessions.get(sessionToken)
       if (!session) return null
 
@@ -231,7 +235,7 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return { session, user }
     },
-    async updateSession(session) {
+    async updateSession(session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
       const currentSession = sessions.get(session.sessionToken)
       if (!currentSession) throw new Error("Session not found")
 
@@ -240,17 +244,20 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return updatedSession
     },
-    async deleteSession(sessionToken) {
+    async deleteSession(sessionToken: string) {
       sessions.delete(sessionToken)
 
       return
     },
-    async createVerificationToken(verificationToken) {
+    async createVerificationToken(verificationToken: VerificationToken) {
       verificationTokens.set(verificationToken.token, verificationToken)
 
       return verificationToken
     },
-    async useVerificationToken(params) {
+    async useVerificationToken(params: {
+      identifier: string
+      token: string
+    }) {
       const { token } = params
 
       // Find verification token
@@ -262,14 +269,14 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return verificationToken
     },
-    async createAuthenticator(authenticator) {
+    async createAuthenticator(authenticator: AdapterAuthenticator) {
       const b64ID = asBase64(authenticator.credentialID)
 
       authenticators.set(b64ID, authenticator)
 
       return authenticator
     },
-    async updateAuthenticatorCounter(authenticator, newCounter) {
+    async updateAuthenticatorCounter(authenticator: AdapterAuthenticator, newCounter: number) {
       const b64ID = asBase64(authenticator.credentialID)
 
       // Find authenticator
@@ -285,17 +292,17 @@ export default function MemoryAdapter(memory?: Memory): Adapter {
 
       return updatedAuthenticator
     },
-    async listAuthenticatorsByAccountId(accountId) {
+    async listAuthenticatorsByAccountId(accountId: string) {
       return Array.from(authenticators.values()).filter(
         (authenticator) => authenticator.providerAccountId === accountId
       )
     },
-    async getAuthenticator(credentialId) {
+    async getAuthenticator(credentialId: Uint8Array) {
       const b64ID = asBase64(credentialId)
 
       return authenticators.get(b64ID) ?? null
     },
-    async deleteAuthenticator(credentialId) {
+    async deleteAuthenticator(credentialId: Uint8Array) {
       const b64ID = asBase64(credentialId)
 
       return authenticators.delete(b64ID)
