@@ -126,6 +126,14 @@ export const toId = (surrealId: string) => {
  * ## Setup
  *
  * The SurrealDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `SurrealDBClient` that is connected already. Below you can see an example how to do this.
+ * 
+ * ### Versions
+ * 
+ * | surrealdb.js version | Adapter version |
+ * | -------------------- | --------------- |
+ * | <= 0.9.1             | 0.2.10          |
+ * | = 0.10.x             | none            |
+ * | >= 0.11.0            | 0.3.0           |
  *
  * ### Add the SurrealDB client
  *
@@ -135,16 +143,18 @@ export const toId = (surrealId: string) => {
  * import { Surreal } from "surrealdb.js";
  *
  * const connectionString = ... // i.e. "http://0.0.0.0:8000"
- * const user = ...
- * const pass = ...
- * const ns = ...
- * const db = ...
+ * const username = ...
+ * const password = ...
+ * const namespace = ...
+ * const database = ...
  *
  * const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
  *   const db = new Surreal();
  *   try {
  *     await db.connect(`${connectionString}/rpc`, {
- *       ns, db, auth: { user, pass }
+ *       namespace, 
+ *       database, 
+ *       auth: { username, password }
  *     })
  *     resolve(db)
  *   } catch (e) {
@@ -165,16 +175,18 @@ export const toId = (surrealId: string) => {
  * import { ExperimentalSurrealHTTP } from "surrealdb.js"
  *
  * const connectionString = ... // i.e. "http://0.0.0.0:8000"
- * const user = ...
- * const pass = ...
- * const ns = ...
- * const db = ...
+ * const username = ...
+ * const password = ...
+ * const namespace = ...
+ * const database = ...
  *
  * const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
  *   try {
  *     const db = new ExperimentalSurrealHTTP(connectionString, {
  *       fetch,
- *       ns, db, auth: { user, pass }
+ *       namespace, 
+ *       database,
+ *       auth: { username, password }
  *     })
  *     resolve(db)
  *   } catch (e) {
