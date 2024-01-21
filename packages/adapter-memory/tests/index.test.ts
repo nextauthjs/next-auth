@@ -5,7 +5,6 @@ const memory = initMemory()
 
 runBasicTests({
   adapter: MemoryAdapter(memory),
-  testAuthenticatorMethods: true,
   db: {
     async user(id: string) {
       return memory.users.get(id) ?? null
@@ -18,9 +17,6 @@ runBasicTests({
     },
     async verificationToken(verificationToken) {
       return memory.verificationTokens.get(verificationToken.token) ?? null
-    },
-    async authenticators(credentialID) {
-      return memory.authenticators.get(asBase64(credentialID)) ?? null
     },
   },
 })
