@@ -215,6 +215,14 @@ export type {
   User,
 } from "@auth/core/types"
 
+export type {
+  Adapter,
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "@auth/core/adapters"
+
 async function auth(
   event: RequestEvent,
   config: SvelteKitAuthConfig
@@ -266,7 +274,7 @@ const actions: AuthAction[] = [
  */
 export function SvelteKitAuth(
   config:
-    | SvelteKitAuthConfig
+    | (SvelteKitAuthConfig & { basePath?: string })
     | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
 ): Handle {
   return async function ({ event, resolve }) {
