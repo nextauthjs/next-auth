@@ -72,7 +72,7 @@ export interface WebexProfile extends Record<string, any> {
  * :::
  */
 export default function Webex<P extends WebexProfile>(
-  config: OAuthUserConfig<P>
+  config: OAuthUserConfig<P> &  { apiBaseUrl: string }
 ): OAuthConfig<P> {
   const apiBaseUrl = config?.apiBaseUrl ?? 'https://webexapis.com/v1';
 
