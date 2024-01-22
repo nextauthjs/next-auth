@@ -1,4 +1,4 @@
-import type { Client } from "oauth4webapi"
+import type { Client, AuthorizationServer } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
@@ -45,6 +45,8 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   request?: EndpointRequest<C, R, P>
   /** @internal */
   conform?: (response: Response) => Awaitable<Response | undefined>
+  /** @internal */
+  serverConform?: (server: AuthorizationServer, codeGrantResponse: Response) => Awaitable<AuthorizationServer>
 }
 
 /**
@@ -57,8 +59,9 @@ export type EndpointHandler<
   R = any,
 > = AdvancedEndpointHandler<P, C, R>
 
-export type AuthorizationEndpointHandler =
-  EndpointHandler<AuthorizationParameters>
+export interface AuthorizationEndpointHandler extends
+  EndpointHandler<AuthorizationParameters> {
+}
 
 export type TokenEndpointHandler = EndpointHandler<
   UrlParams,
@@ -108,7 +111,7 @@ export interface OAuthProviderButtonStyles {
 /** TODO: Document */
 export interface OAuth2Config<Profile>
   extends CommonProviderOptions,
-    PartialIssuer {
+  PartialIssuer {
   /**
    * Identifies the provider when you want to sign in to
    * a specific provider.
@@ -254,7 +257,13 @@ export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
   OAuthEndpointType | "redirectProxyUrl"
 > & {
-  authorization?: { url: URL }
+  authorization?: {
+    url: URL
+    /** @internal */
+    serverConform?: AuthorizationEndpointHandler["serverConform"],
+    /** @internal */
+    conform?: AuthorizationEndpointHandler["conform"],
+  }
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
@@ -275,9 +284,9 @@ export type OAuthConfigInternal<Profile> = Omit<
    */
   redirectProxyUrl?: OAuth2Config<Profile>["redirectProxyUrl"]
 } & Pick<
-    Required<OAuthConfig<Profile>>,
-    "clientId" | "checks" | "profile" | "account"
-  >
+  Required<OAuthConfig<Profile>>,
+  "clientId" | "checks" | "profile" | "account"
+>
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]

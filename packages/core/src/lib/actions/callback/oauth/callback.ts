@@ -1,3 +1,4 @@
+import * as jose from "jose"
 import * as checks from "./checks.js"
 import * as o from "oauth4webapi"
 import {
@@ -44,10 +45,15 @@ export async function handleOAuth(
     // We assume that issuer is always defined as this has been asserted earlier
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
+    let discoveryResponse: Response | undefined = await o.discoveryRequest(issuer)
+
+    if (provider.authorization?.conform) {
+      discoveryResponse = await provider.authorization?.conform(discoveryResponse);
+    }
+
     const discoveredAs = await o.processDiscoveryResponse(
       issuer,
-      discoveryResponse
+      discoveryResponse!
     )
 
     if (!discoveredAs.token_endpoint)
@@ -139,6 +145,10 @@ export async function handleOAuth(
 
   let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
+
+  if (provider.authorization?.serverConform) {
+    as = await provider.authorization?.serverConform(as, codeGrantResponse)
+  }
 
   if (provider.type === "oidc") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)

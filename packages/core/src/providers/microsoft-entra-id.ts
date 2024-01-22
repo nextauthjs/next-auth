@@ -9,6 +9,7 @@
  * @module providers/microsoft-entra-id
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import * as jose from "jose"
 
 export interface MicrosoftEntraIDProfile extends Record<string, any> {
   sub: string
@@ -145,6 +146,31 @@ export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
       params: {
         scope: "openid profile email User.Read",
       },
+      async conform(response) {
+        // Microsoft being special and non-compliant #9635
+        //
+        // MS doesn't follow the spec for some common tenant
+        // ID's ("common", "organizations", "customers"), returning
+        // a different issuer URL than used to make the request.
+        if (response.status !== 200) return response
+
+        let json = await response.json()
+        json.issuer = rest.issuer;
+        return new Response(JSON.stringify(json), response)
+      },
+      async serverConform(authServer, codeGrantResponse) {
+        if (codeGrantResponse.status !== 200) return authServer
+
+        const { id_token } = await codeGrantResponse.clone().json()
+        const jwt: jose.JWTPayload & { tid?: string } = jose.decodeJwt(id_token)
+
+        return {
+          ...authServer,
+          issuer: jwt.tid
+            ? authServer.issuer.replace(tenantId, jwt.tid)
+            : authServer.issuer,
+        }
+      }
     },
     async profile(profile, tokens) {
       // https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples

@@ -24,8 +24,13 @@ export async function getAuthorizationUrl(
     // We check this in assert.ts
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
-    const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
+    let discoveryResponse: Response | undefined = await o.discoveryRequest(issuer)
+
+    if (provider.authorization?.conform) {
+      discoveryResponse = await provider.authorization?.conform(discoveryResponse);
+    }
+
+    const as = await o.processDiscoveryResponse(issuer, discoveryResponse!)
 
     if (!as.authorization_endpoint) {
       throw new TypeError(
