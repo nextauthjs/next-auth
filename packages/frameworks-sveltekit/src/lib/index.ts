@@ -274,7 +274,7 @@ const actions: AuthAction[] = [
  */
 export function SvelteKitAuth(
   config:
-    | (SvelteKitAuthConfig & { basePath?: string })
+    | SvelteKitAuthConfig
     | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
 ): Handle {
   return async function ({ event, resolve }) {
