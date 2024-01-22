@@ -174,10 +174,11 @@ export default function SigninPage(props: {
                   </button>
                 </form>
               ) : null}
-              {(provider.type === "email" || provider.type === "credentials") &&
+              {(provider.type === "email" || provider.type === "credentials" || provider.type === "webauthn") &&
                 i > 0 &&
                 providers[i - 1].type !== "email" &&
-                providers[i - 1].type !== "credentials" && <hr />}
+                providers[i - 1].type !== "credentials" &&
+                providers[i - 1].type !== "webauthn" && <hr />}
               {provider.type === "email" && (
                 <form action={provider.signinUrl} method="POST">
                   <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -230,7 +231,36 @@ export default function SigninPage(props: {
                   </button>
                 </form>
               )}
-              {(provider.type === "email" || provider.type === "credentials") &&
+              {provider.type === "webauthn" && (
+                <form action={provider.callbackUrl} method="POST">
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  {Object.keys(provider.formFields).map((field) => {
+                    return (
+                      <div key={`input-group-${provider.id}`}>
+                        <label
+                          className="section-header"
+                          htmlFor={`input-${field}-for-${provider.id}-provider`}
+                        >
+                          {provider.formFields[field].label ?? field}
+                        </label>
+                        <input
+                          name={field}
+                          id={`input-${field}-for-${provider.id}-provider`}
+                          type={provider.formFields[field].type ?? "text"}
+                          placeholder={
+                            provider.formFields[field].placeholder ?? ""
+                          }
+                          {...provider.formFields[field]}
+                        />
+                      </div>
+                    )
+                  })}
+                  <button id="submitButton" type="submit" tabIndex={0}>
+                    Sign in with {provider.name}
+                  </button>
+                </form>
+              )}
+              {(provider.type === "email" || provider.type === "credentials" || provider.type === "webauthn") &&
                 i + 1 < providers.length && <hr />}
             </div>
           )

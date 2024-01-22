@@ -163,7 +163,7 @@
  */
 
 import { ProviderType } from "./providers/index.js"
-import type { Account, Awaitable, User } from "./types.js"
+import type { Account, Authenticator, Awaitable, User } from "./types.js"
 // TODO: Discuss if we should expose methods to serialize and deserialize
 // the data? Many adapters share this logic, so it could be useful to
 // have a common implementation.
@@ -244,6 +244,11 @@ export interface VerificationToken {
    */
   token: string
 }
+
+/**
+ * An authenticator represents a credential authenticator assigned to a user.
+ */
+export interface AdapterAuthenticator extends Authenticator { }
 
 /**
  * An adapter is an object with function properties (methods) that read and write data from a data source.
@@ -375,6 +380,15 @@ export interface Adapter {
     identifier: string
     token: string
   }): Awaitable<VerificationToken | null>
+  /**
+   * Returns all authenticators from a user.
+   *
+   * If a user is not found, the adapter must return `null`.
+   * If the retrieval fails for some other reason, the adapter must throw an error.
+   */
+  listAuthenticatorsByUserId?(
+    userId: string
+  ): Awaitable<AdapterAuthenticator[] | null>
 }
 
 // For compatibility with older versions of NextAuth.js

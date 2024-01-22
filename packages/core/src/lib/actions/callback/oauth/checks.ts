@@ -10,6 +10,7 @@ import type {
 } from "../../../../types.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import type { OAuthConfigInternal } from "../../../../providers/oauth.js"
+import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
 
 interface CheckPayload {
   value: string
@@ -20,7 +21,7 @@ export async function signCookie(
   type: keyof CookiesOptions,
   value: string,
   maxAge: number,
-  options: InternalOptions<"oauth" | "oidc">,
+  options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>,
   data?: any
 ): Promise<Cookie> {
   const { cookies, logger } = options
@@ -97,16 +98,16 @@ export const pkce = {
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export function decodeState(value: string):
   | {
-      /** If defined, a redirect proxy is being used to support multiple OAuth apps with a single callback URL */
-      origin?: string
-      /** Random value for CSRF protection */
-      random: string
-    }
+    /** If defined, a redirect proxy is being used to support multiple OAuth apps with a single callback URL */
+    origin?: string
+    /** Random value for CSRF protection */
+    random: string
+  }
   | undefined {
   try {
     const decoder = new TextDecoder()
     return JSON.parse(decoder.decode(jose.base64url.decode(value)))
-  } catch {}
+  } catch { }
 }
 
 export const state = {
@@ -261,4 +262,53 @@ export function handleState(
   }
 
   return { randomState, proxyRedirect }
+}
+
+
+const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+type WebAuthnChallengeCookie = { challenge: string; userID?: string }
+export const webauthnChallenge = {
+  async create(options: InternalOptions<WebAuthnProviderType>, challenge: string, userID?: string) {
+    const maxAge = WEBAUTHN_CHALLENGE_MAX_AGE
+    const data: WebAuthnChallengeCookie = { challenge, userID }
+    const cookie = await signCookie(
+      "webauthnChallenge",
+      JSON.stringify(data),
+      maxAge,
+      options
+    )
+    return { cookie }
+  },
+  /**
+   * Returns challenge if present,
+   * and clears the container cookie afterwards.
+   */
+  async use(
+    cookies: RequestInternal["cookies"],
+    resCookies: Cookie[],
+    options: InternalOptions<WebAuthnProviderType>
+  ): Promise<WebAuthnChallengeCookie | undefined> {
+    const challenge = cookies?.[options.cookies.webauthnChallenge.name]
+
+    if (!challenge)
+      return
+
+    const value = await decode<CheckPayload>({
+      ...options.jwt,
+      token: challenge,
+      salt: options.cookies.webauthnChallenge.name,
+    })
+
+    if (!value?.value)
+      throw new InvalidCheck("Challenge value could not be parsed.")
+
+    // Clear the pkce code verifier cookie after use
+    resCookies.push({
+      name: options.cookies.webauthnChallenge.name,
+      value: "",
+      options: { ...options.cookies.webauthnChallenge.options, maxAge: 0 },
+    })
+
+    return JSON.parse(value.value) as WebAuthnChallengeCookie
+  },
 }

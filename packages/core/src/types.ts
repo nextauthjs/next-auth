@@ -72,6 +72,8 @@ import type {
   OAuthConfigInternal,
   OIDCConfigInternal,
   ProviderType,
+  WebAuthnConfig,
+  WebAuthnProviderType,
 } from "./providers/index.js"
 
 export type { AuthConfig } from "./index.js"
@@ -250,15 +252,15 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   session: (
     params: (
       | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        }
+        session: Session
+        /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+        user: AdapterUser
+      }
       | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-        }
+        session: Session
+        /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+        token: JWT
+      }
     ) & {
       /**
        * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
@@ -346,6 +348,7 @@ export interface CookiesOptions {
   pkceCodeVerifier: Partial<CookieOption>
   state: Partial<CookieOption>
   nonce: Partial<CookieOption>
+  webauthnChallenge: Partial<CookieOption>
 }
 
 /**
@@ -452,7 +455,7 @@ export interface DefaultSession {
  * [`SessionProvider`](https://authjs.devreference/nextjs/react#sessionprovider) |
  * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
  */
-export interface Session extends DefaultSession {}
+export interface Session extends DefaultSession { }
 
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
@@ -477,16 +480,18 @@ export interface User {
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
-    ? OIDCConfigInternal<any>
-    : T extends "email"
-      ? EmailConfig
-      : T extends "credentials"
-        ? CredentialsConfig
-        : never) & {
-  signinUrl: string
-  /** @example `"https://example.com/api/auth/callback/id"` */
-  callbackUrl: string
-}
+  ? OIDCConfigInternal<any>
+  : T extends "email"
+  ? EmailConfig
+  : T extends "credentials"
+  ? CredentialsConfig
+  : T extends WebAuthnProviderType
+  ? WebAuthnConfig
+  : never) & {
+    signinUrl: string
+    /** @example `"https://example.com/api/auth/callback/id"` */
+    callbackUrl: string
+  }
 
 export interface PublicProvider {
   id: string
@@ -522,6 +527,8 @@ export interface PublicProvider {
  *   - **`GET`**: Renders the built-in sign-out page.
  *   - **`POST`**: Initiates the sign-out flow. This will invalidate the user's session (deleting the cookie, and if there is a session in the database, it will be deleted as well).
  * - **`"verify-request"`**: Renders the built-in verification request page.
+ * - **`"webauthn-options"`**:
+ *   - **`GET`**: Returns the options for the WebAuthn authentication and registration flows.
  */
 export type AuthAction =
   | "callback"
@@ -532,6 +539,7 @@ export type AuthAction =
   | "signin"
   | "signout"
   | "verify-request"
+  | "webauthn-options"
 
 /** @internal */
 export interface RequestInternal {
@@ -555,6 +563,24 @@ export interface ResponseInternal<
   body?: Body
   redirect?: string
   cookies?: Cookie[]
+}
+
+export type CredentialDeviceType = "singleDevice" | "multiDevice"
+/**
+ * A webauthn authenticator.
+ * Represents an entity capable of authenticating the account it references,
+ * and contains the auhtenticator's credentials and related information.
+ *
+ * @see https://www.w3.org/TR/webauthn/#authenticator
+ */
+export interface Authenticator {
+  providerAccountId: string
+  credentialID: Uint8Array
+  credentialPublicKey: Uint8Array
+  counter: number
+  credentialDeviceType: CredentialDeviceType
+  credentialBackedUp: boolean
+  transports?: AuthenticatorTransport[]
 }
 
 /** @internal */

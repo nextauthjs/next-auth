@@ -388,7 +388,7 @@ export class UnsupportedStrategy extends AuthError {
   static type = "UnsupportedStrategy"
 }
 
-/** Thrown when the callback endpoint was incorrectly called without a provider. */
+/** Thrown when an endpoint was incorrectly called without a provider, or with an unsupported provider. */
 export class InvalidProvider extends AuthError {
   static type = "InvalidProvider"
 }
