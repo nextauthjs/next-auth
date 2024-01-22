@@ -6,7 +6,6 @@ import type { AuthAction } from "@auth/core/types.js"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
 import type { ProviderType } from "../providers/index.js"
-import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -117,19 +116,14 @@ export async function update(
  */
 export function createActionURL(
   action: AuthAction,
-  h: Headers | ReturnType<typeof headers>,
+  headers: Headers | ReturnType<typeof nextHeaders>,
   basePath?: string
 ): URL {
-  const envUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
-  if (envUrl) {
-    const { origin, pathname } = new URL(envUrl)
-    const separator = pathname.endsWith("/") ? "" : "/"
-    return new URL(`${origin}${pathname}${separator}${action}`)
+  let url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+  if (!url) {
+    const host = headers.get("x-forwarded-host") ?? headers.get("host")
+    const proto = headers.get("x-forwarded-proto")
+    url = `${proto === "http" ? "http" : "https"}://${host}${basePath}`
   }
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
-  // @ts-expect-error `basePath` value is default'ed to "/api/auth" in `setEnvDefaults`
-  const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
-  const separator = pathname.endsWith("/") ? "" : "/"
-  return new URL(`${origin}${pathname}${separator}${action}`)
+  return new URL(`${url.replace(/\/$/, "")}/${action}`)
 }

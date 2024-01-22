@@ -49,5 +49,8 @@ export default {
       return token
     },
   },
+  experimental: {
+    structuredAuth: true,
+  },
   basePath: "/auth",
 } satisfies NextAuthConfig
