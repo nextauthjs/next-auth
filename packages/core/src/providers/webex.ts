@@ -14,7 +14,8 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * The returned user profile from Webex when using the profile callback.
  *
  * Please refer to {@link https://developer.webex.com/docs/api/v1/people/get-my-own-details|People - Get My Own Details}
- * on Webex Developer portal for additional fields.
+ * on Webex Developer portal for additional fields. Returned fields may vary depending on the user's role, the OAuth
+ * integration's scope, and the organization the OAuth integration belongs to.
  */
 export interface WebexProfile extends Record<string, any> {
   id: string;
