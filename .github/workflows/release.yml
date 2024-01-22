@@ -94,6 +94,8 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+          ASTRA_DB_ID: ${{ secrets.ASTRA_DB_ID }}
+          ASTRA_DB_APPLICATION_TOKEN: ${{ secrets.ASTRA_DB_APPLICATION_TOKEN }}
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e

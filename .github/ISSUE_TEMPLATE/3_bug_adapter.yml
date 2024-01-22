@@ -21,12 +21,13 @@ body:
       multiple: true
       options:
         - "Custom adapter"
+        - "@auth/astra-db-adapter"
         - "@auth/azure-tables-adapter"
-        - "@auth/edgedb-adapter"
         - "@auth/d1-adapter"
         - "@auth/dgraph-adapter"
         - "@auth/drizzle-adapter"
         - "@auth/dynamodb-adapter"
+        - "@auth/edgedb-adapter"
         - "@auth/fauna-adapter"
         - "@auth/firebase-adapter"
         - "@auth/hasura-adapter"

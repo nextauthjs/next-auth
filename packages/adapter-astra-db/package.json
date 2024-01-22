@@ -1,0 +1,53 @@
+{
+  "name": "@auth/astra-db-adapter",
+  "version": "0.0.1",
+  "description": "Astra DB adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/astra-db",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "DataStax",
+  "contributors": [
+    "Syed Hakeem Abbas <hakeemsyd@gmail.com>"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "astra-db"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm ./index*",
+    "test": "jest",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "jest": {
+    "preset": "utils/adapter"
+  },
+  "devDependencies": {
+    "@datastax/astra-db-ts": "^0.1.2"
+  }
+}

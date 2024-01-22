@@ -74,6 +74,7 @@ const content = JSON.stringify(
     ],
     // TODO: Autogenerate
     adapters: [
+      { id: "astra-db", name: "Astra DB", img: "astra-db.png" },
       { id: "azure-tables", name: "Azure Tables Storage" },
       { id: "d1", name: "D1" },
       { id: "dgraph", name: "Dgraph", img: "dgraph.png" },
