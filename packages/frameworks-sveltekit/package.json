@@ -70,6 +70,9 @@
       "types": "./client.d.ts",
       "import": "./client.js"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
     "./providers": {
       "types": "./providers/index.d.ts"
     },
