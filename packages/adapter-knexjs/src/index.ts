@@ -1,4 +1,11 @@
 /**
+ * 
+ * create mysql table from the schema.sql folder
+ * 
+ * and import the adapter, no extra step is needed
+ * 
+ * the adapter also supports custom idGenerator function
+ * 
  * @module @auth/knexjs-adapter
  */
 
@@ -6,7 +13,7 @@ import type { Adapter } from "@auth/core/adapters";
 import * as crypto from "crypto";
 import type { Knex } from "knex";
 
-function id(type: string) {
+function idGenerator(type: string) {
 	return crypto.randomUUID();
 }
 
@@ -58,7 +65,7 @@ export function mapExpires<Type extends { expires: string }>(user: Type | undefi
 	return null
 }
 
-export default function adapter(knex: Knex) {
+export default function adapter(knex: Knex, id = idGenerator) {
 	const adapter: Adapter = {
 		async createVerificationToken(verificationToken) {
 			const { identifier, expires, token } = verificationToken;
@@ -141,7 +148,7 @@ export default function adapter(knex: Knex) {
 				token_type
 			} = account;
 			const payload = {
-				id: id("acc"),
+				id: id("account"),
 				userId: userId,
 				provider: provider,
 				type: type,
@@ -162,7 +169,7 @@ export default function adapter(knex: Knex) {
 				throw new Error(`userId is undefined in createSession`);
 			}
 			const payload = {
-				id: id("sess"),
+				id: id("session"),
 				userId: userId,
 				expires: expires,
 				sessionToken: sessionToken
