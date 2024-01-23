@@ -215,14 +215,6 @@ export type {
   User,
 } from "@auth/core/types"
 
-export type {
-  Adapter,
-  AdapterAccount,
-  AdapterSession,
-  AdapterUser,
-  VerificationToken,
-} from "@auth/core/adapters"
-
 async function auth(
   event: RequestEvent,
   config: SvelteKitAuthConfig
