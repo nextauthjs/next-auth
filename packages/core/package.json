@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.20.0",
+  "version": "0.22.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -93,7 +93,7 @@
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
     "postcss-nested": "6.0.0",
-    "vite": "^5.0.2",
-    "vitest": "^0.25.3"
+    "vite": "^5.0.12",
+    "vitest": "^1.2.1"
   }
 }
