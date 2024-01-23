@@ -125,16 +125,9 @@
 
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
-import {
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-  NextFunction,
-  json,
-  urlencoded,
-} from "express"
+import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 import type { IncomingHttpHeaders } from "http"
-import { REFUSED } from "dns"
 
 export type {
   Account,
@@ -145,14 +138,10 @@ export type {
 } from "@auth/core/types"
 
 export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
-  return async (
-    req: ExpressRequest,
-    res: ExpressResponse,
-    next: NextFunction
-  ) => {
-    json()(req, res, async (err) => {
+  return async (req: e.Request, res: e.Response, next: e.NextFunction) => {
+    e.json()(req, res, async (err) => {
       if (err) return next(err)
-      urlencoded({ extended: true })(req, res, async (err) => {
+      e.urlencoded({ extended: true })(req, res, async (err) => {
         if (err) return next(err)
         config.basePath = getBasePath(req)
         setEnvDefaults(config)
@@ -166,7 +155,7 @@ export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
 export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
-  req: ExpressRequest,
+  req: e.Request,
   config: Omit<AuthConfig, "raw">
 ): GetSessionResult {
   setEnvDefaults(config)
@@ -242,6 +231,6 @@ export function createActionURL(
   return new URL(`${url.replace(/\/$/, "")}/${action}`)
 }
 
-function getBasePath(req: ExpressRequest) {
+function getBasePath(req: e.Request) {
   return req.baseUrl.split(req.params[0])[0].replace(/\/$/, "")
 }
