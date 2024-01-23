@@ -18,6 +18,9 @@
     "./providers": {
       "types": "./providers/index.d.ts"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
