@@ -30,12 +30,12 @@ If you're using [Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-ha
 
 ```javascript title="pages/api/auth/[...nextauth].js" showLineNumbers
 import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
+import GitHubProvider from "next-auth/providers/github"
 
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
-    GithubProvider({
+    GitHubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
