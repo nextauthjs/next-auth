@@ -3,32 +3,23 @@ import express from "express"
 import { ExpressAuth, getSession } from "../../src/index.js"
 
 import CredentialsProvider from "@auth/core/providers/credentials"
+import type { AuthConfig } from "@auth/core"
+
 export const authConfig = {
   secret: "secret",
   providers: [
     CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "jsmith",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
-        const name = (credentials.username as string) || "John Smith"
-        const user = {
-          id: "1",
-          name,
-          email: name.replace(" ", "") + "@example.com",
+      credentials: { username: { label: "Username" } },
+      async authorize(credentials) {
+        if (typeof credentials?.username === "string") {
+          const { username: name } = credentials
+          return { name: name, email: name.replace(" ", "") + "@example.com" }
         }
-
-        return user
+        return null
       },
     }),
   ],
-}
+} satisfies AuthConfig
 
 const extractCookieValue = (cookieHeader: string | string[], name: string) => {
   const cookieStringFull = Array.isArray(cookieHeader)
@@ -49,10 +40,7 @@ describe("Integration test with login and getSession", () => {
   it("Should return the session with username after logging in", async () => {
     let expectations = () => {}
 
-    app.use(express.json())
-    app.use(express.urlencoded({ extended: true }))
-
-    app.use("/api/auth/*", ExpressAuth(authConfig))
+    app.use("/auth/*", ExpressAuth(authConfig))
 
     app.post("/test", async (req, res) => {
       const session = await getSession(req, authConfig)
@@ -66,7 +54,7 @@ describe("Integration test with login and getSession", () => {
 
     // Get signin page
     const response = await client
-      .get("/api/auth/signin")
+      .get("/auth/signin")
       .set("X-Test-Header", "foo")
       .set("Accept", "application/json")
 
@@ -83,13 +71,9 @@ describe("Integration test with login and getSession", () => {
 
     // Sign in
     const responseCredentials = await client
-      .post("/api/auth/callback/credentials")
-      .set("Cookie", [`${csrfTokenCookie}; ${callbackCookie}`]) // Send the cookie with the request
-      .send({
-        csrfToken: csrfTokenValue,
-        username: "johnsmith",
-        password: "ABC123",
-      })
+      .post("/auth/callback/credentials")
+      .set("Cookie", [csrfTokenCookie, callbackCookie]) // Send the cookie with the request
+      .send({ csrfToken: csrfTokenValue, username: "johnsmith" })
 
     // Parse cookie for session token
     const sessionTokenCookie = extractCookieValue(
@@ -102,9 +86,7 @@ describe("Integration test with login and getSession", () => {
       .post("/test")
       .set("X-Test-Header", "foo")
       .set("Accept", "application/json")
-      .set("Cookie", [
-        `${csrfTokenCookie}; ${callbackCookie}; ${sessionTokenCookie}`,
-      ]) // Send the cookie with the request
+      .set("Cookie", [sessionTokenCookie])
 
     await expectations()
   })
