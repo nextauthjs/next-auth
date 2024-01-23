@@ -82,11 +82,11 @@ export default function Webex<P extends WebexProfile>(
     name: 'Webex',
     type: 'oauth',
     authorization: {
-      url: apiBaseUrl + '/authorize',
+      url: `${apiBaseUrl}/authorize`,
       params: { scope: 'spark:kms spark:people_read' }
     },
-    token: apiBaseUrl + '/access_token',
-    userinfo: apiBaseUrl + '/people/me',
+    token: `${apiBaseUrl}/access_token`,
+    userinfo: `${apiBaseUrl}/people/me`,
     profile(profile) {
       return {
         id: profile.id,
