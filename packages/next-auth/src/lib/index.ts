@@ -76,7 +76,13 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
       async session(...args) {
         const session =
           // If the user defined a custom session callback, use that instead
-          (await config.callbacks?.session?.(...args)) ?? args[0].session
+          (await config.callbacks?.session?.(...args)) ?? {
+            ...args[0].session,
+            expires:
+              args[0].session.expires instanceof Date
+                ? args[0].session.expires.toISOString()
+                : args[0].session.expires,
+          }
         // @ts-expect-error either user or token will be defined
         const user = args[0].user ?? args[0].token
         return { user, ...session } satisfies Session

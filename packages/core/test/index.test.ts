@@ -180,11 +180,12 @@ describe("Session Action", () => {
         image: "https://test.com/test.png",
       }
 
+      const expectedUserId = randomString(32)
       const mockAdapter: Adapter = {
         getSessionAndUser: vi.fn().mockResolvedValue({
           session: {
             sessionToken: expectedSessionToken,
-            userId: randomString(32),
+            userId: expectedUserId,
             expires: currentExpires,
           },
           user: expectedUser,
@@ -231,7 +232,9 @@ describe("Session Action", () => {
         newSession: undefined,
         session: {
           user: expectedUser,
-          expires: currentExpires.toISOString(),
+          expires: currentExpires,
+          sessionToken: expectedSessionToken,
+          userId: expectedUserId,
         },
         user: expectedUser,
       })
@@ -268,11 +271,12 @@ describe("Session Action", () => {
         image: "https://test.com/test.png",
       }
 
+      const expectedUserId = randomString(32)
       const mockAdapter: Adapter = {
         getSessionAndUser: vi.fn().mockResolvedValue({
           session: {
             sessionToken: expectedSessionToken,
-            userId: randomString(32),
+            userId: expectedUserId,
             expires: currentExpires,
           },
           user: expectedUser,
@@ -316,7 +320,9 @@ describe("Session Action", () => {
         newSession: undefined,
         session: {
           user: expectedUser,
-          expires: currentExpires.toISOString(),
+          expires: currentExpires,
+          sessionToken: expectedSessionToken,
+          userId: expectedUserId,
         },
         user: expectedUser,
       })
