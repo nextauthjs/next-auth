@@ -4,14 +4,19 @@ import {
   sqliteTable as defaultSqliteTableFn,
   text,
   primaryKey,
-  BaseSQLiteDatabase,
-  SQLiteTableFn,
+  type BaseSQLiteDatabase,
+  type SQLiteTableFn,
 } from "drizzle-orm/sqlite-core"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
+import { names, type AnySQLiteDatabase } from "./utils"
+import type { DrizzleAdapterConfig } from "../index"
 
-export function createTables(sqliteTable: SQLiteTableFn) {
-  const users = sqliteTable("user", {
+export function createTables(
+  sqliteTable: SQLiteTableFn,
+  namingStrategy: "snake_case" | "camelCase" | "PascalCase" = "camelCase"
+) {
+  const users = sqliteTable(names[namingStrategy].user, {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
     email: text("email").notNull(),
@@ -20,7 +25,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
   })
 
   const accounts = sqliteTable(
-    "account",
+    names[namingStrategy].account,
     {
       userId: text("userId")
         .notNull()
@@ -41,7 +46,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
     })
   )
 
-  const sessions = sqliteTable("session", {
+  const sessions = sqliteTable(names[namingStrategy].session, {
     sessionToken: text("sessionToken").notNull().primaryKey(),
     userId: text("userId")
       .notNull()
@@ -50,7 +55,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
   })
 
   const verificationTokens = sqliteTable(
-    "verificationToken",
+    names[namingStrategy].verificationToken,
     {
       identifier: text("identifier").notNull(),
       token: text("token").notNull(),
@@ -68,10 +73,15 @@ export type DefaultSchema = ReturnType<typeof createTables>
 
 export function SQLiteDrizzleAdapter(
   client: InstanceType<typeof BaseSQLiteDatabase>,
-  tableFn = defaultSqliteTableFn
+  config?: DrizzleAdapterConfig<AnySQLiteDatabase>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const tableFn = config?.tableFn ?? defaultSqliteTableFn
+  const namingStrategy = config?.namingStrategy ?? "camelCase"
+
+  const { users, accounts, sessions, verificationTokens } = createTables(
+    tableFn,
+    namingStrategy
+  )
 
   return {
     async createUser(data) {
@@ -166,10 +176,11 @@ export function SQLiteDrizzleAdapter(
         .get()
 
       if (!results) {
-        return null;
+        return null
       }
-      return Promise.resolve(results).then((results) => results.user)
-
+      return Promise.resolve(results).then(
+        (results) => results[names[namingStrategy].user] as AdapterUser | null
+      )
     },
     async deleteSession(sessionToken) {
       const result = await client
