@@ -11,6 +11,13 @@ https://developers.kakao.com/product/kakaoLogin
 
 https://developers.kakao.com/docs/latest/en/kakaologin/common
 
+Create a Kakao application at `https://developers.kakao.com/console/app`.
+
+The "Redirect URI" used the Kakao application must include your full domain and end in the callback path. For example;
+
+For production: https://{YOUR_DOMAIN}/api/auth/callback/kakao
+For development: http://localhost:3000/api/auth/callback/kakao
+
 ## Options
 
 The **Kakao Provider** comes with a set of default options:
@@ -32,9 +39,3 @@ providers: [
 ]
 ...
 ```
-
-## Instructions
-
-### Configuration
-
-Create a provider and a Kakao application at `https://developers.kakao.com/console/app`. In the settings of the app under Kakao Login, activate web app, change consent items and configure callback URL.
