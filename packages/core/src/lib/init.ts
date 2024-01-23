@@ -41,7 +41,17 @@ export const defaultCallbacks: CallbacksOptions = {
     return baseUrl
   },
   session({ session }) {
-    return session
+    return {
+      user: {
+        name: session.user?.name,
+        email: session.user?.email,
+        image: session.user?.image,
+      },
+      expires:
+        session.expires instanceof Date
+          ? session.expires.toISOString()
+          : session.expires,
+    }
   },
   jwt({ token }) {
     return token
@@ -142,7 +152,7 @@ export async function init({
     isOnRedirectProxy,
     experimental: {
       ...authOptions.experimental,
-    }
+    },
   }
 
   // Init cookies
