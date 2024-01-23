@@ -1,0 +1,56 @@
+{
+  "name": "@auth/knexjs-adapter",
+  "version": "0.0.1",
+  "description": "Knexjs adapter for next-auth.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Bardouni Naoufal",
+  "contributors": [
+    "Bardouni Naoufal <me@bardouni.com>"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "knex.js"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "./tests/test.sh",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "knex": "^2",
+		"mysql2": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18"
+  },
+  "jest": {
+    "preset": "utils/adapter"
+  }
+}
