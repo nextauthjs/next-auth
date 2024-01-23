@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/mysql-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { MinimumSchema } from "./utils"
 
 export function createTables(mySqlTable: MySqlTableFn) {
   const users = mySqlTable("user", {
@@ -78,10 +79,17 @@ export type DefaultSchema = ReturnType<typeof createTables>
 
 export function mySqlDrizzleAdapter(
   client: InstanceType<typeof MySqlDatabase>,
-  tableFn = defaultMySqlTableFn
+  tableFnOrTables?: MySqlTableFn | Partial<MinimumSchema["mysql"]>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const defaultTables = createTables(
+    typeof tableFnOrTables === "function"
+      ? tableFnOrTables
+      : defaultMySqlTableFn
+  )
+  const { users, accounts, sessions, verificationTokens } = {
+    ...defaultTables,
+    ...(typeof tableFnOrTables === "object" ? tableFnOrTables : {}),
+  }
 
   return {
     async createUser(data) {

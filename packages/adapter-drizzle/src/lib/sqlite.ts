@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/sqlite-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { MinimumSchema } from "./utils"
 
 export function createTables(sqliteTable: SQLiteTableFn) {
   const users = sqliteTable("user", {
@@ -68,10 +69,17 @@ export type DefaultSchema = ReturnType<typeof createTables>
 
 export function SQLiteDrizzleAdapter(
   client: InstanceType<typeof BaseSQLiteDatabase>,
-  tableFn = defaultSqliteTableFn
+  tableFnOrTables?: SQLiteTableFn | Partial<MinimumSchema["sqlite"]>
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const defaultTables = createTables(
+    typeof tableFnOrTables === "function"
+      ? tableFnOrTables
+      : defaultSqliteTableFn
+  )
+  const { users, accounts, sessions, verificationTokens } = {
+    ...defaultTables,
+    ...(typeof tableFnOrTables === "object" ? tableFnOrTables : {}),
+  }
 
   return {
     async createUser(data) {
