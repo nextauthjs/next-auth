@@ -1,7 +1,1 @@
-export type {
-  Adapter,
-  AdapterAccount,
-  AdapterSession,
-  AdapterUser,
-  VerificationToken,
-} from "@auth/core/adapters"
+export type * from "@auth/core/adapters"
