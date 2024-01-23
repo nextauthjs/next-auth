@@ -15,6 +15,10 @@ https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps
 
 https://github.com/settings/apps
 
+:::info
+When creating a GitHub App, make sure to set the "Email addresses" account permission to read-only in order to access private email addresses on GitHub.
+:::
+
 ## Options
 
 The **GitHub Provider** comes with a set of default options:
