@@ -475,16 +475,18 @@ export function createActionURL(
   h: Headers,
   basePath?: string
 ) {
-  const envUrl = env.AUTH_URL ?? env.NEXTAUTH_URL
+  const envUrl = env.AUTH_URL
   if (envUrl) {
     const { origin, pathname } = new URL(envUrl)
     const separator = pathname.endsWith("/") ? "" : "/"
     return new URL(`${origin}${pathname}${separator}${action}`)
   }
   const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
-  // @ts-expect-error `basePath` value is default'ed to "/api/auth" in `setEnvDefaults`
+  const protocol =
+    h.get("x-forwarded-proto") === "http" || dev ? "http" : "https"
+  // @ts-expect-error `basePath` value is default'ed to "/auth" in `setEnvDefaults`
   const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
   const separator = pathname.endsWith("/") ? "" : "/"
+  console.log(`test: ${origin}${pathname}${separator}${action}`)
   return new URL(`${origin}${pathname}${separator}${action}`)
 }
