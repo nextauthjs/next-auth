@@ -1,34 +1,33 @@
 import { text, type EmailConfig, type EmailUserConfig, html } from "./index.js"
 
 /** @todo Document this */
-export default function SendGrid(config: EmailUserConfig): EmailConfig {
+export default function Resend(config: EmailUserConfig): EmailConfig {
   return {
-    id: "sendgrid",
+    id: "resend",
     type: "email",
-    name: "SendGrid",
+    name: "Resend",
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
     async sendVerificationRequest(params) {
       const { identifier: to, provider, url, theme } = params
       const { host } = new URL(url)
-      const res = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${provider.apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          personalizations: [{ to: [{ email: to }] }],
-          from: { email: provider.from },
+          from: provider.from,
+          to,
           subject: `Sign in to ${host}`,
-          content: [
-            { type: "text/plain", value: text({ url, host }) },
-            { type: "text/html", value: html({ url, host, theme }) },
-          ],
+          html: html({ url, host, theme }),
+          text: text({ url, host }),
         }),
       })
-      // REVIEW: Clean up error handling
-      if (!res.ok) throw new Error("Sendgrid error: " + (await res.text()))
+
+      if (!res.ok)
+        throw new Error("Resend error: " + JSON.stringify(await res.json()))
     },
     options: config,
   }

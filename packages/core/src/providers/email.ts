@@ -41,7 +41,10 @@ export interface EmailConfig extends CommonProviderOptions {
     theme: Theme
     request: Request
   }) => Awaitable<void>
+  /** Used to hash the verification token. */
   secret?: string
+  /** Used with HTTP-based email providers  */
+  apiKey?: string
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
   options: EmailUserConfig
