@@ -198,16 +198,15 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import { redirect } from "@sveltejs/kit"
 import type { Handle, RequestEvent } from "@sveltejs/kit"
-import { parse } from "set-cookie-parser"
-import { dev, building } from "$app/environment"
-import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
-import { Auth, raw, skipCSRFCheck } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import { Auth } from "@auth/core"
+import type { AuthAction, Session } from "@auth/core/types"
 import type { BuiltInProviderType } from "@auth/core/providers"
+import type { SvelteKitAuthConfig } from "./types"
+import { setEnvDefaults } from "./env"
+import { auth, signIn, signOut } from "./actions"
 
 export type {
   Account,
@@ -216,124 +215,6 @@ export type {
   Session,
   User,
 } from "@auth/core/types"
-
-type SignInParams = Parameters<App.Locals["signIn"]>
-async function signIn(
-  provider: SignInParams[0],
-  options: SignInParams[1] = {},
-  authorizationParams: SignInParams[2],
-  config: SvelteKitAuthConfig,
-  event: RequestEvent
-) {
-  const { request } = event
-  const headers = new Headers(request.headers)
-  const {
-    redirect: shouldRedirect = true,
-    redirectTo,
-    ...rest
-  } = options instanceof FormData ? Object.fromEntries(options) : options
-
-  const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = createActionURL("signin", headers, config.basePath)
-
-  if (!provider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(302, url)
-    return url
-  }
-
-  let url = `${base}/${provider}?${new URLSearchParams(authorizationParams)}`
-  let foundProvider: SignInParams[0] | undefined = undefined
-
-  for (const _provider of config.providers) {
-    const { id } = typeof _provider === "function" ? _provider?.() : _provider
-    if (id === provider) {
-      foundProvider = id
-      break
-    }
-  }
-
-  if (!foundProvider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(302, url)
-    return url
-  }
-
-  if (foundProvider === "credentials") {
-    url = url.replace("signin", "callback")
-  }
-
-  headers.set("Content-Type", "application/x-www-form-urlencoded")
-  const body = new URLSearchParams({ ...rest, callbackUrl })
-  const req = new Request(url, { method: "POST", headers, body })
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
-
-  for (const c of res?.cookies ?? []) {
-    event.cookies.set(c.name, c.value, { path: "/", ...c.options })
-  }
-
-  if (shouldRedirect) return redirect(302, res.redirect!)
-  return res.redirect as any
-}
-
-type SignOutParams = Parameters<App.Locals["signOut"]>
-async function signOut(
-  options: SignOutParams[0],
-  config: SvelteKitAuthConfig,
-  event: RequestEvent
-) {
-  const { request } = event
-  const headers = new Headers(request.headers)
-  headers.set("Content-Type", "application/x-www-form-urlencoded")
-
-  const url = createActionURL("signout", headers, config.basePath)
-  const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
-  const body = new URLSearchParams({ callbackUrl })
-  const req = new Request(url, { method: "POST", headers, body })
-
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
-
-  for (const c of res?.cookies ?? [])
-    event.cookies.set(c.name, c.value, { path: "/", ...c.options })
-
-  if (options?.redirect ?? true) return redirect(302, res.redirect!)
-
-  return res as any
-}
-
-async function auth(
-  event: RequestEvent,
-  config: SvelteKitAuthConfig
-): ReturnType<App.Locals["auth"]> {
-  setEnvDefaults(env, config)
-  config.trustHost ??= true
-
-  const { request: req } = event
-
-  const basePath = config.basePath ?? `${base}/auth`
-  const sessionUrl = createActionURL("session", req.headers, basePath)
-  const request = new Request(sessionUrl, {
-    headers: { cookie: req.headers.get("cookie") ?? "" },
-  })
-  const response = await Auth(request, config)
-
-  const authCookies = parse(response.headers.getSetCookie())
-  for (const cookie of authCookies) {
-    const { name, value, ...options } = cookie
-    // @ts-expect-error - Review: SvelteKit and set-cookie-parser are mismatching
-    event.cookies.set(name, value, { path: "/", ...options })
-  }
-
-  const { status = 200 } = response
-  const data = await response.json()
-
-  if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data
-  throw new Error(data.message)
-}
-
-/** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {}
 
 const actions: AuthAction[] = [
   "providers",
@@ -384,110 +265,4 @@ export function SvelteKitAuth(
 // TODO: Get this function from @auth/core/util
 function isAction(action: string): action is AuthAction {
   return actions.includes(action as AuthAction)
-}
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace App {
-    interface Locals {
-      auth(): Promise<Session | null>
-      /** @deprecated Use `auth` instead. */
-      getSession(): Promise<Session | null>
-      signIn: <
-        P extends BuiltInProviderType | (string & {}),
-        R extends boolean = true,
-      >(
-        /** Provider to sign in to */
-        provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
-        options?:
-          | FormData
-          | ({
-              /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-              redirectTo?: string
-              /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-              redirect?: R
-            } & Record<string, any>),
-        authorizationParams?:
-          | string[][]
-          | Record<string, string>
-          | string
-          | URLSearchParams
-      ) => Promise<R extends false ? any : never>
-      signOut: <R extends boolean = true>(options?: {
-        /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
-        redirectTo?: string
-        /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
-        redirect?: R
-      }) => Promise<R extends false ? any : never>
-    }
-    interface PageData {
-      session?: Session | null
-    }
-  }
-}
-
-declare module "$env/dynamic/private" {
-  export const AUTH_SECRET: string
-  export const AUTH_TRUST_HOST: string
-  export const VERCEL: string
-}
-
-export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
-  if (building) return
-
-  try {
-    const url = env.AUTH_URL
-    if (url) config.basePath = new URL(url).pathname
-  } catch {
-  } finally {
-    config.basePath ??= `${base}/auth`
-  }
-
-  config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
-  config.secret ??= env.AUTH_SECRET
-  config.trustHost ??= !!(
-    env.AUTH_URL ??
-    env.AUTH_TRUST_HOST ??
-    env.VERCEL ??
-    env.NODE_ENV !== "production" ??
-    dev
-  )
-  config.providers = config.providers.map((p) => {
-    const finalProvider = typeof p === "function" ? p({}) : p
-    if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      const ID = finalProvider.id.toUpperCase()
-      finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
-      finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
-      if (finalProvider.type === "oidc") {
-        finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
-      }
-    }
-    return finalProvider
-  })
-}
-
-/**
- * Extract the origin and base path from either `AUTH_URL` or `NEXTAUTH_URL` environment variables,
- * or the request's headers and the {@link NextAuthConfig.basePath} option.
- */
-export function createActionURL(
-  action: AuthAction,
-  h: Headers,
-  basePath?: string
-) {
-  const envUrl = env.AUTH_URL
-  if (envUrl) {
-    const { origin, pathname } = new URL(envUrl)
-    const separator = pathname.endsWith("/") ? "" : "/"
-    return new URL(`${origin}${pathname}${separator}${action}`)
-  }
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol =
-    // REVIEW: Remove dev if SvelteKit support https in dev 
-    h.get("x-forwarded-proto") === "http" || dev ? "http" : "https"
-  // @ts-expect-error `basePath` value is default'ed to "/auth" in `setEnvDefaults`
-  const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
-  const separator = pathname.endsWith("/") ? "" : "/"
-  console.log(`test: ${origin}${pathname}${separator}${action}`)
-  return new URL(`${origin}${pathname}${separator}${action}`)
 }
