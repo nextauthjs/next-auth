@@ -56,9 +56,6 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "files": [
-    "client.*",
-    "index.*",
-    "providers",
     "dist",
     "src"
   ],

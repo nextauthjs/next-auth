@@ -137,19 +137,11 @@ export function createActionURL(
   h: Headers,
   basePath?: string
 ) {
-  const envUrl = env.AUTH_URL
-  if (envUrl) {
-    const { origin, pathname } = new URL(envUrl)
-    const separator = pathname.endsWith("/") ? "" : "/"
-    return new URL(`${origin}${pathname}${separator}${action}`)
+  let url = env.AUTH_URL
+  if (!url) {
+    const host = headers.get("x-forwarded-host") ?? headers.get("host")
+    const proto = headers.get("x-forwarded-proto")
+    url = `${proto === "http" || dev ? "http" : "https"}://${host}${basePath}`
   }
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol =
-    // REVIEW: Remove dev if SvelteKit support https in dev 
-    h.get("x-forwarded-proto") === "http" || dev ? "http" : "https"
-  // @ts-expect-error `basePath` value is default'ed to "/auth" in `setEnvDefaults`
-  const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
-  const separator = pathname.endsWith("/") ? "" : "/"
-  console.log(`test: ${origin}${pathname}${separator}${action}`)
-  return new URL(`${origin}${pathname}${separator}${action}`)
+  return new URL(`${url.replace(/\/$/, "")}/${action}`)
 }
