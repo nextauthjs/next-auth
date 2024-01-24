@@ -21,8 +21,9 @@ function send({ html, title, status, cookies, theme, headTags }: any): ResponseI
     cookies,
     status,
     headers: { "Content-Type": "text/html" },
-    body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style><title>${title}</title>${headTags ?? ""}</head><body class="__next-auth-theme-${theme?.colorScheme ?? "auto"
-      }"><div class="page">${renderToString(html)}</div></body></html>`,
+    body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style><title>${title}</title>${
+      headTags ?? ""
+    }</head><body class="__next-auth-theme-${theme?.colorScheme ?? "auto"}"><div class="page">${renderToString(html)}</div></body></html>`,
   }
 }
 
@@ -75,8 +76,9 @@ export default function renderPage(params: RenderPageParams) {
     signin(providerId?: string, error?: any) {
       if (providerId) throw new UnknownAction("Unsupported action")
       if (pages?.signIn) {
-        let signinUrl = `${pages.signIn}${pages.signIn.includes("?") ? "&" : "?"
-          }${new URLSearchParams({ callbackUrl: params.callbackUrl ?? "/" })}`
+        let signinUrl = `${pages.signIn}${
+          pages.signIn.includes("?") ? "&" : "?"
+        }${new URLSearchParams({ callbackUrl: params.callbackUrl ?? "/" })}`
         if (error) signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
         return { redirect: signinUrl, cookies }
       }
@@ -139,8 +141,9 @@ export default function renderPage(params: RenderPageParams) {
     error(error?: string) {
       if (pages?.error) {
         return {
-          redirect: `${pages.error}${pages.error.includes("?") ? "&" : "?"
-            }error=${error}`,
+          redirect: `${pages.error}${
+            pages.error.includes("?") ? "&" : "?"
+          }error=${error}`,
           cookies,
         }
       }

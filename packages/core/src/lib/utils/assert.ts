@@ -108,7 +108,7 @@ export function assertConfig(
   )
   const callbackUrlCookie =
     request.cookies?.[
-    options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name
+      options.cookies?.callbackUrl?.name ?? defaultCallbackUrl.name
     ]
 
   if (callbackUrlCookie && !isValidHttpUrl(callbackUrlCookie, url.origin)) {

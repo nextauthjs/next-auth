@@ -6,24 +6,6 @@ import { SessionStore } from "./cookie";
 // /**
 //  * Returns the currently logged in user, if any.
 //  */
-// export async function getLoggedInUser(options: InternalOptions, sessionStore: SessionStore): Promise<Pick<AdapterUser, "name" | "email" | "id"> | undefined> {
-//   // Get the current session, if it exists
-//   // NOTE: this is a bit hacky, but routes.session seems to be
-//   // the only place that implements a full session/user check.
-//   const { body: currentSession } = await routeSession(options, sessionStore, [])
-//   let sessionUser: Pick<AdapterUser, "name" | "email" | "id"> | undefined = undefined
-//   if (currentSession?.user && currentSession.user.id && currentSession.user.email) {
-//     sessionUser = {
-//       id: currentSession.user.id,
-//       email: currentSession.user.email,
-//       name: currentSession.user.name,
-//     }
-//   }
-
-//   return sessionUser
-// }
-
-
 export async function getLoggedInUser(
   options: InternalOptions,
   sessionStore: SessionStore

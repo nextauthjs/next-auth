@@ -63,10 +63,9 @@
   "license": "ISC",
   "dependencies": {
     "@panva/hkdf": "^1.1.1",
+    "cookie": "0.6.0",
     "@simplewebauthn/server": "^9.0.0",
     "@types/cookie": "0.6.0",
-    "cbor-x": "1.5.2",
-    "cookie": "0.6.0",
     "jose": "^5.1.3",
     "oauth4webapi": "^2.4.0",
     "preact": "10.11.3",
@@ -89,6 +88,7 @@
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
+    "@simplewebauthn/browser": "v9.0.0",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",

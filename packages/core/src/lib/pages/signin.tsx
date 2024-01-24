@@ -1,10 +1,8 @@
-import { readFileSync } from "fs"
 import type {
   InternalProvider,
   SignInPageErrorParam,
   Theme,
 } from "../../types.js"
-
 import { webauthnScript } from "../utils/webauthn-client.js"
 
 const signinErrors: Record<SignInPageErrorParam | "default", string> = {
@@ -63,7 +61,6 @@ webauthnScript(baseURL, "${providerID}")
     </>
   )
 }
-
 
 export default function SigninPage(props: {
   csrfToken?: string

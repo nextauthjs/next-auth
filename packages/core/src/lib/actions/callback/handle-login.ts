@@ -119,10 +119,10 @@ export async function handleLoginOrRegister(
     session = useJwtSession
       ? {}
       : await createSession({
-        sessionToken: generateSessionToken(),
-        userId: user.id,
-        expires: fromDate(options.session.maxAge),
-      })
+          sessionToken: generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
 
     return { session, user, isNewUser }
   } else if (account.type === "webauthn") {
@@ -232,10 +232,10 @@ export async function handleLoginOrRegister(
     session = useJwtSession
       ? {}
       : await createSession({
-        sessionToken: generateSessionToken(),
-        userId: userByAccount.id,
-        expires: fromDate(options.session.maxAge),
-      })
+          sessionToken: generateSessionToken(),
+          userId: userByAccount.id,
+          expires: fromDate(options.session.maxAge),
+        })
 
     return { session, user: userByAccount, isNewUser }
   } else {
@@ -310,10 +310,10 @@ export async function handleLoginOrRegister(
     session = useJwtSession
       ? {}
       : await createSession({
-        sessionToken: generateSessionToken(),
-        userId: user.id,
-        expires: fromDate(options.session.maxAge),
-      })
+          sessionToken: generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
 
     return { session, user, isNewUser: true }
   }

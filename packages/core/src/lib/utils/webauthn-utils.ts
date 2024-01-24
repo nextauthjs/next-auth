@@ -1,6 +1,6 @@
-import { WebAuthnProviderType } from "../../providers";
-import { Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal } from "../../types";
-import { Cookie, SessionStore } from "./cookie";
+import type { WebAuthnProviderType } from "../../providers/webauthn";
+import type { Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal } from "../../types";
+import type { Cookie, SessionStore } from "./cookie";
 import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../../errors";
 import { webauthnChallenge } from "../actions/callback/oauth/checks";
 import { VerifiedAuthenticationResponse, VerifiedRegistrationResponse, generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server";
@@ -10,8 +10,8 @@ import type {
   PublicKeyCredentialRequestOptionsJSON,
   RegistrationResponseJSON,
 } from "@simplewebauthn/server/script/deps"
-import { Adapter, AdapterAccount, AdapterAuthenticator, AdapterUser } from "../../adapters";
-import { GetUserInfo, UserInfo } from "../../providers/webauthn";
+import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterUser } from "../../adapters";
+import type { GetUserInfo, UserInfo } from "../../providers/webauthn";
 import { getLoggedInUser } from "./session";
 
 export type WebAuthnRegister = "register"

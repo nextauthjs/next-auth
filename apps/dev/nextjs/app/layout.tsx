@@ -4,7 +4,7 @@ import { Header } from "components/header"
 import styles from "components/header.module.css"
 import "./styles.css"
 import { AuthError } from "next-auth"
-export const runtime = "nodejs"
+
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html>

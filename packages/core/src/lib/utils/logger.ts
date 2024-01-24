@@ -60,7 +60,7 @@ export function setLogger(
   debug?: boolean
 ) {
   // Turn off debug logging if `debug` isn't set to `true`
-  if (!debug) logger.debug = () => { }
+  if (!debug) logger.debug = () => {}
 
   if (newLogger.error) logger.error = newLogger.error
   if (newLogger.warn) logger.warn = newLogger.warn

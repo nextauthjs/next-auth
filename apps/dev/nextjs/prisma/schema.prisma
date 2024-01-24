@@ -1,6 +1,6 @@
 datasource db {
-  provider = "postgresql"
-  url      = "postgresql://postgres:postgres@localhost:5432/nextauth?schema=public"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 generator client {
@@ -34,9 +34,9 @@ model Session {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?         @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]

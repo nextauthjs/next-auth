@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
     </SessionProvider>
   )
 }
-export const runtime = "nodejs"
+
 function PagesHeader() {
   const { data: session } = useSession()
   return (

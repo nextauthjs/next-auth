@@ -21,4 +21,3 @@ export default function Client() {
     </div>
   )
 }
-export const runtime = "nodejs"

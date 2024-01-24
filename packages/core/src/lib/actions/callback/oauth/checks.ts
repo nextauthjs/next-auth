@@ -98,16 +98,16 @@ export const pkce = {
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export function decodeState(value: string):
   | {
-    /** If defined, a redirect proxy is being used to support multiple OAuth apps with a single callback URL */
-    origin?: string
-    /** Random value for CSRF protection */
-    random: string
-  }
+      /** If defined, a redirect proxy is being used to support multiple OAuth apps with a single callback URL */
+      origin?: string
+      /** Random value for CSRF protection */
+      random: string
+    }
   | undefined {
   try {
     const decoder = new TextDecoder()
     return JSON.parse(decoder.decode(jose.base64url.decode(value)))
-  } catch { }
+  } catch {}
 }
 
 export const state = {
@@ -263,7 +263,6 @@ export function handleState(
 
   return { randomState, proxyRedirect }
 }
-
 
 const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 type WebAuthnChallengeCookie = { challenge: string; userID?: string }

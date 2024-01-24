@@ -5,6 +5,8 @@ export default function handler(req: Request) {
   return Auth(req, getDefaults({ providers: [GitHub] }))
 }
 
+export const config = { runtime: "edge" }
+
 export function getDefaults(config: AuthConfig) {
   config.secret ??= process.env.AUTH_SECRET
   config.trustHost ??= !!process.env.VERCEL

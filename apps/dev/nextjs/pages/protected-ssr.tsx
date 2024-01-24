@@ -2,7 +2,7 @@
 import { auth } from "../auth"
 import AccessDenied from "components/access-denied"
 import { GetServerSideProps } from "next"
-export const runtime = "nodejs"
+
 export default function Page({ content, session }) {
   // If no session exists, display access denied message
   if (!session) return <AccessDenied />

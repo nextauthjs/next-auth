@@ -17,7 +17,6 @@ import { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
 export * from "./credentials.js"
 export * from "./email.js"
 export * from "./oauth.js"
-export type { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
 
 /**
  * Providers passed to Auth.js must define one of these types.
@@ -66,11 +65,11 @@ interface InternalProviderOptions {
  */
 export type Provider<P extends Profile = any> = (
   | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig | WebAuthnConfig) &
-    InternalProviderOptions)
+      InternalProviderOptions)
   | ((
-    ...args: any
-  ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig | WebAuthnConfig) &
-    InternalProviderOptions)
+      ...args: any
+    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig | WebAuthnConfig) &
+      InternalProviderOptions)
 ) &
   InternalProviderOptions
 

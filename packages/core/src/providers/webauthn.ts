@@ -1,7 +1,7 @@
 import type { CommonProviderOptions, ProviderType, CredentialInput } from "."
 import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts } from "@simplewebauthn/server"
 import type { InternalOptions, RequestInternal } from "../types"
-import type { Adapter, AdapterUser } from "../adapters"
+import type { AdapterUser } from "../adapters"
 import { EmailSignInError, MissingAdapter } from "../errors"
 import { randomString } from "../lib/utils/web"
 

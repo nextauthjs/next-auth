@@ -72,9 +72,11 @@ import type {
   OAuthConfigInternal,
   OIDCConfigInternal,
   ProviderType,
+} from "./providers/index.js"
+import {
   WebAuthnConfig,
   WebAuthnProviderType,
-} from "./providers/index.js"
+} from "./providers/webauthn"
 
 export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
@@ -253,15 +255,15 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   session: (
     params: (
       | {
-        session: { user: AdapterUser } & AdapterSession
-        /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-        user: AdapterUser
-      }
+          session: { user: AdapterUser } & AdapterSession
+          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+          user: AdapterUser
+        }
       | {
-        session: Session
-        /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-        token: JWT
-      }
+          session: Session
+          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+          token: JWT
+        }
     ) & {
       /**
        * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
@@ -456,7 +458,7 @@ export interface DefaultSession {
  * [`SessionProvider`](https://authjs.devreference/nextjs/react#sessionprovider) |
  * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
  */
-export interface Session extends DefaultSession { }
+export interface Session extends DefaultSession {}
 
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
@@ -481,18 +483,18 @@ export interface User {
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
-  ? OIDCConfigInternal<any>
-  : T extends "email"
-  ? EmailConfig
-  : T extends "credentials"
-  ? CredentialsConfig
-  : T extends WebAuthnProviderType
-  ? WebAuthnConfig
-  : never) & {
-    signinUrl: string
-    /** @example `"https://example.com/api/auth/callback/id"` */
-    callbackUrl: string
-  }
+    ? OIDCConfigInternal<any>
+    : T extends "email"
+      ? EmailConfig
+      : T extends "credentials"
+        ? CredentialsConfig
+        : T extends WebAuthnProviderType
+          ? WebAuthnConfig
+          : never) & {
+  signinUrl: string
+  /** @example `"https://example.com/api/auth/callback/id"` */
+  callbackUrl: string
+}
 
 export interface PublicProvider {
   id: string

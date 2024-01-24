@@ -1,9 +1,16 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import GitHub from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
+import Facebook from "next-auth/providers/facebook"
+import Auth0 from "next-auth/providers/auth0"
+import Twitter from "next-auth/providers/twitter"
 import Passkey from "next-auth/providers/passkey"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client";
-export const runtime = "nodejs"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
 declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
@@ -16,19 +23,13 @@ declare module "next-auth" {
   }
 
   interface User {
-    // foo: string
+    foo: string
   }
 }
-
-
-const prisma = new PrismaClient();
 
 export default {
   debug: false,
   adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-  },
   providers: [
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
@@ -42,15 +43,16 @@ export default {
         }
       },
     }),
+    GitHub,
+    Google,
+    Facebook,
+    Auth0,
+    Twitter,
     Passkey({
       relayingParty: {
-        id: "electric-oddly-spider.ngrok-free.app",
+        id: "localhost",
         name: "Example",
-        origin: "https://electric-oddly-spider.ngrok-free.app",
-      },
-      formFields: {
-        email: { label: "Email", type: "email", required: true, autocomplete: "username webauthn" },
-        username: { label: "Your Name", name: "displayName", type: "text", required: false },
+        origin: "http://localhost:3000",
       },
     })
   ].filter(Boolean) as NextAuthConfig["providers"],
