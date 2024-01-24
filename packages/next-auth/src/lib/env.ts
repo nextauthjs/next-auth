@@ -6,7 +6,7 @@ export function setEnvDefaults(config: NextAuthConfig) {
   config.secret ??= process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
   try {
     const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
-    if (url) config.basePath = new URL(url).pathname
+    if (url && !config.basePath) config.basePath = new URL(url).pathname
   } catch {
   } finally {
     config.basePath ??= "/api/auth"
