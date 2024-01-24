@@ -198,7 +198,12 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import type { Handle, RequestEvent } from "@sveltejs/kit"
+import {
+  redirect,
+  type Action,
+  type Handle,
+  type RequestEvent,
+} from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { dev, building } from "$app/environment"
 import { base } from "$app/paths"
@@ -268,27 +273,40 @@ export function SvelteKitAuth(
   config:
     | SvelteKitAuthConfig
     | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
-): Handle {
-  return async function ({ event, resolve }) {
-    const _config = typeof config === "object" ? config : await config(event)
-    setEnvDefaults(env, _config)
+): {
+  handle: Handle
+  signIn: Action<{ id: string }>
+  signOut: Action
+} {
+  return {
+    signIn: async (event) => {
+      console.log(Object.fromEntries(await event.request.formData()))
+      throw new Error("Not implemented")
+    },
+    signOut: async (event) => {
+      throw new Error("Not implemented")
+    },
+    async handle({ event, resolve }) {
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
 
-    const { url, request } = event
+      const { url, request } = event
 
-    event.locals.auth ??= () => auth(event, _config)
-    event.locals.getSession ??= event.locals.auth
+      event.locals.auth ??= () => auth(event, _config)
+      event.locals.getSession ??= event.locals.auth
 
-    const action = url.pathname
-      .slice(
-        // @ts-expect-error - basePath is defined in setEnvDefaults
-        _config.basePath.length + 1
-      )
-      .split("/")[0]
+      const action = url.pathname
+        .slice(
+          // @ts-expect-error - basePath is defined in setEnvDefaults
+          _config.basePath.length + 1
+        )
+        .split("/")[0]
 
-    if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
-      return Auth(request, _config)
-    }
-    return resolve(event)
+      if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
+        return Auth(request, _config)
+      }
+      return resolve(event)
+    },
   }
 }
 
