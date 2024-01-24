@@ -134,7 +134,7 @@ export async function auth(
  */
 export function createActionURL(
   action: AuthAction,
-  h: Headers,
+  headers: Headers,
   basePath?: string
 ) {
   let url = env.AUTH_URL
