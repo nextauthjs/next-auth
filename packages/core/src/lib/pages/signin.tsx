@@ -1,8 +1,11 @@
+import { readFileSync } from "fs"
 import type {
   InternalProvider,
   SignInPageErrorParam,
   Theme,
 } from "../../types.js"
+
+import { webauthnScript } from "../utils/webauthn-client.js"
 
 const signinErrors: Record<SignInPageErrorParam | "default", string> = {
   default: "Unable to sign in.",
@@ -46,6 +49,22 @@ function hexToRgba(hex?: string, alpha = 1) {
   return rgba
 }
 
+function ConditionalUIScript(providerID: string) {
+  const conditionalUIScript = `${webauthnScript}`
+  const startConditionalUIScript = `
+const currentURL = window.location.href
+const baseURL = currentURL.substring(0, currentURL.lastIndexOf('/'))
+webauthnScript(baseURL, "${providerID}")
+`
+  return (
+    <>
+      <script dangerouslySetInnerHTML={{ __html: conditionalUIScript }} />
+      <script dangerouslySetInnerHTML={{ __html: startConditionalUIScript }} />
+    </>
+  )
+}
+
+
 export default function SigninPage(props: {
   csrfToken?: string
   providers?: InternalProvider[]
@@ -80,6 +99,10 @@ export default function SigninPage(props: {
   const error = errorType && (signinErrors[errorType] ?? signinErrors.default)
 
   const providerLogoPath = "https://authjs.dev/img/providers"
+
+  const conditionalUIProviderID = providers.find(
+    (provider) => provider.type === "webauthn" && provider.enableConditionalUI
+  )?.id
 
   return (
     <div className="signin">
@@ -232,7 +255,7 @@ export default function SigninPage(props: {
                 </form>
               )}
               {provider.type === "webauthn" && (
-                <form action={provider.callbackUrl} method="POST">
+                <form action={provider.callbackUrl} method="POST" id={`${provider.id}-form`}>
                   <input type="hidden" name="csrfToken" value={csrfToken} />
                   {Object.keys(provider.formFields).map((field) => {
                     return (
@@ -245,6 +268,7 @@ export default function SigninPage(props: {
                         </label>
                         <input
                           name={field}
+                          data-form-field
                           id={`input-${field}-for-${provider.id}-provider`}
                           type={provider.formFields[field].type ?? "text"}
                           placeholder={
@@ -255,7 +279,7 @@ export default function SigninPage(props: {
                       </div>
                     )
                   })}
-                  <button id="submitButton" type="submit" tabIndex={0}>
+                  <button id={`submitButton-${provider.id}`} type="submit" tabIndex={0}>
                     Sign in with {provider.name}
                   </button>
                 </form>
@@ -266,6 +290,7 @@ export default function SigninPage(props: {
           )
         })}
       </div>
+      {conditionalUIProviderID && ConditionalUIScript(conditionalUIProviderID)}
     </div>
   )
 }

@@ -29,6 +29,7 @@ const actions: AuthAction[] = [
   "callback",
   "verify-request",
   "error",
+  "webauthn-options",
 ]
 
 export async function toInternalRequest(
@@ -148,7 +149,7 @@ export function parseActionAndProviderId(
   if (!isAction(action))
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  if (providerId && !["signin", "callback"].includes(action))
+  if (providerId && !["signin", "callback", "webauthn-options"].includes(action))
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   return { action, providerId }

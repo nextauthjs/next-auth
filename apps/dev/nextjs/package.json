@@ -16,10 +16,12 @@
   "dependencies": {
     "@auth/edgedb-adapter": "workspace:*",
     "@auth/fauna-adapter": "workspace:*",
+    "@auth/memory-adapter": "workspace:*",
     "@auth/prisma-adapter": "workspace:*",
     "@auth/supabase-adapter": "workspace:*",
     "@auth/typeorm-adapter": "workspace:*",
     "@prisma/client": "^5",
+    "@simplewebauthn/browser": "v9.0.0",
     "@supabase/supabase-js": "^2.0.5",
     "edgedb": "^1.0.1",
     "faunadb": "^4",

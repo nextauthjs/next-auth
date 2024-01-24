@@ -8,7 +8,14 @@ import { randomString } from "../lib/utils/web"
 
 export type WebAuthnProviderType = "webauthn"
 
+// Validate that a string is a valid semver version number.
+type SemverString = `v${number}` | `v${number}.${number}` | `v${number}.${number}.${number}`
+function isSemverString(version: string): version is SemverString {
+    return /^v\d+(?:\.\d+){0,2}$/.test(version)
+}
+
 export const DEFAULT_WEBAUTHN_TIMEOUT = 5 * 60 * 1000 // 5 minutes
+export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.0"
 
 type RelayingParty = {
     /** Relaying Party ID. Use the website's domain name. */
@@ -57,7 +64,11 @@ export type UserInfo = {
  * 
  * It should not have any side effects (i.e. it should not modify the database).
  */
-export type GetUserInfo<TProviderType = ProviderType> = (options: InternalOptions<TProviderType>, request: RequestInternal, sessionUser?: Pick<AdapterUser, "name" | "id" | "email">) => Promise<{ userInfo: UserInfo; exists: boolean }>
+export type GetUserInfo<TProviderType = ProviderType> = (
+    options: InternalOptions<TProviderType>,
+    request: RequestInternal,
+    sessionUser: Pick<AdapterUser, "name" | "id" | "email"> | null
+) => Promise<{ userInfo: UserInfo; exists: boolean }>
 
 
 type ConfigurableAuthenticationOptions = Omit<GenerateAuthenticationOptionsOpts, "rpID" | "allowCredentials" | "challenge">
@@ -69,6 +80,19 @@ export interface WebAuthnConfig extends CommonProviderOptions {
     type: WebAuthnProviderType
     /** Relaying party (RP) configuration */
     relayingParty: RelayingParty
+    /**
+     * Enable conditional UI.
+     * 
+     * NOTE: Only one provider can have this option enabled at a time. Defaults to `true`.
+     */
+    enableConditionalUI: boolean
+    /**
+     * Version of SimpleWebAuthn browser script to load in the sign in page.
+     * 
+     * This is only loaded if the provider has conditional UI enabled. If set to false, it won't load any script.
+     * Defaults to `v9.0.0`.
+     */
+    simpleWebAuthnBrowserVersion: SemverString | false
     /** Form fields displayed in the default Passkey sign in/up form.
      * These are not validated or enforced beyond the default Auth.js authentication page.
      * 
@@ -141,18 +165,26 @@ export type WebAuthnInputConfig = Pick<WebAuthnConfig, "relayingParty"> & Partia
  * :::
  */
 export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
+    // Make sure simpleWebAuthnBrowserVersion is a valid version number.
+    if (config.simpleWebAuthnBrowserVersion) {
+        if (!isSemverString(config.simpleWebAuthnBrowserVersion)) {
+            throw new Error("simpleWebAuthnBrowserVersion must be a valid semver version number.")
+        }
+    }
 
     return {
         id: "webauthn",
         name: "WebAuthn",
+        enableConditionalUI: true,
         authenticationOptions: {
             timeout: DEFAULT_WEBAUTHN_TIMEOUT,
         },
         registrationOptions: {
             timeout: DEFAULT_WEBAUTHN_TIMEOUT,
         },
-        formFields: { email: { label: "Email", required: true } },
+        formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
         getUserInfo,
+        simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
         ...config,
         type: "webauthn",
     }
@@ -202,7 +234,7 @@ const getUserInfo: GetUserInfo<WebAuthnProviderType> = async (options, request, 
         if (!dbUser) {
             return {
                 userInfo: {
-                    userID: randomString(32),
+                    userID: randomString(16), // 32 byte string
                     userName: email,
                     userDisplayName: displayName ?? email, // Use email as display name by default.
                 },
@@ -219,4 +251,18 @@ const getUserInfo: GetUserInfo<WebAuthnProviderType> = async (options, request, 
         },
         exists: true,
     }
+}
+
+/**
+ * Builds and returns the script tag to load the SimpleWebAuthn browser script.
+ * @param config Provider config
+ * @returns The script tag to load the SimpleWebAuthn browser script, or an empty string if the provider has no conditional UI enabled.
+ */
+export function getSimpleWebAuthnBrowserScriptTag(config: WebAuthnConfig) {
+    const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
+
+    if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
+        return ""
+
+    return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.es5.umd.min.js" crossorigin="anonymous"></script>`
 }

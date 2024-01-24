@@ -8,15 +8,16 @@ generator client {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?         @unique
   emailVerified DateTime?
   image         String?
   phone         String?
   role          String?
   accounts      Account[]
   sessions      Session[]
+  Authenticator Authenticator[]
 }
 
 model Account {
@@ -50,4 +51,18 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

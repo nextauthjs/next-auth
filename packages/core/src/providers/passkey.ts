@@ -64,14 +64,13 @@ export default function Passkey(config: WebAuthnInputConfig): WebAuthnConfig {
         name: "Passkey",
         authenticationOptions: {
             timeout: DEFAULT_WEBAUTHN_TIMEOUT,
-            userVerification: "preferred",
+            userVerification: "required",
         },
         registrationOptions: {
-            attestationType: "none",
             timeout: DEFAULT_WEBAUTHN_TIMEOUT,
             authenticatorSelection: {
                 residentKey: "required",
-                userVerification: "preferred",
+                userVerification: "required",
             },
         },
         verifyAuthenticationOptions: {

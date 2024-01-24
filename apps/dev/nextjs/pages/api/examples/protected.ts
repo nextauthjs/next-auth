@@ -11,3 +11,4 @@ export default async function handler(...args: Parameters<NextApiHandler>) {
   }
   res.status(401).json("You must be signed in.")
 }
+export const runtime = "nodejs"

@@ -69,7 +69,8 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "@simplewebauthn/browser": "v9.0.0"
   },
   "peerDependencies": {
     "next": "^14",

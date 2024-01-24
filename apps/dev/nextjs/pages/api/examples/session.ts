@@ -5,3 +5,4 @@ export default async (req, res) => {
   const session = await auth(req, res)
   res.json(session)
 }
+export const runtime = "nodejs"

@@ -1,4 +1,4 @@
-import { OAuthAccountNotLinked } from "../../../errors.js"
+import { AccountNotLinked, OAuthAccountNotLinked } from "../../../errors.js"
 import { fromDate } from "../../utils/date.js"
 
 import type {
@@ -32,7 +32,7 @@ export async function handleLoginOrRegister(
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth", "oidc"].includes(_account.type))
+  if (!["email", "oauth", "oidc", "webauthn"].includes(_account.type))
     throw new Error("Provider not supported")
 
   const {
@@ -119,12 +119,93 @@ export async function handleLoginOrRegister(
     session = useJwtSession
       ? {}
       : await createSession({
+        sessionToken: generateSessionToken(),
+        userId: user.id,
+        expires: fromDate(options.session.maxAge),
+      })
+
+    return { session, user, isNewUser }
+  } else if (account.type === "webauthn") {
+    // Check if the account exists
+    const userByAccount = await getUserByAccount({
+      providerAccountId: account.providerAccountId,
+      provider: account.provider,
+    })
+    if (userByAccount) {
+      if (user) {
+        // If the user is already signed in with this account, we don't need to do anything
+        if (userByAccount.id === user.id) {
+          return { session, user, isNewUser }
+        }
+        // If the user is currently signed in, but the new account they are signing in
+        // with is already associated with another user, then we cannot link them
+        // and need to return an error.
+        throw new AccountNotLinked(
+          "The account is already associated with another user",
+          { provider: account.provider }
+        )
+      }
+      // If there is no active session, but the account being signed in with is already
+      // associated with a valid user then create session to sign the user in.
+      session = useJwtSession
+        ? {}
+        : await createSession({
+          sessionToken: generateSessionToken(),
+          userId: userByAccount.id,
+          expires: fromDate(options.session.maxAge),
+        })
+
+      return { session, user: userByAccount, isNewUser }
+    } else {
+      // If the account doesn't exist, we'll create it
+      if (user) {
+        // If the user is already signed in and the account isn't already associated
+        // with another user account then we can go ahead and link the accounts safely.
+        await linkAccount({ ...account, userId: user.id })
+        await events.linkAccount?.({ user, account, profile })
+
+        // As they are already signed in, we don't need to do anything after linking them
+        return { session, user, isNewUser }
+      }
+
+      // If the user is not signed in and it looks like a new account then we
+      // check there also isn't an user account already associated with the same
+      // email address as the one in the request.
+      const userByEmail = profile.email
+        ? await getUserByEmail(profile.email)
+        : null
+      if (userByEmail) {
+        // We don't trust user-provided email addresses, so we don't want to link accounts
+        // if the email address associated with the new account is already associated with
+        // an existing account.
+        throw new AccountNotLinked(
+          "Another account already exists with the same e-mail address",
+          { provider: account.provider }
+        )
+      } else {
+        // If the current user is not logged in and the profile isn't linked to any user
+        // accounts (by email or provider account id)...
+        //
+        // If no account matching the same [provider].id or .email exists, we can
+        // create a new account for the user, link it to the OAuth account and
+        // create a new session for them so they are signed in with it.
+        user = await createUser({ ...profile, emailVerified: null })
+      }
+      await events.createUser?.({ user })
+
+      await linkAccount({ ...account, userId: user.id })
+      await events.linkAccount?.({ user, account, profile })
+
+      session = useJwtSession
+        ? {}
+        : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
           expires: fromDate(options.session.maxAge),
         })
 
-    return { session, user, isNewUser }
+      return { session, user, isNewUser: true }
+    }
   }
 
   // If signing in with OAuth account, check to see if the account exists already
@@ -151,10 +232,10 @@ export async function handleLoginOrRegister(
     session = useJwtSession
       ? {}
       : await createSession({
-          sessionToken: generateSessionToken(),
-          userId: userByAccount.id,
-          expires: fromDate(options.session.maxAge),
-        })
+        sessionToken: generateSessionToken(),
+        userId: userByAccount.id,
+        expires: fromDate(options.session.maxAge),
+      })
 
     return { session, user: userByAccount, isNewUser }
   } else {
@@ -229,10 +310,10 @@ export async function handleLoginOrRegister(
     session = useJwtSession
       ? {}
       : await createSession({
-          sessionToken: generateSessionToken(),
-          userId: user.id,
-          expires: fromDate(options.session.maxAge),
-        })
+        sessionToken: generateSessionToken(),
+        userId: user.id,
+        expires: fromDate(options.session.maxAge),
+      })
 
     return { session, user, isNewUser: true }
   }

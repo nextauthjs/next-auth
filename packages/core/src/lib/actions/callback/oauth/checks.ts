@@ -279,19 +279,19 @@ export const webauthnChallenge = {
     )
     return { cookie }
   },
+
   /**
    * Returns challenge if present,
-   * and clears the container cookie afterwards.
    */
   async use(
+    options: InternalOptions<WebAuthnProviderType>,
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalOptions<WebAuthnProviderType>
-  ): Promise<WebAuthnChallengeCookie | undefined> {
+  ): Promise<WebAuthnChallengeCookie> {
     const challenge = cookies?.[options.cookies.webauthnChallenge.name]
 
     if (!challenge)
-      return
+      throw new InvalidCheck("Challenge cookie missing.")
 
     const value = await decode<CheckPayload>({
       ...options.jwt,
@@ -303,11 +303,12 @@ export const webauthnChallenge = {
       throw new InvalidCheck("Challenge value could not be parsed.")
 
     // Clear the pkce code verifier cookie after use
-    resCookies.push({
+    const cookie = {
       name: options.cookies.webauthnChallenge.name,
       value: "",
       options: { ...options.cookies.webauthnChallenge.options, maxAge: 0 },
-    })
+    }
+    resCookies.push(cookie)
 
     return JSON.parse(value.value) as WebAuthnChallengeCookie
   },

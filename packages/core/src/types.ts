@@ -79,6 +79,7 @@ import type {
 export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
+export type Awaited<T> = T extends Promise<infer U> ? U : T
 
 /**
  * Change the theme of the built-in pages.
@@ -574,6 +575,7 @@ export type CredentialDeviceType = "singleDevice" | "multiDevice"
  * @see https://www.w3.org/TR/webauthn/#authenticator
  */
 export interface Authenticator {
+  userId: string
   providerAccountId: string
   credentialID: Uint8Array
   credentialPublicKey: Uint8Array
@@ -612,5 +614,5 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * See also {@link OAuthConfigInternal.redirectProxyUrl}.
    */
   isOnRedirectProxy: boolean
-  experimental: Record<string, boolean>
+  experimental: NonNullable<AuthConfig['experimental']>
 }

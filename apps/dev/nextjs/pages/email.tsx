@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-use-before-define
 import * as React from "react"
 import { signIn, signOut, useSession } from "next-auth/react"
-
+export const runtime = "nodejs"
 export default function Page() {
   const [response, setResponse] =
     React.useState<Awaited<ReturnType<typeof signIn>>>()

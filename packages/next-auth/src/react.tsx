@@ -10,6 +10,7 @@
 "use client"
 
 import * as React from "react"
+import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import {
   apiBaseUrl,
   ClientSessionError,
@@ -24,6 +25,7 @@ import type {
   RedirectableProviderType,
 } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
+import type { WebAuthnOptionsResponseBody } from "@auth/core/lib/utils/webauthn-utils"
 import type {
   AuthClientConfig,
   ClientSafeProvider,
@@ -208,6 +210,35 @@ export async function getProviders() {
 }
 
 /**
+ * Fetch webauthn options from server and prompt user for authentication or registration.
+ * Returns either the completed WebAuthn response or an error request.
+ * 
+ * @param providerID provider ID
+ * @param options SignInOptions
+ * @returns WebAuthn response or error
+ */
+async function webAuthnOptions(providerID: string, options?: SignInOptions) {
+  const baseUrl = apiBaseUrl(__NEXTAUTH)
+
+  // @ts-expect-error
+  const params = new URLSearchParams(options)
+
+  const optionsResp = await fetch(`${baseUrl}/webauthn-options/${providerID}?${params}`)
+  if (!optionsResp.ok) {
+    return { error: optionsResp }
+  }
+  const optionsData: WebAuthnOptionsResponseBody = await optionsResp.json()
+
+  if (optionsData.action === "authenticate") {
+    const webAuthnResponse = await startAuthentication(optionsData.options)
+    return { data: webAuthnResponse, action: "authenticate"}
+  } else {
+    const webAuthnResponse = await startRegistration(optionsData.options)
+    return { data: webAuthnResponse, action: "register" }
+  }
+}
+
+/**
  * Initiate a signin flow or send the user to the signin page listing all possible providers.
  * Handles CSRF protection.
  */
@@ -243,11 +274,24 @@ export async function signIn<
 
   const isCredentials = providers[provider].type === "credentials"
   const isEmail = providers[provider].type === "email"
-  const isSupportingReturn = isCredentials || isEmail
+  const isWebAuthn = providers[provider].type === "webauthn"
+  const isSupportingReturn = isCredentials || isEmail || isWebAuthn
 
   const signInUrl = `${baseUrl}/${
-    isCredentials ? "callback" : "signin"
+    isCredentials || isWebAuthn ? "callback" : "signin"
   }/${provider}`
+
+  // Execute WebAuthn client flow if needed
+  const webAuthnBody: Record<string, unknown> = {}
+  if (isWebAuthn) {
+    const { data, error, action } = await webAuthnOptions(provider, options)
+    if (error) {
+      logger.error(new Error(await error.text()))
+      return
+    }
+    webAuthnBody.data = JSON.stringify(data)
+    webAuthnBody.action = action
+  }
 
   const csrfToken = await getCsrfToken()
   const res = await fetch(
@@ -259,7 +303,7 @@ export async function signIn<
         "X-Auth-Return-Redirect": "1",
       },
       // @ts-expect-error
-      body: new URLSearchParams({ ...options, csrfToken, callbackUrl }),
+      body: new URLSearchParams({ ...options, ...webAuthnBody, csrfToken, callbackUrl }),
     }
   )
 

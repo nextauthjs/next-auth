@@ -197,7 +197,7 @@ export interface AdapterUser extends User {
  */
 export interface AdapterAccount extends Account {
   userId: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email">
+  type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
 }
 
 /**
@@ -248,7 +248,24 @@ export interface VerificationToken {
 /**
  * An authenticator represents a credential authenticator assigned to a user.
  */
-export interface AdapterAuthenticator extends Authenticator { }
+export interface AdapterAuthenticator extends Omit<Authenticator, "credentialPublicKey" | "credentialID" | "transports" | "credentialDeviceType"> {
+  /**
+   * Base64 encoded credential ID.
+   */
+  credentialID: string
+  /**
+   * Base64 encoded credential public key.
+   */
+  credentialPublicKey: string
+  /**
+   * Concatenated transport flags.
+   */
+  transports?: string
+  /**
+   * Device type of the authenticator.
+   */
+  credentialDeviceType: string
+}
 
 /**
  * An adapter is an object with function properties (methods) that read and write data from a data source.
@@ -381,14 +398,47 @@ export interface Adapter {
     token: string
   }): Awaitable<VerificationToken | null>
   /**
+   * Get account by provider account id and provider.
+   * 
+   * If an account is not found, the adapter must return `null`.
+   */
+  getAccount?(
+    providerAccountId: AdapterAccount["providerAccountId"], provider: AdapterAccount["provider"]
+  ): Awaitable<AdapterAccount | null>
+  /**
+   * Returns an authenticator from its id.
+   * 
+   * If an authenticator is not found, the adapter must return `null`.
+   */
+  getAuthenticator?(
+    credentialID: AdapterAuthenticator['credentialID']
+  ): Awaitable<AdapterAuthenticator | null>
+  /**
+   * Create a new authenticator.
+   * 
+   * If the creation fails, the adapter must throw an error.
+   */
+  createAuthenticator?(
+    authenticator: AdapterAuthenticator
+  ): Awaitable<AdapterAuthenticator>
+  /**
    * Returns all authenticators from a user.
    *
    * If a user is not found, the adapter must return `null`.
    * If the retrieval fails for some other reason, the adapter must throw an error.
    */
   listAuthenticatorsByUserId?(
-    userId: string
+    userId: AdapterAuthenticator['userId']
   ): Awaitable<AdapterAuthenticator[] | null>
+  /**
+   * Updates an authenticator's counter.
+   * 
+   * If the update fails, the adapter must throw an error.
+   */
+  updateAuthenticatorCounter?(
+    credentialID: AdapterAuthenticator['credentialID'],
+    newCounter: AdapterAuthenticator['counter']
+  ): Awaitable<AdapterAuthenticator>
 }
 
 // For compatibility with older versions of NextAuth.js

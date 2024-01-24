@@ -88,6 +88,9 @@ importers:
       '@auth/fauna-adapter':
         specifier: workspace:*
         version: link:../../../packages/adapter-fauna
+      '@auth/memory-adapter':
+        specifier: workspace:*
+        version: link:../../../packages/adapter-memory
       '@auth/prisma-adapter':
         specifier: workspace:*
         version: link:../../../packages/adapter-prisma
@@ -100,6 +103,9 @@ importers:
       '@prisma/client':
         specifier: ^5
         version: 5.2.0(prisma@5.2.0)
+      '@simplewebauthn/browser':
+        specifier: v9.0.0
+        version: 9.0.0
       '@supabase/supabase-js':
         specifier: ^2.0.5
         version: 2.0.5
@@ -423,6 +429,12 @@ importers:
         specifier: ^8.10.0
         version: 8.11.2
 
+  packages/adapter-memory:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/adapter-mikro-orm:
     dependencies:
       '@auth/core':
@@ -614,6 +626,9 @@ importers:
       '@types/cookie':
         specifier: 0.6.0
         version: 0.6.0
+      cbor-x:
+        specifier: 1.5.2
+        version: 1.5.2
       cookie:
         specifier: 0.6.0
         version: 0.6.0
@@ -753,6 +768,9 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+      '@simplewebauthn/browser':
+        specifier: v9.0.0
+        version: 9.0.0
     devDependencies:
       '@types/react':
         specifier: 18.0.37
@@ -10008,6 +10026,12 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: true
 
+  /@simplewebauthn/browser@9.0.0:
+    resolution: {integrity: sha512-8eukKf8ZuZUUTSwp97VRYJqv1t7Vg2LKKfGY5Ir8EtXOZhUbGCAFmL4mxSatb5gj0ARqmcGjyUXM6s6nYJxDsQ==}
+    dependencies:
+      '@simplewebauthn/types': 9.0.0
+    dev: false
+
   /@simplewebauthn/server@9.0.0:
     resolution: {integrity: sha512-pm3UWhZrneBoSDQmtYTScZeOhcKbPch/zmMgfJZJY3sE1l0VAQsAKlIjoLGRrw2vXYSL7Eslhh0Qdb301IPxTQ==}
     engines: {node: '>=16.0.0'}
@@ -10019,7 +10043,7 @@ packages:
       '@peculiar/asn1-schema': 2.3.8
       '@peculiar/asn1-x509': 2.3.8
       '@simplewebauthn/types': 9.0.0
-      cbor-x: 1.5.8
+      cbor-x: 1.5.2
       cross-fetch: 4.0.0
     transitivePeerDependencies:
       - encoding
@@ -13977,8 +14001,8 @@ packages:
     dev: false
     optional: true
 
-  /cbor-x@1.5.8:
-    resolution: {integrity: sha512-gc3bHBsvG6GClCY6c0/iip+ghlqizkVp+TtaL927lwvP4VP9xBdi1HmqPR5uj/Mj/0TOlngMkIYa25wKg+VNrQ==}
+  /cbor-x@1.5.2:
+    resolution: {integrity: sha512-JArE6xcgj3eo13fpnShO42QFBUuXP2uG12RLeF2Nb+dJcETFYxkUa27gXQrRYp67Ahtaxyfbg+ihc62XTyQqsQ==}
     optionalDependencies:
       cbor-extract: 2.2.0
     dev: false
@@ -15490,6 +15514,18 @@ packages:
       ms: 2.1.2
     dev: true
 
+  /debug@4.3.4:
+    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.2
+    dev: true
+
   /debug@4.3.4(supports-color@5.5.0):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
@@ -15728,6 +15764,7 @@ packages:
   /detect-libc@2.0.2:
     resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
+    requiresBuild: true
 
   /detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
@@ -30769,7 +30806,7 @@ packages:
       acorn: 8.11.2
       acorn-walk: 8.2.0
       chai: 4.3.7
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4
       local-pkg: 0.4.2
       source-map: 0.6.1
       strip-literal: 1.0.0

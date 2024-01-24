@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-
+export const runtime = "nodejs"
 export default function Page() {
   const { status } = useSession({ required: true })
   const [content, setContent] = useState()
