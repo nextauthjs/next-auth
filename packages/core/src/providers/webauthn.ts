@@ -11,64 +11,42 @@ export type WebAuthnProviderType = "webauthn"
 // Validate that a string is a valid semver version number.
 type SemverString = `v${number}` | `v${number}.${number}` | `v${number}.${number}.${number}`
 function isSemverString(version: string): version is SemverString {
-    return /^v\d+(?:\.\d+){0,2}$/.test(version)
+  return /^v\d+(?:\.\d+){0,2}$/.test(version)
 }
 
 export const DEFAULT_WEBAUTHN_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.0"
 
 type RelayingParty = {
-    /** Relaying Party ID. Use the website's domain name. */
-    id: string
-    /** Relaying Party name. Use the website's name. */
-    name: string
-    /** Relaying Party origin. Use the website's origin. */
-    origin: string
-}
-
-export type UserInfo = {
-    /** User's website-specific unique ID. It is stored by the authenticator during registration.
-     * This ID:
-     * - Must be unique in the database.
-     * - Must not contain personally identifiable information.
-     * - Should be an opaque value.
-     * - Should be random or pseudorandom.
-     * - Must never change throughout the user's lifetime with the service.
-     */
-    userID: string
-    /** User's website-specific username (email, username, phone number, etc...).
-     * It is provided by the client during authentication to look up the user's credentials in the database.
-     * This value:
-     * - Must be unique in the database.
-     * - May contain personally identifiable information.
-     * - May change throughout the user's lifetime with the service.
-     */
-    userName: string
-    /** User's preferred display name. It's only used for display purposes.
-     * This value:
-     * - May contain personally identifiable information.
-     * - May change throughout the user's lifetime with the service.
-     * - May be the same as the user's username. (default behavior)
-     */
-    userDisplayName?: string
+  /** Relaying Party ID. Use the website's domain name. */
+  id: string
+  /** Relaying Party name. Use the website's name. */
+  name: string
+  /** Relaying Party origin. Use the website's origin. */
+  origin: string
 }
 
 /**
  * Function that returns the user info that the authenticator will use during registration and authentication.
  * 
- * It accepts the provider options, the request object, and the session user and returns the user info.
- * If the session user is defined, the function must return the session user info and `exists` must be `true`.
- * If the request contains an existing user's data (e.g. email address), the function must return the existing user info and `exists` must be `true`.
- * If the request contains enough information to create a new user, the function must return a new user info and `exists` must be `false`.
- * If the request does not contain enough information to create a new user, the function must throw some kind of `AuthError`
+ * - It accepts the provider options, the request object, and the session user and returns the user info.
+ * - If the session user is defined, the function must return the session user info and `exists` must be `true`.
+ * - If the request contains an existing user's data (e.g. email address), the function must return the existing user info and `exists` must be `true`.
+ * - If the request contains enough information to create a new user, the function must return a new user info and `exists` must be `false`.
+ * - If the request does not contain enough information to create a new user, the function must throw some kind of `AuthError`
  * 
  * It should not have any side effects (i.e. it should not modify the database).
+ * 
+ * During passkey creation:
+ *  - The passkey's user ID will be user.id
+ *  - The passkey's user name will be user.email
+ *  - The passkey's user display name will be user.name
  */
-export type GetUserInfo<TProviderType = ProviderType> = (
-    options: InternalOptions<TProviderType>,
-    request: RequestInternal,
-    sessionUser: Pick<AdapterUser, "name" | "id" | "email"> | null
-) => Promise<{ userInfo: UserInfo; exists: boolean }>
+export type GetUserInfo = (
+  options: InternalOptions<WebAuthnProviderType>,
+  request: RequestInternal,
+  sessionUser: AdapterUser | null
+) => Promise<{ user: AdapterUser; exists: boolean }>
 
 
 type ConfigurableAuthenticationOptions = Omit<GenerateAuthenticationOptionsOpts, "rpID" | "allowCredentials" | "challenge">
@@ -77,50 +55,51 @@ type ConfigurableVerifyAuthenticationOptions = Omit<VerifyAuthenticationResponse
 type ConfigurableVerifyRegistrationOptions = Omit<VerifyRegistrationResponseOpts, "expectedChallenge" | "expectedOrigin" | "expectedRPID" | "response">
 
 export interface WebAuthnConfig extends CommonProviderOptions {
-    type: WebAuthnProviderType
-    /** Relaying party (RP) configuration */
-    relayingParty: RelayingParty
-    /**
-     * Enable conditional UI.
-     * 
-     * NOTE: Only one provider can have this option enabled at a time. Defaults to `true`.
-     */
-    enableConditionalUI: boolean
-    /**
-     * Version of SimpleWebAuthn browser script to load in the sign in page.
-     * 
-     * This is only loaded if the provider has conditional UI enabled. If set to false, it won't load any script.
-     * Defaults to `v9.0.0`.
-     */
-    simpleWebAuthnBrowserVersion: SemverString | false
-    /** Form fields displayed in the default Passkey sign in/up form.
-     * These are not validated or enforced beyond the default Auth.js authentication page.
-     * 
-     * By default it displays an email field.
-     */
-    formFields: Record<string, CredentialInput>
-    /**
-     * Authentication options that are passed to @simplewebauthn during authentication.
-     */
-    authenticationOptions?: Partial<ConfigurableAuthenticationOptions>
-    /**
-     * Registration options that are passed to @simplewebauthn during registration.
-     */
-    registrationOptions?: Partial<ConfigurableRegistrationOptions>
-    /**
-     * Verify Authentication options that are passed to @simplewebauthn during authentication.
-     */
-    verifyAuthenticationOptions?: Partial<ConfigurableVerifyAuthenticationOptions>
-    /**
-     * Verify Registration options that are passed to @simplewebauthn during registration.
-     */
-    verifyRegistrationOptions?: Partial<ConfigurableVerifyRegistrationOptions>
-    /** Function called during registration to get user info.
-     * 
-     * By default, it uses the email address to look for the user in the database.
-     * If it doesn't find the user, it will create a random user ID and use the email address as the user name and user display name.
-     */
-    getUserInfo: GetUserInfo<WebAuthnProviderType>
+  type: WebAuthnProviderType
+  /** Relaying party (RP) configuration */
+  relayingParty: RelayingParty
+  /**
+   * Enable conditional UI.
+   * 
+   * NOTE: Only one provider can have this option enabled at a time. Defaults to `true`.
+   */
+  enableConditionalUI: boolean
+  /**
+   * Version of SimpleWebAuthn browser script to load in the sign in page.
+   * 
+   * This is only loaded if the provider has conditional UI enabled. If set to false, it won't load any script.
+   * Defaults to `v9.0.0`.
+   */
+  simpleWebAuthnBrowserVersion: SemverString | false
+  /** Form fields displayed in the default Passkey sign in/up form.
+   * These are not validated or enforced beyond the default Auth.js authentication page.
+   * 
+   * By default it displays an email field.
+   */
+  formFields: Record<string, CredentialInput>
+  /**
+   * Authentication options that are passed to @simplewebauthn during authentication.
+   */
+  authenticationOptions?: Partial<ConfigurableAuthenticationOptions>
+  /**
+   * Registration options that are passed to @simplewebauthn during registration.
+   */
+  registrationOptions?: Partial<ConfigurableRegistrationOptions>
+  /**
+   * Verify Authentication options that are passed to @simplewebauthn during authentication.
+   */
+  verifyAuthenticationOptions?: Partial<ConfigurableVerifyAuthenticationOptions>
+  /**
+   * Verify Registration options that are passed to @simplewebauthn during registration.
+   */
+  verifyRegistrationOptions?: Partial<ConfigurableVerifyRegistrationOptions>
+  /**
+   * Function called during registration to get user info.
+   * 
+   * By default, it uses the email address to look for the user in the database.
+   * If it doesn't find the user, it will create a random user ID and use the email address as the user name and user display name.
+   */
+  getUserInfo: GetUserInfo
 }
 
 export type WebAuthnInputConfig = Pick<WebAuthnConfig, "relayingParty"> & Partial<WebAuthnConfig>
@@ -165,29 +144,29 @@ export type WebAuthnInputConfig = Pick<WebAuthnConfig, "relayingParty"> & Partia
  * :::
  */
 export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
-    // Make sure simpleWebAuthnBrowserVersion is a valid version number.
-    if (config.simpleWebAuthnBrowserVersion) {
-        if (!isSemverString(config.simpleWebAuthnBrowserVersion)) {
-            throw new Error("simpleWebAuthnBrowserVersion must be a valid semver version number.")
-        }
+  // Make sure simpleWebAuthnBrowserVersion is a valid version number.
+  if (config.simpleWebAuthnBrowserVersion) {
+    if (!isSemverString(config.simpleWebAuthnBrowserVersion)) {
+      throw new Error("simpleWebAuthnBrowserVersion must be a valid semver version number.")
     }
+  }
 
-    return {
-        id: "webauthn",
-        name: "WebAuthn",
-        enableConditionalUI: true,
-        authenticationOptions: {
-            timeout: DEFAULT_WEBAUTHN_TIMEOUT,
-        },
-        registrationOptions: {
-            timeout: DEFAULT_WEBAUTHN_TIMEOUT,
-        },
-        formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
-        getUserInfo,
-        simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
-        ...config,
-        type: "webauthn",
-    }
+  return {
+    id: "webauthn",
+    name: "WebAuthn",
+    enableConditionalUI: true,
+    authenticationOptions: {
+      timeout: DEFAULT_WEBAUTHN_TIMEOUT,
+    },
+    registrationOptions: {
+      timeout: DEFAULT_WEBAUTHN_TIMEOUT,
+    },
+    formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
+    getUserInfo,
+    simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
+    ...config,
+    type: "webauthn",
+  }
 }
 
 /**
@@ -203,54 +182,47 @@ export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
  * @throws {MissingAdapter} If the adapter is missing.
  * @throws {EmailSignInError} If the email address is not provided.
  */
-const getUserInfo: GetUserInfo<WebAuthnProviderType> = async (options, request, sessionUser) => {
-    const { adapter } = options
-    if (!adapter)
-        throw new MissingAdapter(
-            "Adapter not implemented."
-        )
+const getUserInfo: GetUserInfo = async (options, request, sessionUser) => {
+  const { adapter } = options
+  if (!adapter)
+    throw new MissingAdapter(
+      "Adapter not implemented."
+    )
 
-    let dbUser = sessionUser ?? null
+  let dbUser = sessionUser ?? null
 
-    // If there's no session user, try to get the user from the request.
-    if (!dbUser) {
-        // Get email address and display name from the query.
-        const { query, body, method } = request
-        const email = (method === "POST" ? body?.email : query?.email) as unknown
-        const displayName = (method === "POST" ? body?.name : query?.name) as unknown
-
-        // If email is not provided, raise an error.
-        if (!email || typeof email !== "string")
-            throw new EmailSignInError("Email address is required.")
-
-        // If displayName is defined but not a string, raise an error.
-        if (typeof displayName !== "undefined" && typeof displayName !== "string")
-            throw new EmailSignInError("Display name must be omitted or be a string.")
-
-
-        dbUser = await adapter.getUserByEmail(email)
-
-        // If the user does not exist, create a new ID and use the provided info.
-        if (!dbUser) {
-            return {
-                userInfo: {
-                    userID: randomString(16), // 32 byte string
-                    userName: email,
-                    userDisplayName: displayName ?? email, // Use email as display name by default.
-                },
-                exists: false,
-            }
-        }
-    }
-
+  if (dbUser) {
     return {
-        userInfo: {
-            userID: dbUser.id,
-            userName: dbUser.email,
-            userDisplayName: dbUser.name ?? undefined, // If the existing user has no name, don't set it.
-        },
-        exists: true,
+      user: dbUser,
+      exists: true,
     }
+  }
+
+  // Get email address from the query.
+  const { query, body, method } = request
+  const email = (method === "POST" ? body?.email : query?.email) as unknown
+
+  // If email is not provided, raise an error.
+  if (!email || typeof email !== "string")
+    throw new EmailSignInError("Email address is required.")
+
+  dbUser = await adapter.getUserByEmail(email)
+  if (dbUser) {
+    return {
+      user: dbUser,
+      exists: true,
+    }
+  }
+
+  // If the user does not exist, create a new ID and use the provided info.
+  return {
+    user: {
+      email,
+      id: randomString(16), // 32 byte string
+      emailVerified: null,
+    },
+    exists: false,
+  }
 }
 
 /**
@@ -259,10 +231,10 @@ const getUserInfo: GetUserInfo<WebAuthnProviderType> = async (options, request, 
  * @returns The script tag to load the SimpleWebAuthn browser script, or an empty string if the provider has no conditional UI enabled.
  */
 export function getSimpleWebAuthnBrowserScriptTag(config: WebAuthnConfig) {
-    const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
+  const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
 
-    if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
-        return ""
+  if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
+    return ""
 
-    return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.es5.umd.min.js" crossorigin="anonymous"></script>`
+  return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.es5.umd.min.js" crossorigin="anonymous"></script>`
 }

@@ -11,7 +11,7 @@ import type {
   RegistrationResponseJSON,
 } from "@simplewebauthn/server/script/deps"
 import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterUser } from "../../adapters";
-import type { GetUserInfo, UserInfo } from "../../providers/webauthn";
+import type { GetUserInfo } from "../../providers/webauthn";
 import { getLoggedInUser } from "./session";
 
 export type WebAuthnRegister = "register"
@@ -46,7 +46,7 @@ export function decideWebAuthnOptions(
   loggedInUser: SessionUser | null,
   userInfoResponse: Awaited<ReturnType<GetUserInfo> | null>
 ): WebAuthnAction | null {
-  const { userInfo, exists } = userInfoResponse ?? {}
+  const { user, exists } = userInfoResponse ?? {}
 
   const loggedIn = !!loggedInUser
 
@@ -63,7 +63,7 @@ export function decideWebAuthnOptions(
        * - The user is logged in, meaning the user wants to register a new authenticator.
        * - The user is not logged in and provided user info that does NOT exist, meaning the user wants to register a new account.
        */
-      if (userInfo && loggedIn === exists)
+      if (user && loggedIn === exists)
         return "register"
 
       break
@@ -78,7 +78,7 @@ export function decideWebAuthnOptions(
        * - Finally, if the user info provided is of a non-existing user, the desired action is registration.
        */
       if (!loggedIn) {
-        if (userInfo) {
+        if (user) {
           if (exists) {
             return "authenticate"
           } else {
@@ -101,19 +101,19 @@ export function decideWebAuthnOptions(
  * Retrieves the registration response for WebAuthn options request.
  * 
  * @param options - The internal options for WebAuthn.
- * @param userInfo - The user information.
+ * @param user - The user information.
  * @param resCookies - Optional cookies to be included in the response.
  * @returns A promise that resolves to the WebAuthnOptionsResponse.
  */
 export async function getRegistrationResponse(
   options: InternalOptionsWebAuthn,
-  userInfo: UserInfo,
+  user: AdapterUser,
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get registration options
-  const regOptions = await getRegistrationOptions(options, userInfo)
+  const regOptions = await getRegistrationOptions(options, user)
   // Get signed cookie
-  const { cookie } = await webauthnChallenge.create(options, regOptions.challenge, userInfo.userID)
+  const { cookie } = await webauthnChallenge.create(options, regOptions.challenge, user.id)
 
   return {
     status: 200,
@@ -132,17 +132,17 @@ export async function getRegistrationResponse(
  * Retrieves the authentication response for WebAuthn options request.
  * 
  * @param options - The internal options for WebAuthn.
- * @param userInfo - Optional user information.
+ * @param user - Optional user information.
  * @param resCookies - Optional array of cookies to be included in the response.
  * @returns A promise that resolves to a WebAuthnOptionsResponse object.
  */
 export async function getAuthenticationResponse(
   options: InternalOptionsWebAuthn,
-  userInfo?: UserInfo,
+  user?: AdapterUser,
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get authentication options
-  const authOptions = await getAuthenticationOptions(options, userInfo)
+  const authOptions = await getAuthenticationOptions(options, user)
   // Get signed cookie
   const { cookie } = await webauthnChallenge.create(options, authOptions.challenge)
 
@@ -256,7 +256,7 @@ export async function verifyRegister(
 
   // Get the current user's info
   const sessionUser = await getLoggedInUser(options, sessionStore)
-  const { userInfo, exists } = await provider.getUserInfo(options, request, sessionUser)
+  const { user, exists } = await provider.getUserInfo(options, request, sessionUser)
 
   // Get challenge from request cookies
   const { challenge: expectedChallenge, userID } = await webauthnChallenge.use(options, request.cookies, resCookies)
@@ -266,7 +266,7 @@ export async function verifyRegister(
 
   // If the user does not exist, make sure to use the challenge userID
   if (!exists) {
-    userInfo.userID = userID
+    user.id = userID
   }
 
   // Verify the response
@@ -286,14 +286,6 @@ export async function verifyRegister(
   // Make sure the response was verified
   if (!verification.verified || !verification.registrationInfo) {
     throw new WebAuthnVerificationError("WebAuthn registration response could not be verified.")
-  }
-
-  // Build user
-  const user: AdapterUser = {
-    id: userInfo.userID,
-    email: userInfo.userName,
-    name: userInfo.userDisplayName,
-    emailVerified: null,
   }
 
   // Build a new account
@@ -318,8 +310,8 @@ export async function verifyRegister(
 
   // Return created stuff
   return {
-    account,
     user,
+    account,
     authenticator,
   }
 }
@@ -332,11 +324,11 @@ export async function verifyRegister(
  * @param userInfo - The user information.
  * @returns The authentication options.
  */
-async function getAuthenticationOptions(options: InternalOptionsWebAuthn, userInfo?: UserInfo) {
+async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?: AdapterUser) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = userInfo ? await adapter.listAuthenticatorsByUserId(userInfo.userID) : null
+  const authenticators = user ? await adapter.listAuthenticatorsByUserId(user.id) : null
 
   // Return the authentication options.
   return await generateAuthenticationOptions({
@@ -355,19 +347,21 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, userIn
  * Generates WebAuthn registration options.
  * 
  * @param options - The internal options for WebAuthn.
- * @param userInfo - The user information.
+ * @param user - The user information.
  * @returns The registration options.
  */
-async function getRegistrationOptions(options: InternalOptionsWebAuthn, userInfo: UserInfo) {
+async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: AdapterUser) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = await adapter.listAuthenticatorsByUserId(userInfo.userID)
+  const authenticators = await adapter.listAuthenticatorsByUserId(user.id)
 
   // Return the registration options.
   return await generateRegistrationOptions({
     ...provider.registrationOptions,
-    ...userInfo,
+    userID: user.id,
+    userName: user.email,
+    userDisplayName: user.name ?? undefined,
     rpID: provider.relayingParty.id,
     rpName: provider.relayingParty.name,
     excludeCredentials: authenticators?.map((a) => ({

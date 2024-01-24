@@ -9,7 +9,7 @@ import { SessionStore } from "./cookie";
 export async function getLoggedInUser(
   options: InternalOptions,
   sessionStore: SessionStore
-): Promise<Pick<AdapterUser, "name" | "id" | "email"> | null> {
+): Promise<AdapterUser | null> {
   const {
     adapter,
     jwt,
@@ -26,9 +26,9 @@ export async function getLoggedInUser(
       const salt = options.cookies.sessionToken.name
       const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
 
-      if (!payload) throw new Error("Invalid JWT")
+      if (!payload || !payload.sub) throw new Error("Invalid JWT")
 
-      return { name: payload.name, email: payload.email ?? "", id: payload.sub ?? "" }
+      return adapter?.getUser(payload.sub) ?? null
     } catch (e) {
       logger.error(new JWTSessionError(e as Error))
     }

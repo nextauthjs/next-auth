@@ -48,9 +48,9 @@ export async function webAuthnOptions(
 
   switch (decision) {
     case "authenticate":
-      return getAuthenticationResponse(narrowOptions, getUserInfoResponse?.userInfo, cookies)
+      return getAuthenticationResponse(narrowOptions, getUserInfoResponse?.user, cookies)
     case "register":
-      return getRegistrationResponse(narrowOptions, getUserInfoResponse!.userInfo, cookies)
+      return getRegistrationResponse(narrowOptions, getUserInfoResponse!.user, cookies)
     default:
       return {
         status: 400,
