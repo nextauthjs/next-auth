@@ -339,13 +339,15 @@ export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
+    const ID = finalProvider.id.toUpperCase()
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      const ID = finalProvider.id.toUpperCase()
       finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
       if (finalProvider.type === "oidc") {
         finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
       }
+    } else if (finalProvider.type === "email") {
+      finalProvider.apiKey ??= envObject[`AUTH_${ID}_KEY`]
     }
     return finalProvider
   })
