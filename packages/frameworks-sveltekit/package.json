@@ -42,8 +42,8 @@
     "svelte": "^4.0.0",
     "svelte-check": "^3.4.3",
     "tslib": "^2.4.1",
-    "vite": "^5.0.0",
-    "vitest": "^1.0.0"
+    "vite": "^5.0.12",
+    "vitest": "^1.2.1"
   },
   "dependencies": {
     "@auth/core": "workspace:*",
@@ -69,6 +69,9 @@
     "./client": {
       "types": "./client.d.ts",
       "import": "./client.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
