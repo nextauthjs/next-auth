@@ -587,4 +587,5 @@ export interface InternalOptions<TProviderType = ProviderType> {
    */
   isOnRedirectProxy: boolean
   experimental: Record<string, boolean>
+  basePath: string
 }

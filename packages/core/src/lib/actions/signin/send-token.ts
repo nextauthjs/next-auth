@@ -51,11 +51,13 @@ export async function sendToken(
 
   const secret = provider.secret ?? options.secret
 
+  const baseUrl = new URL(options.basePath, options.url.origin)
+
   const sendRequest = provider.sendVerificationRequest({
     identifier: email,
     token,
     expires,
-    url: `${url}/callback/${provider.id}?${new URLSearchParams({
+    url: `${baseUrl}/callback/${provider.id}?${new URLSearchParams({
       callbackUrl,
       token,
       email,
@@ -74,7 +76,7 @@ export async function sendToken(
   await Promise.all([sendRequest, createToken])
 
   return {
-    redirect: `${url}/verify-request?${new URLSearchParams({
+    redirect: `${baseUrl}/verify-request?${new URLSearchParams({
       provider: provider.id,
       type: provider.type,
     })}`,
