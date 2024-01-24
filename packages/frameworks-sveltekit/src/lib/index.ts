@@ -483,6 +483,7 @@ export function createActionURL(
   }
   const host = h.get("x-forwarded-host") ?? h.get("host")
   const protocol =
+    // REVIEW: Remove dev if SvelteKit support https in dev 
     h.get("x-forwarded-proto") === "http" || dev ? "http" : "https"
   // @ts-expect-error `basePath` value is default'ed to "/auth" in `setEnvDefaults`
   const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)

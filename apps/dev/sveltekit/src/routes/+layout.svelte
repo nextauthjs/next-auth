@@ -20,7 +20,7 @@
                 $page.data.session.user?.name}</strong
             >
           </span>
-          <a href="/auth/signout" class="button">Sign out</a>
+          <a href="/api/signout" class="button">Sign out</a>
         {:else}
           <span class="notSignedInText">You are not signed in</span>
           <a href="/auth/signin" class="buttonPrimary">Sign in</a>
@@ -31,6 +31,7 @@
       <ul class="navItems">
         <li class="navItem"><a href="/">Home</a></li>
         <li class="navItem"><a href="/protected">Protected</a></li>
+        <li class="navItem"><a href="/protected-ssr-login">Protected with Auto login</a></li>
       </ul>
     </nav>
   </header>
