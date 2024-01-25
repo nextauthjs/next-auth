@@ -39,7 +39,7 @@
     },
     {
       "source": "/schemas/adapters",
-      "destination": "/adapters/overview",
+      "destination": "/getting-started/adapters",
       "permanent": true
     },
     {
@@ -64,8 +64,28 @@
     },
     {
       "source": "/",
+      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/nextjs"
+    },
+    {
+      "source": "/",
       "has": [{ "type": "host", "value": "solid-start.authjs.dev" }],
       "destination": "https://authjs.dev/reference/solid-start"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "express.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/express"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/nextjs"
+    },
+    {
+      "source": "/v5",
+      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
+      "destination": "https://authjs.dev/guides/upgrade-to-v5"
     },
     {
       "source": "/:path(.*)",
@@ -80,7 +100,7 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/adapters"
+      "destination": "https://authjs.dev/getting-started/adapters"
     },
     {
       "source": "/:path(.*)",
@@ -88,9 +108,24 @@
       "destination": "https://authjs.dev/reference/adapter/:path*"
     },
     {
-      "source": "/:path",
+      "source": "/",
       "has": [{ "type": "host", "value": "providers.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/core/providers_:path.default"
+      "destination": "https://authjs.dev/getting-started/providers"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "providers.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/core/providers/:path"
+    },
+    {
+      "source": "/getting-started/upgrade-to-v4",
+      "destination": "https://next-auth.js.org/getting-started/upgrade-v4",
+      "permanent": true
+    },
+    {
+      "source": "/reference/core/providers_:slug(.*)",
+      "destination": "/reference/core/providers/:slug",
+      "permanent": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@auth/pouchdb-adapter",
-  "version": "1.0.0",
+  "version": "1.0.14",
   "description": "PouchDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -45,15 +45,12 @@
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
     "@types/pouchdb": "^6.4.0",
-    "jest": "^27.4.3",
     "pouchdb": "^8.0.1",
     "pouchdb-adapter-memory": "^8.0.1",
     "pouchdb-find": "^8.0.1"
   },
   "jest": {
-    "preset": "@auth/adapter-test/jest"
+    "preset": "utils/adapter"
   }
 }

@@ -1,5 +1,4 @@
-import "isomorphic-fetch"
-import { runBasicTests } from "@auth/adapter-test"
+import { runBasicTests } from "utils/adapter"
 import "dotenv/config"
 import { XataClient } from "../src/xata"
 import { XataAdapter } from "../src"

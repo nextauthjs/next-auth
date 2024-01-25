@@ -7,6 +7,7 @@ import {
   BaseSQLiteDatabase,
   SQLiteTableFn,
 } from "drizzle-orm/sqlite-core"
+import { stripUndefined } from "./utils"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
@@ -74,80 +75,70 @@ export function SQLiteDrizzleAdapter(
     createTables(tableFn)
 
   return {
-    createUser(data) {
-      return client
+    async createUser(data) {
+      return await client
         .insert(users)
         .values({ ...data, id: crypto.randomUUID() })
         .returning()
         .get()
     },
-    getUser(data) {
-      return client.select().from(users).where(eq(users.id, data)).get() ?? null
+    async getUser(data) {
+      const result = await client
+        .select()
+        .from(users)
+        .where(eq(users.id, data))
+        .get()
+      return result ?? null
     },
-    getUserByEmail(data) {
-      return (
-        client.select().from(users).where(eq(users.email, data)).get() ?? null
-      )
+    async getUserByEmail(data) {
+      const result = await client
+        .select()
+        .from(users)
+        .where(eq(users.email, data))
+        .get()
+      return result ?? null
     },
     createSession(data) {
       return client.insert(sessions).values(data).returning().get()
     },
-    getSessionAndUser(data) {
-      return (
-        client
-          .select({
-            session: sessions,
-            user: users,
-          })
-          .from(sessions)
-          .where(eq(sessions.sessionToken, data))
-          .innerJoin(users, eq(users.id, sessions.userId))
-          .get() ?? null
-      )
+    async getSessionAndUser(data) {
+      const result = await client
+        .select({ session: sessions, user: users })
+        .from(sessions)
+        .where(eq(sessions.sessionToken, data))
+        .innerJoin(users, eq(users.id, sessions.userId))
+        .get()
+      return result ?? null
     },
-    updateUser(data) {
+    async updateUser(data) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      return client
+      const result = await client
         .update(users)
         .set(data)
         .where(eq(users.id, data.id))
         .returning()
         .get()
+      return result ?? null
     },
-    updateSession(data) {
-      return client
+    async updateSession(data) {
+      const result = await client
         .update(sessions)
         .set(data)
         .where(eq(sessions.sessionToken, data.sessionToken))
         .returning()
         .get()
+      return result ?? null
     },
-    linkAccount(rawAccount) {
-      const updatedAccount = client
-        .insert(accounts)
-        .values(rawAccount)
-        .returning()
-        .get()
-
-      const account: AdapterAccount = {
-        ...updatedAccount,
-        type: updatedAccount.type,
-        access_token: updatedAccount.access_token ?? undefined,
-        token_type: updatedAccount.token_type ?? undefined,
-        id_token: updatedAccount.id_token ?? undefined,
-        refresh_token: updatedAccount.refresh_token ?? undefined,
-        scope: updatedAccount.scope ?? undefined,
-        expires_at: updatedAccount.expires_at ?? undefined,
-        session_state: updatedAccount.session_state ?? undefined,
-      }
-
-      return account
+    async linkAccount(rawAccount) {
+      return stripUndefined(
+        await client.insert(accounts).values(rawAccount).returning().get()
+      )
     },
-    getUserByAccount(account) {
-      const results = client
+    async getUserByAccount(account) {
+      const results = await client
         .select()
         .from(accounts)
         .leftJoin(users, eq(users.id, accounts.userId))
@@ -159,43 +150,54 @@ export function SQLiteDrizzleAdapter(
         )
         .get()
 
-      return results?.user ?? null
+      if (!results) {
+        return null
+      }
+      return Promise.resolve(results).then((results) => results.user)
     },
-    deleteSession(sessionToken) {
-      return (
-        client
-          .delete(sessions)
-          .where(eq(sessions.sessionToken, sessionToken))
-          .returning()
-          .get() ?? null
-      )
+    async deleteSession(sessionToken) {
+      const result = await client
+        .delete(sessions)
+        .where(eq(sessions.sessionToken, sessionToken))
+        .returning()
+        .get()
+      return result ?? null
     },
-    createVerificationToken(token) {
-      return client.insert(verificationTokens).values(token).returning().get()
+    async createVerificationToken(token) {
+      const result = await client
+        .insert(verificationTokens)
+        .values(token)
+        .returning()
+        .get()
+      return result ?? null
     },
-    useVerificationToken(token) {
+    async useVerificationToken(token) {
       try {
-        return (
-          client
-            .delete(verificationTokens)
-            .where(
-              and(
-                eq(verificationTokens.identifier, token.identifier),
-                eq(verificationTokens.token, token.token)
-              )
+        const result = await client
+          .delete(verificationTokens)
+          .where(
+            and(
+              eq(verificationTokens.identifier, token.identifier),
+              eq(verificationTokens.token, token.token)
             )
-            .returning()
-            .get() ?? null
-        )
+          )
+          .returning()
+          .get()
+        return result ?? null
       } catch (err) {
         throw new Error("No verification token found.")
       }
     },
-    deleteUser(id) {
-      return client.delete(users).where(eq(users.id, id)).returning().get()
+    async deleteUser(id) {
+      const result = await client
+        .delete(users)
+        .where(eq(users.id, id))
+        .returning()
+        .get()
+      return result ?? null
     },
-    unlinkAccount(account) {
-      client
+    async unlinkAccount(account) {
+      await client
         .delete(accounts)
         .where(
           and(
@@ -204,8 +206,6 @@ export function SQLiteDrizzleAdapter(
           )
         )
         .run()
-
-      return undefined
     },
   }
 }

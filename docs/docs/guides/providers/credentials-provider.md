@@ -7,35 +7,44 @@ The Credentials provider allows you to handle signing in with arbitrary credenti
 
 It is intended to support use cases where you have an existing system you need to authenticate users against.
 
-It comes with the constraint that users authenticated in this manner are not persisted in the database, and consequently that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
-
-:::warning
-The functionality provided for credentials-based authentication is intentionally limited to discourage the use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
-:::
+It comes with the constraint that users authenticated in this manner are not persisted in the database by default, and consequently, that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
 
 ## Options
 
 The **Credentials Provider** comes with a set of default options:
 
-- [Credentials Provider options](/reference/core/providers_credentials)
+- [Credentials Provider options](/reference/core/providers/credentials)
 
 You can override any of the options to suit your own use case.
 
 ## Example - Username / Password
 
-The Credentials provider is specified like other providers, except that you need to define a handler for `authorize()` that accepts credentials submitted via HTTP POST as input and returns either:
+:::caution
+The functionality provided for credentials-based authentication is intentionally limited to discourage the use of passwords due to the inherent security risks of the username-password model.
 
-1. A `user` object, which indicates the credentials are valid.
+OAuth providers spend significant amounts of money, time, and engineering effort to build:
 
-If you return an object it will be persisted to the JSON Web Token and the user will be signed in, unless a custom `signIn()` callback is configured that subsequently rejects it.
+- abuse detection (bot-protection, rate-limiting)
+- password management (password reset, credential stuffing, rotation)
+- data security (encryption/salting, strength validation)
 
-2. If you return `null` then an error will be displayed advising the user to check their details.
+and much more for authentication solutions. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
 
-3. If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
+If you'd still like to build password-based authentication for your application despite these risks, Auth.js gives you full control to do so.
 
-The Credentials provider's `authorize()` method also provides the request object as the second parameter (see the example below).
+:::
 
-```js title="pages/api/auth/[...nextauth].js"
+The Credentials provider is specified like other providers, except that you need to define a handler for `authorize()` that accepts credentials submitted via HTTP POST as input and returns a `user` object, which indicates the credentials are valid.
+
+If you return an object it will be persisted to the JSON Web Token and the user will be signed in (unless a custom `signIn()` callback is configured that subsequently rejects it).
+
+- If you return `null` then an error will be displayed advising the user to check their details.
+
+- If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
+
+The Credentials provider's `authorize()` method also provides the request object as the second parameter. Here's an example that handles these concerns.
+
+```js title="auth.js"
 import CredentialsProvider from "next-auth/providers/credentials";
 ...
 providers: [
@@ -69,7 +78,50 @@ providers: [
 ...
 ```
 
-See the [callbacks documentation](/reference/configuration/auth-config#callbacks) for more information on how to interact with the token.
+See the [callbacks documentation](/reference/core#authconfig#callbacks) for more information on how to interact with the token. For example, you can add additional information to the token by returning an object from the `jwt()` callback:
+
+```js
+callbacks: {
+  async jwt({ token, user, account, profile, isNewUser }) {
+    if (user) {
+      token.id = user.id
+    }
+    return token
+  }
+}
+```
+
+### Using a database
+
+You can also use the `authorize()` callback to interact with your database to regain some of the functionality from [more powerful providers](reference/core/providers):
+
+```js
+...
+providers: [
+  CredentialsProvider({
+    ...
+    async authorize(credentials, req) {
+      let user = null
+
+      const saltedPasswordToCheck = passwordToSalt(credentials.password)
+      user = await getUserFromDb(credentials.username, credentials.password)
+
+      if (!user) {
+        const saltedPassword = passwordToSalt(credentials.password)
+        user = await addUserToDb(credentials.username, saltedPassword)
+      }
+
+      if (!user) {
+        throw new Error("User was not found and could not be created.")
+      }
+
+      return user
+
+    }
+  })
+]
+...
+```
 
 ## Example - Web3 / Signin With Ethereum
 
@@ -78,8 +130,8 @@ The credentials provider can also be used to integrate with a service like [Sign
 For more information, check out the links below:
 
 - [Tutorial](https://docs.login.xyz/integrations/Auth.js)
-- [Example App Repo](https://github.com/spruceid/siwe-next-auth-example).
-- [Example App Demo](https://siwe-next-auth-example2.vercel.app/).
+- [Example App Repo](https://github.com/spruceid/siwe-next-auth-example)
+- [Example App Demo](https://siwe-next-auth-example2.vercel.app/)
 
 ## Multiple providers
 

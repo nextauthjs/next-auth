@@ -32,7 +32,7 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- * 
+ *
  * For OAuth 2.0 Flow:
  *```js
  * import Auth from "@auth/core"
@@ -40,27 +40,24 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BoxyHQ({ 
+ *   providers: [BoxyHQ({
  *    authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
- *    clientId: BOXYHQ_SAML_CLIENT_ID, 
+ *    clientId: BOXYHQ_SAML_CLIENT_ID,
  *    clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
  *    issuer: BOXYHQ_SAML_ISSUER
  *   })],
  * })
  * ```
  * For OIDC Flow:
- * 
+ *
  *```js
  * import Auth from "@auth/core"
  * import BoxyHQ from "@auth/core/providers/boxyhq-saml"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BoxyHQ({ 
- *    id: "boxyhq-saml-oidc",
- *    wellKnown: `http://localhost:5225/.well-known/openid-configuration`,
- *    authorization: { params: { scope: "openid email" } },
- *    clientId: BOXYHQ_SAML_CLIENT_ID, 
+ *   providers: [BoxyHQ({
+ *    clientId: BOXYHQ_SAML_CLIENT_ID,
  *    clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
  *    issuer: BOXYHQ_SAML_ISSUER
  *   })],
