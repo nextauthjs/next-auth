@@ -1,8 +1,10 @@
-import { randomUUID, runBasicTests } from "utils/adapter"
+import { runBasicTests } from "utils/adapter"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
 import { ObjectId } from "mongodb"
-const prisma = new PrismaClient()
+import { withAccelerate } from "@prisma/extension-accelerate"
+
+const prisma = new PrismaClient().$extends(withAccelerate())
 
 runBasicTests({
   adapter: PrismaAdapter(prisma),

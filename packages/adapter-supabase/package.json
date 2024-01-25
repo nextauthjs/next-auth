@@ -1,6 +1,6 @@
 {
   "name": "@auth/supabase-adapter",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Supabase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
