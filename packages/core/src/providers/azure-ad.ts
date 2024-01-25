@@ -5,7 +5,7 @@ type AzureADOptions<P extends MicrosoftEntraIDProfile> = MicrosoftEntraIDOptions
 
 /**
  * @deprecated
- * Azure Active Directory is now Mixcrosoft Entra ID.
+ * Azure Active Directory is now Microsoft Entra ID.
  * Import this provider from the `providers/microsoft-entra-id` submodule instead of `providers/azure-ad`.
  *
  * To log in with nodemailer, change `signIn("email")` to `signIn("nodemailer")`
