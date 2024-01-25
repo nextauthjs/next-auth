@@ -8,7 +8,7 @@ To test an implementation of Auth.js, we encourage you to use [Cypress](https://
 
 To get started, install the dependencies:
 
-```bash npm2yarn2pnpm
+```bash npm2yarn
 npm install --save-dev cypress cypress-social-logins @testing-library/cypress
 ```
 
@@ -23,11 +23,11 @@ Next you will have to create some configuration files for Cypress.
 First, the primary cypress config:
 
 ```ts title="cypress.config.ts"
-import { defineConfig } from 'cypress'
+import { defineConfig } from "cypress"
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: "http://localhost:3000",
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
@@ -54,23 +54,22 @@ You must change the login credentials you want to use, but you can also redefine
 Third, if you're using the `cypress-social-login` plugin, you must add this to your `/cypress/plugins/index.js` file like so:
 
 ```js title="cypress.config.ts" {3-4,10-14}
-import { defineConfig } from 'cypress'
+import { defineConfig } from "cypress"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { GoogleSocialLogin } = require('cypress-social-logins').plugins
+const { GoogleSocialLogin } = require("cypress-social-logins").plugins
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: "http://localhost:3000",
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
-      on('task', {
+      on("task", {
         GoogleSocialLogin,
       })
     },
   },
 })
-
 ```
 
 Finally, you can also add the following npm scripts to your `package.json`:

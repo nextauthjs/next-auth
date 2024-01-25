@@ -5,8 +5,8 @@
  * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt JWT}s
  * issued and used by Auth.js.
  *
- * The JWT issued by Auth.js is _encrypted by default_, using the _A256GCM_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7516 JWE}).
- * It uses the `AUTH_SECRET` environment variable to derive a sufficient encryption key.
+ * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
+ * It uses the `AUTH_SECRET` environment variable or the passed `secret` propery to derive a suitable encryption key.
  *
  * :::info Note
  * Auth.js JWTs are meant to be used by the same app that issued them.
@@ -15,7 +15,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/core
  * ```
  *
@@ -38,22 +38,26 @@
 
 import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, jwtDecrypt } from "jose"
-import { SessionStore } from "./lib/cookie.js"
+import { SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"
+import { parse } from "cookie"
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 const now = () => (Date.now() / 1000) | 0
 
-/** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
+const alg = "dir"
+const enc = "A256CBC-HS512"
+
+/** Issues a JWT. By default, the JWT is encrypted using "A256CBC-HS512". */
 export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
-  const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
+  const { token = {}, secret, maxAge = DEFAULT_MAX_AGE, salt } = params
+  const encryptionSecret = await getDerivedEncryptionKey(enc, secret, salt)
   // @ts-expect-error `jose` allows any object as payload.
   return await new EncryptJWT(token)
-    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .setProtectedHeader({ alg, enc })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
     .setJti(crypto.randomUUID())
@@ -64,20 +68,24 @@ export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
 export async function decode<Payload = JWT>(
   params: JWTDecodeParams
 ): Promise<Payload | null> {
-  const { token, secret } = params
+  const { token, secret, salt } = params
   if (!token) return null
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
-  const { payload } = await jwtDecrypt(token, encryptionSecret, {
-    clockTolerance: 15,
-  })
+  const { payload } = await jwtDecrypt(
+    token,
+    async ({ enc }) => await getDerivedEncryptionKey(enc, secret, salt),
+    {
+      clockTolerance: 15,
+      keyManagementAlgorithms: [alg],
+      contentEncryptionAlgorithms: [enc, "A256GCM"]
+    }
+  )
   return payload as Payload
 }
 
-export interface GetTokenParams<R extends boolean = false> {
+export interface GetTokenParams<R extends boolean = false>
+  extends Pick<JWTDecodeParams, "salt" | "secret"> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
-  req:
-    | Request
-    | { cookies: Record<string, string>; headers: Record<string, string> }
+  req: Request | { headers: Headers | Record<string, string> }
   /**
    * Use secure prefix for cookie name, unless URL in `NEXTAUTH_URL` is http://
    * or not set (e.g. development or test instance) case use unprefixed name
@@ -91,11 +99,6 @@ export interface GetTokenParams<R extends boolean = false> {
    * @default false
    */
   raw?: R
-  /**
-   * The same `secret` used in the `NextAuth` configuration.
-   * Defaults to the `AUTH_SECRET` environment variable.
-   */
-  secret?: string
   decode?: JWTOptions["decode"]
   logger?: LoggerInstance | Console
 }
@@ -103,7 +106,6 @@ export interface GetTokenParams<R extends boolean = false> {
 /**
  * Takes an Auth.js request (`req`) and returns either the Auth.js issued JWT's payload,
  * or the raw JWT string. We look for the JWT in the either the cookies, or the `Authorization` header.
- * [Documentation](https://authjs.dev/guides/basics/securing-pages-and-api-routes#using-gettoken)
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>
@@ -112,35 +114,34 @@ export async function getToken(
   params: GetTokenParams
 ): Promise<string | JWT | null> {
   const {
-    req,
-    secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
-      !!process.env.VERCEL,
+    secureCookie,
     cookieName = secureCookie
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token",
-    raw,
+      ? "__Secure-authjs.session-token"
+      : "authjs.session-token",
     decode: _decode = decode,
+    salt = cookieName,
+    secret,
     logger = console,
-    secret = process.env.AUTH_SECRET,
+    raw,
+    req,
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
   if (!secret)
     throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
+  const headers =
+    req.headers instanceof Headers ? req.headers : new Headers(req.headers)
+
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
-    // @ts-expect-error
-    { cookies: req.cookies, headers: req.headers },
+    parse(headers.get("cookie") ?? ""),
     logger
   )
 
   let token = sessionStore.value
 
-  const authorizationHeader =
-    req.headers instanceof Headers
-      ? req.headers.get("authorization")
-      : req.headers.authorization
+  const authorizationHeader = headers.get("authorization")
 
   if (!token && authorizationHeader?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = authorizationHeader.split(" ")[1]
@@ -152,19 +153,34 @@ export async function getToken(
   if (raw) return token
 
   try {
-    return await _decode({ token, secret })
+    return await _decode({ token, secret, salt })
   } catch {
     return null
   }
 }
 
-async function getDerivedEncryptionKey(secret: string) {
+async function getDerivedEncryptionKey(
+  enc: string,
+  keyMaterial: Parameters<typeof hkdf>[1],
+  salt: Parameters<typeof hkdf>[2]
+) {
+  let length: number
+  switch (enc) {
+    case "A256CBC-HS512":
+      length = 64
+      break
+    case "A256GCM":
+      length = 32
+      break
+    default:
+      throw new Error("Unsupported JWT Content Encryption Algorithm")
+  }
   return await hkdf(
     "sha256",
-    secret,
-    "",
-    "Auth.js Generated Encryption Key",
-    32
+    keyMaterial,
+    salt,
+    `Auth.js Generated Encryption Key (${salt})`,
+    length
   )
 }
 
@@ -173,6 +189,9 @@ export interface DefaultJWT extends Record<string, unknown> {
   email?: string | null
   picture?: string | null
   sub?: string
+  iat?: number
+  exp?: number
+  jti?: string
 }
 
 /**
@@ -183,31 +202,33 @@ export interface DefaultJWT extends Record<string, unknown> {
 export interface JWT extends Record<string, unknown>, DefaultJWT {}
 
 export interface JWTEncodeParams<Payload = JWT> {
-  /** The JWT payload. */
-  token?: Payload
-  /** The secret used to encode the Auth.js issued JWT. */
-  secret: string
   /**
    * The maximum age of the Auth.js issued JWT in seconds.
    *
    * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge?: number
+  /** Used in combination with `secret`, to derive the encryption secret for JWTs. */
+  salt: string
+  /** Used in combination with `salt`, to derive the encryption secret for JWTs. */
+  secret: string
+  /** The JWT payload. */
+  token?: Payload
 }
 
 export interface JWTDecodeParams {
+  /** Used in combination with `secret`, to derive the encryption secret for JWTs. */
+  salt: string
+  /** Used in combination with `salt`, to derive the encryption secret for JWTs. */
+  secret: string
   /** The Auth.js issued JWT to be decoded */
   token?: string
-  /** The secret used to decode the Auth.js issued JWT. */
-  secret: string
 }
 
 export interface JWTOptions {
   /**
    * The secret used to encode/decode the Auth.js issued JWT.
-   *
-   * @deprecated  Set the `AUTH_SECRET` environment variable or
-   * use the top-level `secret` option instead
+   * @internal
    */
   secret: string
   /**

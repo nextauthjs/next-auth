@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.</p>
+ *  Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.
  *  <a href="https://www.prisma.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/prisma.svg" width="38" />
  *  </a>
@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @prisma/client @auth/prisma-adapter
  * npm install prisma --save-dev
  * ```
@@ -21,7 +21,7 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 /**
  * ## Setup
  *
- * Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
+ * Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object:
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
@@ -46,7 +46,7 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  *
  * You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
  *
- * > This schema is adapted for use in Prisma and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Prisma and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * ```json title="schema.prisma"
  * datasource db {
@@ -220,7 +220,10 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  **/
 export function PrismaAdapter(p: PrismaClient): Adapter {
   return {
-    createUser: (data) => p.user.create({ data }),
+    // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
+    createUser: ({ id: _id, ...data }) => {
+      return p.user.create({ data })
+    },
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {

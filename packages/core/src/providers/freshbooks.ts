@@ -78,11 +78,8 @@ export default function Freshbooks(
     },
     style: {
       logo: "/freshbooks.svg",
-      logoDark: "/freshbooks-dark.svg",
-      bg: "#fff",
-      text: "#0075dd",
-      bgDark: "#0075dd",
-      textDark: "#fff",
+      bg: "#0075dd",
+      text: "#fff",
     },
     options,
   }

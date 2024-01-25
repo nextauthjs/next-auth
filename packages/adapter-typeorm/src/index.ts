@@ -8,7 +8,7 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install @auth/typeorm-adapter typeorm
  * ```
  *
@@ -21,8 +21,8 @@ import type {
   AdapterSession,
 } from "@auth/core/adapters"
 import { DataSourceOptions, DataSource, EntityManager } from "typeorm"
-import * as defaultEntities from "./entities"
-import { parseDataSourceConfig, updateConnectionEntities } from "./utils"
+import * as defaultEntities from "./entities.js"
+import { parseDataSourceConfig, updateConnectionEntities } from "./utils.js"
 
 export const entities = defaultEntities
 
@@ -42,14 +42,14 @@ export async function getManager(options: {
   dataSource: string | DataSourceOptions
   entities: Entities
 }): Promise<EntityManager> {
-  const { dataSource, entities } = options
-
-  const config = {
-    ...parseDataSourceConfig(dataSource),
-    entities: Object.values(entities),
+  if (!_dataSource) {
+    const { dataSource, entities } = options
+    const config = {
+      ...parseDataSourceConfig(dataSource),
+      entities: Object.values(entities),
+    }
+    _dataSource = new DataSource(config)
   }
-
-  if (!_dataSource) _dataSource = new DataSource(config)
 
   const manager = _dataSource?.manager
 
@@ -58,7 +58,7 @@ export async function getManager(options: {
   }
 
   if (process.env.NODE_ENV !== "production") {
-    await updateConnectionEntities(_dataSource, config.entities)
+    await updateConnectionEntities(_dataSource, Object.values(options.entities))
   }
   return manager
 }
@@ -89,7 +89,7 @@ export async function getManager(options: {
  *
  * If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
  *
- * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * 1. Create a file containing your modified entities:
  *
@@ -297,6 +297,11 @@ export function TypeORMAdapter(
     },
   }
 
+  const UserEntityName = c.entities.UserEntity.name
+  const AccountEntityName = c.entities.AccountEntity.name
+  const SessionEntityName = c.entities.SessionEntity.name
+  const VerificationTokenEntityName = c.entities.VerificationTokenEntity.name
+
   return {
     /**
      * Method used in testing. You won't need to call this in your app.
@@ -306,23 +311,22 @@ export function TypeORMAdapter(
       const m = await getManager(c)
       await m.connection.close()
     },
-    // @ts-expect-error
     createUser: async (data) => {
       const m = await getManager(c)
-      const user = await m.save("UserEntity", data)
+      const user = await m.save(UserEntityName, data)
       return user
     },
     // @ts-expect-error
     async getUser(id) {
       const m = await getManager(c)
-      const user = await m.findOne("UserEntity", { where: { id } })
+      const user = await m.findOne(UserEntityName, { where: { id } })
       if (!user) return null
       return { ...user }
     },
     // @ts-expect-error
     async getUserByEmail(email) {
       const m = await getManager(c)
-      const user = await m.findOne("UserEntity", { where: { email } })
+      const user = await m.findOne(UserEntityName, { where: { email } })
       if (!user) return null
       return { ...user }
     },
@@ -330,7 +334,7 @@ export function TypeORMAdapter(
       const m = await getManager(c)
       // @ts-expect-error
       const account = await m.findOne<AdapterAccount & { user: AdapterUser }>(
-        "AccountEntity",
+        AccountEntityName,
         // @ts-expect-error
         { where: provider_providerAccountId, relations: ["user"] }
       )
@@ -340,36 +344,36 @@ export function TypeORMAdapter(
     // @ts-expect-error
     async updateUser(data) {
       const m = await getManager(c)
-      const user = await m.save("UserEntity", data)
+      const user = await m.save(UserEntityName, data)
       return user
     },
     async deleteUser(id) {
       const m = await getManager(c)
       await m.transaction(async (tm) => {
-        await tm.delete("AccountEntity", { userId: id })
-        await tm.delete("SessionEntity", { userId: id })
-        await tm.delete("UserEntity", { id })
+        await tm.delete(AccountEntityName, { userId: id })
+        await tm.delete(SessionEntityName, { userId: id })
+        await tm.delete(UserEntityName, { id })
       })
     },
     async linkAccount(data) {
       const m = await getManager(c)
-      const account = await m.save("AccountEntity", data)
+      const account = await m.save(AccountEntityName, data)
       return account
     },
     async unlinkAccount(providerAccountId) {
       const m = await getManager(c)
-      await m.delete<AdapterAccount>("AccountEntity", providerAccountId)
+      await m.delete<AdapterAccount>(AccountEntityName, providerAccountId)
     },
     async createSession(data) {
       const m = await getManager(c)
-      const session = await m.save("SessionEntity", data)
+      const session = await m.save(SessionEntityName, data)
       return session
     },
     async getSessionAndUser(sessionToken) {
       const m = await getManager(c)
       const sessionAndUser = await m.findOne<
         AdapterSession & { user: AdapterUser }
-      >("SessionEntity", { where: { sessionToken }, relations: ["user"] })
+      >(SessionEntityName, { where: { sessionToken }, relations: ["user"] })
 
       if (!sessionAndUser) return null
       const { user, ...session } = sessionAndUser
@@ -377,17 +381,21 @@ export function TypeORMAdapter(
     },
     async updateSession(data) {
       const m = await getManager(c)
-      await m.update("SessionEntity", { sessionToken: data.sessionToken }, data)
+      await m.update(
+        SessionEntityName,
+        { sessionToken: data.sessionToken },
+        data
+      )
       // TODO: Try to return?
       return null
     },
     async deleteSession(sessionToken) {
       const m = await getManager(c)
-      await m.delete("SessionEntity", { sessionToken })
+      await m.delete(SessionEntityName, { sessionToken })
     },
     async createVerificationToken(data) {
       const m = await getManager(c)
-      const verificationToken = await m.save("VerificationTokenEntity", data)
+      const verificationToken = await m.save(VerificationTokenEntityName, data)
       // @ts-expect-error
       delete verificationToken.id
       return verificationToken
@@ -395,13 +403,13 @@ export function TypeORMAdapter(
     // @ts-expect-error
     async useVerificationToken(identifier_token) {
       const m = await getManager(c)
-      const verificationToken = await m.findOne("VerificationTokenEntity", {
+      const verificationToken = await m.findOne(VerificationTokenEntityName, {
         where: identifier_token,
       })
       if (!verificationToken) {
         return null
       }
-      await m.delete("VerificationTokenEntity", identifier_token)
+      await m.delete(VerificationTokenEntityName, identifier_token)
       // @ts-expect-error
       delete verificationToken.id
       return verificationToken

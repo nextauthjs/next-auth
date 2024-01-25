@@ -1,13 +1,35 @@
 import type {
-  LiteralUnion,
-  SignInOptions,
-  SignInAuthorizationParams,
-  SignOutParams,
-} from "next-auth/react"
-import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
+import { base } from "$app/paths"
+
+type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
+
+interface SignInOptions extends Record<string, unknown> {
+  /**
+   * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
+   *
+   * [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl)
+   */
+  callbackUrl?: string
+  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
+  redirect?: boolean
+}
+
+interface SignOutParams<R extends boolean = true> {
+  /** [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1) */
+  callbackUrl?: string
+  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+  redirect?: R
+}
+
+/** Match `inputType` of `new URLSearchParams(inputType)` */
+export type SignInAuthorizationParams =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams
 
 /**
  * Client-side method to initiate a signin flow
@@ -17,7 +39,7 @@ import type {
  * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
@@ -34,16 +56,15 @@ export async function signIn<
   const isEmail = providerId === "email"
   const isSupportingReturn = isCredentials || isEmail
 
-  // TODO: Handle custom base path
-  const signInUrl = `/auth/${
+  const basePath = base ?? ""
+  const signInUrl = `${basePath}/auth/${
     isCredentials ? "callback" : "signin"
   }/${providerId}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  // TODO: Handle custom base path
   // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch("/auth/csrf")
+  const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
 
   const res = await fetch(_signInUrl, {
@@ -61,9 +82,8 @@ export async function signIn<
   })
 
   const data = await res.clone().json()
-  const error = new URL(data.url).searchParams.get("error")
 
-  if (redirect || !isSupportingReturn || !error) {
+  if (redirect || !isSupportingReturn) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
     window.location.href = data.url ?? callbackUrl
     // If url contains a hash, the browser does not reload the page. We reload manually
@@ -82,11 +102,11 @@ export async function signIn<
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
-  // TODO: Custom base path
+  const basePath = base ?? ""
   // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch("/auth/csrf")
+  const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
-  const res = await fetch(`/auth/signout`, {
+  const res = await fetch(`${basePath}/auth/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",

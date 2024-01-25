@@ -9,11 +9,11 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth @next-auth/fauna-adapter faunadb
+ * ```bash npm2yarn
+ * npm install @auth/fauna-adapter faunadb
  * ```
  *
- * @module @next-auth/fauna-adapter
+ * @module @auth/fauna-adapter
  */
 import {
   Client as FaunaClient,
@@ -44,7 +44,7 @@ import {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 export const collections = {
   Users: Collection("users"),
@@ -130,14 +130,14 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  *
  * This is the Fauna Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
  *
- * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapters/fauna](https://authjs.dev/reference/adapters/fauna).
+ * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/core/adapters/fauna](https://authjs.dev/reference/core/adapters/fauna).
  *
  * ### Configure Auth.js
  *
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { Client as FaunaClient } from "faunadb"
- * import { FaunaAdapter } from "@next-auth/fauna-adapter"
+ * import { FaunaAdapter } from "@auth/fauna-adapter"
  *
  * const client = new FaunaClient({
  *   secret: "secret",
@@ -197,7 +197,7 @@ export function query(f: FaunaClient, format: (...args: any) => any) {
  * })
  * ```
  *
- * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/adapters#models)
+ * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  **/
 export function FaunaAdapter(f: FaunaClient): Adapter {
   const { Users, Accounts, Sessions, VerificationTokens } = collections

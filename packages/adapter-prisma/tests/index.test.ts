@@ -1,4 +1,4 @@
-import { randomUUID, runBasicTests } from "@next-auth/adapter-test"
+import { randomUUID, runBasicTests } from "utils/adapter"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
 import { ObjectId } from "mongodb"
@@ -8,10 +8,8 @@ runBasicTests({
   adapter: PrismaAdapter(prisma),
   db: {
     id() {
-      if (process.env.CONTAINER_NAME === "next-auth-mongodb-test") {
-        return new ObjectId().toHexString()
-      }
-      return randomUUID()
+      if (process.env.CONTAINER_NAME !== "authjs-mongodb-test") return
+      return new ObjectId().toHexString()
     },
     connect: async () => {
       await Promise.all([

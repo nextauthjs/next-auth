@@ -11,51 +11,59 @@ on:
   # TODO: Support latest releases
   workflow_dispatch:
     inputs:
-      name: 
+      name:
         type: choice
         description: Package name (npm)
         options:
-        - "@auth/core"
-        - "@auth/nextjs"
-        - "@auth/dgraph-adapter"
-        - "@auth/drizzle-adapter"
-        - "@auth/dynamodb-adapter"
-        - "@auth/fauna-adapter"
-        - "@auth/firebase-adapter"
-        - "@auth/mikro-orm-adapter"
-        - "@auth/mongodb-adapter"
-        - "@auth/neo4j-adapter"
-        - "@auth/pouchdb-adapter"
-        - "@auth/prisma-adapter"
-        - "@auth/sequelize-adapter"
-        - "@auth/supabase-adapter"
-        - "@auth/typeorm-adapter"
-        - "@auth/upstash-redis-adapter"
-        - "@auth/xata-adapter"
-        - "next-auth"
+          - "@auth/core"
+          - "@auth/dgraph-adapter"
+          - "@auth/drizzle-adapter"
+          - "@auth/dynamodb-adapter"
+          - "@auth/fauna-adapter"
+          - "@auth/firebase-adapter"
+          - "@auth/hasura-adapter"
+          - "@auth/mikro-orm-adapter"
+          - "@auth/mongodb-adapter"
+          - "@auth/neo4j-adapter"
+          - "@auth/pouchdb-adapter"
+          - "@auth/prisma-adapter"
+          - "@auth/sequelize-adapter"
+          - "@auth/supabase-adapter"
+          - "@auth/typeorm-adapter"
+          - "@auth/unstorage-adapter"
+          - "@auth/upstash-redis-adapter"
+          - "@auth/xata-adapter"
+          - "next-auth"
       # TODO: Infer from package name
       path:
         type: choice
         description: Directory name (packages/*)
         options:
-        - "core"
-        - "frameworks-nextjs"
-        - "adapter-dgraph"
-        - "adapter-drizzle"
-        - "adapter-dynamodb"
-        - "adapter-fauna"
-        - "adapter-firebase"
-        - "adapter-mikro-orm"
-        - "adapter-mongodb"
-        - "adapter-neo4j"
-        - "adapter-pouchdb"
-        - "adapter-prisma"
-        - "adapter-sequelize"
-        - "adapter-supabase"
-        - "adapter-typeorm"
-        - "adapter-upstash-redis"
-        - "adapter-xata"
-        - "next-auth"
+          - "core"
+          - "frameworks-nextjs"
+          - "adapter-edgedb"
+          - "adapter-dgraph"
+          - "adapter-drizzle"
+          - "adapter-dynamodb"
+          - "adapter-fauna"
+          - "adapter-firebase"
+          - "adapter-hasura"
+          - "adapter-mikro-orm"
+          - "adapter-mongodb"
+          - "adapter-neo4j"
+          - "adapter-pouchdb"
+          - "adapter-prisma"
+          - "adapter-sequelize"
+          - "adapter-supabase"
+          - "adapter-typeorm"
+          - "adapter-unstorage"
+          - "adapter-upstash-redis"
+          - "adapter-xata"
+          - "next-auth"
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  FORCE_COLOR: true
 
 jobs:
   test:
@@ -65,7 +73,7 @@ jobs:
       - name: Init
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
@@ -75,14 +83,17 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Peek
+        run: pnpm peek
+        if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      - name: Build
+        run: pnpm build
       - name: Run tests
         run: pnpm test
         timeout-minutes: 15
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e
@@ -91,7 +102,7 @@ jobs:
       #     AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
       #     AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
       #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      #     TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      #     TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       # - name: Upload E2E artifacts
       #   if: github.repository == 'nextauthjs/next-auth'
       #   uses: actions/upload-artifact@v3
@@ -115,22 +126,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT_CLASSIC }}
+          # Please upvote https://github.com/orgs/community/discussions/13836
+          token: ${{ secrets.GH_PAT }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Publish to npm and GitHub
         run: pnpm release
         env:
-          # Use GH_PAT when this is fixed:
-          # https://github.com/github/roadmap/issues/622
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_CLASSIC }}
+          # Please upvote https://github.com/orgs/community/discussions/13836
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-pr:
     name: Publish PR

@@ -1,12 +1,12 @@
 name: Bug report (Adapter)
 description: Create an adapter-specific report
-labels: [triage, adapters]
+labels: [triage, bug, adapters]
 body:
   - type: markdown
     attributes:
       value: |
         **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
-        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/adapters/overview) related issue!
+        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/getting-started/adapters) related issue!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
         ### Important :exclamation:
@@ -21,20 +21,28 @@ body:
       multiple: true
       options:
         - "Custom adapter"
-        - "@next-auth/dgraph-adapter"
-        - "@next-auth/dynamodb-adapter"
-        - "@next-auth/fauna-adapter"
-        - "@next-auth/firebase-adapter"
-        - "@next-auth/mikro-orm-adapter"
-        - "@next-auth/mongodb-adapter"
-        - "@next-auth/neo4j-adapter"
-        - "@next-auth/pouchdb-adapter"
+        - "@auth/azure-tables-adapter"
+        - "@auth/edgedb-adapter"
+        - "@auth/d1-adapter"
+        - "@auth/dgraph-adapter"
+        - "@auth/drizzle-adapter"
+        - "@auth/dynamodb-adapter"
+        - "@auth/fauna-adapter"
+        - "@auth/firebase-adapter"
+        - "@auth/hasura-adapter"
+        - "@auth/kysely-adapter"
+        - "@auth/mikro-orm-adapter"
+        - "@auth/mongodb-adapter"
+        - "@auth/neo4j-adapter"
+        - "@auth/pg-adapter"
+        - "@auth/pouchdb-adapter"
         - "@auth/prisma-adapter"
-        - "@next-auth/sequelize-adapter"
-        - "@next-auth/supabase-adapter"
+        - "@auth/sequelize-adapter"
+        - "@auth/supabase-adapter"
         - "@auth/typeorm-adapter"
-        - "@next-auth/upstash-redis-adapter"
-        - "@next-auth/xata-adapter"
+        - "@auth/unstorage-adapter"
+        - "@auth/upstash-redis-adapter"
+        - "@auth/xata-adapter"
     validations:
       required: true
   - type: textarea
@@ -43,10 +51,9 @@ body:
       description: |
         Run this command in your project's root folder and paste the result:
 
-        ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth,@auth/*" && npx envinfo --npmPackages "@next-auth/*"
-        ```
-        Alternatively, if the above command did not work, we need the version of the following packages from your package.json: "next", "react", "next-auth" and your adapter. Please also mention your OS and Node.js version, as well as the browser you are using.
+        `npx envinfo --system --binaries --browsers --npmPackages "{next,react,next-auth,@auth/*}"`
+
+        Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
     validations:
       required: true
   - type: input

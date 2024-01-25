@@ -8,11 +8,11 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth pouchdb pouchdb-find @next-auth/pouchdb-adapter
+ * ```bash npm2yarn
+ * npm install pouchdb pouchdb-find @auth/pouchdb-adapter
  * ```
  *
- * @module @next-auth/pouchdb-adapter
+ * @module @auth/pouchdb-adapter
  */
 
 import type {
@@ -21,8 +21,7 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
-import { ulid } from "ulid"
+} from "@auth/core/adapters"
 
 type PrefixConfig = Record<
   "user" | "account" | "session" | "verificationToken",
@@ -99,7 +98,7 @@ export interface PouchDBAdapterOptions {
  * ```javascript title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
- * import { PouchDBAdapter } from "@next-auth/pouchdb-adapter"
+ * import { PouchDBAdapter } from "@auth/pouchdb-adapter"
  * import PouchDB from "pouchdb"
  *
  * // Setup your PouchDB instance and database
@@ -154,7 +153,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
 
   return {
     async createUser(user) {
-      const doc = { ...user, _id: [userPrefix, ulid()].join("_") }
+      const doc = { ...user, _id: [userPrefix, crypto.randomUUID()].join("_") }
       await pouchdb.put(doc)
       return { ...user, id: doc._id }
     },
@@ -220,7 +219,10 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
     async deleteUser(id) {},
 
     async linkAccount(account) {
-      const doc = { ...account, _id: [accountPrefix, ulid()].join("_") }
+      const doc = {
+        ...account,
+        _id: [accountPrefix, crypto.randomUUID()].join("_"),
+      }
       await (pouchdb as unknown as PouchDB.Database<AdapterAccount>).put(doc)
 
       return { ...account, id: doc._id }
@@ -245,7 +247,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
 
     async createSession(data) {
       const doc = {
-        _id: [sessionPrefix, ulid()].join("_"),
+        _id: [sessionPrefix, crypto.randomUUID()].join("_"),
         ...data,
       }
       await (pouchdb as unknown as PouchDB.Database<AdapterSession>).put(doc)
@@ -271,7 +273,10 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
         const user = await (
           pouchdb as unknown as PouchDB.Database<AdapterUser>
         ).get(session.userId)
-        return { session: toAdapterSession(session), user: toAdapterUser(user) }
+        return {
+          session: toAdapterSession(session),
+          user: toAdapterUser(user),
+        }
       }
       return null
     },
@@ -317,7 +322,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
 
     async createVerificationToken(data) {
       await (pouchdb as unknown as PouchDB.Database<VerificationToken>).put({
-        _id: [verificationTokenPrefix, ulid()].join("_"),
+        _id: [verificationTokenPrefix, crypto.randomUUID()].join("_"),
         ...data,
       })
 

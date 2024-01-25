@@ -1,7 +1,7 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b> Wikimedia</b> integration.</span>
- * <a href="www.mediawiki.org/">
+ * <a href="https://mediawiki.org/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/wikimedia.svg" height="48" />
  * </a>
  * </div>
@@ -247,14 +247,7 @@ export default function Wikimedia<P extends WikimediaProfile>(
         image: null,
       }
     },
-    style: {
-      logo: "/wikimedia.svg",
-      logoDark: "/wikimedia-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
-    },
+    style: { logo: "/wikimedia.svg", bg: "#000", text: "#fff" },
     options,
   }
 }

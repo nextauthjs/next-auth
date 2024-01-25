@@ -8,20 +8,19 @@
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install @supabase/supabase-js next-auth @next-auth/supabase-adapter
+ * ```bash npm2yarn
+ * npm install @supabase/supabase-js @auth/supabase-adapter
  * ```
  *
- * @module @next-auth/supabase-adapter
+ * @module @auth/supabase-adapter
  */
 import { createClient } from "@supabase/supabase-js"
-import { Database } from "./database.types"
 import {
   Adapter,
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
 function isDate(date: any) {
   return (
@@ -61,7 +60,7 @@ export interface SupabaseAdapterOptions {
  * :::note
  * This adapter is developed by the community and not officially maintained or supported by Supabase. It uses the Supabase Database to store user and session data in a separate `next_auth` schema. It is a standalone Auth server that does not interface with Supabase Auth and therefore provides a different feature set.
  *
- * If you’re looking for an officially maintained Auth server with additional features like [built-in email server](https://supabase.com/docs/guides/auth/auth-email#configure-email-settings?utm_source=authjs-docs&medium=referral&campaign=authjs), [phone auth](https://supabase.com/docs/guides/auth/auth-twilio?utm_source=authjs-docs&medium=referral&campaign=authjs), and [Multi Factor Authentication (MFA / 2FA)](https://supabase.com/contact/mfa?utm_source=authjs-docs&medium=referral&campaign=authjs), please use [Supabase Auth](https://supabase.com/auth) with the [Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/auth-helpers/nextjs?utm_source=authjs-docs&medium=referral&campaign=authjs).
+ * If you're looking for an officially maintained Auth server with additional features like [built-in email server](https://supabase.com/docs/guides/auth/auth-email#configure-email-settings?utm_source=authjs-docs&medium=referral&campaign=authjs), [phone auth](https://supabase.com/docs/guides/auth/auth-twilio?utm_source=authjs-docs&medium=referral&campaign=authjs), and [Multi Factor Authentication (MFA / 2FA)](https://supabase.com/contact/mfa?utm_source=authjs-docs&medium=referral&campaign=authjs), please use [Supabase Auth](https://supabase.com/auth) with the [Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/auth-helpers/nextjs?utm_source=authjs-docs&medium=referral&campaign=authjs).
  * :::
  *
  * ## Setup
@@ -72,12 +71,12 @@ export interface SupabaseAdapterOptions {
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+ * import { SupabaseAdapter } from "@auth/supabase-adapter"
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-config
+ * // https://authjs.dev/reference/core#authconfig
  * export default NextAuth({
- *   // https://authjs.dev/reference/providers/oauth-builtin
+ *   // https://authjs.dev/reference/core/providers
  *   providers: [...],
  *   adapter: SupabaseAdapter({
  *     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -89,7 +88,7 @@ export interface SupabaseAdapterOptions {
  *
  * ### Create the NextAuth schema in Supabase
  *
- * Setup your database as described in our main [schema](https://authjs.dev/reference/adapters#models), by copying the SQL schema below in the Supabase [SQL Editor](https://app.supabase.com/project/_/sql).
+ * Setup your database as described in our main [schema](https://authjs.dev/reference/core/adapters#models), by copying the SQL schema below in the Supabase [SQL Editor](https://app.supabase.com/project/_/sql).
  *
  * Alternatively you can select the NextAuth Quickstart card on the [SQL Editor page](https://app.supabase.com/project/_/sql), or [create a migration with the Supabase CLI](https://supabase.com/docs/guides/cli/local-development#database-migrations?utm_source=authjs-docs&medium=referral&campaign=authjs).
  *
@@ -214,7 +213,7 @@ export interface SupabaseAdapterOptions {
  *
  * To sign the JWT use the `jsonwebtoken` package:
  *
- * ```bash npm2yarn2pnpm
+ * ```bash npm2yarn
  * npm install jsonwebtoken
  * ```
  *
@@ -224,13 +223,13 @@ export interface SupabaseAdapterOptions {
  *
  * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
- * import { SupabaseAdapter } from "@next-auth/supabase-adapter"
+ * import { SupabaseAdapter } from "@auth/supabase-adapter"
  * import jwt from "jsonwebtoken"
  *
  * // For more information on each option (and a full list of options) go to
  * // https://authjs.dev/reference/configuration/auth-options
  * export default NextAuth({
- *   // https://authjs.dev/reference/providers/oauth-builtin
+ *   // https://authjs.dev/reference/core/providers
  *   providers: [...],
  *   adapter: SupabaseAdapter({
  *     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -261,7 +260,7 @@ export interface SupabaseAdapterOptions {
  * For example, given the following public schema:
  *
  * ```sql
- * // Note: This table contains user data. Users should only be able to view and update their own data.
+ * -- Note: This table contains user data. Users should only be able to view and update their own data.
  * create table users (
  *   -- UUID from next_auth.users
  *   id uuid not null primary key,
@@ -271,13 +270,13 @@ export interface SupabaseAdapterOptions {
  *   constraint "users_id_fkey" foreign key ("id")
  *         references  next_auth.users (id) match simple
  *         on update no action
- *         on delete cascade -- if user is deleted in NextAuth they will also be deleted in our public table.
+ *         on delete cascade -- if a user is deleted in NextAuth they will also be deleted in our public table.
  * );
  * alter table users enable row level security;
  * create policy "Can view own user data." on users for select using (next_auth.uid() = id);
  * create policy "Can update own user data." on users for update using (next_auth.uid() = id);
  *
- * // This trigger automatically creates a user entry when a new user signs up via NextAuth.
+ * -- This trigger automatically creates a user entry when a new user signs up via NextAuth.
  * create function public.handle_new_user()
  * returns trigger as $$
  * begin
@@ -315,7 +314,7 @@ export interface SupabaseAdapterOptions {
  * ```
  *  ### Usage with TypeScript
  *
- * You can pass types that were generated with the Supabase CLI to the Supabase Client to get enhanced type safety and auto completion.
+ * You can pass types that were generated with the Supabase CLI to the Supabase Client to get enhanced type safety and auto-completion.
  *
  * Creating a new supabase client object:
  *
@@ -339,7 +338,7 @@ export interface SupabaseAdapterOptions {
  *     // A JWT which can be used as Authorization header with supabase-js for RLS.
  *     supabaseAccessToken?: string
  *     user: {
- *       // he user's postal address
+ *       // The user's postal address
  *       address: string
  *     } & DefaultSession["user"]
  *   }
@@ -350,9 +349,8 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
   const { url, secret } = options
   const supabase = createClient<Database, "next_auth">(url, secret, {
     db: { schema: "next_auth" },
-    global: {
-      headers: { "X-Client-Info": "@next-auth/supabase-adapter@0.1.0" },
-    },
+    global: { headers: { "X-Client-Info": "@auth/supabase-adapter" } },
+    auth: { persistSession: false },
   })
   return {
     async createUser(user) {
@@ -463,7 +461,7 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       return {
         user: format<AdapterUser>(
-          user as Database["next_auth"]["Tables"]["users"]["Row"]
+          user as Database["next_auth"]["Tables"]["users"]["Row"][]
         ),
         session: format<AdapterSession>(session),
       }
@@ -522,5 +520,137 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       return format<VerificationToken>(verificationToken)
     },
+  }
+}
+
+interface Database {
+  next_auth: {
+    Tables: {
+      accounts: {
+        Row: {
+          id: string
+          type: string | null
+          provider: string | null
+          providerAccountId: string | null
+          refresh_token: string | null
+          access_token: string | null
+          expires_at: number | null
+          token_type: string | null
+          scope: string | null
+          id_token: string | null
+          session_state: string | null
+          oauth_token_secret: string | null
+          oauth_token: string | null
+          userId: string | null
+        }
+        Insert: {
+          id?: string
+          type?: string | null
+          provider?: string | null
+          providerAccountId?: string | null
+          refresh_token?: string | null
+          access_token?: string | null
+          expires_at?: number | null
+          token_type?: string | null
+          scope?: string | null
+          id_token?: string | null
+          session_state?: string | null
+          oauth_token_secret?: string | null
+          oauth_token?: string | null
+          userId?: string | null
+        }
+        Update: {
+          id?: string
+          type?: string | null
+          provider?: string | null
+          providerAccountId?: string | null
+          refresh_token?: string | null
+          access_token?: string | null
+          expires_at?: number | null
+          token_type?: string | null
+          scope?: string | null
+          id_token?: string | null
+          session_state?: string | null
+          oauth_token_secret?: string | null
+          oauth_token?: string | null
+          userId?: string | null
+        }
+      }
+      sessions: {
+        Row: {
+          expires: string | null
+          sessionToken: string | null
+          userId: string | null
+          id: string
+        }
+        Insert: {
+          expires?: string | null
+          sessionToken?: string | null
+          userId?: string | null
+          id?: string
+        }
+        Update: {
+          expires?: string | null
+          sessionToken?: string | null
+          userId?: string | null
+          id?: string
+        }
+      }
+      users: {
+        Row: {
+          name: string | null
+          email: string | null
+          emailVerified: string | null
+          image: string | null
+          id: string
+        }
+        Insert: {
+          name?: string | null
+          email?: string | null
+          emailVerified?: string | null
+          image?: string | null
+          id?: string
+        }
+        Update: {
+          name?: string | null
+          email?: string | null
+          emailVerified?: string | null
+          image?: string | null
+          id?: string
+        }
+      }
+      verification_tokens: {
+        Row: {
+          id: number
+          identifier: string | null
+          token: string | null
+          expires: string | null
+        }
+        Insert: {
+          id?: number
+          identifier?: string | null
+          token?: string | null
+          expires?: string | null
+        }
+        Update: {
+          id?: number
+          identifier?: string | null
+          token?: string | null
+          expires?: string | null
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      uid: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
   }
 }

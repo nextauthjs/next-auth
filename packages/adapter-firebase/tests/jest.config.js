@@ -1,4 +1,4 @@
-import config from "@next-auth/adapter-test/jest/jest-preset.js"
+import config from "utils/adapter/jest-preset.js"
 
 //TODO: update rest of the packages to Jest 29+
 const {testURL, ...rest} = config
