@@ -2,6 +2,8 @@ name: Triage issue
 on:
   issues:
     types: [labeled, opened]
+  issue_comment:
+    types: [created]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -14,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Nissuer
-        uses: balazsorban44/nissuer@1.8.1
+        uses: balazsorban44/nissuer@1.8.2
         with:
           label-area-prefix: ""
           label-area-section: "[Provider|Adapter] type(.*)### Environment"
