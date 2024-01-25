@@ -220,7 +220,10 @@ import type { Adapter, AdapterAccount } from "@auth/core/adapters"
  **/
 export function PrismaAdapter(p: PrismaClient): Adapter {
   return {
-    createUser: (data) => p.user.create({ data }),
+    // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
+    createUser: ({ id: _id, ...data }) => {
+      return p.user.create({ data })
+    },
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
