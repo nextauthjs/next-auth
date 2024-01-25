@@ -1,4 +1,3 @@
-import { OAuthProfileParseError } from "../../errors.js"
 import { merge } from "./merge.js"
 
 import type {
@@ -87,15 +86,14 @@ function normalizeOAuth(
 
 /**
  * Returns basic user profile from the userinfo response/`id_token` claims.
+ * An `id` is generated internally (using `crypto.randomUUID()`) and will override `id` if provided.
+ * The result if this function is user to create the `User` in the database.
  * @see https://authjs.dev/reference/core/adapters#user
  * @see https://openid.net/specs/openid-connect-core-1_0.html#IDToken
- * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#
  */
 const defaultProfile: ProfileCallback<Profile> = (profile) => {
-  const id = profile.sub ?? profile.id
-  if (!id) throw new OAuthProfileParseError("Missing user id")
   return stripUndefined({
-    id: id.toString(),
     name: profile.name ?? profile.nickname ?? profile.preferred_username,
     email: profile.email,
     image: profile.picture,
