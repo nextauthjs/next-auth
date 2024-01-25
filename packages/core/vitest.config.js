@@ -6,6 +6,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [],
   test: {
+    coverage: { include: ['src/**/*.ts'] },
     setupFiles: ['./test/test-setup.ts'],
   },
 })

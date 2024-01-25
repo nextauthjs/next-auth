@@ -94,6 +94,10 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+      - uses: codecov/codecov-action@v3
+        with:
+          files:
+          token: ${{ secrets.CODECOV_TOKEN }}
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e
@@ -110,11 +114,6 @@ jobs:
       #     name: playwright-report
       #     path: apps/dev/nextjs/playwright-report/
       #     retention-days: 30
-      # - name: Coverage
-      #   uses: codecov/codecov-action@v1
-      #   with:
-      #     directory: ./coverage
-      #     fail_ci_if_error: false
   release-branch:
     name: Publish branch
     runs-on: ubuntu-latest

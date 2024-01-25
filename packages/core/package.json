@@ -63,8 +63,8 @@
   "license": "ISC",
   "dependencies": {
     "@panva/hkdf": "^1.1.1",
-    "cookie": "0.6.0",
     "@types/cookie": "0.6.0",
+    "cookie": "0.6.0",
     "jose": "^5.1.3",
     "oauth4webapi": "^2.4.0",
     "preact": "10.11.3",
@@ -83,13 +83,14 @@
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
-    "test": "vitest",
+    "test": "vitest --coverage",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
+    "@vitest/coverage-v8": "^1.2.1",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
     "postcss-nested": "6.0.0",
