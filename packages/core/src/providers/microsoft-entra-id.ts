@@ -17,6 +17,17 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
   picture: string
 }
 
+export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> = OAuthUserConfig<P> & {
+  /**
+   * https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
+   *
+   * @default 48
+   */
+  profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
+  /** @default "common" */
+  tenantId?: string
+}
+
 /**
  * Add MicrosoftEntraID login to your page.
  *
@@ -113,16 +124,7 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
  * :::
  */
 export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
-  options: OAuthUserConfig<P> & {
-    /**
-     * https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
-     *
-     * @default 48
-     */
-    profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
-    /** @default "common" */
-    tenantId?: string
-  }
+  options:MicrosoftEntraIDOptions<P>
 ): OAuthConfig<P> {
   const { tenantId = "common", profilePhotoSize = 48, ...rest } = options
   rest.issuer ??= `https://login.microsoftonline.com/${tenantId}/v2.0`
