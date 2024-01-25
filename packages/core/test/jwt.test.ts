@@ -30,7 +30,7 @@ describe("supports secret rotation", () => {
     expect(() => d2).rejects.toEqual(new Error("no matching decryption secret"))
   })
 
-  it("should throw error when no matching secret was passed", async () => {
+  it("should not be able decode with non-matching secret", async () => {
     const t1 = await encode({ salt, token, secret: s3 })
     const decoded = decode({ salt, token: t1, secret: s12 })
     expect(() => decoded).rejects.toEqual(
