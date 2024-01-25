@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=next-auth-mongodb-test
+CONTAINER_NAME=authjs-mongodb-test
 
 JEST_WATCH=false
 
