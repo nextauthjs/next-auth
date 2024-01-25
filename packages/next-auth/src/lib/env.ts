@@ -3,7 +3,6 @@ import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 
 export function setEnvDefaults(config: NextAuthConfig) {
-  config.secret ??= process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
   try {
     const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
     if (url) config.basePath = new URL(url).pathname
@@ -12,6 +11,15 @@ export function setEnvDefaults(config: NextAuthConfig) {
     config.basePath ??= "/api/auth"
   }
 
+  if (!config.secret) {
+    config.secret = []
+    const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
+    if (secret) config.secret.push(secret)
+    for (const i of [1, 2, 3]) {
+      const secret = process.env[`AUTH_SECRET_${i}`]
+      if (secret) config.secret.unshift(secret)
+    }
+  }
   config.trustHost ??= !!(
     process.env.AUTH_URL ??
     process.env.NEXTAUTH_URL ??

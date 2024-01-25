@@ -553,7 +553,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
    */
   csrfTokenVerified?: boolean
-  secret: string
+  secret: string | string[]
   theme: Theme
   debug: boolean
   logger: LoggerInstance

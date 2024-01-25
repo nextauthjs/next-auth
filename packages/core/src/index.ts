@@ -211,12 +211,16 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * To generate a random string, you can use the following command:
    *
-   * - On Unix systems, type `openssl rand -hex 32` in the terminal
-   * - Or generate one [online](https://generate-secret.vercel.app/32)
+   * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+   *
+   * @note
+   * You can also pass an array of secrets, in which case the first secret that successfully
+   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
+   * The newer secret should be added to the start of the array, which will be used for all new sessions.
+   *
    */
-  secret?: string
+  secret?: string | string[]
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.
