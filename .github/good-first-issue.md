@@ -8,7 +8,7 @@ This will help you set up your development environment to get started. When you 
 
 Please make sure that - if applicable - you add tests for the changes you make.
 
-If you have any questions, feel free to ask in the comments below or the PR. (generally you don't need to `@tag` anyone directly, as we will get notified anyway and will respond as soon as we can)
+If you have any questions, feel free to ask in the comments below or the PR. Generally, you don't need to `@mention` anyone directly, as we will get notified anyway and will respond as soon as we can)
 
 > NOTE: if nobody has picked up the issue yet, there is no need to ask for permission "can I work on this?" Please, go ahead :slightly_smiling_face:
 
