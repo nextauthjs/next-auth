@@ -8,7 +8,7 @@
  *
  * @module providers/ory-hydra
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface OryHydraProfile extends Record<string, any> {
   iss: string
@@ -72,20 +72,12 @@ export interface OryHydraProfile extends Record<string, any> {
  * :::
  */
 export default function OryHydra<P extends OryHydraProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+  options: OIDCUserConfig<P>
+): OIDCConfig<P> {
   return {
     id: "hydra",
     name: "Hydra",
-    type: "oauth",
-    authorization: { params: { scope: "openid offline_access" } },
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
-    checks: ["pkce", "state"],
-    profile(profile) {
-      return {
-        id: profile.sub,
-      }
-    },
+    type: "oidc",
     style: {
       logo: "/ory.svg",
       logoDark: "/ory-dark.svg",
