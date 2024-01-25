@@ -1,19 +1,19 @@
-import { type ParentComponent } from "solid-js";
-import { A, Title, useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
-import { authOpts } from "./api/auth/[...solidauth]";
-import { getSession } from "@solid-auth/next";
+import { type ParentComponent } from "solid-js"
+import { A, Title, useRouteData } from "solid-start"
+import { createServerData$ } from "solid-start/server"
+import { authOpts } from "./api/auth/[...solidauth]"
+import { getSession } from "@solid-auth/next"
 
 export const routeData = () => {
   return createServerData$(
     async (_, { request }) => {
-      return await getSession(request, authOpts);
+      return await getSession(request, authOpts)
     },
     { key: () => ["auth_user"] }
-  );
-};
+  )
+}
 const Home: ParentComponent = () => {
-  const user = useRouteData<typeof routeData>();
+  const user = useRouteData<typeof routeData>()
   return (
     <>
       <Title>Create JD App</Title>
@@ -38,7 +38,7 @@ const Home: ParentComponent = () => {
         </p>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

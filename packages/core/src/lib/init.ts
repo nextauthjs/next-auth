@@ -6,7 +6,6 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
-import parseUrl from "./utils/parse-url.js"
 import { merge } from "./utils/merge.js"
 
 import type {
@@ -42,7 +41,14 @@ export const defaultCallbacks: CallbacksOptions = {
     return baseUrl
   },
   session({ session }) {
-    return session
+    return {
+      user: {
+        name: session.user?.name,
+        email: session.user?.email,
+        image: session.user?.image,
+      },
+      expires: session.expires.toISOString?.() ?? session.expires,
+    }
   },
   jwt({ token }) {
     return token
@@ -141,6 +147,9 @@ export async function init({
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
+    experimental: {
+      ...authOptions.experimental,
+    },
   }
 
   // Init cookies

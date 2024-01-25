@@ -60,7 +60,7 @@ import type {
   OAuth2TokenEndpointResponse,
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
-import type { Adapter, AdapterUser } from "./adapters.js"
+import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
 import { AuthConfig } from "./index.js"
 import type { JWT, JWTOptions } from "./jwt.js"
 import type { Cookie } from "./lib/utils/cookie.js"
@@ -248,29 +248,25 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
   session: (
-    params:
-      | (
-          | {
-              session: Session
-              /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-              user: AdapterUser
-            }
-          | {
-              session: Session
-              /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-              token: JWT
-            }
-        ) & {
-          /**
-           * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
-           *
-           * :::note
-           * You should validate this data before using it.
-           * :::
-           */
-          newSession: any
-          trigger?: "update"
-        }
+    params: ({
+      session: { user: AdapterUser } & AdapterSession
+      /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+      user: AdapterUser
+    } & {
+      session: Session
+      /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+      token: JWT
+    }) & {
+      /**
+       * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
+       *
+       * :::note
+       * You should validate this data before using it.
+       * :::
+       */
+      newSession: any
+      trigger?: "update"
+    }
   ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
@@ -478,12 +474,12 @@ export interface User {
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
-  ? OIDCConfigInternal<any>
-  : T extends "email"
-  ? EmailConfig
-  : T extends "credentials"
-  ? CredentialsConfig
-  : never) & {
+    ? OIDCConfigInternal<any>
+    : T extends "email"
+      ? EmailConfig
+      : T extends "credentials"
+        ? CredentialsConfig
+        : never) & {
   signinUrl: string
   /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
@@ -549,7 +545,7 @@ export interface RequestInternal {
 
 // Should only be used by frameworks
 export interface ResponseInternal<
-  Body extends string | Record<string, any> | any[] | null = any
+  Body extends string | Record<string, any> | any[] | null = any,
 > {
   status?: number
   headers?: Headers | HeadersInit
@@ -587,4 +583,6 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * See also {@link OAuthConfigInternal.redirectProxyUrl}.
    */
   isOnRedirectProxy: boolean
+  experimental: Record<string, boolean>
+  basePath: string
 }

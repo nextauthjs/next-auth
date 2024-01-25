@@ -3,6 +3,7 @@ import { UnknownAction } from "../../errors.js"
 
 import type {
   AuthAction,
+  AuthConfig,
   RequestInternal,
   ResponseInternal,
 } from "../../types.js"
@@ -31,35 +32,22 @@ const actions: AuthAction[] = [
 ]
 
 export async function toInternalRequest(
-  req: Request
+  req: Request,
+  config: AuthConfig
 ): Promise<RequestInternal | Error> {
   try {
-    let originalUrl = new URL(req.url.replace(/\/$/, ""))
-    let url = new URL(originalUrl)
-    const pathname = url.pathname.replace(/\/$/, "")
-
-    const action = actions.find((a) => pathname.includes(a))
-    if (!action) {
-      throw new UnknownAction(`Cannot detect action in pathname (${pathname}).`)
-    }
-
-    // Remove anything after the basepath
-    const re = new RegExp(`/${action}.*`)
-    url = new URL(url.href.replace(re, ""))
-
-    if (req.method !== "GET" && req.method !== "POST") {
+    if (req.method !== "GET" && req.method !== "POST")
       throw new UnknownAction("Only GET and POST requests are supported.")
-    }
 
-    const providerIdOrAction = pathname.split("/").pop()
-    let providerId
-    if (
-      providerIdOrAction &&
-      !action.includes(providerIdOrAction) &&
-      ["signin", "callback"].includes(action)
-    ) {
-      providerId = providerIdOrAction
-    }
+    // Defaults are usually set in the `init` function, but this is needed below
+    config.basePath ??= "/auth"
+
+    const url = new URL(req.url)
+
+    const { action, providerId } = parseActionAndProviderId(
+      url.pathname,
+      config.basePath
+    )
 
     return {
       url,
@@ -69,8 +57,8 @@ export async function toInternalRequest(
       headers: Object.fromEntries(req.headers),
       body: req.body ? await getBody(req) : undefined,
       cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
-      error: originalUrl.searchParams.get("error") ?? undefined,
-      query: Object.fromEntries(originalUrl.searchParams),
+      error: url.searchParams.get("error") ?? undefined,
+      query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
     return e as Error
@@ -129,4 +117,39 @@ export function randomString(size: number) {
   const r = (a: string, i: number): string => a + i2hex(i)
   const bytes = crypto.getRandomValues(new Uint8Array(size))
   return Array.from(bytes).reduce(r, "")
+}
+
+function isAction(action: string): action is AuthAction {
+  return actions.includes(action as AuthAction)
+}
+
+/** @internal Parse the action and provider id from a URL pathname. */
+export function parseActionAndProviderId(
+  pathname: string,
+  base: string
+): {
+  action: AuthAction
+  providerId?: string
+} {
+  const a = pathname.match(new RegExp(`^${base}(.+)`))
+
+  if (a === null)
+    throw new UnknownAction(`Cannot parse action at ${pathname}`)
+
+  const [_, actionAndProviderId] = a
+
+  const b = actionAndProviderId.replace(/^\//, "").split("/")
+
+  if (b.length !== 1 && b.length !== 2)
+    throw new UnknownAction(`Cannot parse action at ${pathname}`)
+
+  const [action, providerId] = b
+
+  if (!isAction(action))
+    throw new UnknownAction(`Cannot parse action at ${pathname}`)
+
+  if (providerId && !["signin", "callback"].includes(action))
+    throw new UnknownAction(`Cannot parse action at ${pathname}`)
+
+  return { action, providerId }
 }
