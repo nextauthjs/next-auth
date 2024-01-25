@@ -37,7 +37,7 @@
  */
 
 import { hkdf } from "@panva/hkdf"
-import { EncryptJWT, jwtDecrypt } from "jose"
+import { EncryptJWT, base64url, calculateJwkThumbprint, jwtDecrypt } from "jose"
 import { SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
@@ -50,14 +50,21 @@ const now = () => (Date.now() / 1000) | 0
 
 const alg = "dir"
 const enc = "A256CBC-HS512"
+type Digest = Parameters<typeof calculateJwkThumbprint>[1]
 
 /** Issues a JWT. By default, the JWT is encrypted using "A256CBC-HS512". */
 export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
   const { token = {}, secret, maxAge = DEFAULT_MAX_AGE, salt } = params
-  const encryptionSecret = await getDerivedEncryptionKey(enc, secret, salt)
+  const secrets = Array.isArray(secret) ? secret : [secret]
+  const encryptionSecret = await getDerivedEncryptionKey(enc, secrets[0], salt)
+
+  const thumbprint = await calculateJwkThumbprint(
+    { kty: "oct", k: base64url.encode(encryptionSecret) },
+    `sha${encryptionSecret.byteLength << 3}` as Digest
+  )
   // @ts-expect-error `jose` allows any object as payload.
   return await new EncryptJWT(token)
-    .setProtectedHeader({ alg, enc })
+    .setProtectedHeader({ alg, enc, kid: thumbprint })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
     .setJti(crypto.randomUUID())
@@ -69,14 +76,32 @@ export async function decode<Payload = JWT>(
   params: JWTDecodeParams
 ): Promise<Payload | null> {
   const { token, secret, salt } = params
+  const secrets = Array.isArray(secret) ? secret : [secret]
   if (!token) return null
   const { payload } = await jwtDecrypt(
     token,
-    async ({ enc }) => await getDerivedEncryptionKey(enc, secret, salt),
+    async ({ kid, enc }) => {
+      for (const secret of secrets) {
+        const encryptionSecret = await getDerivedEncryptionKey(
+          enc,
+          secret,
+          salt
+        )
+        if (kid === undefined) return encryptionSecret
+
+        const thumbprint = await calculateJwkThumbprint(
+          { kty: "oct", k: base64url.encode(encryptionSecret) },
+          `sha${encryptionSecret.byteLength << 3}` as Digest
+        )
+        if (kid === thumbprint) return encryptionSecret
+      }
+
+      throw new Error("no matching decryption secret")
+    },
     {
       clockTolerance: 15,
       keyManagementAlgorithms: [alg],
-      contentEncryptionAlgorithms: [enc, "A256GCM"]
+      contentEncryptionAlgorithms: [enc, "A256GCM"],
     }
   )
   return payload as Payload
@@ -211,7 +236,7 @@ export interface JWTEncodeParams<Payload = JWT> {
   /** Used in combination with `secret`, to derive the encryption secret for JWTs. */
   salt: string
   /** Used in combination with `salt`, to derive the encryption secret for JWTs. */
-  secret: string
+  secret: string | string[]
   /** The JWT payload. */
   token?: Payload
 }
@@ -219,8 +244,15 @@ export interface JWTEncodeParams<Payload = JWT> {
 export interface JWTDecodeParams {
   /** Used in combination with `secret`, to derive the encryption secret for JWTs. */
   salt: string
-  /** Used in combination with `salt`, to derive the encryption secret for JWTs. */
-  secret: string
+  /**
+   * Used in combination with `salt`, to derive the encryption secret for JWTs.
+   *
+   * @note
+   * You can also pass an array of secrets, in which case the first secret that successfully
+   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
+   * The newer secret should be added to the start of the array, which will be used for all new sessions.
+   */
+  secret: string | string[]
   /** The Auth.js issued JWT to be decoded */
   token?: string
 }
@@ -228,9 +260,11 @@ export interface JWTDecodeParams {
 export interface JWTOptions {
   /**
    * The secret used to encode/decode the Auth.js issued JWT.
+   * It can be an array of secrets, in which case the first secret that successfully
+   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
    * @internal
    */
-  secret: string
+  secret: string | string[]
   /**
    * The maximum age of the Auth.js issued JWT in seconds.
    *
