@@ -17,6 +17,9 @@
     <a href="https://www.npmjs.com/package/next-auth">
       <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="Github Stable Release" />
     </a>
+    <a href="https://codecov.io/gh/nextauthjs/next-auth" > 
+      <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauth.js/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov">
+    </a>
   </p>
   <p align="center">
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.

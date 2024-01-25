@@ -6,7 +6,10 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [],
   test: {
-    coverage: { include: ['src/**/*.ts'] },
+    coverage: {
+      include: ['src/**/*.ts'],
+      reporter: ['json', 'html'],
+    },
     setupFiles: ['./test/test-setup.ts'],
   },
 })

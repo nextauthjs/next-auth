@@ -95,8 +95,8 @@ jobs:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
       - uses: codecov/codecov-action@v3
+        name: Coverage
         with:
-          files:
           token: ${{ secrets.CODECOV_TOKEN }}
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
