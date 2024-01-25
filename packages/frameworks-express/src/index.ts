@@ -181,13 +181,22 @@ export async function getSession(
 }
 
 export function setEnvDefaults(config: AuthConfig) {
-  config.secret ??= process.env.AUTH_SECRET
   try {
     const url = process.env.AUTH_URL
     if (url) config.basePath = new URL(url).pathname
   } catch {
   } finally {
     config.basePath ??= "/auth"
+  }
+
+  if (!config.secret) {
+    config.secret = []
+    const secret = process.env.AUTH_SECRET
+    if (secret) config.secret.push(secret)
+    for (const i of [1, 2, 3]) {
+      const secret = process.env[`AUTH_SECRET_${i}`]
+      if (secret) config.secret.unshift(secret)
+    }
   }
 
   config.trustHost ??= !!(
