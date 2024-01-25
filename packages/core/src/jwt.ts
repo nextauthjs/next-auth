@@ -48,13 +48,16 @@ const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 const now = () => (Date.now() / 1000) | 0
 
-/** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
+const alg = "dir"
+const enc = "A256CBC-HS512"
+
+/** Issues a JWT. By default, the JWT is encrypted using "A256CBC-HS512". */
 export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
   const { token = {}, secret, maxAge = DEFAULT_MAX_AGE, salt } = params
-  const encryptionSecret = await getDerivedEncryptionKey(secret, salt)
+  const encryptionSecret = await getDerivedEncryptionKey(enc, secret, salt)
   // @ts-expect-error `jose` allows any object as payload.
   return await new EncryptJWT(token)
-    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .setProtectedHeader({ alg, enc })
     .setIssuedAt()
     .setExpirationTime(now() + maxAge)
     .setJti(crypto.randomUUID())
@@ -67,10 +70,15 @@ export async function decode<Payload = JWT>(
 ): Promise<Payload | null> {
   const { token, secret, salt } = params
   if (!token) return null
-  const encryptionSecret = await getDerivedEncryptionKey(secret, salt)
-  const { payload } = await jwtDecrypt(token, encryptionSecret, {
-    clockTolerance: 15,
-  })
+  const { payload } = await jwtDecrypt(
+    token,
+    async ({ enc }) => await getDerivedEncryptionKey(enc, secret, salt),
+    {
+      clockTolerance: 15,
+      keyManagementAlgorithms: [alg],
+      contentEncryptionAlgorithms: [enc, "A256GCM"]
+    }
+  )
   return payload as Payload
 }
 
@@ -152,15 +160,27 @@ export async function getToken(
 }
 
 async function getDerivedEncryptionKey(
+  enc: string,
   keyMaterial: Parameters<typeof hkdf>[1],
   salt: Parameters<typeof hkdf>[2]
 ) {
+  let length: number
+  switch (enc) {
+    case "A256CBC-HS512":
+      length = 64
+      break
+    case "A256GCM":
+      length = 32
+      break
+    default:
+      throw new Error("Unsupported JWT Content Encryption Algorithm")
+  }
   return await hkdf(
     "sha256",
     keyMaterial,
     salt,
     `Auth.js Generated Encryption Key (${salt})`,
-    32
+    length
   )
 }
 
