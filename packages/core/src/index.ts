@@ -167,9 +167,10 @@ export async function Auth(
       return Response.json(null, { status: 400 })
 
     const type = isAuthError ? error.type : "Configuration"
+    const message = isAuthError ? error.message : type
     const page = (isAuthError && error.kind) || "error"
     // TODO: Filter out some error types from being sent to the client
-    const params = new URLSearchParams({ error: type })
+    const params = new URLSearchParams({ error: message })
     const path =
       config.pages?.[page] ?? `${config.basePath}/${page.toLowerCase()}`
 

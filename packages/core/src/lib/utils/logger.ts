@@ -21,7 +21,9 @@ const reset = "\x1b[0m"
 export const logger: LoggerInstance = {
   error(error) {
     const name = error instanceof AuthError ? error.type : error.name
-    console.error(`${red}[auth][error]${reset} ${name}: ${error.message}`)
+    console.error(
+      `${red}[auth][error]${reset} ${name}: ${error.message} Read more at https://errors.authjs.dev#${name}`
+    )
     if (
       error.cause &&
       typeof error.cause === "object" &&
