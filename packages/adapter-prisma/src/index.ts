@@ -234,6 +234,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
     deleteUser: (id) => p.user.delete({ where: { id } }),
     linkAccount: (data) =>
       p.account.create({ data }) as unknown as AdapterAccount,
+    updateAccount: (data) => p.account.upsert({where:{providerAccountId: data.providerAccountId, userId: data.userId}, update:data, create: data }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
       p.account.delete({
         where: { provider_providerAccountId },
