@@ -19,7 +19,7 @@
     "dev:docs:adapters": "turbo run dev --filter=docs",
     "email": "cd apps/dev/nextjs && pnpm email",
     "eslint": "eslint --cache .",
-    "lint": "prettier --check ./packages",
+    "lint": "prettier --check .",
     "format": "prettier --write .",
     "release": "release",
     "peek": "pnpm release --peek",
