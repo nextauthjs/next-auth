@@ -46,7 +46,7 @@ import type { Adapter } from "@auth/core/adapters"
  *   ],
  * })
  * ```
- * 
+ *
  * :::info
  * If you're using multi-project schemas, you can pass your table function as a second argument
  * :::
@@ -75,7 +75,7 @@ import type { Adapter } from "@auth/core/adapters"
  * export const users = pgTable("user", {
  *  id: text("id").notNull().primaryKey(),
  *  name: text("name"),
- *  email: text("email").notNull(),
+ *  email: text("email"),
  *  emailVerified: timestamp("emailVerified", { mode: "date" }),
  *  image: text("image"),
  * })
@@ -138,7 +138,7 @@ import type { Adapter } from "@auth/core/adapters"
  * export const users = mysqlTable("user", {
  *  id: varchar("id", { length: 255 }).notNull().primaryKey(),
  *  name: varchar("name", { length: 255 }),
- *  email: varchar("email", { length: 255 }).notNull(),
+ *  email: varchar("email", { length: 255 }),
  *   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }).defaultNow(),
  *  image: varchar("image", { length: 255 }),
  * })
@@ -197,7 +197,7 @@ import type { Adapter } from "@auth/core/adapters"
  * export const users = sqliteTable("user", {
  *  id: text("id").notNull().primaryKey(),
  *  name: text("name"),
- *  email: text("email").notNull(),
+ *  email: text("email"),
  *  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
  *  image: text("image"),
  * })
