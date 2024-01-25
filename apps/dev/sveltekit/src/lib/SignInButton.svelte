@@ -1,12 +1,11 @@
 <script lang="ts">
-  export let provider: any
+  export let callbackUrl: string
+  export let providerName: string
 </script>
 
-<form action={provider.signinUrl} method="POST">
-  {#if provider.callbackUrl}
-    <input type="hidden" name="callbackUrl" value={provider.callbackUrl} />
-  {/if}
+<form action='/signin' method="POST">
+  <input type="hidden" name="callbackUrl" value={callbackUrl} />
   <button type="submit" class="button">
-    <slot>Sign in with {provider.name}</slot>
+    <slot>Sign in with {providerName}</slot>
   </button>
 </form>

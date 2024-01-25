@@ -1,5 +1,9 @@
 <script lang="ts">
   import { page } from "$app/stores"
+  import { SignIn } from "@auth/sveltekit/components"
+  const signout = async () => {
+    await fetch("/api/signout", { method: "POST" })
+  }
 </script>
 
 <div>
@@ -20,7 +24,7 @@
                 $page.data.session.user?.name}</strong
             >
           </span>
-          <a href="/api/signout" class="button">Sign out</a>
+          <button on:click={signout} class="button">Sign out</button>
         {:else}
           <span class="notSignedInText">You are not signed in</span>
           <a href="/auth/signin" class="buttonPrimary">Sign in</a>
@@ -31,7 +35,9 @@
       <ul class="navItems">
         <li class="navItem"><a href="/">Home</a></li>
         <li class="navItem"><a href="/protected">Protected</a></li>
-        <li class="navItem"><a href="/protected-ssr-login">Protected with Auto login</a></li>
+        <li class="navItem">
+          <SignIn provider="github">Sign In with GitHub</SignIn>
+        </li>
       </ul>
     </nav>
   </header>

@@ -68,6 +68,10 @@
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
     },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "svelte": "./dist/components/index.js"
+    },
     "./adapters": {
       "types": "./dist/adapters.d.ts"
     },

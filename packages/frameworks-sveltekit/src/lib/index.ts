@@ -198,12 +198,11 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import type { Handle, RequestEvent } from "@sveltejs/kit"
+import type { Action, Actions, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
-import type { AuthAction, Session } from "@auth/core/types"
-import type { BuiltInProviderType } from "@auth/core/providers"
+import type { AuthAction } from "@auth/core/types"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
@@ -216,7 +215,7 @@ export type {
   User,
 } from "@auth/core/types"
 
-const actions: AuthAction[] = [
+const authActions: AuthAction[] = [
   "providers",
   "session",
   "csrf",
@@ -235,34 +234,58 @@ export function SvelteKitAuth(
   config:
     | SvelteKitAuthConfig
     | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
-): Handle {
-  return async function ({ event, resolve }) {
-    const _config = typeof config === "object" ? config : await config(event)
-    setEnvDefaults(env, _config)
+): {
+  handle: Handle
+  signIn: Action
+  signOut: Action
+} {
+  return {
+    signIn: async (event) => {
+      const { request, locals } = event
+      const url = new URL(request.url)
+      const formData = await request.formData()
+      const data = Object.fromEntries(formData)
+      const provider = data['id'].toString()
+      const authorizationParams = Object.fromEntries(url.searchParams)
+      console.log({
+        provider,
+        data: Object.fromEntries(formData),
+        authorizationParams,
+      })
+      await locals.signIn(provider, formData, authorizationParams)
+    },
+    signOut: async ({ request, locals }) => {
+      const options = Object.fromEntries(await request.formData())
+      await locals.signOut(options)
+    },
+    async handle({ event, resolve }) {
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
 
-    const { url, request } = event
+      const { url, request } = event
 
-    event.locals.auth ??= () => auth(event, _config)
-    event.locals.getSession ??= event.locals.auth
-    event.locals.signIn ??= (provider, options, authorizationParams) =>
-      signIn(provider, options, authorizationParams, _config, event)
-    event.locals.signOut ??= async (options) => signOut(options, _config, event)
+      event.locals.auth ??= () => auth(event, _config)
+      event.locals.getSession ??= event.locals.auth
+      event.locals.signIn ??= (provider, options, authorizationParams) =>
+        signIn(provider, options, authorizationParams, _config, event)
+      event.locals.signOut ??= async (options) => signOut(options, _config, event)
 
-    const action = url.pathname
-      .slice(
-        // @ts-expect-error - basePath is defined in setEnvDefaults
-        _config.basePath.length + 1
-      )
-      .split("/")[0]
+      const action = url.pathname
+        .slice(
+          // @ts-expect-error - basePath is defined in setEnvDefaults
+          _config.basePath.length + 1
+        )
+        .split("/")[0]
 
-    if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
-      return Auth(request, _config)
-    }
-    return resolve(event)
+      if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
+        return Auth(request, _config)
+      }
+      return resolve(event)
+    },
   }
 }
 
 // TODO: Get this function from @auth/core/util
 function isAction(action: string): action is AuthAction {
-  return actions.includes(action as AuthAction)
+  return authActions.includes(action as AuthAction)
 }

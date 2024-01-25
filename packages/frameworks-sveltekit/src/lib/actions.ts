@@ -61,6 +61,8 @@ export async function signIn(
   const req = new Request(url, { method: "POST", headers, body })
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
+  console.log({ res })
+
   for (const c of res?.cookies ?? []) {
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
   }
