@@ -1,7 +1,8 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
-import { detectOrigin, reqWithEnvUrl } from "./env.js"
+import { reqWithEnvUrl } from "./env.js"
+import { createActionURL } from "./actions.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
@@ -59,8 +60,8 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
 }
 
 async function getSession(headers: Headers, config: NextAuthConfig) {
-  const origin = detectOrigin(headers)
-  const request = new Request(`${origin}/session`, {
+  const url = createActionURL("session", headers, config.basePath)
+  const request = new Request(url, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
 
@@ -75,7 +76,13 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
       async session(...args) {
         const session =
           // If the user defined a custom session callback, use that instead
-          (await config.callbacks?.session?.(...args)) ?? args[0].session
+          (await config.callbacks?.session?.(...args)) ?? {
+            ...args[0].session,
+            expires:
+              args[0].session.expires instanceof Date
+                ? args[0].session.expires.toISOString()
+                : args[0].session.expires,
+          }
         // @ts-expect-error either user or token will be defined
         const user = args[0].user ?? args[0].token
         return { user, ...session } satisfies Session
@@ -249,7 +256,7 @@ async function handleAuth(
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
       NextResponse.next()
   } else if (!authorized) {
-    const signInPage = config.pages?.signIn ?? "/api/auth/signin"
+    const signInPage = config.pages?.signIn ?? `${config.basePath}/signin`
     if (request.nextUrl.pathname !== signInPage) {
       // Redirect to signin page by default if not authorized
       const signInUrl = request.nextUrl.clone()

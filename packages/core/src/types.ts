@@ -60,7 +60,7 @@ import type {
   OAuth2TokenEndpointResponse,
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
-import type { Adapter, AdapterUser } from "./adapters.js"
+import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
 import { AuthConfig } from "./index.js"
 import type { JWT, JWTOptions } from "./jwt.js"
 import type { Cookie } from "./lib/utils/cookie.js"
@@ -248,18 +248,15 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
   session: (
-    params: (
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        }
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-        }
-    ) & {
+    params: ({
+      session: { user: AdapterUser } & AdapterSession
+      /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+      user: AdapterUser
+    } & {
+      session: Session
+      /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+      token: JWT
+    }) & {
       /**
        * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
        *
@@ -587,4 +584,5 @@ export interface InternalOptions<TProviderType = ProviderType> {
    */
   isOnRedirectProxy: boolean
   experimental: Record<string, boolean>
+  basePath: string
 }

@@ -260,6 +260,9 @@
   "pnpm": {
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.3.1": "patches/@balazsorban__monorepo-release@0.3.1.patch"
+    },
+    "overrides": {
+      "mailparser": "3.6.6"
     }
   }
 }

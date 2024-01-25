@@ -45,7 +45,7 @@
  *
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
- * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
+ * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.basePath}:
  * ```
  * [origin]/auth/callback/[provider]
  * ```
@@ -199,8 +199,8 @@
 
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
-
-import { dev } from "$app/environment"
+import { parse } from "set-cookie-parser"
+import { dev, building } from "$app/environment"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
@@ -215,17 +215,28 @@ export type {
   User,
 } from "@auth/core/types"
 
-export async function getSession(
-  req: Request,
+async function auth(
+  event: RequestEvent,
   config: SvelteKitAuthConfig
-): ReturnType<App.Locals["getSession"]> {
-  config.secret ??= env.AUTH_SECRET
+): ReturnType<App.Locals["auth"]> {
+  setEnvDefaults(env, config)
   config.trustHost ??= true
 
-  const prefix = config.prefix ?? `${base}/auth`
-  const url = new URL(prefix + "/session", req.url)
-  const request = new Request(url, { headers: req.headers })
+  const { request: req } = event
+
+  const basePath = config.basePath ?? `${base}/auth`
+  const url = new URL(basePath + "/session", req.url)
+  const request = new Request(url, {
+    headers: { cookie: req.headers.get("cookie") ?? "" },
+  })
   const response = await Auth(request, config)
+
+  const authCookies = parse(response.headers.getSetCookie())
+  for (const cookie of authCookies) {
+    const { name, value, ...options } = cookie
+    // @ts-expect-error - Review: SvelteKit and set-cookie-parser are mismatching
+    event.cookies.set(name, value, { path: "/", ...options })
+  }
 
   const { status = 200 } = response
   const data = await response.json()
@@ -236,16 +247,7 @@ export async function getSession(
 }
 
 /** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
-  /**
-   * Defines the base path for the auth routes.
-   * If you change the default value,
-   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
-   *
-   * @default `${base}/auth` - `base` is the base path of your SvelteKit app, configured in `svelte.config.js`.
-   */
-  prefix?: string
-}
+export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {}
 
 const actions: AuthAction[] = [
   "providers",
@@ -258,48 +260,49 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-type DynamicSvelteKitAuthConfig = (
-  event: RequestEvent
-) => PromiseLike<SvelteKitAuthConfig>
-
 /**
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
 export function SvelteKitAuth(
-  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
+  config:
+    | SvelteKitAuthConfig
+    | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
 ): Handle {
   return async function ({ event, resolve }) {
-    const authOptions =
-      typeof svelteKitAuthOptions === "object"
-        ? svelteKitAuthOptions
-        : await svelteKitAuthOptions(event)
-    const { prefix = `${base}/auth` } = authOptions
-
-    authOptions.secret ??= env.AUTH_SECRET
-    authOptions.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
-    authOptions.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
+    const _config = typeof config === "object" ? config : await config(event)
+    setEnvDefaults(env, _config)
 
     const { url, request } = event
 
-    event.locals.getSession ??= () => getSession(request, authOptions)
+    event.locals.auth ??= () => auth(event, _config)
+    event.locals.getSession ??= event.locals.auth
 
     const action = url.pathname
-      .slice(prefix.length + 1)
-      .split("/")[0] as AuthAction
+      .slice(
+        // @ts-expect-error - basePath is defined in setEnvDefaults
+        _config.basePath.length + 1
+      )
+      .split("/")[0]
 
-    if (!actions.includes(action) || !url.pathname.startsWith(prefix + "/")) {
-      return resolve(event)
+    if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
+      return Auth(request, _config)
     }
-
-    return Auth(request, authOptions)
+    return resolve(event)
   }
+}
+
+// TODO: Get this function from @auth/core/util
+function isAction(action: string): action is AuthAction {
+  return actions.includes(action as AuthAction)
 }
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace App {
     interface Locals {
+      auth(): Promise<Session | null>
+      /** @deprecated Use `auth` instead. */
       getSession(): Promise<Session | null>
     }
     interface PageData {
@@ -312,4 +315,40 @@ declare module "$env/dynamic/private" {
   export const AUTH_SECRET: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
+}
+
+export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
+  if (building) return
+
+  try {
+    const url = env.AUTH_URL
+    if (url) config.basePath = new URL(url).pathname
+  } catch {
+  } finally {
+    config.basePath ??= `${base}/auth`
+  }
+
+  config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
+  config.secret ??= env.AUTH_SECRET
+  config.trustHost ??= !!(
+    env.AUTH_URL ??
+    env.AUTH_TRUST_HOST ??
+    env.VERCEL ??
+    env.NODE_ENV !== "production" ??
+    dev
+  )
+  config.providers = config.providers.map((p) => {
+    const finalProvider = typeof p === "function" ? p({}) : p
+    const ID = finalProvider.id.toUpperCase()
+    if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
+      finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
+      finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
+      if (finalProvider.type === "oidc") {
+        finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
+      }
+    } else if (finalProvider.type === "email") {
+      finalProvider.apiKey ??= envObject[`AUTH_${ID}_KEY`]
+    }
+    return finalProvider
+  })
 }

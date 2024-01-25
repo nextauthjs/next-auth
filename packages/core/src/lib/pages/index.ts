@@ -4,9 +4,9 @@ import SigninPage from "./signin.js"
 import SignoutPage from "./signout.js"
 import css from "./styles.js"
 import VerifyRequestPage from "./verify-request.js"
+import { UnknownAction } from "../../errors.js"
 
 import type {
-  ErrorPageParam,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
@@ -72,7 +72,8 @@ export default function renderPage(params: RenderPageParams) {
         ),
       }
     },
-    signin(error: any) {
+    signin(providerId?: string, error?: any) {
+      if (providerId) throw new UnknownAction("Unsupported action")
       if (pages?.signIn) {
         let signinUrl = `${pages.signIn}${
           pages.signIn.includes("?") ? "&" : "?"

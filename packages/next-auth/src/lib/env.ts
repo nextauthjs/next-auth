@@ -1,10 +1,17 @@
 import { NextRequest } from "next/server"
-import type { headers } from "next/headers"
 
 import type { NextAuthConfig } from "./index.js"
 
 export function setEnvDefaults(config: NextAuthConfig) {
   config.secret ??= process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
+  try {
+    const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+    if (url) config.basePath = new URL(url).pathname
+  } catch {
+  } finally {
+    config.basePath ??= "/api/auth"
+  }
+
   config.trustHost ??= !!(
     process.env.AUTH_URL ??
     process.env.NEXTAUTH_URL ??
@@ -15,28 +22,18 @@ export function setEnvDefaults(config: NextAuthConfig) {
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
+    const ID = finalProvider.id.toUpperCase()
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      const ID = finalProvider.id.toUpperCase()
       finalProvider.clientId ??= process.env[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= process.env[`AUTH_${ID}_SECRET`]
       if (finalProvider.type === "oidc") {
         finalProvider.issuer ??= process.env[`AUTH_${ID}_ISSUER`]
       }
+    } else if (finalProvider.type === "email") {
+      finalProvider.apiKey ??= process.env[`AUTH_${ID}_KEY`]
     }
     return finalProvider
   })
-}
-
-/**
- * Extract the origin from `NEXTAUTH_URL` or `AUTH_URL`
- * environment variables, or the request's headers.
- */
-export function detectOrigin(h: Headers | ReturnType<typeof headers>) {
-  const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
-  if (url) return new URL(url)
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
-  return new URL(`${protocol}://${host}`)
 }
 
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
