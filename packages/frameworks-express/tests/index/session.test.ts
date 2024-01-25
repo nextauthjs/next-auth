@@ -39,8 +39,6 @@ describe("getSession", () => {
   it("Should return the mocked session from the Auth response", async () => {
     let expectations: Function = () => {}
 
-    app.use(express.json())
-
     app.post("/", async (req, res) => {
       const session = await getSession(req, {
         providers: [],
