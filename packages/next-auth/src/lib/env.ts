@@ -37,15 +37,10 @@ export function setEnvDefaults(config: NextAuthConfig) {
 }
 
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
-export function reqWithEnvUrl(req: NextRequest): NextRequest {
+export function reqWithEnvURL(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
   if (!url) return req
-  const base = new URL(url).origin
-  // REVIEW: Bug in Next.js?: TypeError: next_dist_server_web_exports_next_request__WEBPACK_IMPORTED_MODULE_0__ is not a constructor
-  // return new NextRequest(new URL(nonBase, base), req)
-  const _url = req.nextUrl.clone()
-  _url.href = req.nextUrl.href.replace(req.nextUrl.origin, base)
-  const _req = new Request(_url, req) as any
-  _req.nextUrl = _url
-  return _req
+  const { origin: envOrigin } = new URL(url)
+  const { href, origin } = req.nextUrl
+  return new NextRequest(href.replace(origin, envOrigin), req)
 }

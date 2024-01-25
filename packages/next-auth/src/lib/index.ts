@@ -1,7 +1,7 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
-import { reqWithEnvUrl } from "./env.js"
+import { reqWithEnvURL } from "./env.js"
 import { createActionURL } from "./actions.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -219,7 +219,7 @@ async function handleAuth(
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
-  const request = reqWithEnvUrl(args[0])
+  const request = reqWithEnvURL(args[0])
   const sessionResponse = await getSession(request.headers, config)
   const auth = await sessionResponse.json()
 
