@@ -5,7 +5,7 @@
  * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt JWT}s
  * issued and used by Auth.js.
  *
- * The JWT issued by Auth.js is _encrypted by default_, using the _ A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
+ * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
  * It uses the `AUTH_SECRET` environment variable to derive a sufficient encryption key.
  *
  * :::info Note
