@@ -24,7 +24,7 @@ export interface TestOptions {
   }
   db: {
     /** Generates UUID v4 by default. Use it to override how the test suite should generate IDs, like user id. */
-    id?: () => string
+    id?: () => string | undefined
     /**
      * Manually disconnect database after all tests have been run,
      * if your adapter doesn't do it automatically
@@ -59,7 +59,7 @@ const testIf = (condition: boolean) => (condition ? test : test.skip)
  * You can add additional tests below, if you wish.
  */
 export async function runBasicTests(options: TestOptions) {
-  const id = options.db.id ?? randomUUID
+  const id = () => options.db.id?.() ?? randomUUID()
   // Init
   beforeAll(async () => {
     await options.db.connect?.()
@@ -75,7 +75,7 @@ export async function runBasicTests(options: TestOptions) {
   })
 
   let user = options.fixtures?.user ?? {
-    id: id(),
+    id: randomUUID(),
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
