@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { encode, decode } from "../jwt"
 
-describe.only("supports secret rotation", () => {
+describe("supports secret rotation", () => {
   const payload = { foo: "bar" }
   const s1 = "secret1"
   const s2 = "secret2"
