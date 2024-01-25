@@ -123,14 +123,6 @@ export const toId = (surrealId: string) => {
  *
  * The SurrealDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `SurrealDBClient` that is connected already. Below you can see an example how to do this.
  *
- * ### Versions
- *
- * | surrealdb.js version | Adapter version |
- * | -------------------- | --------------- |
- * | <= 0.9.1             | 0.2.10          |
- * | = 0.10.x             | none            |
- * | >= 0.11.0            | 0.3.0           |
- *
  * ### Add the SurrealDB client
  *
  * #### Option 1/2 – Using RPC:
