@@ -241,22 +241,21 @@ export function SvelteKitAuth(
 } {
   return {
     signIn: async (event) => {
-      const { request, locals } = event
+      const { request } = event
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
       const url = new URL(request.url)
       const formData = await request.formData()
-      const data = Object.fromEntries(formData)
-      const provider = data['id'].toString()
+      const options = Object.fromEntries(formData)
+      const provider = options['id'].toString()
       const authorizationParams = Object.fromEntries(url.searchParams)
-      console.log({
-        provider,
-        data: Object.fromEntries(formData),
-        authorizationParams,
-      })
-      await locals.signIn(provider, formData, authorizationParams)
+      await signIn(provider, options, authorizationParams, _config, event)
     },
-    signOut: async ({ request, locals }) => {
-      const options = Object.fromEntries(await request.formData())
-      await locals.signOut(options)
+    signOut: async (event) => {
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
+      const options = Object.fromEntries(await event.request.formData())
+      await signOut(options, _config, event)
     },
     async handle({ event, resolve }) {
       const _config = typeof config === "object" ? config : await config(event)
@@ -266,9 +265,10 @@ export function SvelteKitAuth(
 
       event.locals.auth ??= () => auth(event, _config)
       event.locals.getSession ??= event.locals.auth
-      event.locals.signIn ??= (provider, options, authorizationParams) =>
-        signIn(provider, options, authorizationParams, _config, event)
-      event.locals.signOut ??= async (options) => signOut(options, _config, event)
+
+      // event.locals.signIn ??= (provider, options, authorizationParams) =>
+      //   signIn(provider, options, authorizationParams, _config, event)
+      // event.locals.signOut ??= async (options) => signOut(options, _config, event)
 
       const action = url.pathname
         .slice(

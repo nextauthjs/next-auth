@@ -1,9 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { SignIn } from "@auth/sveltekit/components"
-  const signout = async () => {
-    await fetch("/api/signout", { method: "POST" })
-  }
+  import { SignIn, SignOut } from "@auth/sveltekit/components"
 </script>
 
 <div>
@@ -24,7 +21,7 @@
                 $page.data.session.user?.name}</strong
             >
           </span>
-          <button on:click={signout} class="button">Sign out</button>
+          <SignOut>Sign out</SignOut>
         {:else}
           <span class="notSignedInText">You are not signed in</span>
           <a href="/auth/signin" class="buttonPrimary">Sign in</a>

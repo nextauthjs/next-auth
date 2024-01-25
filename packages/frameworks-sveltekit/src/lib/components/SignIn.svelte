@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from "$app/forms"
   import type { signIn } from "$lib/actions"
 
   export let className = ""
@@ -16,6 +17,7 @@
       ? `?${new URLSearchParams(authorizationParams).toString()}`
       : ""
   }`}
+  use:enhance
   class={`signInButton ${className}`}
 >
   <input type="hidden" name="id" value={provider} />
