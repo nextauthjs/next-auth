@@ -58,6 +58,9 @@ declare global {
 
 declare module "$env/dynamic/private" {
   export const AUTH_SECRET: string
+  export const AUTH_SECRET_1: string
+  export const AUTH_SECRET_2: string
+  export const AUTH_SECRET_3: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
 }
