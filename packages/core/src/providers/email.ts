@@ -120,6 +120,7 @@ export interface EmailConfig extends CommonProviderOptions {
   // user options
   // TODO figure out a better way than copying from EmailUserConfig
   secret?: string
+  apiKey?: string
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
 }

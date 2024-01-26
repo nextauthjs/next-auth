@@ -1,6 +1,9 @@
 import type { IncomingHttpHeaders } from "http"
 import type { AuthAction, AuthConfig } from "../../types"
 
+/**
+ * Set default env variables on the config object
+ **/
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
   try {
     const url = process.env.AUTH_URL
