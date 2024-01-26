@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize"
 import { runBasicTests } from "utils/adapter"
 import SequelizeAdapter, { models } from "../src"
+import { beforeEach, describe, expect, test } from "vitest"
 
 const sequelize = new Sequelize({
   logging: false,
@@ -50,7 +51,7 @@ describe("Additional Sequelize tests", () => {
 
       const { getUser } = SequelizeAdapter(sequelize)
 
-      await getUser("1")
+      await getUser?.("1")
     })
 
     test("Creates DB tables", async () => {
@@ -129,7 +130,7 @@ describe("Additional Sequelize tests", () => {
         },
       })
 
-      await getUser("1")
+      await getUser?.("1")
     })
 
     test("Custom user model", async () => {
