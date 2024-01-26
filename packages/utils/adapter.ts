@@ -3,18 +3,6 @@ import { test, expect, beforeAll, afterAll } from "vitest"
 import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
 
-const requiredMethods = [
-  "createUser",
-  "getUser",
-  "getUserByEmail",
-  "getUserByAccount",
-  "updateUser",
-  "linkAccount",
-  "createSession",
-  "getSessionAndUser",
-  "updateSession",
-  "deleteSession",
-]
 export interface TestOptions {
   adapter: Adapter
   fixtures?: {

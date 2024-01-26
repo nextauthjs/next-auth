@@ -37,9 +37,8 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "tsc -w",
     "build": "tsc",
-    "test": "firebase emulators:exec --only firestore 'vitest -c ../utils/vitest.config.ts'"
+    "test": "firebase emulators:exec 'vitest -c ../utils/vitest.config.ts'"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
