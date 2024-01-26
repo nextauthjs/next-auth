@@ -1,8 +1,6 @@
 //@ts-check
 
-// This will be available in the browser
-/** @type {import("@simplewebauthn/browser")} */
-let SimpleWebAuthnBrowser
+// Declare a SimpleWebAuthnBrowser variable as part of "window"
 
 /** @typedef {"authenticate"} WebAuthnAuthenticate */
 /** @typedef {"register"} WebAuthnRegister */
@@ -24,6 +22,10 @@ let SimpleWebAuthnBrowser
  * @param {string} providerID is the ID of the webauthn provider
  */
 export async function webauthnScript(baseURL, providerID) {
+  /** @type {typeof import("@simplewebauthn/browser")} */
+  // @ts-ignore
+  const WebAuthnBrowser = window.SimpleWebAuthnBrowser
+
   /**
    * Fetch webauthn options from the server
    * 
@@ -121,7 +123,7 @@ export async function webauthnScript(baseURL, providerID) {
    */
   async function authenticationFlow(options, autofill) {
     // Start authentication
-    const authResp = await SimpleWebAuthnBrowser.startAuthentication(options, autofill)
+    const authResp = await WebAuthnBrowser.startAuthentication(options, autofill)
 
     // Submit authentication response to server
     return await submitForm("authenticate", authResp)
@@ -140,7 +142,7 @@ export async function webauthnScript(baseURL, providerID) {
     })
 
     // Start registration
-    const regResp = await SimpleWebAuthnBrowser.startRegistration(options)
+    const regResp = await WebAuthnBrowser.startRegistration(options)
 
     // Submit registration response to server
     return await submitForm("register", regResp)
@@ -154,7 +156,7 @@ export async function webauthnScript(baseURL, providerID) {
    */
   async function autofillAuthentication() {
     // if the browser can't handle autofill, don't try
-    if (!SimpleWebAuthnBrowser.browserSupportsWebAuthnAutofill()) return
+    if (!WebAuthnBrowser.browserSupportsWebAuthnAutofill()) return
 
     const res = await fetchOptions("authenticate")
     if (!res) {
@@ -179,7 +181,7 @@ export async function webauthnScript(baseURL, providerID) {
     const form = getForm()
 
     // If the browser can't do WebAuthn, hide the form
-    if (!SimpleWebAuthnBrowser.browserSupportsWebAuthn()) {
+    if (!WebAuthnBrowser.browserSupportsWebAuthn()) {
       form.style.display = "none"
 
       return

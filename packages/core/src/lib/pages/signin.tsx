@@ -48,15 +48,13 @@ function hexToRgba(hex?: string, alpha = 1) {
 }
 
 function ConditionalUIScript(providerID: string) {
-  const conditionalUIScript = `${webauthnScript}`
   const startConditionalUIScript = `
-const currentURL = window.location.href
-const baseURL = currentURL.substring(0, currentURL.lastIndexOf('/'))
-webauthnScript(baseURL, "${providerID}")
+const currentURL = window.location.href;
+const baseURL = currentURL.substring(0, currentURL.lastIndexOf('/'));
+(${webauthnScript})(baseURL, "${providerID}");
 `
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: conditionalUIScript }} />
       <script dangerouslySetInnerHTML={{ __html: startConditionalUIScript }} />
     </>
   )
