@@ -603,8 +603,8 @@ importers:
         version: link:../core
     devDependencies:
       '@xata.io/client':
-        specifier: ^0.13.0
-        version: 0.13.4(typescript@5.3.3)
+        specifier: ^0.28.4
+        version: 0.28.4(typescript@5.3.3)
 
   packages/core:
     dependencies:
@@ -8988,8 +8988,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@xata.io/client@0.13.4(typescript@5.3.3):
-    resolution: {integrity: sha512-eODWMjW185bPR3YcBSWOHeH5FlxsVSq8lbCoHxrjt8TZAthXb9MHwEUhgh39GrkwcQ181XRz2XwKDJAipIRg6A==}
+  /@xata.io/client@0.28.4(typescript@5.3.3):
+    resolution: {integrity: sha512-B02WHIA/ViHya84XvH6JCo13rd5h4S5vVyY2aYi6fIcjDIbCpsSLJ4oGWpdodovRYeAZy9Go4OhdyZwMIRC4BQ==}
     peerDependencies:
       typescript: '>=4.5'
     dependencies:

@@ -48,7 +48,8 @@
     },
     "@auth/xata-adapter#test": {
       "env": [
-        "XATA_API_KEY"
+        "XATA_API_KEY",
+        "XATA_DATABASE_URL"
       ]
     },
     "docs#dev": {
