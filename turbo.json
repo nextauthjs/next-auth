@@ -30,7 +30,6 @@
       ],
       "inputs": [
         "src/**/",
-        "src/**/",
         "test/**/"
       ],
       "outputMode": "new-only"
