@@ -2,14 +2,6 @@ import { runBasicTests } from "utils/adapter"
 import { EdgeDBAdapter } from "../src"
 import { createClient } from "edgedb"
 
-if (process.env.CI) {
-  // TODO: Fix this
-  test('Skipping EdgeDBAdapter tests in CI because of "Request failed" errors. Should revisit', () => {
-    expect(true).toBe(true)
-  })
-  process.exit(0)
-}
-
 const client = createClient()
 
 runBasicTests({

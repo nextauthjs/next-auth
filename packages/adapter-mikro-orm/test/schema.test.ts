@@ -1,6 +1,7 @@
 import { MikroORM, Options } from "@mikro-orm/core"
 import { SqliteDriver } from "@mikro-orm/sqlite"
 import { defaultEntities } from "../src"
+import { expect, test } from "vitest"
 
 const config: Options<SqliteDriver> = {
   dbName: "./db.sqlite",
@@ -13,7 +14,7 @@ const config: Options<SqliteDriver> = {
   ],
 }
 
-it("run migrations", async () => {
+test("run migrations", async () => {
   const orm = await MikroORM.init(config)
   await orm.getSchemaGenerator().dropSchema()
 

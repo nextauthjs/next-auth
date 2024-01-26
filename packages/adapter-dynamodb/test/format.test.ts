@@ -1,7 +1,8 @@
-import { format } from "../src/"
+import { describe, expect, test } from "vitest"
+import { format } from "../src"
 
 describe("dynamodb utils.format", () => {
-  it("format.to() preserves non-Date non-expires properties", () => {
+  test("format.to() preserves non-Date non-expires properties", () => {
     expect(
       format.to({
         pk: "test-pk",
@@ -13,7 +14,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.to() converts non-expires Date properties to ISO strings", () => {
+  test("format.to() converts non-expires Date properties to ISO strings", () => {
     const date = new Date()
     expect(
       format.to({
@@ -24,7 +25,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.to() converts expires property to a UNIX timestamp", () => {
+  test("format.to() converts expires property to a UNIX timestamp", () => {
     // DynamoDB requires that the property used for TTL is a UNIX timestamp.
     const date = new Date()
     const timestamp = date.getTime() / 1000
@@ -37,7 +38,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.from() preserves non-special attributes", () => {
+  test("format.from() preserves non-special attributes", () => {
     expect(
       format.from({
         testAttr1: "test-value",
@@ -49,7 +50,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.from() removes dynamodb key attributes", () => {
+  test("format.from() removes dynamodb key attributes", () => {
     expect(
       format.from({
         pk: "test-pk",
@@ -60,7 +61,7 @@ describe("dynamodb utils.format", () => {
     ).toEqual({})
   })
 
-  it("format.from() only removes type attribute from Session, VT, and User", () => {
+  test("format.from() only removes type attribute from Session, VT, and User", () => {
     expect(format.from({ type: "SESSION" })).toEqual({})
     expect(format.from({ type: "VT" })).toEqual({})
     expect(format.from({ type: "USER" })).toEqual({})
@@ -68,7 +69,7 @@ describe("dynamodb utils.format", () => {
     expect(format.from({ type: "ELSE" })).toEqual({ type: "ELSE" })
   })
 
-  it("format.from() converts ISO strings to Date instances", () => {
+  test("format.from() converts ISO strings to Date instances", () => {
     const date = new Date()
     expect(
       format.from({
@@ -79,7 +80,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.from() converts expires attribute from timestamp to Date instance", () => {
+  test("format.from() converts expires attribute from timestamp to Date instance", () => {
     // AdapterSession["expires"] and VerificationToken["expires"] are both meant
     // to be Date instances.
     const date = new Date()
@@ -93,7 +94,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.from() converts expires attribute from ISO string to Date instance", () => {
+  test("format.from() converts expires attribute from ISO string to Date instance", () => {
     // Due to a bug in an old version, some expires attributes were stored as
     // ISO strings, so we need to handle those properly too.
     const date = new Date()
@@ -106,7 +107,7 @@ describe("dynamodb utils.format", () => {
     })
   })
 
-  it("format.from(format.to()) preserves expires attribute", () => {
+  test("format.from(format.to()) preserves expires attribute", () => {
     const date = new Date()
     expect(
       format.from(
