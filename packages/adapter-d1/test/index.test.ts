@@ -1,3 +1,5 @@
+import { test, beforeAll, expect } from "vitest"
+
 import {
   D1Adapter,
   up,
