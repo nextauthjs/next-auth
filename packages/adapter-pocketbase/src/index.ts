@@ -5,12 +5,32 @@ import type {
   AdapterUser,
 } from "@auth/core/adapters"
 import type PocketBase from "pocketbase"
-import { type Record as PBRecord } from "pocketbase"
+import { type Collection, type Record as PBRecord } from "pocketbase"
+import { nextAuthCollections } from "../tests/index.test"
 
 export interface PocketBaseAdapterOptions {
   username: string
   password: string
+  collections: Collection[]
 }
+
+/** @internal */
+async function initCollections({client, options, collections}: {client: PocketBase, options: PocketBaseAdapterOptions, collections: Collection[]}) {
+  await client.admins.authWithPassword(options.username, options.password)
+
+  const collectionNames = (
+    await client.collections.getFullList(nextAuthCollections.length)
+  ).map((collection) => collection.name)
+
+  nextAuthCollections.forEach(async (name) => {
+    if (collectionNames.includes(name)) {
+      await client.collections.delete(name)
+    }
+
+   collections.forEach(async (collection) => {
+      await client.collections.create(collection)
+    })
+})
 
 /** @internal */
 export type PocketBaseUser = PBRecord & {
@@ -138,6 +158,10 @@ export const PocketBaseAdapter = (
   options: PocketBaseAdapterOptions
 ): Adapter => {
   const { from, to } = format
+  const { collections } = options
+
+  await initCollections({client, options, collections})
+
   return {
     async createUser(user) {
       await client.collection("users").create<PocketBaseUser>(to(user))

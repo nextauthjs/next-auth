@@ -14,7 +14,7 @@ import { randomUUID } from "crypto"
 
 const pb = new Pocketbase("http://127.0.0.1:8090")
 
-const nextAuthCollections = [
+export const nextAuthCollections = [
   "verificationTokens",
   "sessions",
   "accounts",
@@ -191,6 +191,7 @@ runBasicTests({
   adapter: PocketBaseAdapter(pb, {
     username: "username@test.com",
     password: "123456123456",
+    collections: [],
   }),
   db: {
     // random 15 character string
