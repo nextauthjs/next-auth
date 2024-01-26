@@ -7,7 +7,7 @@ echo "Waiting 10 sec for Hasura to start..."
 sleep 10
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest --config=../utils/vitest.config.ts --coverage;then
+if npx jest;then
     docker compose down -v
 else
     docker compose down -v && exit 1
