@@ -1,6 +1,7 @@
+import { describe, beforeEach, it, expect } from "vitest"
 import supertest from "supertest"
 import express from "express"
-import { ExpressAuth, getSession } from "../../src/index.js"
+import { ExpressAuth, getSession } from "../src/index.js"
 
 import CredentialsProvider from "@auth/core/providers/credentials"
 import type { AuthConfig } from "@auth/core"
