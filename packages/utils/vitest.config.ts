@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
 
 import { defineConfig } from "vite"
+import swc from "unplugin-swc"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [],
   test: {
     coverage: {
       include: ["src/**/*.ts"],
@@ -12,4 +12,5 @@ export default defineConfig({
     },
     setupFiles: ["../utils/vitest-setup.ts"],
   },
+  plugins: [swc.vite()],
 })

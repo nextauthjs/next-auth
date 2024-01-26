@@ -37,9 +37,8 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "tsc -w",
     "build": "tsc",
-    "test": "firebase emulators:exec --only firestore --project next-auth-test 'jest -c tests/jest.config.js'"
+    "test": "firebase emulators:exec 'vitest -c ../utils/vitest.config.ts'"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

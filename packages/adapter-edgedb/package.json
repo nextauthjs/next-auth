@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "vitest -c ../utils/vitest.config.ts"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -48,8 +48,5 @@
   },
   "devDependencies": {
     "edgedb": "^1.0.1"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

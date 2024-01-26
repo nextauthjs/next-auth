@@ -33,7 +33,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./tests/test.sh"
+    "test": "./test/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -43,8 +43,5 @@
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.0.5"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

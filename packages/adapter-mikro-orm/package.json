@@ -37,7 +37,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "jest --runInBand",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "build": "tsc"
   },
   "peerDependencies": {
@@ -49,8 +49,5 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

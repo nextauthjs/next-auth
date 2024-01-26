@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "vitest -c ../utils/vitest.config.ts"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -44,8 +44,5 @@
   },
   "devDependencies": {
     "@xata.io/client": "^0.13.0"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

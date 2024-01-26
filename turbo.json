@@ -30,7 +30,6 @@
       ],
       "inputs": [
         "src/**/",
-        "src/**/",
         "test/**/"
       ],
       "outputMode": "new-only"
@@ -44,6 +43,12 @@
       "env": [
         "UPSTASH_REDIS_KEY",
         "UPSTASH_REDIS_URL"
+      ]
+    },
+    "@auth/xata-adapter#test": {
+      "env": [
+        "XATA_API_KEY",
+        "XATA_DATABASE_URL"
       ]
     },
     "docs#dev": {
