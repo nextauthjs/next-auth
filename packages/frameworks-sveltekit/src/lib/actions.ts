@@ -67,7 +67,10 @@ export async function signIn(
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
   }
 
-  if (shouldRedirect) return redirect(302, res.redirect!)
+  if (shouldRedirect) {
+    redirect(302, res.redirect!)
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return res.redirect as any
 }
@@ -128,7 +131,6 @@ export async function auth(
   if (status === 200) return data
   throw new Error(data.message)
 }
-
 
 /**
  * Extract the origin and base path from either `AUTH_URL` or `NEXTAUTH_URL` environment variables,
