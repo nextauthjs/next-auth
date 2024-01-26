@@ -21,7 +21,7 @@ export default function AuthKit(
         image: profile.raw_attributes.picture ?? null,
       }
     },
-    style: { logo: "/workos.svg", bg: "#6363f1", text: "#fff" },
+    style: { logo: "/authkit.svg", bg: "#12192A", text: "#fff" },
     options,
   }
 }
