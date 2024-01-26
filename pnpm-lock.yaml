@@ -714,9 +714,6 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
     devDependencies:
-      '@playwright/test':
-        specifier: 1.29.2
-        version: 1.29.2
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.1.1(@sveltejs/kit@2.4.3)

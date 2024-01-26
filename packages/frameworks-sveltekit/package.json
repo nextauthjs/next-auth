@@ -30,10 +30,9 @@
     "dev": "svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
-    "test:unit": "vitest --config=../utils/vitest.config.ts --coverage"
+    "test": "vitest --config=../utils/vitest.config.ts --coverage"
   },
   "devDependencies": {
-    "@playwright/test": "1.29.2",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.4.3",
     "@sveltejs/package": "^1.0.0",
