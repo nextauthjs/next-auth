@@ -1,7 +1,7 @@
 // This work is needed as workaround to Drizzle truncating millisecond precision.
 // https://github.com/drizzle-team/drizzle-orm/pull/668
 
-import { randomUUID } from "utils/adapter"
+import { randomUUID } from "utils/adapter/vitest"
 
 const emailVerified = new Date()
 emailVerified.setMilliseconds(0)

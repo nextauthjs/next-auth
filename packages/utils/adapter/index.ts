@@ -1,4 +1,3 @@
-import { test, expect, beforeAll, afterAll } from "vitest"
 import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomUUID } from "crypto"
 
