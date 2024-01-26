@@ -76,10 +76,10 @@ export function pgDrizzleAdapter(
     createTables(tableFn)
 
   return {
-    async createUser(data) {
+    async createUser(user) {
       return await client
         .insert(users)
-        .values({ ...data, id: crypto.randomUUID() })
+        .values(user)
         .returning()
         .then((res) => res[0] ?? null)
     },

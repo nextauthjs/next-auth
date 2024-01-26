@@ -153,7 +153,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
 
   return {
     async createUser(user) {
-      const doc = { ...user, _id: [userPrefix, crypto.randomUUID()].join("_") }
+      const doc = { ...user, _id: [userPrefix, user.id].join("_") }
       await pouchdb.put(doc)
       return { ...user, id: doc._id }
     },

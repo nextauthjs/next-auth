@@ -311,9 +311,8 @@ export function TypeORMAdapter(
       const m = await getManager(c)
       await m.connection.close()
     },
-    createUser: async (data) => {
-      const m = await getManager(c)
-      const user = await m.save(UserEntityName, data)
+    async createUser(user) {
+      await getManager(c).then((m) => m.save(UserEntityName, user))
       return user
     },
     // @ts-expect-error

@@ -245,8 +245,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
   /** If the database is SQLite, turn ISO strings into dates */
   const from = isSqlite ? format.from : <T>(x: T) => x as T
   return {
-    async createUser(data) {
-      const user = { ...data, id: crypto.randomUUID() }
+    async createUser(user) {
       await db.insertInto("User").values(to(user)).executeTakeFirstOrThrow()
       return user
     },
