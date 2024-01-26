@@ -30,7 +30,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
-    "test": "vitest --config=../utils/vitest.config --coverage",
+    "test": "vitest --config=utils/vitest.config.js --coverage",
     "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {

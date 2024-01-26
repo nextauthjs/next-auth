@@ -30,7 +30,7 @@
     "dev": "svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
-    "test:unit": "vitest --config=../utils/vitest.config --coverage"
+    "test:unit": "vitest --config=../utils/vitest.config.js --coverage"
   },
   "devDependencies": {
     "@playwright/test": "1.29.2",
