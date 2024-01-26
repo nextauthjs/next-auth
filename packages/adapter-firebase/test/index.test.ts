@@ -16,8 +16,8 @@ describe.each([
 ] as Partial<FirebaseAdapterConfig>[])(
   "FirebaseAdapter with config: %s",
   (config) => {
-    config.name = `next-auth-test-${config.namingStrategy}`
-    config.projectId = "next-auth-test"
+    config.name = `authjs-test-${config.namingStrategy}`
+    config.projectId = "authjs-test"
     config.databaseURL = "http://localhost:8080"
 
     const db = initFirestore(config)
