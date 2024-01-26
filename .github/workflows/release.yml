@@ -98,7 +98,6 @@ jobs:
         name: Coverage
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/**/coverage
       # - name: Run E2E tests
       #   if: github.repository == 'nextauthjs/next-auth'
       #   run: pnpm e2e
