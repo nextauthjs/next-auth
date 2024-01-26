@@ -1,6 +1,6 @@
 {
   "name": "@auth/drizzle-adapter",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "description": "Drizzle adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -56,8 +56,5 @@
     "drizzle-orm": "^0.29.1",
     "mysql2": "^3.2.0",
     "postgres": "^3.3.4"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

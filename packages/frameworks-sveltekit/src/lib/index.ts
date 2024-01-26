@@ -198,7 +198,7 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import type { Action, Actions, Handle, RequestEvent } from "@sveltejs/kit"
+import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"

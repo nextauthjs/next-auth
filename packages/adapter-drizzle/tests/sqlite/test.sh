@@ -9,7 +9,7 @@ rm -f db.sqlite
 
 drizzle-kit generate:sqlite --config=./tests/sqlite/drizzle.config.ts
 drizzle-kit push:sqlite --config=./tests/sqlite/drizzle.config.ts
-jest ./tests/sqlite/index.test.ts --forceExit
+vitest --config=../utils/vitest.config.ts --coverage ./tests/sqlite/index.test.ts
 
 echo "Running LibSQL tests."
 
@@ -17,4 +17,4 @@ rm -f db.sqlite
 
 drizzle-kit generate:sqlite --config=./tests/sqlite/drizzle.config.ts
 drizzle-kit push:sqlite --config=./tests/sqlite/drizzle.config.ts
-jest ./tests/sqlite/libsql.test.ts --forceExit
+vitest --config=../utils/vitest.config.ts --coverage ./tests/sqlite/libsql.test.ts

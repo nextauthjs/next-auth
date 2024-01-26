@@ -3,8 +3,8 @@
 # Start Hasura
 docker compose up -d
 
-echo "Waiting 5 sec for Hasura to start..."
-sleep 5
+echo "Waiting 10 sec for Hasura to start..."
+sleep 10
 
 # Always stop container, but exit with 1 when tests are failing
 if npx jest;then
