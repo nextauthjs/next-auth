@@ -22,6 +22,9 @@ import type {
   AdapterSession,
   AdapterAccount,
 } from "@auth/core/adapters"
+import { Session, User } from "@auth/core/types"
+import * as postgres from "postgres"
+import { PostgresType, Sql } from "postgres"
 
 export function mapExpiresAt(account: any): any {
   const expires_at: number = parseInt(account.expires_at)
@@ -115,35 +118,30 @@ export function mapExpiresAt(account: any): any {
  * ```
  *
  */
-export default function PostgresJSAdapter(sql: any): Adapter {
+
+export interface Database {
+  User: AdapterUser | Partial<AdapterUser>
+  Account: AdapterAccount
+  Session: AdapterSession
+  VT: VerificationToken | Partial<VerificationToken>
+}
+
+/* export default function PostgresJSAdapter(sql): Adapter {
   return {
-    async createVerificationToken(
-      verificationToken
-    ): Promise<VerificationToken> {
-      const { identifier, expires, token } = verificationToken
-      await sql`
-        INSERT INTO verification_token ( identifier, expires, token ) 
-        VALUES (${identifier}, ${expires}, ${token})
-        `
-      return verificationToken
-    },
-    async useVerificationToken({
-      identifier,
-      token,
-    }: Partial<VerificationToken>): Promise<VerificationToken> {
-      const result = await sql`delete from verification_token
-      where identifier = ${identifier} and token = ${token}
-      RETURNING identifier, expires, token`
-      return result.count !== 0 ? result[0] : null
-    },
+    createUser: (data) => sql`
+        INSERT INTO users (name, email, "emailVerified", image) 
+        VALUES (${data.name},${data.email}, ${data.emailVerified},${data.image}) 
+        RETURNING *`,
+
     async createUser(user: Omit<AdapterUser, "id">) {
       const { name, email, emailVerified, image } = user
       const result = await sql`
         INSERT INTO users (name, email, "emailVerified", image) 
         VALUES (${name},${email}, ${emailVerified},${image}) 
-        RETURNING id, name, email, "emailVerified", image`
+        RETURNING *`
+      console.log(...result)
 
-      return result
+      return result[0]
     },
     async getUser(id) {
       const result = await sql`select * from users where id = ${id}`
@@ -186,6 +184,11 @@ export default function PostgresJSAdapter(sql: any): Adapter {
       `
 
       return updateSql[0]
+    },
+    async deleteUser(userId) {
+      await sql`delete from users where id = ${userId}`
+      await sql`delete from sessions where "userId" = ${userId}`
+      await sql`delete from accounts where "userId" = ${userId}`
     },
     async linkAccount(account: AdapterAccount) {
       const {
@@ -234,6 +237,33 @@ returning
 
       return mapExpiresAt(result[0])
     },
+    async unlinkAccount(partialAccount) {
+      const { provider, providerAccountId } = partialAccount
+      await sql`delete from accounts where "providerAccountId" = ${providerAccountId} and provider = ${provider}`
+    },
+    async getSessionAndUser(sessionToken: string | undefined): Promise<{
+      session: AdapterSession
+      user: AdapterUser
+    } | null> {
+      if (sessionToken === undefined) {
+        return null
+      }
+      let session =
+        await sql`select * from sessions where "sessionToken" = ${sessionToken}`
+      if (session.count === 0) {
+        return null
+      }
+      let user = await sql`select * from users where id = ${session[0].userId}`
+      if (user.count === 0) {
+        return null
+      }
+      console.log({ user, session })
+
+      return {
+        session,
+        user,
+      }
+    },
     async createSession({ sessionToken, userId, expires }) {
       if (userId === undefined) {
         throw Error(`userId is undef in createSession`)
@@ -244,30 +274,7 @@ returning
       RETURNING id, "sessionToken", "userId", expires`
       return result[0]
     },
-    async getSessionAndUser(sessionToken: string | undefined): Promise<{
-      session: AdapterSession
-      user: AdapterUser
-    } | null> {
-      if (sessionToken === undefined) {
-        return null
-      }
-      const result1 =
-        await sql`select * from sessions where "sessionToken" = ${sessionToken}`
-      if (result1.count === 0) {
-        return null
-      }
-      let session = result1[0]
-      const result2 =
-        await sql`select * from users where id = ${session.userId}`
-      if (result2.count === 0) {
-        return null
-      }
-      const user = result2[0]
-      return {
-        session,
-        user,
-      }
-    },
+
     async updateSession(
       session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
     ): Promise<AdapterSession | null | undefined> {
@@ -293,14 +300,156 @@ returning
     async deleteSession(sessionToken) {
       await sql`delete from sessions where "sessionToken" = ${sessionToken}`
     },
-    async unlinkAccount(partialAccount) {
+    async createVerificationToken(
+      verificationToken
+    ): Promise<VerificationToken> {
+      const { identifier, expires, token } = verificationToken
+      await sql`
+        INSERT INTO verification_token ( identifier, expires, token ) 
+        VALUES (${identifier}, ${expires}, ${token})
+        RETURNING verification_token
+        `
+      console.log(verificationToken)
+      return verificationToken
+    },
+    async useVerificationToken(
+      verificationToken
+    ): Promise<Maybe<VerificationToken>> {
+      const { identifier, token } = verificationToken
+
+      let res = await sql`delete from verification_token
+      where identifier = ${identifier} and token = ${token}
+      RETURNING *`
+      return res[0]
+    },
+  }
+} */
+
+export default function PostgresJSAdapter(sql: any): Adapter {
+  return {
+    createUser: (data) => sql`
+        INSERT INTO users (name, email, "emailVerified", image) 
+        VALUES (${data.name},${data.email}, ${data.emailVerified},${data.image}) 
+        RETURNING *`,
+    getUser: (id) => sql`select * from users where id = ${id}`,
+    getUserByEmail: (email) => sql`select * from users where email = ${email}`,
+    getUserByAccount: ({ providerAccountId, provider }) =>
+      sql`
+          select u.* from users u join accounts a on u.id = a."userId"
+          where 
+          a.provider = ${provider} 
+          and 
+          a."providerAccountId" = ${providerAccountId}
+          returning accounts.userId`.then((res: any[]) => res[0] ?? null),
+    updateUser: async (user: Partial<AdapterUser>): Promise<AdapterUser> => {
+      /*       const fetchSql = await sql`select * from users where id = ${user.id}`
+      const oldUser: User = fetchSql[0]
+      const newUser = {
+        ...oldUser,
+        ...user,
+      }
+      const { id, name, email, emailVerified, image } = newUser
+      const updateSql = await sql`
+        UPDATE users set
+        name = ${name}, email = ${email}, "emailVerified" = ${emailVerified}, image = ${image}
+        where id = ${id}
+        RETURNING *
+      `
+
+      return updateSql[0] */
+      const rows: AdapterUser[] = await sql`
+            UPDATE users
+            SET name = ${user.name}, email = ${user.email}, image = ${user.image}
+            WHERE id = ${user.id}
+            RETURNING id, name, email, image;
+            `
+      const updatedUser = {
+        ...rows[0],
+        id: rows[0].id.toString(),
+        emailVerified: rows[0].emailVerified,
+        email: rows[0].email,
+      }
+      return updatedUser
+    },
+    deleteUser: async (userId) => {
+      await Promise.all([
+        await sql`delete from users where id = ${userId}`,
+        await sql`delete from sessions where "userId" = ${userId}`,
+        await sql`delete from accounts where "userId" = ${userId}`,
+      ])
+    },
+    linkAccount: (account: AdapterAccount) =>
+      sql`insert into accounts 
+      (
+        "userId", 
+        provider, 
+        type, 
+        "providerAccountId", 
+        access_token,
+        expires_at,
+        refresh_token,
+        id_token,
+        scope,
+        session_state,
+        token_type
+      )
+      values (${account.userId},${account.provider}, ${account.type}, ${account.providerAccountId}, ${account.access_token},to_timestamp(${account.expires_at}), ${account.refresh_token}, ${account.id_token}, ${account.scope}, ${account.session_state},${account.token_type})      
+      returning *`.then((res: any[]) => mapExpiresAt(res[0]) ?? null),
+
+    unlinkAccount: async (partialAccount) => {
       const { provider, providerAccountId } = partialAccount
       await sql`delete from accounts where "providerAccountId" = ${providerAccountId} and provider = ${provider}`
+      return
     },
-    async deleteUser(userId) {
-      await sql`delete from users where id = ${userId}`
-      await sql`delete from sessions where "userId" = ${userId}`
-      await sql`delete from accounts where "userId" = ${userId}`
+    getSessionAndUser: (sessionToken) =>
+      sql`
+          select u.* from users u join sessions s on u.id = s."userId"
+          where "sessionToken" = ${sessionToken}
+          returning sessions, users`.then((res: any[]) => res[0] ?? null),
+
+    createSession: ({ sessionToken, userId, expires }) =>
+      sql`insert into sessions ("userId", expires, "sessionToken")
+      values (${userId}, ${expires}, ${sessionToken})
+      RETURNING *`.then((res: Session[]) => res[0] ?? null),
+
+    updateSession: async (session) => {
+      const { sessionToken } = session
+      const result1 =
+        await sql`select * from sessions where "sessionToken" = ${sessionToken}`
+
+      const originalSession = result1[0]
+      const newSession = {
+        ...originalSession,
+        ...session,
+      }
+      const result = await sql`
+        UPDATE sessions set
+        expires = ${newSession.expires}
+        where "sessionToken" = ${newSession.sessionToken}
+        `
+
+      return result[0]
+    },
+    deleteSession: async (sessionToken) =>
+      await sql`delete from sessions where "sessionToken" = ${sessionToken}`,
+    createVerificationToken: async (
+      verificationToken
+    ): Promise<VerificationToken> => {
+      const { identifier, expires, token } = verificationToken
+      await sql`
+        INSERT INTO verification_token ( identifier, expires, token ) 
+        VALUES (${identifier}, ${expires}, ${token})
+        RETURNING verification_token
+        `
+      console.log(verificationToken)
+      return verificationToken
+    },
+    useVerificationToken: async (verificationToken) => {
+      const { identifier, token } = verificationToken
+      let res = await sql`delete from verification_token
+      where identifier = ${identifier} and token = ${token}
+      RETURNING *`
+      return res[0]
     },
   }
 }
