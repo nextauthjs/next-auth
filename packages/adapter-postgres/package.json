@@ -1,0 +1,24 @@
+{
+  "name": "@auth/postgres-adapter",
+  "version": "0.2.14",
+  "description": "Postgres adapter for next-auth.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {"url": "https://github.com/nextauthjs/next-auth/issues"},
+  "author": "Mustaqim Arifin <mustaqim.arifin@gmail.com>",
+  "license": "ISC",
+  "keywords": [
+    "next-auth"   , "@auth"       , "Auth.js"     , "next.js"     ,
+    "oauth"       , "postgres"    , " postgres.js"
+  ],
+  "type": "module",
+  "exports": { ".": {"types": "./index.d.ts", "import": "./index.js"} },
+  "files": ["*.d.ts*", "*.js", "src"],
+  "private": false,
+  "publishConfig": {"access": "public"},
+  "scripts": {"test": "./tests/test.sh", "build": "tsc"},
+  "dependencies": {"@auth/core": "workspace:*"},
+  "peerDependencies": {"postgres": "^3"},
+  "devDependencies": {"postgres": "^3.4.3"},
+  "jest": {"preset": "utils/adapter"}
+}
