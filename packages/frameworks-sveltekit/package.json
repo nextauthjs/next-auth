@@ -30,7 +30,7 @@
     "dev": "svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
-    "test:unit": "vitest"
+    "test:unit": "vitest --config=../utils/vitest.config --coverage"
   },
   "devDependencies": {
     "@playwright/test": "1.29.2",
@@ -41,9 +41,7 @@
     "@types/set-cookie-parser": "^2.4.7",
     "svelte": "^4.0.0",
     "svelte-check": "^3.4.3",
-    "tslib": "^2.4.1",
-    "vite": "^5.0.12",
-    "vitest": "^1.2.1"
+    "tslib": "^2.4.1"
   },
   "dependencies": {
     "@auth/core": "workspace:*",

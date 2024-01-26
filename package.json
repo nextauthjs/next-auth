@@ -33,6 +33,7 @@
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
+    "@vitest/coverage-v8": "1.2.1",
     "eslint": "8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
@@ -48,7 +49,9 @@
     "prettier-plugin-svelte": "^3.1.2",
     "turbo": "^1.10.12",
     "typescript": "5.2.2",
-    "utils": "workspace:*"
+    "utils": "workspace:*",
+    "vite": "^5.0.12",
+    "vitest": "^1.2.1"
   },
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
