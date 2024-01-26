@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "firebase emulators:exec 'vitest -c ../utils/vitest.config.ts'"
+    "test": "firebase emulators:exec --debug 'vitest -c ../utils/vitest.config.ts'"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

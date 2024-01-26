@@ -21,7 +21,7 @@ printf "\nWaiting 5 sec for schema to be uploaded..." && sleep 5
 
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest ../../utils/vitest.config.ts; then
+if vitest -c ../utils/vitest.config.ts; then
     docker stop "${CONTAINER_NAME}"
 else
     docker stop "${CONTAINER_NAME}"
