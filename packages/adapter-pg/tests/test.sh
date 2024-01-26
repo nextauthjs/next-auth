@@ -7,7 +7,8 @@ docker run --name pg-adapter \
   -e POSTGRES_PASSWORD=pg \
   -p 5432:5432 \
   -v "$(pwd)"/schema.sql:/docker-entrypoint-initdb.d/schema.sql \
-  postgres:latest
+  postgres:13.3
+
 
 echo "waiting 10 seconds for databases to start..."
 sleep 10

@@ -37,54 +37,48 @@ export function mapExpiresAt(account: any): any {
  * The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our doc page on [Database Models](https://authjs.dev/getting-started/adapters#models).
  *
  * ```sql
-CREATE TABLE verification_token
-(
-  identifier TEXT NOT NULL,
-  expires TIMESTAMPTZ NOT NULL,
-  token TEXT NOT NULL,
-
-
-PRIMARY KEY (identifier, token) );
-
-CREATE TABLE accounts
-(
-  id SERIAL,
-  user_id INTEGER NOT NULL REFERENCES users(id),
-  provider_id VARCHAR(255) NOT NULL,
-  provider_type VARCHAR(255) NOT NULL,
-  provider_account_id VARCHAR(255) NOT NULL,
-  refresh_token TEXT,
-  access_token TEXT,
-  expires_at BIGINT,
-  id_token TEXT,
-  scope TEXT,
-  session_state TEXT,
-  token_type TEXT,
-
-
-PRIMARY KEY (id) );
-
-CREATE TABLE sessions
-(
-  id SERIAL,
-  user_id INTEGER NOT NULL REFERENCES users(id),
-  expires TIMESTAMPTZ NOT NULL,
-  session_token VARCHAR(255) NOT NULL,
-
-
-PRIMARY KEY (id) );
-
-CREATE TABLE users
-(
-  id SERIAL,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  email_verified BOOLEAN DEFAULT false,
-  image TEXT,
-
-
-PRIMARY KEY (id) );
-
+* CREATE TABLE users
+* (
+*  id SERIAL,
+*  name VARCHAR(255),
+*  email VARCHAR(255),
+*  "emailVerified" BOOLEAN DEFAULT false,
+*  image TEXT,
+*
+*
+* PRIMARY KEY (id) );
+*
+* CREATE TABLE verification_token (
+*    identifier TEXT NOT NULL,
+*    expires TIMESTAMPTZ NOT NULL,
+*    token TEXT NOT NULL,
+*
+*    PRIMARY KEY (identifier, token)
+* );
+* CREATE TABLE accounts (
+*    id SERIAL,
+*    "userId" INTEGER NOT NULL REFERENCES users(id),
+*    type VARCHAR(255) NOT NULL,
+*    provider VARCHAR(255) NOT NULL,
+*    "providerAccountId" VARCHAR(255) NOT NULL,
+*    refresh_token TEXT,
+*    access_token TEXT,
+*    expires_at BIGINT,
+*    id_token TEXT,
+*    scope TEXT,
+*    session_state TEXT,
+*    token_type TEXT,
+*    PRIMARY KEY (id)
+* );
+* CREATE TABLE sessions (
+*    id SERIAL,
+*    "userId" INTEGER NOT NULL REFERENCES users(id),
+*    expires TIMESTAMPTZ NOT NULL,
+*    "sessionToken" VARCHAR(255) NOT NULL,
+*    
+*    PRIMARY KEY (id)
+*  );
+*
  *
  * ```
  *
