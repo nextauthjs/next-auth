@@ -3,9 +3,8 @@ import { XataClient } from "../src/xata"
 import { XataAdapter } from "../src"
 
 const client = new XataClient({
-  databaseURL:
-    "https://info-s-workspace-rm803r.eu-central-1.xata.sh/db/authjs-test:main",
-  apiKey: "xau_ZDtAvExvG3qarXyXnq5rFTodiYgpGOdv4",
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.XATA_DATABASE_URL,
 })
 
 runBasicTests({
