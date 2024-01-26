@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "./tests/pocketbase.test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
