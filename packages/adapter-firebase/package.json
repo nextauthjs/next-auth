@@ -39,7 +39,8 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "test": "firebase emulators:exec --only firestore --project next-auth-test 'vitest --config=../utils/vitest.config.ts --coverage'"
+    "test:run": "vitest --config=../utils/vitest.config.ts --coverage",
+    "test": "firebase emulators:exec --only firestore --project next-auth-test 'pnpm test:run'"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
