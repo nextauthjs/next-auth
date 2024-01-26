@@ -1,3 +1,4 @@
+import { describe } from "vitest"
 import { runBasicTests } from "utils/adapter"
 import { Pool } from "pg"
 import {
@@ -12,8 +13,6 @@ import { createPool } from "mysql2"
 import SqliteDatabase from "better-sqlite3"
 import { KyselyAdapter, KyselyAuth } from "../src"
 import type { Database } from "../src"
-
-globalThis.crypto ??= require("crypto").webcrypto
 
 export function createTableWithId(
   schema: SchemaModule,
