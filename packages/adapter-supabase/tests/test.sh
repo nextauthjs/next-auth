@@ -12,7 +12,7 @@ IFS=':'; arr=("$line"); unset IFS;
 export SUPABASE_SERVICE_ROLE_KEY=${arr[1]}
 
 # Always stop Supabase, but exit with 1 when tests are failing
-if npx jest; then
+if vitest -c ../utils/vitest.config.ts; then
 	supabase stop
 else
 	supabase stop && exit 1

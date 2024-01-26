@@ -1,3 +1,4 @@
+import { vi } from "vitest"
 import { DataSource } from "typeorm"
 import type { DataSourceOptions } from "typeorm"
 import type { TestOptions } from "utils/adapter"
@@ -6,7 +7,7 @@ import { parseDataSourceConfig } from "../src/utils"
 
 export { defaultEntities }
 
-console.warn = jest.fn()
+console.warn = vi.fn()
 
 /** Set up Test Database */
 export function db(

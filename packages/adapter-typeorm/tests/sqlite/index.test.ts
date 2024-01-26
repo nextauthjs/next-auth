@@ -8,7 +8,7 @@ import type { DataSourceOptions } from "typeorm"
 const sqliteConfig: DataSourceOptions = {
   type: "sqlite" as const,
   name: "next-auth-test-memory",
-  database: "./tests/sqlite/dev.db",
+  database: "./test/sqlite/dev.db",
   synchronize: true,
   namingStrategy: new SnakeNamingStrategy(),
 }

@@ -1,4 +1,4 @@
-import { runBasicTests } from "utils/adapter/vitest"
+import { runBasicTests } from "utils/adapter"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "../src"
 import { ObjectId } from "mongodb"

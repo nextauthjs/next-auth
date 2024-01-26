@@ -6,7 +6,7 @@ docker run -d \
   -e MYSQL_ROOT_PASSWORD=root \
   -e MYSQL_DATABASE=kysely_test \
   -p 3308:3306 \
-  -v "$(pwd)"/tests/scripts/mysql-init.sql:/data/application/init.sql \
+  -v "$(pwd)"/test/scripts/mysql-init.sql:/data/application/init.sql \
   mysql/mysql-server \
   --init-file /data/application/init.sql
 
@@ -23,7 +23,7 @@ echo "waiting 15 seconds for databases to start..."
 sleep 15
 
 # Always stop container, but exit with 1 when tests are failing
-if npx jest tests; then
+if vitest -c ../utils/vitest.config.ts; then
   docker stop mysql && docker stop postgres
 else
   docker stop mysql && docker stop postgres && exit 1

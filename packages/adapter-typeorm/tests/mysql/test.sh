@@ -7,9 +7,9 @@ sleep ${WAIT}
 set -eu
 
 echo "Started running MySQL tests with default models."
-jest tests/mysql/index.test.ts
+vitest -c ../utils/vitest.config.ts mysql/index.test.ts
 echo "Finished running MySQL tests with default models."
 
 echo "Started running MySQL tests with custom models."
-CUSTOM_MODEL=1 jest tests/mysql/index.custom.test.ts
+CUSTOM_MODEL=1 vitest -c ../utils/vitest.config.ts mysql/index.custom.test.ts
 echo "Finished running MySQL tests with custom models."

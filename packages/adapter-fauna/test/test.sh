@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=next-auth-fauna-test
+CONTAINER_NAME=authjs-fauna-test
 export FAUNADB_PORT=8443
 export FAUNA_ADMIN_KEY=secret
 export FAUNADB_DOMAIN=localhost
@@ -21,7 +21,7 @@ npx fauna-schema-migrate generate
 npx fauna-schema-migrate apply all
 
 # Always stop container, but exit with 1 when tests are failing
-if npx jest;then
+if vitest -c ../utils/vitest.config.ts;then
     docker stop ${CONTAINER_NAME}
 else
     docker stop ${CONTAINER_NAME} && exit 1

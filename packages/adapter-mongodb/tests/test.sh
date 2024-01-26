@@ -9,7 +9,7 @@ echo "Waiting 3 sec for db to start..."
 sleep 3
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest --config=../utils/vitest.config.ts --coverage;then
+if vitest --config=../utils/vitest.config.ts;then
     docker stop ${CONTAINER_NAME}
 else
     docker stop ${CONTAINER_NAME} && exit 1

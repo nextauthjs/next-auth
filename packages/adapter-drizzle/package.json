@@ -38,9 +38,9 @@
   "scripts": {
     "clean": "find . -type d -name \".drizzle\" | xargs rm -rf",
     "test": "pnpm test:mysql && pnpm test:sqlite && pnpm test:pg",
-    "test:mysql": "pnpm clean && ./tests/mysql/test.sh",
-    "test:sqlite": "pnpm clean && ./tests/sqlite/test.sh",
-    "test:pg": "pnpm clean && ./tests/pg/test.sh",
+    "test:mysql": "pnpm clean && ./test/mysql/test.sh",
+    "test:sqlite": "pnpm clean && ./test/sqlite/test.sh",
+    "test:pg": "pnpm clean && ./test/pg/test.sh",
     "build": "tsc",
     "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
   },

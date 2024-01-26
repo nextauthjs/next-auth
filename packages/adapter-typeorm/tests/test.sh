@@ -8,13 +8,13 @@ set -eu
 
 pids=()
 
-./tests/init.sh
+./test/init.sh
 
-./tests/sqlite/test.sh & pids+=($!)
+./test/sqlite/test.sh & pids+=($!)
 
-./tests/postgresql/test.sh & pids+=($!)
+./test/postgresql/test.sh & pids+=($!)
 
-./tests/mysql/test.sh & pids+=($!)
+./test/mysql/test.sh & pids+=($!)
 
 for _ in "${pids[@]}"; do
     if wait -n; then

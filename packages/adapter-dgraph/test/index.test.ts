@@ -11,7 +11,7 @@ const params: DgraphClientParams = {
   endpoint: "http://localhost:8080/graphql",
   authToken: "test",
   jwtAlgorithm: "RS256",
-  jwtSecret: fs.readFileSync(path.join(process.cwd(), "/tests/private.key"), {
+  jwtSecret: fs.readFileSync(path.join(process.cwd(), "/test/private.key"), {
     encoding: "utf8",
   }),
 }

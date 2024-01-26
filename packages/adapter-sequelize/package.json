@@ -33,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "jest",
+    "test": "vitest --config=../utils/vitest.config.ts",
     "build": "tsc"
   },
   "dependencies": {
@@ -44,8 +44,5 @@
   },
   "devDependencies": {
     "sequelize": "^6.6.5"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }
