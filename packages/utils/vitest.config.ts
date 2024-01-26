@@ -7,6 +7,7 @@ import swc from "unplugin-swc"
 export default defineConfig({
   test: {
     coverage: {
+      enabled: true,
       include: ["src/**/*.ts"],
       reporter: ["json", "html"],
     },
