@@ -1,3 +1,4 @@
+import { describe, test, expect } from "vitest"
 import { runBasicTests } from "utils/adapter"
 
 import { FirestoreAdapter, type FirebaseAdapterConfig } from "../src"
