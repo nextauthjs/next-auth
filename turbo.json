@@ -46,6 +46,11 @@
         "UPSTASH_REDIS_URL"
       ]
     },
+    "@auth/xata-adapter#test": {
+      "env": [
+        "XATA_API_KEY"
+      ]
+    },
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",

@@ -1,22 +1,6 @@
 import { runBasicTests } from "utils/adapter"
-import "dotenv/config"
 import { XataClient } from "../src/xata"
 import { XataAdapter } from "../src"
-
-if (!process.env.XATA_API_KEY) {
-  test("Skipping XataAdapter tests, since required environment variables aren't available", () => {
-    expect(true).toBe(true)
-  })
-  process.exit(0)
-}
-
-if (process.env.CI) {
-  // TODO: Fix this
-  test('Skipping XataAdapter tests in CI because of "Request failed" errors. Should revisit', () => {
-    expect(true).toBe(true)
-  })
-  process.exit(0)
-}
 
 const client = new XataClient({
   apiKey: process.env.XATA_API_KEY,
