@@ -6,64 +6,17 @@
         "^build"
       ],
       "outputs": [
-        "dist/**/*",
-        "lib/**/*",
-        "*.js",
-        "*.d.ts",
-        "*.d.ts.map"
-      ],
-      "outputMode": "new-only"
-    },
-    "@auth/core#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
+        "dist/**",
         "lib/**",
         "providers/**",
         "*.js",
         "*.d.ts",
         "*.d.ts.map",
         "src/lib/pages/styles.ts",
-        "src/providers/oauth-types.ts"
+        "src/providers/oauth-types.ts",
+        ".svelte-kit/**"
       ],
       "outputMode": "new-only"
-    },
-    "@auth/sveltekit#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".svelte-kit/**",
-        "providers/**",
-        "client.*",
-        "index.*"
-      ],
-      "outputMode": "new-only"
-    },
-    "@auth/express#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "providers/**",
-        "index.*",
-        "lib/**",
-        "*.d.ts"
-      ],
-      "outputMode": "new-only"
-    },
-    "next-auth#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "lib/**",
-        "providers/**",
-        "*.js",
-        "*.d.ts",
-        "*.d.ts*"
-      ]
     },
     "clean": {
       "cache": false
@@ -74,6 +27,11 @@
     "test": {
       "outputs": [
         "coverage/**"
+      ],
+      "inputs": [
+        "src/**/",
+        "src/**/",
+        "test/**/"
       ],
       "outputMode": "new-only"
     },
