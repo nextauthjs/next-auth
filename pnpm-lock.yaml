@@ -570,9 +570,6 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@types/uuid':
-        specifier: ^8.3.3
-        version: 8.3.4
       redis:
         specifier: ^4.6.12
         version: 4.6.12

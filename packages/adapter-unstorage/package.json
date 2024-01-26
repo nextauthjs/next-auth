@@ -43,7 +43,6 @@
     "unstorage": "^1.10.1"
   },
   "devDependencies": {
-    "@types/uuid": "^8.3.3",
     "redis": "^4.6.12",
     "unstorage": "^1.10.1"
   }
