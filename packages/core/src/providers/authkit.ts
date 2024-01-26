@@ -1,25 +1,22 @@
-export default function AuthKit(
-  options
-) {
+import type { OAuthConfig } from "./index.js"
+
+export default function AuthKit(options): OAuthConfig<Record<string, any>> {
   const { issuer = "https://api.workos.com/" } = options
 
   return {
     id: "authkit",
     name: "AuthKit",
     type: "oauth",
-    authorization: `${issuer}user_management/authorize`,
-    token: `${issuer}authenticate`,
+    authorization: {
+      url: `${issuer}user_management/authorize`,
+      params: {
+        client_id: options.clientId,
+        redirect_uri: options.redirectUri,
+        response_type: "code",
+      },
+    },
     client: {
       token_endpoint_auth_method: "client_secret_post",
-    },
-    userinfo: `${issuer}sso/profile`,
-    profile(profile) {
-      return {
-        id: profile.id,
-        name: `${profile.first_name} ${profile.last_name}`,
-        email: profile.email,
-        image: profile.raw_attributes.picture ?? null,
-      }
     },
     style: { logo: "/authkit.svg", bg: "#12192A", text: "#fff" },
     options,
