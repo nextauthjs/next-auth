@@ -21,5 +21,5 @@ echo "Waiting 15 sec for db to start..." && sleep 15
 
 drizzle-kit generate:pg --config=./test/pg/drizzle.config.ts
 npx tsx ./test/pg/migrator.ts
-vitest --config=../utils/vitest.config.ts ./test/pg/index.test.ts
+vitest -c ../utils/vitest.config.ts ./test/pg/index.test.ts
 docker stop ${PG_CONTAINER_NAME}

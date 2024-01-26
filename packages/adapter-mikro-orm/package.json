@@ -37,7 +37,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "vitest --config=../utils/vitest.config.ts",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "build": "tsc"
   },
   "peerDependencies": {

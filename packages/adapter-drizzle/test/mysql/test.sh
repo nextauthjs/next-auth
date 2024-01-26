@@ -18,5 +18,5 @@ echo "Waiting 15 sec for db to start..." && sleep 15
 
 drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
 drizzle-kit push:mysql --config=./test/mysql/drizzle.config.ts
-vitest --config=../utils/vitest.config.ts ./test/mysql/index.test.ts
+vitest -c ../utils/vitest.config.ts ./test/mysql/index.test.ts
 docker stop ${MYSQL_CONTAINER_NAME}

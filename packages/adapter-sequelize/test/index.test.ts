@@ -1,7 +1,7 @@
+import { beforeEach, describe, expect, test } from "vitest"
 import { Sequelize, DataTypes } from "sequelize"
 import { runBasicTests } from "utils/adapter"
 import SequelizeAdapter, { models } from "../src"
-import { beforeEach, describe, expect, test } from "vitest"
 
 const sequelize = new Sequelize({
   logging: false,

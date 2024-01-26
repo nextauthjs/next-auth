@@ -82,7 +82,7 @@
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
-    "test": "vitest --config=../utils/vitest.config.ts",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {

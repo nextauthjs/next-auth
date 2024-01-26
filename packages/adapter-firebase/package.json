@@ -39,7 +39,7 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "test": "firebase emulators:exec --only firestore --project next-auth-test 'vitest --config=../utils/vitest.config.ts'"
+    "test": "firebase emulators:exec --debug --only firestore --project authjs-firebase 'vitest -c ../utils/vitest.config.ts'"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

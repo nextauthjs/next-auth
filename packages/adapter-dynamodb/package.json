@@ -18,8 +18,8 @@
     "access": "public"
   },
   "scripts": {
-    "test:default": "vitest --config=../utils/vitest.config.ts",
-    "test:custom": "CUSTOM_MODEL=1 vitest --config=../utils/vitest.config.ts",
+    "test:default": "vitest -c ../utils/vitest.config.ts",
+    "test:custom": "CUSTOM_MODEL=1 vitest -c ../utils/vitest.config.ts",
     "test": "pnpm test:default && pnpm test:custom",
     "clean": "rm -rf index.*",
     "build": "pnpm clean && tsc"

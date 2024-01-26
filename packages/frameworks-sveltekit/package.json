@@ -30,7 +30,7 @@
     "dev": "svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
-    "test": "vitest --config=../utils/vitest.config.ts"
+    "test": "vitest -c ../utils/vitest.config.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
