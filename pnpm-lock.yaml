@@ -80,7 +80,7 @@ importers:
         specifier: ^5.0.12
         version: 5.0.12(@types/node@20.11.7)
       vitest:
-        specifier: ^1.2.1
+        specifier: 1.2.2
         version: 1.2.2(@types/node@20.11.7)
 
   apps/dev/nextjs:

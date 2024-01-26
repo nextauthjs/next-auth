@@ -48,7 +48,7 @@
     "typescript": "5.3.3",
     "utils": "workspace:*",
     "vite": "^5.0.12",
-    "vitest": "^1.2.1"
+    "vitest": "1.2.2"
   },
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
