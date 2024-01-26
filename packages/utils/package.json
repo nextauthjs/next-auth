@@ -5,5 +5,8 @@
   "devDependencies": {
     "@auth/core": "workspace:*"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "unplugin-swc": "^1.4.4"
+  }
 }
