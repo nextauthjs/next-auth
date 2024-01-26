@@ -82,6 +82,10 @@
     border-radius: 0.5rem;
     filter: invert(1);
   }
+  :global(.signInButton) {
+    display: flex;
+    justify-content: end;
+  }
 
   .nojs-show {
     opacity: 1;
