@@ -3,8 +3,6 @@ import { runBasicTests } from "utils/adapter"
 import { hydrateDates, UnstorageAdapter } from "../src"
 import fsDriver from "unstorage/drivers/fs"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 const storage = createStorage({
   driver: fsDriver({ base: "./tmp" }),
 })

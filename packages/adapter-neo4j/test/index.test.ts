@@ -4,8 +4,6 @@ import statements from "./resources/statements"
 
 import { Neo4jAdapter, format } from "../src"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 const driver = neo4j.driver(
   "bolt://localhost",
   neo4j.auth.basic("neo4j", "password")

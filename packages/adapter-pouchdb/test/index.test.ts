@@ -17,8 +17,6 @@ import {
   VerificationToken,
 } from "@auth/core/adapters"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 // pouchdb setup
 PouchDB.plugin(memoryAdapter).plugin(find)
 let pouchdb: PouchDB.Database

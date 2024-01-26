@@ -15,8 +15,6 @@ import {
 } from "@mikro-orm/core"
 import { runBasicTests } from "utils/adapter"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 @Entity()
 export class User implements defaultEntities.User {
   @PrimaryKey()

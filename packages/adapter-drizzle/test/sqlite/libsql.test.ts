@@ -9,8 +9,6 @@ import {
 } from "./schema.libsql"
 import { eq, and } from "drizzle-orm"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 const orNull = <T>(x: T | null | undefined): NonNullable<T> | null => x ?? null
 
 runBasicTests({

@@ -3,8 +3,6 @@ import { DrizzleAdapter } from "../../src"
 import { db, accounts, sessions, users, verificationTokens } from "./schema"
 import { eq, and } from "drizzle-orm"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 runBasicTests({
   adapter: DrizzleAdapter(db),
   db: {

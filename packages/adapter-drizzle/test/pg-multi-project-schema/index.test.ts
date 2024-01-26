@@ -4,8 +4,6 @@ import { db, accounts, sessions, users, verificationTokens } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 runBasicTests({
   adapter: DrizzleAdapter(db),
   fixtures,

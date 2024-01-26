@@ -3,8 +3,6 @@ import { runBasicTests } from "utils/adapter"
 import { hydrateDates, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 if (!process.env.UPSTASH_REDIS_URL || !process.env.UPSTASH_REDIS_KEY) {
   test("Skipping UpstashRedisAdapter tests, since required environment variables aren't available", () => {
     expect(true).toBe(true)

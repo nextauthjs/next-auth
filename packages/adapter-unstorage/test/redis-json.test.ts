@@ -5,8 +5,6 @@ import { defineDriver } from "unstorage"
 import { createClient } from "redis"
 import type { RedisClientType, RedisClientOptions } from "redis"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 const redisJSONDriver = defineDriver((options: RedisClientOptions) => {
   let redisClient: RedisClientType
   const getRedisClient = async () => {

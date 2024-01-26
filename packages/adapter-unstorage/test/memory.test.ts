@@ -2,8 +2,6 @@ import { createStorage } from "unstorage"
 import { runBasicTests } from "utils/adapter"
 import { hydrateDates, UnstorageAdapter } from "../src"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 const storage = createStorage()
 
 runBasicTests({

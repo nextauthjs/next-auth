@@ -3,8 +3,6 @@ import { runBasicTests } from "utils/adapter"
 import { hydrateDates, UnstorageAdapter } from "../src"
 import redisDriver from "unstorage/drivers/redis"
 
-globalThis.crypto ??= require("node:crypto").webcrypto
-
 const storage = createStorage({
   driver: redisDriver({ username: "default" }),
 })
