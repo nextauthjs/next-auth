@@ -5,7 +5,7 @@
   export let className = ""
   export let provider: Parameters<typeof signIn>[0]
   export let callbackUrl: string = '/'
-  export let signInPage = "sign-in"
+  export let signInPage = "signin"
   export let options: Parameters<typeof signIn>[1] | undefined = undefined
   export let authorizationParams: Parameters<typeof signIn>[2] | undefined = undefined
 </script>
@@ -27,5 +27,5 @@
       <input type="hidden" name={key} value={value} />
     {/each}
   {/if}
-  <button type="submit"><slot /></button>
+  <button style="width: 100%" type="submit"><slot /></button>
 </form>
