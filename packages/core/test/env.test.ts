@@ -154,6 +154,7 @@ describe("createActionURL", () => {
       expected: "https://env.com/api/auth/signout",
     },
   ])("%j", ({ args, expected }) => {
+    // @ts-expect-error
     expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
   })
 })
