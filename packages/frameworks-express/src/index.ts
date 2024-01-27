@@ -160,8 +160,9 @@ export async function getSession(
   setEnvDefaults(process.env, config)
   const url = createActionURL(
     "session",
-    req.protocol.toString(),
-    req.headers,
+    req.protocol,
+    // @ts-expect-error
+    new Headers(req.headers),
     process.env,
     config.basePath
   )
