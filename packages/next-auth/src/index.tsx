@@ -67,7 +67,7 @@
  * @module next-auth
  */
 
-import { Auth, setEnvDefaults } from "@auth/core"
+import { Auth, setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 import { reqWithEnvURL } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
@@ -365,8 +365,7 @@ export default function NextAuth(
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {
       const _config = config(req)
-      setEnvDefaults(process.env, _config)
-      _config.basePath ??= "/api/auth"
+      setEnvDefaults(_config)
       return Auth(reqWithEnvURL(req), _config)
     }
 
@@ -377,25 +376,22 @@ export default function NextAuth(
 
       signIn: (provider, options, authorizationParams) => {
         const _config = config(undefined)
-        setEnvDefaults(process.env, _config)
-        _config.basePath ??= "/api/auth"
+        setEnvDefaults(_config)
         return signIn(provider, options, authorizationParams, _config)
       },
       signOut: (options) => {
         const _config = config(undefined)
-        setEnvDefaults(process.env, _config)
-        _config.basePath ??= "/api/auth"
+        setEnvDefaults(_config)
         return signOut(options, _config)
       },
       unstable_update: (data) => {
         const _config = config(undefined)
-        setEnvDefaults(process.env, _config)
-        _config.basePath ??= "/api/auth"
+        setEnvDefaults(_config)
         return update(data, _config)
       },
     }
   }
-  setEnvDefaults(process.env, config)
+  setEnvDefaults(config)
   config.basePath ??= "/api/auth"
   const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
   return {
@@ -411,5 +407,24 @@ export default function NextAuth(
     unstable_update: (data) => {
       return update(data, config)
     },
+  }
+}
+
+// this is the one that next-auth should be using everywhere
+/**
+ * @internal
+ * For backwards compatibility, `next-auth` checks for `NEXTAUTH_URL`
+ * and the `basePath` by default is `/api/auth` instead of `/auth`
+ * (which is the default for all other Auth.js integrations).
+ */
+function setEnvDefaults(config: NextAuthConfig) {
+  try {
+    const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+    // @ts-expect-error if empty, we expect it to throw and set in finally
+    config.basePath ||= new URL(url).pathname
+  } catch {
+  } finally {
+    config.basePath ||= "/api/auth"
+    coreSetEnvDefaults(process.env, config)
   }
 }
