@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
 import { AuthConfig } from "../src/index.js"
-import { setEnvDefaults } from "../src/lib/utils/env.js"
+import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
 import Auth0 from "../src/providers/auth0.js"
 import Resend from "../src/providers/resend.js"
 
@@ -15,8 +15,8 @@ beforeEach(() => {
   authConfig = { ...testConfig } // clone
 })
 
-describe("Environment variables are set on config", () => {
-  it("client id, client secret, issuer", () => {
+describe("config is inferred from environment variables", () => {
+  it("providers (client id, client secret, issuer, api key)", () => {
     const env = {
       AUTH_AUTH0_ID: "asdf",
       AUTH_AUTH0_SECRET: "fdsa",
@@ -24,10 +24,15 @@ describe("Environment variables are set on config", () => {
       AUTH_RESEND_KEY: "resend",
     }
     setEnvDefaults(env, authConfig)
-    expect(authConfig.providers[0].clientId).toBe(env.AUTH_AUTH0_ID)
-    expect(authConfig.providers[0].clientSecret).toBe(env.AUTH_AUTH0_SECRET)
-    expect(authConfig.providers[0].issuer).toBe(env.AUTH_AUTH0_ISSUER)
-    expect(authConfig.providers[1].apiKey).toBe(env.AUTH_RESEND_KEY)
+    const [p1, p2] = authConfig.providers
+    // @ts-expect-error
+    expect(p1.clientId).toBe(env.AUTH_AUTH0_ID)
+    // @ts-expect-error
+    expect(p1.clientSecret).toBe(env.AUTH_AUTH0_SECRET)
+    // @ts-expect-error
+    expect(p1.issuer).toBe(env.AUTH_AUTH0_ISSUER)
+    // @ts-expect-error
+    expect(p2.apiKey).toBe(env.AUTH_RESEND_KEY)
   })
 
   it("AUTH_SECRET", () => {
@@ -84,5 +89,71 @@ describe("Environment variables are set on config", () => {
   ])(`%j`, (env, expected) => {
     setEnvDefaults(env, authConfig)
     expect(authConfig).toMatchObject(expected)
+  })
+})
+
+describe("createActionURL", () => {
+  it.each([
+    {
+      args: {
+        action: "callback",
+        protocol: undefined,
+        headers: new Headers({ host: "example.com" }),
+        env: {},
+        basePath: "/basepath",
+      },
+      expected: "https://example.com/basepath/callback",
+    },
+    {
+      args: {
+        action: "session",
+        protocol: "http",
+        headers: new Headers({ host: "example.com" }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "http://example.com/auth/session",
+    },
+    {
+      args: {
+        action: "session",
+        protocol: "http",
+        headers: new Headers({
+          host: "127.0.0.1",
+          "x-forwarded-host": "example.com",
+        }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "http://example.com/auth/session",
+    },
+    {
+      args: {
+        action: "signin",
+        protocol: "http",
+        headers: new Headers({
+          "x-forwarded-host": "example.com",
+          "x-forwarded-proto": "https",
+        }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "https://example.com/auth/signin",
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({
+          "x-forwarded-host": "example.com",
+          "x-forwarded-proto": "https",
+        }),
+        env: { AUTH_URL: "https://env.com/api/auth/" },
+        basePath: "/auth",
+      },
+      expected: "https://env.com/api/auth/signout",
+    },
+  ])("%j", ({ args, expected }) => {
+    expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
   })
 })
