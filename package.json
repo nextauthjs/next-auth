@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
-    "@balazsorban/monorepo-release": "0.3.1",
+    "@balazsorban/monorepo-release": "0.5.0",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
@@ -246,11 +246,11 @@
     ]
   },
   "pnpm": {
-    "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.3.1": "patches/@balazsorban__monorepo-release@0.3.1.patch"
-    },
     "overrides": {
       "mailparser": "3.6.6"
+    },
+    "patchedDependencies": {
+      "@balazsorban/monorepo-release@0.5.0": "patches/@balazsorban__monorepo-release@0.5.0.patch"
     }
   }
 }
