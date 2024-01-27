@@ -27,11 +27,3 @@ export function setEnvDefaults(config: NextAuthConfig) {
     coreSetEnvDefaults(process.env, config)
   }
 }
-
-export function actionWithEnv<T extends (...args: any[]) => any>(action: T, config: (request: NextRequest | undefined) => NextAuthConfig): any {
-  return (...args: Parameters<T>) => {
-    const _config = config(undefined)
-    setEnvDefaults(_config)
-    return action(...args, _config)
-  }
-}
