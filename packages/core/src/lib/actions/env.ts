@@ -45,8 +45,8 @@ export function createActionURL(
 ): URL {
   let url = process.env.AUTH_URL
   if (!url) {
-    const host = headers["x-forwarded-host"] ?? headers.host
-    const proto = headers["x-forwarded-proto"] ?? protocol
+    const host = headers.get("x-forwarded-host") ?? headers.get("host")
+    const proto = headers.get("x-forwarded-proto") ?? protocol
     url = `${proto === "http" ? "http" : "https"}://${host}${basePath}`
   }
 
