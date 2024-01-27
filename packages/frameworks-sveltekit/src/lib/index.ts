@@ -200,7 +200,7 @@
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
-import { building, dev } from "$app/environment"
+import { dev, building } from "$app/environment"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
