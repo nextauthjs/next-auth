@@ -7,7 +7,7 @@
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
     "build": "turbo run build --filter=next-auth --filter=@auth/* --no-deps",
-    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*edgedb* --filter=!*mikro* --filter=!*upstash* --filter=!*supabase* --filter=!*dynamo* --filter=!*app*",
+    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*supabase* --filter=!*upstash* --filter=!*xata*",
     "clean": "turbo run clean --no-cache",
     "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
@@ -28,27 +28,27 @@
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
-    "@balazsorban/monorepo-release": "0.3.1",
-    "@types/jest": "^29.5.7",
+    "@balazsorban/monorepo-release": "0.5.0",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
+    "@vitest/coverage-v8": "1.2.1",
     "eslint": "8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^27.0.1",
     "eslint-plugin-jsdoc": "^39.6.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-svelte3": "^4.0.0",
-    "jest": "^29.7.0",
     "prettier": "3.1.1",
     "prettier-plugin-svelte": "^3.1.2",
-    "turbo": "^1.10.12",
-    "typescript": "5.2.2",
-    "utils": "workspace:*"
+    "turbo": "^1.11.3",
+    "typescript": "5.3.3",
+    "utils": "workspace:*",
+    "vite": "^5.0.12",
+    "vitest": "1.2.2"
   },
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
@@ -154,18 +154,6 @@
       },
       {
         "files": [
-          "*.test.ts",
-          "*.test.js"
-        ],
-        "extends": [
-          "plugin:jest/recommended"
-        ],
-        "env": {
-          "jest": true
-        }
-      },
-      {
-        "files": [
           "docs/**"
         ],
         "plugins": [
@@ -258,8 +246,11 @@
     ]
   },
   "pnpm": {
+    "overrides": {
+      "mailparser": "3.6.6"
+    },
     "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.3.1": "patches/@balazsorban__monorepo-release@0.3.1.patch"
+      "@balazsorban/monorepo-release@0.5.0": "patches/@balazsorban__monorepo-release@0.5.0.patch"
     }
   }
 }

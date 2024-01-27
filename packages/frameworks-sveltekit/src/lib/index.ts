@@ -313,6 +313,9 @@ declare global {
 
 declare module "$env/dynamic/private" {
   export const AUTH_SECRET: string
+  export const AUTH_SECRET_1: string
+  export const AUTH_SECRET_2: string
+  export const AUTH_SECRET_3: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
 }
@@ -329,7 +332,17 @@ export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
   }
 
   config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
-  config.secret ??= env.AUTH_SECRET
+
+  if (!config.secret) {
+    config.secret = []
+    const secret = env.AUTH_SECRET
+    if (secret) config.secret.push(secret)
+    for (const i of [1, 2, 3]) {
+      const secret = process.env[`AUTH_SECRET_${i}`]
+      if (secret) config.secret.unshift(secret)
+    }
+  }
+
   config.trustHost ??= !!(
     env.AUTH_URL ??
     env.AUTH_TRUST_HOST ??
@@ -339,13 +352,15 @@ export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
+    const ID = finalProvider.id.toUpperCase()
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      const ID = finalProvider.id.toUpperCase()
       finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
       if (finalProvider.type === "oidc") {
         finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
       }
+    } else if (finalProvider.type === "email") {
+      finalProvider.apiKey ??= envObject[`AUTH_${ID}_KEY`]
     }
     return finalProvider
   })

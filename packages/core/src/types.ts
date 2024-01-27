@@ -253,18 +253,15 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
    */
   session: (
-    params: (
-      | {
-          session: { user: AdapterUser } & AdapterSession
-          /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-          user: AdapterUser
-        }
-      | {
-          session: Session
-          /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-          token: JWT
-        }
-    ) & {
+    params: ({
+      session: { user: AdapterUser } & AdapterSession
+      /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+      user: AdapterUser
+    } & {
+      session: Session
+      /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+      token: JWT
+    }) & {
       /**
        * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
        *
@@ -449,26 +446,13 @@ export interface DefaultSession {
   expires: ISODateString
 }
 
-/**
- * Returned by `useSession`, `getSession`, returned by the `session` callback
- * and also the shape received as a prop on the `SessionProvider` React Context
- *
- * [`useSession`](https://authjs.devreference/nextjs/react/#usesession) |
- * [`getSession`](https://authjs.dev/reference/utilities#getsession) |
- * [`SessionProvider`](https://authjs.devreference/nextjs/react#sessionprovider) |
- * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
- */
-export interface Session extends DefaultSession {}
+/** The active session of the logged in user. */
+export interface Session extends DefaultSession { }
 
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
  * available in the `jwt` and `session` callbacks,
  * or the second parameter of the `session` callback, when using a database.
- *
- * [`signIn` callback](https://authjs.dev/guides/basics/callbacks#sign-in-callback) |
- * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
- * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
- * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
 export interface User {
   id?: string
@@ -483,18 +467,18 @@ export interface User {
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
-    ? OIDCConfigInternal<any>
-    : T extends "email"
-      ? EmailConfig
-      : T extends "credentials"
-        ? CredentialsConfig
-        : T extends WebAuthnProviderType
-          ? WebAuthnConfig
-          : never) & {
-  signinUrl: string
-  /** @example `"https://example.com/api/auth/callback/id"` */
-  callbackUrl: string
-}
+  ? OIDCConfigInternal<any>
+  : T extends "email"
+  ? EmailConfig
+  : T extends "credentials"
+  ? CredentialsConfig
+  : T extends WebAuthnProviderType
+  ? WebAuthnConfig
+  : never) & {
+    signinUrl: string
+    /** @example `"https://example.com/api/auth/callback/id"` */
+    callbackUrl: string
+  }
 
 export interface PublicProvider {
   id: string
@@ -622,7 +606,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
    */
   csrfTokenVerified?: boolean
-  secret: string
+  secret: string | string[]
   theme: Theme
   debug: boolean
   logger: LoggerInstance
@@ -640,4 +624,5 @@ export interface InternalOptions<TProviderType = ProviderType> {
    */
   isOnRedirectProxy: boolean
   experimental: NonNullable<AuthConfig['experimental']>
+  basePath: string
 }

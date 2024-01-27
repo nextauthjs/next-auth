@@ -181,13 +181,22 @@ export async function getSession(
 }
 
 export function setEnvDefaults(config: AuthConfig) {
-  config.secret ??= process.env.AUTH_SECRET
   try {
     const url = process.env.AUTH_URL
     if (url) config.basePath = new URL(url).pathname
   } catch {
   } finally {
     config.basePath ??= "/auth"
+  }
+
+  if (!config.secret) {
+    config.secret = []
+    const secret = process.env.AUTH_SECRET
+    if (secret) config.secret.push(secret)
+    for (const i of [1, 2, 3]) {
+      const secret = process.env[`AUTH_SECRET_${i}`]
+      if (secret) config.secret.unshift(secret)
+    }
   }
 
   config.trustHost ??= !!(
@@ -199,13 +208,15 @@ export function setEnvDefaults(config: AuthConfig) {
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
+    const ID = finalProvider.id.toUpperCase()
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      const ID = finalProvider.id.toUpperCase()
       finalProvider.clientId ??= process.env[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= process.env[`AUTH_${ID}_SECRET`]
       if (finalProvider.type === "oidc") {
         finalProvider.issuer ??= process.env[`AUTH_${ID}_ISSUER`]
       }
+    } else if (finalProvider.type === "email") {
+      finalProvider.apiKey ??= process.env[`AUTH_${ID}_KEY`]
     }
     return finalProvider
   })

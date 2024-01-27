@@ -132,9 +132,9 @@ export function parseActionAndProviderId(
   action: AuthAction
   providerId?: string
 } {
-  const a = pathname.split(base)
+  const a = pathname.match(new RegExp(`^${base}(.+)`))
 
-  if (a.length !== 2 || a[0] !== "")
+  if (a === null)
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   const [_, actionAndProviderId] = a
