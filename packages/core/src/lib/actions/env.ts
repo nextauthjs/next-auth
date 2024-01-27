@@ -43,7 +43,7 @@ export function createActionURL(
   headers: Headers,
   basePath?: string
 ): URL {
-  let url = process.env.AUTH_URL
+  let url = envObject.AUTH_URL
   if (!url) {
     const host = headers.get("x-forwarded-host") ?? headers.get("host")
     const proto = headers.get("x-forwarded-proto") ?? protocol
