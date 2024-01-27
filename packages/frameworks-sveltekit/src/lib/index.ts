@@ -200,10 +200,11 @@
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
+import { building, dev } from "$app/environment"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
-import { Auth, setEnvDefaults } from "@auth/core"
+import { Auth, setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export type {
@@ -218,7 +219,7 @@ async function auth(
   event: RequestEvent,
   config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["auth"]> {
-  setEnvDefaults(env, config)
+  setEnvDefaults(config)
   config.trustHost ??= true
 
   const { request: req } = event
@@ -270,7 +271,7 @@ export function SvelteKitAuth(
 ): Handle {
   return async function ({ event, resolve }) {
     const _config = typeof config === "object" ? config : await config(event)
-    setEnvDefaults(env, _config)
+    setEnvDefaults(_config)
 
     const { url, request } = event
 
@@ -317,4 +318,10 @@ declare module "$env/dynamic/private" {
   export const AUTH_SECRET_3: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
+}
+
+function setEnvDefaults(config: SvelteKitAuthConfig) {
+  if (building) return
+  coreSetEnvDefaults(env, config)
+  config.trustHost ??= dev
 }
