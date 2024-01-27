@@ -1,15 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 
-import { Auth, AuthConfig } from "../src/index.js"
+import { AuthConfig } from "../src/index.js"
 import { setEnvDefaults } from "../src/lib/utils/env.js"
 import GitHub from "../src/providers/github.js"
-import {
-  AUTH_SECRET,
-  CALLBACK_ACTION,
-  ERROR_ACTION,
-  SESSION_ACTION,
-  SESSION_COOKIE_NAME,
-} from "./constants.js"
 
 const testConfig: AuthConfig = {
   providers: [GitHub],
@@ -38,11 +31,14 @@ describe("Environment Vars", () => {
   it("should set the AUTH_SECRET", () => {
     setEnvDefaults(
       {
-        AUTH_SECRET: "aaaaaa",
+        AUTH_SECRET:
+          "cec8c777201ab63dfde2d29ee577358d98c53cb65c7110c4db23ee78656dd096",
       },
       authConfig
     )
     console.log(authConfig)
-    expect(authConfig.secret?.[0]).toEqual("aaaaaa")
+    expect(authConfig.secret?.[0]).toEqual(
+      "cec8c777201ab63dfde2d29ee577358d98c53cb65c7110c4db23ee78656dd096"
+    )
   })
 })
