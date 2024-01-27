@@ -1,11 +1,9 @@
 import type { AuthAction, AuthConfig } from "../../types"
 
-/**
- * Set default env variables on the config object
- **/
+/** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
   try {
-    const url = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+    const url = envObject.AUTH_URL
     if (url && !config.basePath) config.basePath = new URL(url).pathname
   } catch {
   } finally {
@@ -23,7 +21,6 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
   }
 
   config.redirectProxyUrl ??= envObject.AUTH_REDIRECT_PROXY_URL
-  config.secret ??= envObject.AUTH_SECRET
   config.trustHost ??= !!(
     envObject.AUTH_URL ??
     envObject.AUTH_TRUST_HOST ??
