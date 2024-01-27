@@ -40,7 +40,7 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
 export function createActionURL(
   action: AuthAction,
   protocol: string,
-  headers: IncomingHttpHeaders,
+  headers: Headers,
   basePath?: string
 ): URL {
   let url = process.env.AUTH_URL
