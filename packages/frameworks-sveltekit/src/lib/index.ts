@@ -200,7 +200,6 @@
 /// <reference types="@sveltejs/kit" />
 import type { Handle, RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
-import { dev, building } from "$app/environment"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
@@ -220,6 +219,7 @@ async function auth(
   config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["auth"]> {
   setEnvDefaults(env, config)
+  config.basePath ??= `${base}/auth`
   config.trustHost ??= true
 
   const { request: req } = event
