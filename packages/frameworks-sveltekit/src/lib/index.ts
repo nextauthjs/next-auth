@@ -203,7 +203,7 @@ import { parse } from "set-cookie-parser"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
-import { Auth, setEnvDefaults } from "@auth/core"
+import { Auth, setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export type {
@@ -218,8 +218,7 @@ async function auth(
   event: RequestEvent,
   config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["auth"]> {
-  setEnvDefaults(env, config)
-  config.basePath ??= `${base}/auth`
+  setEnvDefaults(config)
   config.trustHost ??= true
 
   const { request: req } = event
@@ -271,7 +270,7 @@ export function SvelteKitAuth(
 ): Handle {
   return async function ({ event, resolve }) {
     const _config = typeof config === "object" ? config : await config(event)
-    setEnvDefaults(env, _config)
+    setEnvDefaults(_config)
 
     const { url, request } = event
 
@@ -318,4 +317,22 @@ declare module "$env/dynamic/private" {
   export const AUTH_SECRET_3: string
   export const AUTH_TRUST_HOST: string
   export const VERCEL: string
+}
+
+// this is the one that @auth/svelteit should be using everywhere
+/**
+ * @internal
+ * For backwards compatibility, `next-auth` checks for `NEXTAUTH_URL`
+ * and the `basePath` by default is `/api/auth` instead of `/auth`
+ * (which is the default for all other Auth.js integrations).
+ */
+function setEnvDefaults(config) {
+  try {
+    const url = env.AUTH_URL
+    config.basePath ||= new URL(url).pathname
+  } catch {
+  } finally {
+    config.basePath ||= "/auth"
+    coreSetEnvDefaults(env, config)
+  }
 }
