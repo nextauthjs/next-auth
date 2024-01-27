@@ -12,7 +12,7 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     config.basePath ??= `/auth`
   }
 
-  if (!config.secret) {
+  if (!config.secret?.length) {
     config.secret = []
     const secret = envObject.AUTH_SECRET
     if (secret) config.secret.push(secret)

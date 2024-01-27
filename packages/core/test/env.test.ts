@@ -10,13 +10,12 @@ const testConfig: AuthConfig = {
   basePath: "/api/auth",
 }
 
+let authConfig: AuthConfig
+
+beforeEach(() => {
+  authConfig = testConfig
+})
 describe("Environment Vars", () => {
-  let authConfig: AuthConfig
-
-  beforeEach(() => {
-    authConfig = testConfig
-  })
-
   it("should set the clientId/clientSecret on the provider", () => {
     setEnvDefaults(
       {
