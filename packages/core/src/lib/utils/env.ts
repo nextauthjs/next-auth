@@ -1,4 +1,3 @@
-import type { IncomingHttpHeaders } from "http"
 import type { AuthAction, AuthConfig } from "../../types"
 
 /**
@@ -11,6 +10,16 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
   } catch {
   } finally {
     config.basePath ??= `/auth`
+  }
+
+  if (!config.secret) {
+    config.secret = []
+    const secret = envObject.AUTH_SECRET
+    if (secret) config.secret.push(secret)
+    for (const i of [1, 2, 3]) {
+      const secret = process.env[`AUTH_SECRET_${i}`]
+      if (secret) config.secret.unshift(secret)
+    }
   }
 
   config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
@@ -41,6 +50,7 @@ export function createActionURL(
   action: AuthAction,
   protocol: string,
   headers: Headers,
+  envObject: any,
   basePath?: string
 ): URL {
   let url = envObject.AUTH_URL
