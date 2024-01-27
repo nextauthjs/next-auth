@@ -1,6 +1,5 @@
-import type { Awaited, InternalOptions, RequestInternal, ResponseInternal } from "../../types.js"
+import type { InternalOptions, RequestInternal, ResponseInternal } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
-import type { GetUserInfo } from "../../providers/webauthn.js"
 import { getLoggedInUser } from "../utils/session.js"
 import { assertInternalOptionsWebAuthn, decideWebAuthnOptions, getAuthenticationResponse, getRegistrationResponse } from "../utils/webauthn-utils.js"
 
@@ -38,13 +37,14 @@ export async function webAuthnOptions(
   const sessionUser = await getLoggedInUser(options, sessionStore)
 
   // Extract user info from request
-  let getUserInfoResponse: Awaited<ReturnType<GetUserInfo>> | null = null
-  try {
-    getUserInfoResponse = await provider.getUserInfo(options, request, sessionUser)
-  } catch (e) { }
+  // If session user exists, we don't need to call getUserInfo
+  const getUserInfoResponse = sessionUser ? {
+    user: sessionUser,
+    exists: true
+  } : await provider.getUserInfo(options, request)
 
   // Make a decision on what kind of webauthn options to return
-  const decision = decideWebAuthnOptions(action ?? null, sessionUser, getUserInfoResponse)
+  const decision = decideWebAuthnOptions(action, !!sessionUser, getUserInfoResponse)
 
   switch (decision) {
     case "authenticate":

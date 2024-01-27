@@ -13,15 +13,17 @@ import { handleOAuth } from "./oauth/callback.js"
 import { handleState } from "./oauth/checks.js"
 import { createHash } from "../../utils/web.js"
 
-import type { AdapterAccount, AdapterAuthenticator, AdapterSession, AdapterUser } from "../../../adapters.js"
+import type { AdapterSession } from "../../../adapters.js"
 import type {
   Account,
+  Authenticator,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
 import { assertInternalOptionsWebAuthn, verifyAuthenticate, verifyRegister } from "../../utils/webauthn-utils.js"
+import { MaybeUserWithID } from "../../../providers/webauthn.js"
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -373,9 +375,9 @@ export async function callback(
       const localOptions = assertInternalOptionsWebAuthn(options)
 
       // Verify request to get user, account and authenticator
-      let user: AdapterUser
-      let account: AdapterAccount
-      let authenticator: AdapterAuthenticator | undefined
+      let user: MaybeUserWithID
+      let account: Account
+      let authenticator: Authenticator | undefined
       switch (action) {
         case "authenticate": {
           const verified = await verifyAuthenticate(localOptions, request, cookies)
@@ -386,7 +388,7 @@ export async function callback(
           break
         }
         case "register": {
-          const verified = await verifyRegister(options, request, cookies, sessionStore)
+          const verified = await verifyRegister(options, request, cookies)
 
           user = verified.user
           account = verified.account
@@ -403,16 +405,21 @@ export async function callback(
       )
 
       // Sign user in, creating them and their account if needed
-      const { user: loggedInUser, isNewUser, session } = await handleLoginOrRegister(
+      const { user: loggedInUser, isNewUser, session, account: currentAccount } = await handleLoginOrRegister(
         sessionStore.value,
         user,
         account,
         options
       )
 
+      if (!currentAccount) {
+        // This is mostly for type checking. It should never actually happen.
+        throw new AuthError("Error creating or finding account")
+      }
+
       // Create new authenticator if needed
-      if (authenticator) {
-        await localOptions.adapter.createAuthenticator(authenticator)
+      if (authenticator && loggedInUser.id) {
+        await localOptions.adapter.createAuthenticator({ ...authenticator, userId: loggedInUser.id })
       }
 
       // Do the session registering dance
@@ -426,7 +433,7 @@ export async function callback(
         const token = await callbacks.jwt({
           token: defaultToken,
           user: loggedInUser,
-          account,
+          account: currentAccount,
           isNewUser,
           trigger: isNewUser ? "signUp" : "signIn",
         })
@@ -460,7 +467,7 @@ export async function callback(
         })
       }
 
-      await events.signIn?.({ user: loggedInUser, account, isNewUser })
+      await events.signIn?.({ user: loggedInUser, account: currentAccount, isNewUser })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login

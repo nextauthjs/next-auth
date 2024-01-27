@@ -1,6 +1,6 @@
-import type { WebAuthnProviderType } from "../../providers/webauthn";
-import type { Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal } from "../../types";
-import type { Cookie, SessionStore } from "./cookie";
+import type { MaybeUserWithID, WebAuthnProviderType } from "../../providers/webauthn";
+import type { Account, Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal } from "../../types";
+import type { Cookie } from "./cookie";
 import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../../errors";
 import { webauthnChallenge } from "../actions/callback/oauth/checks";
 import { VerifiedAuthenticationResponse, VerifiedRegistrationResponse, generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server";
@@ -12,7 +12,7 @@ import type {
 } from "@simplewebauthn/server/script/deps"
 import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterUser } from "../../adapters";
 import type { GetUserInfo } from "../../providers/webauthn";
-import { getLoggedInUser } from "./session";
+import { randomString } from "./web";
 
 export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
@@ -32,6 +32,19 @@ type WebAuthnOptionsResponse = ResponseInternal & {
   body: WebAuthnOptionsResponseBody
 }
 
+export type CredentialDeviceType = "singleDevice" | "multiDevice"
+interface InternalAuthenticator {
+  providerAccountId: string
+  credentialID: Uint8Array
+  credentialPublicKey: Uint8Array
+  counter: number
+  credentialDeviceType: CredentialDeviceType
+  credentialBackedUp: boolean
+  transports?: AuthenticatorTransport[]
+}
+
+type RGetUserInfo = Awaited<ReturnType<GetUserInfo>>
+
 /**
  * Decides the WebAuthn options based on the provided parameters.
  * 
@@ -42,13 +55,11 @@ type WebAuthnOptionsResponse = ResponseInternal & {
  * @returns The WebAuthn action to perform, or undefined if no decision could be made.
  */
 export function decideWebAuthnOptions(
-  action: WebAuthnAction | null,
-  loggedInUser: SessionUser | null,
-  userInfoResponse: Awaited<ReturnType<GetUserInfo> | null>
+  action: WebAuthnAction | undefined,
+  loggedIn: boolean,
+  userInfoResponse: RGetUserInfo
 ): WebAuthnAction | null {
-  const { user, exists } = userInfoResponse ?? {}
-
-  const loggedIn = !!loggedInUser
+  const { user = null, exists = false } = userInfoResponse ?? {}
 
   switch (action) {
     case "authenticate": {
@@ -65,11 +76,9 @@ export function decideWebAuthnOptions(
        */
       if (user && loggedIn === exists)
         return "register"
-
       break
     }
-
-    case null: {
+    case undefined: {
       /**
        * When no explicit action is provided, we try to infer it based on the user info provided. These are the possible cases:
        * - Logged in users must always send an explit action, so we bail out in this case.
@@ -88,7 +97,6 @@ export function decideWebAuthnOptions(
           return "authenticate"
         }
       }
-
       break
     }
   }
@@ -107,13 +115,13 @@ export function decideWebAuthnOptions(
  */
 export async function getRegistrationResponse(
   options: InternalOptionsWebAuthn,
-  user: AdapterUser,
+  user: MaybeUserWithID,
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get registration options
   const regOptions = await getRegistrationOptions(options, user)
   // Get signed cookie
-  const { cookie } = await webauthnChallenge.create(options, regOptions.challenge, user.id)
+  const { cookie } = await webauthnChallenge.create(options, regOptions.challenge, user)
 
   return {
     status: 200,
@@ -138,7 +146,7 @@ export async function getRegistrationResponse(
  */
 export async function getAuthenticationResponse(
   options: InternalOptionsWebAuthn,
-  user?: AdapterUser,
+  user?: MaybeUserWithID,
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get authentication options
@@ -244,8 +252,7 @@ export async function verifyRegister(
   options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
   resCookies: Cookie[],
-  sessionStore: SessionStore
-): Promise<{ account: AdapterAccount, user: AdapterUser; authenticator: AdapterAuthenticator }> {
+): Promise<{ account: Account, user: MaybeUserWithID; authenticator: Authenticator }> {
   const { provider } = options
 
   // Get WebAuthn response from request body
@@ -254,19 +261,10 @@ export async function verifyRegister(
     throw new AuthError("Invalid WebAuthn Registration response.")
   }
 
-  // Get the current user's info
-  const sessionUser = await getLoggedInUser(options, sessionStore)
-  const { user, exists } = await provider.getUserInfo(options, request, sessionUser)
-
   // Get challenge from request cookies
-  const { challenge: expectedChallenge, userID } = await webauthnChallenge.use(options, request.cookies, resCookies)
-  if (!userID) {
-    throw new AuthError("Missing user ID in WebAuthn challenge cookie.")
-  }
-
-  // If the user does not exist, make sure to use the challenge userID
-  if (!exists) {
-    user.id = userID
+  const { challenge: expectedChallenge, registerData: user } = await webauthnChallenge.use(options, request.cookies, resCookies)
+  if (!user) {
+    throw new AuthError("Missing user registration data in WebAuthn challenge cookie.")
   }
 
   // Verify the response
@@ -289,16 +287,14 @@ export async function verifyRegister(
   }
 
   // Build a new account
-  const account: AdapterAccount = {
+  const account = {
     providerAccountId: toBase64(verification.registrationInfo.credentialID),
     provider: options.provider.id,
     type: provider.type,
-    userId: user.id,
   }
 
   // Build a new authenticator
-  const authenticator: AdapterAuthenticator = {
-    userId: user.id,
+  const authenticator = {
     providerAccountId: account.providerAccountId,
     counter: verification.registrationInfo.counter,
     credentialID: toBase64(verification.registrationInfo.credentialID),
@@ -321,14 +317,16 @@ export async function verifyRegister(
  * Generates WebAuthn authentication options.
  * 
  * @param options - The internal options for WebAuthn.
- * @param userInfo - The user information.
+ * @param user - Optional user information.
  * @returns The authentication options.
  */
-async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?: AdapterUser) {
+async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?: MaybeUserWithID) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = user ? await adapter.listAuthenticatorsByUserId(user.id) : null
+  const authenticators = user && "id" in user ?
+    await adapter.listAuthenticatorsByUserId(user.id) :
+    null
 
   // Return the authentication options.
   return await generateAuthenticationOptions({
@@ -350,16 +348,22 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?:
  * @param user - The user information.
  * @returns The registration options.
  */
-async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: AdapterUser) {
+async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: MaybeUserWithID) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = await adapter.listAuthenticatorsByUserId(user.id)
+  const authenticators = "id" in user ? await adapter.listAuthenticatorsByUserId(user.id) : null
+
+  // Generate a random user ID for the credential.
+  // We can do this because we don't use this user ID to link the
+  // credential to the user. Instead, we store actual userID in the
+  // Authenticator object and fetch it via it's credential ID.
+  const userID = randomString(32)
 
   // Return the registration options.
   return await generateRegistrationOptions({
     ...provider.registrationOptions,
-    userID: user.id,
+    userID,
     userName: user.email,
     userDisplayName: user.name ?? undefined,
     rpID: provider.relayingParty.id,
@@ -387,10 +391,10 @@ export function assertInternalOptionsWebAuthn(options: InternalOptions): Interna
   return { ...options, provider, adapter }
 }
 
-function fromAdapterAuthenticator(authenticator: AdapterAuthenticator): Authenticator {
+function fromAdapterAuthenticator(authenticator: AdapterAuthenticator): InternalAuthenticator {
   return {
     ...authenticator,
-    credentialDeviceType: authenticator.credentialDeviceType as Authenticator["credentialDeviceType"],
+    credentialDeviceType: authenticator.credentialDeviceType as InternalAuthenticator["credentialDeviceType"],
     transports: stringToTransports(authenticator.transports),
     credentialID: fromBase64(authenticator.credentialID),
     credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
@@ -405,10 +409,10 @@ function toBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("base64")
 }
 
-function transportsToString(transports: Authenticator["transports"]) {
+function transportsToString(transports: InternalAuthenticator["transports"]) {
   return transports?.join(",")
 }
 
-function stringToTransports(tstring: string | undefined): Authenticator["transports"] {
-  return tstring ? tstring.split(",") as Authenticator["transports"] : undefined
+function stringToTransports(tstring: string | undefined): InternalAuthenticator["transports"] {
+  return tstring ? tstring.split(",") as InternalAuthenticator["transports"] : undefined
 }

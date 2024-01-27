@@ -11,6 +11,7 @@ import type {
 import type { Cookie } from "../../../utils/cookie.js"
 import type { OAuthConfigInternal } from "../../../../providers/oauth.js"
 import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
+import { AdapterUser } from "../../../../adapters.js"
 
 interface CheckPayload {
   value: string
@@ -265,11 +266,11 @@ export function handleState(
 }
 
 const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-type WebAuthnChallengeCookie = { challenge: string; userID?: string }
+type WebAuthnChallengeCookie = { challenge: string; registerData?: AdapterUser | Omit<AdapterUser, "id"> }
 export const webauthnChallenge = {
-  async create(options: InternalOptions<WebAuthnProviderType>, challenge: string, userID?: string) {
+  async create(options: InternalOptions<WebAuthnProviderType>, challenge: string, registerData?: AdapterUser | Omit<AdapterUser, "id">) {
     const maxAge = WEBAUTHN_CHALLENGE_MAX_AGE
-    const data: WebAuthnChallengeCookie = { challenge, userID }
+    const data: WebAuthnChallengeCookie = { challenge, registerData }
     const cookie = await signCookie(
       "webauthnChallenge",
       JSON.stringify(data),

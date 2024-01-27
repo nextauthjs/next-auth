@@ -135,7 +135,8 @@ export async function handleLoginOrRegister(
       if (user) {
         // If the user is already signed in with this account, we don't need to do anything
         if (userByAccount.id === user.id) {
-          return { session, user, isNewUser }
+          const currentAccount: AdapterAccount = { ...account, userId: user.id }
+          return { session, user, isNewUser, account: currentAccount }
         }
         // If the user is currently signed in, but the new account they are signing in
         // with is already associated with another user, then we cannot link them
@@ -155,7 +156,8 @@ export async function handleLoginOrRegister(
           expires: fromDate(options.session.maxAge),
         })
 
-      return { session, user: userByAccount, isNewUser }
+      const currentAccount: AdapterAccount = { ...account, userId: userByAccount.id }
+      return { session, user: userByAccount, isNewUser, account: currentAccount }
     } else {
       // If the account doesn't exist, we'll create it
       if (user) {
@@ -165,7 +167,8 @@ export async function handleLoginOrRegister(
         await events.linkAccount?.({ user, account, profile })
 
         // As they are already signed in, we don't need to do anything after linking them
-        return { session, user, isNewUser }
+        const currentAccount: AdapterAccount = { ...account, userId: user.id }
+        return { session, user, isNewUser, account: currentAccount }
       }
 
       // If the user is not signed in and it looks like a new account then we
@@ -189,7 +192,7 @@ export async function handleLoginOrRegister(
         // If no account matching the same [provider].id or .email exists, we can
         // create a new account for the user, link it to the OAuth account and
         // create a new session for them so they are signed in with it.
-        user = await createUser({ ...profile, emailVerified: null })
+        user = await createUser({ ...profile })
       }
       await events.createUser?.({ user })
 
@@ -204,7 +207,8 @@ export async function handleLoginOrRegister(
           expires: fromDate(options.session.maxAge),
         })
 
-      return { session, user, isNewUser: true }
+      const currentAccount: AdapterAccount = { ...account, userId: user.id }
+      return { session, user, isNewUser: true, account: currentAccount }
     }
   }
 

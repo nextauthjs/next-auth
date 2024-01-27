@@ -1,9 +1,8 @@
-import type { CommonProviderOptions, ProviderType, CredentialInput } from "."
+import type { CommonProviderOptions, CredentialInput } from "."
 import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts } from "@simplewebauthn/server"
 import type { InternalOptions, RequestInternal } from "../types"
 import type { AdapterUser } from "../adapters"
-import { EmailSignInError, MissingAdapter } from "../errors"
-import { randomString } from "../lib/utils/web"
+import { MissingAdapter } from "../errors"
 
 
 export type WebAuthnProviderType = "webauthn"
@@ -26,27 +25,17 @@ type RelayingParty = {
   origin: string
 }
 
-/**
- * Function that returns the user info that the authenticator will use during registration and authentication.
- * 
- * - It accepts the provider options, the request object, and the session user and returns the user info.
- * - If the session user is defined, the function must return the session user info and `exists` must be `true`.
- * - If the request contains an existing user's data (e.g. email address), the function must return the existing user info and `exists` must be `true`.
- * - If the request contains enough information to create a new user, the function must return a new user info and `exists` must be `false`.
- * - If the request does not contain enough information to create a new user, the function must throw some kind of `AuthError`
- * 
- * It should not have any side effects (i.e. it should not modify the database).
- * 
- * During passkey creation:
- *  - The passkey's user ID will be user.id
- *  - The passkey's user name will be user.email
- *  - The passkey's user display name will be user.name
- */
 export type GetUserInfo = (
   options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
-  sessionUser: AdapterUser | null
-) => Promise<{ user: AdapterUser; exists: boolean }>
+) => Promise<{
+  user: AdapterUser
+  exists: true
+} | {
+  user: Omit<AdapterUser, "id">
+  exists: false
+} | null>
+export type MaybeUserWithID = AdapterUser | Omit<AdapterUser, "id">
 
 
 type ConfigurableAuthenticationOptions = Omit<GenerateAuthenticationOptionsOpts, "rpID" | "allowCredentials" | "challenge">
@@ -94,10 +83,21 @@ export interface WebAuthnConfig extends CommonProviderOptions {
    */
   verifyRegistrationOptions?: Partial<ConfigurableVerifyRegistrationOptions>
   /**
-   * Function called during registration to get user info.
+   * Function that returns the user info that the authenticator will use during registration and authentication.
    * 
-   * By default, it uses the email address to look for the user in the database.
-   * If it doesn't find the user, it will create a random user ID and use the email address as the user name and user display name.
+   * - It accepts the provider options, the request object, and returns the user info.
+   * - If the request contains an existing user's data (e.g. email address), the function must return the existing user and `exists` must be `true`.
+   * - If the request contains enough information to create a new user, the function must return a new user info and `exists` must be `false`.
+   * - If the request does not contain enough information to create a new user, the function must return `null`.
+   * 
+   * It should not have any side effects (i.e. it shall not modify the database).
+   * 
+   * During passkey creation:
+   *  - The passkey's user ID will be a random string.
+   *  - The passkey's user name will be user.email
+   *  - The passkey's user display name will be user.name, if present, or user.email
+   * 
+   * By default, it looks for and uses the "email" request parameter to look up the user in the database.
    */
   getUserInfo: GetUserInfo
 }
@@ -151,6 +151,16 @@ export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
     }
   }
 
+  // Override getUserInfo to validate it during runtime.
+  const getUserInfo: GetUserInfo = (options, request) => {
+    const result = config.getUserInfo ? config.getUserInfo(options, request) : defaultGetUserInfo(options, request)
+
+    // Validate the result.
+
+
+    return result
+  }
+
   return {
     id: "webauthn",
     name: "WebAuthn",
@@ -162,9 +172,9 @@ export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
       timeout: DEFAULT_WEBAUTHN_TIMEOUT,
     },
     formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
-    getUserInfo,
     simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
     ...config,
+    getUserInfo,
     type: "webauthn",
   }
 }
@@ -177,48 +187,36 @@ export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
  * 
  * @param options - The internaloptions object.
  * @param request - The request object containing the query parameters.
- * @param sessionUser - The session user, if present.
- * @returns The user information including userID, userName, and userDisplayName.
+ * @returns The existing or new user info.
  * @throws {MissingAdapter} If the adapter is missing.
  * @throws {EmailSignInError} If the email address is not provided.
  */
-const getUserInfo: GetUserInfo = async (options, request, sessionUser) => {
+const defaultGetUserInfo: GetUserInfo = async (options, request) => {
   const { adapter } = options
   if (!adapter)
     throw new MissingAdapter(
-      "Adapter not implemented."
+      "WebAuthn provider requires a database adapter to be configured."
     )
-
-  let dbUser = sessionUser ?? null
-
-  if (dbUser) {
-    return {
-      user: dbUser,
-      exists: true,
-    }
-  }
 
   // Get email address from the query.
   const { query, body, method } = request
   const email = (method === "POST" ? body?.email : query?.email) as unknown
 
-  // If email is not provided, raise an error.
-  if (!email || typeof email !== "string")
-    throw new EmailSignInError("Email address is required.")
+  // If email is not provided, return null
+  if (!email || typeof email !== "string") return null
 
-  dbUser = await adapter.getUserByEmail(email)
-  if (dbUser) {
+  const existingUser = await adapter.getUserByEmail(email)
+  if (existingUser) {
     return {
-      user: dbUser,
+      user: existingUser,
       exists: true,
     }
   }
 
-  // If the user does not exist, create a new ID and use the provided info.
+  // If the user does not exist, return a new user info.
   return {
     user: {
       email,
-      id: randomString(16), // 32 byte string
       emailVerified: null,
     },
     exists: false,

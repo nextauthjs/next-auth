@@ -248,23 +248,11 @@ export interface VerificationToken {
 /**
  * An authenticator represents a credential authenticator assigned to a user.
  */
-export interface AdapterAuthenticator extends Omit<Authenticator, "credentialPublicKey" | "credentialID" | "transports" | "credentialDeviceType"> {
+export interface AdapterAuthenticator extends Authenticator {
   /**
-   * Base64 encoded credential ID.
+   * User ID of the authenticator.
    */
-  credentialID: string
-  /**
-   * Base64 encoded credential public key.
-   */
-  credentialPublicKey: string
-  /**
-   * Concatenated transport flags.
-   */
-  transports?: string
-  /**
-   * Device type of the authenticator.
-   */
-  credentialDeviceType: string
+  userId: string
 }
 
 /**

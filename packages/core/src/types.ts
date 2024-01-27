@@ -568,7 +568,6 @@ export interface ResponseInternal<
   cookies?: Cookie[]
 }
 
-export type CredentialDeviceType = "singleDevice" | "multiDevice"
 /**
  * A webauthn authenticator.
  * Represents an entity capable of authenticating the account it references,
@@ -577,14 +576,38 @@ export type CredentialDeviceType = "singleDevice" | "multiDevice"
  * @see https://www.w3.org/TR/webauthn/#authenticator
  */
 export interface Authenticator {
-  userId: string
+  /**
+   * ID of the user this authenticator belongs to.
+   */
+  userId?: string
+  /**
+   * The provider account ID connected to the authenticator.
+   */
   providerAccountId: string
-  credentialID: Uint8Array
-  credentialPublicKey: Uint8Array
+  /**
+   * Number of times the authenticator has been used.
+   */
   counter: number
-  credentialDeviceType: CredentialDeviceType
+  /**
+   * Whether the client authenticator backed up the credential.
+   */
   credentialBackedUp: boolean
-  transports?: AuthenticatorTransport[]
+  /**
+   * Base64 encoded credential ID.
+   */
+  credentialID: string
+  /**
+   * Base64 encoded credential public key.
+   */
+  credentialPublicKey: string
+  /**
+   * Concatenated transport flags.
+   */
+  transports?: string
+  /**
+   * Device type of the authenticator.
+   */
+  credentialDeviceType: string
 }
 
 /** @internal */
