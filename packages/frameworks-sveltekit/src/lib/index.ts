@@ -204,7 +204,7 @@ import { dev, building } from "$app/environment"
 import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
-import { Auth } from "@auth/core"
+import { Auth, setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
 export type {
@@ -219,7 +219,7 @@ async function auth(
   event: RequestEvent,
   config: SvelteKitAuthConfig
 ): ReturnType<App.Locals["auth"]> {
-  setEnvDefaults(env, config)
+  setEnvDefaults(config)
   config.trustHost ??= true
 
   const { request: req } = event
@@ -271,7 +271,7 @@ export function SvelteKitAuth(
 ): Handle {
   return async function ({ event, resolve }) {
     const _config = typeof config === "object" ? config : await config(event)
-    setEnvDefaults(env, _config)
+    setEnvDefaults(_config)
 
     const { url, request } = event
 
@@ -320,48 +320,8 @@ declare module "$env/dynamic/private" {
   export const VERCEL: string
 }
 
-export function setEnvDefaults(envObject: any, config: SvelteKitAuthConfig) {
+function setEnvDefaults(config: SvelteKitAuthConfig) {
   if (building) return
-
-  try {
-    const url = env.AUTH_URL
-    if (url) config.basePath = new URL(url).pathname
-  } catch {
-  } finally {
-    config.basePath ??= `${base}/auth`
-  }
-
-  config.redirectProxyUrl ??= env.AUTH_REDIRECT_PROXY_URL
-
-  if (!config.secret) {
-    config.secret = []
-    const secret = env.AUTH_SECRET
-    if (secret) config.secret.push(secret)
-    for (const i of [1, 2, 3]) {
-      const secret = process.env[`AUTH_SECRET_${i}`]
-      if (secret) config.secret.unshift(secret)
-    }
-  }
-
-  config.trustHost ??= !!(
-    env.AUTH_URL ??
-    env.AUTH_TRUST_HOST ??
-    env.VERCEL ??
-    env.NODE_ENV !== "production" ??
-    dev
-  )
-  config.providers = config.providers.map((p) => {
-    const finalProvider = typeof p === "function" ? p({}) : p
-    const ID = finalProvider.id.toUpperCase()
-    if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
-      finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
-      if (finalProvider.type === "oidc") {
-        finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
-      }
-    } else if (finalProvider.type === "email") {
-      finalProvider.apiKey ??= envObject[`AUTH_${ID}_KEY`]
-    }
-    return finalProvider
-  })
+  coreSetEnvDefaults(env, config)
+  config.trustHost ??= dev
 }

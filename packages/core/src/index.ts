@@ -39,6 +39,7 @@
 import { assertConfig } from "./lib/utils/assert.js"
 import { AuthError, ErrorPageLoop } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
+import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
@@ -55,7 +56,7 @@ import type {
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
-export { skipCSRFCheck, raw }
+export { skipCSRFCheck, raw, setEnvDefaults, createActionURL }
 
 export async function Auth(
   request: Request,
