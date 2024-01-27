@@ -6,7 +6,7 @@ import type { AuthAction, AuthConfig } from "../../types"
  **/
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
   try {
-    const url = process.env.AUTH_URL
+    const url = envObject.AUTH_URL
     if (url && !config.basePath) config.basePath = new URL(url).pathname
   } catch {
   } finally {
