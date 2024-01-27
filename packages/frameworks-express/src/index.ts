@@ -157,7 +157,7 @@ export async function getSession(
   req: e.Request,
   config: Omit<AuthConfig, "raw">
 ): GetSessionResult {
-  setEnvDefaults(config)
+  setEnvDefaults(process.env, config)
   const url = createActionURL(
     "session",
     req.protocol.toString(),

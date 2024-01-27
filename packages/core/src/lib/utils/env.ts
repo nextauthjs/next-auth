@@ -53,7 +53,7 @@ export function createActionURL(
   envObject: any,
   basePath?: string
 ): URL {
-  let url = envObject.AUTH_URL
+  let url = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
   if (!url) {
     const host = headers.get("x-forwarded-host") ?? headers.get("host")
     const proto = headers.get("x-forwarded-proto") ?? protocol
