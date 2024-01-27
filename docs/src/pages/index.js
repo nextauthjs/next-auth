@@ -8,7 +8,6 @@ import CodeBlock from "@theme/CodeBlock"
 import ProviderMarquee from "../components/ProviderMarquee"
 import Seo from "./seo"
 import styles from "./index.module.css"
-import { Clerk } from "../components/clerk"
 
 const features = [
   {
@@ -134,6 +133,15 @@ function Home() {
                 </Link>
               </div>
             </div>
+            <div className={styles.heroClerk}>
+              Looking for a hosted alternative?
+              <a
+                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                target="_blank"
+              >
+                Try Clerk →
+              </a>
+            </div>
             <div className="hero-marquee">
               <ProviderMarquee />
             </div>
@@ -153,7 +161,6 @@ function Home() {
                   </h2>
                 </div>
               </div>
-              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
