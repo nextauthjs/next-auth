@@ -373,6 +373,7 @@ export default function NextAuth(
       handlers: { GET: httpHandler, POST: httpHandler } as const,
       // @ts-expect-error
       auth: initAuth(config, (c) => setEnvDefaults(c)),
+
       signIn: (provider, options, authorizationParams) => {
         const _config = config(undefined)
         setEnvDefaults(_config)
