@@ -17,18 +17,18 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     const secret = envObject.AUTH_SECRET
     if (secret) config.secret.push(secret)
     for (const i of [1, 2, 3]) {
-      const secret = process.env[`AUTH_SECRET_${i}`]
+      const secret = envObject[`AUTH_SECRET_${i}`]
       if (secret) config.secret.unshift(secret)
     }
   }
 
-  config.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
-  config.secret ??= process.env.AUTH_SECRET
+  config.redirectProxyUrl ??= envObject.AUTH_REDIRECT_PROXY_URL
+  config.secret ??= envObject.AUTH_SECRET
   config.trustHost ??= !!(
-    process.env.AUTH_URL ??
-    process.env.AUTH_TRUST_HOST ??
-    process.env.VERCEL ??
-    process.env.NODE_ENV !== "production"
+    envObject.AUTH_URL ??
+    envObject.AUTH_TRUST_HOST ??
+    envObject.VERCEL ??
+    envObject.NODE_ENV !== "production"
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
