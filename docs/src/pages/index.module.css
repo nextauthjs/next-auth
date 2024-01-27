@@ -126,9 +126,6 @@
   justify-content: center;
   gap: 0.5rem;
   font-size: 1.2rem;
-
-  a {
-    position: relative;
-    z-index: 1000;
-  }
+  position: relative;
+  z-index: 1000;
 }
