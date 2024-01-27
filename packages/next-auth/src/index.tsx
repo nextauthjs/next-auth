@@ -67,8 +67,8 @@
  * @module next-auth
  */
 
-import { Auth } from "@auth/core"
-import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
+import { Auth, setEnvDefaults } from "@auth/core"
+import { reqWithEnvURL } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
@@ -365,7 +365,8 @@ export default function NextAuth(
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {
       const _config = config(req)
-      setEnvDefaults(_config)
+      setEnvDefaults(process.env, _config)
+      _config.basePath ??= "/api/auth"
       return Auth(reqWithEnvURL(req), _config)
     }
 
@@ -376,22 +377,26 @@ export default function NextAuth(
 
       signIn: (provider, options, authorizationParams) => {
         const _config = config(undefined)
-        setEnvDefaults(_config)
+        setEnvDefaults(process.env, _config)
+        _config.basePath ??= "/api/auth"
         return signIn(provider, options, authorizationParams, _config)
       },
       signOut: (options) => {
         const _config = config(undefined)
-        setEnvDefaults(_config)
+        setEnvDefaults(process.env, _config)
+        _config.basePath ??= "/api/auth"
         return signOut(options, _config)
       },
       unstable_update: (data) => {
         const _config = config(undefined)
-        setEnvDefaults(_config)
+        setEnvDefaults(process.env, _config)
+        _config.basePath ??= "/api/auth"
         return update(data, _config)
       },
     }
   }
-  setEnvDefaults(config)
+  setEnvDefaults(process.env, config)
+  config.basePath ??= "/api/auth"
   const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
