@@ -14,7 +14,7 @@ export async function sendToken(
   options: InternalOptions<"email">
 ) {
   const { body } = request
-  const { provider, url, callbacks, adapter } = options
+  const { provider, callbacks, adapter } = options
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const email = normalizer(body?.email)
 
@@ -39,6 +39,14 @@ export async function sendToken(
     throw new AuthorizedCallbackError(e as Error)
   }
   if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (typeof authorized === "string") {
+    return {
+      redirect: await callbacks.redirect({
+        url: authorized,
+        baseUrl: options.url.origin,
+      }),
+    }
+  }
 
   const { callbackUrl, theme } = options
   const token =

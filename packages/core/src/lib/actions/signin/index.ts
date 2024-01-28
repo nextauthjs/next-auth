@@ -28,7 +28,8 @@ export async function signIn(
       return { redirect, cookies }
     }
     case "email": {
-      return await sendToken(request, options)
+      const response = await sendToken(request, options)
+      return { ...response, cookies }
     }
     default:
       return { redirect: signInUrl, cookies }
