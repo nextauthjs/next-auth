@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
 CONTAINER_NAME=next-auth-fauna-test
-export FAUNADB_PORT=8443
-export FAUNA_ADMIN_KEY=secret
-export FAUNADB_DOMAIN=localhost
-export FAUNADB_SCHEME=http
+FAUNADB_PORT=8443
+FAUNA_ADMIN_KEY=secret
 
-
-# Start db
+# Start Docker
 docker run -d --rm \
 --name ${CONTAINER_NAME} \
 -p ${FAUNADB_PORT}:${FAUNADB_PORT} \
@@ -16,9 +13,8 @@ fauna/faunadb
 echo "Waiting 20 sec for db to start..."
 sleep 20
 
-# Create tables and indeces
-npx fauna-schema-migrate generate
-npx fauna-schema-migrate apply all
+# Create collections and indexes
+npx fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}
 
 # Always stop container, but exit with 1 when tests are failing
 if npx jest;then

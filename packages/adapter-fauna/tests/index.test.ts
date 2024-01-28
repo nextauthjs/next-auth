@@ -1,35 +1,53 @@
-import { collections, FaunaAdapter, format, indexes, query } from "../src"
+import { FaunaAdapter, sessionFields, verificationTokenFields } from "../src"
 import { runBasicTests } from "utils/adapter"
-import { Client as FaunaClient, Get, Match, Ref } from "faunadb"
+import { Client, fql } from "fauna"
+import { FaunaAccount, FaunaSession, FaunaVerificationToken } from "../src/types"
 
-const client = new FaunaClient({
+const client = new Client({
   secret: "secret",
-  scheme: "http",
-  domain: "localhost",
-  port: 8443,
+  endpoint: new URL("http://localhost:8443"),
 })
 
-const q = query(client, format.from)
+const adapter = FaunaAdapter(client)
 
 runBasicTests({
-  adapter: FaunaAdapter(client),
+  adapter,
   db: {
-    disconnect: async () => await client.close({ force: true }),
-    user: async (id) => await q(Get(Ref(collections.Users, id))),
-    session: async (sessionToken) =>
-      await q(Get(Match(indexes.SessionByToken, sessionToken))),
+    disconnect: async () => client.close(),
+    user: adapter.getUser,
+    async session(sessionToken) {
+      const response = await client.query<FaunaSession>(fql`Session.bySessionToken(${sessionToken}).first() { ${sessionFields} }`)
+      if (response.data === null) return null
+      return {
+        ...response.data,
+        expires: response.data.expires.toDate()
+      }
+    },
     async account({ provider, providerAccountId }) {
-      const key = [provider, providerAccountId]
-      const ref = Match(indexes.AccountByProviderAndProviderAccountId, key)
-      return await q(Get(ref))
+      const response = await client.query<FaunaAccount>(fql`
+        Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first() {
+          access_token,
+          expires_at,
+          id_token,
+          provider,
+          providerAccountId,
+          refresh_token,
+          scope,
+          session_state,
+          token_type,
+          type,
+          userId
+        }
+      `)
+      return response.data
     },
     async verificationToken({ identifier, token }) {
-      const key = [identifier, token]
-      const ref = Match(indexes.VerificationTokenByIdentifierAndToken, key)
-      const verificationToken = await q(Get(ref))
-      // @ts-expect-error
-      if (verificationToken) delete verificationToken.id
-      return verificationToken
+      const response = await client.query<FaunaVerificationToken>(fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first() { ${verificationTokenFields} }`)
+      if (response.data === null) return null
+      return {
+        ...response.data,
+        expires: response.data.expires.toDate()
+      }
     },
   },
 })
