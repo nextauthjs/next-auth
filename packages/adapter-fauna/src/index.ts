@@ -14,7 +14,7 @@
  *
  * @module @auth/fauna-adapter
  */
-import { Adapter, AdapterAccount, AdapterUser } from "@auth/core/adapters"
+import { Adapter } from "@auth/core/adapters"
 import { Client, fql } from "fauna"
 import { FaunaAccount, FaunaUser, FaunaVerificationToken } from "./types"
 import { FaunaSession } from "./types"
