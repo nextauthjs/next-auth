@@ -258,19 +258,16 @@ export class MissingAuthorize extends AuthError {
 }
 
 /**
- * Auth.js requires a secret to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
+ * Auth.js requires a secret or multiple secrets to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
  *
  * :::note
- * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET` environment variable.
- * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret).
+ * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET`, `AUTH_SECRET_1`, etc. environment variables.
+ * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret) option.
  * :::
  *
  *
  * :::tip
- * You can generate a good secret value:
- *  - On Unix systems: type `openssl rand -hex 32` in the terminal
- *  - Or generate one [online](https://generate-secret.vercel.app/32)
- *
+ * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
  * :::
  */
 export class MissingSecret extends AuthError {

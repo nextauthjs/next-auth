@@ -7,11 +7,11 @@
  * npm install next-auth@beta
  * ```
  *
- * ## Environment variable inferrence
+ * ## Environment variable inference
  *
  * `NEXTAUTH_URL` and `NEXTAUTH_SECRET` have been inferred since v4.
  *
- * Since NextAuth.js v5 can also automatically infer environment variables that are prefiexed with `AUTH_`.
+ * Since NextAuth.js v5 can also automatically infer environment variables that are prefixed with `AUTH_`.
  *
  * For example `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
  *
@@ -45,11 +45,30 @@
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
+ * ## Lazy initialization
+ * You can also initialize NextAuth.js lazily (previously known as advanced intialization), which allows you to access the request context in the configuration in some cases, like Route Handlers, Middleware, API Routes or `getServerSideProps`.
+ * The above example becomes:
+ *
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "next-auth/providers/github"
+ * export const { handlers, auth } = NextAuth(req => {
+ *  if (req) {
+ *   console.log(req) // do something with the request
+ *  }
+ *  return { providers: [ GitHub ] }
+ * })
+ * ```
+ *
+ * :::tip
+ * This is useful if you want to customize the configuration based on the request, for example, to add a different provider in staging/dev environments.
+ * :::
+ *
  * @module next-auth
  */
 
 import { Auth } from "@auth/core"
-import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
+import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
@@ -323,10 +342,57 @@ export interface NextAuthResult {
  *
  * export const { handlers, auth } = NextAuth({ providers: [GitHub] })
  * ```
+ *
+ * Lazy initialization:
+ * @example
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "@auth/core/providers/github"
+ *
+ * export const { handlers, auth } = NextAuth((req) => {
+ *   console.log(req) // do something with the request
+ *   return {
+ *     providers: [GitHub],
+ *   },
+ * })
+ * ```
  */
-export default function NextAuth(config: NextAuthConfig): NextAuthResult {
+export default function NextAuth(
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | undefined) => NextAuthConfig)
+): NextAuthResult {
+  if (typeof config === "function") {
+    const httpHandler = (req: NextRequest) => {
+      const _config = config(req)
+      setEnvDefaults(_config)
+      return Auth(reqWithEnvURL(req), _config)
+    }
+
+    return {
+      handlers: { GET: httpHandler, POST: httpHandler } as const,
+      // @ts-expect-error
+      auth: initAuth(config, (c) => setEnvDefaults(c)),
+
+      signIn: (provider, options, authorizationParams) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return signIn(provider, options, authorizationParams, _config)
+      },
+      signOut: (options) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return signOut(options, _config)
+      },
+      unstable_update: (data) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return update(data, _config)
+      },
+    }
+  }
   setEnvDefaults(config)
-  const httpHandler = (req: NextRequest) => Auth(reqWithEnvUrl(req), config)
+  const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error

@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.4",
+  "version": "5.0.0-beta.5",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -32,6 +32,9 @@
     "./providers": {
       "types": "./providers/index.d.ts"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
@@ -58,6 +61,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "dev": "pnpm providers && tsc -w",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "files": [

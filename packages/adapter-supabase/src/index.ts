@@ -270,7 +270,7 @@ export interface SupabaseAdapterOptions {
  *   constraint "users_id_fkey" foreign key ("id")
  *         references  next_auth.users (id) match simple
  *         on update no action
- *         on delete cascade -- if user is deleted in NextAuth they will also be deleted in our public table.
+ *         on delete cascade -- if a user is deleted in NextAuth they will also be deleted in our public table.
  * );
  * alter table users enable row level security;
  * create policy "Can view own user data." on users for select using (next_auth.uid() = id);
@@ -314,7 +314,7 @@ export interface SupabaseAdapterOptions {
  * ```
  *  ### Usage with TypeScript
  *
- * You can pass types that were generated with the Supabase CLI to the Supabase Client to get enhanced type safety and auto completion.
+ * You can pass types that were generated with the Supabase CLI to the Supabase Client to get enhanced type safety and auto-completion.
  *
  * Creating a new supabase client object:
  *
@@ -338,7 +338,7 @@ export interface SupabaseAdapterOptions {
  *     // A JWT which can be used as Authorization header with supabase-js for RLS.
  *     supabaseAccessToken?: string
  *     user: {
- *       // he user's postal address
+ *       // The user's postal address
  *       address: string
  *     } & DefaultSession["user"]
  *   }
