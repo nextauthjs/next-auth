@@ -33,6 +33,7 @@
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
     "@vitest/coverage-v8": "1.2.1",
+    "@vitest/ui": "^1.2.2",
     "eslint": "8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
