@@ -477,6 +477,9 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+      '@auth/pg-adapter':
+        specifier: workspace:*
+        version: link:../adapter-pg
     devDependencies:
       postgres:
         specifier: ^3.4.3
@@ -22918,7 +22921,7 @@ packages:
   /puppeteer@18.2.1:
     resolution: {integrity: sha512-7+UhmYa7wxPh2oMRwA++k8UGVDxh3YdWFB52r9C3tM81T6BU7cuusUSxImz0GEYSOYUKk/YzIhkQ6+vc0gHbxQ==}
     engines: {node: '>=14.1.0'}
-    deprecated: < 21.3.7 is no longer supported
+    deprecated: < 21.5.0 is no longer supported
     requiresBuild: true
     dependencies:
       https-proxy-agent: 5.0.1

@@ -17,7 +17,10 @@
   "private": false,
   "publishConfig": {"access": "public"},
   "scripts": {"test": "./tests/test.sh", "build": "tsc"},
-  "dependencies": {"@auth/core": "workspace:*"},
+  "dependencies": {
+    "@auth/core"      : "workspace:*",
+    "@auth/pg-adapter": "workspace:*"
+  },
   "peerDependencies": {"postgres": "^3"},
   "devDependencies": {"postgres": "^3.4.3"},
   "jest": {"preset": "utils/adapter"}

@@ -22,9 +22,6 @@ import type {
   AdapterSession,
   AdapterAccount,
 } from "@auth/core/adapters"
-import { Session, User } from "@auth/core/types"
-import * as postgres from "postgres"
-import { PostgresType, Sql } from "postgres"
 
 export function mapExpiresAt(account: any): any {
   const expires_at: number = parseInt(account.expires_at)
@@ -39,48 +36,147 @@ export function mapExpiresAt(account: any): any {
  *
  * The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our doc page on [Database Models](https://authjs.dev/getting-started/adapters#models).
  *
- * ```sql
-* CREATE TABLE users
-* (
-*  id SERIAL,
-*  name VARCHAR(255),
-*  email VARCHAR(255),
-*  "emailVerified" BOOLEAN DEFAULT false,
-*  image TEXT,
-*
-*
-* PRIMARY KEY (id) );
-*
-* CREATE TABLE verification_token (
-*    identifier TEXT NOT NULL,
-*    expires TIMESTAMPTZ NOT NULL,
-*    token TEXT NOT NULL,
-*
-*    PRIMARY KEY (identifier, token)
-* );
-* CREATE TABLE accounts (
-*    id SERIAL,
-*    "userId" INTEGER NOT NULL REFERENCES users(id),
-*    type VARCHAR(255) NOT NULL,
-*    provider VARCHAR(255) NOT NULL,
-*    "providerAccountId" VARCHAR(255) NOT NULL,
-*    refresh_token TEXT,
-*    access_token TEXT,
-*    expires_at BIGINT,
-*    id_token TEXT,
-*    scope TEXT,
-*    session_state TEXT,
-*    token_type TEXT,
-*    PRIMARY KEY (id)
-* );
-* CREATE TABLE sessions (
-*    id SERIAL,
-*    "userId" INTEGER NOT NULL REFERENCES users(id),
-*    expires TIMESTAMPTZ NOT NULL,
-*    "sessionToken" VARCHAR(255) NOT NULL,
-*    
-*    PRIMARY KEY (id)
-*  );
+ * ```sql title="schema.sql"
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- The `nanoid()` function generates a compact, URL-friendly unique identifier.
+-- Based on the given size and alphabet, iat creates a randomized string that's ideal for
+-- use-cases requiring small, unpredictable IDs (e.g., URL shorteners, generated file names, etc.).
+-- While it comes with a default configuration, the function is designed to be flexible,
+-- allowing for customization to meet specific needs.
+DROP FUNCTION IF EXISTS nanoid(int, text, float);
+CREATE OR REPLACE FUNCTION nanoid(
+    size int DEFAULT 5, -- The number of symbols in the NanoId String. Must be greater than 0.
+    alphabet text DEFAULT '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', -- The symbols used in the NanoId String. Must contain between 1 and 255 symbols.
+    additionalBytesFactor float DEFAULT 1.6 -- The additional bytes factor used for calculating the step size. Must be equal or greater then 1.
+)
+    RETURNS text -- A randomly generated NanoId String
+    LANGUAGE plpgsql
+    VOLATILE
+    PARALLEL SAFE
+AS
+$$
+DECLARE
+    alphabetArray  text[];
+    alphabetLength int := 64;
+    mask           int := 63;
+    step           int := 34;
+BEGIN
+    IF size IS NULL OR size < 1 THEN
+        RAISE EXCEPTION 'The size must be defined and greater than 0!';
+    END IF;
+
+    IF alphabet IS NULL OR length(alphabet) = 0 OR length(alphabet) > 255 THEN
+        RAISE EXCEPTION 'The alphabet can''t be undefined, zero or bigger than 255 symbols!';
+    END IF;
+
+    IF additionalBytesFactor IS NULL OR additionalBytesFactor < 1 THEN
+        RAISE EXCEPTION 'The additional bytes factor can''t be less than 1!';
+    END IF;
+
+    alphabetArray := regexp_split_to_array(alphabet, '');
+    alphabetLength := array_length(alphabetArray, 1);
+    mask := (2 << cast(floor(log(alphabetLength - 1) / log(2)) as int)) - 1;
+    step := cast(ceil(additionalBytesFactor * mask * size / alphabetLength) AS int);
+
+    IF step > 1024 THEN
+        step := 1024; -- The step size % can''t be bigger then 1024!
+    END IF;
+
+    RETURN nanoid_optimized(size, alphabet, mask, step);
+END
+$$;
+
+-- Generates an optimized random string of a specified size using the given alphabet, mask, and step.
+-- This optimized version is designed for higher performance and lower memory overhead.
+-- No checks are performed! Use it only if you really know what you are doing.
+DROP FUNCTION IF EXISTS nanoid_optimized(int, text, int, int);
+CREATE OR REPLACE FUNCTION nanoid_optimized(
+    size int, -- The desired length of the generated string.
+    alphabet text, -- The set of characters to choose from for generating the string.
+    mask int, -- The mask used for mapping random bytes to alphabet indices. Should be `(2^n) - 1` where `n` is a power of 2 less than or equal to the alphabet size.
+    step int -- The number of random bytes to generate in each iteration. A larger value may speed up the function but increase memory usage.
+)
+    RETURNS text -- A randomly generated NanoId String
+    LANGUAGE plpgsql
+    VOLATILE
+    PARALLEL SAFE
+AS
+$$
+DECLARE
+    idBuilder      text := '';
+    counter        int  := 0;
+    bytes          bytea;
+    alphabetIndex  int;
+    alphabetArray  text[];
+    alphabetLength int  := 64;
+BEGIN
+    alphabetArray := regexp_split_to_array(alphabet, '');
+    alphabetLength := array_length(alphabetArray, 1);
+
+    LOOP
+        bytes := gen_random_bytes(step);
+        FOR counter IN 0..step - 1
+            LOOP
+                alphabetIndex := (get_byte(bytes, counter) & mask) + 1;
+                IF alphabetIndex <= alphabetLength THEN
+                    idBuilder := idBuilder || alphabetArray[alphabetIndex];
+                    IF length(idBuilder) = size THEN
+                        RETURN idBuilder;
+                    END IF;
+                END IF;
+            END LOOP;
+    END LOOP;
+END
+$$;
+
+CREATE TABLE users
+(
+  id TEXT NOT NULL DEFAULT nanoid(),
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
+  "emailVerified" TIMESTAMPTZ,
+  image TEXT,
+
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE verification_token
+(
+  identifier TEXT NOT NULL,
+  expires TIMESTAMPTZ NOT NULL,
+  token TEXT NOT NULL,
+
+  PRIMARY KEY (identifier, token)
+);
+
+CREATE TABLE accounts
+(
+  id TEXT NOT NULL DEFAULT nanoid(),
+  "userId" TEXT,
+  type VARCHAR(255) NOT NULL,
+  provider TEXT,
+  "providerAccountId" TEXT,
+  refresh_token TEXT,
+  access_token TEXT,
+  expires_at BIGINT,
+  id_token TEXT,
+  scope TEXT,
+  session_state TEXT,
+  token_type TEXT,
+
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE sessions
+(
+  id TEXT NOT NULL DEFAULT nanoid(),
+  "userId" TEXT,
+  expires TIMESTAMPTZ NOT NULL,
+  "sessionToken" TEXT,
+
+  PRIMARY KEY (id)
+);
 *
  *
  * ```
@@ -119,54 +215,41 @@ export function mapExpiresAt(account: any): any {
  *
  */
 
-export interface Database {
-  User: AdapterUser | Partial<AdapterUser>
-  Account: AdapterAccount
-  Session: AdapterSession
-  VT: VerificationToken | Partial<VerificationToken>
-}
-
-/* export default function PostgresJSAdapter(sql): Adapter {
+export default function PostgresJSAdapter(sql: any): Adapter {
   return {
-    createUser: (data) => sql`
-        INSERT INTO users (name, email, "emailVerified", image) 
-        VALUES (${data.name},${data.email}, ${data.emailVerified},${data.image}) 
-        RETURNING *`,
+    createUser: async (data) => {
+      const x = await sql`
+        INSERT INTO users (id, name, email, "emailVerified", image) 
+        VALUES (${data.id}, ${data.name}, ${data.email}, ${data.emailVerified}, ${data.image})
+    RETURNING id, name, email, "emailVerified", image`
 
-    async createUser(user: Omit<AdapterUser, "id">) {
-      const { name, email, emailVerified, image } = user
-      const result = await sql`
-        INSERT INTO users (name, email, "emailVerified", image) 
-        VALUES (${name},${email}, ${emailVerified},${image}) 
-        RETURNING *`
-      console.log(...result)
-
-      return result[0]
+      return x[0]
     },
+
     async getUser(id) {
-      const result = await sql`select * from users where id = ${id}`
+      const x = await sql`select * from users where id = ${id}`
       try {
-        return result.count === 0 ? null : result[0]
+        return x.length === 0 ? null : x[0]
       } catch (e) {
         return null
       }
     },
     async getUserByEmail(email) {
-      const result = await sql`select * from users where email = ${email}`
-      return result.count !== 0 ? result[0] : null
+      const x = await sql`select * from users where email = ${email}`
+      return x.length !== 0 ? x[0] : null
     },
     async getUserByAccount({
       providerAccountId,
       provider,
     }): Promise<AdapterUser | null> {
-      const result = await sql`
+      const x = await sql`
           select u.* from users u join accounts a on u.id = a."userId"
           where 
           a.provider = ${provider} 
           and 
           a."providerAccountId" = ${providerAccountId}`
 
-      return result.count !== 0 ? result[0] : null
+      return x.length !== 0 ? x[0] : null
     },
     async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
       const fetchSql = await sql`select * from users where id = ${user.id}`
@@ -180,7 +263,7 @@ export interface Database {
         UPDATE users set
         name = ${name}, email = ${email}, "emailVerified" = ${emailVerified}, image = ${image}
         where id = ${id}
-        RETURNING name, id, email, "emailVerified", image
+ RETURNING name, id, email, "emailVerified", image
       `
 
       return updateSql[0]
@@ -204,7 +287,7 @@ export interface Database {
         session_state,
         token_type,
       } = account
-      const result = await sql`
+      const x = await sql`
       insert into accounts 
       (
         "userId", 
@@ -219,8 +302,10 @@ export interface Database {
         session_state,
         token_type
       )
-      values (${userId},${provider}, ${type}, ${providerAccountId}, ${access_token},   to_timestamp(${expires_at}), ${refresh_token}, ${id_token}, ${scope}, ${session_state},${token_type})      
-returning
+      values (${userId},${provider}, ${type}, ${providerAccountId}, ${access_token}, (${Number(
+        expires_at
+      )}), ${refresh_token}, ${id_token}, ${scope}, ${session_state},${token_type})
+  returning
         id,
         "userId", 
         provider, 
@@ -235,7 +320,7 @@ returning
         token_type
       `
 
-      return mapExpiresAt(result[0])
+      return mapExpiresAt(x[0])
     },
     async unlinkAccount(partialAccount) {
       const { provider, providerAccountId } = partialAccount
@@ -248,16 +333,19 @@ returning
       if (sessionToken === undefined) {
         return null
       }
-      let session =
+      const result1 =
         await sql`select * from sessions where "sessionToken" = ${sessionToken}`
-      if (session.count === 0) {
+      if (result1.length === 0) {
         return null
       }
-      let user = await sql`select * from users where id = ${session[0].userId}`
-      if (user.count === 0) {
+      let session: AdapterSession = result1[0]
+
+      const result2 =
+        await sql`select * from users where id = ${session.userId}`
+      if (result2.length === 0) {
         return null
       }
-      console.log({ user, session })
+      const user = result2[0]
 
       return {
         session,
@@ -268,34 +356,34 @@ returning
       if (userId === undefined) {
         throw Error(`userId is undef in createSession`)
       }
-      const result =
+      const x =
         await sql`insert into sessions ("userId", expires, "sessionToken")
       values (${userId}, ${expires}, ${sessionToken})
       RETURNING id, "sessionToken", "userId", expires`
-      return result[0]
+      return x[0]
     },
 
     async updateSession(
       session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
     ): Promise<AdapterSession | null | undefined> {
       const { sessionToken } = session
-      const result1 =
+      const x1 =
         await sql`select * from sessions where "sessionToken" = ${sessionToken}`
-      if (result1.count === 0) {
+      if (x1.length === 0) {
         return null
       }
-      const originalSession = result1[0]
+      const originalSession = x1[0]
       const newSession = {
         ...originalSession,
         ...session,
       }
-      const result = await sql`
+      const x = await sql`
         UPDATE sessions set
         expires = ${newSession.expires}
         where "sessionToken" = ${newSession.sessionToken}
         `
 
-      return result[0]
+      return x[0]
     },
     async deleteSession(sessionToken) {
       await sql`delete from sessions where "sessionToken" = ${sessionToken}`
@@ -306,150 +394,17 @@ returning
       const { identifier, expires, token } = verificationToken
       await sql`
         INSERT INTO verification_token ( identifier, expires, token ) 
-        VALUES (${identifier}, ${expires}, ${token})
-        RETURNING verification_token
-        `
+        VALUES (${identifier}, ${expires}, ${token})`
       console.log(verificationToken)
       return verificationToken
     },
-    async useVerificationToken(
-      verificationToken
-    ): Promise<Maybe<VerificationToken>> {
+    async useVerificationToken(verificationToken): Promise<VerificationToken> {
       const { identifier, token } = verificationToken
 
       let res = await sql`delete from verification_token
       where identifier = ${identifier} and token = ${token}
-      RETURNING *`
-      return res[0]
-    },
-  }
-} */
-
-export default function PostgresJSAdapter(sql: any): Adapter {
-  return {
-    createUser: (data) => sql`
-        INSERT INTO users (name, email, "emailVerified", image) 
-        VALUES (${data.name},${data.email}, ${data.emailVerified},${data.image}) 
-        RETURNING *`,
-    getUser: (id) => sql`select * from users where id = ${id}`,
-    getUserByEmail: (email) => sql`select * from users where email = ${email}`,
-    getUserByAccount: ({ providerAccountId, provider }) =>
-      sql`
-          select u.* from users u join accounts a on u.id = a."userId"
-          where 
-          a.provider = ${provider} 
-          and 
-          a."providerAccountId" = ${providerAccountId}
-          returning accounts.userId`.then((res: any[]) => res[0] ?? null),
-    updateUser: async (user: Partial<AdapterUser>): Promise<AdapterUser> => {
-      /*       const fetchSql = await sql`select * from users where id = ${user.id}`
-      const oldUser: User = fetchSql[0]
-      const newUser = {
-        ...oldUser,
-        ...user,
-      }
-      const { id, name, email, emailVerified, image } = newUser
-      const updateSql = await sql`
-        UPDATE users set
-        name = ${name}, email = ${email}, "emailVerified" = ${emailVerified}, image = ${image}
-        where id = ${id}
-        RETURNING *
-      `
-
-      return updateSql[0] */
-      const rows: AdapterUser[] = await sql`
-            UPDATE users
-            SET name = ${user.name}, email = ${user.email}, image = ${user.image}
-            WHERE id = ${user.id}
-            RETURNING id, name, email, image;
-            `
-      const updatedUser = {
-        ...rows[0],
-        id: rows[0].id.toString(),
-        emailVerified: rows[0].emailVerified,
-        email: rows[0].email,
-      }
-      return updatedUser
-    },
-    deleteUser: async (userId) => {
-      await Promise.all([
-        await sql`delete from users where id = ${userId}`,
-        await sql`delete from sessions where "userId" = ${userId}`,
-        await sql`delete from accounts where "userId" = ${userId}`,
-      ])
-    },
-    linkAccount: (account: AdapterAccount) =>
-      sql`insert into accounts 
-      (
-        "userId", 
-        provider, 
-        type, 
-        "providerAccountId", 
-        access_token,
-        expires_at,
-        refresh_token,
-        id_token,
-        scope,
-        session_state,
-        token_type
-      )
-      values (${account.userId},${account.provider}, ${account.type}, ${account.providerAccountId}, ${account.access_token},to_timestamp(${account.expires_at}), ${account.refresh_token}, ${account.id_token}, ${account.scope}, ${account.session_state},${account.token_type})      
-      returning *`.then((res: any[]) => mapExpiresAt(res[0]) ?? null),
-
-    unlinkAccount: async (partialAccount) => {
-      const { provider, providerAccountId } = partialAccount
-      await sql`delete from accounts where "providerAccountId" = ${providerAccountId} and provider = ${provider}`
-      return
-    },
-    getSessionAndUser: (sessionToken) =>
-      sql`
-          select u.* from users u join sessions s on u.id = s."userId"
-          where "sessionToken" = ${sessionToken}
-          returning sessions, users`.then((res: any[]) => res[0] ?? null),
-
-    createSession: ({ sessionToken, userId, expires }) =>
-      sql`insert into sessions ("userId", expires, "sessionToken")
-      values (${userId}, ${expires}, ${sessionToken})
-      RETURNING *`.then((res: Session[]) => res[0] ?? null),
-
-    updateSession: async (session) => {
-      const { sessionToken } = session
-      const result1 =
-        await sql`select * from sessions where "sessionToken" = ${sessionToken}`
-
-      const originalSession = result1[0]
-      const newSession = {
-        ...originalSession,
-        ...session,
-      }
-      const result = await sql`
-        UPDATE sessions set
-        expires = ${newSession.expires}
-        where "sessionToken" = ${newSession.sessionToken}
-        `
-
-      return result[0]
-    },
-    deleteSession: async (sessionToken) =>
-      await sql`delete from sessions where "sessionToken" = ${sessionToken}`,
-    createVerificationToken: async (
-      verificationToken
-    ): Promise<VerificationToken> => {
-      const { identifier, expires, token } = verificationToken
-      await sql`
-        INSERT INTO verification_token ( identifier, expires, token ) 
-        VALUES (${identifier}, ${expires}, ${token})
-        RETURNING verification_token
-        `
-      console.log(verificationToken)
-      return verificationToken
-    },
-    useVerificationToken: async (verificationToken) => {
-      const { identifier, token } = verificationToken
-      let res = await sql`delete from verification_token
-      where identifier = ${identifier} and token = ${token}
-      RETURNING *`
-      return res[0]
+RETURNING identifier, expires, token`
+      return res.length !== 0 ? res[0] : null
     },
   }
 }

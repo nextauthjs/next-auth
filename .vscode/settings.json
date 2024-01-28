@@ -1,7 +1,7 @@
 {
-  "typescript.tsdk"           : "node_modules/typescript/lib",
-  "openInGitHub.remote.branch": "main"                       ,
-  "editor.wordWrap"           : "on"                         ,
-  "sql-formatter.dialect"     : "postgresql"                 ,
-  "editor.defaultFormatter"   : "esbenp.prettier-vscode"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "openInGitHub.remote.branch": "main",
+  "editor.wordWrap": "on",
+  "sql-formatter.dialect": "postgresql",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
