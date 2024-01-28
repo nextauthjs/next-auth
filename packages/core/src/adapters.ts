@@ -394,7 +394,7 @@ export interface Adapter {
     providerAccountId: AdapterAccount["providerAccountId"], provider: AdapterAccount["provider"]
   ): Awaitable<AdapterAccount | null>
   /**
-   * Returns an authenticator from its id.
+   * Returns an authenticator from its credentialID.
    * 
    * If an authenticator is not found, the adapter must return `null`.
    */
@@ -412,12 +412,12 @@ export interface Adapter {
   /**
    * Returns all authenticators from a user.
    *
-   * If a user is not found, the adapter must return `null`.
+   * If a user is not found, the adapter should still return an empty array.
    * If the retrieval fails for some other reason, the adapter must throw an error.
    */
   listAuthenticatorsByUserId?(
     userId: AdapterAuthenticator['userId']
-  ): Awaitable<AdapterAuthenticator[] | null>
+  ): Awaitable<AdapterAuthenticator[]>
   /**
    * Updates an authenticator's counter.
    * 
