@@ -390,5 +390,6 @@ async function handleAuthorized(
     throw new AuthorizedCallbackError(e as Error)
   }
   if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
-  if (typeof authorized === "string") return await redirect({ url: authorized, baseUrl: config.url.origin })
+  if (typeof authorized !== "string") return
+  return await redirect({ url: authorized, baseUrl: config.url.origin })
 }
