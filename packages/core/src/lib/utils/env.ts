@@ -53,6 +53,7 @@ export function createActionURL(
   let url = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
   if (!url) {
     const host = headers.get("x-forwarded-host") ?? headers.get("host")
+    if (!host) throw new TypeError("Missing host")
     const proto = headers.get("x-forwarded-proto") ?? protocol
     url = `${proto === "http" ? "http" : "https"}://${host}${basePath}`
   }
