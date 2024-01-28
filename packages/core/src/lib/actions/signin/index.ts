@@ -13,7 +13,7 @@ export async function signIn(
   cookies: Cookie[],
   options: InternalOptions
 ): Promise<ResponseInternal> {
-  const signInUrl = `${options.url}/signin`
+  const signInUrl = `${options.url.origin}${options.basePath}/signin`
 
   if (!options.provider) return { redirect: signInUrl, cookies }
 
@@ -28,7 +28,8 @@ export async function signIn(
       return { redirect, cookies }
     }
     case "email": {
-      return await sendToken(request, options)
+      const response = await sendToken(request, options)
+      return { ...response, cookies }
     }
     default:
       return { redirect: signInUrl, cookies }
