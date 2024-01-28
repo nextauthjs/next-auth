@@ -7,8 +7,9 @@ import swc from "unplugin-swc"
 export default defineConfig({
   test: {
     coverage: {
+      all: true,
       enabled: true,
-      include: ["src/**/*.ts"],
+      include: ["src"],
       reporter: ["json", "html"],
     },
     setupFiles: ["../utils/vitest-setup.ts"],
