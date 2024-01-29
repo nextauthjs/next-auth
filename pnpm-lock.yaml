@@ -7016,7 +7016,7 @@ packages:
       '@peculiar/asn1-schema': 2.3.8
       '@peculiar/asn1-x509': 2.3.8
       '@simplewebauthn/types': 9.0.0
-      cbor-x: 1.5.2
+      cbor-x: 1.5.8
       cross-fetch: 4.0.0
     transitivePeerDependencies:
       - encoding
@@ -10450,8 +10450,8 @@ packages:
     dev: false
     optional: true
 
-  /cbor-x@1.5.2:
-    resolution: {integrity: sha512-JArE6xcgj3eo13fpnShO42QFBUuXP2uG12RLeF2Nb+dJcETFYxkUa27gXQrRYp67Ahtaxyfbg+ihc62XTyQqsQ==}
+  /cbor-x@1.5.8:
+    resolution: {integrity: sha512-gc3bHBsvG6GClCY6c0/iip+ghlqizkVp+TtaL927lwvP4VP9xBdi1HmqPR5uj/Mj/0TOlngMkIYa25wKg+VNrQ==}
     optionalDependencies:
       cbor-extract: 2.2.0
     dev: false
