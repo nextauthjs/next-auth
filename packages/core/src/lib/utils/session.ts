@@ -1,15 +1,14 @@
-import { AdapterUser } from "../../adapters";
 import { JWTSessionError, SessionTokenError } from "../../errors";
-import { InternalOptions } from "../../types";
-import { SessionStore } from "./cookie";
+import type { InternalOptions, User } from "../../types";
+import type { SessionStore } from "./cookie";
 
 /**
- * Returns the currently logged in adapter user, if any.
+ * Returns the currently logged in user, if any.
  */
 export async function getLoggedInUser(
   options: InternalOptions,
   sessionStore: SessionStore
-): Promise<AdapterUser | null> {
+): Promise<User | null> {
   const {
     adapter,
     jwt,
@@ -28,7 +27,12 @@ export async function getLoggedInUser(
 
       if (!payload || !payload.sub) throw new Error("Invalid JWT")
 
-      return adapter?.getUser(payload.sub) ?? null
+      return {
+        id: payload.sub,
+        name: payload.name,
+        email: payload.email,
+        image: payload.picture,
+      } satisfies User
     } catch (e) {
       logger.error(new JWTSessionError(e as Error))
     }

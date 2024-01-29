@@ -1,5 +1,5 @@
-import type { MaybeUserWithID, WebAuthnProviderType } from "../../providers/webauthn";
-import type { Account, Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal } from "../../types";
+import type { WebAuthnProviderType } from "../../providers/webauthn";
+import type { Account, Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal, User } from "../../types";
 import type { Cookie } from "./cookie";
 import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../../errors";
 import { webauthnChallenge } from "../actions/callback/oauth/checks";
@@ -10,15 +10,13 @@ import type {
   PublicKeyCredentialRequestOptionsJSON,
   RegistrationResponseJSON,
 } from "@simplewebauthn/server/script/deps"
-import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterUser } from "../../adapters";
+import type { Adapter, AdapterAccount, AdapterAuthenticator } from "../../adapters";
 import type { GetUserInfo } from "../../providers/webauthn";
 import { randomString } from "./web";
 
 export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
 export type WebAuthnAction = WebAuthnRegister | WebAuthnAuthenticate
-
-type SessionUser = Pick<AdapterUser, "name" | "email" | "id">
 
 type InternalOptionsWebAuthn = InternalOptions<WebAuthnProviderType> & { adapter: Required<Adapter> }
 export type WebAuthnOptionsResponseBody = {
@@ -115,7 +113,7 @@ export function decideWebAuthnOptions(
  */
 export async function getRegistrationResponse(
   options: InternalOptionsWebAuthn,
-  user: MaybeUserWithID,
+  user: User & { email: string },
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get registration options
@@ -146,7 +144,7 @@ export async function getRegistrationResponse(
  */
 export async function getAuthenticationResponse(
   options: InternalOptionsWebAuthn,
-  user?: MaybeUserWithID,
+  user?: User,
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get authentication options
@@ -171,7 +169,7 @@ export async function verifyAuthenticate(
   options: InternalOptionsWebAuthn,
   request: RequestInternal,
   resCookies: Cookie[]
-): Promise<{ account: AdapterAccount, user: AdapterUser }> {
+): Promise<{ account: AdapterAccount, user: User }> {
   const { adapter, provider } = options
 
   // Get WebAuthn response from request body
@@ -252,7 +250,7 @@ export async function verifyRegister(
   options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
   resCookies: Cookie[],
-): Promise<{ account: Account, user: MaybeUserWithID; authenticator: Authenticator }> {
+): Promise<{ account: Account, user: User; authenticator: Authenticator }> {
   const { provider } = options
 
   // Get WebAuthn response from request body
@@ -320,11 +318,11 @@ export async function verifyRegister(
  * @param user - Optional user information.
  * @returns The authentication options.
  */
-async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?: MaybeUserWithID) {
+async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?: User) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = user && "id" in user ?
+  const authenticators = user && user["id"] ?
     await adapter.listAuthenticatorsByUserId(user.id) :
     null
 
@@ -348,11 +346,11 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?:
  * @param user - The user information.
  * @returns The registration options.
  */
-async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: MaybeUserWithID) {
+async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: User & { email: string }) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = "id" in user ? await adapter.listAuthenticatorsByUserId(user.id) : null
+  const authenticators = user["id"] ? await adapter.listAuthenticatorsByUserId(user.id) : null
 
   // Generate a random user ID for the credential.
   // We can do this because we don't use this user ID to link the

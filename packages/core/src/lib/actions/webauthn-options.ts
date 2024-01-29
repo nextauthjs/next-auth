@@ -1,4 +1,5 @@
-import type { InternalOptions, RequestInternal, ResponseInternal } from "../../types.js"
+import { Adapter } from "../../adapters.js"
+import type { InternalOptions, RequestInternal, ResponseInternal, User } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
 import { getLoggedInUser } from "../utils/session.js"
 import { assertInternalOptionsWebAuthn, decideWebAuthnOptions, getAuthenticationResponse, getRegistrationResponse } from "../utils/webauthn-utils.js"
@@ -33,7 +34,7 @@ export async function webAuthnOptions(
     }
   }
 
-  // Get the user info, if any
+  // Get the user info from the session
   const sessionUser = await getLoggedInUser(options, sessionStore)
 
   // Extract user info from request
@@ -43,14 +44,18 @@ export async function webAuthnOptions(
     exists: true
   } : await provider.getUserInfo(options, request)
 
+  const userInfo = getUserInfoResponse?.user
+
   // Make a decision on what kind of webauthn options to return
   const decision = decideWebAuthnOptions(action, !!sessionUser, getUserInfoResponse)
 
   switch (decision) {
     case "authenticate":
-      return getAuthenticationResponse(narrowOptions, getUserInfoResponse?.user, cookies)
+      return getAuthenticationResponse(narrowOptions, userInfo, cookies)
     case "register":
-      return getRegistrationResponse(narrowOptions, getUserInfoResponse!.user, cookies)
+      if (typeof userInfo?.email === "string") {
+        return getRegistrationResponse(narrowOptions, userInfo as User & { email: string }, cookies)
+      }
     default:
       return {
         status: 400,

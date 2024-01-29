@@ -1,7 +1,6 @@
 import type { CommonProviderOptions, CredentialInput } from "."
 import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts } from "@simplewebauthn/server"
-import type { InternalOptions, RequestInternal } from "../types"
-import type { AdapterUser } from "../adapters"
+import type { InternalOptions, RequestInternal, User } from "../types"
 import { MissingAdapter } from "../errors"
 
 
@@ -29,13 +28,12 @@ export type GetUserInfo = (
   options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
 ) => Promise<{
-  user: AdapterUser
+  user: User
   exists: true
 } | {
-  user: Omit<AdapterUser, "id">
+  user: Omit<User, "id">
   exists: false
 } | null>
-export type MaybeUserWithID = AdapterUser | Omit<AdapterUser, "id">
 
 
 type ConfigurableAuthenticationOptions = Omit<GenerateAuthenticationOptionsOpts, "rpID" | "allowCredentials" | "challenge">
@@ -217,7 +215,6 @@ const defaultGetUserInfo: GetUserInfo = async (options, request) => {
   return {
     user: {
       email,
-      emailVerified: null,
     },
     exists: false,
   }

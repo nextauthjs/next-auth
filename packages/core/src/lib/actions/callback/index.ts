@@ -20,10 +20,10 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
+  User,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
 import { assertInternalOptionsWebAuthn, verifyAuthenticate, verifyRegister } from "../../utils/webauthn-utils.js"
-import { MaybeUserWithID } from "../../../providers/webauthn.js"
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -378,7 +378,7 @@ export async function callback(
       const localOptions = assertInternalOptionsWebAuthn(options)
 
       // Verify request to get user, account and authenticator
-      let user: MaybeUserWithID
+      let user: User
       let account: Account
       let authenticator: Authenticator | undefined
       switch (action) {
@@ -404,7 +404,7 @@ export async function callback(
       // Check if user is allowed to sign in
       await handleAuthorized(
         { user, account },
-        options.callbacks.signIn
+        options,
       )
 
       // Sign user in, creating them and their account if needed
