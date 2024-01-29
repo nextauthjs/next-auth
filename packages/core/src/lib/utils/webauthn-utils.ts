@@ -50,7 +50,7 @@ type RGetUserInfo = Awaited<ReturnType<GetUserInfo>>
  * @param loggedInUser - The logged-in user (optional).
  * @param userInfoResponse - The response containing user information (optional).
  * 
- * @returns The WebAuthn action to perform, or undefined if no inference could be made.
+ * @returns The WebAuthn action to perform, or null if no inference could be made.
  */
 export function inferWebAuthnOptions(
   action: WebAuthnAction | undefined,
