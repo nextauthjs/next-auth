@@ -2,7 +2,7 @@ import { Adapter } from "../../adapters.js"
 import type { InternalOptions, RequestInternal, ResponseInternal, User } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
 import { getLoggedInUser } from "../utils/session.js"
-import { assertInternalOptionsWebAuthn, decideWebAuthnOptions, getAuthenticationResponse, getRegistrationResponse } from "../utils/webauthn-utils.js"
+import { assertInternalOptionsWebAuthn, inferWebAuthnOptions, getAuthenticationResponse, getRegistrationResponse } from "../utils/webauthn-utils.js"
 
 /**
  * Returns authentication or registration options for a WebAuthn flow
@@ -47,7 +47,7 @@ export async function webAuthnOptions(
   const userInfo = getUserInfoResponse?.user
 
   // Make a decision on what kind of webauthn options to return
-  const decision = decideWebAuthnOptions(action, !!sessionUser, getUserInfoResponse)
+  const decision = inferWebAuthnOptions(action, !!sessionUser, getUserInfoResponse)
 
   switch (decision) {
     case "authenticate":

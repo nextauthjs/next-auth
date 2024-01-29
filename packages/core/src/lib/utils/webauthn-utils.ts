@@ -44,15 +44,15 @@ interface InternalAuthenticator {
 type RGetUserInfo = Awaited<ReturnType<GetUserInfo>>
 
 /**
- * Decides the WebAuthn options based on the provided parameters.
+ * Infers the WebAuthn options based on the provided parameters.
  * 
  * @param action - The WebAuthn action to perform (optional).
  * @param loggedInUser - The logged-in user (optional).
  * @param userInfoResponse - The response containing user information (optional).
  * 
- * @returns The WebAuthn action to perform, or undefined if no decision could be made.
+ * @returns The WebAuthn action to perform, or undefined if no inference could be made.
  */
-export function decideWebAuthnOptions(
+export function inferWebAuthnOptions(
   action: WebAuthnAction | undefined,
   loggedIn: boolean,
   userInfoResponse: RGetUserInfo
