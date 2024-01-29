@@ -17,7 +17,7 @@ sleep 20
 npx fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest -c ../utils/vitest.config.ts;then
+if npx vitest -c ../../utils/vitest.config.ts;then
     docker stop ${CONTAINER_NAME}
 else
     docker stop ${CONTAINER_NAME} && exit 1
