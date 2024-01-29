@@ -1,4 +1,4 @@
-import type { WebAuthnProviderType } from "../../providers/webauthn";
+import type { RelayingParty, WebAuthnProviderType } from "../../providers/webauthn";
 import type { Account, Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal, User } from "../../types";
 import type { Cookie } from "./cookie";
 import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../../errors";
@@ -193,13 +193,14 @@ export async function verifyAuthenticate(
   // Verify the response
   let verification: VerifiedAuthenticationResponse
   try {
+    const relayingParty = getRelayingParty(options)
     verification = await verifyAuthenticationResponse({
       ...provider.verifyAuthenticationOptions,
       expectedChallenge,
       response: data as AuthenticationResponseJSON,
       authenticator: fromAdapterAuthenticator(authenticator),
-      expectedOrigin: provider.relayingParty.origin,
-      expectedRPID: provider.relayingParty.id,
+      expectedOrigin: relayingParty.origin,
+      expectedRPID: relayingParty.id,
     })
   } catch (e: any) {
     throw new WebAuthnVerificationError(e)
@@ -268,12 +269,13 @@ export async function verifyRegister(
   // Verify the response
   let verification: VerifiedRegistrationResponse
   try {
+    const relayingParty = getRelayingParty(options)
     verification = await verifyRegistrationResponse({
       ...provider.verifyRegistrationOptions,
       expectedChallenge,
       response: data as RegistrationResponseJSON,
-      expectedOrigin: provider.relayingParty.origin,
-      expectedRPID: provider.relayingParty.id,
+      expectedOrigin: relayingParty.origin,
+      expectedRPID: relayingParty.id,
     })
   } catch (e: any) {
     throw new WebAuthnVerificationError(e)
@@ -326,10 +328,12 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?:
     await adapter.listAuthenticatorsByUserId(user.id) :
     null
 
+  const relayingParty = getRelayingParty(options)
+
   // Return the authentication options.
   return await generateAuthenticationOptions({
     ...provider.authenticationOptions,
-    rpID: provider.relayingParty.id,
+    rpID: relayingParty.id,
     allowCredentials: authenticators?.map((a) => ({
       id: fromBase64(a.credentialID),
       type: "public-key",
@@ -358,14 +362,16 @@ async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: Us
   // Authenticator object and fetch it via it's credential ID.
   const userID = randomString(32)
 
+  const relayingParty = getRelayingParty(options)
+
   // Return the registration options.
   return await generateRegistrationOptions({
     ...provider.registrationOptions,
     userID,
     userName: user.email,
     userDisplayName: user.name ?? undefined,
-    rpID: provider.relayingParty.id,
-    rpName: provider.relayingParty.name,
+    rpID: relayingParty.id,
+    rpName: relayingParty.name,
     excludeCredentials: authenticators?.map((a) => ({
       id: fromBase64(a.credentialID),
       type: "public-key",
@@ -413,4 +419,22 @@ function transportsToString(transports: InternalAuthenticator["transports"]) {
 
 function stringToTransports(tstring: string | undefined): InternalAuthenticator["transports"] {
   return tstring ? tstring.split(",") as InternalAuthenticator["transports"] : undefined
+}
+
+/**
+ * Retrieves the relaying party information based on the provided options.
+ * If the relaying party information is not provided, it falls back to using the URL information.
+ *
+ * @param options - The options object containing the provider and URL information.
+ * @returns The relaying party object with the ID, name, and origin.
+ */
+function getRelayingParty(options: InternalOptions<WebAuthnProviderType>): RelayingParty {
+  const { provider, url } = options
+  const { relayingParty } = provider
+
+  return {
+    id: relayingParty?.id ?? url.hostname,
+    name: relayingParty?.name ?? url.host,
+    origin: relayingParty?.origin ?? url.origin,
+  }
 }

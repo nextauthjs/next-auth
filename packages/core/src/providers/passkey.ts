@@ -9,7 +9,7 @@
  * @module providers/passkey
  */
 
-import WebAuthn, { WebAuthnInputConfig, WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT } from "./webauthn"
+import WebAuthn, { WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT } from "./webauthn"
 
 
 /**
@@ -24,7 +24,7 @@ import WebAuthn, { WebAuthnInputConfig, WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Passkey({ relayingParty: { id: "example.com", name: "My Website", origin: "https://example.com" } })],
+ *   providers: [Passkey],
  * })
  * ```
  * ### Resources
@@ -58,7 +58,7 @@ import WebAuthn, { WebAuthnInputConfig, WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT
  *
  * :::
  */
-export default function Passkey(config: WebAuthnInputConfig): WebAuthnConfig {
+export default function Passkey(config: Partial<WebAuthnConfig>): WebAuthnConfig {
     return WebAuthn({
         id: "passkey",
         name: "Passkey",

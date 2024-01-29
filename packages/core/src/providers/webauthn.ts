@@ -15,7 +15,7 @@ function isSemverString(version: string): version is SemverString {
 export const DEFAULT_WEBAUTHN_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.0"
 
-type RelayingParty = {
+export type RelayingParty = {
   /** Relaying Party ID. Use the website's domain name. */
   id: string
   /** Relaying Party name. Use the website's name. */
@@ -43,8 +43,12 @@ type ConfigurableVerifyRegistrationOptions = Omit<VerifyRegistrationResponseOpts
 
 export interface WebAuthnConfig extends CommonProviderOptions {
   type: WebAuthnProviderType
-  /** Relaying party (RP) configuration */
-  relayingParty: RelayingParty
+  /**
+   * Relaying party (RP) configuration
+   * 
+   * If not provided, the request URL will be used.
+   **/
+  relayingParty?: Partial<RelayingParty>
   /**
    * Enable conditional UI.
    * 
@@ -100,9 +104,6 @@ export interface WebAuthnConfig extends CommonProviderOptions {
   getUserInfo: GetUserInfo
 }
 
-export type WebAuthnInputConfig = Pick<WebAuthnConfig, "relayingParty"> & Partial<WebAuthnConfig>
-
-
 /**
  * Add WebAuthn login to your page.
  * 
@@ -115,7 +116,7 @@ export type WebAuthnInputConfig = Pick<WebAuthnConfig, "relayingParty"> & Partia
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [WebAuthn({ relayingParty: { id: "example.com", name: "My Website", origin: "https://example.com" } })],
+ *   providers: [WebAuthn],
  * })
  * ```
  * ### Resources
@@ -141,7 +142,7 @@ export type WebAuthnInputConfig = Pick<WebAuthnConfig, "relayingParty"> & Partia
  *
  * :::
  */
-export default function WebAuthn(config: WebAuthnInputConfig): WebAuthnConfig {
+export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfig {
   // Make sure simpleWebAuthnBrowserVersion is a valid version number.
   if (config.simpleWebAuthnBrowserVersion) {
     if (!isSemverString(config.simpleWebAuthnBrowserVersion)) {

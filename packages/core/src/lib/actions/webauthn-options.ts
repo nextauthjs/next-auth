@@ -1,4 +1,3 @@
-import { Adapter } from "../../adapters.js"
 import type { InternalOptions, RequestInternal, ResponseInternal, User } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
 import { getLoggedInUser } from "../utils/session.js"
