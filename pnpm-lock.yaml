@@ -34,6 +34,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 1.2.1
         version: 1.2.1(vitest@1.2.2)
+      '@vitest/ui':
+        specifier: ^1.2.2
+        version: 1.2.2(vitest@1.2.2)
       eslint:
         specifier: 8.30.0
         version: 8.30.0
@@ -81,7 +84,7 @@ importers:
         version: 5.0.12(@types/node@20.11.7)
       vitest:
         specifier: 1.2.2
-        version: 1.2.2(@types/node@20.11.7)
+        version: 1.2.2(@types/node@20.11.7)(@vitest/ui@1.2.2)
 
   apps/dev/nextjs:
     dependencies:
@@ -8908,7 +8911,7 @@ packages:
       std-env: 3.7.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.2.2(@types/node@20.11.7)
+      vitest: 1.2.2(@types/node@20.11.7)(@vitest/ui@1.2.2)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8941,6 +8944,21 @@ packages:
     resolution: {integrity: sha512-k9Gcahssw8d7X3pSLq3e3XEu/0L78mUkCjivUqCQeXJm9clfXR/Td8+AP+VC1O6fKPIDLcHDTAmBOINVuv6+7g==}
     dependencies:
       tinyspy: 2.2.0
+    dev: true
+
+  /@vitest/ui@1.2.2(vitest@1.2.2):
+    resolution: {integrity: sha512-CG+5fa8lyoBr+9i+UZGS31Qw81v33QlD10uecHxN2CLJVN+jLnqx4pGzGvFFeJ7jSnUCT0AlbmVWY6fU6NJZmw==}
+    peerDependencies:
+      vitest: ^1.0.0
+    dependencies:
+      '@vitest/utils': 1.2.2
+      fast-glob: 3.3.2
+      fflate: 0.8.1
+      flatted: 3.2.9
+      pathe: 1.1.2
+      picocolors: 1.0.0
+      sirv: 2.0.4
+      vitest: 1.2.2(@types/node@20.11.7)(@vitest/ui@1.2.2)
     dev: true
 
   /@vitest/utils@1.2.2:
@@ -13847,6 +13865,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       tough-cookie: 4.1.3
+    dev: true
+
+  /fflate@0.8.1:
+    resolution: {integrity: sha512-/exOvEuc+/iaUm105QIiOt4LpBdMTWsXxqR0HDF35vx3fmaKzw7354gTilCh5rkzEt8WYyG//ku3h3nRmd7CHQ==}
     dev: true
 
   /figures@3.2.0:
@@ -25736,7 +25758,7 @@ packages:
       vite: 5.0.12(@types/node@20.11.7)
     dev: true
 
-  /vitest@1.2.2(@types/node@20.11.7):
+  /vitest@1.2.2(@types/node@20.11.7)(@vitest/ui@1.2.2):
     resolution: {integrity: sha512-d5Ouvrnms3GD9USIK36KG8OZ5bEvKEkITFtnGv56HFaSlbItJuYr7hv2Lkn903+AvRAgSixiamozUVfORUekjw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -25766,6 +25788,7 @@ packages:
       '@vitest/runner': 1.2.2
       '@vitest/snapshot': 1.2.2
       '@vitest/spy': 1.2.2
+      '@vitest/ui': 1.2.2(vitest@1.2.2)
       '@vitest/utils': 1.2.2
       acorn-walk: 8.3.2
       cac: 6.7.14

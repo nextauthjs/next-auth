@@ -189,8 +189,9 @@ export interface Profile {
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
    * Controls whether a user is allowed to sign in or not.
-   * Returning `true` continues the sign-in flow, while
-   * returning `false` throws an `AuthorizedCallbackError` with the message `"AccessDenied"`.
+   * Returning `true` continues the sign-in flow.
+   * Returning `false` or throwing an error will stop the sign-in flow and redirect the user to the error page.
+   * Returning a string will redirect the user to the specified URL.
    *
    * Unhandled errors will throw an `AuthorizedCallbackError` with the message set to the original error.
    *
@@ -226,7 +227,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     }
     /** If Credentials provider is used, it contains the user credentials */
     credentials?: Record<string, CredentialInput>
-  }) => Awaitable<boolean>
+  }) => Awaitable<boolean | string>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
    * By default only URLs on the same URL as the site are allowed,
