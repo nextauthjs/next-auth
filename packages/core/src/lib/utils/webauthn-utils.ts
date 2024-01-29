@@ -57,7 +57,7 @@ export function inferWebAuthnOptions(
   loggedIn: boolean,
   userInfoResponse: RGetUserInfo
 ): WebAuthnAction | null {
-  const { user = null, exists = false } = userInfoResponse ?? {}
+  const { user, exists = false } = userInfoResponse ?? {}
 
   switch (action) {
     case "authenticate": {
