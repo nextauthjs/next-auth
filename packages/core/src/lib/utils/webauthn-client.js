@@ -18,10 +18,10 @@
 /**
  * webauthnScript is the client-side script that handles the webauthn form
  * 
- * @param {string} baseURL is the base URL of the auth API
+ * @param {string} authURL is the URL of the auth API
  * @param {string} providerID is the ID of the webauthn provider
  */
-export async function webauthnScript(baseURL, providerID) {
+export async function webauthnScript(authURL, providerID) {
   /** @type {typeof import("@simplewebauthn/browser")} */
   // @ts-ignore
   const WebAuthnBrowser = window.SimpleWebAuthnBrowser
@@ -35,7 +35,7 @@ export async function webauthnScript(baseURL, providerID) {
    */
   async function fetchOptions(action) {
     // Create the options URL with the action and query parameters
-    const url = new URL(`${baseURL}/webauthn-options/${providerID}`)
+    const url = new URL(`${authURL}/webauthn-options/${providerID}`)
 
     if (action) url.searchParams.append("action", action)
 

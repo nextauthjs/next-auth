@@ -50,8 +50,8 @@ function hexToRgba(hex?: string, alpha = 1) {
 function ConditionalUIScript(providerID: string) {
   const startConditionalUIScript = `
 const currentURL = window.location.href;
-const baseURL = currentURL.substring(0, currentURL.lastIndexOf('/'));
-(${webauthnScript})(baseURL, "${providerID}");
+const authURL = currentURL.substring(0, currentURL.lastIndexOf('/'));
+(${webauthnScript})(authURL, "${providerID}");
 `
   return (
     <>
