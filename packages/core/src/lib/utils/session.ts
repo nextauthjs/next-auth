@@ -3,9 +3,9 @@ import { JWTSessionError, SessionTokenError } from "../../errors";
 import { InternalOptions } from "../../types";
 import { SessionStore } from "./cookie";
 
-// /**
-//  * Returns the currently logged in user, if any.
-//  */
+/**
+ * Returns the currently logged in adapter user, if any.
+ */
 export async function getLoggedInUser(
   options: InternalOptions,
   sessionStore: SessionStore
