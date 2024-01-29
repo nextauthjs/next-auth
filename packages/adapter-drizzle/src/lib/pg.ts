@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { stripUndefined } from "./utils"
+import { stripUndefined } from "./utils.js"
 
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("user", {
