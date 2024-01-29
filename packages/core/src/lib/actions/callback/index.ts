@@ -369,7 +369,7 @@ export async function callback(
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "webauthn" && method === "POST") {
       // Get callback action from request. It should be either "authenticate" or "register"
-      const action = request.body?.action as unknown
+      const action = request.body?.action
       if (typeof action !== "string" || (action !== "authenticate" && action !== "register")) {
         throw new AuthError("Invalid action parameter")
       }
