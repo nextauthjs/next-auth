@@ -114,13 +114,12 @@ export async function Auth(
       !htmlPages.includes(internalRequest.action) ||
       internalRequest.method !== "GET"
     ) {
-      return new Response(
-        JSON.stringify({
+      return Response.json(
+        {
           message:
             "There was a problem with the server configuration. Check the server logs for more information.",
-          code: assertionResult.name,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        },
+        { status: 500 }
       )
     }
 
