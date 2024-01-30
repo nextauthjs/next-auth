@@ -1,0 +1,46 @@
+{
+  "name": "@auth/astro",
+  "description": "Authentication for Astro.",
+  "version": "0.1.0",
+  "type": "module",
+  "files": [
+    "api",
+    "src",
+    "middleware.ts",
+    "module.d.ts"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./src/config.ts",
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./middleware": "./src/middleware.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "set-cookie-parser": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.14",
+    "@types/set-cookie-parser": "^2.4.7",
+    "astro": "^4.2.4",
+    "vite": "^5.0.12"
+  },
+  "peerDependencies": {
+    "astro": "^4.0.0",
+    "@auth/core": "^0.24.0"
+  },
+  "keywords": [
+    "astro",
+    "withastro",
+    "astro-component",
+    "authjs",
+    "auth"
+  ],
+  "author": "Reuben Tier <otterlord.dev@gmail.com>",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "license": "ISC"
+}

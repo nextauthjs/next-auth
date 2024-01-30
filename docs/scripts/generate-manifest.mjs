@@ -71,6 +71,14 @@ const content = JSON.stringify(
         url: "auth-solid",
         entrypoints: ["index.ts", "client.ts"],
       },
+      {
+        id: "astro",
+        packageName: "@auth/astro",
+        packageDir: "frameworks-astro",
+        name: "Astro Auth",
+        url: "auth-astro",
+        entrypoints: ["index.ts", "server.ts", "client.ts"],
+      },
     ],
     // TODO: Autogenerate
     adapters: [
