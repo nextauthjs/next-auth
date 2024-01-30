@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index a6899bbf1a545f9581a1f3c4b83e433e35c7cee9..329107182487c1b8321ff48374dcbeb1ebc86572 100755
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -5,7 +5,7 @@ import { publish } from "./publish.js";
+ import { log } from "./utils.js";
+ import { bold } from "yoctocolors";
+ // TODO: Allow user config
+-const userConfig = {};
++const userConfig = { ignorePackages: ["next-auth"] };
+ const config = { ...defaultConfig, ...userConfig };
+ const endMsg = bold("Done");
+ console.time(endMsg);

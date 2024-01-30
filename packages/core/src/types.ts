@@ -184,8 +184,9 @@ export interface Profile {
 export interface CallbacksOptions<P = Profile, A = Account> {
   /**
    * Controls whether a user is allowed to sign in or not.
-   * Returning `true` continues the sign-in flow, while
-   * returning `false` throws an `AuthorizedCallbackError` with the message `"AccessDenied"`.
+   * Returning `true` continues the sign-in flow.
+   * Returning `false` or throwing an error will stop the sign-in flow and redirect the user to the error page.
+   * Returning a string will redirect the user to the specified URL.
    *
    * Unhandled errors will throw an `AuthorizedCallbackError` with the message set to the original error.
    *
@@ -221,7 +222,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     }
     /** If Credentials provider is used, it contains the user credentials */
     credentials?: Record<string, CredentialInput>
-  }) => Awaitable<boolean>
+  }) => Awaitable<boolean | string>
   /**
    * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
    * By default only URLs on the same URL as the site are allowed,
@@ -440,26 +441,13 @@ export interface DefaultSession {
   expires: ISODateString
 }
 
-/**
- * Returned by `useSession`, `getSession`, returned by the `session` callback
- * and also the shape received as a prop on the `SessionProvider` React Context
- *
- * [`useSession`](https://authjs.devreference/nextjs/react/#usesession) |
- * [`getSession`](https://authjs.dev/reference/utilities#getsession) |
- * [`SessionProvider`](https://authjs.devreference/nextjs/react#sessionprovider) |
- * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback)
- */
+/** The active session of the logged in user. */
 export interface Session extends DefaultSession {}
 
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
  * available in the `jwt` and `session` callbacks,
  * or the second parameter of the `session` callback, when using a database.
- *
- * [`signIn` callback](https://authjs.dev/guides/basics/callbacks#sign-in-callback) |
- * [`session` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
- * [`jwt` callback](https://authjs.dev/guides/basics/callbacks#jwt-callback) |
- * [`profile` OAuth provider callback](https://authjs.dev/guides/providers/custom-provider)
  */
 export interface User {
   id?: string
@@ -566,7 +554,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
    */
   csrfTokenVerified?: boolean
-  secret: string
+  secret: string | string[]
   theme: Theme
   debug: boolean
   logger: LoggerInstance

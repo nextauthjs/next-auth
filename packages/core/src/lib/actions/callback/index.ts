@@ -101,14 +101,15 @@ export async function callback(
         })
       }
 
-      await handleAuthorized(
+      const redirect = await handleAuthorized(
         {
           user: userByAccount ?? userFromProvider,
           account,
           profile: OAuthProfile,
         },
-        options.callbacks.signIn
+        options
       )
+      if (redirect) return { redirect, cookies }
 
       const { user, session, isNewUser } = await handleLoginOrRegister(
         sessionStore.value,
@@ -220,7 +221,8 @@ export async function callback(
         provider: provider.id,
       }
 
-      await handleAuthorized({ user, account }, options.callbacks.signIn)
+      const redirect = await handleAuthorized({ user, account }, options)
+      if (redirect) return { redirect, cookies }
 
       // Sign user in
       const {
@@ -319,10 +321,11 @@ export async function callback(
         provider: provider.id,
       } satisfies Account
 
-      await handleAuthorized(
+      const redirect = await handleAuthorized(
         { user, account, credentials },
-        options.callbacks.signIn
+        options
       )
+      if (redirect) return { redirect, cookies }
 
       const defaultToken = {
         name: user.name,
@@ -376,13 +379,17 @@ export async function callback(
 
 async function handleAuthorized(
   params: Parameters<InternalOptions["callbacks"]["signIn"]>[0],
-  signIn: InternalOptions["callbacks"]["signIn"]
-) {
+  config: InternalOptions
+): Promise<string | undefined> {
+  let authorized
+  const { signIn, redirect } = config.callbacks
   try {
-    const authorized = await signIn(params)
-    if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+    authorized = await signIn(params)
   } catch (e) {
     if (e instanceof AuthError) throw e
     throw new AuthorizedCallbackError(e as Error)
   }
+  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (typeof authorized !== "string") return
+  return await redirect({ url: authorized, baseUrl: config.url.origin })
 }
