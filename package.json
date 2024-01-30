@@ -84,6 +84,7 @@
     ".svelte-kit",
     ".next",
     ".nuxt",
+    ".astro",
     ".docusaurus",
     "build",
     "docs/docs/reference/core",

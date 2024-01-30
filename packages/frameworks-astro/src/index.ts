@@ -12,6 +12,72 @@
  * ```bash npm2yarn
  * npm run astro add @auth/astro
  * ```
+ * 
+ * ### Manual installation
+ * 
+ * Install the required dependencies.
+ * 
+ * ```bash npm2yarn
+ * npm i @auth/astro @auth/core
+ * ```
+ * 
+ * Add the `@auth/astro` integration to your Astro config.
+ * 
+ * ```ts
+ * // astro.config.mjs
+ * import { defineConfig } from 'astro/config';
+ * import auth from '@auth/astro';
+ * 
+ * export default defineConfig({
+ *   // ...
+ *   integrations: [auth()]
+ * })
+ * ```
+ * 
+ * ## Configure
+ * 
+ * Create your auth config file `auth.config.ts`.
+ * 
+ * ```ts
+ * import { defineConfig } from '@auth/astro/config'
+ * import type { Provider } from '@auth/core/providers'
+ * import GitHub from '@auth/core/providers/github'
+ * 
+ * export default defineConfig({
+ *   providers: [
+ *     GitHub({
+ *       clientId: import.meta.env.GITHUB_CLIENT_ID,
+ *       clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
+ *     }) as Provider,
+ *   ]
+ * })
+ * ```
+ * 
+ * ## Get the current session
+ * 
+ * You can access the current session from [`Astro.locals`](https://docs.astro.build/en/reference/api-reference/#astrolocals) (or [`context.locals`](https://docs.astro.build/en/reference/api-reference/#contextlocals) in an endpoint).
+ * 
+ * ```tsx
+ * ---
+ * const { session } = Astro.locals
+ * ---
+ * 
+ * {JSON.stringify(session)}
+ * ```
+ * 
+ * ## Protected routes
+ * 
+ * ```tsx
+ * ---
+ * import Layout from '~/layouts/Base.astro'
+ * 
+ * if (!Astro.locals.session) return Astro.redirect('/')
+ * ---
+ * 
+ * <Layout>
+ *   <h1>Welcome {Astro.locals.session.user.name}</h1>
+ * </Layout>
+ * ```
  *
  * @module @auth/astro
  */
@@ -61,6 +127,9 @@ export const virtualConfigModule = ({
   }
 }
 
+/**
+ * The Astro integration to add auth.js to your project.
+ */
 export default (config: AstroAuthConfig = {}): AstroIntegration => ({
   name: "astro-auth",
   hooks: {
@@ -98,8 +167,8 @@ export default (config: AstroAuthConfig = {}): AstroIntegration => ({
         const entrypoint = join(currentDir + "/api/[...auth].ts")
         injectRoute({
           pattern: config.basePath + "/[...auth]",
-          entrypoint: entrypoint,
-          // @ts-ignore Astro 3 support
+          entrypoint,
+          // @ts-expect-error Astro 3.0 support (see: https://docs.astro.build/en/guides/upgrade-to/v4/#renamed-entrypoint-integrations-api)
           entryPoint: entrypoint,
         })
       }

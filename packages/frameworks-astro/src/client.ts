@@ -1,4 +1,4 @@
-import '../module'
+import '../module.d.ts'
 import type {
   BuiltInProviderType,
   RedirectableProviderType,

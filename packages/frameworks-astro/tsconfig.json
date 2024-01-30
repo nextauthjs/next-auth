@@ -1,4 +1,7 @@
 {
   "include": ["./src/**/*"],
+  "compilerOptions": {
+    "module": "nodenext"
+  },
   "exclude": ["*.d.ts"]
 }

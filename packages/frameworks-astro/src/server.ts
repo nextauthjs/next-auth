@@ -1,32 +1,11 @@
-/**
- *
- * :::warning
- * `@auth/astro` is currently experimental. The API _will_ change in the future.
- * :::
- *
- * `@auth/astro` is the official Astro integration for Auth.js.
- * It provides a simple way to add authentication to your Astro app in a few lines of code.
- *
- * ## Installation
- *
- * ```bash npm2yarn
- * npm install @auth/core @auth/astro
- * ```
- *
- * @module @auth/astro
- */
-
 // virtual module typedefs
-import '../module'
+import '../module.d.ts'
 
 import { Auth } from '@auth/core'
 import type { AuthAction, AuthConfig, Session } from '@auth/core/types'
 import { APIContext } from 'astro'
 import authConfig from 'auth:config'
 import { parseString } from 'set-cookie-parser'
-
-export interface AstroAuthConfig extends AuthConfig {
-}
 
 const actions: AuthAction[] = [
   "providers",
@@ -80,6 +59,7 @@ function AstroAuthHandler(authOptions=authConfig) {
  *   debug: false,
  * })
  * ```
+ * 
  * @param config The configuration for authentication providers and other options.
  * @returns An object with `GET` and `POST` methods that can be exported in an Astro endpoint.
  */
