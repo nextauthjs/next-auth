@@ -9,7 +9,7 @@ declare module 'auth:config' {
   interface FullAuthConfig extends AuthConfig {
     basePath: string
   }
-	const config: FullAuthConfig
+	const config: (ctx: import('astro').APIContext) => FullAuthConfig
 	export default config
 }
 

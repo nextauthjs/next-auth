@@ -120,7 +120,16 @@ export const virtualConfigModule = ({
     },
     load: (id) => {
       if (id === resolvedId)
-        return `import authConfig from "${configFile}"; authConfig.basePath = '${basePath}'; export default authConfig`
+        return `
+          import authConfig from "${configFile}";
+          
+          export default (ctx) => {
+            let resolvedConfig = typeof authConfig === 'function' ? authConfig(ctx) : authConfig
+            resolvedConfig.basePath = '${basePath}';
+
+            return resolvedConfig;
+          }
+        `
       if (id === resolvedClientId)
         return `export default { basePath: '${basePath}' }`
     },
@@ -164,7 +173,7 @@ export default (config: AstroAuthConfig = {}): AstroIntegration => ({
       if (config.injectEndpoints !== false) {
         const { dirname, join } = await import("node:path")
         const currentDir = dirname(import.meta.url.replace("file://", ""))
-        const entrypoint = join(currentDir + "/api/[...auth].ts")
+        const entrypoint = join(currentDir, "../api/[...auth].ts")
         injectRoute({
           pattern: config.basePath + "/[...auth]",
           entrypoint,
