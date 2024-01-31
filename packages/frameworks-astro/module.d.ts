@@ -6,10 +6,7 @@ declare namespace App {
 
 declare module 'auth:config' {
   import type { AuthConfig } from '@auth/core'
-  interface FullAuthConfig extends AuthConfig {
-    basePath: string
-  }
-	const config: (ctx: import('astro').APIContext) => FullAuthConfig
+	const config: (ctx: import('astro').APIContext) => AuthConfig
 	export default config
 }
 

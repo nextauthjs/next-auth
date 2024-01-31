@@ -3,18 +3,25 @@
   "description": "Authentication for Astro.",
   "version": "0.1.0",
   "type": "module",
+  "scripts": {
+    "build": "pnpm clean && pnpm providers",
+    "clean": "rm -rf src/lib/providers",
+    "providers": "node ../utils/scripts/providers.js --out src/lib"
+  },
   "files": [
     "api",
+    "providers",
     "src",
-    "middleware.ts",
-    "module.d.ts"
+    "*.d.ts"
   ],
   "exports": {
     ".": "./src/index.ts",
     "./config": "./src/config.ts",
     "./client": "./src/client.ts",
     "./server": "./src/server.ts",
-    "./middleware": "./middleware.ts"
+    "./middleware": "./src/middleware.ts",
+    "./providers": "./src/lib/providers/index.ts",
+    "./providers/*": "./src/lib/providers/*.ts"
   },
   "publishConfig": {
     "access": "public"

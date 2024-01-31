@@ -30,7 +30,7 @@ function AstroAuthHandler(config?: ReturnType<typeof authConfig>) {
     const { request, cookies } = ctx
     const url = new URL(request.url)
     const action = url.pathname
-      .slice(basePath.length + 1)
+      .slice(basePath!.length + 1)
       .split("/")[0] as AuthAction
 
     if (!actions.includes(action) || !url.pathname.startsWith(basePath + "/")) {

@@ -64,6 +64,11 @@
     },
     {
       "source": "/",
+      "has": [{ "type": "host", "value": "astro.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/astro"
+    },
+    {
+      "source": "/",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
       "destination": "https://authjs.dev/reference/nextjs"
     },

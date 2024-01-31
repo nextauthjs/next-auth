@@ -18,7 +18,7 @@
  * Install the required dependencies.
  * 
  * ```bash npm2yarn
- * npm i @auth/astro @auth/core
+ * npm i @auth/astro
  * ```
  * 
  * Add the `@auth/astro` integration to your Astro config.
@@ -41,7 +41,7 @@
  * ```ts
  * import { defineConfig } from '@auth/astro/config'
  * import type { Provider } from '@auth/core/providers'
- * import GitHub from '@auth/core/providers/github'
+ * import GitHub from '@auth/astro/providers/github'
  * 
  * export default defineConfig({
  *   providers: [
@@ -88,7 +88,7 @@ import type { PluginOption } from "vite"
 export interface AstroAuthConfig {
   /**
    * Defines the base path for the auth routes.
-   * @default '/api/auth'
+   * @default '/auth'
    */
   basePath?: string
   /**
@@ -155,7 +155,7 @@ export default (config: AstroAuthConfig = {}): AstroIntegration => ({
           'auth-astro requires server-side rendering. Please set output to "server" & install an adapter. See https://docs.astro.build/en/guides/deploy/#adding-an-adapter-for-ssr'
         )
 
-      config.basePath ??= "/api/auth"
+      config.basePath ??= "/auth"
       config.configFile ??= "./auth.config"
 
       updateConfig({

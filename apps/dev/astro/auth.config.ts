@@ -1,5 +1,5 @@
 import { defineConfig } from '@auth/astro/config'
-import GitHub from '@auth/core/providers/github'
+import GitHub from '@auth/astro/providers/github'
 
 export default defineConfig({
   providers: [
