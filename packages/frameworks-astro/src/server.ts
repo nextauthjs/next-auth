@@ -73,12 +73,8 @@ function AstroAuthHandler(config?: ReturnType<typeof authConfig>) {
 export function AstroAuth(config?: ReturnType<typeof authConfig>) {
 	const handler = AstroAuthHandler(config)
 	return {
-		async GET(context: APIContext) {
-			return await handler(context)
-		},
-		async POST(context: APIContext) {
-			return await handler(context)
-		},
+		GET: handler,
+		POST: handler,
 	}
 }
 
