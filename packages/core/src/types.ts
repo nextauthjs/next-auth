@@ -83,6 +83,8 @@ export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
 export type Awaited<T> = T extends Promise<infer U> ? U : T
 
+export type SemverString = `v${number}` | `v${number}.${number}` | `v${number}.${number}.${number}`
+
 /**
  * Change the theme of the built-in pages.
  *

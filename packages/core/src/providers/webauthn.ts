@@ -1,16 +1,10 @@
 import type { CommonProviderOptions, CredentialInput } from "."
 import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts } from "@simplewebauthn/server"
-import type { InternalOptions, RequestInternal, User } from "../types"
+import type { InternalOptions, RequestInternal, SemverString, User } from "../types"
 import { MissingAdapter } from "../errors"
 
 
 export type WebAuthnProviderType = "webauthn"
-
-// Validate that a string is a valid semver version number.
-type SemverString = `v${number}` | `v${number}.${number}` | `v${number}.${number}.${number}`
-function isSemverString(version: string): version is SemverString {
-  return /^v\d+(?:\.\d+){0,2}$/.test(version)
-}
 
 export const DEFAULT_WEBAUTHN_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.0"
@@ -143,23 +137,6 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  * :::
  */
 export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfig {
-  // Make sure simpleWebAuthnBrowserVersion is a valid version number.
-  if (config.simpleWebAuthnBrowserVersion) {
-    if (!isSemverString(config.simpleWebAuthnBrowserVersion)) {
-      throw new Error("simpleWebAuthnBrowserVersion must be a valid semver version number.")
-    }
-  }
-
-  // Override getUserInfo to validate it during runtime.
-  const getUserInfo: GetUserInfo = (options, request) => {
-    const result = config.getUserInfo ? config.getUserInfo(options, request) : defaultGetUserInfo(options, request)
-
-    // Validate the result.
-
-
-    return result
-  }
-
   return {
     id: "webauthn",
     name: "WebAuthn",
@@ -172,8 +149,8 @@ export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfi
     },
     formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
     simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
-    ...config,
     getUserInfo,
+    ...config,
     type: "webauthn",
   }
 }
@@ -190,7 +167,7 @@ export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfi
  * @throws {MissingAdapter} If the adapter is missing.
  * @throws {EmailSignInError} If the email address is not provided.
  */
-const defaultGetUserInfo: GetUserInfo = async (options, request) => {
+const getUserInfo: GetUserInfo = async (options, request) => {
   const { adapter } = options
   if (!adapter)
     throw new MissingAdapter(

@@ -1,5 +1,6 @@
 import { defaultCookies } from "./cookie.js"
 import {
+  AuthError,
   DuplicateConditionalUI,
   ExperimentalFeatureNotEnabled,
   InvalidCallbackUrl,
@@ -13,7 +14,7 @@ import {
   UntrustedHost,
 } from "../../errors.js"
 
-import type { AuthConfig, RequestInternal } from "../../types.js"
+import type { AuthConfig, RequestInternal, SemverString } from "../../types.js"
 import type { WarningCode } from "./logger.js"
 import { Adapter } from "../../adapters.js"
 
@@ -36,6 +37,10 @@ function isValidHttpUrl(url: string, baseUrl: string) {
   } catch {
     return false
   }
+}
+
+function isSemverString(version: string): version is SemverString {
+  return /^v\d+(?:\.\d+){0,2}$/.test(version)
 }
 
 let hasCredentials = false
@@ -144,6 +149,13 @@ export function assertConfig(
     else if (provider.type === "email") hasEmail = true
     else if (provider.type === "webauthn") {
       hasWebAuthn = true
+
+      // Validate simpleWebAuthnBrowserVersion
+      if (provider.simpleWebAuthnBrowserVersion && !isSemverString(provider.simpleWebAuthnBrowserVersion)) {
+        return new AuthError(
+          `Invalid provider config for "${provider.id}": simpleWebAuthnBrowserVersion "${provider.simpleWebAuthnBrowserVersion}" must be a valid semver string.`
+        )
+      }
 
       if (provider.enableConditionalUI) {
         // Make sure only one webauthn provider has "enableConditionalUI" set to true
