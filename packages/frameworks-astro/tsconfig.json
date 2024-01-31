@@ -1,7 +1,8 @@
 {
-  "include": ["./src/**/*"],
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
-    "module": "nodenext"
+    "lib": ["dom", "dom.iterable", "esnext"]
   },
-  "exclude": ["*.d.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts"]
 }

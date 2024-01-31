@@ -37,10 +37,10 @@ function AstroAuthHandler(config?: ReturnType<typeof authConfig>) {
       return
     }
 
-    const res = await Auth(request, config)
+    const res = await Auth(request, config) as Response
     if (['callback', 'signin', 'signout'].includes(action)) {
 			// Properly handle multiple Set-Cookie headers (they can't be concatenated in one)
-			res.headers.getSetCookie().forEach((cookie) => {
+			res.headers.getSetCookie().forEach((cookie: string) => {
 				const { name, value, ...options } = parseString(cookie)
 				// Astro's typings are more explicit than @types/set-cookie-parser for sameSite
 				cookies.set(name, value, options as Parameters<(typeof cookies)['set']>[2])
@@ -94,7 +94,7 @@ export async function getSession(ctx: APIContext, config?: ReturnType<typeof aut
 	config.trustHost ??= true
 
 	const url = new URL(`${config.basePath}/session`, ctx.request.url)
-	const response = await Auth(new Request(url, { headers: ctx.request.headers }), config)
+	const response = await Auth(new Request(url, { headers: ctx.request.headers }), config) as Response
 	const { status = 200 } = response
 
 	const data = await response.json()
