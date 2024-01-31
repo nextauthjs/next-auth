@@ -30,8 +30,7 @@
     "vite": "^5.0.12"
   },
   "peerDependencies": {
-    "astro": "^4.0.0",
-    "@auth/core": "^0.24.0"
+    "astro": "^4.0.0"
   },
   "keywords": [
     "astro",
