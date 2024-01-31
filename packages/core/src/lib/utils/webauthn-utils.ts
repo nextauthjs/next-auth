@@ -405,19 +405,19 @@ function fromAdapterAuthenticator(authenticator: AdapterAuthenticator): Internal
   }
 }
 
-function fromBase64(base64: string): Uint8Array {
+export function fromBase64(base64: string): Uint8Array {
   return new Uint8Array(Buffer.from(base64, "base64"))
 }
 
-function toBase64(bytes: Uint8Array): string {
+export function toBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("base64")
 }
 
-function transportsToString(transports: InternalAuthenticator["transports"]) {
+export function transportsToString(transports: InternalAuthenticator["transports"]) {
   return transports?.join(",")
 }
 
-function stringToTransports(tstring: string | undefined): InternalAuthenticator["transports"] {
+export function stringToTransports(tstring: string | undefined): InternalAuthenticator["transports"] {
   return tstring ? tstring.split(",") as InternalAuthenticator["transports"] : undefined
 }
 
@@ -428,7 +428,7 @@ function stringToTransports(tstring: string | undefined): InternalAuthenticator[
  * @param options - The options object containing the provider and URL information.
  * @returns The relaying party object with the ID, name, and origin.
  */
-function getRelayingParty(options: InternalOptions<WebAuthnProviderType>): RelayingParty {
+export function getRelayingParty(options: InternalOptions<WebAuthnProviderType>): RelayingParty {
   const { provider, url } = options
   const { relayingParty } = provider
 
