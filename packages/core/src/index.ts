@@ -175,14 +175,14 @@ export async function Auth(
     if (request.method === "POST" && internalRequest.action === "session")
       return Response.json(null, { status: 400 })
 
-    const isClientSafeErrorType = isAuthError && !isClientError(error)
+    const isClientSafeErrorType = isClientError(error)
     const type = isClientSafeErrorType ? error.type : "Configuration"
 
     const params = new URLSearchParams({ error: type })
     if (error instanceof CredentialsSignin) params.set("code", error.code)
 
     const pageKind = (isAuthError && error.kind) || "error"
-    const pagePath = config.pages?.[pageKind] ?? pageKind.toLowerCase()
+    const pagePath = config.pages?.[pageKind] ?? `/${pageKind.toLowerCase()}`
     const url = `${internalRequest.url.origin}${config.basePath}${pagePath}?${params}`
 
     if (isRedirect) return Response.json({ url })

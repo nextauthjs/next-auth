@@ -1,8 +1,8 @@
 type ErrorOptions = Error | Record<string, unknown>
 
 type ErrorType =
+  | "AccessDenied"
   | "AdapterError"
-  | "AuthorizedCallbackError"
   | "CallbackRouteError"
   | "ErrorPageLoop"
   | "EventError"
@@ -97,8 +97,8 @@ export class AdapterError extends AuthError {
  * Thrown when the execution of the [`signIn` callback](https://authjs.dev/reference/core/types#signin) fails
  * or if it returns `false`.
  */
-export class AuthorizedCallbackError extends AuthError {
-  static type = "AuthorizedCallbackError"
+export class AccessDenied extends AuthError {
+  static type = "AccessDenied"
 }
 
 /**
@@ -449,6 +449,7 @@ const clientErrors = new Set<ErrorType>([
   "OAuthCallbackError",
   "OAuthSignInError",
   "EmailSignInError",
+  "AccessDenied",
 ])
 
 /**
@@ -456,6 +457,7 @@ const clientErrors = new Set<ErrorType>([
  * Errors are always logged on the server, but to prevent leaking sensitive information,
  * only a subset of errors are sent to the client as-is.
  */
-export function isClientError(error: AuthError) {
-  return clientErrors.has(error.type)
+export function isClientError(error: Error): error is AuthError {
+  if (error instanceof AuthError) return clientErrors.has(error.type)
+  return false
 }
