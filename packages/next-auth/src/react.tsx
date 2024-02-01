@@ -137,7 +137,7 @@ export function useSession<R extends boolean>(
 
   React.useEffect(() => {
     if (requiredAndNotLoading) {
-      const url = `/api/auth/signin?${new URLSearchParams({
+      const url = `${__NEXTAUTH.basePath}/signin?${new URLSearchParams({
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`

@@ -68,7 +68,7 @@
  */
 
 import { Auth } from "@auth/core"
-import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
+import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
@@ -358,13 +358,15 @@ export interface NextAuthResult {
  * ```
  */
 export default function NextAuth(
-  config: NextAuthConfig | ((request: Request | undefined) => NextAuthConfig)
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | undefined) => NextAuthConfig)
 ): NextAuthResult {
   if (typeof config === "function") {
     const httpHandler = (req: NextRequest) => {
       const _config = config(req)
       setEnvDefaults(_config)
-      return Auth(reqWithEnvUrl(req), _config)
+      return Auth(reqWithEnvURL(req), _config)
     }
 
     return {
@@ -390,7 +392,7 @@ export default function NextAuth(
     }
   }
   setEnvDefaults(config)
-  const httpHandler = (req: NextRequest) => Auth(reqWithEnvUrl(req), config)
+  const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error

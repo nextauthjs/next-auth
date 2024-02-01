@@ -32,6 +32,9 @@
     "./providers": {
       "types": "./providers/index.d.ts"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
@@ -58,6 +61,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "dev": "pnpm providers && tsc -w",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "files": [

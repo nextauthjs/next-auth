@@ -7,6 +7,7 @@ import {
   BaseSQLiteDatabase,
   SQLiteTableFn,
 } from "drizzle-orm/sqlite-core"
+import { stripUndefined } from "./utils.js"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 
@@ -132,25 +133,9 @@ export function SQLiteDrizzleAdapter(
       return result ?? null
     },
     async linkAccount(rawAccount) {
-      const updatedAccount = await client
-        .insert(accounts)
-        .values(rawAccount)
-        .returning()
-        .get()
-
-      const account: AdapterAccount = {
-        ...updatedAccount,
-        type: updatedAccount.type,
-        access_token: updatedAccount.access_token ?? undefined,
-        token_type: updatedAccount.token_type ?? undefined,
-        id_token: updatedAccount.id_token ?? undefined,
-        refresh_token: updatedAccount.refresh_token ?? undefined,
-        scope: updatedAccount.scope ?? undefined,
-        expires_at: updatedAccount.expires_at ?? undefined,
-        session_state: updatedAccount.session_state ?? undefined,
-      }
-
-      return account
+      return stripUndefined(
+        await client.insert(accounts).values(rawAccount).returning().get()
+      )
     },
     async getUserByAccount(account) {
       const results = await client
@@ -166,10 +151,9 @@ export function SQLiteDrizzleAdapter(
         .get()
 
       if (!results) {
-        return null;
+        return null
       }
       return Promise.resolve(results).then((results) => results.user)
-
     },
     async deleteSession(sessionToken) {
       const result = await client
@@ -222,8 +206,6 @@ export function SQLiteDrizzleAdapter(
           )
         )
         .run()
-
-      return undefined
     },
   }
 }
