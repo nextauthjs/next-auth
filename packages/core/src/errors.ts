@@ -183,11 +183,25 @@ export class InvalidCallbackUrl extends AuthError {
 }
 
 /**
- * The `authorize` callback returned `null` in the [Credentials provider](https://authjs.dev/getting-started/providers/credentials-tutorial).
- * We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+ * Can be thrown from the `authorize` callback of the Credentials provider.
+ * When an error occurs during the `authorize` callback, two things can happen:
+ * 1. The user is redirected to the signin page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable.
+ * 2. If you throw this error in a framework that handles form actions server-side, this error is thrown, instead of redirecting the user, so you'll need to handle.
  */
 export class CredentialsSignin extends SignInError {
   static type = "CredentialsSignin"
+  /**
+   * The error code that is set in the `code` query parameter of the redirect URL.
+   *
+   *
+   * ⚠ NOTE: This property is going to be included in the URL, so make sure it does not hint at sensitive errors.
+   *
+   * The full error is always logged on the server, if you need to debug.
+   *
+   * Generally, we don't recommend hinting specifically if the user had either a wrong username or password specifically,
+   * try rather something like "Invalid credentials".
+   */
+  code: string = "credentials"
 }
 
 /**
@@ -426,4 +440,22 @@ export class Verification extends AuthError {
  */
 export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"
+}
+
+// TODO: Review this list to make sure it's complete and we only send non-hinting errors to the client.
+const clientErrors = new Set<ErrorType>([
+  "CredentialsSignin",
+  "OAuthAccountNotLinked",
+  "OAuthCallbackError",
+  "OAuthSignInError",
+  "EmailSignInError",
+])
+
+/**
+ * Used to only allow sending a certain subset of errors to the client.
+ * Errors are always logged on the server, but to prevent leaking sensitive information,
+ * only a subset of errors are sent to the client as-is.
+ */
+export function isClientError(error: AuthError) {
+  return clientErrors.has(error.type)
 }

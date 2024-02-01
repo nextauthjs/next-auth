@@ -1,5 +1,6 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
+import { logger } from "./logger.js"
 
 import type {
   AuthAction,
@@ -34,7 +35,7 @@ const actions: AuthAction[] = [
 export async function toInternalRequest(
   req: Request,
   config: AuthConfig
-): Promise<RequestInternal | Error> {
+): Promise<RequestInternal | undefined> {
   try {
     if (req.method !== "GET" && req.method !== "POST")
       throw new UnknownAction("Only GET and POST requests are supported.")
@@ -61,7 +62,8 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
-    return e as Error
+    logger.error(e as Error)
+    logger.debug("request", req)
   }
 }
 
@@ -133,8 +135,7 @@ export function parseActionAndProviderId(
 } {
   const a = pathname.match(new RegExp(`^${base}(.+)`))
 
-  if (a === null)
-    throw new UnknownAction(`Cannot parse action at ${pathname}`)
+  if (a === null) throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   const [_, actionAndProviderId] = a
 
