@@ -66,7 +66,7 @@ export { skipCSRFCheck, raw, setEnvDefaults, createActionURL }
 
 export async function Auth(
   request: Request,
-  config: AuthConfig
+  config: AuthConfig & { raw: typeof raw }
 ): Promise<ResponseInternal>
 
 export async function Auth(
