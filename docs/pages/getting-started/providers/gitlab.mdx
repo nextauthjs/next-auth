@@ -1,0 +1,90 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/gitlab.svg" height="64" width="64" />
+
+# GitLab Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/gitlab
+```
+
+### Environment Variables
+
+```
+AUTH_GITLAB_ID
+AUTH_GITLAB_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Gitlab from "next-auth/providers/gitlab";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Gitlab],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Gitlab from "@auth/sveltekit/providers/gitlab";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Gitlab],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Gitlab from "@auth/express/providers/gitlab";
+
+app.use("/auth/*", ExpressAuth({ providers: [Gitlab] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [GitLab OAuth documentation](https://docs.gitlab.com/ee/api/oauth2.html)
+
+### Notes
+
+By default, Auth.js assumes that the GitLab provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+<Callout>
+  Enable the `read_user` option in scope if you want to save the users email
+  address on sign up.
+</Callout>
+
+<Callout type="info">
+
+The GitLab provider comes with a [default configuration](https://gitlab.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/gitlab.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/gitlab-discussions).

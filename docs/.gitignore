@@ -1,1 +1,7 @@
-.vercel
+.next
+node_modules
+.env*
+tsconfig.tsbuildinfo
+
+# Generated Typedoc
+pages/reference/core 

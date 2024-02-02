@@ -1,0 +1,123 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+# Environment variables
+
+## Auth secret
+
+<Code>
+<Code.Next>
+
+```bash filename=".env.local"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Next>
+
+<Code.Svelte>
+
+```bash filename=".env"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Svelte>
+
+{/* <Code.Solid>
+
+```bash filename=".env"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Solid> */}
+
+</Code>
+
+`AUTH_SECRET` is a random token used by the library to encrypt tokens and email verification hashes, and it's mandatory to keep things secure (See [Deployment](/deployment) to learn more). On Unix based systems you can use this command:
+
+```bash
+openssl rand -base64 32
+```
+
+or you can visit https://generate-secret.vercel.app/32 to generate one.
+
+<Callout type="warning">
+  When deploying your app outside <strong>Vercel</strong>, you'll need to set
+  also a `AUTH_TRUST_HOST` variable to `true` for other hosting providers like
+  <strong>Cloudflare Pages</strong> or <strong>Netlify</strong>.
+</Callout>
+
+## OAuth variables
+
+Auth.js is automatically configured to pick the right environment variables for `clientId` and `clientSecret` when using an [official OAuth provider](/reference/oauth-providers).
+
+The shape of these variables in your environment file always follows the same pattern:
+
+```
+{PROVIDER-NAME}_AUTH_ID=
+{PROVIDER-NAME}_AUTH_SECRET=
+```
+
+For example if we're using the Google, Twitter and Github providers, it'll be:
+
+```bash
+# Google
+AUTH_GOOGLE_ID=123
+AUTH_GOOGLE_SECRET=123
+# Twitter
+AUTH_TWITTER_ID=123
+AUTH_TWITTER_SECRET=123
+# Github
+AUTH_GITHUB_ID=123
+AUTH_GITHUB_ID=123
+```
+
+Then, in our [Auth.js configuration file](/tutorials/configuration), you can just do:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+import Twitter from "next-auth/providers/twitter";
+import GitHub from "next-auth/providers/github";
+
+export const { handlers, auth } = NextAuth({
+  providers: [Google, Twitter, GitHub],
+});
+```
+
+</Code.Next>
+</Code>
+
+And Auth.js will magically 🪄 pick up the right **Client Id** and **Client Secret** for each.
+
+If for whatever reason you want to name the variables differently:
+
+```bash
+# Google
+AUTH_GOOGLE_ID=123
+AUTH_GOOGLE_SECRET=123
+```
+
+Then you will need to manually reference them in the config:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+
+export const { handlers, auth } = NextAuth({
+  providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
+  ],
+});
+```
+
+</Code.Next>
+</Code>

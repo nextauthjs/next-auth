@@ -1,0 +1,131 @@
+import { Steps, Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<Steps>
+### Installing Auth.js
+
+Start by installing the appropriate package for your framework of choice:
+
+<Code>
+  <Code.Next>
+    
+    ```bash npm2yarn
+    npm install next-auth
+    ```
+
+  </Code.Next>
+  <Code.Svelte>
+  
+    ```bash npm2yarn
+    npm install @auth/sveltekit
+    ```
+  </Code.Svelte>
+  {/* <Code.Solid>
+  
+    ```bash npm2yarn
+    npm install @auth/solid-start
+    ```
+  
+  </Code.Solid> */}
+  <Code.Express>
+  
+    ```bash npm2yarn
+    npm install @auth/express
+    ```
+  
+  </Code.Express>
+</Code>
+
+<Callout type="info">Installing `@auth/core` is not necessary.</Callout>
+
+### Setup Environment
+
+<Code>
+  <Code.Next>
+
+`AUTH_SECRET` is a mandatory, random value used by the library to encrypt tokens and email
+verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via running:
+
+  </Code.Next>
+</Code>
+
+```bash
+npx auth secret
+```
+
+Then add it to your `.env.local` file:
+
+```bash filename=".env.local"
+AUTH_SECRET=secret
+```
+
+### Configure
+
+Next, create the Auth.js config object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc.
+
+<Code>
+  <Code.Next>
+
+Start by creating a new `auth.ts` file at the root of your app with the following content:
+
+<Callout type="info">
+  You can actually name the file however you want and place it wherever you
+  like. Make sure you place so it's easy to reference via imports, as we'll be
+  using its 3 main exports: `signIn`, `signOut` and `auth`.
+</Callout>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth";
+
+export const { signIn, signOut, auth } = NextAuth({
+  providers: [],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="./src/hooks.server.ts"
+import { SvelteKitAuth } from "@auth/sveltekit";
+
+export const handle = SvelteKitAuth({
+  providers: [],
+});
+```
+
+  </Code.Svelte>
+  {/* <Code.Solid>
+
+```ts filename="./routes/api/auth/[...solidauth].ts"
+import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
+
+export const authOpts: SolidAuthConfig = {
+  providers: [],
+};
+
+export const { GET, POST } = SolidAuth(authOpts);
+```
+
+  </Code.Solid> */}
+  <Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express";
+import express from "express";
+
+const app = express();
+
+// If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
+app.use("trust proxy");
+app.use("/auth/*", ExpressAuth({ providers: [] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Setup Authentication Methods
+
+With that, the basic setup is complete! If you need a database, go on to the next page,
+otherwise you can skip on to the next section, [Authentication](/getting-started/authentication), to setup your first authentication method.
+
+</Steps>

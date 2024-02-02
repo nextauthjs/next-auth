@@ -1,0 +1,137 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/fusionauth.svg" height="64" width="64" />
+
+# Fusion Auth
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/fusionauth
+```
+
+### Environment Variables
+
+```
+AUTH_FUSIONAUTH_ID
+AUTH_FUSIONAUTH_SECRET
+AUTH_FUSIONAUTH_TENANT_ID
+AUTH_FUSIONAUTH_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import FusionAuth from "next-auth/providers/fusionauth";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    FusionAuth({
+      clientId: process.env.AUTH_FUSIONAUTH_ID,
+      clientSecret: process.env.AUTH_FUSIONAUTH_SECRET,
+      tenantId: process.env.AUTH_FUSIONAUTH_TENANT_ID,
+      issuer: process.env.AUTH_FUSIONAUTH_ISSUER,
+    }),
+  ],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import FusionAuth from "@auth/sveltekit/providers/fusionauth";
+import {
+  AUTH_FUSIONAUTH_ID,
+  AUTH_FUSIONAUTH_SECRET,
+  AUTH_FUSIONAUTH_TENANT_ID,
+  AUTH_FUSIONAUTH_ISSUER,
+} from "$env/static/private";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [
+    FusionAuth({
+      clientId: AUTH_FUSIONAUTH_ID,
+      clientSecret: AUTH_FUSIONAUTH_SECRET,
+      tenantId: AUTH_FUSIONAUTH_TENANT_ID,
+      issuer: AUTH_FUSIONAUTH_ISSUER,
+    }),
+  ],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import FusionAuth from "@auth/express/providers/fusionauth";
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      FusionAuth({
+        clientId: process.env.AUTH_FUSIONAUTH_ID,
+        clientSecret: process.env.AUTH_FUSIONAUTH_SECRET,
+        tenantId: process.env.AUTH_FUSIONAUTH_TENANT_ID,
+        issuer: process.env.AUTH_FUSIONAUTH_ISSUER,
+      }),
+    ],
+  })
+);
+```
+
+  </Code.Express>
+</Code>
+
+<Callout type="warning">
+  If you're using multi-tenancy, you need to pass in the tenantId option to
+  apply the proper theme.
+</Callout>
+
+### Resources
+
+- [FusionAuth OAuth documentation](https://fusionauth.io/docs/v1/tech/oauth/)
+
+### Notes
+
+By default, Auth.js assumes that the FusionAuth provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+## Configuration
+
+<Callout type="info">
+An application can be created at https://your-fusionauth-server-url/admin/application.
+
+For more information, follow the [FusionAuth 5-minute setup guide](https://fusionauth.io/docs/v1/tech/5-minute-setup-guide).
+
+</Callout>
+
+In the OAuth settings for your application, configure the following.
+
+- Redirect URL
+  - https://localhost:3000/api/auth/callback/fusionauth
+- Enabled grants
+  - Make sure _Authorization Code_ is enabled.
+
+If using JSON Web Tokens, you need to make sure the signing algorithm is RS256, you can create an RS256 key pair by
+going to Settings, Key Master, generate RSA and choosing SHA-256 as algorithm. After that, go to the JWT settings of
+your application and select this key as Access Token signing key and Id Token signing key.
+
+The FusionAuth provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/fusionauth.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

@@ -1,0 +1,95 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/42-school.svg" height="64" width="64" />
+
+# 42School Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/42-school
+```
+
+### Environment Variables
+
+```
+AUTH_42_SCHOOL_ID
+AUTH_42_SCHOOL_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import 42School from "next-auth/providers/42-school"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [42School],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import 42School from "@auth/sveltekit/providers/42-school"
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [42School],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express"
+import 42School from "@auth/express/providers/42-school"
+
+app.use("/auth/*",
+  ExpressAuth({ providers: [ 42School ] })
+)
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
+
+### Notes
+
+<Callout>
+  42 returns a field on `Account` called `created_at` which is a number. See the
+  [docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests).
+  Make sure to add this field to your database schema, in case if you are using
+  an [Adapter](https://authjs.dev/reference/core/adapters).
+</Callout>
+
+By default, Auth.js assumes that the 42School provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+<Callout type="tip">
+  The 42School provider comes with a [default
+  configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/42-school.ts).
+  To override the defaults for your use case, check out [customizing a built-in
+  OAuth
+  provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+Auth.js strictly adheres to the specification and it cannot take responsibility for
+any deviation from the spec by the provider. You can open an issue, but if the problem
+is non-compliance with the spec, we might not pursue a resolution. You can ask for
+more help in [Discussions](https://authjs.dev/new/github-discussions).

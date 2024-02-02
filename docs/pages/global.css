@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("./animated-stars.css");
+
+details > *:not(summary) {
+  @apply p-4;
+}
+
+/* Here because we can't safelist Nextra's tailwind classes
+* and this is used on the index.mdx page */
+._bg-primary-500 {
+  background-color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation) 50%
+  );
+}
+
+.underline-highlight {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -0.125rem;
+    left: -0.5rem;
+    right: -0.5rem;
+    height: 0.75rem;
+    z-index: -1;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/664131/underline.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+.gradient-bg {
+  background: url(/img/etc/rainbow.png);
+  background-size: cover;
+}
+
+.blur-shadow {
+  box-shadow: 6px -8px 10px rgb(250 245 255);
+}
+
+.button-primary {
+  background-color: rgb(147 51 234);
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: inset 0 0 0 2px #f3e5f529, inset 0 -2px 1px #ce93d824,
+    inset 0 0 0 1px #6a1b9a36;
+}
+
+.button-primary:hover {
+  background-color: rgb(126 34 206);
+}
+
+.nextra-code pre {
+  @apply dark:bg-neutral-950;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  .animation-delay-700 {
+    animation-delay: 700ms;
+  }
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+  .animation-delay-900 {
+    animation-delay: 900ms;
+  }
+  .animation-delay-1100 {
+    animation-delay: 1100ms;
+  }
+  .animation-delay-1000 {
+    animation-delay: 1000ms;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+@layer components {
+  .break-word-legacy {
+    word-break: break-word;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply dark:bg-neutral-800 bg-neutral-700 transition-colors duration-300;
+  border-radius: 100vh;
+  transition: all 250ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply dark:bg-neutral-950 bg-neutral-800;
+  cursor: pointer;
+}
+
+/* Navbar Github Star Counter */
+.github-counter {
+  position: absolute;
+  color: #000;
+  top: 11px;
+  right: -18px;
+  font-size: 9px;
+  background-color: #ccc;
+  padding: 2px 5px;
+  border-radius: 10px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+div.nextra-search + a {
+  display: none;
+}
+
+html[data-theme="dark"] .github-counter {
+  background-color: #222;
+  color: #fff;
+}
+
+/* ark-ui tooltip animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+[data-scope="tooltip"][data-part="content"][data-state="open"] {
+  animation: fadeIn 250ms ease-out;
+}
+
+[data-scope="tooltip"][data-part="content"][data-state="closed"] {
+  animation: fadeOut 250ms ease-in;
+}

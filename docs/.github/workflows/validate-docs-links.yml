@@ -1,0 +1,22 @@
+name: "Validate Docs Links"
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  validate-docs-links:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: corepack enable
+      - run: node ./.github/actions/validate-docs-links/lib/index.js
+        name: "Run link checker"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

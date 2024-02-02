@@ -1,0 +1,146 @@
+import { Callout, Steps, Tabs } from "nextra/components";
+import { Code } from "@/components/Code";
+import { Screenshot } from "@/components/Screenshot";
+import MagicLink from "../../../public/img/magic-links/start.webp";
+
+### Magic links setup
+
+To setup "magic links" (sign in tokens sent to the user's email), we will need to use the built-in [`EmailProvider`](/).
+
+To sign in, a user provides their email address, then a **Verification Token** is sent to the them. By default this token is valid <u>for 24 hours</u>. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+
+<Callout>
+  Magic links are setup through the [`EmailProvider`](/). The `EmailProvider`
+  can be used with both [JSON Web Tokens](https://jwt.io/) and [database
+  sessions](/concepts/session-strategies#database-session), but you **must
+  configure a database to use it**. It is not possible to enable email sign in
+  without using a database.
+</Callout>
+
+There are two ways to setup magic links through the `EmailProvider`, either through an SMTP server or via HTTP-based email services like AWS SES, Postmark, Sendgrid, etc. We're going to walk through the SMTP Server setup here.
+
+<Callout type="info">
+  Make sure you check the [HTTP-based magic links tutorial](/) in case you want
+  to integrate with an HTTP-based email service instead of an SMTP server.
+</Callout>
+
+<Steps>
+
+### Install `nodemailer`
+
+Auth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the [`EmailProvider`](/). Run:
+
+```sh npm2yarn
+npm install nodemailer
+```
+
+You will need access to an SMTP server, ideally from one of [the services known to work with nodemailer](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/).
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/docs/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Connecting to the SMTP server
+
+There are two ways to configure the SMTP server connection: using a connection string or a configuration object.
+
+<Tabs items={['Connection string', 'Configuration object']}>
+  <Tabs.Tab>
+
+```bash filename=".env"
+EMAIL_SERVER=smtp://username:password@smtp.example.com:587
+EMAIL_FROM=noreply@example.com
+```
+
+```ts filename="./auth.ts"
+import EmailProvider from "next-auth/providers/email";
+...
+providers: [
+  EmailProvider({
+    server: process.env.EMAIL_SERVER,
+    from: process.env.EMAIL_FROM
+  }),
+],
+```
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+
+```bash filename=".env"
+EMAIL_SERVER_USER=username
+EMAIL_SERVER_PASSWORD=password
+EMAIL_SERVER_HOST=smtp.example.com
+EMAIL_SERVER_PORT=587
+EMAIL_FROM=noreply@example.com
+```
+
+```ts filename="./auth.ts"
+import EmailProvider from "next-auth/providers/email";
+...
+providers: [
+  EmailProvider({
+    server: {
+      host: process.env.EMAIL_SERVER_HOST,
+      port: process.env.EMAIL_SERVER_PORT,
+      auth: {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD
+      }
+    },
+    from: process.env.EMAIL_FROM
+  }),
+],
+```
+
+  </Tabs.Tab>
+</Tabs>
+
+<Callout type="info">
+  Check our [Customising magic links emails](/) to learn how to change the look
+  and feel of the emails the user receives to sign in.
+</Callout>
+
+<Callout>
+  Check our deep-dive tutorial on how to setup [Auth.js magic links with
+  SendGrid](/tutorials/deep-dive/passwordless-sendgrid-setup) for a better
+  understanding on how to setup magic links end-to-end (including database
+  setup).
+</Callout>
+
+### Signin Button
+
+Next, we can add a sign in button somewhere in your application like the Navbar. This will forward the user on to the Auth.js default signin page.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts";
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signIn();
+      }}
+    >
+      <button type="submit">Sign In</button>
+    </form>
+  );
+}
+```
+
+</Code.Next>
+</Code>
+
+### Signin
+
+Start your application, click on the sign in button we just added, and you should see Auth.js [built-in sign in page](/tutorials/custom-pages/built-in-pages) with the option to sign in with your email:
+
+<Screenshot src={MagicLink} alt="Screenshot of sign in page" />
+
+Insert your email and click "Sign in with Email". You should receive an email from Auth.js, click on it and should be redirected to your application, landing already authenticated.
+
+</Steps>

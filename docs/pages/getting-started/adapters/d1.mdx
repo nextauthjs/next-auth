@@ -1,0 +1,65 @@
+import { Callout } from "nextra/components";
+
+<img align="right" src="/img/adapters/d1.svg" width="64" height="64" />
+
+# <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> Adapter for Auth.js
+
+<Callout type="warning">
+  This adapter is not developed or maintained by Cloudflare and they haven't
+  declared the D1 api stable. The author will make an effort to keep this
+  adapter up to date. The adapter is compatible with the D1 api as of March 22,
+  2023.
+</Callout>
+
+## Installation
+
+```bash npm2yarn
+npm install next-auth @auth/d1-adapter
+```
+
+## Setup
+
+This is the D1 Adapter for [`next-auth`](https://authjs.dev). This package can only be used in
+conjunction with the Auth.js client packages, like `next-auth` and `@auth/sveltekit`. It is not a standalone package.
+
+### Configure Auth.js
+
+```js filename="./auth.js"
+import NextAuth from "next-auth";
+import { D1Adapter, up } from "@auth/d1-adapter";
+
+// For more information on each option (and a full list of options) go to
+// https://authjs.dev/reference/configuration/auth-options
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  // https://authjs.dev/reference/providers/
+  providers: [],
+  adapter: D1Adapter(env.db),
+});
+```
+
+### Migrations
+
+Somewhere in the initialization of your application you need to run the `up(env.db)` function to create the tables in D1.
+It will create 4 tables if they don't already exist:
+`accounts`, `sessions`, `users`, `verification_tokens`.
+
+The table prefix "" is not configurable at this time.
+
+You can use something like the following to attempt the migration once each time your worker starts up. Running migrations more than once will not erase your existing tables.
+
+```javascript
+import { up } from "@auth/d1-adapter";
+
+let migrated = false;
+async function migrationHandle({ event, resolve }) {
+  if (!migrated) {
+    try {
+      await up(event.platform.env.db);
+      migrated = true;
+    } catch (e) {
+      console.log(e.cause.message, e.message);
+    }
+  }
+  return resolve(event);
+}
+```

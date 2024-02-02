@@ -1,0 +1,109 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/reddit.svg" height="64" width="64" />
+
+# Reddit Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/reddit
+```
+
+### Environment Variables
+
+```
+AUTH_REDDIT_ID
+AUTH_REDDIT_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Reddit from "next-auth/providers/reddit";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Reddit],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Reddit from "@auth/sveltekit/providers/reddit";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Reddit],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Reddit from "@auth/express/providers/reddit";
+
+app.use("/auth/*", ExpressAuth({ providers: [Reddit] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [Reddit API documentation](https://www.reddit.com/dev/api/)
+- [Reddit app console](https://www.reddit.com/prefs/apps/)
+
+### Notes
+
+By default, Auth.js assumes that the Reddit provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+<Callout type="warning">
+
+Reddit requires authorization every time you go through their page.
+Only allows one callback URL per Client ID / Client Secret.
+
+</Callout>
+
+<Callout>
+
+This Provider template only has a one hour access token to it and only has the "identity" scope. If you want to get a refresh token as well you must follow this:
+
+```js filename="pages/api/auth/[...nextauth].js"
+providers: [
+  RedditProvider({
+    clientId: process.env.REDDIT_CLIENT_ID,
+    clientSecret: process.env.REDDIT_CLIENT_SECRET,
+    authorization: {
+      params: {
+        duration: "permanent",
+      },
+    },
+  }),
+];
+```
+
+</Callout>
+
+The Reddit provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/reddit.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

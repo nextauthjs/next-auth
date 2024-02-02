@@ -1,0 +1,281 @@
+import { Callout } from "nextra/components";
+import { RichTabs } from "@/components/RichTabs";
+import { Code } from "@/components/Code";
+import { Screenshot } from "@/components/Screenshot";
+import {
+  SignIn,
+  SignOut,
+  UserCircle,
+  HardDrives,
+  IdentificationBadge,
+  GitFork,
+  PaintBucket,
+} from "@phosphor-icons/react";
+
+# Managing the user session
+
+Auth.js ships with lightweight utilities to help you manage the user's session easily. Aside from [built-in pages](/tutorials/custom-pages/built-in-pages), which are [themable](/tutorials/theming) or [fully customisable](/tutorials/custom-pages/custom-sign-in), Auth.js does not come with any built-in styles.
+
+You're in charge of the building the UI for session management. Below we summarise some of the most common patterns for handling user sessions that you'll need to build before shipping your app to production.
+
+<RichTabs defaultValue="login">
+  <RichTabs.List className="gap-2">
+    <RichTabs.Trigger value="login">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <SignIn fontSize="2.2rem" />
+        <span>Handle sign in/out</span>
+      </div>
+    </RichTabs.Trigger>
+    <RichTabs.Trigger value="user-menu">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <UserCircle fontSize="2.2rem" />
+        <span>Display user menu</span>
+      </div>
+    </RichTabs.Trigger>
+    <RichTabs.Trigger value="protecting">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <GitFork fontSize="2.2rem" />
+        <span>Protecting routes</span>
+      </div>
+    </RichTabs.Trigger>
+    <RichTabs.Trigger value="custom-pages">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <PaintBucket fontSize="2.2rem" />
+        <span>Custom pages</span>
+      </div>
+    </RichTabs.Trigger>
+  </RichTabs.List>
+
+<RichTabs.Content className="p-8" value="login">
+
+For signing in users, assuming you have [already setup an authentication method](/getting-started/authentication), you only need to build a button that when pressed calls the `signIn` function exported in your Auth.js config:
+
+<Code>
+  <Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/github";
+
+export const { signIn, auth } = NextAuth({
+  providers: [GitHub],
+});
+```
+
+```tsx filename="./components/auth/sign-in.tsx"
+import { signIn } from "../../auth.ts";
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signIn();
+      }}
+    >
+      <button type="submit">Sign in</button>
+    </form>
+  );
+}
+```
+
+  </Code.Next>
+</Code>
+
+When clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/tutorials/custom-pages/custom-sign-in), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
+
+import DefaultSignInPage from "../../public/img/getting-started/default-signin-page.webp";
+
+<Screenshot src={DefaultSignInPage} alt="Default Sign-in Page" />
+
+Once authenticated, the user will be redirected back to the page they started the signin from. If
+you want the user to be redirected somewhere else after sign in (.i.e `/dashboard`), you can do so
+by passing the target URL as `redirectTo` in the `signIn()` options.
+
+```ts filename="./auth.ts"
+import { signIn } from "../../auth.ts";
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signIn("github", { redirectTo: "/dashboard" });
+      }}
+    >
+      <button type="submit">Sign in</button>
+    </form>
+  );
+}
+```
+
+### Handling sign out
+
+Similarly, to sign out users, just build a button that calls the exported `signOut` function from your Auth.js config when pressed:
+
+<Code>
+  
+<Code.Next>
+```tsx
+export function SignOut() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signOut()
+      }}
+    >
+      <button type="submit">
+        Sign Out
+      </button>
+    </form>
+  )
+}
+```
+</Code.Next>
+
+</Code>
+
+</RichTabs.Content>
+
+<RichTabs.Content className="p-8" value="user-menu">
+
+Most commonly, once a user is logged in, you might want to display the session by displaying the user's name and profile picture.
+
+In Auth.js we need to call the `auth()` helper exported from the Auth.js configuration file to get the available user session:
+
+<Code>
+  
+<Code.Next>
+
+```tsx filename="./components/UserAvatar"
+import { auth } from "@/auth.ts";
+import { Flex, Avatar, Text } from "@/components";
+
+export function UserAvatar(props) {
+  const session = await auth();
+
+  if (!session) return null;
+
+  return (
+    <Flex gap="2">
+      <Avatar src={session?.user.img} fallback="U" />
+      <Text>Welcome {session?.user.name}!</Text>
+    </Flex>
+  );
+}
+```
+
+For Next.js, we recommend calling `auth()` in a server component. `auth()` should always be called [on a server component](https://nextjs.org/learn/react-foundations/server-and-client-components) and that should solve the most common use cases. If for some reason, you need to read the session on a client component, see the `Next.js (pages)` tab where we explain how to do so with `useSession()` (deprecated).
+
+</Code.Next>
+
+<Code.NextPages>
+
+You can access the session server-side by calling [`auth()`](/) in [`getServerSideProps()`](/):
+
+```tsx filename="./pages/hello.tsx"
+import { auth } from "@/auth.ts";
+
+export default function HelloPage({ session }) {
+  return <UserAvatar img={session.img}>{session.name}</UserAvatar>;
+}
+
+export async function getServerSideProps(ctx) {
+  const session = await auth(ctx);
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
+```
+
+You can also access the session client-side using `useSession()`. Make sure `<SessionProvider />` is
+wrapping your application.
+
+```tsx filename="./pages/_app.tsx"
+import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
+
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />;
+    </SessionProvider>
+  );
+}
+```
+
+```tsx
+import { useSession } from "next-auth/react";
+
+export default function HelloPage() {
+  const session = useSession();
+
+  return <UserAvatar img={session.img}>{session.name}</UserAvatar>;
+}
+```
+
+</Code.NextPages>
+
+</Code>
+
+</RichTabs.Content>
+
+<RichTabs.Content className="p-8" value="protecting">
+
+### Redirecting users
+
+You can extend the default `withAuth` middleware to redirect users depending on certain conditions, for example their role:
+
+```ts
+import { withAuth } from "next-auth/middleware";
+
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
+    console.log(req.nextauth.token);
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => token?.role === "admin",
+    },
+  }
+);
+
+export const config = { matcher: ["/admin"] };
+```
+
+### Blocking access
+
+...
+
+### Middleware (Next.js)
+
+With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.ts` file in your root pages directory which looks like this:
+
+```ts filename="./middleware.ts"
+export { default } from "next-auth/middleware";
+```
+
+Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/app/admin/_middleware.ts` would protect all pages under the `/admin` route.
+
+For the time being, middleware only supports **jwt** as a session strategy, so it won't work with databases.
+
+</RichTabs.Content>
+
+<RichTabs.Content className="p-8" value="custom-pages">
+
+### Custom pages
+
+```
+TODO
+```
+
+</RichTabs.Content>
+</RichTabs>

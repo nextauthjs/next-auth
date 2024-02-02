@@ -1,0 +1,100 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/vk.svg" width="64" height="64" />
+
+# VK Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/vk
+```
+
+### Environment Variables
+
+```
+AUTH_VK_ID
+AUTH_VK_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Vk from "next-auth/providers/vk";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Vk],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Vk from "@auth/sveltekit/providers/vk";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Vk],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Vk from "@auth/express/providers/vk";
+
+app.use("/auth/*", ExpressAuth({ providers: [Vk] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [VK API documentation](https://vk.com/dev/first_guide)
+- [VK App configuration](https://vk.com/apps?act=manage)
+
+### Notes
+
+By default, Auth.js assumes that the VK provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+The VK provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/vk.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+<Callout type="info">
+By default the provider uses 5.126 version of the API. See https://vk.com/dev/versions for more info.
+If you want to use a different version, you can pass it to provider's options object:
+
+```js filename="pages/api/auth/[...nextauth].js"
+const apiVersion = "5.126";
+providers: [
+  VkProvider({
+    accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+    requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+    authorizationUrl: `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
+    profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
+  }),
+];
+```
+
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

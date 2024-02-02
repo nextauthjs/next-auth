@@ -1,0 +1,206 @@
+import { Steps, Callout, Tabs } from "nextra/components";
+import { Link } from "@/components/Link";
+import { SelectProvider } from "@/components/SelectProvider";
+import { RichTabs } from "@/components/RichTabs";
+import { Code } from "@/components/Code";
+import { Screenshot } from "@/components/Screenshot";
+import { OAuthInstructions } from "@/components/OAuthInstructions";
+import { TokenAuthInstructions } from "@/components/TokenAuthInstructions";
+import { GitDiff, Password, ChatDots } from "@phosphor-icons/react";
+import { ListDisclosure } from "@/components/ListDisclosure";
+import manifest from "@/data/manifest.json";
+
+# Authentication
+
+At this point, you need to decide how you're gonna authenticate users in your application. Auth.js supports <u>three main authentication paradigms</u>:
+
+- [OAuth authentication](/getting-started/providers/oauth-tutorial) ( _Sign in with Google, Github, LinkedIn, etc..._ )
+- [Passwordless authentication](/getting-started/providers/email-tutorial) ( _Magic links, OTP codes, etc..._ )
+- [Credentials](/getting-started/providers/credentials-tutorial) ( _Integrating with external APIs,
+  WebAuthn, etc..._ )
+
+<br />
+
+<details>
+<summary>
+<b>Why Auth.js recommends OAuth as the main authentication method for your application?</b>
+</summary>
+
+OAuth providers spend significant amounts of money, time, and engineering effort to build abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
+
+</details>
+<details>
+<summary>
+<b>Do I need a database?</b>
+</summary>
+
+Auth.js by default uses [JSON Web Tokens](https://jwt.io/) for saving the user's session so you don't need to setup a database for authenticating users (_all our JWT tokens are encrypted by default with A256GCM_). However, if you want to set up a database, you can use one of our official database adapters or create your own. The database will be used <u>to persist the user's session</u>. You can force the usage of JWT when using a database through the configuration options.
+
+</details>
+<details>
+<summary>
+<b>Can I set up more than one authentication method?</b>
+</summary>
+
+OAuth providers spend significant amounts of money, time, and engineering effort to build abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
+
+</details>
+
+Once you have decided how to authenticate users in your application (you can always add more authentication methods later), click on the instructions below for the initial setup.
+
+<RichTabs defaultValue="oauth">
+  <RichTabs.List className="gap-2">
+    <RichTabs.Trigger key="oauth" value="oauth">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <GitDiff fontSize="2.5rem" />
+        <span>Setup OAuth</span>
+      </div>
+    </RichTabs.Trigger>
+    <RichTabs.Trigger key="token-auth" value="passwordless">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <ChatDots fontSize="2.5rem" />
+        <span>Passwordless</span>
+      </div>
+    </RichTabs.Trigger>
+    <RichTabs.Trigger key="external-auth" value="credentials">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <Password fontSize="2.5rem" />
+        <span>Setup Credentials</span>
+      </div>
+    </RichTabs.Trigger>
+  </RichTabs.List>
+  <RichTabs.Content className="p-8" key="oauth" value="oauth">
+  <SelectProvider />
+  </RichTabs.Content>
+
+{" "}
+
+<RichTabs.Content className="p-8" key="token-auth" value="passwordless">
+  <TokenAuthInstructions />
+</RichTabs.Content>
+
+<RichTabs.Content className="p-8" key="external-auth" value="credentials">
+
+To setup Auth.js with external authentication we need to use the `CredentialsProvider`, which is designed to forward any inserted credentials (.i.e username/password) in the sign in form to your authentication service. This provider is very flexible, and can be easily setup to work with modern authentication methods like for example [WebAuthn](https://webauthn.io/).
+
+<Callout type="warning">
+  The functionality provided by the `CredentialsProvider` is intentionally
+  limited in favour of flexibility and to discourage the use of passwords due to
+  the inherent security risks associated with them (and the additional
+  complexity associated with supporting usernames and passwords).
+</Callout>
+
+<Steps>
+
+### Signin Button
+
+Lets start by creating a simple sign in button.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts";
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signIn("credentials", {
+          // Note: The credentials (username/password) will usually be collected through a sign in form you have you build yourself.
+          //       The CredentialsProvider is non-opinionated, username/password is the simplest use-case, but you can configure it
+          //       with other types of external auth like WebAuthn,
+          username: "foo@foo.com",
+          password: "helloworld",
+        });
+      }}
+    >
+      <button type="submit">Sign In</button>
+    </form>
+  );
+}
+```
+
+</Code.Next>
+</Code>
+
+### Credentials Provider
+
+Next, lets initialise the `CredentialsProvider` in the Auth.js configuration file, specifying our custom authentication logic:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+
+export const { handlers, auth } = NextAuth({
+  providers: [
+    Credentials({
+      // `credentials` will usually contain the collected user's credentials
+      // forwarded through the `signIn()` helper.
+      async authorize(credentials) {
+        // You can call here your external API or run the logic to authenticate the
+        // user using the collected credentials
+        const authResponse = await fetch("/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
+
+        if (!authResponse.ok) {
+          return null;
+        }
+
+        const user = await authResponse.json();
+
+        return user;
+      },
+    }),
+  ],
+});
+```
+
+</Code.Next>
+</Code>
+
+Note that we only had to define a single `authorize` method that is in charge of receiving the credentials inserted by the user and call whatever authentication service we want to use. Auth.js will then be in charge of managing the user session for us.
+
+Now display the `SignIn` button we made somewhere in your app and click it, inserting the expected credentials. If the supplied credentials pass the logic you have defined in the `authorize` callback we wrote, you should be redirected back to the app, now authenticated.
+
+<Callout type="info">
+  [Check the Credentials Provider
+  options](/reference/core/providers/credentials) for further customization
+</Callout>
+
+<Callout type="info">
+  If you're using TypeScript, you can [augment the `User`
+  interface](/getting-started/typescript#module-augmentation) to match the
+  response of your `authorize` callback, so whenever you read the user in other
+  callbacks (like the `jwt`) the type will match correctly.
+</Callout>
+
+</Steps>
+
+</RichTabs.Content>
+</RichTabs>
+
+### Next Steps
+
+If you now navigate in your app to `/api/auth/session`, should see the Auth.js session displayed as a JSON:
+
+import SessionWorking from "../../public/img/getting-started/authentication-get-started.png";
+
+<Screenshot
+  className="mb-12 max-w-xl mx-auto w-full"
+  src={SessionWorking}
+  alt="Auth.js Session"
+/>
+
+If you've gotten this far, you can be confident that your user is authenticated and
+your setup is working. See the next section, [Session management](/getting-started/session-management),
+to learn how to manage and display the user's session in your application.

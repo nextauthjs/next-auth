@@ -1,0 +1,73 @@
+<img
+  align="right"
+  src="/img/adapters/upstash-redis.svg"
+  width="64"
+  height="64"
+/>
+
+# <a href="https://docs.upstash.com/redis">Upstash Redis</a> Adapter for Auth.js
+
+## Installation
+
+```bash npm2yarn
+npm install @upstash/redis @auth/upstash-redis-adapter
+```
+
+## Setup
+
+Configure Auth.js to use the Upstash Redis Adapter:
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter";
+import upstashRedisClient from "@upstash/redis";
+
+const redis = upstashRedisClient(
+  process.env.UPSTASH_REDIS_URL,
+  process.env.UPSTASH_REDIS_TOKEN
+);
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: UpstashRedisAdapter(redis),
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+});
+```
+
+## Advanced usage
+
+### Using multiple apps with a single Upstash Redis instance
+
+The Upstash free-tier allows for only one Redis instance. If you have multiple Auth.js connected apps using this instance, you need different key prefixes for every app.
+
+You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
+
+The default values for this object are:
+
+```ts
+const defaultOptions = {
+  baseKeyPrefix: "",
+  accountKeyPrefix: "user:account:",
+  accountByUserIdPrefix: "user:account:by-user-id:",
+  emailKeyPrefix: "user:email:",
+  sessionKeyPrefix: "user:session:",
+  sessionByUserIdKeyPrefix: "user:session:by-user-id:",
+  userKeyPrefix: "user:",
+  verificationTokenKeyPrefix: "user:token:",
+};
+```
+
+Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
+
+Example:
+
+```ts
+export default NextAuth({
+  adapter: UpstashRedisAdapter(redis, { baseKeyPrefix: "app2:" }),
+});
+```

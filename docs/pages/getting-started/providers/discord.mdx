@@ -1,0 +1,86 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/discord.svg" height="64" width="64" />
+
+# Discord Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/discord
+```
+
+### Environment Variables
+
+```
+AUTH_DISCORD_ID
+AUTH_DISCORD_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Discord from "next-auth/providers/discord";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Discord],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Discord from "@auth/sveltekit/providers/discord";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Discord],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Discord from "@auth/express/providers/discord";
+
+app.use("/auth/*", ExpressAuth({ providers: [Discord] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [Discord OAuth documentation](https://discord.com/developers/docs/topics/oauth2)
+- [Discord OAuth apps](https://discord.com/developers/applications)
+
+### Notes
+
+By default, Auth.js assumes that the Discord provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+<Callout type="info">
+
+The Discord provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/discord.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

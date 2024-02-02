@@ -1,0 +1,94 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/mattermost.svg" height="64" width="64" />
+
+# Mattermost Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/mattermost
+```
+
+### Environment Variables
+
+```
+AUTH_MATTERMOST_ID
+AUTH_MATTERMOST_SECRET
+AUTH_MATTERMOST_ISSUER
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Mattermost from "next-auth/providers/mattermost";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Mattermost],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Mattermost from "@auth/sveltekit/providers/mattermost";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Mattermost],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Mattermost from "@auth/express/providers/mattermost";
+
+app.use("/auth/*", ExpressAuth({ providers: [Mattermost] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [Mattermost OAuth documentation](https://example.com)
+
+### Notes
+
+By default, Auth.js assumes that the Mattermost provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+To create your Mattermost OAuth2 app visit `http://<your Mattermost instance url>/<your team>/integrations/oauth2-apps`
+
+<Callout type="warning">
+
+The Mattermost provider requires the `issuer` option to be set. This is the base url of your Mattermost instance. e.g https://my-cool-server.cloud.mattermost.com
+
+</Callout>
+
+<Callout>
+
+The Mattermost provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/mattermost.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

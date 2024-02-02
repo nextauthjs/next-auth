@@ -1,0 +1,96 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/trakt.svg" height="64" width="64" />
+
+# Trakt Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/trakt
+```
+
+### Environment Variables
+
+```
+AUTH_TRAKT_ID
+AUTH_TRAKT_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Trakt from "next-auth/providers/trakt";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Trakt],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Trakt from "@auth/sveltekit/providers/trakt";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Trakt],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Trakt from "@auth/express/providers/trakt";
+
+app.use("/auth/*", ExpressAuth({ providers: [Trakt] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [Trakt OAuth documentation](https://trakt.docs.apiary.io/#reference/authentication-oauth)
+
+If you're using the api in production by calling `api.trakt.tv`. Follow the example. If you wish to develop on Trakt's sandbox environment by calling `api-staging.trakt.tv`, change the URLs.
+
+Start by creating an OAuth app on Trakt for production or development. Then set the Client ID and Client Secret as TRAKT_ID and TRAKT_SECRET in .env.
+
+### Notes
+
+By default, Auth.js assumes that the Trakt provider is
+based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+
+<Callout type="warning">
+
+- Trakt does not allow hotlinking images. Even the authenticated user's profie picture.
+- Trakt does not supply the authenticated user's email.
+
+</Callout>
+
+<Callout>
+
+The Trakt provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/trakt.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

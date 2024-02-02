@@ -1,0 +1,82 @@
+import { FrameworkExamples } from "@/components/FrameworkExamples";
+import { ProviderMarquee } from "@/components/LogosMarquee/Slider";
+import { Blur } from "@/components/Blur";
+import { Guides } from "@/components/Guides";
+import Footer from "@/components/Footer";
+
+<div className="overflow-hidden relative">
+  <section className="px-4 mx-auto w-full max-w-7xl h-64">
+    <div className="flex flex-col gap-14 items-center mt-20">
+      <div className="flex flex-col gap-8 justify-center items-center w-full">
+        <span className="text-6xl font-black lg:text-8xl">Auth.js</span>
+        <div className="flex flex-col md:flex-row md:gap-8 justify-center md:items-baseline text-2xl font-bold text-center lg:text-3xl">
+          <h1>Authentication for the Web.</h1>
+          <div>
+            <span className="underline-highlight">Free and open source</span>.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="flex flex-row justify-center pt-16 w-full">
+      <a
+        href="/docs"
+        className="inline-block py-3 px-8 text-xl font-medium text-white bg-violet-500 dark:bg-violet-900 rounded transition hover:scale-110 hover:rotate-2 focus-visible:ring focus:outline-none
+        dark:active:bg-violet-950 active:bg-violet-600"
+      >
+        Get started
+      </a>
+    </div>
+    <Blur />
+    <div className="overflow-hidden bg-animation -z-10">
+      <div id="stars"></div>
+      <div id="stars2"></div>
+      <div id="stars3"></div>
+      <div id="stars4"></div>
+    </div>
+  </section>
+  <section className="flex flex-col items-center px-4 pt-24 pb-24">
+    <div className="mb-20 text-lg text-center flex gap-2">
+      Looking for a hosted alternative?
+      <a
+        href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+        target="_blank"
+        className="flex gap-2 text-[#289ef9]"
+      >
+        Try Clerk{" "}
+        <svg
+          width="16"
+          data-slot="icon"
+          fill="none"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+          ></path>
+        </svg>
+      </a>
+    </div>
+    <FrameworkExamples />
+  </section>
+  <Guides />
+  <section
+    className="flex relative h-[40rem] flex-col justify-between items-center pt-24 pb-12
+    bg-neutral-200 dark:bg-neutral-900 overflow-hidden"
+  >
+    <div
+      className="z-10 flex gap-4 justify-start items-center text-2xl md:text-3xl font-bold
+      text-center text-white lg:text-4xl h-full"
+    >
+      <div className="leading-normal text-slate-800 dark:text-slate-200 pb-12">
+        Supports a wide range of providers
+      </div>
+    </div>
+    <ProviderMarquee />
+  </section>
+  <Footer className="bg-white dark:bg-neutral-950 py-8 !m-0" />
+</div>

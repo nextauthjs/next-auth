@@ -1,56 +1,59 @@
 {
-  "private": true,
-  "repository": "https://github.com/nextauthjs/next-auth",
-  "name": "docs",
+  "name": "auth-js-docs",
+  "version": "0.0.1",
+  "packageManager": "pnpm@8.14.0",
+  "description": "Auth.js Documenation",
+  "type": "module",
   "scripts": {
-    "start": "TYPEDOC_WATCH=true docusaurus start --no-open",
-    "dev": "pnpm manifest && pnpm snippets && pnpm start",
-    "build": "pnpm manifest && docusaurus build",
-    "docusaurus": "docusaurus",
-    "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
-    "serve": "docusaurus serve",
-    "clear": "docusaurus clear",
-    "manifest": "node scripts/generate-manifest.mjs",
-    "snippets": "node scripts/generate-snippets.mjs"
+    "typedoc": "typedoc",
+    "dev": "typedoc --watch & next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ./{components,pages,utils}",
+    "lint:fix": "eslint ./{components,pages,utils} --fix"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ubbe-xyz/nextra-docs"
+  },
+  "author": "Auth.js Team (https://authjs.dev/contributors)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ubbe-xyz/nextra-docs/issues"
+  },
+  "homepage": "https://github.com/ubbe-xyz/nextra-docs#readme",
   "dependencies": {
-    "@mdx-js/react": "3.0.0",
+    "@ariakit/react": "^0.4.0",
+    "@ark-ui/react": "^1.1.0",
+    "@inkeep/widgets": "^0.2.258",
+    "@next/third-parties": "^14.1.0",
+    "@phosphor-icons/react": "^2.0.15",
+    "@radix-ui/react-tabs": "^1.0.4",
     "classnames": "^2.3.2",
-    "mdx-mermaid": "2.0.0",
-    "mermaid": "10.6.0",
-    "prism-react-renderer": "2.1.0",
+    "next": "^14.0.4",
+    "nextra": "3.0.0-alpha.12",
+    "nextra-theme-docs": "3.0.0-alpha.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-fast-marquee": "^1.6.2",
     "react-marquee-slider": "^1.1.5",
-    "styled-components": "5.3.6"
+    "shikiji": "^0.9.19",
+    "typedoc": "^0.25.6",
+    "typedoc-plugin-markdown": "4.0.0-next.39"
   },
   "devDependencies": {
-    "@docusaurus/core": "3.0.0",
-    "@docusaurus/eslint-plugin": "3.0.0",
-    "@docusaurus/module-type-aliases": "3.0.0",
-    "@docusaurus/preset-classic": "3.0.0",
-    "@docusaurus/remark-plugin-npm2yarn": "3.0.0",
-    "@docusaurus/theme-classic": "3.0.0",
-    "@docusaurus/theme-common": "3.0.0",
-    "@docusaurus/theme-mermaid": "3.0.0",
-    "@docusaurus/tsconfig": "3.0.0",
-    "@docusaurus/types": "3.0.0",
-    "docusaurus-plugin-typedoc": "1.0.0-next.22",
-    "typedoc": "0.25.3",
-    "typedoc-plugin-markdown": "4.0.0-next.29",
-    "typescript": "5.2.2"
+    "@types/node": "20.9.0",
+    "@types/react": "18.2.46",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "postcss": "^8.4.31",
+    "simple-git-hooks": "^2.9.0",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint"
   }
 }

@@ -1,0 +1,49 @@
+import { Code } from "@/components/Code";
+import { Screenshot } from "@/components/Screenshot"
+
+# Custom sign out page
+
+Is easy to configure Auth.js to display a custom sign out page in case you need it.
+
+Here's the code for a simple sign out page built on top of the [example app](https://github.com/nextauthjs/next-auth-example):
+
+<Code>
+<Code.Next>
+
+```tsx filename="app/auth-signout/page.tsx"
+import { UserSwitch } from "@phosphor-icons/react";
+import { signOut } from "../../auth";
+import { AuthError } from "next-auth";
+
+export default function SignOutPage() {
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-screen pt-32">
+      <Card>
+        <h5>
+          <UserSwitch fontSize="2rem" />
+          Are you sure you want to sign out?
+        </h5>
+        <form
+          action={async (formData) => {
+            "use server";
+            await signOut();
+          }}
+        >
+          <button type="submit">Sign out</button>
+        </form>
+      </Card>
+    </div>
+  );
+}
+```
+
+</Code.Next>
+</Code>
+
+Now if the user navigates to `/auth-signout` they'll see the following page:
+
+import CustomSignOut from "../../../public/img/tutorials/custom-sign-out.webp"
+
+<Screenshot src={CustomSignOut} alt="Custom Sign-out" />
+
+If they click "Sign out", the session will be deleted and they will be redirected to the homepage (which is always `/` by default).

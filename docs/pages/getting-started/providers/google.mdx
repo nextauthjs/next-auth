@@ -1,0 +1,139 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img align="right" src="/img/providers/google.svg" height="64" width="64" />
+
+# Google Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/google
+```
+
+### Environment Variables
+
+```
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Google],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import Google from "@auth/sveltekit/providers/google";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [Google],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import Google from "@auth/express/providers/google";
+
+app.use("/auth/*", ExpressAuth({ providers: [Google] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [Google OAuth documentation](https://developers.google.com/identity/protocols/oauth2)
+- [Google OAuth Configuration](https://console.developers.google.com/apis/credentials)
+
+### Notes
+
+By default, Auth.js assumes that the Google provider is
+based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
+
+The "Authorized redirect URIs" used when creating the credentials must include your full domain and end in the callback path. For example;
+
+- For production: `https://{YOUR_DOMAIN}/api/auth/callback/google`
+- For development: `http://localhost:3000/api/auth/callback/google`
+
+<Callout type="warning">
+Google only provides Refresh Token to an application the first time a user signs in.
+
+To force Google to re-issue a Refresh Token, the user needs to remove the application from their account and sign in again:
+https://myaccount.google.com/permissions
+
+Alternatively, you can also pass options in the `params` object of `authorization` which will force the Refresh Token to always be provided on sign in, however this will ask all users to confirm if they wish to grant your application access every time they sign in.
+
+If you need access to the RefreshToken or AccessToken for a Google account and you are not using a database to persist user accounts, this may be something you need to do.
+
+```js filename="pages/api/auth/[...nextauth].js"
+const options = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
+  ],
+};
+```
+
+</Callout>
+
+<Callout>
+Google also returns a `email_verified` boolean property in the OAuth profile.
+
+You can use this property to restrict access to people with verified accounts at a particular domain.
+
+```js
+const options = {
+  ...
+  callbacks: {
+    async signIn({ account, profile }) {
+      if (account.provider === "google") {
+        return profile.email_verified && profile.email.endsWith("@example.com")
+      }
+      return true // Do different verification for other providers that don't have `email_verified`
+    },
+  }
+  ...
+}
+```
+
+</Callout>
+
+The Google provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/google.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

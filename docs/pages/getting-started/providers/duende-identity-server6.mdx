@@ -1,0 +1,110 @@
+import { Callout } from "nextra/components";
+import { Code } from "@/components/Code";
+
+<img
+  align="right"
+  src="/img/providers/duende-identityserver6.svg"
+  height="64"
+  width="64"
+/>
+
+# Duende Identity Server Provider
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/duende-identity-server6
+```
+
+### Environment Variables
+
+```
+AUTH_DUENDE_IDENTITY_SERVER6_ID
+AUTH_DUENDE_IDENTITY_SERVER6_SECRET
+AUTH_DUENDE_IDENTITY_SERVER6_ISSUER
+```
+
+> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
+> setup, if you'd like to name them something else you must pass them in in your providers array.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import DuendeIdentityServer6 from "next-auth/providers/duende-identity-server6";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [DuendeIdentityServer6],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit";
+import DuendeIdentityServer6 from "@auth/sveltekit/providers/duende-identity-server6";
+
+export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+  providers: [DuendeIdentityServer6],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import ExpressAuth from "@auth/express";
+import DuendeIdentityServer6 from "@auth/express/providers/duende-identity-server6";
+
+app.use("/auth/*", ExpressAuth({ providers: [DuendeIdentityServer6] }));
+```
+
+  </Code.Express>
+</Code>
+
+### Resources
+
+- [DuendeIdentityServer6 documentation](https://docs.duendesoftware.com/identityserver/v6)
+
+### Notes
+
+## Demo IdentityServer
+
+The configuration below is for the demo server at https://demo.duendesoftware.com/
+
+If you want to try it out, you can copy and paste the configuration below.
+
+You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
+
+```js filename=pages/api/auth/[...nextauth].js
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6";
+providers: [
+  DuendeIDS6Provider({
+    clientId: "interactive.confidential",
+    clientSecret: "secret",
+    issuer: "https://demo.duendesoftware.com",
+  }),
+];
+```
+
+By default, Auth.js assumes that the DuendeIdentityServer6 provider is
+based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
+
+<Callout type="info">
+
+The DuendeIdentityServer6 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/duende-identity-server6.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+
+</Callout>
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

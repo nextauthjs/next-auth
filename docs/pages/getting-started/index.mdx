@@ -1,0 +1,69 @@
+import { Callout } from "nextra/components";
+import { ListDisclosure } from "@/components/ListDisclosure";
+import { Link } from "@/components/Link";
+import { Screenshot } from "@/components/Screenshot";
+import { DemoCards } from "@/components/DemoCards";
+import manifest from "@/data/manifest.json";
+
+# What is Auth.js?
+
+Auth.js is a runtime agnostic library based on standard Web APIs that deeply integrates with modern JavaScript frameworks via additional libraries that wrap the core functionality
+and tailor it to the framework's best practices.
+
+<DemoCards />
+
+Check the [integrations page](/getting-started/integrations) for all supported packages. We are working on supporting more frameworks, but you can create own or
+help us create one for your favorite framework.
+
+<Callout type="info">
+  To reduce migration overhead, NextAuth.js will continue to be released under
+  the `next-auth` package name, instead of the `@auth/*` convention. Auth.js was
+  born out of `next-auth` but [over the years has
+  evolved](/contributors#history) to be framework agnostic.
+</Callout>
+
+<Callout typpe="info">
+  Confused about Auth.js and NextAuth.js? Have a look at [our
+  history](/contributors#history).
+</Callout>
+
+## Authentication methods
+
+There are 3 ways to authenticate users with Auth.js:
+
+- [OAuth authentication](/getting-started/providers/oauth-tutorial) ( _Sign in with Google, Github, LinkedIn, etc..._ )
+- [Passwordless authentication](/getting-started/providers/email-tutorial) ( _Magic links, OTP codes, etc..._ )
+- [Credentials](/getting-started/providers/credentials-tutorial) ( _Integrating with external APIs,
+  WebAuthn, etc..._ )
+
+### Official Providers
+
+<ListDisclosure limit={8}>
+  {Object.entries(manifest.providersOAuth).map(([id, name]) => (
+    <Link
+      href={`/reference/core/providers/${id}`}
+      key={name}
+      className="p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-lg h-32"
+    >
+      <img src={`/img/providers/${id}.svg`} className="w-11 mt-2" />
+      <div className="text-sm text-center">{name}</div>
+    </Link>
+  ))}
+</ListDisclosure>
+
+### Supported Databases
+
+Optionally, Auth.js can be integrated with an external database via Database adapters, in case you need or want to store user data.
+
+<ListDisclosure limit={8}>
+  {Object.entries(manifest.adapters).map(([value, label]) => (
+    <Link
+      href={`/reference/adapter/${value}`}
+      key={value}
+      className="p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-lg h-32"
+    >
+      <img src={`/img/adapters/${value}.svg`} className="h-12 mt-2" />
+      <div className="text-sm text-center">{label}</div>
+    </Link>
+  ))}
+</ListDisclosure>
