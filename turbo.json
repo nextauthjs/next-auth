@@ -2,9 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": [
         "dist/**",
         "lib/**",
@@ -25,31 +23,18 @@
       "cache": false
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ],
-      "inputs": [
-        "src/**/",
-        "test/**/"
-      ],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**/", "test/**/"],
       "outputMode": "new-only"
     },
     "e2e": {
-      "outputs": [
-        "playwright-report/**"
-      ]
+      "outputs": ["playwright-report/**"]
     },
     "@auth/upstash-redis-adapter#test": {
-      "env": [
-        "UPSTASH_REDIS_KEY",
-        "UPSTASH_REDIS_URL"
-      ]
+      "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
     },
     "@auth/xata-adapter#test": {
-      "env": [
-        "XATA_API_KEY",
-        "XATA_DATABASE_URL"
-      ]
+      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "docs#dev": {
       "dependsOn": [
@@ -117,8 +102,7 @@
         "^build"
       ],
       "outputs": [
-        ".docusaurus/**/*",
-        "build/**/*",
+        ".next/**/*",
         "docs/reference/adapter/**",
         "docs/reference/core/**/*",
         "docs/reference/nextjs/**/*",
