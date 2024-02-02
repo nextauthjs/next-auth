@@ -125,6 +125,7 @@ export async function session(
       const sessionPayload = await callbacks.session({
         // TODO: user already passed below,
         // remove from session object in https://github.com/nextauthjs/next-auth/pull/9702
+        // @ts-expect-error
         session: { ...session, user },
         user,
         newSession,

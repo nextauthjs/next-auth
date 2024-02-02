@@ -17,6 +17,9 @@
     <a href="https://www.npmjs.com/package/next-auth">
       <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="Github Stable Release" />
     </a>
+    <a href="https://codecov.io/gh/nextauthjs/next-auth" > 
+      <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov">
+    </a>
   </p>
   <p align="center">
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
@@ -53,7 +56,7 @@ Auth.js can be used with or without a database.
 - Designed to be secure by default and encourage best practices for safeguarding user data
 - Uses Cross-Site Request Forgery (CSRF) Tokens on POST routes (sign in, sign out)
 - Default cookie policy aims for the most restrictive policy appropriate for each cookie
-- When JSON Web Tokens are used, they are encrypted by default (JWE) with A256GCM
+- When JSON Web Tokens are used, they are encrypted by default (JWE) with A256CBC-HS512
 - Features tab/window syncing and session polling to support short-lived sessions
 - Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org)
 
@@ -94,11 +97,11 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://vercel.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
+        <a href="https://workos.com" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
         </a><br />
-        <div>Vercel</div>
-        <sub>💵☁️</sub>
+        <div>WorkOS</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
@@ -136,11 +139,11 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://workos.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
+        <a href="https://vercel.com" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
         </a><br />
-        <div>WorkOS</div>
-        <sub>💵</sub>
+        <div>Vercel</div>
+        <sub>💵☁️</sub>
       </td>
     </tr>
     <tr>

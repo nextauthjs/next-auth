@@ -1,7 +1,7 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
-import { reqWithEnvUrl } from "./env.js"
+import { reqWithEnvURL } from "./env.js"
 import { createActionURL } from "./actions.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -79,11 +79,9 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
           (await config.callbacks?.session?.(...args)) ?? {
             ...args[0].session,
             expires:
-              args[0].session.expires instanceof Date
-                ? args[0].session.expires.toISOString()
-                : args[0].session.expires,
+              args[0].session.expires?.toISOString?.() ??
+              args[0].session.expires,
           }
-        // @ts-expect-error either user or token will be defined
         const user = args[0].user ?? args[0].token
         return { user, ...session } satisfies Session
       },
@@ -221,7 +219,7 @@ async function handleAuth(
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
-  const request = reqWithEnvUrl(args[0])
+  const request = reqWithEnvURL(args[0])
   const sessionResponse = await getSession(request.headers, config)
   const auth = await sessionResponse.json()
 

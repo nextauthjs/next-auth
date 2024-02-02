@@ -39,6 +39,7 @@
 import { assertConfig } from "./lib/utils/assert.js"
 import { AuthError, ErrorPageLoop } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
+import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
@@ -55,7 +56,7 @@ import type {
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
 
-export { skipCSRFCheck, raw }
+export { skipCSRFCheck, raw, setEnvDefaults, createActionURL }
 
 export async function Auth(
   request: Request,
@@ -113,13 +114,12 @@ export async function Auth(
       !htmlPages.includes(internalRequest.action) ||
       internalRequest.method !== "GET"
     ) {
-      return new Response(
-        JSON.stringify({
+      return Response.json(
+        {
           message:
             "There was a problem with the server configuration. Check the server logs for more information.",
-          code: assertionResult.name,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        },
+        { status: 500 }
       )
     }
 
@@ -168,6 +168,7 @@ export async function Auth(
 
     const type = isAuthError ? error.type : "Configuration"
     const page = (isAuthError && error.kind) || "error"
+    // TODO: Filter out some error types from being sent to the client
     const params = new URLSearchParams({ error: type })
     const path =
       config.pages?.[page] ?? `${config.basePath}/${page.toLowerCase()}`
@@ -210,12 +211,16 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * To generate a random string, you can use the following command:
    *
-   * - On Unix systems, type `openssl rand -hex 32` in the terminal
-   * - Or generate one [online](https://generate-secret.vercel.app/32)
+   * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+   *
+   * @note
+   * You can also pass an array of secrets, in which case the first secret that successfully
+   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
+   * The newer secret should be added to the start of the array, which will be used for all new sessions.
+   *
    */
-  secret?: string
+  secret?: string | string[]
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.

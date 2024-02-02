@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "2.4.1",
+    "@sveltejs/kit": "2.4.3",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "svelte": "^4",
     "svelte-check": "2.10.2",
