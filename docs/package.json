@@ -32,6 +32,7 @@
     "next": "^14.0.4",
     "nextra": "3.0.0-alpha.12",
     "nextra-theme-docs": "3.0.0-alpha.12",
+    "nuqs": "^1.16.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.2",

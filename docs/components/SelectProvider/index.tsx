@@ -1,17 +1,17 @@
-import * as Ariakit from "@ariakit/react";
-import { useSelectProvider } from "./useSelectProvider";
-import { ChangeEvent } from "react";
-import { OAuthInstructions } from "../OAuthInstructions";
-import manifest from "@/data/manifest.json";
-import { Link } from "../Link";
+import * as Ariakit from "@ariakit/react"
+import { useSelectProvider } from "./useSelectProvider"
+import { ChangeEvent } from "react"
+import { OAuthInstructions } from "../OAuthInstructions"
+import manifest from "@/data/manifest.json"
+import { Link } from "../Link"
 
 export function SelectProvider() {
   const { items, term, selected, handleSearchItem, handleSelectOption } =
-    useSelectProvider();
+    useSelectProvider()
 
   return (
     <>
-      <Ariakit.ComboboxProvider value={term}>
+      <Ariakit.ComboboxProvider value={term} defaultSelectedValue={selected}>
         <Ariakit.ComboboxLabel className="block mb-2 text-xl font-semibold">
           Select an OAuth Provider
         </Ariakit.ComboboxLabel>
@@ -122,5 +122,5 @@ export function SelectProvider() {
         />
       ) : null}
     </>
-  );
+  )
 }

@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
-import { List, Trigger, Root, Content } from "@radix-ui/react-tabs";
+import { List, Trigger, Root, Content } from "@radix-ui/react-tabs"
 import type {
   TabsListProps,
   TabsTriggerProps,
   TabsContentProps,
   TabsProps,
-} from "@radix-ui/react-tabs";
-import cx from "classnames";
-import { useRouter } from "next/router";
+} from "@radix-ui/react-tabs"
+import cx from "classnames"
+import { useRouter } from "next/router"
+import { useQueryState } from "nuqs"
+import { useRichTabs } from "./useRichTabs"
 
 RichTabs.List = function TabsList({ className, ...rest }: TabsListProps) {
   return (
@@ -15,8 +16,8 @@ RichTabs.List = function TabsList({ className, ...rest }: TabsListProps) {
       {...rest}
       className={cx("flex flex-row items-center justify-start", className)}
     />
-  );
-};
+  )
+}
 
 RichTabs.Trigger = function TabsTrigger({
   className,
@@ -34,8 +35,8 @@ RichTabs.Trigger = function TabsTrigger({
           : "rounded-md"
       )}
     />
-  );
-};
+  )
+}
 
 RichTabs.Content = function TabsContent({
   className,
@@ -54,48 +55,36 @@ RichTabs.Content = function TabsContent({
           : "rounded-md"
       )}
     />
-  );
-};
+  )
+}
+
+type Props = TabsProps & { onTabChange?: (value: string) => void } & {
+  defaultValue: string
+}
 
 export function RichTabs({
   children,
   className,
   orientation = "horizontal",
+  defaultValue,
   onTabChange,
-  ...rest
-}: TabsProps & { onTabChange?: (value: string) => void }) {
-  const [tabValue, setTabValue] = useState(rest.defaultValue);
-  const router = useRouter();
-  const {
-    query: { tab },
-  } = router;
+}: Props) {
+  const { tabValue, handleValueChanged } = useRichTabs({
+    onTabChange,
+    defaultValue,
+  })
 
-  useEffect(() => {
-    setTabValue(
-      Array.isArray(tab)
-        ? tab[0]
-        : typeof tab === "string" && tab.length > 0
-        ? tab
-        : rest.defaultValue
-    );
-  }, [tab]);
-
-  function handleValueChanged(value: string) {
-    setTabValue(value);
-    if (onTabChange) {
-      onTabChange(value);
-    }
-  }
-
-  return (
+  return tabValue ? (
     <Root
       className={cx("px-0 pt-4 m-0 rounded-lg mt-2", className)}
       orientation={orientation}
-      {...rest}
-      value={tabValue}
       onValueChange={handleValueChanged}
+      value={tabValue}
+      defaultValue={defaultValue}
     >
       {children}
     </Root>
-  );
+  ) : (
+    <p>...</p>
+  )
 }

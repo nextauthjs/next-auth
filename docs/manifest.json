@@ -1,0 +1,170 @@
+{
+  "frameworks": [
+    {
+      "id": "nextjs",
+      "name": "NextAuth.js",
+      "url": "next-auth-example"
+    },
+    {
+      "id": "sveltekit",
+      "name": "SvelteKit Auth",
+      "url": "sveltekit-auth-example"
+    },
+    {
+      "id": "solidstart",
+      "name": "SolidStart Auth",
+      "url": "auth-solid"
+    }
+  ],
+  "adapters": {
+    "azure-tables": [
+      "Azure Tables Storage"
+    ],
+    "d1": [
+      "D1"
+    ],
+    "dgraph": [
+      "Dgraph",
+      "dgraph.png"
+    ],
+    "drizzle": [
+      "Drizzle ORM",
+      "drizzle-orm.png"
+    ],
+    "dynamodb": [
+      "DynamoDB",
+      "dynamodb.png"
+    ],
+    "edgedb": [
+      "EdgeDB"
+    ],
+    "fauna": [
+      "Fauna",
+      "fauna.png"
+    ],
+    "firebase": [
+      "Firebase"
+    ],
+    "hasura": [
+      "Hasura"
+    ],
+    "kysely": [
+      "Kysely"
+    ],
+    "mikro-orm": [
+      "Mikro ORM",
+      "mikro-orm.png"
+    ],
+    "mongodb": [
+      "MongoDB"
+    ],
+    "neo4j": [
+      "Neo4j"
+    ],
+    "pg": [
+      "pg",
+      "pg.png"
+    ],
+    "pouchdb": [
+      "PouchDB"
+    ],
+    "prisma": [
+      "Prisma"
+    ],
+    "sequelize": [
+      "Sequelize"
+    ],
+    "supabase": [
+      "Supabase"
+    ],
+    "surrealdb": [
+      "SurrealDB",
+      "surreal.png"
+    ],
+    "typeorm": [
+      "TypeORM",
+      "typeorm.png"
+    ],
+    "upstash-redis": [
+      "Upstash Redis"
+    ],
+    "xata": [
+      "Xata"
+    ]
+  },
+  "providers": {
+    "42-school": "42 School",
+    "apple": "Apple",
+    "asgardeo": "Asgardeo",
+    "atlassian": "Atlassian",
+    "auth0": "Auth0",
+    "authentik": "Authentik",
+    "azure-ad-b2c": "Azure Active Directory B2C",
+    "azure-ad": "Azure Active Directory",
+    "azure-devops": "Azure DevOps",
+    "battlenet": "Battle.net",
+    "beyondidentity": "Beyond Identity",
+    "box": "Box",
+    "boxyhq-saml-oidc": "BoxyHQ SAML",
+    "bungie": "Bungie",
+    "clickup": "ClickUp",
+    "cognito": "Cognito",
+    "coinbase": "Coinbase",
+    "descope": "Descope",
+    "discord": "Discord",
+    "dribbble": "Dribbble",
+    "dropbox": "Dropbox",
+    "duende-identityserver6": "DuendeIdentityServer6",
+    "eveonline": "EVE Online",
+    "facebook": "Facebook",
+    "faceit": "FACEIT",
+    "foursquare": "Foursquare",
+    "freshbooks": "Freshbooks",
+    "fusionauth": "FusionAuth",
+    "github": "GitHub",
+    "gitlab": "GitLab",
+    "google": "Google",
+    "hubspot": "HubSpot",
+    "identity-server4": "IdentityServer4",
+    "instagram": "Instagram",
+    "kakao": "Kakao",
+    "keycloak": "Keycloak",
+    "line": "LINE",
+    "linkedin": "LinkedIn",
+    "mailchimp": "Mailchimp",
+    "mailru": "Mail.ru",
+    "mastodon": "Mastodon",
+    "mattermost": "Mattermost",
+    "medium": "Medium",
+    "naver": "Naver",
+    "netlify": "Netlify",
+    "notion": "Notion",
+    "okta": "Okta",
+    "onelogin": "OneLogin",
+    "osso": "Osso",
+    "osu": "Osu!",
+    "passage": "Passage",
+    "patreon": "Patreon",
+    "pinterest": "Pinterest",
+    "pipedrive": "Pipedrive",
+    "reddit": "Reddit",
+    "salesforce": "Salesforce",
+    "slack": "Slack",
+    "spotify": "Spotify",
+    "strava": "Strava",
+    "tiktok": "TikTok",
+    "todoist": "Todoist",
+    "trakt": "Trakt",
+    "twitch": "Twitch",
+    "twitter": "Twitter",
+    "united-effects": "United Effects",
+    "vk": "VK",
+    "wikimedia": "Wikimedia",
+    "wordpress": "WordPress.com",
+    "workos": "WorkOS",
+    "yandex": "Yandex",
+    "zitadel": "ZITADEL",
+    "zoho": "Zoho",
+    "zoom": "Zoom"
+  }
+}
