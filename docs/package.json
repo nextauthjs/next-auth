@@ -1,7 +1,5 @@
 {
-  "name": "auth-js-docs",
-  "version": "0.0.1",
-  "packageManager": "pnpm@8.14.0",
+  "name": "docs",
   "description": "Auth.js Documenation",
   "type": "module",
   "scripts": {
@@ -14,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ubbe-xyz/nextra-docs"
+    "url": "git+https://github.com/nextauthjs/next-auth"
   },
   "author": "Auth.js Team (https://authjs.dev/contributors)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ubbe-xyz/nextra-docs/issues"
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "homepage": "https://github.com/ubbe-xyz/nextra-docs#readme",
+  "homepage": "https://authjs.dev",
   "dependencies": {
     "@ariakit/react": "^0.4.0",
     "@ark-ui/react": "^1.1.0",
