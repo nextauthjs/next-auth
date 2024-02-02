@@ -83,9 +83,17 @@
       "permanent": true
     },
     {
+      "source": "/reference/core/providers/:path(.*)",
+      "destination": "/getting-started/providers/:path(.*)"
+    },
+    {
       "source": "/",
       "has": [{ "type": "host", "value": "discord.authjs.dev" }],
       "destination": "https://discord.gg/CGAPMawPng"
+    },
+    {
+      "source": "/reference/adapter/:path(.*)",
+      "destination": "/getting-started/adapters/:path(.*)"
     }
   ]
 }

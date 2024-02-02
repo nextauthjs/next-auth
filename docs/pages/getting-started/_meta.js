@@ -25,7 +25,7 @@ export default {
     type: "separator",
     title: "Connections",
   },
-  providers: "OAuth Providers",
+  providers: "Providers",
   adapters: "Adapters",
   "-- more": {
     type: "separator",
@@ -34,4 +34,4 @@ export default {
   integrations: "Integrations",
   contributors: "Contributors",
   sponsors: "Sponsors",
-};
+}
