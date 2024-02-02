@@ -23,9 +23,9 @@ jobs:
           vercel_project_id: ${{ secrets.VERCEL_PROJECT_ID }}
           gh_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install dependencies
-        run: cd ./.github/actions/broken-link-checker && pnpm install && pnpm build
+        run: cd ./.github/broken-link-checker && pnpm install && pnpm build
       - name: Run link checker
-        uses: ./.github/actions/broken-link-checker
+        uses: ./.github/broken-link-checker
         id: broken-links
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
