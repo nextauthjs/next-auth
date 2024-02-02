@@ -85,7 +85,6 @@
     ".svelte-kit",
     ".next",
     ".nuxt",
-    ".docusaurus",
     "build",
     "docs/docs/reference/core",
     "docs/docs/reference/sveltekit",
@@ -152,17 +151,6 @@
           "react/prop-types": "off",
           "react/no-unescaped-entities": "off"
         }
-      },
-      {
-        "files": [
-          "docs/**"
-        ],
-        "plugins": [
-          "@docusaurus"
-        ],
-        "extends": [
-          "plugin:@docusaurus/recommended"
-        ]
       },
       {
         "files": [
@@ -236,7 +224,6 @@
       {
         "files": [
           "apps/dev/nextjs/app/api/auth/[...nextauth]/route.ts",
-          "docs/{sidebars,docusaurus.config}.js",
           "packages/next-auth/src/lib/env.ts",
           "apps/examples/nextjs/auth.ts"
         ],
