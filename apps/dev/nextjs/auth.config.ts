@@ -5,11 +5,6 @@ import Google from "next-auth/providers/google"
 import Facebook from "next-auth/providers/facebook"
 import Auth0 from "next-auth/providers/auth0"
 import Twitter from "next-auth/providers/twitter"
-import Passkey from "next-auth/providers/passkey"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
 
 declare module "next-auth" {
   /**
@@ -29,7 +24,6 @@ declare module "next-auth" {
 
 export default {
   debug: false,
-  adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
@@ -48,13 +42,6 @@ export default {
     Facebook,
     Auth0,
     Twitter,
-    Passkey({
-      relayingParty: {
-        id: "localhost",
-        name: "Example",
-        origin: "http://localhost:3000",
-      },
-    })
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
@@ -63,7 +50,4 @@ export default {
     },
   },
   basePath: "/auth",
-  experimental: {
-    enableWebAuthn: true
-  }
 } satisfies NextAuthConfig
