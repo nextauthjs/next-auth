@@ -5,9 +5,9 @@ import {
   Browser,
   GithubLogo,
   ArrowRight,
-} from "@phosphor-icons/react";
-import Link from "next/link";
-import Image from "next/image";
+} from "@phosphor-icons/react"
+import Link from "next/link"
+import Image from "next/image"
 
 export function Guides() {
   return (
@@ -17,7 +17,7 @@ export function Guides() {
           <div className="flex justify-between items-center mb-10 w-full">
             <h2 className="text-2xl lg:text-3xl">Highlighted Guides</h2>
             <Link
-              href="/docs"
+              href="/getting-started"
               className="flex gap-2 items-center text-[#289ef9]"
             >
               See all
@@ -151,5 +151,5 @@ export function Guides() {
         </div>
       </div>
     </section>
-  );
+  )
 }

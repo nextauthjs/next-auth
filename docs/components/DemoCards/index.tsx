@@ -1,5 +1,5 @@
-import { Link } from "@/components/Link";
-import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@phosphor-icons/react";
+import { Link } from "@/components/Link"
+import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@phosphor-icons/react"
 
 export function DemoCards() {
   return (
@@ -32,7 +32,7 @@ export function DemoCards() {
       ].map(({ href, name, img, logoWidth, wip, githubHref }) => (
         <div className="flex flex-col gap-2" key={name}>
           <Link
-            href={`/docs/installation?framework=${name.toLowerCase()}`}
+            href={`/getting-started/installation?framework=${name.toLowerCase()}`}
             className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-lg border-slate-200 dark:border-neutral-800 dark:bg-neutral-900"
           >
             <img
@@ -83,5 +83,5 @@ export function DemoCards() {
         <div className="mt-3 text-sm">Add New</div>
       </Link>
     </div>
-  );
+  )
 }

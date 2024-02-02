@@ -1,9 +1,9 @@
-import { DocsThemeConfig } from "nextra-theme-docs";
-import { Link } from "@/components/Link";
-import { ChildrenProps } from "@/utils/types";
-import Footer from "@/components/Footer";
-import { Sparkle } from "@phosphor-icons/react";
-import dynamic from "next/dynamic";
+import { DocsThemeConfig } from "nextra-theme-docs"
+import { Link } from "@/components/Link"
+import { ChildrenProps } from "@/utils/types"
+import Footer from "@/components/Footer"
+import { Sparkle } from "@phosphor-icons/react"
+import dynamic from "next/dynamic"
 
 const InkeepChatButton = dynamic(
   () => import("@/components/InkeepSearch").then((mod) => mod.InkeepTrigger),
@@ -26,7 +26,7 @@ const InkeepChatButton = dynamic(
       </div>
     ),
   }
-);
+)
 
 const config: DocsThemeConfig = {
   logo: (
@@ -107,7 +107,10 @@ const config: DocsThemeConfig = {
     content: (
       <>
         Migrating from NextAuth.js v4? Read{" "}
-        <a style={{ textDecoration: "underline" }} href="/docs/migrating-to-v5">
+        <a
+          style={{ textDecoration: "underline" }}
+          href="/getting-started/migrating-to-v5"
+        >
           <b>our migration guide</b>
         </a>
         .
@@ -123,6 +126,6 @@ const config: DocsThemeConfig = {
   footer: {
     component: <Footer />,
   },
-};
+}
 
-export default config;
+export default config

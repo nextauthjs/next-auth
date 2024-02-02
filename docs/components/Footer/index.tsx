@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import cx from "classnames";
+import { useEffect } from "react"
+import cx from "classnames"
 
 function kFormatter(num: number) {
-  return (Math.sign(num) * (Math.abs(num) / 1000)).toFixed(1) + "k";
+  return (Math.sign(num) * (Math.abs(num) / 1000)).toFixed(1) + "k"
 }
 
 export function Footer({ className = "" }) {
@@ -10,12 +10,12 @@ export function Footer({ className = "" }) {
     fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
-        const githubStat = document.querySelector(".github-counter");
-        githubStat.innerHTML = kFormatter(data.stargazers_count);
+        const githubStat = document.querySelector(".github-counter")
+        githubStat.innerHTML = kFormatter(data.stargazers_count)
       })
       // eslint-disable-next-line no-console
-      .catch((e) => console.error(e));
-  }, []);
+      .catch((e) => console.error(e))
+  }, [])
   return (
     <div
       className={cx(
@@ -28,7 +28,7 @@ export function Footer({ className = "" }) {
           <h3 className="mb-4 text-lg font-black">About Auth.js</h3>
           <ul className="flex flex-col gap-2">
             <li>
-              <a href="/docs">Introduction</a>
+              <a href="/getting-started">Introduction</a>
             </li>
             <li>
               <a
@@ -81,7 +81,7 @@ export function Footer({ className = "" }) {
         Auth.js &copy; Balázs Orbán and Team - {new Date().getFullYear()}
       </div>
     </div>
-  );
+  )
 }
 
-export default Footer;
+export default Footer
