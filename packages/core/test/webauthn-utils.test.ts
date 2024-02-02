@@ -21,7 +21,6 @@ import {
   toBase64,
   stringToTransports,
   transportsToString,
-  getRelayingParty,
 
 } from "../src/lib/utils/webauthn-utils"
 import { webauthnChallenge } from "../src/lib/actions/callback/oauth/checks"
@@ -159,7 +158,7 @@ function prepareVerifyTest(action: WebAuthnAction, requestData?: Record<string, 
   const user = { id: authenticator.userId, email: "user@example.com" } as unknown as AdapterUser
   vi.mocked(options.adapter.getUser).mockResolvedValue(user)
 
-  const rp = getRelayingParty(options)
+  const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
   const expectedAuthenticationResponse = {
     ...defaultWebAuthnConfig.verifyAuthenticationOptions,
     expectedChallenge: challenge,
@@ -286,7 +285,7 @@ describe("transportsToString", () => {
 describe("getRelayingParty", () => {
   it("returns relaying party with default values", () => {
     const options = getMockOptions()
-    const relayingParty = getRelayingParty(options)
+    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
 
     expect(relayingParty).toEqual({
       id: options.url.hostname,
@@ -303,7 +302,7 @@ describe("getRelayingParty", () => {
         origin: "https://custom.com",
       }
     })
-    const relayingParty = getRelayingParty(options)
+    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
 
     expect(relayingParty).toEqual({
       id: "my-id",
@@ -319,12 +318,55 @@ describe("getRelayingParty", () => {
         origin: "https://custom.com",
       }
     })
-    const relayingParty = getRelayingParty(options)
+    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
 
     expect(relayingParty).toEqual({
       id: "my-id",
       name: options.url.host,
       origin: "https://custom.com",
+    })
+  })
+
+  it("uses the first value if array by default", () => {
+    const options = getMockOptions({}, {
+      relayingParty: {
+        id: ["other-id", "my-id"],
+        name: ["Other Relaying Party", "My Relaying Party"],
+        origin: ["https://other.com", "https://custom.com"],
+      }
+    })
+    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
+
+    expect(relayingParty).toEqual({
+      id: "other-id",
+      name: "Other Relaying Party",
+      origin: "https://other.com",
+    })
+  })
+
+  it("accepts custom getRelayingParty function", () => {
+    const options = getMockOptions({}, {
+      relayingParty: {
+        id: "my-id",
+        origin: "https://custom.com",
+      },
+      getRelayingParty: (opts, req) => {
+        const id = opts.provider.relayingParty!.id as string
+        return {
+          id,
+          name: req.url.host,
+          origin: req.url.origin,
+        }
+      }
+    })
+    const relayingParty = options.provider.getRelayingParty(options, {
+      url: new URL("https://myapp.com"),
+    } as RequestInternal)
+
+    expect(relayingParty).toEqual({
+      id: "my-id",
+      name: "myapp.com",
+      origin: "https://myapp.com",
     })
   })
 })
@@ -426,7 +468,7 @@ describe("getRegistrationResponse", () => {
     vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
@@ -443,7 +485,7 @@ describe("getRegistrationResponse", () => {
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse("register", returnedOptions, cookies)
 
-    expect(await getRegistrationResponse(options, user, cookies)).toEqual(expectedResponse)
+    expect(await getRegistrationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
     expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
@@ -470,7 +512,7 @@ describe("getRegistrationResponse", () => {
     vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
@@ -492,7 +534,7 @@ describe("getRegistrationResponse", () => {
     }
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
-    expect(await getRegistrationResponse(options, user)).toEqual(expectedResponse)
+    expect(await getRegistrationResponse(options, {} as RequestInternal, user)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
     expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
@@ -506,7 +548,7 @@ describe("getRegistrationResponse", () => {
 
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
@@ -518,7 +560,7 @@ describe("getRegistrationResponse", () => {
     }
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
-    expect(await getRegistrationResponse(options, user)).toEqual(expectedResponse)
+    expect(await getRegistrationResponse(options, {} as RequestInternal, user)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
     expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
@@ -532,7 +574,7 @@ describe("getRegistrationResponse", () => {
 
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
@@ -544,7 +586,7 @@ describe("getRegistrationResponse", () => {
     }
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
-    expect(await getRegistrationResponse(options, user)).toEqual(expectedResponse)
+    expect(await getRegistrationResponse(options, {} as RequestInternal, user)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
     expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
@@ -563,7 +605,7 @@ describe("getAuthenticationResponse", () => {
     vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
@@ -576,7 +618,7 @@ describe("getAuthenticationResponse", () => {
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse("authenticate", returnedOptions, cookies)
 
-    expect(await getAuthenticationResponse(options, user, cookies)).toEqual(expectedResponse)
+    expect(await getAuthenticationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge")
     expect(generateAuthenticationOptions).toHaveBeenCalledWith(expectedOptionsParams)
@@ -600,7 +642,7 @@ describe("getAuthenticationResponse", () => {
     vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
@@ -618,7 +660,7 @@ describe("getAuthenticationResponse", () => {
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse("authenticate", returnedOptions, cookies)
 
-    expect(await getAuthenticationResponse(options, user, cookies)).toEqual(expectedResponse)
+    expect(await getAuthenticationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge")
     expect(generateAuthenticationOptions).toHaveBeenCalledWith(expectedOptionsParams)
@@ -632,7 +674,7 @@ describe("getAuthenticationResponse", () => {
 
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
-    const rp = getRelayingParty(options)
+    const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
@@ -641,7 +683,7 @@ describe("getAuthenticationResponse", () => {
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse("authenticate", returnedOptions, cookies)
 
-    expect(await getAuthenticationResponse(options, user, cookies)).toEqual(expectedResponse)
+    expect(await getAuthenticationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
 
     expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge")
     expect(generateAuthenticationOptions).toHaveBeenCalledWith(expectedOptionsParams)

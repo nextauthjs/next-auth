@@ -18,6 +18,15 @@ export type RelayingParty = {
   origin: string
 }
 
+type RelayingPartyArray = {
+  /** Relaying Party ID. Use the website's domain name. */
+  id: string | string[]
+  /** Relaying Party name. Use the website's name. */
+  name: string | string[]
+  /** Relaying Party origin. Use the website's origin. */
+  origin: string | string[]
+}
+
 export type GetUserInfo = (
   options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
@@ -42,7 +51,11 @@ export interface WebAuthnConfig extends CommonProviderOptions {
    * 
    * If not provided, the request URL will be used.
    **/
-  relayingParty?: Partial<RelayingParty>
+  relayingParty?: Partial<RelayingPartyArray>
+  /**
+   * Function that returns the relaying party for the current request.
+   */
+  getRelayingParty: (options: InternalOptions<WebAuthnProviderType>, request: RequestInternal) => RelayingParty
   /**
    * Enable conditional UI.
    * 
@@ -69,7 +82,7 @@ export interface WebAuthnConfig extends CommonProviderOptions {
   /**
    * Registration options that are passed to @simplewebauthn during registration.
    */
-  registrationOptions?: Partial<ConfigurableRegistrationOptions>
+  registrationOptions: Partial<ConfigurableRegistrationOptions>
   /**
    * Verify Authentication options that are passed to @simplewebauthn during authentication.
    */
@@ -150,6 +163,7 @@ export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfi
     formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
     simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
     getUserInfo,
+    getRelayingParty,
     ...config,
     type: "webauthn",
   }
@@ -210,4 +224,31 @@ export function getSimpleWebAuthnBrowserScriptTag(config: WebAuthnConfig) {
     return ""
 
   return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.es5.umd.min.js" crossorigin="anonymous"></script>`
+}
+
+/**
+ * Retrieves the relaying party information based on the provided options.
+ * If the relaying party information is not provided, it falls back to using the URL information.
+ *
+ * @param options - The options object containing the provider and URL information.
+ * @returns The relaying party object with the ID, name, and origin.
+ */
+function getRelayingParty(options: InternalOptions<WebAuthnProviderType>): RelayingParty {
+  const { provider, url } = options
+  const { relayingParty } = provider
+  const id = relayingParty && relayingParty.id ?
+    (Array.isArray(relayingParty.id) ? relayingParty.id[0] : relayingParty.id) :
+    url.hostname
+  const name = relayingParty && relayingParty.name ?
+    (Array.isArray(relayingParty.name) ? relayingParty.name[0] : relayingParty.name) :
+    url.host
+  const origin = relayingParty && relayingParty.origin ?
+    (Array.isArray(relayingParty.origin) ? relayingParty.origin[0] : relayingParty.origin) :
+    url.origin
+
+  return {
+    id,
+    name,
+    origin,
+  }
 }

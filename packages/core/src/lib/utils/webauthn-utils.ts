@@ -107,17 +107,19 @@ export function inferWebAuthnOptions(
  * Retrieves the registration response for WebAuthn options request.
  * 
  * @param options - The internal options for WebAuthn.
+ * @param request - The request object.
  * @param user - The user information.
  * @param resCookies - Optional cookies to be included in the response.
  * @returns A promise that resolves to the WebAuthnOptionsResponse.
  */
 export async function getRegistrationResponse(
   options: InternalOptionsWebAuthn,
+  request: RequestInternal,
   user: User & { email: string },
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get registration options
-  const regOptions = await getRegistrationOptions(options, user)
+  const regOptions = await getRegistrationOptions(options, request, user)
   // Get signed cookie
   const { cookie } = await webauthnChallenge.create(options, regOptions.challenge, user)
 
@@ -138,17 +140,19 @@ export async function getRegistrationResponse(
  * Retrieves the authentication response for WebAuthn options request.
  * 
  * @param options - The internal options for WebAuthn.
+ * @param request - The request object.
  * @param user - Optional user information.
  * @param resCookies - Optional array of cookies to be included in the response.
  * @returns A promise that resolves to a WebAuthnOptionsResponse object.
  */
 export async function getAuthenticationResponse(
   options: InternalOptionsWebAuthn,
+  request: RequestInternal,
   user?: User,
   resCookies?: Cookie[]
 ): Promise<WebAuthnOptionsResponse> {
   // Get authentication options
-  const authOptions = await getAuthenticationOptions(options, user)
+  const authOptions = await getAuthenticationOptions(options, request, user)
   // Get signed cookie
   const { cookie } = await webauthnChallenge.create(options, authOptions.challenge)
 
@@ -193,7 +197,7 @@ export async function verifyAuthenticate(
   // Verify the response
   let verification: VerifiedAuthenticationResponse
   try {
-    const relayingParty = getRelayingParty(options)
+    const relayingParty = provider.getRelayingParty(options, request)
     verification = await verifyAuthenticationResponse({
       ...provider.verifyAuthenticationOptions,
       expectedChallenge,
@@ -269,7 +273,7 @@ export async function verifyRegister(
   // Verify the response
   let verification: VerifiedRegistrationResponse
   try {
-    const relayingParty = getRelayingParty(options)
+    const relayingParty = provider.getRelayingParty(options, request)
     verification = await verifyRegistrationResponse({
       ...provider.verifyRegistrationOptions,
       expectedChallenge,
@@ -317,10 +321,11 @@ export async function verifyRegister(
  * Generates WebAuthn authentication options.
  * 
  * @param options - The internal options for WebAuthn.
+ * @param request - The request object.
  * @param user - Optional user information.
  * @returns The authentication options.
  */
-async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?: User) {
+async function getAuthenticationOptions(options: InternalOptionsWebAuthn, request: RequestInternal, user?: User) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
@@ -328,7 +333,7 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?:
     await adapter.listAuthenticatorsByUserId(user.id) :
     null
 
-  const relayingParty = getRelayingParty(options)
+  const relayingParty = provider.getRelayingParty(options, request)
 
   // Return the authentication options.
   return await generateAuthenticationOptions({
@@ -347,10 +352,15 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, user?:
  * Generates WebAuthn registration options.
  * 
  * @param options - The internal options for WebAuthn.
+ * @param request - The request object.
  * @param user - The user information.
  * @returns The registration options.
  */
-async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: User & { email: string }) {
+async function getRegistrationOptions(
+  options: InternalOptionsWebAuthn,
+  request: RequestInternal,
+  user: User & { email: string }
+) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
@@ -362,7 +372,7 @@ async function getRegistrationOptions(options: InternalOptionsWebAuthn, user: Us
   // Authenticator object and fetch it via it's credential ID.
   const userID = randomString(32)
 
-  const relayingParty = getRelayingParty(options)
+  const relayingParty = provider.getRelayingParty(options, request)
 
   // Return the registration options.
   return await generateRegistrationOptions({
@@ -419,22 +429,4 @@ export function transportsToString(transports: InternalAuthenticator["transports
 
 export function stringToTransports(tstring: string | undefined): InternalAuthenticator["transports"] {
   return tstring ? tstring.split(",") as InternalAuthenticator["transports"] : undefined
-}
-
-/**
- * Retrieves the relaying party information based on the provided options.
- * If the relaying party information is not provided, it falls back to using the URL information.
- *
- * @param options - The options object containing the provider and URL information.
- * @returns The relaying party object with the ID, name, and origin.
- */
-export function getRelayingParty(options: InternalOptions<WebAuthnProviderType>): RelayingParty {
-  const { provider, url } = options
-  const { relayingParty } = provider
-
-  return {
-    id: relayingParty?.id ?? url.hostname,
-    name: relayingParty?.name ?? url.host,
-    origin: relayingParty?.origin ?? url.origin,
-  }
 }

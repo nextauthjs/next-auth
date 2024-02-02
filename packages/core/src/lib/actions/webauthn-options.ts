@@ -50,10 +50,10 @@ export async function webAuthnOptions(
 
   switch (decision) {
     case "authenticate":
-      return getAuthenticationResponse(narrowOptions, userInfo, cookies)
+      return getAuthenticationResponse(narrowOptions, request, userInfo, cookies)
     case "register":
       if (typeof userInfo?.email === "string") {
-        return getRegistrationResponse(narrowOptions, userInfo as User & { email: string }, cookies)
+        return getRegistrationResponse(narrowOptions, request, userInfo as User & { email: string }, cookies)
       }
     default:
       return {
