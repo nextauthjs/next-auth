@@ -205,14 +205,14 @@ export function assertConfig(
 
   let requiredMethods: (keyof Adapter)[] = []
 
-  if (hasEmail) {
-    if (!adapter) return new MissingAdapter("Email login requires an adapter.")
-    requiredMethods.push(...emailMethods)
-  }
-
-  if (session?.strategy === "database" || (!session?.strategy && adapter)) {
-    if (!adapter) return new MissingAdapter("Database session requires an adapter.")
-    requiredMethods.push(...sessionMethods)
+  if (hasEmail || session?.strategy === "database" || (!session?.strategy && adapter)) {
+    if (hasEmail) {
+      if (!adapter) return new MissingAdapter("Email login requires an adapter.")
+      requiredMethods.push(...emailMethods)
+    } else {
+      if (!adapter) return new MissingAdapter("Database session requires an adapter.")
+      requiredMethods.push(...sessionMethods)
+    }
   }
 
   if (hasWebAuthn) {
