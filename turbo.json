@@ -34,9 +34,12 @@
       ],
       "outputMode": "new-only"
     },
-    "e2e": {
+    "test:e2e": {
       "outputs": [
-        "playwright-report/**"
+        "blob-report/**",
+        "playwright-report/**",
+        "playwright/.cache/**",
+        "test-results/**"
       ]
     },
     "@auth/upstash-redis-adapter#test": {
