@@ -31,7 +31,7 @@ export type AccountDoc<T = string> = {
   userId: T
   refresh_token?: string
   access_token?: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
+  type: Extract<ProviderType, "oauth" | "oidc" | "email">
   provider: string
   providerAccountId: string
   expires_at?: number

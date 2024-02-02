@@ -1192,7 +1192,6 @@ enum provider_type_enum {
   email
   oauth
   oidc
-  webauthn
 }
 
 """
