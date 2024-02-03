@@ -97,8 +97,8 @@ jobs:
       - name: Run E2E tests
         if: github.repository == 'nextauthjs/next-auth'
         run: |
-          pnpm exec playwright install --with-deps &&
-          cd apps/dev/nextjs && pnpm build &&
+          pnpm exec playwright install --with-deps
+          cd apps/dev/nextjs && pnpm build
           pnpm test:e2e
         timeout-minutes: 15
         env:
