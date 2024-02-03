@@ -1,3 +1,4 @@
+import nanoid from "nanoid";
 import { eq, and } from "drizzle-orm"
 import {
   integer,
@@ -78,7 +79,7 @@ export function SQLiteDrizzleAdapter(
     async createUser(data) {
       return await client
         .insert(users)
-        .values({ ...data, id: crypto.randomUUID() })
+        .values({ ...data, id: nanoid() })
         .returning()
         .get()
     },
