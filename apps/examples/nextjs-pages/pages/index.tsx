@@ -1,7 +1,6 @@
 import CustomLink from "@/components/custom-link"
 
 export default function Index({ packageJSON }) {
-  // export default function Index() {
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
@@ -30,6 +29,8 @@ export default function Index({ packageJSON }) {
 export const getServerSideProps = async () => {
   const packageJSON = await import("../package.json")
   return {
-    data: packageJSON.default,
+    props: {
+      packageJSON: packageJSON.default,
+    },
   }
 }
