@@ -6,6 +6,8 @@ import swc from "unplugin-swc"
 // https://vitejs.dev/config/
 export default defineConfig({
   test: {
+    // NOTE: `.spec` is reserved for Playwright tests
+    include: ["**/*.test.?(c|m)[jt]s?(x)"],
     coverage: {
       all: true,
       enabled: true,
