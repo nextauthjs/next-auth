@@ -107,7 +107,10 @@
 .header {
   border-radius: 0 0 0.6rem 0.6rem;
   margin-bottom: 2rem;
-  width: 100%;
+
+  @media screen and (max-width: 960px) {
+    padding: 0 1rem;
+  }
 }
 
 .passwordInput {

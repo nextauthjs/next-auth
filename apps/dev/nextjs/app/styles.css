@@ -14,7 +14,7 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  max-width: 968px;
+  max-width: 960px;
   margin: 0 auto;
   background: #fff;
   color: var(--color-text);
@@ -57,6 +57,10 @@ h6 {
 
 main {
   flex-grow: 1;
+
+  @media screen and (max-width: 960px) {
+    padding: 0 1rem;
+  }
 }
 
 .container {
@@ -96,6 +100,8 @@ main {
     background-color: #ccc;
     padding: 1rem;
     border-radius: 0.5rem;
+    word-break: break-all;
+    white-space: pre-wrap;
   }
 
   .btn-wrapper {

@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <ul className={styles.navItems}>
-        <div className={styles.navItems}>
+        <div className={styles.navItemsLeft}>
           <li className={styles.navItem}>
             <a href="https://authjs.dev">Documentation</a>
             <svg
@@ -65,7 +65,7 @@ export default function Footer() {
             <Link href="/policy">Policy</Link>
           </li>
         </div>
-        <li className={styles.navItem}>
+        <li className={styles.navItem} style={{ margin: "0" }}>
           <img
             className={styles.footerLogo}
             src="https://authjs.dev/img/logo/logo-sm.webp"

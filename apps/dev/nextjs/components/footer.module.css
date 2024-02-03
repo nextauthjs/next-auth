@@ -1,13 +1,28 @@
 .footer {
-  margin: 2rem 0 2rem 0;
+  margin: 0;
+  padding: 0 1rem 0 1rem;
+
+  @media screen and (min-width: 960px) {
+    padding: 0;
+  }
 }
 
 .navItems {
-  padding: 0;
+  padding: 2rem 0rem 2rem 0rem;
+  margin: 0;
   list-style: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.navItemsLeft {
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 460px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .navItem {
