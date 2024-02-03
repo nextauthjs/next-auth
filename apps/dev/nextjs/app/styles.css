@@ -72,11 +72,11 @@ main {
 }
 
 .card {
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   background-color: #f3f3f3;
 
   .card-header {
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 0.75rem 0.75rem 0 0;
     background-color: #dfdfdf;
     padding: 1.1rem;
   }
@@ -112,7 +112,7 @@ main {
   button {
     justify-self: end;
     font-weight: 500;
-    border-radius: 0.3rem;
+    border-radius: 0.5rem;
     border: none;
     font-weight: bold;
     cursor: pointer;
