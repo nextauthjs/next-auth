@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test"
+import { test, expect, type Page } from "@playwright/test"
 // import v8toIstanbul from "v8-to-istanbul"
 // import { writeFile } from "fs/promises"
 
