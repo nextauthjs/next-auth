@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test"
+import { test, expect } from "@playwright/test"
 // import v8toIstanbul from "v8-to-istanbul"
 // import { writeFile } from "fs/promises"
 
@@ -19,12 +19,14 @@ async function withCoverage(page: Page, fn: () => Promise<void>) {
   // }
 }
 
-test("Basic login", async ({ page }) => {
+test("Basic auth", async ({ page, browser }) => {
   if (
     !process.env.TEST_KEYCLOAK_USERNAME ||
     !process.env.TEST_KEYCLOAK_PASSWORD
   )
     throw new TypeError("Incorrect TEST_KEYCLOAK_{USERNAME,PASSWORD}")
+
+  // Login
 
   // await withCoverage(page, async () => {
   await page.goto("http://localhost:3000/auth/signin")
@@ -37,6 +39,7 @@ test("Basic login", async ({ page }) => {
   await page.getByRole("button", { name: "Sign In" }).click()
   await page.waitForURL("http://localhost:3000")
   const session = await page.locator("pre").textContent()
+
   expect(JSON.parse(session ?? "{}")).toEqual({
     user: {
       email: "bob@alice.com",
@@ -45,5 +48,15 @@ test("Basic login", async ({ page }) => {
     },
     expires: expect.any(String),
   })
+
+  // Logout
+  await page.getByText("Sign out").click()
+  await page
+    .locator("header")
+    .getByRole("button", { name: "Sign in", exact: true })
+    .waitFor()
+  await page.goto("http://localhost:3000/auth/session")
+
+  expect(await page.locator("html").textContent()).toBe("null")
   // })
 })
