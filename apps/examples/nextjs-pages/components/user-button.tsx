@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
-// import { auth } from "auth"
 import { useSession } from "next-auth/react"
 import {
   DropdownMenu,
@@ -11,7 +10,7 @@ import {
 } from "./ui/dropdown-menu"
 import { SignIn, SignOut } from "./auth-components"
 
-export default async function UserButton() {
+export default function UserButton() {
   const { data: session } = useSession()
   if (!session?.user) return <SignIn />
   return (

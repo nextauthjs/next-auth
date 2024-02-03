@@ -12,14 +12,13 @@ export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
-  console.log("_app.session", { pageProps, session })
   return (
     <SessionProvider session={session}>
       <div className={inter.className}>
+        <Header />
         <Component {...pageProps} />
+        <Footer />
       </div>
     </SessionProvider>
   )
-  // <Header />
-  // <Footer />
 }
