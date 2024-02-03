@@ -107,6 +107,7 @@ jobs:
           AUTH_KEYCLOAK_ID: ${{ secrets.AUTH_KEYCLOAK_ID }}
           AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
+          AUTH_TRUST_HOST: 1
       - uses: actions/upload-artifact@v3
         with:
           name: playwright-report
