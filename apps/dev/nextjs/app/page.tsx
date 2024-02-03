@@ -16,14 +16,16 @@ export default async function Page() {
           <h3>Server Action</h3>
         </div>
         <div className="card-body">
-          <form
-            action={async () => {
-              "use server"
-              update({ user: { name: "Server Fill Murray" } })
-            }}
-          >
-            <button>Update Session - New Name</button>
-          </form>
+          {session ? (
+            <form
+              action={async () => {
+                "use server"
+                update({ user: { name: "Server Fill Murray" } })
+              }}
+            >
+              <button>Update Session - New Name</button>
+            </form>
+          ) : null}
         </div>
         <div className="card-footer">
           Note: The "Sign in" button in the header is using{" "}

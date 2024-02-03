@@ -14,11 +14,13 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  padding: 0 1rem 1rem 1rem;
   max-width: 968px;
   margin: 0 auto;
   background: #fff;
   color: var(--color-text);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 li,
@@ -53,6 +55,10 @@ h6 {
   margin: 0;
 }
 
+main {
+  flex-grow: 1;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -72,7 +78,11 @@ h6 {
   }
 
   .card-body {
-    padding: 1.1rem;
+    padding-bottom: 1.1rem;
+
+    &:has(button) {
+      padding: 1.1rem;
+    }
   }
 
   .card-footer {

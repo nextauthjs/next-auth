@@ -1,14 +1,34 @@
 .footer {
-  margin-top: 2rem;
+  margin: 2rem 0 2rem 0;
 }
 
 .navItems {
-  margin-bottom: 1rem;
   padding: 0;
   list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navItem {
   display: inline-block;
   margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+.navItem a {
+  color: black;
+  font-weight: 300;
+  text-decoration: none;
+}
+.navItem svg {
+  margin-left: 0.2rem;
+  height: 16px;
+  width: 16px;
+}
+
+.footerLogo {
+  height: 24px;
+  width: 24px;
+  margin-right: 0.5rem;
 }
