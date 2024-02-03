@@ -45,7 +45,8 @@
     "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
   },
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "nanoid": "^5.0.5"
   },
   "devDependencies": {
     "@libsql/client": "0.4.0-pre.5",
