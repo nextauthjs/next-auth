@@ -20,7 +20,7 @@ const UpdateForm = () => {
               ...session,
               user: { ...session.user, name },
             })
-            console.log({ newSession })
+            console.log("new Sesh", { newSession })
           }
         }}
         className="flex items-center space-x-2 w-full max-w-sm"

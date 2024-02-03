@@ -1,4 +1,5 @@
 {
+  "name": "next-auth-pages-example",
   "private": true,
   "description": "An example project for NextAuth.js with Next.js Pages",
   "repository": "https://github.com/nextauthjs/next-auth-pages-example.git",
@@ -28,7 +29,7 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.274.0",
     "next": "latest",
-    "next-auth": "beta",
+    "next-auth": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",
