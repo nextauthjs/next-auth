@@ -94,10 +94,6 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
-      - uses: codecov/codecov-action@v3
-        name: Coverage
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
       - name: Run E2E tests
         if: github.repository == 'nextauthjs/next-auth'
         run: \
@@ -111,8 +107,10 @@ jobs:
           AUTH_KEYCLOAK_ID: ${{ secrets.AUTH_KEYCLOAK_ID }}
           AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      - uses: codecov/codecov-action@v3
+        name: Coverage
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   release-branch:
     name: Publish branch
