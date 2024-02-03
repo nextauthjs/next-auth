@@ -654,9 +654,9 @@ importers:
       postcss:
         specifier: 8.4.19
         version: 8.4.19
-      postcss-nested:
-        specifier: 6.0.0
-        version: 6.0.0(postcss@8.4.19)
+      postcss-nesting:
+        specifier: ^12.0.2
+        version: 12.0.2(postcss@8.4.19)
 
   packages/frameworks-express:
     dependencies:
@@ -3219,6 +3219,15 @@ packages:
     engines: {node: '>=v14'}
     dependencies:
       chalk: 4.1.2
+    dev: true
+
+  /@csstools/selector-specificity@3.0.1(postcss-selector-parser@6.0.15):
+    resolution: {integrity: sha512-NPljRHkq4a14YzZ3YD406uaxh7s0g6eAq3L9aLOWywoqe8PkYamAvtsh7KNX6c++ihDrJ0RiU+/z7rGnhlZ5ww==}
+    engines: {node: ^14 || ^16 || >=18}
+    peerDependencies:
+      postcss-selector-parser: ^6.0.13
+    dependencies:
+      postcss-selector-parser: 6.0.15
     dev: true
 
   /@dabh/diagnostics@2.0.3:
@@ -20486,12 +20495,13 @@ packages:
       postcss: 8.4.33
     dev: true
 
-  /postcss-nested@6.0.0(postcss@8.4.19):
-    resolution: {integrity: sha512-0DkamqrPcmkBDsLn+vQDIrtkSbNkv5AD/M322ySo9kqFkCIYklym2xEmWkwo+Y3/qZo34tzEPNUw4y7yMCdv5w==}
-    engines: {node: '>=12.0'}
+  /postcss-nesting@12.0.2(postcss@8.4.19):
+    resolution: {integrity: sha512-63PpJHSeNs93S3ZUIyi+7kKx4JqOIEJ6QYtG3x+0qA4J03+4n0iwsyA1GAHyWxsHYljQS4/4ZK1o2sMi70b5wQ==}
+    engines: {node: ^14 || ^16 || >=18}
     peerDependencies:
-      postcss: ^8.2.14
+      postcss: ^8.4
     dependencies:
+      '@csstools/selector-specificity': 3.0.1(postcss-selector-parser@6.0.15)
       postcss: 8.4.19
       postcss-selector-parser: 6.0.15
     dev: true
