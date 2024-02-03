@@ -43,8 +43,10 @@ export interface EmailConfig extends CommonProviderOptions {
   }) => Awaitable<void>
   /** Used to hash the verification token. */
   secret?: string
-  /** Used with HTTP-based email providers  */
+  /** Used with HTTP-based email providers. */
   apiKey?: string
+  /** Used with SMTP-based email providers. */
+  server?: NodemailerConfig["server"]
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
   options: EmailUserConfig
