@@ -1,3 +1,4 @@
+import nanoid from "nanoid";
 import { and, eq } from "drizzle-orm"
 import {
   int,
@@ -85,7 +86,7 @@ export function mySqlDrizzleAdapter(
 
   return {
     async createUser(data) {
-      const id = crypto.randomUUID()
+      const id = nanoid();
 
       await client.insert(users).values({ ...data, id })
 
