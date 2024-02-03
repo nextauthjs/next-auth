@@ -98,7 +98,7 @@ jobs:
         if: github.repository == 'nextauthjs/next-auth'
         run: |
           pnpm exec playwright install --with-deps
-          cd apps/dev/nextjs && pnpm build
+          pnpm build:app
           pnpm test:e2e
         timeout-minutes: 15
         env:
