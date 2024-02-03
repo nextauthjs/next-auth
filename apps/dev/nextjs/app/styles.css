@@ -15,7 +15,7 @@ body {
     "Segoe UI Symbol",
     "Noto Color Emoji";
   padding: 0 1rem 1rem 1rem;
-  max-width: 680px;
+  max-width: 968px;
   margin: 0 auto;
   background: #fff;
   color: var(--color-text);
@@ -24,6 +24,7 @@ body {
 li,
 p {
   line-height: 1.5rem;
+  margin: 0;
 }
 
 a {
@@ -41,4 +42,75 @@ iframe {
   width: 100%;
   border-radius: 0.5rem;
   filter: invert(1);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.card {
+  border-radius: 1rem;
+  background-color: #f3f3f3;
+
+  .card-header {
+    border-radius: 1rem 1rem 0 0;
+    background-color: #dfdfdf;
+    padding: 1.1rem;
+  }
+
+  .card-body {
+    padding: 1.1rem;
+  }
+
+  .card-footer {
+    padding: 1.1rem;
+    padding-top: 0;
+    color: #777;
+    font-style: italic;
+  }
+
+  pre {
+    background-color: #ccc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .btn-wrapper {
+    display: flex;
+    gap: 1rem;
+  }
+
+  button {
+    justify-self: end;
+    font-weight: 500;
+    border-radius: 0.3rem;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.4rem;
+    padding: 0.7rem 0.8rem;
+    position: relative;
+    z-index: 10;
+    background-color: #d5d5d5;
+    color: black;
+    text-decoration: none;
+    padding: 0.7rem 1.4rem;
+  }
+  button:hover {
+    background-color: #ccc;
+  }
 }
