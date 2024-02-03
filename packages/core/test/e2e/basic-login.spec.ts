@@ -39,9 +39,9 @@ test("Basic login", async ({ page }) => {
   const session = await page.locator("pre").textContent()
   expect(JSON.parse(session ?? "{}")).toEqual({
     user: {
-      email: "info@balazsorban.com",
-      name: "Balázs Orbán",
-      image: "https://avatars.githubusercontent.com/u/18369201?v=4",
+      email: "bob@alice.com",
+      name: "Bob Alice",
+      image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
     },
     expires: expect.any(String),
   })
