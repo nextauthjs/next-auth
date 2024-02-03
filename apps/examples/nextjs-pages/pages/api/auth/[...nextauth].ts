@@ -6,10 +6,10 @@ const handler = async (req, res) => {
 
   switch (method) {
     case "GET":
-      GET(req)
+      res.send(GET(req))
       break
     case "POST":
-      POST(req)
+      res.send(POST(req))
       break
   }
 }
