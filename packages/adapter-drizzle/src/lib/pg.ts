@@ -1,3 +1,4 @@
+import nanoid from "nanoid";
 import { and, eq } from "drizzle-orm"
 import {
   timestamp,
@@ -79,7 +80,7 @@ export function pgDrizzleAdapter(
     async createUser(data) {
       return await client
         .insert(users)
-        .values({ ...data, id: crypto.randomUUID() })
+        .values({ ...data, id: nanoid() })
         .returning()
         .then((res) => res[0] ?? null)
     },
