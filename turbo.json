@@ -2,6 +2,9 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
+      "inputs": [
+        "src/**"
+      ],
       "dependsOn": [
         "^build"
       ],
