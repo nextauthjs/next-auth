@@ -6,6 +6,7 @@ const handler = async (req, res) => {
   const webRequest = {
     ...req,
     headers: new Headers(req.headers),
+    url: new URL(`http://${req.headers["x-forwarded-host"]}${req.url}`),
   }
 
   switch (method) {
