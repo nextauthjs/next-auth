@@ -4,8 +4,11 @@ import SessionData from "@/components/session-data"
 // import { getSession } from "next-auth/react"
 import type { Session } from "next-auth"
 import type { GetServerSidePropsContext } from "next"
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next"
 
-export default function Page({ session }: { session: Session }) {
+export default function Page({
+  serverSession: session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
       <h1 className="text-3xl font-bold">
@@ -23,18 +26,16 @@ export default function Page({ session }: { session: Session }) {
   )
 }
 
-export const getServerSideProps = async (
+export const getServerSideProps = (async (
   context: GetServerSidePropsContext
 ) => {
   // const session = await getSession()
   const url = `${context.req.headers["x-forwarded-proto"]}://${context.req.headers.host}/api/auth/session`
 
   // TODO: Test while working on other methods
-  const sessionRes = await fetch(url)
-  const session = await sessionRes.json()
-  return {
-    props: {
-      session,
-    },
-  }
-}
+  const sessionRes = await fetch(url, {
+    headers: new Headers(context.req.headers as Record<string, string>),
+  })
+  const serverSession: Session = await sessionRes.json()
+  return { props: { serverSession } }
+}) as GetServerSideProps<{ serverSession: Session }>

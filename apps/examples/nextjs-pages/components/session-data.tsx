@@ -1,6 +1,7 @@
 import type { Session } from "next-auth"
 
 export default function SessionData({ session }: { session: Session | null }) {
+  console.log("session-data.session", session)
   if (session?.user) {
     return (
       <div className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
