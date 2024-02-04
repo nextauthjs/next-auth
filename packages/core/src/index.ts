@@ -55,8 +55,9 @@ import type {
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
+import { isAuthAction } from "./lib/utils/actions.js"
 
-export { skipCSRFCheck, raw, setEnvDefaults, createActionURL }
+export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
   request: Request,
