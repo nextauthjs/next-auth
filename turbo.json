@@ -6,6 +6,7 @@
         "^build"
       ],
       "outputs": [
+        ".next",
         "dist/**",
         "lib/**",
         "providers/**",
