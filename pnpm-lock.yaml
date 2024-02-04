@@ -67,6 +67,9 @@ importers:
       eslint-plugin-svelte3:
         specifier: ^4.0.0
         version: 4.0.0(eslint@8.30.0)(svelte@3.59.2)
+      fake-smtp-server:
+        specifier: ^0.8.0
+        version: 0.8.0
       prettier:
         specifier: 3.1.1
         version: 3.1.1
@@ -119,9 +122,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.8
         version: 18.2.18
-      fake-smtp-server:
-        specifier: ^0.8.0
-        version: 0.8.0
       prisma:
         specifier: ^5
         version: 5.8.1
@@ -134,6 +134,9 @@ importers:
       '@auth/sveltekit':
         specifier: workspace:*
         version: link:../../../packages/frameworks-sveltekit
+      nodemailer:
+        specifier: ^6.9.3
+        version: 6.9.8
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: next

@@ -20,7 +20,8 @@
     "vite": "^5"
   },
   "dependencies": {
-    "@auth/sveltekit": "workspace:*"
+    "@auth/sveltekit": "workspace:*",
+    "nodemailer": "^6.9.3"
   },
   "type": "module"
 }
