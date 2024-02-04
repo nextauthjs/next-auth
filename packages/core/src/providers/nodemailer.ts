@@ -1,5 +1,6 @@
 import { createTransport } from "nodemailer"
-import { EmailConfig, html, text } from "./email"
+import { EmailConfig, html, text } from "./email.js"
+import { AuthError } from "../errors.js"
 
 import type { Transport, TransportOptions } from "nodemailer"
 import * as JSONTransport from "nodemailer/lib/json-transport/index.js"
@@ -8,7 +9,7 @@ import * as SESTransport from "nodemailer/lib/ses-transport/index.js"
 import * as SMTPTransport from "nodemailer/lib/smtp-transport/index.js"
 import * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
 import * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
-import type { Awaitable, Theme } from "../types"
+import type { Awaitable, Theme } from "../types.js"
 
 type AllTransportOptions =
   | string
@@ -27,9 +28,8 @@ type AllTransportOptions =
   | Transport<any>
   | TransportOptions
 
-export interface NodemailerConfig
-  extends Omit<EmailConfig, "sendVerificationRequest" | "options"> {
-  server: AllTransportOptions
+export interface NodemailerConfig extends EmailConfig {
+  server?: AllTransportOptions
   sendVerificationRequest: (params: {
     identifier: string
     url: string
@@ -50,6 +50,9 @@ export type NodemailerUserConfig = Omit<
 export default function Nodemailer(
   config: NodemailerUserConfig
 ): NodemailerConfig {
+  if (!config.server)
+    throw new AuthError("Nodemailer requires a `server` configuration")
+
   return {
     id: "nodemailer",
     type: "email",
