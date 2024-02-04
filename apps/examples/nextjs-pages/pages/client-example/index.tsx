@@ -1,9 +1,9 @@
-import { auth } from "auth"
+import { useSession } from "next-auth/react"
 import ClientExample from "@/components/client-example"
 import { SessionProvider } from "next-auth/react"
 
-export default async function ClientPage() {
-  const session = await auth()
+export default function ClientPage() {
+  const { data: session } = useSession()
   if (session?.user) {
     // TODO: Look into https://react.dev/reference/react/experimental_taintObjectReference
     // filter out sensitive data before passing to client.

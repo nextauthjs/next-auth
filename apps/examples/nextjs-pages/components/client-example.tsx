@@ -41,7 +41,7 @@ const UpdateForm = () => {
 export default function ClientExample() {
   const { data: session, status } = useSession()
   return (
-    <div className="space-y-2">
+    <div className="mx-auto mt-10 space-y-2 max-w-screen-md">
       <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
       <p>
         This page fetches session data client side using the{" "}

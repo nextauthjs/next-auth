@@ -11,7 +11,7 @@ export default function Page() {
     })()
   }, [])
   return (
-    <div className="space-y-2">
+    <div className="mx-auto mt-10 space-y-2 max-w-screen-md">
       <h1 className="text-3xl font-bold">Route Handler Usage</h1>
       <p>
         This page fetches data from an API{" "}

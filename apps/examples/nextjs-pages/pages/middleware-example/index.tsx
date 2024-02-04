@@ -2,7 +2,7 @@ import CustomLink from "@/components/custom-link"
 
 export default function Page() {
   return (
-    <div className="space-y-2">
+    <div className="mx-auto mt-10 space-y-2 max-w-screen-md">
       <h1 className="text-3xl font-bold">Middleware usage</h1>
       <p>
         This page is protected by using the universal{" "}
