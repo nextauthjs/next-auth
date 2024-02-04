@@ -10,14 +10,14 @@ docker run -d --rm \
 -p ${FAUNADB_PORT}:${FAUNADB_PORT} \
 fauna/faunadb
 
-echo "Waiting 3 sec for db to start..."
-sleep 3
+echo "Waiting 10 sec for db to start..."
+sleep 10
 
 # Create collections and indexes
-npx fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}
+fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}
 
 # Always stop container, but exit with 1 when tests are failing
-if npx vitest -c ../../utils/vitest.config.ts;then
+if vitest -c ../utils/vitest.config.ts;then
     docker stop ${CONTAINER_NAME}
 else
     docker stop ${CONTAINER_NAME} && exit 1

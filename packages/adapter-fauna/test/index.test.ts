@@ -1,7 +1,19 @@
-import { FaunaAdapter, sessionFields, verificationTokenFields } from "../src"
+import {
+  FaunaAdapter,
+  format,
+  userFields,
+  sessionFields,
+  verificationTokenFields,
+} from "../src"
 import { runBasicTests } from "utils/adapter"
 import { Client, fql } from "fauna"
-import { FaunaAccount, FaunaSession, FaunaVerificationToken } from "../src/types"
+
+import type {
+  FaunaUser,
+  FaunaAccount,
+  FaunaSession,
+  FaunaVerificationToken,
+} from "../src"
 
 const client = new Client({
   secret: "secret",
@@ -14,14 +26,17 @@ runBasicTests({
   adapter,
   db: {
     disconnect: async () => client.close(),
-    user: adapter.getUser,
+    user: async (id) => {
+      const response = await client.query<FaunaUser>(
+        fql`User.byId(${id}) { ${userFields} }`
+      )
+      return format.from(response.data)
+    },
     async session(sessionToken) {
-      const response = await client.query<FaunaSession>(fql`Session.bySessionToken(${sessionToken}).first() { ${sessionFields} }`)
-      if (response.data === null) return null
-      return {
-        ...response.data,
-        expires: response.data.expires.toDate()
-      }
+      const response = await client.query<FaunaSession>(
+        fql`Session.bySessionToken(${sessionToken}).first() { ${sessionFields} }`
+      )
+      return format.from(response.data)
     },
     async account({ provider, providerAccountId }) {
       const response = await client.query<FaunaAccount>(fql`
@@ -39,15 +54,13 @@ runBasicTests({
           userId
         }
       `)
-      return response.data
+      return format.from(response.data)
     },
     async verificationToken({ identifier, token }) {
-      const response = await client.query<FaunaVerificationToken>(fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first() { ${verificationTokenFields} }`)
-      if (response.data === null) return null
-      return {
-        ...response.data,
-        expires: response.data.expires.toDate()
-      }
+      const response = await client.query<FaunaVerificationToken>(
+        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first() { ${verificationTokenFields} }`
+      )
+      return format.from(response.data)
     },
   },
 })
