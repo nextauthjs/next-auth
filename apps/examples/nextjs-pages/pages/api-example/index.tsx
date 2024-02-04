@@ -16,8 +16,8 @@ export default function Page() {
       <h1 className="text-3xl font-bold">Route Handler Usage</h1>
       <p className="leading-loose">
         This page fetches data from an API{" "}
-        <CustomLink href="https://nextjs.org/docs/app/building-your-application/routing/route-handlers">
-          Route Handler
+        <CustomLink href="https://nextjs.org/docs/pages/building-your-application/routing/api-routes">
+          Route
         </CustomLink>
         . The API is protected using the universal{" "}
         <CustomLink href="https://nextjs.authjs.dev#auth">

@@ -10,7 +10,7 @@ export default function Page() {
           <code>auth()</code>
         </CustomLink>{" "}
         method in{" "}
-        <CustomLink href="https://nextjs.org/docs/app/building-your-application/routing/middleware">
+        <CustomLink href="https://nextjs.org/docs/pages/building-your-application/routing/middleware">
           Next.js Middleware
         </CustomLink>
         .
