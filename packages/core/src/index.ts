@@ -321,8 +321,7 @@ export interface AuthConfig {
    * ```ts
    * // /pages/api/auth/[...nextauth].js
    * import log from "logging-service"
-   * import { isAuthAction } from './lib/utils/actions';
-export default NextAuth({
+   * export default NextAuth({
    *   logger: {
    *     error(code, ...message) {
    *       log.error(code, message)
