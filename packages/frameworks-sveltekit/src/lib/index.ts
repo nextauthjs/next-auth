@@ -204,8 +204,7 @@ import { env } from "$env/dynamic/private"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
-import { Auth } from "@auth/core"
-import type { AuthAction } from "@auth/core/types"
+import { Auth, isAuthAction } from "@auth/core"
 
 export type {
   Account,
@@ -214,17 +213,6 @@ export type {
   Session,
   User,
 } from "@auth/core/types"
-
-const authActions: AuthAction[] = [
-  "providers",
-  "session",
-  "csrf",
-  "signin",
-  "signout",
-  "callback",
-  "verify-request",
-  "error",
-]
 
 /**
  * The main entry point to `@auth/sveltekit`
@@ -273,15 +261,13 @@ export function SvelteKitAuth(
         )
         .split("/")[0]
 
-      if (isAction(action) && url.pathname.startsWith(_config.basePath + "/")) {
+      if (
+        isAuthAction(action) &&
+        url.pathname.startsWith(_config.basePath + "/")
+      ) {
         return Auth(request, _config)
       }
       return resolve(event)
     },
   }
-}
-
-// TODO: Get this function from @auth/core/util
-function isAction(action: string): action is AuthAction {
-  return authActions.includes(action as AuthAction)
 }
