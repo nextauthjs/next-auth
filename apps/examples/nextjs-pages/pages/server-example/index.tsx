@@ -1,23 +1,22 @@
 import CustomLink from "@/components/custom-link"
 import SessionData from "@/components/session-data"
-import { auth } from "../../auth"
+// import { auth } from "../../auth"
+// import { getSession } from "next-auth/react"
 import type { Session } from "next-auth"
 import type { GetServerSidePropsContext } from "next"
 
 export default function Page({ session }: { session: Session }) {
   return (
     <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
-      <h1 className="text-3xl font-bold">React Server Component Usage</h1>
+      <h1 className="text-3xl font-bold">
+        <code>getServerSideProps</code> Usage
+      </h1>
       <p className="leading-loose">
-        This page is server-rendered as a{" "}
-        <CustomLink href="https://nextjs.org/docs/app/building-your-application/rendering/server-components">
-          React Server Component
+        This page is server-rendered server-side using{" "}
+        <CustomLink href="https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props">
+          `getServerSideProps`
         </CustomLink>
-        . It gets the session data on the server using{" "}
-        <CustomLink href="https://nextjs.authjs.dev#auth">
-          <code>auth()</code>
-        </CustomLink>{" "}
-        method.
+        .
       </p>
       <SessionData session={session} />
     </div>
@@ -27,7 +26,12 @@ export default function Page({ session }: { session: Session }) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const session = await auth(context)
+  // const session = await getSession()
+  const url = `${context.req.headers["x-forwarded-proto"]}://${context.req.headers.host}/api/auth/session`
+
+  // TODO: Test while working on other methods
+  const sessionRes = await fetch(url)
+  const session = await sessionRes.json()
   return {
     props: {
       session,

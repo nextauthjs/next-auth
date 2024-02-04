@@ -7,6 +7,7 @@ export default function Page() {
     ;(async () => {
       const res = await fetch("/api/protected")
       const json = await res.json()
+      console.log("protected.json", data)
       setData(json)
     })()
   }, [])
@@ -26,7 +27,7 @@ export default function Page() {
       </p>
       <h2 className="text-xl font-bold">Data from API Route:</h2>
       {data ? (
-        <pre>
+        <pre className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ) : (

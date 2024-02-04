@@ -13,17 +13,7 @@ const UpdateForm = () => {
   return (
     <>
       <h2 className="text-xl font-bold">Updating the session</h2>
-      <form
-        onSubmit={async () => {
-          if (session) {
-            const newSession = await update({
-              ...session,
-              user: { ...session.user, name },
-            })
-          }
-        }}
-        className="flex items-center space-x-2 w-full max-w-sm"
-      >
+      <div className="flex items-center space-x-2 w-full max-w-sm">
         <Input
           type="text"
           placeholder={session.user.name ?? ""}
@@ -32,8 +22,20 @@ const UpdateForm = () => {
             setName(e.target.value)
           }}
         />
-        <Button type="submit">Update</Button>
-      </form>
+        <Button
+          type="submit"
+          onClick={async () => {
+            if (session) {
+              await update({
+                ...session,
+                user: { ...session.user, name },
+              })
+            }
+          }}
+        >
+          Update
+        </Button>
+      </div>
     </>
   )
 }
