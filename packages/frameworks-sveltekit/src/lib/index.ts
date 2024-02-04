@@ -324,4 +324,5 @@ function setEnvDefaults(config: SvelteKitAuthConfig) {
   if (building) return
   coreSetEnvDefaults(env, config)
   config.trustHost ??= dev
+  config.basePath = `${base}/auth`
 }
