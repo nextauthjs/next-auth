@@ -14,17 +14,30 @@
  *
  * @module @auth/fauna-adapter
  */
-import { Adapter } from "@auth/core/adapters"
-import { Client, fql } from "fauna"
-import { FaunaAccount, FaunaUser, FaunaVerificationToken } from "./types"
-import { FaunaSession } from "./types"
-import { objectToQueryValue } from "./objectToQueryValue"
+import { Client, TimeStub, fql } from "fauna"
 
-const userFields = fql`
+import type {
+  Adapter,
+  AdapterUser,
+  AdapterSession,
+  VerificationToken,
+  AdapterAccount,
+} from "@auth/core/adapters"
+
+type ToFauna<T> = {
+  [P in keyof T]: T[P] extends Date | null ? TimeStub | null : T[P]
+}
+
+export type FaunaUser = ToFauna<AdapterUser>
+export type FaunaSession = ToFauna<AdapterSession>
+export type FaunaVerificationToken = ToFauna<VerificationToken>
+export type FaunaAccount = ToFauna<AdapterAccount> & any // TODO: Remove `& any`
+
+export const userFields = fql`
 email,
 name,
 image,
-id: .data.id,
+id,
 emailVerified
 `
 
@@ -155,27 +168,22 @@ token
 export function FaunaAdapter(client: Client): Adapter {
   return {
     async createUser(user) {
-      const response = await client.query<FaunaUser>(fql`User.createData(${objectToQueryValue(user)}) { ${userFields} }`)
-      return {
-        ...response.data,
-        emailVerified: response.data.emailVerified.toDate(),
-      }
+      await client.query(
+        fql`User.createData(${format.to(user)}) { ${userFields} }`
+      )
+      return user
     },
     async getUser(id) {
-      const response = await client.query<FaunaUser>(fql`User.byUserId(${id}).first() { ${userFields} }`)
-      if (response.data === null) return null
-      return {
-        ...response.data,
-        emailVerified: response.data.emailVerified.toDate(),
-      }
+      const response = await client.query<FaunaUser>(
+        fql`User.byUserId(${id}).first() { ${userFields} }`
+      )
+      return format.from(response.data)
     },
     async getUserByEmail(email) {
-      const response = await client.query<FaunaUser>(fql`User.byEmail(${email}).first() { ${userFields} }`)
-      if (response.data === null) return null
-      return {
-        ...response.data,
-        emailVerified: response.data.emailVerified.toDate(),
-      }
+      const response = await client.query<FaunaUser>(
+        fql`User.byEmail(${email}).first() { ${userFields} }`
+      )
+      return format.from(response.data)
     },
     async getUserByAccount({ provider, providerAccountId }) {
       const response = await client.query<FaunaUser>(fql`
@@ -186,18 +194,15 @@ export function FaunaAdapter(client: Client): Adapter {
           null
         }
       `)
-      if (response.data === null) return null
-      return {
-        ...response.data,
-        emailVerified: response.data.emailVerified.toDate(),
-      }
+      return format.from(response.data)
     },
     async updateUser(user) {
-      const response = await client.query<FaunaUser>(fql`User.byUserId(${user.id}).first().updateData(${objectToQueryValue(user)}) { ${userFields} }`)
-      return {
-        ...response.data,
-        emailVerified: response.data.emailVerified.toDate(),
-      }
+      const response = await client.query<FaunaUser>(
+        fql`User.byUserId(${user.id}).first().updateData(${format.to(
+          user
+        )}) { ${userFields} }`
+      )
+      return format.from(response.data)
     },
     async deleteUser(userId) {
       await client.query(fql`
@@ -212,10 +217,16 @@ export function FaunaAdapter(client: Client): Adapter {
       `)
     },
     async linkAccount(account) {
-      await client.query<FaunaAccount>(fql`Account.create(${objectToQueryValue(account)})`)
+      await client.query<FaunaAccount>(
+        fql`Account.create(${format.to(account)})`
+      )
+      return account
     },
     async unlinkAccount({ provider, providerAccountId }) {
-      await client.query<FaunaAccount>(fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`)
+      const response = await client.query<FaunaAccount>(
+        fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`
+      )
+      return format.from<AdapterAccount>(response.data)
     },
     async getSessionAndUser(sessionToken) {
       const response = await client.query<[FaunaUser, FaunaSession]>(fql`
@@ -231,42 +242,35 @@ export function FaunaAdapter(client: Client): Adapter {
           null
         }
       `)
-      if (response.data === null) return null
-      const [user, session] = response.data
-      return {
-        session: {
-          ...session,
-          expires: session.expires.toDate(),
-        },
-        user: {
-          ...user,
-          emailVerified: user.emailVerified.toDate(),
-        },
-      }
+      const [user, session] = response.data ?? []
+      return { session: format.from(session), user: format.from(user) }
     },
     async createSession(session) {
-      const response = await client.query<FaunaSession>(fql`Session.create(${objectToQueryValue(session)}) { ${sessionFields} }`)
-      return {
-        ...response.data,
-        expires: response.data.expires.toDate(),
-      }
+      await client.query<FaunaSession>(
+        fql`Session.create(${format.to(session)}) { ${sessionFields} }`
+      )
+      return session
     },
     async updateSession(session) {
-      const response = await client.query<FaunaSession>(fql`Session.bySessionToken(${session.sessionToken}).first().update(${objectToQueryValue(session)}) { ${sessionFields} }`)
-      return {
-        ...response.data,
-        expires: response.data.expires.toDate(),
-      }
+      const response = await client.query<FaunaSession>(
+        fql`Session.bySessionToken(${
+          session.sessionToken
+        }).first().update(${format.to(session)}) { ${sessionFields} }`
+      )
+      return format.from(response.data)
     },
     async deleteSession(sessionToken) {
-      await client.query(fql`Session.bySessionToken(${sessionToken}).first().delete()`)
+      await client.query(
+        fql`Session.bySessionToken(${sessionToken}).first().delete()`
+      )
     },
     async createVerificationToken(verificationToken) {
-      const response = await client.query<FaunaVerificationToken>(fql`VerificationToken.create(${objectToQueryValue(verificationToken)}) { ${verificationTokenFields} }`)
-      return {
-        ...response.data,
-        expires: response.data.expires.toDate(),
-      }
+      await client.query<FaunaVerificationToken>(
+        fql`VerificationToken.create(${format.to(
+          verificationToken
+        )}) { ${verificationTokenFields} }`
+      )
+      return verificationToken
     },
     async useVerificationToken({ identifier, token }) {
       const response = await client.query<FaunaVerificationToken>(fql`
@@ -282,11 +286,30 @@ export function FaunaAdapter(client: Client): Adapter {
           null
         }
       `)
-      if (response.data === null) return null
-      return {
-        ...response.data,
-        expires: response.data.expires.toDate(),
-      }
+      return format.from(response.data)
     },
   }
+}
+
+export const format = {
+  /** Takes an object that's coming from a database and converts it to plain JavaScript. */
+  from<T>(object: Record<string, any> = {}): T {
+    if (!object) return null as unknown as T
+    const newObject: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(object))
+      if (value instanceof TimeStub) newObject[key] = value.toDate()
+      else newObject[key] = value
+    return newObject as T
+  },
+  /** Takes an object that's coming from Auth.js and prepares it to be written to the database. */
+  to<T>(object: Record<string, any>): T {
+    const newObject: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(object))
+      if (value instanceof Date) newObject[key] = TimeStub.fromDate(value)
+      else if (typeof value === "string" && !isNaN(Date.parse(value)))
+        newObject[key] = TimeStub.from(value)
+      else newObject[key] = value ?? null
+
+    return newObject as T
+  },
 }
