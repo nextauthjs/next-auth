@@ -214,6 +214,8 @@ export type {
   User,
 } from "@auth/core/types"
 
+const authorizationParamsPrefix = "authorizationParams-"
+
 /**
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
@@ -232,12 +234,26 @@ export function SvelteKitAuth(
       const { request } = event
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
-      const url = new URL(request.url)
       const formData = await request.formData()
-      const options = Object.fromEntries(formData)
-      const provider = options['id'].toString()
-      const authorizationParams = Object.fromEntries(url.searchParams)
-      await signIn(provider, options, authorizationParams, _config, event)
+      const { providerId: provider, ...options } = Object.fromEntries(formData)
+      // get the authorization params from the options prefixed with `authorizationParams-`
+      let authorizationParams: Parameters<typeof signIn>[2] = {}
+      let _options: Parameters<typeof signIn>[1] = {}
+      for (const key in options) {
+        if (key.startsWith(authorizationParamsPrefix)) {
+          authorizationParams[key.slice(authorizationParamsPrefix.length)] =
+            options[key] as string
+        } else {
+          _options[key] = options[key]
+        }
+      }
+      await signIn(
+        provider as string,
+        _options,
+        authorizationParams,
+        _config,
+        event
+      )
     },
     signOut: async (event) => {
       const _config = typeof config === "object" ? config : await config(event)

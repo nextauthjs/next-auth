@@ -33,7 +33,23 @@
         <li class="navItem"><a href="/">Home</a></li>
         <li class="navItem"><a href="/protected">Protected</a></li>
         <li class="navItem">
-          <SignIn provider="github">Sign In with GitHub</SignIn>
+          <SignIn provider="github"
+            ><span slot="submitButton">Sign In with GitHub</span></SignIn
+          >
+          <SignIn provider="email"
+            ><span slot="submitButton">Sign In with Email</span></SignIn
+          >
+          <SignIn provider="credentials" authorizationParams={{
+            foo: "bar",
+          }}
+            >
+            <span slot="submitButton">Sign In with Credentials</span>
+            <div slot="credentials">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+            </SignIn
+          >
         </li>
       </ul>
     </nav>

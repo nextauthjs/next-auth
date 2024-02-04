@@ -4,28 +4,61 @@
 
   export let className = ""
   export let provider: Parameters<typeof signIn>[0]
-  export let callbackUrl: string = '/'
+  /** The path to the FormAction file in your route. @default signin */
   export let signInPage = "signin"
   export let options: Parameters<typeof signIn>[1] | undefined = undefined
-  export let authorizationParams: Parameters<typeof signIn>[2] | undefined = undefined
+  export let authorizationParams: Parameters<typeof signIn>[2] | undefined =
+    undefined
+  const callbackUrl =
+    options instanceof FormData
+      ? options.get("redirectTo")
+      : options?.redirectTo
+  const redirect =
+    options instanceof FormData ? options.get("redirect") : options?.redirectTo
+
+  const authorizationParamsInputs = authorizationParams
+    ? typeof authorizationParams === "string" && authorizationParams
+      ? new URLSearchParams(authorizationParams)
+      : authorizationParams
+    : undefined
 </script>
 
 <form
   method="POST"
-  action={`/${signInPage}${
-    authorizationParams && Object.keys(authorizationParams).length
-      ? `?${new URLSearchParams(authorizationParams).toString()}`
-      : ""
-  }`}
+  action={signInPage}
   use:enhance
   class={`signInButton ${className}`}
 >
-  <input type="hidden" name="id" value={provider} />
+  <input type="hidden" name="providerId" value={provider} />
+  {#if callbackUrl}
   <input type="hidden" name="callbackUrl" value={callbackUrl} />
-  {#if options}
-    {#each Object.entries(options) as [key, value]}
-      <input type="hidden" name={key} value={value} />
+  {/if}
+  {#if redirect}
+  <input type="hidden" name="redirect" value={redirect} />
+  {/if}
+  {#if authorizationParamsInputs}
+    {#each Object.entries(authorizationParamsInputs) as [key, value]}
+      <input type="hidden" name={`authorizationParams-${key}`} value={value} />
     {/each}
   {/if}
-  <button style="width: 100%" type="submit"><slot /></button>
+  {#if provider === "credentials"}
+    <slot name="credentials" />
+  {/if}
+  {#if provider === "email"}
+    <slot name="email">
+      <label class="section-header" for="input-email-for-email-provider">
+        Email
+      </label>
+      <input
+        id="input-email-for-email-provider"
+        type="email"
+        name="email"
+        placeholder="email@example.com"
+        required
+      />
+    </slot>
+  {/if}
+  <button style="width: 100%" type="submit"
+    ><slot name="submitButton">Sign in with {provider}</slot></button
+  >
 </form>
