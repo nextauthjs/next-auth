@@ -51,12 +51,7 @@ export default function ClientExample() {
         React Hook.
       </p>
       <p>
-        It needs the{" "}
-        <CustomLink href="https://react.devreference/nextjs/react/use-client">
-          <code>'use client'</code>
-        </CustomLink>{" "}
-        directive at the top of the file to enable client side rendering, and
-        the{" "}
+        Make sure to wrap this component tree in a{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#sessionprovider">
           <code>SessionProvider</code>
         </CustomLink>{" "}

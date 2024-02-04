@@ -1,6 +1,6 @@
 import CustomLink from "@/components/custom-link"
 
-export default function Index({ packageJSON }) {
+export default function Index() {
   return (
     <div className="mx-auto mt-10 space-y-2 max-w-screen-md">
       <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
@@ -17,20 +17,6 @@ export default function Index({ packageJSON }) {
         </CustomLink>{" "}
         examples to see how to secure pages and get session data.
       </p>
-      <p>
-        Current{" "}
-        <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
-        version: <em>next-auth@{packageJSON.dependencies["next-auth"]}</em>
-      </p>
     </div>
   )
-}
-
-export const getServerSideProps = async () => {
-  const packageJSON = await import("../package.json")
-  return {
-    props: {
-      packageJSON: packageJSON.default,
-    },
-  }
 }

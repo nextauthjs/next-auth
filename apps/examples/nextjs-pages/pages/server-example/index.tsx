@@ -1,8 +1,10 @@
 import CustomLink from "@/components/custom-link"
 import SessionData from "@/components/session-data"
 import { auth } from "../../auth"
+import type { Session } from "next-auth"
+import type { GetServerSidePropsContext } from "next"
 
-export default function Page({ session }) {
+export default function Page({ session }: { session: Session }) {
   return (
     <div className="mx-auto mt-10 space-y-2 max-w-screen-md">
       <h1 className="text-3xl font-bold">React Server Component Usage</h1>
@@ -22,7 +24,9 @@ export default function Page({ session }) {
   )
 }
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const session = await auth(context)
   return {
     props: {

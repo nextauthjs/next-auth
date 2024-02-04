@@ -3,7 +3,7 @@ import type { Session } from "next-auth"
 export default function SessionData({ session }: { session: Session | null }) {
   if (session?.user) {
     return (
-      <div className="w-full space-y-2 overflow-auto">
+      <div className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
         <h2 className="text-xl font-bold">Current Session Data</h2>
         {Object.keys(session.user).length > 3 ? (
           <p>
@@ -24,7 +24,7 @@ export default function SessionData({ session }: { session: Session | null }) {
   }
 
   return (
-    <p>
+    <p className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
       No session data, please <em>Sign In</em> first.
     </p>
   )
