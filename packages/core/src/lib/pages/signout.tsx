@@ -7,7 +7,7 @@ export interface SignoutProps {
 }
 
 export default function SignoutPage(props: SignoutProps) {
-  const { url = "/signout", csrfToken, theme } = props
+  const { url = "/auth/signout", csrfToken, theme } = props
 
   return (
     <div className="signout">
