@@ -36,8 +36,8 @@
           <SignIn provider="github"
             ><span slot="submitButton">Sign In with GitHub</span></SignIn
           >
-          <SignIn provider="email"
-            ><span slot="submitButton">Sign In with Email</span></SignIn
+          <SignIn provider="sendgrid"
+            ><span slot="submitButton">Sign In with SendGrid</span></SignIn
           >
           <SignIn provider="credentials" authorizationParams={{
             foo: "bar",

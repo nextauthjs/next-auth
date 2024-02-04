@@ -44,9 +44,9 @@
   {#if provider === "credentials"}
     <slot name="credentials" />
   {/if}
-  {#if provider === "email"}
+  {#if provider === "email" || provider === "sendgrid" || provider === "resend"}
     <slot name="email">
-      <label class="section-header" for="input-email-for-email-provider">
+      <label class="section-header" for={`input-email-for-${provider}-provider`}>
         Email
       </label>
       <input

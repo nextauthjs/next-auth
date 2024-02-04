@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@auth/sveltekit": "workspace:*",
-    "nodemailer": "^6.9.3"
+    "@auth/unstorage-adapter": "workspace:*",
+    "nodemailer": "^6.9.3",
+    "unstorage": "^1.10.1"
   },
   "type": "module"
 }
