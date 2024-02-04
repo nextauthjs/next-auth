@@ -1,5 +1,5 @@
 import "./globals.css"
-import Head from "next/head"
+import { cn } from "@/lib/utils"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
 import { Inter } from "next/font/google"
@@ -14,9 +14,11 @@ export default function MyApp({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <div className={inter.className}>
+      <div className={cn("flex h-dvh flex-col", inter.className)}>
         <Header />
-        <Component {...pageProps} />
+        <div className="flex-grow">
+          <Component {...pageProps} />
+        </div>
         <Footer />
       </div>
     </SessionProvider>

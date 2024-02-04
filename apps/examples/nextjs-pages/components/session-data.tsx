@@ -25,7 +25,7 @@ export default function SessionData({ session }: { session: Session | null }) {
 
   return (
     <p className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
-      No session data, please <em>Sign In</em> first.
+      No session data, please <b>Sign In</b> first.
     </p>
   )
 }

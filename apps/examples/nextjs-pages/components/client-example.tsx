@@ -41,16 +41,16 @@ const UpdateForm = () => {
 export default function ClientExample() {
   const { data: session, status } = useSession()
   return (
-    <div className="mx-auto mt-10 space-y-2 max-w-screen-md">
+    <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
       <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
-      <p>
+      <p className="leading-loose">
         This page fetches session data client side using the{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#usesession">
           <code>useSession</code>
         </CustomLink>{" "}
         React Hook.
       </p>
-      <p>
+      <p className="leading-loose">
         Make sure to wrap this component tree in a{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#sessionprovider">
           <code>SessionProvider</code>
