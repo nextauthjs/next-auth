@@ -266,10 +266,6 @@ export function SvelteKitAuth(
       event.locals.auth ??= () => auth(event, _config)
       event.locals.getSession ??= event.locals.auth
 
-      // event.locals.signIn ??= (provider, options, authorizationParams) =>
-      //   signIn(provider, options, authorizationParams, _config, event)
-      // event.locals.signOut ??= async (options) => signOut(options, _config, event)
-
       const action = url.pathname
         .slice(
           // @ts-expect-error - basePath is defined in setEnvDefaults

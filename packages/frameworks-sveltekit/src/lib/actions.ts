@@ -2,7 +2,6 @@ import { redirect } from "@sveltejs/kit"
 import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { dev } from "$app/environment"
-import { base } from "$app/paths"
 import { env } from "$env/dynamic/private"
 
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
@@ -110,8 +109,7 @@ export async function auth(
 
   const { request: req } = event
 
-  const basePath = config.basePath ?? `${base}/auth`
-  const sessionUrl = createActionURL("session", req.headers, basePath)
+  const sessionUrl = createActionURL("session", req.headers, config.basePath)
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },
   })
