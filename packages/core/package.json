@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.23.0",
+  "version": "0.25.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -82,7 +82,8 @@
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
-    "test": "vitest --config=../utils/vitest.config.ts --coverage",
+    "test:e2e": "playwright test -c ../utils/playwright.config.ts",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {

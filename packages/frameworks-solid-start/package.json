@@ -1,7 +1,7 @@
 {
   "name": "@auth/solid-start",
   "description": "Authentication for SolidStart.",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "type": "module",
   "files": [
     "client.*",
@@ -25,6 +25,7 @@
   "scripts": {
     "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
     "patch": "npm version patch --no-git-tag-version",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "clean": "rm -rf client.* index.*"
   },
   "publishConfig": {

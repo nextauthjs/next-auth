@@ -201,11 +201,11 @@
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
-import { Auth } from "@auth/core"
-import type { AuthAction } from "@auth/core/types"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
+import { Auth } from "@auth/core"
+import type { AuthAction } from "@auth/core/types"
 
 export type {
   Account,

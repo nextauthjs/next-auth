@@ -1,6 +1,6 @@
 {
   "name": "@auth/kysely-adapter",
-  "version": "0.1.16",
+  "version": "0.3.0",
   "description": "Kysely adapter for Auth.js",
   "homepage": "https://authjs.dev/reference/adapter/kysely",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -31,7 +31,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./tests/test.sh"
+    "test": "./test/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -46,8 +46,5 @@
     "kysely": "^0.24.2",
     "mysql2": "^3.2.0",
     "pg": "^8.10.0"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }
