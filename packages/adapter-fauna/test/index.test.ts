@@ -25,6 +25,8 @@ const adapter = FaunaAdapter(client)
 runBasicTests({
   adapter,
   db: {
+    // UUID is not a valid ID in Fauna (see https://docs.fauna.com/fauna/current/reference/fql_reference/types#id)
+    id: () => String(Math.floor(Math.random() * 10 ** 18)),
     disconnect: async () => client.close(),
     user: async (id) => {
       const response = await client.query<FaunaUser>(

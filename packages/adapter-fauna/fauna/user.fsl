@@ -1,9 +1,6 @@
 collection User {
-    unique [.email, .data.id]
+    unique [.email]
     index byEmail {
         terms [.email]
-    }
-    index byUserId {
-        terms [.data.id]
     }
 }
