@@ -43,6 +43,10 @@
       "types": "./react.d.ts",
       "import": "./react.js"
     },
+    "./webauthn": {
+      "types": "./webauthn.d.ts",
+      "import": "./webauthn.js"
+    },
     "./package.json": "./package.json"
   },
   "keywords": [
@@ -76,12 +80,16 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "v9.0.0",
     "next": "^14",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
+      "optional": true
+    },
+    "@simplewebauthn/browser": {
       "optional": true
     }
   },
