@@ -314,6 +314,15 @@ export interface Adapter {
   linkAccount?(
     account: AdapterAccount
   ): Promise<void> | Awaitable<AdapterAccount | null | undefined>
+    /**
+   * This method is invoked internally (but optionally can be used for manual updating of an Account).
+   * It updates an [Account](https://authjs.dev/reference/core/adapters#models) in the database.
+   *
+   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   */
+  updateAccount?: (
+    account: AdapterAccount
+  ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>
   /** @todo This method is currently not invoked yet. */
   unlinkAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">

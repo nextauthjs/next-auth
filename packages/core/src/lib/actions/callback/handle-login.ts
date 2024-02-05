@@ -58,6 +58,7 @@ export async function handleLoginOrRegister(
     getUserByAccount,
     getUserByEmail,
     linkAccount,
+    updateAccount,
     createSession,
     getSessionAndUser,
     deleteSession,
@@ -134,8 +135,9 @@ export async function handleLoginOrRegister(
   })
   if (userByAccount) {
     if (user) {
-      // If the user is already signed in with this account, we don't need to do anything
+      // If the user is already signed in with this account, we need to update our account with newly issued refresh and access tokens.
       if (userByAccount.id === user.id) {
+        updateAccount({ ...account, userId: userByAccount.id });
         return { session, user, isNewUser }
       }
       // If the user is currently signed in, but the new account they are signing in
@@ -147,7 +149,8 @@ export async function handleLoginOrRegister(
       )
     }
     // If there is no active session, but the account being signed in with is already
-    // associated with a valid user then create session to sign the user in.
+    // associated with a valid user then create session to sign the user in and update the account with newly issued refresh and access tokens.
+    updateAccount({ ...account, userId: userByAccount.id });
     session = useJwtSession
       ? {}
       : await createSession({
