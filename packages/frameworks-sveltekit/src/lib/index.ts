@@ -13,25 +13,26 @@
  * ```
  *
  * ## Usage
- *
- * ```ts title="src/hooks.server.ts"
+ * 
+ * ```ts title="src/auth.ts"
+ * 
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
- * export const handle = SvelteKitAuth({
+ * export const { handle, signIn signOut } = SvelteKitAuth({
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
- *
+ * 
  * or to use SvelteKit platform environment variables for platforms like Cloudflare
  *
- * ```ts title="src/hooks.server.ts"
+ * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
- * export const handle = SvelteKitAuth(async (event) => {
+ * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
  *     providers: [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
  *     secret: event.platform.env.AUTH_SECRET,
@@ -39,6 +40,11 @@
  *   }
  *   return authOptions
  * }) satisfies Handle;
+ * ```
+ *
+ * Re-export the handle in `src/hooks.server.ts`:
+ * ```ts title="src/hooks.server.ts"
+ * export { handle } from "./auth"
  * ```
  *
  * Remember to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
@@ -57,7 +63,7 @@
  *
  * ```ts
  * <script>
- *   import { signIn, signOut } from "@auth/sveltekit/client"
+ *   import { SignIn, SignOut } from "@auth/sveltekit/components"
  *   import { page } from "$app/stores"
  * </script>
  *
@@ -74,13 +80,35 @@
  *       <small>Signed in as</small><br />
  *       <strong>{$page.data.session.user?.name ?? "User"}</strong>
  *     </span>
- *     <button on:click={() => signOut()} class="button">Sign out</button>
+ *     <SignOut />
  *   {:else}
  *     <span class="notSignedInText">You are not signed in</span>
- *     <button on:click={() => signIn("github")}>Sign In with GitHub</button>
+ *     <SignIn provider="github"/>
+ *     <SignIn provider="google"/>
+ *     <SignIn provider="facebook"/>
  *   {/if}
  * </p>
  * ```
+ * 
+ * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components.
+ * To set up the form actions, we need to define the files in `src/routes`:
+ * ```ts title="src/routes/signin/+page.server.ts"
+ * import { signIn } from "../../auth"
+ * import type { Actions } from "./$types"
+ * export const actions: Actions = { default: signIn }
+ * ```
+ * ```ts title="src/routes/signin/+page.svelte"
+ * <!-- empty file -->
+ * ```
+ * ```ts title="src/routes/signout/+page.server.ts"
+ * import { signOut } from "../../auth"
+ * import type { Actions } from "./$types"
+ * export const actions: Actions = { default: signOut }
+ * ```
+ * ```ts title="src/routes/signout/+page.svelte"
+ * <!-- empty file -->
+ * ```
+ * 
  *
  * ## Managing the session
  *
