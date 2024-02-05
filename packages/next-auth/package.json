@@ -43,6 +43,10 @@
       "types": "./react.d.ts",
       "import": "./react.js"
     },
+    "./webauthn": {
+      "types": "./webauthn.d.ts",
+      "import": "./webauthn.js"
+    },
     "./package.json": "./package.json"
   },
   "keywords": [
