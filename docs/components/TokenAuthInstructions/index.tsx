@@ -1,47 +1,61 @@
-import React from "react";
-import cx from "classnames";
-import { Option, useTokenAuthInstructions } from "./useTokenAuthInstructions";
-import { ChatCircleDots, EnvelopeSimpleOpen } from "@phosphor-icons/react";
-// @ts-expect-error - Typescript does not like MDX imports, but it works
-import EmailProviderSetup from "./content/EmailProviderSetup.mdx";
-import { Tooltip } from "../Tooltip";
+import { useState } from "react"
+import cx from "classnames"
+import NodemailerSetup from "./content/NodemailerSetup.mdx"
+import ResendSetup from "./content/ResendSetup.mdx"
+import SendgridSetup from "./content/SendgridSetup.mdx"
 
-const styles = {
-  base: "p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center gap-2 justify-center w-32 shadow-lg h-32 dark:border-slate-600 dark:hover:bg-slate-600",
-  selected: "aria-selected:border-1 aria-selected:border-fuchsia-400",
-  disabled: "opacity-50 cursor-not-allowed",
-};
+const EmailTypes = {
+  Nodemailer: "Nodemailer",
+  Resend: "Resend",
+  Sendgrid: "Sendgrid",
+} as const
 
 export function TokenAuthInstructions() {
-  const { selected } = useTokenAuthInstructions();
-  const cardStyles = cx(styles.base, styles.selected);
-
-  const content = selected === Option.Email ? <EmailProviderSetup /> : null;
+  const [activeEmailType, setActiveEmailType] = useState<
+    keyof typeof EmailTypes
+  >(EmailTypes.Nodemailer)
 
   return (
     <>
-      <div className="mt-3 flex flex-row gap-4 pb-3">
-        <div
-          role="button"
-          aria-selected={selected === Option.Email}
-          className={cardStyles}
+      <div className="flex flex-row gap-4 pb-3 mt-3">
+        <button
+          aria-disabled="true"
+          aria-selected={activeEmailType === EmailTypes.Resend}
+          onClick={() => setActiveEmailType(EmailTypes.Resend)}
+          className={cx(
+            "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 dark:border-neutral-600 dark:hover:bg-neutral-600 transition-colors",
+            activeEmailType === EmailTypes.Resend && "dark:bg-neutral-800"
+          )}
         >
-          <EnvelopeSimpleOpen fontSize="3rem" color="#37474F" />
-          <div className="text-sm text-center font-semibold">Nodemailer</div>
-        </div>
-        <Tooltip label="Coming soon &nbsp;👀">
-          <div
-            role="button"
-            aria-disabled="true"
-            aria-selected={selected === Option.OTP}
-            className={cx(cardStyles, "gap-3", styles.disabled)}
-          >
-            <ChatCircleDots fontSize="2.8rem" color="#37474F" />
-            <div className="text-sm text-center font-semibold">Resend</div>
-          </div>
-        </Tooltip>
+          <img className="size-16" src={`/img/providers/resend.svg`} />
+          <div className="text-sm font-semibold text-center">Resend</div>
+        </button>
+        <button
+          aria-selected={activeEmailType === EmailTypes.Sendgrid}
+          onClick={() => setActiveEmailType(EmailTypes.Sendgrid)}
+          className={cx(
+            "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 dark:border-neutral-600 dark:hover:bg-neutral-600 transition-colors",
+            activeEmailType === EmailTypes.Sendgrid && "dark:bg-neutral-800"
+          )}
+        >
+          <img className="size-16" src={`/img/providers/sendgrid.svg`} />
+          <div className="text-sm font-semibold text-center">Sendgrid</div>
+        </button>
+        <button
+          aria-selected={activeEmailType === EmailTypes.Nodemailer}
+          onClick={() => setActiveEmailType(EmailTypes.Nodemailer)}
+          className={cx(
+            "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 dark:border-neutral-600 dark:hover:bg-neutral-600 transition-colors",
+            activeEmailType === EmailTypes.Nodemailer && "dark:bg-neutral-800"
+          )}
+        >
+          <img className="w-16 h-12" src={`/img/providers/nodemailer.svg`} />
+          <div className="text-sm font-semibold text-center">Nodemailer</div>
+        </button>
       </div>
-      {content}
+      {activeEmailType === EmailTypes.Resend ? <ResendSetup /> : null}
+      {activeEmailType === EmailTypes.Sendgrid ? <SendgridSetup /> : null}
+      {activeEmailType === EmailTypes.Nodemailer ? <NodemailerSetup /> : null}
     </>
-  );
+  )
 }

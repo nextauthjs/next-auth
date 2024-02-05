@@ -1,0 +1,83 @@
+import { Callout, Steps, Tabs } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+import MagicLink from "../../../public/img/magic-links/start.webp"
+
+### Resend Setup
+
+To setup "magic links" (sign in tokens sent to the user's email), we will need to use one of the built-in Email Providers - Resend, Sendgrid or Nodemailer.
+
+To sign in, a user provides their email address, then a **Verification Token** is sent to the them. By default this token is valid <u>for 24 hours</u>. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+
+<Callout>
+  Magic links are setup through the Email Providers. An Email Provider can be
+  used with both [JSON Web Tokens](https://jwt.io/) and [database
+  sessions](/concepts/session-strategies#database-session), but you **must
+  configure a database to use it**. It is not possible to enable email sign in
+  without using a database.
+</Callout>
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/docs/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Connecting to the SMTP server
+
+There are two ways to configure the SMTP server connection: using a connection string or a configuration object.
+
+```bash filename=".env"
+AUTH_RESEND_KEY=abc123
+```
+
+```ts filename="./auth.ts"
+import Resend from "next-auth/providers/resend";
+
+providers: [
+  Resend
+],
+```
+
+<Callout type="info">
+  Check our [Customising magic links emails](/) to learn how to change the look
+  and feel of the emails the user receives to sign in.
+</Callout>
+
+### Signin Button
+
+Next, we can add a sign in button somewhere in your application like the Navbar. This will forward the user on to the Auth.js default signin page.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signIn()
+      }}
+    >
+      <button type="submit">Sign In</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+</Code>
+
+### Signin
+
+Start your application, click on the sign in button we just added, and you should see Auth.js [built-in sign in page](/tutorials/custom-pages/built-in-pages) with the option to sign in with your email:
+
+<Screenshot src={MagicLink} alt="Screenshot of sign in page" />
+
+Insert your email and click "Sign in with Email". You should receive an email from Auth.js, click on it and should be redirected to your application, landing already authenticated.
+
+</Steps>

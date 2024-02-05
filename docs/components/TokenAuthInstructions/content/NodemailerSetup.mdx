@@ -1,34 +1,27 @@
-import { Callout, Steps, Tabs } from "nextra/components";
-import { Code } from "@/components/Code";
-import { Screenshot } from "@/components/Screenshot";
-import MagicLink from "../../../public/img/magic-links/start.webp";
+import { Callout, Steps, Tabs } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+import MagicLink from "../../../public/img/magic-links/start.webp"
 
-### Magic links setup
+### Nodemailer Setup
 
-To setup "magic links" (sign in tokens sent to the user's email), we will need to use the built-in [`EmailProvider`](/).
+To setup "magic links" (sign in tokens sent to the user's email), we will need to use one of the built-in Email Providers - Resend, Sendgrid or Nodemailer.
 
 To sign in, a user provides their email address, then a **Verification Token** is sent to the them. By default this token is valid <u>for 24 hours</u>. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
 
 <Callout>
-  Magic links are setup through the [`EmailProvider`](/). The `EmailProvider`
-  can be used with both [JSON Web Tokens](https://jwt.io/) and [database
+  Magic links are setup through the Email Providers. An Email Provider can be
+  used with both [JSON Web Tokens](https://jwt.io/) and [database
   sessions](/concepts/session-strategies#database-session), but you **must
   configure a database to use it**. It is not possible to enable email sign in
   without using a database.
-</Callout>
-
-There are two ways to setup magic links through the `EmailProvider`, either through an SMTP server or via HTTP-based email services like AWS SES, Postmark, Sendgrid, etc. We're going to walk through the SMTP Server setup here.
-
-<Callout type="info">
-  Make sure you check the [HTTP-based magic links tutorial](/) in case you want
-  to integrate with an HTTP-based email service instead of an SMTP server.
 </Callout>
 
 <Steps>
 
 ### Install `nodemailer`
 
-Auth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the [`EmailProvider`](/). Run:
+Auth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use an Email Provider. Run:
 
 ```sh npm2yarn
 npm install nodemailer
@@ -54,10 +47,10 @@ EMAIL_FROM=noreply@example.com
 ```
 
 ```ts filename="./auth.ts"
-import EmailProvider from "next-auth/providers/email";
-...
+import Nodemailer from "next-auth/providers/nodemailer";
+
 providers: [
-  EmailProvider({
+  Nodemailer({
     server: process.env.EMAIL_SERVER,
     from: process.env.EMAIL_FROM
   }),
@@ -76,10 +69,10 @@ EMAIL_FROM=noreply@example.com
 ```
 
 ```ts filename="./auth.ts"
-import EmailProvider from "next-auth/providers/email";
+import Nodemailer from "next-auth/providers/nodemailer";
 ...
 providers: [
-  EmailProvider({
+  Nodemailer({
     server: {
       host: process.env.EMAIL_SERVER_HOST,
       port: process.env.EMAIL_SERVER_PORT,
@@ -101,13 +94,6 @@ providers: [
   and feel of the emails the user receives to sign in.
 </Callout>
 
-<Callout>
-  Check our deep-dive tutorial on how to setup [Auth.js magic links with
-  SendGrid](/tutorials/deep-dive/passwordless-sendgrid-setup) for a better
-  understanding on how to setup magic links end-to-end (including database
-  setup).
-</Callout>
-
 ### Signin Button
 
 Next, we can add a sign in button somewhere in your application like the Navbar. This will forward the user on to the Auth.js default signin page.
@@ -116,19 +102,19 @@ Next, we can add a sign in button somewhere in your application like the Navbar.
 <Code.Next>
 
 ```tsx filename="./components/sign-in.tsx"
-import { signIn } from "../../auth.ts";
+import { signIn } from "../../auth.ts"
 
 export function SignIn() {
   return (
     <form
       action={async () => {
-        "use server";
-        await signIn();
+        "use server"
+        await signIn()
       }}
     >
       <button type="submit">Sign In</button>
     </form>
-  );
+  )
 }
 ```
 
