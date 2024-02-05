@@ -13,6 +13,7 @@
   action={`/${signOutPage}`}
   use:enhance
   class={`signInButton ${className}`}
+  {...$$restProps}
 >
   {#if options}
     {#if options?.redirect}

@@ -28,6 +28,7 @@
   action={signInPage}
   use:enhance
   class={`signInButton ${className}`}
+  {...$$restProps}
 >
   <input type="hidden" name="providerId" value={provider} />
   {#if callbackUrl}
