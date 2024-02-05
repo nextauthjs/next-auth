@@ -2,20 +2,20 @@ import { vi, expect, it, describe, beforeEach } from "vitest"
 import renderPage from "../src/lib/pages/index"
 import { pagesOptions } from "./fixtures/pages"
 import { init } from "../src/lib/init"
+import type { SignoutProps } from "../src/lib/pages/signout"
+import type { SigninProps } from "../src/lib/pages/signin"
+import { VNode } from "preact"
 
 const mocks = vi.hoisted(() => ({
-  SignoutPage: vi.fn().mockImplementation((props: any) => {
-    console.log("SignoutPage.props", props)
-    return `<form action="${props.url.toString()}" method="POST">`
-  }),
-  SigninPage: vi.fn(),
+  SignoutPage: (props: SignoutProps) =>
+    `<form action="${props.url?.toString()}" method="POST">`,
+  SigninPage: (props: SigninProps) =>
+    `<form action="${props.providers?.[0].signinUrl.toString()}" method="POST">`,
 }))
 
 vi.mock("preact-render-to-string", () => {
   return {
-    renderToString: (e: any) => {
-      return e
-    },
+    renderToString: (vnode: VNode<{}>) => vnode,
   }
 })
 
@@ -34,7 +34,7 @@ describe("pages", () => {
     })
 
     it("should attempt to render signout page", async () => {
-      // When visiting `/auth/signout`, for example
+      // Generated when visiting `/auth/signout`
       const { options } = await init({
         authOptions: pagesOptions,
         action: "signout",
@@ -48,9 +48,6 @@ describe("pages", () => {
       const render = renderPage({ ...options, query: {}, cookies: [] })
       const signOutPage = render.signout()
 
-      console.log(signOutPage)
-
-      expect(mocks.SignoutPage).toHaveBeenCalled()
       expect(signOutPage.body).toContain(`<title>Sign Out</title>`)
       expect(signOutPage.body).toContain(
         `action="http://localhost:3000/auth/signout"`
@@ -79,7 +76,7 @@ describe("pages", () => {
     })
 
     it("should attempt to render signin page", async () => {
-      // When visiting `/auth/signin`, for example
+      // Generated when visiting `/auth/signin`
       const { options } = await init({
         authOptions: pagesOptions,
         action: "signin",
@@ -92,13 +89,11 @@ describe("pages", () => {
 
       const render = renderPage({ ...options, query: {}, cookies: [] })
       const signInPage = render.signin()
-      // console.log(signInPage)
 
-      expect(mocks.SigninPage).toHaveBeenCalled()
       expect(signInPage.body).toContain(`<title>Sign In</title>`)
-      // expect(signInPage.body).toContain(
-      //   `action="http://localhost:3000/auth/signin"`
-      // )
+      expect(signInPage.body).toContain(
+        `action="http://localhost:3000/auth/signin/github"`
+      )
     })
   })
 })

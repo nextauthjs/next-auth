@@ -46,14 +46,16 @@ function hexToRgba(hex?: string, alpha = 1) {
   return rgba
 }
 
-export default function SigninPage(props: {
+export type SigninProps = {
   csrfToken?: string
   providers?: InternalProvider[]
   callbackUrl?: string
   email?: string
   error?: SignInPageErrorParam
   theme?: Theme
-}) {
+}
+
+export default function SigninPage(props: SigninProps) {
   const {
     csrfToken,
     providers = [],
