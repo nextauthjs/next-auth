@@ -1,12 +1,9 @@
 import {
   FaunaAdapter,
   format,
-  userFields,
-  sessionFields,
-  verificationTokenFields,
 } from "../src"
 import { runBasicTests } from "utils/adapter"
-import { Client, fql } from "fauna"
+import { Client, fql, NullDocument } from "fauna"
 
 import type {
   FaunaUser,
@@ -30,39 +27,30 @@ runBasicTests({
     disconnect: async () => client.close(),
     user: async (id) => {
       const response = await client.query<FaunaUser>(
-        fql`User.byId(${id}) { ${userFields} }`
+        fql`User.byId(${id})`,
       )
+      if (response.data instanceof NullDocument) return null
       return format.from(response.data)
     },
     async session(sessionToken) {
       const response = await client.query<FaunaSession>(
-        fql`Session.bySessionToken(${sessionToken}).first() { ${sessionFields} }`
+        fql`Session.bySessionToken(${sessionToken}).first()`,
       )
       return format.from(response.data)
     },
     async account({ provider, providerAccountId }) {
-      const response = await client.query<FaunaAccount>(fql`
-        Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first() {
-          access_token,
-          expires_at,
-          id_token,
-          provider,
-          providerAccountId,
-          refresh_token,
-          scope,
-          session_state,
-          token_type,
-          type,
-          userId
-        }
-      `)
+      const response = await client.query<FaunaAccount>(
+        fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()`,
+      )
       return format.from(response.data)
     },
     async verificationToken({ identifier, token }) {
       const response = await client.query<FaunaVerificationToken>(
-        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first() { ${verificationTokenFields} }`
+        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first()`,
       )
-      return format.from(response.data)
+      const _verificationToken: Partial<FaunaVerificationToken> = { ...response.data }
+      delete _verificationToken.id
+      return format.from(_verificationToken)
     },
   },
 })
