@@ -9,6 +9,7 @@ const actions: AuthAction[] = [
   "callback",
   "verify-request",
   "error",
+  "webauthn-options",
 ]
 
 export function isAuthAction(action: string): action is AuthAction {
