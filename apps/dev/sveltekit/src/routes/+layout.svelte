@@ -102,6 +102,10 @@
     display: flex;
     justify-content: end;
   }
+  :global(.signOutButton) {
+    display: flex;
+    justify-content: end;
+  }
 
   .nojs-show {
     opacity: 1;
