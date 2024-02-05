@@ -1,5 +1,6 @@
 import type { CommonProviderOptions, CredentialInput } from "."
-import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts } from "@simplewebauthn/server"
+import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts, VerifiedAuthenticationResponse, VerifiedRegistrationResponse } from "@simplewebauthn/server"
+import type { PublicKeyCredentialCreationOptionsJSON, PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/server/script/deps.js"
 import type { InternalOptions, RequestInternal, SemverString, User } from "../types"
 import { MissingAdapter } from "../errors"
 
@@ -43,6 +44,14 @@ type ConfigurableAuthenticationOptions = Omit<GenerateAuthenticationOptionsOpts,
 type ConfigurableRegistrationOptions = Omit<GenerateRegistrationOptionsOpts, "rpName" | "rpID" | "userID" | "userName" | "challenge" | "userDisplayName" | "excludeCredentials">
 type ConfigurableVerifyAuthenticationOptions = Omit<VerifyAuthenticationResponseOpts, "expectedChallenge" | "expectedOrigin" | "expectedRPID" | "authenticator" | "response">
 type ConfigurableVerifyRegistrationOptions = Omit<VerifyRegistrationResponseOpts, "expectedChallenge" | "expectedOrigin" | "expectedRPID" | "response">
+
+
+interface SimpleWebAuthn {
+  verifyAuthenticationResponse(options: VerifyAuthenticationResponseOpts): Promise<VerifiedAuthenticationResponse>
+  verifyRegistrationResponse(options: VerifyRegistrationResponseOpts): Promise<VerifiedRegistrationResponse>
+  generateAuthenticationOptions(options: GenerateAuthenticationOptionsOpts): Promise<PublicKeyCredentialRequestOptionsJSON>
+  generateRegistrationOptions(options: GenerateRegistrationOptionsOpts): Promise<PublicKeyCredentialCreationOptionsJSON>
+}
 
 export interface WebAuthnConfig extends CommonProviderOptions {
   type: WebAuthnProviderType
@@ -109,6 +118,10 @@ export interface WebAuthnConfig extends CommonProviderOptions {
    * By default, it looks for and uses the "email" request parameter to look up the user in the database.
    */
   getUserInfo: GetUserInfo
+  /**
+   * SimpleWebAuthn instance to use for registration and authentication.
+   */
+  simpleWebAuthn: SimpleWebAuthn
 }
 
 /**
@@ -149,7 +162,7 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  *
  * :::
  */
-export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfig {
+export default function WebAuthn(config: Partial<WebAuthnConfig> & Pick<WebAuthnConfig, "simpleWebAuthn">): WebAuthnConfig {
   return {
     id: "webauthn",
     name: "WebAuthn",
