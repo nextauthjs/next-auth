@@ -1,0 +1,107 @@
+import { AuthConfig } from "../src"
+
+const userProfile = {
+  id: "abc",
+  name: "Fill Murray",
+  email: "fill@murray.com",
+  image: "https://source.boringavatars.com/marble",
+}
+
+export const pagesOptions = {
+  debug: false,
+  pages: {},
+  theme: {
+    colorScheme: "auto" as const,
+    logo: "",
+    brandColor: "",
+    buttonText: "",
+  },
+  session: {
+    strategy: "jwt" as const,
+    maxAge: 2592000,
+    updateAge: 86400,
+    generateSessionToken: () => "abc123",
+  },
+  providers: [
+    {
+      id: "github",
+      name: "GitHub",
+      type: "oauth" as const,
+      authorization: `https://github.com/login/oauth/authorize`,
+      //   params: { scope: "read:user user:email" },
+      // },
+      token: `https://github.com/login/oauth/access_token`,
+      userinfo: {
+        url: `https://github.com/user`,
+        async request() {
+          return userProfile
+        },
+      },
+      profile: () => userProfile,
+      style: { logo: "", bg: "", text: "" },
+      clientId: "0068da00aa8d490899d8",
+      clientSecret: "047b96bb9f2a01d5fb01c8c3678986d2d2f6efbd",
+      signinUrl: "http://localhost:3000/auth/signin/github",
+      callbackUrl: "http://localhost:3000/auth/callback/github",
+      redirectProxyUrl: undefined,
+      checks: [],
+      account: () => {},
+    },
+  ],
+  callbacks: {
+    signIn: () => null,
+    redirect: () => null,
+    session: () => null,
+    jwt: () => null,
+  },
+  basePath: "/auth",
+  secret: ["32decbfb38944e030750cbe592473317322443ec22cefd9d997c05afc6010fbe"],
+  redirectProxyUrl: undefined,
+  trustHost: true,
+  url: new URL("http://localhost:3000/auth/signin"),
+  // {
+  //   href: "http://localhost:3000/auth/signin",
+  //   origin: "http://localhost:3000",
+  //   protocol: "http:",
+  //   username: "",
+  //   password: "",
+  //   host: "localhost:3000",
+  //   hostname: "localhost",
+  //   port: "3000",
+  //   pathname: "/auth/signin",
+  //   search: "",
+  //   searchParams: new URLSearchParams({}),
+  //   hash: "",
+  //   toJSON: () => String.toString(),
+  // }),
+  action: "signout",
+  provider: undefined,
+  cookies: {
+    sessionToken: { name: "authjs.session-token", options: {} },
+    callbackUrl: { name: "authjs.callback-url", options: {} },
+    csrfToken: { name: "authjs.csrf-token", options: {} },
+    pkceCodeVerifier: { name: "authjs.pkce.code_verifier", options: {} },
+    state: { name: "authjs.state", options: {} },
+    nonce: { name: "authjs.nonce", options: {} },
+  },
+  jwt: {
+    secret: [
+      "32decbfb38944e030750cbe592473317322443ec22cefd9d997c05afc6010fbe",
+    ],
+    maxAge: 2592000,
+    encode: async () => {},
+    decode: async () => {},
+  },
+  events: {},
+  adapter: undefined,
+  logger: {
+    error: (msg: string) => console.error(msg),
+    warn: (msg: string) => console.warn(msg),
+    debug: (msg: string) => console.debug(msg),
+  },
+  callbackUrl: "http://localhost:3000/",
+  isOnRedirectProxy: false,
+  experimental: {},
+  csrfToken: "63e06109c89aad4883eb922fe9d9ec273a2a5184dab9a8421a3e06ad929f09a5",
+  csrfTokenVerified: undefined,
+} satisfies AuthConfig
