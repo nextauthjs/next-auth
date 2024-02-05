@@ -10,7 +10,6 @@
 "use client"
 
 import * as React from "react"
-import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import {
   apiBaseUrl,
   ClientSessionError,
@@ -212,18 +211,23 @@ export async function getProviders() {
 /**
  * Fetch webauthn options from server and prompt user for authentication or registration.
  * Returns either the completed WebAuthn response or an error request.
- * 
+ *
  * @param providerID provider ID
  * @param options SignInOptions
  * @returns WebAuthn response or error
  */
 async function webAuthnOptions(providerID: string, options?: SignInOptions) {
+  const { startAuthentication, startRegistration } = await import(
+    "@simplewebauthn/browser"
+  )
   const baseUrl = apiBaseUrl(__NEXTAUTH)
 
   // @ts-expect-error
   const params = new URLSearchParams(options)
 
-  const optionsResp = await fetch(`${baseUrl}/webauthn-options/${providerID}?${params}`)
+  const optionsResp = await fetch(
+    `${baseUrl}/webauthn-options/${providerID}?${params}`
+  )
   if (!optionsResp.ok) {
     return { error: optionsResp }
   }
@@ -231,7 +235,7 @@ async function webAuthnOptions(providerID: string, options?: SignInOptions) {
 
   if (optionsData.action === "authenticate") {
     const webAuthnResponse = await startAuthentication(optionsData.options)
-    return { data: webAuthnResponse, action: "authenticate"}
+    return { data: webAuthnResponse, action: "authenticate" }
   } else {
     const webAuthnResponse = await startRegistration(optionsData.options)
     return { data: webAuthnResponse, action: "register" }
@@ -303,7 +307,12 @@ export async function signIn<
         "X-Auth-Return-Redirect": "1",
       },
       // @ts-expect-error
-      body: new URLSearchParams({ ...options, ...webAuthnBody, csrfToken, callbackUrl }),
+      body: new URLSearchParams({
+        ...options,
+        ...webAuthnBody,
+        csrfToken,
+        callbackUrl,
+      }),
     }
   )
 
