@@ -5,6 +5,7 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
+  AdapterAuthenticator,
 } from "@auth/core/adapters"
 import type { Account } from "@auth/core/types"
 
@@ -20,6 +21,13 @@ const supabase = createClient(url, secret, {
 runBasicTests({
   adapter: SupabaseAdapter({ url, secret }),
   db: {
+    connect: async () => {
+      await supabase.from("users").delete().neq("id", "00000000-0000-0000-0000-000000000000")
+      await supabase.from("accounts").delete().neq("id", "00000000-0000-0000-0000-000000000000")
+      await supabase.from("sessions").delete().neq("id", "00000000-0000-0000-0000-000000000000")
+      await supabase.from("identifier").delete().neq("identifier", "00000000-0000-0000-0000-000000000000")
+      await supabase.from("authenticators").delete().neq("id", "00000000-0000-0000-0000-000000000000")
+    },
     async session(sessionToken) {
       const { data, error } = await supabase
         .from("sessions")
@@ -69,5 +77,19 @@ runBasicTests({
 
       return format<VerificationToken>(verificationToken)
     },
+    async authenticator(credentialID) {
+      const { data, error } = await supabase
+        .from("authenticators")
+        .select()
+        .eq("credentialID", credentialID)
+        .maybeSingle()
+
+      if (error) throw error
+      if (!data) return null
+
+      return format<AdapterAuthenticator>(data, ["counter"])
+    },
+
   },
+  testWebAuthnMethods: true,
 })
