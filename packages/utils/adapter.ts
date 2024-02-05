@@ -65,7 +65,7 @@ export async function runBasicTests(options: TestOptions) {
   })
 
   let user = options.fixtures?.user ?? {
-    id: randomUUID(),
+    id: id(),
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
@@ -78,21 +78,21 @@ export async function runBasicTests(options: TestOptions) {
   }
 
   const session: any = options.fixtures?.session ?? {
-    sessionToken: randomUUID(),
+    sessionToken: id(),
     expires: ONE_WEEK_FROM_NOW,
   }
 
   const account: any = options.fixtures?.account ?? {
     provider: "github",
-    providerAccountId: randomUUID(),
+    providerAccountId: id(),
     type: "oauth",
-    access_token: randomUUID(),
+    access_token: id(),
     expires_at: ONE_MONTH / 1000,
-    id_token: randomUUID(),
-    refresh_token: randomUUID(),
+    id_token: id(),
+    refresh_token: id(),
     token_type: "bearer",
     scope: "user",
-    session_state: randomUUID(),
+    session_state: id(),
   }
 
   // All adapters must define these methods
@@ -226,7 +226,7 @@ export async function runBasicTests(options: TestOptions) {
 
   test("createVerificationToken", async () => {
     const identifier = "info@example.com"
-    const token = randomUUID()
+    const token = id()
     const hashedToken = hashToken(token)
 
     const verificationToken = {
@@ -247,7 +247,7 @@ export async function runBasicTests(options: TestOptions) {
 
   test("useVerificationToken", async () => {
     const identifier = "info@example.com"
-    const token = randomUUID()
+    const token = id()
     const hashedToken = hashToken(token)
     const verificationToken = {
       token: hashedToken,
