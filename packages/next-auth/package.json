@@ -73,16 +73,19 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "@simplewebauthn/browser": "v9.0.0"
+    "@auth/core": "workspace:*"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "v9.0.0",
     "next": "^14",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
     "nodemailer": {
+      "optional": true
+    },
+    "@simplewebauthn/browser": {
       "optional": true
     }
   },
