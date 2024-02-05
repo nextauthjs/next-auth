@@ -11,12 +11,17 @@
 
 import WebAuthn, { WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT } from "./webauthn"
 
-
 /**
  * Add Passkey login to your page.
- * 
+ *
  * ### Setup
- * 
+ *
+ * Install the required peer dependency.
+ *
+ * ```npm2yarn
+ * npm install @simplewebauthn/browser
+ * ```
+ *
  * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
@@ -58,27 +63,29 @@ import WebAuthn, { WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT } from "./webauthn"
  *
  * :::
  */
-export default function Passkey(config: Partial<WebAuthnConfig>): WebAuthnConfig {
-    return WebAuthn({
-        id: "passkey",
-        name: "Passkey",
-        authenticationOptions: {
-            timeout: DEFAULT_WEBAUTHN_TIMEOUT,
-            userVerification: "required",
-        },
-        registrationOptions: {
-            timeout: DEFAULT_WEBAUTHN_TIMEOUT,
-            authenticatorSelection: {
-                residentKey: "required",
-                userVerification: "required",
-            },
-        },
-        verifyAuthenticationOptions: {
-            requireUserVerification: true,
-        },
-        verifyRegistrationOptions: {
-            requireUserVerification: true,
-        },
-        ...config,
-    })
+export default function Passkey(
+  config: Partial<WebAuthnConfig>
+): WebAuthnConfig {
+  return WebAuthn({
+    id: "passkey",
+    name: "Passkey",
+    authenticationOptions: {
+      timeout: DEFAULT_WEBAUTHN_TIMEOUT,
+      userVerification: "required",
+    },
+    registrationOptions: {
+      timeout: DEFAULT_WEBAUTHN_TIMEOUT,
+      authenticatorSelection: {
+        residentKey: "required",
+        userVerification: "required",
+      },
+    },
+    verifyAuthenticationOptions: {
+      requireUserVerification: true,
+    },
+    verifyRegistrationOptions: {
+      requireUserVerification: true,
+    },
+    ...config,
+  })
 }
