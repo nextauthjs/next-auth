@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores"
+  import { SignIn, SignOut } from "@auth/sveltekit/components"
 </script>
 
 <div>
@@ -20,7 +21,7 @@
                 $page.data.session.user?.name}</strong
             >
           </span>
-          <a href="/auth/signout" class="button">Sign out</a>
+          <SignOut>Sign out</SignOut>
         {:else}
           <span class="notSignedInText">You are not signed in</span>
           <a href="/auth/signin" class="buttonPrimary">Sign in</a>
@@ -31,6 +32,25 @@
       <ul class="navItems">
         <li class="navItem"><a href="/">Home</a></li>
         <li class="navItem"><a href="/protected">Protected</a></li>
+        <li class="navItem">
+          <SignIn provider="github"
+            ><span slot="submitButton">Sign In with GitHub</span></SignIn
+          >
+          <SignIn provider="sendgrid"
+            ><span slot="submitButton">Sign In with SendGrid</span></SignIn
+          >
+          <SignIn provider="credentials" authorizationParams={{
+            foo: "bar",
+          }}
+            >
+            <span slot="submitButton">Sign In with Credentials</span>
+            <div slot="credentials">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+            </SignIn
+          >
+        </li>
       </ul>
     </nav>
   </header>
@@ -77,6 +97,14 @@
     width: 100%;
     border-radius: 0.5rem;
     filter: invert(1);
+  }
+  :global(.signInButton) {
+    display: flex;
+    justify-content: end;
+  }
+  :global(.signOutButton) {
+    display: flex;
+    justify-content: end;
   }
 
   .nojs-show {
