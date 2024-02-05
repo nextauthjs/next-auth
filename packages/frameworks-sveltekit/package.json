@@ -47,8 +47,18 @@
     "set-cookie-parser": "^2.6.0"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "v9.0.0",
     "@sveltejs/kit": "^1.0.0 || ^2.0.0",
+    "nodemailer": "^6.6.5",
     "svelte": "^3.54.0 || ^4.0.0 || ^5"
+  },
+  "peerDependenciesMeta": {
+    "nodemailer": {
+      "optional": true
+    },
+    "@simplewebauthn/browser": {
+      "optional": true
+    }
   },
   "type": "module",
   "types": "./index.d.ts",

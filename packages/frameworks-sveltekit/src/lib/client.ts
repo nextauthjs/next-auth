@@ -3,6 +3,7 @@ import type {
   RedirectableProviderType,
 } from "@auth/core/providers"
 import { base } from "$app/paths"
+import type { WebAuthnOptionsResponseBody } from "@auth/core/lib/utils/webauthn-utils"
 
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
@@ -32,6 +33,40 @@ export type SignInAuthorizationParams =
   | URLSearchParams
 
 /**
+ * Fetch webauthn options from server and prompt user for authentication or registration.
+ * Returns either the completed WebAuthn response or an error request.
+ *
+ * @param providerId provider ID
+ * @param options SignInOptions
+ * @returns WebAuthn response or error
+ */
+async function webAuthnOptions(providerId: string, options?: SignInOptions) {
+  const { startAuthentication, startRegistration } = await import(
+    "@simplewebauthn/browser"
+  )
+  const baseUrl = `${base}/auth/`
+
+  // @ts-expect-error
+  const params = new URLSearchParams(options)
+
+  const optionsResp = await fetch(
+    `${baseUrl}/webauthn-options/${providerId}?${params}`
+  )
+  if (!optionsResp.ok) {
+    return { error: optionsResp }
+  }
+  const optionsData: WebAuthnOptionsResponseBody = await optionsResp.json()
+
+  if (optionsData.action === "authenticate") {
+    const webAuthnResponse = await startAuthentication(optionsData.options)
+    return { data: webAuthnResponse, action: "authenticate" }
+  } else {
+    const webAuthnResponse = await startRegistration(optionsData.options)
+    return { data: webAuthnResponse, action: "register" }
+  }
+}
+
+/**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.
  * Automatically adds the CSRF token to the request.
@@ -54,14 +89,27 @@ export async function signIn<
   // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
   const isEmail = providerId === "email"
-  const isSupportingReturn = isCredentials || isEmail
+  const isWebAuthn = providerId === "webauthn"
+  const isSupportingReturn = isCredentials || isEmail || isWebAuthn
 
   const basePath = base ?? ""
   const signInUrl = `${basePath}/auth/${
-    isCredentials ? "callback" : "signin"
+    isCredentials || isWebAuthn ? "callback" : "signin"
   }/${providerId}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+
+  // Execute WebAuthn client flow if needed
+  const webAuthnBody: Record<string, unknown> = {}
+  if (isWebAuthn) {
+    const { data, error, action } = await webAuthnOptions(providerId, options)
+    if (error) {
+      // logger.error(new Error(await error.text()))
+      return
+    }
+    webAuthnBody.data = JSON.stringify(data)
+    webAuthnBody.action = action
+  }
 
   // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
   const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
@@ -78,6 +126,7 @@ export async function signIn<
       ...options,
       csrfToken,
       callbackUrl,
+      ...webAuthnBody,
     }),
   })
 
