@@ -65,7 +65,7 @@ export async function signIn(
   }
 
   if (shouldRedirect) {
-    redirect(302, res.redirect!)
+    return redirect(302, res.redirect!)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
