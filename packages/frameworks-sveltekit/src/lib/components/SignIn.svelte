@@ -25,7 +25,7 @@
 
 <form
   method="POST"
-  action={signInPage}
+  action={`/${signInPage}`}
   use:enhance
   class={`signInButton ${className}`}
   {...$$restProps}

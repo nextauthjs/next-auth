@@ -12,7 +12,7 @@
   method="POST"
   action={`/${signOutPage}`}
   use:enhance
-  class={`signInButton ${className}`}
+  class={`signOutButton ${className}`}
   {...$$restProps}
 >
   {#if options}
