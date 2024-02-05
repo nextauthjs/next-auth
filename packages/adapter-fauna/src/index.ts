@@ -111,10 +111,6 @@ export type FaunaAccount = ToFauna<AdapterAccount> & any // TODO: Remove `& any`
  *     {
  *       unique: ["email"],
  *       status: "active",
- *     },
- *     {
- *       unique: ["data.id"],
- *       status: "active",
  *     }
  *   ],
  *   indexes: {
