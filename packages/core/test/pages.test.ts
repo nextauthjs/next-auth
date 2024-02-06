@@ -2,30 +2,6 @@ import { vi, expect, it, describe, beforeEach } from "vitest"
 import renderPage from "../src/lib/pages/index"
 import { pagesOptions } from "./fixtures/pages"
 import { init } from "../src/lib/init"
-import type { SignoutProps } from "../src/lib/pages/signout"
-import type { SigninProps } from "../src/lib/pages/signin"
-import { VNode } from "preact"
-
-const mocks = vi.hoisted(() => ({
-  SignoutPage: (props: SignoutProps) =>
-    `<form action="${props.url?.toString()}" method="POST">`,
-  SigninPage: (props: SigninProps) =>
-    `<form action="${props.providers?.[0].signinUrl.toString()}" method="POST">`,
-}))
-
-vi.mock("preact-render-to-string", () => {
-  return {
-    renderToString: (vnode: VNode<{}>) => vnode,
-  }
-})
-
-vi.mock("../src/lib/pages/signin", () => ({
-  default: mocks.SigninPage,
-}))
-
-vi.mock("../src/lib/pages/signout", () => ({
-  default: mocks.SignoutPage,
-}))
 
 describe("pages", () => {
   describe("sign-out", () => {
