@@ -1,4 +1,4 @@
-import type { AuthAction, AuthConfig } from "../../types"
+import type { AuthAction, AuthConfig } from "../../types.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {

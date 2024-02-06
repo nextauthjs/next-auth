@@ -422,7 +422,14 @@ export interface AuthConfig {
    * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
    * @default {}
    */
-  experimental?: Record<string, boolean>
+  experimental?: {
+    /**
+     * Enable WebAuthn support.
+     * 
+     * @default false
+     */
+    enableWebAuthn?: boolean
+  }
   /**
    * The base path of the Auth.js API endpoints.
    *

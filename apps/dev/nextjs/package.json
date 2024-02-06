@@ -8,8 +8,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "email": "fake-smtp-server",
-    "start:email": "pnpm email",
     "e2e": "pnpm dlx playwright test"
   },
   "license": "ISC",
@@ -25,7 +23,6 @@
   "devDependencies": {
     "@types/react": "^18.2.23",
     "@types/react-dom": "^18.2.8",
-    "fake-smtp-server": "^0.8.0",
     "prisma": "^5",
     "sqlite3": "^5.0.8"
   }

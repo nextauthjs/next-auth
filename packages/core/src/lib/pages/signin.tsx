@@ -3,6 +3,7 @@ import type {
   SignInPageErrorParam,
   Theme,
 } from "../../types.js"
+import { webauthnScript } from "../utils/webauthn-client.js"
 
 const signinErrors: Record<SignInPageErrorParam | "default", string> = {
   default: "Unable to sign in.",
@@ -46,7 +47,20 @@ function hexToRgba(hex?: string, alpha = 1) {
   return rgba
 }
 
-export type SigninProps = {
+function ConditionalUIScript(providerID: string) {
+  const startConditionalUIScript = `
+const currentURL = window.location.href;
+const authURL = currentURL.substring(0, currentURL.lastIndexOf('/'));
+(${webauthnScript})(authURL, "${providerID}");
+`
+  return (
+    <>
+      <script dangerouslySetInnerHTML={{ __html: startConditionalUIScript }} />
+    </>
+  )
+}
+
+export default function SigninPage(props: {
   csrfToken?: string
   providers?: InternalProvider[]
   callbackUrl?: string
@@ -82,6 +96,10 @@ export default function SigninPage(props: SigninProps) {
   const error = errorType && (signinErrors[errorType] ?? signinErrors.default)
 
   const providerLogoPath = "https://authjs.dev/img/providers"
+
+  const conditionalUIProviderID = providers.find(
+    (provider) => provider.type === "webauthn" && provider.enableConditionalUI
+  )?.id
 
   return (
     <div className="signin">
@@ -176,10 +194,11 @@ export default function SigninPage(props: SigninProps) {
                   </button>
                 </form>
               ) : null}
-              {(provider.type === "email" || provider.type === "credentials") &&
+              {(provider.type === "email" || provider.type === "credentials" || provider.type === "webauthn") &&
                 i > 0 &&
                 providers[i - 1].type !== "email" &&
-                providers[i - 1].type !== "credentials" && <hr />}
+                providers[i - 1].type !== "credentials" &&
+                providers[i - 1].type !== "webauthn" && <hr />}
               {provider.type === "email" && (
                 <form action={provider.signinUrl} method="POST">
                   <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -232,12 +251,43 @@ export default function SigninPage(props: SigninProps) {
                   </button>
                 </form>
               )}
-              {(provider.type === "email" || provider.type === "credentials") &&
+              {provider.type === "webauthn" && (
+                <form action={provider.callbackUrl} method="POST" id={`${provider.id}-form`}>
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  {Object.keys(provider.formFields).map((field) => {
+                    return (
+                      <div key={`input-group-${provider.id}`}>
+                        <label
+                          className="section-header"
+                          htmlFor={`input-${field}-for-${provider.id}-provider`}
+                        >
+                          {provider.formFields[field].label ?? field}
+                        </label>
+                        <input
+                          name={field}
+                          data-form-field
+                          id={`input-${field}-for-${provider.id}-provider`}
+                          type={provider.formFields[field].type ?? "text"}
+                          placeholder={
+                            provider.formFields[field].placeholder ?? ""
+                          }
+                          {...provider.formFields[field]}
+                        />
+                      </div>
+                    )
+                  })}
+                  <button id={`submitButton-${provider.id}`} type="submit" tabIndex={0}>
+                    Sign in with {provider.name}
+                  </button>
+                </form>
+              )}
+              {(provider.type === "email" || provider.type === "credentials" || provider.type === "webauthn") &&
                 i + 1 < providers.length && <hr />}
             </div>
           )
         })}
       </div>
+      {conditionalUIProviderID && ConditionalUIScript(conditionalUIProviderID)}
     </div>
   )
 }
