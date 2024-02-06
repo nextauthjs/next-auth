@@ -17,7 +17,7 @@ export function SelectProvider() {
         </Ariakit.ComboboxLabel>
         <Ariakit.Combobox
           placeholder="Type and select an OAuth Provider"
-          className="py-2 px-4 w-full font-medium rounded-sm shadow-md md:w-96 bg-slate-100 border-slate-400 text-slate-800 dark:bg-slate-800 dark:text-slate-300"
+          className="py-2 px-4 w-full font-medium rounded-sm shadow-md md:w-96 bg-neutral-100 border-neutral-400 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleSearchItem(e.target.value)
           }
@@ -26,11 +26,11 @@ export function SelectProvider() {
           <Ariakit.ComboboxPopover
             gutter={4}
             sameWidth
-            className="overflow-y-scroll z-50 p-2 mt-1 max-h-72 rounded-md bg-slate-100 dark:bg-slate-900"
+            className="overflow-y-scroll z-50 p-2 mt-1 max-h-72 rounded-md bg-neutral-100 dark:bg-neutral-900"
           >
             {items.map((item) => (
               <Ariakit.ComboboxItem
-                className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-amber-200 dark:aria-selected:text-slate-900"
+                className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-violet-200 dark:aria-selected:text-neutral-900"
                 value={item.name}
                 key={item.name}
                 onClick={() => handleSelectOption(item)}
@@ -58,7 +58,7 @@ export function SelectProvider() {
                 onClick={() =>
                   handleSelectOption({ id: "google", name: "Google" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-slate-200 dark:border-neutral-800 dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/google.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Google</div>
@@ -68,7 +68,7 @@ export function SelectProvider() {
                 onClick={() =>
                   handleSelectOption({ id: "twitter", name: "Twitter" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-slate-200 transition-color dark:border-neutral-800 dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 transition-color dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/twitter.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Twitter</div>
@@ -78,7 +78,7 @@ export function SelectProvider() {
                 onClick={() =>
                   handleSelectOption({ id: "facebook", name: "Facebook" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-slate-200 dark:border-neutral-800 dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img
                   src={`/img/providers/facebook.svg`}
@@ -91,14 +91,14 @@ export function SelectProvider() {
                 onClick={() =>
                   handleSelectOption({ id: "auth0", name: "Auth0" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-slate-200 dark:border-neutral-800 dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/auth0.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Auth0</div>
               </div>
               <div
                 role="button"
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-slate-200 dark:border-neutral-800 dark:border-slate-600 dark:hover:bg-slate-600 hover:bg-slate-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
                 onClick={() =>
                   handleSelectOption({ id: "auth0", name: "Auth0" })
                 }
@@ -109,7 +109,7 @@ export function SelectProvider() {
             </div>
           </>
         ) : (
-          <p className="py-2 px-4 mt-6 bg-amber-100 rounded-md dark:bg-amber-400 dark:text-slate-900">
+          <p className="py-2 px-4 mt-6 bg-violet-100 rounded-md dark:bg-violet-400/40 dark:text-neutral-900">
             Can't find the OAuth provider you're looking for? Then, you'll need
             to <Link href="/guides/custom-oauth">build your own provider</Link>.
           </p>
