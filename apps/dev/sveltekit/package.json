@@ -20,7 +20,10 @@
     "vite": "^5"
   },
   "dependencies": {
-    "@auth/sveltekit": "workspace:*"
+    "@auth/sveltekit": "workspace:*",
+    "@auth/unstorage-adapter": "workspace:*",
+    "nodemailer": "^6.9.3",
+    "unstorage": "^1.10.1"
   },
   "type": "module"
 }

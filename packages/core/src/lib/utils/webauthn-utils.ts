@@ -1,31 +1,56 @@
-import type { RelayingParty, WebAuthnProviderType } from "../../providers/webauthn";
-import type { Account, Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal, User } from "../../types";
-import type { Cookie } from "./cookie";
-import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../../errors";
-import { webauthnChallenge } from "../actions/callback/oauth/checks";
-import { VerifiedAuthenticationResponse, VerifiedRegistrationResponse, generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server";
+import type { WebAuthnProviderType } from "../../providers/webauthn.js"
+import type {
+  Account,
+  Authenticator,
+  Awaited,
+  InternalOptions,
+  RequestInternal,
+  ResponseInternal,
+  User,
+} from "../../types.js"
+import type { Cookie } from "./cookie.js"
+import {
+  AdapterError,
+  AuthError,
+  InvalidProvider,
+  MissingAdapter,
+  WebAuthnVerificationError,
+} from "../../errors.js"
+import { webauthnChallenge } from "../actions/callback/oauth/checks.js"
 import type {
   AuthenticationResponseJSON,
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,
   RegistrationResponseJSON,
 } from "@simplewebauthn/server/script/deps"
-import type { Adapter, AdapterAccount, AdapterAuthenticator } from "../../adapters";
-import type { GetUserInfo } from "../../providers/webauthn";
-import { randomString } from "./web";
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterAuthenticator,
+} from "../../adapters.js"
+import type { GetUserInfo } from "../../providers/webauthn.js"
+import { randomString } from "./web.js"
+import type {
+  VerifiedAuthenticationResponse,
+  VerifiedRegistrationResponse,
+} from "@simplewebauthn/server"
 
 export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
 export type WebAuthnAction = WebAuthnRegister | WebAuthnAuthenticate
 
-type InternalOptionsWebAuthn = InternalOptions<WebAuthnProviderType> & { adapter: Required<Adapter> }
-export type WebAuthnOptionsResponseBody = {
-  action: WebAuthnAuthenticate,
-  options: PublicKeyCredentialRequestOptionsJSON
-} | {
-  action: WebAuthnRegister,
-  options: PublicKeyCredentialCreationOptionsJSON
+type InternalOptionsWebAuthn = InternalOptions<WebAuthnProviderType> & {
+  adapter: Required<Adapter>
 }
+export type WebAuthnOptionsResponseBody =
+  | {
+      action: WebAuthnAuthenticate
+      options: PublicKeyCredentialRequestOptionsJSON
+    }
+  | {
+      action: WebAuthnRegister
+      options: PublicKeyCredentialCreationOptionsJSON
+    }
 type WebAuthnOptionsResponse = ResponseInternal & {
   body: WebAuthnOptionsResponseBody
 }
@@ -45,11 +70,11 @@ type RGetUserInfo = Awaited<ReturnType<GetUserInfo>>
 
 /**
  * Infers the WebAuthn options based on the provided parameters.
- * 
+ *
  * @param action - The WebAuthn action to perform (optional).
  * @param loggedInUser - The logged-in user (optional).
  * @param userInfoResponse - The response containing user information (optional).
- * 
+ *
  * @returns The WebAuthn action to perform, or null if no inference could be made.
  */
 export function inferWebAuthnOptions(
@@ -72,8 +97,7 @@ export function inferWebAuthnOptions(
        * - The user is logged in, meaning the user wants to register a new authenticator.
        * - The user is not logged in and provided user info that does NOT exist, meaning the user wants to register a new account.
        */
-      if (user && loggedIn === exists)
-        return "register"
+      if (user && loggedIn === exists) return "register"
       break
     }
     case undefined: {
@@ -105,7 +129,7 @@ export function inferWebAuthnOptions(
 
 /**
  * Retrieves the registration response for WebAuthn options request.
- * 
+ *
  * @param options - The internal options for WebAuthn.
  * @param request - The request object.
  * @param user - The user information.
@@ -121,7 +145,11 @@ export async function getRegistrationResponse(
   // Get registration options
   const regOptions = await getRegistrationOptions(options, request, user)
   // Get signed cookie
-  const { cookie } = await webauthnChallenge.create(options, regOptions.challenge, user)
+  const { cookie } = await webauthnChallenge.create(
+    options,
+    regOptions.challenge,
+    user
+  )
 
   return {
     status: 200,
@@ -138,7 +166,7 @@ export async function getRegistrationResponse(
 
 /**
  * Retrieves the authentication response for WebAuthn options request.
- * 
+ *
  * @param options - The internal options for WebAuthn.
  * @param request - The request object.
  * @param user - Optional user information.
@@ -154,7 +182,10 @@ export async function getAuthenticationResponse(
   // Get authentication options
   const authOptions = await getAuthenticationOptions(options, request, user)
   // Get signed cookie
-  const { cookie } = await webauthnChallenge.create(options, authOptions.challenge)
+  const { cookie } = await webauthnChallenge.create(
+    options,
+    authOptions.challenge
+  )
 
   return {
     status: 200,
@@ -173,12 +204,20 @@ export async function verifyAuthenticate(
   options: InternalOptionsWebAuthn,
   request: RequestInternal,
   resCookies: Cookie[]
-): Promise<{ account: AdapterAccount, user: User }> {
+): Promise<{ account: AdapterAccount; user: User }> {
   const { adapter, provider } = options
 
   // Get WebAuthn response from request body
-  const data = request.body && typeof request.body.data === "string" ? JSON.parse(request.body.data) as unknown : undefined
-  if (!data || typeof data !== "object" || !("id" in data) || typeof data.id !== "string") {
+  const data =
+    request.body && typeof request.body.data === "string"
+      ? (JSON.parse(request.body.data) as unknown)
+      : undefined
+  if (
+    !data ||
+    typeof data !== "object" ||
+    !("id" in data) ||
+    typeof data.id !== "string"
+  ) {
     throw new AuthError("Invalid WebAuthn Authentication response.")
   }
 
@@ -188,17 +227,25 @@ export async function verifyAuthenticate(
   // Get authenticator from database
   const authenticator = await adapter.getAuthenticator(credentialID)
   if (!authenticator) {
-    throw new AuthError(`WebAuthn authenticator not found in database: ${JSON.stringify({ credentialID })}`)
+    throw new AuthError(
+      `WebAuthn authenticator not found in database: ${JSON.stringify({
+        credentialID,
+      })}`
+    )
   }
 
   // Get challenge from request cookies
-  const { challenge: expectedChallenge } = await webauthnChallenge.use(options, request.cookies, resCookies)
+  const { challenge: expectedChallenge } = await webauthnChallenge.use(
+    options,
+    request.cookies,
+    resCookies
+  )
 
   // Verify the response
   let verification: VerifiedAuthenticationResponse
   try {
     const relayingParty = provider.getRelayingParty(options, request)
-    verification = await verifyAuthenticationResponse({
+    verification = await provider.simpleWebAuthn.verifyAuthenticationResponse({
       ...provider.verifyAuthenticationOptions,
       expectedChallenge,
       response: data as AuthenticationResponseJSON,
@@ -214,34 +261,53 @@ export async function verifyAuthenticate(
 
   // Make sure the response was verified
   if (!verified) {
-    throw new WebAuthnVerificationError("WebAuthn authentication response could not be verified.")
+    throw new WebAuthnVerificationError(
+      "WebAuthn authentication response could not be verified."
+    )
   }
 
   // Update authenticator counter
   try {
     const { newCounter } = authenticationInfo
-    await adapter.updateAuthenticatorCounter(authenticator.credentialID, newCounter)
+    await adapter.updateAuthenticatorCounter(
+      authenticator.credentialID,
+      newCounter
+    )
   } catch (e: any) {
     throw new AdapterError(
-      `Failed to update authenticator counter. This may cause future authentication attempts to fail. ${JSON.stringify({
-        credentialID,
-        oldCounter: authenticator.counter,
-        newCounter: authenticationInfo.newCounter,
-      })}`, e)
+      `Failed to update authenticator counter. This may cause future authentication attempts to fail. ${JSON.stringify(
+        {
+          credentialID,
+          oldCounter: authenticator.counter,
+          newCounter: authenticationInfo.newCounter,
+        }
+      )}`,
+      e
+    )
   }
 
   // Get the account and user
-  const account = await adapter.getAccount(authenticator.providerAccountId, provider.id)
+  const account = await adapter.getAccount(
+    authenticator.providerAccountId,
+    provider.id
+  )
   if (!account) {
-    throw new AuthError(`WebAuthn account not found in database: ${JSON.stringify({ credentialID, providerAccountId: authenticator.providerAccountId })}`)
+    throw new AuthError(
+      `WebAuthn account not found in database: ${JSON.stringify({
+        credentialID,
+        providerAccountId: authenticator.providerAccountId,
+      })}`
+    )
   }
 
   const user = await adapter.getUser(account.userId)
   if (!user) {
     throw new AuthError(
-      `WebAuthn user not found in database: ${JSON.stringify(
-        { credentialID, providerAccountId: authenticator.providerAccountId, userID: account.userId }
-      )}`
+      `WebAuthn user not found in database: ${JSON.stringify({
+        credentialID,
+        providerAccountId: authenticator.providerAccountId,
+        userID: account.userId,
+      })}`
     )
   }
 
@@ -254,27 +320,38 @@ export async function verifyAuthenticate(
 export async function verifyRegister(
   options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
-  resCookies: Cookie[],
-): Promise<{ account: Account, user: User; authenticator: Authenticator }> {
+  resCookies: Cookie[]
+): Promise<{ account: Account; user: User; authenticator: Authenticator }> {
   const { provider } = options
 
   // Get WebAuthn response from request body
-  const data = request.body && typeof request.body.data === "string" ? JSON.parse(request.body.data) as unknown : undefined
-  if (!data || typeof data !== "object" || !("id" in data) || typeof data.id !== "string") {
+  const data =
+    request.body && typeof request.body.data === "string"
+      ? (JSON.parse(request.body.data) as unknown)
+      : undefined
+  if (
+    !data ||
+    typeof data !== "object" ||
+    !("id" in data) ||
+    typeof data.id !== "string"
+  ) {
     throw new AuthError("Invalid WebAuthn Registration response.")
   }
 
   // Get challenge from request cookies
-  const { challenge: expectedChallenge, registerData: user } = await webauthnChallenge.use(options, request.cookies, resCookies)
+  const { challenge: expectedChallenge, registerData: user } =
+    await webauthnChallenge.use(options, request.cookies, resCookies)
   if (!user) {
-    throw new AuthError("Missing user registration data in WebAuthn challenge cookie.")
+    throw new AuthError(
+      "Missing user registration data in WebAuthn challenge cookie."
+    )
   }
 
   // Verify the response
   let verification: VerifiedRegistrationResponse
   try {
     const relayingParty = provider.getRelayingParty(options, request)
-    verification = await verifyRegistrationResponse({
+    verification = await provider.simpleWebAuthn.verifyRegistrationResponse({
       ...provider.verifyRegistrationOptions,
       expectedChallenge,
       response: data as RegistrationResponseJSON,
@@ -287,7 +364,9 @@ export async function verifyRegister(
 
   // Make sure the response was verified
   if (!verification.verified || !verification.registrationInfo) {
-    throw new WebAuthnVerificationError("WebAuthn registration response could not be verified.")
+    throw new WebAuthnVerificationError(
+      "WebAuthn registration response could not be verified."
+    )
   }
 
   // Build a new account
@@ -302,10 +381,15 @@ export async function verifyRegister(
     providerAccountId: account.providerAccountId,
     counter: verification.registrationInfo.counter,
     credentialID: toBase64(verification.registrationInfo.credentialID),
-    credentialPublicKey: toBase64(verification.registrationInfo.credentialPublicKey),
+    credentialPublicKey: toBase64(
+      verification.registrationInfo.credentialPublicKey
+    ),
     credentialBackedUp: verification.registrationInfo.credentialBackedUp,
     credentialDeviceType: verification.registrationInfo.credentialDeviceType,
-    transports: transportsToString((data as RegistrationResponseJSON).response.transports as AuthenticatorTransport[])
+    transports: transportsToString(
+      (data as RegistrationResponseJSON).response
+        .transports as AuthenticatorTransport[]
+    ),
   }
 
   // Return created stuff
@@ -316,27 +400,31 @@ export async function verifyRegister(
   }
 }
 
-
 /**
  * Generates WebAuthn authentication options.
- * 
+ *
  * @param options - The internal options for WebAuthn.
  * @param request - The request object.
  * @param user - Optional user information.
  * @returns The authentication options.
  */
-async function getAuthenticationOptions(options: InternalOptionsWebAuthn, request: RequestInternal, user?: User) {
+async function getAuthenticationOptions(
+  options: InternalOptionsWebAuthn,
+  request: RequestInternal,
+  user?: User
+) {
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = user && user["id"] ?
-    await adapter.listAuthenticatorsByUserId(user.id) :
-    null
+  const authenticators =
+    user && user["id"]
+      ? await adapter.listAuthenticatorsByUserId(user.id)
+      : null
 
   const relayingParty = provider.getRelayingParty(options, request)
 
   // Return the authentication options.
-  return await generateAuthenticationOptions({
+  return await provider.simpleWebAuthn.generateAuthenticationOptions({
     ...provider.authenticationOptions,
     rpID: relayingParty.id,
     allowCredentials: authenticators?.map((a) => ({
@@ -347,10 +435,9 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, reques
   })
 }
 
-
 /**
  * Generates WebAuthn registration options.
- * 
+ *
  * @param options - The internal options for WebAuthn.
  * @param request - The request object.
  * @param user - The user information.
@@ -364,7 +451,9 @@ async function getRegistrationOptions(
   const { provider, adapter } = options
 
   // Get the user's authenticators.
-  const authenticators = user["id"] ? await adapter.listAuthenticatorsByUserId(user.id) : null
+  const authenticators = user["id"]
+    ? await adapter.listAuthenticatorsByUserId(user.id)
+    : null
 
   // Generate a random user ID for the credential.
   // We can do this because we don't use this user ID to link the
@@ -375,7 +464,7 @@ async function getRegistrationOptions(
   const relayingParty = provider.getRelayingParty(options, request)
 
   // Return the registration options.
-  return await generateRegistrationOptions({
+  return await provider.simpleWebAuthn.generateRegistrationOptions({
     ...provider.registrationOptions,
     userID,
     userName: user.email,
@@ -390,13 +479,14 @@ async function getRegistrationOptions(
   })
 }
 
-export function assertInternalOptionsWebAuthn(options: InternalOptions): InternalOptionsWebAuthn {
+export function assertInternalOptionsWebAuthn(
+  options: InternalOptions
+): InternalOptionsWebAuthn {
   const { provider, adapter } = options
 
   // Adapter is required for WebAuthn
-  if (!adapter) throw new MissingAdapter(
-    "An adapter is required for the WebAuthn provider"
-  )
+  if (!adapter)
+    throw new MissingAdapter("An adapter is required for the WebAuthn provider")
   // Provider must be WebAuthn
   if (!provider || provider.type !== "webauthn") {
     throw new InvalidProvider("Provider must be WebAuthn")
@@ -405,10 +495,13 @@ export function assertInternalOptionsWebAuthn(options: InternalOptions): Interna
   return { ...options, provider, adapter }
 }
 
-function fromAdapterAuthenticator(authenticator: AdapterAuthenticator): InternalAuthenticator {
+function fromAdapterAuthenticator(
+  authenticator: AdapterAuthenticator
+): InternalAuthenticator {
   return {
     ...authenticator,
-    credentialDeviceType: authenticator.credentialDeviceType as InternalAuthenticator["credentialDeviceType"],
+    credentialDeviceType:
+      authenticator.credentialDeviceType as InternalAuthenticator["credentialDeviceType"],
     transports: stringToTransports(authenticator.transports),
     credentialID: fromBase64(authenticator.credentialID),
     credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
@@ -423,10 +516,16 @@ export function toBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("base64")
 }
 
-export function transportsToString(transports: InternalAuthenticator["transports"]) {
+export function transportsToString(
+  transports: InternalAuthenticator["transports"]
+) {
   return transports?.join(",")
 }
 
-export function stringToTransports(tstring: string | undefined): InternalAuthenticator["transports"] {
-  return tstring ? tstring.split(",") as InternalAuthenticator["transports"] : undefined
+export function stringToTransports(
+  tstring: string | undefined
+): InternalAuthenticator["transports"] {
+  return tstring
+    ? (tstring.split(",") as InternalAuthenticator["transports"])
+    : undefined
 }

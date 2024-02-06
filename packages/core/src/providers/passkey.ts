@@ -9,7 +9,10 @@
  * @module providers/passkey
  */
 
-import WebAuthn, { WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT } from "./webauthn"
+import WebAuthn, {
+  WebAuthnConfig,
+  DEFAULT_WEBAUTHN_TIMEOUT,
+} from "./webauthn.js"
 
 /**
  * Add Passkey login to your page.

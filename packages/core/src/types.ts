@@ -73,17 +73,20 @@ import type {
   OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
-import {
+import type {
   WebAuthnConfig,
   WebAuthnProviderType,
-} from "./providers/webauthn"
+} from "./providers/webauthn.js"
 
 export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
 export type Awaited<T> = T extends Promise<infer U> ? U : T
 
-export type SemverString = `v${number}` | `v${number}.${number}` | `v${number}.${number}.${number}`
+export type SemverString =
+  | `v${number}`
+  | `v${number}.${number}`
+  | `v${number}.${number}.${number}`
 
 /**
  * Change the theme of the built-in pages.
@@ -470,18 +473,18 @@ export interface User {
 export type InternalProvider<T = ProviderType> = (T extends "oauth"
   ? OAuthConfigInternal<any>
   : T extends "oidc"
-  ? OIDCConfigInternal<any>
-  : T extends "email"
-  ? EmailConfig
-  : T extends "credentials"
-  ? CredentialsConfig
-  : T extends WebAuthnProviderType
-  ? WebAuthnConfig
-  : never) & {
-    signinUrl: string
-    /** @example `"https://example.com/api/auth/callback/id"` */
-    callbackUrl: string
-  }
+    ? OIDCConfigInternal<any>
+    : T extends "email"
+      ? EmailConfig
+      : T extends "credentials"
+        ? CredentialsConfig
+        : T extends WebAuthnProviderType
+          ? WebAuthnConfig
+          : never) & {
+  signinUrl: string
+  /** @example `"https://example.com/api/auth/callback/id"` */
+  callbackUrl: string
+}
 
 export interface PublicProvider {
   id: string
@@ -626,6 +629,6 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * See also {@link OAuthConfigInternal.redirectProxyUrl}.
    */
   isOnRedirectProxy: boolean
-  experimental: NonNullable<AuthConfig['experimental']>
+  experimental: NonNullable<AuthConfig["experimental"]>
   basePath: string
 }
