@@ -453,7 +453,7 @@ export interface DefaultSession {
 }
 
 /** The active session of the logged in user. */
-export interface Session extends DefaultSession { }
+export interface Session extends DefaultSession {}
 
 /**
  * The shape of the returned object in the OAuth providers' `profile` callback,
