@@ -8,6 +8,7 @@ const prisma = new PrismaClient().$extends(withAccelerate())
 
 runBasicTests({
   adapter: PrismaAdapter(prisma),
+  testWebAuthnMethods: true,
   db: {
     id() {
       if (process.env.CONTAINER_NAME !== "authjs-mongodb-test") return
@@ -19,6 +20,7 @@ runBasicTests({
         prisma.account.deleteMany({}),
         prisma.session.deleteMany({}),
         prisma.verificationToken.deleteMany({}),
+        prisma.authenticator.deleteMany({}),
       ])
     },
     disconnect: async () => {
@@ -27,6 +29,7 @@ runBasicTests({
         prisma.account.deleteMany({}),
         prisma.session.deleteMany({}),
         prisma.verificationToken.deleteMany({}),
+        prisma.authenticator.deleteMany({}),
       ])
       await prisma.$disconnect()
     },
@@ -44,5 +47,7 @@ runBasicTests({
       delete result.id
       return result
     },
+    authenticator: (credentialID) =>
+      prisma.authenticator.findUnique({ where: { credentialID } }),
   },
 })

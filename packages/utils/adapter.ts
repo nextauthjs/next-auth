@@ -1,7 +1,7 @@
 import { test, expect, beforeAll, afterAll } from "vitest"
 
 import type { Adapter } from "@auth/core/adapters"
-import { createHash, randomUUID } from "crypto"
+import { createHash, randomInt, randomUUID } from "crypto"
 
 export interface TestOptions {
   adapter: Adapter
@@ -39,10 +39,18 @@ export interface TestOptions {
      * based on the user identifier and the verification token (hashed).
      */
     verificationToken: (params: { identifier: string; token: string }) => any
+    /**
+     * A simple query function that returns an authenticator directly from the db.
+     */
+    authenticator?: (credentialID: string) => any
   }
-  skipTests?: string[]
+  skipTests?: string[],
+  /**
+   * Enables testing of WebAuthn methods.
+   */
+  testWebAuthnMethods?: boolean
 }
-const testIf = (condition: boolean) => (condition ? test : test.skip)
+
 /**
  * A wrapper to run the most basic tests.
  * Run this at the top of your test file.
@@ -55,8 +63,24 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.connect?.()
   })
 
-  const { adapter: _adapter, db, skipTests } = options
+  const { adapter: _adapter, db, skipTests: skipTests = [], testWebAuthnMethods } = options
   const adapter = _adapter as Required<Adapter>
+
+  if (!testWebAuthnMethods) {
+    skipTests.push(...[
+      "getAccount",
+      "getAuthenticator",
+      "createAuthenticator",
+      "listAuthenticatorsByUserId",
+      "updateAuthenticatorCounter"
+    ])
+  }
+
+  const maybeTest = (
+    method: keyof Adapter,
+    ...args: Parameters<typeof test> extends [any, ...infer U] ? U : never
+  ) =>
+    skipTests.includes(method) ? test.skip(method, ...args) : test(method, ...args)
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
@@ -303,7 +327,7 @@ export async function runBasicTests(options: TestOptions) {
     expect(dbAccount).toBeNull()
   })
 
-  testIf(!skipTests?.includes("deleteUser"))("deleteUser", async () => {
+  maybeTest("deleteUser", async () => {
     let dbUser = await db.user(user.id)
     expect(dbUser).toEqual(user)
 
@@ -327,6 +351,221 @@ export async function runBasicTests(options: TestOptions) {
     })
     // Account should not exist after user is deleted
     expect(dbAccount).toBeNull()
+  })
+
+  maybeTest("getAccount", async () => {
+    // Setup
+    const providerAccountId = randomUUID()
+    const provider = "auth0"
+    const localUser = await adapter.createUser({
+      id: randomUUID(),
+      email: "getAccount@example.com",
+      emailVerified: null,
+    })
+    await adapter.linkAccount({
+      provider,
+      providerAccountId,
+      type: "oauth",
+      userId: localUser.id,
+    })
+
+    // Test
+    const invalidBoth = await adapter.getAccount("invalid-provider-account-id", "invalid-provider")
+    expect(invalidBoth).toBeNull()
+    const invalidProvider = await adapter.getAccount(providerAccountId, "invalid-provider")
+    expect(invalidProvider).toBeNull()
+    const invalidProviderAccountId = await adapter.getAccount("invalid-provider-account-id", provider)
+    expect(invalidProviderAccountId).toBeNull()
+    const validAccount = await adapter.getAccount(providerAccountId, provider)
+    expect(validAccount).not.toBeNull()
+
+    const dbAccount = await db.account({
+      provider,
+      providerAccountId,
+    })
+    expect(dbAccount).toMatchObject(validAccount || {})
+  })
+  maybeTest("createAuthenticator", async () => {
+    // Setup
+    const credentialID = randomUUID()
+    const localUser = await adapter.createUser({
+      id: randomUUID(),
+      email: "createAuthenticator@example.com",
+      emailVerified: null,
+    })
+    await adapter.linkAccount({
+      provider: "webauthn",
+      providerAccountId: credentialID,
+      type: "webauthn",
+      userId: localUser.id,
+    })
+
+    // Test
+    const authenticatorData = {
+      credentialID,
+      providerAccountId: credentialID,
+      userId: localUser.id,
+      counter: randomInt(100),
+      credentialBackedUp: true,
+      credentialDeviceType: "platform",
+      credentialPublicKey: randomUUID(),
+      transports: "usb,ble,nfc",
+    }
+    const newAuthenticator = await adapter.createAuthenticator(authenticatorData)
+    expect(newAuthenticator).not.toBeNull()
+    expect(newAuthenticator).toMatchObject(authenticatorData)
+
+    const dbAuthenticator = db.authenticator ? await db.authenticator(
+      credentialID,
+    ) : undefined
+    expect(dbAuthenticator).toMatchObject(newAuthenticator)
+  })
+  maybeTest("getAuthenticator", async () => {
+    // Setup
+    const credentialID = randomUUID()
+    const localUser = await adapter.createUser({
+      id: randomUUID(),
+      email: "getAuthenticator@example.com",
+      emailVerified: null,
+    })
+    await adapter.linkAccount({
+      provider: "webauthn",
+      providerAccountId: credentialID,
+      type: "webauthn",
+      userId: localUser.id,
+    })
+    await adapter.createAuthenticator({
+      credentialID,
+      providerAccountId: credentialID,
+      userId: localUser.id,
+      counter: randomInt(100),
+      credentialBackedUp: true,
+      credentialDeviceType: "platform",
+      credentialPublicKey: randomUUID(),
+      transports: "usb,ble,nfc",
+    })
+
+    // Test
+    const invalidAuthenticator = await adapter.getAuthenticator("invalid-credential-id")
+    expect(invalidAuthenticator).toBeNull()
+
+    const validAuthenticator = await adapter.getAuthenticator(credentialID)
+    expect(validAuthenticator).not.toBeNull()
+    const dbAuthenticator = db.authenticator ? await db.authenticator(
+      credentialID
+    ) : undefined
+    expect(dbAuthenticator).toMatchObject(validAuthenticator || {})
+  })
+  maybeTest("listAuthenticatorsByUserId", async () => {
+    // Setup
+    const user1 = await adapter.createUser({
+      id: randomUUID(),
+      email: "listAuthenticatorsByUserId1@example.com",
+      emailVerified: null,
+    })
+    const user2 = await adapter.createUser({
+      id: randomUUID(),
+      email: "listAuthenticatorsByUserId2@example.com",
+      emailVerified: null,
+    })
+    const credentialID1 = randomUUID()
+    const credentialID2 = randomUUID()
+    const credentialID3 = randomUUID()
+    await adapter.linkAccount({
+      provider: "webauthn",
+      providerAccountId: credentialID1,
+      type: "webauthn",
+      userId: user1.id,
+    })
+    await adapter.linkAccount({
+      provider: "webauthn",
+      providerAccountId: credentialID2,
+      type: "webauthn",
+      userId: user1.id,
+    })
+    await adapter.linkAccount({
+      provider: "webauthn",
+      providerAccountId: credentialID3,
+      type: "webauthn",
+      userId: user2.id,
+    })
+    const authenticator1 = await adapter.createAuthenticator({
+      credentialID: credentialID1,
+      providerAccountId: credentialID1,
+      userId: user1.id,
+      counter: randomInt(100),
+      credentialBackedUp: true,
+      credentialDeviceType: "platform",
+      credentialPublicKey: randomUUID(),
+      transports: "usb,ble,nfc",
+    })
+    const authenticator2 = await adapter.createAuthenticator({
+      credentialID: credentialID2,
+      providerAccountId: credentialID2,
+      userId: user1.id,
+      counter: randomInt(100),
+      credentialBackedUp: true,
+      credentialDeviceType: "platform",
+      credentialPublicKey: randomUUID(),
+      transports: "usb,nfc",
+    })
+    const authenticator3 = await adapter.createAuthenticator({
+      credentialID: credentialID3,
+      providerAccountId: credentialID3,
+      userId: user2.id,
+      counter: randomInt(100),
+      credentialBackedUp: true,
+      credentialDeviceType: "platform",
+      credentialPublicKey: randomUUID(),
+      transports: "usb,ble",
+    })
+
+    // Test
+    const authenticators0 = await adapter.listAuthenticatorsByUserId("invalid-user-id")
+    expect(authenticators0).toEqual([])
+
+    const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
+    expect(authenticators1).not.toBeNull()
+    expect([authenticator1, authenticator2]).toMatchObject(authenticators1 || [])
+
+    const authenticators2 = await adapter.listAuthenticatorsByUserId(user2.id)
+    expect(authenticators2).not.toBeNull()
+    expect([authenticator3]).toMatchObject(authenticators2 || [])
+  })
+  maybeTest("updateAuthenticatorCounter", async () => {
+    // Setup
+    const credentialID = randomUUID()
+    const localUser = await adapter.createUser({
+      id: randomUUID(),
+      email: "updateAuthenticatorCounter@example.com",
+      emailVerified: null,
+    })
+    await adapter.linkAccount({
+      provider: "webauthn",
+      providerAccountId: credentialID,
+      type: "webauthn",
+      userId: localUser.id,
+    })
+    const newAuthenticator = await adapter.createAuthenticator({
+      credentialID,
+      providerAccountId: credentialID,
+      userId: localUser.id,
+      counter: randomInt(100),
+      credentialBackedUp: true,
+      credentialDeviceType: "platform",
+      credentialPublicKey: randomUUID(),
+      transports: "usb,ble,nfc",
+    })
+
+    // Test
+    await expect(
+      () => adapter.updateAuthenticatorCounter("invalid-credential-id", randomInt(100))
+    ).rejects.toThrow()
+
+    const newCounter = newAuthenticator.counter + randomInt(100)
+    const updatedAuthenticator = await adapter.updateAuthenticatorCounter(credentialID, newCounter)
+    expect(updatedAuthenticator).not.toBeNull()
+    expect(updatedAuthenticator.counter).toBe(newCounter)
   })
 }
 
