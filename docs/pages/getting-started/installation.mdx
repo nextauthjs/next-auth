@@ -1,10 +1,10 @@
-import { Steps, Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Steps, Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <Steps>
 ### Installing Auth.js
 
-Start by installing the appropriate package for your framework of choice:
+Start by installing the appropriate package for your framework:
 
 <Code>
   <Code.Next>
@@ -75,49 +75,49 @@ Start by creating a new `auth.ts` file at the root of your app with the followin
 </Callout>
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
+import NextAuth from "next-auth"
 
 export const { signIn, signOut, auth } = NextAuth({
   providers: [],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
 ```ts filename="./src/hooks.server.ts"
-import { SvelteKitAuth } from "@auth/sveltekit";
+import { SvelteKitAuth } from "@auth/sveltekit"
 
 export const handle = SvelteKitAuth({
   providers: [],
-});
+})
 ```
 
   </Code.Svelte>
   {/* <Code.Solid>
 
 ```ts filename="./routes/api/auth/[...solidauth].ts"
-import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start";
+import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start"
 
 export const authOpts: SolidAuthConfig = {
   providers: [],
-};
+}
 
-export const { GET, POST } = SolidAuth(authOpts);
+export const { GET, POST } = SolidAuth(authOpts)
 ```
 
   </Code.Solid> */}
   <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import { ExpressAuth } from "@auth/express";
-import express from "express";
+import { ExpressAuth } from "@auth/express"
+import express from "express"
 
-const app = express();
+const app = express()
 
 // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
-app.use("trust proxy");
-app.use("/auth/*", ExpressAuth({ providers: [] }));
+app.use("trust proxy")
+app.use("/auth/*", ExpressAuth({ providers: [] }))
 ```
 
   </Code.Express>
