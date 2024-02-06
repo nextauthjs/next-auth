@@ -5,8 +5,7 @@ import { TSIcon } from "./TSIcon"
 interface Props {
   providerName: string
   providerId: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  highlight: any // TODO...
+  highlight: TODO
 }
 
 export function SignInCode({ providerId, providerName, highlight }: Props) {
@@ -28,7 +27,7 @@ export function SignInCode({ providerId, providerName, highlight }: Props) {
                       // prettier-ignore
                       `
 import { signIn } from "@/auth.ts";
-// ...
+
 export function SignIn() {
   return (
     <form
