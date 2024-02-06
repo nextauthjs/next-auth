@@ -14,7 +14,20 @@ import type {
   PublicProvider,
 } from "../../types.js"
 import type { Cookie } from "../utils/cookie.js"
-import { getSimpleWebAuthnBrowserScriptTag } from "../../providers/webauthn.js"
+
+/**
+ * Builds and returns the script tag to load the SimpleWebAuthn browser script.
+ * @param config Provider config
+ * @returns The script tag to load the SimpleWebAuthn browser script, or an empty string if the provider has no conditional UI enabled.
+ */
+export function getSimpleWebAuthnBrowserScriptTag(config: InternalProvider<"webauthn">) {
+  const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
+
+  if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
+    return ""
+
+  return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.umd.min.js" crossorigin="anonymous"></script>`
+}
 
 function send({ html, title, status, cookies, theme, headTags }: any): ResponseInternal {
   return {

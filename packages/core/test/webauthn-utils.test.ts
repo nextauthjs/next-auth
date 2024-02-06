@@ -40,12 +40,6 @@ const getMockAdapter = () => ({
 }) as unknown as Required<Adapter>
 
 const getDefaultProvider = (config?: Partial<WebAuthnConfig>) => WebAuthn({
-  simpleWebAuthn: {
-    generateAuthenticationOptions,
-    generateRegistrationOptions,
-    verifyAuthenticationResponse,
-    verifyRegistrationResponse
-  },
   ...config,
 })
 

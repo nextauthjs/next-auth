@@ -2,6 +2,7 @@ import type { CommonProviderOptions, CredentialInput } from "."
 import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts, VerifiedAuthenticationResponse, VerifiedRegistrationResponse } from "@simplewebauthn/server"
 import type { PublicKeyCredentialCreationOptionsJSON, PublicKeyCredentialRequestOptionsJSON } from "@simplewebauthn/server/script/deps.js"
 import type { InternalOptions, RequestInternal, SemverString, User } from "../types"
+import { generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server"
 import { MissingAdapter } from "../errors"
 
 
@@ -162,7 +163,7 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  *
  * :::
  */
-export default function WebAuthn(config: Partial<WebAuthnConfig> & Pick<WebAuthnConfig, "simpleWebAuthn">): WebAuthnConfig {
+export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfig {
   return {
     id: "webauthn",
     name: "WebAuthn",
@@ -177,6 +178,12 @@ export default function WebAuthn(config: Partial<WebAuthnConfig> & Pick<WebAuthn
     simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
     getUserInfo,
     getRelayingParty,
+    simpleWebAuthn: {
+      generateAuthenticationOptions,
+      generateRegistrationOptions,
+      verifyAuthenticationResponse,
+      verifyRegistrationResponse,
+    },
     ...config,
     type: "webauthn",
   }
