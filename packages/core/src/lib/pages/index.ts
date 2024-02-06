@@ -14,7 +14,6 @@ import type {
   PublicProvider,
 } from "../../types.js"
 import type { Cookie } from "../utils/cookie.js"
-import { getSimpleWebAuthnBrowserScriptTag } from "../../providers/webauthn.js"
 
 function send({
   html,
