@@ -2,7 +2,6 @@ import { DocsThemeConfig } from "nextra-theme-docs"
 import { Link } from "@/components/Link"
 import { ChildrenProps } from "@/utils/types"
 import Footer from "@/components/Footer"
-import { Sparkle } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
 
 const InkeepChatButton = dynamic(

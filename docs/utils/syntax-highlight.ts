@@ -3,19 +3,19 @@ import {
   BundledTheme,
   HighlighterGeneric,
   getHighlighter,
-} from "shikiji";
+} from "shikiji"
 
-export type Highlighter = HighlighterGeneric<BundledLanguage, BundledTheme>;
+export type Highlighter = HighlighterGeneric<BundledLanguage, BundledTheme>
 
-let hl: Highlighter | null = null;
+let hl: Highlighter | null = null
 
 async function init() {
-  if (hl) return;
+  if (hl) return
 
   hl = await getHighlighter({
-    themes: ["nord", "min-light"],
+    themes: ["github-dark-dimmed", "github-dark"],
     langs: ["ts", "tsx", "bash"],
-  });
+  })
 }
 
 function highlight(code: string) {
@@ -23,14 +23,14 @@ function highlight(code: string) {
     ? hl.codeToHtml(code, {
         lang: "tsx",
         themes: {
-          light: "min-light",
-          dark: "nord",
+          light: "github-dark",
+          dark: "github-dark",
         },
       })
-    : null;
+    : null
 }
 
 export default {
   init,
   highlight,
-};
+}

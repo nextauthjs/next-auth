@@ -54,7 +54,8 @@ details > *:not(summary) {
 }
 
 .nextra-code pre {
-  @apply dark:bg-neutral-950;
+  --shiki-dark-bg: "transparent" !important;
+  @apply dark:!bg-neutral-950 !bg-transparent;
 }
 
 @keyframes fadeIn {
