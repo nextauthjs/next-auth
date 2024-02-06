@@ -1,15 +1,20 @@
 import { and, eq } from "drizzle-orm"
 import {
-  int,
-  timestamp,
-  mysqlTable as defaultMySqlTableFn,
-  primaryKey,
-  varchar,
-  MySqlTableFn,
   MySqlDatabase,
+  MySqlTableFn,
+  boolean,
+  mysqlTable as defaultMySqlTableFn,
+  int,
+  primaryKey,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterAuthenticator,
+} from "@auth/core/adapters"
 
 export function createTables(mySqlTable: MySqlTableFn) {
   const users = mySqlTable("user", {
@@ -71,7 +76,25 @@ export function createTables(mySqlTable: MySqlTableFn) {
     })
   )
 
-  return { users, accounts, sessions, verificationTokens }
+  const authenticators = mySqlTable("authenticator", {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    credentialPublicKey: varchar("credentialPublicKey", {
+      length: 255,
+    }).notNull(),
+    counter: int("counter").notNull(),
+    credentialDeviceType: varchar("credentialDeviceType", {
+      length: 255,
+    }).notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: varchar("transports", { length: 255 }),
+  })
+
+  return { users, accounts, sessions, verificationTokens, authenticators }
 }
 
 export type DefaultSchema = ReturnType<typeof createTables>
@@ -80,7 +103,7 @@ export function mySqlDrizzleAdapter(
   client: InstanceType<typeof MySqlDatabase>,
   tableFn = defaultMySqlTableFn
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
+  const { users, accounts, sessions, verificationTokens, authenticators } =
     createTables(tableFn)
 
   return {
@@ -260,5 +283,70 @@ export function mySqlDrizzleAdapter(
 
       return undefined
     },
+    async getAccount(providerAccountId, provider) {
+      return await client
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, providerAccountId),
+            eq(accounts.provider, provider)
+          )
+        )
+        .then((res) => (res[0] as AdapterAccount) ?? null)
+    },
+    async createAuthenticator(data) {
+      await client
+        .insert(authenticators)
+        .values({ ...data, id: crypto.randomUUID() })
+
+      return await client
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, data.credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await client
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+      return authenticator ? authenticator : null
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return await client
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.userId, userId))
+        .then((res) => res.map(fromDBAuthenticator))
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      await client
+        .update(authenticators)
+        .set({ counter: newCounter })
+        .where(eq(authenticators.credentialID, credentialID))
+
+      return await client
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+  }
+}
+
+type BaseDrizzleAuthenticator = ReturnType<
+  typeof createTables
+>["authenticators"]["$inferInsert"]
+
+function fromDBAuthenticator(
+  authenticator: BaseDrizzleAuthenticator
+): AdapterAuthenticator {
+  const { transports, id, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }

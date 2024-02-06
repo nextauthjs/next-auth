@@ -387,23 +387,25 @@ export interface Adapter {
   }): Awaitable<VerificationToken | null>
   /**
    * Get account by provider account id and provider.
-   * 
+   *
    * If an account is not found, the adapter must return `null`.
    */
   getAccount?(
-    providerAccountId: AdapterAccount["providerAccountId"], provider: AdapterAccount["provider"]
+    providerAccountId: AdapterAccount["providerAccountId"],
+    provider: AdapterAccount["provider"]
   ): Awaitable<AdapterAccount | null>
+  //            ^?
   /**
    * Returns an authenticator from its credentialID.
-   * 
+   *
    * If an authenticator is not found, the adapter must return `null`.
    */
   getAuthenticator?(
-    credentialID: AdapterAuthenticator['credentialID']
+    credentialID: AdapterAuthenticator["credentialID"]
   ): Awaitable<AdapterAuthenticator | null>
   /**
    * Create a new authenticator.
-   * 
+   *
    * If the creation fails, the adapter must throw an error.
    */
   createAuthenticator?(
@@ -416,16 +418,16 @@ export interface Adapter {
    * If the retrieval fails for some other reason, the adapter must throw an error.
    */
   listAuthenticatorsByUserId?(
-    userId: AdapterAuthenticator['userId']
+    userId: AdapterAuthenticator["userId"]
   ): Awaitable<AdapterAuthenticator[]>
   /**
    * Updates an authenticator's counter.
-   * 
+   *
    * If the update fails, the adapter must throw an error.
    */
   updateAuthenticatorCounter?(
-    credentialID: AdapterAuthenticator['credentialID'],
-    newCounter: AdapterAuthenticator['counter']
+    credentialID: AdapterAuthenticator["credentialID"],
+    newCounter: AdapterAuthenticator["counter"]
   ): Awaitable<AdapterAuthenticator>
 }
 
