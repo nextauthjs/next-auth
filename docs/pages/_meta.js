@@ -31,9 +31,27 @@ export default {
     type: "page",
   },
   contributors: {
-    type: "hidden",
+    title: "Contributors",
+    type: "page",
+    display: "hidden",
+    theme: {
+      typesetting: "article",
+    },
   },
   sponsors: {
-    type: "hidden",
+    title: "Sponsors",
+    type: "page",
+    display: "hidden",
+    theme: {
+      typesetting: "article",
+    },
   },
-};
+  404: {
+    title: "404",
+    type: "page",
+    display: "hidden",
+    theme: {
+      typesetting: "article",
+    },
+  },
+}

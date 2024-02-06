@@ -117,6 +117,13 @@ const config: DocsThemeConfig = {
     ),
     dismissible: true,
   },
+  editLink: {
+    content: "Edit this page on GitHub →",
+  },
+  feedback: {
+    content: "Question? Give us feedback →",
+    labels: "feedback",
+  },
   toc: {
     extraContent: <span data-todo="potential spot for ad?"></span>,
     backToTop: true,

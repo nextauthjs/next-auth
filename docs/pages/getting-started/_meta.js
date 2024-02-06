@@ -1,6 +1,16 @@
 export default {
-  index: "Introduction",
-  "migrating-to-v5": "Migrate to NextAuth.js v5",
+  index: {
+    title: "Introduction",
+    theme: {
+      typesetting: "article",
+    },
+  },
+  "migrating-to-v5": {
+    title: "Migrate to NextAuth.js v5",
+    theme: {
+      typesetting: "article",
+    },
+  },
   "-- getting-started": {
     type: "separator",
     title: "Getting Started",
@@ -31,7 +41,18 @@ export default {
     type: "separator",
     title: "More",
   },
-  integrations: "Integrations",
-  contributors: "Contributors",
-  sponsors: "Sponsors",
+  integrations: {
+    title: "Integrations",
+    theme: {
+      typesetting: "article",
+    },
+  },
+  contributors: {
+    title: "Contributors",
+    href: "/contributors",
+  },
+  sponsors: {
+    title: "Sponsors",
+    href: "/sponsors",
+  },
 }
