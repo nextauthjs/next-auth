@@ -80,16 +80,20 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@simplewebauthn/browser": "v9.0.0",
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.1",
     "next": "^14",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
-    "nodemailer": {
+    "@simplewebauthn/browser": {
       "optional": true
     },
-    "@simplewebauthn/browser": {
+    "@simplewebauthn/server": {
+      "optional": true
+    },
+    "nodemailer": {
       "optional": true
     }
   },

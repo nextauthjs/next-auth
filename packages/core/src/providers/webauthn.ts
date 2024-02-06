@@ -1,13 +1,30 @@
-import type { CommonProviderOptions, CredentialInput } from "."
-import type { GenerateRegistrationOptionsOpts, GenerateAuthenticationOptionsOpts, VerifyAuthenticationResponseOpts, VerifyRegistrationResponseOpts } from "@simplewebauthn/server"
-import type { InternalOptions, RequestInternal, SemverString, User } from "../types"
-import { MissingAdapter } from "../errors"
+import {
+  generateAuthenticationOptions,
+  generateRegistrationOptions,
+  verifyAuthenticationResponse,
+  verifyRegistrationResponse,
+} from "@simplewebauthn/server"
+import { MissingAdapter } from "../errors.js"
 
+import type { CommonProviderOptions, CredentialInput } from "."
+import type {
+  GenerateRegistrationOptionsOpts,
+  GenerateAuthenticationOptionsOpts,
+  VerifyAuthenticationResponseOpts,
+  VerifyRegistrationResponseOpts,
+} from "@simplewebauthn/server"
+
+import type {
+  InternalOptions,
+  RequestInternal,
+  SemverString,
+  User,
+} from "../types.js"
 
 export type WebAuthnProviderType = "webauthn"
 
 export const DEFAULT_WEBAUTHN_TIMEOUT = 5 * 60 * 1000 // 5 minutes
-export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.0"
+export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.1"
 
 export type RelayingParty = {
   /** Relaying Party ID. Use the website's domain name. */
@@ -29,49 +46,71 @@ type RelayingPartyArray = {
 
 export type GetUserInfo = (
   options: InternalOptions<WebAuthnProviderType>,
-  request: RequestInternal,
-) => Promise<{
-  user: User
-  exists: true
-} | {
-  user: Omit<User, "id">
-  exists: false
-} | null>
+  request: RequestInternal
+) => Promise<
+  | { user: User; exists: true }
+  | { user: Omit<User, "id">; exists: false }
+  | null
+>
 
-
-type ConfigurableAuthenticationOptions = Omit<GenerateAuthenticationOptionsOpts, "rpID" | "allowCredentials" | "challenge">
-type ConfigurableRegistrationOptions = Omit<GenerateRegistrationOptionsOpts, "rpName" | "rpID" | "userID" | "userName" | "challenge" | "userDisplayName" | "excludeCredentials">
-type ConfigurableVerifyAuthenticationOptions = Omit<VerifyAuthenticationResponseOpts, "expectedChallenge" | "expectedOrigin" | "expectedRPID" | "authenticator" | "response">
-type ConfigurableVerifyRegistrationOptions = Omit<VerifyRegistrationResponseOpts, "expectedChallenge" | "expectedOrigin" | "expectedRPID" | "response">
+type ConfigurableAuthenticationOptions = Omit<
+  GenerateAuthenticationOptionsOpts,
+  "rpID" | "allowCredentials" | "challenge"
+>
+type ConfigurableRegistrationOptions = Omit<
+  GenerateRegistrationOptionsOpts,
+  | "rpName"
+  | "rpID"
+  | "userID"
+  | "userName"
+  | "challenge"
+  | "userDisplayName"
+  | "excludeCredentials"
+>
+type ConfigurableVerifyAuthenticationOptions = Omit<
+  VerifyAuthenticationResponseOpts,
+  | "expectedChallenge"
+  | "expectedOrigin"
+  | "expectedRPID"
+  | "authenticator"
+  | "response"
+>
+type ConfigurableVerifyRegistrationOptions = Omit<
+  VerifyRegistrationResponseOpts,
+  "expectedChallenge" | "expectedOrigin" | "expectedRPID" | "response"
+>
 
 export interface WebAuthnConfig extends CommonProviderOptions {
   type: WebAuthnProviderType
   /**
    * Relaying party (RP) configuration
-   * 
+   *
    * If not provided, the request URL will be used.
    **/
   relayingParty?: Partial<RelayingPartyArray>
   /**
    * Function that returns the relaying party for the current request.
    */
-  getRelayingParty: (options: InternalOptions<WebAuthnProviderType>, request: RequestInternal) => RelayingParty
+  getRelayingParty: (
+    options: InternalOptions<WebAuthnProviderType>,
+    request: RequestInternal
+  ) => RelayingParty
   /**
    * Enable conditional UI.
-   * 
+   *
    * NOTE: Only one provider can have this option enabled at a time. Defaults to `true`.
    */
   enableConditionalUI: boolean
   /**
    * Version of SimpleWebAuthn browser script to load in the sign in page.
-   * 
+   *
    * This is only loaded if the provider has conditional UI enabled. If set to false, it won't load any script.
    * Defaults to `v9.0.0`.
    */
   simpleWebAuthnBrowserVersion: SemverString | false
   /** Form fields displayed in the default Passkey sign in/up form.
    * These are not validated or enforced beyond the default Auth.js authentication page.
-   * 
+   *
    * By default it displays an email field.
    */
   formFields: Record<string, CredentialInput>
@@ -93,29 +132,36 @@ export interface WebAuthnConfig extends CommonProviderOptions {
   verifyRegistrationOptions?: Partial<ConfigurableVerifyRegistrationOptions>
   /**
    * Function that returns the user info that the authenticator will use during registration and authentication.
-   * 
+   *
    * - It accepts the provider options, the request object, and returns the user info.
    * - If the request contains an existing user's data (e.g. email address), the function must return the existing user and `exists` must be `true`.
    * - If the request contains enough information to create a new user, the function must return a new user info and `exists` must be `false`.
    * - If the request does not contain enough information to create a new user, the function must return `null`.
-   * 
+   *
    * It should not have any side effects (i.e. it shall not modify the database).
-   * 
+   *
    * During passkey creation:
    *  - The passkey's user ID will be a random string.
    *  - The passkey's user name will be user.email
    *  - The passkey's user display name will be user.name, if present, or user.email
-   * 
+   *
    * By default, it looks for and uses the "email" request parameter to look up the user in the database.
    */
   getUserInfo: GetUserInfo
+  /** SimpleWebAuthn instance to use for registration and authentication. */
+  simpleWebAuthn: {
+    verifyAuthenticationResponse: typeof verifyAuthenticationResponse
+    verifyRegistrationResponse: typeof verifyRegistrationResponse
+    generateAuthenticationOptions: typeof generateAuthenticationOptions
+    generateRegistrationOptions: typeof generateRegistrationOptions
+  }
 }
 
 /**
  * Add WebAuthn login to your page.
- * 
+ *
  * ### Setup
- * 
+ *
  * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
@@ -149,18 +195,28 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  *
  * :::
  */
-export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfig {
+export default function WebAuthn(
+  config: Partial<WebAuthnConfig>
+): WebAuthnConfig {
   return {
     id: "webauthn",
     name: "WebAuthn",
     enableConditionalUI: true,
-    authenticationOptions: {
-      timeout: DEFAULT_WEBAUTHN_TIMEOUT,
+    simpleWebAuthn: {
+      generateAuthenticationOptions,
+      generateRegistrationOptions,
+      verifyAuthenticationResponse,
+      verifyRegistrationResponse,
     },
-    registrationOptions: {
-      timeout: DEFAULT_WEBAUTHN_TIMEOUT,
+    authenticationOptions: { timeout: DEFAULT_WEBAUTHN_TIMEOUT },
+    registrationOptions: { timeout: DEFAULT_WEBAUTHN_TIMEOUT },
+    formFields: {
+      email: {
+        label: "Email",
+        required: true,
+        autocomplete: "username webauthn",
+      },
     },
-    formFields: { email: { label: "Email", required: true, autocomplete: "username webauthn" } },
     simpleWebAuthnBrowserVersion: DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION,
     getUserInfo,
     getRelayingParty,
@@ -171,10 +227,10 @@ export default function WebAuthn(config: Partial<WebAuthnConfig>): WebAuthnConfi
 
 /**
  * Retrieves user information for the WebAuthn provider.
- * 
+ *
  * It looks for the "email" query parameter and uses it to look up the user in the database.
  * It also accepts a "name" query parameter to set the user's display name.
- * 
+ *
  * @param options - The internaloptions object.
  * @param request - The request object containing the query parameters.
  * @returns The existing or new user info.
@@ -197,58 +253,38 @@ const getUserInfo: GetUserInfo = async (options, request) => {
 
   const existingUser = await adapter.getUserByEmail(email)
   if (existingUser) {
-    return {
-      user: existingUser,
-      exists: true,
-    }
+    return { user: existingUser, exists: true }
   }
 
   // If the user does not exist, return a new user info.
-  return {
-    user: {
-      email,
-    },
-    exists: false,
-  }
-}
-
-/**
- * Builds and returns the script tag to load the SimpleWebAuthn browser script.
- * @param config Provider config
- * @returns The script tag to load the SimpleWebAuthn browser script, or an empty string if the provider has no conditional UI enabled.
- */
-export function getSimpleWebAuthnBrowserScriptTag(config: WebAuthnConfig) {
-  const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
-
-  if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
-    return ""
-
-  return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.es5.umd.min.js" crossorigin="anonymous"></script>`
+  return { user: { email }, exists: false }
 }
 
 /**
  * Retrieves the relaying party information based on the provided options.
  * If the relaying party information is not provided, it falls back to using the URL information.
- *
- * @param options - The options object containing the provider and URL information.
- * @returns The relaying party object with the ID, name, and origin.
  */
-function getRelayingParty(options: InternalOptions<WebAuthnProviderType>): RelayingParty {
+function getRelayingParty(
+  /** The options object containing the provider and URL information. */
+  options: InternalOptions<WebAuthnProviderType>
+): RelayingParty {
   const { provider, url } = options
   const { relayingParty } = provider
-  const id = relayingParty && relayingParty.id ?
-    (Array.isArray(relayingParty.id) ? relayingParty.id[0] : relayingParty.id) :
-    url.hostname
-  const name = relayingParty && relayingParty.name ?
-    (Array.isArray(relayingParty.name) ? relayingParty.name[0] : relayingParty.name) :
-    url.host
-  const origin = relayingParty && relayingParty.origin ?
-    (Array.isArray(relayingParty.origin) ? relayingParty.origin[0] : relayingParty.origin) :
-    url.origin
+
+  const id = Array.isArray(relayingParty?.id)
+    ? relayingParty.id[0]
+    : relayingParty?.id
+
+  const name = Array.isArray(relayingParty?.name)
+    ? relayingParty.name[0]
+    : relayingParty?.name
+  const origin = Array.isArray(relayingParty?.origin)
+    ? relayingParty.origin[0]
+    : relayingParty?.origin
 
   return {
-    id,
-    name,
-    origin,
+    id: id ?? url.hostname,
+    name: name ?? url.host,
+    origin: origin ?? url.origin,
   }
 }

@@ -1,9 +1,8 @@
-import type { RelayingParty, WebAuthnProviderType } from "../../providers/webauthn";
+import type { WebAuthnProviderType } from "../../providers/webauthn";
 import type { Account, Authenticator, Awaited, InternalOptions, RequestInternal, ResponseInternal, User } from "../../types";
 import type { Cookie } from "./cookie";
 import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../../errors";
 import { webauthnChallenge } from "../actions/callback/oauth/checks";
-import { VerifiedAuthenticationResponse, VerifiedRegistrationResponse, generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse } from "@simplewebauthn/server";
 import type {
   AuthenticationResponseJSON,
   PublicKeyCredentialCreationOptionsJSON,
@@ -13,6 +12,7 @@ import type {
 import type { Adapter, AdapterAccount, AdapterAuthenticator } from "../../adapters";
 import type { GetUserInfo } from "../../providers/webauthn";
 import { randomString } from "./web";
+import type { VerifiedAuthenticationResponse, VerifiedRegistrationResponse } from "@simplewebauthn/server";
 
 export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
@@ -198,7 +198,7 @@ export async function verifyAuthenticate(
   let verification: VerifiedAuthenticationResponse
   try {
     const relayingParty = provider.getRelayingParty(options, request)
-    verification = await verifyAuthenticationResponse({
+    verification = await provider.simpleWebAuthn.verifyAuthenticationResponse({
       ...provider.verifyAuthenticationOptions,
       expectedChallenge,
       response: data as AuthenticationResponseJSON,
@@ -274,7 +274,7 @@ export async function verifyRegister(
   let verification: VerifiedRegistrationResponse
   try {
     const relayingParty = provider.getRelayingParty(options, request)
-    verification = await verifyRegistrationResponse({
+    verification = await provider.simpleWebAuthn.verifyRegistrationResponse({
       ...provider.verifyRegistrationOptions,
       expectedChallenge,
       response: data as RegistrationResponseJSON,
@@ -336,7 +336,7 @@ async function getAuthenticationOptions(options: InternalOptionsWebAuthn, reques
   const relayingParty = provider.getRelayingParty(options, request)
 
   // Return the authentication options.
-  return await generateAuthenticationOptions({
+  return await provider.simpleWebAuthn.generateAuthenticationOptions({
     ...provider.authenticationOptions,
     rpID: relayingParty.id,
     allowCredentials: authenticators?.map((a) => ({
@@ -375,7 +375,7 @@ async function getRegistrationOptions(
   const relayingParty = provider.getRelayingParty(options, request)
 
   // Return the registration options.
-  return await generateRegistrationOptions({
+  return await provider.simpleWebAuthn.generateRegistrationOptions({
     ...provider.registrationOptions,
     userID,
     userName: user.email,
