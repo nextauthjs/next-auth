@@ -1,6 +1,6 @@
 {
   "name": "@auth/d1-adapter",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A Cloudflare D1 adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
