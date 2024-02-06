@@ -9,19 +9,21 @@ const driver = neo4j.driver(
   neo4j.auth.basic("neo4j", "password")
 )
 
-const neo4jSession = driver.session()
+const sessionConfig = { database: 'neo4j' }
 
 runBasicTests({
-  adapter: Neo4jAdapter(neo4jSession),
+  adapter: Neo4jAdapter(driver, sessionConfig),
   db: {
     async connect() {
       for await (const statement of statements.split(";")) {
         if (!statement.length) return
-        await neo4jSession.writeTransaction((tx) => tx.run(statement))
+        const neo4jSession = driver.session()
+        await neo4jSession.executeWrite((tx) => tx.run(statement))
       }
     },
     async disconnect() {
-      await neo4jSession.writeTransaction((tx) =>
+      const neo4jSession = driver.session()
+      await neo4jSession.executeWrite((tx) =>
         tx.run(
           `MATCH (n)
            DETACH DELETE n
@@ -32,14 +34,16 @@ runBasicTests({
       await driver.close()
     },
     async user(id) {
-      const result = await neo4jSession.readTransaction((tx) =>
+      const neo4jSession = driver.session()
+      const result = await neo4jSession.executeRead((tx) =>
         tx.run(`MATCH (u:User) RETURN u`, { id })
       )
       return format.from(result?.records[0]?.get("u")?.properties)
     },
 
     async session(sessionToken: string) {
-      const result = await neo4jSession.readTransaction((tx) =>
+      const neo4jSession = driver.session()
+      const result = await neo4jSession.executeRead((tx) =>
         tx.run(
           `MATCH (u:User)-[:HAS_SESSION]->(s:Session)
            RETURN s, u.id AS userId`,
@@ -55,7 +59,8 @@ runBasicTests({
     },
 
     async account(provider_providerAccountId) {
-      const result = await neo4jSession.readTransaction((tx) =>
+      const neo4jSession = driver.session()
+      const result = await neo4jSession.executeRead((tx) =>
         tx.run(
           `MATCH (u:User)-[:HAS_ACCOUNT]->(a:Account)
            RETURN a, u.id AS userId`,
@@ -72,7 +77,8 @@ runBasicTests({
     },
 
     async verificationToken(identifier_token) {
-      const result = await neo4jSession.readTransaction((tx) =>
+      const neo4jSession = driver.session()
+      const result = await neo4jSession.executeRead((tx) =>
         tx.run(
           `MATCH (v:VerificationToken)
            RETURN v`,
