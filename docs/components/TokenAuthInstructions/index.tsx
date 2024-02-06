@@ -13,7 +13,7 @@ const EmailTypes = {
 export function TokenAuthInstructions() {
   const [activeEmailType, setActiveEmailType] = useState<
     keyof typeof EmailTypes
-  >(EmailTypes.Nodemailer)
+  >(EmailTypes.Resend)
 
   return (
     <>

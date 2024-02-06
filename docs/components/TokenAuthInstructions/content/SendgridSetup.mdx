@@ -5,16 +5,14 @@ import MagicLink from "../../../public/img/magic-links/start.webp"
 
 ### Sendgrid Setup
 
-To setup "magic links" (sign in tokens sent to the user's email), we will need to use one of the built-in Email Providers - Resend, Sendgrid or Nodemailer.
-
-To sign in, a user provides their email address, then a **Verification Token** is sent to the them. By default this token is valid <u>for 24 hours</u>. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+To setup "magic links" we can use the builtin Sendgrid provider. This login mechanism starts by the user providing their email address at the login form. Then a **Verification Token** is sent to the provided email address. The user then has 24 hours to click the link in the email body to "consume" that token and register their account, otherwise the verification token will expire and they will have to request a new one.
 
 <Callout>
-  Magic links are setup through the Email Providers. An Email Provider can be
-  used with both [JSON Web Tokens](https://jwt.io/) and [database
-  sessions](/concepts/session-strategies#database-session), but you **must
-  configure a database to use it**. It is not possible to enable email sign in
-  without using a database.
+  An Email Provider can be used with both [JSON Web Tokens](https://jwt.io/) and
+  [database](/concepts/session-strategies#database-session) session, whichever
+  you choose, you **must still configure a database** so that Auth.js can save
+  the verification tokens and look them up when the user attempts to login. It
+  is not possible to enable an email provider without using a database.
 </Callout>
 
 <Steps>
@@ -70,6 +68,33 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.Svelte>
+
+```ts filename="src/routes/signin/+page.server.ts"
+import { signIn } from "../../auth"
+import type { Actions } from "./$types"
+export const actions: Actions = { default: signIn }
+```
+
+```ts filename="src/routes/signin/+page.svelte"
+<!-- empty file -->
+```
+
+```ts filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn />
+  </nav>
+</div>
+
+```
+
+</Code.Svelte>
 </Code>
 
 ### Signin
