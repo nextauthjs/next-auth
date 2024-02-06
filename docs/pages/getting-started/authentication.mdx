@@ -174,20 +174,7 @@ export default function Login() {
   </Steps>
 
 <Callout>
-WebAuthn support is currently not supported in `edge` environments out of the box due to an issue with an upstream library and `crypto` support. However, if you'd like to try it in an `edge` environment, you can tell webpack to try not to bundle it with the following configuration option in your `next.config.js`.
-
-```ts
-const nextConfig = {
-  webpack: (cfg, ctx) => {
-    // Do not attempt to load "crypto" when running in edge
-    if (ctx.nextRuntime === "edge") {
-      cfg.resolve.fallback = { crypto: false }
-    }
-
-    return cfg
-  },
-}
-```
+WebAuthn support is currently not supported in `edge` environments out of the box due to an issue with an upstream library and `crypto` support.
 
 </Callout>
 
