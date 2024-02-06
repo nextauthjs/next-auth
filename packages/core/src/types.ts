@@ -73,7 +73,7 @@ import type {
   OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
-import {
+import type {
   WebAuthnConfig,
   WebAuthnProviderType,
 } from "./providers/webauthn"
