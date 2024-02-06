@@ -187,7 +187,7 @@ export async function handleOAuth(
 }
 
 /** Returns the user and account that is going to be created in the database. */
-async function getUserAndAccount(
+export async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
