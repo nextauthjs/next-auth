@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 import { Screenshot } from "@/components/Screenshot"
 import { OAuthInstructions } from "@/components/OAuthInstructions"
 import { TokenAuthInstructions } from "@/components/TokenAuthInstructions"
-import { GitDiff, Password, ChatDots } from "@phosphor-icons/react"
+import { GitDiff, Password, ChatDots, Fingerprint } from "@phosphor-icons/react"
 import { ListDisclosure } from "@/components/ListDisclosure"
 import manifest from "@/data/manifest.json"
 
@@ -16,8 +16,7 @@ At this point, you need to decide how you're gonna authenticate users in your ap
 
 - [OAuth authentication](/getting-started/providers/oauth-tutorial) ( _Sign in with Google, Github, LinkedIn, etc..._ )
 - [Passwordless authentication](/getting-started/providers/email-tutorial) ( _Magic links, OTP codes, etc..._ )
-- [Credentials](/getting-started/providers/credentials-tutorial) ( _Integrating with external APIs,
-  WebAuthn, etc..._ )
+- [Credentials](/getting-started/providers/credentials-tutorial) ( _Integrating with external APIs, etc..._ )
 
 <br />
 
@@ -68,20 +67,116 @@ Once you have decided how to authenticate users in your application (you can alw
         <span>Setup Credentials</span>
       </div>
     </RichTabs.Trigger>
+    <RichTabs.Trigger key="webauthn" value="webauthn">
+      <div className="flex flex-col justify-center gap-1 items-center h-full">
+        <Fingerprint fontSize="2.5rem" />
+        <span>WebAuthn</span>
+      </div>
+    </RichTabs.Trigger>
   </RichTabs.List>
   <RichTabs.Content className="p-8" key="oauth" value="oauth">
-  <SelectProvider />
+    <SelectProvider />
   </RichTabs.Content>
-
-{" "}
 
 <RichTabs.Content className="p-8" key="token-auth" value="passwordless">
   <TokenAuthInstructions />
 </RichTabs.Content>
 
+<RichTabs.Content className="p-8" key="external-auth" value="webauthn">
+  <Callout type="warning">
+    The WebAuthn / Passkeys provider is experimental and not recommended for
+    production use yet.
+  </Callout>
+  The WebAuthn provider  requires changes to all of the client libraries as well as any database adapter that plans to support it. Therefore, the WebAuthn provider is currently only supported in the following client libraries and database adapters. Support for more clients and adapters are coming soon.
+- `next-auth@5.0.0-beta.7`
+- `@auth/prisma-adapter@1.3.0`
+
+<Steps>
+  ### Apply the required schema Migrations
+
+This is the raw SQL migration, for more details including an example MongoDB migration, check out the Prisma `schema.prisma` [here](https://github.com/Maronato/next-auth/blob/main/packages/adapter-prisma/prisma/schema.prisma), or the PR adding support to Prisma [here](https://github.com/nextauthjs/next-auth/pull/9876).
+
+```sql
+-- CreateTable
+CREATE TABLE "Authenticator" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "credentialID" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "credentialPublicKey" TEXT NOT NULL,
+    "counter" INTEGER NOT NULL,
+    "credentialDeviceType" TEXT NOT NULL,
+    "credentialBackedUp" BOOLEAN NOT NULL,
+    "transports" TEXT,
+    CONSTRAINT "Authenticator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Authenticator_credentialID_key" ON "Authenticator"("credentialID");
+```
+
+### Update Auth.js Configuration
+
+Add the `Passkeys` provider to your configuration.
+
+```ts filename="./auth.ts"
+import Passkey from "next-auth/providers/passkey"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
+export default {
+  debug: false,
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    Passkey({
+      relayingParty: {
+        id: "localhost",
+        name: "Example",
+        origin: "http://localhost:3000",
+      },
+    })
+  ],
+  experimental: {
+    enableWebAuthn: true
+  }
+```
+
+If you're using the built-in Auth.js pages, then you are good to go now! Navigating to your `/signin` route should include a "Signin with Passkeys" button now.
+
+### Custom Pages
+
+If you're using a custom signin page, you can leverage the `next-auth` `signIn` function to initiate a WebAuthn registration and login with the following code.
+
+```ts filename="app/login/page.tsx"
+"use client"
+import { signIn, useSession } from "next-auth/react"
+
+export default function Login() {
+  const { data: session, update, status } = useSession()
+
+  return (
+    <div>
+      {status === "authenticated" ? (
+        <button onClick={() => signIn("passkey", { action: "register" })}>
+          Register new Passkey
+        </button>
+      ) : status === "unauthenticated" ? (
+        <button onClick={() => signIn("passkey")}>Sign in with Passkey</button>
+      ) : null}
+    </div>
+  )
+}
+```
+
+  </Steps>
+
+</RichTabs.Content>
+
 <RichTabs.Content className="p-8" key="external-auth" value="credentials">
 
-To setup Auth.js with external authentication we need to use the `CredentialsProvider`, which is designed to forward any inserted credentials (.i.e username/password) in the sign in form to your authentication service. This provider is very flexible, and can be easily setup to work with modern authentication methods like for example [WebAuthn](https://webauthn.io/).
+To setup Auth.js with external authentication we need to use the `CredentialsProvider`, which is designed to forward any inserted credentials (.i.e username/password) in the sign in form to your authentication service.
 
 <Callout type="warning">
   The functionality provided by the `CredentialsProvider` is intentionally
@@ -109,8 +204,7 @@ export function SignIn() {
         "use server"
         await signIn("credentials", {
           // Note: The credentials (username/password) will usually be collected through a sign in form you have you build yourself.
-          //       The CredentialsProvider is non-opinionated, username/password is the simplest use-case, but you can configure it
-          //       with other types of external auth like WebAuthn,
+          //       The CredentialsProvider is non-opinionated, username/password is the simplest use-case, but can be configured to work with many other authentication mechanisms.
           username: "foo@foo.com",
           password: "helloworld",
         })
