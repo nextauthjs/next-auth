@@ -233,20 +233,6 @@ const getUserInfo: GetUserInfo = async (options, request) => {
 }
 
 /**
- * Builds and returns the script tag to load the SimpleWebAuthn browser script.
- * @param config Provider config
- * @returns The script tag to load the SimpleWebAuthn browser script, or an empty string if the provider has no conditional UI enabled.
- */
-export function getSimpleWebAuthnBrowserScriptTag(config: WebAuthnConfig) {
-  const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
-
-  if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
-    return ""
-
-  return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.es5.umd.min.js" crossorigin="anonymous"></script>`
-}
-
-/**
  * Retrieves the relaying party information based on the provided options.
  * If the relaying party information is not provided, it falls back to using the URL information.
  *
