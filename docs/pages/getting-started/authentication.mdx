@@ -15,7 +15,7 @@ import manifest from "@/data/manifest.json"
 At this point, you need to decide how you're gonna authenticate users in your application. Auth.js supports three main authentication paradigms.
 
 - [OAuth authentication](/getting-started/providers/oauth-tutorial) (_Sign in with Google, Github, LinkedIn, etc..._)
-- [Passwordless authentication](/getting-started/providers/email-tutorial) (_Magic links, OTP codes, etc..._)
+- [Magic Link](/getting-started/providers/email-tutorial) (_Email Provider like Resend, Sendgrid, Nodemailer..._)
 - [Credentials](/getting-started/providers/credentials-tutorial) (_Integrating with external APIs, etc..._)
 
 <br />
@@ -55,10 +55,10 @@ Once you have decided how to authenticate users in your application (you can alw
         <span>Setup OAuth</span>
       </div>
     </RichTabs.Trigger>
-    <RichTabs.Trigger key="token-auth" value="passwordless">
+    <RichTabs.Trigger key="token-auth" value="magic-link">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <ChatDots fontSize="2.5rem" />
-        <span>Passwordless</span>
+        <span>Magic Link</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger key="external-auth" value="credentials">
@@ -78,7 +78,7 @@ Once you have decided how to authenticate users in your application (you can alw
     <SelectProvider />
   </RichTabs.Content>
 
-<RichTabs.Content className="p-8" key="token-auth" value="passwordless">
+<RichTabs.Content className="p-8" key="magic-link" value="magic-link">
   <TokenAuthInstructions />
 </RichTabs.Content>
 
@@ -212,25 +212,26 @@ import Credentials from "next-auth/providers/credentials"
 export const { handlers, auth } = NextAuth({
   providers: [
     Credentials({
-      // `credentials` will usually contain the collected user's credentials
-      // forwarded through the `signIn()` helper.
-      async authorize(credentials) {
-        // You can call here your external API or run the logic to authenticate the
-        // user using the collected credentials
-        const authResponse = await fetch("/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        })
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      credentials: {
+        username: {},
+        password: {},
+      },
+      authorize: async (credentials) => {
+        let user = null
 
-        if (!authResponse.ok) {
-          return null
+        // logic to salt and hash password
+        const pwHash = saltAndHashPassword(credentials.password)
+
+        // logic to verify if user exists
+        user = await getUserFromDb(credentials.username, pwHash)
+
+        if (!user) {
+          throw new Error("User not found.")
         }
 
-        const user = await authResponse.json()
-
+        // return json object with the user data
         return user
       },
     }),
@@ -250,36 +251,32 @@ import Credentials from "@auth/sveltekit/providers/credentials"
 export const { signIn, signOut, handle } = SvelteKitAuth({
   providers: [
     Credentials({
-      // `credentials` will usually contain the collected user's credentials
-      // forwarded through the `signIn()` helper.
-      async authorize(credentials) {
-        // You can call here your external API or run the logic to authenticate the
-        // user using the collected credentials
-        const authResponse = await fetch("/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        })
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      credentials: {
+        username: {},
+        password: {},
+      },
+      authorize: async (credentials) => {
+        let user = null
 
-        if (!authResponse.ok) {
-          return null
+        // logic to salt and hash password
+        const pwHash = saltAndHashPassword(credentials.password)
+
+        // logic to verify if user exists
+        user = await getUserFromDb(credentials.username, pwHash)
+
+        if (!user) {
+          throw new Error("User not found.")
         }
 
-        const user = await authResponse.json()
-
+        // return json object with the user data
         return user
       },
     }),
   ],
 })
 ```
-
-<Callout type="info">
-  Check the [Credentials Provider
-  options](/reference/core/providers/credentials) for further customization
-</Callout>
 
 </Code.Svelte>
 </Code>
@@ -291,7 +288,7 @@ export const { signIn, signOut, handle } = SvelteKitAuth({
   callbacks (like the `jwt`) the type will match correctly.
 </Callout>
 
-### Signin Button
+### Signin Form
 
 Finally, lets create a simple sign in button.
 
@@ -323,16 +320,33 @@ export function SignIn() {
 </Code.Next>
 <Code.Svelte>
 
-If you want to take advantage of the Auth.js built-in default pages, we can use the client-side `signIn` method to redirect the user to the signin page when clicked. To setup a custom page, check out the [SvelteKit Custom Page](/getting-started/session-management?tab=custom-pages) documentation.
+```ts filename="src/route/+page.svelte"
+  <script>
+  import { signIn, signOut } from '@auth/sveltekit/client'
+  import { page } from '$app/stores'
 
-```ts filename="src/components/navbar.svelte"
-<script lang="ts">
-  import { signIn } from "@auth/sveltekit/client"
-</script>
+  let email = ''
+  let password = ''
+  </script>
 
-<nav>
-  <button on:click={signIn}>Sign In</button>
-</nav>
+  <div>
+    {#if $page.data.session?.user}
+      <p>Signed in as {$page.data.session.user.email}</p>
+      <button on:click={ () => signOut() }>Sign out</button>
+    {:else}
+      <form>
+        <label>
+          Email
+          <input name="email" type="email" bind:value={email}>
+        </label>
+        <label>
+          Password
+          <input name="password" type="password" bind:value={password}>
+        </label>
+        <button on:click={() => signIn('credentials', { email, password })}>Log in</button>
+      </form>
+    {/if}
+  </div>
 ```
 
 </Code.Svelte>
@@ -345,7 +359,7 @@ If you want to take advantage of the Auth.js built-in default pages, we can use 
 
 ### Next Steps
 
-If you now navigate in your app to `/api/auth/session`, should see the Auth.js session displayed as a JSON:
+Now, start your development server and login with your chosen provider. After a successful login, you can navigate to `/api/auth/session` where you should see the Auth.js session json blob.
 
 import SessionWorking from "../../public/img/getting-started/authentication-get-started.png"
 
@@ -355,6 +369,4 @@ import SessionWorking from "../../public/img/getting-started/authentication-get-
   alt="Auth.js Session"
 />
 
-If you've gotten this far, you can be confident that your user is authenticated and
-your setup is working. See the next section, [Session management](/getting-started/session-management),
-to learn how to manage and display the user's session in your application.
+If you've gotten this far, you can be confident that your user is authenticated and your setup is working. See the next section, [Session management](/getting-started/session-management), to learn how to manage and display the user's session in your application.
