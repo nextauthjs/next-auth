@@ -16,6 +16,7 @@
  * @module @auth/drizzle-adapter
  */
 
+import { is } from "drizzle-orm"
 import { MySqlDatabase, MySqlTableFn } from "drizzle-orm/mysql-core"
 import { PgDatabase, PgTableFn } from "drizzle-orm/pg-core"
 import { BaseSQLiteDatabase, SQLiteTableFn } from "drizzle-orm/sqlite-core"
@@ -23,7 +24,6 @@ import { mySqlDrizzleAdapter } from "./lib/mysql.js"
 import { pgDrizzleAdapter } from "./lib/pg.js"
 import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
 import { SqlFlavorOptions, TableFn } from "./lib/utils.js"
-import { is } from "drizzle-orm"
 
 import type { Adapter } from "@auth/core/adapters"
 
@@ -64,6 +64,7 @@ import type { Adapter } from "@auth/core/adapters"
 
  * ```ts title="schema.ts"
  * import {
+ *   boolean
  *   timestamp,
  *   pgTable,
  *   text,
@@ -121,6 +122,20 @@ import type { Adapter } from "@auth/core/adapters"
  *    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
  *  })
  * )
+ * 
+ * export const authenticators = pgTable("authenticator", {
+ *  id: text("id").notNull().primaryKey(),
+ *  credentialID: text("credentialID").notNull().unique(),
+ *  userId: text("userId")
+ *    .notNull()
+ *    .references(() => users.id, { onDelete: "cascade" }),
+ *  providerAccountId: text("providerAccountId").notNull(),
+ *  credentialPublicKey: text("credentialPublicKey").notNull(),
+ *  counter: integer("counter").notNull(),
+ *  credentialDeviceType: text("credentialDeviceType").notNull(),
+ *  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+ *  transports: text("transports"),
+ * })
  * ```
  *
  * ### MySQL
@@ -186,6 +201,24 @@ import type { Adapter } from "@auth/core/adapters"
  *   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
  * })
  * )
+ * 
+ * export const authenticators = pgTable("authenticator", {
+ *  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+ *  credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+ *  userId: varchar("userId", { length: 255 })
+ *    .notNull()
+ *    .references(() => users.id, { onDelete: "cascade" }),
+ *  providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+ *  credentialPublicKey:  varchar("credentialPublicKey", {
+ *    length: 255,
+ *  }).notNull(),
+ *  counter: int("counter").notNull(),
+ *  credentialDeviceType: varchar("credentialDeviceType", {
+ *   length: 255,
+ *  }).notNull(),
+ *  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+ *  transports: varchar("transports", { length: 255 }),
+ * })
  * ```
  *
  * ### SQLite
@@ -245,6 +278,22 @@ import type { Adapter } from "@auth/core/adapters"
  *   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
  * })
  * )
+ * 
+ * export const authenticators = sqliteTable("authenticator", {
+ *  id: text("id").notNull().primaryKey(),
+ *  credentialID: text("credentialID").notNull().unique(),
+ *  userId: text("userId")
+ *    .notNull()
+ *    .references(() => users.id, { onDelete: "cascade" }),
+ *  providerAccountId: text("providerAccountId").notNull(),
+ *  credentialPublicKey: text("credentialPublicKey").notNull(),
+ *  counter: integer("counter").notNull(),
+ *  credentialDeviceType: text("credentialDeviceType").notNull(),
+ *  credentialBackedUp: integer("credentialBackedUp", {
+ *    mode: "boolean",
+ *  }).notNull(),
+ *  transports: text("transports"),
+  })
  * ```
  *
  * ## Migrating your database
