@@ -1,4 +1,5 @@
 import { Link } from "@/components/Link"
+import { Tooltip } from "@/components/Tooltip"
 import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@phosphor-icons/react"
 
 export function DemoCards() {
@@ -54,24 +55,26 @@ export function DemoCards() {
             ) : null}
           </Link>
           <div className="flex gap-2">
-            <a
-              href={href}
-              rel="noreferrer"
-              title="Live Example"
-              target="_blank"
-              className="flex justify-center p-2 w-full text-sm rounded-md bg-slate-100 dark:bg-neutral-900"
-            >
-              <ArrowSquareOut size={20} />
-            </a>
-            <a
-              href={githubHref}
-              rel="noreferrer"
-              title="Github Repository for Example"
-              target="_blank"
-              className="flex justify-center p-2 w-full text-sm rounded-md bg-slate-100 dark:bg-neutral-900"
-            >
-              <GithubLogo size={20} />
-            </a>
+            <Tooltip label="Live Example">
+              <a
+                href={href}
+                rel="noreferrer"
+                target="_blank"
+                className="flex justify-center p-2 w-full text-sm rounded-md bg-slate-100 dark:bg-neutral-900"
+              >
+                <ArrowSquareOut size={20} />
+              </a>
+            </Tooltip>
+            <Tooltip label="Github Repository">
+              <a
+                href={githubHref}
+                rel="noreferrer"
+                target="_blank"
+                className="flex justify-center p-2 w-full text-sm rounded-md bg-slate-100 dark:bg-neutral-900"
+              >
+                <GithubLogo size={20} />
+              </a>
+            </Tooltip>
           </div>
         </div>
       ))}
