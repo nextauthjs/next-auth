@@ -82,7 +82,7 @@ Once you have decided how to authenticate users in your application (you can alw
   <TokenAuthInstructions />
 </RichTabs.Content>
 
-<RichTabs.Content className="p-8" key="external-auth" value="webauthn">
+<RichTabs.Content className="p-8" key="webauthn" value="webauthn">
   <Callout type="warning">
     The WebAuthn / Passkeys provider is experimental and not recommended for
     production use yet.
@@ -136,11 +136,12 @@ export default {
         name: "Example",
         origin: "http://localhost:3000",
       },
-    })
+    }),
   ],
   experimental: {
-    enableWebAuthn: true
-  }
+    enableWebAuthn: true,
+  },
+}
 ```
 
 If you're using the built-in Auth.js pages, then you are good to go now! Navigating to your `/signin` route should include a "Signin with Passkeys" button now.
