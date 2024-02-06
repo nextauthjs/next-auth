@@ -28,6 +28,11 @@ type ErrorType =
   | "UntrustedHost"
   | "Verification"
   | "MissingCSRF"
+  | "AccountNotLinked"
+  | "DuplicateConditionalUI"
+  | "MissingWebAuthnAutocomplete"
+  | "WebAuthnVerificationError"
+  | "ExperimentalFeatureNotEnabled"
 
 /**
  * Base error class for all Auth.js errors.
@@ -385,7 +390,7 @@ export class UnsupportedStrategy extends AuthError {
   static type = "UnsupportedStrategy"
 }
 
-/** Thrown when the callback endpoint was incorrectly called without a provider. */
+/** Thrown when an endpoint was incorrectly called without a provider, or with an unsupported provider. */
 export class InvalidProvider extends AuthError {
   static type = "InvalidProvider"
 }
@@ -426,4 +431,45 @@ export class Verification extends AuthError {
  */
 export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"
+}
+
+/**
+ * Thrown when multiple providers have `enableConditionalUI` set to `true`.
+ * Only one provider can have this option enabled at a time.
+ */
+export class DuplicateConditionalUI extends AuthError {
+  static type = "DuplicateConditionalUI"
+}
+
+/**
+ * Thrown when a WebAuthn provider has `enableConditionalUI` set to `true` but no formField has `webauthn` in its autocomplete param.
+ * 
+ * The `webauthn` autocomplete param is required for conditional UI to work.
+ */
+export class MissingWebAuthnAutocomplete extends AuthError {
+  static type = "MissingWebAuthnAutocomplete"
+}
+
+/**
+ * Thrown when a WebAuthn provider fails to verify a client response.
+ */
+export class WebAuthnVerificationError extends AuthError {
+  static type = "WebAuthnVerificationError"
+}
+
+/**
+ * Thrown when an Email address is already associated with an account
+ * but the user is trying an account that is not linked to it.
+ *
+ * For security reasons, Auth.js does not automatically link accounts to existing accounts if the user is not signed in.
+ */
+export class AccountNotLinked extends SignInError {
+  static type = "AccountNotLinked"
+}
+
+/**
+ * Thrown when an experimental feature is used but not enabled.
+ */
+export class ExperimentalFeatureNotEnabled extends AuthError {
+  static type = "ExperimentalFeatureNotEnabled"
 }
