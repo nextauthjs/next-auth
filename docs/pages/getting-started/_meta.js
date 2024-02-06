@@ -6,13 +6,13 @@ export default {
     title: "Getting Started",
   },
   installation: "Installation",
-  database: "Database",
   authentication: {
     title: "Authentication",
     theme: {
       toc: false,
     },
   },
+  database: "Database",
   "session-management": {
     title: "Session Management",
     theme: {
