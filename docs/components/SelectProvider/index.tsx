@@ -6,12 +6,8 @@ import dynamic from "next/dynamic"
 import manifest from "@/data/manifest.json"
 import { Link } from "../Link"
 
-const OAuthInstructions = dynamic(
-  () => import("../OAuthInstructions").then((mod) => mod.OAuthInstructions),
-  {
-    loading: () => <p>Loading...</p>,
-    ssr: false,
-  }
+const OAuthInstructions = dynamic(() =>
+  import("../OAuthInstructions").then((mod) => mod.OAuthInstructions)
 )
 
 export function SelectProvider() {
