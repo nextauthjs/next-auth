@@ -148,7 +148,7 @@ export interface WebAuthnConfig extends CommonProviderOptions {
    * By default, it looks for and uses the "email" request parameter to look up the user in the database.
    */
   getUserInfo: GetUserInfo
-  /** @internal SimpleWebAuthn instance to use for registration and authentication. */
+  /** SimpleWebAuthn instance to use for registration and authentication. */
   simpleWebAuthn: {
     verifyAuthenticationResponse: typeof verifyAuthenticationResponse
     verifyRegistrationResponse: typeof verifyRegistrationResponse
