@@ -207,7 +207,7 @@ async function getUserAndAccount(
         ...tokens,
         provider: provider.id,
         type: provider.type,
-        providerAccountId: user.id.toString(),
+        providerAccountId: userFromProfile.id?.toString(),
       },
     }
   } catch (e) {
