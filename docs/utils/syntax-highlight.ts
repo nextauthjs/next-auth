@@ -13,7 +13,7 @@ async function init() {
   if (hl) return
 
   hl = await getHighlighter({
-    themes: ["github-dark-dimmed", "github-dark"],
+    themes: ["github-light", "github-dark"],
     langs: ["ts", "tsx", "bash"],
   })
 }
@@ -23,7 +23,7 @@ function highlight(code: string) {
     ? hl.codeToHtml(code, {
         lang: "tsx",
         themes: {
-          light: "github-dark",
+          light: "github-light",
           dark: "github-dark",
         },
       })

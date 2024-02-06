@@ -58,6 +58,11 @@ details > *:not(summary) {
   @apply dark:!bg-neutral-950 !bg-transparent;
 }
 
+:is(html[class~="dark"] .nextra-code span) {
+  background-color: var(--shiki-dark-bg) !important;
+  color: var(--shiki-dark) !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
