@@ -92,7 +92,12 @@ Once you have decided how to authenticate users in your application (you can alw
 - `@auth/prisma-adapter@1.3.0`
 
 <Steps>
-  ### Apply the required schema Migrations
+### Install peer dependencies
+```npm2yarn
+npm install @simplewebauthn/browser @simplewebauthn/server
+```
+
+### Apply the required schema Migrations
 
 This is the raw SQL migration, for more details including an example MongoDB migration, check out the Prisma `schema.prisma` [here](https://github.com/Maronato/next-auth/blob/main/packages/adapter-prisma/prisma/schema.prisma), or the PR adding support to Prisma [here](https://github.com/nextauthjs/next-auth/pull/9876).
 
