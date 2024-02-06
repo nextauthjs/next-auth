@@ -111,7 +111,7 @@ export interface ZitadelProfile extends Record<string, any> {
  *
  * :::
  */
-export default function ZITADEL<P extends ZitadelProfile>(
+export default function Zitadel<P extends ZitadelProfile>(
   options: OAuthUserConfig<P>
 ): OIDCConfig<P> {
   return {
