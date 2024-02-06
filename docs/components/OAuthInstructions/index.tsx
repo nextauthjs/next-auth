@@ -1,5 +1,3 @@
-"use client"
-
 import manifest from "@/data/manifest.json"
 import cx from "classnames"
 import { Callout, Pre, Code as NXCode } from "nextra/components"
