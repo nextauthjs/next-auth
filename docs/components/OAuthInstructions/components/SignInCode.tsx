@@ -5,7 +5,7 @@ import { TSIcon } from "./TSIcon"
 interface Props {
   providerName: string
   providerId: string
-  highlight: TODO
+  highlight: (code: string) => string
 }
 
 export function SignInCode({ providerId, providerName, highlight }: Props) {
@@ -22,27 +22,21 @@ export function SignInCode({ providerId, providerName, highlight }: Props) {
           <NXCode>
             <span
               dangerouslySetInnerHTML={{
-                __html: highlight
-                  ? highlight(
-                      // prettier-ignore
-                      `
-import { signIn } from "@/auth.ts";
+                __html: highlight(`
+import { signIn } from "@/auth.ts"
 
 export function SignIn() {
   return (
     <form
       action={async () => {
-        "use server";
-        await signIn("${providerId}");
+        "use server"
+        await signIn("${providerId}")
       }}
     >
       <button type="submit">Signin with ${providerName}</button>
     </form>
-  );
-}
-`
-                    )
-                  : null,
+  )
+} `),
               }}
             />
           </NXCode>
@@ -63,15 +57,10 @@ export function SignIn() {
           <NXCode>
             <span
               dangerouslySetInnerHTML={{
-                __html: highlight
-                  ? highlight(
-                      // prettier-ignore
-                      `import { signIn } from "../../auth"
+                __html: highlight(`import { signIn } from "../../auth"
 import type { Actions } from "./$types"
 export const actions: Actions = { default: signIn }
-`
-                    )
-                  : null,
+`),
               }}
             />
           </NXCode>
@@ -90,14 +79,9 @@ export const actions: Actions = { default: signIn }
           <NXCode>
             <span
               dangerouslySetInnerHTML={{
-                __html: highlight
-                  ? highlight(
-                      // prettier-ignore
-                      `
+                __html: highlight(`
 <!-- empty file -->
-`
-                    )
-                  : null,
+`),
               }}
             />
           </NXCode>
@@ -116,19 +100,14 @@ export const actions: Actions = { default: signIn }
           <NXCode>
             <span
               dangerouslySetInnerHTML={{
-                __html: highlight
-                  ? highlight(
-                      // prettier-ignore
-                      `<script lang="ts">
+                __html: highlight(`<script lang="ts">
   import {SignIn} from "@auth/sveltekit/components"
 </script>
 
 <div>
   <img src="/img/logo.svg" alt="Company Logo" />
   <SignIn provider="${providerId}" signInPage="signin" />
-</div> `
-                    )
-                  : null,
+</div> `),
               }}
             />
           </NXCode>

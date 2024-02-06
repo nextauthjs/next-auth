@@ -1,51 +1,43 @@
-import manifest from "@/data/manifest.json";
-import cx from "classnames";
-import { Callout, Pre, Code as NXCode } from "nextra/components";
-import React, { useEffect, useState } from "react";
-import { Link } from "../Link";
-import { Code } from "../Code";
-import { StepTitle } from "./components/StepTitle";
-import shl from "../../utils/syntax-highlight";
-import { SetupCode } from "./components/SetupCode";
-import { SignInCode } from "./components/SignInCode";
+"use client"
+
+import manifest from "@/data/manifest.json"
+import cx from "classnames"
+import { Callout, Pre, Code as NXCode } from "nextra/components"
+import React, { useEffect, useState } from "react"
+import { Link } from "../Link"
+import { Code } from "../Code"
+import { StepTitle } from "./components/StepTitle"
+import shl from "../../utils/syntax-highlight"
+import { SetupCode } from "./components/SetupCode"
+import { SignInCode } from "./components/SignInCode"
 
 interface Props {
-  providerId: string;
-  disabled?: boolean;
+  providerId: string
+  disabled?: boolean
 }
 
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
-  const [hlReady, setHlReady] = useState(false);
+  shl.init().catch(console.error)
 
-  useEffect(() => {
-    shl
-      .init()
-      .then(() => setHlReady(true))
-      // eslint-disable-next-line no-console
-      .catch(console.error);
-  }, []);
-
-  const providerName = manifest.providersOAuth[providerId];
+  const providerName = manifest.providersOAuth[providerId]
 
   const providerEnVars = (
     <Pre data-filename=".env.local">
       <NXCode>
         <span
           dangerouslySetInnerHTML={{
-            __html: hlReady
-              ? shl.highlight(
-                  // prettier-ignore
-                  `
+            __html: shl.highlight(
+              // prettier-ignore
+              `
 AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
 AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
 `
-                )
-              : null,
+            ),
           }}
         />
       </NXCode>
     </Pre>
-  );
+  )
 
   return (
     <div
@@ -182,5 +174,5 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
         for more details.
       </Callout>
     </div>
-  );
+  )
 }
