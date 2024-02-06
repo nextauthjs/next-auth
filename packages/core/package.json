@@ -70,10 +70,14 @@
     "preact-render-to-string": "5.2.3"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.1",
     "nodemailer": "^6.8.0"
   },
   "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
     "@simplewebauthn/server": {
       "optional": true
     },

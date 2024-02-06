@@ -21,7 +21,7 @@ export type AppRouteHandlerFn = (
    * dynamic route).
    */
   ctx: AppRouteHandlerFnContext
-) => unknown
+) => void | Response | Promise<void | Response>
 
 export type AppRouteHandlers = Record<
   "GET" | "POST",
