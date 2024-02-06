@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import Img from "next/image";
 import Marquee, { Motion, randomIntFromInterval } from "react-marquee-slider";
-import manifest from "../../pages/data/manifest.json";
+import manifest from "@/data/manifest.json";
 
 const clamp = (min: number, num: number, max: number) =>
   Math.min(Math.max(num, min), max);
