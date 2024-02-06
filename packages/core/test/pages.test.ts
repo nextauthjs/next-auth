@@ -1,6 +1,6 @@
 import { vi, expect, it, describe, beforeEach } from "vitest"
 import renderPage from "../src/lib/pages/index"
-import { pagesOptions } from "./fixtures/pages"
+import { authOptions } from "./fixtures/pages"
 import { init } from "../src/lib/init"
 
 describe("pages", () => {
@@ -12,7 +12,7 @@ describe("pages", () => {
     it("should attempt to render signout page", async () => {
       // Generated when visiting `/auth/signout`
       const { options } = await init({
-        authOptions: pagesOptions,
+        authOptions,
         action: "signout",
         providerId: "github",
         url: new URL("http://localhost:3000/auth/signout"),
@@ -33,7 +33,7 @@ describe("pages", () => {
     it("should return correct URL for signout page form action", async () => {
       // When visiting `/auth/signout`, for example
       const { options } = await init({
-        authOptions: pagesOptions,
+        authOptions: authOptions,
         action: "signout",
         providerId: "github",
         url: new URL("http://localhost:3000/auth/signout"),
@@ -54,7 +54,7 @@ describe("pages", () => {
     it("should attempt to render signin page", async () => {
       // Generated when visiting `/auth/signin`
       const { options } = await init({
-        authOptions: pagesOptions,
+        authOptions: authOptions,
         action: "signin",
         providerId: "github",
         url: new URL("http://localhost:3000/auth/signin"),

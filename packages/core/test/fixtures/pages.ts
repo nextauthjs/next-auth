@@ -7,7 +7,7 @@ const userProfile = {
   image: "https://source.boringavatars.com/marble",
 }
 
-export const pagesOptions = {
+export const authOptions = {
   debug: false,
   pages: {},
   theme: {
@@ -44,12 +44,6 @@ export const pagesOptions = {
       account: () => {},
     },
   ],
-  callbacks: {
-    // signIn: () => null,
-    // redirect: () => null,
-    // session: () => null,
-    jwt: () => null,
-  },
   basePath: "/auth",
   secret: ["abc"],
   redirectProxyUrl: undefined,
