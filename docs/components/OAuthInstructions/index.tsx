@@ -5,9 +5,9 @@ import React, { useEffect, useState } from "react"
 import { Link } from "../Link"
 import { Code } from "../Code"
 import { StepTitle } from "./components/StepTitle"
-import shl from "../../utils/syntax-highlight"
 import { SetupCode } from "./components/SetupCode"
 import { SignInCode } from "./components/SignInCode"
+import { getHighlighter } from "shikiji"
 
 interface Props {
   providerId: string
@@ -15,27 +15,29 @@ interface Props {
 }
 
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
-  shl.init().catch(console.error)
+  const [highlighter, setHighlighterer] = useState(null)
+  useEffect(() => {
+    ;(async () => {
+      const hl = await getHighlighter({
+        themes: ["github-light", "github-dark"],
+        langs: ["ts", "tsx", "bash"],
+      })
+      setHighlighterer(hl)
+    })()
+  }, [])
+
+  const highlight = (code: string): string => {
+    if (!highlighter) return null
+    return highlighter.codeToHtml(code, {
+      lang: "tsx",
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+    })
+  }
 
   const providerName = manifest.providersOAuth[providerId]
-
-  const providerEnVars = (
-    <Pre data-filename=".env.local">
-      <NXCode>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: shl.highlight(
-              // prettier-ignore
-              `
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
-`
-            ),
-          }}
-        />
-      </NXCode>
-    </Pre>
-  )
 
   return (
     <div
@@ -105,10 +107,56 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
         environment file:
       </p>
       <Code>
-        <Code.Next>{providerEnVars} </Code.Next>
-        <Code.Svelte>{providerEnVars}</Code.Svelte>
+        <Code.Next>
+          <Pre data-filename=".env.local">
+            <NXCode>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: highlight(
+                    // prettier-ignore
+                    `
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
+`
+                  ),
+                }}
+              />
+            </NXCode>
+          </Pre>
+        </Code.Next>
+        <Code.Svelte>
+          <Pre data-filename=".env.local">
+            <NXCode>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: highlight(
+                    // prettier-ignore
+                    `
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
+`
+                  ),
+                }}
+              />
+            </NXCode>
+          </Pre>
+        </Code.Svelte>
         <Code.Express>
-          {providerEnVars}
+          <Pre data-filename=".env.local">
+            <NXCode>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: highlight(
+                    // prettier-ignore
+                    `
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
+`
+                  ),
+                }}
+              />
+            </NXCode>
+          </Pre>
           <p className="mt-2 leading-7 first:mt-0">
             Assuming{" "}
             <Link href="https://www.npmjs.com/package/dotenv">
@@ -143,7 +191,7 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
       <SetupCode
         providerId={providerId}
         providerName={providerName}
-        highlight={shl.highlight}
+        highlight={highlight}
       />
       {/* Step 4 */}
       <StepTitle>Signin Button</StepTitle>
@@ -154,7 +202,7 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
       <SignInCode
         providerId={providerId}
         providerName={providerName}
-        highlight={shl.highlight}
+        highlight={highlight}
       />
       {/* Step 5 */}
       <StepTitle>Ship it!</StepTitle>
