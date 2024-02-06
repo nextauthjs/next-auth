@@ -15,28 +15,23 @@ import type {
 } from "../../types.js"
 import type { Cookie } from "../utils/cookie.js"
 
-/**
- * Builds and returns the script tag to load the SimpleWebAuthn browser script.
- * @param config Provider config
- * @returns The script tag to load the SimpleWebAuthn browser script, or an empty string if the provider has no conditional UI enabled.
- */
-export function getSimpleWebAuthnBrowserScriptTag(config: InternalProvider<"webauthn">) {
-  const { simpleWebAuthnBrowserVersion, enableConditionalUI } = config
-
-  if (!simpleWebAuthnBrowserVersion || !enableConditionalUI)
-    return ""
-
-  return `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.umd.min.js" crossorigin="anonymous"></script>`
-}
-
-function send({ html, title, status, cookies, theme, headTags }: any): ResponseInternal {
+function send({
+  html,
+  title,
+  status,
+  cookies,
+  theme,
+  headTags,
+}: any): ResponseInternal {
   return {
     cookies,
     status,
     headers: { "Content-Type": "text/html" },
     body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style><title>${title}</title>${
       headTags ?? ""
-    }</head><body class="__next-auth-theme-${theme?.colorScheme ?? "auto"}"><div class="page">${renderToString(html)}</div></body></html>`,
+    }</head><body class="__next-auth-theme-${
+      theme?.colorScheme ?? "auto"
+    }"><div class="page">${renderToString(html)}</div></body></html>`,
   }
 }
 
@@ -100,11 +95,17 @@ export default function renderPage(params: RenderPageParams) {
       // a simpleWebAuthnBrowserScript is defined, we need to
       // render the script in the page.
       const webauthnProvider = providers?.find(
-        (p): p is InternalProvider<"webauthn"> => p.type === "webauthn" && p.enableConditionalUI
+        (p): p is InternalProvider<"webauthn"> =>
+          p.type === "webauthn" &&
+          p.enableConditionalUI &&
+          !!p.simpleWebAuthnBrowserVersion
       )
-      const simpleWebAuthnBrowserScript = webauthnProvider ?
-        getSimpleWebAuthnBrowserScriptTag(webauthnProvider) :
-        undefined
+
+      let simpleWebAuthnBrowserScript = ""
+      if (webauthnProvider) {
+        const { simpleWebAuthnBrowserVersion } = webauthnProvider
+        simpleWebAuthnBrowserScript = `<script src="https://unpkg.com/browse/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.umd.min.js" crossorigin="anonymous"></script>`
+      }
 
       return send({
         cookies,
