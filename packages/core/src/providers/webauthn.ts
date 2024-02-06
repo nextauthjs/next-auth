@@ -6,7 +6,7 @@ import {
 } from "@simplewebauthn/server"
 import { MissingAdapter } from "../errors.js"
 
-import type { CommonProviderOptions, CredentialInput } from "."
+import type { CommonProviderOptions, CredentialInput } from "./index.js"
 import type {
   GenerateRegistrationOptionsOpts,
   GenerateAuthenticationOptionsOpts,
