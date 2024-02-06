@@ -95,9 +95,6 @@
     },
     "nodemailer": {
       "optional": true
-    },
-    "@simplewebauthn/browser": {
-      "optional": true
     }
   },
   "devDependencies": {
