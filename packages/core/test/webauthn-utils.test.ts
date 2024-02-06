@@ -39,17 +39,13 @@ const getMockAdapter = () => ({
   getUser: vi.fn(),
 }) as unknown as Required<Adapter>
 
-const getDefaultProvider = (config?: Partial<WebAuthnConfig>) => WebAuthn({
-  ...config,
-})
-
 function getMockOptions(
   defaultOptions?: Partial<InternalOptions>,
   defaultProvider?: Partial<WebAuthnConfig>
 ) {
   const {
     adapter = getMockAdapter(),
-    provider = WebAuthn(getDefaultProvider(defaultProvider)),
+    provider = WebAuthn(defaultProvider ?? {}),
     experimental = { enableWebAuthn: true },
     action = "webauthn-options",
     logger = { error: vi.fn() },
@@ -213,7 +209,7 @@ vi.mock("../src/lib/actions/callback/oauth/checks", () => ({
   }
 }))
 
-const defaultWebAuthnConfig = getDefaultProvider()
+const defaultWebAuthnConfig = WebAuthn({})
 
 afterEach(() => {
   vi.resetAllMocks()

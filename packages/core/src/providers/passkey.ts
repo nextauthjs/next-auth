@@ -64,7 +64,7 @@ import WebAuthn, { WebAuthnConfig, DEFAULT_WEBAUTHN_TIMEOUT } from "./webauthn"
  * :::
  */
 export default function Passkey(
-  config: Parameters<typeof WebAuthn>[0]
+  config: Partial<WebAuthnConfig>
 ): WebAuthnConfig {
   return WebAuthn({
     id: "passkey",
