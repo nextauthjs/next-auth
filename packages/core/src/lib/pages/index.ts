@@ -104,7 +104,7 @@ export default function renderPage(params: RenderPageParams) {
       let simpleWebAuthnBrowserScript = ""
       if (webauthnProvider) {
         const { simpleWebAuthnBrowserVersion } = webauthnProvider
-        simpleWebAuthnBrowserScript = `<script src="https://unpkg.com/browse/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.umd.min.js" crossorigin="anonymous"></script>`
+        simpleWebAuthnBrowserScript = `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.umd.min.js" crossorigin="anonymous"></script>`
       }
 
       return send({
