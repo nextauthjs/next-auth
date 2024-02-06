@@ -13,6 +13,7 @@ import type {
   Adapter,
   AdapterAccount,
   AdapterAccountType,
+  AdapterAuthenticator,
   AdapterSession,
   AdapterUser,
   VerificationToken,
@@ -90,6 +91,22 @@ export function defineTables(
     verificationTokensTable,
   }
 }
+
+export const sqliteAuthenticatorsTable = sqliteTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: integer("credentialBackedUp", {
+    mode: "boolean",
+  }).notNull(),
+  transports: text("transports"),
+}) satisfies DefaultSQLiteAuthenticatorTable
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<"sync" | "async", any, any>,
@@ -243,21 +260,84 @@ export function SQLiteDrizzleAdapter(
         )
         .run()
     },
+    async getAccount(providerAccountId, provider) {
+      return await client
+        .select()
+        .from(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.providerAccountId, providerAccountId),
+            eq(accountsTable.provider, provider)
+          )
+        )
+        .then((res) => (res[0] as AdapterAccount) ?? null)
+    },
+    async createAuthenticator(data) {
+      const user = await client
+        .insert(authenticatorsTable)
+        .values({ ...data, id: crypto.randomUUID() })
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+
+      return user
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+      return authenticator ? authenticator : null
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.userId, userId))
+        .then((res) => res.map(fromDBAuthenticator))
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      return await client
+        .update(authenticatorsTable)
+        .set({ counter: newCounter })
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+  }
+}
+
+type BaseDrizzleAuthenticator = Required<
+  DefaultSQLiteSchema["authenticatorsTable"]["$inferInsert"]
+>
+
+function fromDBAuthenticator(
+  authenticator: BaseDrizzleAuthenticator
+): AdapterAuthenticator {
+  const { transports, id, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }
 
 type DefaultSQLiteColumn<
   T extends {
-    data: string | number | Date
-    dataType: "string" | "number" | "date"
+    data: string | boolean | number | Date
+    dataType: "string" | "boolean" | "number" | "date"
     notNull: boolean
-    columnType: "SQLiteText" | "SQLiteTimestamp" | "SQLiteInteger"
+    columnType:
+      | "SQLiteText"
+      | "SQLiteBoolean"
+      | "SQLiteTimestamp"
+      | "SQLiteInteger"
   },
 > = SQLiteColumn<{
   name: string
   columnType: T["columnType"]
   data: T["data"]
-  driverParam: string | number
+  driverParam: string | number | boolean
   notNull: T["notNull"]
   hasDefault: boolean
   enumValues: any
@@ -429,9 +509,72 @@ export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
   schema: string | undefined
 }>
 
+export type DefaultSQLiteAuthenticatorTable = SQLiteTableWithColumns<{
+  name: string
+  columns: {
+    id: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialID: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    userId: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    providerAccountId: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialPublicKey: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    counter: DefaultSQLiteColumn<{
+      columnType: "SQLiteInteger"
+      data: number
+      notNull: true
+      dataType: "number"
+    }>
+    credentialDeviceType: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialBackedUp: DefaultSQLiteColumn<{
+      columnType: "SQLiteBoolean"
+      data: boolean
+      notNull: true
+      dataType: "boolean"
+    }>
+    transports: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: false
+      dataType: "string"
+    }>
+  }
+  dialect: "sqlite"
+  schema: string | undefined
+}>
+
 export type DefaultSQLiteSchema = {
   usersTable: DefaultSQLiteUsersTable
   accountsTable: DefaultSQLiteAccountsTable
   sessionsTable?: DefaultSQLiteSessionsTable
   verificationTokensTable?: DefaultSQLiteVerificationTokenTable
+  authenticatorsTable: DefaultSQLiteAuthenticatorTable
 }

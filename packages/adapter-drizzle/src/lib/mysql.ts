@@ -5,6 +5,7 @@ import {
   MySqlTableWithColumns,
   PreparedQueryHKTBase,
   QueryResultHKT,
+  boolean,
   int,
   mysqlTable,
   primaryKey,
@@ -19,6 +20,7 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
+  AdapterAuthenticator,
 } from "@auth/core/adapters"
 
 export function defineTables(
@@ -97,6 +99,24 @@ export function defineTables(
     verificationTokensTable,
   }
 }
+
+export const mysqlAuthenticatorsTable = mysqlTable("authenticator", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
+  providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+  credentialPublicKey: varchar("credentialPublicKey", {
+    length: 255,
+  }).notNull(),
+  counter: int("counter").notNull(),
+  credentialDeviceType: varchar("credentialDeviceType", {
+    length: 255,
+  }).notNull(),
+  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+  transports: varchar("transports", { length: 255 }),
+}) satisfies DefaultMySqlAuthenticatorTable
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
@@ -270,21 +290,91 @@ export function MySqlDrizzleAdapter(
           )
         )
     },
+    async getAccount(providerAccountId, provider) {
+      return await client
+        .select()
+        .from(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.providerAccountId, providerAccountId),
+            eq(accountsTable.provider, provider)
+          )
+        )
+        .then((res) => (res[0] as AdapterAccount) ?? null)
+    },
+    async createAuthenticator(data) {
+      await client
+        .insert(mysqlAuthenticatorsTable)
+        .values({ ...data, id: crypto.randomUUID() })
+
+      return await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, data.credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+      return authenticator ? authenticator : null
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.userId, userId))
+        .then((res) => res.map(fromDBAuthenticator))
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      await client
+        .update(authenticatorsTable)
+        .set({ counter: newCounter })
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+
+      return await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+  }
+}
+
+type DrizzleAuthenticator = Required<
+  DefaultMySqlSchema["authenticatorsTable"]["$inferInsert"]
+>
+
+function fromDBAuthenticator(
+  authenticator: DrizzleAuthenticator
+): AdapterAuthenticator {
+  const { transports, id, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }
 
 type DefaultMyqlColumn<
   T extends {
-    data: string | number | Date
-    dataType: "string" | "number" | "date"
+    data: string | number | boolean | Date
+    dataType: "string" | "number" | "boolean" | "date"
     notNull: boolean
-    columnType: "MySqlVarChar" | "MySqlText" | "MySqlTimestamp" | "MySqlInt"
+    columnType:
+      | "MySqlVarChar"
+      | "MySqlText"
+      | "MySqlBoolean"
+      | "MySqlTimestamp"
+      | "MySqlInt"
   },
 > = MySqlColumn<{
   name: string
   columnType: T["columnType"]
   data: T["data"]
-  driverParam: string | number
+  driverParam: string | number | boolean
   notNull: T["notNull"]
   hasDefault: boolean
   enumValues: any
@@ -457,9 +547,72 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
   schema: string | undefined
 }>
 
+export type DefaultMySqlAuthenticatorTable = MySqlTableWithColumns<{
+  name: string
+  columns: {
+    id: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialID: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    userId: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    providerAccountId: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialPublicKey: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    counter: DefaultMyqlColumn<{
+      columnType: "MySqlInt"
+      data: number
+      notNull: true
+      dataType: "number"
+    }>
+    credentialDeviceType: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialBackedUp: DefaultMyqlColumn<{
+      columnType: "MySqlBoolean"
+      data: boolean
+      notNull: true
+      dataType: "boolean"
+    }>
+    transports: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: false
+      dataType: "string"
+    }>
+  }
+  dialect: "mysql"
+  schema: string | undefined
+}>
+
 export type DefaultMySqlSchema = {
   usersTable: DefaultMySqlUsersTable
   accountsTable: DefaultMySqlAccountsTable
   sessionsTable?: DefaultMySqlSessionsTable
   verificationTokensTable?: DefaultMySqlVerificationTokenTable
+  authenticatorsTable: DefaultMySqlAuthenticatorTable
 }

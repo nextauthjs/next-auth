@@ -4,6 +4,7 @@ import {
   PgDatabase,
   PgTableWithColumns,
   QueryResultHKT,
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -15,6 +16,7 @@ import type {
   Adapter,
   AdapterAccount,
   AdapterAccountType,
+  AdapterAuthenticator,
   AdapterSession,
   AdapterUser,
   VerificationToken,
@@ -96,6 +98,20 @@ export function defineTables(
     verificationTokensTable,
   }
 }
+
+export const postgresAuthenticatorsTable = pgTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+  transports: text("transports"),
+}) satisfies DefaultPostgresAuthenticatorTable
 
 export function PostgresDrizzleAdapter(
   client: PgDatabase<QueryResultHKT, any>,
@@ -240,21 +256,86 @@ export function PostgresDrizzleAdapter(
           )
         )
     },
+    async getAccount(providerAccountId, provider) {
+      return await client
+        .select()
+        .from(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.providerAccountId, providerAccountId),
+            eq(accountsTable.provider, provider)
+          )
+        )
+        .then((res) => (res[0] as AdapterAccount) ?? null)
+    },
+    async createAuthenticator(data) {
+      const user = await client
+        .insert(authenticatorsTable)
+        .values({ ...data, id: crypto.randomUUID() })
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+
+      return user
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+      return authenticator ? authenticator : null
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.userId, userId))
+        .then((res) => res.map(fromDBAuthenticator))
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      return await client
+        .update(authenticatorsTable)
+        .set({ counter: newCounter })
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+  }
+}
+
+type BaseDrizzleAuthenticator = Required<
+  DefaultPostgresSchema["authenticatorsTable"]["$inferInsert"]
+>
+
+function fromDBAuthenticator(
+  authenticator: BaseDrizzleAuthenticator
+): AdapterAuthenticator {
+  const { transports, id, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }
 
 type DefaultPostgresColumn<
   T extends {
-    data: string | number | Date
-    dataType: "string" | "number" | "date"
+    data: string | number | boolean | Date
+    dataType: "string" | "number" | "boolean" | "date"
     notNull: boolean
-    columnType: "PgVarchar" | "PgText" | "PgTimestamp" | "PgInteger" | "PgUUID"
+    columnType:
+      | "PgVarchar"
+      | "PgText"
+      | "PgBoolean"
+      | "PgTimestamp"
+      | "PgInteger"
+      | "PgUUID"
   },
 > = PgColumn<{
   name: string
   columnType: T["columnType"]
   data: T["data"]
-  driverParam: string | number
+  driverParam: string | number | boolean
   notNull: T["notNull"]
   hasDefault: boolean
   enumValues: any
@@ -426,9 +507,72 @@ export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
   schema: string | undefined
 }>
 
+export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
+  name: string
+  columns: {
+    id: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialID: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    userId: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    providerAccountId: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialPublicKey: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    counter: DefaultPostgresColumn<{
+      columnType: "PgInteger"
+      data: number
+      notNull: true
+      dataType: "number"
+    }>
+    credentialDeviceType: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialBackedUp: DefaultPostgresColumn<{
+      columnType: "PgBoolean"
+      data: boolean
+      notNull: true
+      dataType: "boolean"
+    }>
+    transports: DefaultPostgresColumn<{
+      columnType: "PgVarchar" | "PgText"
+      data: string
+      notNull: false
+      dataType: "string"
+    }>
+  }
+  dialect: "pg"
+  schema: string | undefined
+}>
+
 export type DefaultPostgresSchema = {
   usersTable: DefaultPostgresUsersTable
   accountsTable: DefaultPostgresAccountsTable
   sessionsTable?: DefaultPostgresSessionsTable
   verificationTokensTable?: DefaultPostgresVerificationTokenTable
+  authenticatorsTable: DefaultPostgresAuthenticatorTable
 }
