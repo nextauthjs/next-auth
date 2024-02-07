@@ -73,10 +73,20 @@ import type {
   OIDCConfigInternal,
   ProviderType,
 } from "./providers/index.js"
+import type {
+  WebAuthnConfig,
+  WebAuthnProviderType,
+} from "./providers/webauthn.js"
 
 export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
+export type Awaited<T> = T extends Promise<infer U> ? U : T
+
+export type SemverString =
+  | `v${number}`
+  | `v${number}.${number}`
+  | `v${number}.${number}.${number}`
 
 /**
  * Change the theme of the built-in pages.
@@ -344,6 +354,7 @@ export interface CookiesOptions {
   pkceCodeVerifier: Partial<CookieOption>
   state: Partial<CookieOption>
   nonce: Partial<CookieOption>
+  webauthnChallenge: Partial<CookieOption>
 }
 
 /**
@@ -467,7 +478,9 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
       ? EmailConfig
       : T extends "credentials"
         ? CredentialsConfig
-        : never) & {
+        : T extends WebAuthnProviderType
+          ? WebAuthnConfig
+          : never) & {
   signinUrl: string
   /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string
@@ -507,6 +520,8 @@ export interface PublicProvider {
  *   - **`GET`**: Renders the built-in sign-out page.
  *   - **`POST`**: Initiates the sign-out flow. This will invalidate the user's session (deleting the cookie, and if there is a session in the database, it will be deleted as well).
  * - **`"verify-request"`**: Renders the built-in verification request page.
+ * - **`"webauthn-options"`**:
+ *   - **`GET`**: Returns the options for the WebAuthn authentication and registration flows.
  */
 export type AuthAction =
   | "callback"
@@ -517,6 +532,7 @@ export type AuthAction =
   | "signin"
   | "signout"
   | "verify-request"
+  | "webauthn-options"
 
 /** @internal */
 export interface RequestInternal {
@@ -540,6 +556,48 @@ export interface ResponseInternal<
   body?: Body
   redirect?: string
   cookies?: Cookie[]
+}
+
+/**
+ * A webauthn authenticator.
+ * Represents an entity capable of authenticating the account it references,
+ * and contains the auhtenticator's credentials and related information.
+ *
+ * @see https://www.w3.org/TR/webauthn/#authenticator
+ */
+export interface Authenticator {
+  /**
+   * ID of the user this authenticator belongs to.
+   */
+  userId?: string
+  /**
+   * The provider account ID connected to the authenticator.
+   */
+  providerAccountId: string
+  /**
+   * Number of times the authenticator has been used.
+   */
+  counter: number
+  /**
+   * Whether the client authenticator backed up the credential.
+   */
+  credentialBackedUp: boolean
+  /**
+   * Base64 encoded credential ID.
+   */
+  credentialID: string
+  /**
+   * Base64 encoded credential public key.
+   */
+  credentialPublicKey: string
+  /**
+   * Concatenated transport flags.
+   */
+  transports?: string
+  /**
+   * Device type of the authenticator.
+   */
+  credentialDeviceType: string
 }
 
 /** @internal */
@@ -571,6 +629,6 @@ export interface InternalOptions<TProviderType = ProviderType> {
    * See also {@link OAuthConfigInternal.redirectProxyUrl}.
    */
   isOnRedirectProxy: boolean
-  experimental: Record<string, boolean>
+  experimental: NonNullable<AuthConfig["experimental"]>
   basePath: string
 }
