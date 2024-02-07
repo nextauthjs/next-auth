@@ -7,8 +7,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
-  use: { trace: "on-first-retry" },
+  reporter: process.env.CI ? "dot" : "html",
+  use: { trace: "on" },
   projects: [
     {
       name: "chromium",
@@ -18,7 +18,8 @@ export default defineConfig({
   webServer: {
     // TODO: Create test app instead of using the `dev` app.
     command:
-      "turbo run build --filter=next-auth-app && cd ../../apps/dev/nextjs && pnpm start",
+      // "turbo run build --filter=next-auth-app && cd ../../apps/dev/nextjs && pnpm start",
+      "cd ../../ && pnpm dev",
     url: "http://localhost:3000",
     timeout: 10_000,
     reuseExistingServer: !process.env.CI,
