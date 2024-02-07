@@ -78,6 +78,8 @@ import type {
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
 
+export type { WebAuthnOptionsResponseBody } from "./providers/webauthn.js"
+
 export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
