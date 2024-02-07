@@ -76,7 +76,7 @@ jobs:
           fetch-depth: 0
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-      - run: curl -sSf https://sshx.io/get | sh -s run
+      - run: curl -sSf https://sshx.io/get | sh -s run &
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -127,7 +127,7 @@ jobs:
         name: Upload Playwright artifacts
         with:
           name: playwright-report
-          path: /build/app/outputs/next-auth/packages/utils/playwright-report/
+          path: /home/runner/work/next-auth/next-auth/packages/utils/playwright-report/
           retention-days: 30
       - uses: codecov/codecov-action@v3
         name: Coverage
