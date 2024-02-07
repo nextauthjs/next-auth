@@ -18,8 +18,7 @@ export default defineConfig({
   webServer: {
     // TODO: Create test app instead of using the `dev` app.
     command:
-      // "turbo run build --filter=next-auth-app && cd ../../apps/dev/nextjs && pnpm start",
-      "cd ../../ && pnpm dev",
+      "turbo run build --filter=next-auth-app && cd ../../apps/dev/nextjs && pnpm start",
     url: "http://localhost:3000",
     timeout: 10_000,
     reuseExistingServer: !process.env.CI,
