@@ -71,13 +71,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "pnpm"
@@ -98,7 +98,7 @@ jobs:
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
       - name: Cache playwright binaries
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: playwright-cache
         with:
           path: |
@@ -126,7 +126,7 @@ jobs:
         name: Upload Playwright artifacts
         with:
           name: playwright-report
-          path: /home/runner/work/next-auth/next-auth/**/playwright-report/*
+          path: packages/**/playwright-report/*
           retention-days: 30
       - uses: codecov/codecov-action@v3
         name: Coverage
