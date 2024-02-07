@@ -94,13 +94,26 @@ jobs:
         env:
           UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
           UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright
+        if: steps.playwright-cache.outputs.cache-hit != 'true' && github.repository == 'nextauthjs/next-auth'
+        run: |
+          pnpm exec playwright install --with-deps
       - name: Run E2E tests
         continue-on-error: true # TODO: Make this less flakey
         if: github.repository == 'nextauthjs/next-auth'
-        run: |
-          pnpm exec playwright install --with-deps > /dev/null 2>&1
-          pnpm test:e2e
         timeout-minutes: 15
+        run: |
+          pnpm test:e2e
         env:
           TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
           TEST_KEYCLOAK_PASSWORD: ${{ secrets.TEST_KEYCLOAK_PASSWORD }}
@@ -109,6 +122,7 @@ jobs:
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
       - uses: actions/upload-artifact@v3
+        if: failure()
         name: Upload Playwright report
         with:
           name: playwright-report
