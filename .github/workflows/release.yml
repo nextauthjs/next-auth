@@ -123,11 +123,11 @@ jobs:
           AUTH_TRUST_HOST: 1
       - uses: actions/upload-artifact@v3
         continue-on-error: true
-        if: failure()
+        if: ${{ failure() }}
         name: Upload Playwright report
         with:
           name: playwright-report
-          path: packages/core/playwright-report/
+          path: /build/app/outputs/next-auth/packages/core/playwright-report/
           retention-days: 30
       - uses: codecov/codecov-action@v3
         name: Coverage
