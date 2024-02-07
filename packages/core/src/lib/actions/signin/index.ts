@@ -6,7 +6,7 @@ import type {
   InternalOptions,
   RequestInternal,
   ResponseInternal,
-} from "../../../types"
+} from "../../../types.js"
 
 export async function signIn(
   request: RequestInternal,

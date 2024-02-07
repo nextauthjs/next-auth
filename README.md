@@ -97,11 +97,11 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://vercel.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
+        <a href="https://workos.com" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
         </a><br />
-        <div>Vercel</div>
-        <sub>💵☁️</sub>
+        <div>WorkOS</div>
+        <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
@@ -139,11 +139,11 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://workos.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
+        <a href="https://vercel.com" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
         </a><br />
-        <div>WorkOS</div>
-        <sub>💵</sub>
+        <div>Vercel</div>
+        <sub>💵☁️</sub>
       </td>
     </tr>
     <tr>
