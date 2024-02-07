@@ -159,7 +159,7 @@ export interface DynamoDBAdapterOptions {
  * If you're using Terraform to manage your infrastructure, you can use this resource definition:
  *
  * ```hcl title=dynamodb.tf
- * resource "aws_dynamodb_table" "next_auth" {
+ * resource "aws_dynamodb_table" "authjs" {
  *   name         = "next-auth"
  *   billing_mode = "PAY_PER_REQUEST" # Alternatively, ON_DEMAND, see https://aws.amazon.com/dynamodb/pricing/
  *   hash_key     = "pk"
