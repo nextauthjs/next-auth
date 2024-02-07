@@ -76,7 +76,6 @@ jobs:
           fetch-depth: 0
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-      - run: curl -sSf https://sshx.io/get | sh -s run &
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -122,12 +121,12 @@ jobs:
           AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         continue-on-error: true
         name: Upload Playwright artifacts
         with:
           name: playwright-report
-          path: /home/runner/work/next-auth/next-auth/packages/core/playwright-report/
+          path: /home/runner/work/next-auth/next-auth/**/playwright-report/*
           retention-days: 30
       - uses: codecov/codecov-action@v3
         name: Coverage
