@@ -14,13 +14,13 @@
  *
  * @module @auth/dgraph-adapter
  */
-import { client as dgraphClient } from "./lib/client"
-import { format } from "./lib/utils"
+import { client as dgraphClient } from "./lib/client.js"
+import { format } from "./lib/utils.js"
 import type { Adapter } from "@auth/core/adapters"
-import type { DgraphClientParams } from "./lib/client"
-import * as defaultFragments from "./lib/graphql/fragments"
+import type { DgraphClientParams } from "./lib/client.js"
+import * as defaultFragments from "./lib/graphql/fragments.js"
 
-export type { DgraphClientParams, DgraphClientError } from "./lib/client"
+export type { DgraphClientParams, DgraphClientError } from "./lib/client.js"
 
 /** This is the interface of the Dgraph adapter options. */
 export interface DgraphAdapterOptions {

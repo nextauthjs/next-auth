@@ -23,7 +23,10 @@
  */
 import type { Adapter } from "@auth/core/adapters"
 
-import type { XataClient } from "./xata"
+// import type { XataClient } from "./xata.js"
+
+// TODO: Fix type for XataClient
+type XataClient = any
 
 /**
  * ## Setup
