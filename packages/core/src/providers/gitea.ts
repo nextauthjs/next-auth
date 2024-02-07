@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div style={{backgroundColor: "#609926", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Gitea</b> integration.</span>
  * <a href="https://gitea.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/gitea.svg" height="48" width="48"/>
