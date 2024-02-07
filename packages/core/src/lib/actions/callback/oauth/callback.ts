@@ -186,7 +186,10 @@ export async function handleOAuth(
   return { ...profileResult, profile, cookies: resCookies }
 }
 
-/** Returns the user and account that is going to be created in the database. */
+/**
+ * Returns the user and account that is going to be created in the database.
+ * @internal
+ */
 export async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
