@@ -96,7 +96,7 @@ const config: DocsThemeConfig = {
       ? frontMatter.title
       : capitalizedPathTitle
       ? `Auth.js | ${capitalizedPathTitle}`
-      : "Auth.js"
+      : "Auth.js | Authentication for the Web"
 
     return (
       <>

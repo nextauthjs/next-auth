@@ -1,8 +1,8 @@
-import { FrameworkExamples } from "@/components/FrameworkExamples";
-import { ProviderMarquee } from "@/components/LogosMarquee/Slider";
-import { Blur } from "@/components/Blur";
-import { Guides } from "@/components/Guides";
-import Footer from "@/components/Footer";
+import { FrameworkExamples } from "@/components/FrameworkExamples"
+import { ProviderMarquee } from "@/components/LogosMarquee/Slider"
+import { Blur } from "@/components/Blur"
+import { Guides } from "@/components/Guides"
+import Footer from "@/components/Footer"
 
 <div className="overflow-hidden relative">
   <section className="px-4 mx-auto w-full max-w-7xl h-64">
@@ -20,10 +20,12 @@ import Footer from "@/components/Footer";
     <div className="flex flex-row justify-center pt-16 w-full">
       <a
         href="/getting-started"
-        className="inline-block py-3 px-8 text-xl font-medium text-white bg-violet-500 dark:bg-violet-900 rounded transition hover:scale-110 hover:rotate-2 focus-visible:ring focus:outline-none
-        dark:active:bg-violet-950 active:bg-violet-600"
+        className="overflow-hidden group inline-block py-3 px-8 text-xl font-medium text-white bg-violet-500 dark:bg-violet-900 rounded transition hover:scale-110 hover:rotate-2 focus-visible:ring focus:outline-none dark:active:bg-violet-950 active:bg-violet-600"
       >
-        Get started
+        Get Started
+        <div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(18deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(18deg)_translateX(100%)]">
+          <div class="relative h-full w-8 bg-white/20"></div>
+        </div>
       </a>
     </div>
     <Blur />
