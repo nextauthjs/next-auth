@@ -57,6 +57,6 @@
     "@prisma/client": "^5.9.1",
     "@prisma/extension-accelerate": "^0.6.3",
     "mongodb": "^4.17.0",
-    "prisma": "^5.2.0"
+    "prisma": "^5.9.1"
   }
 }
