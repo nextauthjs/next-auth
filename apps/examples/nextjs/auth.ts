@@ -72,86 +72,64 @@ import type { NextAuthConfig } from "next-auth"
 
 const prisma = new PrismaClient()
 
-export const config = {
+const providers = [Apple, Auth0, AzureDevops, Cognito, Facebook, GitHub, Google, LinkedIn, Passage, Pinterest, Twitch, Twitter]
+
+export const baseConfig = {
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    Apple,
-    Auth0,
-    AzureDevops,
-    Cognito,
-    Facebook,
-    GitHub,
-    Google,
-    LinkedIn,
-    Passage,
-    Passkey({
-      formFields: {
-        username: {
-          label: "Username",
-          required: true,
-          autocomplete: "username webauthn",
-        },
-      },
-    }),
-    Pinterest,
-    Twitch,
-    Twitter,
-    // Asgardeo,
-    // Atlassian,
-    // Authentik,
-    // AzureAD,
-    // AzureB2C,
-    // Battlenet,
-    // Box,
-    // BoxyHQSAML,
-    // Bungie,
-    // Coinbase,
-    // Discord,
-    // Dropbox,
-    // DuendeIDS6,
-    // Eveonline,
-    // Faceit,
-    // FortyTwoSchool,
-    // Foursquare,
-    // Freshbooks,
-    // Fusionauth,
-    // Gitlab,
-    // Hubspot,
-    // Instagram,
-    // Kakao,
-    // Keycloak,
-    // Line,
-    // Mailchimp,
-    // Mailru,
-    // Medium,
-    // Naver,
-    // Netlify,
-    // Okta,
-    // Onelogin,
-    // Osso,
-    // Osu,
-    // Patreon,
-    // Pipedrive,
-    // Reddit,
-    // Salesforce,
-    // Slack,
-    // Spotify,
-    // Strava,
-    // Todoist,
-    // Trakt,
-    // UnitedEffects,
-    // Vk,
-    // Wikimedia,
-    // Wordpress,
-    // WorkOS,
-    // Yandex,
-    // Zitadel,
-    // Zoho,
-    // Zoom,
-  ],
+  // Asgardeo,
+  // Atlassian,
+  // Authentik,
+  // AzureAD,
+  // AzureB2C,
+  // Battlenet,
+  // Box,
+  // BoxyHQSAML,
+  // Bungie,
+  // Coinbase,
+  // Discord,
+  // Dropbox,
+  // DuendeIDS6,
+  // Eveonline,
+  // Faceit,
+  // FortyTwoSchool,
+  // Foursquare,
+  // Freshbooks,
+  // Fusionauth,
+  // Gitlab,
+  // Hubspot,
+  // Instagram,
+  // Kakao,
+  // Keycloak,
+  // Line,
+  // Mailchimp,
+  // Mailru,
+  // Medium,
+  // Naver,
+  // Netlify,
+  // Okta,
+  // Onelogin,
+  // Osso,
+  // Osu,
+  // Patreon,
+  // Pipedrive,
+  // Reddit,
+  // Salesforce,
+  // Slack,
+  // Spotify,
+  // Strava,
+  // Todoist,
+  // Trakt,
+  // UnitedEffects,
+  // Vk,
+  // Wikimedia,
+  // Wordpress,
+  // WorkOS,
+  // Yandex,
+  // Zitadel,
+  // Zoho,
+  // Zoom,
   session: {
     strategy: "jwt",
   },
@@ -169,6 +147,42 @@ export const config = {
   experimental: {
     enableWebAuthn: true,
   },
+  adapter: undefined,
+  debug: true,
 } satisfies NextAuthConfig
 
-export const { handlers, auth, signIn, signOut, unstable_update: update } = NextAuth(config)
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+  unstable_update: update,
+} = NextAuth((request) => {
+  if (
+    request?.nextUrl?.pathname.includes("webauthn") ||
+    request?.nextUrl?.pathname.includes("passkey") ||
+    request?.nextUrl?.pathname.endsWith("signin")
+  ) {
+    return {
+      ...baseConfig,
+      providers: [
+        ...providers,
+        Passkey({
+          formFields: {
+            username: {
+              label: "Username",
+              required: true,
+              autocomplete: "username webauthn",
+            },
+          },
+        }),
+      ],
+      adapter: PrismaAdapter(prisma),
+    }
+  }
+  console.log(request?.nextUrl.pathname)
+  return {
+    ...baseConfig,
+    providers,
+  }
+})
