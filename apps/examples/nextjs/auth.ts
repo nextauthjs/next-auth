@@ -88,7 +88,13 @@ export const config = {
     LinkedIn,
     Passage,
     Passkey({
-      fieldLabel: "Username",
+      formFields: {
+        username: {
+          label: "Username",
+          required: true,
+          autocomplete: "username webauthn",
+        },
+      },
     }),
     Pinterest,
     Twitch,
