@@ -9,24 +9,13 @@ import CustomLink from "./custom-link"
 
 const UpdateForm = () => {
   const { data: session, update } = useSession()
-  const [name, setName] = useState(session?.user?.name ?? "")
+  const [name, setName] = useState(`New ${session?.user?.name}` ?? "")
 
   if (!session?.user) return null
   return (
     <>
-      <h2 className="text-xl font-bold">Updating the session</h2>
-      <form
-        onSubmit={async () => {
-          if (session) {
-            const newSession = await update({
-              ...session,
-              user: { ...session.user, name },
-            })
-            console.log({ newSession })
-          }
-        }}
-        className="flex items-center w-full max-w-sm space-x-2"
-      >
+      <h2 className="text-xl font-bold">Updating the session client-side</h2>
+      <div className="flex items-center space-x-2 w-full max-w-sm">
         <Input
           type="text"
           placeholder={session.user.name ?? ""}
@@ -35,8 +24,10 @@ const UpdateForm = () => {
             setName(e.target.value)
           }}
         />
-        <Button type="submit">Update</Button>
-      </form>
+        <Button onClick={() => update({ user: { name } })} type="submit">
+          Update
+        </Button>
+      </div>
     </>
   )
 }

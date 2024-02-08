@@ -155,6 +155,8 @@ export interface WebAuthnConfig extends CommonProviderOptions {
     generateAuthenticationOptions: typeof generateAuthenticationOptions
     generateRegistrationOptions: typeof generateRegistrationOptions
   }
+  /** Custom label for the WebAuthn input field */
+  fieldLabel?: string
 }
 
 /**
@@ -212,7 +214,7 @@ export default function WebAuthn(
     registrationOptions: { timeout: DEFAULT_WEBAUTHN_TIMEOUT },
     formFields: {
       email: {
-        label: "Email",
+        label: config.fieldLabel ?? "Email",
         required: true,
         autocomplete: "username webauthn",
       },
