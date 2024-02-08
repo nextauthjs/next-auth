@@ -477,11 +477,11 @@ importers:
         version: link:../core
     devDependencies:
       '@prisma/client':
-        specifier: ^5.2.0
-        version: 5.8.1(prisma@5.8.1)
+        specifier: ^5.9.1
+        version: 5.9.1(prisma@5.8.1)
       '@prisma/extension-accelerate':
-        specifier: ^0.6.2
-        version: 0.6.2(@prisma/client@5.8.1)
+        specifier: ^0.6.3
+        version: 0.6.3(@prisma/client@5.9.1)
       mongodb:
         specifier: ^4.17.0
         version: 4.17.2
@@ -6770,6 +6770,20 @@ packages:
         optional: true
     dependencies:
       prisma: 5.8.1
+    dev: false
+
+  /@prisma/client@5.9.1(prisma@5.8.1):
+    resolution: {integrity: sha512-caSOnG4kxcSkhqC/2ShV7rEoWwd3XrftokxJqOCMVvia4NYV/TPtJlS9C2os3Igxw/Qyxumj9GBQzcStzECvtQ==}
+    engines: {node: '>=16.13'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      prisma: 5.8.1
+    dev: true
 
   /@prisma/debug@5.8.1:
     resolution: {integrity: sha512-tjuw7eA0Us3T42jx9AmAgL58rzwzpFGYc3R7Y4Ip75EBYrKMBA1YihuWMcBC92ILmjlQ/u3p8VxcIE0hr+fZfg==}
@@ -6786,13 +6800,13 @@ packages:
       '@prisma/fetch-engine': 5.8.1
       '@prisma/get-platform': 5.8.1
 
-  /@prisma/extension-accelerate@0.6.2(@prisma/client@5.8.1):
-    resolution: {integrity: sha512-KIBVPeWt8qaSg7wQ+TXmCVeUDoW75whtXcdS9dbHxRoO2OWFH5I9+qbkHBhx5Wj/h1wQpS8usuxGnsZqiBjUpQ==}
+  /@prisma/extension-accelerate@0.6.3(@prisma/client@5.9.1):
+    resolution: {integrity: sha512-KnIfqbwCNMP3t1jgw76IVCE4HspRmWxagR0L4wJS+/74BgkRHrt/9ic8ONo7dir4AGGoHyg/Ej8yN+uGXNrXeg==}
     engines: {node: '>=16'}
     peerDependencies:
       '@prisma/client': '>=4.16.1'
     dependencies:
-      '@prisma/client': 5.8.1(prisma@5.8.1)
+      '@prisma/client': 5.9.1(prisma@5.8.1)
     dev: true
 
   /@prisma/fetch-engine@5.8.1:

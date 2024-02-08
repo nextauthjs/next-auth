@@ -16,7 +16,13 @@
  * @module @auth/prisma-adapter
  */
 import type { PrismaClient, Prisma } from "@prisma/client"
-import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterSession, AdapterUser } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterAuthenticator,
+  AdapterSession,
+  AdapterUser,
+} from "@auth/core/adapters"
 
 /**
  * ## Setup
@@ -215,7 +221,7 @@ import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterSession, Ada
  *   @@unique([identifier, token])
  *   @@map("verificationtokens")
  * }
- * 
+ *
  * model Authenticator {
  *   id                   String  @id @default(cuid())
  *   credentialID         String  @unique
@@ -226,7 +232,7 @@ import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterSession, Ada
  *   credentialDeviceType String
  *   credentialBackedUp   Boolean
  *   transports           String?
- * 
+ *
  *   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  * }
  * ```
@@ -248,10 +254,12 @@ export function PrismaAdapter(
         where: { provider_providerAccountId },
         select: { user: true },
       })
-      return account?.user as AdapterUser ?? null
+      return (account?.user as AdapterUser) ?? null
     },
-    updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }) as Promise<AdapterUser>,
-    deleteUser: (id) => p.user.delete({ where: { id } }) as Promise<AdapterUser>,
+    updateUser: ({ id, ...data }) =>
+      p.user.update({ where: { id }, data }) as Promise<AdapterUser>,
+    deleteUser: (id) =>
+      p.user.delete({ where: { id } }) as Promise<AdapterUser>,
     linkAccount: (data) =>
       p.account.create({ data }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
@@ -296,36 +304,49 @@ export function PrismaAdapter(
     },
     async getAccount(providerAccountId, provider) {
       return p.account.findFirst({
-        where: { providerAccountId, provider }
+        where: { providerAccountId, provider },
       }) as Promise<AdapterAccount | null>
     },
     async createAuthenticator(authenticator) {
-      return p.authenticator.create({
-        data: authenticator
-      }).then(fromDBAuthenticator)
+      return p.authenticator
+        .create({
+          data: authenticator,
+        })
+        .then(fromDBAuthenticator)
     },
     async getAuthenticator(credentialID) {
-      const authenticator = await p.authenticator.findUnique({ where: { credentialID } })
+      const authenticator = await p.authenticator.findUnique({
+        where: { credentialID },
+      })
       return authenticator ? fromDBAuthenticator(authenticator) : null
     },
     async listAuthenticatorsByUserId(userId) {
-      const authenticators = await p.authenticator.findMany({ where: { userId } })
+      const authenticators = await p.authenticator.findMany({
+        where: { userId },
+      })
 
       return authenticators.map(fromDBAuthenticator)
     },
     async updateAuthenticatorCounter(credentialID, counter) {
-      return p.authenticator.update({
-        where: { credentialID: credentialID },
-        data: { counter },
-      }).then(fromDBAuthenticator)
-    }
+      return p.authenticator
+        .update({
+          where: { credentialID: credentialID },
+          data: { counter },
+        })
+        .then(fromDBAuthenticator)
+    },
   }
 }
 
-type BasePrismaAuthenticator = Parameters<PrismaClient['authenticator']['create']>[0]['data']
-type PrismaAuthenticator = BasePrismaAuthenticator & Required<Pick<BasePrismaAuthenticator, 'userId'>>
+type BasePrismaAuthenticator = Parameters<
+  PrismaClient["authenticator"]["create"]
+>[0]["data"]
+type PrismaAuthenticator = BasePrismaAuthenticator &
+  Required<Pick<BasePrismaAuthenticator, "userId">>
 
-function fromDBAuthenticator(authenticator: PrismaAuthenticator): AdapterAuthenticator {
+function fromDBAuthenticator(
+  authenticator: PrismaAuthenticator
+): AdapterAuthenticator {
   const { transports, id, user, ...other } = authenticator
 
   return {
