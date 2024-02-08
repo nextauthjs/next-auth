@@ -11,7 +11,7 @@ sleep 2
 pnpm exec triplit migrate up --token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoibG9jYWwtcHJvamVjdC1pZCJ9.8Z76XXPc9esdlZb2b7NDC7IVajNXKc4eVcPsO7Ve0ug
 
 # Run tests
-npx jest --config=./tests/jest.config.js
+npx vitest -c ../utils/vitest.config.ts
 
 # Kill the server
 kill $SERVER_PID
