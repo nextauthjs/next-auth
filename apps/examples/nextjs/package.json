@@ -22,7 +22,7 @@
     "Thang Huu Vu <hi@thvu.dev>"
   ],
   "dependencies": {
-    "@auth/prisma-adapter": "latest:^",
+    "@auth/prisma-adapter": "latest",
     "@prisma/client": "5.9.1",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-collapsible": "^1.0.3",
