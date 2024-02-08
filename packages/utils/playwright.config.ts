@@ -8,6 +8,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? "dot" : "html",
+  trace: "on",
   use: { trace: "on" },
   projects: [
     {
