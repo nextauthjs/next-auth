@@ -1,4 +1,5 @@
-import { text, type EmailConfig, type EmailUserConfig, html } from "./index.js"
+import type { EmailConfig, EmailUserConfig } from "./index.js"
+import { html, text } from "../lib/utils/email.js"
 
 /** @todo Document this */
 export default function Resend(config: EmailUserConfig): EmailConfig {
