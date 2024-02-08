@@ -1,5 +1,6 @@
 import { createTransport } from "nodemailer"
-import { EmailConfig, html, text } from "./email.js"
+import { EmailConfig } from "./email.js"
+import { html, text } from "../lib/utils/email.js"
 import { AuthError } from "../errors.js"
 
 import type { Transport, TransportOptions } from "nodemailer"
