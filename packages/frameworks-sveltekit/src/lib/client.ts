@@ -3,7 +3,7 @@ import type {
   RedirectableProviderType,
 } from "@auth/core/providers"
 import { base } from "$app/paths"
-import type { WebAuthnOptionsResponseBody } from "@auth/core/lib/utils/webauthn-utils"
+import type { WebAuthnOptionsResponseBody } from "@auth/core/types"
 
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
