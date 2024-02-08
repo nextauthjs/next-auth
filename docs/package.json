@@ -26,6 +26,7 @@
     "@inkeep/widgets": "^0.2.258",
     "@next/third-parties": "^14.1.0",
     "@phosphor-icons/react": "^2.0.15",
+    "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@vercel/analytics": "^1.1.2",
     "classnames": "^2.3.2",

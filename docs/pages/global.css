@@ -59,7 +59,6 @@ details > *:not(summary) {
 }
 
 :is(html[class~="dark"] .nextra-code span) {
-  background-color: var(--shiki-dark-bg) !important;
   color: var(--shiki-dark) !important;
 }
 

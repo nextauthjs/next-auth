@@ -1,4 +1,4 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/prisma.svg" width="64" height="64" />
 
@@ -13,28 +13,66 @@ npm install prisma --save-dev
 
 ## Setup
 
-Add this adapter to your `auth.js` next-auth configuration file.
+Add the adapter to your Auth.js configuration file.
 
 ```js filename="./auth.js"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-});
+  providers: [Google],
+})
 ```
 
-### Schema
+## Edge Compatibility
+
+At the moment, Prisma is still working on being fully compatible with the Vercel edge runtime. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about edge support in early access since `5.9.0` [here](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
+
+- Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
+- Switch to the `jwt` session strategy
+
+Using Prisma in and edge runtime with `jwt` session strategy looks like this.
+
+Define the `auth.config.ts` file:
+
+```ts filename="auth.config.ts"
+export default {
+  providers: [GitHub, Google, Facebook, Twitter],
+} satisfies NextAuthConfig
+```
+
+Import and use the `PrismaAdapter` in the `auth.ts` file:
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+globalThis.prisma ??= new PrismaClient()
+
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
+  adapter: PrismaAdapter(globalThis.prisma),
+  session: { strategy: "jwt" },
+  ...authConfig,
+})
+```
+
+In the middleware file, import the `auth.config` and use it as the configuration for `NextAuth` (note that the `adapter` is not used here to avoid the error):
+
+```ts filename="middleware.ts"
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
+
+export const middleware = NextAuth(authConfig).auth
+```
+
+## Schema
 
 You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
 
@@ -53,41 +91,40 @@ generator client {
   previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
 }
 
-model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Authenticator Authenticator[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -95,7 +132,21 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
 
-  @@unique([identifier, token])
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 ```
 

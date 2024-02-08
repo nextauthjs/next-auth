@@ -1,5 +1,6 @@
 import { Callout } from "nextra/components"
 import { Code } from "@/components/Code"
+import { Accordion, Accordions } from "@/components/Accordion"
 
 <img align="right" src="/img/providers/passkey.svg" width="128" height="128" />
 
@@ -27,13 +28,90 @@ npm install @simplewebauthn/browser @simplewebauthn/server
 
 The `@simplewebauthn/browser` peer dependency is only required for custom signin pages. If you're using the Auth.js default pages, you can skip installing that peer dependency.
 
-### Apply the required schema Migrations
+### Database Setup
 
 This is the raw SQL migration, for more details including an example MongoDB migration, check out the Prisma `schema.prisma` [here](https://github.com/Maronato/next-auth/blob/main/packages/adapter-prisma/prisma/schema.prisma), or the PR adding support to Prisma [here](https://github.com/nextauthjs/next-auth/pull/9876).
 
-In short, the Passkeys provider requires an additional table called `Authenticator`.
+The Passkeys provider requires an additional table called `Authenticator`. Below is a migration in raw SQL
 
-```sql filename="./migration/add-webauthn-authenticator-table.sql"
+<Accordions>
+<Accordion title="Prisma Schema">
+
+```prisma {18, 54-66}
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+</Accordion>
+<Accordion title="SQL Migration">
+
+This migration works for **PostgreSQL** and **SQLite**.
+
+```sql filename="./migration/add-webauthn-authenticator-table-postgres.sql"
 -- CreateTable
 CREATE TABLE "Authenticator" (
     "id" TEXT NOT NULL PRIMARY KEY,
@@ -51,6 +129,34 @@ CREATE TABLE "Authenticator" (
 -- CreateIndex
 CREATE UNIQUE INDEX "Authenticator_credentialID_key" ON "Authenticator"("credentialID");
 ```
+
+This migration works for **MySQL** / **MariaDB**.
+
+```sql filename="./migration/add-webauthn-authenticator-table-mysql.sql"
+-- CreateTable
+CREATE TABLE Authenticator (
+    id varchar(255) NOT NULL PRIMARY KEY,
+    credentialID TEXT NOT NULL,
+    userId varchar(255) NOT NULL,
+    providerAccountId TEXT NOT NULL,
+    credentialPublicKey TEXT NOT NULL,
+    counter INTEGER NOT NULL,
+    credentialDeviceType TEXT NOT NULL,
+    credentialBackedUp BOOLEAN NOT NULL,
+    transports TEXT,
+    CONSTRAINT Authenticator_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX Authenticator_credentialID_key ON Authenticator(credentialID);
+```
+
+</Accordion>
+</Accordions>
+
+### Prisma Edge Compatibility
+
+If you're using Auth.js in Next.js via middleware, you'll need to make some small adjustments as Prisma does not support edge runtimes yet. See the [Prisma docs](/getting-started/adapters/prisma#edge-compatibility) for more details.
 
 ### Update Auth.js Configuration
 
