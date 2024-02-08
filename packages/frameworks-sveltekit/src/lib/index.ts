@@ -242,6 +242,8 @@ export type {
   User,
 } from "@auth/core/types"
 
+export type { SvelteKitAuthConfig }
+
 const authorizationParamsPrefix = "authorizationParams-"
 
 /**
