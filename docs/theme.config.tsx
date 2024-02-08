@@ -3,6 +3,8 @@ import { Link } from "@/components/Link"
 import { ChildrenProps } from "@/utils/types"
 import Footer from "@/components/Footer"
 import dynamic from "next/dynamic"
+import { usePathname } from "next/navigation"
+import { useConfig } from "nextra-theme-docs"
 
 const InkeepChatButton = dynamic(
   () => import("@/components/InkeepSearch").then((mod) => mod.InkeepTrigger),
@@ -81,27 +83,45 @@ const config: DocsThemeConfig = {
   sidebar: {
     defaultMenuCollapseLevel: 1,
   },
-  head: (
-    <>
-      <link
-        rel="icon"
-        href="/favicon-32x32.png"
-        sizes="32x32"
-        type="image/png"
-      />
-      <link
-        rel="icon"
-        href="/favicon-16x16.png"
-        sizes="16x16"
-        type="image/png"
-      />
-      <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta property="og:url" content="https://authjs.dev" />
-      <meta property="og:title" content="Auth.js" />
-      <meta property="og:description" content="Authentication for the Web" />
-    </>
-  ),
+  head: () => {
+    const pathname = usePathname()
+    const { frontMatter } = useConfig()
+    const url = `https://authjs.dev${pathname}`
+
+    const lastPathParam = pathname.split("/").at(-1).replaceAll("-", " ")
+    const capitalizedPathTitle = lastPathParam.replace(/\b\w/g, (l) =>
+      l.toUpperCase()
+    )
+    const title = frontMatter.title
+      ? frontMatter.title
+      : capitalizedPathTitle
+      ? `Auth.js | ${capitalizedPathTitle}`
+      : "Auth.js"
+
+    return (
+      <>
+        <link
+          rel="icon"
+          href="/favicon-32x32.png"
+          sizes="32x32"
+          type="image/png"
+        />
+        <link
+          rel="icon"
+          href="/favicon-16x16.png"
+          sizes="16x16"
+          type="image/png"
+        />
+        <title>{title}</title>
+        <meta property="og:url" content={url} />
+        <meta property="og:title" content={title} />
+        <meta
+          property="og:description"
+          content={frontMatter.description || "Authentication for the Web"}
+        />
+      </>
+    )
+  },
   banner: {
     content: (
       <>
