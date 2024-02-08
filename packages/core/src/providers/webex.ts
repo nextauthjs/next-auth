@@ -19,7 +19,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  */
 export interface WebexProfile extends Record<string, any> {
   id: string;
-  emails: [string, ...string[]];
+  emails: string[];
   displayName?: string;
   avatar?: string;
 }
