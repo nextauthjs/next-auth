@@ -63,7 +63,6 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Passage from "next-auth/providers/passage"
 import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
-import Resend from "next-auth/providers/resend"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
 import { PrismaClient } from "@prisma/client"
@@ -92,9 +91,6 @@ export const config = {
       fieldLabel: "Username",
     }),
     Pinterest,
-    Resend({
-      from: "no-reply@authjs.dev",
-    }),
     Twitch,
     Twitter,
     // Asgardeo,
