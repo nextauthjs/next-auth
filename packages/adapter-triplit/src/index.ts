@@ -310,7 +310,7 @@ export function TriplitAdapter(
     async createVerificationToken(token) {
       const result = await client.insert(collectionNames.verificationRequest, {
         ...token,
-        expires: token.expires.toISOString(),
+        expires: token.expires,
       })
       return result?.output
     },
