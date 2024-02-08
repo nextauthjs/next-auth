@@ -157,7 +157,45 @@ import type { Adapter, AdapterAccount, AdapterAuthenticator, AdapterSession, Ada
  * ```
  *
  * Everything else should be the same.
- *
+ * 
+ * ### Edge runtime compatibility
+ * At the moment, Prisma is still working on being fully compatible with the Vercel edge runtime. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560). There are two options to deal with this issue:
+ * - Use the Prisma's [Accelerate plan](https://pris.ly/d/accelerate)
+ * - Switch to the `jwt` session strategy. Below is an example:
+ * 
+ * Define the `auth.config.ts` file:
+ * ```ts title="auth.config.ts"
+ * export default {
+ *   providers: [
+ *     GitHub,
+ *     Google,
+ *     Facebook,
+ *     Twitter,
+ *   ],
+ * } satisfies NextAuthConfig
+ * ```
+ * 
+ * Import and use the `PrismaAdapter` in the `auth.ts` file:
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import authConfig from "auth.config"
+ * import { PrismaAdapter } from "@auth/prisma-adapter"
+ * 
+ * export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
+ *   adapter: PrismaAdapter(globalThis.prisma),
+ *   session: { strategy: "jwt" },
+ *   ...authConfig,
+ * })
+ * ```
+ * 
+ * In the middleware file, import the `auth.config` and use it as the configuration for `NextAuth` (note that the `adapter` is not used here to avoid the error):
+ * ```ts title="middleware.ts"
+ * import NextAuth from "next-auth"
+ * import authConfig from "auth.config"
+ * 
+ * export const middleware = NextAuth(authConfig).auth
+ * ```
+ * 
  * ### Naming Conventions
  *
  * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Prisma's `@map()`([see the documentation here](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database)) feature to change the field names. This won't affect Auth.js, but will allow you to customize the column names to whichever naming convention you wish.
