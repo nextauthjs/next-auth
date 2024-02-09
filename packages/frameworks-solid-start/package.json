@@ -6,6 +6,8 @@
   "files": [
     "client.*",
     "index.*",
+    "adapters.*",
+    "chunk*",
     "src"
   ],
   "exports": {
