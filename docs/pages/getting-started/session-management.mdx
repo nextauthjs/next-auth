@@ -48,19 +48,15 @@ You're in charge of the building the UI for session management. Below we summari
 
 <RichTabs.Content className="p-8" value="login">
 
-For signing in users, assuming you have [already setup an authentication method](/getting-started/authentication), you only need to build a button that when pressed calls the `signIn` function exported in your Auth.js config:
+For signing in users, assuming you have [already setup an authentication method](/getting-started/authentication), you only need to build a button that when pressed calls the sign in function exported in your Auth.js config.
+
+<Callout>
+  Note that when logging in for the first time, Auth.js will automatically
+  create an account for the user in the database.
+</Callout>
 
 <Code>
   <Code.Next>
-
-```ts filename="./auth.ts"
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
-
-export const { signIn, auth } = NextAuth({
-  providers: [GitHub],
-})
-```
 
 ```tsx filename="./components/auth/sign-in.tsx"
 import { signIn } from "../../auth.ts"
@@ -80,6 +76,17 @@ export function SignIn() {
 ```
 
   </Code.Next>
+  <Code.NextPages>
+
+```tsx filename="src/components/signin-button.tsx"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  return <Button onClick={() => signIn()}>Sign In</Button>
+}
+```
+
+  </Code.NextPages>
   <Code.Svelte>
 
 ```svelte filename="src/routes/+page.svelte"
@@ -131,6 +138,21 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextPages>
+
+```tsx filename="src/components/signin-button.tsx"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  return (
+    <Button onClick={() => signIn("github", { redirectTo: "/dashboard" })}>
+      Sign In
+    </Button>
+  )
+}
+```
+
+</Code.NextPages>
 <Code.Svelte>
 
 ```svelte filename="src/routes/+page.svelte"
@@ -184,6 +206,21 @@ export function SignOut() {
 ```
 
 </Code.Next>
+<Code.NextPages>
+
+```tsx filename="src/components/signout-button.tsx"
+import { signOut } from "next-auth/react"
+
+export function SignOut() {
+  return (
+    <button onClick={() => signOut()}
+      Sign Out
+    </button>
+  )
+}
+```
+
+</Code.NextPages>
 <Code.Svelte>
 
 ```svelte filename="src/routes/+page.svelte"
@@ -203,6 +240,11 @@ export function SignOut() {
 
 </Code.Svelte>
 </Code>
+
+<Callout>
+  Note that when signing out of an OAuth provider like GitHub in an Auth.js
+  application, the user will not be signed out of GitHub elsewhere.
+</Callout>
 
 </RichTabs.Content>
 
