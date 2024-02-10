@@ -80,6 +80,24 @@ export function SignIn() {
 ```
 
   </Code.Next>
+  <Code.Svelte>
+
+```svelte filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { page } from "$app/stores"
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<header>
+  <nav>
+    <SignIn>
+      <span slot="submitButton">Sign In with GitHub</span>
+    </SignIn>
+  </nav>
+</header>
+```
+
+  </Code.Svelte>
 </Code>
 
 When clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/tutorials/custom-pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
@@ -90,9 +108,12 @@ import DefaultSignInPage from "../../public/img/getting-started/default-signin-p
 
 Once authenticated, the user will be redirected back to the page they started the signin from. If
 you want the user to be redirected somewhere else after sign in (.i.e `/dashboard`), you can do so
-by passing the target URL as `redirectTo` in the `signIn()` options.
+by passing the target URL as `redirectTo` in the sign-in options.
 
-```ts filename="./auth.ts"
+<Code>
+<Code.Next>
+
+```tsx filename="app/components/signin-button.tsx"
 import { signIn } from "../../auth.ts"
 
 export function SignIn() {
@@ -109,14 +130,45 @@ export function SignIn() {
 }
 ```
 
+</Code.Next>
+<Code.Svelte>
+
+```svelte filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { page } from "$app/stores"
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<header>
+  <nav>
+    <SignIn
+      signInPage="signin"
+      options={{
+        redirectTo: $page.data.redirectTo
+          ? `/${decodeURIComponent($page.data.redirectTo).slice(1)}`
+          : `/dashboard`,
+      }}
+      className="w-full"
+    >
+      <span slot="submitButton">Sign in</span>
+    </SignIn>
+  </nav>
+</header>
+```
+
+</Code.Svelte>
+</Code>
+
 ### Handling sign out
 
-Similarly, to sign out users, just build a button that calls the exported `signOut` function from your Auth.js config when pressed:
+To sign out users, you can build a button that calls the exported sign-out function from your Auth.js config when clicked.
 
 <Code>
-  
 <Code.Next>
-```tsx
+
+```tsx filename="app/components/signout-button.tsx" {6}
+import { signOut } from "../../auth.ts"
+
 export function SignOut() {
   return (
     <form
@@ -125,14 +177,31 @@ export function SignOut() {
         await signOut()
       }}
     >
-      <button type="submit">
-        Sign Out
-      </button>
+      <button type="submit">Sign Out</button>
     </form>
   )
 }
 ```
+
 </Code.Next>
+<Code.Svelte>
+
+```svelte filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { page } from "$app/stores"
+  import { SignOut } from "@auth/sveltekit/components"
+</script>
+
+<header>
+  <nav>
+    <SignOut>
+      <span slot="submitButton">Signout</span>
+    </SignIn>
+  </nav>
+</header>
+```
+
+</Code.Svelte>
 </Code>
 
 </RichTabs.Content>
@@ -249,7 +318,7 @@ export default function Dashboard() {
 </Code.NextPages>
 <Code.Svelte>
 
-```ts filename="src/components/user-avatar.svelte"
+```svelte filename="src/components/user-avatar.svelte"
 <script lang="ts">
   import { page } from "$app/stores"
 </script>
@@ -359,7 +428,7 @@ export default function MyApp({
 </Code.NextPages>
 <Code.Svelte>
 
-```tsx filename="src/routes/dashboard/+page.server.ts" {5, 8}
+```ts filename="src/routes/dashboard/+page.server.ts" {5, 8}
 import { fail, redirect } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 
