@@ -17,7 +17,7 @@ export function Guides() {
           <div className="flex justify-between items-center mb-10 w-full">
             <h2 className="text-2xl lg:text-3xl">Highlighted Guides</h2>
             <Link
-              href="/getting-started"
+              href="/guides/configuring-oauth-providers"
               className="flex gap-2 items-center text-[#289ef9]"
             >
               See all
@@ -78,13 +78,6 @@ export function Guides() {
         <div className="flex flex-col flex-1 justify-start items-start px-8 w-full max-w-2xl lg:mx-0">
           <div className="flex justify-between items-center mb-10 w-full">
             <h2 className="text-2xl lg:text-3xl">Example Apps</h2>
-            {/* <Link
-              href="#TODO"
-              className="flex gap-2 items-center text-[#289ef9]"
-            >
-              See all
-              <ArrowRight size={14} />
-            </Link> */}
           </div>
           <ul className="w-full list-none">
             {[
