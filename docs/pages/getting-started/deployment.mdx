@@ -1,4 +1,4 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 # Deployment
 
@@ -12,36 +12,47 @@ import { Callout } from "nextra/components";
 
 Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a random string of at least 32 characters. On Unix based systems you can use this command:
 
+```bash npm2yarn
+npm exec auth secret
+```
+
+Alternatively, you can use the following `openssl` command, which should be available on all Linux / Mac OS X systems.
+
 ```bash
 openssl rand -base64 32
 ```
 
-or https://generate-secret.vercel.app/32 to generate a random value for it.
+If you are using an [OAuth Provider](/reference/oauth-providers), your provider will have a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's setup documentation).
 
-If you are using an [OAuth Provider](/reference/oauth-providers), your provider will have a
+<Callout type="info">
+Auth.js now supports **environment variable inference**, meaning that if you name your environment variables after a specific pattern, you won't need to explicitly pass them to the providers, for example.
 
-{" "}
+Client ID's and client secrets should be named `AUTH_[PROVIDER]_ID` and `AUTH_[PROVIDER]_SECRET`. If your provider requires an issuer, that should be named `AUTH_[PROVIDER]_ISSUER`. For example:
 
-<ins>Client ID</ins> and <ins>Client Secret</ins> that you will need to set as environment
-variables as well (in the case of OIDC, a third `issuer` might be also required,
-refer to the provider's setup). Auth.js now supports [environment variable inference](#TODO).
+```bash
+AUTH_OKTA_ID=abc
+AUTH_OKTA_SECRET=abc
+AUTH_OKTA_ISSUER=abc
+```
+
+</Callout>
+
+#### `AUTH_SECRET`
+
+This is the only striclty required environment variable. It is the secret used to encode the JWT and encrypt things in transit. As mentioned above, we recommend at least a 32 character random string. This can be generated via the CLI with `npm exec auth secret` or via openssl with `openssl rand -base64 32`.
 
 #### `AUTH_TRUST_HOST`
 
 When deploying your application behind a reverse proxy, you'll need to set `AUTH_TRUST_HOST` equal
-to `true`. Some hosting providers, like Vercel, will do this for you.
+to `true`. This tells Auth.js to trust the `X-Forwarded-Host` header from the reverse proxy. Auth.js will automatically infer this to be true if we detect the environment variable indicating that your application is running on one of the supported hosting providers. Currently `process.env.VERCEL` and `process.env.CF_PAGES` (Cloudflare Pages) are supported.
 
 #### `AUTH_URL`
 
-// TODO
-
-#### `AUTH_SECRET`
-
-// TODO
+This environment variable is mostly unnecessary with v5 as the host is inferred from the request headers. However, if you are using a different base path, you can set this environment variable as well. For example, `AUTH_URL=http://localhost:3000/web/auth` or `AUTH_URL=https://company.com/app1/auth`
 
 #### `AUTH_REDIRECT_PROXY_URL`
 
-// TODO
+This environment variable is designed to be used when using Auth.js as a proxy for preview deploys, for example. For more details, see the [securign preview deploys](/getting-started/deployment?securing-a-preview-deployment) section below.
 
 ## Serverless
 
