@@ -1,20 +1,21 @@
-import { Callout } from "nextra/components";
-import { Screenshot } from "@/components/Screenshot";
+---
+title: Auth.js | OAuth
+---
+
+import { Callout } from "nextra/components"
+import { Screenshot } from "@/components/Screenshot"
 
 # OAuth
 
 <Callout>
-  NextAuth.js is designed to work with any OAuth service, it supports **OAuth
-  1.0**, **1.0A**, **2.0** and **OpenID Connect** and has built-in support for
-  most popular sign-in services.
+  Auth.js is designed to work with any OAuth service, it supports **OAuth 2.0**
+  and **OpenID Connect** and has built-in support for most popular sign-in
+  services.
 </Callout>
 
-Authentication Providers in **Auth.js** are [OAuth](https://oauth.net/2/) definitions that allow your users to sign in with their favorite pre-existing logins. You can use any of our many predefined providers, or write your own custom OAuth configuration.
+Authentication Providers in **Auth.js** are predefined [OAuth](https://oauth.net/2/) configurations that allow your users to sign in with pre-existing logins at their favorite services. You can use any of our predefined providers, or write your own custom OAuth configuration. For customizing or writing your own OAuth provider, see our [configuring OAuth providers](/guides/configuring-oauth-providers) guide.
 
-- [Using a built-in OAuth Provider](/getting-started/authentication#setup-oauth) (e.g Github, Twitter, Google, etc...)
-- [Using a custom OAuth Provider](/tutorials/custom-oauth)
-
-Without going into too much detail, the <u>OAuth flow generally has 6 parts</u>:
+At a high level, the OAuth **Authorization Code** flow we support generally has 6 parts:
 
 1. The application requests authorization to access service resources from the user
 2. If the user authorized the request, the application receives an authorization grant
@@ -22,6 +23,10 @@ Without going into too much detail, the <u>OAuth flow generally has 6 parts</u>:
 4. If the application identity is authenticated and the authorization grant is valid, the authorization server (API) issues an access token to the application. Authorization is complete.
 5. The application requests the resource from the resource server (API) and presents the access token for authentication
 6. If the access token is valid, the resource server (API) serves the resource to the application
+
+## Diagrams
+
+Below are two diagrams visually illustrating the same basic flow as described above, the OAuth Authorization Code flow. First is a sequence diagram.
 
 ```mermaid
 sequenceDiagram
@@ -51,16 +56,16 @@ sequenceDiagram
     App Server->>Browser: You're now logged in!
 ```
 
-Here is a more visual representation 👀 of a typical OAuth flow with Auth.js ( _this example is with Sveltekit, but the same concepts should apply to any framework_ ):
+Next is a swim lane diagram which comes from a great article, [Setting up OAuth with Auth.js and SvelteKit](https://mainmatter.com/blog/2023/11/23/setting-up-oauth-with-auth-js-and-sveltekit/) by [Andrey Mikhaylov](https://github.com/lolmaus) of [mainmatter.com](https://mainmatter.com).
 
-<br />
-<br />
-
-import OAuthDiagram from "../../public/img/concepts/oauth-diagram.webp";
+import OAuthDiagram from "../../public/img/concepts/oauth-diagram.webp"
 
 <Screenshot src={OAuthDiagram} alt="OAuth Flow Diagram" />
+
+## Further Reading
 
 To learn more, check out the following blog posts:
 
 - Aaron Parecki's blog post [OAuth2 Simplified](https://aaronparecki.com/oauth-2-simplified/)
 - Postman's blog post [OAuth 2.0: Implicit Flow is Dead, Try PKCE Instead](https://blog.postman.com/pkce-oauth-how-to/)
+- Setting up OAuth with Auth.js and SvelteKit [blog post](https://mainmatter.com/blog/2023/11/23/setting-up-oauth-with-auth-js-and-sveltekit/)
