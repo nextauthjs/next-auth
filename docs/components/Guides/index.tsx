@@ -25,14 +25,14 @@ export function Guides() {
             </Link>
           </div>
           <ul className="w-full list-none">
-            <Link href="/guides/configuring-oauth">
+            <Link href="/guides/configuring-oauth-providers">
               <li className="flex justify-between mb-8 w-full group">
                 <div className="flex gap-2">
                   <ShieldStar size={32} />
                   <div className="flex flex-col items-start">
                     Configuring OAuth providers
                     <span className="text-neutral-400 dark:text-neutral-700">
-                      Customize to a built-in one or set up your own.
+                      Customize a built-in one or set up your own.
                     </span>
                   </div>
                 </div>
