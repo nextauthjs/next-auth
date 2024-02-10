@@ -1,8 +1,8 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 # Session strategies
 
-When a user visits your application, you want them to not have to log in every single time. This is called a session. <u>Auth.js supports 2 main session strategies</u>, JWT session and Database session, which are described below.
+When a user visits your application, you want them to not have to log in every single time. After logging in once, your application should save some data about the user and allow them to pick up where they left off the next time they visit. This is called a session. **Auth.js supports 2 main session strategies**, the JWT-based session and Database session.
 
 <Callout>
   Both session strategies have advantages and disadvantages which you have to
@@ -13,19 +13,19 @@ Controlling the session strategy can be done through the [`session.strategy`](/r
 
 ## JWT Session
 
-Auth.js can create sessions using [JSON Web Tokens (JWT)](https://datatracker.ietf.org/doc/html/rfc7519). This is the default session strategy for Auth.js. When a user signs in, a JWT is created [in a `HttpOnly` cookie](https://developer.mozilla.org/en-US/getting-started/Web/HTTP/Cookies#restrict_access_to_cookies). Making the cookie `HttpOnly` prevents JavaScript from accessing it client-side (`document.cookie`), which makes it harder for attackers to steal the value. In addition, the JWT is encrypted with a secret key only known to the server. So even if an attacker were to steal the JWT from the cookie, they would not be able to decrypt it. Combined with a short expiration time, this makes JWTs a secure way to create sessions.
+Auth.js can create sessions using [JSON Web Tokens (JWT)](https://datatracker.ietf.org/doc/html/rfc7519). This is the default session strategy for Auth.js. When a user signs in, a JWT is created [in a `HttpOnly` cookie](https://developer.mozilla.org/en-US/getting-started/Web/HTTP/Cookies#restrict_access_to_cookies). Making the cookie `HttpOnly` prevents JavaScript from accessing it client-side (via `document.cookie`, for example), which makes it harder for attackers to steal the value. In addition, the JWT is encrypted with a secret key only known to the server. So even if an attacker were to steal the JWT from the cookie, they would not be able to decrypt it. Combined with a short expiration time, this makes JWTs a secure way to create sessions.
 
 When a user signs out, the JWT is deleted from the cookies, and the session is destroyed.
 
-### 💚 Advantages
+### Advantages
 
 - JWTs as a session do not require a database to store sessions, this can be faster and cheaper to run and easier to scale.
-- Retrieving a JWT session can always run on the Edge.
+- JWT sessions have the most compatibility with new runtimes, like on the Edge.
 - Using this strategy requires fewer resources as you don't need to manage an extra database/service.
 - You may then use the created token to pass information between services and APIs on the same domain without having to contact a database to verify the included information.
 - You can use JWT to securely store information without exposing it to third-party JavaScript running on your site.
 
-### 👎🏽 Disadvantages
+### Disadvantages
 
 - Expiring a JSON Web Token before its encoded expiry is not possible - doing so requires maintaining a server-side blocklist of invalidated tokens (at least until they truly expire) and checking every token against the list every time a token is presented. Auth.js **will** destroy the cookie, but if the user has the JWT saved elsewhere, it will be valid (the server will accept it) until it expires. (Shorter session expiry times are used when using JSON Web Tokens as session tokens to allow sessions to be invalidated sooner and simplify this problem.)
 - Auth.js enable advanced features to mitigate the downsides of using shorter session expiry times on the user experience, including automatic session token rotation, optionally sending keep-alive messages (session polling) to prevent short-lived sessions from expiring if there is a window or tab open, background re-validation, and automatic tab/window syncing that keeps sessions in sync across windows any time session state changes or a window or tab gains or loses focus.
@@ -38,14 +38,14 @@ Alternatively, to a JWT session strategy, Auth.js also support database sessions
 
 When a user signs out, the session is deleted from the database, and the session ID is deleted from the cookies.
 
-### 💚 Advantages
+### Advantages
 
 - Database sessions can be at any time modified server-side, so you can implement features that might be more difficult - but not impossible - using the JWT strategy, etc.: "sign out everywhere", or limiting concurrent logins
 - Auth.js has no opinion on the type of database you are using, we have a big list of [official
   database adapters](/getting-started/database), but you can [implement your
   own](/guides/creating-a-database-adapter) as well
 
-### 👎🏽 Disadvantages
+### Disadvantages
 
 - Database sessions need a roundtrip to your database, so they might be slower on scale unless your connections/databases are accommodated for it
 - Many database adapters are not yet compatible with the Edge, which would allow faster and cheaper session retrieval
