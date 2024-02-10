@@ -189,3 +189,8 @@ html[data-theme="dark"] .github-counter {
 [data-scope="tooltip"][data-part="content"][data-state="closed"] {
   animation: fadeOut 250ms ease-in;
 }
+
+/* Nextra Tabs buttons - fix ring cutoff from overflow-hidden */
+button[id^="headlessui-tabs-tab"] {
+  margin: 0 3px 0 3px;
+}
