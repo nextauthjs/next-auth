@@ -45,6 +45,8 @@ npm install next-auth@latest
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 
+## Migration
+
 <Steps>
 
 ### Configuration File
@@ -229,34 +231,19 @@ Beginning with `next-auth` v5, you should now install database adapters from the
   your own.
 </Callout>
 
-### Adapter type
-
-The `Adapter` type is uncommon unless you are writing your adapter. If you are using an existing adapter, you can likely ignore this change.
-
-Otherwise, the `Adapter` type can now be imported from `next-auth` instead of `next-auth/adapters`.
-
-```diff filename="pages/api/auth/[...nextauth].ts"
-- import type { Adapter } from "next-auth/adapters"
-+ import type { Adapter } from "@auth/core/adapters"
-```
-
-This is because the - previously - Auth.js scoped [`@next-auth/*-adapter`](https://www.npmjs.com/search?q=next-auth%20adapter) database adapters should work in any framework the same way (there is nothing Next.js specific in these adapters), so it was unnecessary to keep this type tied to the `next-auth` package.
-
 ### Database Migrations
 
-NextAuth.js v5 does not introduce any breaking changes to the database schema. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table if you are not using them.
+NextAuth.js v5 **does not introduce any breaking changes to the database schema**. However, since OAuth 1.0 support is dropped, the already optional `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table if you are not using them.
 
 Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were
 required to be added to the `account` table. This is no longer the case, and you can remove it if
 you are not using it. If you do use it, please make sure to return it via the new [`account()` callback](/reference/core/providers#account).
 
-</Steps>
-
-## Edge compatibility
+### Edge compatibility
 
 While Auth.js strictly uses standard Web APIs (and thus can run in any environment that supports that), some libraries/ORM packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files. The following is an example of how to do this with a database adapter.
 
-Auth.js supports two [session strategies](/concepts/session-strategies). When you are using an adapter, you can choose to save the session data into a database. Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy.
+Auth.js supports two [session strategies](/concepts/session-strategies). When you are using an adapter, you can choose to save the session data into a database. **Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy**.
 
 Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it, by forcing a JWT session strategy:
 
@@ -265,17 +252,17 @@ Most adapters rely on an ORM/library that is not yet compatible with the Edge ru
   filenames/structure can be anything you like.
 </Callout>
 
-1. Create an `auth.config.ts` file with your config and export it:
+1. Create an `auth.config.ts` file with your config and export it. You can put all common configuration here that does not rely on the adapter.
 
-```ts filename="auth.config.ts"
+```ts filename="auth.config.ts" {3}
 import GitHub from "next-auth/providers/github"
 import type { NextAuthConfig } from "next-auth"
 export default { providers: [GitHub] } satisfies NextAuthConfig
 ```
 
-2. Create an `auth.ts` file and add your adapter there, together with the `jwt` session strategy:
+2. Next, create an `auth.ts` file and add your adapter and the `jwt` session strategy there. This is the `auth.ts` configuration file you will import from in the rest of your application, other than in the middleware.
 
-```ts filename="auth.ts"
+```ts filename="auth.ts" {9-10}
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
@@ -290,16 +277,15 @@ export const { handlers, auth } = NextAuth({
 })
 ```
 
-3. Make sure that Middleware is not using the import with a non-edge compatible adapter:
+3. In your middleware file, import the first `auth.config` configuration object and use it to [lazily initialize]() Auth.js there, without the non-edge compatible adapter.
 
-```diff filename="middleware.ts"
-- export { auth as middleware } from './auth'
-+ import authConfig from "./auth.config"
-+ import NextAuth from "next-auth"
-+ export const { auth: middleware } = NextAuth(authConfig)
+```ts filename="middleware.ts" {1}
+import authConfig from "./auth.config"
+import NextAuth from "next-auth"
+export const { auth: middleware } = NextAuth(authConfig)
 ```
 
-That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime yet, by forcing the session strategy to be JWT.
+That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime yet.
 
 Please follow up with your database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
 
@@ -307,6 +293,8 @@ Please follow up with your database/ORM's maintainer to see if they are planning
 
 - `NextAuthOptions` is renamed to `NextAuthConfig`
 
+</Steps>
+
 ## Summary
 
-We hope this migration goes smoothly for everyone! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub.
+We hope this migration goes smoothly for everyone! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub, or come chat with us in the [Discord](https://discord.authjs.dev) server.
