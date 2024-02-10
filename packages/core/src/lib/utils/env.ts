@@ -25,6 +25,7 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     envObject.AUTH_URL ??
     envObject.AUTH_TRUST_HOST ??
     envObject.VERCEL ??
+    envObject.CF_PAGES ??
     envObject.NODE_ENV !== "production"
   )
   config.providers = config.providers.map((p) => {
