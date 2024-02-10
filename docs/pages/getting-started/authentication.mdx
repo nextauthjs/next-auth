@@ -42,6 +42,8 @@ Auth.js by default uses [JSON Web Tokens](https://jwt.io/) for saving the user's
 
 You can setup as many authentication methods as you'd like. But keep in mind, OAuth providers like Google and GitHub spend significant amounts of time, money, and engineering effort to build features such as abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
 
+However, if you have multiple providers setup Auth.js will attempt to link a user's multiple accounts from the various providers under certain circumstances. For example, if a user has already signed in with GitHub, and therefore has a `User` and `Account` table entry associated with that Email, and they then attempt to signin with an email provider / magic link using the same email address, then Auth.js will link the two accounts based upon the matching email address. See the [FAQ](/concepts/faq#security) for more information on account linking.
+
 </details>
 
 Once you have decided how to authenticate users in your application (you can always add more authentication methods later), click on the instructions below for the initial setup.
