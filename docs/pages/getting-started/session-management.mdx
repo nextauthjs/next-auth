@@ -133,52 +133,70 @@ export function SignOut() {
 }
 ```
 </Code.Next>
-
 </Code>
 
 </RichTabs.Content>
 
 <RichTabs.Content className="p-8" value="user-menu">
 
-Most commonly, once a user is logged in, you might want to display the session by displaying the user's name and profile picture.
+A common use-case once a user is logged in, is that you might want to display some session information by displaying the user's name and profile picture.
 
-In Auth.js we need to call the `auth()` helper exported from the Auth.js configuration file to get the available user session:
+In Auth.js we need to call the `auth()` helper exported from the Auth.js configuration file to get the available user session.
 
 <Code>
-  
 <Code.Next>
 
 ```tsx filename="./components/UserAvatar"
-import { auth } from "@/auth.ts"
-import { Flex, Avatar, Text } from "@/components"
+import { auth } from "../auth"
 
-export function UserAvatar(props) {
+export function UserAvatar() {
   const session = await auth()
 
-  if (!session) return null
+  if (!session.user) return null
 
   return (
-    <Flex gap="2">
-      <Avatar src={session?.user.img} fallback="U" />
-      <Text>Welcome {session?.user.name}!</Text>
-    </Flex>
+    <div>
+      <img
+        src={session?.user.img ?? "https://source.boringavatars.com/marble/120"}
+        alt="User Avatar"
+      />
+    </div>
   )
 }
 ```
 
-For Next.js, we recommend calling `auth()` in a server component. `auth()` should always be called [on a server component](https://nextjs.org/learn/react-foundations/server-and-client-components) and that should solve the most common use cases. If for some reason, you need to read the session on a client component, see the `Next.js (pages)` tab where we explain how to do so with `useSession()` (deprecated).
-
 </Code.Next>
-
 <Code.NextPages>
 
-You can access the session server-side by calling [`auth()`](/) in [`getServerSideProps()`](/):
+In the pages router, you'll need to access the `session` in the page itself and then pass it into your `UserAvatar` component.
 
-```tsx filename="./pages/hello.tsx"
+```tsx filename="./components/UserAvatar"
+export function UserAvatar({ session }) {
+  return (
+    <div>
+      <img
+        src={session?.user.img ?? "https://source.boringavatars.com/marble/120"}
+        alt="User Avatar"
+      />
+    </div>
+  )
+}
+```
+
+Next, we'll need to setup the pages. We can access the `session` server side or client side in the page.
+
+### Page Server Side
+
+```tsx filename="./pages/dashboard.tsx"
 import { auth } from "@/auth.ts"
+import { UserAvatar } from "@/components/UserAvatar"
 
-export default function HelloPage({ session }) {
-  return <UserAvatar img={session.img}>{session.name}</UserAvatar>
+export default function Dashboard({ session }) {
+  return (
+    <nav>
+      <UserAvatar session={session} />
+    </nav>
+  )
 }
 
 export async function getServerSideProps(ctx) {
@@ -192,7 +210,134 @@ export async function getServerSideProps(ctx) {
 }
 ```
 
-You can also access the session client-side using `useSession()`. Make sure `<SessionProvider />` is
+### Page Client Side
+
+When accessing the session client-side using `useSession()`, make sure an Auth.js `<SessionProvider />` is
+wrapping your page.
+
+```tsx filename="pages/_app.tsx"
+import type { AppProps } from "next/app"
+import { SessionProvider } from "next-auth/react"
+
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />;
+    </SessionProvider>
+  )
+}
+```
+
+```tsx filename="pages/dashboard.tsx
+import { useSession } from "next-auth/react"
+import { UserAvatar } from "@/components/UserAvatar"
+
+export default function Dashboard() {
+  const session = useSession()
+
+  return (
+    <nav>
+      <UserAvatar session={session} />
+    </nav>
+  )
+}
+```
+
+</Code.NextPages>
+<Code.Svelte>
+
+```ts filename="src/components/user-avatar.svelte"
+<script lang="ts">
+  import { page } from "$app/stores"
+</script>
+
+<img
+  src={$page.data.session?.user?.image ?? 'https://source.boringavatars.com/marble/120/'}
+  alt="User Avatar"
+/>
+```
+
+</Code.Svelte>
+</Code>
+
+</RichTabs.Content>
+
+<RichTabs.Content className="p-8" value="protecting">
+
+Protecting routes can be done generally by checking for the session and taking an action if an active session is not found, like redirecting the user to the login page or simply returning a `401: Unauthenticated` response.
+
+### Pages
+
+<Code>
+<Code.Next>
+
+Protecting pages comes in two forms: server-side and client-side. For server-side protection, you can use the `auth` export from the Auth.js configuration file directly. Client-side we can use the `useSession` hook.
+
+In a client component, we can use the `useSession` import from `next-auth/react`.
+
+```tsx filename="app/client/page.tsx" {6-7}
+"use client"
+
+import { useSession } from "next-auth/react"
+
+export default function Client() {
+  const { data: session, session } = useSession()
+  if (session.status === "unauthenticated") return <div>Not authenticated</div>
+
+  return (
+    <div>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </div>
+  )
+}
+```
+
+In a server component, we can use `auth` directly.
+
+```tsx filename="app/server/page.tsx" {4-5}
+import { auth } from "auth"
+
+export default async function Page() {
+  const session = await auth()
+  if (!session) return <div>Not authenticated</div>
+
+  return (
+    <div>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </div>
+  )
+}
+```
+
+</Code.Next>
+<Code.NextPages>
+
+To protect a page in the Next.js Pages router, we can use `auth` in `getServerSideProps`.
+
+```tsx filename="./pages/dashboard.tsx" {4, 10}
+import { auth } from "../auth"
+
+export default function Dashboard({ session }) {
+  if (!session.user) return <div>Not authenticated</div>
+
+  return <div>{JSON.stringify(session, null, 2)}</div>
+}
+
+export async function getServerSideProps(ctx) {
+  const session = await auth(ctx)
+
+  return {
+    props: {
+      session,
+    },
+  }
+}
+```
+
+To access the session client-side using `useSession()`. Make sure `<SessionProvider />` is
 wrapping your application.
 
 ```tsx filename="./pages/_app.tsx"
@@ -211,128 +356,171 @@ export default function MyApp({
 }
 ```
 
-```tsx
-import { useSession } from "next-auth/react"
+</Code.NextPages>
+<Code.Svelte>
 
-export default function HelloPage() {
-  const session = useSession()
+```tsx filename="src/routes/dashboard/+page.server.ts" {5, 8}
+import { fail, redirect } from "@sveltejs/kit"
+import type { PageServerLoad } from "./$types"
 
-  return <UserAvatar img={session.img}>{session.name}</UserAvatar>
+export const load: PageServerLoad = async ({ locals, url }) => {
+  const session = await locals?.auth()
+
+  if (!session?.user?.userId) {
+    return fail(401, { type: "error", error: "Unauthenticated" })
+  }
+}
+```
+
+</Code.Svelte>
+</Code>
+
+### API Routes
+
+Protecting API routes in the various frameworks can also be done with the `auth` export.
+
+<Code>
+<Code.Next>
+
+```ts filename="./app/api/admin/route.ts" {1,5}
+import { auth } from "auth"
+import { NextResponse } from "next/server"
+
+export const GET = auth(function GET(req) {
+  if (req.auth) return NextResponse.json(req.auth)
+  return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+})
+```
+
+</Code.Next>
+<Code.NextPages>
+
+```ts filename="./pages/api/admin.ts"
+// TODO: Update once server-side API methods are implemented for pages router again
+
+// import { auth } from "../../auth"
+// import { getSession } from "next-auth/react"
+import { NextApiRequest, NextApiResponse } from "next"
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  // const session = await auth(req, res)
+  // const session = await getSession(req, res)
+  const url = `${req.headers["x-forwarded-proto"]}://${req.headers.host}/api/auth/session`
+
+  const sessionRes = await fetch(url)
+  const session = await sessionRes.json()
+
+  if (!session.user) {
+    return res.status(401).json({ message: "Not authenticated" })
+  }
+
+  return res.json({ data: "Protected data" })
 }
 ```
 
 </Code.NextPages>
+<Code.Svelte>
 
+```ts filename="src/routes/api/users/+server.ts" {5}
+import type { RequestHandler } from "./$types"
+import { json, fail } from "@sveltejs/kit"
+
+export const GET: RequestHandler = async ({ url, locals }) => {
+  const session = await locals.auth()
+  if (!session?.user?.userId) {
+    return fail(401, { type: "error", error: "Unauthenticated" })
+  }
+}
+```
+
+</Code.Svelte>
 </Code>
 
-</RichTabs.Content>
+### Next.js Middleware
 
-<RichTabs.Content className="p-8" value="protecting">
+With Next.js 12+, the easiest way to protect a set of pages is using the middleware file. You can create a `middleware.ts` file in your root pages directory with the following contents.
 
-### Redirecting users
+```ts filename="middleware.ts"
+import { auth } from "./auth"
 
-You can extend the default `withAuth` middleware to redirect users depending on certain conditions, for example their role:
-
-```ts
-import { withAuth } from "next-auth/middleware"
-
-export default withAuth(
-  // `withAuth` augments your `Request` with the user's token.
-  function middleware(req) {
-    console.log(req.nextauth.token)
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => token?.role === "admin",
-    },
+export default auth((req) => {
+  if (!req.auth) {
+    return NextResponse.redirect("/login")
   }
-)
+})
 
 export const config = { matcher: ["/admin"] }
 ```
 
-### Blocking access
+This will protect all routes under `/admin`.
 
-...
+You can also use a regex to match multiple routes or you can negate certain routes in order to protect all remaining routes. The following example avoids running the middleware on paths such as the favicon or static images.
 
-### Middleware (Next.js)
-
-With NextAuth.js 4.2.0 and Next.js 12, you can now protect your pages via the middleware pattern more easily. If you would like to protect all pages, you can create a `_middleware.ts` file in your root pages directory which looks like this:
-
-```ts filename="./middleware.ts"
-export { default } from "next-auth/middleware"
+```ts filename="middleware.ts"
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
 ```
 
-Otherwise, if you only want to protect a subset of pages, you could put it in a subdirectory as well, for example in `/app/admin/_middleware.ts` would protect all pages under the `/admin` route.
-
-For the time being, middleware only supports **jwt** as a session strategy, so it won't work with databases.
+Middleware will protect pages as defined by the `matcher` config export. For more details about the matcher, check out the [Next.js docs](https://nextjs.org/docs/pages/building-your-application/routing/middleware#matching-paths).
 
 </RichTabs.Content>
 
 <RichTabs.Content className="p-8" value="custom-pages">
 
-### Signin Page
+### Custom Pages
 
-To tell Auth.js to use a custom signin page, add the following to your Auth.js configuration. In this configuration object the key is the type of page adn the value is the path of the route which should implement the respective page.
+To enable custom pages add the following to your Auth.js configuration. In the `pages` object, the key is the type of page and the value is the path/route at which the page is located. Please make sure you actually have a page at the specified route.
 
 <Code>
-<Code.Svelte>
+<Code.Next>
 
-```ts filename="src/auth.ts"
-import { SvelteKitAuth } from "@auth/sveltekit"
-import { Github } from "@auth/sveltekit/providers/github"
+```ts filename="./auth.ts" {8-10}
+import { NextAuth } from "next-auth"
+import Github from "next-auth/providers/github"
 
-export const { signIn, signOut, handle } = SvelteKitAuth({
+// Define your configuration in a separate variable and pass it to NextAuth()
+// This way we can also 'export const config' for use later
+export const config = {
   providers: [Github],
   pages: {
-    signin: "routes/login",
+    signin: "/login",
+  },
+}
+
+export const { signIn, signOut, handle } = NextAuth(config)
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="src/auth.ts" {14-16}
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from "@auth/sveltekit/providers/github"
+import type { Provider } from "@auth/sveltekit/providers"
+
+const providers: Provider[] = [Github]
+
+// Export this map of provider details to use in the sign-in page later
+export const providerMap = providers.map((provider) => {
+  return { id: provider.id, name: provider.name }
+})
+
+export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
+  providers,
+  pages: {
+    signIn: "/signin",
   },
 })
 ```
 
-First, we need a SvelteKit route to handle the `POST` requests to the `/signin` route
-
-```ts filename="src/routes/signin/+page.server.ts"
-import { signIn } from "../../auth"
-import type { Actions } from "./$types"
-export const actions: Actions = { default: signIn }
-```
-
-SvelteKit requires a client-side `+page.svelte` file to go along with it, so we can add this empty file to make it happy.
-
-```ts filename="src/routes/signin/+page.svelte"
-<!-- empty file -->
-```
-
-Finally, we can use the exported `SignIn` Svelte component to add a button to our UI that will attempt a server-side login.
-
-```ts filename="src/routes/login/+page.svelte"
-<script lang="ts">
-  import { SignIn } from "@auth/sveltekit/components"
-</script>
-
-<div>
-  <img src="/img/logo.svg" alt="Company Logo" />
-  <SignIn provider="github" signInPage="signin" />
-</div>
-```
-
-These props will tell our `SignIn` component to use the `github` provider, and to attempt the `POST` request to the route where we setup the form action handler above, `src/routes/signin/+page.server.ts`.
-
 </Code.Svelte>
 </Code>
 
-### Signout Page
-
-```
-TODO
-```
-
-### Error Page
-
-```
-TODO
-```
+To continue setting up the custom page, checkout our [guide on custom pages](/guides/custom-pages/signin).
 
 </RichTabs.Content>
 </RichTabs>
