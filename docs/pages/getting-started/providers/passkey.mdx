@@ -34,7 +34,7 @@ The `@simplewebauthn/browser` peer dependency is only required for custom signin
 
 This is the raw SQL migration, for more details including an example MongoDB migration, check out the Prisma `schema.prisma` [here](https://github.com/Maronato/next-auth/blob/main/packages/adapter-prisma/prisma/schema.prisma), or the PR adding support to Prisma [here](https://github.com/nextauthjs/next-auth/pull/9876).
 
-The Passkeys provider requires an additional table called `Authenticator`. Below is a migration in raw SQL
+The Passkeys provider requires an additional table called `Authenticator`. Below are the updated Prisma schema and a raw SQL migration variation for both PostgreSQL and MySQL.
 
 <Accordions>
 <Accordion title="Prisma Schema">
@@ -206,11 +206,6 @@ export default function Login() {
   )
 }
 ```
-
-<Callout>
-  WebAuthn support is currently not supported in `edge` environments out of the
-  box due to an issue with an upstream library and `crypto` support.
-</Callout>
 
 </Steps>
 

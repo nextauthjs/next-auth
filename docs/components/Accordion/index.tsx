@@ -55,7 +55,7 @@ export const MultipleAccordions = forwardRef<
       ref={ref}
       value={value}
       onValueChange={setValue}
-      className={cx(className, "border-2 *:bg-neutral-700")}
+      className={cx(className, "mt-2 border-2 *:bg-neutral-700")}
       {...props}
     />
   )
@@ -84,7 +84,7 @@ export const SingleAccordions = forwardRef<
       collapsible
       className={cx(
         className,
-        "border-2 border-neutral-100 dark:border-neutral-800 rounded-lg"
+        "mt-4 border-2 border-neutral-100 dark:border-neutral-800 rounded-lg"
       )}
       {...props}
     />
