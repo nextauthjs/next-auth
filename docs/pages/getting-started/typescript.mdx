@@ -1,15 +1,12 @@
-import { Callout } from "nextra/components";
-import { Screenshot } from "@/components/Screenshot";
+import { Callout } from "nextra/components"
+import { Screenshot } from "@/components/Screenshot"
+import { Code } from "@/components/Code"
 
 # Typescript
 
 Auth.js is committed to type-safety, so it's written in TypeScript and 100% type safe. It comes with its own type definitions to use in your project.
 
 Even if you don't use TypeScript, IDEs like VSCode will pick this up to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes links to documentation, examples, and other valuable resources.
-
-import TypesDocumentation from "../../public/img/etc/types-documentation.webp";
-
-<Screenshot src={TypesDocumentation} alt="Types Documentation" />
 
 ## Philosophy
 
@@ -38,9 +35,11 @@ Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.h
 
 Let's look at `Session` for example:
 
-```ts
-// auth.ts
-import NextAuth, { type DefaultSession } from "next-auth";
+<Code>
+<Code.Next>
+
+```ts filename="auth.ts"
+import NextAuth, { type DefaultSession } from "next-auth"
 
 declare module "@auth/core" {
   /**
@@ -49,9 +48,9 @@ declare module "@auth/core" {
   interface Session {
     user: {
       /** The user's postal address. */
-      address: string;
+      address: string
       // By default, TypeScript merges new interface properties and overwrite existing ones. In this case, the default session user properties will be overwritten, with the new one defined above. To keep the default session user properties, you need to add them back into the newly declared interface
-    } & DefaultSession["user"]; // To keep the default types
+    } & DefaultSession["user"] // To keep the default types
   }
 }
 
@@ -60,15 +59,51 @@ export const { auth } = NextAuth({
     session({ session, token, user }) {
       // session.user.address is now a valid property, and will be type-checked
       // in places like `useSession().data.user` or `auth().user`
-      return session;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          address: user.address,
+        },
+      }
     },
   },
-});
+})
 ```
 
-Module augmentation is not limited to specific interfaces. You can augment almost anything, but here are some of the more common interfaces that you might need to override in based on your use-case:
+</Code.Next>
+<Code.Svelte>
 
-```ts
+```ts filename="app.d.ts"
+import "@auth/sveltekit"
+
+declare module "@auth/sveltekit" {
+  interface User {
+    userId: string
+  }
+}
+```
+
+```ts filename="auth.ts"
+export const { auth } = SvelteKitAuth({
+  providers,
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (token) {
+        session.user.userId = token.sub
+      }
+      return session
+    },
+  },
+})
+```
+
+</Code.Svelte>
+</Code>
+
+Module augmentation is not limited to specific interfaces. You can augment any `interface` we've defined, here are some of the more common interfaces that you might want to override based on your use case.
+
+```ts filename="types.d.ts"
 declare module "@auth/core" {
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
@@ -88,41 +123,41 @@ declare module "@auth/core" {
 }
 
 // The `JWT` interface can be found in the `next-auth/jwt` submodule
-import { JWT } from "@auth/core/jwt";
+import { JWT } from "@auth/core/jwt"
 
 declare module "@auth/core/jwt" {
   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
-    idToken?: string;
+    idToken?: string
   }
 }
 ```
 
-The module declaration can be added to any file that is [included](https://www.typescriptlang.org/tsconfig#include) in your project.
+The module declaration can be added to any file that is ["included"](https://www.typescriptlang.org/tsconfig#include) in your project's `tsconfig.json`.
 
 ## Database Adapters
 
 Official adapters are all written in TypeScript. If you're writing your own custom Adapter, you can take advantage of the types that comes with `@auth/core` to make sure your implementation conforms to what's expected:
 
 ```ts
-import type { Adapter } from "@auth/core/adapters";
+import type { Adapter } from "@auth/core/adapters"
 
 function MyAdapter(): Adapter {
   return {
     // your adapter methods here
-  };
+  }
 }
 ```
 
-When writing your own custom Adapter in plain JavaScript, note that you can use **JSDoc** to get helpful editor hints and auto-completion like so:
+When writing your own custom Adapter in JavaScript, you can still use **JSDoc** to get helpful editor hints and auto-completion.
 
 ```js
 /** @return { import("@auth/core/adapters").Adapter } */
 function MyAdapter() {
   return {
     // your adapter methods here
-  };
+  }
 }
 ```
 
@@ -130,4 +165,4 @@ function MyAdapter() {
 
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
 2. [Digital Ocean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
-3. [Creating a Database Adapter](#TODO)
+3. [Creating a Database Adapter](/guides/creating-a-database-adapter)
