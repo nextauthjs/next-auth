@@ -37,7 +37,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ## Edge Compatibility
 
-At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about edge support in early access since `5.9.1` [here](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
+At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about early edge support in the `5.9.1` [changelog](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
 
 - Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
 - Switch to the `jwt` session strategy
@@ -444,40 +444,7 @@ model Authenticator {
 }
 ```
 
-</Accordion>
-</Accordions>
-
-### Apply Schema
-
-This will create an SQL migration file and execute it:
-
-```
-npx prisma migrate dev
-```
-
-Note that you will need to specify your database connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project.
-
-To learn more about [Prisma Migrate](https://www.prisma.io/migrate), check out the [Migrate docs](https://www.prisma.io/docs/concepts/components/prisma-migrate).
-
-### Generate Prisma Client
-
-Once you have saved your schema, use the Prisma CLI to generate the Prisma Client:
-
-```
-npx prisma generate
-```
-
-When you're working on your application and making changes to your database schema, you'll need to
-run the migrate command again every time in order to (1) generate a migration file and (2)
-regenerate the Prisma client in your project with the latest types.
-
-```
-npx prisma migrate dev
-```
-
-### MongoDB support
-
-Prisma supports MongoDB, and so does Auth.js. Following the instructions of the [Prisma documentation](https://www.prisma.io/docs/concepts/database-connectors/mongodb) on the MongoDB connector, things you have to change are:
+Prisma supports MongoDB, and so does Auth.js. Following the instructions of the [Prisma documentation](https://www.prisma.io/docs/concepts/database-connectors/mongodb) on the MongoDB connector, things to look out for include the following.
 
 1. Make sure that the id fields are mapped correctly
 
@@ -485,7 +452,7 @@ Prisma supports MongoDB, and so does Auth.js. Following the instructions of the 
 id  String  @id @default(auto()) @map("_id") @db.ObjectId
 ```
 
-2. The Native database type attribute to `@db.String` from `@db.Text` and userId to `@db.ObjectId`.
+2. Use the native database type attributes like `@db.String` and for Id fields, `@db.ObjectId`.
 
 ```prisma
 user_id            String   @db.ObjectId
@@ -494,11 +461,41 @@ access_token       String?  @db.String
 id_token           String?  @db.String
 ```
 
-Everything else should be the same.
+This has all been applied in the above example schema already.
+
+</Accordion>
+</Accordions>
+
+### Apply Schema
+
+This will create an SQL migration file and execute it:
+
+```bash npm2yarn
+npm exec prisma migrate dev
+```
+
+Note that you will need to specify your database connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project. Note Prisma doesn't support `.env.local` syntax, it must be named `.env`. For more information, check out their [environment variables docs](https://www.prisma.io/docs/orm/more/development-environment/environment-variables/using-multiple-env-files).
+
+### Generate Prisma Client
+
+`prisma migrate dev` will also generate the Prisma client, but if you need to generate it again manually you can run the following command.
+
+```bash npm2yarn
+npm exec prisma generate
+```
+
+### Development Workflow
+
+When you're working on your application and making changes to your database schema, you'll need to
+run the migrate command again every time you make changes to the schema in order for Prisma to (1) generate a migration file and apply it to the underlying database and (2) regenerate the Prisma client in your project with the latest types and model methods.
+
+```bash npm2yarn
+npm exec prisma migrate dev
+```
 
 ### Naming Conventions
 
-If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Prisma's `@map()`([see the documentation here](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database)) feature to change the field names. This won't affect Auth.js, but will allow you to customize the column names to whichever naming convention you wish.
+If mixed `snake_case` and `camelCase` column names is an issue for you and/or your underlying database system, we recommend using Prisma's [`@map()` feature](https://www.prisma.io/docs/concepts/components/prisma-schema/names-in-underlying-database) to change the field names. This won't affect Auth.js, but will allow you to customize the column names to whichever naming convention you prefer.
 
 For example, moving to `snake_case` and plural table names.
 
