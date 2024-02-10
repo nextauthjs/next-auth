@@ -8,5 +8,4 @@ export default {
   email: "Email",
   callbacks: "Callbacks",
   "custom-pages": "Custom Pages",
-  "deep-dive": "Deep Dive",
 }
