@@ -216,4 +216,29 @@ export default function Login() {
 
 ## Options
 
-The Passkeys provider has some unique options, for more details, check out the [API reference](/reference/providers/passkey).
+The Passkeys provider has some unique options, for more details, check out the [API reference](/reference/providers/passkey). Below are some of the common options and their default values.
+
+```ts filename="./auth.ts"
+export const { handlers, auth } = NextAuth({
+  providers: [
+    Passkey({
+      relayingParty: {
+          id: id ?? url.hostname,
+          name: name ?? url.host,
+          origin: origin ?? url.origin,
+      },
+      enableConditionalUI: true
+      simpleWebAuthnBrowserVersion: 'v9.0.1',
+      authenticationOptions: { timeout: 5 * 60 * 1000 },
+      registrationOptions: { timeout: 5 * 60 * 1000 },
+      formFields: {
+        email: {
+          label: "Email",
+          required: true,
+          autocomplete: "username webauthn",
+        },
+      },
+    }
+  ])
+})
+```
