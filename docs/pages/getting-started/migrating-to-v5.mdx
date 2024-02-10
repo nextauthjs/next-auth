@@ -1,4 +1,4 @@
-import { Callout, Tabs } from "nextra/components";
+import { Callout, Tabs, Steps } from "nextra/components"
 
 # Upgrade Guide (NextAuth.js v5)
 
@@ -45,23 +45,35 @@ npm install next-auth@latest
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 
-## Configuration
+<Steps>
+
+### Configuration File
 
 We worked hard to avoid saving your config options in a separate file and then passing them around as `authOptions` throughout your application. To achieve this, we settled on moving the configuration file to the root of the repository and having it export the necessary functions you can use everywhere else. (`auth`, `signIn`, `signOut`, `handlers` etc.).
 
 An example of the new configuration file format is as follows, which should look very similar to the one you are used to from v4.
 
-```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
+```ts filename="./auth.ts" {5}
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
 
-export const { auth, handlers } = NextAuth({ providers: [GitHub] });
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  providers: [GitHub, Google],
+})
 ```
+
+Some things to note about the new configuration:
+
+1. This is now in a file named `auth.ts` in the root of your repository. It can technically be named anything, but you'll be importing the exported methods from here across your app, so we'd recommend keeping it short.
+2. There is no need to install `@auth/core` to import the provider definitions from, these come from `next-auth` itself.
+3. The configuration object passed to the `NextAuth()` function is the same as before.
+4. The methods exported from that `NextAuth()` function call are new and will be required elsewhere in your application.
 
 This then allows you to import the functions exported from this file elsewhere in your codebase via import statements like the following.
 
 ```ts
-import { auth } from "@/auth";
+import { auth } from "@/auth"
 ```
 
 The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a short Route Handler for `GET` and `POST` requests for those paths. This file now lives in the App Router, but the rest of your app can stay in the Pages Router if you are gradually migrating!
@@ -157,16 +169,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 For advanced use cases, you can use `auth` as a wrapper for your Middleware:
 
 ```ts filename="middleware.ts"
-import { auth } from "./auth";
+import { auth } from "./auth"
 
 export default auth((req) => {
   // req.auth
-});
+})
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-};
+}
 ```
 
 Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
@@ -203,11 +215,7 @@ If you have previously used `getSession()` or other imports server-side, you'll 
 
 ### Adapter packages
 
-Beginning with `next-auth` v5, you should now install database adapters from the `@auth/*-adapter` scope, instead of `@next-auth/*-adapter`.
-
-This is because Database Adapters don't rely on any Next.js features, so it made sense to move them to this new scope.
-
-Example:
+Beginning with `next-auth` v5, you should now install database adapters from the `@auth/*-adapter` scope, instead of `@next-auth/*-adapter`. Database adapters don't rely on any Next.js features, so it made more sense to move them to this new scope.
 
 ```diff
 - npm install @next-auth/prisma-adapter
@@ -215,9 +223,9 @@ Example:
 ```
 
 <Callout type="info">
-  Check out the [Adapters docs](/reference/core/adapters) for a list of official
-  adapters, or the [Create a database
-  adapter](/guides/creating-a-database-adapter) guide to learn how to create
+  Check out the [adapters page](/getting-started/database) for a list of
+  official adapters, or the "[create a database
+  adapter](/guides/creating-a-database-adapter)" guide to learn how to create
   your own.
 </Callout>
 
@@ -225,7 +233,7 @@ Example:
 
 The `Adapter` type is uncommon unless you are writing your adapter. If you are using an existing adapter, you can likely ignore this change.
 
-Otherwise, the `Adapter` type can now be imported from `@auth/core/adapters` instead of `next-auth/adapters`.
+Otherwise, the `Adapter` type can now be imported from `next-auth` instead of `next-auth/adapters`.
 
 ```diff filename="pages/api/auth/[...nextauth].ts"
 - import type { Adapter } from "next-auth/adapters"
@@ -241,6 +249,8 @@ NextAuth.js v5 does not introduce any breaking changes to the database schema. H
 Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were
 required to be added to the `account` table. This is no longer the case, and you can remove it if
 you are not using it. If you do use it, please make sure to return it via the new [`account()` callback](/reference/core/providers#account).
+
+</Steps>
 
 ## Edge compatibility
 
@@ -258,26 +268,26 @@ Most adapters rely on an ORM/library that is not yet compatible with the Edge ru
 1. Create an `auth.config.ts` file with your config and export it:
 
 ```ts filename="auth.config.ts"
-import GitHub from "next-auth/providers/github";
-import type { NextAuthConfig } from "next-auth";
-export default { providers: [GitHub] } satisfies NextAuthConfig;
+import GitHub from "next-auth/providers/github"
+import type { NextAuthConfig } from "next-auth"
+export default { providers: [GitHub] } satisfies NextAuthConfig
 ```
 
 2. Create an `auth.ts` file and add your adapter there, together with the `jwt` session strategy:
 
 ```ts filename="auth.ts"
-import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import authConfig from "./auth.config";
+import NextAuth from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+import authConfig from "./auth.config"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export const { handlers, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,
-});
+})
 ```
 
 3. Make sure that Middleware is not using the import with a non-edge compatible adapter:

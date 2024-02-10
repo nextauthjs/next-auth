@@ -7,9 +7,6 @@ export default {
   },
   "migrating-to-v5": {
     title: "Migrate to NextAuth.js v5",
-    theme: {
-      typesetting: "article",
-    },
   },
   "-- getting-started": {
     type: "separator",
