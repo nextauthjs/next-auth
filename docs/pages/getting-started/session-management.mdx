@@ -14,7 +14,7 @@ import {
 
 # Managing the user session
 
-Auth.js ships with lightweight utilities to help you manage the user's session easily. Aside from [built-in pages](/tutorials/custom-pages/built-in-pages), which are [themable](/tutorials/theming) or [fully customisable](/tutorials/custom-pages/custom-sign-in), Auth.js does not come with any built-in styles.
+Auth.js ships with lightweight utilities to help you manage the user's session easily. Aside from [built-in pages](/tutorials/custom-pages/built-in-pages), which are [themable](/tutorials/theming) or [fully customisable](/tutorials/custom-pages/signin), Auth.js does not come with any built-in styles.
 
 You're in charge of the building the UI for session management. Below we summarise some of the most common patterns for handling user sessions that you'll need to build before shipping your app to production.
 
@@ -82,7 +82,7 @@ export function SignIn() {
   </Code.Next>
 </Code>
 
-When clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/tutorials/custom-pages/custom-sign-in), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
+When clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/tutorials/custom-pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
 
 import DefaultSignInPage from "../../public/img/getting-started/default-signin-page.webp"
 
