@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Accordion, Accordions } from "@/components/Accordion"
 
 <img align="right" src="/img/adapters/prisma.svg" width="64" height="64" />
 
@@ -36,12 +37,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ## Edge Compatibility
 
-At the moment, Prisma is still working on being fully compatible with the Vercel edge runtime. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about edge support in early access since `5.9.0` [here](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
+At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about edge support in early access since `5.9.1` [here](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
 
 - Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
 - Switch to the `jwt` session strategy
 
-Using Prisma in and edge runtime with `jwt` session strategy looks like this.
+Using Prisma with the `jwt` session strategy and `@prisma/client@5.9.1` or above doesn't require any additional modifications, other than ensuring you don't do any database queries in your middleware.
+
+Since `@prisma/client@5.9.1`, Prisma no longer throws about being incompatible with the edge runtime at instantiation, but at query time. Therefore, it is possible to import it in files being used in your middleware as long as you do not execute any queries in your middleware.
+
+<Accordions>
+<Accordion title="Using '@prisma/client' before 'v5.9.1' requires some additional workarounds">
+
+You will need to separate your Auth.js configuration into two files and use the [lazy initialization](/getting-started/advanced) feature to instantiate a second copy of Auth.js in the middleware without the adapter.
 
 Define the `auth.config.ts` file:
 
@@ -51,7 +59,7 @@ export default {
 } satisfies NextAuthConfig
 ```
 
-Import and use the `PrismaAdapter` in the `auth.ts` file:
+Import and use the `PrismaAdapter` in the `auth.ts` file. This is your main Auth.js configuration file that you'll use around the rest of your application.
 
 ```ts filename="auth.ts"
 import NextAuth from "next-auth"
@@ -68,7 +76,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 })
 ```
 
-In the middleware file, import the `auth.config` and use it as the configuration for `NextAuth` (note that the `adapter` is not used here to avoid the error):
+In the middleware file, however, import the first `auth.config` and instantiate a second instance of `NextAuth` using it as the configuration (note that the `adapter` is not used here to avoid the error).
 
 ```ts filename="middleware.ts"
 import NextAuth from "next-auth"
@@ -77,34 +85,39 @@ import authConfig from "./auth.config"
 export const middleware = NextAuth(authConfig).auth
 ```
 
+</Accordion>
+</Accordions>
+
 ## Schema
 
-You need to use at least Prisma 2.26.0. Create a schema file in `prisma/schema.prisma` similar to this one:
+You need to use at least Prisma `4.0.0`. Create a schema file at `prisma/schema.prisma` with the following models.
 
-> This schema is adapted for use in Prisma and based upon our main
-> [schema](https://authjs.dev/docs/database)
+<Accordions>
+<Accordion title="PostgreSQL">
 
-```json filename="schema.prisma"
+```prisma filename="prisma/schema-postgres.prisma"
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/d/migrate-shadow
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
+  provider = "prisma-client-js"
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String          @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  // Optional for WebAuthn support
   Authenticator Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Account {
@@ -120,6 +133,9 @@ model Account {
   id_token          String?
   session_state     String?
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
@@ -130,6 +146,9 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -140,6 +159,96 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
+// Optional for WebAuthn support
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+</Accordion>
+<Accordion title="MySQL">
+
+```prisma filename="prisma/schema-mysql.prisma"
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  username      String?         @unique
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  Session       Session[]
+  Account       Account?
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String  @unique
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Optional for WebAuthn support
 model Authenticator {
   id                   String  @id @default(cuid())
   credentialID         String  @unique
@@ -160,8 +269,105 @@ model Authenticator {
   type](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string)
   gets mapped to `varchar(191)` which may not be long enough to store fields
   such as `id_token` in the `Account` model. This can be avoided by explicitly
-  using the `Text` type with `@db.Text`.
+  using the `Text` type with `@db.Text` as shown for some fields in the example
+  above.
 </Callout>
+
+</Accordion>
+<Accordion title="SQLite">
+
+```prisma filename="prisma/schema-sqlite.prisma"
+
+```
+
+</Accordion>
+<Accordion title="MongoDB">
+
+```prisma filename="prisma/schema-mongodb.prisma"
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  credentialID         String  @unique
+  userId               String  @db.ObjectId
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+</Accordion>
+</Accordions>
 
 ### Apply Schema
 
