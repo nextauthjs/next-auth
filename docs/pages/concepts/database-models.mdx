@@ -1,4 +1,4 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 # Database models
 
@@ -52,7 +52,7 @@ erDiagram
 
 ---
 
-### User model
+### User
 
 The User model is for information such as the user's name and email address. Email address is optional, but if one is specified for a `User`, then it must be unique.
 
@@ -72,12 +72,12 @@ fields in your [OAuth provider](/guides/configuring-oauth#use-your-own-provider)
 
 If the first sign-in is via the [Email Provider](/reference/core/providers/email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
 
-### Account model
+### Account
 
 The Account model is for information about accounts associated with a `User`. A single `User` can have multiple `Account`(s), but each `Account` can only have one `User`.
 
 <Callout>
-  ACcount creation in the database is automatic and happens when the user is
+  Account creation in the database is automatic and happens when the user is
   logged in for the first time with an authentication provider (either OAuth,
   magic links or plain credentials) or the
   [`Adapter.linkAccount`](/reference/core/adapters#linkaccount) method is
@@ -94,7 +94,7 @@ You can manually unlink accounts if your adapter implements the
 `unlinkAccount` method. Make sure to take all the necessary security steps to
 avoid data loss.
 
-### Session model
+### Session
 
 Even if you are using a database, you can still use **JWT** for session handling for fast access, in which case, this model can be opted out in your database.
 
@@ -106,16 +106,16 @@ When a Session is read, its `expires` field is checked to see if the session is 
 extra delete call to the database during an active session retrieval. This
 might result in a slight performance increase.
 
-### VerificationToken model
+### VerificationToken
 
-The VerificationToken model is used to store tokens for **Magic links** sign in.
+The `VerificationToken` model is used to store tokens for email-based **magic-link** sign in.
 
-A single `User` can have multiple open `VerificationToken`(s) (e.g. sign in with different devices).
+A single `User` can have multiple open `VerificationToken`s active (e.g. sign in with different devices).
 
 <Callout>
-  Due to users forgetting or failing at the sign-in flow, you might end up with
-  unwanted rows in your database, that you might have to periodically clean up
-  to avoid filling the database up with unnecessary data.
+  Due to users forgetting or failures during the sign-in flow, you might end up
+  with unwanted rows in your database. You might want to periodically clean
+  these up to avoid filling up your database with unnecessary data.
 </Callout>
 
 It has been designed so that it can be extended for other verification purposes in the future (e.g. 2FA / magic codes, etc... ).
