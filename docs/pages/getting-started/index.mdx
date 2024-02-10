@@ -42,7 +42,7 @@ There are 3 ways to authenticate users with Auth.js:
 <ListDisclosure limit={8}>
   {Object.entries(manifest.providersOAuth).map(([id, name]) => (
     <Link
-      href={`/reference/core/providers/${id}`}
+      href={`/getting-started/providers/${id}`}
       key={name}
       className="p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-lg h-32"
     >
@@ -59,7 +59,7 @@ Optionally, Auth.js can be integrated with an external database via Database ada
 <ListDisclosure limit={8}>
   {Object.entries(manifest.adapters).map(([value, label]) => (
     <Link
-      href={`/reference/adapter/${value}`}
+      href={`/getting-started/adapters/${value}`}
       key={value}
       className="p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-lg h-32"
     >
