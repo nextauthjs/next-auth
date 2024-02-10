@@ -1,5 +1,6 @@
 export default {
-  "configuring-oauth": "Configuring OAuth",
+  "configuring-oauth-providers": "Configuring OAuth",
+  "oauth-github-setup": "Basic OAuth with Github",
   "creating-a-database-adapter": "Creating a Database Adapter",
   "role-based-access-control": "Role-Based Access Control",
   testing: "Testing",
@@ -8,4 +9,4 @@ export default {
   callbacks: "Callbacks",
   "custom-pages": "Custom Pages",
   "deep-dive": "Deep Dive",
-};
+}

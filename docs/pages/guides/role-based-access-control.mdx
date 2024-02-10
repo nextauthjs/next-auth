@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 # Role-based access control
 
@@ -16,24 +16,41 @@ Start by adding a `profile()` callback to the providers' config to determine the
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
-export default NextAuth({
+export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
         return { role: profile.role ?? "user", ... }
       },
-      ...
     })
   ],
 })
 ```
 
 </Code.Next>
+<Code.Svelte>
+
+```ts filename="./auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+
+export const { handlers, auth } = SvelteKitAuth({
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      },
+    })
+  ],
+})
+```
+
+</Code.Svelte>
 </Code>
 
 <Callout>
-  To determine the user's role, you can either add your logic or if your
-  provider assigns roles already, use that instead.
+  Determining the users role is your responsibility, you can either add your own
+  logic or if your provider returns a role you can use that instead.
 </Callout>
 
 ## Persisting the role
@@ -49,17 +66,16 @@ If you also want to use the role on the client, you can expose it via the `sessi
 <Code>
 <Code.Next>
 
-```ts filename="./auth.ts"
+```ts filename="./auth.ts" {8}
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
-export default NextAuth({
+export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
         return { role: profile.role ?? "user", ... }
       },
-      ...
     })
   ],
   callbacks: {
@@ -76,6 +92,34 @@ export default NextAuth({
 ```
 
 </Code.Next>
+<Code.Svelte>
+
+```ts filename="./auth.ts" {8}
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+
+export const { handlers, auth } = SvelteKitAuth({
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      },
+    })
+  ],
+  callbacks: {
+    jwt({ token, user }) {
+      if(user) token.role = user.role
+      return token
+    },
+    session({ session, token }) {
+      session.user.role = token.role
+      return session
+    }
+  }
+})
+```
+
+</Code.Svelte>
 </Code>
 
 <Callout type="info">
@@ -89,7 +133,7 @@ When you have a database, you can save the user role on the [User model](/refere
 
 First, add a `role` column to the User model.
 
-```ts filename="/prisma/schema.prisma"
+```prisma filename="/prisma/schema.prisma"
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -114,7 +158,33 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import prisma from "lib/prisma"
 
-export default NextAuth({
+export const { handlers, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      }
+    })
+  ],
+  callbacks: {
+    session({ session, user }) {
+      session.user.role = user.role
+      return session
+    }
+  }
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+import prisma from "lib/prisma"
+
+export const { handlers, auth } = SvelteKitAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
@@ -133,7 +203,7 @@ export default NextAuth({
 })
 ```
 
-</Code.Next>
+</Code.Svelte>
 </Code>
 
 <Callout type="info">
@@ -162,12 +232,30 @@ export default function Page() {
 ```
 
 </Code.Next>
+<Code.Svelte>
+
+```ts filename="./routes/+page.server.ts"
+export const load: PageServerLoad = async (event) => {
+  const session = await event.locals.auth()
+
+  if (!session && event.url.pathname !== "/login") {
+    const fromUrl = event.url.pathname + event.url.search
+    redirect(307, `/login?redirectTo=${encodeURIComponent(fromUrl)}`)
+  }
+
+  return {
+    session,
+  }
+}
+```
+
+</Code.Svelte>
 </Code>
 
 <Callout>
   When using Next.js and JWT, you can alternatively also use
-  [Middleware](/getting-started/securing/middleware#redirecting-users) to redirect the user
-  based on their role, even before rendering the page.
+  [Middleware](/getting-started/securing/middleware#redirecting-users) to
+  redirect the user based on their role, even before rendering the page.
 </Callout>
 
 ## Resources

@@ -1,5 +1,5 @@
-import { Callout, Tabs, Steps } from "nextra/components";
-import { Screenshot } from "@/components/Screenshot";
+import { Callout, Tabs, Steps } from "nextra/components"
+import { Screenshot } from "@/components/Screenshot"
 
 # OAuth with Github
 
@@ -11,11 +11,12 @@ The fastest way to set up Auth.js is with an [OAuth provider](/concepts/oauth). 
   can also integrate with your custom OAuth provider by [building your
   own](/guides/configuring-oauth#use-your-own-provider).
 </Callout>
-{/* prettier-ignore */}
+
 <Callout type="info">
-  This tutorial uses Github as the OAuth provider.Note that for any OAuth provider,<strong> the process will be the same</strong>, only differing on how you register your application in the chosen provider's dashboard.
+  This tutorial uses Github as the OAuth provider. Note that for any OAuth
+  provider,<strong> the process will be the same</strong>, only differing on how
+  you register your application in the chosen provider's dashboard.
 </Callout>
-{/* prettier-ignore */}
 
 ## Overview
 
@@ -74,7 +75,8 @@ export const { handlers, auth } = NextAuth({
   providers: [GitHub],
 });
 ```
-```ts filename="pages/api/auth/[...nextauth].ts"
+```ts filename="app/api/auth/[...nextauth]/route.ts"
+// Even in pages, we recommend moving this catch-all route to the app directory
 export { GET, POST } from "./auth";
 ```
 </Tabs.Tab>
@@ -104,13 +106,13 @@ We need to register our application in GitHub, so that when Auth.js forwards the
 
 Log in [to GitHub](https://github.com/settings/developers), go to **Settings** → **Developers** → **OAuth Apps** and click "New OAuth App":
 
-import CreatingOAuthApp from "../../../public/img/oauth-setup/creating-oauth-app.webp";
+import CreatingOAuthApp from "../../public/img/oauth-setup/creating-oauth-app.webp"
 
 <Screenshot src={CreatingOAuthApp} alt="Creating an OAuth App on Github" />
 
 Next, you'll be presented with a screen to register your application. Fill in all the required fields:
 
-import CallbackUrl from "../../../public/img/oauth-setup/callback-url.webp";
+import CallbackUrl from "../../public/img/oauth-setup/callback-url.webp"
 
 <Screenshot src={CallbackUrl} />
 
@@ -121,7 +123,7 @@ The callback URL we provide should have the following shape:
 [origin]/api/auth/callback/[provider]
 ```
 
-For us, given we want to try our authentication <ins>working locally</ins> on our machine and we're using <ins>GitHub</ins> as our authentication provider, it'll be:
+For us, given we want to try our authentication **working locally** on our machine and we're using **GitHub** as our authentication provider, it'll be:
 
 ```
 http://localhost:3000/api/auth/callback/github
@@ -137,20 +139,19 @@ The last part of the URL, `[provider]`, is the ID of the provider you're using. 
 
 Once created, the next screen shows all the configurations for our app:
 
-import ClientIdSecret from "../../../public/img/oauth-setup/clientid-secret.webp";
+import ClientIdSecret from "../../public/img/oauth-setup/clientid-secret.webp"
 
 <Screenshot src={ClientIdSecret} alt="Generating clientId and clientSecret" />
 
-We need 2 things from this screen, the <ins>Client ID</ins> and <ins>Client Secret</ins>.
+We need 2 things from this screen, the **Client ID** and **Client Secret**.
 
 The Client ID is always there, a public identifier of your OAuth application within GitHub.
 
 For the Client Secret, click on the "Generate a new client Secret" and you will be presented with a new string (which is just a randomized string).
 
 <Callout>
-  Keep both your <ins>Client ID</ins> and <ins>Client Secret</ins> secure and
-  never expose them to the public or share them with people outside your
-  organization.
+  Keep both your **Client ID** and **Client Secret** secure and never expose
+  them to the public or share them with people outside your organization.
 </Callout>
 
 We have finished configuring our OAuth provider, now let's wire all together so we can finally authenticate our users through Github.
@@ -168,13 +169,13 @@ Finally, we're ready to run our application locally.
 
 Start the Next.js app:
 
-```
-npm run next dev
+```bash npm2yarn
+npm run dev
 ```
 
 And navigate to [`http://localhost:3000`](http://localhost:3000). You should see the following page:
 
-import AppStart from "../../../public/img/oauth-setup/app-start.webp";
+import AppStart from "../../public/img/oauth-setup/app-start.webp"
 
 <Screenshot src={AppStart} alt="App Start" />
 
@@ -182,13 +183,13 @@ Click on "Sign in" and then on "Sign in with GitHub".
 
 Auth.js will redirect you to GitHub, and GitHub will recognize our app (that we just registered), asking the user to enter its credentials to proceed:
 
-import GithubCredentials from "../../../public/img/oauth-setup/github-auth-credentials.webp";
+import GithubCredentials from "../../public/img/oauth-setup/github-auth-credentials.webp"
 
 <Screenshot src={GithubCredentials} alt="GitHub Credentials" />
 
 Once authenticated, GitHub will redirect the user back to our app and Auth.js will take care of the rest:
 
-import GithubAuthSuccess from "../../../public/img/oauth-setup/github-auth-success.webp";
+import GithubAuthSuccess from "../../public/img/oauth-setup/github-auth-success.webp"
 
 <Screenshot src={GithubAuthSuccess} alt="GitHub Authentication Success" />
 
@@ -197,7 +198,7 @@ Great! We have completed the whole end-to-end authentication flow so that users 
 <Callout type="info">
   As you can see, most of the time required setting up OAuth in our application
   is spent registering our application in the OAuth provider's dashboard (some
-  are easier to navigate, some are harder 😭). Once registered, the setup via
+  are easier to navigate, some are harder). Once registered, the setup via
   Auth.js is then really easy.
 </Callout>
 
@@ -205,6 +206,6 @@ Great! We have completed the whole end-to-end authentication flow so that users 
 
 Before we can release our app to production, we'll need to change a few things.
 
-You'll need to register a separate application in Github's dashboard [as we did here](/setup/oauth-authentication#registering-our-app-in-github) but setting up the Callback URL host to your application's domain (.i.e `https://example.com/api/auth/callback/github`). You'll then have a new <ins>Client ID</ins> and <ins>Client Secret</ins> that will be added via environment variables in your production environment.
+You'll need to register a separate application in Github's dashboard [as we did here](/setup/oauth-authentication#registering-our-app-in-github) but setting up the Callback URL host to your application's domain (.i.e `https://example.com/api/auth/callback/github`). You'll then have a new **Client ID** and **Client Secret** that will be added via environment variables in your production environment.
 
 Refer to the [Deployment page](/deployment) for more information.

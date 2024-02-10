@@ -1,0 +1,40 @@
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+
+# Built-in Pages
+
+Auth.js comes by default with a set of pages that are presented to the user as they go through their authentication journey (sign up, sign in, sign out, error, etc...). This is helpful so that you don't need to write those from scratch when using the library first time.
+
+For example, in [the example app](https://github.com/nextauthjs/next-auth-example), if you click on "Sign in":
+
+import ExampleApp from "../../../public/img/tutorials/example-app.webp"
+
+<Screenshot src={ExampleApp} alt="Example App" />
+
+or build your own button component which calls the `signIn` helper, and then click it:
+
+<Code>
+<Code.Next>
+
+```tsx filename="components/sign-in.tsx"
+import { signIn } from "../auth.ts"
+
+export function SignInButton() {
+  return <button onClick={}>Sign in</button>
+}
+```
+
+</Code.Next>
+</Code>
+
+you'll then be presented with Auth.js built-in sign in page:
+
+import SignInPage from "../../../public/img/tutorials/sign-in-page.webp"
+
+<Screenshot src={SignInPage} alt="Sign-in Page" />
+
+In this case the app has been configured with [GithubProvider](/) and [CredentialsProvider](/) (so either sign in with Github or insert username and password), hence the sign in page shows both options.
+
+If we added the [GoogleProvider](/) to our Auth.js config file (`./auth.ts`), then a 3rd option to sign in with Google would be available, and so on as we add more providers.
+
+If you'd like to build your own sign in page, checkout our next guide on [custom sign-in pages](/guides/custom-pages/signin).

@@ -1,3 +1,3 @@
 export default {
-  "oauth-github-setup": "OAuth with Github",
-};
+  "oauth-github-setup": "Basic OAuth with Github",
+}

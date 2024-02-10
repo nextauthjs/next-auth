@@ -1,5 +1,5 @@
-import { Callout, Steps } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout, Steps } from "nextra/components"
+import { Code } from "@/components/Code"
 
 # Configuring an OAuth provider
 
@@ -31,7 +31,7 @@ export const { handlers, auth } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Auth0 from "@auth/sveltekit/providers/auth0";
 
-export const handle = SvelteKitAuth({
+export const { handlers, auth } = NextAuth({
   providers: [
     Auth0({ authorization: { params: { scope: "openid custom_scope" } } }),
   ],
@@ -86,13 +86,7 @@ export const handle = SvelteKitAuth({
   first, before creating one from scratch.
 </Callout>
 
-<Callout type="info">
-  Auth.js uses the
-  [`oauth4webapi`](https://github.com/panva/oauth4webapi/blob/main/docs/README.md)
-  package under the hood.
-</Callout>
-
-We support _any_ [OAuth](https://datatracker.ietf.org/doc/html/rfc6749) or [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) compliant provider.
+We support any [OAuth](https://datatracker.ietf.org/doc/html/rfc6749) or [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) compliant provider.
 Start by passing an object to the [`providers` list](/reference/core#providers):
 
 <Code>

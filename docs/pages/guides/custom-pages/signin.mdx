@@ -1,0 +1,153 @@
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+
+# Custom Sign-in Page
+
+To add a custom sign-in page, you'll need to define the path to your page in the `pages` object in your Auth.js configuration. Make sure a route / page actually exists at the path you're defining here!
+
+<Code>
+<Code.Next>
+
+```tsx filename="./auth.ts" {7, 10}
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+import type { NextAuthConfig } from "next-auth"
+
+// Define your configuration in a separate variable and pass it to NextAuth()
+// This way we can also 'export const config' for use later
+export const config = {
+  providers: [GitHub],
+  pages: {
+    signIn: "/signin",
+  },
+} satisfies NextAuthConfig
+
+export const { handlers, auth, signIn, signOut } = NextAuth(config)
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```tsx filename="./auth.ts" {7}
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from "@auth/sveltekit/providers/github"
+import type { Provider } from "@auth/sveltekit/providers"
+
+const providers: Provider[] = [Github]
+
+export const providerMap = providers.map((provider) => {
+  return { id: provider.id, name: provider.name }
+})
+
+export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
+  providers,
+  pages: {
+    signIn: "/signin",
+  },
+})
+```
+
+</Code.Svelte>
+</Code>
+
+We can now build our own custom sign in page:
+
+<Code>
+<Code.Next>
+
+```tsx filename="app/signin/page.tsx"
+import { signIn, config, auth } from "../../../auth.ts"
+import { redirect } from "next/navigation"
+
+async function getSession() {
+  const session = await auth()
+
+  return {
+    session,
+  }
+}
+
+export default async function SignInPage() {
+  const { session } = await getSession()
+
+  // The user is already logged in, redirect to homepage.
+  // Make sure is not the same URL to avoid an infinite loop!
+  if (session) return redirect("/")
+
+  return (
+    <div className="flex flex-col gap-4 max-w-80 mx-auto justify-center h-screen">
+      {Object.values(config.providers).map((provider) => (
+        <form action={provider.authorisation.url} method="POST">
+          <Button className="flex flex-row gap-2" type="submit">
+            <span>Sign in with {provider.name}</span>
+          </Button>
+        </form>
+      ))}
+    </div>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="src/routes/signin/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div class="flex overflow-hidden relative w-full h-full">
+  <div class="h-dvh z-20 flex w-full items-center justify-center md:ml-[15%] md:w-[22rem]">
+    <div class="flex flex-col justify-center items-center w-80 text-xl">
+      <h2 class="flex items-center mb-4 space-x-2 text-3xl font-light text-slate-600">
+        <img src="/img/logo.png" alt="Company Logo" class="size-5" />
+        <span class="text-4xl font-medium text-white">Company</span>
+      </h2>
+      <div class="flex flex-col gap-2 p-6 m-8 w-full bg-white rounded shadow-lg">
+        <SignIn
+          provider={provider.id}
+          signInPage="signin"
+          options={{
+            redirectTo: $page.data.redirectTo
+              ? `/${decodeURIComponent($page.data.redirectTo).slice(1)}`
+              : `/dashboard`,
+          }}
+          className="w-full"
+        >
+          <div
+            class="mt-2 flex h-12 w-full items-center space-x-2 rounded px-4 text-base font-light transition focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
+          >
+            <span class="flex justify-center w-full">
+              Signin with {provider.name}
+            </span>
+          </div>
+        </SignIn>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+```ts filename="src/routes/signin/+page.server.ts"
+import { signIn } from "../../auth"
+import type { Actions } from "./$types"
+
+export const actions = {
+  default: async (e) => {
+    return signIn(e)
+  },
+} satisfies Actions
+```
+
+</Code.Svelte>
+</Code>
+
+Then when clicking on "Sign in" on the app (calling `signIn`), our custom sign in page will appear with the available sign in options:
+
+import CustomSignInPage from "../../../public/img/tutorials/custom-sign-in-page.webp"
+
+<Screenshot
+  src={CustomSignInPage}
+  alt="Custom Sign-in Page"
+  className="w-full max-w-3xl"
+/>
