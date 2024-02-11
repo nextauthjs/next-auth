@@ -1,4 +1,4 @@
-import { test, expect } from "../../../utils/e2e/baseFixtures"
+import { test, expect } from "@playwright/test"
 
 test.describe("Basic Auth", () => {
   test("Credentials Signin / Signout", async ({ page }) => {
