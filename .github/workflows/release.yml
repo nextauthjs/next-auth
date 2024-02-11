@@ -123,15 +123,15 @@ jobs:
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
       - run: |
-          ls -lah packages/utils/
-          ls -lah packages/core/
+          pwd
+          ls -lah packages/utils/test-results/
       - uses: actions/upload-artifact@v4
         continue-on-error: true
         name: Upload Playwright artifacts
         with:
-          name: playwright-report
-          path: "**/test-results/*/trace.zip"
-          retention-days: 30
+          name: playwright-traces
+          path: "**/packages/utils/test-results/*/trace.zip"
+          retention-days: 7
       - uses: codecov/codecov-action@v3
         name: Coverage
         with:
