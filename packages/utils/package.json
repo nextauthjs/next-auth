@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "devDependencies": {
     "@auth/core": "workspace:*",
-    "@preact/preset-vite": "^2.8.1"
+    "@preact/preset-vite": "^2.8.1",
+    "nyc": "^15.1.0",
+    "vite-plugin-istanbul": "^5.0.0"
   },
   "type": "module",
   "dependencies": {
