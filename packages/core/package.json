@@ -71,7 +71,7 @@
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
-    "@simplewebauthn/server": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
     "nodemailer": "^6.8.0"
   },
   "peerDependenciesMeta": {
