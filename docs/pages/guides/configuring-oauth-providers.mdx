@@ -27,16 +27,21 @@ export const { handlers, auth } = NextAuth({
 ```
 </Code.Next>
 <Code.Svelte>
-```ts filename="hooks.server.ts"
+```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Auth0 from "@auth/sveltekit/providers/auth0";
 
-export const { handlers, auth } = NextAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     Auth0({ authorization: { params: { scope: "openid custom_scope" } } }),
   ],
 });
 ```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
 </Code.Svelte>
 </Code>
 
@@ -61,11 +66,11 @@ export const { handlers, auth } = NextAuth({
 ```
 </Code.Next>
 <Code.Svelte>
-```ts filename="hooks.server.ts"
+```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Auth0 from "@auth/sveltekit/providers/auth0";
 
-export const handle = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     Auth0({
       // You can also make calls to external resources if necessary.
@@ -76,6 +81,11 @@ export const handle = SvelteKitAuth({
   ],
 });
 ```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
 </Code.Svelte>
 </Code>
 
@@ -107,10 +117,10 @@ export const { handlers, auth } = NextAuth({
 ```
 </Code.Next>
 <Code.Svelte>
-```ts filename="hooks.server.ts"
+```ts filename="src/hooks.server.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
 
-export const handle = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [{
     id: "my-provider", // signIn("my-provider") and will be part of the callback URL
     name: "My Provider", // optional, used on the default login page as the button text.
@@ -121,6 +131,7 @@ export const handle = SvelteKitAuth({
   }],
 });
 ```
+
 </Code.Svelte>
 </Code>
 

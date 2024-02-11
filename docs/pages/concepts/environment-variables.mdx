@@ -93,7 +93,7 @@ import Google from "@auth/sveltekit/providers/google"
 import Twitter from "@auth/sveltekit/providers/twitter"
 import GitHub from "@auth/sveltekit/providers/github"
 
-export const { handlers, auth } = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [Google, Twitter, GitHub],
 })
 ```
@@ -131,12 +131,12 @@ export const { handlers, auth } = NextAuth({
 </Code.Next>
 <Code.Svelte>
 
-```ts filename="./auth.ts" {8-9}
+```ts filename="./src/auth.ts" {8-9}
 import SvelteKitAuth from "@auth/sveltekit"
 import Google from "@auth/sveltekit/providers/google"
 import { env } from "$env/dynamic/private"
 
-export const { handlers, auth } = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       clientId: env.AUTH_WEBAPP_GOOGLE_CLIENT_ID,

@@ -104,7 +104,7 @@ The `@simplewebauthn/browser` peer dependency is only required for custom signin
 
 ### Apply the required schema Migrations
 
-This is the raw SQL migration, for more details including an example MongoDB migration, check out the Prisma `schema.prisma` [here](https://github.com/Maronato/next-auth/blob/main/packages/adapter-prisma/prisma/schema.prisma), or the PR adding support to Prisma [here](https://github.com/nextauthjs/next-auth/pull/9876).
+This is the raw SQL migration, for more details including an example MongoDB migration, check out the updated Prisma schemas at the [prisma adapter docs](/getting-started/adapters/prisma).
 
 In short, the Passkeys provider requires an additional table called `Authenticator`.
 
@@ -196,7 +196,7 @@ First, lets initialise the `CredentialsProvider` in the Auth.js configuration fi
 <Code>
 <Code.Next>
 
-```ts filename="./auth.ts"
+```ts filename="./src/auth.ts"
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
@@ -269,6 +269,10 @@ export const { signIn, signOut, handle } = SvelteKitAuth({
 })
 ```
 
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
 </Code.Svelte>
 </Code>
 
@@ -335,13 +339,13 @@ export function SignIn() {
 <Code.Svelte>
 
 ```ts filename="src/route/+page.svelte"
-  <script>
+<script>
   import { signIn, signOut } from '../auth'
   import { page } from '$app/stores'
 
   let email = ''
   let password = ''
-  </script>
+</script>
 
   <div>
     <form>
@@ -462,7 +466,7 @@ import { ZodError } from "zod"
 import Credentials from "@auth/sveltekit/providers/credentials"
 import { signInSchema } from "./lib/zod"
 
-export const { handlers, auth } = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
