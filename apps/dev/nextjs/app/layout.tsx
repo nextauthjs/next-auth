@@ -24,10 +24,10 @@ export async function AppHeader() {
       session={session}
       signIn={
         <form
-          action={async (formData) => {
+          action={async () => {
             "use server"
             try {
-              await signIn("credentials", formData)
+              await signIn()
             } catch (error) {
               if (error instanceof AuthError) {
                 console.log(error)
