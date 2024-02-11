@@ -18,7 +18,7 @@ export default defineConfig({
   ],
   webServer: {
     cwd: "../../",
-    command: "turbo run build --filter=next-auth-app && pnpm dev",
+    command: "turbo run dev --filter=next-auth-app",
     url: "http://localhost:3000",
     timeout: 20_000,
     stdout: process.env.CI ? "ignore" : "pipe",
