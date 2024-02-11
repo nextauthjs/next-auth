@@ -40,11 +40,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
+```ts filename="/src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit";
 import Pinterest from "@auth/sveltekit/providers/pinterest";
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Pinterest],
 });
 ```

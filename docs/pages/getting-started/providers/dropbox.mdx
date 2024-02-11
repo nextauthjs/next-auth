@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/dropbox.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_DROPBOX_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Dropbox from "next-auth/providers/dropbox";
+import NextAuth from "next-auth"
+import Dropbox from "next-auth/providers/dropbox"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Dropbox],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Dropbox from "@auth/sveltekit/providers/dropbox";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Dropbox from "@auth/sveltekit/providers/dropbox"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Dropbox],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Dropbox from "@auth/express/providers/dropbox";
+import ExpressAuth from "@auth/express"
+import Dropbox from "@auth/express/providers/dropbox"
 
-app.use("/auth/*", ExpressAuth({ providers: [Dropbox] }));
+app.use("/auth/*", ExpressAuth({ providers: [Dropbox] }))
 ```
 
   </Code.Express>

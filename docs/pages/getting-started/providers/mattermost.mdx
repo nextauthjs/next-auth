@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/mattermost.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_MATTERMOST_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Mattermost from "next-auth/providers/mattermost";
+import NextAuth from "next-auth"
+import Mattermost from "next-auth/providers/mattermost"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Mattermost],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Mattermost from "@auth/sveltekit/providers/mattermost";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Mattermost from "@auth/sveltekit/providers/mattermost"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Mattermost],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Mattermost from "@auth/express/providers/mattermost";
+import ExpressAuth from "@auth/express"
+import Mattermost from "@auth/express/providers/mattermost"
 
-app.use("/auth/*", ExpressAuth({ providers: [Mattermost] }));
+app.use("/auth/*", ExpressAuth({ providers: [Mattermost] }))
 ```
 
   </Code.Express>

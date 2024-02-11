@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/wikimedia.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_WIKIMEDIA_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Wikimedia from "next-auth/providers/wikimedia";
+import NextAuth from "next-auth"
+import Wikimedia from "next-auth/providers/wikimedia"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Wikimedia],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Wikimedia from "@auth/sveltekit/providers/wikimedia";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Wikimedia from "@auth/sveltekit/providers/wikimedia"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Wikimedia],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Wikimedia from "@auth/express/providers/wikimedia";
+import ExpressAuth from "@auth/express"
+import Wikimedia from "@auth/express/providers/wikimedia"
 
-app.use("/auth/*", ExpressAuth({ providers: [Wikimedia] }));
+app.use("/auth/*", ExpressAuth({ providers: [Wikimedia] }))
 ```
 
   </Code.Express>

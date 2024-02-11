@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/keycloak.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_KEYCLOAK_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Keycloak from "next-auth/providers/keycloak";
+import NextAuth from "next-auth"
+import Keycloak from "next-auth/providers/keycloak"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Keycloak],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Keycloak from "@auth/sveltekit/providers/keycloak";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Keycloak from "@auth/sveltekit/providers/keycloak"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Keycloak],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Keycloak from "@auth/express/providers/keycloak";
+import ExpressAuth from "@auth/express"
+import Keycloak from "@auth/express/providers/keycloak"
 
-app.use("/auth/*", ExpressAuth({ providers: [Keycloak] }));
+app.use("/auth/*", ExpressAuth({ providers: [Keycloak] }))
 ```
 
   </Code.Express>

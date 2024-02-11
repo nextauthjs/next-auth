@@ -1,4 +1,4 @@
-import { Code } from "@/components/Code";
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/auth0.svg" width="64" height="64" />
 
@@ -28,34 +28,34 @@ AUTH_AUTH0_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Auth0 from "next-auth/providers/auth0";
+import NextAuth from "next-auth"
+import Auth0 from "next-auth/providers/auth0"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Auth0],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Auth0 from "@auth/sveltekit/providers/auth0";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Auth0 from "@auth/sveltekit/providers/auth0"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Auth0],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Auth0 from "@auth/express/providers/auth0";
+import ExpressAuth from "@auth/express"
+import Auth0 from "@auth/express/providers/auth0"
 
-app.use("/auth/*", ExpressAuth({ providers: [Auth0] }));
+app.use("/auth/*", ExpressAuth({ providers: [Auth0] }))
 ```
 
   </Code.Express>

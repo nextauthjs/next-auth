@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img
   align="right"
@@ -34,34 +34,34 @@ AUTH_UNITEDEFFECTS_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import UnitedEffects from "next-auth/providers/united-effects";
+import NextAuth from "next-auth"
+import UnitedEffects from "next-auth/providers/united-effects"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [UnitedEffects],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import UnitedEffects from "@auth/sveltekit/providers/united-effects";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import UnitedEffects from "@auth/sveltekit/providers/united-effects"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [UnitedEffects],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import UnitedEffects from "@auth/express/providers/united-effects";
+import ExpressAuth from "@auth/express"
+import UnitedEffects from "@auth/express/providers/united-effects"
 
-app.use("/auth/*", ExpressAuth({ providers: [UnitedEffects] }));
+app.use("/auth/*", ExpressAuth({ providers: [UnitedEffects] }))
 ```
 
   </Code.Express>

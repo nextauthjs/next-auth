@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/authentik.svg" height="64" width="64" />
 
@@ -42,11 +42,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
+```ts filename="/src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit";
 import Authentik from "@auth/sveltekit/providers/authentik";
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Authentik({
     clientId: AUTH_AUTHENTIK_CLIENT_ID
     clientSecret: AUTH_AUTHENTIK_CLIENT_SECRET

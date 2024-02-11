@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img
   align="right"
@@ -35,34 +35,34 @@ AUTH_DUENDE_IDENTITY_SERVER6_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import DuendeIdentityServer6 from "next-auth/providers/duende-identity-server6";
+import NextAuth from "next-auth"
+import DuendeIdentityServer6 from "next-auth/providers/duende-identity-server6"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [DuendeIdentityServer6],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import DuendeIdentityServer6 from "@auth/sveltekit/providers/duende-identity-server6";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import DuendeIdentityServer6 from "@auth/sveltekit/providers/duende-identity-server6"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [DuendeIdentityServer6],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import DuendeIdentityServer6 from "@auth/express/providers/duende-identity-server6";
+import ExpressAuth from "@auth/express"
+import DuendeIdentityServer6 from "@auth/express/providers/duende-identity-server6"
 
-app.use("/auth/*", ExpressAuth({ providers: [DuendeIdentityServer6] }));
+app.use("/auth/*", ExpressAuth({ providers: [DuendeIdentityServer6] }))
 ```
 
   </Code.Express>
@@ -83,14 +83,14 @@ If you want to try it out, you can copy and paste the configuration below.
 You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
 
 ```js filename=pages/api/auth/[...nextauth].js
-import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6";
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
 providers: [
   DuendeIDS6Provider({
     clientId: "interactive.confidential",
     clientSecret: "secret",
     issuer: "https://demo.duendesoftware.com",
   }),
-];
+]
 ```
 
 By default, Auth.js assumes that the DuendeIdentityServer6 provider is

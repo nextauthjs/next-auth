@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/passage.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_PASSAGE_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Passage from "next-auth/providers/passage";
+import NextAuth from "next-auth"
+import Passage from "next-auth/providers/passage"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Passage],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Passage from "@auth/sveltekit/providers/passage";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Passage from "@auth/sveltekit/providers/passage"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Passage],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Passage from "@auth/express/providers/passage";
+import ExpressAuth from "@auth/express"
+import Passage from "@auth/express/providers/passage"
 
-app.use("/auth/*", ExpressAuth({ providers: [Passage] }));
+app.use("/auth/*", ExpressAuth({ providers: [Passage] }))
 ```
 
   </Code.Express>

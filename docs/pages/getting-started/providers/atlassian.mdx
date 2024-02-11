@@ -1,4 +1,4 @@
-import { Code } from "@/components/Code";
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/atlassian.svg" width="64" height="64" />
 
@@ -28,34 +28,34 @@ AUTH_ATLASSIAN_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Atlassian from "next-auth/providers/atlassian";
+import NextAuth from "next-auth"
+import Atlassian from "next-auth/providers/atlassian"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Atlassian],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Atlassian from "@auth/sveltekit/providers/atlassian";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Atlassian from "@auth/sveltekit/providers/atlassian"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Atlassian],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Atlassian from "@auth/express/providers/atlassian";
+import ExpressAuth from "@auth/express"
+import Atlassian from "@auth/express/providers/atlassian"
 
-app.use("/auth/*", ExpressAuth({ providers: [Atlassian] }));
+app.use("/auth/*", ExpressAuth({ providers: [Atlassian] }))
 ```
 
   </Code.Express>

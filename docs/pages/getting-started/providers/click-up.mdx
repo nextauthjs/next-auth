@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/clickup.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_CLICKUP_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import ClickUp from "next-auth/providers/click-up";
+import NextAuth from "next-auth"
+import ClickUp from "next-auth/providers/click-up"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [ClickUp],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import ClickUp from "@auth/sveltekit/providers/click-up";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import ClickUp from "@auth/sveltekit/providers/click-up"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [ClickUp],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import ClickUp from "@auth/express/providers/click-up";
+import ExpressAuth from "@auth/express"
+import ClickUp from "@auth/express/providers/click-up"
 
-app.use("/auth/*", ExpressAuth({ providers: [ClickUp] }));
+app.use("/auth/*", ExpressAuth({ providers: [ClickUp] }))
 ```
 
   </Code.Express>

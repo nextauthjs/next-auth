@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/notion.svg" height="64" width="64" />
 
@@ -22,8 +22,8 @@ AUTH_NOTION_REDIRECT_URI
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Notion from "next-auth/providers/notion";
+import NextAuth from "next-auth"
+import Notion from "next-auth/providers/notion"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -33,22 +33,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       redirectUri: process.env.AUTH_NOTION_REDIRECT_URI,
     }),
   ],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Notion from "@auth/sveltekit/providers/notion";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Notion from "@auth/sveltekit/providers/notion"
 import {
   AUTH_NOTION_ID,
   AUTH_NOTION_SECRET,
   AUTH_NOTION_REDIRECT_URI,
-} from "$env/static/private";
+} from "$env/static/private"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Notion({
       clientId: AUTH_NOTION_ID,
@@ -56,15 +56,15 @@ export const { signIn, signOut, auth } = SvelteKitAuth(request, {
       redirectUri: AUTH_NOTION_REDIRECT_URI,
     }),
   ],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Notion from "@auth/express/providers/notion";
+import ExpressAuth from "@auth/express"
+import Notion from "@auth/express/providers/notion"
 
 app.use(
   "/auth/*",
@@ -77,7 +77,7 @@ app.use(
       }),
     ],
   })
-);
+)
 ```
 
   </Code.Express>

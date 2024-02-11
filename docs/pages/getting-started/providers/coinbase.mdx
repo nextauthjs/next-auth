@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/coinbase.svg" height="64" width="128" />
 
@@ -29,34 +29,34 @@ AUTH_COINBASE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Coinbase from "next-auth/providers/coinbase";
+import NextAuth from "next-auth"
+import Coinbase from "next-auth/providers/coinbase"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Coinbase],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Coinbase from "@auth/sveltekit/providers/coinbase";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Coinbase from "@auth/sveltekit/providers/coinbase"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Coinbase],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Coinbase from "@auth/express/providers/coinbase";
+import ExpressAuth from "@auth/express"
+import Coinbase from "@auth/express/providers/coinbase"
 
-app.use("/auth/*", ExpressAuth({ providers: [Coinbase] }));
+app.use("/auth/*", ExpressAuth({ providers: [Coinbase] }))
 ```
 
   </Code.Express>

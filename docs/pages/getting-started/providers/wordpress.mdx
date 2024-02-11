@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/wordpress.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_WORDPRESS_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Wordpress from "next-auth/providers/wordpress";
+import NextAuth from "next-auth"
+import Wordpress from "next-auth/providers/wordpress"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Wordpress],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Wordpress from "@auth/sveltekit/providers/wordpress";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Wordpress from "@auth/sveltekit/providers/wordpress"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Wordpress],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Wordpress from "@auth/express/providers/wordpress";
+import ExpressAuth from "@auth/express"
+import Wordpress from "@auth/express/providers/wordpress"
 
-app.use("/auth/*", ExpressAuth({ providers: [Wordpress] }));
+app.use("/auth/*", ExpressAuth({ providers: [Wordpress] }))
 ```
 
   </Code.Express>

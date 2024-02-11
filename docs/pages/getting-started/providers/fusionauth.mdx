@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/fusionauth.svg" height="64" width="64" />
 
@@ -28,8 +28,8 @@ AUTH_FUSIONAUTH_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import FusionAuth from "next-auth/providers/fusionauth";
+import NextAuth from "next-auth"
+import FusionAuth from "next-auth/providers/fusionauth"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -40,23 +40,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       issuer: process.env.AUTH_FUSIONAUTH_ISSUER,
     }),
   ],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import FusionAuth from "@auth/sveltekit/providers/fusionauth";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import FusionAuth from "@auth/sveltekit/providers/fusionauth"
 import {
   AUTH_FUSIONAUTH_ID,
   AUTH_FUSIONAUTH_SECRET,
   AUTH_FUSIONAUTH_TENANT_ID,
   AUTH_FUSIONAUTH_ISSUER,
-} from "$env/static/private";
+} from "$env/static/private"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     FusionAuth({
       clientId: AUTH_FUSIONAUTH_ID,
@@ -65,15 +65,15 @@ export const { signIn, signOut, auth } = SvelteKitAuth(request, {
       issuer: AUTH_FUSIONAUTH_ISSUER,
     }),
   ],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import FusionAuth from "@auth/express/providers/fusionauth";
+import ExpressAuth from "@auth/express"
+import FusionAuth from "@auth/express/providers/fusionauth"
 
 app.use(
   "/auth/*",
@@ -87,7 +87,7 @@ app.use(
       }),
     ],
   })
-);
+)
 ```
 
   </Code.Express>

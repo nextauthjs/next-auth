@@ -1,4 +1,4 @@
-import { Code } from "@/components/Code";
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/apple.svg" width="64" height="64" />
 
@@ -28,34 +28,34 @@ AUTH_APPLE_SECRET
   <Code.Next>
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import Apple from "next-auth/providers/apple";
+import NextAuth from "next-auth"
+import Apple from "next-auth/providers/apple"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Apple],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="./auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Apple from "@auth/sveltekit/providers/apple";
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Apple from "@auth/sveltekit/providers/apple"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Apple],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Apple from "@auth/express/providers/apple";
+import ExpressAuth from "@auth/express"
+import Apple from "@auth/express/providers/apple"
 
-app.use("/auth/*", ExpressAuth({ providers: [Apple] }));
+app.use("/auth/*", ExpressAuth({ providers: [Apple] }))
 ```
 
   </Code.Express>

@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/line.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_LINE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Line from "next-auth/providers/line";
+import NextAuth from "next-auth"
+import Line from "next-auth/providers/line"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Line],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Line from "@auth/sveltekit/providers/line";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Line from "@auth/sveltekit/providers/line"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Line],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Line from "@auth/express/providers/line";
+import ExpressAuth from "@auth/express"
+import Line from "@auth/express/providers/line"
 
-app.use("/auth/*", ExpressAuth({ providers: [Line] }));
+app.use("/auth/*", ExpressAuth({ providers: [Line] }))
 ```
 
   </Code.Express>

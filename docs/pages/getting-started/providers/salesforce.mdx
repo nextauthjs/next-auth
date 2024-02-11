@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/saleforce.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_SALESFORCE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Salesforce from "next-auth/providers/salesforce";
+import NextAuth from "next-auth"
+import Salesforce from "next-auth/providers/salesforce"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Salesforce],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Salesforce from "@auth/sveltekit/providers/salesforce";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Salesforce from "@auth/sveltekit/providers/salesforce"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Salesforce],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Salesforce from "@auth/express/providers/salesforce";
+import ExpressAuth from "@auth/express"
+import Salesforce from "@auth/express/providers/salesforce"
 
-app.use("/auth/*", ExpressAuth({ providers: [Salesforce] }));
+app.use("/auth/*", ExpressAuth({ providers: [Salesforce] }))
 ```
 
   </Code.Express>

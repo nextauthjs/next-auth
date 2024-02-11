@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/zitadel.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_ZITADEL_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Zitadel from "next-auth/providers/zitadel";
+import NextAuth from "next-auth"
+import Zitadel from "next-auth/providers/zitadel"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Zitadel],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Zitadel from "@auth/sveltekit/providers/zitadel";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Zitadel from "@auth/sveltekit/providers/zitadel"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Zitadel],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Zitadel from "@auth/express/providers/zitadel";
+import ExpressAuth from "@auth/express"
+import Zitadel from "@auth/express/providers/zitadel"
 
-app.use("/auth/*", ExpressAuth({ providers: [Zitadel] }));
+app.use("/auth/*", ExpressAuth({ providers: [Zitadel] }))
 ```
 
   </Code.Express>

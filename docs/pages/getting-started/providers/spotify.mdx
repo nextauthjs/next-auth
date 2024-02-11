@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/spotify.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_SPOTIFY_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Spotify from "next-auth/providers/spotify";
+import NextAuth from "next-auth"
+import Spotify from "next-auth/providers/spotify"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Spotify],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Spotify from "@auth/sveltekit/providers/spotify";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Spotify from "@auth/sveltekit/providers/spotify"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Spotify],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Spotify from "@auth/express/providers/spotify";
+import ExpressAuth from "@auth/express"
+import Spotify from "@auth/express/providers/spotify"
 
-app.use("/auth/*", ExpressAuth({ providers: [Spotify] }));
+app.use("/auth/*", ExpressAuth({ providers: [Spotify] }))
 ```
 
   </Code.Express>

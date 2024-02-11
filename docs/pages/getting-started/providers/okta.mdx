@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/okta.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_OKTA_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Okta from "next-auth/providers/okta";
+import NextAuth from "next-auth"
+import Okta from "next-auth/providers/okta"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Okta],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Okta from "@auth/sveltekit/providers/okta";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Okta from "@auth/sveltekit/providers/okta"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Okta],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Okta from "@auth/express/providers/okta";
+import ExpressAuth from "@auth/express"
+import Okta from "@auth/express/providers/okta"
 
-app.use("/auth/*", ExpressAuth({ providers: [Okta] }));
+app.use("/auth/*", ExpressAuth({ providers: [Okta] }))
 ```
 
   </Code.Express>

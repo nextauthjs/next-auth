@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/freshbooks.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_FRESHBOOKS_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import FreshBooks from "next-auth/providers/freshbooks";
+import NextAuth from "next-auth"
+import FreshBooks from "next-auth/providers/freshbooks"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [FreshBooks],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import FreshBooks from "@auth/sveltekit/providers/freshbooks";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import FreshBooks from "@auth/sveltekit/providers/freshbooks"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [FreshBooks],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import FreshBooks from "@auth/express/providers/freshbooks";
+import ExpressAuth from "@auth/express"
+import FreshBooks from "@auth/express/providers/freshbooks"
 
-app.use("/auth/*", ExpressAuth({ providers: [FreshBooks] }));
+app.use("/auth/*", ExpressAuth({ providers: [FreshBooks] }))
 ```
 
   </Code.Express>

@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/mailru.svg" height="64" width="128" />
 
@@ -29,34 +29,34 @@ AUTH_MAILRU_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import MailRu from "next-auth/providers/mailru";
+import NextAuth from "next-auth"
+import MailRu from "next-auth/providers/mailru"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [MailRu],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import MailRu from "@auth/sveltekit/providers/mailru";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import MailRu from "@auth/sveltekit/providers/mailru"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [MailRu],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import MailRu from "@auth/express/providers/mailru";
+import ExpressAuth from "@auth/express"
+import MailRu from "@auth/express/providers/mailru"
 
-app.use("/auth/*", ExpressAuth({ providers: [MailRu] }));
+app.use("/auth/*", ExpressAuth({ providers: [MailRu] }))
 ```
 
   </Code.Express>

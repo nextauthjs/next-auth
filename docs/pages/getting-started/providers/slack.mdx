@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/slack.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_SLACK_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Slack from "next-auth/providers/slack";
+import NextAuth from "next-auth"
+import Slack from "next-auth/providers/slack"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Slack],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Slack from "@auth/sveltekit/providers/slack";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Slack from "@auth/sveltekit/providers/slack"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Slack],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Slack from "@auth/express/providers/slack";
+import ExpressAuth from "@auth/express"
+import Slack from "@auth/express/providers/slack"
 
-app.use("/auth/*", ExpressAuth({ providers: [Slack] }));
+app.use("/auth/*", ExpressAuth({ providers: [Slack] }))
 ```
 
   </Code.Express>

@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/box.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_BOX_CLIENT_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Box from "next-auth/providers/box";
+import NextAuth from "next-auth"
+import Box from "next-auth/providers/box"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Box],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Box from "@auth/sveltekit/providers/box";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Box from "@auth/sveltekit/providers/box"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Box],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Box from "@auth/express/providers/box";
+import ExpressAuth from "@auth/express"
+import Box from "@auth/express/providers/box"
 
-app.use("/auth/*", ExpressAuth({ providers: [Box] }));
+app.use("/auth/*", ExpressAuth({ providers: [Box] }))
 ```
 
   </Code.Express>

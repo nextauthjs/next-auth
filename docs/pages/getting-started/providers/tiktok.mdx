@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/tiktok.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_TIKTOK_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import TikTok from "next-auth/providers/tiktok";
+import NextAuth from "next-auth"
+import TikTok from "next-auth/providers/tiktok"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [TikTok],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import TikTok from "@auth/sveltekit/providers/tiktok";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import TikTok from "@auth/sveltekit/providers/tiktok"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [TikTok],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import TikTok from "@auth/express/providers/tiktok";
+import ExpressAuth from "@auth/express"
+import TikTok from "@auth/express/providers/tiktok"
 
-app.use("/auth/*", ExpressAuth({ providers: [TikTok] }));
+app.use("/auth/*", ExpressAuth({ providers: [TikTok] }))
 ```
 
   </Code.Express>

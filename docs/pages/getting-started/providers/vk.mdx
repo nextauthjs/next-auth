@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/vk.svg" width="64" height="64" />
 
@@ -29,34 +29,34 @@ AUTH_VK_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Vk from "next-auth/providers/vk";
+import NextAuth from "next-auth"
+import Vk from "next-auth/providers/vk"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Vk],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Vk from "@auth/sveltekit/providers/vk";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Vk from "@auth/sveltekit/providers/vk"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Vk],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Vk from "@auth/express/providers/vk";
+import ExpressAuth from "@auth/express"
+import Vk from "@auth/express/providers/vk"
 
-app.use("/auth/*", ExpressAuth({ providers: [Vk] }));
+app.use("/auth/*", ExpressAuth({ providers: [Vk] }))
 ```
 
   </Code.Express>
@@ -80,7 +80,7 @@ By default the provider uses 5.126 version of the API. See https://vk.com/dev/ve
 If you want to use a different version, you can pass it to provider's options object:
 
 ```js filename="pages/api/auth/[...nextauth].js"
-const apiVersion = "5.126";
+const apiVersion = "5.126"
 providers: [
   VkProvider({
     accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
@@ -88,7 +88,7 @@ providers: [
     authorizationUrl: `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
     profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
   }),
-];
+]
 ```
 
 </Callout>

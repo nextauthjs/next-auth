@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/bungie.svg" height="64" width="64" />
 
@@ -44,11 +44,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
+```ts filename="/src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit";
 import Bungie from "@auth/sveltekit/providers/boxyhq-saml";
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Bungie({
       clientId: AUTH_BUNGIE_ID
@@ -161,29 +161,29 @@ Create directory `certificates` and place `localhost.key` and `localhost.crt`
 You can create a `server.js` in the root of your project and run it with `node server.js` to test Sign in with Bungie integration locally:
 
 ```js
-const { createServer } = require("https");
-const { parse } = require("url");
-const next = require("next");
-const fs = require("fs");
+const { createServer } = require("https")
+const { parse } = require("url")
+const next = require("next")
+const fs = require("fs")
 
-const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
+const dev = process.env.NODE_ENV !== "production"
+const app = next({ dev })
+const handle = app.getRequestHandler()
 
 const httpsOptions = {
   key: fs.readFileSync("./certificates/localhost.key"),
   cert: fs.readFileSync("./certificates/localhost.crt"),
-};
+}
 
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
-    const parsedUrl = parse(req.url, true);
-    handle(req, res, parsedUrl);
+    const parsedUrl = parse(req.url, true)
+    handle(req, res, parsedUrl)
   }).listen(3000, (err) => {
-    if (err) throw err;
-    console.log("> Ready on https://localhost:3000");
-  });
-});
+    if (err) throw err
+    console.log("> Ready on https://localhost:3000")
+  })
+})
 ```
 
 ### Notes

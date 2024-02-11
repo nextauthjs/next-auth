@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img
   align="right"
@@ -29,39 +29,39 @@ AUTH_BEYOND_IDENTITY_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import BeyondIdentity from "next-auth/providers/beyondidentity";
+import NextAuth from "next-auth"
+import BeyondIdentity from "next-auth/providers/beyondidentity"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [BeyondIdentity],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import BeyondIdentity from "@auth/sveltekit/providers/beyondidentity";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import BeyondIdentity from "@auth/sveltekit/providers/beyondidentity"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [BeyondIdentity],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import BeyondIdentity from "@auth/express/providers/beyondidentity";
+import ExpressAuth from "@auth/express"
+import BeyondIdentity from "@auth/express/providers/beyondidentity"
 
 app.use(
   "/auth/*",
   ExpressAuth({
     providers: [BeyondIdentity],
   })
-);
+)
 ```
 
   </Code.Express>

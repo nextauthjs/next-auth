@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/naver.svg" height="64" width="128" />
 
@@ -29,34 +29,34 @@ AUTH_NAVER_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Naver from "next-auth/providers/naver";
+import NextAuth from "next-auth"
+import Naver from "next-auth/providers/naver"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Naver],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Naver from "@auth/sveltekit/providers/naver";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Naver from "@auth/sveltekit/providers/naver"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Naver],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Naver from "@auth/express/providers/naver";
+import ExpressAuth from "@auth/express"
+import Naver from "@auth/express/providers/naver"
 
-app.use("/auth/*", ExpressAuth({ providers: [Naver] }));
+app.use("/auth/*", ExpressAuth({ providers: [Naver] }))
 ```
 
   </Code.Express>

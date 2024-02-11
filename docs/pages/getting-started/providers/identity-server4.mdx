@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img
   align="right"
@@ -35,34 +35,34 @@ AUTH_IDENTITY_SERVER4_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import IdentityServer4 from "next-auth/providers/identity-server4";
+import NextAuth from "next-auth"
+import IdentityServer4 from "next-auth/providers/identity-server4"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [IdentityServer4],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import IdentityServer4 from "@auth/sveltekit/providers/identity-server4";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import IdentityServer4 from "@auth/sveltekit/providers/identity-server4"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [IdentityServer4],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import IdentityServer4 from "@auth/express/providers/identity-server4";
+import ExpressAuth from "@auth/express"
+import IdentityServer4 from "@auth/express/providers/identity-server4"
 
-app.use("/auth/*", ExpressAuth({ providers: [IdentityServer4] }));
+app.use("/auth/*", ExpressAuth({ providers: [IdentityServer4] }))
 ```
 
   </Code.Express>

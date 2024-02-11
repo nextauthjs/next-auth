@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img
   align="right"
@@ -38,8 +38,8 @@ AUTH_BOXYHQ_SAML_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import BoxyHQ from "next-auth/providers/boxyhq-saml";
+import NextAuth from "next-auth"
+import BoxyHQ from "next-auth/providers/boxyhq-saml"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -50,17 +50,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       issuer: AUTH_BOXYHQ_SAML_ISSUER,
     }),
   ],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import BoxyHQ from "@auth/sveltekit/providers/boxyhq-saml";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import BoxyHQ from "@auth/sveltekit/providers/boxyhq-saml"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     BoxyHQ({
       authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
@@ -69,15 +69,15 @@ export const { signIn, signOut, auth } = SvelteKitAuth(request, {
       issuer: AUTH_BOXYHQ_SAML_ISSUER,
     }),
   ],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import BoxyHQ from "@auth/express/providers/boxyhq-saml";
+import ExpressAuth from "@auth/express"
+import BoxyHQ from "@auth/express/providers/boxyhq-saml"
 
 app.use(
   "/auth/*",
@@ -91,7 +91,7 @@ app.use(
       }),
     ],
   })
-);
+)
 ```
 
   </Code.Express>
@@ -103,12 +103,12 @@ Auth.js will automatically pick up the environment variables for `clientId`, `cl
 `issuer` for OIDC providers, so your setup can look like this:
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import BoxyHQ from "next-auth/providers/boxyhq-saml";
+import NextAuth from "next-auth"
+import BoxyHQ from "next-auth/providers/boxyhq-saml"
 
 export const { handlers, signIn, signOut, auth } = await NextAuth(request, {
   providers: [BoxyHQ],
-});
+})
 ```
 
 ### Resources

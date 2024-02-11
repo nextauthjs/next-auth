@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/reddit.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_REDDIT_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Reddit from "next-auth/providers/reddit";
+import NextAuth from "next-auth"
+import Reddit from "next-auth/providers/reddit"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Reddit],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Reddit from "@auth/sveltekit/providers/reddit";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Reddit from "@auth/sveltekit/providers/reddit"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Reddit],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Reddit from "@auth/express/providers/reddit";
+import ExpressAuth from "@auth/express"
+import Reddit from "@auth/express/providers/reddit"
 
-app.use("/auth/*", ExpressAuth({ providers: [Reddit] }));
+app.use("/auth/*", ExpressAuth({ providers: [Reddit] }))
 ```
 
   </Code.Express>
@@ -94,7 +94,7 @@ providers: [
       },
     },
   }),
-];
+]
 ```
 
 </Callout>

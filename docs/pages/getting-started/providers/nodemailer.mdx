@@ -129,7 +129,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 
-export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Nodemailer({

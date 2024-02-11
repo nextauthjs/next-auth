@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/descope.svg" width="64" height="64" />
 
@@ -29,34 +29,34 @@ AUTH_DESCOPE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Descope from "next-auth/providers/descope";
+import NextAuth from "next-auth"
+import Descope from "next-auth/providers/descope"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Descope],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Descope from "@auth/sveltekit/providers/descope";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Descope from "@auth/sveltekit/providers/descope"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Descope],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Descope from "@auth/express/providers/descope";
+import ExpressAuth from "@auth/express"
+import Descope from "@auth/express/providers/descope"
 
-app.use("/auth/*", ExpressAuth({ providers: [Descope] }));
+app.use("/auth/*", ExpressAuth({ providers: [Descope] }))
 ```
 
   </Code.Express>

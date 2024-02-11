@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/workos.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_WORKOS_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import WorkOS from "next-auth/providers/workos";
+import NextAuth from "next-auth"
+import WorkOS from "next-auth/providers/workos"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [WorkOS],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import WorkOS from "@auth/sveltekit/providers/workos";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import WorkOS from "@auth/sveltekit/providers/workos"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [WorkOS],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import WorkOS from "@auth/express/providers/workos";
+import ExpressAuth from "@auth/express"
+import WorkOS from "@auth/express/providers/workos"
 
-app.use("/auth/*", ExpressAuth({ providers: [WorkOS] }));
+app.use("/auth/*", ExpressAuth({ providers: [WorkOS] }))
 ```
 
   </Code.Express>
@@ -89,11 +89,11 @@ We can then add a custom login page that displays an input where the user can en
 We then extract the domain from the user's email address and pass it to the `authorizationParams` parameter on the `signIn` function:
 
 ```js filename="pages/auth/signin.js"
-import { useState } from "react";
-import { getProviders, signIn } from "next-auth/react";
+import { useState } from "react"
+import { getProviders, signIn } from "next-auth/react"
 
 export default function SignIn({ providers }) {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("")
 
   return (
     <>
@@ -117,7 +117,7 @@ export default function SignIn({ providers }) {
                 Sign in with SSO
               </button>
             </div>
-          );
+          )
         }
 
         return (
@@ -126,17 +126,17 @@ export default function SignIn({ providers }) {
               Sign in with {provider.name}
             </button>
           </div>
-        );
+        )
       })}
     </>
-  );
+  )
 }
 
 export async function getServerSideProps(context) {
-  const providers = await getProviders();
+  const providers = await getProviders()
   return {
     props: { providers },
-  };
+  }
 }
 ```
 

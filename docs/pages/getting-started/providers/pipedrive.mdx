@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/pipedrive.svg" height="64" width="128" />
 
@@ -29,34 +29,34 @@ AUTH_PIPEDRIVE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import PipeDrive from "next-auth/providers/pipedrive";
+import NextAuth from "next-auth"
+import PipeDrive from "next-auth/providers/pipedrive"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [PipeDrive],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import PipeDrive from "@auth/sveltekit/providers/pipedrive";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import PipeDrive from "@auth/sveltekit/providers/pipedrive"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [PipeDrive],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import PipeDrive from "@auth/express/providers/pipedrive";
+import ExpressAuth from "@auth/express"
+import PipeDrive from "@auth/express/providers/pipedrive"
 
-app.use("/auth/*", ExpressAuth({ providers: [PipeDrive] }));
+app.use("/auth/*", ExpressAuth({ providers: [PipeDrive] }))
 ```
 
   </Code.Express>

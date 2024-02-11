@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/google.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_GOOGLE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Google],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Google from "@auth/sveltekit/providers/google";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Google],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Google from "@auth/express/providers/google";
+import ExpressAuth from "@auth/express"
+import Google from "@auth/express/providers/google"
 
-app.use("/auth/*", ExpressAuth({ providers: [Google] }));
+app.use("/auth/*", ExpressAuth({ providers: [Google] }))
 ```
 
   </Code.Express>
@@ -102,7 +102,7 @@ const options = {
       },
     }),
   ],
-};
+}
 ```
 
 </Callout>

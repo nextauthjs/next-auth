@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/github.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_GITHUB_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [GitHub],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import GitHub from "@auth/sveltekit/providers/github";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from "@auth/sveltekit/providers/github"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [GitHub],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import GitHub from "@auth/express/providers/github";
+import ExpressAuth from "@auth/express"
+import GitHub from "@auth/express/providers/github"
 
-app.use("/auth/*", ExpressAuth({ providers: [GitHub] }));
+app.use("/auth/*", ExpressAuth({ providers: [GitHub] }))
 ```
 
   </Code.Express>

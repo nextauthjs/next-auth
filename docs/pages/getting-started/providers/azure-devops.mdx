@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img
   align="right"
@@ -77,11 +77,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
+```ts filename="/src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit";
 import AzureDevOps from "@auth/sveltekit/providers/azure-devops";
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [AzureDevOps({
     clientId: AUTH_AZURE_DEVOPS_APP_ID
     clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET
@@ -118,10 +118,10 @@ export const { signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, account }) {
       // The token has an absolute expiration time
-      const accessTokenExpires = account.expires_at * 1000;
+      const accessTokenExpires = account.expires_at * 1000
     },
   },
-});
+})
 
 async function refreshAccessToken(token) {
   const response = await fetch(
@@ -139,9 +139,9 @@ async function refreshAccessToken(token) {
           process.env.NEXTAUTH_URL + "/api/auth/callback/azure-devops",
       }),
     }
-  );
+  )
 
   // The refreshed token comes with a relative expiration time
-  const accessTokenExpires = Date.now() + newToken.expires_in * 1000;
+  const accessTokenExpires = Date.now() + newToken.expires_in * 1000
 }
 ```

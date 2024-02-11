@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/yandex.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_YANDEX_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Yandex from "next-auth/providers/yandex";
+import NextAuth from "next-auth"
+import Yandex from "next-auth/providers/yandex"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Yandex],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Yandex from "@auth/sveltekit/providers/yandex";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Yandex from "@auth/sveltekit/providers/yandex"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Yandex],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Yandex from "@auth/express/providers/yandex";
+import ExpressAuth from "@auth/express"
+import Yandex from "@auth/express/providers/yandex"
 
-app.use("/auth/*", ExpressAuth({ providers: [Yandex] }));
+app.use("/auth/*", ExpressAuth({ providers: [Yandex] }))
 ```
 
   </Code.Express>

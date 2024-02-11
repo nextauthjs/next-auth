@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/linkedin.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_LINKEDIN_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import LinkedIn from "next-auth/providers/linkedin";
+import NextAuth from "next-auth"
+import LinkedIn from "next-auth/providers/linkedin"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [LinkedIn],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import LinkedIn from "@auth/sveltekit/providers/linkedin";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import LinkedIn from "@auth/sveltekit/providers/linkedin"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [LinkedIn],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import LinkedIn from "@auth/express/providers/linkedin";
+import ExpressAuth from "@auth/express"
+import LinkedIn from "@auth/express/providers/linkedin"
 
-app.use("/auth/*", ExpressAuth({ providers: [LinkedIn] }));
+app.use("/auth/*", ExpressAuth({ providers: [LinkedIn] }))
 ```
 
   </Code.Express>

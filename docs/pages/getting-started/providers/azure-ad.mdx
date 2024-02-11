@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/azure.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_AZURE_AD_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import AzureAd from "next-auth/providers/azure-ad";
+import NextAuth from "next-auth"
+import AzureAd from "next-auth/providers/azure-ad"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [AzureAd],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import AzureAd from "@auth/sveltekit/providers/azure-ad";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import AzureAd from "@auth/sveltekit/providers/azure-ad"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [AzureAd],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import AzureAd from "@auth/express/providers/azure-ad";
+import ExpressAuth from "@auth/express"
+import AzureAd from "@auth/express/providers/azure-ad"
 
-app.use("/auth/*", ExpressAuth({ providers: [AzureAd] }));
+app.use("/auth/*", ExpressAuth({ providers: [AzureAd] }))
 ```
 
   </Code.Express>

@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/instagram.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_INSTAGRAM_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Instagram from "next-auth/providers/instagram";
+import NextAuth from "next-auth"
+import Instagram from "next-auth/providers/instagram"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Instagram],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Instagram from "@auth/sveltekit/providers/instagram";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Instagram from "@auth/sveltekit/providers/instagram"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Instagram],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Instagram from "@auth/express/providers/instagram";
+import ExpressAuth from "@auth/express"
+import Instagram from "@auth/express/providers/instagram"
 
-app.use("/auth/*", ExpressAuth({ providers: [Instagram] }));
+app.use("/auth/*", ExpressAuth({ providers: [Instagram] }))
 ```
 
   </Code.Express>

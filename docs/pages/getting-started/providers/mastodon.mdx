@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/mastodon.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_MASTODON_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Mastodon from "next-auth/providers/mastodon";
+import NextAuth from "next-auth"
+import Mastodon from "next-auth/providers/mastodon"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Mastodon],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Mastodon from "@auth/sveltekit/providers/mastodon";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Mastodon from "@auth/sveltekit/providers/mastodon"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Mastodon],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Mastodon from "@auth/express/providers/mastodon";
+import ExpressAuth from "@auth/express"
+import Mastodon from "@auth/express/providers/mastodon"
 
-app.use("/auth/*", ExpressAuth({ providers: [Mastodon] }));
+app.use("/auth/*", ExpressAuth({ providers: [Mastodon] }))
 ```
 
   </Code.Express>

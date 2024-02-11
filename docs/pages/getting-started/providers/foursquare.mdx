@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/foursquare.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_FOURSQUARE_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import FourSquare from "next-auth/providers/foursquare";
+import NextAuth from "next-auth"
+import FourSquare from "next-auth/providers/foursquare"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [FourSquare],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import FourSquare from "@auth/sveltekit/providers/foursquare";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import FourSquare from "@auth/sveltekit/providers/foursquare"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [FourSquare],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import FourSquare from "@auth/express/providers/foursquare";
+import ExpressAuth from "@auth/express"
+import FourSquare from "@auth/express/providers/foursquare"
 
-app.use("/auth/*", ExpressAuth({ providers: [FourSquare] }));
+app.use("/auth/*", ExpressAuth({ providers: [FourSquare] }))
 ```
 
   </Code.Express>

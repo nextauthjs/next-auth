@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/todoist.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_TODOIST_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Todoist from "next-auth/providers/todoist";
+import NextAuth from "next-auth"
+import Todoist from "next-auth/providers/todoist"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Todoist],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Todoist from "@auth/sveltekit/providers/todoist";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Todoist from "@auth/sveltekit/providers/todoist"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Todoist],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Todoist from "@auth/express/providers/todoist";
+import ExpressAuth from "@auth/express"
+import Todoist from "@auth/express/providers/todoist"
 
-app.use("/auth/*", ExpressAuth({ providers: [Todoist] }));
+app.use("/auth/*", ExpressAuth({ providers: [Todoist] }))
 ```
 
   </Code.Express>

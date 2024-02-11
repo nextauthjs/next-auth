@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/twitch.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_TWITCH_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Twitch from "next-auth/providers/twitch";
+import NextAuth from "next-auth"
+import Twitch from "next-auth/providers/twitch"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Twitch],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Twitch from "@auth/sveltekit/providers/twitch";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Twitch from "@auth/sveltekit/providers/twitch"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Twitch],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Twitch from "@auth/express/providers/twitch";
+import ExpressAuth from "@auth/express"
+import Twitch from "@auth/express/providers/twitch"
 
-app.use("/auth/*", ExpressAuth({ providers: [Twitch] }));
+app.use("/auth/*", ExpressAuth({ providers: [Twitch] }))
 ```
 
   </Code.Express>

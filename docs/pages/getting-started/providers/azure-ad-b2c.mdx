@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/azure.svg" height="64" width="64" />
 
@@ -60,11 +60,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
+```ts filename="/src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit";
 import AzureADB2C from "@auth/sveltekit/providers/azure-ad-b2c";
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [AzureADB2C({
     clientId: AUTH_AZURE_AD_CLIENT_ID
     clientSecret: AUTH_AZURE_AD_CLIENT_SECRET

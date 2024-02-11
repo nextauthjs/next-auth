@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/kakao.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_KAKAO_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Kakao from "next-auth/providers/kakao";
+import NextAuth from "next-auth"
+import Kakao from "next-auth/providers/kakao"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Kakao],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Kakao from "@auth/sveltekit/providers/kakao";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Kakao from "@auth/sveltekit/providers/kakao"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Kakao],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Kakao from "@auth/express/providers/kakao";
+import ExpressAuth from "@auth/express"
+import Kakao from "@auth/express/providers/kakao"
 
-app.use("/auth/*", ExpressAuth({ providers: [Kakao] }));
+app.use("/auth/*", ExpressAuth({ providers: [Kakao] }))
 ```
 
   </Code.Express>

@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/osso.svg" height="64" width="64" />
 
@@ -30,34 +30,34 @@ AUTH_OSSO_ISSUER
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Osso from "next-auth/providers/osso";
+import NextAuth from "next-auth"
+import Osso from "next-auth/providers/osso"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Osso],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Osso from "@auth/sveltekit/providers/osso";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Osso from "@auth/sveltekit/providers/osso"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Osso],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Osso from "@auth/express/providers/osso";
+import ExpressAuth from "@auth/express"
+import Osso from "@auth/express/providers/osso"
 
-app.use("/auth/*", ExpressAuth({ providers: [Osso] }));
+app.use("/auth/*", ExpressAuth({ providers: [Osso] }))
 ```
 
   </Code.Express>

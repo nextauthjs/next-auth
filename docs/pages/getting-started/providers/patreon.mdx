@@ -1,5 +1,5 @@
-import { Callout } from "nextra/components";
-import { Code } from "@/components/Code";
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/patreon.svg" height="64" width="64" />
 
@@ -29,34 +29,34 @@ AUTH_PATREON_SECRET
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import Patreon from "next-auth/providers/patreon";
+import NextAuth from "next-auth"
+import Patreon from "next-auth/providers/patreon"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Patreon],
-});
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
-```ts filename="/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import Patreon from "@auth/sveltekit/providers/patreon";
+```ts filename="/src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Patreon from "@auth/sveltekit/providers/patreon"
 
-export const { signIn, signOut, auth } = SvelteKitAuth(request, {
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Patreon],
-});
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import Patreon from "@auth/express/providers/patreon";
+import ExpressAuth from "@auth/express"
+import Patreon from "@auth/express/providers/patreon"
 
-app.use("/auth/*", ExpressAuth({ providers: [Patreon] }));
+app.use("/auth/*", ExpressAuth({ providers: [Patreon] }))
 ```
 
   </Code.Express>
