@@ -26,7 +26,7 @@ export function SelectProvider() {
             handleSearchItem(e.target.value)
           }
         />
-        {items.length && term ? (
+        {term ? (
           <Ariakit.ComboboxPopover
             gutter={4}
             sameWidth
@@ -47,14 +47,10 @@ export function SelectProvider() {
               </Ariakit.ComboboxItem>
             ))}
           </Ariakit.ComboboxPopover>
-        ) : !term ? (
+        ) : (
           <>
             <p className="mt-8 rounded-md">
-              <strong>
-                ↑ Type and select a provider to see its setup instructions.
-              </strong>{" "}
-              Otherwise, here are some suggested OAuth providers, click on any
-              of them to see the provider's setup instructions:
+              Or jump directly to one of the popular ones below.
             </p>
             <div className="flex flex-row gap-6 pb-8 mt-8">
               <div
@@ -104,7 +100,7 @@ export function SelectProvider() {
                 role="button"
                 className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
                 onClick={() =>
-                  handleSelectOption({ id: "auth0", name: "Auth0" })
+                  handleSelectOption({ id: "github", name: "Github" })
                 }
               >
                 <img src={`/img/providers/github.svg`} className="mt-2 w-11" />
@@ -112,12 +108,16 @@ export function SelectProvider() {
               </div>
             </div>
           </>
-        ) : (
-          <p className="py-2 px-4 mt-6 bg-violet-100 rounded-md dark:bg-violet-400/40 dark:text-neutral-900">
-            Can't find the OAuth provider you're looking for? Then, you'll need
-            to <Link href="/guides/custom-oauth">build your own provider</Link>.
-          </p>
         )}
+        {term && items.length === 0 ? (
+          <p className="py-2 px-4 mt-6 bg-violet-100 rounded-md dark:bg-violet-400/40 dark:text-neutral-900">
+            Can't find the OAuth provider you're looking for? You can always{" "}
+            <Link href="/guides/configuring-oauth-providers#adding-a-new-built-in-provider">
+              build your own
+            </Link>
+            .
+          </p>
+        ) : null}
       </Ariakit.ComboboxProvider>
       {selected ? (
         <OAuthInstructions

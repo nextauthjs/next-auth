@@ -68,7 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 
-export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Nodemailer({
       server: process.env.EMAIL_SERVER,
@@ -76,6 +76,10 @@ export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
     }),
   ],
 })
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
 ```
 
 </Code.Svelte>
@@ -123,7 +127,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 
-export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Nodemailer({
       server: {

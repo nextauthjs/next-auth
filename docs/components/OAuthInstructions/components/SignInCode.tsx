@@ -100,8 +100,9 @@ export const actions: Actions = { default: signIn }
           <NXCode>
             <span
               dangerouslySetInnerHTML={{
-                __html: highlight(`<script lang="ts">
-  import {SignIn} from "@auth/sveltekit/components"
+                __html: highlight(`
+<script lang="ts">
+   import { SignIn } from "@auth/sveltekit/components"
 </script>
 
 <div>

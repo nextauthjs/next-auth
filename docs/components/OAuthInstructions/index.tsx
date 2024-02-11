@@ -76,28 +76,29 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
         <Code.Svelte>
           <Pre>
             <NXCode>
-              <span>{`[origin]/api/callback/${providerId}`}</span>
+              <span>{`[origin]/auth/callback/${providerId}`}</span>
             </NXCode>
           </Pre>
         </Code.Svelte>
         <Code.Express>
           <Pre>
             <NXCode>
-              <span>{`[origin]/api/auth/callback/${providerId}`}</span>
+              <span>{`[origin]/auth/callback/${providerId}`}</span>
             </NXCode>
           </Pre>
         </Code.Express>
       </Code>
       <Callout type="info">
-        Replace "origin" with the URL your application is accessed. If it's
-        running locally that might be for example "http://localhost:3000",
-        otherwise the URL of your app.
+        Replace <code>origin</code> with the URL your application is accessed.
+        If it's running locally that might be for example
+        <code>http://localhost:3000</code>, otherwise the URL of your
+        application with schema (i.e. <code>https://</code>).
       </Callout>
       <Callout type="info">
-        Note that, when deploying your application to production, you'll need to
-        update the callback URL on {providerName} dashboard to point to your
-        application's URL. If you want to test OAuth in multiple environments,
-        then you'll to register multiple OAuth apps.
+        Many providers only allow you to register one callback URL at a time.
+        Therefore, if you want to have an active OAuth configuration for
+        development and production URLs, you'll need to register a second OAuth
+        app in the {providerName} dashboard for the other environment(s).
       </Callout>
       {/* Step 2 */}
       <StepTitle>Setup Environment Variables</StepTitle>
@@ -208,13 +209,13 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
       <StepTitle>Ship it!</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
         Click the “Sign in with {providerName}" button and if all went well, you
-        should be redirected to ${providerName} and once authenticated,
+        should be redirected to {providerName} and once authenticated,
         redirected back to the app!
       </p>
       <Callout>
         You can build your own Signin, Signout, etc. pages to match the style of
         your application, check out{" "}
-        <Link href="/getting-started/session-management">
+        <Link href="/getting-started/session-management?tab=custom-pages">
           session management
         </Link>{" "}
         for more details.
