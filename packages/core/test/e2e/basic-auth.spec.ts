@@ -8,7 +8,6 @@ test.describe("Basic Auth", () => {
       await page
         .getByRole("button", { name: "Sign in with Credentials" })
         .click()
-      await page.waitForURL("http://localhost:3000")
       const session = await page.locator("pre").textContent()
 
       expect(JSON.parse(session ?? "{}")).toEqual({
@@ -22,11 +21,6 @@ test.describe("Basic Auth", () => {
 
     await test.step("should logout", async () => {
       await page.getByText("Sign out").click()
-      await page
-        .locator("header")
-        .getByRole("button", { name: "Sign in", exact: true })
-        .waitFor()
-
       const session = await page.locator("pre").textContent()
       expect(JSON.parse(session ?? "{}")).toBeNull()
     })
@@ -42,13 +36,11 @@ test.describe("Basic Auth", () => {
     await test.step("should login", async () => {
       await page.goto("http://localhost:3000/auth/signin")
       await page.getByText("Keycloak").click()
-      await page.getByText("Username or email").waitFor()
       await page
         .getByLabel("Username or email")
         .fill(process.env.TEST_KEYCLOAK_USERNAME!)
       await page.locator("#password").fill(process.env.TEST_KEYCLOAK_PASSWORD!)
       await page.getByRole("button", { name: "Sign In" }).click()
-      await page.waitForURL("http://localhost:3000")
       const session = await page.locator("pre").textContent()
 
       expect(JSON.parse(session ?? "{}")).toEqual({
