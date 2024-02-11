@@ -14,30 +14,14 @@ export function Header({
   return (
     <header className={styles.header}>
       <div className={styles.signedInStatus}>
-        {!session?.user && (
+        <img
+          src={
+            session?.user?.image ?? "https://source.boringavatars.com/beam/120"
+          }
+          className={styles.avatar}
+        />
+        {session?.user ? (
           <>
-            <img
-              src={
-                session?.user?.image ??
-                "https://source.boringavatars.com/beam/120"
-              }
-              className={styles.avatar}
-            />
-            <span className={styles.notSignedInText}>
-              You are not signed in
-            </span>
-            {signIn}
-          </>
-        )}
-        {session?.user && (
-          <>
-            <img
-              src={
-                session?.user?.image ??
-                "https://source.boringavatars.com/beam/120"
-              }
-              className={styles.avatar}
-            />
             <span className={styles.signedInText}>
               <small>Signed in as</small>
               <br />
@@ -45,6 +29,13 @@ export function Header({
               {session.user?.name ? `(${session.user.name})` : null}
             </span>
             {signOut}
+          </>
+        ) : (
+          <>
+            <span className={styles.notSignedInText}>
+              You are not signed in
+            </span>
+            {signIn}
           </>
         )}
       </div>
