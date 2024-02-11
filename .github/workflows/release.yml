@@ -89,7 +89,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Run tests
-        if: false
         run: pnpm test
         timeout-minutes: 15
         env:
@@ -122,17 +121,15 @@ jobs:
           AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
-      - run: |
-          pwd
-          ls -lah packages/utils/test-results/
       - uses: actions/upload-artifact@v4
-        continue-on-error: true
+        if: failure()
         name: Upload Playwright artifacts
         with:
           name: playwright-traces
           path: "**/packages/utils/test-results/*/trace.zip"
           retention-days: 7
       - uses: codecov/codecov-action@v3
+        if: always()
         name: Coverage
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
