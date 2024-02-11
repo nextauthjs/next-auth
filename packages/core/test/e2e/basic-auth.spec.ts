@@ -11,7 +11,6 @@ test.describe("Basic Auth", () => {
       await page.waitForURL("http://localhost:3000")
       const session = await page.locator("pre").textContent()
 
-      console.log(session)
       expect(JSON.parse(session ?? "{}")).toEqual({
         user: {
           email: "test@example.com",
