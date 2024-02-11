@@ -20,7 +20,11 @@ test.describe("Basic Auth", () => {
     })
 
     await test.step("should logout", async () => {
-      await page.getByText("Sign out").click()
+      await page
+        .getByRole("banner")
+        .getByRole("button", { name: "Sign out" })
+        .click()
+
       const session = await page.locator("pre").textContent()
       expect(JSON.parse(session ?? "{}")).toBeNull()
     })
@@ -54,14 +58,13 @@ test.describe("Basic Auth", () => {
     })
 
     await test.step("should logout", async () => {
-      await page.getByText("Sign out").click()
       await page
-        .locator("header")
-        .getByRole("button", { name: "Sign in", exact: true })
-        .waitFor()
-      await page.goto("http://localhost:3000/auth/session")
+        .getByRole("banner")
+        .getByRole("button", { name: "Sign out" })
+        .click()
 
-      expect(await page.locator("html").textContent()).toBe("null")
+      const session = await page.locator("pre").textContent()
+      expect(JSON.parse(session ?? "{}")).toBeNull()
     })
   })
 })
