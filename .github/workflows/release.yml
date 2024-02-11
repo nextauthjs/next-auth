@@ -123,7 +123,6 @@ jobs:
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
       - uses: actions/upload-artifact@v4
-        if: failure()
         name: Upload Playwright artifacts
         with:
           name: playwright-traces
