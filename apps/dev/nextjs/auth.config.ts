@@ -28,10 +28,9 @@ export default {
   providers: [
     Credentials({
       id: "password",
-      name: "Password",
+      name: "Credentials",
       credentials: { password: { label: "Password", type: "password" } },
-      authorize(c) {
-        if (c.password !== "password") return null
+      authorize() {
         return {
           id: "test",
           foo: "bar",
