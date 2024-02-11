@@ -27,6 +27,8 @@ export default {
   debug: true,
   providers: [
     Credentials({
+      id: "password",
+      name: "Password",
       credentials: { password: { label: "Password", type: "password" } },
       authorize(c) {
         if (c.password !== "password") return null
