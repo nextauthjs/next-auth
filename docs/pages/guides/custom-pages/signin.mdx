@@ -39,7 +39,7 @@ export const providerMap = providers.map((provider) => {
   return { id: provider.id, name: provider.name }
 })
 
-export const { handlers, auth, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers,
   pages: {
     signIn: "/signin",

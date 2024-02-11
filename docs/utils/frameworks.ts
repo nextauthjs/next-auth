@@ -64,13 +64,16 @@ export const { GET, POST } = handlers`;
 
 function codeSvelte() {
   return `
-// src/hooks.server.ts
+// src/auth.ts
 import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from '@auth/sveltekit/providers/github'
   
-export const handle = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [GitHub],
 })
+
+// src/hooks.server.ts
+export { handle } from "./auth"
 `;
 }
 

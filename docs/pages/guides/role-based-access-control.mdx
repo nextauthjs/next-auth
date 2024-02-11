@@ -30,11 +30,11 @@ export const { handlers, auth } = NextAuth({
 </Code.Next>
 <Code.Svelte>
 
-```ts filename="./auth.ts"
+```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Google from "@auth/sveltekit/providers/google"
 
-export const { handlers, auth } = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
@@ -94,11 +94,11 @@ export const { handlers, auth } = NextAuth({
 </Code.Next>
 <Code.Svelte>
 
-```ts filename="./auth.ts" {8}
+```ts filename="./src/auth.ts" {8}
 import SvelteKitAuth from "@auth/sveltekit"
 import Google from "@auth/sveltekit/providers/google"
 
-export const { handlers, auth } = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
@@ -179,12 +179,12 @@ export const { handlers, auth } = NextAuth({
 </Code.Next>
 <Code.Svelte>
 
-```ts filename="./auth.ts"
+```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Google from "@auth/sveltekit/providers/google"
 import prisma from "lib/prisma"
 
-export const { handlers, auth } = SvelteKitAuth({
+export const { handle, auth } = SvelteKitAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
@@ -201,6 +201,10 @@ export const { handlers, auth } = SvelteKitAuth({
     }
   }
 })
+```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
 ```
 
 </Code.Svelte>

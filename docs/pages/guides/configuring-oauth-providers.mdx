@@ -117,7 +117,7 @@ export const { handlers, auth } = NextAuth({
 ```
 </Code.Next>
 <Code.Svelte>
-```ts filename="src/hooks.server.ts"
+```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
 
 export const { handle } = SvelteKitAuth({
@@ -130,6 +130,10 @@ export const { handle } = SvelteKitAuth({
     clientSecret: process.env.AUTH_CLIENT_SECRET, // from the provider's dashboard
   }],
 });
+```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
 ```
 
 </Code.Svelte>
