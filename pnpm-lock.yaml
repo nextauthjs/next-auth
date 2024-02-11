@@ -588,7 +588,7 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@simplewebauthn/server':
-        specifier: ^9.0.1
+        specifier: ^9.0.2
         version: 9.0.2
       '@types/cookie':
         specifier: 0.6.0
@@ -680,15 +680,6 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
-      '@simplewebauthn/browser':
-        specifier: ^9.0.1
-        version: 9.0.1
-      '@simplewebauthn/server':
-        specifier: ^9.0.2
-        version: 9.0.2
-      nodemailer:
-        specifier: ^6.6.5
-        version: 6.9.8
       set-cookie-parser:
         specifier: ^2.6.0
         version: 2.6.0
@@ -727,7 +718,7 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       '@simplewebauthn/server':
-        specifier: ^9.0.1
+        specifier: ^9.0.2
         version: 9.0.2
     devDependencies:
       '@types/react':
