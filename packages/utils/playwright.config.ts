@@ -1,14 +1,14 @@
 import { defineConfig, devices } from "@playwright/test"
 
-/** See https://playwright.dev/docs/test-configuration. */
+/** See https://playwright.dev/docs/api/class-testconfig. */
 export default defineConfig({
-  testDir: `../core/test/e2e`, // TODO: `core` should not be hardcoded here
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  testDir: "../",
+  testMatch: "**/test/e2e/*.spec.ts",
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? "dot" : "html",
-  trace: "on",
+  reporter: process.env.CI
+    ? "dot"
+    : [["line"], ["html", { open: "on-failure" }]],
   use: { trace: "on" },
   projects: [
     {
@@ -17,11 +17,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // TODO: Create test app instead of using the `dev` app.
     cwd: "../../",
     command: "turbo run build --filter=next-auth-app && pnpm dev",
     url: "http://localhost:3000",
-    timeout: 10_000,
-    reuseExistingServer: !process.env.CI,
+    timeout: 20_000,
+    stdout: process.env.CI ? "ignore" : "pipe",
+    stderr: "pipe",
   },
 })
