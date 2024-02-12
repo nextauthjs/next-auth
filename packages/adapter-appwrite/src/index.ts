@@ -253,7 +253,6 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 );
                 return formatter.account<AdapterAccount>(data);
             } catch (error) {
-                console.log("error", error);
                 throw error
             }
         },
@@ -377,17 +376,17 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                     ]
                 );
 
-                console.log("DATA", data);
-
-
                 if (!data || data.total === 0) {
                     return null
                 }
+                await databases.deleteDocument(
+                    config.database_id,
+                    config.verification_token_collection_id,
+                    data.documents[0]["$id"]
+                );
 
                 return formatter.verification_token<VerificationToken>(data.documents[0])
             } catch (error) {
-                console.log("ERROR", error);
-
                 throw error
             }
         },
