@@ -26,6 +26,7 @@ export default {
       toc: false,
     },
   },
+  callbacks: "Callbacks",
   deployment: "Deployment",
   typescript: "TypeScript",
   "-- connect": {
