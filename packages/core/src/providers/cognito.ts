@@ -80,6 +80,14 @@ export default function Cognito<P extends CognitoProfile>(
     id: "cognito",
     name: "Cognito",
     type: "oidc",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email ?? null,
+        image: profile.picture ?? null,
+      }
+    },
     style: { logo: "/cognito.svg", bg: "#fff", text: "#C17B9E" },
     options,
   }

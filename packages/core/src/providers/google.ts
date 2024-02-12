@@ -142,6 +142,14 @@ export default function Google<P extends GoogleProfile>(
     name: "Google",
     type: "oidc",
     issuer: "https://accounts.google.com",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture ?? null,
+      }
+    },
     style: { logo: "/google.svg", bg: "#fff", text: "#000" },
     options,
   }

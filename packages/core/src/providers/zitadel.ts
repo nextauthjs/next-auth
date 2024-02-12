@@ -118,6 +118,14 @@ export default function ZITADEL<P extends ZitadelProfile>(
     id: "zitadel",
     name: "ZITADEL",
     type: "oidc",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email ?? null,
+        image: profile.picture ?? null,
+      }
+    },
     options,
   }
 }

@@ -123,6 +123,14 @@ export default function Auth0(
     id: "auth0",
     name: "Auth0",
     type: "oidc",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture ?? null,
+      }
+    },
     style: { logo: "/auth0.svg", text: "#fff", bg: "#EB5424" },
     options: config,
   }

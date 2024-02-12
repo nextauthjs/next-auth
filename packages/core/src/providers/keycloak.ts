@@ -99,6 +99,14 @@ export default function Keycloak<P extends KeycloakProfile>(
     id: "keycloak",
     name: "Keycloak",
     type: "oidc",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email ?? null,
+        image: profile.picture ?? null,
+      }
+    },
     style: { logo: "/keycloak.svg", bg: "#fff", text: "#000" },
     options,
   }

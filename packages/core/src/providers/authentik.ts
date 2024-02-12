@@ -89,6 +89,14 @@ export default function Authentik<P extends AuthentikProfile>(
     id: "authentik",
     name: "Authentik",
     type: "oidc",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture ?? null,
+      }
+    },
     options,
   }
 }

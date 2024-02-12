@@ -90,6 +90,14 @@ export default function DuendeIdentityServer6<P extends DuendeISUser>(
     id: "duende-identity-server6",
     name: "DuendeIdentityServer6",
     type: "oidc",
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email ?? null,
+        image: profile.picture ?? null,
+      }
+    },
     options,
   }
 }

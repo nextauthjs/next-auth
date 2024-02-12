@@ -65,6 +65,14 @@ export default function OneLogin(
     name: "OneLogin",
     type: "oidc",
     wellKnown: `${config.issuer}/oidc/2/.well-known/openid-configuration`,
+    profile(profile) {
+      return {
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email ?? null,
+        image: profile.picture ?? null,
+      }
+    },
     options: config,
   }
 }
