@@ -1,19 +1,9 @@
 {
   "extends": "utils/tsconfig.json",
-  "references": [
-    {
-      "path": "./test"
-    }
-  ],
   "compilerOptions": {
     "outDir": ".",
     "rootDir": "src"
   },
-  "exclude": [
-    "*.js",
-    "*.d.ts"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": ["*.js", "*.d.ts"],
+  "include": ["src/**/*"]
 }
