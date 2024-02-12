@@ -1,7 +1,9 @@
 <script lang="ts">
   import { page } from "$app/stores"
   import { SignIn, SignOut } from "@auth/sveltekit/components"
-  // import { signIn, signOut } from "../auth"
+  import { signIn, signOut } from "@auth/sveltekit/client"
+
+  let password = ""
 </script>
 
 <h1>SvelteKit Auth Example</h1>
@@ -64,11 +66,17 @@
         <div>
           <div class="input-wrapper">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <input
+              bind:value={password}
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
           </div>
-          <button on:click={() => signIn("credentials")}
-            >Sign In with Credentials</button
-          >
+          <button on:click={() => signIn("credentials", { password })}>
+            Sign In with Credentials
+          </button>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@
   <nav class="nojs-show loaded">
     <div class="nav-left">
       <img
+        alt="Avatar"
         src={$page.data.session?.user?.image ??
           "https://source.boringavatars.com/beam/120"}
         class="avatar"

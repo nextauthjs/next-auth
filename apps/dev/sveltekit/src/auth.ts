@@ -1,7 +1,7 @@
 import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from "@auth/sveltekit/providers/github"
 import Credentials from "@auth/sveltekit/providers/credentials"
-import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+// import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 import Facebook from "@auth/sveltekit/providers/facebook"
 import Auth0 from "@auth/sveltekit/providers/auth0"
 import Discord from "@auth/sveltekit/providers/discord"
@@ -29,7 +29,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   },
   providers: [
     SendGrid,
-    Nodemailer({ server: "smtps://0.0.0.0:465?tls.rejectUnauthorized=false" }),
+    // Nodemailer({ server: "smtps://0.0.0.0:465?tls.rejectUnauthorized=false" }),
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {
@@ -37,7 +37,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
         return {
           name: "Fill Murray",
           email: "bill@fillmurray.com",
-          image: "https://www.fillmurray.com/64/64",
+          image: "https://source.boringavatars.com/marble/120",
           id: "1",
           foo: "",
         }
