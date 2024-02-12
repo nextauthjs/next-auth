@@ -588,8 +588,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@simplewebauthn/server':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^9.0.2
+        version: 9.0.2
       '@types/cookie':
         specifier: 0.6.0
         version: 0.6.0
@@ -718,8 +718,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       '@simplewebauthn/server':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^9.0.2
+        version: 9.0.2
     devDependencies:
       '@types/react':
         specifier: 18.0.37
@@ -7265,8 +7265,8 @@ packages:
       '@simplewebauthn/types': 9.0.1
     dev: false
 
-  /@simplewebauthn/server@9.0.1:
-    resolution: {integrity: sha512-XnilMoBygy2BOZjIHPxby+7ENx5ChN2wXfhd14mOgO/XitYMqdphTo/kwgxEI4/Je3lELK1h/eLDJqM2fIKS1w==}
+  /@simplewebauthn/server@9.0.2:
+    resolution: {integrity: sha512-aaWA+qVOU4byk5IDb/l+M1+7dmrAJhTb4ISJHucpsgRQcMMEes76tbGIqO2JQuA7N50tc/OBrnGKBjoKYG1kSw==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@hexagon/base64': 1.1.28
@@ -7275,7 +7275,7 @@ packages:
       '@peculiar/asn1-rsa': 2.3.8
       '@peculiar/asn1-schema': 2.3.8
       '@peculiar/asn1-x509': 2.3.8
-      '@simplewebauthn/types': 9.0.0
+      '@simplewebauthn/types': 9.0.1
       cbor-x: 1.5.8
       cross-fetch: 4.0.0
     transitivePeerDependencies:
@@ -7284,6 +7284,7 @@ packages:
 
   /@simplewebauthn/types@9.0.0:
     resolution: {integrity: sha512-Lo6LLNQee66D//KueYy9AyX7oiQ7BBKJgdLzP3l0HJDrV4GRSzSAii8AtigBGOeNc8hOQsF/D8itItyuZX9djA==}
+    dev: true
 
   /@simplewebauthn/types@9.0.1:
     resolution: {integrity: sha512-tGSRP1QvsAvsJmnOlRQyw/mvK9gnPtjEc5fg2+m8n+QUa+D7rvrKkOYyfpy42GTs90X3RDOnqJgfHt+qO67/+w==}
