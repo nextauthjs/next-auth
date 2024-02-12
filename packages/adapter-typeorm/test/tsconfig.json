@@ -1,19 +1,17 @@
 {
   "extends": "utils/tsconfig.json",
-  "references": [
-    {
-      "path": "./test"
-    }
-  ],
   "compilerOptions": {
-    "outDir": ".",
-    "rootDir": "src"
+    "experimentalDecorators": true,
+    "composite": true
   },
   "exclude": [
     "*.js",
     "*.d.ts"
   ],
   "include": [
-    "src/**/*"
+    "*.ts",
+    "mysql/*.ts",
+    "postgresql/*.ts",
+    "sqlite/*.ts"
   ]
 }
