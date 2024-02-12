@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.25.0",
+  "version": "0.26.3",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -70,9 +70,17 @@
     "preact-render-to-string": "5.2.3"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
     "nodemailer": "^6.8.0"
   },
   "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
+    "@simplewebauthn/server": {
+      "optional": true
+    },
     "nodemailer": {
       "optional": true
     }
@@ -82,15 +90,17 @@
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
+    "test:e2e": "playwright test -c ../utils/playwright.config.ts",
     "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
+    "@simplewebauthn/browser": "v9.0.0",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
-    "postcss-nested": "6.0.0"
+    "postcss-nesting": "^12.0.2"
   }
 }

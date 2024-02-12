@@ -2,10 +2,13 @@
 
 import { defineConfig } from "vite"
 import swc from "unplugin-swc"
+import preact from "@preact/preset-vite"
 
 // https://vitejs.dev/config/
 export default defineConfig({
   test: {
+    // NOTE: `.spec` is reserved for Playwright tests
+    include: ["**/*.test.?(c|m)[jt]s?(x)"],
     coverage: {
       all: true,
       enabled: true,
@@ -14,5 +17,5 @@ export default defineConfig({
     },
     setupFiles: ["../utils/vitest-setup.ts"],
   },
-  plugins: [swc.vite()],
+  plugins: [swc.vite(), preact()],
 })

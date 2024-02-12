@@ -53,7 +53,7 @@ export { SessionProviderProps }
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH: AuthClientConfig = {
+export const __NEXTAUTH: AuthClientConfig = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -259,7 +259,11 @@ export async function signIn<
         "X-Auth-Return-Redirect": "1",
       },
       // @ts-expect-error
-      body: new URLSearchParams({ ...options, csrfToken, callbackUrl }),
+      body: new URLSearchParams({
+        ...options,
+        csrfToken,
+        callbackUrl,
+      }),
     }
   )
 

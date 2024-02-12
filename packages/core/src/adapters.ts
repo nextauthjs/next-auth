@@ -163,7 +163,7 @@
  */
 
 import { ProviderType } from "./providers/index.js"
-import type { Account, Awaitable, User } from "./types.js"
+import type { Account, Authenticator, Awaitable, User } from "./types.js"
 // TODO: Discuss if we should expose methods to serialize and deserialize
 // the data? Many adapters share this logic, so it could be useful to
 // have a common implementation.
@@ -197,7 +197,7 @@ export interface AdapterUser extends User {
  */
 export interface AdapterAccount extends Account {
   userId: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email">
+  type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
 }
 
 /**
@@ -243,6 +243,16 @@ export interface VerificationToken {
    * A [hashed](https://authjs.dev/concepts/hashing) token, using the `AuthConfig.secret` value.
    */
   token: string
+}
+
+/**
+ * An authenticator represents a credential authenticator assigned to a user.
+ */
+export interface AdapterAuthenticator extends Authenticator {
+  /**
+   * User ID of the authenticator.
+   */
+  userId: string
 }
 
 /**
@@ -385,6 +395,48 @@ export interface Adapter {
     identifier: string
     token: string
   }): Awaitable<VerificationToken | null>
+  /**
+   * Get account by provider account id and provider.
+   * 
+   * If an account is not found, the adapter must return `null`.
+   */
+  getAccount?(
+    providerAccountId: AdapterAccount["providerAccountId"], provider: AdapterAccount["provider"]
+  ): Awaitable<AdapterAccount | null>
+  /**
+   * Returns an authenticator from its credentialID.
+   * 
+   * If an authenticator is not found, the adapter must return `null`.
+   */
+  getAuthenticator?(
+    credentialID: AdapterAuthenticator['credentialID']
+  ): Awaitable<AdapterAuthenticator | null>
+  /**
+   * Create a new authenticator.
+   * 
+   * If the creation fails, the adapter must throw an error.
+   */
+  createAuthenticator?(
+    authenticator: AdapterAuthenticator
+  ): Awaitable<AdapterAuthenticator>
+  /**
+   * Returns all authenticators from a user.
+   *
+   * If a user is not found, the adapter should still return an empty array.
+   * If the retrieval fails for some other reason, the adapter must throw an error.
+   */
+  listAuthenticatorsByUserId?(
+    userId: AdapterAuthenticator['userId']
+  ): Awaitable<AdapterAuthenticator[]>
+  /**
+   * Updates an authenticator's counter.
+   * 
+   * If the update fails, the adapter must throw an error.
+   */
+  updateAuthenticatorCounter?(
+    credentialID: AdapterAuthenticator['credentialID'],
+    newCounter: AdapterAuthenticator['counter']
+  ): Awaitable<AdapterAuthenticator>
 }
 
 // For compatibility with older versions of NextAuth.js
