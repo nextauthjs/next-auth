@@ -59,7 +59,9 @@
       />
     </slot>
   {/if}
-  <button style="width: 100%" type="submit"
-    ><slot name="submitButton">Sign in with {provider}</slot></button
-  >
+  <slot name="submitButton">
+    <button type="submit">
+      Sign in with {provider}
+    </button>
+  </slot>
 </form>
