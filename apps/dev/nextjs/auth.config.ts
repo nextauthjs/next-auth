@@ -25,7 +25,6 @@ declare module "next-auth" {
 
 export default {
   debug: true,
-  secret: process.env.AUTH_SECRET,
   providers: [
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
