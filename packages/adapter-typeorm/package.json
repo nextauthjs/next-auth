@@ -38,7 +38,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf *.js *.d.ts* test/**/*.js test/**/*.d.ts*",
     "init:db": "test/init.sh",
     "mysql": "pnpm init:db && test/mysql/test.sh",
     "postgres": "pnpm init:db && test/postgresql/test.sh",

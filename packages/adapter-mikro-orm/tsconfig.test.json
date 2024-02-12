@@ -2,13 +2,15 @@
   "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "experimentalDecorators": true,
-    "composite": true
+    "rootDir": "test",
+    "outDir": "test"
   },
   "exclude": [
     "*.js",
-    "*.d.ts"
+    "*.d.ts",
+    "src"
   ],
   "include": [
-    "*.test.ts"
+    "test/*.ts"
   ]
 }
