@@ -88,7 +88,7 @@ jobs:
         if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       - name: Build
         run: pnpm build
-      - name: Run tests
+      - name: Run unit tests
         if: false
         run: pnpm test
         timeout-minutes: 15
