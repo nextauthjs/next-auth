@@ -1,4 +1,10 @@
+import { join } from "node:path"
 import { defineConfig, devices } from "@playwright/test"
+import * as dotenv from "dotenv"
+
+if (process.env.NODE_ENV !== "production" && !process.env.CI) {
+  dotenv.config({ path: join(process.cwd(), "..", "core", ".env") })
+}
 
 /** See https://playwright.dev/docs/api/class-testconfig. */
 export default defineConfig({
