@@ -12,7 +12,7 @@
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /** @see [Supported Scopes](https://docs.passage.id/hosted-login/oidc-client-configuration#supported-scopes) */
-export interface PassageProfile extends Record<string, any> {
+export interface PassageProfile {
   iss: string
   /** Unique identifer in Passage for the user */
   sub: string
@@ -81,22 +81,14 @@ export interface PassageProfile extends Record<string, any> {
  *
  * :::
  */
-export default function Passage<P extends PassageProfile>(
-  config: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function Passage(
+  config: OAuthUserConfig<PassageProfile>
+): OAuthConfig<PassageProfile> {
   return {
     id: "passage",
     name: "Passage",
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_basic" },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     style: {
       logo: "/passage.svg",
       bg: "#fff",

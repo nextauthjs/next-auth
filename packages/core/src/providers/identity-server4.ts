@@ -67,14 +67,6 @@ export default function IdentityServer4(
     id: "identity-server4",
     name: "IdentityServer4",
     type: "oidc",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     options,
   }
 }

@@ -166,7 +166,7 @@ export default function Apple<P extends AppleProfile>(
         id: profile.sub,
         name: profile.name,
         email: profile.email,
-        image: profile.picture ?? null,
+        image: null,
       }
     },
     style: {

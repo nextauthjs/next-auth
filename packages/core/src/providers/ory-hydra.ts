@@ -78,14 +78,6 @@ export default function OryHydra<P extends OryHydraProfile>(
     id: "hydra",
     name: "Hydra",
     type: "oidc",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     style: {
       logo: "/ory.svg",
       logoDark: "/ory-dark.svg",

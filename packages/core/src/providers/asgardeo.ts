@@ -116,14 +116,6 @@ export default function Asgardeo(
       bg: "#000",
       text: "#fff",
     },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture ?? null,
-      }
-    },
     options: config,
   }
 }

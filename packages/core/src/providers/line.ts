@@ -90,14 +90,6 @@ export default function LINE<P extends LineProfile>(
     client: {
       id_token_signed_response_alg: "HS256",
     },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     style: { logo: "/line.svg", bg: "#00C300", text: "#fff" },
     options,
   }

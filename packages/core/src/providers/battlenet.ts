@@ -91,8 +91,8 @@ export default function BattleNet<P extends BattleNetProfile>(
       return {
         id: profile.sub,
         name: profile.battle_tag,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
+        email: null,
+        image: null,
       }
     },
     style: { logo: "/battlenet.svg", bg: "#148eff", text: "#fff" },

@@ -106,14 +106,6 @@ export default function Slack<P extends SlackProfile>(
     name: "Slack",
     type: "oidc",
     issuer: "https://slack.com",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     style: { logo: "/slack.svg", bg: "#000", text: "#fff" },
     options,
   }

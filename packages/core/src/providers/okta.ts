@@ -98,16 +98,8 @@ export default function Okta<P extends OktaProfile>(
     id: "okta",
     name: "Okta",
     type: "oidc",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
-    checks: ["pkce", "state"],
     style: { logo: "/okta.svg", bg: "#000", text: "#fff" },
+    checks: ['pkce', 'state'],
     options,
   }
 }

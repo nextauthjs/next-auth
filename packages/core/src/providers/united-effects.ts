@@ -82,14 +82,6 @@ export default function UnitedEffects<P extends UnitedEffectsProfile>(
     authorization: {
       params: { scope: "openid email profile", resource: options.issuer },
     },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     options,
   }
 }

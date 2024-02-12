@@ -113,14 +113,6 @@ export default function Twitch(
         }
       },
     },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     style: { logo: "/twitch.svg", bg: "#65459B", text: "#fff" },
     options: config,
   }

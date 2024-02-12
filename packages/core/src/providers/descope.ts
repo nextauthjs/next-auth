@@ -16,7 +16,7 @@ import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 /** The returned user profile from Descope when using the profile callback.
  * [See Load User](https://docs.descope.com/api/openapi/usermanagement/operation/LoadUser/)
  */
-export interface DescopeProfile extends Record<string, any> {
+export interface DescopeProfile {
   /** The user's unique Descope ID */
   sub: string
   /** The user's name */
@@ -98,22 +98,14 @@ export interface DescopeProfile extends Record<string, any> {
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
-export default function Descope<P extends DescopeProfile>(
-  config: OIDCUserConfig<P>
-): OIDCConfig<P> {
+export default function Descope(
+  config: OIDCUserConfig<DescopeProfile>
+): OIDCConfig<DescopeProfile> {
   return {
     id: "descope",
     name: "Descope",
     type: "oidc",
     issuer: `https://api.descope.com/${config.clientId}`,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email ?? null,
-        image: profile.picture ?? null,
-      }
-    },
     style: {
       logo: "/descope.svg",
       bg: "#1C1C23",
