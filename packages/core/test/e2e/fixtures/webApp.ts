@@ -5,11 +5,11 @@ import {
   type Page,
 } from "@playwright/test"
 import { AuthFixture } from "./auth"
-import { KeycloakLoginPom } from "../poms/KeycloakLoginPom"
+import { KeycloakLoginPom } from "../poms/keycloakLoginPom"
 
 /**
- * This fixture provides utility methods for logging in, navigating and clicking
- * common elements like sidebar navigation items.
+ * This fixture provides utility methods for logging in,
+ * navigating and clicking common elements.
  */
 export class WebApp {
   #auth: AuthFixture
@@ -95,9 +95,7 @@ export class WebApp {
       const sessionRes = await fetch(`${environmentUrl}/auth/session`)
 
       if (sessionRes.ok) {
-        const sesh = await sessionRes.json()
-        this.session = sesh
-        return this.session
+        this.session = await sessionRes.json()
       }
     } catch (error) {
       console.error(error)

@@ -18,7 +18,6 @@ export function createAuthFixture(): AuthFixture {
     },
     get loginPassword() {
       const password = process.env.TEST_KEYCLOAK_PASSWORD
-
       if (!password) throw new Error("Keycloak password is empty")
 
       return password

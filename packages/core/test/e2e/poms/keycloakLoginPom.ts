@@ -27,7 +27,8 @@ export class KeycloakLoginPom {
     if (!username) throw new Error("Keycloak username missing")
     if (!password) throw new Error("Keycloak password missing")
 
-    // Login to Keycloak
+    await this.isVisible()
+
     await this.usernameInput.fill(username)
     await this.passwordInput.fill(password)
 

@@ -1,7 +1,7 @@
 import { test as base } from "@playwright/test"
 import { AuthFixture, createAuthFixture } from "../fixtures/auth"
-import { WebApp } from "../fixtures/WebApp"
-import { KeycloakLoginPom } from "../poms/KeycloakLoginPom"
+import { WebApp } from "../fixtures/webApp"
+import { KeycloakLoginPom } from "../poms/keycloakLoginPom"
 
 type AuthJsWebappFixtures = {
   auth: AuthFixture
