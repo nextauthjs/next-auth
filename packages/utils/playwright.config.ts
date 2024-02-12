@@ -25,10 +25,12 @@ export default defineConfig({
   ],
   webServer: {
     cwd: "../../",
-    command: "turbo run dev --filter=next-auth-app",
+    command:
+      "DEBUG=pw:test:task,pw:webserver* turbo run dev --filter=next-auth-app",
     url: "http://localhost:3000",
     timeout: 20_000,
-    stdout: process.env.CI ? "ignore" : "pipe",
+    // stdout: process.env.CI ? "ignore" : "pipe",
+    stdout: "pipe",
     stderr: "pipe",
   },
 })
