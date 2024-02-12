@@ -24,9 +24,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    cwd: "../../",
-    command:
-      "DEBUG=pw:test:task,pw:webserver* turbo run dev --filter=next-auth-app",
+    cwd: "../../apps/dev/nextjs/",
+    command: "DEBUG=pw:test:task,pw:webserver* pnpm run dev",
     url: "http://localhost:3000",
     timeout: 20_000,
     // stdout: process.env.CI ? "ignore" : "pipe",
