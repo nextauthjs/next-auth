@@ -9,6 +9,7 @@
     "build": "turbo run build --filter=next-auth --filter=@auth/* --no-deps",
     "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*supabase* --filter=!*upstash* --filter=!*xata*",
     "test:e2e": "turbo run test:e2e",
+    "test:e2e:watch": "turbo run test:e2e -- --ui",
     "clean": "turbo run clean --no-cache",
     "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
