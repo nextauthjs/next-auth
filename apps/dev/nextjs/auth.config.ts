@@ -24,8 +24,6 @@ declare module "next-auth" {
 }
 
 export default {
-  debug: true,
-  trustHost: true,
   providers: [
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
