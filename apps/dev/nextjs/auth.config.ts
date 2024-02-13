@@ -44,8 +44,11 @@ export default {
     Twitter,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
-    async session({ session, token, trigger }) {
+    jwt({ token, trigger, session }) {
       if (trigger === "update") token.name = session.user.name
+      return token
+    },
+    async session({ session, token, trigger }) {
       return {
         ...session,
         user: {
