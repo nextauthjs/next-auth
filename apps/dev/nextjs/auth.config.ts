@@ -24,7 +24,8 @@ declare module "next-auth" {
 }
 
 export default {
-  debug: false,
+  debug: true,
+  trustHost: true,
   providers: [
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
@@ -46,9 +47,13 @@ export default {
     Twitter,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
-    jwt({ token, trigger, session }) {
-      if (trigger === "update") token.name = session.user.name
-      return token
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...token,
+        },
+      }
     },
   },
   basePath: "/auth",
