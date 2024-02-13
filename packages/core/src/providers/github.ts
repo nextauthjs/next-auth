@@ -43,6 +43,7 @@ export interface GitHubProfile {
   blog: string | null
   location: string | null
   email: string | null
+  email_verified?: boolean
   hireable: boolean | null
   bio: string | null
   twitter_username?: string | null
@@ -163,8 +164,10 @@ export default function GitHub(
           })
 
           if (res.ok) {
-            const emails: GitHubEmail[] = await res.json()
-            profile.email = (emails.find((e) => e.primary) ?? emails[0]).email
+            const emails: GithubEmail[] = await res.json();
+            const githubEmail = emails.find((e) => e.primary) ?? emails[0];
+            profile.email = githubEmail!.email;
+            profile.email_verified = githubEmail!.verified;
           }
         }
 
