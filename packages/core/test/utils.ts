@@ -3,6 +3,7 @@ import { Auth, createActionURL } from "../src"
 
 import type { Adapter } from "../src/adapters"
 import type { AuthAction, AuthConfig, LoggerInstance } from "../src/types"
+import { defaultCallbacks } from "../src/lib/init.ts"
 
 export function TestAdapter(): Adapter {
   return {
@@ -29,11 +30,30 @@ export const logger: LoggerInstance = {
   error: vi.fn(),
 }
 
+export const events: AuthConfig["events"] = {
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+  createUser: vi.fn(),
+  updateUser: vi.fn(),
+  linkAccount: vi.fn(),
+  session: vi.fn(),
+}
+
+export const callbacks = defaultCallbacks
+
+export const getExpires = (maxAge = 30 * 24 * 60 * 60 * 1000) => {
+  const now = Date.now()
+  vi.setSystemTime(now)
+  return new Date(now + maxAge)
+}
+
 export function testConfig(overrides?: Partial<AuthConfig>): AuthConfig {
   return {
     secret: "secret",
     trustHost: true,
     logger,
+    events,
+    callbacks,
     basePath: "/auth",
     providers: [],
     ...overrides,
@@ -55,7 +75,7 @@ export async function makeAuthRequest(params: {
 
   let url: string | URL = createActionURL(
     action,
-    "http",
+    "https",
     headers,
     {},
     config.basePath
