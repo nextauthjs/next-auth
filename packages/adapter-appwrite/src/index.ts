@@ -156,7 +156,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 const data = await databases.createDocument(
                     config.database_id,
                     config.user_collection_id,
-                    user.id,
+                    ID.unique(),
                     { name: user.name, email: user.email, emailVerified: user.emailVerified, image: user.image }
                 );
                 return formatter.user<AdapterUser>(data)
