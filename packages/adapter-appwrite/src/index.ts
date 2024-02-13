@@ -151,7 +151,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
     const databases = new sdk.Databases(client);
 
     return {
-        async createUser(user: AdapterUser) {
+        async createUser(user) {
             try {
                 const data = await databases.createDocument(
                     config.database_id,
@@ -164,7 +164,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async getUser(id: string) {
+        async getUser(id) {
             try {
                 const data = await databases.getDocument(
                     config.database_id,
@@ -184,7 +184,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async getUserByEmail(email: string) {
+        async getUserByEmail(email) {
             try {
                 const data = await databases.listDocuments(
                     config.database_id,
@@ -201,7 +201,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async getUserByAccount({ providerAccountId, provider }: { providerAccountId: string, provider: string }) {
+        async getUserByAccount({ providerAccountId, provider }) {
             try {
                 const data = await databases.listDocuments(
                     config.database_id,
@@ -243,7 +243,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async linkAccount(account: AdapterAccount) {
+        async linkAccount(account) {
             try {
                 const data = await databases.createDocument(
                     config.database_id,
@@ -276,7 +276,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async createSession({ sessionToken, userId, expires }) {
+        async createSession({ sessionToken, userId, expires }:) {
             try {
                 const data = await databases.createDocument(
                     config.database_id,
@@ -290,7 +290,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async getSessionAndUser(sessionToken: string) {
+        async getSessionAndUser(sessionToken) {
             try {
                 const data = await databases.listDocuments(
                     config.database_id,
