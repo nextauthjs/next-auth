@@ -79,7 +79,7 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
+import type { AppRouteHandlerFn } from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError } from "@auth/core/errors"

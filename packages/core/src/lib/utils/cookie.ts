@@ -117,6 +117,16 @@ export function defaultCookies(useSecureCookies: boolean) {
         secure: useSecureCookies,
       },
     },
+    webauthnChallenge: {
+      name: `${cookiePrefix}authjs.challenge`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        maxAge: 60 * 15, // 15 minutes in seconds
+      },
+    },
   } as const satisfies CookiesOptions
 }
 
