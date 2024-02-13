@@ -19,7 +19,7 @@ declare module "next-auth" {
   }
 
   interface User {
-    foo: string
+    foo?: string
   }
 }
 
@@ -33,7 +33,6 @@ export default {
         if (c.password !== "password") return null
         return {
           id: "test",
-          foo: "bar",
           name: "Test User",
           email: "test@example.com",
         }
@@ -47,7 +46,8 @@ export default {
     Twitter,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token, trigger }) {
+      if (trigger === "update") token.name = session.user.name
       return {
         ...session,
         user: {
