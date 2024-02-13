@@ -30,14 +30,14 @@ export const logger: LoggerInstance = {
   error: vi.fn(),
 }
 
-export const events: AuthConfig["events"] = {
+export const events = {
   signIn: vi.fn(),
   signOut: vi.fn(),
   createUser: vi.fn(),
   updateUser: vi.fn(),
   linkAccount: vi.fn(),
   session: vi.fn(),
-}
+} satisfies AuthConfig["events"]
 
 export const callbacks = defaultCallbacks
 

@@ -11,11 +11,11 @@ import {
   testConfig,
 } from "../utils.js"
 
-beforeEach(() => {
-  vi.resetAllMocks()
-})
+describe("GET", () => {
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
 
-describe("GET - JWT session", () => {
   it("should return a valid JWT session response", async () => {
     const authConfig = testConfig()
 
@@ -87,6 +87,7 @@ describe("GET - JWT session", () => {
       token: expectedToken,
     })
   })
+
   it("should return null if no JWT session in the requests cookies", async () => {
     const { response } = await makeAuthRequest({
       action: "session",
@@ -94,6 +95,7 @@ describe("GET - JWT session", () => {
     const actual = await response.json()
     expect(actual).toEqual(null)
   })
+
   it("should return null if JWT session is invalid", async () => {
     const { response } = await makeAuthRequest({
       action: "session",
@@ -104,6 +106,7 @@ describe("GET - JWT session", () => {
     const actual = await response.json()
     expect(actual).toEqual(null)
   })
+
   it("should throw invalid JWT error if salt is invalid", async () => {
     const { response } = await makeAuthRequest({
       action: "session",
