@@ -196,9 +196,26 @@ button[id^="headlessui-tabs-tab"] {
 }
 
 #carbonads {
-  @apply flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400;
+  @apply flex flex-col gap-1 p-3 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
 
+  .carbon-text {
+    @apply dark:text-neutral-300;
+  }
+
+  .carbon-poweredby {
+    @apply dark:text-neutral-400;
+  }
+
+  #carbon-responsive .carbon-img {
+    flex: unset !important;
+  }
   img {
-    @apply rounded-[0.25rem] mb-2 w-full !max-w-full
+    @apply rounded-[0.25rem] w-full !max-w-full;
+  }
+
+  #carbon-responsive .carbon-responsive-wrap {
+    border: none !important;
+    background-color: unset !important;
+    padding: 0 !important;
   }
 }

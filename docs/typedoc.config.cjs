@@ -3,8 +3,7 @@ const fs = require("node:fs")
 const path = require("node:path")
 
 // list providers entries from @auth/core/providers/*.ts
-const coreSrc = "/opt/nextauthjs/next-auth/packages/core/src"
-// const coreSrc = "../packages/core/src"
+const coreSrc = path.join(process.cwd(), "..", "packages", "core", "src")
 const providers = fs
   .readdirSync(path.join(coreSrc, "/providers"))
   .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
@@ -19,9 +18,11 @@ module.exports = {
     .concat(providers),
   entryPointStrategy: "expand",
   out: "pages/reference/core",
-  tsconfig: "/opt/nextauthjs/next-auth/packages/core/tsconfig.json",
-  // tsconfig: "../packages/core/tsconfig.json",
-  plugin: ["typedoc-plugin-markdown", require.resolve("./typedoc-mdn-links.cjs")],
+  tsconfig: path.join(process.cwd(), "..", "packages", "core", "tsconfig.json"),
+  plugin: [
+    "typedoc-plugin-markdown",
+    require.resolve("./typedoc-mdn-links.cjs"),
+  ],
   hideInPageTOC: true,
   disableSources: true,
   hideBreadcrumbs: true,
