@@ -1,7 +1,7 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
-import { reqWithEnvUrl } from "./env.js"
+import { reqWithEnvURL } from "./env.js"
 import { createActionURL } from "./actions.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -10,7 +10,7 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
+import type { AppRouteHandlerFn } from "./types.js"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 /** Configure NextAuth.js. */
@@ -79,11 +79,9 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
           (await config.callbacks?.session?.(...args)) ?? {
             ...args[0].session,
             expires:
-              args[0].session.expires instanceof Date
-                ? args[0].session.expires.toISOString()
-                : args[0].session.expires,
+              args[0].session.expires?.toISOString?.() ??
+              args[0].session.expires,
           }
-        // @ts-expect-error either user or token will be defined
         const user = args[0].user ?? args[0].token
         return { user, ...session } satisfies Session
       },
@@ -193,7 +191,10 @@ export function initAuth(
       return async (
         ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
       ) => {
-        return handleAuth(args, config, userMiddlewareOrRoute)
+        return handleAuth(args, config, userMiddlewareOrRoute).then((res) => {
+          console.log(Object.fromEntries(res.headers))
+          return res
+        })
       }
     }
 
@@ -221,7 +222,7 @@ async function handleAuth(
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
-  const request = reqWithEnvUrl(args[0])
+  const request = reqWithEnvURL(args[0])
   const sessionResponse = await getSession(request.headers, config)
   const auth = await sessionResponse.json()
 
@@ -271,6 +272,9 @@ async function handleAuth(
   // Preserve cookies from the session response
   for (const cookie of sessionResponse.headers.getSetCookie())
     finalResponse.headers.append("set-cookie", cookie)
+
+  console.log(Object.fromEntries(finalResponse.headers))
+  console.log(Object.fromEntries(response.headers))
 
   return finalResponse
 }

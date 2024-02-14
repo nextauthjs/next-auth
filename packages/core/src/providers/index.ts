@@ -12,6 +12,7 @@ import type {
   OAuthProviderType,
   OIDCConfig,
 } from "./oauth.js"
+import { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
 
 export * from "./credentials.js"
 export * from "./email.js"
@@ -25,7 +26,7 @@ export * from "./oauth.js"
  * @see [Email or Passwordless Authentication](https://authjs.dev/concepts/oauth)
  * @see [Credentials-based Authentication](https://authjs.dev/concepts/credentials)
  */
-export type ProviderType = "oidc" | "oauth" | "email" | "credentials"
+export type ProviderType = "oidc" | "oauth" | "email" | "credentials" | WebAuthnProviderType
 
 /** Shared across all {@link ProviderType} */
 export interface CommonProviderOptions {
@@ -63,11 +64,11 @@ interface InternalProviderOptions {
  * @see [Credentials guide](https://authjs.dev/guides/providers/credentials)
  */
 export type Provider<P extends Profile = any> = (
-  | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig) &
+  | ((OIDCConfig<P> | OAuth2Config<P> | EmailConfig | CredentialsConfig | WebAuthnConfig) &
       InternalProviderOptions)
   | ((
       ...args: any
-    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig) &
+    ) => (OAuth2Config<P> | OIDCConfig<P> | EmailConfig | CredentialsConfig | WebAuthnConfig) &
       InternalProviderOptions)
 ) &
   InternalProviderOptions
@@ -77,7 +78,8 @@ export type BuiltInProviders = Record<
   (config: Partial<OAuthConfig<any>>) => OAuthConfig<any>
 > &
   Record<CredentialsProviderType, typeof CredentialsProvider> &
-  Record<EmailProviderType, typeof EmailProvider>
+  Record<EmailProviderType, typeof EmailProvider> &
+  Record<WebAuthnProviderType, (config: Partial<WebAuthnConfig>) => WebAuthnConfig>
 
 export type AppProviders = Array<
   Provider | ReturnType<BuiltInProviders[keyof BuiltInProviders]>
@@ -90,4 +92,4 @@ export interface AppProvider extends CommonProviderOptions {
 
 export type RedirectableProviderType = "email" | "credentials"
 
-export type BuiltInProviderType = RedirectableProviderType | OAuthProviderType
+export type BuiltInProviderType = RedirectableProviderType | OAuthProviderType | WebAuthnProviderType

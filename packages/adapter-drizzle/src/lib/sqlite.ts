@@ -7,7 +7,7 @@ import {
   BaseSQLiteDatabase,
   SQLiteTableFn,
 } from "drizzle-orm/sqlite-core"
-import { stripUndefined } from "./utils"
+import { stripUndefined } from "./utils.js"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
 

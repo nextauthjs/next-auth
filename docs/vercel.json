@@ -126,6 +126,11 @@
       "source": "/reference/core/providers_:slug(.*)",
       "destination": "/reference/core/providers/:slug",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "discord.authjs.dev" }],
+      "destination": "https://discord.gg/CGAPMawPng"
     }
   ]
 }
