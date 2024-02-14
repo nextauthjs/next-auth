@@ -6,14 +6,14 @@ import GitHub from "../../src/providers/github.js"
 
 import { makeAuthRequest } from "../utils.js"
 
-describe("assert POST callback action", () => {
+describe("assert GET callback action", () => {
   beforeEach(() => {
     vi.resetAllMocks()
   })
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it("should throw Configuration error if the provider ID is not found", async () => {
+  it("should throw InvalidProvider error if the provider ID is not found", async () => {
     const { response } = await makeAuthRequest({
       action: "callback",
       path: "/invalid-provider",
@@ -21,7 +21,7 @@ describe("assert POST callback action", () => {
 
     expect(response.status).toEqual(302)
     expect(response.headers.get("location")).toEqual(
-      `https://authjs.test/auth/error?error=Configuration`
+      `https://authjs.test/auth/error?error=InvalidProvider`
     )
   })
 

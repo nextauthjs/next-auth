@@ -89,7 +89,7 @@ export async function makeAuthRequest(params: {
   if (params.path) url = `${url}${params.path}`
   if (params.query) url = `${url}?${new URLSearchParams(params.query)}`
   const request = new Request(url, {
-    method: body || action === "callback" ? "POST" : "GET",
+    method: body ? "POST" : "GET",
     headers,
     body,
   })
