@@ -5,6 +5,10 @@ import type { Adapter } from "../src/adapters"
 import type { AuthAction, AuthConfig, LoggerInstance } from "../src/types"
 import { defaultCallbacks } from "../src/lib/init.ts"
 
+export const AUTH_SECRET = "secret"
+export const SESSION_COOKIE_NAME = "__Secure-authjs.session-token"
+export const CSRF_COOKIE_NAME = "__Host-authjs.csrf-token"
+
 export function TestAdapter(): Adapter {
   return {
     createUser: vi.fn(),
@@ -63,13 +67,15 @@ export function testConfig(overrides?: Partial<AuthConfig>): AuthConfig {
 export async function makeAuthRequest(params: {
   action: AuthAction
   cookies?: Record<string, string>
+  host?: string
+  path?: string
   query?: Record<string, string>
   body?: any
   config?: Partial<AuthConfig>
 }) {
-  const { action, body, cookies = {} } = params
+  const { action, body, cookies = {}, host = "authjs.test" } = params
   const config = testConfig(params.config)
-  const headers = new Headers({ host: "authjs.test" })
+  const headers = new Headers({ host: host })
   for (const [name, value] of Object.entries(cookies))
     headers.append("cookie", `${name}=${value}`)
 
@@ -80,9 +86,10 @@ export async function makeAuthRequest(params: {
     {},
     config.basePath
   )
+  if (params.path) url = `${url}${params.path}`
   if (params.query) url = `${url}?${new URLSearchParams(params.query)}`
   const request = new Request(url, {
-    method: body ? "POST" : "GET",
+    method: body || action === "callback" ? "POST" : "GET",
     headers,
     body,
   })
