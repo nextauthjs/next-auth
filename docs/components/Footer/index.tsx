@@ -19,7 +19,7 @@ export function Footer({ className = "" }) {
       document.querySelector<HTMLScriptElement>("#_carbonads_js")
     if (carbonAdsEl) {
       carbonAdsEl.src =
-        "https://cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg"
+        "https://cdn.carbonads.com/carbon.js?serve=CWYD42JY&placement=authjsdev&format=cover"
     }
   }, [])
   return (
