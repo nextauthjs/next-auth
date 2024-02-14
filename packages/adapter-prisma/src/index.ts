@@ -9,7 +9,7 @@
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install @prisma/client @auth/prisma-adapter
+ * npm install @prisma/client @next-auth/prisma-adapter
  * npm install prisma --save-dev
  * ```
  *
