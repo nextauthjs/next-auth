@@ -10,7 +10,7 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
+import type { AppRouteHandlerFn } from "./types.js"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 /** Configure NextAuth.js. */
@@ -191,7 +191,10 @@ export function initAuth(
       return async (
         ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
       ) => {
-        return handleAuth(args, config, userMiddlewareOrRoute)
+        return handleAuth(args, config, userMiddlewareOrRoute).then((res) => {
+          console.log(Object.fromEntries(res.headers))
+          return res
+        })
       }
     }
 
@@ -269,6 +272,9 @@ async function handleAuth(
   // Preserve cookies from the session response
   for (const cookie of sessionResponse.headers.getSetCookie())
     finalResponse.headers.append("set-cookie", cookie)
+
+  console.log(Object.fromEntries(finalResponse.headers))
+  console.log(Object.fromEntries(response.headers))
 
   return finalResponse
 }

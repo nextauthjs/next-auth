@@ -3,8 +3,9 @@ import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import Facebook from "next-auth/providers/facebook"
-import Auth0 from "next-auth/providers/auth0"
+// import Auth0 from "next-auth/providers/auth0"
 import Twitter from "next-auth/providers/twitter"
+import Keycloak from "next-auth/providers/keycloak"
 
 declare module "next-auth" {
   /**
@@ -39,8 +40,9 @@ export default {
     }),
     GitHub,
     Google,
+    Keycloak,
     Facebook,
-    Auth0,
+    // Auth0,
     Twitter,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {

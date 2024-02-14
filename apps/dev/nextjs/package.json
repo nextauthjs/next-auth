@@ -8,21 +8,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "email": "fake-smtp-server",
-    "start:email": "pnpm email",
     "e2e": "pnpm dlx playwright test"
   },
   "license": "ISC",
   "dependencies": {
-    "@auth/edgedb-adapter": "workspace:*",
-    "@auth/fauna-adapter": "workspace:*",
     "@auth/prisma-adapter": "workspace:*",
-    "@auth/supabase-adapter": "workspace:*",
-    "@auth/typeorm-adapter": "workspace:*",
     "@prisma/client": "^5",
-    "@supabase/supabase-js": "^2.0.5",
-    "edgedb": "^1.0.1",
-    "faunadb": "^4",
     "next": "14.0.4",
     "next-auth": "workspace:*",
     "nodemailer": "^6.9.3",
@@ -30,16 +21,9 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@edgedb/generate": "^0.0.4",
-    "@playwright/test": "1.29.2",
-    "@types/jsonwebtoken": "^8.5.5",
     "@types/react": "^18.2.23",
     "@types/react-dom": "^18.2.8",
-    "dotenv": "^16.0.3",
-    "fake-smtp-server": "^0.8.0",
-    "pg": "^8.7.3",
     "prisma": "^5",
-    "sqlite3": "^5.0.8",
-    "typeorm": "0.3.17"
+    "sqlite3": "^5.0.8"
   }
 }
