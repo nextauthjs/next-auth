@@ -194,3 +194,11 @@ html[data-theme="dark"] .github-counter {
 button[id^="headlessui-tabs-tab"] {
   margin: 0 3px 0 3px;
 }
+
+#carbonads {
+  @apply flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400;
+
+  img {
+    @apply rounded-[0.25rem] mb-2 w-full !max-w-full
+  }
+}

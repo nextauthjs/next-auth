@@ -13,8 +13,12 @@ export function Footer({ className = "" }) {
         const githubStat = document.querySelector(".github-counter")
         githubStat.innerHTML = kFormatter(data.stargazers_count)
       })
-      // eslint-disable-next-line no-console
-      .catch((e) => console.error(e))
+
+    // CarbonAds hydration error workaround hack
+    const carbonAdsEl =
+      document.querySelector<HTMLScriptElement>("#_carbonads_js")
+    carbonAdsEl.src =
+      "https://cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg"
   }, [])
   return (
     <div

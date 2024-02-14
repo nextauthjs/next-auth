@@ -95,8 +95,8 @@ const config: DocsThemeConfig = {
     const title = frontMatter.title
       ? frontMatter.title
       : capitalizedPathTitle
-      ? `Auth.js | ${capitalizedPathTitle}`
-      : "Auth.js | Authentication for the Web"
+        ? `Auth.js | ${capitalizedPathTitle}`
+        : "Auth.js | Authentication for the Web"
 
     return (
       <>
@@ -146,33 +146,38 @@ const config: DocsThemeConfig = {
   },
   toc: {
     extraContent: (
-      <a
-        href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
-        target="_blank"
-      >
-        <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-          Looking for a hosted alternative?
-          <span className="flex gap-2 text-[#289ef9]">
-            Try Clerk{" "}
-            <svg
-              width="16"
-              data-slot="icon"
-              fill="none"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-              ></path>
-            </svg>
-          </span>
-        </div>
-      </a>
+      <div className="max-w-96 flex flex-col gap-2">
+        <a
+          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+          target="_blank"
+        >
+          <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
+            Looking for a hosted alternative?
+            <span className="flex gap-2 text-[#289ef9]">
+              Try Clerk{" "}
+              <svg
+                width="16"
+                data-slot="icon"
+                fill="none"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+                ></path>
+              </svg>
+            </span>
+          </div>
+        </a>
+        <script
+          id="_carbonads_js"
+        />
+      </div>
     ),
     backToTop: true,
   },
