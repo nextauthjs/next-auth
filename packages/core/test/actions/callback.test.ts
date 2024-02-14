@@ -42,7 +42,7 @@ describe("assert GET callback action", () => {
     )
   })
 
-  it("should redirect query with state if isOnRedirectProxy is true, and state query contains origin", async () => {
+  it("should redirect query with state if redirectProxyUrl is defined, and state query contains origin", async () => {
     const encodedState = jose.base64url.encode(
       JSON.stringify({
         random: o.generateRandomState(),
@@ -57,7 +57,6 @@ describe("assert GET callback action", () => {
       config: {
         redirectProxyUrl: "https://login.example.com",
         providers: [GitHub],
-        debug: true,
       },
     })
 
