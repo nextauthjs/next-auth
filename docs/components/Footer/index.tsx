@@ -17,8 +17,10 @@ export function Footer({ className = "" }) {
     // CarbonAds hydration error workaround hack
     const carbonAdsEl =
       document.querySelector<HTMLScriptElement>("#_carbonads_js")
-    carbonAdsEl.src =
-      "https://cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg"
+    if (carbonAdsEl) {
+      carbonAdsEl.src =
+        "https://cdn.carbonads.com/carbon.js?serve=CEAI6K3N&placement=next-authjsorg"
+    }
   }, [])
   return (
     <div
