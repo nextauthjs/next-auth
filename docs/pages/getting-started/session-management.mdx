@@ -48,12 +48,7 @@ You're in charge of the building the UI for session management. Below we summari
 
 <RichTabs.Content className="p-8" value="login">
 
-For signing in users, assuming you have [already setup an authentication method](/getting-started/authentication), you only need to build a button that when pressed calls the sign in function exported in your Auth.js config.
-
-<Callout>
-  Note that when logging in for the first time, Auth.js will automatically
-  create an account for the user in the database.
-</Callout>
+To signin your users, make sure you have at least one [authentication method](/getting-started/authentication) setup. You then need to build a button which will call the sign in function from your Auth.js framework package.
 
 <Code>
   <Code.Next>
@@ -89,6 +84,12 @@ export function SignIn() {
   </Code.NextPages>
   <Code.Svelte>
 
+The SvelteKit client also supports two signin / signout methods, one server-side using Form Actions, and one client-side using normal requests and redirects.
+
+#### Form Action (Server-Side)
+
+First, we can use the `SignIn` component exported from `@auth/sveltekit/components`.
+
 ```svelte filename="src/routes/+page.svelte"
 <script lang="ts">
   import { page } from "$app/stores"
@@ -102,6 +103,38 @@ export function SignIn() {
     </SignIn>
   </nav>
 </header>
+```
+
+This requires a server action at `/signin`, this path can be customized with the `signInPage` prop.
+
+```ts filename="src/routes/signin/+page.server.ts"
+import { signIn } from "../../auth"
+import type { Actions } from "./$types"
+
+export const actions: Actions = { default: signIn }
+```
+
+And for that `+page.server.ts` to run, it also needs a `+page.svelte` file, which we can leave "empty" like this.
+
+```ts filename="src/routes/signin/+page.svelte"
+<!-- empty -->
+```
+
+#### Client Side
+
+Client-side is a bit simpler as we just need to import a button `on:click` handler from `@auth/sveltekit/client`.
+
+```svelte filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { signIn } from '@auth/sveltekit/client'
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <button on:click={signIn}>Signin</button>
+  </nav>
+</div>
 ```
 
   </Code.Svelte>
@@ -250,9 +283,9 @@ export function SignOut() {
 
 <RichTabs.Content className="p-8" value="user-menu">
 
-A common use-case once a user is logged in, is that you might want to display some session information by displaying the user's name and profile picture.
+Once a user is logged in, you often want to show their profile picture or display some other user information. To do this, we'll have to fetch the session in our pages or components.
 
-In Auth.js we need to call the `auth()` helper exported from the Auth.js configuration file to get the available user session.
+In Auth.js we need to call the `auth()` helper which will return the session data.
 
 <Code>
 <Code.Next>
@@ -279,7 +312,7 @@ export function UserAvatar() {
 </Code.Next>
 <Code.NextPages>
 
-In the pages router, you'll need to access the `session` in the page itself and then pass it into your `UserAvatar` component.
+In the pages router, you'll need to access the `session` in the page itself and then, for example, pass it on to your `UserAvatar` component.
 
 ```tsx filename="./components/UserAvatar"
 export function UserAvatar({ session }) {
@@ -359,6 +392,8 @@ export default function Dashboard() {
 
 </Code.NextPages>
 <Code.Svelte>
+
+With SvelteKit, you've already set the session on your `$page` store in your `+layout.server.ts` file, therefore we can use it directly like this.
 
 ```svelte filename="src/components/user-avatar.svelte"
 <script lang="ts">

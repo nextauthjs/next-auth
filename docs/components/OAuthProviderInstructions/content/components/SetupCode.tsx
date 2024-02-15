@@ -30,6 +30,9 @@ export const { signIn, signOut, auth } = NextAuth({
         />
       </Code.Next>
       <Code.Svelte>
+        In SvelteKit you should also setup your Auth.js configuration in a file
+        at `/src/auth.ts`.
+        <br />
         <Pre
           data-filename="./src/auth.ts"
           data-theme="default"
@@ -46,6 +49,10 @@ export const { handle } = SvelteKitAuth({
 }) `),
           }}
         />
+        <br />
+        Add the <code>handler</code> which <code>SvelteKitAuth</code> returns to
+        your <code>hooks.server.ts</code> file so that Auth.js can run on any
+        incoming request.
         <Pre
           data-filename="./src/hooks.server.ts"
           data-theme="default"
@@ -54,6 +61,31 @@ export const { handle } = SvelteKitAuth({
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`export { handle } from "./auth"`),
+          }}
+        />
+        <br />
+        Finally, using your <code>+layout.server.ts</code> we can add the{" "}
+        <code>session</code> object onto the <code>$page</code> store so that
+        the session is easy to access in your routes and components. For
+        example, on <code>$page.data.session</code>.
+        <Pre
+          data-filename="./src/routes/+layout.server.ts"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+import type { LayoutServerLoad } from "./$types"
+import { redirect } from "@sveltejs/kit"
+ 
+export const load: LayoutServerLoad = async (event) => {
+  const session = await event.locals.auth()
+ 
+  return {
+    session,
+  }
+}`),
           }}
         />
       </Code.Svelte>
