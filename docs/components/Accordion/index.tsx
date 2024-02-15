@@ -55,7 +55,7 @@ export const MultipleAccordions = forwardRef<
       ref={ref}
       value={value}
       onValueChange={setValue}
-      className={cx(className, "mt-2 border-2 *:bg-neutral-700")}
+      className={className}
       {...props}
     />
   )
@@ -84,7 +84,7 @@ export const SingleAccordions = forwardRef<
       collapsible
       className={cx(
         className,
-        "mt-4 border-2 border-neutral-100 dark:border-neutral-800 rounded-lg"
+        "mt-4 border border-neutral-200 dark:border-neutral-800 rounded-lg"
       )}
       {...props}
     />
@@ -105,27 +105,22 @@ export const Accordion = forwardRef<
       // Use `id` instead if presents
       value={props.id ?? title}
       className={cx(
-        "group/accordion scroll-m-20 border-b-2 border-neutral-100 dark:border-neutral-800 p-1 last-of-type:border-b-0",
+        "group/accordion scroll-m-20 border-b border-neutral-200 dark:border-neutral-800 last-of-type:border-b-0 first:rounded-t-lg first:overflow-hidden last:overflow-hidden last:rounded-b-lg",
         className
       )}
       {...props}
     >
-      <AccordionPrimitive.Header
-        asChild
-        className="flex items-center rounded-lg not-prose text-medium text-muted-foreground"
-      >
-        <>
-          <AccordionPrimitive.Trigger className="flex gap-1 items-center py-4 w-full text-left focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring">
-            <CaretRight className="size-5 transition-transform duration-200 group-data-[state=open]/accordion:rotate-90" />
-            <span className="font-medium text-medium text-foreground">
-              {title}
-            </span>
-          </AccordionPrimitive.Trigger>
-          {props.id ? <CopyButton id={props.id} /> : null}
-        </>
-      </AccordionPrimitive.Header>
+      <>
+        <AccordionPrimitive.Trigger className="flex gap-1 items-center py-[1.125rem] px-2 w-full text-left focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring data-[state=open]:bg-neutral-100 data-[state=open]:dark:bg-neutral-950 transition-colors duration-300">
+          <CaretRight className="size-5 transition-transform duration-200 group-data-[state=open]/accordion:rotate-90" />
+          <span className="font-medium text-medium text-foreground">
+            {title}
+          </span>
+        </AccordionPrimitive.Trigger>
+        {props.id ? <CopyButton id={props.id} /> : null}
+      </>
       <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-        <div className="pb-4 pl-6 text-sm prose-no-margin">{children}</div>
+        <div className="py-4 pl-6 text-sm prose-no-margin">{children}</div>
       </AccordionPrimitive.Content>
     </AccordionPrimitive.Item>
   )
