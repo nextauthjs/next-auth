@@ -110,52 +110,43 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       </p>
       <Code>
         <Code.Next>
-          <Pre data-filename=".env.local">
-            <NXCode>
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: highlight(
-                    `
+          <Pre
+            data-filename=".env.local"
+            dangerouslySetInnerHTML={{
+              __html: highlight(
+                `
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
 `
-                  ),
-                }}
-              />
-            </NXCode>
-          </Pre>
+              ),
+            }}
+          />
         </Code.Next>
         <Code.Svelte>
-          <Pre data-filename=".env.local">
-            <NXCode>
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: highlight(
-                    `
+          <Pre
+            data-filename=".env.local"
+            dangerouslySetInnerHTML={{
+              __html: highlight(
+                `
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
 `
-                  ),
-                }}
-              />
-            </NXCode>
-          </Pre>
+              ),
+            }}
+          />
         </Code.Svelte>
         <Code.Express>
-          <Pre data-filename=".env.local">
-            <NXCode>
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: highlight(
-                    `
+          <Pre
+            data-filename=".env.local"
+            dangerouslySetInnerHTML={{
+              __html: highlight(
+                `
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
 `
-                  ),
-                }}
-              />
-            </NXCode>
-          </Pre>
+              ),
+            }}
+          />
           <p className="mt-2 leading-7 first:mt-0">
             Assuming{" "}
             <Link href="https://www.npmjs.com/package/dotenv">

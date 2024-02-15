@@ -53,9 +53,12 @@ details > *:not(summary) {
   background-color: rgb(126 34 206);
 }
 
-.nextra-code pre {
-  --shiki-dark-bg: "transparent" !important;
+div.nextra-code > pre {
   @apply dark:!bg-neutral-950 !bg-transparent overflow-y-visible;
+}
+div.nextra-code * pre {
+  --shiki-dark-bg: "transparent" !important;
+  @apply dark:!bg-transparent;
 }
 
 pre code.nextra-code:not(:has(span)) {
