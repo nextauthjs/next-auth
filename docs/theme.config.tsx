@@ -1,4 +1,4 @@
-import { DocsThemeConfig } from "nextra-theme-docs"
+import { DocsThemeConfig, ThemeSwitch } from "nextra-theme-docs"
 import { Link } from "@/components/Link"
 import { ChildrenProps } from "@/utils/types"
 import Footer from "@/components/Footer"
@@ -42,7 +42,7 @@ const config: DocsThemeConfig = {
   project: {
     link: "https://github.com/nextauthjs/next-auth",
   },
-  darkMode: true,
+  darkMode: false,
   color: {
     hue: {
       light: 268,
@@ -77,11 +77,13 @@ const config: DocsThemeConfig = {
           </Link>
           <div className="github-counter">20k</div>
         </div>
+        <ThemeSwitch lite />
       </div>
     ),
   },
   sidebar: {
     defaultMenuCollapseLevel: 1,
+    toggleButton: false,
   },
   head: () => {
     const pathname = usePathname()
@@ -146,7 +148,7 @@ const config: DocsThemeConfig = {
   },
   toc: {
     extraContent: (
-      <div className="max-w-96 flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-w-96">
         <a
           href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
           target="_blank"
@@ -174,9 +176,7 @@ const config: DocsThemeConfig = {
             </span>
           </div>
         </a>
-        <script
-          id="_carbonads_js"
-        />
+        <script id="_carbonads_js" />
       </div>
     ),
     backToTop: true,
