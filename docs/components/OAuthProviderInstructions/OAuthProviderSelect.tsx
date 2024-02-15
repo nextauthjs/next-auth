@@ -22,7 +22,7 @@ export function OAuthProviderSelect() {
 
   return (
     <>
-      <ComboboxProvider value={term} defaultSelectedValue={selected}>
+      <ComboboxProvider value={term} selectedValue={selected}>
         <ComboboxLabel className="block mb-2 text-xl font-semibold">
           Select an OAuth Provider
         </ComboboxLabel>
@@ -33,28 +33,29 @@ export function OAuthProviderSelect() {
             handleSearchItem(e.target.value)
           }
         />
-        {term ? (
-          <ComboboxPopover
-            gutter={4}
-            sameWidth
-            className="overflow-y-scroll z-50 p-2 mt-1 max-h-72 rounded-md bg-neutral-100 dark:bg-neutral-900"
-          >
-            {items.map((item) => (
-              <ComboboxItem
-                className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-violet-200 dark:aria-selected:bg-violet-500 dark:aria-selected:text-neutral-900"
-                value={item.name}
-                key={item.name}
-                onClick={() => handleSelectOption(item)}
-              >
-                <img
-                  src={`/img/providers/${item.id}.svg`}
-                  className="w-6 h-6 rounded-sm"
-                />{" "}
-                {item.name}
-              </ComboboxItem>
-            ))}
-          </ComboboxPopover>
-        ) : (
+        <ComboboxPopover
+          gutter={4}
+          sameWidth
+          hideOnEscape
+          hideOnInteractOutside
+          className="overflow-y-scroll z-50 p-2 mt-1 max-h-72 rounded-md bg-neutral-100 dark:bg-neutral-900"
+        >
+          {items.map((item) => (
+            <ComboboxItem
+              className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-violet-200 dark:aria-selected:bg-violet-500 dark:aria-selected:text-neutral-900"
+              value={item.name}
+              key={item.name}
+              onClick={() => handleSelectOption(item)}
+            >
+              <img
+                src={`/img/providers/${item.id}.svg`}
+                className="w-6 h-6 rounded-sm"
+              />{" "}
+              {item.name}
+            </ComboboxItem>
+          ))}
+        </ComboboxPopover>
+        {!term ? (
           <>
             <p className="mt-8 rounded-md">
               Or jump directly to one of the popular ones below.
@@ -115,9 +116,9 @@ export function OAuthProviderSelect() {
               </div>
             </div>
           </>
-        )}
+        ) : null}
         {term && items.length === 0 ? (
-          <p className="py-2 px-4 mt-6 bg-violet-100 rounded-md dark:bg-violet-400/40 dark:text-neutral-900">
+          <p className="py-2 px-4 mt-6 bg-violet-100 rounded-md dark:bg-violet-300/50 dark:text-neutral-900">
             Can't find the OAuth provider you're looking for? You can always{" "}
             <Link href="/guides/configuring-oauth-providers#adding-a-new-built-in-provider">
               build your own
@@ -126,7 +127,7 @@ export function OAuthProviderSelect() {
           </p>
         ) : null}
       </ComboboxProvider>
-      {selected ? (
+      {selected && term && items.length !== 0 ? (
         <OAuthProviderInstructions
           providerId={selected}
           disabled={
