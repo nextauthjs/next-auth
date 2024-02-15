@@ -1,10 +1,10 @@
 import { Steps, Callout, Tabs } from "nextra/components"
 import { Link } from "@/components/Link"
-import { SelectProvider } from "@/components/SelectProvider"
+import { OAuthProviderSelect } from "@/components/OAuthProviderInstructions"
 import { RichTabs } from "@/components/RichTabs"
 import { Code } from "@/components/Code"
 import { Screenshot } from "@/components/Screenshot"
-import { TokenAuthInstructions } from "@/components/TokenAuthInstructions"
+import { MagicLinkInstructions } from "@/components/MagicLinkInstructions"
 import { GitDiff, Password, ChatDots, Fingerprint } from "@phosphor-icons/react"
 import { ListDisclosure } from "@/components/ListDisclosure"
 import manifest from "@/data/manifest.json"
@@ -15,7 +15,7 @@ At this point, you need to decide how you're gonna authenticate users in your ap
 
 - [OAuth authentication](/getting-started/providers/oauth-tutorial) (_Sign in with Google, Github, LinkedIn, etc..._)
 - [Magic Links](/getting-started/providers/email-tutorial) (_Email Provider like Resend, Sendgrid, Nodemailer..._)
-- [Credentials](/getting-started/providers/credentials-tutorial) (_Integrating with external APIs, etc..._)
+- [Credentials](/getting-started/providers/credentials-tutorial) (_Username and Password, Integrating with external APIs, etc..._)
 
 <br />
 
@@ -56,13 +56,13 @@ Once you have decided how to authenticate users in your application (you can alw
         <span>Setup OAuth</span>
       </div>
     </RichTabs.Trigger>
-    <RichTabs.Trigger key="token-auth" value="magic-link">
+    <RichTabs.Trigger key="magic-link" value="magic-link">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <ChatDots fontSize="2.5rem" />
         <span>Magic Link</span>
       </div>
     </RichTabs.Trigger>
-    <RichTabs.Trigger key="external-auth" value="credentials">
+    <RichTabs.Trigger key="credentials" value="credentials">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <Password fontSize="2.5rem" />
         <span>Setup Credentials</span>
@@ -75,12 +75,13 @@ Once you have decided how to authenticate users in your application (you can alw
       </div>
     </RichTabs.Trigger>
   </RichTabs.List>
-  <RichTabs.Content className="p-8" key="oauth" value="oauth">
-    <SelectProvider />
-  </RichTabs.Content>
+
+<RichTabs.Content className="p-8" key="oauth" value="oauth">
+  <OAuthProviderSelect />
+</RichTabs.Content>
 
 <RichTabs.Content className="p-8" key="magic-link" value="magic-link">
-  <TokenAuthInstructions />
+  <MagicLinkInstructions />
 </RichTabs.Content>
 
 <RichTabs.Content className="p-8" key="webauthn" value="webauthn">
@@ -97,10 +98,10 @@ Once you have decided how to authenticate users in your application (you can alw
 ### Install peer dependencies
 
 ```bash npm2yarn
-npm install @simplewebauthn/browser @simplewebauthn/server
+npm install @simplewebauthn/server @simplewebauthn/browser
 ```
 
-The `@simplewebauthn/browser` peer dependency is only required for custom signin pages. If you're using the Auth.js default pages, you can skip installing that peer dependency.
+The `@simplewebauthn/browser` peer dependency **is only required for custom signin pages**. If you're using the Auth.js default pages, you can skip installing that peer dependency.
 
 ### Apply the required schema Migrations
 
@@ -183,7 +184,7 @@ WebAuthn support is currently not supported in `edge` environments out of the bo
 
 </RichTabs.Content>
 
-<RichTabs.Content className="p-8" key="external-auth" value="credentials">
+<RichTabs.Content className="p-8" key="credentials" value="credentials">
 
 To setup Auth.js with external authentication mechanisms or simply use username and password, we need to use the `CredentialsProvider`. This provider is designed to forward any credentials inserted into the login form (.i.e username/password) to your authentication service via the `authorize` callback on the provider configuration.
 

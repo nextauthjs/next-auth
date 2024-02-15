@@ -10,7 +10,7 @@ const EmailTypes = {
   Sendgrid: "Sendgrid",
 } as const
 
-export function TokenAuthInstructions() {
+export function MagicLinkInstructions() {
   const [activeEmailType, setActiveEmailType] = useState<
     keyof typeof EmailTypes
   >(EmailTypes.Resend)

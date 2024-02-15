@@ -1,18 +1,18 @@
 import * as Ariakit from "@ariakit/react"
-import { useSelectProvider } from "./useSelectProvider"
+import { useOAuthProviderSelect } from "./useOAuthProviderSelect"
 import { ChangeEvent } from "react"
 import dynamic from "next/dynamic"
 
 import manifest from "@/data/manifest.json"
 import { Link } from "../Link"
 
-const OAuthInstructions = dynamic(() =>
-  import("../OAuthInstructions").then((mod) => mod.OAuthInstructions)
+const OAuthProviderInstructions = dynamic(() =>
+  import("./content").then((mod) => mod.OAuthInstructions)
 )
 
-export function SelectProvider() {
+export function OAuthProviderSelect() {
   const { items, term, selected, handleSearchItem, handleSelectOption } =
-    useSelectProvider()
+    useOAuthProviderSelect()
   return (
     <>
       <Ariakit.ComboboxProvider value={term} defaultSelectedValue={selected}>
@@ -120,7 +120,7 @@ export function SelectProvider() {
         ) : null}
       </Ariakit.ComboboxProvider>
       {selected ? (
-        <OAuthInstructions
+        <OAuthProviderInstructions
           providerId={selected}
           disabled={term !== manifest.providersOAuth[selected]}
         />

@@ -2,12 +2,12 @@ import manifest from "@/data/manifest.json"
 import cx from "classnames"
 import { Callout, Pre, Code as NXCode } from "nextra/components"
 import React, { useEffect, useState } from "react"
-import { Link } from "../Link"
-import { Code } from "../Code"
+import { Link } from "@/components/Link"
+import { Code } from "@/components/Code"
 import { StepTitle } from "./components/StepTitle"
 import { SetupCode } from "./components/SetupCode"
 import { SignInCode } from "./components/SignInCode"
-import { getHighlighter } from "shikiji"
+import { getHighlighter } from "shiki"
 
 interface Props {
   providerId: string
@@ -17,7 +17,7 @@ interface Props {
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
   const [highlighter, setHighlighterer] = useState(null)
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const hl = await getHighlighter({
         themes: ["github-light", "github-dark"],
         langs: ["ts", "tsx", "bash"],
@@ -117,7 +117,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
                     // prettier-ignore
                     `
 AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
 `
                   ),
                 }}
@@ -134,7 +134,7 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
                     // prettier-ignore
                     `
 AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
 `
                   ),
                 }}
@@ -151,7 +151,7 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
                     // prettier-ignore
                     `
 AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_", )}_SECRET={CLIENT_SECRET}
+AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
 `
                   ),
                 }}

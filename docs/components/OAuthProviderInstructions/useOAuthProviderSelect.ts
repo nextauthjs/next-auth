@@ -1,6 +1,6 @@
-import manifest from "@/data/manifest.json"
-import { useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
+import { useQueryState, parseAsString } from "nuqs"
+import manifest from "@/data/manifest.json"
 
 const providerList = Object.entries(manifest.providersOAuth).map(
   ([id, name]) => {
@@ -8,9 +8,12 @@ const providerList = Object.entries(manifest.providersOAuth).map(
   }
 )
 
-export function useSelectProvider() {
+export function useOAuthProviderSelect() {
   const [term, setTerm] = useState("")
-  const [selected, setSelected] = useQueryState("provider")
+  const [selected, setSelected] = useQueryState(
+    "provider",
+    parseAsString.withDefault("nextjs")
+  )
 
   useEffect(() => {
     // if landing to the page with a provider pre-selected
