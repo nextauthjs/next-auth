@@ -1,6 +1,4 @@
----
-title: Creating a framework integration
----
+# Creating a Framework Integration
 
 The core functionalities of Auth.js - `@auth/core` - are built on top of the Web Standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request)/[Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) mental model, and therefore are framework-agnostic. For each framework, we provide an integration layer that allows you to use the authentication features in a way that is specific to the framework. See the [list of integrations](./reference#integrations) that are currently available.
 
@@ -19,7 +17,6 @@ pnpm setup-fw-integration <framework-name>
 ```
 
 This will copy all the files from our official template at `./packages/frameworks-template` to a new directory under `packages/` with all the required files, and rename the placeholders to the name of the framework you provided.
-
 
 - Coding styles. The source code files should:
 
