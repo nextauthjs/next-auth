@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
-    "lint:fix": "eslint ./{components,pages,utils} --fix"
+    "lint:fix": "eslint ./{components,pages,utils} --fix",
+    "postinstall": "pnpm exec simple-git-hooks"
   },
   "repository": {
     "type": "git",
@@ -30,25 +31,24 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@vercel/analytics": "^1.1.2",
     "classnames": "^2.3.2",
-    "next": "^14.0.4",
-    "nextra": "3.0.0-alpha.12",
-    "nextra-theme-docs": "3.0.0-alpha.12",
-    "nuqs": "^1.16.1",
+    "next": "^14.1.0",
+    "nextra": "3.0.0-alpha.17",
+    "nextra-theme-docs": "3.0.0-alpha.17",
+    "nuqs": "^1.17.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-fast-marquee": "^1.6.2",
-    "react-marquee-slider": "^1.1.5",
-    "shikiji": "^0.9.19",
-    "typedoc": "^0.25.6",
-    "typedoc-plugin-markdown": "4.0.0-next.39"
+    "react-marquee-slider": "^1.1.5"
   },
   "devDependencies": {
     "@types/node": "20.9.0",
     "@types/react": "18.2.46",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
+    "shiki": "^1.1.2",
     "simple-git-hooks": "^2.9.0",
-    "tailwindcss": "^3.3.5"
+    "tailwindcss": "^3.3.5",
+    "typedoc": "^0.25.8",
+    "typedoc-plugin-markdown": "4.0.0-next.53"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint"
