@@ -58,7 +58,7 @@ div.nextra-code > pre {
 }
 div.nextra-code * pre {
   --shiki-dark-bg: "transparent" !important;
-  @apply dark:!bg-transparent;
+  @apply !bg-transparent;
 }
 
 pre code.nextra-code:not(:has(span)) {
