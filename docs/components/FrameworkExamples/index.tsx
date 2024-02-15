@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { addClassToHast, codeToHtml } from "shikiji";
-import { Framework, frameworkDetails } from "utils/frameworks";
-import { RichTabs } from "@/components/RichTabs";
-import Image from "next/image";
-import SvelteKit from "../../public/img/etc/sveltekit.svg";
-import Express from "../../public/img/etc/express.svg";
-import NextJs from "../../public/img/etc/nextjs.svg";
+import React, { useEffect, useState } from "react"
+import { addClassToHast, codeToHtml } from "shiki"
+import { Framework, frameworkDetails } from "utils/frameworks"
+import { RichTabs } from "@/components/RichTabs"
+import Image from "next/image"
+import SvelteKit from "../../public/img/etc/sveltekit.svg"
+import Express from "../../public/img/etc/express.svg"
+import NextJs from "../../public/img/etc/nextjs.svg"
 
 async function renderNextJs(framework: Framework) {
-  const tailwindDarkMode = document.documentElement.classList.contains("dark");
+  const tailwindDarkMode = document.documentElement.classList.contains("dark")
 
   return codeToHtml(frameworkDetails[framework].code, {
     lang: "ts",
@@ -19,26 +19,26 @@ async function renderNextJs(framework: Framework) {
           addClassToHast(
             node,
             "w-full h-full !px-2 !py-4 rounded-md overflow-x-scroll"
-          );
+          )
         },
       },
     ],
-  });
+  })
 }
 
 export function FrameworkExamples() {
-  const [active, setActive] = useState<Framework>(Framework.NextJs);
-  const [example, setExample] = useState("");
+  const [active, setActive] = useState<Framework>(Framework.NextJs)
+  const [example, setExample] = useState("")
 
   useEffect(() => {
     renderNextJs(active)
       .then((code) => setExample(code))
       // eslint-disable-next-line no-console
-      .catch((e) => console.error(e));
-  }, [active]);
+      .catch((e) => console.error(e))
+  }, [active])
 
   function handleTabChange(value: Framework) {
-    setActive(value);
+    setActive(value)
   }
 
   return (
@@ -120,5 +120,5 @@ export function FrameworkExamples() {
         </div>
       </RichTabs>
     </div>
-  );
+  )
 }
