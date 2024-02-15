@@ -1,10 +1,10 @@
 type Details = {
-  title: string;
-  code: string;
-  logo: string;
-  logoW: string;
-  example: string;
-};
+  title: string
+  code: string
+  logo: string
+  logoW: string
+  example: string
+}
 
 export enum Framework {
   NextJs = "nextjs",
@@ -42,7 +42,7 @@ export const frameworkDetails: Record<Framework, Details> = {
     logoW: "45",
     example: "https://express.vercel.app/",
   },
-};
+}
 
 /**
  * Using functions for these to not have to have them at the top of the file and block readability...
@@ -59,7 +59,7 @@ export { auth as middleware } from "@/auth"
   
 // app/api/auth/[...nextauth]/route.ts
 import { handlers } from "@/auth"
-export const { GET, POST } = handlers`;
+export const { GET, POST } = handlers`
 }
 
 function codeSvelte() {
@@ -71,10 +71,10 @@ import GitHub from '@auth/sveltekit/providers/github'
 export const { handle } = SvelteKitAuth({
   providers: [GitHub],
 })
-
+ 
 // src/hooks.server.ts
 export { handle } from "./auth"
-`;
+`
 }
 
 // function codeSolid() {
@@ -99,9 +99,9 @@ function codeExpress() {
 import { express } from "express"
 import { SolidAuth } from "@auth/express"
 import GitHub from "@auth/express/providers/github"
-
+ 
 const app = express()
-
+ 
 app.use("/auth/*", ExpressAuth({ providers: [GitHub] }))
-`;
+`
 }
