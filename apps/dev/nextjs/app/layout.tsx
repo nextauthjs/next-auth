@@ -11,16 +11,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <AppHeader />
         <main>{props.children}</main>
-        <div>
-          <form
-            action={async () => {
-              "use server"
-              update({ user: { name: "New Name" } })
-            }}
-          >
-            <button>Update name</button>
-          </form>
-        </div>
         <Footer />
       </body>
     </html>
@@ -34,10 +24,10 @@ export async function AppHeader() {
       session={session}
       signIn={
         <form
-          action={async (formData) => {
+          action={async () => {
             "use server"
             try {
-              await signIn("credentials", formData)
+              await signIn()
             } catch (error) {
               if (error instanceof AuthError) {
                 console.log(error)
@@ -46,7 +36,6 @@ export async function AppHeader() {
             }
           }}
         >
-          <input name="password" />
           <button className={styles.buttonPrimary}>Sign in</button>
         </form>
       }
@@ -57,7 +46,7 @@ export async function AppHeader() {
             await signOut()
           }}
         >
-          <button className={styles.button}>Sign out</button>
+          <button className={styles.buttonPrimary}>Sign out</button>
         </form>
       }
     />

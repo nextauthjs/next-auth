@@ -6,52 +6,18 @@
         "^build"
       ],
       "outputs": [
-        "dist/**/*",
-        "lib/**/*",
-        "*.js",
-        "*.d.ts",
-        "*.d.ts.map"
-      ],
-      "outputMode": "new-only"
-    },
-    "@auth/core#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
+        ".next",
+        "dist/**",
         "lib/**",
         "providers/**",
         "*.js",
         "*.d.ts",
         "*.d.ts.map",
         "src/lib/pages/styles.ts",
-        "src/providers/oauth-types.ts"
+        "src/providers/oauth-types.ts",
+        ".svelte-kit/**"
       ],
       "outputMode": "new-only"
-    },
-    "@auth/sveltekit#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".svelte-kit/**",
-        "providers/**",
-        "client.*",
-        "index.*"
-      ],
-      "outputMode": "new-only"
-    },
-    "next-auth#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "lib/**",
-        "providers/**",
-        "*.js",
-        "*.d.ts",
-        "*.d.ts*"
-      ]
     },
     "clean": {
       "cache": false
@@ -60,17 +26,33 @@
       "cache": false
     },
     "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/**/",
+        "test/**/"
+      ],
       "outputMode": "new-only"
     },
-    "e2e": {
+    "test:e2e": {
       "outputs": [
-        "playwright-report/**"
+        "blob-report/**",
+        "playwright-report/**",
+        "playwright/.cache/**",
+        "test-results/**"
       ]
     },
     "@auth/upstash-redis-adapter#test": {
       "env": [
         "UPSTASH_REDIS_KEY",
         "UPSTASH_REDIS_URL"
+      ]
+    },
+    "@auth/xata-adapter#test": {
+      "env": [
+        "XATA_API_KEY",
+        "XATA_DATABASE_URL"
       ]
     },
     "docs#dev": {
@@ -97,7 +79,9 @@
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
         "@auth/sveltekit#build",
+        "@auth/express#build",
         "@auth/typeorm-adapter#build",
+        "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
         "next-auth#build",
@@ -130,6 +114,7 @@
         "@auth/surrealdb-adapter#build",
         "@auth/sveltekit#build",
         "@auth/typeorm-adapter#build",
+        "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
         "next-auth#build",
@@ -142,7 +127,8 @@
         "docs/reference/core/**/*",
         "docs/reference/nextjs/**/*",
         "docs/reference/solidstart/**/*",
-        "docs/reference/sveltekit/**/*"
+        "docs/reference/sveltekit/**/*",
+        "docs/reference/express/**/*"
       ]
     }
   }

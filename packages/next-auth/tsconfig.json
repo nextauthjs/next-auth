@@ -1,20 +1,11 @@
 {
   "extends": "utils/tsconfig.json",
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "react-jsx",
     "outDir": ".",
-    "rootDir": "src",
+    "rootDir": "src"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "*.js",
-    "*.d.ts",
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts"]
 }

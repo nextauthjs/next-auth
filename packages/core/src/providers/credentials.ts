@@ -17,7 +17,7 @@ export interface CredentialsConfig<
   CredentialsInputs extends Record<string, CredentialInput> = Record<
     string,
     CredentialInput
-  >
+  >,
 > extends CommonProviderOptions {
   type: "credentials"
   credentials: CredentialsInputs
@@ -127,7 +127,7 @@ export default function Credentials<
   CredentialsInputs extends Record<string, CredentialInput> = Record<
     string,
     CredentialInput
-  >
+  >,
 >(config: Partial<CredentialsConfig<CredentialsInputs>>): CredentialsConfig {
   return {
     id: "credentials",

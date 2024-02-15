@@ -2,7 +2,7 @@
 title: Creating a database adapter
 ---
 
-Auth.js adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. (We welcome PRs for new adapters! See the [checklist](#official-adapter-checklist) below.)
+Auth.js adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. (We welcome PRs for new adapters! See the [guidelines](#official-adapter-guidelines) below.)
 
 Auth.js adapters are very flexible, and you can implement only the methods you need, and only create the database tables/columns that are actually going to be used.
 
@@ -25,6 +25,7 @@ Auth.js differentiates between users and accounts. A user can have multiple acco
     Not yet invoked by Auth.js:
     - [_`deleteUser`_](/reference/core/adapters#deleteuser)
     - [_`unlinkAccount`_](/reference/core/adapters#unlinkaccount)
+
   </span>
   ```mermaid
   erDiagram
@@ -50,7 +51,6 @@ Although Auth.js doesn't require it, for basic display purposes, we recommend ad
 :::note
 Although Auth.js doesn't require it, the `Account` table typically saves tokens retrieved from the provider. You can configure the columns via the [`account()` provider method](/reference/core/providers#account). If you don't need to save tokens, create an empty `account() {}` method.
 :::
-
 
 ## Database session management
 
@@ -89,7 +89,6 @@ Auth.js can manage sessions in two ways. Learn about them and their advantages a
 
 If you want to use database sessions, you will need to implement the following methods:
 
-
 To add database session management, you will need to expand your database tables/columns as follows:
 
 See also: [Session](/getting-started/adapters#session) models.
@@ -97,7 +96,6 @@ See also: [Session](/getting-started/adapters#session) models.
 ## Verification tokens
 
 When you want to support email/passwordless login, Auth.js uses a database to store temporary verification tokens that are tied to a user's email address.
-
 
 ### Methods and models
 
@@ -131,7 +129,7 @@ When you want to support email/passwordless login, Auth.js uses a database to st
 
 See also: [Verification Token](/getting-started/adapters#verification-token) models.
 
-## Official adapter checklist
+## Official adapter guidelines
 
 :::info
 When all of the below steps are done, you are ready to submit a PR to our [repository](https://github.com/nextauthjs/next-auth).
@@ -149,6 +147,7 @@ If you created an adapter and want us to distribute it as an official package, p
    - Configured as an ES module (ESM)
    - Documented via JSDoc comments
    - Have at least one named export exported from its main module. (For example `export function MyAdapter(): Adapter {}`)
+   - collection/table names should follow the convention (plural/singular, camelCase/snake_case) of the underlying ORM/database docs/conventions
 
 1. Configure the monorepo to help us maintain the package
 

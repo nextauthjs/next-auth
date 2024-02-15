@@ -52,9 +52,11 @@ const defaultConfig = {
   readme: "none",
   skipErrorChecking: true,
   sort: ["kind", "static-first", "required-first", "alphabetical"],
+  useCodeBlocks: true,
+  expandObjects: true,
 } satisfies TypeDocConfig
 
-export function typedocAdapter({ id }: typeof manifest.adapters[number]) {
+export function typedocAdapter({ id }: (typeof manifest.adapters)[number]) {
   const options = {
     ...defaultConfig,
     id,
@@ -70,7 +72,7 @@ export function typedocFramework({
   packageDir,
   entrypoints,
   id,
-}: typeof manifest.frameworks[number]) {
+}: (typeof manifest.frameworks)[number]) {
   const packageName = require(`../packages/${packageDir}/package.json`).name
   const options = {
     ...defaultConfig,

@@ -28,6 +28,11 @@ type ErrorType =
   | "UntrustedHost"
   | "Verification"
   | "MissingCSRF"
+  | "AccountNotLinked"
+  | "DuplicateConditionalUI"
+  | "MissingWebAuthnAutocomplete"
+  | "WebAuthnVerificationError"
+  | "ExperimentalFeatureNotEnabled"
 
 /**
  * Base error class for all Auth.js errors.
@@ -258,19 +263,16 @@ export class MissingAuthorize extends AuthError {
 }
 
 /**
- * Auth.js requires a secret to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
+ * Auth.js requires a secret or multiple secrets to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
  *
  * :::note
- * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET` environment variable.
- * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret).
+ * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET`, `AUTH_SECRET_1`, etc. environment variables.
+ * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret) option.
  * :::
  *
  *
  * :::tip
- * You can generate a good secret value:
- *  - On Unix systems: type `openssl rand -hex 32` in the terminal
- *  - Or generate one [online](https://generate-secret.vercel.app/32)
- *
+ * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
  * :::
  */
 export class MissingSecret extends AuthError {
@@ -304,7 +306,7 @@ export class OAuthCallbackError extends SignInError {
 }
 
 /**
- * This error occurs during an OAuth sign in attempt when the provdier's
+ * This error occurs during an OAuth sign in attempt when the provider's
  * response could not be parsed. This could for example happen if the provider's API
  * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers/oauth#profile) method is not implemented correctly.
  */
@@ -388,7 +390,7 @@ export class UnsupportedStrategy extends AuthError {
   static type = "UnsupportedStrategy"
 }
 
-/** Thrown when the callback endpoint was incorrectly called without a provider. */
+/** Thrown when an endpoint was incorrectly called without a provider, or with an unsupported provider. */
 export class InvalidProvider extends AuthError {
   static type = "InvalidProvider"
 }
@@ -429,4 +431,45 @@ export class Verification extends AuthError {
  */
 export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"
+}
+
+/**
+ * Thrown when multiple providers have `enableConditionalUI` set to `true`.
+ * Only one provider can have this option enabled at a time.
+ */
+export class DuplicateConditionalUI extends AuthError {
+  static type = "DuplicateConditionalUI"
+}
+
+/**
+ * Thrown when a WebAuthn provider has `enableConditionalUI` set to `true` but no formField has `webauthn` in its autocomplete param.
+ * 
+ * The `webauthn` autocomplete param is required for conditional UI to work.
+ */
+export class MissingWebAuthnAutocomplete extends AuthError {
+  static type = "MissingWebAuthnAutocomplete"
+}
+
+/**
+ * Thrown when a WebAuthn provider fails to verify a client response.
+ */
+export class WebAuthnVerificationError extends AuthError {
+  static type = "WebAuthnVerificationError"
+}
+
+/**
+ * Thrown when an Email address is already associated with an account
+ * but the user is trying an account that is not linked to it.
+ *
+ * For security reasons, Auth.js does not automatically link accounts to existing accounts if the user is not signed in.
+ */
+export class AccountNotLinked extends SignInError {
+  static type = "AccountNotLinked"
+}
+
+/**
+ * Thrown when an experimental feature is used but not enabled.
+ */
+export class ExperimentalFeatureNotEnabled extends AuthError {
+  static type = "ExperimentalFeatureNotEnabled"
 }

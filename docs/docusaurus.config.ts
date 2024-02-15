@@ -144,7 +144,7 @@ export default {
           title: "Acknowledgements",
           items: [
             { label: "Contributors", to: "/contributors" },
-            { label: "Sponsors", to: "https://opencollective.com/nextauth" },
+            { label: "Sponsors", to: "/sponsors" },
             { label: "Images by unDraw", to: "https://undraw.co/" },
           ],
         },
@@ -219,6 +219,12 @@ export default {
     ...(process.env.TYPEDOC_SKIP_ADAPTERS
       ? []
       : manifest.adapters.map(typedocAdapter)),
+  ],
+  scripts: [
+    {
+      src: "js/clerk.js",
+      async: true,
+    },
   ],
   headTags: [
     { tagName: "meta", attributes: { charSet: "utf-8" } },
