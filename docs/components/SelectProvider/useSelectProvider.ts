@@ -30,7 +30,7 @@ export function useSelectProvider() {
 
   return {
     items: providerList.filter((item) =>
-      item.name.toLowerCase().includes(term.toLowerCase())
+      item.name.toLowerCase().includes(term?.toLowerCase())
     ),
     term,
     selected,
