@@ -26,7 +26,7 @@
     "build": "tsc",
     "patch": "npm version patch --no-git-tag-version",
     "test": "vitest -c ../utils/vitest.config.ts",
-    "clean": "rm -rf client.* index.*"
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "publishConfig": {
     "access": "public"
