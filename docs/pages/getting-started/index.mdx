@@ -44,7 +44,7 @@ There are 3 ways to authenticate users with Auth.js:
     <Link
       href={`/getting-started/providers/${id}`}
       key={name}
-      className="p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-lg h-32"
+      className="p-4 border border-solid dark:border-neutral-800 border-neutral-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-sm h-32 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300"
     >
       <img src={`/img/providers/${id}.svg`} className="w-11 mt-2" />
       <div className="text-sm text-center">{name}</div>
@@ -61,7 +61,7 @@ Optionally, Auth.js can be integrated with an external database via Database ada
     <Link
       href={`/getting-started/adapters/${value}`}
       key={value}
-      className="p-4 border border-solid dark:border-neutral-800 border-slate-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-lg h-32"
+      className="p-4 border border-solid dark:border-neutral-800 border-neutral-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-sm h-32 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300"
     >
       <img src={`/img/adapters/${value}.svg`} className="h-12 mt-2" />
       <div className="text-sm text-center">{label}</div>

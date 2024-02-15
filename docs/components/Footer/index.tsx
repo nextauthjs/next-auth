@@ -11,7 +11,7 @@ export function Footer({ className = "" }) {
       .then((res) => res.json())
       .then((data) => {
         const githubStat = document.querySelector(".github-counter")
-        githubStat.innerHTML = kFormatter(data.stargazers_count)
+        githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
       })
 
     // CarbonAds hydration error workaround hack

@@ -1,19 +1,19 @@
-import React from "react";
-import { useListDisclosure } from "./useListDisclosure";
-import cx from "classnames";
+import React from "react"
+import { useListDisclosure } from "./useListDisclosure"
+import cx from "classnames"
 
 interface Props {
-  children: React.ReactElement[];
-  limit: number;
-  className?: string;
+  children: React.ReactElement[]
+  limit: number
+  className?: string
 }
 
 export function ListDisclosure({ children, limit, className = "" }: Props) {
   const { displayLimit, handleCollapseAll, handleDisplayMore } =
-    useListDisclosure(limit);
+    useListDisclosure(limit)
 
-  const rendered = children.slice(0, displayLimit);
-  const isAllDisplayed = displayLimit >= children.length;
+  const rendered = children.slice(0, displayLimit)
+  const isAllDisplayed = displayLimit >= children.length
 
   return (
     <>
@@ -26,11 +26,11 @@ export function ListDisclosure({ children, limit, className = "" }: Props) {
         {rendered}
       </div>
       <button
-        className="w-24 h-8 text-sm font-semibold text-white rounded-full shadow-md bg-slate-900"
+        className="w-24 h-8 text-sm font-semibold text-white rounded-full bg-neutral-400 dark:bg-neutral-950"
         onClick={isAllDisplayed ? handleCollapseAll : handleDisplayMore}
       >
         {isAllDisplayed ? "Collapse all" : "Show more"}
       </button>
     </>
-  );
+  )
 }

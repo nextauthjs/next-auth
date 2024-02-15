@@ -34,7 +34,7 @@ export function DemoCards() {
         <div className="flex flex-col gap-2" key={name}>
           <Link
             href={`/getting-started/installation?framework=${name.toLowerCase()}`}
-            className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-lg border-slate-200 dark:border-neutral-800 dark:bg-neutral-900"
+            className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 no-underline rounded-lg border border-solid shadow-sm transition-colors duration-300 hover:no-underline border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
           >
             <img
               alt={name}
@@ -44,7 +44,7 @@ export function DemoCards() {
                 name === "Express" || name === "Next.js" ? "dark:invert" : ""
               }
             />
-            <div className="mt-3 text-sm">{name}</div>
+            <div className="mt-3 text-sm no-underline">{name}</div>
             {wip ? (
               <div
                 className="absolute py-1 px-3 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
@@ -80,7 +80,7 @@ export function DemoCards() {
       ))}
       <Link
         href={`/reference`}
-        className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-lg border-slate-200 dark:border-neutral-800 dark:bg-neutral-900"
+        className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-sm border-slate-200 dark:border-neutral-800 dark:bg-neutral-900"
       >
         <Plus size={36} />
         <div className="mt-3 text-sm">Add New</div>

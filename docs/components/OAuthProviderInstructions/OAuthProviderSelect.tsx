@@ -66,7 +66,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "google", name: "Google" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/google.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Google</div>
@@ -76,7 +76,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "twitter", name: "Twitter" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 transition-color dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/twitter.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Twitter</div>
@@ -86,7 +86,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "facebook", name: "Facebook" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
                 <img
                   src={`/img/providers/facebook.svg`}
@@ -99,14 +99,14 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "auth0", name: "Auth0" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/auth0.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Auth0</div>
               </div>
               <div
                 role="button"
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
                 onClick={() =>
                   handleSelectOption({ id: "github", name: "Github" })
                 }

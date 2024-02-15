@@ -55,7 +55,11 @@ details > *:not(summary) {
 
 .nextra-code pre {
   --shiki-dark-bg: "transparent" !important;
-  @apply dark:!bg-neutral-950 !bg-transparent;
+  @apply dark:!bg-neutral-950 !bg-transparent overflow-y-visible;
+}
+
+pre code.nextra-code:not(:has(span)) {
+  padding-inline: 1rem;
 }
 
 :is(html[class~="dark"] .nextra-code span) {
