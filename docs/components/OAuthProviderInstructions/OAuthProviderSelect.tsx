@@ -19,6 +19,7 @@ const OAuthProviderInstructions = dynamic(() =>
 export function OAuthProviderSelect() {
   const { items, term, selected, handleSearchItem, handleSelectOption } =
     useOAuthProviderSelect()
+
   return (
     <>
       <ComboboxProvider value={term} defaultSelectedValue={selected}>
@@ -40,7 +41,7 @@ export function OAuthProviderSelect() {
           >
             {items.map((item) => (
               <ComboboxItem
-                className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-violet-200 dark:aria-selected:text-neutral-900"
+                className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-violet-200 dark:aria-selected:bg-violet-500 dark:aria-selected:text-neutral-900"
                 value={item.name}
                 key={item.name}
                 onClick={() => handleSelectOption(item)}
@@ -128,7 +129,10 @@ export function OAuthProviderSelect() {
       {selected ? (
         <OAuthProviderInstructions
           providerId={selected}
-          disabled={term !== manifest.providersOAuth[selected]}
+          disabled={
+            term.toLowerCase() !==
+            manifest.providersOAuth[selected].toLowerCase()
+          }
         />
       ) : null}
     </>

@@ -12,7 +12,7 @@ export function useOAuthProviderSelect() {
   const [term, setTerm] = useState("")
   const [selected, setSelected] = useQueryState(
     "provider",
-    parseAsString.withDefault("nextjs")
+    parseAsString.withDefault("")
   )
 
   useEffect(() => {
