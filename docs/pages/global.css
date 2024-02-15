@@ -81,36 +81,6 @@ pre code.nextra-code:not(:has(span)) {
 }
 
 @layer utilities {
-  .animation-delay-200 {
-    animation-delay: 200ms;
-  }
-  .animation-delay-300 {
-    animation-delay: 300ms;
-  }
-  .animation-delay-400 {
-    animation-delay: 400ms;
-  }
-  .animation-delay-500 {
-    animation-delay: 500ms;
-  }
-  .animation-delay-600 {
-    animation-delay: 600ms;
-  }
-  .animation-delay-700 {
-    animation-delay: 700ms;
-  }
-  .animation-delay-800 {
-    animation-delay: 800ms;
-  }
-  .animation-delay-900 {
-    animation-delay: 900ms;
-  }
-  .animation-delay-1100 {
-    animation-delay: 1100ms;
-  }
-  .animation-delay-1000 {
-    animation-delay: 1000ms;
-  }
   .animation-delay-2000 {
     animation-delay: 2s;
   }
@@ -170,7 +140,7 @@ html[data-theme="dark"] .github-counter {
   color: #fff;
 }
 
-/* ark-ui tooltip animation */
+/* Tooltip transitions */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -225,4 +195,9 @@ button[id^="headlessui-tabs-tab"] {
     background-color: unset !important;
     padding: 0 !important;
   }
+}
+
+/* Sidebar hack for padding for focus ring */
+aside.nextra-sidebar-container .nextra-scrollbar > div {
+  padding: 4px;
 }
