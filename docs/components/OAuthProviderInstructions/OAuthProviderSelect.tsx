@@ -27,8 +27,8 @@ export function OAuthProviderSelect() {
           Select an OAuth Provider
         </ComboboxLabel>
         <Combobox
-          placeholder="Type and select an OAuth Provider"
-          className="py-2 px-4 w-full font-medium rounded-sm shadow-md md:w-96 bg-neutral-100 border-neutral-400 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300"
+          placeholder="Search for your favorite OAuth provider"
+          className="py-2 px-4 w-full font-medium rounded-sm shadow-sm md:w-96 bg-neutral-100 border-neutral-400 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleSearchItem(e.target.value)
           }

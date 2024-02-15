@@ -5,7 +5,7 @@ import { RichTabs } from "@/components/RichTabs"
 import { Code } from "@/components/Code"
 import { Screenshot } from "@/components/Screenshot"
 import { MagicLinkInstructions } from "@/components/MagicLinkInstructions"
-import { GitDiff, Password, ChatDots, Fingerprint } from "@phosphor-icons/react"
+import { LockKey, Password, Envelope, Fingerprint } from "@phosphor-icons/react"
 import { ListDisclosure } from "@/components/ListDisclosure"
 import manifest from "@/data/manifest.json"
 
@@ -52,20 +52,20 @@ Once you have decided how to authenticate users in your application (you can alw
   <RichTabs.List className="gap-2">
     <RichTabs.Trigger key="oauth" value="oauth">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
-        <GitDiff fontSize="2.5rem" />
-        <span>Setup OAuth</span>
+        <LockKey fontSize="2.5rem" />
+        <span>OAuth</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger key="magic-link" value="magic-link">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
-        <ChatDots fontSize="2.5rem" />
+        <Envelope fontSize="2.5rem" />
         <span>Magic Link</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger key="credentials" value="credentials">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <Password fontSize="2.5rem" />
-        <span>Setup Credentials</span>
+        <span>Credentials</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger key="webauthn" value="webauthn">
