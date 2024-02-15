@@ -1,10 +1,16 @@
-import * as Ariakit from "@ariakit/react"
+import {
+  Combobox,
+  ComboboxItem,
+  ComboboxLabel,
+  ComboboxPopover,
+  ComboboxProvider,
+} from "@ariakit/react"
 import { useOAuthProviderSelect } from "./useOAuthProviderSelect"
-import { ChangeEvent } from "react"
 import dynamic from "next/dynamic"
+import type { ChangeEvent } from "react"
 
+import { Link } from "@/components/Link"
 import manifest from "@/data/manifest.json"
-import { Link } from "../Link"
 
 const OAuthProviderInstructions = dynamic(() =>
   import("./content").then((mod) => mod.OAuthInstructions)
@@ -15,11 +21,11 @@ export function OAuthProviderSelect() {
     useOAuthProviderSelect()
   return (
     <>
-      <Ariakit.ComboboxProvider value={term} defaultSelectedValue={selected}>
-        <Ariakit.ComboboxLabel className="block mb-2 text-xl font-semibold">
+      <ComboboxProvider value={term} defaultSelectedValue={selected}>
+        <ComboboxLabel className="block mb-2 text-xl font-semibold">
           Select an OAuth Provider
-        </Ariakit.ComboboxLabel>
-        <Ariakit.Combobox
+        </ComboboxLabel>
+        <Combobox
           placeholder="Type and select an OAuth Provider"
           className="py-2 px-4 w-full font-medium rounded-sm shadow-md md:w-96 bg-neutral-100 border-neutral-400 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -27,13 +33,13 @@ export function OAuthProviderSelect() {
           }
         />
         {term ? (
-          <Ariakit.ComboboxPopover
+          <ComboboxPopover
             gutter={4}
             sameWidth
             className="overflow-y-scroll z-50 p-2 mt-1 max-h-72 rounded-md bg-neutral-100 dark:bg-neutral-900"
           >
             {items.map((item) => (
-              <Ariakit.ComboboxItem
+              <ComboboxItem
                 className="flex flex-row gap-4 items-center py-2 px-2 cursor-pointer aria-selected:bg-violet-200 dark:aria-selected:text-neutral-900"
                 value={item.name}
                 key={item.name}
@@ -44,9 +50,9 @@ export function OAuthProviderSelect() {
                   className="w-6 h-6 rounded-sm"
                 />{" "}
                 {item.name}
-              </Ariakit.ComboboxItem>
+              </ComboboxItem>
             ))}
-          </Ariakit.ComboboxPopover>
+          </ComboboxPopover>
         ) : (
           <>
             <p className="mt-8 rounded-md">
@@ -58,7 +64,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "google", name: "Google" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/google.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Google</div>
@@ -68,7 +74,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "twitter", name: "Twitter" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 transition-color dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg border-neutral-200 transition-color dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/twitter.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Twitter</div>
@@ -78,7 +84,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "facebook", name: "Facebook" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img
                   src={`/img/providers/facebook.svg`}
@@ -91,14 +97,14 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "auth0", name: "Auth0" })
                 }
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
               >
                 <img src={`/img/providers/auth0.svg`} className="mt-2 w-11" />
                 <div className="text-sm text-center">Auth0</div>
               </div>
               <div
                 role="button"
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-600 hover:bg-neutral-50"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-lg transition-colors border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-600 hover:bg-neutral-50"
                 onClick={() =>
                   handleSelectOption({ id: "github", name: "Github" })
                 }
@@ -118,7 +124,7 @@ export function OAuthProviderSelect() {
             .
           </p>
         ) : null}
-      </Ariakit.ComboboxProvider>
+      </ComboboxProvider>
       {selected ? (
         <OAuthProviderInstructions
           providerId={selected}

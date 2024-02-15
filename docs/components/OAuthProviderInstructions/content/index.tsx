@@ -1,13 +1,14 @@
-import manifest from "@/data/manifest.json"
+import { useEffect, useState } from "react"
+import { getHighlighter } from "shiki"
 import cx from "classnames"
 import { Callout, Pre, Code as NXCode } from "nextra/components"
-import React, { useEffect, useState } from "react"
-import { Link } from "@/components/Link"
-import { Code } from "@/components/Code"
+
 import { StepTitle } from "./components/StepTitle"
 import { SetupCode } from "./components/SetupCode"
 import { SignInCode } from "./components/SignInCode"
-import { getHighlighter } from "shiki"
+import { Link } from "@/components/Link"
+import { Code } from "@/components/Code"
+import manifest from "@/data/manifest.json"
 
 interface Props {
   providerId: string
@@ -15,14 +16,14 @@ interface Props {
 }
 
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
-  const [highlighter, setHighlighterer] = useState(null)
+  const [highlighter, setHighlighter] = useState(null)
   useEffect(() => {
     ; (async () => {
       const hl = await getHighlighter({
         themes: ["github-light", "github-dark"],
         langs: ["ts", "tsx", "bash"],
       })
-      setHighlighterer(hl)
+      setHighlighter(hl)
     })()
   }, [])
 
@@ -114,10 +115,9 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
               <span
                 dangerouslySetInnerHTML={{
                   __html: highlight(
-                    // prettier-ignore
                     `
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
 `
                   ),
                 }}
@@ -131,10 +131,9 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
               <span
                 dangerouslySetInnerHTML={{
                   __html: highlight(
-                    // prettier-ignore
                     `
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
 `
                   ),
                 }}
@@ -148,10 +147,9 @@ AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
               <span
                 dangerouslySetInnerHTML={{
                   __html: highlight(
-                    // prettier-ignore
                     `
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/ig, "_",)}_SECRET={CLIENT_SECRET}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
 `
                   ),
                 }}
