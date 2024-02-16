@@ -78,7 +78,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
 /**
  * ## Setup
  *
- * First, create a Firebase project and generate a service account key. Visit: `https://console.firebase.google.com/u/0/project/{project-id}/settings/serviceaccounts/adminsdk` (replace `{project-id}` with your project"s id)
+ * First, create a Firebase project and generate a service account key. Visit: `https://console.firebase.google.com/u/0/project/{project-id}/settings/serviceaccounts/adminsdk` (replace `{project-id}` with your project's id)
  *
  * Now you have a few options to authenticate with the Firebase Admin SDK in your app:
  *
@@ -430,7 +430,8 @@ export function collectionsFactory(
       .withConverter(getConverter<AdapterAccount>({ preferSnakeCase })),
     verification_tokens: db
       .collection(
-        preferSnakeCase ? "verification_tokens" : "verificationTokens"
+        collectionPrefix + 
+          (preferSnakeCase ? "verification_tokens" : "verificationTokens")
       )
       .withConverter(
         getConverter<VerificationToken>({ preferSnakeCase, excludeId: true })
