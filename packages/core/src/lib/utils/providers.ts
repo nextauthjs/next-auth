@@ -86,14 +86,17 @@ function normalizeOAuth(
 
 /**
  * Returns basic user profile from the userinfo response/`id_token` claims.
- * An `id` is generated internally (using `crypto.randomUUID()`) and will override `id` if provided.
- * The result if this function is user to create the `User` in the database.
+ * The returned `id` will become the `account.providerAccountId`. `user.id`
+ * and `account.id` are auto-generated UUID's.
+ *
+ * The result if this function is used to create the `User` in the database.
  * @see https://authjs.dev/reference/core/adapters#user
  * @see https://openid.net/specs/openid-connect-core-1_0.html#IDToken
  * @see https://openid.net/specs/openid-connect-core-1_0.html#
  */
 const defaultProfile: ProfileCallback<Profile> = (profile) => {
   return stripUndefined({
+    id: profile.sub ?? profile.id ?? crypto.randomUUID(),
     name: profile.name ?? profile.nickname ?? profile.preferred_username,
     email: profile.email,
     image: profile.picture,
