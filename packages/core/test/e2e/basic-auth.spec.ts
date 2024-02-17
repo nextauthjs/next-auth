@@ -14,6 +14,10 @@ test.describe("Basic Auth", () => {
         user: {
           email: "test@example.com",
           name: "Test User",
+          sub: expect.any(String),
+          iat: expect.any(Number),
+          exp: expect.any(Number),
+          jti: expect.any(String),
         },
         expires: expect.any(String),
       })
@@ -51,7 +55,11 @@ test.describe("Basic Auth", () => {
         user: {
           email: "bob@alice.com",
           name: "Bob Alice",
-          image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
+          picture: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
+          sub: expect.any(String),
+          iat: expect.any(Number),
+          exp: expect.any(Number),
+          jti: expect.any(String),
         },
         expires: expect.any(String),
       })
