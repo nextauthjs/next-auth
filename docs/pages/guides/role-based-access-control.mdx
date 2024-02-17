@@ -239,6 +239,8 @@ export default function Page() {
 <Code.Svelte>
 
 ```ts filename="./routes/+page.server.ts"
+import { redirect } from "@sveltejs/kit"
+
 export const load: PageServerLoad = async (event) => {
   const session = await event.locals.auth()
 
