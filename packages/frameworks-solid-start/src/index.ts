@@ -13,7 +13,7 @@
  * npm install @auth/core @auth/solid-start
  * ```
  *
- * We recommended to using [create-jd-app](https://github.com/OrJDev/create-jd-app)
+ * It is recommended to use [create-jd-app](https://github.com/OrJDev/create-jd-app) to bootstrap your application with SolidStart auth included.
  *
  * @module @auth/solid-start
  */
@@ -67,7 +67,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ## Creating the API handler
  *
- * in this example we are using github so make sure to set the following environment variables:
+ * This example uses github so make sure to set the following environment variables:
  *
  * ```
  * GITHUB_ID=your_github_oauth_id
@@ -117,7 +117,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ### When Using SSR
  *
- * When using SSR, I recommend creating a `Protected` component that will trigger suspense using the `Show` component. It should look like this:
+ * When using SSR, it is recommended to create a `Protected` component that will trigger suspense using the `Show` component. It should look like this:
  *
  *
  * ```tsx
@@ -181,7 +181,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ### When Using CSR
  *
- * When using CSR, the `Protected` component will not work as expected and will cause the screen to flash, so I had to come up with a tricky solution, we will use a Solid-Start middleware:
+ * When using CSR, the `Protected` component will not work as expected and will cause the screen to flash. To fix this, a Solid-Start middleware is used:
  *
  * ```tsx
  * // entry-server.tsx
@@ -213,7 +213,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * );
  * ```
  *
- * And now you can easily create a protected route:
+ * And now a protected route can be created:
  *
  *
  * ```tsx
