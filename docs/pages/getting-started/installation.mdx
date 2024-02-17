@@ -94,7 +94,6 @@ Finally, we can add the session to our `$page` store in the `+layout.server.ts` 
 
 ```ts filename="./src/routes/+layout.server.ts" {5}
 import type { LayoutServerLoad } from "./$types"
-import { redirect } from "@sveltejs/kit"
 
 export const load: LayoutServerLoad = async (event) => {
   const session = await event.locals.auth()
