@@ -67,7 +67,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ## Creating the API handler
  *
- * This example uses github so make sure to set the following environment variables:
+ * This example uses github, make sure to set the following environment variables:
  *
  * ```
  * GITHUB_ID=your_github_oauth_id
