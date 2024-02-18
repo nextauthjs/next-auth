@@ -66,7 +66,7 @@
  * This can either be done per route, or for a group of routes using a middleware such as the following:
  *
  * ```ts
- * export function authenticatedUser(
+ * export async function authenticatedUser(
  *   req: Request,
  *   res: Response,
  *   next: NextFunction
