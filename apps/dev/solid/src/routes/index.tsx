@@ -1,10 +1,18 @@
-// @refresh reload
 import { Header } from "../components/nav"
+import type { RouteSectionProps } from "@solidjs/router"
 
-export default function App(event) {
-  const session = {}
-  console.log("app.event", event)
+const getSession = async (event) => {
+  "use server"
+  console.log("getSEssion.event", event)
+  const session = await event?.locals?.auth()
+  return session
+}
+
+export default function App(props: RouteSectionProps) {
+  const sesh = typeof window !== "undefined" ? window.__locals : {}
+  console.log("\nAPP.PROPS", sesh)
   // const session = event?.locals?.auth() ?? {}
+  const session = getSession()
   return (
     <main>
       <Header session={session} />

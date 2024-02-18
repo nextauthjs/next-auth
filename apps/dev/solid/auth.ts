@@ -23,4 +23,4 @@ export const authOptions = {
   ],
 }
 
-export const { signIn, signOut, handlers } = SolidAuth(authOptions)
+export const { signIn, signOut, handlers, auth } = SolidAuth(authOptions)
