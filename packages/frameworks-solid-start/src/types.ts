@@ -2,7 +2,7 @@ import type { AuthConfig } from "@auth/core"
 import type { BuiltInProviderType } from "@auth/core/providers"
 import type { Session } from "@auth/core/types"
 
-/** Configure the {@link SvelteKitAuth} method. */
+/** Configure the {@link SolidAuth} method. */
 export interface SolidAuthConfig extends Omit<AuthConfig, "raw"> { }
 
 // declare module "@solidjs/start/server" {
@@ -48,8 +48,5 @@ declare global {
       any
       : never
     >
-  }
-  interface PageData {
-    session?: Session | null
   }
 }

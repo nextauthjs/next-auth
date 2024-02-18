@@ -1,19 +1,24 @@
 /**
- *
- * :::warning
- * `@auth/solid-start` is currently experimental. The API _will_ change in the future.
- * :::
- *
- * SolidStart Auth is the official SolidStart integration for Auth.js.
- * It provides a simple way to add authentication to your SolidStart app in a few lines of code.
- *
- * ## Installation
- *
- * ```bash npm2yarn
- * npm install @auth/solid-start
- * ```
- *
- * We recommended to using [create-jd-app](https://github.com/OrJDev/create-jd-app)
+ * <p align="center">
+ *   <br/>
+ *   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+ *   <h3 align="center">Solid-Start Auth</a></h3>
+ *   <h4 align="center">Authentication for Solid-Start.</h4>
+ *   <p align="center" style="align: center;">
+ *     <a href="https://npm.im/next-auth">
+ *       <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
+ *     </a>
+ *     <a href="https://npm.im/@auth/solid-start">
+ *       <img alt="npm" src="https://img.shields.io/npm/v/@auth/solid-start?color=green&label=@auth/solid-start&style=flat-square">
+ *     </a>
+ *     <a href="https://www.npmtrends.com/@auth/solid-start">
+ *       <img src="https://img.shields.io/npm/dm/@auth/solid-start?label=%20downloads&style=flat-square" alt="Downloads" />
+ *     </a>
+ *     <a href="https://github.com/nextauthjs/next-auth/stargazers">
+ *       <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+ *     </a>
+ *   </p>
+ * </p>
  *
  * @module @auth/solid-start
  */
@@ -26,7 +31,7 @@ import type {
 } from "@auth/core/types"
 import { setEnvDefaults } from "./env.js"
 import { auth, signIn, signOut } from "./actions.js"
-import type { APIEvent } from "@solidjs/start/server"
+import type { APIEvent, FetchEvent } from "@solidjs/start/server"
 
 export type {
   Account,
@@ -47,16 +52,17 @@ const actions: AuthAction[] = [
   "error",
 ]
 
-// TODO: Double check
+/*
+ * TODO: Double check
+ * Was erroring out that 'crypto' isn't defined even though running on Node 20+ locally
+ */
 import { webcrypto } from "node:crypto"
 globalThis.crypto ??= webcrypto as Crypto
 
 function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
   return async (event: APIEvent) => {
     const { request } = event
-    console.log("SOLID.HANDLER.REQUEST", request)
     const url = new URL(request.url)
-    console.log("SOLID.HANDLER.URL", url)
     const action = url.pathname
       .slice(prefix.length + 1)
       .split("/")[0] as AuthAction
@@ -65,16 +71,15 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
       return
     }
 
-    const authResponse = await Auth(request, authOptions)
-    console.log("SOLIDHANDLER.AUTHRESPONSE", authResponse)
-    return authResponse
+    return Auth(request, authOptions)
   }
 }
 
 /**
+ * TODO: All of these instructions are now outdated / invalid. Need updated
  * ## Setup
  *
- * [Generate an auth secret](https://generate-secret.vercel.app/32), then set it as an environment variable:
+ * Generate an [auth secret](https://generate-secret.vercel.app/32), then set it as an environment variable:
  *
  * ```
  * AUTH_SECRET=your_auth_secret
@@ -249,7 +254,6 @@ export function SolidAuth(
 ) {
   return {
     signIn: async (event: APIEvent) => {
-      console.log("signin.event", event)
       const { request } = event
       const _config =
         typeof config === "object" ? config : await config(event.request)
@@ -277,12 +281,17 @@ export function SolidAuth(
       )
     },
     signOut: async (event: APIEvent) => {
-      console.log("signout.event", event)
       const _config =
         typeof config === "object" ? config : await config(event.request)
       setEnvDefaults(_config)
       const options = Object.fromEntries(await event.request.formData())
       await signOut(options, _config, event)
+    },
+    auth: async (event: FetchEvent) => {
+      const _config =
+        typeof config === "object" ? config : await config(event.request)
+      setEnvDefaults(_config)
+      return () => auth(event, _config)
     },
     handlers: async () => {
       return {
@@ -291,11 +300,10 @@ export function SolidAuth(
             typeof config === "object" ? config : await config(event.request)
           setEnvDefaults(_config)
 
-          // event.locals.auth = auth(event, _config)
-          // event.locals.getSession = auth(event, _config)
+          // event.locals.auth ??= () => auth(event, _config)
+          // event.locals.getSession = event.locals.auth
 
           const handler = SolidAuthHandler("/auth", _config)
-          console.log("HANDLERS.SOLIDCONFIG.GET", _config)
           return await handler(event)
         },
         async POST(event: APIEvent) {
@@ -304,7 +312,7 @@ export function SolidAuth(
           setEnvDefaults(_config)
 
           // event.locals.auth ??= () => auth(event, _config)
-          // event.locals.getSession = auth(event, _config)
+          // event.locals.getSession = event.locals.auth
 
           const handler = SolidAuthHandler("/auth", _config)
           console.log("HANDLERS.SOLIDCONFIG.POST", _config)
@@ -316,27 +324,3 @@ export function SolidAuth(
 }
 
 export type GetSessionResult = Promise<Session | null>
-
-// export async function getSession(
-//   req: Request,
-//   options: Omit<AuthConfig, "raw">
-// ): GetSessionResult {
-//   options.secret ??= process.env.AUTH_SECRET
-//   options.trustHost ??= true
-//
-//   console.log("getSession.options", options)
-//
-//   const url = new URL(`${options.basePath}/session`, req.url)
-//   const response = await Auth(
-//     new Request(url, { headers: req.headers }),
-//     options
-//   )
-//
-//   const { status = 200 } = response
-//
-//   const data = await response.json()
-//
-//   if (!data || !Object.keys(data).length) return null
-//   if (status === 200) return data
-//   throw new Error(data.message)
-// }

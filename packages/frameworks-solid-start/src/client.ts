@@ -2,8 +2,6 @@ import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
-// import { SolidAuthConfig } from "./index"
-import type { AuthConfig as SolidAuthConfig } from "@auth/core/types"
 
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
@@ -54,22 +52,11 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
-  console.log("CLIENT.SIGNIN.ARGS", {
-    providerId,
-    options,
-    authorizationParams,
-  })
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
-  // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
   const isEmail = providerId === "email"
   const isSupportingReturn = isCredentials || isEmail
-
-  // TODO: Double check
-  if (!providerId) {
-    window.location.href = `/auth/signin?callbackUrl=${callbackUrl}`
-  }
 
   const signInUrl = `/auth/${isCredentials ? "callback" : "signin"
     }/${providerId}`
@@ -79,15 +66,13 @@ export async function signIn<
   const csrfTokenResponse = await fetch(`/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
 
-  console.log("CLIENT.AUTHORIZATION_URL._signInUrl", _signInUrl)
-
   const res = await fetch(_signInUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-ignore
+    // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken,
@@ -95,9 +80,7 @@ export async function signIn<
     }),
   })
 
-  console.log("CLIENT.SIGNINURL.RES.OK", res.ok)
   const data = await res.clone().json()
-  console.log("CLIENT.SIGNINURL.RES.CLONED.JSON", JSON.stringify(data, null, 2))
   const error = new URL(data.url).searchParams.get("error")
   if (redirect || !isSupportingReturn || !error) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major

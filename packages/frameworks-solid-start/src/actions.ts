@@ -1,14 +1,13 @@
-import type { APIEvent } from "@solidjs/start/server"
-import { redirect } from "@solidjs/router"
 import { serialize } from "cookie"
 import { json } from "@solidjs/router"
-
+import { redirect } from "@solidjs/router"
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
+import { setEnvDefaults } from "./env"
 import type {
   AuthAction,
   AuthConfig as SolidAuthConfig,
 } from "@auth/core/types"
-import { setEnvDefaults } from "./env"
+import type { APIEvent, FetchEvent } from "@solidjs/start/server"
 
 type SignInParams = Parameters<RequestEventLocals["signIn"]>
 
@@ -64,7 +63,6 @@ export async function signIn(
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
   for (const c of res?.cookies ?? []) {
-    // setCookie(event, c.name, c.value, { path: "/", ...c.options })
     event.response.headers.set(
       "Set-Cookie",
       serialize(c.name, c.value, { path: "/", ...c.options })
@@ -78,7 +76,6 @@ export async function signIn(
   // event.locals.auth = auth(event, config)
   // event.locals.getSession = auth(event, config)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return res.redirect as any
 }
 
@@ -101,7 +98,6 @@ export async function signOut(
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
   for (const c of res?.cookies ?? []) {
-    // setCookie(event, c.name, c.value, { path: "/", ...c.options })
     event.response.headers.set(
       "Set-Cookie",
       serialize(c.name, c.value, { path: "/", ...c.options })
@@ -110,12 +106,11 @@ export async function signOut(
 
   if (options?.redirect ?? true) return redirect(res.redirect!, 302)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return res as any
 }
 
 export async function auth(
-  event: APIEvent,
+  event: FetchEvent,
   config: SolidAuthConfig
 ): ReturnType<RequestEventLocals["auth"]> {
   "use server"
@@ -130,21 +125,15 @@ export async function auth(
   })
   const res = await Auth(request, config)
 
-  // for (const c of response?.cookies ?? []) {
-  //   setCookie(event, c.name, c.value, { path: "/", ...c })
-  // }
-  // for (const c of res?.cookies ?? []) {
   for (const c of res?.headers.getSetCookie() ?? []) {
     event.response.headers.set(
       "Set-Cookie",
-      // serialize(c.name, c.value, { path: "/", ...c.options })
       serialize(c[0], c[1], { path: "/" })
     )
   }
 
   const { status = 200 } = res
   const data = await res.json()
-  // const data = await res.body
 
   // event.locals.auth = auth(event, config)
   // event.locals.getSession = auth(event, config)
