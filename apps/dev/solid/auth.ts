@@ -17,7 +17,6 @@ export const authOptions = {
           email: "bill@fillmurray.com",
           image: "https://www.fillmurray.com/64/64",
           id: "1",
-          foo: "",
         }
       },
     }),
