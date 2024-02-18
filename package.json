@@ -17,6 +17,7 @@
     "dev-v4:db": "turbo run dev --parallel --continue --filter=next-auth-app-v4...",
     "dev-v4": "turbo run dev --parallel --continue --filter=next-auth-app-v4... --filter=!./packages/adapter-*",
     "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
+    "dev:solid": "turbo run dev --parallel --continue --filter=solid-auth-app...",
     "dev:docs": "TYPEDOC_SKIP_ADAPTERS=1 turbo run dev --filter=docs",
     "dev:docs:adapters": "turbo run dev --filter=docs",
     "email": "fake-smtp-server",
