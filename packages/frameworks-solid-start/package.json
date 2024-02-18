@@ -20,29 +20,41 @@
       "types": "./client.d.ts",
       "import": "./client.js"
     },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsc",
+    "dev": "pnpm providers && tsc --watch",
+    "build": "pnpm clean && pnpm providers && tsc",
     "patch": "npm version patch --no-git-tag-version",
+    "providers": "node ../utils/scripts/providers.js --out src/",
     "test": "vitest -c ../utils/vitest.config.ts",
-    "clean": "rm -rf *.js *.d.ts*"
+    "clean": "rm -rf *.js *.d.ts* providers src/providers"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "@solidjs/router": "^0.12.3",
+    "set-cookie-parser": "^2.6.0"
   },
   "devDependencies": {
     "@solidjs/meta": "^0.28.0",
+    "@solidjs/start": "^0.5.9",
     "@types/node": "^18.7.14",
-    "solid-js": "^1.5.7",
-    "solid-start": "^0.2.14"
+    "@types/set-cookie-parser": "^2.4.7",
+    "solid-js": "^1.8.15"
   },
   "peerDependencies": {
-    "solid-js": "^1.5.7",
-    "solid-start": "^0.2.14"
+    "@solidjs/start": "^0.5.9",
+    "solid-js": "^1.8.15"
   },
   "keywords": [
     "SolidJS",

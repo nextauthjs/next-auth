@@ -2,6 +2,7 @@ import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
+import { SolidAuthConfig } from "./index"
 
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
@@ -52,6 +53,11 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
+  console.log("CLIENT.SIGNIN.ARGS", {
+    providerId,
+    options,
+    authorizationParams,
+  })
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
   // TODO: Support custom providers
@@ -59,16 +65,15 @@ export async function signIn<
   const isEmail = providerId === "email"
   const isSupportingReturn = isCredentials || isEmail
 
-  // TODO: Handle custom base path
-  const signInUrl = `/api/auth/${
+  const signInUrl = `/auth/${
     isCredentials ? "callback" : "signin"
   }/${providerId}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  // TODO: Handle custom base path
-  const csrfTokenResponse = await fetch("/api/auth/csrf")
+  const csrfTokenResponse = await fetch(`/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
+  console.log("CSRF.TOKEN", csrfToken)
 
   const res = await fetch(_signInUrl, {
     method: "post",
@@ -84,7 +89,9 @@ export async function signIn<
     }),
   })
 
+  console.log("res.ok", res.ok)
   const data = await res.clone().json()
+  console.log("data.url", data)
   const error = new URL(data.url).searchParams.get("error")
   if (redirect || !isSupportingReturn || !error) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
@@ -107,10 +114,9 @@ export async function signIn<
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
-  // TODO: Custom base path
-  const csrfTokenResponse = await fetch("/api/auth/csrf")
+  const csrfTokenResponse = await fetch(`/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
-  const res = await fetch(`/api/auth/signout`, {
+  const res = await fetch(`/auth/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
