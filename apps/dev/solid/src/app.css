@@ -126,5 +126,9 @@ nav {
       border-radius: 0 0 1rem 1rem;
       text-decoration: none;
     }
+
+    .active {
+      font-weight: 700;
+    }
   }
 }

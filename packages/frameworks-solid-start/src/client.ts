@@ -47,8 +47,8 @@ export async function signIn<
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
+    ? P | BuiltInProviderType
+    : BuiltInProviderType
   >,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
@@ -65,15 +65,15 @@ export async function signIn<
   const isEmail = providerId === "email"
   const isSupportingReturn = isCredentials || isEmail
 
-  const signInUrl = `/auth/${
-    isCredentials ? "callback" : "signin"
-  }/${providerId}`
+  const signInUrl = `/auth/${isCredentials ? "callback" : "signin"
+    }/${providerId}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
   const csrfTokenResponse = await fetch(`/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
-  console.log("CSRF.TOKEN", csrfToken)
+
+  console.log("CLIENT.AUTHORIZATION_URL._signInUrl", _signInUrl)
 
   const res = await fetch(_signInUrl, {
     method: "post",
@@ -89,9 +89,9 @@ export async function signIn<
     }),
   })
 
-  console.log("res.ok", res.ok)
+  console.log("CLIENT.SIGNINURL.RES.OK", res.ok)
   const data = await res.clone().json()
-  console.log("data.url", data)
+  console.log("CLIENT.SIGNINURL.RES.CLONED.JSON", JSON.stringify(data, null, 2))
   const error = new URL(data.url).searchParams.get("error")
   if (redirect || !isSupportingReturn || !error) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major

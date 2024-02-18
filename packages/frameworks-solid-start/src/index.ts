@@ -21,7 +21,7 @@
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 import { setEnvDefaults } from "./env.js"
-import { signIn, signOut } from "./actions.js"
+import { auth, signIn, signOut } from "./actions.js"
 import type { APIEvent } from "@solidjs/start/server"
 
 export type {
@@ -57,9 +57,9 @@ globalThis.crypto ??= webcrypto
 function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
   return async (event: APIEvent) => {
     const { request } = event
-    console.log("SOLID HANDLER.REQUEST", request)
+    console.log("SOLID.HANDLER.REQUEST", request)
     const url = new URL(request.url)
-    console.log("SOLID HANDLER.URL", url)
+    console.log("SOLID.HANDLER.URL", url)
     const action = url.pathname
       .slice(prefix.length + 1)
       .split("/")[0] as AuthAction
@@ -288,21 +288,33 @@ export function SolidAuth(
       await signOut(options, _config, event)
     },
     handlers: async () => {
-      console.log("SOLID.HANDLER.ENTRY")
-      // const _config =
-      //   typeof config === "object" ? config : await config()
-      const _config = config
-      const { prefix = "/auth", ...authOptions } = _config as SolidAuthConfig
-      setEnvDefaults(authOptions)
-
-      const handler = SolidAuthHandler(prefix, authOptions)
       return {
         GET: async (event: APIEvent) => {
-          console.log("GET", event)
+          const _config =
+            typeof config === "object" ? config : await config(event.request)
+          const { prefix = "/auth", ...authOptions } =
+            _config as SolidAuthConfig
+          setEnvDefaults(authOptions)
+          const handler = SolidAuthHandler(prefix, authOptions)
+
+          event.locals.auth = auth(event, authOptions)
+          event.locals.getSession = auth(event, authOptions)
+
+          console.log("HANDLERS.SOLIDCONFIG.GET", authOptions)
           return await handler(event)
         },
         POST: async (event: APIEvent) => {
-          console.log("POST", event)
+          const _config =
+            typeof config === "object" ? config : await config(event.request)
+          const { prefix = "/auth", ...authOptions } =
+            _config as SolidAuthConfig
+          setEnvDefaults(authOptions)
+          const handler = SolidAuthHandler(prefix, authOptions)
+
+          event.locals.auth ??= () => auth(event, authOptions)
+          event.locals.getSession = auth(event, authOptions)
+
+          console.log("HANDLERS.SOLIDCONFIG.POST", authOptions)
           return await handler(event)
         },
       }
@@ -312,26 +324,26 @@ export function SolidAuth(
 
 export type GetSessionResult = Promise<Session | null>
 
-export async function getSession(
-  req: Request,
-  options: Omit<AuthConfig, "raw">
-): GetSessionResult {
-  options.secret ??= process.env.AUTH_SECRET
-  options.trustHost ??= true
-
-  console.log("getSession.options", options)
-
-  const url = new URL(`${options.basePath}/session`, req.url)
-  const response = await Auth(
-    new Request(url, { headers: req.headers }),
-    options
-  )
-
-  const { status = 200 } = response
-
-  const data = await response.json()
-
-  if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data
-  throw new Error(data.message)
-}
+// export async function getSession(
+//   req: Request,
+//   options: Omit<AuthConfig, "raw">
+// ): GetSessionResult {
+//   options.secret ??= process.env.AUTH_SECRET
+//   options.trustHost ??= true
+//
+//   console.log("getSession.options", options)
+//
+//   const url = new URL(`${options.basePath}/session`, req.url)
+//   const response = await Auth(
+//     new Request(url, { headers: req.headers }),
+//     options
+//   )
+//
+//   const { status = 200 } = response
+//
+//   const data = await response.json()
+//
+//   if (!data || !Object.keys(data).length) return null
+//   if (status === 200) return data
+//   throw new Error(data.message)
+// }

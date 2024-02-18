@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/solid-start": "workspace:*",
     "@auth/unstorage-adapter": "workspace:*",
+    "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.12.3",
     "@solidjs/start": "^0.5.9",
     "solid-js": "^1.8.15",
