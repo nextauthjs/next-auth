@@ -41,6 +41,8 @@ export type {
   User,
 } from "@auth/core/types"
 
+export type { SolidAuthConfig }
+
 const actions: AuthAction[] = [
   "providers",
   "session",

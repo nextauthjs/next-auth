@@ -1,4 +1,4 @@
-import { SolidAuth } from "@auth/solid-start"
+import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start"
 import GitHub from "@auth/solid-start/providers/github"
 import Discord from "@auth/solid-start/providers/discord"
 import Credentials from "@auth/solid-start/providers/credentials"
@@ -21,6 +21,16 @@ export const authOptions = {
       },
     }),
   ],
-}
+  callbacks: {
+    jwt({ token, user }) {
+      console.log("callbacks.jwt", { token, user })
+      return token
+    },
+    async session({ session, user }) {
+      console.log("callbacks.session", { session, user })
+      return session
+    },
+  },
+} satisfies SolidAuthConfig
 
 export const { signIn, signOut, handlers, auth } = SolidAuth(authOptions)
