@@ -19,7 +19,11 @@
  */
 
 import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type {
+  AuthAction,
+  AuthConfig as SolidAuthConfig,
+  Session,
+} from "@auth/core/types"
 import { setEnvDefaults } from "./env.js"
 import { auth, signIn, signOut } from "./actions.js"
 import type { APIEvent } from "@solidjs/start/server"
@@ -32,14 +36,6 @@ export type {
   User,
 } from "@auth/core/types"
 
-export interface SolidAuthConfig extends AuthConfig {
-  /**
-   * Defines the base path for the auth routes.
-   * @default '/api/auth'
-   */
-  prefix?: string
-}
-
 const actions: AuthAction[] = [
   "providers",
   "session",
@@ -51,8 +47,9 @@ const actions: AuthAction[] = [
   "error",
 ]
 
+// TODO: Double check
 import { webcrypto } from "node:crypto"
-globalThis.crypto ??= webcrypto
+globalThis.crypto ??= webcrypto as Crypto
 
 function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
   return async (event: APIEvent) => {
@@ -289,32 +286,28 @@ export function SolidAuth(
     },
     handlers: async () => {
       return {
-        GET: async (event: APIEvent) => {
+        async GET(event: APIEvent) {
           const _config =
             typeof config === "object" ? config : await config(event.request)
-          const { prefix = "/auth", ...authOptions } =
-            _config as SolidAuthConfig
-          setEnvDefaults(authOptions)
-          const handler = SolidAuthHandler(prefix, authOptions)
+          setEnvDefaults(_config)
 
-          event.locals.auth = auth(event, authOptions)
-          event.locals.getSession = auth(event, authOptions)
+          // event.locals.auth = auth(event, _config)
+          // event.locals.getSession = auth(event, _config)
 
-          console.log("HANDLERS.SOLIDCONFIG.GET", authOptions)
+          const handler = SolidAuthHandler("/auth", _config)
+          console.log("HANDLERS.SOLIDCONFIG.GET", _config)
           return await handler(event)
         },
-        POST: async (event: APIEvent) => {
+        async POST(event: APIEvent) {
           const _config =
             typeof config === "object" ? config : await config(event.request)
-          const { prefix = "/auth", ...authOptions } =
-            _config as SolidAuthConfig
-          setEnvDefaults(authOptions)
-          const handler = SolidAuthHandler(prefix, authOptions)
+          setEnvDefaults(_config)
 
-          event.locals.auth ??= () => auth(event, authOptions)
-          event.locals.getSession = auth(event, authOptions)
+          // event.locals.auth ??= () => auth(event, _config)
+          // event.locals.getSession = auth(event, _config)
 
-          console.log("HANDLERS.SOLIDCONFIG.POST", authOptions)
+          const handler = SolidAuthHandler("/auth", _config)
+          console.log("HANDLERS.SOLIDCONFIG.POST", _config)
           return await handler(event)
         },
       }

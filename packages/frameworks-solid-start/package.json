@@ -43,11 +43,14 @@
   "dependencies": {
     "@auth/core": "workspace:*",
     "@solidjs/router": "^0.12.3",
-    "set-cookie-parser": "^2.6.0"
+    "cookie": "0.6.0",
+    "set-cookie-parser": "^2.6.0",
+    "vinxi": "^0.2.1"
   },
   "devDependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/start": "^0.5.9",
+    "@types/cookie": "0.6.0",
     "@types/node": "^18.7.14",
     "@types/set-cookie-parser": "^2.4.7",
     "solid-js": "^1.8.15"

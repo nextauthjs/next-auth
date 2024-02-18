@@ -2,7 +2,8 @@ import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
-import { SolidAuthConfig } from "./index"
+// import { SolidAuthConfig } from "./index"
+import type { AuthConfig as SolidAuthConfig } from "@auth/core/types"
 
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
@@ -64,6 +65,11 @@ export async function signIn<
   const isCredentials = providerId === "credentials"
   const isEmail = providerId === "email"
   const isSupportingReturn = isCredentials || isEmail
+
+  // TODO: Double check
+  if (!providerId) {
+    window.location.href = `/auth/signin?callbackUrl=${callbackUrl}`
+  }
 
   const signInUrl = `/auth/${isCredentials ? "callback" : "signin"
     }/${providerId}`

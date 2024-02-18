@@ -7,6 +7,7 @@ export const authOptions = {
   debug: true,
   providers: [
     GitHub,
+    Discord,
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {

@@ -1,10 +1,14 @@
 import type { APIEvent } from "@solidjs/start/server"
-import { parse } from "set-cookie-parser"
-import type { SolidAuthConfig } from "./index.js"
+// import type { SolidAuthConfig } from "./index.js"
 import { redirect } from "@solidjs/router"
+import { parse, serialize } from "cookie"
+import { json } from "@solidjs/router"
 
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
-import type { AuthAction } from "@auth/core/types"
+import type {
+  AuthAction,
+  AuthConfig as SolidAuthConfig,
+} from "@auth/core/types"
 import { setEnvDefaults } from "./env"
 
 type SignInParams = Parameters<RequestEventLocals["signIn"]>
@@ -14,7 +18,7 @@ export async function signIn(
   options: SignInParams[1] = {},
   authorizationParams: SignInParams[2],
   config: SolidAuthConfig,
-  event: APIEvent
+  event: any
 ) {
   "use server"
   const { request } = event
@@ -30,7 +34,7 @@ export async function signIn(
 
   if (!provider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(302, url)
+    if (shouldRedirect) redirect(url, 302)
     return url
   }
 
@@ -47,7 +51,7 @@ export async function signIn(
 
   if (!foundProvider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(302, url)
+    if (shouldRedirect) redirect(url, 302)
     return url
   }
 
@@ -60,14 +64,20 @@ export async function signIn(
   const req = new Request(url, { method: "POST", headers, body })
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  const authCookies = parse(event.request.headers.getSetCookie())
-  for (const c of authCookies ?? []) {
-    authCookies.set(c.name, c.value, { path: "/", ...c.options })
+  for (const c of res?.cookies ?? []) {
+    // setCookie(event, c.name, c.value, { path: "/", ...c.options })
+    event.response.headers.set(
+      "Set-Cookie",
+      serialize(c.name, c.value, { path: "/", ...c.options })
+    )
   }
 
   if (shouldRedirect) {
-    return redirect(302, res.redirect!)
+    return redirect(res.redirect!, 302)
   }
+
+  // event.locals.auth = auth(event, config)
+  // event.locals.getSession = auth(event, config)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return res.redirect as any
@@ -91,11 +101,15 @@ export async function signOut(
 
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  const authCookies = parse(event.request.headers.getSetCookie())
-  for (const c of res?.cookies ?? [])
-    authCookies?.set(c.name, c.value, { path: "/", ...c.options })
+  for (const c of res?.cookies ?? []) {
+    // setCookie(event, c.name, c.value, { path: "/", ...c.options })
+    event.response.headers.set(
+      "Set-Cookie",
+      serialize(c.name, c.value, { path: "/", ...c.options })
+    )
+  }
 
-  if (options?.redirect ?? true) return redirect(302, res.redirect!)
+  if (options?.redirect ?? true) return redirect(res.redirect!, 302)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return res as any
@@ -115,20 +129,29 @@ export async function auth(
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },
   })
-  const response = await Auth(request, config)
+  const res = await Auth(request, config)
 
-  const authCookies = parse(response.headers.getSetCookie())
-  for (const cookie of authCookies) {
-    const { name, value, ...options } = cookie
-    // @ts-expect-error - Review: SvelteKit and set-cookie-parser are mismatching
-    event.cookies.set(name, value, { path: "/", ...options })
+  // for (const c of response?.cookies ?? []) {
+  //   setCookie(event, c.name, c.value, { path: "/", ...c })
+  // }
+  // for (const c of res?.cookies ?? []) {
+  for (const c of res?.headers.getSetCookie() ?? []) {
+    event.response.headers.set(
+      "Set-Cookie",
+      // serialize(c.name, c.value, { path: "/", ...c.options })
+      serialize(c[0], c[1], { path: "/" })
+    )
   }
 
-  const { status = 200 } = response
-  const data = await response.json()
+  const { status = 200 } = res
+  const data = await res.json()
+  // const data = await res.body
+
+  // event.locals.auth = auth(event, config)
+  // event.locals.getSession = auth(event, config)
 
   if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data
+  if (status === 200) return json(data)
   throw new Error(data.message)
 }
 
