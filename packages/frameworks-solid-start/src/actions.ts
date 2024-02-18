@@ -73,9 +73,6 @@ export async function signIn(
     return redirect(res.redirect!, 302)
   }
 
-  // event.locals.auth = auth(event, config)
-  // event.locals.getSession = auth(event, config)
-
   return res.redirect as any
 }
 
@@ -133,9 +130,6 @@ export async function auth(
 
   const { status = 200 } = res
   const data = await res.json()
-
-  // event.locals.auth = auth(event, config)
-  // event.locals.getSession = auth(event, config)
 
   if (!data || !Object.keys(data).length) return null
   if (status === 200) return data

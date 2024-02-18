@@ -9,8 +9,6 @@ export interface SolidAuthConfig extends Omit<AuthConfig, "raw"> { }
 declare global {
   interface RequestEventLocals {
     auth(): Promise<Session | null>
-    /** @deprecated Use `auth` instead. */
-    getSession(): Promise<Session | null>
     signIn: <
       P extends BuiltInProviderType | (string & NonNullable<unknown>),
       R extends boolean = true,

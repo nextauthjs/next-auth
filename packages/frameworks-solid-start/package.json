@@ -3,10 +3,33 @@
   "description": "Authentication for SolidStart.",
   "version": "0.6.0",
   "type": "module",
+  "author": "Auth.js Team <authjs.dev>",
+  "contributors": [
+    "OrJDev <orjdeveloper@gmail.com>",
+    "Nico Domino <yo@ndo.dev>"
+  ],
+  "license": "ISC",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "homepage": "https://solid.authjs.dev",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "keywords": [
+    "solid",
+    "solid-start",
+    "auth.js"
+  ],
+  "scripts": {
+    "dev": "pnpm providers && tsc --watch",
+    "build": "pnpm clean && pnpm providers && tsc",
+    "patch": "npm version patch --no-git-tag-version",
+    "providers": "node ../utils/scripts/providers.js --out src/",
+    "test": "vitest -c ../utils/vitest.config.ts",
+    "clean": "rm -rf *.js *.d.ts* providers src/providers"
+  },
   "files": [
     "*.js",
-    "*.d.ts*",
-    "src"
+    "*.d.ts*"
   ],
   "exports": {
     ".": {
@@ -29,14 +52,6 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "dev": "pnpm providers && tsc --watch",
-    "build": "pnpm clean && pnpm providers && tsc",
-    "patch": "npm version patch --no-git-tag-version",
-    "providers": "node ../utils/scripts/providers.js --out src/",
-    "test": "vitest -c ../utils/vitest.config.ts",
-    "clean": "rm -rf *.js *.d.ts* providers src/providers"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -55,13 +70,5 @@
   "peerDependencies": {
     "@solidjs/start": "^0.5.9",
     "solid-js": "^1.8.15"
-  },
-  "keywords": [
-    "SolidJS",
-    "SolidStart",
-    "Auth"
-  ],
-  "author": "OrJDev <orjdeveloper@gmail.com>",
-  "repository": "https://github.com/nextauthjs/next-auth",
-  "license": "ISC"
+  }
 }

@@ -302,9 +302,6 @@ export function SolidAuth(
             typeof config === "object" ? config : await config(event.request)
           setEnvDefaults(_config)
 
-          // event.locals.auth ??= () => auth(event, _config)
-          // event.locals.getSession = event.locals.auth
-
           const handler = SolidAuthHandler("/auth", _config)
           return await handler(event)
         },
@@ -313,41 +310,10 @@ export function SolidAuth(
             typeof config === "object" ? config : await config(event.request)
           setEnvDefaults(_config)
 
-          // event.locals.auth ??= () => auth(event, _config)
-          // event.locals.getSession = event.locals.auth
-
           const handler = SolidAuthHandler("/auth", _config)
-          console.log("HANDLERS.SOLIDCONFIG.POST", _config)
           return await handler(event)
         },
       }
     },
   }
 }
-
-// export type GetSessionResult = Promise<Session | null>
-//
-// TODO: Original getSession fn - still needed?
-// Trying to use new 'auth' instead..
-//
-// export async function getSession(
-//   req: Request,
-//   options: Omit<SolidAuthConfig, "raw">
-// ): GetSessionResult {
-//   options.secret ??= process.env.AUTH_SECRET
-//   options.trustHost ??= true
-//
-//   const url = new URL("/api/auth/session", req.url)
-//   const response = await Auth(
-//     new Request(url, { headers: req.headers }),
-//     options
-//   )
-//
-//   const { status = 200 } = response
-//
-//   const data = await response.json()
-//
-//   if (!data || !Object.keys(data).length) return null
-//   if (status === 200) return data
-//   throw new Error(data.message)
-// }
