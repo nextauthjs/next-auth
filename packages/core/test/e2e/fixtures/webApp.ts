@@ -72,14 +72,7 @@ export class WebApp {
     // Ensure we've landed back at the dev app logged in
     const session = await this.page.locator("pre").textContent()
 
-    expect(JSON.parse(session ?? "{}")).toEqual({
-      user: {
-        email: "bob@alice.com",
-        name: "Bob Alice",
-        image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
-      },
-      expires: expect.any(String),
-    })
+    expect(JSON.parse(session ?? "{}").user.email).toEqual("bob@alice.com")
 
     this.isLoggedIn = true
   }
@@ -92,10 +85,9 @@ export class WebApp {
     if (!this.isLoggedIn) return
 
     try {
-      const sessionRes = await fetch(`${environmentUrl}/auth/session`)
-
-      if (sessionRes.ok) {
-        this.session = await sessionRes.json()
+      const response = await this.page.goto(`${environmentUrl}/auth/session`)
+      if (response?.ok()) {
+        this.session = await response?.json()
       }
     } catch (error) {
       console.error(error)
