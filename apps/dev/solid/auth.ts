@@ -21,19 +21,6 @@ export const authOptions = {
       },
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      console.log("callbacks.jwt", { token, user })
-      // if (user.id) {
-      //   token.userId = user.id
-      // }
-      return token
-    },
-    async session({ session, user }) {
-      console.log("callbacks.session", { session, user })
-      return session
-    },
-  },
 } satisfies SolidAuthConfig
 
 export const { signIn, signOut, handlers, auth } = SolidAuth(authOptions)

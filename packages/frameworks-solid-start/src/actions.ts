@@ -113,7 +113,6 @@ export async function auth(
   event: FetchEvent,
   config: SolidAuthConfig
 ): ReturnType<RequestEventLocals["auth"]> {
-  "use server"
   setEnvDefaults(config)
   config.trustHost ??= true
 
