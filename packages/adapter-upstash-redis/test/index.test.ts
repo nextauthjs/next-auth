@@ -3,24 +3,9 @@ import { runBasicTests } from "utils/adapter"
 import { hydrateDates, UpstashRedisAdapter } from "../src"
 import "dotenv/config"
 
-if (!process.env.UPSTASH_REDIS_URL || !process.env.UPSTASH_REDIS_KEY) {
-  test("Skipping UpstashRedisAdapter tests, since required environment variables aren't available", () => {
-    expect(true).toBe(true)
-  })
-  process.exit(0)
-}
-
-if (process.env.CI) {
-  // TODO: Fix this
-  test('Skipping UpstashRedisAdapter tests in CI because of "Request failed" errors. Should revisit', () => {
-    expect(true).toBe(true)
-  })
-  process.exit(0)
-}
-
 const client = new Redis({
-  url: process.env.UPSTASH_REDIS_URL,
-  token: process.env.UPSTASH_REDIS_KEY,
+  url: "http://localhost:8079",
+  token: "uwndz1YIfm9k78mx+mjW8qe7CX33VxRYnscDpZVkt4Y=",
 })
 
 runBasicTests({
