@@ -114,12 +114,6 @@ import type { Actions } from "./$types"
 export const actions: Actions = { default: signIn }
 ```
 
-And for that `+page.server.ts` to run, it also needs a `+page.svelte` file, which we can leave "empty" like this.
-
-```ts filename="src/routes/signin/+page.svelte"
-<!-- empty -->
-```
-
 #### Client Side
 
 Client-side is a bit simpler as we just need to import a button `on:click` handler from `@auth/sveltekit/client`.
@@ -282,12 +276,6 @@ import { signOut } from "../../auth"
 import type { Actions } from "./$types"
 
 export const actions: Actions = { default: signOut }
-```
-
-And for that `+page.server.ts` to run, it also needs a `+page.svelte` file, which we can leave "empty" like this.
-
-```ts filename="src/routes/signout/+page.svelte"
-<!-- empty -->
 ```
 
 #### Client Side

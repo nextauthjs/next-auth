@@ -79,22 +79,6 @@ export const actions: Actions = { default: signIn }
           }}
         />
         <p className="mt-4">
-          SvelteKit requires a client-side <code>+page.svelte</code> file to go
-          along with it, so we can add this empty file to make it happy.
-        </p>
-        <Pre
-          data-theme="default"
-          data-copy=""
-          data-language="tsx"
-          icon={TSIcon}
-          data-filename="src/routes/signin/+page.svelte"
-          dangerouslySetInnerHTML={{
-            __html: highlight(`
-<!-- empty file -->
-`),
-          }}
-        />
-        <p className="mt-4">
           Finally, we can use the exported <code>SignIn</code> Svelte component
           to add a button to our UI that will attempt a server-side login.
         </p>
