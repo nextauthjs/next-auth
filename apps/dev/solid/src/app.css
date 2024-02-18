@@ -86,6 +86,7 @@ nav {
 
     img {
       width: 48px;
+      border-radius: 100%;
     }
 
     .nav-right {

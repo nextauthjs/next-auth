@@ -1,12 +1,11 @@
 import { Header } from "../components/nav"
-import type { RouteSectionProps } from "@solidjs/router"
+import { getRequestEvent } from "solid-js/web"
 
-export default function App(props: RouteSectionProps) {
-  console.log("APP.PROPS", props)
-  const session = {}
+export default function App() {
+  const event = getRequestEvent()
   return (
     <main>
-      <Header session={session} />
+      <Header session={event?.locals?.auth} />
       <section class="main">
         <h1>Solid Start Auth Example</h1>
         <p>
@@ -19,7 +18,7 @@ export default function App(props: RouteSectionProps) {
         </p>
         <div class="session">
           <h3>Session</h3>
-          <pre>{JSON.stringify(session, null, 2)}</pre>
+          <pre>{JSON.stringify(event?.locals?.auth ?? {}, null, 2)}</pre>
         </div>
       </section>
     </main>

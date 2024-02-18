@@ -1,7 +1,6 @@
-import type { Session } from "@auth/solid-start"
-// import { signIn, signOut } from "../../auth"
-import { signIn, signOut } from "@auth/solid-start/client"
 import { A } from "@solidjs/router"
+import { signIn, signOut } from "@auth/solid-start/client"
+import type { Session } from "@auth/solid-start"
 
 export function Header({ session }: { session: Session | null }) {
   return (
