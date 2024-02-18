@@ -1,5 +1,6 @@
 import { SolidAuth } from "@auth/solid-start"
 import GitHub from "@auth/solid-start/providers/github"
+import Discord from "@auth/solid-start/providers/discord"
 import Credentials from "@auth/solid-start/providers/credentials"
 
 export const authOptions = {
