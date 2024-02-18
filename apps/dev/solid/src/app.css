@@ -1,0 +1,130 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+main {
+  text-align: center;
+}
+
+h1 {
+  color: #335d92;
+  text-transform: uppercase;
+  font-size: 4rem;
+  font-weight: 100;
+  line-height: 1.1;
+  margin: 4rem auto;
+  max-width: 14rem;
+}
+
+p {
+  max-width: 14rem;
+  margin: 2rem auto;
+  line-height: 1.35;
+}
+
+@media (min-width: 480px) {
+  h1 {
+    max-width: none;
+  }
+
+  p {
+    max-width: none;
+  }
+}
+
+.increment {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1em 2em;
+  color: #335d92;
+  background-color: rgba(68, 107, 158, 0.1);
+  border-radius: 2em;
+  border: 2px solid rgba(68, 107, 158, 0);
+  outline: none;
+  width: 200px;
+  font-variant-numeric: tabular-nums;
+}
+
+.increment:focus {
+  border: 2px solid #335d92;
+}
+
+.increment:active {
+  background-color: rgba(68, 107, 158, 0.2);
+}
+
+.button,
+.button-primary {
+  justify-self: end;
+  font-weight: 500;
+  border-radius: 0.3rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1.4rem;
+  padding: 0.7rem 0.8rem;
+  position: relative;
+  z-index: 10;
+  background-color: transparent;
+  color: #555;
+}
+
+.button-primary {
+  background-color: #346df1;
+  border-color: #346df1;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.7rem 1.4rem;
+}
+
+.button-primary:hover {
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.2);
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  max-width: 968px;
+  margin-inline: auto;
+  align-items: center;
+
+  .wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eee;
+    padding-inline: 2rem;
+    padding: 1em;
+
+    img {
+      width: 48px;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: stretch;
+
+    a {
+      background-color: #ccc;
+      padding: 1rem 1rem;
+      border-radius: 0 0 1rem 1rem;
+      text-decoration: none;
+    }
+  }
+}

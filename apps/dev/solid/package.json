@@ -1,0 +1,23 @@
+{
+  "name": "solid-auth-app",
+  "version": "1.0.0",
+  "description": "Solid-Start + Auth.js Developer app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "@auth/solid-start": "workspace:*",
+    "@auth/unstorage-adapter": "workspace:*",
+    "@solidjs/router": "^0.12.3",
+    "@solidjs/start": "^0.5.9",
+    "solid-js": "^1.8.15",
+    "vinxi": "^0.2.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
