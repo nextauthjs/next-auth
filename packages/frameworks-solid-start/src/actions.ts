@@ -139,7 +139,7 @@ export async function auth(
   // event.locals.getSession = auth(event, config)
 
   if (!data || !Object.keys(data).length) return null
-  if (status === 200) return json(data)
+  if (status === 200) return data
   throw new Error(data.message)
 }
 
