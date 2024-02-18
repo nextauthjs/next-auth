@@ -1,7 +1,6 @@
 import type { APIEvent } from "@solidjs/start/server"
-// import type { SolidAuthConfig } from "./index.js"
 import { redirect } from "@solidjs/router"
-import { parse, serialize } from "cookie"
+import { serialize } from "cookie"
 import { json } from "@solidjs/router"
 
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
