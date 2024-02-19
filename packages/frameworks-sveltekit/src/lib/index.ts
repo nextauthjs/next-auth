@@ -97,18 +97,11 @@
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signIn }
  * ```
- * ```ts title="src/routes/signin/+page.svelte"
- * <!-- empty file -->
- * ```
  * ```ts title="src/routes/signout/+page.server.ts"
  * import { signOut } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signOut }
  * ```
- * ```ts title="src/routes/signout/+page.svelte"
- * <!-- empty file -->
- * ```
- *
  *
  * ## Managing the session
  *
