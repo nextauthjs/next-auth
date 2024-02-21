@@ -1,4 +1,9 @@
-import { Auth, raw, skipCSRFCheck } from "@auth/core"
+import {
+  Auth,
+  raw,
+  skipCSRFCheck,
+  createActionURL as createActionURLCore,
+} from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
@@ -120,16 +125,12 @@ export function createActionURL(
   h: Headers | ReturnType<typeof headers>,
   basePath?: string
 ): URL {
-  const envUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
-  if (envUrl) {
-    const { origin, pathname } = new URL(envUrl)
-    const separator = pathname.endsWith("/") ? "" : "/"
-    return new URL(`${origin}${pathname}${separator}${action}`)
-  }
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
-  // @ts-expect-error `basePath` value is default'ed to "/api/auth" in `setEnvDefaults`
-  const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
-  const separator = pathname.endsWith("/") ? "" : "/"
-  return new URL(`${origin}${pathname}${separator}${action}`)
+  return createActionURLCore(
+    action,
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next-auth sets it by default
+    h.get("x-forwarded-proto"),
+    h,
+    process.env,
+    basePath
+  )
 }
