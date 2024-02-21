@@ -51,13 +51,22 @@ export function createActionURL(
   envObject: any,
   basePath?: string
 ): URL {
-  let url = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
-  if (!url) {
-    const host = headers.get("x-forwarded-host") ?? headers.get("host")
-    if (!host) throw new TypeError("Missing host")
-    const proto = headers.get("x-forwarded-proto") ?? protocol
-    url = `${proto === "http" ? "http" : "https"}://${host}${basePath}`
+  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+
+  let detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
+  let detectedProtocol = headers.get("x-forwarded-proto") ?? protocol ?? "https"
+
+  let url: URL
+  if (envUrl) {
+    url = new URL(envUrl)
+  } else {
+    url = new URL(`${detectedProtocol}://${detectedHost}`)
   }
 
-  return new URL(`${url.replace(/\/$/, "")}/${action}`)
+  // remove trailing slash
+  const sanitizedUrl = url.toString().replace(/\/$/, "")
+  // remove leading and trailing slash
+  const sanitizedBasePath = basePath?.replace(/(^\/|\/$)/g, "") ?? ""
+
+  return new URL(`${sanitizedUrl}/${sanitizedBasePath}/${action}`)
 }

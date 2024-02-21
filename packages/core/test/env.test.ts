@@ -144,14 +144,31 @@ describe("createActionURL", () => {
       args: {
         action: "signout",
         protocol: undefined,
-        headers: new Headers({
-          "x-forwarded-host": "example.com",
-          "x-forwarded-proto": "https",
-        }),
-        env: { AUTH_URL: "https://env.com/api/auth/" },
-        basePath: "/auth",
+        headers: new Headers({}),
+        env: { AUTH_URL: "http://localhost:3000" },
+        basePath: "/api/auth",
       },
-      expected: "https://env.com/api/auth/signout",
+      expected: "http://localhost:3000/api/auth/signout",
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "https://sub.domain.env.com" },
+        basePath: "/api/auth",
+      },
+      expected: "https://sub.domain.env.com/api/auth/signout",
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "https://sub.domain.env.com/my-app/" },
+        basePath: "/api/auth",
+      },
+      expected: "https://sub.domain.env.com/my-app/api/auth/signout",
     },
   ])("%j", ({ args, expected }) => {
     // @ts-expect-error
