@@ -442,14 +442,13 @@ export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"
 }
 
-// TODO: Review this list to make sure it's complete and we only send non-hinting errors to the client.
 const clientErrors = new Set<ErrorType>([
   "CredentialsSignin",
   "OAuthAccountNotLinked",
   "OAuthCallbackError",
-  "OAuthSignInError",
-  "EmailSignInError",
   "AccessDenied",
+  "Verification",
+  "MissingCSRF",
 ])
 
 /**
