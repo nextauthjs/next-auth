@@ -1,11 +1,14 @@
 import {  ConvexHttpClient } from "convex/browser"
-import type {   Adapter,
+import type {
+  Adapter,
   AdapterAccount,
   AdapterAuthenticator,
   AdapterSession,
-  AdapterUser, } from "@auth/core/src/adapters"
+  AdapterUser,
+} from "@auth/core/src/adapters"
 import { Awaitable } from "vitest"
 import { api } from "../convex/_generated/api"
+import { Id } from "../convex/_generated/dataModel"
 
 export function ConvexAdapter(client: ConvexHttpClient): Adapter {
   return {
@@ -22,5 +25,17 @@ export function ConvexAdapter(client: ConvexHttpClient): Adapter {
         return temp
       })
     },
+    getUser(id: string): Awaitable<AdapterUser | null> {
+      return client.query(api.users.get, { id: id as Id<"users"> }).then((user) => {
+        if(!user) return null
+        return {
+          id: user?._id,
+          name: user?.name,
+          email: user?.email,
+          emailVerified: user?.emailVerified ? new Date(user?.emailVerified) : undefined,
+          image: user?.image,
+        } as AdapterUser
+      })
+    }
   }
 }
