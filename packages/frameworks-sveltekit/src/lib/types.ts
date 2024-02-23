@@ -56,7 +56,7 @@ declare global {
   }
 }
 
-declare module "$env/dynamic/private" {
+declare module "$env/static/private" {
   export const AUTH_SECRET: string
   export const AUTH_SECRET_1: string
   export const AUTH_SECRET_2: string

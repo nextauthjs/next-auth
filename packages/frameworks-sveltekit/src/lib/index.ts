@@ -220,7 +220,7 @@
 
 /// <reference types="@sveltejs/kit" />
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
-import { env } from "$env/dynamic/private"
+import * as env from "$env/static/private"
 
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"

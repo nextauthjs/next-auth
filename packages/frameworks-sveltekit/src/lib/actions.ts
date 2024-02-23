@@ -2,7 +2,7 @@ import { redirect } from "@sveltejs/kit"
 import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { dev } from "$app/environment"
-import { env } from "$env/dynamic/private"
+import * as env from "$env/static/private"
 
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
 import type { AuthAction } from "@auth/core/types"
