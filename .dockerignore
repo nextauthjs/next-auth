@@ -1,0 +1,26 @@
+# Files
+
+/**/*/.env
+/**/*/.env.*
+/**/*/README.md
+/**/*/.git
+/**/*/.github
+/**/*/.gitignore
+/**/*/.dockerignore
+/**/*/.turbo
+/**/*/npm-debug.log
+/**/*/Dockerfile
+
+# Directories
+/**/*/node_modules
+/**/*/test
+/**/*/dist
+
+# Auth.js Dirs
+docs/**
+packages/**
+!packages/next-auth
+!packages/core
+!packages/utils
+apps/*
+!apps/examples/nextjs
