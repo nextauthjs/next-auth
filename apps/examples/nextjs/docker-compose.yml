@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  authjs-docker-test:
+    build:
+      context: ../../../
+      dockerfile: apps/examples/nextjs/Dockerfile
+    ports:
+      - "3000:3000"
