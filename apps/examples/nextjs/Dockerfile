@@ -23,7 +23,7 @@ COPY --chown=node:node apps/examples/nextjs/package.json ./package.json
 RUN echo "package-import-method=copy" > .npmrc
 
 # Install dependencies
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install && pnpm install -w sharp
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
 
 ## BUILDER
 FROM base AS builder
@@ -34,7 +34,7 @@ COPY --chown=node:node apps/examples/nextjs ./
 # Copy dependencies from deps stage
 COPY --from=deps /app ./
 
-ENV NEXT_TELEMETRY_DISABLED 1
+# ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
 # Build the "standalone" Next.js version
@@ -47,13 +47,14 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+# ENV NEXT_TELEMETRY_DISABLED 1
 
 # Copy everything from builder stage
 COPY --chown=node:node --from=builder /app ./
 
 # Install only prod dependencies
 RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install --prod
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install -w sharp
 
 USER node
 EXPOSE 3000
