@@ -23,7 +23,7 @@ COPY --chown=node:node apps/examples/nextjs/package.json ./package.json
 RUN echo "package-import-method=copy" > .npmrc
 
 # Install dependencies
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install && pnpm install -w sharp
 
 ## BUILDER
 FROM base AS builder
@@ -59,5 +59,5 @@ USER node
 EXPOSE 3000
 ENV PORT 3000
 
-# Run the generated build output
-CMD ["node", ".next/standalone/server.js"]
+# Run the built project
+CMD ["pnpm", "exec", "next", "start"]
