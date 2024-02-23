@@ -8,48 +8,56 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
 
 USER node
 
+## DEPENDENCIES
 FROM base AS deps
-# RUN apk add --no-cache libc6-compat
-# RUN apt install libc6-compat
 WORKDIR /app
 
+# Copy over package.json and lock files
+# - "--parents" flag required otherwise copying "patches" only copies the contents
+#   of that directory, and not the directory itself. This requires the syntax
+#   directive at the top of the file.
 COPY --parents --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml patches ./
 COPY --chown=node:node apps/examples/nextjs/package.json ./package.json
 
+# Avoid 'cross-device link not permitted' error with pnpm install
 RUN echo "package-import-method=copy" > .npmrc
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
-# pnpm install --frozen-lockfile
 
-# Rebuild the source code only when needed
+# Install dependencies
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
+
+## BUILDER
 FROM base AS builder
 WORKDIR /app
 
+# Copy code from the examples app
 COPY --chown=node:node apps/examples/nextjs ./
+# Copy dependencies from deps stage
 COPY --from=deps /app ./
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
+# Build the "standalone" Next.js version
 RUN pnpm build
-RUN rm -rf node_modules src \
-  && pnpm -r exec -- rm -rf node_modules
+# Remove node_modules
+RUN rm -rf node_modules
 
-# Production image, copy all the files and run next
+## RUNNER
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Copy everything from builder stage
 COPY --chown=node:node --from=builder /app ./
 
+# Install only prod dependencies
 RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install --prod
-# pnpm install --frozen-lockfile --prod
 
 USER node
-
 EXPOSE 3000
-
 ENV PORT 3000
 
+# Run the generated build output
 CMD ["node", ".next/standalone/server.js"]
