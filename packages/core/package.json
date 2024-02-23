@@ -91,6 +91,7 @@
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
     "test:e2e": "playwright test -c ../utils/playwright.config.ts",
+    "test:docker": "./test/docker/test.sh",
     "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
