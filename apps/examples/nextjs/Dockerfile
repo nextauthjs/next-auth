@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile-upstream:master-labs
+
 # Loosely based on Next.js Dockerfile example - https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 FROM node:20-slim AS base
 
