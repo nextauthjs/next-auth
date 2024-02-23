@@ -36,6 +36,78 @@ export function ConvexAdapter(client: ConvexHttpClient): Adapter {
           image: user?.image,
         } as AdapterUser
       })
-    }
+    },
+    getUserByEmail(email: string): Awaitable<AdapterUser | null> {
+      return client.query(api.users.getByEmail, {
+        email
+      }).then((user) => {
+        if(!user) return null
+        return {
+          id: user?._id,
+          name: user?.name,
+          email: user?.email,
+          emailVerified: user?.emailVerified ? new Date(user?.emailVerified) : undefined,
+          image: user?.image,
+        } as AdapterUser
+      })
+    },
+    getUserByAccount(providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">): Awaitable<AdapterUser | null> {
+      return client.query(api.accounts.getUserByAccount, {
+        providerAccountId: providerAccountId as unknown as string
+      }).then((user) => {
+        if(!user) return null
+        return {
+          id: user?._id,
+          name: user?.name,
+          email: user?.email,
+          emailVerified: user?.emailVerified ? new Date(user?.emailVerified) : undefined,
+          image: user?.image,
+        } as AdapterUser
+      })
+    },
+    updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, "id">): Awaitable<AdapterUser> {
+      if(!user.email) throw new Error("User.email could not be found on ConvexAdapter.updateUser")
+      return client.mutation(api.users.update, {
+        id: user.id as Id<"users">,
+        email: user.email,
+        emailVerified: user?.emailVerified ? new Date(user?.emailVerified).toISOString() : undefined,
+        image: user.image ?? undefined,
+      }).then((user) => {
+        if (!user) throw new Error("User not found but calling ConvexAdapter.updateUser")
+        return {
+          id: user?._id,
+          name: user?.name,
+          email: user?.email,
+          emailVerified: user?.emailVerified ? new Date(user?.emailVerified) : undefined,
+          image: user?.image,
+        } as AdapterUser
+      })
+    },
+    deleteUser(userId: string): Promise<void> | Awaitable<AdapterUser | null | undefined> {
+      return client.mutation(api.users.deleteUser, {
+        id: userId as Id<"users">
+      })
+    },
+    linkAccount(account: AdapterAccount): Promise<void> {
+      return client.mutation(api.accounts.create, {
+        userId: account.userId as any,
+        type: account.type,
+        provider: account.provider,
+        providerAccountId: account.providerAccountId,
+        refreshToken: account.refreshToken as string,
+        accessToken: account.accessToken as string,
+        expires_at: account.expires_at,
+        token_type: account.token_type,
+        scope: account.scope,
+        id_token: account.id_token,
+        session_state: account.session_state as string,
+      }).then(_id => {
+      })
+    },
+    unlinkAccount(providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">): Promise<void> {
+      return client.mutation(api.accounts.deleteAccount, {
+        providerAccountId: providerAccountId as unknown as string
+      }).then((_) => {})
+    },
   }
 }
