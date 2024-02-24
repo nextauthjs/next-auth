@@ -15,8 +15,5 @@ services:
       dockerfile: apps/examples/nextjs/Dockerfile
       labels:
         - "com.example.description=Auth.js Next.js Example App"
-      platforms:
-        - "linux/amd64"
-        - "linux/arm64"
     ports:
       - "3000:3000"

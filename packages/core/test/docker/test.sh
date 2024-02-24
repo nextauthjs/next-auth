@@ -3,10 +3,12 @@
 cd ../../apps/examples/nextjs/ || exit
 
 args=("-f" "docker-compose.yml")
-if [[ "$CI" ]]; then
-  args+=("--env-file ../../../packages/core/.env")
+if [[ -z "${CI}" ]]; then
+  args+=("--env-file" "../../../packages/core/.env")
 fi
 args+=("up" "--detach" "--build")
+
+echo "Running: docker-compose ${args[*]}"
 
 docker-compose "${args[@]}"
 
