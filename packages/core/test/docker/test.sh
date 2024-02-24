@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-kill-all next-server
-
 cd ../../apps/examples/nextjs/ || exit
 
 args=("-f" "docker-compose.yml")
