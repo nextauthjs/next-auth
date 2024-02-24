@@ -3,7 +3,6 @@
 cd ../../apps/examples/nextjs/ || exit
 
 docker-compose -f docker-compose.yml \
-  --progress=plain \
   --env-file ../../../packages/core/.env \
   up \
   --detach \
