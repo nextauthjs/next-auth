@@ -20,13 +20,17 @@ export default async function UserButton() {
           <Avatar className="w-8 h-8">
             {session.user.image && (
               <AvatarImage
-                src={session.user.image}
+                src={
+                  session.user.image ??
+                  "https://source.boringavatars.com/marble/120"
+                }
                 alt={session.user.name ?? ""}
               />
             )}
             <AvatarFallback>{session.user.email}</AvatarFallback>
           </Avatar>
         </Button>
+        <SignOut />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">

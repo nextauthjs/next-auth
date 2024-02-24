@@ -151,6 +151,18 @@ export const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
+    jwt({ token, trigger, session }) {
+      if (trigger === "update") token.name = session.user.name
+      return token
+    },
+    async session({ session, token, trigger }) {
+      return {
+        ...session,
+        user: {
+          ...token,
+        },
+      }
+    },
   },
   basePath: "/auth",
   trustHost: true,
