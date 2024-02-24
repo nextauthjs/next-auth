@@ -16,21 +16,23 @@ export default async function UserButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative w-8 h-8 rounded-full">
-          <Avatar className="w-8 h-8">
-            {session.user.image && (
-              <AvatarImage
-                src={
-                  session.user.image ??
-                  "https://source.boringavatars.com/marble/120"
-                }
-                alt={session.user.name ?? ""}
-              />
-            )}
-            <AvatarFallback>{session.user.email}</AvatarFallback>
-          </Avatar>
-        </Button>
-        <SignOut />
+        <div>
+          <Button variant="ghost" className="relative w-8 h-8 rounded-full">
+            <Avatar className="w-8 h-8">
+              {session.user.image && (
+                <AvatarImage
+                  src={
+                    session.user.image ??
+                    "https://source.boringavatars.com/marble/120"
+                  }
+                  alt={session.user.name ?? ""}
+                />
+              )}
+              <AvatarFallback>{session.user.email}</AvatarFallback>
+            </Avatar>
+          </Button>
+          <SignOut />
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
