@@ -16,11 +16,14 @@ import { createHash } from "../../utils/web.js"
 import type { AdapterSession } from "../../../adapters.js"
 import type {
   Account,
+  Authenticator,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
+  User,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
+import { assertInternalOptionsWebAuthn, verifyAuthenticate, verifyRegister } from "../../utils/webauthn-utils.js"
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -361,6 +364,124 @@ export async function callback(
 
       await events.signIn?.({ user, account })
 
+      return { redirect: callbackUrl, cookies }
+    } else if (provider.type === "webauthn" && method === "POST") {
+      // Get callback action from request. It should be either "authenticate" or "register"
+      const action = request.body?.action
+      if (typeof action !== "string" || (action !== "authenticate" && action !== "register")) {
+        throw new AuthError("Invalid action parameter")
+      }
+      // Return an error if the adapter is missing or if the provider
+      // is not a webauthn provider.
+      const localOptions = assertInternalOptionsWebAuthn(options)
+
+      // Verify request to get user, account and authenticator
+      let user: User
+      let account: Account
+      let authenticator: Authenticator | undefined
+      switch (action) {
+        case "authenticate": {
+          const verified = await verifyAuthenticate(localOptions, request, cookies)
+
+          user = verified.user
+          account = verified.account
+
+          break
+        }
+        case "register": {
+          const verified = await verifyRegister(options, request, cookies)
+
+          user = verified.user
+          account = verified.account
+          authenticator = verified.authenticator
+
+          break
+        }
+      }
+
+      // Check if user is allowed to sign in
+      await handleAuthorized(
+        { user, account },
+        options,
+      )
+
+      // Sign user in, creating them and their account if needed
+      const { user: loggedInUser, isNewUser, session, account: currentAccount } = await handleLoginOrRegister(
+        sessionStore.value,
+        user,
+        account,
+        options
+      )
+
+      if (!currentAccount) {
+        // This is mostly for type checking. It should never actually happen.
+        throw new AuthError("Error creating or finding account")
+      }
+
+      // Create new authenticator if needed
+      if (authenticator && loggedInUser.id) {
+        await localOptions.adapter.createAuthenticator({ ...authenticator, userId: loggedInUser.id })
+      }
+
+      // Do the session registering dance
+      if (useJwtSession) {
+        const defaultToken = {
+          name: loggedInUser.name,
+          email: loggedInUser.email,
+          picture: loggedInUser.image,
+          sub: loggedInUser.id?.toString(),
+        }
+        const token = await callbacks.jwt({
+          token: defaultToken,
+          user: loggedInUser,
+          account: currentAccount,
+          isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
+        })
+
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          const salt = options.cookies.sessionToken.name
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token, salt })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+          cookies.push(...sessionCookies)
+        }
+      } else {
+        // Save Session Token in cookie
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: (session as AdapterSession).sessionToken,
+          options: {
+            ...options.cookies.sessionToken.options,
+            expires: (session as AdapterSession).expires,
+          },
+        })
+      }
+
+      await events.signIn?.({ user: loggedInUser, account: currentAccount, isNewUser })
+
+      // Handle first logins on new accounts
+      // e.g. option to send users to a new account landing page on initial login
+      // Note that the callback URL is preserved, so the journey can still be resumed
+      if (isNewUser && pages.newUser) {
+        return {
+          redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
+            }${new URLSearchParams({ callbackUrl })}`,
+          cookies,
+        }
+      }
+
+      // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
     }
 

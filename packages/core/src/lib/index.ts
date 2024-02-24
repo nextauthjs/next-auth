@@ -53,6 +53,13 @@ export async function AuthInternal(
         return render.signout()
       case "verify-request":
         return render.verifyRequest()
+      case "webauthn-options":
+        return await actions.webAuthnOptions(
+          request,
+          options,
+          sessionStore,
+          cookies,
+        )
       default:
     }
   } else {

@@ -61,8 +61,9 @@ import type {
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
+import { isAuthAction } from "./lib/utils/actions.js"
 
-export { skipCSRFCheck, raw, setEnvDefaults, createActionURL }
+export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
   request: Request,
@@ -426,7 +427,14 @@ export interface AuthConfig {
    * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
    * @default {}
    */
-  experimental?: Record<string, boolean>
+  experimental?: {
+    /**
+     * Enable WebAuthn support.
+     *
+     * @default false
+     */
+    enableWebAuthn?: boolean
+  }
   /**
    * The base path of the Auth.js API endpoints.
    *
