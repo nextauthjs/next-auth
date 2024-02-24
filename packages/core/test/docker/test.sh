@@ -2,11 +2,13 @@
 
 cd ../../apps/examples/nextjs/ || exit
 
-docker-compose -f docker-compose.yml \
-  --env-file ../../../packages/core/.env \
-  up \
-  --detach \
-  --build
+args=("-f" "docker-compose.yml")
+if [[ "$CI" ]]; then
+  args+=("--env-file ../../../packages/core/.env")
+fi
+args+=("up" "--detach" "--build")
+
+docker-compose "${args[@]}"
 
 echo "waiting 10 seconds for container to start..."
 sleep 10
