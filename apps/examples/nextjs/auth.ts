@@ -140,6 +140,7 @@ export const config = {
       return true
     },
   },
+  basePath: "/auth",
   trustHost: true,
 } satisfies NextAuthConfig
 
