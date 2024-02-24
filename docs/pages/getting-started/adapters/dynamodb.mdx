@@ -2,6 +2,8 @@
 title: DynamoDB
 ---
 
+import { Callout } from "nextra/components"
+
 <img align="right" src="/img/adapters/dynamodb.svg" width="64" height="64" />
 
 # <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"> DynamoDB </a>{" "} Adapter for Auth.js
@@ -16,6 +18,48 @@ npm install next-auth @auth/dynamodb-adapter
 
 By default, the adapter expects a table with a partition key `pk` and a sort key `sk`, as well as a global secondary index named `GSI1` with `GSI1PK` as partition key and `GSI1SK` as sorting key. To automatically delete sessions and verification requests after they expire using [dynamodb TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) you should [enable the TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html) with attribute name 'expires'. You can set whatever you want as the table name and the billing method.
 You can find the full schema in the table structure section below.
+
+## AWS Credentials
+
+<Callout type="info">
+  Always follow the **principle of least privilege** when giving access to AWS
+  services/resources -> identities should only be permitted to perform the
+  smallest set of actions necessary to fulfill a specific task.
+</Callout>
+
+1. Open the [AWS console](https://console.aws.amazon.com/) and go to "IAM", then "Users".
+2. Create a new user. The purpose of this user is to give programmatic access to DynamoDB.
+3. Create an Access Key and then copy Key ID and Secret to your `.env`/`.env.local` file.
+4. Select "Add Permission" and "Create Inline Policy".
+5. Copy the JSON below into the JSON input and replace `region`, `account_id` and `table_name` with your values.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DynamoDBAccess",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:Describe*",
+        "dynamodb:List*",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:Query",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:{region}:{account_id}:table/{table_name}",
+        "arn:aws:dynamodb:{region}:{account_id}:table/{table_name}/index/GSI1"
+      ]
+    }
+  ]
+}
+```
 
 ### Configuring Auth.js
 
