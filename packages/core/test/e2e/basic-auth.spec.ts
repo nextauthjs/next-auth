@@ -29,6 +29,8 @@ test.describe("Basic Auth", () => {
         .getByRole("button", { name: "Sign out" })
         .click()
 
+      new Promise((resolve) => setTimeout(resolve, 2000))
+
       const session = await page.locator("pre").textContent()
       expect(JSON.parse(session ?? "{}")).toBeNull()
     })
@@ -70,6 +72,8 @@ test.describe("Basic Auth", () => {
         .getByRole("banner")
         .getByRole("button", { name: "Sign out" })
         .click()
+
+      new Promise((resolve) => setTimeout(resolve, 2000))
 
       const session = await page.locator("pre").textContent()
       expect(JSON.parse(session ?? "{}")).toBeNull()
