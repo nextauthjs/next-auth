@@ -1,74 +1,110 @@
+// @ts-check
 import { join } from "path"
 import { readdir, readFile, writeFile } from "fs/promises"
 
-// TODO: Autogenerate
-const frameworks = [
-  { id: "nextjs", name: "NextAuth.js", url: "next-auth-example" },
-  { id: "sveltekit", name: "SvelteKit Auth", url: "sveltekit-auth-example" },
-  { id: "solidstart", name: "SolidStart Auth", url: "auth-solid" },
-]
-
-// TODO: Autogenerate
-// const packagesPath = join(process.cwd(), "../packages")
-// const adaptersPaths = await readdir(packagesPath).then((d) =>
-//   d.filter((dirent) => dirent.startsWith("adapter-"))
-// )
-// const adapters = await adaptersPaths.reduce((acc, path) => {
-//   const id = path.replace("adapter-", "")
-//   const name = id
-//     .split("-")
-//     .map((w) => w[0].toUpperCase() + w.slice(1))
-//     .join(" ")
-//   acc[id] = name
-//   return acc
-// }, {})
-
-const adapters = {
-  "azure-tables": ["Azure Tables Storage"],
-  d1: ["D1"],
-  dgraph: ["Dgraph", "dgraph.png"],
-  drizzle: ["Drizzle ORM", "drizzle-orm.png"],
-  dynamodb: ["DynamoDB", "dynamodb.png"],
-  edgedb: ["EdgeDB"],
-  fauna: ["Fauna", "fauna.png"],
-  firebase: ["Firebase"],
-  hasura: ["Hasura"],
-  kysely: ["Kysely"],
-  "mikro-orm": ["Mikro ORM", "mikro-orm.png"],
-  mongodb: ["MongoDB"],
-  neo4j: ["Neo4j"],
-  pg: ["pg", "pg.png"],
-  pouchdb: ["PouchDB"],
-  prisma: ["Prisma"],
-  sequelize: ["Sequelize"],
-  supabase: ["Supabase"],
-  surrealdb: ["SurrealDB", "surreal.png"],
-  typeorm: ["TypeORM", "typeorm.png"],
-  "upstash-redis": ["Upstash Redis"],
-  xata: ["Xata"],
-}
-
+const providers = {}
 const providersPath = join(process.cwd(), "../packages/core/src/providers")
 const providerFiles = await readdir(providersPath, "utf8")
-const notOAuth = [
-  "index.ts",
-  "oauth-types.ts",
-  "email.ts",
-  "credentials.ts",
-  "oauth.ts",
-]
-
-const providers = {}
 
 for (const file of providerFiles) {
-  if (notOAuth.includes(file)) continue
+  if (["index.ts", "oauth-types.ts", "oauth.ts"].includes(file)) continue
   const provider = await readFile(join(providersPath, file), "utf8")
   const { id } = provider.match(/id: "(?<id>.+)",/).groups
   const { title } = provider.match(/name: "(?<title>.+)",/).groups
   providers[id] = title
 }
 
+const content = JSON.stringify(
+  {
+    // TODO: Autogenerate from packages + package.json#exports
+    frameworks: [
+      {
+        packageDir: "core",
+        packageName: "@auth/core",
+        id: "core",
+        entrypoints: [
+          "index.ts",
+          "adapters.ts",
+          "errors.ts",
+          "jwt.ts",
+          "types.ts",
+          "providers/index.ts",
+          ...Object.keys(providers).map((id) => `providers/${id}.ts`),
+        ],
+      },
+      {
+        id: "nextjs",
+        packageName: "next-auth",
+        packageDir: "next-auth",
+        name: "NextAuth.js",
+        url: "next-auth-example",
+        entrypoints: [
+          "index.tsx",
+          "react.tsx",
+          "jwt.ts",
+          "next.ts",
+          "types.ts",
+          "middleware.ts",
+        ],
+      },
+      {
+        id: "sveltekit",
+        packageName: "@auth/sveltekit",
+        packageDir: "frameworks-sveltekit",
+        name: "SvelteKit Auth",
+        url: "sveltekit-auth-example",
+        entrypoints: ["lib/index.ts", "lib/client.ts"],
+      },
+      {
+        id: "express",
+        packageName: "@auth/express",
+        packageDir: "frameworks-express",
+        name: "Express Auth",
+        url: "express-auth-example",
+        entrypoints: ["index.ts"],
+      },
+      {
+        id: "solidstart",
+        packageName: "@auth/solid-start",
+        packageDir: "frameworks-solid-start",
+        name: "SolidStart Auth",
+        url: "auth-solid",
+        entrypoints: ["index.ts", "client.ts"],
+      },
+    ],
+    // TODO: Autogenerate
+    adapters: [
+      { id: "azure-tables", name: "Azure Tables Storage" },
+      { id: "d1", name: "D1" },
+      { id: "dgraph", name: "Dgraph", img: "dgraph.png" },
+      { id: "drizzle", name: "DrizzleORM", img: "drizzle-orm.png" },
+      { id: "dynamodb", name: "DynamoDB", img: "dynamodb.png" },
+      { id: "edgedb", name: "EdgeDB" },
+      { id: "fauna", name: "Fauna", img: "fauna.png" },
+      { id: "firebase", name: "Firebase" },
+      { id: "hasura", name: "Hasura" },
+      { id: "kysely", name: "Kysely" },
+      { id: "mikro-orm", name: "Mikro ORM", img: "mikro-orm.png" },
+      { id: "mongodb", name: "MongoDB" },
+      { id: "neo4j", name: "Neo4j" },
+      { id: "pg", name: "pg", img: "pg.png" },
+      { id: "pouchdb", name: "PouchDB" },
+      { id: "prisma", name: "Prisma" },
+      { id: "sequelize", name: "Sequelize" },
+      { id: "supabase", name: "Supabase" },
+      { id: "surrealdb", name: "SurrealDB", img: "surreal.png" },
+      { id: "typeorm", name: "TypeORM", img: "typeorm.png" },
+      { id: "unstorage", name: "Unstorage" },
+      { id: "upstash-redis", name: "Upstash Redis" },
+      { id: "xata", name: "Xata" },
+    ],
+    providers,
+  },
+  null,
+  2
+)
 await writeFile(
-  join(process.cwd(), "manifest.json"),
-  JSON.stringify({ frameworks, adapters, providers }, null, 2)
+  join(process.cwd(), "manifest.mjs"),
+  `// This file is autogenerated by scripts/generate-manifest.mjs
+export default ${content}`
 )

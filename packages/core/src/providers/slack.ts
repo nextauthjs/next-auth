@@ -65,7 +65,8 @@ export interface SlackProfile extends Record<string, any> {
  *
  * ### Resources
  *
- * - [Slack OAuth documentation](https://api.slack.com/authentication https://api.slack.com/docs/sign-in-with-slack)
+ * - [Slack Authentication documentation](https://api.slack.com/authentication)
+ * - [Sign-in with Slack](https://api.slack.com/docs/sign-in-with-slack)
  * - [Slack app console](https://api.slack.com/apps)
  *
  * ### Notes

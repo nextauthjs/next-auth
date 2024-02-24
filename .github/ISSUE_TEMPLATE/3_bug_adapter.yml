@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
-        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/adapters/overview) related issue!
+        Thanks for taking the time to fill out this [Adapter](https://next-auth.js.org/getting-started/adapters) related issue!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
         ### Important :exclamation:
@@ -40,6 +40,7 @@ body:
         - "@auth/sequelize-adapter"
         - "@auth/supabase-adapter"
         - "@auth/typeorm-adapter"
+        - "@auth/unstorage-adapter"
         - "@auth/upstash-redis-adapter"
         - "@auth/xata-adapter"
     validations:
@@ -50,10 +51,9 @@ body:
       description: |
         Run this command in your project's root folder and paste the result:
 
-        ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth,@auth/*" && npx envinfo --npmPackages "@next-auth/*"
-        ```
-        Alternatively, if the above command did not work, we need the version of the following packages from your package.json: "next", "react", "next-auth" and your adapter. Please also mention your OS and Node.js version, as well as the browser you are using.
+        `npx envinfo --system --binaries --browsers --npmPackages "{next,react,next-auth,@auth/*}"`
+
+        Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
     validations:
       required: true
   - type: input

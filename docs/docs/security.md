@@ -30,4 +30,3 @@ The best way to report an issue is by contacting us via email at info@balazsorba
 :::note
 For less serious issues (e.g. RFC compliance for unsupported flows or potential issues that may cause a problem in the future) it is appropriate to make these public as bug reports or feature requests or to raise a question to open a discussion around them.
 :::
-

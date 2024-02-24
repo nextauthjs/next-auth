@@ -2,7 +2,7 @@
  *
  * NextAuth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
  *
- * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://nextjs.authjs.dev#methods)
+ * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://authjs.dev/guides/upgrade-to-v5#methods)
  *
  * @module react
  */
@@ -53,7 +53,7 @@ export { SessionProviderProps }
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH: AuthClientConfig = {
+export const __NEXTAUTH: AuthClientConfig = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -137,7 +137,7 @@ export function useSession<R extends boolean>(
 
   React.useEffect(() => {
     if (requiredAndNotLoading) {
-      const url = `/api/auth/signin?${new URLSearchParams({
+      const url = `${__NEXTAUTH.basePath}/signin?${new URLSearchParams({
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
@@ -184,7 +184,6 @@ export async function getSession(params?: GetSessionParams) {
  * required to make requests that changes state. (e.g. signing in or out, or updating the session).
  *
  * [CSRF Prevention: Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie)
- * @internal
  */
 export async function getCsrfToken() {
   const response = await fetchData<{ csrfToken: string }>(
@@ -192,7 +191,7 @@ export async function getCsrfToken() {
     __NEXTAUTH,
     logger
   )
-  return response?.csrfToken
+  return response?.csrfToken ?? ""
 }
 
 type ProvidersType = Record<
@@ -203,7 +202,6 @@ type ProvidersType = Record<
 /**
  * Returns a client-safe configuration object of the currently
  * available providers.
- * @internal
  */
 export async function getProviders() {
   return fetchData<ProvidersType>("providers", __NEXTAUTH, logger)
@@ -214,7 +212,7 @@ export async function getProviders() {
  * Handles CSRF protection.
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   provider?: LiteralUnion<
     P extends RedirectableProviderType
@@ -251,21 +249,23 @@ export async function signIn<
     isCredentials ? "callback" : "signin"
   }/${provider}`
 
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
-
-  const res = await fetch(_signInUrl, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
-    },
-    // @ts-expect-error
-    body: new URLSearchParams({
-      ...options,
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-    }),
-  })
+  const csrfToken = await getCsrfToken()
+  const res = await fetch(
+    `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Auth-Return-Redirect": "1",
+      },
+      // @ts-expect-error
+      body: new URLSearchParams({
+        ...options,
+        csrfToken,
+        callbackUrl,
+      }),
+    }
+  )
 
   const data = await res.json()
 
@@ -301,19 +301,15 @@ export async function signOut<R extends boolean = true>(
 ): Promise<R extends true ? undefined : SignOutResponse> {
   const { callbackUrl = window.location.href } = options ?? {}
   const baseUrl = apiBaseUrl(__NEXTAUTH)
-  const fetchOptions = {
+  const csrfToken = await getCsrfToken()
+  const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error
-    body: new URLSearchParams({
-      csrfToken: await getCsrfToken(),
-      callbackUrl,
-    }),
-  }
-  const res = await fetch(`${baseUrl}/signout`, fetchOptions)
+    body: new URLSearchParams({ csrfToken, callbackUrl }),
+  })
   const data = await res.json()
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
@@ -404,7 +400,9 @@ export function SessionProvider(props: SessionProviderProps) {
         __NEXTAUTH._session = await getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
-        logger.error(new ClientSessionError(error.message, error))
+        logger.error(
+          new ClientSessionError((error as Error).message, error as any)
+        )
       } finally {
         setLoading(false)
       }
@@ -469,9 +467,9 @@ export function SessionProvider(props: SessionProviderProps) {
       status: loading
         ? "loading"
         : session
-        ? "authenticated"
-        : "unauthenticated",
-      async update(data) {
+          ? "authenticated"
+          : "unauthenticated",
+      async update(data: any) {
         if (loading || !session) return
         setLoading(true)
         const newSession = await fetchData<Session>(

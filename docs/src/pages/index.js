@@ -8,10 +8,9 @@ import classnames from "classnames"
 import { useEffect } from "react"
 import ProviderMarquee from "../components/ProviderMarquee"
 import styles from "./index.module.css"
-import { providers } from "../../manifest.json"
-import { Clerk } from "../components/clerk"
+import manifest from "../../manifest.mjs"
 
-const providersCount = Object.keys(providers).length + 2 // email, credentials
+const providersCount = Object.keys(manifest.providers).length + 2 // email, credentials
 const features = [
   {
     title: "Easy",
@@ -168,6 +167,15 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+            <div className={styles.heroClerk}>
+              Looking for a hosted alternative?
+              <a
+                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                target="_blank"
+              >
+                Try Clerk →
+              </a>
+            </div>
             <div className="hero-marquee">
               <ProviderMarquee />
             </div>
@@ -187,7 +195,6 @@ export default function Home() {
                   </h2>
                 </div>
               </div>
-              <Clerk />
               <div className="row">
                 {features.map((props, idx) => (
                   <Feature key={idx} {...props} />
@@ -271,7 +278,7 @@ export default function Home() {
 
 const svelteKitCode = `
 import { SvelteKitAuth } from "@auth/sveltekit"
-import GitHub from '@auth/core/providers/github'
+import GitHub from '@auth/sveltekit/providers/github'
 import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
 export const handle = SvelteKitAuth({
   providers: [

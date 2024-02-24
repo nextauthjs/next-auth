@@ -1,29 +1,11 @@
 {
+  "extends": "utils/tsconfig.json",
   "compilerOptions": {
-    "isolatedModules": true,
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
     "outDir": ".",
-    "rootDir": "src",
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "stripInternal": true,
-    "declarationMap": true,
-    "declaration": true
+    "rootDir": "src"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "*.js",
-    "*.d.ts",
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts"]
 }

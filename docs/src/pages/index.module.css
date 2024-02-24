@@ -115,3 +115,17 @@
   font-size: 1.2rem;
   text-align: center;
 }
+
+[data-theme="dark"] .heroClerk {
+  color: #fff;
+}
+
+.heroClerk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  position: relative;
+  z-index: 1000;
+}

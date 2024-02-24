@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/fushionauth
+ * @module providers/fusionauth
  */
 import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 

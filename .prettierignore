@@ -23,7 +23,7 @@ build
 docs/docs/reference/core
 docs/docs/reference/sveltekit
 static
-docs/manifest.json
+docs/manifest.mjs
 
 # --------------- Packages ---------------
 
@@ -41,10 +41,12 @@ packages/core/src/lib/pages/styles.ts
 packages/frameworks-sveltekit/package
 packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
 
+# @auth/express
+packages/frameworks-express/providers
+
 # next-auth
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/css/index.css
-
 
 # Adapters
 .branches
@@ -57,7 +59,6 @@ migrations
 test.schema.gql
 
 # --------------- Apps ---------------
-
 
 # Examples should have their own Prettier config since they are templates too
 apps/example-sveltekit

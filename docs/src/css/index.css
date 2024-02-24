@@ -85,7 +85,7 @@ a:hover,
 }
 
 .docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
+  background-color: rgb(44, 50, 65);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
@@ -281,11 +281,25 @@ html[data-theme="dark"] #carbonads .carbon-text {
 
 html[data-theme="dark"] #carbonads > span {
   background: #1a1a1a;
-  box-shadow: 0 0 1px hsl(0deg 0% 0% / 9%), 0 0 2px hsl(0deg 0% 0% / 9%),
-    0 0 4px hsl(0deg 0% 0% / 9%), 0 0 8px hsl(0deg 0% 0% / 9%);
+  box-shadow:
+    0 0 1px hsl(0deg 0% 0% / 9%),
+    0 0 2px hsl(0deg 0% 0% / 9%),
+    0 0 4px hsl(0deg 0% 0% / 9%),
+    0 0 8px hsl(0deg 0% 0% / 9%);
 }
 
 html[data-theme="dark"] #carbonads .carbon-poweredby {
   color: #aaa;
   background: #1e2021;
+}
+
+.theme-doc-markdown.markdown {
+  > p:first-of-type {
+    :last-child {
+      img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
 }

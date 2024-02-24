@@ -1,3 +1,10 @@
+nextauthjs/express-auth-example:
+  - source: apps/examples/express
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
+
 nextauthjs/sveltekit-auth-example:
   - source: apps/examples/sveltekit
     dest: .
@@ -21,6 +28,13 @@ nextauthjs/next-auth-gatsby-example:
 
 nextauthjs/next-auth-example:
   - source: apps/examples/nextjs
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
+
+nextauthjs/next-auth-pages-example:
+  - source: apps/examples/nextjs-pages
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml

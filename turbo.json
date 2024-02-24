@@ -6,51 +6,18 @@
         "^build"
       ],
       "outputs": [
-        "dist/**/*",
-        "lib/**/*",
-        "*.js",
-        "*.d.ts",
-        "*.d.ts.map"
-      ],
-      "outputMode": "new-only"
-    },
-    "@auth/core#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
+        ".next",
+        "dist/**",
         "lib/**",
         "providers/**",
         "*.js",
         "*.d.ts",
         "*.d.ts.map",
         "src/lib/pages/styles.ts",
-        "src/providers/oauth-types.ts"
+        "src/providers/oauth-types.ts",
+        ".svelte-kit/**"
       ],
       "outputMode": "new-only"
-    },
-    "@auth/sveltekit#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".svelte-kit/**",
-        "client.*",
-        "index.*"
-      ],
-      "outputMode": "new-only"
-    },
-    "next-auth#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "lib/**",
-        "providers/**",
-        "*.js",
-        "*.d.ts",
-        "*.d.ts*"
-      ]
     },
     "clean": {
       "cache": false
@@ -59,11 +26,21 @@
       "cache": false
     },
     "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/**/",
+        "test/**/"
+      ],
       "outputMode": "new-only"
     },
-    "e2e": {
+    "test:e2e": {
       "outputs": [
-        "playwright-report/**"
+        "blob-report/**",
+        "playwright-report/**",
+        "playwright/.cache/**",
+        "test-results/**"
       ]
     },
     "@auth/upstash-redis-adapter#test": {
@@ -72,18 +49,21 @@
         "UPSTASH_REDIS_URL"
       ]
     },
+    "@auth/xata-adapter#test": {
+      "env": [
+        "XATA_API_KEY",
+        "XATA_DATABASE_URL"
+      ]
+    },
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/prisma-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/sveltekit#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
-        "@auth/edgedb-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
         "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
         "@auth/hasura-adapter#build",
@@ -93,12 +73,18 @@
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
+        "@auth/express#build",
         "@auth/typeorm-adapter#build",
+        "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "next-auth#build",
         "^build"
       ],
       "cache": false
@@ -106,15 +92,12 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
-        "@auth/prisma-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/sveltekit#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
-        "@auth/edgedb-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
         "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
         "@auth/fauna-adapter#build",
         "@auth/firebase-adapter#build",
         "@auth/hasura-adapter#build",
@@ -124,12 +107,17 @@
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
         "@auth/typeorm-adapter#build",
+        "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "next-auth#build",
         "^build"
       ],
       "outputs": [
@@ -138,7 +126,9 @@
         "docs/reference/adapter/**",
         "docs/reference/core/**/*",
         "docs/reference/nextjs/**/*",
-        "docs/reference/sveltekit/**/*"
+        "docs/reference/solidstart/**/*",
+        "docs/reference/sveltekit/**/*",
+        "docs/reference/express/**/*"
       ]
     }
   }

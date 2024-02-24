@@ -151,7 +151,7 @@ export async function fetchData<T = any>(
     if (!res.ok) throw data
     return data
   } catch (error) {
-    logger.error(new ClientFetchError(error.message, error))
+    logger.error(new ClientFetchError((error as Error).message, error as any))
     return null
   }
 }
@@ -218,7 +218,7 @@ export function parseUrl(url?: string): {
     url = `https://${url}`
   }
 
-  const _url = new URL(url ?? defaultUrl)
+  const _url = new URL(url || defaultUrl)
   const path = (_url.pathname === "/" ? defaultUrl.pathname : _url.pathname)
     // Remove trailing slash
     .replace(/\/$/, "")

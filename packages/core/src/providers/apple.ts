@@ -115,8 +115,8 @@ export interface AppleProfile extends Record<string, any> {
  * export default NextAuth({
  *   providers: [
  *     AppleProvider({
- *       clientId: process.env.GITHUB_ID,
- *       clientSecret: process.env.GITHUB_SECRET,
+ *       clientId: process.env.APPLE_ID,
+ *       clientSecret: process.env.APPLE_SECRET,
  *     }),
  *   ],
  * })

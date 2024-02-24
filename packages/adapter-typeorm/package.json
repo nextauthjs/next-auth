@@ -1,6 +1,6 @@
 {
   "name": "@auth/typeorm-adapter",
-  "version": "1.0.6",
+  "version": "1.5.0",
   "description": "TypeORM adapter for Auth.js.",
   "homepage": "https://authjs.dev/reference/adapter/typeorm",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -39,27 +39,23 @@
     "build": "tsc",
     "dev": "tsc -w",
     "clean": "rm -rf dist",
-    "init:db": "tests/init.sh",
-    "mysql": "pnpm init:db && tests/mysql/test.sh",
-    "postgres": "pnpm init:db && tests/postgresql/test.sh",
-    "sqlite": "tests/sqlite/test.sh",
-    "test:containers": "tests/test.sh",
-    "test": "tests/test.sh"
+    "init:db": "test/init.sh",
+    "mysql": "pnpm init:db && test/mysql/test.sh",
+    "postgres": "pnpm init:db && test/postgresql/test.sh",
+    "sqlite": "test/sqlite/test.sh",
+    "test:containers": "test/test.sh",
+    "test": "test/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.3",
     "sqlite3": "^5.0.8",
     "typeorm": "0.3.17",
-    "typeorm-naming-strategies": "^4.1.0",
-    "typescript": "5.2.2"
+    "typeorm-naming-strategies": "^4.1.0"
   },
   "peerDependencies": {
     "mssql": "^6.2.1 || ^7 || ^8 || ^9",
@@ -81,8 +77,5 @@
     "sqlite3": {
       "optional": true
     }
-  },
-  "jest": {
-    "preset": "@auth/adapter-test/jest"
   }
 }

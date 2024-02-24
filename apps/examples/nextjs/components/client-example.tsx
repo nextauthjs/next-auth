@@ -9,9 +9,9 @@ import CustomLink from "./custom-link"
 
 const UpdateForm = () => {
   const { data: session, update } = useSession()
-  const [name, setName] = useState(session?.user.name ?? "")
+  const [name, setName] = useState(session?.user?.name ?? "")
 
-  if (!session) return null
+  if (!session?.user) return null
   return (
     <>
       <h2 className="text-xl font-bold">Updating the session</h2>
@@ -55,7 +55,7 @@ export default function ClientExample() {
       </p>
       <p>
         It needs the{" "}
-        <CustomLink href="https://react.dev/reference/react/use-client">
+        <CustomLink href="https://react.devreference/nextjs/react/use-client">
           <code>'use client'</code>
         </CustomLink>{" "}
         directive at the top of the file to enable client side rendering, and

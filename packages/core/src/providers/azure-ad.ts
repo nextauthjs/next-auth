@@ -130,7 +130,7 @@ export default function AzureAD<P extends AzureADProfile>(
     id: "azure-ad",
     name: "Azure Active Directory",
     type: "oidc",
-    wellKnown: `${rest.issuer}}/.well-known/openid-configuration?appid=${options.clientId}`,
+    wellKnown: `${rest.issuer}/.well-known/openid-configuration?appid=${options.clientId}`,
     authorization: {
       params: {
         scope: "openid profile email User.Read",

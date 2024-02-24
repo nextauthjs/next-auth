@@ -1,22 +1,17 @@
 /**
- *
- * :::warning Note
- * This is the documentation for `next-auth@latest`. Check out the documentation of v4 [here](https://next-auth.js.org).
- * :::
- *
- * If you are looking for the migration guide, visit the [`next-auth@latest` Migration Guide](https://nextjs.authjs.dev/v5).
+ * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/guides/upgrade-to-v5)._
  *
  * ## Installation
  *
- * ```bash npm2yarn2pnpm
- * npm install next-auth@5 @auth/core
+ * ```bash npm2yarn
+ * npm install next-auth@beta
  * ```
  *
- * ## Environment variable inferrence
+ * ## Environment variable inference
  *
  * `NEXTAUTH_URL` and `NEXTAUTH_SECRET` have been inferred since v4.
  *
- * Since NextAuth.js v5 can also automatically infer environment variables that are prefiexed with `AUTH_`.
+ * Since NextAuth.js v5 can also automatically infer environment variables that are prefixed with `AUTH_`.
  *
  * For example `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` will be used as the `clientId` and `clientSecret` options for the GitHub provider.
  *
@@ -32,7 +27,7 @@
  *
  * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
- * import GitHub from "next-auth/providers/GitHub"
+ * import GitHub from "next-auth/providers/github"
  * export const { handlers, auth } = NextAuth({ providers: [ GitHub ] })
  * ```
  *
@@ -50,32 +45,52 @@
  *
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
- * @module index
+ * ## Lazy initialization
+ * You can also initialize NextAuth.js lazily (previously known as advanced intialization), which allows you to access the request context in the configuration in some cases, like Route Handlers, Middleware, API Routes or `getServerSideProps`.
+ * The above example becomes:
+ *
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "next-auth/providers/github"
+ * export const { handlers, auth } = NextAuth(req => {
+ *  if (req) {
+ *   console.log(req) // do something with the request
+ *  }
+ *  return { providers: [ GitHub ] }
+ * })
+ * ```
+ *
+ * :::tip
+ * This is useful if you want to customize the configuration based on the request, for example, to add a different provider in staging/dev environments.
+ * :::
+ *
+ * @module next-auth
  */
 
 import { Auth } from "@auth/core"
-import { reqWithEnvUrl, setEnvDefaults } from "./lib/env.js"
+import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Session } from "@auth/core/types"
+import type { BuiltInProviderType } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module.js"
+import type { AppRouteHandlerFn } from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-import type { BuiltInProviderType } from "./providers/index.js"
+export { AuthError } from "@auth/core/errors"
 
 export type {
-  Account,
-  DefaultSession,
-  Profile,
   Session,
+  Account,
+  Profile,
+  DefaultSession,
   User,
-} from "./types.js"
+} from "@auth/core/types"
 
 type AppRouteHandlers = Record<
   "GET" | "POST",
@@ -221,7 +236,9 @@ export interface NextAuthResult {
       ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
     ) => AppRouteHandlerFn)
   /**
-   * Sign in with a provider.
+   * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
+   *
+   * By default, the user is redirected to the current page after signing in. You can override this behavior by setting the `redirectTo` option.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -237,27 +254,55 @@ export interface NextAuthResult {
    *   </form>
    * )
    * ```
+   *
+   * If an error occurs during signin, an instance of {@link AuthError} will be thrown. You can catch it like this:
+   * ```ts title="app/layout.tsx"
+   * import { AuthError } from "next-auth"
+   * import { signIn } from "../auth"
+   *
+   * export default function Layout() {
+   *  return (
+   *    <form action={async (formData) => {
+   *      "use server"
+   *      try {
+   *        await signIn("credentials", formData)
+   *     } catch(error) {
+   *       if (error instanceof AuthError) // Handle auth errors
+   *       throw error // Rethrow all other errors
+   *     }
+   *    }}>
+   *     <button>Sign in</button>
+   *   </form>
+   *  )
+   * }
+   * ```
+   *
    */
-  signIn<
+  signIn: <
     P extends BuiltInProviderType | (string & {}),
-    R extends boolean = true
+    R extends boolean = true,
   >(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
-    options?: {
-      /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-      redirectTo?: string
-      /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-      redirect?: R
-    } & Record<string, any>,
+    options?:
+      | FormData
+      | ({
+          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          redirectTo?: string
+          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+          redirect?: R
+        } & Record<string, any>),
     authorizationParams?:
       | string[][]
       | Record<string, string>
       | string
       | URLSearchParams
-  ): Promise<R extends false ? any : never>
+  ) => Promise<R extends false ? any : never>
   /**
-   * Sign out the user.
+   * Sign out the user. If the session was created using a database strategy, the session will be removed from the database and the related cookie is invalidated.
+   * If the session was created using a JWT, the cookie is invalidated.
+   *
+   * By default the user is redirected to the current page after signing out. You can override this behavior by setting the `redirectTo` option.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -273,14 +318,16 @@ export interface NextAuthResult {
    *   </form>
    * )
    * ```
+   *
+   *
    */
-  signOut<R extends boolean = true>(options?: {
+  signOut: <R extends boolean = true>(options?: {
     /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
     redirectTo?: string
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
-  }): Promise<R extends false ? any : never>
-  update: (
+  }) => Promise<R extends false ? any : never>
+  unstable_update: (
     data: Partial<Session | { user: Partial<Session["user"]> }>
   ) => Promise<Session | null>
 }
@@ -295,21 +342,68 @@ export interface NextAuthResult {
  *
  * export const { handlers, auth } = NextAuth({ providers: [GitHub] })
  * ```
+ *
+ * Lazy initialization:
+ * @example
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import GitHub from "@auth/core/providers/github"
+ *
+ * export const { handlers, auth } = NextAuth((req) => {
+ *   console.log(req) // do something with the request
+ *   return {
+ *     providers: [GitHub],
+ *   },
+ * })
+ * ```
  */
-export default function NextAuth(config: NextAuthConfig): NextAuthResult {
+export default function NextAuth(
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | undefined) => NextAuthConfig)
+): NextAuthResult {
+  if (typeof config === "function") {
+    const httpHandler = (req: NextRequest) => {
+      const _config = config(req)
+      setEnvDefaults(_config)
+      return Auth(reqWithEnvURL(req), _config)
+    }
+
+    return {
+      handlers: { GET: httpHandler, POST: httpHandler } as const,
+      // @ts-expect-error
+      auth: initAuth(config, (c) => setEnvDefaults(c)),
+
+      signIn: (provider, options, authorizationParams) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return signIn(provider, options, authorizationParams, _config)
+      },
+      signOut: (options) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return signOut(options, _config)
+      },
+      unstable_update: (data) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return update(data, _config)
+      },
+    }
+  }
   setEnvDefaults(config)
-  const httpHandler = (req: NextRequest) => Auth(reqWithEnvUrl(req), config)
+  const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
     auth: initAuth(config),
-    signIn(provider, options, authorizationParams) {
+    signIn: (provider, options, authorizationParams) => {
       return signIn(provider, options, authorizationParams, config)
     },
-    signOut(options) {
+    signOut: (options) => {
       return signOut(options, config)
     },
-    update(data) {
+    unstable_update: (data) => {
       return update(data, config)
     },
   }

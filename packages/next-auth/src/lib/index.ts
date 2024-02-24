@@ -1,7 +1,8 @@
 import { Auth, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
-import { detectOrigin, reqWithEnvUrl } from "./env.js"
+import { reqWithEnvURL } from "./env.js"
+import { createActionURL } from "./actions.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
@@ -9,11 +10,11 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "next/dist/server/future/route-modules/app-route/module"
+import type { AppRouteHandlerFn } from "./types.js"
 import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 /** Configure NextAuth.js. */
-export interface NextAuthConfig extends AuthConfig {
+export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
    * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
@@ -54,14 +55,13 @@ export interface NextAuthConfig extends AuthConfig {
       request: NextRequest
       /** The authenticated user or token, if any. */
       auth: Session | null
-    }) => Awaitable<boolean | NextResponse | undefined>
+    }) => Awaitable<boolean | NextResponse | Response | undefined>
   }
 }
 
-/** Server-side method to read the session. */
 async function getSession(headers: Headers, config: NextAuthConfig) {
-  const origin = detectOrigin(headers)
-  const request = new Request(`${origin}/session`, {
+  const url = createActionURL("session", headers, config.basePath)
+  const request = new Request(url, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
 
@@ -70,18 +70,23 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
     callbacks: {
       ...config.callbacks,
       // Since we are server-side, we don't need to filter out the session data
-      // See https://nextjs.authjs.dev/v5#authenticating-server-side
+      // See https://authjs.dev/guides/upgrade-to-v5/v5#authenticating-server-side
       // TODO: Taint the session data to prevent accidental leakage to the client
-      // https://react.dev/reference/react/experimental_taintObjectReference
+      // https://react.devreference/nextjs/react/experimental_taintObjectReference
       async session(...args) {
         const session =
           // If the user defined a custom session callback, use that instead
-          (await config.callbacks?.session?.(...args)) ?? args[0].session
+          (await config.callbacks?.session?.(...args)) ?? {
+            ...args[0].session,
+            expires:
+              args[0].session.expires?.toISOString?.() ??
+              args[0].session.expires,
+          }
         const user = args[0].user ?? args[0].token
         return { user, ...session } satisfies Session
       },
     },
-  })
+  }) as Promise<Response>
 }
 
 export interface NextAuthRequest extends NextRequest {
@@ -105,14 +110,73 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
   return typeof arg === "function"
 }
 
-export function initAuth(config: NextAuthConfig) {
+export function initAuth(
+  config:
+    | NextAuthConfig
+    | ((request: NextRequest | undefined) => NextAuthConfig),
+  onLazyLoad?: (config: NextAuthConfig) => void // To set the default env vars
+) {
+  if (typeof config === "function") {
+    return (...args: WithAuthArgs) => {
+      if (!args.length) {
+        // React Server Components
+        const _headers = headers()
+        const _config = config(undefined) // Review: Should we pass headers() here instead?
+        onLazyLoad?.(_config)
+
+        return getSession(_headers, _config).then((r) => r.json())
+      }
+
+      if (args[0] instanceof Request) {
+        // middleware.ts inline
+        // export { auth as default } from "auth"
+        const req = args[0]
+        const ev = args[1]
+        const _config = config(req)
+        onLazyLoad?.(_config)
+
+        // args[0] is supposed to be NextRequest but the instanceof check is failing.
+        return handleAuth([req, ev], _config)
+      }
+
+      if (isReqWrapper(args[0])) {
+        // middleware.ts wrapper/route.ts
+        // import { auth } from "auth"
+        // export default auth((req) => { console.log(req.auth) }})
+        const userMiddlewareOrRoute = args[0]
+        return async (
+          ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
+        ) => {
+          return handleAuth(args, config(args[0]), userMiddlewareOrRoute)
+        }
+      }
+      // API Routes, getServerSideProps
+      const request = "req" in args[0] ? args[0].req : args[0]
+      const response: any = "res" in args[0] ? args[0].res : args[1]
+      // @ts-expect-error -- request is NextRequest
+      const _config = config(request)
+      onLazyLoad?.(_config)
+
+      // @ts-expect-error -- request is NextRequest
+      return getSession(new Headers(request.headers), _config).then(
+        async (authResponse) => {
+          const auth = await authResponse.json()
+
+          for (const cookie of authResponse.headers.getSetCookie())
+            response.headers.append("set-cookie", cookie)
+
+          return auth satisfies Session | null
+        }
+      )
+    }
+  }
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
       return getSession(headers(), config).then((r) => r.json())
     }
     if (args[0] instanceof Request) {
-      // middleare.ts
+      // middleware.ts inline
       // export { auth as default } from "auth"
       const req = args[0]
       const ev = args[1]
@@ -120,14 +184,16 @@ export function initAuth(config: NextAuthConfig) {
     }
 
     if (isReqWrapper(args[0])) {
-      // middleware.ts/router.ts
+      // middleware.ts wrapper/route.ts
       // import { auth } from "auth"
       // export default auth((req) => { console.log(req.auth) }})
       const userMiddlewareOrRoute = args[0]
       return async (
         ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
       ) => {
-        return handleAuth(args, config, userMiddlewareOrRoute)
+        return handleAuth(args, config, userMiddlewareOrRoute).then((res) => {
+          return res
+        })
       }
     }
 
@@ -142,8 +208,8 @@ export function initAuth(config: NextAuthConfig) {
     ).then(async (authResponse) => {
       const auth = await authResponse.json()
 
-      // Preserve cookies set by Auth.js Core
-      cloneSetCookie(authResponse, response)
+      for (const cookie of authResponse.headers.getSetCookie())
+        response.headers.append("set-cookie", cookie)
 
       return auth satisfies Session | null
     })
@@ -155,20 +221,13 @@ async function handleAuth(
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
-  const request = reqWithEnvUrl(args[0])
+  const request = reqWithEnvURL(args[0])
   const sessionResponse = await getSession(request.headers, config)
   const auth = await sessionResponse.json()
 
-  // If we are handling a recognized NextAuth.js request,
-  // don't require authorization to avoid an accidental redirect loop
-  let authorized: boolean | NextResponse | undefined = true
+  let authorized: boolean | NextResponse | Response | undefined = true
 
-  const { pathname: basePath } = request.nextUrl
-
-  if (
-    !isNextAuthAction(request, config, basePath) &&
-    config.callbacks?.authorized
-  ) {
+  if (config.callbacks?.authorized) {
     authorized = await config.callbacks.authorized({ request, auth })
   }
 
@@ -177,6 +236,17 @@ async function handleAuth(
   if (authorized instanceof Response) {
     // User returned a custom response, like redirecting to a page or 401, respect it
     response = authorized
+
+    const redirect = authorized.headers.get("Location")
+    const { pathname } = request.nextUrl
+    // If the user is redirecting to the same NextAuth.js action path as the current request,
+    // don't allow the redirect to prevent an infinite loop
+    if (
+      redirect &&
+      isSameAuthAction(pathname, new URL(redirect).pathname, config)
+    ) {
+      authorized = true
+    }
   } else if (userMiddlewareOrRoute) {
     // Execute user's middleware/handler with the augmented request
     const augmentedReq = request as NextAuthRequest
@@ -186,49 +256,37 @@ async function handleAuth(
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
       NextResponse.next()
   } else if (!authorized) {
-    const signInPage =
-      config.pages?.signIn ?? `${request.nextUrl.basePath}}/signin`
+    const signInPage = config.pages?.signIn ?? `${config.basePath}/signin`
     if (request.nextUrl.pathname !== signInPage) {
       // Redirect to signin page by default if not authorized
-      request.nextUrl.pathname = signInPage
-      request.nextUrl.searchParams.set("callbackUrl", request.nextUrl.href)
-      response = NextResponse.redirect(request.nextUrl)
+      const signInUrl = request.nextUrl.clone()
+      signInUrl.pathname = signInPage
+      signInUrl.searchParams.set("callbackUrl", request.nextUrl.href)
+      response = NextResponse.redirect(signInUrl)
     }
   }
 
   const finalResponse = new Response(response?.body, response)
-  // Preserve cookies set by Auth.js Core
-  cloneSetCookie(sessionResponse, finalResponse)
+
+  // Preserve cookies from the session response
+  for (const cookie of sessionResponse.headers.getSetCookie())
+    finalResponse.headers.append("set-cookie", cookie)
 
   return finalResponse
 }
 
-/** Clone cookies from one response to another. */
-function cloneSetCookie(from: Response, to: Response) {
-  const authCookies =
-    from.headers.getSetCookie?.() ?? from.headers.get("set-cookie")
-
-  if (!authCookies?.length) return
-
-  if (Array.isArray(authCookies)) {
-    authCookies.forEach((cookie) => to.headers.append("set-cookie", cookie))
-  } else {
-    to.headers.set("set-cookie", authCookies)
-  }
-}
-
-/** Check if the request is for a NextAuth.js action. */
-function isNextAuthAction(
-  req: NextRequest,
-  config: NextAuthConfig,
-  basePath: string
+function isSameAuthAction(
+  requestPath: string,
+  redirectPath: string,
+  config: NextAuthConfig
 ) {
-  const { pathname } = req.nextUrl
-
-  const action = pathname.replace(`${basePath}/`, "") as AuthAction
+  const action = redirectPath.replace(`${requestPath}/`, "") as AuthAction
   const pages = Object.values(config.pages ?? {})
 
-  return actions.has(action) || pages.some((page) => pathname === page)
+  return (
+    (actions.has(action) || pages.includes(redirectPath)) &&
+    redirectPath === requestPath
+  )
 }
 
 const actions = new Set<AuthAction>([

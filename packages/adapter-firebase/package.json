@@ -1,6 +1,6 @@
 {
   "name": "@auth/firebase-adapter",
-  "version": "1.0.3",
+  "version": "1.4.0",
   "description": "Firebase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -37,9 +37,8 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "tsc -w",
     "build": "tsc",
-    "test": "firebase emulators:exec --only firestore --project next-auth-test 'jest -c tests/jest.config.js'"
+    "test": "firebase emulators:exec 'vitest -c ../utils/vitest.config.ts'"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -48,10 +47,7 @@
     "firebase-admin": "^11.4.1"
   },
   "devDependencies": {
-    "@auth/adapter-test": "workspace:*",
-    "@auth/tsconfig": "workspace:*",
     "firebase-admin": "^11.4.1",
-    "firebase-tools": "^11.16.1",
-    "jest": "^29.3.1"
+    "firebase-tools": "^11.16.1"
   }
 }
