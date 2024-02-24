@@ -83,7 +83,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
               args[0].session.expires,
           }
         const user = args[0].user ?? args[0].token
-        return { user, ...session } satisfies Session
+        return { ...session, user } satisfies Session
       },
     },
   }) as Promise<Response>
