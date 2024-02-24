@@ -20,11 +20,9 @@ export default async function Index() {
         </CustomLink>{" "}
         examples to see how to secure pages and get session data.
       </p>
-      {session ? (
-        <pre className="p-4 rounded-md bg-neutral-100 text-wrap dark:bg-neutral-800">
-          {JSON.stringify(session, null, 2)}
-        </pre>
-      ) : null}
+      <pre className="p-4 rounded-md bg-neutral-100 text-wrap dark:bg-neutral-800">
+        {session ? JSON.stringify(session, null, 2) : null}
+      </pre>
       <p>
         Current{" "}
         <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
