@@ -8,7 +8,7 @@
  * npm install @auth/core
  * ```
  *
- * You can then import this submodule from `@auth/core/type`.
+ * You can then import this submodule from `@auth/core/types`.
  *
  * ## Usage
  *
@@ -159,6 +159,7 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
  * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
  */
 export interface Profile {
+  id?: string | null
   sub?: string | null
   name?: string | null
   given_name?: string | null

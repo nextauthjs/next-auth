@@ -13,18 +13,18 @@
  * ```
  *
  * ## Usage
- * 
+ *
  * ```ts title="src/auth.ts"
- * 
+ *
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
- * export const { handle, signIn signOut } = SvelteKitAuth({
+ * export const { handle, signIn, signOut } = SvelteKitAuth({
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
- * 
+ *
  * or to use SvelteKit platform environment variables for platforms like Cloudflare
  *
  * ```ts title="src/auth.ts"
@@ -89,7 +89,7 @@
  *   {/if}
  * </p>
  * ```
- * 
+ *
  * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components.
  * To set up the form actions, we need to define the files in `src/routes`:
  * ```ts title="src/routes/signin/+page.server.ts"
@@ -97,18 +97,11 @@
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signIn }
  * ```
- * ```ts title="src/routes/signin/+page.svelte"
- * <!-- empty file -->
- * ```
  * ```ts title="src/routes/signout/+page.server.ts"
  * import { signOut } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signOut }
  * ```
- * ```ts title="src/routes/signout/+page.svelte"
- * <!-- empty file -->
- * ```
- * 
  *
  * ## Managing the session
  *
