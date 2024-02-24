@@ -13,8 +13,6 @@
  * npm install @auth/core @auth/solid-start
  * ```
  *
- * It is recommended to use [create-jd-app](https://github.com/OrJDev/create-jd-app) to bootstrap your application with SolidStart auth included.
- *
  * @module @auth/solid-start
  */
 
