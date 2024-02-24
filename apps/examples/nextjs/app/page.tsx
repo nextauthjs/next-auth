@@ -1,7 +1,9 @@
 import CustomLink from "@/components/custom-link"
 import packageJSON from "../package.json"
+import { auth } from "auth"
 
-export default function Index() {
+export default async function Index() {
+  const session = await auth()
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
@@ -18,6 +20,11 @@ export default function Index() {
         </CustomLink>{" "}
         examples to see how to secure pages and get session data.
       </p>
+      {session ? (
+        <pre className="p-4 rounded-md bg-neutral-100 text-wrap dark:bg-neutral-800">
+          {JSON.stringify(session, null, 2)}
+        </pre>
+      ) : null}
       <p>
         Current{" "}
         <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}

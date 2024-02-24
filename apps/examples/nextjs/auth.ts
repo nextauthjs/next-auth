@@ -12,6 +12,7 @@ import NextAuth from "next-auth"
 // import Bungie from "next-auth/providers/bungie"
 // import Cognito from "next-auth/providers/cognito"
 // import Coinbase from "next-auth/providers/coinbase"
+import Credentials from "next-auth/providers/credentials"
 // import Discord from "next-auth/providers/discord"
 // import Dropbox from "next-auth/providers/dropbox"
 // import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
@@ -28,7 +29,7 @@ import GitHub from "next-auth/providers/github"
 // import Hubspot from "next-auth/providers/hubspot"
 // import Instagram from "next-auth/providers/instagram"
 // import Kakao from "next-auth/providers/kakao"
-// import Keycloak from "next-auth/providers/keycloak"
+import Keycloak from "next-auth/providers/keycloak"
 // import Line from "next-auth/providers/line"
 // import LinkedIn from "next-auth/providers/linkedin"
 // import Mailchimp from "next-auth/providers/mailchimp"
@@ -82,6 +83,17 @@ export const config = {
     // Bungie,
     // Cognito,
     // Coinbase,
+    Credentials({
+      credentials: { password: { label: "Password", type: "password" } },
+      authorize(c: any) {
+        if (c.password !== "password") return null
+        return {
+          id: "test",
+          name: "Test User",
+          email: "test@example.com",
+        }
+      },
+    }),
     // Discord,
     // Dropbox,
     // DuendeIDS6,
@@ -98,7 +110,7 @@ export const config = {
     // Hubspot,
     // Instagram,
     // Kakao,
-    // Keycloak,
+    Keycloak,
     // Line,
     // LinkedIn,
     // Mailchimp,
