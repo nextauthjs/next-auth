@@ -41,7 +41,14 @@ export const defaultCallbacks: CallbacksOptions = {
     return baseUrl
   },
   session({ session }) {
-    return session
+    return {
+      user: {
+        name: session.user?.name,
+        email: session.user?.email,
+        image: session.user?.image,
+      },
+      expires: session.expires?.toISOString?.() ?? session.expires,
+    }
   },
   jwt({ token }) {
     return token
@@ -124,9 +131,7 @@ export async function init({
     },
     // JWT options
     jwt: {
-      // Asserted in assert.ts
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      secret: authOptions.secret!,
+      secret: authOptions.secret!, // Asserted in assert.ts
       maxAge: authOptions.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
       encode: jwt.encode,
       decode: jwt.decode,
@@ -142,7 +147,7 @@ export async function init({
     isOnRedirectProxy,
     experimental: {
       ...authOptions.experimental,
-    }
+    },
   }
 
   // Init cookies

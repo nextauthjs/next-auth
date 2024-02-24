@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.13",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -32,6 +32,9 @@
     "./providers": {
       "types": "./providers/index.d.ts"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
     "./providers/*": {
       "types": "./providers/*.d.ts",
       "import": "./providers/*.js"
@@ -39,6 +42,10 @@
     "./react": {
       "types": "./react.d.ts",
       "import": "./react.js"
+    },
+    "./webauthn": {
+      "types": "./webauthn.d.ts",
+      "import": "./webauthn.js"
     },
     "./package.json": "./package.json"
   },
@@ -58,6 +65,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "dev": "pnpm providers && tsc -w",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "files": [
@@ -72,11 +80,19 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
     "next": "^14",
     "nodemailer": "^6.6.5",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
+    "@simplewebauthn/server": {
+      "optional": true
+    },
     "nodemailer": {
       "optional": true
     }

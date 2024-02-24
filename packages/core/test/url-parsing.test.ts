@@ -46,6 +46,12 @@ describe("parse the action and provider id", () => {
       error: "Cannot parse action at /api/auth/signin/api/auth/signin/github",
       basePath: "/api/auth",
     },
+    {
+      path: "/auth/signin/auth0",
+      action: "signin",
+      providerId: "auth0",
+      basePath: "/auth",
+    },
   ])("$path", ({ path, error, basePath, action, providerId }) => {
     if (action || providerId) {
       const parsed = parseActionAndProviderId(path, basePath)

@@ -7,6 +7,7 @@ import type {
   RequestInternal,
   ResponseInternal,
 } from "../../types.js"
+import { isAuthAction } from "./actions.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -19,17 +20,6 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
     return Object.fromEntries(params)
   }
 }
-
-const actions: AuthAction[] = [
-  "providers",
-  "session",
-  "csrf",
-  "signin",
-  "signout",
-  "callback",
-  "verify-request",
-  "error",
-]
 
 export async function toInternalRequest(
   req: Request,
@@ -119,10 +109,6 @@ export function randomString(size: number) {
   return Array.from(bytes).reduce(r, "")
 }
 
-function isAction(action: string): action is AuthAction {
-  return actions.includes(action as AuthAction)
-}
-
 /** @internal Parse the action and provider id from a URL pathname. */
 export function parseActionAndProviderId(
   pathname: string,
@@ -131,9 +117,9 @@ export function parseActionAndProviderId(
   action: AuthAction
   providerId?: string
 } {
-  const a = pathname.split(base)
+  const a = pathname.match(new RegExp(`^${base}(.+)`))
 
-  if (a.length !== 2 || a[0] !== "")
+  if (a === null)
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   const [_, actionAndProviderId] = a
@@ -145,10 +131,10 @@ export function parseActionAndProviderId(
 
   const [action, providerId] = b
 
-  if (!isAction(action))
+  if (!isAuthAction(action))
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  if (providerId && !["signin", "callback"].includes(action))
+  if (providerId && !["signin", "callback", "webauthn-options"].includes(action))
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   return { action, providerId }

@@ -21,24 +21,9 @@
  *
  * const app = express()
  *
- * // Make sure to use these body parsers so Auth.js can receive data from the client
- * app.use(express.json())
- * app.use(express.urlencoded({ extended: true }))
- *
  * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
  * app.use('trust proxy')
- *
- * app.use(
- *   "/api/auth/*",
- *   ExpressAuth({
- *     providers: [
- *       GitHub({
- *         clientId: process.env.GITHUB_ID,
- *         clientSecret: process.env.GITHUB_SECRET,
- *       }),
- *     ],
- *   })
- * )
+ * app.use("/auth/*", ExpressAuth({ providers: [ GitHub ] }))
  * ```
  *
  * Don't forget to set the `AUTH_SECRET` environment variable. This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
@@ -46,10 +31,10 @@
  * You will also need to load the environment variables into your runtime environment. For example in Node.js with a package like [`dotenv`](https://www.npmjs.com/package/dotenv) or `Deno.env` in Deno.
  *
  * ### Provider Configuration
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
+ * The callback URL used by the [providers](https://authjs.dev/reference/core/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
  *
  * ```
- * [origin]/api/auth/callback/[provider]
+ * [origin]/auth/callback/[provider]
  * ```
  *
  * ## Signing in and signing out
@@ -81,7 +66,7 @@
  * This can either be done per route, or for a group of routes using a middleware such as the following:
  *
  * ```ts
- * export function authenticatedUser(
+ * export async function authenticatedUser(
  *   req: Request,
  *   res: Response,
  *   next: NextFunction
@@ -138,9 +123,9 @@
  * @module @auth/express
  */
 
-import { Auth } from "@auth/core"
+import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
 import type { AuthConfig, Session } from "@auth/core/types"
-import { Request as ExpressRequest, Response as ExpressResponse } from "express"
+import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
 export type {
@@ -151,46 +136,40 @@ export type {
   User,
 } from "@auth/core/types"
 
-function ExpressAuthHandler(authConfig: Omit<AuthConfig, "raw">) {
-  return async (req: ExpressRequest, res: ExpressResponse) => {
-    const request = toWebRequest(req)
-    const response = await Auth(request, authConfig)
-    await toExpressResponse(response, res)
+export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
+  return async (req: e.Request, res: e.Response, next: e.NextFunction) => {
+    e.json()(req, res, async (err) => {
+      if (err) return next(err)
+      e.urlencoded({ extended: true })(req, res, async (err) => {
+        if (err) return next(err)
+        config.basePath = getBasePath(req)
+        setEnvDefaults(process.env, config)
+        await toExpressResponse(await Auth(toWebRequest(req), config), res)
+        next()
+      })
+    })
   }
-}
-
-export function ExpressAuth(
-  config: AuthConfig
-): ReturnType<typeof ExpressAuthHandler> {
-  const { ...authOptions } = config
-  authOptions.secret ??= process.env.AUTH_SECRET
-  authOptions.redirectProxyUrl ??= process.env.AUTH_REDIRECT_PROXY_URL
-  authOptions.trustHost ??= !!(
-    process.env.AUTH_TRUST_HOST ??
-    process.env.VERCEL ??
-    process.env.NODE_ENV !== "production"
-  )
-
-  const handler = ExpressAuthHandler(authOptions)
-
-  return handler
 }
 
 export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
-  req: ExpressRequest,
-  options: Omit<AuthConfig, "raw">
+  req: e.Request,
+  config: Omit<AuthConfig, "raw">
 ): GetSessionResult {
-  options.secret ??= process.env.AUTH_SECRET
-  options.trustHost ??= true
-
-  const request = toWebRequest(req)
-  const url = new URL("/api/auth/session", request.url)
+  setEnvDefaults(process.env, config)
+  const url = createActionURL(
+    "session",
+    req.protocol,
+    // @ts-expect-error
+    new Headers(req.headers),
+    process.env,
+    config.basePath
+  )
 
   const response = await Auth(
-    new Request(url, { headers: request.headers }),
-    options
+    new Request(url, { headers: { cookie: req.headers.cookie ?? "" } }),
+    config
   )
 
   const { status = 200 } = response
@@ -200,4 +179,8 @@ export async function getSession(
   if (!data || !Object.keys(data).length) return null
   if (status === 200) return data
   throw new Error(data.message)
+}
+
+function getBasePath(req: e.Request) {
+  return req.baseUrl.split(req.params[0])[0].replace(/\/$/, "")
 }

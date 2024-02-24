@@ -71,10 +71,6 @@ NextAuth.js has had a few different ways to authenticate server-side in the past
 
 Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
 
-:::note
-When using `auth()`, the [`session()` callback](/reference/core/types#session) is ignored. `auth()` will expose anything returned from the [`jwt()` callback](reference/core/types#jwt) or if using a [`"database"` strategy](/reference/core#session), from the [User](/reference/core/adapters#adapteruser). This is because the `session()` callback was designed to protect you from exposing sensitive information to the client, but when using `auth()` you are always on the server.
-:::
-
 See the table below for a summary of the changes, and click on the links to learn more about each one.
 
 | Where                                                         | v4                                                    | v5                               |
@@ -238,7 +234,7 @@ Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in`
 
 ## Edge compatibility
 
-While NextAuth.js strictly uses standard Web APIs (and thus can run in any environments that supports that), some libraries/ORM packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files. The following is an example of how to do this with a database adapter.
+While NextAuth.js strictly uses standard [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) (and thus can run in any environments that support that), some libraries or ORMs (Object-Relational Mapping) packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files. The following is an example of how to do this with a database adapter.
 
 NextAuth.js supports two session strategies. When you are using an adapter, you can choose to save the session data into a database. Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy.
 
