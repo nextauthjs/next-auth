@@ -273,7 +273,10 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
         const user = await (
           pouchdb as unknown as PouchDB.Database<AdapterUser>
         ).get(session.userId)
-        return { session: toAdapterSession(session), user: toAdapterUser(user) }
+        return {
+          session: toAdapterSession(session),
+          user: toAdapterUser(user),
+        }
       }
       return null
     },

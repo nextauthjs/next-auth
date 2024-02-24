@@ -130,7 +130,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 
   return {
     async createUser(data) {
-      const user = { id: crypto.randomUUID(), ...data }
+      const user = { ...data, id: crypto.randomUUID() }
       await write(`CREATE (u:User $data)`, user)
       return user
     },

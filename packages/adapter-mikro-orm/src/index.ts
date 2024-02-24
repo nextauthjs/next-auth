@@ -135,7 +135,7 @@ export { defaultEntities }
  * ```
  */
 export function MikroOrmAdapter<
-  D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>
+  D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>,
 >(
   ormOptions: ORMOptions<D>,
   options?: {

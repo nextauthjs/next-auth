@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.3.15",
+  "version": "0.13.0",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -23,47 +23,61 @@
     "Iain Collins <me@iaincollins.com>"
   ],
   "scripts": {
-    "dev": "svelte-package -w",
-    "clean": "rm -rf client.* index.* package",
-    "build": "pnpm clean && pnpm check && svelte-package && node ./scripts/postbuild.js && rm -rf package",
-    "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "build": "pnpm clean && pnpm providers && pnpm check && svelte-package",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test:unit": "vitest"
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "clean": "rm -rf client.* index.* package src/lib/providers",
+    "dev": "pnpm providers && svelte-package -w",
+    "preview": "vite preview",
+    "providers": "node ../utils/scripts/providers.js --out src/lib",
+    "test": "vitest -c ../utils/vitest.config.ts"
   },
   "devDependencies": {
-    "@playwright/test": "1.29.2",
-    "@sveltejs/adapter-auto": "^1.0.0",
-    "@sveltejs/kit": "^1.0.0",
-    "@sveltejs/package": "^1.0.0",
-    "svelte": "^3.54.0",
-    "svelte-check": "^2.9.2",
-    "tslib": "^2.4.1",
-    "vite": "^4.0.5",
-    "vitest": "^0.25.3"
+    "@sveltejs/adapter-auto": "^3.0.0",
+    "@sveltejs/kit": "^2.4.3",
+    "@sveltejs/package": "^2.0.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@types/set-cookie-parser": "^2.4.7",
+    "svelte": "^4.0.0",
+    "svelte-check": "^3.4.3",
+    "tslib": "^2.4.1"
   },
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "set-cookie-parser": "^2.6.0"
   },
   "peerDependencies": {
-    "svelte": "^3.54.0 || ^4.0.0",
-    "@sveltejs/kit": "^1.0.0"
+    "@sveltejs/kit": "^1.0.0 || ^2.0.0",
+    "svelte": "^3.54.0 || ^4.0.0 || ^5"
   },
   "type": "module",
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
-    "client.*",
-    "index.*",
+    "dist",
     "src"
   ],
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./client": {
-      "types": "./client.d.ts",
-      "import": "./client.js"
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "svelte": "./dist/components/index.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters.d.ts"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
     },
     "./package.json": "./package.json"
   }

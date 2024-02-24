@@ -3,7 +3,6 @@ import { AuthorizedCallbackError } from "../../../errors.js"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Account } from "../../../types.js"
-import type { AdapterUser } from "../../../adapters.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -15,29 +14,39 @@ export async function sendToken(
   options: InternalOptions<"email">
 ) {
   const { body } = request
-  const { provider, url, callbacks, adapter } = options
+  const { provider, callbacks, adapter } = options
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const email = normalizer(body?.email)
 
-  const defaultUser = { id: email, email, emailVerified: null }
-  const user = ((await adapter!.getUserByEmail(email)) ??
-    defaultUser) satisfies AdapterUser
+  const defaultUser = { id: crypto.randomUUID(), email, emailVerified: null }
+  const user = (await adapter!.getUserByEmail(email)) ?? defaultUser
 
-  const account: Account = {
+  const account = {
     providerAccountId: email,
     userId: user.id,
     type: "email",
     provider: provider.id,
-  }
+  } satisfies Account
 
   let authorized
   try {
-    const params = { user, account, email: { verificationRequest: true } }
-    authorized = await callbacks.signIn(params)
+    authorized = await callbacks.signIn({
+      user,
+      account,
+      email: { verificationRequest: true },
+    })
   } catch (e) {
     throw new AuthorizedCallbackError(e as Error)
   }
   if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (typeof authorized === "string") {
+    return {
+      redirect: await callbacks.redirect({
+        url: authorized,
+        baseUrl: options.url.origin,
+      }),
+    }
+  }
 
   const { callbackUrl, theme } = options
   const token =
@@ -50,11 +59,13 @@ export async function sendToken(
 
   const secret = provider.secret ?? options.secret
 
+  const baseUrl = new URL(options.basePath, options.url.origin)
+
   const sendRequest = provider.sendVerificationRequest({
     identifier: email,
     token,
     expires,
-    url: `${url}/callback/${provider.id}?${new URLSearchParams({
+    url: `${baseUrl}/callback/${provider.id}?${new URLSearchParams({
       callbackUrl,
       token,
       email,
@@ -73,7 +84,7 @@ export async function sendToken(
   await Promise.all([sendRequest, createToken])
 
   return {
-    redirect: `${url}/verify-request?${new URLSearchParams({
+    redirect: `${baseUrl}/verify-request?${new URLSearchParams({
       provider: provider.id,
       type: provider.type,
     })}`,

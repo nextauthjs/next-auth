@@ -6,7 +6,7 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
-import parseUrl from "./utils/parse-url.js"
+import { merge } from "./utils/merge.js"
 
 import type {
   AuthConfig,
@@ -41,7 +41,14 @@ export const defaultCallbacks: CallbacksOptions = {
     return baseUrl
   },
   session({ session }) {
-    return session
+    return {
+      user: {
+        name: session.user?.name,
+        email: session.user?.email,
+        image: session.user?.image,
+      },
+      expires: session.expires?.toISOString?.() ?? session.expires,
+    }
   },
   jwt({ token }) {
     return token
@@ -106,13 +113,12 @@ export async function init({
     action,
     // @ts-expect-errors
     provider,
-    cookies: {
-      ...cookie.defaultCookies(
+    cookies: merge(
+      cookie.defaultCookies(
         authOptions.useSecureCookies ?? url.protocol === "https:"
       ),
-      // Allow user cookie options to override any cookie settings above
-      ...authOptions.cookies,
-    },
+      authOptions.cookies
+    ),
     providers,
     // Session options
     session: {
@@ -125,9 +131,7 @@ export async function init({
     },
     // JWT options
     jwt: {
-      // Asserted in assert.ts
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      secret: authOptions.secret!,
+      secret: authOptions.secret!, // Asserted in assert.ts
       maxAge: authOptions.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
       encode: jwt.encode,
       decode: jwt.decode,
@@ -141,6 +145,9 @@ export async function init({
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
+    experimental: {
+      ...authOptions.experimental,
+    },
   }
 
   // Init cookies

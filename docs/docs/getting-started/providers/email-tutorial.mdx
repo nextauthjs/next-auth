@@ -29,7 +29,7 @@ The Email Provider can be used with both JSON Web Tokens and database sessions, 
 [`nodemailer`](https://www.npmjs.com/package/nodemailer) is a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/) when using the Email Provider. This means we need to install before we can start sending emails:
 
 ```bash npm2yarn
-npm install -D nodemailer
+npm install nodemailer
 ```
 
 `nodemailer` will enable us to send emails from NodeJS, which the runtime on which Next.js application operate.
@@ -113,7 +113,7 @@ For this tutorial, we're going to use the **MongoDB** adapter, but any of the ot
 First, let's start by installing the adapter package:
 
 ```bash npm2yarn
-npm install -D  @auth/mongodb-adapter mongodb
+npm install @auth/mongodb-adapter mongodb
 ```
 
 and create a simple MongoDB client:

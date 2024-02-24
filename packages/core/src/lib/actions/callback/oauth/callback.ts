@@ -12,6 +12,7 @@ import type {
   Profile,
   RequestInternal,
   TokenSet,
+  User,
 } from "../../../../types.js"
 import type { OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
@@ -185,22 +186,23 @@ export async function handleOAuth(
   return { ...profileResult, profile, cookies: resCookies }
 }
 
-/** Returns the user and account that is going to be created in the database. */
-async function getUserAndAccount(
+/**
+ * Returns the user and account that is going to be created in the database.
+ * @internal
+ */
+export async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
   logger: LoggerInstance
 ) {
   try {
-    const user = await provider.profile(OAuthProfile, tokens)
-    user.email = user.email?.toLowerCase()
-
-    if (!user.id) {
-      throw new TypeError(
-        `User id is missing in ${provider.name} OAuth profile response`
-      )
-    }
+    const userFromProfile = await provider.profile(OAuthProfile, tokens)
+    const user = {
+      ...userFromProfile,
+      id: crypto.randomUUID(),
+      email: userFromProfile.email?.toLowerCase(),
+    } satisfies User
 
     return {
       user,
@@ -208,7 +210,7 @@ async function getUserAndAccount(
         ...tokens,
         provider: provider.id,
         type: provider.type,
-        providerAccountId: user.id.toString(),
+        providerAccountId: userFromProfile.id ?? crypto.randomUUID(),
       },
     }
   } catch (e) {

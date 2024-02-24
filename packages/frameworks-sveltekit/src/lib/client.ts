@@ -39,7 +39,7 @@ export type SignInAuthorizationParams =
  * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType

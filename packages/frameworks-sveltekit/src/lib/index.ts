@@ -1,40 +1,38 @@
 /**
- *
- *
  * :::warning
- * `@auth/sveltekit` is currently experimental. The API _will_ change in the future.
+ * `@auth/sveltekit` is currently experimental. The API _might_ change.
  * :::
  *
  * SvelteKit Auth is the official SvelteKit integration for Auth.js.
  * It provides a simple way to add authentication to your SvelteKit app in a few lines of code.
  *
- *
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install @auth/core @auth/sveltekit
+ * npm install @auth/sveltekit
  * ```
  *
  * ## Usage
  *
- * ```ts title="src/hooks.server.ts"
+ * ```ts title="src/auth.ts"
+ *
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
- * export const handle = SvelteKitAuth({
+ * export const { handle, signIn, signOut } = SvelteKitAuth({
  *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
  * })
  * ```
  *
- * or to use sveltekit platform environment variables for platforms like Cloudflare
+ * or to use SvelteKit platform environment variables for platforms like Cloudflare
  *
- * ```ts title="src/hooks.server.ts"
+ * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/sveltekit/providers/github"
  * import type { Handle } from "@sveltejs/kit";
  *
- * export const handle = SvelteKitAuth(async (event) => {
+ * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
  *     providers: [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
  *     secret: event.platform.env.AUTH_SECRET,
@@ -44,11 +42,16 @@
  * }) satisfies Handle;
  * ```
  *
- * Don't forget to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
+ * Re-export the handle in `src/hooks.server.ts`:
+ * ```ts title="src/hooks.server.ts"
+ * export { handle } from "./auth"
+ * ```
+ *
+ * Remember to set the `AUTH_SECRET` [environment variable](https://kit.svelte.dev/docs/modules#$env-dynamic-private). This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
  *
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.prefix}:
+ * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.basePath}:
  * ```
  * [origin]/auth/callback/[provider]
  * ```
@@ -60,7 +63,7 @@
  *
  * ```ts
  * <script>
- *   import { signIn, signOut } from "@auth/sveltekit/client"
+ *   import { SignIn, SignOut } from "@auth/sveltekit/components"
  *   import { page } from "$app/stores"
  * </script>
  *
@@ -77,12 +80,27 @@
  *       <small>Signed in as</small><br />
  *       <strong>{$page.data.session.user?.name ?? "User"}</strong>
  *     </span>
- *     <button on:click={() => signOut()} class="button">Sign out</button>
+ *     <SignOut />
  *   {:else}
  *     <span class="notSignedInText">You are not signed in</span>
- *     <button on:click={() => signIn("github")}>Sign In with GitHub</button>
+ *     <SignIn provider="github"/>
+ *     <SignIn provider="google"/>
+ *     <SignIn provider="facebook"/>
  *   {/if}
  * </p>
+ * ```
+ *
+ * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components.
+ * To set up the form actions, we need to define the files in `src/routes`:
+ * ```ts title="src/routes/signin/+page.server.ts"
+ * import { signIn } from "../../auth"
+ * import type { Actions } from "./$types"
+ * export const actions: Actions = { default: signIn }
+ * ```
+ * ```ts title="src/routes/signout/+page.server.ts"
+ * import { signOut } from "../../auth"
+ * import type { Actions } from "./$types"
+ * export const actions: Actions = { default: signOut }
  * ```
  *
  * ## Managing the session
@@ -150,7 +168,7 @@
  *
  * ```ts
  * import { SvelteKitAuth } from '@auth/sveltekit';
- * import GitHub from '@auth/core/providers/github';
+ * import GitHub from '@auth/sveltekit/providers/github';
  * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
  * import { redirect, type Handle } from '@sveltejs/kit';
  * import { sequence } from '@sveltejs/kit/hooks';
@@ -201,116 +219,94 @@
  */
 
 /// <reference types="@sveltejs/kit" />
-import type { Handle, RequestEvent } from "@sveltejs/kit"
-
-import { dev } from "$app/environment"
-import { base } from "$app/paths"
+import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
-import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type { SvelteKitAuthConfig } from "./types"
+import { setEnvDefaults } from "./env"
+import { auth, signIn, signOut } from "./actions"
+import { Auth, isAuthAction } from "@auth/core"
 
-export async function getSession(
-  req: Request,
-  config: SvelteKitAuthConfig
-): ReturnType<App.Locals["getSession"]> {
-  config.secret ??= env.AUTH_SECRET
-  config.trustHost ??= true
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
 
-  const prefix = config.prefix ?? `${base}/auth`
-  const url = new URL(prefix + "/session", req.url)
-  const request = new Request(url, { headers: req.headers })
-  const response = await Auth(request, config)
+export type { SvelteKitAuthConfig }
 
-  const { status = 200 } = response
-  const data = await response.json()
-
-  if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data
-  throw new Error(data.message)
-}
-
-/** Configure the {@link SvelteKitAuth} method. */
-export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {
-  /**
-   * Defines the base path for the auth routes.
-   * If you change the default value,
-   * you must also update the callback URL used by the [providers](https://authjs.dev/reference/core/providers).
-   *
-   * @default `${base}/auth` - `base` is the base path of your SvelteKit app, configured in `svelte.config.js`.
-   */
-  prefix?: string
-}
-
-const actions: AuthAction[] = [
-  "providers",
-  "session",
-  "csrf",
-  "signin",
-  "signout",
-  "callback",
-  "verify-request",
-  "error",
-]
-
-type DynamicSvelteKitAuthConfig = (
-  event: RequestEvent
-) => PromiseLike<SvelteKitAuthConfig>
-
-function AuthHandle(
-  svelteKitAuthOptions: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
-): Handle {
-  return async function ({ event, resolve }) {
-    const authOptions =
-      typeof svelteKitAuthOptions === "object"
-        ? svelteKitAuthOptions
-        : await svelteKitAuthOptions(event)
-    const { prefix = `${base}/auth` } = authOptions
-    const { url, request } = event
-
-    event.locals.getSession ??= () => getSession(request, authOptions)
-
-    const action = url.pathname
-      .slice(prefix.length + 1)
-      .split("/")[0] as AuthAction
-
-    if (!actions.includes(action) || !url.pathname.startsWith(prefix + "/")) {
-      return resolve(event)
-    }
-
-    return Auth(request, authOptions)
-  }
-}
+const authorizationParamsPrefix = "authorizationParams-"
 
 /**
  * The main entry point to `@auth/sveltekit`
  * @see https://sveltekit.authjs.dev
  */
 export function SvelteKitAuth(
-  options: SvelteKitAuthConfig | DynamicSvelteKitAuthConfig
-): Handle {
-  if (typeof options === "object") {
-    options.secret ??= env.AUTH_SECRET
-    options.trustHost ??= !!(env.AUTH_TRUST_HOST ?? env.VERCEL ?? dev)
-    options.prefix ??= `${base}/auth`
-  }
-  return AuthHandle(options)
-}
+  config:
+    | SvelteKitAuthConfig
+    | ((event: RequestEvent) => PromiseLike<SvelteKitAuthConfig>)
+): {
+  handle: Handle
+  signIn: Action
+  signOut: Action
+} {
+  return {
+    signIn: async (event) => {
+      const { request } = event
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
+      const formData = await request.formData()
+      const { providerId: provider, ...options } = Object.fromEntries(formData)
+      // get the authorization params from the options prefixed with `authorizationParams-`
+      let authorizationParams: Parameters<typeof signIn>[2] = {}
+      let _options: Parameters<typeof signIn>[1] = {}
+      for (const key in options) {
+        if (key.startsWith(authorizationParamsPrefix)) {
+          authorizationParams[key.slice(authorizationParamsPrefix.length)] =
+            options[key] as string
+        } else {
+          _options[key] = options[key]
+        }
+      }
+      await signIn(
+        provider as string,
+        _options,
+        authorizationParams,
+        _config,
+        event
+      )
+    },
+    signOut: async (event) => {
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
+      const options = Object.fromEntries(await event.request.formData())
+      await signOut(options, _config, event)
+    },
+    async handle({ event, resolve }) {
+      const _config = typeof config === "object" ? config : await config(event)
+      setEnvDefaults(env, _config)
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace App {
-    interface Locals {
-      getSession(): Promise<Session | null>
-    }
-    interface PageData {
-      session?: Session | null
-    }
-  }
-}
+      const { url, request } = event
 
-declare module "$env/dynamic/private" {
-  export const AUTH_SECRET: string
-  export const AUTH_TRUST_HOST: string
-  export const VERCEL: string
+      event.locals.auth ??= () => auth(event, _config)
+      event.locals.getSession ??= event.locals.auth
+
+      const action = url.pathname
+        .slice(
+          // @ts-expect-error - basePath is defined in setEnvDefaults
+          _config.basePath.length + 1
+        )
+        .split("/")[0]
+
+      if (
+        isAuthAction(action) &&
+        url.pathname.startsWith(_config.basePath + "/")
+      ) {
+        return Auth(request, _config)
+      }
+      return resolve(event)
+    },
+  }
 }

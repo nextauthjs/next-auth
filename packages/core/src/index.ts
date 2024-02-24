@@ -39,6 +39,7 @@
 import { assertConfig } from "./lib/utils/assert.js"
 import { AuthError, ErrorPageLoop } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
+import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
@@ -54,12 +55,13 @@ import type {
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
+import { isAuthAction } from "./lib/utils/actions.js"
 
-export { skipCSRFCheck, raw }
+export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
   request: Request,
-  config: AuthConfig
+  config: AuthConfig & { raw: typeof raw }
 ): Promise<ResponseInternal>
 
 export async function Auth(
@@ -91,7 +93,7 @@ export async function Auth(
 ): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
-  const internalRequest = await toInternalRequest(request)
+  const internalRequest = await toInternalRequest(request, config)
 
   if (internalRequest instanceof Error) {
     logger.error(internalRequest)
@@ -113,13 +115,12 @@ export async function Auth(
       !htmlPages.includes(internalRequest.action) ||
       internalRequest.method !== "GET"
     ) {
-      return new Response(
-        JSON.stringify({
+      return Response.json(
+        {
           message:
             "There was a problem with the server configuration. Check the server logs for more information.",
-          code: assertionResult.name,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        },
+        { status: 500 }
       )
     }
 
@@ -168,10 +169,10 @@ export async function Auth(
 
     const type = isAuthError ? error.type : "Configuration"
     const page = (isAuthError && error.kind) || "error"
+    // TODO: Filter out some error types from being sent to the client
     const params = new URLSearchParams({ error: type })
     const path =
-      config.pages?.[page] ??
-      `${internalRequest.url.pathname}/${page.toLowerCase()}`
+      config.pages?.[page] ?? `${config.basePath}/${page.toLowerCase()}`
 
     const url = `${internalRequest.url.origin}${path}?${params}`
 
@@ -211,12 +212,16 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * To generate a random string, you can use the following command:
    *
-   * - On Unix systems, type `openssl rand -hex 32` in the terminal
-   * - Or generate one [online](https://generate-secret.vercel.app/32)
+   * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+   *
+   * @note
+   * You can also pass an array of secrets, in which case the first secret that successfully
+   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
+   * The newer secret should be added to the start of the array, which will be used for all new sessions.
+   *
    */
-  secret?: string
+  secret?: string | string[]
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.
@@ -352,9 +357,9 @@ export interface AuthConfig {
    */
   useSecureCookies?: boolean
   /**
-   * You can override the default cookie names and options for any of the cookies used by NextAuth.js.
-   * You can specify one or more cookies with custom properties,
-   * but if you specify custom options for a cookie you must provide all the options for that cookie.
+   * You can override the default cookie names and options for any of the cookies used by Auth.js.
+   * You can specify one or more cookies with custom properties
+   * and missing options will use the default values defined by Auth.js.
    * If you use this feature, you will likely want to create conditional behavior
    * to support setting different cookies policies in development and production builds,
    * as you will be opting out of the built-in dynamic policy.
@@ -410,4 +415,25 @@ export interface AuthConfig {
    * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/getting-started/deployment#securing-a-preview-deployment)
    */
   redirectProxyUrl?: string
+
+  /**
+   * Use this option to enable experimental features.
+   * When enabled, it will print a warning message to the console.
+   * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
+   * @default {}
+   */
+  experimental?: {
+    /**
+     * Enable WebAuthn support.
+     *
+     * @default false
+     */
+    enableWebAuthn?: boolean
+  }
+  /**
+   * The base path of the Auth.js API endpoints.
+   *
+   * @default "/auth"
+   */
+  basePath?: string
 }

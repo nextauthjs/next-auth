@@ -16,18 +16,14 @@
   },
   "dependencies": {
     "@mdx-js/react": "3.0.0",
-    "autoprefixer": "^10.4.15",
     "classnames": "^2.3.2",
-    "framer-motion": "^10.16.4",
     "mdx-mermaid": "2.0.0",
     "mermaid": "10.6.0",
-    "postcss": "^8.4.29",
     "prism-react-renderer": "2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-marquee-slider": "^1.1.5",
-    "styled-components": "5.3.6",
-    "tailwindcss": "^3.3.3"
+    "styled-components": "5.3.6"
   },
   "devDependencies": {
     "@docusaurus/core": "3.0.0",
@@ -41,7 +37,6 @@
     "@docusaurus/tsconfig": "3.0.0",
     "@docusaurus/types": "3.0.0",
     "docusaurus-plugin-typedoc": "1.0.0-next.22",
-    "postcss-nested": "^6.0.1",
     "typedoc": "0.25.3",
     "typedoc-plugin-markdown": "4.0.0-next.29",
     "typescript": "5.2.2"
