@@ -341,6 +341,7 @@ export async function callback(
         token: defaultToken,
         user,
         account,
+        profile: userFromAuthorize,
         isNewUser: false,
         trigger: "signIn",
       })
