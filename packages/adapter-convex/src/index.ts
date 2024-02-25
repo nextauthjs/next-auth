@@ -2,9 +2,8 @@ import {  ConvexHttpClient } from "convex/browser"
 import type {
   Adapter,
   AdapterAccount,
-  AdapterAuthenticator,
   AdapterSession,
-  AdapterUser,
+  AdapterUser, VerificationToken,
 } from "@auth/core/src/adapters"
 import { Awaitable } from "vitest"
 import { api } from "../convex/_generated/api"
@@ -108,6 +107,58 @@ export function ConvexAdapter(client: ConvexHttpClient): Adapter {
       return client.mutation(api.accounts.deleteAccount, {
         providerAccountId: providerAccountId as unknown as string
       }).then((_) => {})
+    },
+    createSession({ userId, expires, sessionToken }): Awaitable<AdapterSession> {
+      return client.mutation(api.sessions.create, {
+        userId: userId as Id<"users">,
+        expires: expires.toISOString(),
+        sessionToken: sessionToken
+      }).then((_id) => {
+        return {
+          sessionToken,
+          userId,
+          expires,
+        } as AdapterSession
+      })
+    },
+    getSessionAndUser(sessionToken: string): Awaitable<{ session: AdapterSession; user: AdapterUser } | null> {
+      return client.query(api.sessions.getSessionAndUser, {
+        sessionToken
+      }).then((data) => {
+        if(!data || !data.session || !data.user) return null
+        return {
+          session: {
+            sessionToken: data.session.sessionToken,
+            userId: data.session.userId as unknown as string,
+            expires: new Date(data.session.expires!),
+          } as AdapterSession,
+          user: {
+            id: data.user._id as unknown as string,
+            name: data.user.name,
+            email: data.user.email,
+            emailVerified: data.user.emailVerified ? new Date(data.user.emailVerified) : undefined,
+            image: data.user.image,
+          } as AdapterUser
+        }
+      })
+    },
+    updateSession(session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">): Awaitable<AdapterSession | null | undefined> {
+      return client.mutation(api.sessions.updateSession, {
+        sessionToken: session.sessionToken,
+      })
+    },
+    deleteSession(sessionToken: string): Promise<void> | Awaitable<AdapterSession | null | undefined> {
+      return client.mutation(api.sessions.deleteSession, {
+        sessionToken
+      })
+    },
+    createVerificationToken(verificationToken: VerificationToken): Awaitable<VerificationToken | null | undefined> {
+      // todo - implement this
+      return null
+    },
+    useVerificationToken(params: { identifier: string; token: string }): Awaitable<VerificationToken | null> {
+      // todo - implement this
+      return null
     },
   }
 }
