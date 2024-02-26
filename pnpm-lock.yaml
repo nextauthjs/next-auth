@@ -515,8 +515,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       surrealdb.js:
-        specifier: ^0.9.1
-        version: 0.9.1
+        specifier: ^0.11.0
+        version: 0.11.0
 
   packages/adapter-typeorm:
     dependencies:
@@ -23966,11 +23966,12 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /surrealdb.js@0.9.1:
-    resolution: {integrity: sha512-Lw7gds+u5966ng00/yOOkeW90VFj2tI5YNZ1cY7t9fyl9yEEcrFOkR5djqXwuJ1V3ORVORP5l+Hv2N6Sfgh5PQ==}
+  /surrealdb.js@0.11.0:
+    resolution: {integrity: sha512-x/Qd0UYyNilwY27JZlWgP8NsCdBzDtextRzP9oIm7xO27qsZvE5Rh4wnYN0xD68zgRAE4W8Jsufbm+hKbaGsTg==}
     dependencies:
       unws: 0.2.4(ws@8.16.0)
       ws: 8.16.0
+      zod: 3.22.4
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -26557,7 +26558,6 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: true
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

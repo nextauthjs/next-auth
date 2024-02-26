@@ -163,7 +163,9 @@ export function initAuth(
           const auth = await authResponse.json()
 
           for (const cookie of authResponse.headers.getSetCookie())
-            response.headers.append("set-cookie", cookie)
+            if ("headers" in response)
+              response.headers.append("set-cookie", cookie)
+            else response.appendHeader("set-cookie", cookie)
 
           return auth satisfies Session | null
         }
@@ -209,7 +211,8 @@ export function initAuth(
       const auth = await authResponse.json()
 
       for (const cookie of authResponse.headers.getSetCookie())
-        response.headers.append("set-cookie", cookie)
+        if ("headers" in response) response.headers.append("set-cookie", cookie)
+        else response.appendHeader("set-cookie", cookie)
 
       return auth satisfies Session | null
     })
