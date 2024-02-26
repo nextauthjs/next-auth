@@ -23,6 +23,12 @@ body {
   flex-direction: column;
 }
 
+code {
+  background: #ddd;
+  padding: 6px;
+  border-radius: 0.25rem;
+}
+
 li,
 p {
   line-height: 1.5rem;
@@ -91,10 +97,13 @@ main {
 
     .actions {
       display: flex;
+      align-items: flex-end;
+      justify-content: center;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
+    .wrapper-form,
     form {
       flex-basis: 100%;
       flex: 1;
@@ -103,6 +112,10 @@ main {
       flex-direction: column;
       justify-content: end;
       align-items: start;
+    }
+
+    .wrapper-form button {
+      width: 100%;
     }
 
     &:has(button) {
@@ -147,6 +160,7 @@ main {
     text-decoration: none;
     padding: 0.7rem 1.4rem;
   }
+
   button:hover {
     background-color: #ccc;
   }
@@ -161,6 +175,7 @@ main {
   label {
     font-size: 1.1rem;
   }
+
   input {
     border-radius: 0.25rem;
     padding: 0.5rem;
@@ -185,6 +200,7 @@ header {
     padding: 1rem 0;
     justify-content: space-between;
     align-items: center;
+
     button {
       border: 0;
     }
@@ -193,6 +209,7 @@ header {
       display: flex;
       padding: 0 1rem;
     }
+
     .nav-right {
       display: flex;
       padding: 0 1rem;

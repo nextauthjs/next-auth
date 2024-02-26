@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores"
   import { SignIn, SignOut } from "@auth/sveltekit/components"
+  console.log($page.data)
 </script>
 
 <header>
@@ -21,7 +22,9 @@
             {$page.data.session.user?.email ?? $page.data.session.user?.name}
           </strong>
         </span>
-        <SignOut>Sign out</SignOut>
+        <SignOut>
+          <div class="buttonPrimary">Sign out</div>
+        </SignOut>
       {:else}
         <span class="header-text">You are not signed in</span>
         <SignIn>

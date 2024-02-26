@@ -19,24 +19,16 @@
       <h3>Server Actions</h3>
     </div>
     <div class="card-body">
-      These actions are all using the SvelteKit exported components to attempt
-      their action via server actions.
+      <p>
+        These actions are all using the components exported from
+        <code>@auth/sveltekit/components</code> to run via form actions.
+      </p>
       <div class="actions">
         <SignIn provider="github">
           <span slot="submitButton">Sign In with GitHub</span>
         </SignIn>
-        <SignIn provider="sendgrid">
-          <div slot="email" class="input-wrapper">
-            <label class="section-header" for="sendgrid-input"> Email </label>
-            <input
-              id="sendgrid-input"
-              type="email"
-              name="email"
-              placeholder="email@example.com"
-              required
-            />
-          </div>
-          <span slot="submitButton">Sign In with SendGrid</span>
+        <SignIn provider="discord">
+          <span slot="submitButton">Sign In with Discord</span>
         </SignIn>
         <SignIn
           provider="credentials"
@@ -58,12 +50,20 @@
       <h3>Client Actions</h3>
     </div>
     <div class="card-body">
-      These actions are all using the methods exported from `auth.ts`
+      <p>
+        These actions are all using the methods exported from
+        <code>@auth/sveltekit/client</code>
+      </p>
       <div class="actions">
-        <div>
+        <div class="wrapper-form">
           <button on:click={() => signIn("github")}>Sign In with GitHub</button>
         </div>
-        <div>
+        <div class="wrapper-form">
+          <button on:click={() => signIn("discord")}
+            >Sign In with Discord</button
+          >
+        </div>
+        <div class="wrapper-form">
           <div class="input-wrapper">
             <label for="password">Password</label>
             <input
