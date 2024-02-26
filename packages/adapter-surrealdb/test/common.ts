@@ -5,33 +5,51 @@ import {
   docToUser,
   docToAccount,
   docToSession,
+  toSurrealId,
 } from "../src/index"
 import type { UserDoc, AccountDoc, SessionDoc } from "../src/index"
+import { randomUUID } from "utils/adapter"
 
 export const config = (
   clientPromise: Promise<Surreal | ExperimentalSurrealHTTP<typeof fetch>>
 ) => ({
   adapter: SurrealDBAdapter(clientPromise),
   db: {
-    async disconnect() {
+    id() {
+      return randomUUID()
+    },
+    connect: async () => {
+      const surreal = await clientPromise
+      await Promise.all([
+        surreal.delete("account"),
+        surreal.delete("session"),
+        surreal.delete("verification_token"),
+        surreal.delete("user"),
+      ])
+    },
+    disconnect: async () => {
       const surreal = await clientPromise
       try {
-        await surreal.delete("account")
-        await surreal.delete("session")
-        await surreal.delete("verification_token")
+        await Promise.all([
+          surreal.delete("account"),
+          surreal.delete("session"),
+          surreal.delete("verification_token"),
+          surreal.delete("user"),
+        ])
       } catch (e) {
         console.log(e)
       }
       if (surreal.close) surreal.close()
     },
     async user(id: string) {
+      const surrealId = toSurrealId(id)
       const surreal = await clientPromise
       try {
         const users = await surreal.query<[UserDoc[]]>("SELECT * FROM $user", {
-          user: `user:${id}`,
+          user: `user:${surrealId}`,
         })
-        const user = users[0]
-        if (user.result?.[0] !== undefined) return docToUser(user.result[0])
+        const user = users[0][0]
+      if (user !== undefined) return docToUser(user)
       } catch (e) {}
       return null
     },
@@ -42,8 +60,7 @@ export const config = (
         { provider, providerAccountId }
       )
       const account = accounts[0]
-      if (account.result?.[0] !== undefined)
-        return docToAccount(account.result[0])
+      if (account?.[0] !== undefined) return docToAccount(account[0])
       return null
     },
     async session(sessionToken: string) {
@@ -52,7 +69,7 @@ export const config = (
         `SELECT * FROM session WHERE sessionToken = $sessionToken`,
         { sessionToken }
       )
-      const session = sessions[0].result?.[0]
+      const session = sessions[0]?.[0]
       if (session !== undefined) {
         return docToSession(session)
       }
@@ -70,7 +87,7 @@ export const config = (
          LIMIT 1`,
         { identifier, verificationToken: token }
       )
-      const verificationToken = tokens[0].result?.[0]
+      const verificationToken = tokens[0]?.[0]
       if (verificationToken) {
         return {
           identifier: verificationToken.identifier,
