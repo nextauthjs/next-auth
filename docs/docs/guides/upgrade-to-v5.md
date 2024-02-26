@@ -49,6 +49,7 @@ export const {
   auth,
 } = NextAuth({
   providers: [GitHub],
+  secret: `edit-this-with-a-secret`
 })
 ```
 
@@ -60,7 +61,7 @@ import { auth } from "../path-to-config/auth"
 
 The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts`), now becomes a 1-line handler for `GET` and `POST` requests for those paths.
 
-```ts title="app/api/auth/[...nextauth]/route.ts"
+```ts title="app/api/auth/[[...nextauth]]/route.ts"
 export { GET, POST } from "./auth"
 export const runtime = "edge" // optional
 ```
