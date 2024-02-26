@@ -19,12 +19,11 @@ declare module "next-auth" {
   }
 
   interface User {
-    foo: string
+    foo?: string
   }
 }
 
 export default {
-  debug: false,
   providers: [
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
@@ -32,7 +31,6 @@ export default {
         if (c.password !== "password") return null
         return {
           id: "test",
-          foo: "bar",
           name: "Test User",
           email: "test@example.com",
         }
@@ -49,6 +47,14 @@ export default {
     jwt({ token, trigger, session }) {
       if (trigger === "update") token.name = session.user.name
       return token
+    },
+    async session({ session, token, trigger }) {
+      return {
+        ...session,
+        user: {
+          ...token,
+        },
+      }
     },
   },
   basePath: "/auth",

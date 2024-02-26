@@ -191,7 +191,9 @@ export function initAuth(
       return async (
         ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
       ) => {
-        return handleAuth(args, config, userMiddlewareOrRoute)
+        return handleAuth(args, config, userMiddlewareOrRoute).then((res) => {
+          return res
+        })
       }
     }
 
