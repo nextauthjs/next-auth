@@ -9,6 +9,7 @@ import { UnstorageAdapter } from "@auth/unstorage-adapter"
 
 const storage = createStorage()
 export const { handle, signIn, signOut } = SvelteKitAuth({
+  debug: true,
   adapter: UnstorageAdapter(storage),
   session: {
     strategy: "jwt",
