@@ -23,7 +23,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
           email: "bill@fillmurray.com",
           image: "https://source.boringavatars.com/marble/120",
           id: "1",
-          foo: "",
         }
       },
     }),
