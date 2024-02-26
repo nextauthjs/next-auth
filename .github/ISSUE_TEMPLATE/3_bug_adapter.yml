@@ -39,6 +39,7 @@ body:
         - "@auth/prisma-adapter"
         - "@auth/sequelize-adapter"
         - "@auth/supabase-adapter"
+        - "@auth/surrealdb-adapter"
         - "@auth/typeorm-adapter"
         - "@auth/unstorage-adapter"
         - "@auth/upstash-redis-adapter"
