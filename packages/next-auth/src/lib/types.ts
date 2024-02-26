@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server"
+import type { NextRequest } from "next/server.js"
 
 /**
  * AppRouteHandlerFnContext is the context that is passed to the handler as the

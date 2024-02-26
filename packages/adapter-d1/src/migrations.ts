@@ -1,4 +1,4 @@
-import type { D1Database } from "."
+import type { D1Database } from "./index.js"
 
 export const upSQLStatements = [
   `CREATE TABLE IF NOT EXISTS "accounts" (

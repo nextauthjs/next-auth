@@ -1,12 +1,11 @@
 import { Auth, raw, skipCSRFCheck } from "@auth/core"
-import { headers as nextHeaders, cookies } from "next/headers"
-import { redirect } from "next/navigation"
+import { headers as nextHeaders, cookies } from "next/headers.js"
+import { redirect } from "next/navigation.js"
 
 import type { AuthAction } from "@auth/core/types"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
 import type { ProviderType } from "../providers/index.js"
-import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -117,7 +116,7 @@ export async function update(
  */
 export function createActionURL(
   action: AuthAction,
-  h: Headers | ReturnType<typeof headers>,
+  h: Headers | ReturnType<typeof nextHeaders>,
   basePath?: string
 ): URL {
   const envUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
