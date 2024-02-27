@@ -34,6 +34,8 @@ CREATE FUNCTION next_auth.uid() RETURNS uuid
 	)::uuid
 $$;
 
+GRANT EXECUTE ON FUNCTION next_auth.uid() TO authenticated;
+
 --
 -- Create sessions table
 --
