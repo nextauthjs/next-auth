@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Accordion, Accordions } from "@/components/Accordion"
 
 # Deployment
 
@@ -25,7 +26,7 @@ openssl rand -base64 32
 If you are using an [OAuth Provider](/reference/oauth-providers), your provider will have a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's setup documentation).
 
 <Callout type="info">
-Auth.js now supports **environment variable inference**, meaning that if you name your environment variables after a specific pattern, you won't need to explicitly pass them to the providers, for example.
+Auth.js now supports **environment variable inference**, meaning that if you name your provider environment variables following a specific syntax, you won't need to explicitly pass them to the providers in your configuration.
 
 Client ID's and client secrets should be named `AUTH_[PROVIDER]_ID` and `AUTH_[PROVIDER]_SECRET`. If your provider requires an issuer, that should be named `AUTH_[PROVIDER]_ISSUER`. For example:
 
@@ -37,32 +38,32 @@ AUTH_OKTA_ISSUER=abc
 
 </Callout>
 
-#### `AUTH_SECRET`
+### `AUTH_SECRET`
 
 This is the only striclty required environment variable. It is the secret used to encode the JWT and encrypt things in transit. As mentioned above, we recommend at least a 32 character random string. This can be generated via the CLI with `npm exec auth secret` or via openssl with `openssl rand -base64 32`.
 
-#### `AUTH_TRUST_HOST`
+### `AUTH_TRUST_HOST`
 
 When deploying your application behind a reverse proxy, you'll need to set `AUTH_TRUST_HOST` equal
 to `true`. This tells Auth.js to trust the `X-Forwarded-Host` header from the reverse proxy. Auth.js will automatically infer this to be true if we detect the environment variable indicating that your application is running on one of the supported hosting providers. Currently `process.env.VERCEL` and `process.env.CF_PAGES` (Cloudflare Pages) are supported.
 
-#### `AUTH_URL`
+### `AUTH_URL`
 
 This environment variable is mostly unnecessary with v5 as the host is inferred from the request headers. However, if you are using a different base path, you can set this environment variable as well. For example, `AUTH_URL=http://localhost:3000/web/auth` or `AUTH_URL=https://company.com/app1/auth`
 
-#### `AUTH_REDIRECT_PROXY_URL`
+### `AUTH_REDIRECT_PROXY_URL`
 
-This environment variable is designed to be used when using Auth.js as a proxy for preview deploys, for example. For more details, see the [securign preview deploys](/getting-started/deployment?securing-a-preview-deployment) section below.
+This environment variable is designed for advanced use-cases only, when using Auth.js as a proxy for preview deploys, for example. For more details, see the [securign preview deploys](#securing-a-preview-deployment) section below.
 
 ## Serverless
 
 Hosting services like Vercel and Netlify are great for deploying apps with Auth.js authentication. The following steps should help you get started:
 
-1. Create the required [environment variables](#environment-variables) for the desired deploy environments.
-2. In the case of an OAuth provider, set the callback URL for the provider to `https://yourdomain.com/api/auth/callback/provider` (replace `yourdomain.com` with your domain and `provider` with the provider name, eg.: `github`).
-3. Deploy!
-
-You can check out example serverless deployments [here](/docs#examples).
+1. Create the required [environment variables](#environment-variables) for your desired environments. Don't forget to also add the required environment variables for your provider of choice (i.e. OAuth clientId / secret, etc.).
+2. When using an OAuth provider, make sure the callback URL for your production URL is setup correctly. Many OAuth providers will only allow you to set 1 callbackUrl per OAuth application. In which case, you'll need to create separate applications for each environment (development, production, etc.). Other providers, like Google, allow you to add many callbackUrls.
+   - By default, the callbackUrl for `next-auth` (Next.js) applications should look something like this: `https://company.com/api/auth/callback/[provider]` (replace `company.com` with your domain and `provider` with the provider name, i.e. `github`).
+   - All other frameworks (`@auth/sveltekit`, `@auth/express`, etc.) by default will use the path `/auth/callback/[provider]`.
+3. Deploy! After having setup those two prerequisites, you should be able to deploy and run your Auth.js application in production!
 
 ## Self-hosted
 
@@ -70,7 +71,102 @@ Auth.js can also be deployed anywhere you can deploy the framework of your choic
 
 ### Docker
 
-When using Auth.js in a Docker environment, make sure to set `trustHost: true` in your Auth.js configuration.
+When using Auth.js in a Docker environment, make sure to set either `trustHost: true` in your Auth.js configuration or the `AUTH_TRUST_HOST` environment variable to `true`. Below is an example `Dockerfile` and matching `docker-compose.yml` for a Next.js application running Auth.js.
+
+<Accordions>
+  <Accordion title="Dockerfile">
+
+```docker filename="Dockerfile"
+# syntax=docker/dockerfile-upstream:master-labs
+
+# Loosely based on Next.js Dockerfile example:
+# https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+
+FROM node:20-slim AS base
+
+# Install package manager
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
+  npm i --global --no-update-notifier --no-fund pnpm@latest
+
+USER node
+
+## DEPENDENCIES
+FROM base AS deps
+WORKDIR /app
+
+# Copy over package.json and lock files
+COPY --chown=node:node pnpm-lock.yaml package.json ./
+
+# Avoid 'cross-device link not permitted' error with pnpm install
+RUN echo "package-import-method=copy" > .npmrc
+
+# Install dependencies
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
+
+## BUILDER
+FROM base AS builder
+WORKDIR /app
+
+# Copy all code files from your app into the container
+COPY --chown=node:node . ./
+
+# Copy installed dependencies from previous 'deps' stage
+COPY --from=deps /app ./
+
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+
+# Build the Next.js production app
+RUN pnpm build
+
+# Remove node_modules
+RUN rm -rf node_modules
+
+## RUNNER
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Copy everything from builder stage
+COPY --chown=node:node --from=builder /app ./
+
+# Install only prod dependencies and `sharp` (required by Next.js)
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install --prod
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install -w sharp
+
+USER node
+EXPOSE 3000
+ENV PORT 3000
+
+# Run the built project
+CMD ["pnpm", "exec", "next", "start"]
+```
+
+  </Accordion>
+  <Accordion title="docker-compose.yml">
+
+```yaml filename="docker-compose.yml"
+version: "3"
+
+services:
+  authjs-docker:
+    environment:
+      - AUTH_GITHUB_ID=abc
+      - AUTH_GITHUB_SECRET=123
+      - AUTH_SECRET=abc123abc123
+      - AUTH_URL=http://localhost:3000/api/auth
+    build:
+      dockerfile: ./Dockerfile
+      labels:
+        - "com.example.description=Auth.js Next.js Example App"
+    ports:
+      - "3000:3000"
+```
+
+  </Accordion>
+</Accordions>
 
 ## Securing a preview deployment
 
