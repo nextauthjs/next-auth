@@ -91,7 +91,7 @@ Auth.js has had a few different ways to authenticate server-side in the past, an
 
 Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function that you can use anywhere.
 
-See the table below for a summary of the changes, and click on the links to learn more about each one.
+See the table below for a summary of the changes. Below that are diff examples of how to use the new `auth()` method in various environments and contexts.
 
 | Where                                                                                  | v4                                                    | v5                               |
 | -------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
@@ -107,7 +107,7 @@ See the table below for a summary of the changes, and click on the links to lear
 
 ### Authentication methods
 
-<Tabs items={["API Route (Node.js)", "getServerSideProps", "Middleware", "Server Component", "Client Component"]}>
+<Tabs items={["Server Component (App)", "Client Component (App)", "Middleware", "API Route (Pages)", "getServerSideProps (Pages)"]}>
 <Tabs.Tab>
 
 Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
@@ -245,14 +245,14 @@ While Auth.js strictly uses standard [Web APIs](https://developer.mozilla.org/en
 
 Auth.js supports two [session strategies](/concepts/session-strategies). When you are using an adapter, you can choose to save the session data into a database. **Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use a `"database"` session strategy**.
 
-Most adapters rely on an ORM/library that is not yet compatible with the Edge runtime. So here is how you can work around it, by forcing a JWT session strategy:
+If you are using an adapter which relies on an ORM/library that is not yet compatible with Edge runtime(s) here is an example of how you might work around that, by forcing the 'jwt' strategy.
 
 <Callout>
   The following filenames are only a convention we chose, the
   filenames/structure can be anything you like.
 </Callout>
 
-1. Create an `auth.config.ts` file with your config and export it. You can put all common configuration here that does not rely on the adapter.
+1. Create an `auth.config.ts` file which exports an object containing your Auth.js configuration options. You can put all common configuration here that does not rely on the adapter.
 
 ```ts filename="auth.config.ts" {3}
 import GitHub from "next-auth/providers/github"
@@ -277,7 +277,7 @@ export const { handlers, auth } = NextAuth({
 })
 ```
 
-3. In your middleware file, import the first `auth.config` configuration object and use it to [lazily initialize]() Auth.js there, without the non-edge compatible adapter.
+3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to [lazily initialize]() Auth.js there. In effect, initializing Auth.js separately without the non-edge compatible adapter.
 
 ```ts filename="middleware.ts" {1}
 import authConfig from "./auth.config"
@@ -289,9 +289,31 @@ That's it! Now you can keep using a database for user data, even if your adapter
 
 Please follow up with your database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
 
+## Environment Variables
+
+There are **no breaking changes to the environment variables**, but we have cleaned up a few things which make some of them unnecessary. Therefore, we wanted to share some best practices around which environment variables are necessary, which are not, and how best to use them.
+
+- If you name your provider secret / clientId variables following this syntax, `AUTH_GITHUB_SECRET` + `AUTH_GITHUB_ID`, they'll be auto-detected and you won't have to explicitly pass them into your provider's configuration in the providers array.
+- The `NEXTAUTH_URL`/`AUTH_URL` is not necessary anymore in most environments. We will auto-detect the host based on the request headers.
+- The `AUTH_TRUST_HOST` environment variable serves the same purpose as setting `trustHost: true` option in your Auth.js configuration. This is necessary when running Auth.js behind a proxy. When set to true we will trust the `X-Forwarded-Host` and `X-Forwarded-Proto` headers to determine the host URL.
+- The `AUTH_SECRET` environment variable is the only variable that is really necessary anymore. You do not need to additionally pass this value into your config as the `secret` configuration option if you've set the environment variable.
+
 ## TypeScript
 
 - `NextAuthOptions` is renamed to `NextAuthConfig`
+- The following types are now exported from `next-auth` (as well as `@auth/sveltekit`, for example):
+
+```ts
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
+```
+
+- In addition, all `Adapter` types are re-exported from `next-auth/adapters` (as well as `@auth/sveltekit/adapters`, for example).
 
 </Steps>
 

@@ -97,23 +97,24 @@ pre code.nextra-code:not(:has(span)) {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem !important;
+  height: 0.4rem !important;
 }
 
 ::-webkit-scrollbar-track {
   border-radius: 100vh;
-  @apply bg-transparent;
+  @apply !bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply dark:bg-neutral-800 bg-neutral-700 transition-colors duration-300;
+  @apply dark:!bg-neutral-700 !bg-neutral-300 transition-colors duration-300;
   border-radius: 100vh;
   transition: all 250ms ease-in-out;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply dark:bg-neutral-950 bg-neutral-800;
+  @apply dark:!bg-neutral-700 !bg-neutral-300;
+  background-clip: unset !important;
   cursor: pointer;
 }
 
