@@ -97,18 +97,11 @@
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signIn }
  * ```
- * ```ts title="src/routes/signin/+page.svelte"
- * <!-- empty file -->
- * ```
  * ```ts title="src/routes/signout/+page.server.ts"
  * import { signOut } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signOut }
  * ```
- * ```ts title="src/routes/signout/+page.svelte"
- * <!-- empty file -->
- * ```
- *
  *
  * ## Managing the session
  *
@@ -152,7 +145,7 @@
  * :::danger
  * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a `PageLoad`.
  * Not doing so can lead to users being able to incorrectly access protected information in the case the `+layout.server.ts` does not run for that page load.
- * This code sample already implements the correct method by using `const { session } = await parent();`
+ * This code sample already implements the correct method by using `const { session } = await parent();`. For more information on SvelteKit's `load` functionality behaviour and its implications on authentication, see this [SvelteKit docs section](https://kit.svelte.dev/docs/load#implications-for-authentication).
  * :::
  *
  * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propagate to leafs in the tree.
