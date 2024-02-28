@@ -77,7 +77,7 @@ Not providing any `secret` or `NEXTAUTH_SECRET` will throw [an error](/errors#no
 You can quickly create a good value on the command line via this `openssl` command.
 
 ```bash
-$ openssl rand -base64 32
+$ openssl rand -base64 33
 ```
 
 :::tip
