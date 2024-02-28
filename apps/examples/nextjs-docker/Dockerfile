@@ -18,7 +18,7 @@ WORKDIR /app
 #   of that directory, and not the directory itself. This requires the syntax
 #   directive at the top of the file.
 COPY --parents --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml patches ./
-COPY --chown=node:node apps/examples/nextjs/package.json ./package.json
+COPY --chown=node:node apps/examples/nextjs-docker/package.json ./package.json
 
 # Avoid 'cross-device link not permitted' error with pnpm install
 RUN echo "package-import-method=copy" > .npmrc
@@ -31,7 +31,7 @@ FROM base AS builder
 WORKDIR /app
 
 # Copy code from the examples app
-COPY --chown=node:node apps/examples/nextjs ./
+COPY --chown=node:node apps/examples/nextjs-docker ./
 # Copy dependencies from deps stage
 COPY --from=deps /app ./
 

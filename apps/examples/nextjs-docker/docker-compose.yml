@@ -12,7 +12,7 @@ services:
       - AUTH_URL=http://localhost:3000/auth
     build:
       context: ../../../
-      dockerfile: apps/examples/nextjs/Dockerfile
+      dockerfile: apps/examples/nextjs-docker/Dockerfile
       labels:
         - "com.example.description=Auth.js Next.js Example App"
     ports:
