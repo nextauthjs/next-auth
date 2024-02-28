@@ -23,9 +23,7 @@
       <input type="hidden" name="redirectTo" value={options.redirectTo} />
     {/if}
   {/if}
-  <slot>
-    <button type="submit">
-      Sign out
-    </button>
-  </slot>
+  <button type="submit">
+    <slot name="submitButton">Sign Out</slot>
+  </button>
 </form>

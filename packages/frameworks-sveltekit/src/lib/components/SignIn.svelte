@@ -3,7 +3,7 @@
   import type { signIn } from "$lib/actions"
 
   export let className = ""
-  export let provider: Parameters<typeof signIn>[0]
+  export let provider: Partial<Parameters<typeof signIn>[0]> = ""
   /** The path to the FormAction file in your route. @default signin */
   export let signInPage = "signin"
   export let options: Parameters<typeof signIn>[1] | undefined = undefined
@@ -59,9 +59,7 @@
       />
     </slot>
   {/if}
-  <slot name="submitButton">
-    <button type="submit">
-      Sign in with {provider}
-    </button>
-  </slot>
+  <button type="submit">
+    <slot name="submitButton">Signin{provider ? `with ${provider}` : ""}</slot>
+  </button>
 </form>
