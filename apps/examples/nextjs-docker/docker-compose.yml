@@ -13,7 +13,5 @@ services:
     build:
       context: ../../../
       dockerfile: apps/examples/nextjs-docker/Dockerfile
-      labels:
-        - "com.example.description=Auth.js Next.js Example App"
     ports:
       - "3000:3000"

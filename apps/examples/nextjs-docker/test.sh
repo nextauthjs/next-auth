@@ -11,8 +11,6 @@ args+=("up" "--detach" "--build")
 
 echo "Running: docker-compose ${args[*]}"
 
-# docker-compose "${args[@]}"
-
 if ! docker-compose "${args[@]}"; then
   echo "Failed to start container"
   exit 1

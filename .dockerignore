@@ -16,10 +16,10 @@
 /**/*/dist
 
 # Auth.js Dirs
+apps/*
 docs/**
 packages/**
 !packages/next-auth
 !packages/core
 !packages/utils
-apps/*
 !apps/examples/nextjs-docker
