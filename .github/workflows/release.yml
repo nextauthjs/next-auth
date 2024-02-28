@@ -116,7 +116,7 @@ jobs:
         if: github.repository == 'nextauthjs/next-auth'
         timeout-minutes: 15
         run: |
-          cd packages/core && pnpm test:docker
+          cd apps/examples/nextjs-docker && pnpm test:docker
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
