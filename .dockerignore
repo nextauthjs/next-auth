@@ -22,4 +22,4 @@ packages/**
 !packages/core
 !packages/utils
 apps/*
-!apps/examples/nextjs
+!apps/examples/nextjs-docker

@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+# Easier to read `docker-compose up` output
+# export BUILDKIT_PROGRESS=plain
+
 args=("-f" "docker-compose.yml")
 if [[ -z "${CI}" ]]; then
-  args+=("--env-file" "../../../packages/core/.env")
+  args+=("--env-file" ".env")
 fi
 args+=("up" "--detach" "--build")
 
