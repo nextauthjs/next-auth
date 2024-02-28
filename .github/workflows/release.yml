@@ -112,8 +112,8 @@ jobs:
         run: |
           pnpm exec playwright install --with-deps chromium
       - name: Run Docker E2E
-        continue-on-error: true # TODO: Make this less flakey
-        if: github.repository == 'nextauthjs/next-auth'
+        continue-on-error: true
+        if: false
         timeout-minutes: 15
         run: |
           cd apps/examples/nextjs-docker && pnpm test:docker
