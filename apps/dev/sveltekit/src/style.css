@@ -107,16 +107,19 @@ main {
     .wrapper-form,
     form {
       flex-basis: 100%;
+      background-color: #ddd;
+      padding: 1rem;
+      border-radius: 0.35rem;
       flex: 1;
       display: flex;
       gap: 0.5rem;
       flex-direction: column;
       justify-content: end;
       align-items: start;
-    }
 
-    .wrapper-form button {
-      width: 100%;
+      button {
+        width: 100%;
+      }
     }
 
     &:has(button) {
@@ -147,7 +150,7 @@ main {
   button {
     justify-self: end;
     font-weight: 500;
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     border: none;
     font-weight: bold;
     cursor: pointer;
@@ -156,14 +159,15 @@ main {
     padding: 0.7rem 0.8rem;
     position: relative;
     z-index: 10;
-    background-color: #d5d5d5;
+    background-color: #bbb;
     color: black;
     text-decoration: none;
     padding: 0.7rem 1.4rem;
+    transition: all 250ms;
   }
 
   button:hover {
-    background-color: #ccc;
+    background-color: #aaa;
   }
 }
 
