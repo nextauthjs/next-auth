@@ -7,28 +7,22 @@
   <div class="signedInStatus">
     <div class="nojs-show loaded">
       <img
+        alt="User avatar"
         src={$page.data?.session?.user?.image ??
           "https://source.boringavatars.com/marble/120"}
         class="avatar"
       />
       {#if $page.data.session}
         <span class="signedInText">
-          <small>Signed in as</small><br />
-          <strong>
-            {$page.data.session.user?.email ?? $page.data.session.user?.name}
-          </strong>
+          {$page.data.session.user?.email ?? $page.data.session.user?.name}
         </span>
         <SignOut>
-          <button type="submit" slot="submitButton" class="buttonPrimary">
-            Sign out
-          </button>
+          <div class="buttonPrimary">Sign out</div>
         </SignOut>
       {:else}
         <span class="notSignedInText">You are not signed in</span>
         <SignIn>
-          <button type="submit" slot="submitButton" class="buttonPrimary">
-            Sign in
-          </button>
+          <div slot="submitButton" class="buttonPrimary">Sign in</div>
         </SignIn>
       {/if}
     </div>
@@ -67,6 +61,7 @@
   }
   .signedInText,
   .notSignedInText {
+    justify-content: end;
     padding-left: 1rem;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -88,24 +83,15 @@
     background-size: cover;
     background-repeat: no-repeat;
   }
-  .button,
   .buttonPrimary {
-    margin-right: -0.4rem;
     font-weight: 500;
     border-radius: 0.3rem;
     cursor: pointer;
     font-size: 1rem;
     line-height: 1.4rem;
-    padding: 0.7rem 0.8rem;
     position: relative;
-    z-index: 10;
-    background-color: transparent;
-    color: #555;
-  }
-  .buttonPrimary {
     justify-self: end;
     background-color: #346df1;
-    border: none;
     color: #fff;
     text-decoration: none;
     padding: 0.7rem 1.4rem;
@@ -121,5 +107,8 @@
   .navItem {
     display: inline-block;
     margin-right: 1rem;
+  }
+  :global(form button) {
+    border: none !important;
   }
 </style>
