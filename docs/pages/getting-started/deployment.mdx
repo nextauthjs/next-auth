@@ -20,7 +20,7 @@ npm exec auth secret
 Alternatively, you can use the following `openssl` command, which should be available on all Linux / Mac OS X systems.
 
 ```bash
-openssl rand -base64 32
+openssl rand -base64 33
 ```
 
 If you are using an [OAuth Provider](/reference/oauth-providers), your provider will have a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's setup documentation).
@@ -40,7 +40,7 @@ AUTH_OKTA_ISSUER=abc
 
 ### `AUTH_SECRET`
 
-This is the only striclty required environment variable. It is the secret used to encode the JWT and encrypt things in transit. As mentioned above, we recommend at least a 32 character random string. This can be generated via the CLI with `npm exec auth secret` or via openssl with `openssl rand -base64 32`.
+This is the only strictly required environment variable. It is the secret used to encode the JWT and encrypt things in transit. As mentioned above, we recommend at least a 32 character random string. This can be generated via the CLI with `npm exec auth secret` or via openssl with `openssl rand -base64 33`.
 
 ### `AUTH_TRUST_HOST`
 
