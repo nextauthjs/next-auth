@@ -358,7 +358,7 @@ export async function runBasicTests(options: TestOptions) {
     const providerAccountId = randomUUID()
     const provider = "auth0"
     const localUser = await adapter.createUser({
-      id: randomUUID(),
+      id: id(),
       email: "getAccount@example.com",
       emailVerified: null,
     })
@@ -389,7 +389,7 @@ export async function runBasicTests(options: TestOptions) {
     // Setup
     const credentialID = randomUUID()
     const localUser = await adapter.createUser({
-      id: randomUUID(),
+      id: id(),
       email: "createAuthenticator@example.com",
       emailVerified: null,
     })
@@ -424,7 +424,7 @@ export async function runBasicTests(options: TestOptions) {
     // Setup
     const credentialID = randomUUID()
     const localUser = await adapter.createUser({
-      id: randomUUID(),
+      id: id(),
       email: "getAuthenticator@example.com",
       emailVerified: null,
     })
@@ -459,12 +459,12 @@ export async function runBasicTests(options: TestOptions) {
   maybeTest("listAuthenticatorsByUserId", async () => {
     // Setup
     const user1 = await adapter.createUser({
-      id: randomUUID(),
+      id: id(),
       email: "listAuthenticatorsByUserId1@example.com",
       emailVerified: null,
     })
     const user2 = await adapter.createUser({
-      id: randomUUID(),
+      id: id(),
       email: "listAuthenticatorsByUserId2@example.com",
       emailVerified: null,
     })
@@ -521,7 +521,7 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const authenticators0 = await adapter.listAuthenticatorsByUserId("invalid-user-id")
+    const authenticators0 = await adapter.listAuthenticatorsByUserId(id())
     expect(authenticators0).toEqual([])
 
     const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
@@ -536,7 +536,7 @@ export async function runBasicTests(options: TestOptions) {
     // Setup
     const credentialID = randomUUID()
     const localUser = await adapter.createUser({
-      id: randomUUID(),
+      id: id(),
       email: "updateAuthenticatorCounter@example.com",
       emailVerified: null,
     })
