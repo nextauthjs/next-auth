@@ -14,7 +14,7 @@
  *
  * @module @auth/fauna-adapter
  */
-import { Client, TimeStub, fql, NullDocument } from "fauna"
+import { Client, TimeStub, fql, NullDocument, QueryValue, QueryValueObject } from "fauna"
 
 import type {
   Adapter,
@@ -25,13 +25,13 @@ import type {
 } from "@auth/core/adapters"
 
 type ToFauna<T> = {
-  [P in keyof T]: T[P] extends Date | null ? TimeStub | null : T[P]
+  [P in keyof T]: T[P] extends Date | null ? TimeStub | null : T[P] extends undefined ? null : T[P] extends QueryValue ? T[P] : QueryValueObject
 }
 
 export type FaunaUser = ToFauna<AdapterUser>
 export type FaunaSession = ToFauna<AdapterSession>
 export type FaunaVerificationToken = ToFauna<VerificationToken> & { id: string }
-export type FaunaAccount = ToFauna<AdapterAccount> & any // TODO: Remove `& any`
+export type FaunaAccount = ToFauna<AdapterAccount>
 
 /**
  *
@@ -150,7 +150,7 @@ export function FaunaAdapter(client: Client): Adapter {
       return format.from(response.data)
     },
     async getUser(id) {
-      const response = await client.query<FaunaUser>(
+      const response = await client.query<FaunaUser | NullDocument>(
         fql`User.byId(${id})`,
       )
       if (response.data instanceof NullDocument) return null
