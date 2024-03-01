@@ -1,3 +1,5 @@
+import { Accordion, Accordions } from "@/components/Accordion"
+
 <img align="right" src="/img/adapters/fauna.svg" height="64" width="64" />
 
 # <a href="https://docs.fauna.com/fauna/current/">Fauna</a> Adapter for Auth.js
@@ -5,75 +7,158 @@
 ## Installation
 
 ```bash npm2yarn
-npm install @auth/fauna-adapter faunadb
+npm install @auth/fauna-adapter fauna
 ```
 
 ## Setup
 
-This is the Fauna Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
+This is the Fauna Adapter for [Auth.js](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` or other client package. It is not a standalone package.
 
-You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/core/adapters/fauna](https://authjs.dev/reference/core/adapters/fauna).
+## Migrating to v2
 
-### Configure Auth.js
+In `@auth/adapter-fauna@2.0.0`, we've renamed the collections to use an uppercase naming pattern in accordance with the Fauna best practices. If you're migrating from v1, you'll need to rename your collections to match the new naming scheme. Additionally, we've renamed the indexes to match the new method-like index names (i.e. `account_by_user_id` to `Account.byUserId`). For more information on migrating your Fauna schema, see their migration guide [here](https://docs.fauna.com/fauna/current/migration)
 
-```js filename="./auth.js"
-import NextAuth from "next-auth";
-import { Client as FaunaClient } from "faunadb";
-import { FaunaAdapter } from "@auth/fauna-adapter";
+<Accordions>
+  <Accordion title="Migration Example">
 
-const client = new FaunaClient({
+```ts filename="authjs-adapter-fauna-v2-migration.fql"
+Collection.byName("accounts")!.update({
+  name: "Account"
+  indexes: {
+    byUserId: {
+        terms: [{ field: "userId" }]
+    },
+    byProviderAndProviderAccountId: {
+        terms: [{ field: "provider" }, { field: "providerAccountId" }]
+    },
+    account_by_provider_and_provider_account_id: null,
+    accounts_by_user_id: null
+  }
+})
+Collection.byName("sessions")!.update({
+  name: "Session",
+  indexes: {
+    bySessionToken: {
+        terms: [{ field: "sessionToken" }]
+    },
+    byUserId: {
+        terms: [{ field: "userId" }]
+    },
+    session_by_session_token: null,
+    sessions_by_user_id: null
+  }
+})
+Collection.byName("users")!.update({
+  name: "User",
+  indexes: {
+    byEmail: {
+        terms: [{ field: "email" }]
+    },
+    user_by_email: null
+  }
+})
+Collection.byName("verification_tokens")!.update({
+  name: "VerificationToken",
+  indexes: {
+    byIdentifierAndToken: {
+        terms: [{ field: "identifier" }, { field: "token" }]
+    },
+    verification_token_by_identifier_and_token: null
+  }
+})
+```
+
+  </Accordion>
+</Accordions>
+
+## Configure Auth.js
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const client = new Client({
   secret: "secret",
-  scheme: "http",
-  domain: "localhost",
-  port: 8443,
-});
+  endpoint: new URL('http://localhost:8443')
+})
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  // https://authjs.dev/reference/providers/
-  providers: [],
-  adapter: FaunaAdapter(client),
-});
+export { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [GitHub],
+  adapter: FaunaAdapter(client)
+})
 ```
 
 ### Schema
 
 Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
 
-```javascript
-CreateCollection({ name: "accounts" });
-CreateCollection({ name: "sessions" });
-CreateCollection({ name: "users" });
-CreateCollection({ name: "verification_tokens" });
-```
-
-```javascript
-CreateIndex({
-  name: "account_by_provider_and_provider_account_id",
-  source: Collection("accounts"),
-  unique: true,
-  terms: [
-    { field: ["data", "provider"] },
-    { field: ["data", "providerAccountId"] },
+```ts filename="authjs-fauna-adapter-schema.fql"
+Collection.create({
+  name: "Account",
+  indexes: {
+    byUserId: {
+      terms: [
+        { field: "userId" }
+      ]
+    },
+    byProviderAndProviderAccountId: {
+      terms [
+        { field: "provider" },
+        { field: "providerAccountId" }
+      ]
+    },
+  }
+})
+Collection.create({
+  name: "Session",
+  constraints: [
+    {
+      unique: ["sessionToken"],
+      status: "active",
+    }
   ],
-});
-CreateIndex({
-  name: "session_by_session_token",
-  source: Collection("sessions"),
-  unique: true,
-  terms: [{ field: ["data", "sessionToken"] }],
-});
-CreateIndex({
-  name: "user_by_email",
-  source: Collection("users"),
-  unique: true,
-  terms: [{ field: ["data", "email"] }],
-});
-CreateIndex({
-  name: "verification_token_by_identifier_and_token",
-  source: Collection("verification_tokens"),
-  unique: true,
-  terms: [{ field: ["data", "identifier"] }, { field: ["data", "token"] }],
-});
+  indexes: {
+    bySessionToken: {
+      terms: [
+        { field: "sessionToken" }
+      ]
+    },
+    byUserId: {
+      terms [
+        { field: "userId" }
+      ]
+    },
+  }
+})
+Collection.create({
+  name: "User",
+  constraints: [
+    {
+      unique: ["email"],
+      status: "active",
+    }
+  ],
+  indexes: {
+    byEmail: {
+      terms [
+        { field: "email" }
+      ]
+    },
+  }
+})
+Collection.create({
+  name: "VerificationToken",
+  indexes: {
+    byIdentifierAndToken: {
+      terms [
+        { field: "identifier" },
+        { field: "token" }
+      ]
+    },
+  }
+})
 ```
 
-> This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
+> This schema is adapted for use in Fauna and based upon our primary [database models](/concepts/database-models).
