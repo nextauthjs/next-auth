@@ -65,7 +65,7 @@ export type FaunaAccount = ToFauna<AdapterAccount>
  *
  * ### Schema
  *
- * Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
+ * Run the following FQL code inside the `Shell` tab in the Fauna dashboard to set up the appropriate collections and indexes.
  *
  * ```javascript
  * Collection.create({
@@ -138,7 +138,57 @@ export type FaunaAccount = ToFauna<AdapterAccount>
  *
  * ### Migrating from v1
  * In v2, we've renamed the collections to use uppercase naming, in accordance with Fauna best practices. If you're migrating from v1, you'll need to rename your collections to match the new naming scheme.
- * Additionally, we've renamed the indexes to match the new method-like index names. Please see above for the new index definitions.
+ * Additionally, we've renamed the indexes to match the new method-like index names.
+ *
+ * #### Migration script
+ * Run this FQL script inside a Fauna shell for the database you're migrating from v1 to v2 (it will rename your collections and indexes to match):
+ *
+ * ```javascript
+ * Collection.byName("accounts")!.update({
+ *   name: "Account"
+ *   indexes: {
+ *     byUserId: {
+ *         terms: [{ field: "userId" }]
+ *     },
+ *     byProviderAndProviderAccountId: {
+ *         terms: [{ field: "provider" }, { field: "providerAccountId" }]
+ *     },
+ *     account_by_provider_and_provider_account_id: null,
+ *     accounts_by_user_id: null
+ *   }
+ * })
+ * Collection.byName("sessions")!.update({
+ *   name: "Session",
+ *   indexes: {
+ *     bySessionToken: {
+ *         terms: [{ field: "sessionToken" }]
+ *     },
+ *     byUserId: {
+ *         terms: [{ field: "userId" }]
+ *     },
+ *     session_by_session_token: null,
+ *     sessions_by_user_id: null
+ *   }
+ * })
+ * Collection.byName("users")!.update({
+ *   name: "User",
+ *   indexes: {
+ *     byEmail: {
+ *         terms: [{ field: "email" }]
+ *     },
+ *     user_by_email: null
+ *   }
+ * })
+ * Collection.byName("verification_tokens")!.update({
+ *   name: "VerificationToken",
+ *   indexes: {
+ *     byIdentifierAndToken: {
+ *         terms: [{ field: "identifier" }, { field: "token" }]
+ *     },
+ *     verification_token_by_identifier_and_token: null
+ *   }
+ * })
+ * ```
  *
  **/
 export function FaunaAdapter(client: Client): Adapter {
