@@ -92,17 +92,21 @@ export interface DynamoDBAdapterOptions {
  *
  * (AWS secrets start with `NEXT_AUTH_` in order to not conflict with [Vercel's reserved environment variables](https://vercel.com/docs/environment-variables#reserved-environment-variables).)
  *
- * ## How to create AWS access key and secret
+ * ## AWS Credentials
  *
- * Important: Always follow the **principle of least privilege** when giving access to AWS services/resources -> identities should only be permitted to perform the smallest set of actions necessary to fulfill a specific task.
+ * :::note
+ *   Always follow the **principle of least privilege** when giving access to AWS
+ *   services/resources -> identities should only be permitted to perform the
+ *   smallest set of actions necessary to fulfill a specific task.
+ * :::
  *
- * 1. Open [AWS console](https://console.aws.amazon.com/) and go to IAM > Users.
- * 2. Create a new user. The only purpose of this user is to give programmatic access to DynamoDB.
- * 3. Create an Access Key and then copy key id and secret to your `.env`/`.env.local` file.
+ * 1. Open the [AWS console](https://console.aws.amazon.com/) and go to "IAM", then "Users".
+ * 2. Create a new user. The purpose of this user is to give programmatic access to DynamoDB.
+ * 3. Create an Access Key and then copy Key ID and Secret to your `.env`/`.env.local` file.
  * 4. Select "Add Permission" and "Create Inline Policy".
- * 5. Copy below JSON into the JSON text input and replace `region`, `account_id` and `table_name` with your specific values.
+ * 5. Copy the JSON below into the JSON input and replace `region`, `account_id` and `table_name` with your values.
  *
- * ```JSON
+ * ```json
  * {
  *   "Version": "2012-10-17",
  *   "Statement": [
