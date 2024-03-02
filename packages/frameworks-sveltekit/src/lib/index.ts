@@ -56,10 +56,14 @@
  * [origin]/auth/callback/[provider]
  * ```
  *
- * ## Signing in and signing out
+ * ## Signing in and Signing out
  *
- * The data for the current session in this example was made available through the `$page` store which can be set through the root `+page.server.ts` file.
- * It is not necessary to store the data there, however, this makes it globally accessible throughout your application simplifying state management.
+ * ### Server-side
+ *
+ * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. You will need two things to make this work:
+ *
+ * 1. Using the components in your SvelteKit app's frontend
+ * 2. Add the required `page.server.ts` at `/signin` (for `SignIn`) and `/signout` (for `SignOut`) to handle the form actions
  *
  * ```ts
  * <script>
@@ -71,36 +75,84 @@
  * <div>
  *   {#if $page.data.session}
  *     {#if $page.data.session.user?.image}
- *       <span
- *         style="background-image: url('{$page.data.session.user.image}')"
+ *       <img
+ *         src={$page.data.session.user.image}
  *         class="avatar"
+ *         alt="User Avatar"
  *       />
  *     {/if}
  *     <span class="signedInText">
  *       <small>Signed in as</small><br />
  *       <strong>{$page.data.session.user?.name ?? "User"}</strong>
  *     </span>
- *     <SignOut />
+ *     <SignOut>
+ *       <div slot="submitButton" class="buttonPrimary">Sign out</div>
+ *     </SignOut>
  *   {:else}
  *     <span class="notSignedInText">You are not signed in</span>
- *     <SignIn provider="github"/>
- *     <SignIn provider="google"/>
+ *     <SignIn>
+ *       <div slot="submitButton" class="buttonPrimary">Sign in</div>
+ *     </SignIn>
  *     <SignIn provider="facebook"/>
  *   {/if}
  * </div>
  * ```
  *
- * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components.
  * To set up the form actions, we need to define the files in `src/routes`:
+ *
  * ```ts title="src/routes/signin/+page.server.ts"
  * import { signIn } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signIn }
  * ```
+ *
  * ```ts title="src/routes/signout/+page.server.ts"
  * import { signOut } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signOut }
+ * ```
+ *
+ * These routes are customizeable with the `signInPage` and `signOutPage` props on the respective comopnents.
+ *
+ * ### Client-Side
+ *
+ * We also export two methods from `@auth/sveltekit/client` in order to do client-side sign-in and sign-out actions.
+ *
+ * ```ts title="src/routes/index.svelte"
+ * import { signIn, signOut } from "@auth/sveltekit/client"
+ *
+ * <nav>
+ *   <p>
+ *     These actions are all using the methods exported from
+ *     <code>@auth/sveltekit/client</code>
+ *   </p>
+ *   <div class="actions">
+ *     <div class="wrapper-form">
+ *       <button on:click={() => signIn("github")}>Sign In with GitHub</button>
+ *     </div>
+ *     <div class="wrapper-form">
+ *       <button on:click={() => signIn("discord")}>Sign In with Discord</button>
+ *     </div>
+ *     <div class="wrapper-form">
+ *       <div class="input-wrapper">
+ *         <label for="password">Password</label>
+ *         <input
+ *           bind:value={password}
+ *           type="password"
+ *           id="password"
+ *           name="password"
+ *           required
+ *         />
+ *       </div>
+ *       <button on:click={() => signIn("credentials", { password })}>
+ *         Sign In with Credentials
+ *       </button>
+ *       <button on:click={() => signOut()})}>
+ *         Sign Out
+ *       </button>
+ *     </div>
+ *   </div>
+ * </nav>
  * ```
  *
  * ## Managing the session
@@ -162,39 +214,42 @@
  * - Very easy to modify
  *
  * The way to handle authorization through the URI is to override your handle hook.
- * The handle hook, available in `hooks.server.ts`, is a function that receives ALL requests sent to your SvelteKit webapp.
- * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
- * Some readers may notice we are already using this handle hook for SvelteKitAuth which returns a handle itself, so we are going to use SvelteKit's sequence to provide middleware-like functions that set the handle hook.
+ * The handle hook, returned from `SvelteKitAuth` in your `src/auth.ts`, is a function that is designed to receive ALL requests sent to your SvelteKit webapp.
+ * You should export it from `src/auth.ts` and import it in your `src/hooks.server.ts`.
+ * To use multiple handles in your `hooks.server.ts`, we can use SvelteKit's `sequence` to execute all of them in series.
  *
- * ```ts
+ * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from '@auth/sveltekit';
  * import GitHub from '@auth/sveltekit/providers/github';
- * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
+ *
+ * export const { handle, signIn, signOut } = SvelteKitAuth({
+ *   providers: [GitHub]
+ * }),
+ * ```
+ *
+ * ```ts title="src/hooks.server.ts"
  * import { redirect, type Handle } from '@sveltejs/kit';
+ * import { handle: authenticationHandle } from './auth';
  * import { sequence } from '@sveltejs/kit/hooks';
  *
- * async function authorization({ event, resolve }) {
- * 	// Protect any routes under /authenticated
- * 	if (event.url.pathname.startsWith('/authenticated')) {
- *    const session = await event.locals.getSession();
- * 		if (!session) {
- * 			throw redirect(303, '/auth');
- * 		}
- * 	}
+ * async function authorizationHandle({ event, resolve }) {
+ *   // Protect any routes under /authenticated
+ *   if (event.url.pathname.startsWith('/authenticated')) {
+ *     const session = await event.locals.getSession();
+ *     if (!session) {
+ *       // Redirect to the signin page
+ *       throw redirect(303, '/auth/signin');
+ *     }
+ *   }
  *
- * 	// If the request is still here, just proceed as normally
- * 	return resolve(event);
+ *   // If the request is still here, just proceed as normally
+ *   return resolve(event);
  * }
  *
  * // First handle authentication, then authorization
  * // Each function acts as a middleware, receiving the request handle
  * // And returning a handle which gets passed to the next function
- * export const handle: Handle = sequence(
- * 	SvelteKitAuth({
- * 		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })]
- * 	}),
- * 	authorization
- * );
+ * export const handle: Handle = sequence(authenticationHandle, authorizationHandle)
  * ```
  *
  * :::info
