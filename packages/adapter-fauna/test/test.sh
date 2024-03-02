@@ -6,9 +6,9 @@ FAUNA_ADMIN_KEY=secret
 
 # Start Docker
 docker run -d --rm \
---name ${CONTAINER_NAME} \
--p ${FAUNADB_PORT}:${FAUNADB_PORT} \
-fauna/faunadb
+  --name ${CONTAINER_NAME} \
+  -p ${FAUNADB_PORT}:${FAUNADB_PORT} \
+  fauna/faunadb
 
 echo "Waiting 10 sec for db to start..."
 sleep 10
@@ -17,8 +17,8 @@ sleep 10
 fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest -c ../utils/vitest.config.ts;then
-    docker stop ${CONTAINER_NAME}
+if vitest run -c ../utils/vitest.config.ts; then
+  docker stop ${CONTAINER_NAME}
 else
-    docker stop ${CONTAINER_NAME} && exit 1
+  docker stop ${CONTAINER_NAME} && exit 1
 fi

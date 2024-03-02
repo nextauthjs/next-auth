@@ -25,7 +25,7 @@
   "scripts": {
     "build": "tsc",
     "patch": "npm version patch --no-git-tag-version",
-    "test": "vitest -c ../utils/vitest.config.ts",
+    "test": "vitest run -c ../utils/vitest.config.ts",
     "clean": "rm -rf *.js *.d.ts*"
   },
   "publishConfig": {

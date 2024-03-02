@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=authjs-unstorage-test
+CONTAINER_NAME=authjs-firestore-test
 
-# Start db
+# Start Docker
 docker run -d --rm \
-  -p 6379:6379 \
   --name ${CONTAINER_NAME} \
-  redis/redis-stack-server:6.2.6-v10
+  -p 8080:8080 \
+  google/cloud-sdk:latest gcloud beta emulators firestore start --host-port=0.0.0.0:8080
 
+echo "Waiting 10 sec for db to start..."
 sleep 10
 
 # Always stop container, but exit with 1 when tests are failing
