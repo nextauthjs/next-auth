@@ -162,18 +162,25 @@
  * - Very easy to modify
  *
  * The way to handle authorization through the URI is to override your handle hook.
- * The handle hook, available in `hooks.server.ts`, is a function that receives ALL requests sent to your SvelteKit webapp.
- * You may intercept them inside the handle hook, add and modify things in the request, block requests, etc.
- * Some readers may notice we are already using this handle hook for SvelteKitAuth which returns a handle itself, so we are going to use SvelteKit's sequence to provide middleware-like functions that set the handle hook.
+ * The handle hook, returned from `SvelteKitAuth` in your `src/auth.ts`, is a function that is designed to receive ALL requests sent to your SvelteKit webapp.
+ * You should export it from `src/auth.ts` and import it in your `src/hooks.server.ts`.
+ * To use multiple handles in your `hooks.server.ts`, we can use SvelteKit's `sequence` to execute all of them in series.
  *
- * ```ts
+ * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from '@auth/sveltekit';
  * import GitHub from '@auth/sveltekit/providers/github';
- * import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
+ *
+ * export const { handle, signIn, signOut } = SvelteKitAuth({
+ * 		providers: [GitHub]
+ * 	}),
+ * ```
+ *
+ * ```ts title="src/hooks.server.ts"
  * import { redirect, type Handle } from '@sveltejs/kit';
+ * import { handle: authenticationHandle } from './auth';
  * import { sequence } from '@sveltejs/kit/hooks';
  *
- * async function authorization({ event, resolve }) {
+ * async function authorizationHandle({ event, resolve }) {
  * 	// Protect any routes under /authenticated
  * 	if (event.url.pathname.startsWith('/authenticated')) {
  *    const session = await event.locals.getSession();
@@ -189,12 +196,7 @@
  * // First handle authentication, then authorization
  * // Each function acts as a middleware, receiving the request handle
  * // And returning a handle which gets passed to the next function
- * export const handle: Handle = sequence(
- * 	SvelteKitAuth({
- * 		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })]
- * 	}),
- * 	authorization
- * );
+ * export const handle: Handle = sequence(authenticationHandle, authorizationHandle)
  * ```
  *
  * :::info
