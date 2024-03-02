@@ -56,10 +56,16 @@
  * [origin]/auth/callback/[provider]
  * ```
  *
- * ## Signing in and signing out
+ * ## Signing in and Signing out
  *
- * The data for the current session in this example was made available through the `$page` store which can be set through the root `+page.server.ts` file.
- * It is not necessary to store the data there, however, this makes it globally accessible throughout your application simplifying state management.
+ * ### Server-side
+ *
+ * The data for the current session in this example was made available through the `$page` store. The `handle` function returned from `SvelteKitAuth()` and used in your `hooks.server.ts` will add an `auth()` method on your `events.locals` object, which is available in any `page.server.ts` or `layout.server.ts`. You should call `event.locals.auth()` to get the session data and return it from your `load` function to make it available in the `$page` store.
+ *
+ * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. You will need two things to make this work:
+ *
+ * 1. Using the components in your SvelteKit app's frontend
+ * 2. Add the required `page.server.ts` at `/signin` (for `SignIn`) and `/signout` (for `SignOut`) to handle the form actions
  *
  * ```ts
  * <script>
@@ -71,8 +77,8 @@
  * <div>
  *   {#if $page.data.session}
  *     {#if $page.data.session.user?.image}
- *       <span
- *         style="background-image: url('{$page.data.session.user.image}')"
+ *       <img
+ *         src={$page.data.session.user.image}
  *         class="avatar"
  *       />
  *     {/if}
@@ -80,27 +86,74 @@
  *       <small>Signed in as</small><br />
  *       <strong>{$page.data.session.user?.name ?? "User"}</strong>
  *     </span>
- *     <SignOut />
+ *     <SignOut>
+ *       <div slot="submitButton" class="buttonPrimary">Sign out</div>
+ *     </SignOut>
  *   {:else}
  *     <span class="notSignedInText">You are not signed in</span>
- *     <SignIn provider="github"/>
- *     <SignIn provider="google"/>
+ *     <SignIn>
+ *       <div slot="submitButton" class="buttonPrimary">Sign in</div>
+ *     </SignIn>
  *     <SignIn provider="facebook"/>
  *   {/if}
  * </div>
  * ```
  *
- * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components.
  * To set up the form actions, we need to define the files in `src/routes`:
+ *
  * ```ts title="src/routes/signin/+page.server.ts"
  * import { signIn } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signIn }
  * ```
+ *
  * ```ts title="src/routes/signout/+page.server.ts"
  * import { signOut } from "../../auth"
  * import type { Actions } from "./$types"
  * export const actions: Actions = { default: signOut }
+ * ```
+ *
+ * These routes are customizeable with the `signInPage` and `signOutPage` props on the respective comopnents.
+ *
+ * ### Client-Side
+ *
+ * We also export two methods from `@auth/sveltekit/client` in order to do client-side sign-in and sign-out actions.
+ *
+ * ```ts title="src/routes/index.svelte"
+ * import { signIn, signOut } from "@auth/sveltekit/client"
+ *
+ * <nav>
+ *   <p>
+ *     These actions are all using the methods exported from
+ *     <code>@auth/sveltekit/client</code>
+ *   </p>
+ *   <div class="actions">
+ *     <div class="wrapper-form">
+ *       <button on:click={() => signIn("github")}>Sign In with GitHub</button>
+ *     </div>
+ *     <div class="wrapper-form">
+ *       <button on:click={() => signIn("discord")}>Sign In with Discord</button>
+ *     </div>
+ *     <div class="wrapper-form">
+ *       <div class="input-wrapper">
+ *         <label for="password">Password</label>
+ *         <input
+ *           bind:value={password}
+ *           type="password"
+ *           id="password"
+ *           name="password"
+ *           required
+ *         />
+ *       </div>
+ *       <button on:click={() => signIn("credentials", { password })}>
+ *         Sign In with Credentials
+ *       </button>
+ *       <button on:click={() => signOut()})}>
+ *         Sign Out
+ *       </button>
+ *     </div>
+ *   </div>
+ * </nav>
  * ```
  *
  * ## Managing the session
