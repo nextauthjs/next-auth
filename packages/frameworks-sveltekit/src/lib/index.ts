@@ -237,7 +237,8 @@
  *   if (event.url.pathname.startsWith('/authenticated')) {
  *     const session = await event.locals.getSession();
  *     if (!session) {
- *       throw redirect(303, '/auth');
+ *       // Redirect to the signin page
+ *       throw redirect(303, '/auth/signin');
  *     }
  *   }
  *
