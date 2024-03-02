@@ -60,8 +60,6 @@
  *
  * ### Server-side
  *
- * The data for the current session in this example was made available through the `$page` store. The `handle` function returned from `SvelteKitAuth()` and used in your `hooks.server.ts` will add an `auth()` method on your `events.locals` object, which is available in any `page.server.ts` or `layout.server.ts`. You should call `event.locals.auth()` to get the session data and return it from your `load` function to make it available in the `$page` store.
- *
  * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. You will need two things to make this work:
  *
  * 1. Using the components in your SvelteKit app's frontend
@@ -224,8 +222,8 @@
  * import GitHub from '@auth/sveltekit/providers/github';
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth({
- * 		providers: [GitHub]
- * 	}),
+ *   providers: [GitHub]
+ * }),
  * ```
  *
  * ```ts title="src/hooks.server.ts"
@@ -234,16 +232,16 @@
  * import { sequence } from '@sveltejs/kit/hooks';
  *
  * async function authorizationHandle({ event, resolve }) {
- * 	// Protect any routes under /authenticated
- * 	if (event.url.pathname.startsWith('/authenticated')) {
- *    const session = await event.locals.getSession();
- * 		if (!session) {
- * 			throw redirect(303, '/auth');
- * 		}
- * 	}
+ *   // Protect any routes under /authenticated
+ *   if (event.url.pathname.startsWith('/authenticated')) {
+ *     const session = await event.locals.getSession();
+ *     if (!session) {
+ *       throw redirect(303, '/auth');
+ *     }
+ *   }
  *
- * 	// If the request is still here, just proceed as normally
- * 	return resolve(event);
+ *   // If the request is still here, just proceed as normally
+ *   return resolve(event);
  * }
  *
  * // First handle authentication, then authorization
