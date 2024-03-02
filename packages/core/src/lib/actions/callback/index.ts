@@ -2,7 +2,7 @@
 
 import {
   AuthError,
-  AuthorizedCallbackError,
+  AccessDenied,
   CallbackRouteError,
   CredentialsSignin,
   InvalidProvider,
@@ -311,12 +311,10 @@ export async function callback(
         // prettier-ignore
         new Request(url, { headers, method, body: JSON.stringify(body) })
       )
-      const user = userFromAuthorize && {
-        ...userFromAuthorize,
-        id: userFromAuthorize?.id?.toString() ?? crypto.randomUUID(),
-      }
+      const user = userFromAuthorize
 
       if (!user) throw new CredentialsSignin()
+      else user.id = user.id?.toString() ?? crypto.randomUUID()
 
       const account = {
         providerAccountId: user.id,
@@ -508,9 +506,9 @@ async function handleAuthorized(
     authorized = await signIn(params)
   } catch (e) {
     if (e instanceof AuthError) throw e
-    throw new AuthorizedCallbackError(e as Error)
+    throw new AccessDenied(e as Error)
   }
-  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (!authorized) throw new AccessDenied("AccessDenied")
   if (typeof authorized !== "string") return
   return await redirect({ url: authorized, baseUrl: config.url.origin })
 }

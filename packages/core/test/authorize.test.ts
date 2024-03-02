@@ -38,7 +38,7 @@ describe("auth via callbacks.signIn", () => {
     it("return false", async () => {
       const res = await signIn({ callbacks: { signIn: () => false } })
       expect(res.headers.get("Location")).toBe(
-        "http://a/auth/error?error=AuthorizedCallbackError"
+        "http://a/auth/error?error=AccessDenied"
       )
     })
     it("return redirect relative URL", async () => {
@@ -64,7 +64,7 @@ describe("auth via callbacks.signIn", () => {
         },
       })
       expect(res.headers.get("Location")).toBe(
-        "http://a/auth/error?error=AuthorizedCallbackError"
+        "http://a/auth/error?error=AccessDenied"
       )
     })
   })
