@@ -44,7 +44,7 @@ export interface TestOptions {
      */
     authenticator?: (credentialID: string) => any
   }
-  skipTests?: string[],
+  skipTests?: string[]
   /**
    * Enables testing of WebAuthn methods.
    */
@@ -63,24 +63,33 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.connect?.()
   })
 
-  const { adapter: _adapter, db, skipTests: skipTests = [], testWebAuthnMethods } = options
+  const {
+    adapter: _adapter,
+    db,
+    skipTests: skipTests = [],
+    testWebAuthnMethods,
+  } = options
   const adapter = _adapter as Required<Adapter>
 
   if (!testWebAuthnMethods) {
-    skipTests.push(...[
-      "getAccount",
-      "getAuthenticator",
-      "createAuthenticator",
-      "listAuthenticatorsByUserId",
-      "updateAuthenticatorCounter"
-    ])
+    skipTests.push(
+      ...[
+        "getAccount",
+        "getAuthenticator",
+        "createAuthenticator",
+        "listAuthenticatorsByUserId",
+        "updateAuthenticatorCounter",
+      ]
+    )
   }
 
   const maybeTest = (
     method: keyof Adapter,
     ...args: Parameters<typeof test> extends [any, ...infer U] ? U : never
   ) =>
-    skipTests.includes(method) ? test.skip(method, ...args) : test(method, ...args)
+    skipTests.includes(method)
+      ? test.skip(method, ...args)
+      : test(method, ...args)
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
@@ -370,11 +379,20 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const invalidBoth = await adapter.getAccount("invalid-provider-account-id", "invalid-provider")
+    const invalidBoth = await adapter.getAccount(
+      "invalid-provider-account-id",
+      "invalid-provider"
+    )
     expect(invalidBoth).toBeNull()
-    const invalidProvider = await adapter.getAccount(providerAccountId, "invalid-provider")
+    const invalidProvider = await adapter.getAccount(
+      providerAccountId,
+      "invalid-provider"
+    )
     expect(invalidProvider).toBeNull()
-    const invalidProviderAccountId = await adapter.getAccount("invalid-provider-account-id", provider)
+    const invalidProviderAccountId = await adapter.getAccount(
+      "invalid-provider-account-id",
+      provider
+    )
     expect(invalidProviderAccountId).toBeNull()
     const validAccount = await adapter.getAccount(providerAccountId, provider)
     expect(validAccount).not.toBeNull()
@@ -411,13 +429,14 @@ export async function runBasicTests(options: TestOptions) {
       credentialPublicKey: randomUUID(),
       transports: "usb,ble,nfc",
     }
-    const newAuthenticator = await adapter.createAuthenticator(authenticatorData)
+    const newAuthenticator =
+      await adapter.createAuthenticator(authenticatorData)
     expect(newAuthenticator).not.toBeNull()
     expect(newAuthenticator).toMatchObject(authenticatorData)
 
-    const dbAuthenticator = db.authenticator ? await db.authenticator(
-      credentialID,
-    ) : undefined
+    const dbAuthenticator = db.authenticator
+      ? await db.authenticator(credentialID)
+      : undefined
     expect(dbAuthenticator).toMatchObject(newAuthenticator)
   })
   maybeTest("getAuthenticator", async () => {
@@ -446,14 +465,16 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const invalidAuthenticator = await adapter.getAuthenticator("invalid-credential-id")
+    const invalidAuthenticator = await adapter.getAuthenticator(
+      "invalid-credential-id"
+    )
     expect(invalidAuthenticator).toBeNull()
 
     const validAuthenticator = await adapter.getAuthenticator(credentialID)
     expect(validAuthenticator).not.toBeNull()
-    const dbAuthenticator = db.authenticator ? await db.authenticator(
-      credentialID
-    ) : undefined
+    const dbAuthenticator = db.authenticator
+      ? await db.authenticator(credentialID)
+      : undefined
     expect(dbAuthenticator).toMatchObject(validAuthenticator || {})
   })
   maybeTest("listAuthenticatorsByUserId", async () => {
@@ -521,12 +542,15 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const authenticators0 = await adapter.listAuthenticatorsByUserId("invalid-user-id")
+    const authenticators0 =
+      await adapter.listAuthenticatorsByUserId("invalid-user-id")
     expect(authenticators0).toEqual([])
 
     const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
     expect(authenticators1).not.toBeNull()
-    expect([authenticator1, authenticator2]).toMatchObject(authenticators1 || [])
+    expect([authenticator1, authenticator2]).toMatchObject(
+      authenticators1 || []
+    )
 
     const authenticators2 = await adapter.listAuthenticatorsByUserId(user2.id)
     expect(authenticators2).not.toBeNull()
@@ -558,12 +582,18 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    await expect(
-      () => adapter.updateAuthenticatorCounter("invalid-credential-id", randomInt(100))
+    await expect(() =>
+      adapter.updateAuthenticatorCounter(
+        "invalid-credential-id",
+        randomInt(100)
+      )
     ).rejects.toThrow()
 
     const newCounter = newAuthenticator.counter + randomInt(100)
-    const updatedAuthenticator = await adapter.updateAuthenticatorCounter(credentialID, newCounter)
+    const updatedAuthenticator = await adapter.updateAuthenticatorCounter(
+      credentialID,
+      newCounter
+    )
     expect(updatedAuthenticator).not.toBeNull()
     expect(updatedAuthenticator.counter).toBe(newCounter)
   })

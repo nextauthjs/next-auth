@@ -27,7 +27,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
-    "test": "vitest",
+    "test": "vitest run",
     "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {

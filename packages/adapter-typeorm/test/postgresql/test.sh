@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-
-WAIT=10
-echo "Waiting ${WAIT} sec for PostgreSQL db to be up..."
-sleep ${WAIT}
-
 set -eu
 
+echo "Waiting 5s for db to start..."
+sleep 5
+
 echo "Started running PostgreSQL tests with default models."
-vitest -c ../utils/vitest.config.ts postgresql/index.test.ts
+vitest run -c ../utils/vitest.config.ts postgresql/index.test.ts
 echo "Finished running PostgreSQL tests with default models."
 
 echo "Started running PostgreSQL tests with custom models."
-CUSTOM_MODEL=1 vitest -c ../utils/vitest.config.ts postgresql/index.custom.test.ts
+CUSTOM_MODEL=1 vitest run -c ../utils/vitest.config.ts postgresql/index.custom.test.ts
 echo "Finished running PostgreSQL tests with custom models."

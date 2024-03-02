@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-docker run -d \
-  --name mysql \
-  --rm \
+MYSQL_CONTAINER_NAME=authjs-kysely-mysql-test
+PG_CONTAINER_NAME=authjs-kysely-pg-test
+
+docker run -d --rm \
+  --name ${MYSQL_CONTAINER_NAME} \
   -e MYSQL_ROOT_PASSWORD=root \
   -e MYSQL_DATABASE=kysely_test \
   -p 3308:3306 \
@@ -10,21 +12,20 @@ docker run -d \
   mysql/mysql-server \
   --init-file /data/application/init.sql
 
-docker run -d \
-  --name postgres \
-  --rm \
+docker run -d --rm \
+  --name ${PG_CONTAINER_NAME} \
   -e POSTGRES_DB=kysely_test \
   -e POSTGRES_USER=kysely \
   -e POSTGRES_HOST_AUTH_METHOD=trust \
   -p 5434:5432 \
   postgres
-  
-echo "waiting 15 seconds for databases to start..."
-sleep 15
+
+echo "waiting 10s for db to start..."
+sleep 10
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest -c ../utils/vitest.config.ts; then
-  docker stop mysql && docker stop postgres
+if vitest run -c ../utils/vitest.config.ts; then
+  docker stop ${MYSQL_CONTAINER_NAME} && docker stop ${PG_CONTAINER_NAME}
 else
-  docker stop mysql && docker stop postgres && exit 1
+  docker stop ${MYSQL_CONTAINER_NAME} && docker stop ${PG_CONTAINER_NAME} && exit 1
 fi
