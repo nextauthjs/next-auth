@@ -10,6 +10,7 @@ docker run -d --rm \
 
 pnpm prisma generate --schema ./prisma/mongodb.prisma
 
+export CONTAINER_NAME=authjs-mongodb-test
 # Always stop container, but exit with 1 when tests are failing
 if vitest run -c ../utils/vitest.config.ts; then
   docker stop ${CONTAINER_NAME}
