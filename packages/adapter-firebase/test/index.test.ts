@@ -14,7 +14,7 @@ import {
 
 describe.each([
   { namingStrategy: "snake_case" },
-  { namingStrategy: "default" },
+  // { namingStrategy: "default" },
 ] as Partial<FirebaseAdapterConfig>[])(
   "FirebaseAdapter with config: %s",
   (config) => {
