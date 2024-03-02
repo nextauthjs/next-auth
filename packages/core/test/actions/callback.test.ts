@@ -13,7 +13,7 @@ describe("assert GET callback action", () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
-  it("should throw InvalidProvider error if the provider ID is not found", async () => {
+  it("should throw Configuration error if the provider ID is not found", async () => {
     const { response } = await makeAuthRequest({
       action: "callback",
       path: "/invalid-provider",
@@ -21,11 +21,11 @@ describe("assert GET callback action", () => {
 
     expect(response.status).toEqual(302)
     expect(response.headers.get("location")).toEqual(
-      `https://authjs.test/auth/error?error=InvalidProvider`
+      `https://authjs.test/auth/error?error=Configuration`
     )
   })
 
-  it("should throws InvalidCheck is missing query state and isOnRedirectProxy is true", async () => {
+  it("should throw Configuration error is missing query state and isOnRedirectProxy is true", async () => {
     const { response } = await makeAuthRequest({
       action: "callback",
       path: "/github",
@@ -38,7 +38,7 @@ describe("assert GET callback action", () => {
 
     expect(response.status).toEqual(302)
     expect(response.headers.get("location")).toEqual(
-      `https://authjs.test/auth/error?error=InvalidCheck`
+      `https://authjs.test/auth/error?error=Configuration`
     )
   })
 
