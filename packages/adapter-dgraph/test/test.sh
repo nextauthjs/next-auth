@@ -4,12 +4,12 @@ CONTAINER_NAME=authjs-dgraph
 
 # Start db
 docker run -d --rm \
-  -p 8000:8000 \
   -p 8080:8080 \
+  -p 9080:9080 \
   --name "${CONTAINER_NAME}" \
-  dgraph/standalone
+  dgraph/standalone:latest
 
-echo "Waiting 5s for db to start..." && sleep 5
+echo "Waiting 15s for db to start..." && sleep 15
 
 head -n -1 src/lib/graphql/schema.gql >test/test.schema.gql
 PUBLIC_KEY=$(sed 's/$/\\n/' test/public.key | tr -d '\n')
