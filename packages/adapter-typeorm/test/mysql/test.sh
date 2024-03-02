@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-
-WAIT=20
-echo "Waiting ${WAIT} sec for MySQL db to be up..."
-sleep ${WAIT}
-
 set -eu
+
+echo "Waiting 5s for db to start..."
+sleep 5
 
 echo "Started running MySQL tests with default models."
 vitest run -c ../utils/vitest.config.ts mysql/index.test.ts

@@ -8,8 +8,8 @@ docker run -d --rm \
   --name ${CONTAINER_NAME} \
   mongo
 
-echo "Waiting 3 sec for db to start..."
-sleep 3
+echo "Waiting 5s for db to start..."
+sleep 5
 
 # Always stop container, but exit with 1 when tests are failing
 if vitest run -c ../utils/vitest.config.ts; then

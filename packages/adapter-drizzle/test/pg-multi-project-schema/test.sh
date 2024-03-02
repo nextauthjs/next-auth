@@ -17,7 +17,7 @@ docker run -d --rm \
   -p ${PGPORT}:5432 \
   postgres:15.3
 
-echo "Waiting 15 sec for db to start..." && sleep 15
+echo "Waiting 5s for db to start..." && sleep 5
 
 # Push schema and seed
 drizzle-kit generate:pg --config=./test/pg/drizzle.config.ts

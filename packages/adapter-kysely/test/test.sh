@@ -20,8 +20,8 @@ docker run -d --rm \
   -p 5434:5432 \
   postgres
 
-echo "waiting 15 seconds for databases to start..."
-sleep 15
+echo "waiting 5s for db to start..."
+sleep 5
 
 # Always stop container, but exit with 1 when tests are failing
 if vitest run -c ../utils/vitest.config.ts; then

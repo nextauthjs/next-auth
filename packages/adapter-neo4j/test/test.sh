@@ -18,7 +18,7 @@ docker run -d --rm \
 # -e NEO4J_ACCEPT_LICENSE_AGREEMENT=yes \
 # neo4j:4.2.0-enterprise
 
-echo "Waiting 10 sec for db to start..." && sleep 10
+echo "Waiting 5s for db to start..." && sleep 5
 
 # Always stop container, but exit with 1 when tests are failing
 if vitest run -c ../utils/vitest.config.ts; then

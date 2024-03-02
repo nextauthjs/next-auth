@@ -11,7 +11,7 @@ docker run -d --rm \
   -v "$(pwd)"/schema.sql:/docker-entrypoint-initdb.d/schema.sql \
   postgres:latest
 
-echo "waiting 5 seconds for databases to start..."
+echo "waiting 5s for db to start..."
 sleep 5
 
 # Always stop container, but exit with 1 when tests are failing
