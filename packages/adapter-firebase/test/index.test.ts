@@ -11,10 +11,9 @@ import {
 } from "../src"
 
 // TODO: promises never resolve in tests, so currently we are skipping them
-
 describe.each([
   { namingStrategy: "snake_case" },
-  // { namingStrategy: "default" },
+  { namingStrategy: "default" },
 ] as Partial<FirebaseAdapterConfig>[])(
   "FirebaseAdapter with config: %s",
   (config) => {
