@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { page } from "$app/stores"
-  import { SignIn, SignOut } from "@auth/sveltekit/components"
-  import { signIn, signOut } from "@auth/sveltekit/client"
+  import { SignIn } from "@auth/sveltekit/components"
+  import { signIn } from "@auth/sveltekit/client"
 
   let password = ""
 </script>
