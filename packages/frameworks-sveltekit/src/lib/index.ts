@@ -78,6 +78,7 @@
  *       <img
  *         src={$page.data.session.user.image}
  *         class="avatar"
+ *         alt="User Avatar"
  *       />
  *     {/if}
  *     <span class="signedInText">
