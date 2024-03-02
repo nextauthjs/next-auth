@@ -17,7 +17,7 @@
           {$page.data.session.user?.email ?? $page.data.session.user?.name}
         </span>
         <SignOut>
-          <div class="buttonPrimary">Sign out</div>
+          <div slot="submitButton" class="buttonPrimary">Sign out</div>
         </SignOut>
       {:else}
         <span class="notSignedInText">You are not signed in</span>
