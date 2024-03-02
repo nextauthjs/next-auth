@@ -73,7 +73,7 @@ export class AuthError extends Error {
 
     Error.captureStackTrace?.(this, this.constructor)
     const url = `https://errors.authjs.dev#${this.type.toLowerCase()}`
-    this.message += `${this.message ? " ." : ""}Read more at ${url}`
+    this.message += `${this.message ? ". " : ""}Read more at ${url}`
   }
 }
 
