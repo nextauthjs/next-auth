@@ -51,7 +51,9 @@ export interface CredentialsConfig<
    * @example
    * ```ts
    * async authorize(credentials, request) { // you have access to the original request as well
-   *   if(!isValidCredentials(credentials)) return null
+   *   if(!isValidCredentials(credentials)) {
+   *      throw new CustomError()
+   *   }
    *   return await getUser(credentials) // assuming it returns a User or null
    * }
    * ```
