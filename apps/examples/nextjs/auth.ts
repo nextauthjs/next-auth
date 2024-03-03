@@ -133,6 +133,7 @@ export const config = {
     // Zoho,
     // Zoom,
   ],
+  basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl

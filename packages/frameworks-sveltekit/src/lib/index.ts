@@ -34,7 +34,12 @@
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
- *     providers: [GitHub({ clientId: event.platform.env.GITHUB_ID, clientSecret: event.platform.env.GITHUB_SECRET })]
+ *     providers: [
+ *       GitHub({
+ *         clientId: event.platform.env.GITHUB_ID,
+ *         clientSecret: event.platform.env.GITHUB_SECRET
+ *       })
+ *     ],
  *     secret: event.platform.env.AUTH_SECRET,
  *     trustHost: true
  *   }
@@ -52,6 +57,7 @@
  * When deploying your app outside Vercel, set the `AUTH_TRUST_HOST` variable to `true` for other hosting providers like Cloudflare Pages or Netlify.
  *
  * The callback URL used by the [providers](https://authjs.dev/getting-started/providers) must be set to the following, unless you override {@link SvelteKitAuthConfig.basePath}:
+ *
  * ```
  * [origin]/auth/callback/[provider]
  * ```
@@ -166,7 +172,7 @@
  *
  * export const load: LayoutServerLoad = async (event) => {
  *   return {
- *     session: await event.locals.getSession()
+ *     session: await event.locals.auth()
  *   };
  * };
  * ```
@@ -188,7 +194,7 @@
  * import type { PageServerLoad } from './$types';
  *
  * export const load: PageServerLoad = async (event) => {
- *   const session = await event.locals.getSession();
+ *   const session = await event.locals.auth();
  *   if (!session?.user) throw redirect(303, '/auth');
  *   return {};
  * };
@@ -229,13 +235,13 @@
  *
  * ```ts title="src/hooks.server.ts"
  * import { redirect, type Handle } from '@sveltejs/kit';
- * import { handle: authenticationHandle } from './auth';
+ * import { handle as authenticationHandle } from './auth';
  * import { sequence } from '@sveltejs/kit/hooks';
  *
  * async function authorizationHandle({ event, resolve }) {
  *   // Protect any routes under /authenticated
  *   if (event.url.pathname.startsWith('/authenticated')) {
- *     const session = await event.locals.getSession();
+ *     const session = await event.locals.auth();
  *     if (!session) {
  *       // Redirect to the signin page
  *       throw redirect(303, '/auth/signin');
