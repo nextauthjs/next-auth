@@ -16,11 +16,11 @@
 
   <div class="session-code">
     <div class="session-code-header">
-      <h3>Server Actions</h3>
+      <h3>Session</h3>
     </div>
     <div class="session-code-body">
       <pre>
-        {JSON.stringify($page.data.session, null, 2).trim()}
+{JSON.stringify($page.data.session, null, 2)}
       </pre>
     </div>
   </div>
