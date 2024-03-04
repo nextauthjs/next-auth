@@ -79,6 +79,27 @@ main {
   justify-content: flex-start;
 }
 
+.session-code {
+  background-color: #f3f3f3;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+
+  .session-code-header {
+    border-radius: 0.75rem 0.75rem 0 0;
+    background-color: #dfdfdf;
+    padding: 1.1rem;
+  }
+
+  .session-code-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.1rem;
+    gap: 2rem;
+  }
+}
+
 .card {
   border-radius: 0.75rem;
   background-color: #f3f3f3;
