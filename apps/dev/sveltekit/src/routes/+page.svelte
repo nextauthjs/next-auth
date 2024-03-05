@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { SignIn, SignOut } from "@auth/sveltekit/components"
-  import { signIn, signOut } from "@auth/sveltekit/client"
+  import { SignIn } from "@auth/sveltekit/components"
+  import { signIn } from "@auth/sveltekit/client"
 
   let password = ""
 </script>
@@ -13,6 +13,17 @@
     <a href="https://kit.svelte.dev/">SvelteKit</a>
     with <a href="https://sveltekit.authjs.dev">SvelteKit Auth</a> for authentication.
   </p>
+
+  <div class="session-code">
+    <div class="session-code-header">
+      <h3>Session</h3>
+    </div>
+    <div class="session-code-body">
+      <pre>
+{JSON.stringify($page.data.session, null, 2)}
+      </pre>
+    </div>
+  </div>
 
   <div class="card">
     <div class="card-header">
@@ -38,8 +49,13 @@
         >
           <span slot="submitButton">Sign In with Credentials</span>
           <div slot="credentials" class="input-wrapper">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <label for="server-password">Password</label>
+            <input
+              type="password"
+              id="server-password"
+              name="password"
+              required
+            />
           </div>
         </SignIn>
       </div>
@@ -65,11 +81,11 @@
         </div>
         <div class="wrapper-form">
           <div class="input-wrapper">
-            <label for="password">Password</label>
+            <label for="client-password">Password</label>
             <input
               bind:value={password}
               type="password"
-              id="password"
+              id="client-password"
               name="password"
               required
             />

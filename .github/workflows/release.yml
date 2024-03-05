@@ -91,12 +91,8 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Run unit tests
-        if: false
         run: pnpm test
         timeout-minutes: 15
-        env:
-          UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
-          UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV

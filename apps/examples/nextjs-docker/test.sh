@@ -16,8 +16,8 @@ if ! docker-compose "${args[@]}"; then
   exit 1
 fi
 
-echo "waiting 10 seconds for container to start..."
-sleep 10
+echo "waiting 5s for container to start..."
+sleep 5
 
 # Used to control which env vars to load in the playwright process
 export TEST_DOCKER=1
