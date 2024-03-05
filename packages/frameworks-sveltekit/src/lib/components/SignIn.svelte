@@ -32,14 +32,14 @@
 >
   <input type="hidden" name="providerId" value={provider} />
   {#if callbackUrl}
-  <input type="hidden" name="callbackUrl" value={callbackUrl} />
+    <input type="hidden" name="callbackUrl" value={callbackUrl} />
   {/if}
   {#if redirect}
-  <input type="hidden" name="redirect" value={redirect} />
+    <input type="hidden" name="redirect" value={redirect} />
   {/if}
   {#if authorizationParamsInputs}
     {#each Object.entries(authorizationParamsInputs) as [key, value]}
-      <input type="hidden" name={`authorizationParams-${key}`} value={value} />
+      <input type="hidden" name={`authorizationParams-${key}`} {value} />
     {/each}
   {/if}
   {#if provider === "credentials"}
@@ -47,7 +47,10 @@
   {/if}
   {#if provider === "email" || provider === "sendgrid" || provider === "resend"}
     <slot name="email">
-      <label class="section-header" for={`input-email-for-${provider}-provider`}>
+      <label
+        class="section-header"
+        for={`input-email-for-${provider}-provider`}
+      >
         Email
       </label>
       <input
@@ -60,6 +63,6 @@
     </slot>
   {/if}
   <button type="submit">
-    <slot name="submitButton">Signin{provider ? `with ${provider}` : ""}</slot>
+    <slot name="submitButton">Signin{provider ? ` with ${provider}` : ""}</slot>
   </button>
 </form>
