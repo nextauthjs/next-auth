@@ -25,7 +25,7 @@ const UpdateForm = () => {
             console.log({ newSession })
           }
         }}
-        className="flex items-center w-full max-w-sm space-x-2"
+        className="flex items-center space-x-2 w-full max-w-sm"
       >
         <Input
           type="text"
@@ -43,6 +43,7 @@ const UpdateForm = () => {
 
 export default function ClientExample() {
   const { data: session, status } = useSession()
+  console.log("ClientExample", session)
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
