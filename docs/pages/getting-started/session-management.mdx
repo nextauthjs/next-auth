@@ -53,7 +53,7 @@ To signin your users, make sure you have at least one [authentication method](/g
 <Code>
   <Code.Next>
 
-`next-auth` supports both server-side and client-side Signin and Signout methods.
+Auth.js supports both server-side and client-side Signin and Signout methods.
 
 #### Server-side
 
@@ -112,7 +112,7 @@ The SvelteKit client also supports two signin / signout methods, one server-side
 
 To signin your users using a SvelteKit form action, we can use the `SignIn` component exported from `@auth/sveltekit/components`.
 
-```svelte filename="src/routes/+page.svelte"
+```svelte filename="src/routes/+page.svelte" {7-9}
 <script lang="ts">
   import { SignIn } from "@auth/sveltekit/components"
 </script>
@@ -126,7 +126,7 @@ To signin your users using a SvelteKit form action, we can use the `SignIn` comp
 </header>
 ```
 
-This requires a server action at `/signin`, this path can be customized with the `signInPage` prop.
+This requires a server action at `/signin`, this path can be customized with the `signInPage` prop on the `SignIn` component.
 
 ```ts filename="src/routes/signin/+page.server.ts"
 import { signIn } from "../../auth"
@@ -139,7 +139,7 @@ export const actions: Actions = { default: signIn }
 
 Client-side is a bit simpler as we just need to import a button `on:click` handler from `@auth/sveltekit/client`.
 
-```svelte filename="src/routes/+page.svelte"
+```svelte filename="src/routes/+page.svelte" {2, 8}
 <script lang="ts">
   import { signIn } from '@auth/sveltekit/client'
 </script>
@@ -170,7 +170,7 @@ by passing the target URL as `redirectTo` in the sign-in options.
 <Code>
 <Code.Next>
 
-```tsx filename="app/components/signin-button.tsx"
+```tsx filename="app/components/signin-button.tsx" {8}
 import { signIn } from "../../auth.ts"
 
 export function SignIn() {
@@ -190,7 +190,7 @@ export function SignIn() {
 </Code.Next>
 <Code.NextPages>
 
-```tsx filename="src/components/signin-button.tsx"
+```tsx filename="src/components/signin-button.tsx" {5}
 import { signIn } from "next-auth/react"
 
 export function SignIn() {
@@ -205,7 +205,7 @@ export function SignIn() {
 </Code.NextPages>
 <Code.Svelte>
 
-```svelte filename="src/routes/+page.svelte"
+```svelte filename="src/routes/+page.svelte" {9-13}
 <script lang="ts">
   import { page } from "$app/stores"
   import { SignIn } from "@auth/sveltekit/components"
@@ -214,7 +214,6 @@ export function SignIn() {
 <header>
   <nav>
     <SignIn
-      signInPage="signin"
       options={{
         redirectTo: $page.data.redirectTo
           ? `/${decodeURIComponent($page.data.redirectTo).slice(1)}`
@@ -242,7 +241,7 @@ Handling sign out can be done similarly to signing in. Most frameworks offer bot
 
 To sign out users with a form action, you can build a button that calls the exported sign-out function from your Auth.js config.
 
-```tsx filename="app/components/signout-button.tsx" {6}
+```tsx filename="app/components/signout-button.tsx" {8}
 import { signOut } from "../../auth.ts"
 
 export function SignOut() {
@@ -263,7 +262,7 @@ export function SignOut() {
 
 Alternatively, you can use the client-side methods from `next-auth/react` to sign out as well.
 
-```ts filename="app/client/page.tsx"
+```ts filename="app/client/page.tsx" {9}
 "use client"
 
 import { signOut } from "next-auth/react"
@@ -282,7 +281,7 @@ export default function Client() {
 </Code.Next>
 <Code.NextPages>
 
-```tsx filename="src/components/signout-button.tsx"
+```tsx filename="src/components/signout-button.tsx" {5}
 import { signOut } from "next-auth/react"
 
 export function SignOut() {
@@ -301,7 +300,9 @@ SvelteKit supports both server and client-side methods for signing out as well.
 
 #### Server-side
 
-```svelte filename="src/routes/+page.svelte"
+To use the SvelteKit form action for signing out, we can use the `SignOut` component exported from `@auth/sveltekit/components`.
+
+```svelte filename="src/routes/+page.svelte" {2, 7-9}
 <script lang="ts">
   import { SignOut } from "@auth/sveltekit/components"
 </script>
@@ -328,7 +329,7 @@ export const actions: Actions = { default: signOut }
 
 Client-side is a bit simpler as we just need to import a button `on:click` handler from `@auth/sveltekit/client`.
 
-```svelte filename="src/routes/+page.svelte"
+```svelte filename="src/routes/+page.svelte" {8}
 <script lang="ts">
   import { signOut } from '@auth/sveltekit/client'
 </script>
@@ -362,7 +363,7 @@ Once a user is logged in, you often want to get the session object in order to u
 
 Be aware, this is an async function that needs to be awaited. That means you'll need to use it in an `async` component (i.e. a React Server Component) or in a `useEffect` hook, for example.
 
-```tsx filename="./components/UserAvatar"
+```tsx filename="./components/UserAvatar" {4} /async/
 import { auth } from "../auth"
 
 export default async function UserAvatar() {
@@ -380,7 +381,9 @@ export default async function UserAvatar() {
 
 #### Client-side
 
-```tsx filename="./components/UserAvatar"
+In a client component, we can use the `useSession` import from `next-auth/react`.
+
+```tsx filename="./components/UserAvatar" {6}
 "use client"
 
 import { useSession } from "next-auth/react"
@@ -398,22 +401,7 @@ export default function Client() {
 </Code.Next>
 <Code.NextPages>
 
-In the pages router, you'll need to access the `session` in the page itself and then, for example, pass it on to your `UserAvatar` component.
-
-```tsx filename="./components/UserAvatar"
-export function UserAvatar({ session }) {
-  return (
-    <div>
-      <img
-        src={session?.user.img ?? "https://source.boringavatars.com/marble/120"}
-        alt="User Avatar"
-      />
-    </div>
-  )
-}
-```
-
-Next, we'll need to setup the pages. We can access the `session` server side or client side in the page.
+In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
 
 ### Page Server Side
 
@@ -476,12 +464,27 @@ export default function Dashboard() {
 }
 ```
 
+Finally, we can use it in the component.
+
+```tsx filename="./components/UserAvatar" /session/
+export function UserAvatar({ session }) {
+  return (
+    <div>
+      <img
+        src={session?.user.img ?? "https://source.boringavatars.com/marble/120"}
+        alt="User Avatar"
+      />
+    </div>
+  )
+}
+```
+
 </Code.NextPages>
 <Code.Svelte>
 
-With SvelteKit, ensure you're returning the `session` from the load function in your page or layout server file. You can then access the session and user data on the `$page.data.session` object.
+With SvelteKit, you have to return the `session` object from the load function in your `+page.server.ts` or `+layout.server.ts` files.
 
-```ts filename="src/routes/+page.server.ts"
+```ts filename="src/routes/+page.server.ts" {11}
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async (events) => {
@@ -497,7 +500,9 @@ export const load: PageServerLoad = async (events) => {
 }
 ```
 
-```svelte filename="src/components/user-avatar.svelte"
+Then you can access the `session` on the `$page.data` object in your page.
+
+```svelte filename="src/components/user-avatar.svelte" {6}
 <script lang="ts">
   import { page } from "$app/stores"
 </script>
@@ -522,11 +527,11 @@ Protecting routes can be done generally by checking for the session and taking a
 <Code>
 <Code.Next>
 
-Protecting pages comes in two forms: server-side and client-side. For server-side protection, you can use the `auth` export from the Auth.js configuration file directly. Client-side we can use the `useSession` hook.
+Protecting pages also comes in two forms: server-side and client-side.
 
-In a client component, we can use the `useSession` import from `next-auth/react`.
+For server-side protection, you can use the `auth` function returned from `NextAuth` and exported from your Auth.js configuration file directly. Client-side we can use the `useSession` hook from `next-auth/react`.
 
-```tsx filename="app/client/page.tsx" {6-7}
+```tsx filename="app/client/page.tsx" {6}
 "use client"
 
 import { useSession } from "next-auth/react"
@@ -545,7 +550,7 @@ export default function Client() {
 
 In a server component, we can use `auth` directly.
 
-```tsx filename="app/server/page.tsx" {4-5}
+```tsx filename="app/server/page.tsx" {4}
 import { auth } from "auth"
 
 export default async function Page() {
@@ -563,7 +568,7 @@ export default async function Page() {
 </Code.Next>
 <Code.NextPages>
 
-To protect a page in the Next.js Pages router, we can use `auth` in `getServerSideProps`.
+To protect a page in the Next.js Pages router, we can use `auth` in `getServerSideProps` to return the `session` to the page as props.
 
 ```tsx filename="./pages/dashboard.tsx" {4, 10}
 import { auth } from "../auth"
@@ -607,9 +612,11 @@ export default function MyApp({
 </Code.NextPages>
 <Code.Svelte>
 
-In SvelteKit, you can leverage the `event.locals.auth()` function that is put there by the Auth.js `handle` we're using in our `hooks.server.ts`. Using this server-side, we can check for the session in any `+page.server.ts` or `+layout.server.ts` and either allow the request on, or redirect to the `/login` page, for example.
+In SvelteKit, you can leverage the `event.locals.auth()` function that is put there by the Auth.js `handle` function we're importing and using in `hooks.server.ts`.
 
-```ts filename="src/routes/dashboard/+page.server.ts" {5, 8}
+By calling `event.locals.auth()` server-side, we can check for the session in any `+page.server.ts` or `+layout.server.ts` file and either allow the request on, or redirect to the `/login` page, for example.
+
+```ts filename="src/routes/dashboard/+page.server.ts" {5}
 import { fail, redirect } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 
@@ -619,6 +626,7 @@ export const load: PageServerLoad = async (event) => {
   if (!session?.user?.userId) {
     // const fromUrl = url.pathname + url.search
     // redirect(303, `/login?redirectTo=${encodeURIComponent(fromUrl)}`)
+
     return fail(401, { type: "error", error: "Unauthenticated" })
   }
 
@@ -638,7 +646,9 @@ Protecting API routes in the various frameworks can also be done with the `auth`
 <Code>
 <Code.Next>
 
-```ts filename="./app/api/admin/route.ts" {1,5}
+In Next.js, you can use the `auth` function to wrap and API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
+
+```ts filename="./app/api/admin/route.ts"
 import { auth } from "auth"
 import { NextResponse } from "next/server"
 
@@ -680,7 +690,9 @@ export default async function handler(
 </Code.NextPages>
 <Code.Svelte>
 
-```ts filename="src/routes/api/users/+server.ts" {5}
+API Routes in SvelteKit work like any other server-side file in Auth.js in SvelteKit, you can access the session by calling `event.locals.auth()`.
+
+```ts filename="src/routes/api/users/+server.ts"
 import type { RequestHandler } from "./$types"
 
 export const GET: RequestHandler = async (event) => {
