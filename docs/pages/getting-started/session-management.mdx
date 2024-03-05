@@ -26,10 +26,10 @@ You're in charge of the building the UI for session management. Below we summari
         <span>Handle sign in/out</span>
       </div>
     </RichTabs.Trigger>
-    <RichTabs.Trigger value="user-menu">
+    <RichTabs.Trigger value="get-session">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <UserCircle fontSize="2.2rem" />
-        <span>Display user menu</span>
+        <span>Get Session</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger value="protecting">
@@ -351,14 +351,16 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 
 </RichTabs.Content>
 
-<RichTabs.Content className="p-8" value="user-menu">
+<RichTabs.Content className="p-8" value="get-session">
 
-Once a user is logged in, you often want to show their profile picture or display some other user information. To do this, we'll have to fetch the session in our pages or components.
-
-In Auth.js we need to call the `auth()` helper which will return the session data. Be aware, this is an async function that needs to be awaited. That means you'll need to use it in an `async` component (i.e. a React Server Component) or in a `useEffect` hook, for example.
+Once a user is logged in, you often want to get the session object in order to use the data in some way. A common use-case is to show their profile picture or display some other user information.
 
 <Code>
 <Code.Next>
+
+#### Server-side
+
+Be aware, this is an async function that needs to be awaited. That means you'll need to use it in an `async` component (i.e. a React Server Component) or in a `useEffect` hook, for example.
 
 ```tsx filename="./components/UserAvatar"
 import { auth } from "../auth"
@@ -371,6 +373,30 @@ export default async function UserAvatar() {
   return (
     <div>
       <img src={session.user.img} alt="User Avatar" />
+    </div>
+  )
+}
+```
+
+#### Client-side
+
+```tsx filename="./components/UserAvatar"
+"use client"
+
+import { useSession } from "next-auth/react"
+
+export default function Client() {
+  const { data: session, status } = useSession()
+  return (
+    <div className="card">
+      <div className="card-body">
+        <h4>Session</h4>
+        <pre>
+          {status === "loading"
+            ? "Loading..."
+            : JSON.stringify(session, null, 2)}
+        </pre>
+      </div>
     </div>
   )
 }
