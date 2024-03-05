@@ -90,7 +90,7 @@ You can also use `getServerSession` in Next.js' server components:
 
 ```tsx
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "pages/api/auth/[...nextauth]"
+import { authOptions } from "app/api/auth/[...nextauth]"
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
