@@ -386,18 +386,11 @@ export default async function UserAvatar() {
 import { useSession } from "next-auth/react"
 
 export default function Client() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   return (
-    <div className="card">
-      <div className="card-body">
-        <h4>Session</h4>
-        <pre>
-          {status === "loading"
-            ? "Loading..."
-            : JSON.stringify(session, null, 2)}
-        </pre>
-      </div>
-    </div>
+    <nav>
+      <img src={session.user.img} alt="User Avatar" />
+    </nav>
   )
 }
 ```
@@ -488,7 +481,7 @@ export default function Dashboard() {
 
 With SvelteKit, ensure you're returning the `session` from the load function in your page or layout server file. You can then access the session and user data on the `$page.data.session` object.
 
-```svelte filename="src/routes/+page.server.ts"
+```ts filename="src/routes/+page.server.ts"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async (events) => {
@@ -499,7 +492,7 @@ export const load: PageServerLoad = async (events) => {
   }
 
   return {
-    session
+    session,
   }
 }
 ```
