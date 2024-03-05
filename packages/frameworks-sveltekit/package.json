@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "0.12.3",
+  "version": "0.14.0",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -30,7 +30,7 @@
     "dev": "pnpm providers && svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
-    "test": "vitest -c ../utils/vitest.config.ts"
+    "test": "vitest run -c ../utils/vitest.config.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",

@@ -163,7 +163,9 @@ export function initAuth(
           const auth = await authResponse.json()
 
           for (const cookie of authResponse.headers.getSetCookie())
-            response.headers.append("set-cookie", cookie)
+            if ("headers" in response)
+              response.headers.append("set-cookie", cookie)
+            else response.appendHeader("set-cookie", cookie)
 
           return auth satisfies Session | null
         }
@@ -192,7 +194,6 @@ export function initAuth(
         ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
       ) => {
         return handleAuth(args, config, userMiddlewareOrRoute).then((res) => {
-          console.log(Object.fromEntries(res.headers))
           return res
         })
       }
@@ -210,7 +211,8 @@ export function initAuth(
       const auth = await authResponse.json()
 
       for (const cookie of authResponse.headers.getSetCookie())
-        response.headers.append("set-cookie", cookie)
+        if ("headers" in response) response.headers.append("set-cookie", cookie)
+        else response.appendHeader("set-cookie", cookie)
 
       return auth satisfies Session | null
     })
@@ -272,9 +274,6 @@ async function handleAuth(
   // Preserve cookies from the session response
   for (const cookie of sessionResponse.headers.getSetCookie())
     finalResponse.headers.append("set-cookie", cookie)
-
-  console.log(Object.fromEntries(finalResponse.headers))
-  console.log(Object.fromEntries(response.headers))
 
   return finalResponse
 }
