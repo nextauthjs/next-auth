@@ -53,6 +53,10 @@ To signin your users, make sure you have at least one [authentication method](/g
 <Code>
   <Code.Next>
 
+`next-auth` supports both server-side and client-side Signin and Signout methods.
+
+#### Server-side
+
 ```tsx filename="./components/auth/sign-in.tsx"
 import { signIn } from "../../auth.ts"
 
@@ -66,6 +70,22 @@ export function SignIn() {
     >
       <button type="submit">Sign in</button>
     </form>
+  )
+}
+```
+
+#### Client-side
+
+```tsx filename="app/client/page.tsx"
+"use client"
+
+import { signIn } from "next-auth/react"
+
+export default function Client() {
+  return (
+    <nav>
+      <button onClick={() => signIn("github")}>Sign in Github</button>
+    </nav>
   )
 }
 ```
@@ -86,9 +106,11 @@ export function SignIn() {
 
 The SvelteKit client also supports two signin / signout methods, one server-side using Form Actions, and one client-side using normal requests and redirects.
 
+### Handling Signin
+
 #### Form Action (Server-Side)
 
-First, we can use the `SignIn` component exported from `@auth/sveltekit/components`.
+To signin your users using a SvelteKit form action, we can use the `SignIn` component exported from `@auth/sveltekit/components`.
 
 ```svelte filename="src/routes/+page.svelte"
 <script lang="ts">
@@ -209,12 +231,16 @@ export function SignIn() {
 </Code.Svelte>
 </Code>
 
-### Handling sign out
+### Handling Signout
 
-To sign out users, you can build a button that calls the exported sign-out function from your Auth.js config when clicked.
+Handling sign out can be done similarly to signing in. Most frameworks offer both a client-side and server-side method for signing out as well.
 
 <Code>
 <Code.Next>
+
+#### Server-side
+
+To sign out users with a form action, you can build a button that calls the exported sign-out function from your Auth.js config.
 
 ```tsx filename="app/components/signout-button.tsx" {6}
 import { signOut } from "../../auth.ts"
@@ -229,6 +255,26 @@ export function SignOut() {
     >
       <button type="submit">Sign Out</button>
     </form>
+  )
+}
+```
+
+#### Client-side
+
+Alternatively, you can use the client-side methods from `next-auth/react` to sign out as well.
+
+```ts filename="app/client/page.tsx"
+"use client"
+
+import { signOut } from "next-auth/react"
+
+export default function Client() {
+  return (
+    <nav className="card">
+      <div className="btn-wrapper">
+        <button onClick={() => signOut()}>Sign out</button>
+      </div>
+    </nav>
   )
 }
 ```
