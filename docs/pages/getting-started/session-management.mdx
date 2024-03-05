@@ -92,7 +92,6 @@ First, we can use the `SignIn` component exported from `@auth/sveltekit/componen
 
 ```svelte filename="src/routes/+page.svelte"
 <script lang="ts">
-  import { page } from "$app/stores"
   import { SignIn } from "@auth/sveltekit/components"
 </script>
 
@@ -130,6 +129,8 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
   </nav>
 </div>
 ```
+
+Just like in other frameworks, you can also pass a provider to the `signIn` function which will attempt to login directly with that provider.
 
   </Code.Svelte>
 </Code>
@@ -256,7 +257,6 @@ SvelteKit supports both server and client-side methods for signing out as well.
 
 ```svelte filename="src/routes/+page.svelte"
 <script lang="ts">
-  import { page } from "$app/stores"
   import { SignOut } from "@auth/sveltekit/components"
 </script>
 
@@ -309,7 +309,7 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 
 Once a user is logged in, you often want to show their profile picture or display some other user information. To do this, we'll have to fetch the session in our pages or components.
 
-In Auth.js we need to call the `auth()` helper which will return the session data.
+In Auth.js we need to call the `auth()` helper which will return the session data. Be aware, this is an async function that needs to be awaited. That means you'll need to use it in an `async` component (i.e. a React Server Component) or in a `useEffect` hook, for example.
 
 <Code>
 <Code.Next>
@@ -317,17 +317,14 @@ In Auth.js we need to call the `auth()` helper which will return the session dat
 ```tsx filename="./components/UserAvatar"
 import { auth } from "../auth"
 
-export function UserAvatar() {
+export default async function UserAvatar() {
   const session = await auth()
 
   if (!session.user) return null
 
   return (
     <div>
-      <img
-        src={session?.user.img ?? "https://source.boringavatars.com/marble/120"}
-        alt="User Avatar"
-      />
+      <img src={session.user.img} alt="User Avatar" />
     </div>
   )
 }
@@ -417,7 +414,23 @@ export default function Dashboard() {
 </Code.NextPages>
 <Code.Svelte>
 
-With SvelteKit, you've already set the session on your `$page` store in your `+layout.server.ts` file, therefore we can use it directly like this.
+With SvelteKit, ensure you're returning the `session` from the load function in your page or layout server file. You can then access the session and user data on the `$page.data.session` object.
+
+```svelte filename="src/routes/+page.server.ts"
+import type { PageServerLoad } from "./$types"
+
+export const load: PageServerLoad = async (events) => {
+  const session = await events.locals.auth()
+
+  if (!session?.user?.userId) {
+    redirect(303, `/login`)
+  }
+
+  return {
+    session
+  }
+}
+```
 
 ```svelte filename="src/components/user-avatar.svelte"
 <script lang="ts">
@@ -529,15 +542,23 @@ export default function MyApp({
 </Code.NextPages>
 <Code.Svelte>
 
+In SvelteKit, you can leverage the `event.locals.auth()` function that is put there by the Auth.js `handle` we're using in our `hooks.server.ts`. Using this server-side, we can check for the session in any `+page.server.ts` or `+layout.server.ts` and either allow the request on, or redirect to the `/login` page, for example.
+
 ```ts filename="src/routes/dashboard/+page.server.ts" {5, 8}
 import { fail, redirect } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 
-export const load: PageServerLoad = async ({ locals, url }) => {
-  const session = await locals?.auth()
+export const load: PageServerLoad = async (event) => {
+  const session = await event.locals.auth()
 
   if (!session?.user?.userId) {
+    // const fromUrl = url.pathname + url.search
+    // redirect(303, `/login?redirectTo=${encodeURIComponent(fromUrl)}`)
     return fail(401, { type: "error", error: "Unauthenticated" })
+  }
+
+  return {
+    session,
   }
 }
 ```
@@ -596,12 +617,12 @@ export default async function handler(
 
 ```ts filename="src/routes/api/users/+server.ts" {5}
 import type { RequestHandler } from "./$types"
-import { json, fail } from "@sveltejs/kit"
 
-export const GET: RequestHandler = async ({ url, locals }) => {
-  const session = await locals.auth()
+export const GET: RequestHandler = async (event) => {
+  const session = await event.locals.auth()
+
   if (!session?.user?.userId) {
-    return fail(401, { type: "error", error: "Unauthenticated" })
+    return new Response(null, { status: 401, statusText: "Unauthorized" })
   }
 }
 ```
