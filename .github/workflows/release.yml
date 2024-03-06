@@ -91,12 +91,8 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Run unit tests
-        if: false
         run: pnpm test
         timeout-minutes: 15
-        env:
-          UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
-          UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
@@ -111,6 +107,20 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true' && github.repository == 'nextauthjs/next-auth'
         run: |
           pnpm exec playwright install --with-deps chromium
+      - name: Run Docker E2E
+        continue-on-error: true
+        if: false
+        timeout-minutes: 15
+        run: |
+          cd apps/examples/nextjs-docker && pnpm test:docker
+        env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
+          TEST_KEYCLOAK_PASSWORD: ${{ secrets.TEST_KEYCLOAK_PASSWORD }}
+          AUTH_KEYCLOAK_ID: ${{ secrets.AUTH_KEYCLOAK_ID }}
+          AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
+          AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
+          AUTH_TRUST_HOST: 1
       - name: Run E2E tests
         continue-on-error: true # TODO: Make this less flakey
         if: github.repository == 'nextauthjs/next-auth'

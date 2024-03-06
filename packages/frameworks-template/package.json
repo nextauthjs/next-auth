@@ -1,7 +1,7 @@
 {
   "name": "@auth/frameworks-template",
   "description": "Authentication for <framework-name>.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "files": [
     "*.js",
@@ -27,7 +27,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
-    "test": "vitest",
+    "test": "vitest run",
     "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {
