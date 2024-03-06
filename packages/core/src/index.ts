@@ -40,6 +40,7 @@ import { assertConfig } from "./lib/utils/assert.js"
 import {
   AuthError,
   CredentialsSignin,
+  CustomCredentials,
   ErrorPageLoop,
   isClientError,
 } from "./errors.js"
@@ -180,7 +181,11 @@ export async function Auth(
     const type = isClientSafeErrorType ? error.type : "Configuration"
 
     const params = new URLSearchParams({ error: type })
-    if (error instanceof CredentialsSignin) params.set("code", error.code)
+    if (
+      error instanceof CredentialsSignin ||
+      error instanceof CustomCredentials
+    )
+      params.set("code", error.code)
 
     const pageKind = (isAuthError && error.kind) || "error"
     const pagePath = config.pages?.[pageKind] ?? `/${pageKind.toLowerCase()}`

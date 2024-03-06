@@ -19,7 +19,7 @@
 import { Auth } from "@auth/core"
 import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
 
-export { AuthError, CredentialsSignin } from "@auth/core/errors"
+export { AuthError, CustomCredentials } from "@auth/core/errors"
 export type {
   Account,
   DefaultSession,

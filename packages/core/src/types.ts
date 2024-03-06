@@ -419,6 +419,7 @@ export type SignInPageErrorParam =
   | "OAuthAccountNotLinked"
   | "EmailSignin"
   | "CredentialsSignin"
+  | "CustomCredentials"
   | "SessionRequired"
 
 export interface PagesOptions {

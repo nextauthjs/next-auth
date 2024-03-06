@@ -288,7 +288,7 @@ import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
 import { Auth, isAuthAction } from "@auth/core"
 
-export { AuthError, CredentialsSignin } from "@auth/core/errors"
+export { AuthError, CustomCredentials } from "@auth/core/errors"
 
 export type {
   Account,

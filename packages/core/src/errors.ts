@@ -210,6 +210,31 @@ export class CredentialsSignin extends SignInError {
 }
 
 /**
+ * Can be thrown from the `authorize` callback of the Credentials provider.
+ * When an error occurs during the `authorize` callback, two things can happen:
+ * 1. The user is redirected to the signin page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable.
+ * 2. If you throw this error in a framework that handles form actions server-side, this error is thrown, instead of redirecting the user, so you'll need to handle.
+ *
+ * Differs from 'CredentialsSignin' in that it doesn't include any default message or suffix to a message you may pass.
+ * This is useful for building completely custom errors.
+ */
+export class CustomCredentials extends Error {
+  static type = "CredentialsSignin"
+  /**
+   * The error code that is set in the `code` query parameter of the redirect URL.
+   *
+   *
+   * ⚠ NOTE: This property is going to be included in the URL, so make sure it does not hint at sensitive errors.
+   *
+   * The full error is always logged on the server, if you need to debug.
+   *
+   * Generally, we don't recommend hinting specifically if the user had either a wrong username or password specifically,
+   * try rather something like "Invalid credentials".
+   */
+  code: string = "credentials"
+}
+
+/**
  * One of the configured OAuth or OIDC providers is missing the `authorization`, `token` or `userinfo`, or `issuer` configuration.
  * To perform OAuth or OIDC sign in, at least one of these endpoints is required.
  *
