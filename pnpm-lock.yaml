@@ -483,7 +483,7 @@ importers:
       jest: ^28.1.1
       jest-environment-jsdom: ^28.1.1
       jest-watch-typeahead: ^1.1.0
-      jose: ^4.11.4
+      jose: ^4.15.5
       msw: ^0.42.3
       next: 13.3.0
       oauth: ^0.9.15
@@ -501,7 +501,7 @@ importers:
       '@babel/runtime': 7.20.13
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
-      jose: 4.11.4
+      jose: 4.15.5
       oauth: 0.9.15
       openid-client: 5.4.0
       preact: 10.8.2
@@ -17878,8 +17878,8 @@ packages:
       valid-url: 1.0.9
     dev: true
 
-  /jose/4.11.4:
-    resolution: {integrity: sha512-94FdcR8felat4vaTJyL/WVdtlWLlsnLMZP8v+A0Vru18K3bQ22vn7TtpVh3JlgBFNIlYOUlGqwp/MjRPOnIyCQ==}
+  /jose/4.15.5:
+    resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
     dev: false
 
   /js-beautify/1.14.4:
@@ -19908,7 +19908,7 @@ packages:
   /openid-client/5.4.0:
     resolution: {integrity: sha512-hgJa2aQKcM2hn3eyVtN12tEA45ECjTJPXCgUh5YzTzy9qwapCvmDTVPWOcWVL0d34zeQoQ/hbG9lJhl3AYxJlQ==}
     dependencies:
-      jose: 4.11.4
+      jose: 4.15.5
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.1
