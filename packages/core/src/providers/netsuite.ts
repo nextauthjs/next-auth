@@ -14,8 +14,6 @@
 *  Read more about Oauth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
 */
 
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
-
 export interface OAuthNetSuiteOptions {
   clientId: string,
   clientSecret: string,
@@ -37,16 +35,7 @@ export interface OAuthNetSuiteOptions {
   accountId: string, // EX: TSTDRV1234567 or 81555 for prod
   scope: string, // EX: restlets rest_webservices or restlets or rest_webservices suiteanalytics_connect restlets
   userInfoUrl: string, // Either a restlet or suitelet returning runtime info or record info -> RESTlet reccommended
-}
-
-export interface NetSuiteProfile {
-  // Main N/runtime.getCurrentUser() object return
-  id: string
-  name: string
-  email: string
-  location: string
-  role: string
-  contact?: string
+  profileCallback: (profile, token) => {}, // Access data returned from the user info endpoint and return it into the session obj
 }
 
 /**
@@ -214,8 +203,8 @@ export interface NetSuiteProfile {
  * :::
  */
 export default function NetSuite<P extends NetSuiteProfile>(
-  config: OAuthUserConfig<Record<string, any>>
-): OAuthConfig<Record<string, any>> {
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "netsuite",
     name: "NetSuite",
@@ -240,17 +229,7 @@ export default function NetSuite<P extends NetSuiteProfile>(
       }
     },
     userinfo: `${config.userInfoUrl}`,
-    profile(profile) {
-      // This is the default runtime.getCurrentUser() object returned from the RESTlet or SUITELet
-      return {
-        id: profile.id,
-        name: profile.name,
-        email: profile.email,
-        location: profile.location,
-        role: profile.role,
-        contact: profile?.contact
-      }
-    },
+    profile: (profile: Object, token) => config.profileCallback(profile, token),
     clientId: `${config.clientId}`,
     clientSecret: `${config.clientSecret}`,
     style: { logo: "/netsuite.png", bg: "#3a4f5f", text: "#fff" },
