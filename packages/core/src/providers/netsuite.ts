@@ -202,9 +202,9 @@ export interface OAuthNetSuiteOptions {
  *
  * :::
  */
-export default function NetSuite(
-  config: OAuthNetSuiteOptions
-): string | object {
+export default function NetSuite<P extends NetSuiteProfile>(
+  options: OAuthUserConfig<P>
+): OAuthConfig<P> {
   return {
     id: "netsuite",
     name: "NetSuite",
