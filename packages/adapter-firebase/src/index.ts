@@ -54,7 +54,7 @@ export interface FirebaseAdapterConfig extends AppOptions {
    * })
    * ```
    */
-  namingStrategy?: "snake_case"
+  namingStrategy?: "snake_case" | "default"
 }
 
 /**

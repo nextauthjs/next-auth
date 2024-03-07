@@ -29,7 +29,7 @@ import type {
   VerificationToken as AdapterVerificationToken,
 } from "@auth/core/adapters"
 
-export { up } from "./migrations"
+export { up } from "./migrations.js"
 
 /**
  * @type @cloudflare/workers-types.D1Database | @miniflare/d1.D1Database

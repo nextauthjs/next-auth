@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -91,7 +91,7 @@
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
     "test:e2e": "playwright test -c ../utils/playwright.config.ts",
-    "test": "vitest -c ../utils/vitest.config.ts",
+    "test": "vitest run -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
