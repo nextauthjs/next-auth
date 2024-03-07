@@ -439,7 +439,7 @@ export interface AuthConfig {
   /**
    * The base path of the Auth.js API endpoints.
    *
-   * @default "/api/auth" in "Next.js", /auth" elsewhere
+   * @default "/api/auth" in "next-auth"; "/auth" with all other frameworks
    */
   basePath?: string
 }
