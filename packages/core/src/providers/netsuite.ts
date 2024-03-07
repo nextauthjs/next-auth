@@ -14,7 +14,9 @@
 *  Read more about Oauth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
 */
 
-export interface OAuthNetSuiteOptions {
+import type { OAuth2Config, OAuthConfig, OAuthUserConfig } from "./index.js"
+
+export interface OAuthNetSuiteOptions<P extends OAuthUserConfig<Record<string, any>>> {
   clientId: string,
   clientSecret: string,
   /**
@@ -29,13 +31,22 @@ export interface OAuthNetSuiteOptions {
    * "login" - the user must authenticate even if there is an active session.
    * This option only works if the application sends the request to the account-specific domain.
    * "consent" - the consent screen appears every time. The user must authenticate if there is no active session.
-   * login consent or consent login - the consent screen appears every time, and the user must authenticate even if there is an active session.
+   * login consent or consent login - the consent screen appears every time, and the user must authenticate even if there is an active session and allow the connection to the NetSuite. Similar to GitHub, Google, and Facebook data consent screens.
    */
   prompt: string | 'none' | 'login' | 'consent',
-  accountId: string, // EX: TSTDRV1234567 or 81555 for prod
+  issuer: string, // EX: TSTDRV1234567 or 81555 for prod
   scope: string, // EX: restlets rest_webservices or restlets or rest_webservices suiteanalytics_connect restlets
-  userInfoUrl: string, // Either a restlet or suitelet returning runtime info or record info -> RESTlet reccommended
-  profileCallback: (profile, token) => {}, // Access data returned from the user info endpoint and return it into the session obj
+  userinfo: string, // Either a restlet or suitelet returning runtime info or record info -> RESTlet reccommended
+}
+
+export interface NetSuiteProfile {
+  // Main N/runtime.getCurrentUser() object return
+  id: string
+  name: string
+  email: string
+  location: string
+  role: string
+  contact?: string,
 }
 
 /**
@@ -152,10 +163,10 @@ export interface OAuthNetSuiteOptions {
  *       NetSuite({
  *         clientId: NETSUITE_CLIENT_ID,
  *         clientSecret: NETSUITE_CLIENT_SECRET,
- *         accountId: NETSUITE_ACCOUNT_ID,
+ *         issuer: NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod
  *        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
  *        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
- *         userInfoUrl: "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
+ *         userinfo: "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
  *         profileCallback: (profile) => {
  *           return {
  *             id: profile.id,
@@ -203,33 +214,42 @@ export interface OAuthNetSuiteOptions {
  * :::
  */
 export default function NetSuite<P extends NetSuiteProfile>(
-  options: OAuthUserConfig<P>
+  config: OAuthNetSuiteOptions<P>
 ): OAuthConfig<P> {
+  const { issuer, userinfo: userInfo, prompt = 'none', scope } = config
+
   return {
     id: "netsuite",
     name: "NetSuite",
     type: "oauth",
-    version: "2.0",
-    protection: 'state',
-    headers: {redirect: 'follow'},
     checks: ["state"],
     authorization: {
-      url: `https://${config.accountId}.app.netsuite.com/app/login/oauth2/authorize.nl`,
+      url: `https://${issuer}.app.netsuite.com/app/login/oauth2/authorize.nl`,
       params: {
         client_id: `${config.clientId}`,
-        prompt: config?.prompt ?? 'login',
+        prompt: prompt,
         response_type: 'code',
-        scope: config.scope || 'restlets rest_webservices',
+        scope: scope || 'restlets rest_webservices',
       }
     },
     token: {
-      url: `https://${config.accountId}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`,
+      url: `https://${issuer}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`,
       params: {
         grant_type: "authorization_code",
       }
     },
-    userinfo: `${config.userInfoUrl}`,
-    profile: (profile: Object, token) => config.profileCallback(profile, token),
+    userinfo: `${userInfo}`,
+    profile(profile) {
+      // This is the default runtime.getCurrentUser() object returned from the RESTlet or SUITELet
+      return {
+        id: profile.id,
+        name: profile.name,
+        email: profile.email,
+        location: profile.location,
+        role: profile.role,
+        contact: profile?.contact
+      }
+    },
     clientId: `${config.clientId}`,
     clientSecret: `${config.clientSecret}`,
     style: { logo: "/netsuite.png", bg: "#3a4f5f", text: "#fff" },
