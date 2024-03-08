@@ -222,7 +222,7 @@ export default {
   ],
   scripts: [
     {
-      src: "js/clerk.js",
+      src: "/js/clerk.js",
       async: true,
     },
   ],
