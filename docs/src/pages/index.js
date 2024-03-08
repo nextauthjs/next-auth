@@ -134,13 +134,16 @@ function Home() {
               </div>
             </div>
             <div className={styles.heroClerk}>
-              (sponsored) Looking for a hosted alternative?
-              <a
-                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
-                target="_blank"
-              >
-                Try Clerk →
-              </a>
+              <div>
+                Looking for a hosted alternative?
+                <a
+                  href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                  target="_blank"
+                >
+                  Try Clerk →
+                </a>
+              </div>
+              <div className={styles.sponsoredBadge}>Sponsored</div>
             </div>
             <div className="hero-marquee">
               <ProviderMarquee />
