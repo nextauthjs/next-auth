@@ -134,7 +134,7 @@
  *
  * ## Testing
  *
- * There is a test suite [available](https://github.com/nextauthjs/next-auth/tree/main/packages/utils/adapter/index.ts)
+ * There is a test suite [available](https://github.com/nextauthjs/next-auth/blob/main/packages/utils/adapter.ts)
  * to ensure that your adapter is compatible with Auth.js.
  *
  * ## Known issues
