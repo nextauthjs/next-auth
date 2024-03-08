@@ -280,6 +280,11 @@ html[data-theme="dark"] #carbonads .carbon-text {
   color: #ddd;
 }
 
+html[data-theme="dark"] #carbonads .carbon-poweredby {
+  color: #aaa;
+  background: #1e2021;
+}
+
 html[data-theme="dark"] #carbonads > span {
   background: #1a1a1a;
   box-shadow:
@@ -289,14 +294,10 @@ html[data-theme="dark"] #carbonads > span {
     0 0 8px hsl(0deg 0% 0% / 9%);
 }
 
-.theme-doc-markdown.markdown {
-  > p:first-of-type {
-    :last-child {
-      img {
-        width: 48px;
-        height: 48px;
-      }
-    }
+.theme-doc-markdown.markdown > p:first-of-type:last-child {
+  img {
+    width: 48px;
+    height: 48px;
   }
 }
 
@@ -314,9 +315,4 @@ div.sponsoredBadge {
 html[data-theme="dark"] .sponsoredBadge {
   background-color: #242526 !important;
   color: #696969;
-}
-
-html[data-theme="dark"] #carbonads .carbon-poweredby {
-  color: #aaa;
-  background: #1e2021;
 }
