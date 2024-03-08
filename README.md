@@ -28,7 +28,7 @@
     See <a href="https://authjs.dev">authjs.dev</a> for our documentation and more information.
   </p>
   <p align="center">
-    (sponsored) Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+     <kbd>Sponsored</kbd> Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
   </p>
 </p>
 
