@@ -88,7 +88,7 @@ function Home() {
       .then((res) => res.json())
       .then((data) => {
         const navLinks = document.getElementsByClassName(
-          "navbar__item navbar__link"
+          "navbar__item navbar__link",
         )
         const githubStat = document.createElement("span")
         githubStat.innerHTML = kFormatter(data.stargazers_count)
@@ -116,7 +116,7 @@ function Home() {
                 <a
                   className={classnames(
                     "button button--outline button--secondary button--lg rounded-pill",
-                    styles.button
+                    styles.button,
                   )}
                   href="https://next-auth-example.vercel.app"
                 >
@@ -125,7 +125,7 @@ function Home() {
                 <Link
                   className={classnames(
                     "button button--primary button--lg rounded-pill",
-                    styles.button
+                    styles.button,
                   )}
                   to={useBaseUrl("/getting-started/example")}
                 >
@@ -134,7 +134,7 @@ function Home() {
               </div>
             </div>
             <div className={styles.heroClerk}>
-              Looking for a hosted alternative?
+              (sponsored) Looking for a hosted alternative?
               <a
                 href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
                 target="_blank"
