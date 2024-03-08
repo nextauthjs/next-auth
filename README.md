@@ -168,9 +168,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
 - 💵 Financial Sponsor
 - ☁️ Infrastructure Support
 
-> [!NOTE]
-> The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
-
 <br />
 <!--sponsors end-->
 
@@ -178,6 +175,9 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
 
 We're open to all community contributions! If you'd like to contribute in any way, please first read
 our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
+
+> [!NOTE]
+> The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
 
 ## License
 
