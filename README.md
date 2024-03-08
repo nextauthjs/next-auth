@@ -25,7 +25,7 @@
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
   </p>
   <p align="center">
-    See <a href="https://authjs.dev">authjs.dev</a> for our framework-specific libraries, or check out <a href="https://next-auth.js.org">next-auth.js.org</a> for next-auth (Next.js).
+    See <a href="https://authjs.dev">authjs.dev</a> for our documentation and more information.
   </p>
   <p align="center">
     (sponsored) Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
