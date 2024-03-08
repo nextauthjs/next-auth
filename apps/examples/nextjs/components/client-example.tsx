@@ -9,7 +9,7 @@ import CustomLink from "./custom-link"
 
 const UpdateForm = () => {
   const { data: session, update } = useSession()
-  const [name, setName] = useState(session?.user?.name ?? "")
+  const [name, setName] = useState(`New ${session?.user?.name}` ?? "")
 
   if (!session?.user) return null
   return (
@@ -25,11 +25,11 @@ const UpdateForm = () => {
             console.log({ newSession })
           }
         }}
-        className="flex items-center w-full max-w-sm space-x-2"
+        className="flex items-center space-x-2 w-full max-w-sm"
       >
         <Input
           type="text"
-          placeholder={session.user.name ?? ""}
+          placeholder="New name"
           value={name}
           onChange={(e) => {
             setName(e.target.value)
@@ -43,9 +43,10 @@ const UpdateForm = () => {
 
 export default function ClientExample() {
   const { data: session, status } = useSession()
+
   return (
-    <div className="space-y-2">
-      <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-3xl font-bold">Client Side Rendering</h1>
       <p>
         This page fetches session data client side using the{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#usesession">
