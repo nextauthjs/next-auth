@@ -304,7 +304,7 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   }
 }
 
-[data-theme="light"] .sponsoredBadge {
+.sponsoredBadge {
   display: inline-block;
   width: max-content;
   font-size: 0.6rem !important;
@@ -316,14 +316,7 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   color: #a1a1a1;
 }
 
-[data-theme="dark"] .sponsoredBadge {
-  display: inline-block;
-  width: max-content;
-  font-size: 0.6rem !important;
-  line-height: 1rem;
-  border-radius: 2rem;
-  padding-inline: 0.5rem;
-  padding-block: 0.25rem;
+html[data-theme="dark"] .sponsoredBadge {
   background-color: #242526 !important;
   color: #696969;
 }
