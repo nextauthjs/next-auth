@@ -259,6 +259,7 @@ html[data-theme="dark"] hr {
   line-height: 1.5;
   text-align: left;
 }
+
 #carbonads .carbon-poweredby {
   display: block;
   padding: 6px 8px;
@@ -288,11 +289,6 @@ html[data-theme="dark"] #carbonads > span {
     0 0 8px hsl(0deg 0% 0% / 9%);
 }
 
-html[data-theme="dark"] #carbonads .carbon-poweredby {
-  color: #aaa;
-  background: #1e2021;
-}
-
 .theme-doc-markdown.markdown {
   > p:first-of-type {
     :last-child {
@@ -318,4 +314,9 @@ div.sponsoredBadge {
 html[data-theme="dark"] .sponsoredBadge {
   background-color: #242526 !important;
   color: #696969;
+}
+
+html[data-theme="dark"] #carbonads .carbon-poweredby {
+  color: #aaa;
+  background: #1e2021;
 }
