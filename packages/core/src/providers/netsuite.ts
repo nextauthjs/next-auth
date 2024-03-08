@@ -92,7 +92,7 @@ export interface NetSuiteProfile {
  * ```
  *
  * :::tip
- * Our `userInfoUrl` needs to compose of a suitelet or RESTLet url that gives us the information about the user. This has to be very fast in which the handshake profile gather execution can't take long.
+ * Our `userinfo` needs to compose of a suitelet or RESTLet url that gives us the information about the user. This has to be very fast in which the handshake profile gather execution can't take long.
  * The best bet is to use the `N/runtime` module to get the basics first. - Here is an example of a RESTlet below. Be sure to deploy and enable access to "All Roles".
  *
  * :::
@@ -167,16 +167,6 @@ export interface NetSuiteProfile {
  *        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
  *        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
  *         userinfo: "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
- *         profileCallback: (profile) => {
- *           return {
- *             id: profile.id,
- *             name: profile.name,
- *             email: profile.email,
- *             location: profile.location,
- *             role: profile.role,
- *             contact: profile?.contact
- *           }
- *         },
  *         // Optional
  *         prompt: "login", // Required if you want to force the user to login every time.
  *         scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
@@ -199,7 +189,7 @@ export interface NetSuiteProfile {
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
- * Make sure the `userInfoUrl` matches the return type of the profile callback to ensure the user session gets read correctly.
+ * Make sure the `userinfo` matches the return type of the profile callback to ensure the user session gets read correctly.
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
  * :::
