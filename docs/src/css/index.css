@@ -294,13 +294,6 @@ html[data-theme="dark"] #carbonads > span {
     0 0 8px hsl(0deg 0% 0% / 9%);
 }
 
-.theme-doc-markdown.markdown > p:first-of-type:last-child {
-  img {
-    width: 48px;
-    height: 48px;
-  }
-}
-
 div.sponsoredBadge {
   display: block;
   font-size: 0.6rem !important;
