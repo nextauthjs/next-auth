@@ -304,7 +304,7 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
   }
 }
 
-.sponsoredBadge {
+[data-theme="light"] .sponsoredBadge {
   display: inline-block;
   width: max-content;
   font-size: 0.75rem;
