@@ -154,7 +154,7 @@ const config: DocsThemeConfig = {
           target="_blank"
         >
           <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-            Looking for a hosted alternative?
+            (sponsored) Looking for a hosted alternative?
             <span className="flex gap-2 text-[#289ef9]">
               Try Clerk{" "}
               <svg
