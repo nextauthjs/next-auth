@@ -28,7 +28,7 @@
     See <a href="https://authjs.dev">authjs.dev</a> for our framework-specific libraries, or check out <a href="https://next-auth.js.org">next-auth.js.org</a> for next-auth (Next.js).
   </p>
   <p align="center">
-    Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+    (sponsored) Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
   </p>
 </p>
 
@@ -94,13 +94,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
           <img width="108" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
         </a><br />
         <div>Clerk</div>
-        <sub>💵</sub>
-      </td>
-      <td align="center" valign="top">
-        <a href="https://workos.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
-        </a><br />
-        <div>WorkOS</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
@@ -174,6 +167,9 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
 
 - 💵 Financial Sponsor
 - ☁️ Infrastructure Support
+
+> [!NOTE]
+> The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
 
 <br />
 <!--sponsors end-->
