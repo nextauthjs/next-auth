@@ -33,6 +33,7 @@ import { setEnvDefaults } from "./env.js"
 import { auth, signIn, signOut } from "./actions.js"
 import type { APIEvent, FetchEvent } from "@solidjs/start/server"
 
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
 export type {
   Account,
   DefaultSession,
@@ -41,7 +42,13 @@ export type {
   User,
 } from "@auth/core/types"
 
-export type { SolidAuthConfig }
+export interface SolidAuthConfig extends AuthConfig {
+  /**
+   * Defines the base path for the auth routes.
+   * @default '/api/auth'
+   */
+  prefix?: string
+}
 
 const actions: AuthAction[] = [
   "providers",
@@ -89,7 +96,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ## Creating the API handler
  *
- * in this example we are using github so make sure to set the following environment variables:
+ * This example uses github, make sure to set the following environment variables:
  *
  * ```
  * AUTH_GITHUB_ID=your_github_oauth_id
@@ -138,7 +145,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ### When Using SSR
  *
- * When using SSR, I recommend creating a `Protected` component that will trigger suspense using the `Show` component. It should look like this:
+ * When using SSR, it is recommended to create a `Protected` component that will trigger suspense using the `Show` component. It should look like this:
  *
  *
  * ```tsx title="/components/Protected.tsx"
@@ -200,7 +207,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * ### When Using CSR
  *
- * When using CSR, the `Protected` component will not work as expected and will cause the screen to flash, so I had to come up with a tricky solution, we will use a Solid-Start middleware:
+ * When using CSR, the `Protected` component will not work as expected and will cause the screen to flash. To fix this, a Solid-Start middleware is used:
  *
  * ```tsx title="entry-server.tsx
  * import { getSession, type Session } from "@auth/solid-start";
@@ -230,7 +237,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * );
  * ```
  *
- * And now you can easily create a protected route:
+ * And now a protected route can be created:
  *
  *
  * ```tsx title="/routes/protected.tsx"

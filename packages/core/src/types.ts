@@ -8,7 +8,7 @@
  * npm install @auth/core
  * ```
  *
- * You can then import this submodule from `@auth/core/type`.
+ * You can then import this submodule from `@auth/core/types`.
  *
  * ## Usage
  *
@@ -199,9 +199,9 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * Returning `false` or throwing an error will stop the sign-in flow and redirect the user to the error page.
    * Returning a string will redirect the user to the specified URL.
    *
-   * Unhandled errors will throw an `AuthorizedCallbackError` with the message set to the original error.
+   * Unhandled errors will throw an `AccessDenied` with the message set to the original error.
    *
-   * @see [`AuthorizedCallbackError`](https://authjs.dev/reference/errors#authorizedcallbackerror)
+   * @see [`AccessDenied`](https://authjs.dev/reference/errors#accessdenied)
    *
    * @example
    * ```ts
