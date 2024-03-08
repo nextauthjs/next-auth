@@ -315,5 +315,11 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
 }
 
 [data-theme="dark"] .sponsoredBadge {
+  display: inline-block;
+  width: max-content;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
   background-color: #242526;
 }
