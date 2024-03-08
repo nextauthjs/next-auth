@@ -168,7 +168,7 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.heroClerk}>
-              (sponsored )Looking for a hosted alternative?
+              (sponsored) Looking for a hosted alternative?
               <a
                 href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
                 target="_blank"
