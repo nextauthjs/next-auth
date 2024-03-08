@@ -93,6 +93,7 @@ const content = JSON.stringify(
       { id: "sequelize", name: "Sequelize" },
       { id: "supabase", name: "Supabase" },
       { id: "surrealdb", name: "SurrealDB", img: "surreal.png" },
+      { id: "triplit", name: "Triplit" },
       { id: "typeorm", name: "TypeORM", img: "typeorm.png" },
       { id: "unstorage", name: "Unstorage" },
       { id: "upstash-redis", name: "Upstash Redis" },
