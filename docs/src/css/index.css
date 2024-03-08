@@ -307,21 +307,21 @@ html[data-theme="dark"] #carbonads .carbon-poweredby {
 [data-theme="light"] .sponsoredBadge {
   display: inline-block;
   width: max-content;
-  font-size: 0.75rem;
+  font-size: 0.6rem !important;
   border-radius: 2rem;
   padding-inline: 0.5rem;
   padding-block: 0.25rem;
-  background-color: #e1e1e1;
+  background-color: #e1e1e1 !important;
   color: #696969;
 }
 
 [data-theme="dark"] .sponsoredBadge {
   display: inline-block;
   width: max-content;
-  font-size: 0.6rem;
+  font-size: 0.6rem !important;
   border-radius: 2rem;
   padding-inline: 0.5rem;
   padding-block: 0.25rem;
-  background-color: #242526;
+  background-color: #242526 !important;
   color: #696969;
 }
