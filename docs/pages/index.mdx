@@ -37,31 +37,34 @@ import Footer from "@/components/Footer"
     </div>
   </section>
   <section className="flex flex-col items-center px-4 pt-24 pb-24">
-    <div className="mb-20 text-lg text-center flex gap-2">
-      (sponsored) Looking for a hosted alternative?
-      <a
-        href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
-        target="_blank"
-        className="flex gap-2 text-[#289ef9]"
-      >
-        Try Clerk{" "}
-        <svg
-          width="16"
-          data-slot="icon"
-          fill="none"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
+    <div className="mb-20 text-lg flex-col items-center flex gap-2">
+      <div class="flex items-center flex-col sm:flex-row gap-2">
+        Looking for a hosted alternative?
+        <a
+          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+          target="_blank"
+          className="flex gap-2 text-[#289ef9]"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-          ></path>
-        </svg>
-      </a>
+          Try Clerk{" "}
+          <svg
+            width="16"
+            data-slot="icon"
+            fill="none"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+            ></path>
+          </svg>
+        </a>
+      </div>
+      <div className="sponsoredBadge">Sponsored</div>
     </div>
     <FrameworkExamples />
   </section>
