@@ -8,7 +8,7 @@ import { existsSync } from "fs"
 const clerk: PropSidebarItemLink = {
   type: "html",
   value:
-    '<span style="display: flex; flex-direction: column;"><a href="https://clerk.com?utm_source=sponsorship&utm_medium=docs&utm_campaign=authjs&utm_content=nav" target="_blank">Hosted Auth (Clerk)</a><div class="sponsoredBadge">Sponsored</div></span>',
+    '<span style="display: flex; flex-direction: column;align-items:baseline;"><a href="https://clerk.com?utm_source=sponsorship&utm_medium=docs&utm_campaign=authjs&utm_content=nav" target="_blank">Hosted Auth (Clerk)</a><div class="sponsoredBadge">Sponsored</div></span>',
   defaultStyle: true,
 }
 
