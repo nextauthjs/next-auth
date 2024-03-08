@@ -41,3 +41,7 @@ More information can be found at: https://opencollective.com/nextauth
 - In 2020, NextAuth.js was rebuilt from the ground up to support Serverless, with support for MySQL, Postgres and MongoDB, JSON Web Tokens and built in support for over a dozen authentication providers.
 
 - In 2021, efforts have started to move NextAuth.js to other frameworks and to support as many databases and providers as possible.
+
+## Notes
+
+The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
