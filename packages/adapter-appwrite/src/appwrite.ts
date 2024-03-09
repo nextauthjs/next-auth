@@ -1,39 +1,39 @@
-import sdk, { ID } from "node-appwrite";
+import { ID, Databases } from "node-appwrite";
+import { AppwriteAdapterOptions } from "./index.js";
 
-export async function init_test_config(client, config) {
-    const databases = new sdk.Databases(client);
+export async function init_db(database: Databases, config: AppwriteAdapterOptions) {
 
     //--------------------------------------------------------------//
     //                       CREATE DATABASE                        //
     //--------------------------------------------------------------//
     const database_id = ID.unique();
-    await databases.create(database_id, "Adapter Test DB").then(async (db_response) => {
+    await database.create(database_id, "Auth Database").then(async (db_response) => {
         config.database_id = db_response.$id;
         //--------------------------------------------------------------//
         //                      CREATE COLLECTIONS                      //
         //--------------------------------------------------------------//
 
         // 1. Session collection
-        config.session_collection_id = await databases.createCollection(db_response.$id, ID.unique(), "sessions").then((res) => res.$id).catch(error => { throw error });
+        config.session_collection_id = await database.createCollection(db_response.$id, ID.unique(), "sessions").then((res) => res.$id).catch(error => { throw error });
 
         // 2. Account collection
-        config.account_collection_id = await databases.createCollection(db_response.$id, ID.unique(), "accounts").then((res) => res.$id).catch(error => { throw error });
+        config.account_collection_id = await database.createCollection(db_response.$id, ID.unique(), "accounts").then((res) => res.$id).catch(error => { throw error });
 
         // 3. User collection
-        config.user_collection_id = await databases.createCollection(db_response.$id, ID.unique(), "users").then((res) => res.$id).catch(error => { throw error });
+        config.user_collection_id = await database.createCollection(db_response.$id, ID.unique(), "users").then((res) => res.$id).catch(error => { throw error });
 
         // 4. Verification token collection
-        config.verification_token_collection_id = await databases.createCollection(db_response.$id, ID.unique(), "verification_tokens").then((res) => res.$id).catch(error => { throw error })
+        config.verification_token_collection_id = await database.createCollection(db_response.$id, ID.unique(), "verification_tokens").then((res) => res.$id).catch(error => { throw error })
     }).then(() => {
         Promise.all([
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.session_collection_id,
                 "sessionToken",
                 200,
                 true
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.session_collection_id,
                 "sessionToken",
@@ -46,14 +46,14 @@ export async function init_test_config(client, config) {
             //--------------------------------------------------------------//
 
             // 1. Session collection attributes
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.session_collection_id,
                 "sessionToken",
                 200,
                 true
             ),
-            databases.createDatetimeAttribute(
+            database.createDatetimeAttribute(
                 config.database_id,
                 config.session_collection_id,
                 "expires",
@@ -61,83 +61,83 @@ export async function init_test_config(client, config) {
             ),
 
             // 2. Account collection attributes
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "type",
                 100,
                 true
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "provider",
                 100,
                 true
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "providerAccountId",
                 200,
                 true
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "refresh_token",
                 200,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "access_token",
                 200,
                 false
             ),
-            databases.createIntegerAttribute(
+            database.createIntegerAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "expires_at",
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "token_type",
                 100,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "scope",
                 200,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "id_token",
                 100,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "session_state",
                 200,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "oauth_token_secret",
                 200,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.account_collection_id,
                 "oauth_token",
@@ -146,21 +146,21 @@ export async function init_test_config(client, config) {
             ),
 
             // 3. Verification token collection attributes
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.verification_token_collection_id,
                 "identifier",
                 200,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.verification_token_collection_id,
                 "token",
                 200,
                 false
             ),
-            databases.createDatetimeAttribute(
+            database.createDatetimeAttribute(
                 config.database_id,
                 config.verification_token_collection_id,
                 "expires",
@@ -168,27 +168,27 @@ export async function init_test_config(client, config) {
             ),
 
             // 4. User collection attributes
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.user_collection_id,
                 "name",
                 100,
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.user_collection_id,
                 "email",
                 100,
                 false
             ),
-            databases.createDatetimeAttribute(
+            database.createDatetimeAttribute(
                 config.database_id,
                 config.user_collection_id,
                 "emailVerified",
                 false
             ),
-            databases.createStringAttribute(
+            database.createStringAttribute(
                 config.database_id,
                 config.user_collection_id,
                 "image",
@@ -204,7 +204,7 @@ export async function init_test_config(client, config) {
             //--------------------------------------------------------------//
 
             // 1. Session collection indexes
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.session_collection_id,
                 "sessions_pkey",
@@ -212,7 +212,7 @@ export async function init_test_config(client, config) {
                 ["$id"],
                 ["asc"]
             ),
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.session_collection_id,
                 "sessionToken_unique",
@@ -222,7 +222,7 @@ export async function init_test_config(client, config) {
             ),
 
             // 2. Account collection indexes
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.account_collection_id,
                 "accounts_pkey",
@@ -230,7 +230,7 @@ export async function init_test_config(client, config) {
                 ["$id"],
                 ["asc"]
             ),
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.account_collection_id,
                 "provider_unique",
@@ -240,7 +240,7 @@ export async function init_test_config(client, config) {
             ),
 
             // 3. User collection indexes
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.user_collection_id,
                 "users_pkey",
@@ -248,7 +248,7 @@ export async function init_test_config(client, config) {
                 ["$id"],
                 ["asc"]
             ),
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.user_collection_id,
                 "email_unique",
@@ -258,7 +258,7 @@ export async function init_test_config(client, config) {
             ),
 
             // 4. Verification token collection indexes
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.verification_token_collection_id,
                 "verification_tokens_pkey",
@@ -266,7 +266,7 @@ export async function init_test_config(client, config) {
                 ["token"],
                 ["asc"]
             ),
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.verification_token_collection_id,
                 "token_identifier_unique",
@@ -274,7 +274,7 @@ export async function init_test_config(client, config) {
                 ["token", "identifier"],
                 ["asc", "asc"]
             ),
-            databases.createIndex(
+            database.createIndex(
                 config.database_id,
                 config.verification_token_collection_id,
                 "token_unique",
@@ -288,7 +288,7 @@ export async function init_test_config(client, config) {
             //--------------------------------------------------------------//
 
             // 1. User to Sessions relationship
-            databases.createRelationshipAttribute(
+            database.createRelationshipAttribute(
                 config.database_id,
                 config.user_collection_id,
                 config.session_collection_id,
@@ -300,7 +300,7 @@ export async function init_test_config(client, config) {
             ),
 
             // 2. User to Accounts relationship
-            databases.createRelationshipAttribute(
+            database.createRelationshipAttribute(
                 config.database_id,
                 config.user_collection_id,
                 config.account_collection_id,
@@ -311,5 +311,7 @@ export async function init_test_config(client, config) {
                 "cascade"
             ),
         ])
+    }).catch(err => {
+        console.log(err)
     })
 }

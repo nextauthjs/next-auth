@@ -1,12 +1,13 @@
-import { AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/adapters";
+import { AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/src/adapters";
 import { runBasicTests } from "utils/adapter";
-import { AppwriteAdapter, formatter } from "../src";
-import sdk, { ID, Query } from "node-appwrite";
+import { AppwriteAdapter, AppwriteAdapterOptions, formatter } from "../src";
+import { Client, Databases, ID, Query } from "node-appwrite";
+import { init_db } from "../src/appwrite.ts";
 
-const config = {
-    endpoint: "",
-    project_id: "",
-    api_secret_key: "",
+const config: AppwriteAdapterOptions = {
+    endpoint: process.env.ENDPOINT?.trim() as string,
+    project_id: process.env.PROJECT_ID?.trim() as string,
+    api_key_secret: process.env.API_KEY_SECRET?.trim() as string,
     database_id: "",
     user_collection_id: "",
     session_collection_id: "",
@@ -14,20 +15,29 @@ const config = {
     verification_token_collection_id: "",
 }
 
-const client = new sdk.Client();
+const client = new Client();
+
 client
     .setEndpoint(config.endpoint)
     .setProject(config.project_id)
-    .setKey(config.api_secret_key);
+    .setKey(config.api_key_secret);
 
-const databases = new sdk.Databases(client);
 
+const database = new Databases(client);
+const database_id = ID.unique();
+
+// await database.create(database_id, "Auth TEST Database")
 runBasicTests({
     adapter: AppwriteAdapter(config),
     db: {
+        connect: async () => {
+
+            const updated_config = await init_db(new Databases(client), config);
+            console.log(updated_config);
+        },
         session: async function (sessionToken: string) {
             try {
-                const data = await databases.listDocuments(
+                const data = await database.listDocuments(
                     config.database_id,
                     config.session_collection_id,
                     [Query.equal("sessionToken", [sessionToken])]
@@ -44,7 +54,7 @@ runBasicTests({
         },
         user: async function (id: string) {
             try {
-                const data = await databases.getDocument(
+                const data = await database.getDocument(
                     config.database_id,
                     config.user_collection_id,
                     id,
@@ -63,7 +73,7 @@ runBasicTests({
         },
         account: async function (providerAccountId: { provider: string; providerAccountId: string; }) {
             try {
-                const data = await databases.listDocuments(
+                const data = await database.listDocuments(
                     config.database_id,
                     config.account_collection_id,
                     [
@@ -81,7 +91,7 @@ runBasicTests({
         },
         verificationToken: async function (params: { identifier: string; token: string; }) {
             try {
-                const data = await databases.listDocuments(
+                const data = await database.listDocuments(
                     config.database_id,
                     config.verification_token_collection_id,
                     [

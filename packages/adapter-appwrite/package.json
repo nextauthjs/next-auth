@@ -32,8 +32,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test:default": "vitest -c ../utils/vitest.config.ts",
-    "test": "pnpm test:default"
+    "test": "./test/test.sh"
   },
   "private": false,
   "publishConfig": {

@@ -15,13 +15,13 @@
  * @module @auth/appwrite-adapter
  */
 
-import { Adapter, AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/adapters";
-import sdk, { ID, Query } from "node-appwrite";
+import { Adapter, AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/src/adapters";
+import { Client, Databases, Query, ID } from "node-appwrite";
 
 export interface AppwriteAdapterOptions {
     endpoint: string,
     project_id: string,
-    api_secret_key: string,
+    api_key_secret: string,
     database_id: string,
     user_collection_id: string,
     session_collection_id: string,
@@ -142,13 +142,13 @@ export const formatter = {
 
 export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
 
-    const client = new sdk.Client();
+    const client = new Client();
     client
         .setEndpoint(config.endpoint)
         .setProject(config.project_id)
-        .setKey(config.api_secret_key);
+        .setKey(config.api_key_secret);
 
-    const databases = new sdk.Databases(client);
+    const databases = new Databases(client);
 
     return {
         async createUser(user) {
@@ -276,7 +276,7 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
                 throw error
             }
         },
-        async createSession({ sessionToken, userId, expires }:) {
+        async createSession({ sessionToken, userId, expires }) {
             try {
                 const data = await databases.createDocument(
                     config.database_id,

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# Start self-hosted appwrite instance
-docker compose up -d
-
+./test/setup.sh # Execute setup script
 if [ $? -eq 0 ]; then
-    echo STARTED APPWRITE INSTANCE SUCCESSFULLY
-    # docker exec appwrite-mariadb "chmod u+x /var/container.sh"
+    if vitest run -c ../utils/vitest.config.ts; then
+        docker compose -f ./appwrite/compose.yml down --volumes
+    else
+        docker compose -f ./appwrite/compose.yml down --volumes && exit 1
+    fi
 else
-    echo FAILED TO START APPWRITE INSTANCE
+    docker compose -f ./appwrite/compose.yml down --volumes && exit 1
 fi
