@@ -1,12 +1,13 @@
 import { AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/src/adapters";
 import { runBasicTests } from "utils/adapter";
 import { AppwriteAdapter, AppwriteAdapterOptions, formatter } from "../src";
-import { Client, Databases, Query } from "node-appwrite";
+import { Client, Databases, ID, Query } from "node-appwrite";
+import { init_db } from "../src/database.ts";
 
 const config: AppwriteAdapterOptions = {
-    endpoint: process.env.ENDPOINT?.trim() as string,
-    project_id: process.env.PROJECT_ID?.trim() as string,
-    api_key_secret: process.env.API_KEY_SECRET?.trim() as string,
+    endpoint: process.env.ENDPOINT as string,
+    project_id: process.env.PROJECT_ID as string,
+    api_key_secret: process.env.API_KEY_SECRET as string,
     database_id: "",
     user_collection_id: "",
     session_collection_id: "",
@@ -15,19 +16,26 @@ const config: AppwriteAdapterOptions = {
 }
 
 const client = new Client();
-
 client
     .setEndpoint(config.endpoint)
     .setProject(config.project_id)
-    .setKey(config.api_key_secret);
+    .setKey(config.api_key_secret)
+    .setSelfSigned();
 
 
 const database = new Databases(client);
-
-// await database.create(database_id, "Auth TEST Database")
 runBasicTests({
     adapter: AppwriteAdapter(config),
     db: {
+        connect: async () => {
+            const promise = database.create("424423fdsf423", "test");
+            promise
+                .then(res => console.log(res))
+                .catch(err => console.log(err))
+
+            // const updated_config = await init_db(database, config);
+            // console.log(updated_config);
+        },
         session: async function (sessionToken: string) {
             try {
                 const data = await database.listDocuments(
