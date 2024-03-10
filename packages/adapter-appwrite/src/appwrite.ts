@@ -2,6 +2,7 @@ import { ID, Databases } from "node-appwrite";
 import { AppwriteAdapterOptions } from "./index.js";
 
 export async function init_db(database: Databases, config: AppwriteAdapterOptions) {
+    console.log(config);
 
     //--------------------------------------------------------------//
     //                       CREATE DATABASE                        //

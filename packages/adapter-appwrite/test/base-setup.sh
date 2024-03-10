@@ -109,7 +109,7 @@ if [ $? -eq 0 ]; then
                     secret=$(echo "$response" | jq -r '.secret')
                     echo "API Key Secret created successfully, writing .env file"
                     if [ -f .env ]; then
-                        sed -i "s/API_KEY_SECRET=.*/API_KEY_SECRET='$secret'/" .env || echo "API_KEY_SECRET='$secret'" >>.env
+                        sed -i "s/API_KEY_SECRET=.*/API_KEY_SECRET=$secret/" .env || echo "API_KEY_SECRET=$secret" >>.env
                         exit 0
                     fi
 

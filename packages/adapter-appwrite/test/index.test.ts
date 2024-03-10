@@ -1,8 +1,7 @@
 import { AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/src/adapters";
 import { runBasicTests } from "utils/adapter";
 import { AppwriteAdapter, AppwriteAdapterOptions, formatter } from "../src";
-import { Client, Databases, ID, Query } from "node-appwrite";
-import { init_db } from "../src/appwrite.ts";
+import { Client, Databases, Query } from "node-appwrite";
 
 const config: AppwriteAdapterOptions = {
     endpoint: process.env.ENDPOINT?.trim() as string,
@@ -24,17 +23,11 @@ client
 
 
 const database = new Databases(client);
-const database_id = ID.unique();
 
 // await database.create(database_id, "Auth TEST Database")
 runBasicTests({
     adapter: AppwriteAdapter(config),
     db: {
-        connect: async () => {
-
-            const updated_config = await init_db(new Databases(client), config);
-            console.log(updated_config);
-        },
         session: async function (sessionToken: string) {
             try {
                 const data = await database.listDocuments(
