@@ -4,7 +4,7 @@ import { AppwriteAdapter, AppwriteAdapterOptions, formatter } from "../src";
 import { Client, Databases, ID, Query } from "node-appwrite";
 import { init_db } from "../src/database.ts";
 
-const config: AppwriteAdapterOptions = {
+let config: AppwriteAdapterOptions = {
     endpoint: process.env.ENDPOINT as string,
     project_id: process.env.PROJECT_ID as string,
     api_key_secret: process.env.API_KEY_SECRET as string,
@@ -28,13 +28,9 @@ runBasicTests({
     adapter: AppwriteAdapter(config),
     db: {
         connect: async () => {
-            const promise = database.create("424423fdsf423", "test");
-            promise
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
-
-            // const updated_config = await init_db(database, config);
-            // console.log(updated_config);
+            const updated_config = await init_db(database, config);
+            console.log(updated_config);
+            config = { ...updated_config }
         },
         session: async function (sessionToken: string) {
             try {

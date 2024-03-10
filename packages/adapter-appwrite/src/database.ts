@@ -1,7 +1,7 @@
 import { ID, Databases } from "node-appwrite";
 import { AppwriteAdapterOptions } from "./index.js";
 
-export async function init_db(database: Databases, config: AppwriteAdapterOptions) {
+export async function init_db(database: Databases, config: AppwriteAdapterOptions): Promise<AppwriteAdapterOptions> {
     //--------------------------------------------------------------//
     //                       CREATE DATABASE                        //
     //--------------------------------------------------------------//
@@ -313,4 +313,6 @@ export async function init_db(database: Databases, config: AppwriteAdapterOption
     }).catch(err => {
         console.log(err)
     })
+
+    return config
 }
