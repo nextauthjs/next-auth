@@ -124,6 +124,19 @@ export function SessionProvider(props: SessionProviderProps) {
   )
 }
 
+
+/**
+ * Client-side method to initiate a signin flow
+ * or send the user to the signin page listing all possible providers.
+ * Automatically adds the CSRF token to the request.
+ *
+ * ```ts
+ * import { signIn } from "@auth/solid-start/client"
+ * signIn()
+ * signIn("provider") // example: signIn("github")
+ * ```
+ */
+
 export async function signIn<
   P extends RedirectableProviderType | undefined = undefined
 >(
@@ -181,6 +194,16 @@ export async function signIn<
     url: error ? null : data.url,
   } as const
 }
+
+/**
+ * Signs the user out, by removing the session cookie.
+ * Automatically adds the CSRF token to the request.
+ *
+ * ```ts
+ * import { signOut } from "@auth/solid-start/client"
+ * signOut()
+ * ```
+ */
 
 export async function signOut(options?: SignOutParams) {
   const { redirectTo = window.location.href, redirect } = options ?? {}
