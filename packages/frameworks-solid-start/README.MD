@@ -57,7 +57,16 @@ const login = () => signIn("github")
 const logout = () => signOut()
 ```
 
-## Getting the current session
+## Getting the current session on the client
+
+```ts
+import { createSession } from '@solid-mediakit/auth/client'
+const session = createSession()
+
+const user = () => session()?.user
+```
+
+## Getting the current session on the server
 
 ```ts
 import { getSession } from "@auth/solid-start"
