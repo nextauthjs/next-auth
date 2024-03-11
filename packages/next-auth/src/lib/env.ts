@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextRequest } from "next/server.js"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
