@@ -1,6 +1,6 @@
 import { Auth, type AuthConfig } from "@auth/core"
-import { headers } from "next/headers"
-import { NextResponse } from "next/server"
+import { headers } from "next/headers.js"
+import { NextResponse } from "next/server.js"
 import { reqWithEnvURL } from "./env.js"
 import { createActionURL } from "./actions.js"
 
