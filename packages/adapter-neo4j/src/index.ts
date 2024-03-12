@@ -14,11 +14,11 @@
  *
  * @module @auth/neo4j-adapter
  */
-import { type Session, isInt, integer } from "neo4j-driver"
+import { type Driver, isInt, integer, SessionConfig } from "neo4j-driver"
 import type { Adapter } from "@auth/core/adapters"
 
-/** This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument. */
-export interface Neo4jOptions extends Session {}
+/** This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver Neo4j driver} as its only required argument. An optioanl {@link https://neo4j.com/docs/javascript-manual/current/transactions/#_session_configuration Session Config} is allowed.*/
+export interface Neo4jOptions extends Driver {}
 
 /**
  * ## Setup
@@ -33,15 +33,13 @@ export interface Neo4jOptions extends Session {}
  *   "bolt://localhost",
  *   neo4j.auth.basic("neo4j", "password")
  * )
- *
- * const neo4jSession = driver.session()
- *
+ * const sessionConfig = { database: 'neo4j' }  // optional (see https://neo4j.com/docs/javascript-manual/current/transactions/#_session_configuration)
  * // For more information on each option (and a full list of options) go to
  * // https://authjs.dev/reference/configuration/auth-options
  * export default NextAuth({
  *   // https://authjs.dev/reference/core/providers
  *   providers: [],
- *   adapter: Neo4jAdapter(neo4jSession),
+ *   adapter: Neo4jAdapter(driver, sessionConfig),
  *   ...
  * })
  * ```
@@ -125,29 +123,31 @@ export interface Neo4jOptions extends Session {}
  * FOR (v:VerificationToken) ON (v.identifier, v.token);
  * ```
  */
-export function Neo4jAdapter(session: Session): Adapter {
-  const { read, write } = client(session)
-
+export function Neo4jAdapter(driver: Driver, sessionConfig?: SessionConfig): Adapter {
   return {
     async createUser(data) {
+      const { write } = client(driver, sessionConfig)
       const user = { ...data, id: crypto.randomUUID() }
       await write(`CREATE (u:User $data)`, user)
       return user
     },
 
     async getUser(id) {
+      const { read } = client(driver, sessionConfig)
       return await read(`MATCH (u:User { id: $id }) RETURN u{.*}`, {
         id,
       })
     },
 
     async getUserByEmail(email) {
+      const { read } = client(driver, sessionConfig)
       return await read(`MATCH (u:User { email: $email }) RETURN u{.*}`, {
         email,
       })
     },
 
     async getUserByAccount(provider_providerAccountId) {
+      const { read } = client(driver, sessionConfig)
       return await read(
         `MATCH (u:User)-[:HAS_ACCOUNT]->(a:Account {
            provider: $provider,
@@ -159,6 +159,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async updateUser(data) {
+      const { write } = client(driver, sessionConfig)
       return (
         await write(
           `MATCH (u:User { id: $data.id })
@@ -170,6 +171,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async deleteUser(id) {
+      const { write } = client(driver, sessionConfig)
       return await write(
         `MATCH (u:User { id: $data.id })
          WITH u, u{.*} AS properties
@@ -180,6 +182,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async linkAccount(data) {
+      const { write } = client(driver, sessionConfig)
       const { userId, ...a } = data
       await write(
         `MATCH (u:User { id: $data.userId })
@@ -195,6 +198,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async unlinkAccount(provider_providerAccountId) {
+      const { write } = client(driver, sessionConfig)
       return await write(
         `MATCH (u:User)-[:HAS_ACCOUNT]->(a:Account {
            providerAccountId: $data.providerAccountId,
@@ -208,6 +212,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async createSession(data) {
+      const { write } = client(driver, sessionConfig)
       const { userId, ...s } = format.to(data)
       await write(
         `MATCH (u:User { id: $data.userId })
@@ -220,6 +225,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async getSessionAndUser(sessionToken) {
+      const { write } = client(driver, sessionConfig)
       const result = await write(
         `OPTIONAL MATCH (u:User)-[:HAS_SESSION]->(s:Session { sessionToken: $data.sessionToken })
          WHERE s.expires <= datetime($data.now)
@@ -239,6 +245,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async updateSession(data) {
+      const { write } = client(driver, sessionConfig)
       return await write(
         `MATCH (u:User)-[:HAS_SESSION]->(s:Session { sessionToken: $data.sessionToken })
          SET s += $data
@@ -248,6 +255,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async deleteSession(sessionToken) {
+      const { write } = client(driver, sessionConfig)
       return await write(
         `MATCH (u:User)-[:HAS_SESSION]->(s:Session { sessionToken: $data.sessionToken })
          WITH u, s, properties(s) AS properties
@@ -258,6 +266,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async createVerificationToken(data) {
+      const { write } = client(driver, sessionConfig)
       await write(
         `MERGE (v:VerificationToken {
            identifier: $data.identifier,
@@ -270,6 +279,7 @@ export function Neo4jAdapter(session: Session): Adapter {
     },
 
     async useVerificationToken(data) {
+      const { write } = client(driver, sessionConfig)
       const result = await write(
         `MATCH (v:VerificationToken {
            identifier: $data.identifier,
@@ -324,15 +334,21 @@ export const format = {
   },
 }
 
-function client(session: Session) {
+function client(driver: Driver, sessionConfig?: SessionConfig) {
   return {
     /** Reads values from the database */
     async read<T>(statement: string, values?: any): Promise<T | null> {
-      const result = await session.readTransaction((tx) =>
-        tx.run(statement, values)
-      )
+      const session = driver.session(sessionConfig)
+      try {
+        const result = await session.executeRead((tx) =>
+          tx.run(statement, values)
+        )
 
-      return format.from<T>(result?.records[0]?.get(0)) ?? null
+        return format.from<T>(result?.records[0]?.get(0)) ?? null
+
+      } finally {
+        await session.close()
+      }
     },
     /**
      * Reads/writes values from/to the database.
@@ -342,11 +358,17 @@ function client(session: Session) {
       statement: string,
       values: T
     ): Promise<any> {
-      const result = await session.writeTransaction((tx) =>
-        tx.run(statement, { data: format.to(values) })
-      )
+      const session = driver.session(sessionConfig)
+      try {
+        const result = await session.executeWrite((tx) =>
+          tx.run(statement, { data: format.to(values) })
+        )
 
-      return format.from<T>(result?.records[0]?.toObject())
+        return format.from<T>(result?.records[0]?.toObject())
+      } finally {
+        await session.close()
+      }
+
     },
   }
 }
