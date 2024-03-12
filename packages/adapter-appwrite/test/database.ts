@@ -1,6 +1,5 @@
-import { Client, Databases, ID } from "node-appwrite"
+import { Client, Databases } from "node-appwrite"
 import { AppwriteAdapterOptions } from "../src"
-import { log } from "console";
 
 const config: AppwriteAdapterOptions = {
   endpoint: process.env.ENDPOINT as string,
@@ -73,38 +72,6 @@ const collectionAttributes = [
   }
 ];
 
-const collectionIndexes = [
-  {
-    collectionId: config.session_collection_id,
-    indexes: [
-      // { name: "sessions_pkey", field: ["$id"], type: "key", order: ["asc"] },
-      { name: "sessionToken_unique", field: ["sessionToken"], type: "unique", order: ["asc"] }
-    ]
-  },
-  {
-    collectionId: config.account_collection_id,
-    indexes: [
-      // { name: "accounts_pkey", field: ["$id"], type: "key", order: ["asc"] },
-      { name: "provider_unique", field: ["provider", "providerAccountId"], type: "unique", order: ["asc", "asc"] }
-    ]
-  },
-  {
-    collectionId: config.user_collection_id,
-    indexes: [
-      // { name: "users_pkey", field: ["$id"], type: "key", order: ["asc"] },
-      { name: "email_unique", field: ["email"], type: "unique", order: ["asc"] }
-    ]
-  },
-  {
-    collectionId: config.verification_token_collection_id,
-    indexes: [
-      { name: "verification_tokens_pkey", field: ["token"], type: "key", order: ["asc"] },
-      { name: "token_identifier_unique", field: ["token", "identifier"], type: "unique", order: ["asc", "asc"] },
-      { name: "token_unique", field: ["token"], type: "unique", order: ["asc"] }
-    ]
-  }
-];
-
 const collectionRelations = [
   {
     fromCollection: config.user_collection_id,
@@ -144,15 +111,6 @@ async function createAttributes() {
 
     );
     await Promise.all(attributePromises);
-  }
-}
-
-async function createIndexes() {
-  for (const collection of collectionIndexes) {
-    const indexPromises = collection.indexes.map(index =>
-      database.createIndex(config.database_id, collection.collectionId, index.name, index.type, index.field, index.order)
-    );
-    await Promise.all(indexPromises);
   }
 }
 

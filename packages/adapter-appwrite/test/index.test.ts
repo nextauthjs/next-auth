@@ -1,7 +1,7 @@
 import { AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from "@auth/core/src/adapters";
 import { runBasicTests } from "utils/adapter";
 import { AppwriteAdapter, AppwriteAdapterOptions, formatter } from "../src";
-import { Client, Databases, ID, Query } from "node-appwrite";
+import { Client, Databases, Query } from "node-appwrite";
 
 const config: AppwriteAdapterOptions = {
     endpoint: process.env.ENDPOINT as string,
