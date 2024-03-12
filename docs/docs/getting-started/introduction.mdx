@@ -9,14 +9,14 @@ import manifest from "../../manifest.mjs"
 
 Auth.js is a complete open-source authentication solution for web applications. Check out the live demos of Auth.js in action:
 
-<div class="card-list">
+<div className="card-list">
   {manifest.frameworks
     // TODO: Add Auth.js Core example
     .filter((f) => f.id !== "core")
     .map(({ id, name, url, logo }) => (
-      <a href={`https://${url}.vercel.app`} class="card">
+      <a href={`https://${url}.vercel.app`} key={id} className="card">
         <img src={`/img/frameworks/${id}.svg`} width="40" />
-        <h4 class="card__title">{name}</h4>
+        <h4 className="card__title">{name}</h4>
       </a>
     ))}
 </div>
