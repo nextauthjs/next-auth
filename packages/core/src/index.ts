@@ -184,8 +184,7 @@ export async function Auth(
 
     const pageKind = (isAuthError && error.kind) || "error"
     const pagePath =
-      config.pages?.[pageKind] ??
-      `/${config.basePath}/${pageKind.toLowerCase()}`
+      config.pages?.[pageKind] ?? `${config.basePath}/${pageKind.toLowerCase()}`
     const url = `${internalRequest.url.origin}${pagePath}?${params}`
 
     if (isRedirect) return Response.json({ url })
