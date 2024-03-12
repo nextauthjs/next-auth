@@ -53,13 +53,14 @@ export function createActionURL(
 ): URL {
   let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
-  let detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
-  let detectedProtocol = headers.get("x-forwarded-proto") ?? protocol ?? "https"
-
   let url: URL
   if (envUrl) {
     url = new URL(envUrl)
   } else {
+    const detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
+    const detectedProtocol =
+      headers.get("x-forwarded-proto") ?? protocol ?? "https"
+
     url = new URL(`${detectedProtocol}://${detectedHost}`)
   }
 
