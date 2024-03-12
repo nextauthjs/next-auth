@@ -127,7 +127,6 @@ async function init_db() {
       .then(async () =>
         await createAttributes()
           .then(async () => {
-            // await createIndexes();
             await createRelations();
           }))
 
