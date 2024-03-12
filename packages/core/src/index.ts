@@ -183,8 +183,10 @@ export async function Auth(
     if (error instanceof CredentialsSignin) params.set("code", error.code)
 
     const pageKind = (isAuthError && error.kind) || "error"
-    const pagePath = config.pages?.[pageKind] ?? `/${pageKind.toLowerCase()}`
-    const url = `${internalRequest.url.origin}${config.basePath}${pagePath}?${params}`
+    const pagePath =
+      config.pages?.[pageKind] ??
+      `/${config.basePath}/${pageKind.toLowerCase()}`
+    const url = `${internalRequest.url.origin}${pagePath}?${params}`
 
     if (isRedirect) return Response.json({ url })
     return Response.redirect(url)
