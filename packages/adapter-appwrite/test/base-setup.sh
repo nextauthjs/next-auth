@@ -17,7 +17,7 @@ if [ $? -eq 0 ]; then
     # SETUP ACCOUNT, SESSION, TEAM, PROJECT, API_KEY
     # CREATE ACCOUNT
     echo "Creating account"
-    http_status=$(execute_curl --location 'http://localhost/v1/account' \
+    http_status=$(execute_curl --location "${ENDPOINT}/account" \
         --header 'Content-Type: application/json' \
         --data-raw '{
         "userId": "'$ACCOUNT_ID'",
@@ -31,7 +31,7 @@ if [ $? -eq 0 ]; then
         echo "Creating session"
 
         http_status=$(execute_curl -c /tmp/appwrite_adapter_session.txt \
-            --location 'http://localhost/v1/account/sessions/email' \
+            --location "${ENDPOINT}/account/sessions/email" \
             --header 'Content-Type: application/json' \
             --data-raw '{
             "email": "'$ACCOUNT_EMAIL'",
@@ -44,7 +44,7 @@ if [ $? -eq 0 ]; then
             echo "Creating team"
 
             http_status=$(execute_curl -b /tmp/appwrite_adapter_session.txt \
-                --location 'http://localhost/v1/teams' \
+                --location "${ENDPOINT}/teams" \
                 --header 'Content-Type: application/json' \
                 --data-raw '{
                 "teamId": "'$TEAM_ID'",
@@ -57,7 +57,7 @@ if [ $? -eq 0 ]; then
                 echo "Creating project"
 
                 http_status=$(execute_curl -b /tmp/appwrite_adapter_session.txt \
-                    --location 'http://localhost/v1/projects' \
+                    --location "${ENDPOINT}/projects" \
                     --header 'Content-Type: application/json' \
                     --data-raw '{
                     "projectId": "'$PROJECT_ID'",
@@ -72,7 +72,7 @@ if [ $? -eq 0 ]; then
                     echo "Creating API Key Secret"
 
                     response=$(curl -b /tmp/appwrite_adapter_session.txt \
-                        --location "http://localhost/v1/projects/${PROJECT_ID}/keys" \
+                        --location "${ENDPOINT}/projects/${PROJECT_ID}/keys" \
                         --header 'Content-Type: application/json' \
                         --data-raw '{
                         "name": "some key",
@@ -106,6 +106,21 @@ if [ $? -eq 0 ]; then
                             "migrations.write"
                         ]
                     }')
+                    # http_status=$(execute_curl -b /tmp/appwrite_adapter_session.txt \
+                    #     --location "${ENDPOINT}/databases" \
+                    #     --header 'Content-Type: application/json' \
+                    #     --header 'x-appwrite-mode: admin' \
+                    #     --header "x-appwrite-project: ${PROJECT_ID}" \
+                    #     --header 'x-appwrite-response-format: 1.4.0' \
+                    #     --data-raw '{
+                    #     "databaseId": "65f0626fb837a709c15a",
+                    #     "name": "test db"
+                    # }')
+                    # if [ "$http_status" -eq 201 ]; then
+                    #     echo "DB created"
+                    # else
+                    #     echo "failed to create DB"
+                    # fi
                     secret=$(echo "$response" | jq -r '.secret')
                     echo "API Key Secret created successfully, writing .env file"
                     if [ -f .env ]; then

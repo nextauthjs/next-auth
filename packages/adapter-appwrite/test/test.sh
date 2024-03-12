@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 
-./test/base-setup.sh # Execute base setup script
-if [ $? -eq 0 ]; then
-    if vitest run -c ../utils/vitest.config.ts; then
-        docker compose -f ./appwrite/compose.yml down --volumes
-    else
-        docker compose -f ./appwrite/compose.yml down --volumes && exit 1
-    fi
-else
-    docker compose -f ./appwrite/compose.yml down --volumes && exit 1
+cleanup_and_exit() {
+    docker compose -f ./appwrite/compose.yml down --volumes
+    exit $1
+}
+
+./test/base-setup.sh
+if [ $? -ne 0 ]; then
+    cleanup_and_exit 1
 fi
+
+source .env && bun run ./test/database.ts
+if [ $? -ne 0 ]; then
+    cleanup_and_exit 1
+fi
+
+# Run tests
+source .env && vitest run -c ../utils/vitest.config.ts
+if [ $? -ne 0 ]; then
+    cleanup_and_exit 1
+fi
+
+cleanup_and_exit 0
