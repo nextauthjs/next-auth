@@ -1,4 +1,5 @@
 import type { AuthAction, AuthConfig } from "../../types.js"
+import { logger } from "./logger.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
@@ -56,11 +57,11 @@ export function createActionURL(
   let url: URL
   if (envUrl) {
     url = new URL(envUrl)
-    if (basePath && basePath !== "/" && url.pathname !== '/') {
-      console.warn(
+    if (basePath && basePath !== "/" && url.pathname !== "/") {
+      logger.warn(
         url.pathname === basePath
-          ? `AUTH_URL pathname and basePath detected. This is likely a configuration mistake - either remove the basePath, or remove the pathname of AUTH_URL.`
-          : "AUTH_URL pathname and basePath detected and are mismatching. This is likely a configuration mistake - either remove the basePath, or remove the pathname of AUTH_URL.\n basePath will override AUTH_URL pathname"
+          ? "env-url-basepath-redundant"
+          : "env-url-basepath-mismatch"
       )
       url.pathname = "/"
     }
@@ -81,5 +82,4 @@ export function createActionURL(
     return new URL(`${sanitizedUrl}/${sanitizedBasePath}/${action}`)
   }
   return new URL(`${sanitizedUrl}/${action}`)
-
 }
