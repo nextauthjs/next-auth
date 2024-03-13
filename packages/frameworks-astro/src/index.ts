@@ -40,7 +40,6 @@
  * 
  * ```ts
  * import { defineConfig } from '@auth/astro/config'
- * import type { Provider } from '@auth/core/providers'
  * import GitHub from '@auth/astro/providers/github'
  * 
  * export default defineConfig({
@@ -48,7 +47,7 @@
  *     GitHub({
  *       clientId: import.meta.env.GITHUB_CLIENT_ID,
  *       clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
- *     }) as Provider,
+ *     }),
  *   ]
  * })
  * ```
