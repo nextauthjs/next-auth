@@ -1,6 +1,6 @@
 {
   "name": "@auth/supabase-adapter",
-  "version": "0.1.18",
+  "version": "0.6.0",
   "description": "Supabase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -33,7 +33,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./tests/test.sh"
+    "test": "./test/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -43,8 +43,5 @@
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.0.5"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

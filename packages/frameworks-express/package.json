@@ -1,7 +1,7 @@
 {
   "name": "@auth/express",
   "description": "Authentication for Express.",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "type": "module",
   "files": [
     "*.js",
@@ -30,7 +30,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
+    "test": "vitest run -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {
@@ -41,11 +41,9 @@
   },
   "devDependencies": {
     "@auth/core": "workspace:experimental",
-    "@jest/globals": "^29.6.3",
     "@types/express": "^4.17.17",
     "@types/supertest": "^2.0.12",
-    "supertest": "^6.3.3",
-    "ts-jest": "29.0.0-next.1"
+    "supertest": "^6.3.3"
   },
   "peerDependencies": {
     "express": "^4.18.2"

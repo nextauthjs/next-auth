@@ -113,7 +113,7 @@ export default function App({
 Instances of `useSession` (more on it in the next section) will have access to the session data and status. The `<SessionProvider />` also keep the session updated and synced between browser tabs and windows. 💪🏽
 
 :::tip
-Check our [client docs](reference/nextjs/react/) to learn all the available options for handling sessions on the browser.
+Check our [client docs](/reference/nextjs/react) to learn all the available options for handling sessions on the browser.
 :::
 
 ### Consuming the session via hooks
@@ -245,14 +245,14 @@ or https://generate-secret.vercel.app/32 to generate a random value for it.
 
 ### Exposing the session via page store
 
-Auth.js provides us a getSession, function to access the session data and status, to call from the `event.locals` variable. We can now just call it and add it to our `$page` store.
+Auth.js provides us a `auth`, function to access the session data and status, to call from the `event.locals` variable. We can now just call it and add it to our `$page` store.
 
 ```ts
 import type { LayoutServerLoad } from "./$types"
 
 export const load: LayoutServerLoad = async (event) => {
   return {
-    session: await event.locals.getSession(),
+    session: await event.locals.auth(),
   }
 }
 ```
@@ -279,14 +279,14 @@ You can use the `$page.data.session` variable from anywhere on your page. Learn 
 
 ### Protecting API Routes
 
-To protect your API Routes (blocking unauthorized access to resources), you can use `locals.getSessions()` just like in the layouts file to know whether a session exists or not:
+To protect your API Routes (blocking unauthorized access to resources), you can use `locals.auth()` just like in the layouts file to know whether a session exists or not:
 
 ```ts title="routes/api/movies/+server.ts"
 import { json, error } from "@sveltejs/kit"
 import type { RequestEvent } from "./$types"
 
 export async function GET({ locals }: RequestEvent) {
-  const session = await locals.getSession()
+  const session = await locals.auth()
   if (!session?.user) {
     throw error(401, "You must sign in to view movies.")
   }

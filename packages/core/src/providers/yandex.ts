@@ -9,7 +9,7 @@
  * @module providers/yandex
  */
 
-import { OAuthConfig, OAuthUserConfig } from "."
+import { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 /**
  * - {@link https://yandex.com/dev/id/doc/en/user-information | Getting information about the user}
