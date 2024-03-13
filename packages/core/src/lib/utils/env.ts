@@ -56,6 +56,14 @@ export function createActionURL(
   let url: URL
   if (envUrl) {
     url = new URL(envUrl)
+    if (basePath && basePath !== "/" && url.pathname !== '/') {
+      console.warn(
+        url.pathname === basePath
+          ? `AUTH_URL pathname and basePath detected. This is likely a configuration mistake - either remove the basePath, or remove the pathname of AUTH_URL.`
+          : "AUTH_URL pathname and basePath detected and are mismatching. This is likely a configuration mistake - either remove the basePath, or remove the pathname of AUTH_URL.\n basePath will override AUTH_URL pathname"
+      )
+      url.pathname = "/"
+    }
   } else {
     const detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
     const detectedProtocol =
@@ -66,8 +74,12 @@ export function createActionURL(
 
   // remove trailing slash
   const sanitizedUrl = url.toString().replace(/\/$/, "")
-  // remove leading and trailing slash
-  const sanitizedBasePath = basePath?.replace(/(^\/|\/$)/g, "") ?? ""
 
-  return new URL(`${sanitizedUrl}/${sanitizedBasePath}/${action}`)
+  if (basePath) {
+    // remove leading and trailing slash
+    const sanitizedBasePath = basePath?.replace(/(^\/|\/$)/g, "") ?? ""
+    return new URL(`${sanitizedUrl}/${sanitizedBasePath}/${action}`)
+  }
+  return new URL(`${sanitizedUrl}/${action}`)
+
 }
