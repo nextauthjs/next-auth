@@ -1,4 +1,5 @@
 import type { AuthAction, AuthConfig } from "../../types.js"
+import { MissingSecret } from "../../errors.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
@@ -18,6 +19,12 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
       const secret = envObject[`AUTH_SECRET_${i}`]
       if (secret) config.secret.unshift(secret)
     }
+  }
+
+  if (!config.secret?.length) {
+    throw new MissingSecret(
+      "Missing secret, please set AUTH_SECRET or config.secret"
+    )
   }
 
   config.redirectProxyUrl ??= envObject.AUTH_REDIRECT_PROXY_URL
