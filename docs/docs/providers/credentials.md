@@ -39,7 +39,8 @@ The Credentials provider's `authorize()` method also provides the request object
 
 ```js title="pages/api/auth/[...nextauth].js"
 import CredentialsProvider from "next-auth/providers/credentials";
-...
+
+export default NextAuth({
 providers: [
   CredentialsProvider({
     // The name to display on the sign in form (e.g. "Sign in with...")
@@ -68,7 +69,7 @@ providers: [
     }
   })
 ]
-...
+)}
 ```
 
 See the [callbacks documentation](/configuration/callbacks) for more information on how to interact with the token.
@@ -94,6 +95,8 @@ You can also use them in conjunction with other provider options.
 As with all providers, the order you specify them is the order they are displayed on the sign in page.
 
 ```js
+
+export default NextAuth({
 providers: [
   CredentialsProvider({
     id: "domain-login",
@@ -131,6 +134,7 @@ providers: [
   }),
   /* ... additional providers ... /*/
 ]
+)}
 ```
 
 ![](/img/signin-complex.png)
