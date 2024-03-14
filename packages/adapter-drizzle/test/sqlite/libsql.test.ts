@@ -1,18 +1,20 @@
+import { and, eq } from "drizzle-orm"
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import {
-  db,
   accounts,
+  authenticators,
+  db,
   sessions,
   users,
   verificationTokens,
 } from "./schema.libsql"
-import { eq, and } from "drizzle-orm"
 
 const orNull = <T>(x: T | null | undefined): NonNullable<T> | null => x ?? null
 
 runBasicTests({
   adapter: DrizzleAdapter(db),
+  testWebAuthnMethods: true,
   db: {
     connect: async () => {
       await Promise.all([
@@ -20,6 +22,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     disconnect: async () => {
@@ -28,6 +31,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     user: (id) =>
@@ -62,6 +66,14 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         )
-        .get() ?? null,
+        .get()
+        .then(orNull),
+    authenticator: (credentialID) =>
+      db
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
+        .get()
+        .then(orNull),
   },
 })

@@ -10,8 +10,14 @@ const poolConnection = createPool({
   database: "next-auth",
 })
 
-export const { users, accounts, sessions, verificationTokens } =
+export const { users, accounts, sessions, verificationTokens, authenticators } =
   createTables(mysqlTable)
-export const schema = { users, accounts, sessions, verificationTokens }
+export const schema = {
+  users,
+  accounts,
+  sessions,
+  verificationTokens,
+  authenticators,
+}
 
 export const db = drizzle(poolConnection, { schema, mode: "default" })
