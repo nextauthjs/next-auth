@@ -1,3 +1,4 @@
+import { and, eq } from "drizzle-orm"
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import { db, accounts, sessions, users, verificationTokens } from "./schema"
@@ -19,6 +20,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     disconnect: async () => {
@@ -27,6 +29,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     user: (id) => db.select().from(users).where(eq(users.id, id)).get() ?? null,
@@ -60,6 +63,12 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         )
+        .get() ?? null,
+    authenticator: (credentialID) =>
+      db
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
         .get() ?? null,
   },
 })

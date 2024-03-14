@@ -1,3 +1,4 @@
+import { pgTable } from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
 import { defineTables } from "../../src/lib/pg"
