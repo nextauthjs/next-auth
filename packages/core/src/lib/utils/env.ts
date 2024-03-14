@@ -1,4 +1,5 @@
 import type { AuthAction, AuthConfig } from "../../types.js"
+import { logger } from "./logger.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
@@ -51,13 +52,34 @@ export function createActionURL(
   envObject: any,
   basePath?: string
 ): URL {
-  let url = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
-  if (!url) {
-    const host = headers.get("x-forwarded-host") ?? headers.get("host")
-    if (!host) throw new TypeError("Missing host")
-    const proto = headers.get("x-forwarded-proto") ?? protocol
-    url = `${proto === "http" ? "http" : "https"}://${host}${basePath}`
+  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+
+  let url: URL
+  if (envUrl) {
+    url = new URL(envUrl)
+    if (basePath && basePath !== "/" && url.pathname !== "/") {
+      logger.warn(
+        url.pathname === basePath
+          ? "env-url-basepath-redundant"
+          : "env-url-basepath-mismatch"
+      )
+      url.pathname = "/"
+    }
+  } else {
+    const detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
+    const detectedProtocol =
+      headers.get("x-forwarded-proto") ?? protocol ?? "https"
+
+    url = new URL(`${detectedProtocol}://${detectedHost}`)
   }
 
-  return new URL(`${url.replace(/\/$/, "")}/${action}`)
+  // remove trailing slash
+  const sanitizedUrl = url.toString().replace(/\/$/, "")
+
+  if (basePath) {
+    // remove leading and trailing slash
+    const sanitizedBasePath = basePath?.replace(/(^\/|\/$)/g, "") ?? ""
+    return new URL(`${sanitizedUrl}/${sanitizedBasePath}/${action}`)
+  }
+  return new URL(`${sanitizedUrl}/${action}`)
 }

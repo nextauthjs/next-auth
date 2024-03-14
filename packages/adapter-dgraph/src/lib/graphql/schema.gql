@@ -38,7 +38,7 @@ type User
       or: [
         {
           rule: """
-          query ($userId: String!) {queryUser(filter: { id: { eq: $userId } } ) {id}}
+          query ($userId: ID!) {queryUser(filter: { id: [$userId] } ) {id}}
           """
         }
         { rule: "{$nextAuth: { eq: true } }" }
@@ -50,7 +50,7 @@ type User
       or: [
         {
           rule: """
-          query ($userId: String!) {queryUser(filter: { id: { eq: $userId } } ) {id}}
+          query ($userId: ID!) {queryUser(filter: { id: [$userId] } ) {id}}
           """
         }
         { rule: "{$nextAuth: { eq: true } }" }
