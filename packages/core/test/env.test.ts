@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest"
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { AuthConfig } from "../src/index.js"
 import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
@@ -93,6 +93,12 @@ describe("config is inferred from environment variables", () => {
 })
 
 describe("createActionURL", () => {
+const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+  afterEach(() => {
+    consoleWarnSpy.mockClear()
+  })
+
   it.each([
     {
       args: {
@@ -144,17 +150,66 @@ describe("createActionURL", () => {
       args: {
         action: "signout",
         protocol: undefined,
-        headers: new Headers({
-          "x-forwarded-host": "example.com",
-          "x-forwarded-proto": "https",
-        }),
-        env: { AUTH_URL: "https://env.com/api/auth/" },
-        basePath: "/auth",
+        headers: new Headers({}),
+        env: { AUTH_URL: "http://localhost:3000" },
+        basePath: "/api/auth",
       },
-      expected: "https://env.com/api/auth/signout",
+      expected: "http://localhost:3000/api/auth/signout",
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "https://sub.domain.env.com" },
+        basePath: "/api/auth",
+      },
+      expected: "https://sub.domain.env.com/api/auth/signout",
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "https://sub.domain.env.com/api/auth" },
+        basePath: undefined,
+      },
+      expected: "https://sub.domain.env.com/api/auth/signout",
     },
   ])("%j", ({ args, expected }) => {
     // @ts-expect-error
     expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
+    expect(consoleWarnSpy).not.toHaveBeenCalled()
   })
+
+   it.each([
+     {
+       args: {
+         action: "signout",
+         protocol: undefined,
+         headers: new Headers({}),
+         env: { AUTH_URL: "http://localhost:3000/my-app/api/auth/" },
+         basePath: "/my-app/api/auth",
+       },
+       expected: "http://localhost:3000/my-app/api/auth/signout",
+     },
+     {
+       args: {
+         action: "signout",
+         protocol: undefined,
+         headers: new Headers({}),
+         env: { AUTH_URL: "https://sub.domain.env.com/my-app" },
+         basePath: "/api/auth",
+       },
+       expected: "https://sub.domain.env.com/api/auth/signout",
+     },
+   ])("Duplicate path configurations: %j", ({ args, expected }) => {
+     // @ts-expect-error
+     expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
+     expect(consoleWarnSpy).toHaveBeenCalled()
+   })
+
+   afterAll(() => {
+    consoleWarnSpy.mockRestore();
+   })
 })
