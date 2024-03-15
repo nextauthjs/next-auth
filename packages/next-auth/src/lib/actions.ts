@@ -1,9 +1,4 @@
-import {
-  Auth,
-  raw,
-  skipCSRFCheck,
-  createActionURL as createActionURLCore,
-} from "@auth/core"
+import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
@@ -28,7 +23,14 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const signInURL = createActionURL("signin", headers, config.basePath)
+  const signInURL = createActionURL(
+    "signin",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
 
   if (!provider) {
     signInURL.searchParams.append("callbackUrl", callbackUrl)
@@ -83,7 +85,14 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL("signout", headers, config.basePath)
+  const url = createActionURL(
+    "signout",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -105,7 +114,14 @@ export async function update(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 
-  const url = createActionURL("session", headers, config.basePath)
+  const url = createActionURL(
+    "session",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
 
@@ -114,23 +130,4 @@ export async function update(
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
   return res.body
-}
-
-/**
- * Extract the origin and base path from either `AUTH_URL` or `NEXTAUTH_URL` environment variables,
- * or the request's headers and the {@link NextAuthConfig.basePath} option.
- */
-export function createActionURL(
-  action: AuthAction,
-  h: Headers | ReturnType<typeof headers>,
-  basePath?: string
-): URL {
-  return createActionURLCore(
-    action,
-    // @ts-expect-error `x-forwarded-proto` is not nullable, next-auth sets it by default
-    h.get("x-forwarded-proto"),
-    h,
-    process.env,
-    basePath
-  )
 }
