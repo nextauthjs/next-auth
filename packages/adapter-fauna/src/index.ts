@@ -225,37 +225,33 @@ const defaultCollectionNames = {
  **/
 export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
   const { collectionNames = defaultCollectionNames } = config || {}
-  const User = new Module(collectionNames.user)
-  const Session = new Module(collectionNames.session)
-  const Account = new Module(collectionNames.account)
-  const VerificationToken = new Module(collectionNames.verificationToken)
 
   return {
     async createUser(user) {
       const response = await client.query<FaunaUser>(
-        fql`${User}.create(${format.to(user)})`,
+        fql`Collection(${collectionNames.user}).create(${format.to(user)})`,
       )
       return format.from(response.data)
     },
     async getUser(id) {
       const response = await client.query<FaunaUser | NullDocument>(
-        fql`${User}.byId(${id})`,
+        fql`Collection(${collectionNames.user}).byId(${id})`,
       )
       if (response.data instanceof NullDocument) return null
       return format.from(response.data)
     },
     async getUserByEmail(email) {
       const response = await client.query<FaunaUser>(
-        fql`${User}.byEmail(${email}).first()`,
+        fql`Collection(${collectionNames.user}).byEmail(${email}).first()`,
       )
       if (response.data === null) return null
       return format.from(response.data)
     },
     async getUserByAccount({ provider, providerAccountId }) {
       const response = await client.query<FaunaUser>(fql`
-        let account = ${Account}.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()
+        let account = Collection(${collectionNames.account}).byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()
         if (account != null) {
-          ${User}.byId(account.userId)
+          Collection(${collectionNames.user}).byId(account.userId)
         } else {
           null
         }
@@ -266,39 +262,39 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
       const _user: Partial<AdapterUser> = { ...user }
       delete _user.id
       const response = await client.query<FaunaUser>(
-        fql`${User}.byId(${user.id}).update(${format.to(_user)})`,
+        fql`Collection(${collectionNames.user}).byId(${user.id}).update(${format.to(_user)})`,
       )
       return format.from(response.data)
     },
     async deleteUser(userId) {
       await client.query(fql`
         // Delete the user's sessions
-        ${Session}.byUserId(${userId}).forEach(session => session.delete())
+        Collection(${collectionNames.session}).byUserId(${userId}).forEach(session => session.delete())
         
         // Delete the user's accounts
-        ${Account}.byUserId(${userId}).forEach(account => account.delete())
+        Collection(${collectionNames.account}).byUserId(${userId}).forEach(account => account.delete())
         
         // Delete the user
-        ${User}.byId(${userId}).delete()
+        Collection(${collectionNames.user}).byId(${userId}).delete()
       `)
     },
     async linkAccount(account) {
       await client.query<FaunaAccount>(
-        fql`${Account}.create(${format.to(account)})`,
+        fql`Collection(${collectionNames.account}).create(${format.to(account)})`,
       )
       return account
     },
     async unlinkAccount({ provider, providerAccountId }) {
       const response = await client.query<FaunaAccount>(
-        fql`${Account}.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`,
+        fql`Collection(${collectionNames.account}).byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`,
       )
       return format.from<AdapterAccount>(response.data)
     },
     async getSessionAndUser(sessionToken) {
       const response = await client.query<[FaunaUser, FaunaSession]>(fql`
-        let session = ${Session}.bySessionToken(${sessionToken}).first()
+        let session = Collection(${collectionNames.session}).bySessionToken(${sessionToken}).first()
         if (session != null) {
-          let user = ${User}.byId(session.userId)
+          let user = Collection(${collectionNames.user}).byId(session.userId)
           if (user != null) {
             [user, session]
           } else {
@@ -314,13 +310,13 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
     },
     async createSession(session) {
       await client.query<FaunaSession>(
-        fql`${Session}.create(${format.to(session)})`,
+        fql`Collection(${collectionNames.session}).create(${format.to(session)})`,
       )
       return session
     },
     async updateSession(session) {
       const response = await client.query<FaunaSession>(
-        fql`${Session}.bySessionToken(${
+        fql`Collection(${collectionNames.session}).bySessionToken(${
           session.sessionToken
         }).first().update(${format.to(session)})`,
       )
@@ -328,12 +324,12 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
     },
     async deleteSession(sessionToken) {
       await client.query(
-        fql`${Session}.bySessionToken(${sessionToken}).first().delete()`,
+        fql`Collection(${collectionNames.session}).bySessionToken(${sessionToken}).first().delete()`,
       )
     },
     async createVerificationToken(verificationToken) {
       await client.query<FaunaVerificationToken>(
-        fql`${VerificationToken}.create(${format.to(
+        fql`Collection(${collectionNames.verificationToken}).create(${format.to(
           verificationToken,
         )})`,
       )
@@ -341,12 +337,12 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
     },
     async useVerificationToken({ identifier, token }) {
       const response = await client.query<FaunaVerificationToken>(
-        fql`${VerificationToken}.byIdentifierAndToken(${identifier}, ${token}).first()`,
+        fql`Collection(${collectionNames.verificationToken}).byIdentifierAndToken(${identifier}, ${token}).first()`,
       )
       if (response.data === null) return null
       // Delete the verification token so it can only be used once
       await client.query(
-        fql`${VerificationToken}.byId(${response.data.id}).delete()`,
+        fql`Collection(${collectionNames.verificationToken}).byId(${response.data.id}).delete()`,
       )
       const _verificationToken: Partial<FaunaVerificationToken> = { ...response.data }
       delete _verificationToken.id
