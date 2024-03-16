@@ -104,6 +104,9 @@ class ThemeRenderContext extends MarkdownThemeRenderContext {
       if (url.startsWith("/reference/core/core.md")) {
         url = url.replace("/core.md", "")
       }
+      if (url.includes("/@auth")) {
+        url = url.replace("/@auth", "")
+      }
       return url
     },
   }

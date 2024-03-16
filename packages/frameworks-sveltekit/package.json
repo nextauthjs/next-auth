@@ -40,7 +40,9 @@
     "@types/set-cookie-parser": "^2.4.7",
     "svelte": "^4.0.0",
     "svelte-check": "^3.4.3",
-    "tslib": "^2.4.1"
+    "tslib": "^2.4.1",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-markdown": "4.0.0-next.53"
   },
   "dependencies": {
     "@auth/core": "workspace:*",

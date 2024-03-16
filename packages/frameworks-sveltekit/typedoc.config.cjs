@@ -4,14 +4,12 @@
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').MarkdownTheme}
  */
 module.exports = {
-  entryPoints: ["../packages/core", "../packages/frameworks-sveltekit"],
-  entryPointStrategy: "packages",
-  out: "pages/reference",
-  // tsconfig: path.join(process.cwd(), "..", "packages", "core", "tsconfig.json"),
+  entryPoints: ["src/lib/index.ts", "src/lib/env.ts", "src/lib/client.ts", "src/lib/adapter.ts", "src/lib/actions.ts", "src/lib/types.ts"],
+  entryPointStrategy: "expand",
+  tsconfig: "./tsconfig.json",
   plugin: [
-    "typedoc-plugin-markdown",
-    require.resolve("./typedoc-nextauth.cjs"),
-    require.resolve("./typedoc-mdn-links.cjs"),
+    require.resolve("./../../docs/typedoc-nextauth.cjs"),
+    require.resolve("./../../docs/typedoc-mdn-links.cjs"),
   ],
   hideInPageTOC: true,
   disableSources: true,
@@ -53,13 +51,11 @@ module.exports = {
   theme: "nextauth",
 
   outputFileStrategy: "modules",
-  entryModule: `@auth/core`,
+  entryModule: "@auth/sveltekit",
+  entryFileName: "index",
   excludeGroups: true,
   hidePageHeader: true,
   useCodeBlocks: false,
   expandObjects: true,
-  entryFileName: "index",
-  // svelteKitEntryModule: `@auth/sveltekit`,
-  // svelteKitEntryFileName: "sveltekit.md",
-  // svelteKitPublicPath: "/reference/sveltekit",
+  publicPath: "/reference/sveltekit",
 }

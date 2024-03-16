@@ -1,17 +1,23 @@
 // @ts-check
+const fs = require("node:fs")
+const path = require("node:path")
+
+const providers = fs
+  .readdirSync(path.join(__dirname, "src", "providers"))
+  .filter((file) => file.endsWith(".ts") && !file.startsWith("oauth"))
+  .map((p) => `src/providers/${p}`)
 
 /**
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').MarkdownTheme}
  */
 module.exports = {
-  entryPoints: ["../packages/core", "../packages/frameworks-sveltekit"],
-  entryPointStrategy: "packages",
-  out: "pages/reference",
-  // tsconfig: path.join(process.cwd(), "..", "packages", "core", "tsconfig.json"),
+  entryPoints: ["src/index.ts", "src/adapters.ts", "src/errors.ts", "src/jwt.ts", "src/types.ts"].concat(providers),
+  entryPointStrategy: "expand",
+  tsconfig: "./tsconfig.json",
   plugin: [
     "typedoc-plugin-markdown",
-    require.resolve("./typedoc-nextauth.cjs"),
-    require.resolve("./typedoc-mdn-links.cjs"),
+    require.resolve("./../../docs/typedoc-nextauth.cjs"),
+    require.resolve("./../../docs/typedoc-mdn-links.cjs"),
   ],
   hideInPageTOC: true,
   disableSources: true,
@@ -53,13 +59,11 @@ module.exports = {
   theme: "nextauth",
 
   outputFileStrategy: "modules",
-  entryModule: `@auth/core`,
+  entryModule: "@auth/core",
+  entryFileName: "index",
   excludeGroups: true,
   hidePageHeader: true,
   useCodeBlocks: false,
   expandObjects: true,
-  entryFileName: "index",
-  // svelteKitEntryModule: `@auth/sveltekit`,
-  // svelteKitEntryFileName: "sveltekit.md",
-  // svelteKitPublicPath: "/reference/sveltekit",
+  publicPath: "/reference/core",
 }
