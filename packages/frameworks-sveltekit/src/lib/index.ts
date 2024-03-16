@@ -287,6 +287,7 @@ import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
 import { Auth, isAuthAction } from "@auth/core"
+import { building } from "$app/environment"
 
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
@@ -317,6 +318,8 @@ export function SvelteKitAuth(
 } {
   return {
     signIn: async (event) => {
+      if (building) return
+
       const { request } = event
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
@@ -342,12 +345,20 @@ export function SvelteKitAuth(
       )
     },
     signOut: async (event) => {
+      if (building) return
+
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
       const options = Object.fromEntries(await event.request.formData())
       await signOut(options, _config, event)
     },
     async handle({ event, resolve }) {
+      if (building) {
+        event.locals.auth ??= async () => null
+        event.locals.getSession ??= event.locals.auth
+        return resolve(event)
+      }
+
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
 
