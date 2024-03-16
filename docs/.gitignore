@@ -4,5 +4,5 @@ node_modules
 tsconfig.tsbuildinfo
 
 # Generated Typedoc
-pages/reference/core.mdx
-pages/reference/core
+!pages/reference/_meta.js
+pages/reference/*
