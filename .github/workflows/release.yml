@@ -16,6 +16,7 @@ on:
         description: Package name (npm)
         options:
           - "@auth/core"
+          - "@auth/appwrite-adapter"
           - "@auth/dgraph-adapter"
           - "@auth/drizzle-adapter"
           - "@auth/dynamodb-adapter"
@@ -42,6 +43,7 @@ on:
         options:
           - "core"
           - "frameworks-nextjs"
+          - "adapter-appwrite"
           - "adapter-edgedb"
           - "adapter-dgraph"
           - "adapter-drizzle"
