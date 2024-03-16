@@ -28,7 +28,7 @@ export async function signIn(
     "signin",
     protocol,
     headers,
-   env,
+    env,
     config.basePath
   )
 
@@ -86,7 +86,7 @@ export async function signOut(
   const headers = new Headers(request.headers)
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL("signout", protocol, headers,env, config.basePath)
+  const url = createActionURL("signout", protocol, headers, env, config.basePath)
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -111,7 +111,7 @@ export async function auth(
 
   const { request: req, url: { protocol } } = event
 
-  const sessionUrl = createActionURL("session", protocol, req.headers,env, config.basePath)
+  const sessionUrl = createActionURL("session", protocol, req.headers, env, config.basePath)
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },
   })
