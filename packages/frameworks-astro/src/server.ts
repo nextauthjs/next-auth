@@ -1,39 +1,25 @@
 // virtual module typedefs
 import '../module.d.ts'
 
-import { Auth } from '@auth/core'
-import type { AuthAction, Session } from '@auth/core/types'
+import { Auth, isAuthAction, setEnvDefaults, createActionURL } from '@auth/core'
+import type { Session } from '@auth/core/types'
 import { APIContext } from 'astro'
 import authConfig from 'auth:config'
 import { parseString } from 'set-cookie-parser'
 
-const actions: AuthAction[] = [
-  "providers",
-  "session",
-  "csrf",
-  "signin",
-  "signout",
-  "callback",
-  "verify-request",
-  "error",
-]
-
 function AstroAuthHandler(config?: ReturnType<typeof authConfig>) {
   return async (ctx: APIContext) => {
-    // @ts-expect-error .env isn't detected by ts
-    const { AUTH_SECRET, AUTH_TRUST_HOST, VERCEL, NODE_ENV } = import.meta.env
     config ??= authConfig(ctx)
+    setEnvDefaults(import.meta.env, config)
     const { basePath } = config
-    config.secret ??= AUTH_SECRET
-    config.trustHost ??= !!(AUTH_TRUST_HOST ?? VERCEL ?? NODE_ENV !== 'production')
 
     const { request, cookies } = ctx
     const url = new URL(request.url)
     const action = url.pathname
       .slice(basePath!.length + 1)
-      .split("/")[0] as AuthAction
+      .split("/")[0]
 
-    if (!actions.includes(action) || !url.pathname.startsWith(basePath + "/")) {
+    if (!isAuthAction(action) || !url.pathname.startsWith(basePath + "/")) {
       return
     }
 
@@ -85,11 +71,10 @@ export function AstroAuth(config?: ReturnType<typeof authConfig>) {
  */
 export async function getSession(ctx: APIContext, config?: ReturnType<typeof authConfig>): Promise<Session | null> {
   config ??= authConfig(ctx)
-	// @ts-ignore
-	config.secret ??= import.meta.env.AUTH_SECRET
-	config.trustHost ??= true
+	setEnvDefaults(import.meta.env, config)
 
-	const url = new URL(`${config.basePath}/session`, ctx.request.url)
+        const protocol = ctx.request.headers.get("x-forwarded-proto") === "http" ? "http" : "https"
+	const url = createActionURL("session", protocol, ctx.request.headers, import.meta.env, config.basePath)
 	const response = await Auth(new Request(url, { headers: ctx.request.headers }), config) as Response
 	const { status = 200 } = response
 
