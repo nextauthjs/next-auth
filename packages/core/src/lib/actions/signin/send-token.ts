@@ -3,6 +3,7 @@ import { AccessDenied } from "../../../errors.js"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Account } from "../../../types.js"
+import type { AdapterUser } from "../../../adapters.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -19,7 +20,8 @@ export async function sendToken(
   const email = normalizer(body?.email)
 
   const defaultUser = { id: crypto.randomUUID(), email, emailVerified: null }
-  const user = (await adapter!.getUserByEmail(email)) ?? defaultUser
+  const user = ((await adapter!.getUserByEmail(email)) ??
+    defaultUser) satisfies AdapterUser
 
   const account = {
     providerAccountId: email,
