@@ -59,7 +59,7 @@ module.exports = {
   theme: "nextauth",
 
   outputFileStrategy: "modules",
-  entryModule: `@auth/core`,
+  entryModule: "@auth/core",
   excludeGroups: true,
   hidePageHeader: true,
   useCodeBlocks: false,

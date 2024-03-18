@@ -50,6 +50,7 @@ module.exports = {
   ],
   theme: "nextauth",
 
+  name: "sveltekit",
   outputFileStrategy: "modules",
   entryModule: "@auth/sveltekit",
   entryFileName: "src/lib/index.ts",
@@ -57,5 +58,5 @@ module.exports = {
   hidePageHeader: true,
   useCodeBlocks: false,
   expandObjects: true,
-  publicPath: "/reference/sveltekit",
+  // publicPath: "/reference/sveltekit",
 }

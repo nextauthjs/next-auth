@@ -54,6 +54,7 @@ module.exports = {
   ],
   theme: "nextauth",
 
+  name: "next-auth",
   outputFileStrategy: "modules",
   entryModule: "next-auth",
   entryFileName: "src/index.tsx",

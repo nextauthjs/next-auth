@@ -58,6 +58,7 @@ module.exports = {
   ],
   theme: "nextauth",
 
+  name: "core",
   outputFileStrategy: "modules",
   entryModule: "@auth/core",
   entryFileName: "src/index.ts",

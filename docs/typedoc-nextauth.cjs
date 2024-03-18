@@ -101,12 +101,12 @@ class ThemeRenderContext extends MarkdownThemeRenderContext {
      * @param {string} url
      */
     parseUrl: (url) => {
-      if (url.startsWith("/reference/core/core.md")) {
-        url = url.replace("/core.md", "")
-      }
-      if (url.includes("/sveltekit/@auth/sveltekit.md")) {
-        url = url.replace("/sveltekit.md", "")
-      }
+      // if (url.startsWith("/reference/core/core.md")) {
+      //   url = url.replace("/core.md", "")
+      // }
+      // if (url.includes("/sveltekit/@auth/sveltekit.md")) {
+      //   url = url.replace("/sveltekit.md", "")
+      // }
       return url
     },
   }

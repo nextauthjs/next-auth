@@ -51,8 +51,9 @@ module.exports = {
   ],
   theme: "nextauth",
 
+  name: "adapter-prisma",
   outputFileStrategy: "modules",
-  entryModule: "@auth/prisma-adapter",
+  entryModule: "@auth/adapter-prisma",
   entryFileName: "src/index.ts",
   excludeGroups: true,
   hidePageHeader: true,

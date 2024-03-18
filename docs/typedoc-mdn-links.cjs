@@ -1,5 +1,9 @@
 // @ts-check
 
+// TODO:
+// There is an official 'typedoc-plugin-mdn-links', do we want to try that?
+// See: https://www.npmjs.com/package/typedoc-plugin-mdn-links
+
 const standards = new Set([
   "Headers",
   "Request",
