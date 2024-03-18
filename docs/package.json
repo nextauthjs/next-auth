@@ -5,7 +5,7 @@
   "scripts": {
     "typedoc": "typedoc",
     "dev": "typedoc --watch & next dev",
-    "build": "next build",
+    "build": "typedoc && next build",
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
     "lint:fix": "eslint ./{components,pages,utils} --fix",
