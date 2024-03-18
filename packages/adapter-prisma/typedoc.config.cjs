@@ -4,20 +4,12 @@
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').MarkdownTheme}
  */
 module.exports = {
-  entryPoints: [
-    "../packages/core",
-    "../packages/frameworks-sveltekit",
-    "../packages/next-auth",
-    "../packages/adapter-prisma",
-  ],
-  entryPointStrategy: "packages",
-  out: "pages/reference",
-  // tsconfig: path.join(process.cwd(), "..", "packages", "core", "tsconfig.json"),
+  entryPoints: ["src/index.ts"],
+  entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   plugin: [
-    "typedoc-plugin-markdown",
-    require.resolve("./typedoc-nextauth.cjs"),
-    require.resolve("./typedoc-mdn-links.cjs"),
+    require.resolve("./../../docs/typedoc-nextauth.cjs"),
+    require.resolve("./../../docs/typedoc-mdn-links.cjs"),
   ],
   hideInPageTOC: true,
   disableSources: true,
@@ -32,6 +24,7 @@ module.exports = {
   githubPages: false,
   hideGenerator: true,
   readme: "none",
+  mergeReadme: true,
   sort: ["kind", "static-first", "required-first", "alphabetical"],
   kindSortOrder: [
     "Function",
@@ -59,9 +52,11 @@ module.exports = {
   theme: "nextauth",
 
   outputFileStrategy: "modules",
-  entryModule: `@auth/core`,
+  entryModule: "@auth/prisma-adapter",
+  entryFileName: "src/index.ts",
   excludeGroups: true,
   hidePageHeader: true,
   useCodeBlocks: false,
   expandObjects: true,
+  publicPath: "/reference/prisma-adapter",
 }

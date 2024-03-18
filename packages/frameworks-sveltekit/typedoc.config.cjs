@@ -52,7 +52,7 @@ module.exports = {
 
   outputFileStrategy: "modules",
   entryModule: "@auth/sveltekit",
-  entryFileName: "index",
+  entryFileName: "src/lib/index.ts",
   excludeGroups: true,
   hidePageHeader: true,
   useCodeBlocks: false,

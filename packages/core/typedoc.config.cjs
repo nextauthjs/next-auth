@@ -60,7 +60,7 @@ module.exports = {
 
   outputFileStrategy: "modules",
   entryModule: "@auth/core",
-  entryFileName: "index",
+  entryFileName: "src/index.ts",
   excludeGroups: true,
   hidePageHeader: true,
   useCodeBlocks: false,

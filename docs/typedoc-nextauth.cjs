@@ -64,7 +64,7 @@ class ThemeRenderContext extends MarkdownThemeRenderContext {
   helpers = {
     ...this.helpers,
     /**
-     * Parse docusauruas style adomination to a Callout element
+     * Parse Docusaurus style admonitions to Callout elements
      * @param {string} comments
      */
     parseComments: (comments) => {
@@ -104,8 +104,8 @@ class ThemeRenderContext extends MarkdownThemeRenderContext {
       if (url.startsWith("/reference/core/core.md")) {
         url = url.replace("/core.md", "")
       }
-      if (url.includes("/@auth")) {
-        url = url.replace("/@auth", "")
+      if (url.includes("/sveltekit/@auth/sveltekit.md")) {
+        url = url.replace("/sveltekit.md", "")
       }
       return url
     },
