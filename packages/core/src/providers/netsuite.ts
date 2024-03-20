@@ -206,7 +206,7 @@ export interface NetSuiteProfile {
 export default function NetSuite<P extends NetSuiteProfile>(
   config: OAuthNetSuiteOptions<P>
 ): OAuthConfig<P> {
-  const { issuer, userinfo: userInfo, prompt = 'none', scope } = config
+  const { issuer, userinfo: userInfo, prompt = 'none', scope = 'restlets rest_webservices', clientId, clientSecret } = config
 
   return {
     id: "netsuite",
@@ -216,10 +216,10 @@ export default function NetSuite<P extends NetSuiteProfile>(
     authorization: {
       url: `https://${issuer}.app.netsuite.com/app/login/oauth2/authorize.nl`,
       params: {
-        client_id: `${config.clientId}`,
+        client_id: clientId,
         prompt: prompt,
         response_type: 'code',
-        scope: scope || 'restlets rest_webservices',
+        scope,
       }
     },
     token: {
@@ -228,7 +228,7 @@ export default function NetSuite<P extends NetSuiteProfile>(
         grant_type: "authorization_code",
       }
     },
-    userinfo: `${userInfo}`,
+    userinfo: userInfo,
     profile(profile) {
       // This is the default runtime.getCurrentUser() object returned from the RESTlet or SUITELet
       return {
@@ -240,8 +240,8 @@ export default function NetSuite<P extends NetSuiteProfile>(
         contact: profile?.contact
       }
     },
-    clientId: `${config.clientId}`,
-    clientSecret: `${config.clientSecret}`,
+    clientId,
+    clientSecret,
     style: { logo: "/netsuite.png", bg: "#3a4f5f", text: "#fff" },
     options: config,
   }
