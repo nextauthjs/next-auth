@@ -41,12 +41,16 @@ export interface OAuthNetSuiteOptions<P extends OAuthUserConfig<Record<string, a
 
 export interface NetSuiteProfile {
   // Main N/runtime.getCurrentUser() object return
-  id: string
+  id: number
   name: string
   email: string
-  location: string
-  role: string
-  contact?: string,
+  location: number
+  role: number
+  roleId?: string
+  roleCenter?: string
+  contact?: number
+  subsidiary?: number
+  department?: number
 }
 
 /**
