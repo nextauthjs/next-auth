@@ -163,7 +163,7 @@ export interface NetSuiteProfile {
  *       NetSuite({
  *         clientId: NETSUITE_CLIENT_ID,
  *         clientSecret: NETSUITE_CLIENT_SECRET,
- *         issuer: NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod
+ *         issuer: NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
  *        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
  *        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
  *         userinfo: "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
