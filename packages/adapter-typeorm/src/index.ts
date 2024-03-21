@@ -1,8 +1,8 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://typeorm.io">TypeORM</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://typeorm.io">
- *   <img style={{display: "block", height: "56px" }} src="https://authjs.dev/img/adapters/typeorm.png" />
+ *   <img style={{display: "block" }} width="56" src="/img/adapters/typeorm.svg" />
  *  </a>
  * </div>
  *
@@ -68,14 +68,12 @@ export async function getManager(options: {
  *
  * Configure Auth.js to use the TypeORM Adapter:
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```ts title="pages/api/auth/[...nextauth]/route.ts"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  *
- *
- * export default NextAuth({
+ * export const { handlers, auth, signIn, signOut } = NextAuth({
  *   adapter: TypeORMAdapter("yourconnectionstring"),
- *   ...
  * })
  * ```
  *

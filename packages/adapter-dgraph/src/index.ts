@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://dgraph.io/docs">Dgraph</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://dgraph.io/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/dgraph.svg" width="100px"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/dgraph.svg" width="100"/>
  *  </a>
  * </div>
  *
