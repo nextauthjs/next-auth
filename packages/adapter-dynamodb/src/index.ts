@@ -47,7 +47,7 @@ export interface DynamoDBAdapterOptions {
  * You need to pass `DynamoDBDocument` client from the modular [`aws-sdk`](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-dynamodb-utilities.html) v3 to the adapter.
  * The default table name is `next-auth`, but you can customise that by passing `{ tableName: 'your-table-name' }` as the second parameter in the adapter.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
  * import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
  * import NextAuth from "next-auth";
@@ -86,7 +86,6 @@ export interface DynamoDBAdapterOptions {
  *   adapter: DynamoDBAdapter(
  *     client
  *   ),
- *   ...
  * });
  * ```
  *
@@ -150,7 +149,7 @@ export interface DynamoDBAdapterOptions {
  *
  * You can create this table with infrastructure as code using [`aws-cdk`](https://github.com/aws/aws-cdk) with the following table definition:
  *
- * ```javascript title=stack.ts
+ * ```js title="stack.ts"
  * new dynamodb.Table(this, `NextAuthTable`, {
  *   tableName: "next-auth",
  *   partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
@@ -202,7 +201,7 @@ export interface DynamoDBAdapterOptions {
  *
  * You can configure your custom table schema by passing the `options` key to the adapter constructor:
  *
- * ```javascript
+ * ```js
  * const adapter = DynamoDBAdapter(client, {
  *   tableName: "custom-table-name",
  *   partitionKey: "custom-pk",
