@@ -51,7 +51,7 @@ module.exports = {
   excludeInternal: true,
   excludePrivate: true,
   excludeProtected: true,
-  cleanOutputDir: true,
+  cleanOutputDir: false,
   gitRevision: "main",
   githubPages: false,
   hideGenerator: true,
