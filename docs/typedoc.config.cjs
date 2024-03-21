@@ -30,7 +30,6 @@ module.exports = {
     "../packages/adapter-sequelize",
     "../packages/adapter-supabase",
     "../packages/adapter-surrealdb",
-    "../packages/adapter-triplit",
     "../packages/adapter-typeorm",
     "../packages/adapter-unstorage",
     "../packages/adapter-upstash-redis",
@@ -38,7 +37,6 @@ module.exports = {
   ],
   entryPointStrategy: "packages",
   out: "pages/reference",
-  // tsconfig: path.join(process.cwd(), "..", "packages", "core", "tsconfig.json"),
   tsconfig: "./tsconfig.json",
   plugin: [
     "typedoc-plugin-markdown",
