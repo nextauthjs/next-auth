@@ -238,7 +238,6 @@ export async function getManager(options: {
  *
  * export default NextAuth({
  *   adapter: TypeORMAdapter("yourconnectionstring", { entities }),
- *   ...
  * })
  * ```
  *
@@ -274,7 +273,6 @@ export async function getManager(options: {
  *
  * export default NextAuth({
  *   adapter: TypeORMAdapter(connection),
- *   ...
  * })
  * ```
  */

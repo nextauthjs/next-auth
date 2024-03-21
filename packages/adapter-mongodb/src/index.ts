@@ -139,7 +139,6 @@ export function _id(hex?: string) {
  * // https://authjs.dev/reference/providers/oauth
  * export default NextAuth({
  *   adapter: MongoDBAdapter(clientPromise),
- *   ...
  * })
  * ```
  **/

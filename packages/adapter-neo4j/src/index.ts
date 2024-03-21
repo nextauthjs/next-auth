@@ -18,7 +18,7 @@ import { type Session, isInt, integer } from "neo4j-driver"
 import type { Adapter } from "@auth/core/adapters"
 
 /** This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument. */
-export interface Neo4jOptions extends Session {}
+export interface Neo4jOptions extends Session { }
 
 /**
  * ## Setup
@@ -42,9 +42,9 @@ export interface Neo4jOptions extends Session {}
  *   // https://authjs.dev/reference/core/providers
  *   providers: [],
  *   adapter: Neo4jAdapter(neo4jSession),
- *   ...
  * })
  * ```
+ *
  * ## Advanced usage
  *
  * ### Schema
@@ -76,7 +76,6 @@ export interface Neo4jOptions extends Session {}
  * 1. For **both** Community Edition & Enterprise Edition create constraints and indexes
  *
  * ```cypher
- *
  * CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
  * ON (u:User) ASSERT u.id IS UNIQUE;
  *

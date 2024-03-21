@@ -143,9 +143,7 @@ export function hydrateDates(json: object) {
  *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UnstorageAdapter(storage, {baseKeyPrefix: "app2:"})
- *   ...
  * })
  * ```
  *
@@ -161,9 +159,7 @@ export function hydrateDates(json: object) {
  *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UnstorageAdapter(storage, {useItemRaw: true})
- *   ...
  * })
  * ```
  */
