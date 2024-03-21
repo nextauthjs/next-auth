@@ -222,10 +222,9 @@ import type { Client } from "edgedb"
  *
  * ### Set an environment variable
  *
- * ```bash title=".env"
- * EDGEDB_DSN=edgedb://johndoe:supersecure@myhost.com:420
  * ```
- *
+ * EDGEDB_DSN="edgedb://johndoe:supersecure@myhost.com:420"
+ * ```
  *
  * ### Apply migrations
  *
