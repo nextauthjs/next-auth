@@ -1,4 +1,4 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/pouchdb.svg" width="64" height="64" />
 
@@ -12,8 +12,8 @@ npm install pouchdb pouchdb-find @auth/pouchdb-adapter
 
 <Callout>
   Depending on your architecture you can use PouchDB's http adapter to reach any
-  database compliant with the CouchDB protocol (CouchDB, Cloudant, ...) or use
-  any other PouchDB compatible adapter (leveldb, in-memory, ...)
+  database compliant with the CouchDB protocol (CouchDB, Cloudant, etc.) or use
+  any other PouchDB compatible adapter (leveldb, in-memory, etc.)
 </Callout>
 
 ## Setup
@@ -26,16 +26,16 @@ npm install pouchdb pouchdb-find @auth/pouchdb-adapter
 Add this adapter to your `auth.js` next-auth configuration file.
 
 ```js filename="./auth.js"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import { PouchDBAdapter } from "@auth/pouchdb-adapter";
-import PouchDB from "pouchdb";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { PouchDBAdapter } from "@auth/pouchdb-adapter"
+import PouchDB from "pouchdb"
 
 // Setup your PouchDB instance and database
 PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
-  .plugin(require("pouchdb-find")); // Don't forget the `pouchdb-find` plugin
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
 
-const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" });
+const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/configuration/auth-options
@@ -48,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   adapter: PouchDBAdapter(pouchdb),
-});
+})
 ```
 
 ## Advanced usage

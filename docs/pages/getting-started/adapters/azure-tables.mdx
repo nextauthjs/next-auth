@@ -45,10 +45,7 @@ const authClient = new TableClient(
 // https://authjs.dev/reference/configuration/auth-options
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // https://authjs.dev/reference/core/providers
-  providers: [
-    // ...
-  ],
+  providers: [],
   adapter: TableStorageAdapter(authClient),
-  // ...
 } satisfies AuthConfig)
 ```

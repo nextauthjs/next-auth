@@ -18,15 +18,15 @@ npm install @upstash/redis @auth/upstash-redis-adapter
 Configure Auth.js to use the Upstash Redis Adapter:
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter";
-import upstashRedisClient from "@upstash/redis";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import upstashRedisClient from "@upstash/redis"
 
 const redis = upstashRedisClient(
   process.env.UPSTASH_REDIS_URL,
   process.env.UPSTASH_REDIS_TOKEN
-);
+)
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UpstashRedisAdapter(redis),
@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+})
 ```
 
 ## Advanced usage
@@ -59,15 +59,13 @@ const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
-};
+}
 ```
 
 Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
 
-Example:
-
 ```ts
 export default NextAuth({
   adapter: UpstashRedisAdapter(redis, { baseKeyPrefix: "app2:" }),
-});
+})
 ```
