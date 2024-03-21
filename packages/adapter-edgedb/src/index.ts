@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.edgedb.com/">Edge DB</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://www.edgedb.com/">Edge DB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.edgedb.com/">
  *   <img style={{display: "block"}} src="/img/adapters/edgedb.svg" width="38" />
  *  </a>
@@ -40,11 +40,13 @@ import type { Client } from "edgedb"
  * Follow the instructions below, or read the [EdgeDB quickstart](https://www.edgedb.com/docs/intro/quickstart) to install the EdgeDB CLI and initialize a project
  *
  * ### Linux or macOS
+ *
  * ```bash
  * curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com | sh
  * ```
  *
  * ### Windows
+ *
  * ```powershell
  * iwr https://ps1.edgedb.com -useb | iex
  * ```
@@ -65,7 +67,7 @@ import type { Client } from "edgedb"
  *
  * Configure your NextAuth.js to use the EdgeDB Adapter:
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { EdgeDBAdapter } from "@auth/edgedb-adapter"
@@ -96,7 +98,7 @@ import type { Client } from "edgedb"
  *         property name -> str;
  *         required property email -> str {
  *             constraint exclusive;
- *         }
+ *         };
  *         property emailVerified -> datetime;
  *         property image -> str;
  *         multi link accounts := .<user[is Account];
@@ -126,14 +128,13 @@ import type { Client } from "edgedb"
  *        property createdAt -> datetime {
  *             default := datetime_current();
  *         };
- *
- *        constraint exclusive on ((.provider, .providerAccountId))
+ *        constraint exclusive on ((.provider, .providerAccountId));
  *     }
  *
  *     type Session {
  *         required property sessionToken -> str {
  *             constraint exclusive;
- *         }
+ *         };
  *         required property userId := .user.id;
  *         required property expires -> datetime;
  *         required link user -> User {
@@ -148,37 +149,38 @@ import type { Client } from "edgedb"
  *         required property identifier -> str;
  *         required property token -> str {
  *             constraint exclusive;
- *         }
+ *         };
  *         required property expires -> datetime;
  *         property createdAt -> datetime {
  *             default := datetime_current();
  *         };
  *
- *         constraint exclusive on ((.identifier, .token))
+ *         constraint exclusive on ((.identifier, .token));
  *     }
  * }
  *
  * # Disable the application of access policies within access policies
  * # themselves. This behavior will become the default in EdgeDB 3.0.
  * # See: https://www.edgedb.com/docs/reference/ddl/access_policies#nonrecursive
+ *
  * using future nonrecursive_access_policies;
  * ```
  *
  * ### Migrate the database schema
  *
- * Create a migration
+ * 1. Create a migration
  *
  * ```
  * edgedb migration create
  * ```
  *
- * Apply the migration
+ * 2. Apply the migration
  *
  * ```
  * edgedb migrate
  * ```
  *
- * To learn more about [EdgeDB migrations](https://www.edgedb.com/docs/intro/migrations#generate-a-migration), check out the [Migrations docs](https://www.edgedb.com/docs/intro/migrations).
+ * To learn more about [EdgeDB migrations](https://www.edgedb.com/docs/intro/migrations#generate-a-migration) check out the [Migrations docs](https://www.edgedb.com/docs/intro/migrations).
  *
  * ### Generate the query builder
  *
@@ -188,31 +190,18 @@ import type { Client } from "edgedb"
  *
  * This will generate the [query builder](https://www.edgedb.com/docs/clients/js/querybuilder) so that you can write fully typed EdgeQL queries with TypeScript in a code-first way.
  *
- * For example
- *
  * ```ts
  * const query = e.select(e.User, () => ({
- *         id: true,
- *         email: true,
- *         emailVerified: true,
- *         name: true,
- *         image: true,
- *         filter_single: { email: 'johndoe@example.com' },
- *       }));
+ *   id: true,
+ *   email: true,
+ *   emailVerified: true,
+ *   name: true,
+ *   image: true,
+ *   filter_single: { email: "johndoe@example.com" },
+ * }));
  *
  * return await query.run(client);
- *
- * // Return type:
- * // {
- * //     id: string;
- * //     email: string;
- * //     emailVerified: Date | null;
- * //     image: string | null;
- * //     name: string | null;
- * // } | null
- *
  * ```
- *
  *
  * ## Deploying
  *
@@ -220,21 +209,16 @@ import type { Client } from "edgedb"
  *
  * First deploy an EdgeDB instance on your preferred cloud provider:
  *
- * [AWS](https://www.edgedb.com/docs/guides/deployment/aws_aurora_ecs)
- *
- * [Google Cloud](https://www.edgedb.com/docs/guides/deployment/gcp)
- *
- * [Azure](https://www.edgedb.com/docs/guides/deployment/azure_flexibleserver)
- *
- * [DigitalOcean](https://www.edgedb.com/docs/guides/deployment/digitalocean)
- *
- * [Fly.io](https://www.edgedb.com/docs/guides/deployment/fly_io)
- *
- * [Docker](https://www.edgedb.com/docs/guides/deployment/docker) (cloud-agnostic)
+ * - [AWS](https://www.edgedb.com/docs/guides/deployment/aws_aurora_ecs)
+ * - [Google Cloud](https://www.edgedb.com/docs/guides/deployment/gcp)
+ * - [Azure](https://www.edgedb.com/docs/guides/deployment/azure_flexibleserver)
+ * - [DigitalOcean](https://www.edgedb.com/docs/guides/deployment/digitalocean)
+ * - [Fly.io](https://www.edgedb.com/docs/guides/deployment/fly_io)
+ * - [Docker](https://www.edgedb.com/docs/guides/deployment/docker) (cloud-agnostic)
  *
  * ### Find your instance’s DSN
  *
- * The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud you are deploying to.
+ * The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud provider your'e deploying to.
  *
  * ### Set an environment variable
  *
@@ -264,8 +248,6 @@ import type { Client } from "edgedb"
  * })
  * ```
  *
- *
- *
  * ### Apply migrations
  *
  * Use the DSN to apply migrations against your remote instance.
@@ -285,7 +267,7 @@ import type { Client } from "edgedb"
  *   "start": "next start",
  *   "lint": "next lint",
  * +  "prebuild": "npx @edgedb/generate edgeql-js"
- * },
+ * }
  * ```
  *
  */

@@ -14,6 +14,7 @@
  *
  * @module @auth/typeorm-adapter
  */
+
 import type {
   Adapter,
   AdapterUser,
@@ -68,11 +69,11 @@ export async function getManager(options: {
  *
  * Configure Auth.js to use the TypeORM Adapter:
  *
- * ```ts title="pages/api/auth/[...nextauth]/route.ts"
+ * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  *
- * export const { handlers, auth, signIn, signOut } = NextAuth({
+ * export default NextAuth({
  *   adapter: TypeORMAdapter("yourconnectionstring"),
  * })
  * ```
@@ -86,8 +87,6 @@ export async function getManager(options: {
  * The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/blob/master/docs/entities.md) to define the shape of your data.
  *
  * If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
- *
- * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
  * 1. Create a file containing your modified entities:
  *
@@ -231,7 +230,7 @@ export async function getManager(options: {
  *
  * 2. Pass them to `TypeORMAdapter`
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  * import * as entities from "lib/entities"
@@ -241,12 +240,12 @@ export async function getManager(options: {
  * })
  * ```
  *
- * :::tip Synchronize your database ♻
+ * :::tip Synchronize your database
  * The `synchronize: true` option in TypeORM will generate SQL that exactly matches the entities. This will automatically apply any changes it finds in the entity model. This is a useful option in development.
  * :::
  *
  * :::warning Using synchronize in production
- * `synchronize: true` should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema! We recommend that you synchronize/migrate your production database at build-time.
+ * The option `synchronize: true` should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema! We recommend that you synchronize/migrate your production database at build-time.
  * :::
  *
  * ### Naming Conventions
@@ -255,26 +254,27 @@ export async function getManager(options: {
  *
  * For example, you can add the naming convention option to the connection object in your NextAuth config.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  * import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
  * import { ConnectionOptions } from "typeorm"
  *
  * const connection: ConnectionOptions = {
- *     type: "mysql",
- *     host: "localhost",
- *     port: 3306,
- *     username: "test",
- *     password: "test",
- *     database: "test",
- *     namingStrategy: new SnakeNamingStrategy()
+ *   type: "mysql",
+ *   host: "localhost",
+ *   port: 3306,
+ *   username: "test",
+ *   password: "test",
+ *   database: "test",
+ *   namingStrategy: new SnakeNamingStrategy()
  * }
  *
  * export default NextAuth({
  *   adapter: TypeORMAdapter(connection),
  * })
  * ```
+ *
  */
 export function TypeORMAdapter(
   dataSource: string | DataSourceOptions,
