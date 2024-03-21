@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/sequelize-adapter",
-  entryFileName: "../sequelize.mdx",
+  entryFileName: "../sequelize-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

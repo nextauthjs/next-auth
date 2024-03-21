@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/dgraph-adapter",
-  entryFileName: "../dgraph.mdx",
+  entryFileName: "../dgraph-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

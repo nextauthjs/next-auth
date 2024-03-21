@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/xata-adapter",
-  entryFileName: "../xata.mdx",
+  entryFileName: "../xata-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

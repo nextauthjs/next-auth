@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/mikro-orm-adapter",
-  entryFileName: "../mikro-orm.mdx",
+  entryFileName: "../mikro-orm-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

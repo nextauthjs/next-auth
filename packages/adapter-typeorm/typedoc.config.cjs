@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/typeorm-adapter",
-  entryFileName: "../typeorm.mdx",
+  entryFileName: "../typeorm-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

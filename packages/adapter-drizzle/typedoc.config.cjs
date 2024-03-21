@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/drizzle-adapter",
-  entryFileName: "../drizzle.mdx",
+  entryFileName: "../drizzle-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

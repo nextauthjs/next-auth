@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/hasura-adapter",
-  entryFileName: "../hasura.mdx",
+  entryFileName: "../hasura-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }
