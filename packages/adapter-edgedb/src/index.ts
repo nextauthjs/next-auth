@@ -184,7 +184,7 @@ import type { Client } from "edgedb"
  *
  * ### Generate the query builder
  *
- * ```bash npm2yarn
+ * ```bash
  * npx @edgedb/generate edgeql-js
  * ```
  *
