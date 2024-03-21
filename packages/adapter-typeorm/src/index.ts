@@ -92,7 +92,7 @@ export async function getManager(options: {
  *
  * (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm/src/entities.ts))
  *
- * ```diff title="lib/entities.ts"
+ * ```ts title="lib/entities.ts" {37-38}
  * import {
  *   Entity,
  *   PrimaryGeneratedColumn,
@@ -130,8 +130,8 @@ export async function getManager(options: {
  *   @Column({ type: "varchar", nullable: true })
  *   image!: string | null
  *
- * + @Column({ type: "varchar", nullable: true })
- * + role!: string | null
+ *   @Column({ type: "varchar", nullable: true })
+ *   role!: string | null
  *
  *   @OneToMany(() => SessionEntity, (session) => session.userId)
  *   sessions!: SessionEntity[]
