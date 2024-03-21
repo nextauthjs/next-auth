@@ -170,13 +170,13 @@ import type { Client } from "edgedb"
  *
  * 1. Create a migration
  *
- * ```
+ * ```bash
  * edgedb migration create
  * ```
  *
  * 2. Apply the migration
  *
- * ```
+ * ```bash
  * edgedb migrate
  * ```
  *
@@ -184,7 +184,7 @@ import type { Client } from "edgedb"
  *
  * ### Generate the query builder
  *
- * ```npm2yarn
+ * ```bash npm2yarn
  * npx @edgedb/generate edgeql-js
  * ```
  *
@@ -222,7 +222,7 @@ import type { Client } from "edgedb"
  *
  * ### Set an environment variable
  *
- * ```env title=".env"
+ * ```bash title=".env"
  * EDGEDB_DSN=edgedb://johndoe:supersecure@myhost.com:420
  * ```
  *
