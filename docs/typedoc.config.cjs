@@ -1,14 +1,15 @@
 // @ts-check
 
 /**
- * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').MarkdownTheme}
+ * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').PluginOptions}
  */
 module.exports = {
+  // typedoc options
   entryPoints: [
-    "../packages/core",
-    "../packages/frameworks-sveltekit",
     "../packages/next-auth",
+    "../packages/core",
     "../packages/adapter-prisma",
+    "../packages/frameworks-sveltekit",
   ],
   entryPointStrategy: "packages",
   out: "pages/reference",
@@ -19,9 +20,7 @@ module.exports = {
     require.resolve("./typedoc-nextauth.cjs"),
     require.resolve("./typedoc-mdn-links.cjs"),
   ],
-  hideInPageTOC: true,
   disableSources: true,
-  hideBreadcrumbs: true,
   excludeNotDocumented: true,
   excludeExternals: true,
   excludeInternal: true,
@@ -56,12 +55,21 @@ module.exports = {
     "GetSignature",
     "SetSignature",
   ],
-  theme: "nextauth",
+  name: "API Reference",
 
+  // typedoc-plugin-markdown options
   outputFileStrategy: "modules",
-  entryModule: "@auth/core",
-  excludeGroups: true,
+  entryFileName: "overview.mdx",
+  fileExtension: ".mdx",
+  excludeScopesInPaths: true,
   hidePageHeader: true,
-  useCodeBlocks: false,
+  hideBreadcrumbs: true,
+  excludeGroups: true,
   expandObjects: true,
+  parametersFormat: "table",
+  indexFormat: "table",
+  textContentMappings: {
+    "label.packages": "Integrations",
+  },
+  useCodeBlocks: true,
 }

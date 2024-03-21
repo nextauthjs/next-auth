@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "typedoc": "typedoc",
-    "dev": "typedoc --watch & next dev",
+    "dev": "typedoc & next dev",
     "build": "typedoc && next build",
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
@@ -48,7 +48,7 @@
     "simple-git-hooks": "^2.11.0",
     "tailwindcss": "^3.4.1",
     "typedoc": "^0.25.12",
-    "typedoc-plugin-markdown": "4.0.0-next.53"
+    "typedoc-plugin-markdown": "4.0.0-next.54"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint"
