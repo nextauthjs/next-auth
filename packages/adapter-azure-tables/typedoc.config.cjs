@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/azure-tables-adapter",
-  entryFileName: "../azure-tables.mdx",
+  entryFileName: "../azure-tables-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

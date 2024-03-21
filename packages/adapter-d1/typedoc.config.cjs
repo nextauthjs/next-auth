@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/d1-adapter",
-  entryFileName: "../d1.mdx",
+  entryFileName: "../d1-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

@@ -236,7 +236,7 @@ export async function getManager(options: {
  * import * as entities from "lib/entities"
  *
  * export default NextAuth({
- *   adapter: TypeORMAdapter("yourconnectionstring", { entities }),
+ *   adapter: TypeORMAdapter("yourconnectionstring", { entities })
  * })
  * ```
  *
@@ -271,7 +271,7 @@ export async function getManager(options: {
  * }
  *
  * export default NextAuth({
- *   adapter: TypeORMAdapter(connection),
+ *   adapter: TypeORMAdapter(connection)
  * })
  * ```
  *

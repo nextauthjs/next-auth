@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/edgedb-adapter",
-  entryFileName: "../edgedb.mdx",
+  entryFileName: "../edgedb-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

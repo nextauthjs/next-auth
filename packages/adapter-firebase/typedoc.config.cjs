@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/firebase-adapter",
-  entryFileName: "../firebase.mdx",
+  entryFileName: "../firebase-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

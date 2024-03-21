@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/fauna-adapter",
-  entryFileName: "../fauna.mdx",
+  entryFileName: "../fauna-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

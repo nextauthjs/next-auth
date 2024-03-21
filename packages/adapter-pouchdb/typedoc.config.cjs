@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/pouchdb-adapter",
-  entryFileName: "../pouchdb.mdx",
+  entryFileName: "../pouchdb-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

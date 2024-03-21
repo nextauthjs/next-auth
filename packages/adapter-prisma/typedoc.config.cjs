@@ -11,7 +11,7 @@ module.exports = {
     require.resolve("./../../docs/typedoc-nextauth.cjs"),
     require.resolve("./../../docs/typedoc-mdn-links.cjs"),
   ],
-  entryFileName: "../prisma.mdx",
+  entryFileName: "../prisma-adapter.mdx",
   entryModule: "@auth/prisma-adapter",
   includeVersion: true,
   readme: 'none'

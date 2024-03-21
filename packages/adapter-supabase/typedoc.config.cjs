@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/supabase-adapter",
-  entryFileName: "../supabase.mdx",
+  entryFileName: "../supabase-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

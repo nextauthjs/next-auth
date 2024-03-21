@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/upstash-redis-adapter",
-  entryFileName: "../upstash-redis.mdx",
+  entryFileName: "../upstash-redis-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

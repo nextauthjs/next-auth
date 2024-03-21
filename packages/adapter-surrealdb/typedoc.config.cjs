@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/surrealdb-adapter",
-  entryFileName: "../surrealdb.mdx",
+  entryFileName: "../surrealdb-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

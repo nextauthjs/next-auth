@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/pg-adapter",
-  entryFileName: "../pg.mdx",
+  entryFileName: "../pg-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

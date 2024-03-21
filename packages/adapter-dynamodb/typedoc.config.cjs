@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/dynamodb-adapter",
-  entryFileName: "../dynamodb.mdx",
+  entryFileName: "../dynamodb-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/kysely-adapter",
-  entryFileName: "../kysely.mdx",
+  entryFileName: "../kysely-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

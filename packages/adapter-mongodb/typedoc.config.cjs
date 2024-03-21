@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/mongodb-adapter",
-  entryFileName: "../mongodb.mdx",
+  entryFileName: "../mongodb-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

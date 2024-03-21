@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/neo4j-adapter",
-  entryFileName: "../neo4j.mdx",
+  entryFileName: "../neo4j-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }

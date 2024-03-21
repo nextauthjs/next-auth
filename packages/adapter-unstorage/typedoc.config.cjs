@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/unstorage-adapter",
-  entryFileName: "../unstorage.mdx",
+  entryFileName: "../unstorage-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 }
