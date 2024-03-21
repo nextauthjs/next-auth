@@ -226,27 +226,6 @@ import type { Client } from "edgedb"
  * EDGEDB_DSN=edgedb://johndoe:supersecure@myhost.com:420
  * ```
  *
- * ### Update the client
- *
- * ```diff title="pages/api/auth/[...nextauth].js"
- * import NextAuth from "next-auth"
- * import GoogleProvider from "next-auth/providers/google"
- * import { EdgeDBAdapter } from "@auth/edgedb-adapter"
- * import { createClient } from "edgedb"
- *
- * - const client = createClient()
- * + const client = createClient({ dsn: process.env.EDGEDB_DSN })
- *
- * export default NextAuth({
- *   adapter: EdgeDBAdapter(client),
- *   providers: [
- *     GoogleProvider({
- *       clientId: process.env.GOOGLE_CLIENT_ID,
- *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
- *     }),
- *   ],
- * })
- * ```
  *
  * ### Apply migrations
  *
@@ -260,15 +239,6 @@ import type { Client } from "edgedb"
  *
  * Add the following `prebuild` script to your `package.json`. When your hosting provider initializes the build, it will trigger this script which will generate the query builder. The `npx @edgedb/generate edgeql-js` command will read the value of the `EDGEDB_DSN` environment variable, connect to the database, and generate the query builder before your hosting provider starts building the project.
  *
- * ```diff title="package.json"
- * "scripts": {
- *   "dev": "next dev",
- *   "build": "next build",
- *   "start": "next start",
- *   "lint": "next lint",
- * +  "prebuild": "npx @edgedb/generate edgeql-js"
- * }
- * ```
  *
  */
 export function EdgeDBAdapter(client: Client): Adapter {
