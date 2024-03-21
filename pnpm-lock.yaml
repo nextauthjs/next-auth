@@ -242,8 +242,8 @@ importers:
         specifier: ^0.25.12
         version: 0.25.12(typescript@5.3.3)
       typedoc-plugin-markdown:
-        specifier: 4.0.0-next.53
-        version: 4.0.0-next.53(typedoc@0.25.12)
+        specifier: 4.0.0-next.54
+        version: 4.0.0-next.54(typedoc@0.25.12)
 
   packages/adapter-azure-tables:
     dependencies:
@@ -23883,6 +23883,14 @@ packages:
 
   /typedoc-plugin-markdown@4.0.0-next.53(typedoc@0.25.12):
     resolution: {integrity: sha512-vESy94SQV77EaDALA7WvLYPGtPKAuDtqhtShZA6sNs+OxkW8Uh+DoZ5Q6gpgu0MnIkLijHnv038kNP87Gl2vpw==}
+    peerDependencies:
+      typedoc: 0.25.x
+    dependencies:
+      typedoc: 0.25.12(typescript@5.3.3)
+    dev: true
+
+  /typedoc-plugin-markdown@4.0.0-next.54(typedoc@0.25.12):
+    resolution: {integrity: sha512-Irb0AxXqRZCpXAcZpGGb3pqG4SP0DzT3Q88rI3ak4K37rJ4jgfNOf/jCTHhD/B2iFty9DKNlssia2ytXDdCOSA==}
     peerDependencies:
       typedoc: 0.25.x
     dependencies:
