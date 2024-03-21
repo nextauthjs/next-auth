@@ -218,3 +218,7 @@ aside.nextra-sidebar-container .nextra-scrollbar > div {
 :is(html[class~="dark"] .sponsoredBadge) {
   background-color: #141414;
 }
+
+article.nextra-content table {
+  overflow-x: auto;
+}

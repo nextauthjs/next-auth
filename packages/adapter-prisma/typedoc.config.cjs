@@ -15,5 +15,4 @@ module.exports = {
   entryModule: "@auth/prisma-adapter",
   includeVersion: true,
   readme: 'none'
-
 }

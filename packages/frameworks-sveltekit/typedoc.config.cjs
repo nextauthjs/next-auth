@@ -11,5 +11,4 @@ module.exports = {
   entryFileName: "../sveltekit.mdx",
   includeVersion: true,
   readme: 'none',
-
 }
