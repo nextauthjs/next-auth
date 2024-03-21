@@ -8,14 +8,21 @@
  *
  * ## Installation
  *
+ * 1. Install Auth.js and the Xata adapter
+ *
  * ```bash npm2yarn
- * # Install Auth.js and the Xata adapter
  * npm install @auth/xata-adapter
+ * ```
  *
- * # Install the Xata CLI globally if you don't already have it
- * npm install --location=global @xata.io/cli
+ * 2. Install the Xata CLI globally if you don't already have it
  *
- * # Login
+ * ```bash npm2yarn
+ * npm install -g @xata.io/cli
+ * ```
+ *
+ * 3. Login
+ *
+ * ```bash
  * xata auth login
  * ```
  *
