@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals"
+import { vi, describe, beforeEach, it, expect } from "vitest"
 
 import Fastify from "fastify"
 
@@ -12,19 +12,21 @@ const sessionJson = {
   expires: "",
 }
 
-jest.unstable_mockModule("@auth/core", () => ({
-  Auth: jest.fn((request, config) => {
-    return new Response(JSON.stringify(sessionJson), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  }),
-}))
+vi.mock("@auth/core", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("@auth/core")>()
+  return {
+    ...mod,
+    Auth: vi.fn((request, config) => {
+      return new Response(JSON.stringify(sessionJson), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      })
+    }),
+  }
+})
 
 // dynamic import to avoid loading Auth before hoisting
-const { getSession } = await import("../../src/index.js")
+const { getSession } = await import("../src/index.js")
 
 describe("getSession", () => {
   let fastify: ReturnType<typeof Fastify>

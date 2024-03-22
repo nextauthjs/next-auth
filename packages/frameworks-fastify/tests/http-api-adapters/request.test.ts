@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from "vitest"
 import Fastify from "fastify"
 import type { FastifyRequest } from 'fastify';
 import { encodeUrlEncoded, toWebRequest } from "../../src/lib"
@@ -27,7 +28,7 @@ async function expectMatchingUrlEncodedRequestBody(
   if (typeof req.body === 'object' && req.body !== null) {
     expect(body).toEqual(encodeUrlEncoded(req.body))
   } else {
-    fail("req.body is not an object or is null");
+    throw new Error("req.body is not an object or is null");
   }
 }
 

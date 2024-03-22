@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from "vitest"
 import Fastify from "fastify"
 import type { LightMyRequestResponse } from 'fastify';
 import { toFastifyReply } from "../../src/lib"
