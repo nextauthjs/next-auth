@@ -34,10 +34,12 @@ export class DgraphClientError extends Error {
 
 export function client(params: DgraphClientParams) {
   if (!params.authToken) {
-    throw new Error("Dgraph client error: Please provide an api key")
+    throw new Error("Dgraph client error: Please provide an API key")
   }
   if (!params.endpoint) {
-    throw new Error("Dgraph client error: Please provide a graphql endpoint")
+    throw new Error(
+      "Dgraph client error: Please provide a valid GraphQL endpoint"
+    )
   }
 
   const {

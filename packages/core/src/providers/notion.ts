@@ -9,7 +9,7 @@
  * @module providers/notion
  */
 
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 export interface Person extends Record<string, any> {
   email: string

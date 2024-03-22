@@ -2,6 +2,8 @@ name: Triage issue
 on:
   issues:
     types: [labeled, opened]
+  issue_comment:
+    types: [created]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -14,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Nissuer
-        uses: balazsorban44/nissuer@1.8.1
+        uses: balazsorban44/nissuer@1.9.2
         with:
           label-area-prefix: ""
           label-area-section: "[Provider|Adapter] type(.*)### Environment"
-          label-comments: '{ "incomplete": ".github/invalid-reproduction.md" }'
+          label-comments: '{ "incomplete": ".github/invalid-reproduction.md", "good first issue": ".github/good-first-issue.md" }'
           reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
           reproduction-invalid-label: "invalid reproduction"
-          reproduction-issue-labels: "bug"
+          reproduction-issue-labels: "bug,"
           reproduction-blocklist: "github.com/nextauthjs.*"

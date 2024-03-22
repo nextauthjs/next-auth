@@ -17,11 +17,11 @@ Below you can see a list of official adapters that are distributed as their own 
 If you don't find an adapter for the database or service you use, you can always create one yourself (and optionally open a PR so anyone can make use of it). Have a look at our guide on [how to create a database adapter](/guides/adapters/creating-a-database-adapter).
 :::
 
-<div class="card-list">
+<div className="card-list">
   {manifest.adapters.map(({ id, name, img }) => (
-    <a href={`/reference/adapter/${id}`} class="card">
+    <a href={`/reference/adapter/${id}`} key={id} className="card">
       <img src={`/img/adapters/${img || `${id}.svg`}`} width="40" />
-      <h4 class="card__title">{name} Adapter</h4>
+      <h4 className="card__title">{name} Adapter</h4>
     </a>
   ))}
 </div>

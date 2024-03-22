@@ -19,8 +19,10 @@ export interface DiscordProfile extends Record<string, any> {
   id: string
   /** the user's username, not unique across the platform */
   username: string
-  /** the user's 4-digit discord-tag */
+  /** the user's Discord-tag */
   discriminator: string
+  /** the user's display name, if it is set  */
+  global_name: string | null
   /**
    * the user's avatar hash:
    * https://discord.com/developers/docs/reference#image-formatting
@@ -145,7 +147,10 @@ export default function Discord<P extends DiscordProfile>(
     userinfo: "https://discord.com/api/users/@me",
     profile(profile) {
       if (profile.avatar === null) {
-        const defaultAvatarNumber = parseInt(profile.discriminator) % 5
+        const defaultAvatarNumber =
+          profile.discriminator === "0"
+            ? Number(BigInt(profile.id) >> BigInt(22)) % 6
+            : parseInt(profile.discriminator) % 5
         profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`
       } else {
         const format = profile.avatar.startsWith("a_") ? "gif" : "png"
@@ -153,7 +158,7 @@ export default function Discord<P extends DiscordProfile>(
       }
       return {
         id: profile.id,
-        name: profile.username,
+        name: profile.global_name ?? profile.username,
         email: profile.email,
         image: profile.image_url,
       }

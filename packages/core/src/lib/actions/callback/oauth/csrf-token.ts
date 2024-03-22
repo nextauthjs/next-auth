@@ -56,5 +56,5 @@ export async function createCSRFToken({
 
 export function validateCSRF(action: AuthAction, verified?: boolean) {
   if (verified) return
-  throw new MissingCSRF(`CSRF token was missing during an action ${action}.`)
+  throw new MissingCSRF(`CSRF token was missing during an action ${action}`)
 }

@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core"
 
 import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import { stripUndefined } from "./utils.js"
 
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("user", {
@@ -135,26 +136,13 @@ export function pgDrizzleAdapter(
         .then((res) => res[0])
     },
     async linkAccount(rawAccount) {
-      const updatedAccount = await client
-        .insert(accounts)
-        .values(rawAccount)
-        .returning()
-        .then((res) => res[0])
-
-      // Drizzle will return `null` for fields that are not defined.
-      // However, the return type is expecting `undefined`.
-      const account = {
-        ...updatedAccount,
-        access_token: updatedAccount.access_token ?? undefined,
-        token_type: updatedAccount.token_type ?? undefined,
-        id_token: updatedAccount.id_token ?? undefined,
-        refresh_token: updatedAccount.refresh_token ?? undefined,
-        scope: updatedAccount.scope ?? undefined,
-        expires_at: updatedAccount.expires_at ?? undefined,
-        session_state: updatedAccount.session_state ?? undefined,
-      }
-
-      return account
+      return stripUndefined(
+        await client
+          .insert(accounts)
+          .values(rawAccount)
+          .returning()
+          .then((res) => res[0])
+      )
     },
     async getUserByAccount(account) {
       const dbAccount =
@@ -170,11 +158,7 @@ export function pgDrizzleAdapter(
           .leftJoin(users, eq(accounts.userId, users.id))
           .then((res) => res[0])) ?? null
 
-      if (!dbAccount) {
-        return null
-      }
-
-      return dbAccount.user
+      return dbAccount?.user ?? null
     },
     async deleteSession(sessionToken) {
       const session = await client

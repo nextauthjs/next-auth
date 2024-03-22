@@ -1,0 +1,8 @@
+collection Account {
+    index byUserId {
+        terms [.userId]
+    }
+    index byProviderAndProviderAccountId {
+        terms [.provider, .providerAccountId]
+    }
+}

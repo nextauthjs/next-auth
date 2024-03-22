@@ -18,16 +18,24 @@ import { Button } from "./ui/button"
 
 export function MainNav() {
   return (
-    <div className="flex items-center space-x-2 lg:space-x-6">
+    <div className="flex gap-4 items-center">
       <CustomLink href="/">
         <Button variant="ghost" className="p-0">
-          <Image src="/logo.png" alt="Home" width="32" height="32" />
+          <Image
+            src="/logo.png"
+            alt="Home"
+            width="32"
+            height="32"
+            className="min-w-8"
+          />
         </Button>
       </CustomLink>
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Server Side</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="px-2">
+              Server Side
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <ListItem href="/server-example" title="RSC Example">

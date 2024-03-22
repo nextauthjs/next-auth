@@ -1,8 +1,8 @@
 type ErrorOptions = Error | Record<string, unknown>
 
 type ErrorType =
+  | "AccessDenied"
   | "AdapterError"
-  | "AuthorizedCallbackError"
   | "CallbackRouteError"
   | "ErrorPageLoop"
   | "EventError"
@@ -28,6 +28,11 @@ type ErrorType =
   | "UntrustedHost"
   | "Verification"
   | "MissingCSRF"
+  | "AccountNotLinked"
+  | "DuplicateConditionalUI"
+  | "MissingWebAuthnAutocomplete"
+  | "WebAuthnVerificationError"
+  | "ExperimentalFeatureNotEnabled"
 
 /**
  * Base error class for all Auth.js errors.
@@ -68,7 +73,7 @@ export class AuthError extends Error {
 
     Error.captureStackTrace?.(this, this.constructor)
     const url = `https://errors.authjs.dev#${this.type.toLowerCase()}`
-    this.message += `${this.message ? " ." : ""}Read more at ${url}`
+    this.message += `${this.message ? ". " : ""}Read more at ${url}`
   }
 }
 
@@ -97,8 +102,8 @@ export class AdapterError extends AuthError {
  * Thrown when the execution of the [`signIn` callback](https://authjs.dev/reference/core/types#signin) fails
  * or if it returns `false`.
  */
-export class AuthorizedCallbackError extends AuthError {
-  static type = "AuthorizedCallbackError"
+export class AccessDenied extends AuthError {
+  static type = "AccessDenied"
 }
 
 /**
@@ -183,11 +188,25 @@ export class InvalidCallbackUrl extends AuthError {
 }
 
 /**
- * The `authorize` callback returned `null` in the [Credentials provider](https://authjs.dev/getting-started/providers/credentials-tutorial).
- * We don't recommend providing information about which part of the credentials were wrong, as it might be abused by malicious hackers.
+ * Can be thrown from the `authorize` callback of the Credentials provider.
+ * When an error occurs during the `authorize` callback, two things can happen:
+ * 1. The user is redirected to the signin page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable.
+ * 2. If you throw this error in a framework that handles form actions server-side, this error is thrown, instead of redirecting the user, so you'll need to handle.
  */
 export class CredentialsSignin extends SignInError {
   static type = "CredentialsSignin"
+  /**
+   * The error code that is set in the `code` query parameter of the redirect URL.
+   *
+   *
+   * ⚠ NOTE: This property is going to be included in the URL, so make sure it does not hint at sensitive errors.
+   *
+   * The full error is always logged on the server, if you need to debug.
+   *
+   * Generally, we don't recommend hinting specifically if the user had either a wrong username or password specifically,
+   * try rather something like "Invalid credentials".
+   */
+  code: string = "credentials"
 }
 
 /**
@@ -258,19 +277,16 @@ export class MissingAuthorize extends AuthError {
 }
 
 /**
- * Auth.js requires a secret to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
+ * Auth.js requires a secret or multiple secrets to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
  *
  * :::note
- * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET` environment variable.
- * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret).
+ * If you are using a framework like Next.js, we try to automatically infer the secret from the `AUTH_SECRET`, `AUTH_SECRET_1`, etc. environment variables.
+ * Alternatively, you can also explicitly set the [`AuthConfig.secret`](https://authjs.dev/reference/core#secret) option.
  * :::
  *
  *
  * :::tip
- * You can generate a good secret value:
- *  - On Unix systems: type `openssl rand -hex 32` in the terminal
- *  - Or generate one [online](https://generate-secret.vercel.app/32)
- *
+ * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
  * :::
  */
 export class MissingSecret extends AuthError {
@@ -388,7 +404,7 @@ export class UnsupportedStrategy extends AuthError {
   static type = "UnsupportedStrategy"
 }
 
-/** Thrown when the callback endpoint was incorrectly called without a provider. */
+/** Thrown when an endpoint was incorrectly called without a provider, or with an unsupported provider. */
 export class InvalidProvider extends AuthError {
   static type = "InvalidProvider"
 }
@@ -429,4 +445,65 @@ export class Verification extends AuthError {
  */
 export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"
+}
+
+const clientErrors = new Set<ErrorType>([
+  "CredentialsSignin",
+  "OAuthAccountNotLinked",
+  "OAuthCallbackError",
+  "AccessDenied",
+  "Verification",
+  "MissingCSRF",
+  "AccountNotLinked",
+  "WebAuthnVerificationError",
+])
+
+/**
+ * Used to only allow sending a certain subset of errors to the client.
+ * Errors are always logged on the server, but to prevent leaking sensitive information,
+ * only a subset of errors are sent to the client as-is.
+ */
+export function isClientError(error: Error): error is AuthError {
+  if (error instanceof AuthError) return clientErrors.has(error.type)
+  return false
+}
+/**
+ * Thrown when multiple providers have `enableConditionalUI` set to `true`.
+ * Only one provider can have this option enabled at a time.
+ */
+export class DuplicateConditionalUI extends AuthError {
+  static type = "DuplicateConditionalUI"
+}
+
+/**
+ * Thrown when a WebAuthn provider has `enableConditionalUI` set to `true` but no formField has `webauthn` in its autocomplete param.
+ *
+ * The `webauthn` autocomplete param is required for conditional UI to work.
+ */
+export class MissingWebAuthnAutocomplete extends AuthError {
+  static type = "MissingWebAuthnAutocomplete"
+}
+
+/**
+ * Thrown when a WebAuthn provider fails to verify a client response.
+ */
+export class WebAuthnVerificationError extends AuthError {
+  static type = "WebAuthnVerificationError"
+}
+
+/**
+ * Thrown when an Email address is already associated with an account
+ * but the user is trying an account that is not linked to it.
+ *
+ * For security reasons, Auth.js does not automatically link accounts to existing accounts if the user is not signed in.
+ */
+export class AccountNotLinked extends SignInError {
+  static type = "AccountNotLinked"
+}
+
+/**
+ * Thrown when an experimental feature is used but not enabled.
+ */
+export class ExperimentalFeatureNotEnabled extends AuthError {
+  static type = "ExperimentalFeatureNotEnabled"
 }

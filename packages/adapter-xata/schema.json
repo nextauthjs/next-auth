@@ -1,0 +1,152 @@
+{
+  "tables": [
+    {
+      "name": "authjs_users",
+      "columns": [
+        {
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "name": "emailVerified",
+          "type": "datetime"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "authjs_accounts",
+      "columns": [
+        {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "authjs_users"
+          }
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "provider",
+          "type": "string"
+        },
+        {
+          "name": "providerAccountId",
+          "type": "string"
+        },
+        {
+          "name": "refresh_token",
+          "type": "string"
+        },
+        {
+          "name": "access_token",
+          "type": "string"
+        },
+        {
+          "name": "expires_at",
+          "type": "int"
+        },
+        {
+          "name": "token_type",
+          "type": "string"
+        },
+        {
+          "name": "scope",
+          "type": "string"
+        },
+        {
+          "name": "id_token",
+          "type": "text"
+        },
+        {
+          "name": "session_state",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "authjs_verificationTokens",
+      "columns": [
+        {
+          "name": "identifier",
+          "type": "string"
+        },
+        {
+          "name": "token",
+          "type": "string"
+        },
+        {
+          "name": "expires",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "name": "authjs_users_accounts",
+      "columns": [
+        {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "authjs_users"
+          }
+        },
+        {
+          "name": "account",
+          "type": "link",
+          "link": {
+            "table": "authjs_accounts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "authjs_users_sessions",
+      "columns": [
+        {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "authjs_users"
+          }
+        },
+        {
+          "name": "session",
+          "type": "link",
+          "link": {
+            "table": "authjs_sessions"
+          }
+        }
+      ]
+    },
+    {
+      "name": "authjs_sessions",
+      "columns": [
+        {
+          "name": "sessionToken",
+          "type": "string"
+        },
+        {
+          "name": "expires",
+          "type": "datetime"
+        },
+        {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "authjs_users"
+          }
+        }
+      ]
+    }
+  ]
+}

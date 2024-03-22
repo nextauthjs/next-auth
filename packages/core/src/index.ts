@@ -37,14 +37,21 @@
  */
 
 import { assertConfig } from "./lib/utils/assert.js"
-import { AuthError, ErrorPageLoop } from "./errors.js"
+import {
+  AuthError,
+  CredentialsSignin,
+  ErrorPageLoop,
+  isClientError,
+} from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
+import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
 import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter } from "./adapters.js"
 import type {
+  AuthAction,
   CallbacksOptions,
   CookiesOptions,
   EventCallbacks,
@@ -54,12 +61,13 @@ import type {
 } from "./types.js"
 import type { Provider } from "./providers/index.js"
 import { JWTOptions } from "./jwt.js"
+import { isAuthAction } from "./lib/utils/actions.js"
 
-export { skipCSRFCheck, raw }
+export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
   request: Request,
-  config: AuthConfig
+  config: AuthConfig & { raw: typeof raw }
 ): Promise<ResponseInternal>
 
 export async function Auth(
@@ -91,46 +99,43 @@ export async function Auth(
 ): Promise<Response | ResponseInternal> {
   setLogger(config.logger, config.debug)
 
-  const internalRequest = await toInternalRequest(request)
+  const internalRequest = await toInternalRequest(request, config)
+  // There was an error parsing the request
+  if (!internalRequest) return Response.json(`Bad request.`, { status: 400 })
 
-  if (internalRequest instanceof Error) {
-    logger.error(internalRequest)
-    return Response.json(
-      `Error: This action with HTTP ${request.method} is not supported.`,
-      { status: 400 }
-    )
-  }
+  const warningsOrError = assertConfig(internalRequest, config)
 
-  const assertionResult = assertConfig(internalRequest, config)
-
-  if (Array.isArray(assertionResult)) {
-    assertionResult.forEach(logger.warn)
-  } else if (assertionResult instanceof Error) {
-    // Bail out early if there's an error in the user config
-    logger.error(assertionResult)
-    const htmlPages = ["signin", "signout", "error", "verify-request"]
+  if (Array.isArray(warningsOrError)) {
+    warningsOrError.forEach(logger.warn)
+  } else if (warningsOrError) {
+    // If there's an error in the user config, bail out early
+    logger.error(warningsOrError)
+    const htmlPages = new Set<AuthAction>([
+      "signin",
+      "signout",
+      "error",
+      "verify-request",
+    ])
     if (
-      !htmlPages.includes(internalRequest.action) ||
+      !htmlPages.has(internalRequest.action) ||
       internalRequest.method !== "GET"
     ) {
-      return new Response(
-        JSON.stringify({
-          message:
-            "There was a problem with the server configuration. Check the server logs for more information.",
-          code: assertionResult.name,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
-      )
+      const message =
+        "There was a problem with the server configuration. Check the server logs for more information."
+      return Response.json({ message }, { status: 500 })
     }
 
     const { pages, theme } = config
 
+    // If this is true, the config required auth on the error page
+    // which could cause a redirect loop
     const authOnErrorPage =
       pages?.error &&
       internalRequest.url.searchParams
         .get("callbackUrl")
         ?.startsWith(pages.error)
 
+    // Either there was no error page configured or the configured one contains infinite redirects
     if (!pages?.error || authOnErrorPage) {
       if (authOnErrorPage) {
         logger.error(
@@ -139,8 +144,8 @@ export async function Auth(
           )
         )
       }
-      const render = renderPage({ theme })
-      const page = render.error("Configuration")
+
+      const page = renderPage({ theme }).error("Configuration")
       return toResponse(page)
     }
 
@@ -149,11 +154,16 @@ export async function Auth(
 
   const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
   const isRaw = config.raw === raw
-  let response: Response
   try {
-    const rawResponse = await AuthInternal(internalRequest, config)
-    if (isRaw) return rawResponse
-    response = await toResponse(rawResponse)
+    const internalResponse = await AuthInternal(internalRequest, config)
+    if (isRaw) return internalResponse
+
+    const response = toResponse(internalResponse)
+    const url = response.headers.get("Location")
+
+    if (!isRedirect || !url) return response
+
+    return Response.json({ url }, { headers: response.headers })
   } catch (e) {
     const error = e as Error
     logger.error(error)
@@ -166,23 +176,19 @@ export async function Auth(
     if (request.method === "POST" && internalRequest.action === "session")
       return Response.json(null, { status: 400 })
 
-    const type = isAuthError ? error.type : "Configuration"
-    const page = (isAuthError && error.kind) || "error"
-    const params = new URLSearchParams({ error: type })
-    const path =
-      config.pages?.[page] ??
-      `${internalRequest.url.pathname}/${page.toLowerCase()}`
+    const isClientSafeErrorType = isClientError(error)
+    const type = isClientSafeErrorType ? error.type : "Configuration"
 
-    const url = `${internalRequest.url.origin}${path}?${params}`
+    const params = new URLSearchParams({ error: type })
+    if (error instanceof CredentialsSignin) params.set("code", error.code)
+
+    const pageKind = (isAuthError && error.kind) || "error"
+    const pagePath = config.pages?.[pageKind] ?? `/${pageKind.toLowerCase()}`
+    const url = `${internalRequest.url.origin}${config.basePath}${pagePath}?${params}`
 
     if (isRedirect) return Response.json({ url })
-
     return Response.redirect(url)
   }
-
-  const redirect = response.headers.get("Location")
-  if (!isRedirect || !redirect) return response
-  return Response.json({ url: redirect }, { headers: response.headers })
 }
 
 /**
@@ -211,12 +217,16 @@ export interface AuthConfig {
   providers: Provider[]
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
-   * To generate a random string, you can use the following command:
    *
-   * - On Unix systems, type `openssl rand -hex 32` in the terminal
-   * - Or generate one [online](https://generate-secret.vercel.app/32)
+   * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+   *
+   * @note
+   * You can also pass an array of secrets, in which case the first secret that successfully
+   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
+   * The newer secret should be added to the start of the array, which will be used for all new sessions.
+   *
    */
-  secret?: string
+  secret?: string | string[]
   /**
    * Configure your session like if you want to use JWT or a database,
    * how long until an idle session expires, or to throttle write operations in case you are using a database.
@@ -314,9 +324,10 @@ export interface AuthConfig {
    * @example
    *
    * ```ts
-   * // /pages/api/auth/[...nextauth].js
+   * // /auth.ts
    * import log from "logging-service"
-   * export default NextAuth({
+   *
+   * export const { handlers, auth, signIn, signOut } = NextAuth({
    *   logger: {
    *     error(code, ...message) {
    *       log.error(code, message)
@@ -412,11 +423,23 @@ export interface AuthConfig {
   redirectProxyUrl?: string
 
   /**
-   * 
    * Use this option to enable experimental features.
    * When enabled, it will print a warning message to the console.
    * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
    * @default {}
    */
-  experimental?: Record<string, boolean>
+  experimental?: {
+    /**
+     * Enable WebAuthn support.
+     *
+     * @default false
+     */
+    enableWebAuthn?: boolean
+  }
+  /**
+   * The base path of the Auth.js API endpoints.
+   *
+   * @default "/api/auth" in "next-auth"; "/auth" with all other frameworks
+   */
+  basePath?: string
 }

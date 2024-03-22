@@ -8,7 +8,7 @@ import TabItem from "@theme/TabItem"
 <Tabs groupId="frameworks" queryString>
   <TabItem value="next" label="Next.js" default>
 
-In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes).
+In Next.js, you can define an API route that will catch all requests that begin with a certain path. Conveniently, this is called [Catch all API routes](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes) / [Catch-all Segments](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#catch-all-segments).
 
 When you define a `/pages/api/auth/[...nextauth]` JS/TS file, you instruct Auth.js that every API request beginning with `/api/auth/*` should be handled by the code written in the `[...nextauth]` file.
 

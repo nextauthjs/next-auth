@@ -133,11 +133,16 @@ export const config = {
     // Zoho,
     // Zoom,
   ],
+  basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
       if (pathname === "/middleware-example") return !!auth
       return true
+    },
+    jwt({ token, trigger, session }) {
+      if (trigger === "update") token.name = session.user.name
+      return token
     },
   },
 } satisfies NextAuthConfig

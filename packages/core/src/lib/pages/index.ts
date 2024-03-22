@@ -4,9 +4,9 @@ import SigninPage from "./signin.js"
 import SignoutPage from "./signout.js"
 import css from "./styles.js"
 import VerifyRequestPage from "./verify-request.js"
+import { UnknownAction } from "../../errors.js"
 
 import type {
-  ErrorPageParam,
   InternalOptions,
   RequestInternal,
   ResponseInternal,
@@ -15,12 +15,21 @@ import type {
 } from "../../types.js"
 import type { Cookie } from "../utils/cookie.js"
 
-function send({ html, title, status, cookies, theme }: any): ResponseInternal {
+function send({
+  html,
+  title,
+  status,
+  cookies,
+  theme,
+  headTags,
+}: any): ResponseInternal {
   return {
     cookies,
     status,
     headers: { "Content-Type": "text/html" },
-    body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style><title>${title}</title></head><body class="__next-auth-theme-${
+    body: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style><title>${title}</title>${
+      headTags ?? ""
+    }</head><body class="__next-auth-theme-${
       theme?.colorScheme ?? "auto"
     }"><div class="page">${renderToString(html)}</div></body></html>`,
   }
@@ -41,7 +50,7 @@ type RenderPageParams = {
  * we render a set of default ones, using Preact SSR.
  */
 export default function renderPage(params: RenderPageParams) {
-  const { url, theme, query, cookies, pages } = params
+  const { url, theme, query, cookies, pages, providers } = params
 
   return {
     csrf(skip: boolean, options: InternalOptions, cookies: Cookie[]) {
@@ -72,7 +81,8 @@ export default function renderPage(params: RenderPageParams) {
         ),
       }
     },
-    signin(error: any) {
+    signin(providerId?: string, error?: any) {
+      if (providerId) throw new UnknownAction("Unsupported action")
       if (pages?.signIn) {
         let signinUrl = `${pages.signIn}${
           pages.signIn.includes("?") ? "&" : "?"
@@ -80,6 +90,23 @@ export default function renderPage(params: RenderPageParams) {
         if (error) signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
         return { redirect: signinUrl, cookies }
       }
+
+      // If we have a webauthn provider with conditional UI and
+      // a simpleWebAuthnBrowserScript is defined, we need to
+      // render the script in the page.
+      const webauthnProvider = providers?.find(
+        (p): p is InternalProvider<"webauthn"> =>
+          p.type === "webauthn" &&
+          p.enableConditionalUI &&
+          !!p.simpleWebAuthnBrowserVersion
+      )
+
+      let simpleWebAuthnBrowserScript = ""
+      if (webauthnProvider) {
+        const { simpleWebAuthnBrowserVersion } = webauthnProvider
+        simpleWebAuthnBrowserScript = `<script src="https://unpkg.com/@simplewebauthn/browser@${simpleWebAuthnBrowserVersion}/dist/bundle/index.umd.min.js" crossorigin="anonymous"></script>`
+      }
+
       return send({
         cookies,
         theme,
@@ -92,6 +119,8 @@ export default function renderPage(params: RenderPageParams) {
               ["email", "oauth", "oidc"].includes(provider.type) ||
               // Only render credentials type provider if credentials are defined
               (provider.type === "credentials" && provider.credentials) ||
+              // Only render webauthn type provider if formFields are defined
+              (provider.type === "webauthn" && provider.formFields) ||
               // Don't render other provider types
               false
           ),
@@ -101,6 +130,7 @@ export default function renderPage(params: RenderPageParams) {
           ...query,
         }),
         title: "Sign In",
+        headTags: simpleWebAuthnBrowserScript,
       })
     },
     signout() {

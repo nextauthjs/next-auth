@@ -118,7 +118,7 @@ Check out the [Session strategies page](/concepts/session-strategies) to learn m
 
 ## Security
 
-Parts of this section have been moved to their [page](/security)](/security).
+Parts of this section have been moved to their [page](/security).
 
 <details>
 <summary>

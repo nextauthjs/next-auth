@@ -32,3 +32,10 @@ nextauthjs/next-auth-example:
     deleteOrphaned: true
   - .github/FUNDING.yml
   - LICENSE
+
+nextauthjs/next-auth-pages-example:
+  - source: apps/examples/nextjs-pages
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE

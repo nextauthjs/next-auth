@@ -220,6 +220,12 @@ export default {
       ? []
       : manifest.adapters.map(typedocAdapter)),
   ],
+  scripts: [
+    {
+      src: "/js/clerk.js",
+      async: true,
+    },
+  ],
   headTags: [
     { tagName: "meta", attributes: { charSet: "utf-8" } },
     { tagName: "link", attributes: { rel: "canonical", href: metadata.url } },

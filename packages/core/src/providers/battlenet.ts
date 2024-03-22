@@ -17,6 +17,8 @@ export interface BattleNetProfile extends Record<string, any> {
 
 /** See the [available regions](https://develop.battle.net/documentation/guides/regionality-and-apis) */
 export type BattleNetIssuer =
+  | "https://oauth.battle.net"
+  | "https://oauth.battlenet.com.cn"
   | "https://www.battlenet.com.cn/oauth"
   | `https://${"us" | "eu" | "kr" | "tw"}.battle.net/oauth`
 
@@ -43,6 +45,8 @@ export type BattleNetIssuer =
  * issuer must be one of these values, based on the available regions:
  * ```
  * type BattleNetIssuer =
+ *   | "https://oauth.battle.net"
+ *   | "https://oauth.battlenet.com.cn"
  *   | "https://www.battlenet.com.cn/oauth"
  *   | "https://us.battle.net/oauth"
  *   | "https://eu.battle.net/oauth"

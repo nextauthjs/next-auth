@@ -1,17 +1,22 @@
 import { defaultCookies } from "./cookie.js"
 import {
+  AuthError,
+  DuplicateConditionalUI,
+  ExperimentalFeatureNotEnabled,
   InvalidCallbackUrl,
   InvalidEndpoints,
   MissingAdapter,
   MissingAdapterMethods,
   MissingAuthorize,
   MissingSecret,
+  MissingWebAuthnAutocomplete,
   UnsupportedStrategy,
   UntrustedHost,
 } from "../../errors.js"
 
-import type { AuthConfig, RequestInternal } from "../../types.js"
+import type { AuthConfig, RequestInternal, SemverString } from "../../types.js"
 import type { WarningCode } from "./logger.js"
+import { Adapter } from "../../adapters.js"
 
 type ConfigError =
   | InvalidCallbackUrl
@@ -34,16 +39,21 @@ function isValidHttpUrl(url: string, baseUrl: string) {
   }
 }
 
+function isSemverString(version: string): version is SemverString {
+  return /^v\d+(?:\.\d+){0,2}$/.test(version)
+}
+
 let hasCredentials = false
 let hasEmail = false
+let hasWebAuthn = false
 
-const emailMethods = [
+const emailMethods: (keyof Adapter)[] = [
   "createVerificationToken",
   "useVerificationToken",
   "getUserByEmail",
 ]
 
-const sessionMethods = [
+const sessionMethods: (keyof Adapter)[] = [
   "createUser",
   "getUser",
   "getUserByEmail",
@@ -54,6 +64,17 @@ const sessionMethods = [
   "getSessionAndUser",
   "updateSession",
   "deleteSession",
+]
+
+const webauthnMethods: (keyof Adapter)[] = [
+  "createUser",
+  "getUser",
+  "linkAccount",
+  "getAccount",
+  "getAuthenticator",
+  "createAuthenticator",
+  "listAuthenticatorsByUserId",
+  "updateAuthenticatorCounter",
 ]
 
 /**
@@ -101,6 +122,9 @@ export function assertConfig(
     )
   }
 
+  // Keep track of webauthn providers that use conditional UI
+  let hasConditionalUIProvider = false
+
   for (const p of options.providers) {
     const provider = typeof p === "function" ? p() : p
     if (
@@ -123,6 +147,36 @@ export function assertConfig(
 
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
+    else if (provider.type === "webauthn") {
+      hasWebAuthn = true
+
+      // Validate simpleWebAuthnBrowserVersion
+      if (provider.simpleWebAuthnBrowserVersion && !isSemverString(provider.simpleWebAuthnBrowserVersion)) {
+        return new AuthError(
+          `Invalid provider config for "${provider.id}": simpleWebAuthnBrowserVersion "${provider.simpleWebAuthnBrowserVersion}" must be a valid semver string.`
+        )
+      }
+
+      if (provider.enableConditionalUI) {
+        // Make sure only one webauthn provider has "enableConditionalUI" set to true
+        if (hasConditionalUIProvider) {
+          return new DuplicateConditionalUI(
+            `Multiple webauthn providers have 'enableConditionalUI' set to True. Only one provider can have this option enabled at a time.`
+          )
+        }
+        hasConditionalUIProvider = true
+
+        // Make sure at least one formField has "webauthn" in its autocomplete param
+        const hasWebauthnFormField = Object.values(
+          provider.formFields
+        ).some((f) => f.autocomplete && f.autocomplete.toString().indexOf("webauthn") > -1)
+        if (!hasWebauthnFormField) {
+          return new MissingWebAuthnAutocomplete(
+            `Provider "${provider.id}" has 'enableConditionalUI' set to True, but none of its formFields have 'webauthn' in their autocomplete param.`
+          )
+        }
+      }
+    }
   }
 
   if (hasCredentials) {
@@ -148,24 +202,33 @@ export function assertConfig(
   }
 
   const { adapter, session } = options
-  if (
-    hasEmail ||
-    session?.strategy === "database" ||
-    (!session?.strategy && adapter)
-  ) {
-    let methods: string[]
 
+  let requiredMethods: (keyof Adapter)[] = []
+
+  if (hasEmail || session?.strategy === "database" || (!session?.strategy && adapter)) {
     if (hasEmail) {
-      if (!adapter)
-        return new MissingAdapter("Email login requires an adapter.")
-      methods = emailMethods
+      if (!adapter) return new MissingAdapter("Email login requires an adapter.")
+      requiredMethods.push(...emailMethods)
     } else {
-      if (!adapter)
-        return new MissingAdapter("Database session requires an adapter.")
-      methods = sessionMethods
+      if (!adapter) return new MissingAdapter("Database session requires an adapter.")
+      requiredMethods.push(...sessionMethods)
+    }
+  }
+
+  if (hasWebAuthn) {
+    // Log experimental warning
+    if (options.experimental?.enableWebAuthn) {
+      warnings.push("experimental-webauthn")
+    } else {
+      return new ExperimentalFeatureNotEnabled("WebAuthn is an experimental feature. To enable it, set `experimental.enableWebAuthn` to `true` in your config.")
     }
 
-    const missing = methods.filter((m) => !adapter[m as keyof typeof adapter])
+    if (!adapter) return new MissingAdapter("WebAuthn requires an adapter.")
+    requiredMethods.push(...webauthnMethods)
+  }
+
+  if (adapter) {
+    const missing = requiredMethods.filter((m) => !(m in adapter))
 
     if (missing.length) {
       return new MissingAdapterMethods(

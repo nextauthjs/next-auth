@@ -27,17 +27,17 @@ export class User implements RemoveIndex<AdapterUser> {
   id: string = crypto.randomUUID()
 
   @Property({ type: types.string, nullable: true })
-  name?: string
+  name?: AdapterUser["name"]
 
   @Property({ type: types.string, nullable: true })
   @Unique()
-  email: string = ""
+  email: AdapterUser["email"] = ""
 
   @Property({ type: types.datetime, nullable: true })
-  emailVerified: Date | null = null
+  emailVerified: AdapterUser["emailVerified"] = null
 
   @Property({ type: types.string, nullable: true })
-  image?: string
+  image?: AdapterUser["image"]
 
   @OneToMany({
     entity: "Session",
@@ -70,14 +70,14 @@ export class Session implements AdapterSession {
   user!: User
 
   @Property({ type: types.string, persist: false })
-  userId!: string
+  userId!: AdapterSession["userId"]
 
   @Property({ type: "Date" })
-  expires!: Date
+  expires!: AdapterSession["expires"]
 
   @Property({ type: types.string })
   @Unique()
-  sessionToken!: string
+  sessionToken!: AdapterSession["sessionToken"]
 }
 
 @Entity()
@@ -95,37 +95,37 @@ export class Account implements RemoveIndex<AdapterAccount> {
   user!: User
 
   @Property({ type: types.string, persist: false })
-  userId!: string
+  userId!: AdapterAccount["userId"]
 
   @Property({ type: types.string })
   type!: AdapterAccount["type"]
 
   @Property({ type: types.string })
-  provider!: string
+  provider!: AdapterAccount["provider"]
 
   @Property({ type: types.string })
-  providerAccountId!: string
+  providerAccountId!: AdapterAccount["providerAccountId"]
 
   @Property({ type: types.string, nullable: true })
-  refresh_token?: string
+  refresh_token?: AdapterAccount["refresh_token"]
 
   @Property({ type: types.string, nullable: true })
-  access_token?: string
+  access_token?: AdapterAccount["access_token"]
 
   @Property({ type: types.integer, nullable: true })
-  expires_at?: number
+  expires_at?: AdapterAccount["expires_at"]
 
   @Property({ type: types.string, nullable: true })
-  token_type?: string
+  token_type?: AdapterAccount["token_type"]
 
   @Property({ type: types.string, nullable: true })
-  scope?: string
+  scope?: AdapterAccount["scope"]
 
   @Property({ type: types.text, nullable: true })
-  id_token?: string
+  id_token?: AdapterAccount["id_token"]
 
   @Property({ type: types.string, nullable: true })
-  session_state?: string
+  session_state?: AdapterAccount["session_state"]
 }
 
 @Entity()
@@ -133,11 +133,11 @@ export class Account implements RemoveIndex<AdapterAccount> {
 export class VerificationToken implements AdapterVerificationToken {
   @PrimaryKey()
   @Property({ type: types.string })
-  token!: string
+  token!: AdapterVerificationToken["token"]
 
   @Property({ type: "Date" })
-  expires!: Date
+  expires!: AdapterVerificationToken["expires"]
 
   @Property({ type: types.string })
-  identifier!: string
+  identifier!: AdapterVerificationToken["identifier"]
 }

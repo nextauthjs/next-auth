@@ -52,6 +52,8 @@ const defaultConfig = {
   readme: "none",
   skipErrorChecking: true,
   sort: ["kind", "static-first", "required-first", "alphabetical"],
+  useCodeBlocks: true,
+  expandObjects: true,
 } satisfies TypeDocConfig
 
 export function typedocAdapter({ id }: (typeof manifest.adapters)[number]) {
