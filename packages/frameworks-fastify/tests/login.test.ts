@@ -1,34 +1,26 @@
+import { describe, beforeEach, it, expect } from "vitest"
 import Fastify, { LightMyRequestResponse } from "fastify"
 import formbodyParser from "@fastify/formbody"
-import { FastifyAuth, getSession } from "../../src/index.js"
+import { FastifyAuth, getSession } from "../src/index.js"
 
 import CredentialsProvider from "@auth/core/providers/credentials"
+import type { AuthConfig } from "@auth/core"
+
 export const authConfig = {
   secret: "secret",
   providers: [
     CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "username",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
-        const name = (credentials.username as string) || "Default Name"
-        const user = {
-          id: "1",
-          name,
-          email: name.replace(" ", "") + "@example.com",
+      credentials: { username: { label: "Username" } },
+      async authorize(credentials) {
+        if (typeof credentials?.username === "string") {
+          const { username: name } = credentials
+          return { name: name, email: name.replace(" ", "") + "@example.com" }
         }
-
-        return user
+        return null
       },
     }),
   ],
-}
+} satisfies AuthConfig
 
 const extractCookieValue = (
   cookies: LightMyRequestResponse["cookies"],

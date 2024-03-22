@@ -30,8 +30,8 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
-    "testdebug": "NODE_OPTIONS=\"--experimental-vm-modules --inspect --inspect-brk\" jest --runInBand --colors --verbose --config ./jest.config.cjs",
+    "test": "vitest run -c ../utils/vitest.config.ts",
+    "test:debug": "NODE_OPTIONS=\"--inspect --inspect-brk\" vitest run -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {
@@ -43,9 +43,7 @@
   "devDependencies": {
     "@auth/core": "workspace:experimental",
     "@fastify/formbody": "^7.4.0",
-    "@jest/globals": "^29.6.3",
-    "fastify": "^4.25.2",
-    "ts-jest": "29.0.0-next.1"
+    "fastify": "^4.25.2"
   },
   "peerDependencies": {
     "fastify": "^4.25.2"
