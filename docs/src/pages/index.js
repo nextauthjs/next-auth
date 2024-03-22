@@ -156,6 +156,15 @@ export default function Home() {
                 >
                   SolidStart Demo
                 </a>
+                <a
+                  className={classnames(
+                    "button button--outline button--secondary button--lg rounded-pill",
+                    styles.button
+                  )}
+                  href="https://express-auth-example.vercel.app"
+                >
+                  Express Demo
+                </a>
                 <Link
                   className={classnames(
                     "button button--primary button--lg rounded-pill",
@@ -255,6 +264,16 @@ export default function Home() {
                     </CodeBlock>
                   </div>
                 </div>
+                <div className="col col--6">
+                  <div className="code">
+                    <div className="code-heading">
+                      Express <span>src/routes/auth.route.ts</span>
+                    </div>
+                    <CodeBlock className="prism-code language-js">
+                      {ExpressCode}
+                    </CodeBlock>
+                  </div>
+                </div>
               </div>
               <div className="row">
                 <div className="col">
@@ -300,6 +319,21 @@ export { handle } from "./auth"
 const solidStartCode = `import { SolidAuth } from "@auth/solid-start"
 import GitHub from "@auth/core/providers/github"
 export const { GET, POST } = SolidAuth({
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET
+    })
+  ]
+})`.trim()
+
+const ExpressCode = `import { ExpressAuth } from "@auth/express"
+import GitHub from "@auth/express/providers/github"
+import express from "express"
+
+const app = express()
+app.use('trust proxy')
+app.use("/auth/*", ExpressAuth({
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID,
