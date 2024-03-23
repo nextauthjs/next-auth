@@ -435,6 +435,31 @@ importers:
         specifier: ^5.7.0
         version: 5.16.0
 
+  packages/adapter-orchid-orm:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      orchid-orm:
+        specifier: ^1.23.11
+        version: 1.23.11(typescript@5.3.3)
+      orchid-orm-schema-to-zod:
+        specifier: ^0.6.11
+        version: 0.6.11
+      orchid-orm-test-factory:
+        specifier: ^0.5.11
+        version: 0.5.11
+      rake-db:
+        specifier: ^2.15.10
+        version: 2.15.10
+      tsx:
+        specifier: ^4.7.1
+        version: 4.7.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+
   packages/adapter-pg:
     dependencies:
       '@auth/core':
@@ -915,6 +940,17 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.22
+
+  /@anatine/zod-mock@3.13.4(@faker-js/faker@8.4.1)(zod@3.22.4):
+    resolution: {integrity: sha512-yO/KeuyYsEDCTcQ+7CiRuY3dnafMHIZUMok6Ci7aERRCTQ+/XmsiPk/RnMx5wlLmWBTmX9kw+PavbMsjM+sAJA==}
+    peerDependencies:
+      '@faker-js/faker': ^7.0.0 || ^8.0.0
+      zod: ^3.21.4
+    dependencies:
+      '@faker-js/faker': 8.4.1
+      randexp: 0.5.3
+      zod: 3.22.4
+    dev: true
 
   /@antfu/utils@0.7.7:
     resolution: {integrity: sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==}
@@ -4841,6 +4877,11 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@faker-js/faker@8.4.1:
+    resolution: {integrity: sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
     dev: true
 
   /@fastify/busboy@1.2.1:
@@ -12385,6 +12426,11 @@ packages:
     resolution: {integrity: sha512-+BNfZ+deCo8hMNpDqDnvT+c0XpJ5cUa6mqYq89bho2Ifze4URTqRkcwR399hWoTrTkbZ/XJYDgP6rc7pRgffEQ==}
     dev: true
 
+  /drange@1.1.1:
+    resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
+    engines: {node: '>=4'}
+    dev: true
+
   /dreamopt@0.8.0:
     resolution: {integrity: sha512-vyJTp8+mC+G+5dfgsY+r3ckxlz+QMX40VjPQsZc5gxVAxLmi64TBoVkP54A/pRAXMXsbu2GMMBrZPxNv23waMg==}
     engines: {node: '>=0.4.0'}
@@ -19219,6 +19265,47 @@ packages:
       wcwidth: 1.0.1
     dev: true
 
+  /orchid-core@0.12.4:
+    resolution: {integrity: sha512-JsXUYD/ml+xfIANQ2+Z0PgZL7bSpgz548/f+lVzwliMPaa3KpXv3hv0kkXxWp3erM6YTz5kgWRfULifmr5bHMQ==}
+    dev: true
+
+  /orchid-orm-schema-to-zod@0.6.11:
+    resolution: {integrity: sha512-cF+PkF3oWqZhPQOx31ip1jnDzpIIHUemgiKhp+VajlvWWCI1d00TPQfjSH+CGW1pHQ9DOVWz0gfTCtvTA4qI8w==}
+    dependencies:
+      orchid-core: 0.12.4
+      pqb: 0.26.7
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - pg-native
+    dev: true
+
+  /orchid-orm-test-factory@0.5.11:
+    resolution: {integrity: sha512-gElCVjTjJny3+T675RN0/dbDo36CQ1yRvk3upVy5fk4HkE/tG7s0hLEM7JW/z3pNVpAQ2bmEctNjhnzjCsBpog==}
+    dependencies:
+      '@anatine/zod-mock': 3.13.4(@faker-js/faker@8.4.1)(zod@3.22.4)
+      '@faker-js/faker': 8.4.1
+      orchid-core: 0.12.4
+      orchid-orm-schema-to-zod: 0.6.11
+      pqb: 0.26.7
+      zod: 3.22.4
+    transitivePeerDependencies:
+      - pg-native
+    dev: true
+
+  /orchid-orm@1.23.11(typescript@5.3.3):
+    resolution: {integrity: sha512-09la9Bptm5C3v/INZGJ6VqrtWbD8tJ9T6+PJOr3KV3GfEK1ia3wJ2gSi5c/FP6ZMl33r1P+rHGj84XUkZXAfIg==}
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      inflection: 1.13.4
+      orchid-core: 0.12.4
+      pqb: 0.26.7
+      prompts: 2.4.2
+      typescript: 5.3.3
+    transitivePeerDependencies:
+      - pg-native
+    dev: true
+
   /os-tmpdir@1.0.2:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
@@ -20632,6 +20719,16 @@ packages:
       - encoding
     dev: true
 
+  /pqb@0.26.7:
+    resolution: {integrity: sha512-s93Dgry9U+0yPqjZW/Hm6/8jZ8FzAnw+rY/W3Bmm0ab760ABkXIDYAcUDF52p/ok5B6Ffitt6WLoUgD6r1k3aA==}
+    dependencies:
+      '@types/pg': 8.11.0
+      orchid-core: 0.12.4
+      pg: 8.11.3
+    transitivePeerDependencies:
+      - pg-native
+    dev: true
+
   /preact-render-to-string@5.2.3(preact@10.11.3):
     resolution: {integrity: sha512-aPDxUn5o3GhWdtJtW0svRC2SS/l8D9MAgo2+AWml+BhDImb27ALf04Q2d+AHqUUOc6RdSXFIBVa2gxzgMKgtZA==}
     peerDependencies:
@@ -20968,7 +21065,7 @@ packages:
   /puppeteer@18.2.1:
     resolution: {integrity: sha512-7+UhmYa7wxPh2oMRwA++k8UGVDxh3YdWFB52r9C3tM81T6BU7cuusUSxImz0GEYSOYUKk/YzIhkQ6+vc0gHbxQ==}
     engines: {node: '>=14.1.0'}
-    deprecated: < 21.5.0 is no longer supported
+    deprecated: < 21.8.0 is no longer supported
     requiresBuild: true
     dependencies:
       https-proxy-agent: 5.0.1
@@ -21031,6 +21128,24 @@ packages:
 
   /radix3@1.1.0:
     resolution: {integrity: sha512-pNsHDxbGORSvuSScqNJ+3Km6QAVqk8CfsCBIEoDgpqLrkD2f3QM4I7d1ozJJ172OmIcoUcerZaNWqtLkRXTV3A==}
+
+  /rake-db@2.15.10:
+    resolution: {integrity: sha512-u7C87RpnlJR4+n/zimf4c+x57dSlKCz6+671Tt2Ik8GJQ0FmjopKs/BRIivswWU6AhuA0hiWXt+tyvKRwFS1ZA==}
+    dependencies:
+      orchid-core: 0.12.4
+      pqb: 0.26.7
+      prompts: 2.4.2
+    transitivePeerDependencies:
+      - pg-native
+    dev: true
+
+  /randexp@0.5.3:
+    resolution: {integrity: sha512-U+5l2KrcMNOUPYvazA3h5ekF80FHTUG+87SEAmHZmolh1M+i/WyTCxVzmi+tidIa1tM4BSe8g2Y/D3loWDjj+w==}
+    engines: {node: '>=4'}
+    dependencies:
+      drange: 1.1.1
+      ret: 0.2.2
+    dev: true
 
   /randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -21683,6 +21798,11 @@ packages:
     dependencies:
       onetime: 5.1.2
       signal-exit: 3.0.7
+    dev: true
+
+  /ret@0.2.2:
+    resolution: {integrity: sha512-M0b3YWQs7R3Z917WRQy1HHA7Ba7D8hvZg6UE5mLykJxQVE2ju0IXbGlaHPPlkY+WN7wFP+wUMXmBFA0aV6vYGQ==}
+    engines: {node: '>=4'}
     dev: true
 
   /retry-as-promised@7.0.4:
@@ -22627,6 +22747,9 @@ packages:
   /sqlite3@5.1.6:
     resolution: {integrity: sha512-olYkWoKFVNSSSQNvxVUfjiVbz3YtBwTJj+mfV5zpHmqW3sELx2Cf4QCdirMelhM5Zh+KDVaKgQHqCxrqiWHybw==}
     requiresBuild: true
+    peerDependenciesMeta:
+      node-gyp:
+        optional: true
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       node-addon-api: 4.3.0
@@ -22642,6 +22765,9 @@ packages:
   /sqlite3@5.1.7:
     resolution: {integrity: sha512-GGIyOiFaG+TUra3JIfkI/zGP8yZYLPQ0pl1bH+ODjiX57sPhrLU5sQJn1y9bDKZUFYkX1crlrPfSYt0BKKdkog==}
     requiresBuild: true
+    peerDependenciesMeta:
+      node-gyp:
+        optional: true
     dependencies:
       bindings: 1.5.0
       node-addon-api: 7.1.0
@@ -23729,6 +23855,17 @@ packages:
 
   /tsx@4.7.0:
     resolution: {integrity: sha512-I+t79RYPlEYlHn9a+KzwrvEwhJg35h/1zHsLC2JXvhC2mdynMv6Zxzvhv5EMV6VF5qJlLlkSnMVvdZV3PSIGcg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild: 0.19.12
+      get-tsconfig: 4.7.2
+    optionalDependencies:
+      fsevents: 2.3.3
+    dev: true
+
+  /tsx@4.7.1:
+    resolution: {integrity: sha512-8d6VuibXHtlN5E3zFkgY8u4DX7Y3Z27zvvPKVmLon/D4AjuKzarkUBTLDBgj9iTQ0hg5xM7c/mYiRVM+HETf0g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
