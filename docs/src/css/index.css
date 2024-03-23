@@ -259,6 +259,7 @@ html[data-theme="dark"] hr {
   line-height: 1.5;
   text-align: left;
 }
+
 #carbonads .carbon-poweredby {
   display: block;
   padding: 6px 8px;
@@ -279,6 +280,11 @@ html[data-theme="dark"] #carbonads .carbon-text {
   color: #ddd;
 }
 
+html[data-theme="dark"] #carbonads .carbon-poweredby {
+  color: #aaa;
+  background: #1e2021;
+}
+
 html[data-theme="dark"] #carbonads > span {
   background: #1a1a1a;
   box-shadow:
@@ -288,18 +294,18 @@ html[data-theme="dark"] #carbonads > span {
     0 0 8px hsl(0deg 0% 0% / 9%);
 }
 
-html[data-theme="dark"] #carbonads .carbon-poweredby {
-  color: #aaa;
-  background: #1e2021;
+div.sponsoredBadge {
+  display: block;
+  font-size: 0.6rem !important;
+  line-height: 1rem;
+  border-radius: 2rem;
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  background-color: rgb(229 231 235 / 0.5) !important;
+  color: #a1a1a1;
 }
 
-.theme-doc-markdown.markdown {
-  > p:first-of-type {
-    :last-child {
-      img {
-        width: 48px;
-        height: 48px;
-      }
-    }
-  }
+html[data-theme="dark"] .sponsoredBadge {
+  background-color: #242526 !important;
+  color: #696969;
 }
