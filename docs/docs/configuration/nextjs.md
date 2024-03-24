@@ -8,7 +8,7 @@ You can create a helper function so you don't need to pass `authOptions` around:
 ```ts title=auth.ts
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
 import type { NextAuthOptions } from "next-auth"
-import { getServerSession } from "next-auth"
+import { getServerSession } from "next-auth/next"
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -29,8 +29,8 @@ When calling from the server-side i.e. in Route Handlers, React Server Component
 
 In `[...nextauth].ts`:
 ```ts
-import NextAuth from 'next-auth'
-import type { NextAuthOptions } from 'next-auth'
+import NextAuth from "next-auth"
+import type { NextAuthOptions } from "next-auth"
 
 export const authOptions: NextAuthOptions = {
   // your configs
@@ -41,7 +41,7 @@ export default NextAuth(authOptions);
 
 ### In `getServerSideProps`:
 ```js
-import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { authOptions } from "pages/api/auth/[...nextauth]"
 import { getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
@@ -66,7 +66,7 @@ export async function getServerSideProps(context) {
 
 ### In API Routes:
 ```js
-import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { authOptions } from "pages/api/auth/[...nextauth]"
 import { getServerSession } from "next-auth/next"
 
 
@@ -90,7 +90,7 @@ You can also use `getServerSession` in Next.js' server components:
 
 ```tsx
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "pages/api/auth/[...nextauth]"
+import { authOptions } from "app/api/auth/[...nextauth]/route"
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
