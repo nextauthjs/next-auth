@@ -1,4 +1,12 @@
-import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest"
 
 import { AuthConfig } from "../src/index.js"
 import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
@@ -86,9 +94,9 @@ describe("config is inferred from environment variables", () => {
 
   it.each([
     [{ AUTH_TRUST_HOST: "1", AUTH_SECRET: "asdf" }, { trustHost: true }],
-    [{ VERCEL: "1" }, { trustHost: true, secret: "asdf" }],
+    [{ VERCEL: "1", AUTH_SECRET: "asdf" }, { trustHost: true }],
     [{ NODE_ENV: "development", AUTH_SECRET: "asdf" }, { trustHost: true }],
-    [{ NODE_ENV: "test" }, { trustHost: true, secret: "asdf" }],
+    [{ NODE_ENV: "test", AUTH_SECRET: "asdf" }, { trustHost: true }],
     [
       { AUTH_URL: "http://example.com", AUTH_SECRET: "asdf" },
       { trustHost: true },
@@ -100,7 +108,7 @@ describe("config is inferred from environment variables", () => {
 })
 
 describe("createActionURL", () => {
-const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => { })
 
   afterEach(() => {
     consoleWarnSpy.mockClear()
@@ -189,34 +197,34 @@ const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     expect(consoleWarnSpy).not.toHaveBeenCalled()
   })
 
-   it.each([
-     {
-       args: {
-         action: "signout",
-         protocol: undefined,
-         headers: new Headers({}),
-         env: { AUTH_URL: "http://localhost:3000/my-app/api/auth/" },
-         basePath: "/my-app/api/auth",
-       },
-       expected: "http://localhost:3000/my-app/api/auth/signout",
-     },
-     {
-       args: {
-         action: "signout",
-         protocol: undefined,
-         headers: new Headers({}),
-         env: { AUTH_URL: "https://sub.domain.env.com/my-app" },
-         basePath: "/api/auth",
-       },
-       expected: "https://sub.domain.env.com/api/auth/signout",
-     },
-   ])("Duplicate path configurations: %j", ({ args, expected }) => {
-     // @ts-expect-error
-     expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
-     expect(consoleWarnSpy).toHaveBeenCalled()
-   })
+  it.each([
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "http://localhost:3000/my-app/api/auth/" },
+        basePath: "/my-app/api/auth",
+      },
+      expected: "http://localhost:3000/my-app/api/auth/signout",
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "https://sub.domain.env.com/my-app" },
+        basePath: "/api/auth",
+      },
+      expected: "https://sub.domain.env.com/api/auth/signout",
+    },
+  ])("Duplicate path configurations: %j", ({ args, expected }) => {
+    // @ts-expect-error
+    expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
+    expect(consoleWarnSpy).toHaveBeenCalled()
+  })
 
-   afterAll(() => {
-    consoleWarnSpy.mockRestore();
-   })
+  afterAll(() => {
+    consoleWarnSpy.mockRestore()
+  })
 })
