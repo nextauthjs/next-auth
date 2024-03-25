@@ -599,6 +599,14 @@ export interface Authenticator {
    * Device type of the authenticator.
    */
   credentialDeviceType: string
+  /**
+   * AAGUID of the authenticator.
+   */
+  credentialAAGUID: string
+  /**
+   * Origin of the website the authenticator is registered to.
+   */
+  credentialOrigin: string
 }
 
 /** @internal */
