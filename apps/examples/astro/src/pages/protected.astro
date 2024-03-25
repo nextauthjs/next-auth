@@ -1,0 +1,41 @@
+---
+const { session } = Astro.locals
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body>
+    {
+      session ? (
+        <h1>Protected page</h1>
+        <p>
+          This is a protected content. You can access this content because you are signed in.
+        </p>
+        <p>
+          <a href="/">Go to home</a>
+        </p>
+      ) : (
+        <h1>Access Denied</h1>
+        <p>
+          <a href="/auth/signin">You must be signed in to view this page</a>
+        </p>
+        <p>
+          <a href="/">Go to home</a>
+        </p>
+      )
+    }
+
+    <script>
+      import { signIn, signOut } from '@auth/astro/client'
+
+      document.querySelector('.signin')?.addEventListener('click', () => signIn('github'))
+      document.querySelector('.signout')?.addEventListener('click', () => signOut())
+    </script>
+	</body>
+</html>
