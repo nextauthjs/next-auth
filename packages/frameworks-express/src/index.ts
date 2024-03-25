@@ -48,7 +48,7 @@
  * import { getSession } from "@auth/express"
  *
  * export function authSession(req: Request, res: Response, next: NextFunction) {
- *   res.locals.session = await getSession(req)
+ *   res.locals.session = await getSession(req, authConfig)
  *   next()
  * }
  *
