@@ -161,4 +161,19 @@ Collection.create({
 })
 ```
 
-> This schema is adapted for use in Fauna and based upon our primary [database models](/concepts/database-models).
+### Custom Collection Names
+
+If you want to use custom collection names, you can pass them as an option to the adapter, like this:
+
+```js
+FaunaAdapter(client, {
+  collectionNames: {
+    user: "CustomUser",
+    account: "CustomAccount",
+    session: "CustomSession",
+    verificationToken: "CustomVerificationToken",
+  },
+})
+```
+
+Make sure the collection names you pass to the provider match the collection names of your Fauna database.
