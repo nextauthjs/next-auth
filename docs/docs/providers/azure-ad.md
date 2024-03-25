@@ -33,6 +33,7 @@ https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-regis
   - Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
 - When asked for a redirection URL, select the platform type "Web" and use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
 - After your App Registration is created, under "Client Credential" create your Client secret.
+- Click on "API Permissions" and click "Grant admin consent for..." to allow User.Read access to your tenant.
 - Now copy your:
   - Application (client) ID
   - Directory (tenant) ID
