@@ -17,32 +17,16 @@
  * ```ts title="src/routes/auth.route.ts"
  * import { FastifyAuth } from "@auth/fastify"
  * import formbodyParser from "@fastify/formbody"
- * import httpProxy from "@fastify/http-proxy"
  * import GitHub from "@auth/fastify/providers/github"
  * import Fastify from "fastify"
  *
- * const fastify = Fastify();
+ * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
+ * const fastify = Fastify({ trustProxy: true });
  *
  * // Make sure to use a form body parser so Auth.js can receive data from the client
  * fastify.register(formbodyParser)
  *
- * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
- * fastify.register(httpProxy, {
- *   upstream: 'https://my-api.example.com',
- *   http2: false, // Set to true if your upstream supports http2
- * });
- *
- * fastify.register(
- *   FastifyAuth({
- *     providers: [
- *       GitHub({
- *         clientId: process.env.GITHUB_ID,
- *         clientSecret: process.env.GITHUB_SECRET,
- *       }),
- *     ],
- *   }),
- *   { prefix: '/api/auth' }
- * )
+ * fastify.register(FastifyAuth({ providers: [ GitHub ] }), { prefix: '/auth' })
  * ```
  *
  * Don't forget to set the `AUTH_SECRET` environment variable. This should be a minimum of 32 characters, random string. On UNIX systems you can use `openssl rand -hex 32` or check out `https://generate-secret.vercel.app/32`.
@@ -53,7 +37,7 @@
  * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you mount the `FastifyAuth` handler on a different path:
  *
  * ```
- * [origin]/api/auth/callback/[provider]
+ * [origin]/auth/callback/[provider]
  * ```
  *
  * ## Signing in and signing out
@@ -61,82 +45,89 @@
  * NB: Make sure to include the `csrfToken` in the request body for all sign-in and sign-out requests.
  *
  * ## Managing the session
- * If you are using Fastify with a template engine (e.g EJS, Pug), you can make the session data available to all routes via middleware as follows
+ * If you are using Fastify with a template engine (e.g @fastify/view with EJS, Pug), you can make the session data available to all routes via a preHandler hook as follows
  *
  * ```ts title="app.ts"
  * import { getSession } from "@auth/fastify"
- *
- * export function authSession(req: Request, res: Response, next: NextFunction) {
- *   res.locals.session = await getSession(req)
- *   next()
+ * 
+ * // Decorating the reply is not required but will optimise performance
+ * fastify.decorateReply('session', null)
+
+ * export async function authSession(req: FastifyRequest, reply: FastifyReply) {
+ *   reply.session = await getSession(req, authConfig)
  * }
  *
- * app.use(authSession)
+ * fastify.addHook("preHandler", authSession)
  *
  * // Now in your route
- * app.get("/", (req, res) => {
- *   const { session } = res.locals
- *   res.render("index", { user: session?.user })
+ * fastify.get("/", (req, reply) => {
+ *   const session = reply.session;
+ *   reply.view("index.pug", { user: session?.user })
  * })
  * ```
+ * 
+ * Note for TypeScript, you may want to augment the Fastify types to include the `session` property on the reply object. This can be done by creating a @types/fastify/index.d.ts file:
+ * 
+ * ```ts title="@types/fastify/index.d.ts"
+ * import { Session } from "@auth/core/types";
+ * declare module "fastify" {
+ *   interface FastifyReply {
+ *     session: Session | null;
+ *   }
+ * }
+ * ```
+ * 
+ * You may need to add `"typeRoots": ["@types"]` to `compilerOptions` in your tsconfig.json.
  *
  * ## Authorization
- * You can protect routes by checking for the presence of a session and then redirect to a login page if the session is not present.
- * This can either be done per route, or for a group of routes using a middleware such as the following:
+ * You can protect routes with hooks by checking for the presence of a session and then redirect to a login page if the session is not present.
  *
  * ```ts
- * export function authenticatedUser(
- *   req: Request,
- *   res: Response,
- *   next: NextFunction
+ * export async function authenticatedUser(
+ *   req: FastifyRequest,
+ *   reply: FastifyReply
  * ) {
- *   const session = res.locals.session ?? (await getSession(req, authConfig))
- *   if (!session?.user) {
- *     res.redirect("/login")
- *   } else {
- *     next()
+ *   reply.session ??= await getSession(req, authConfig);
+ *   if (!reply.session?.user) {
+ *     reply.redirect("/auth/signin?error=SessionRequired");
  *   }
  * }
  * ```
  *
  * ### Per Route
- * To protect a single route, simply add the middleware to the route as follows:
+ * To protect a single route, simply register the preHandler hook to the route as follows:
  * ```ts title="app.ts"
  * // This route is protected
- * app.get("/profile", authenticatedUser, (req, res) => {
- *   const { session } = res.locals
- *   res.render("profile", { user: session?.user })
- * })
- *
+ * fastify.get("/profile", { preHandler: [authenticatedUser] }, (req, reply) => {
+ *   const session = reply.session;
+ *   reply.view("profile.pug", { user: session?.user })
+ * });
+ * 
  * // This route is not protected
- * app.get("/", (req, res) => {
- *   res.render("index")
- * })
- *
- * app.use("/", root)
+ * fastify.get("/", (req, reply) => {
+ *   reply.view("index");
+ * });
  * ```
+ * 
  * ### Per Group of Routes
- * To protect a group of routes, define a router and add the middleware to the router as follows:
+ * To protect a group of routes, create a plugin and register the authenication hook and routes to the instance as follows:
  *
- * ```ts title="routes/protected.route.ts"
- * import { Router } from "express"
- *
- * const router = Router()
- *
- * router.use(authenticatedUser) // All routes defined after this will be protected
- *
- * router.get("/", (req, res) => {
- *   res.render("protected")
- * })
- *
- * export default router
- * ```
- *
- * Then we mount the router as follows:
  * ```ts title="app.ts"
- * import protected from "./routes/protected.route"
- *
- * app.use("/protected", protected)
+ * fastify.register(
+ *   async (instance) => {
+ *     // All routes on this instance will be protected because of the preHandler hook
+ *     instance.addHook("preHandler", authenticatedUser)
+ * 
+ *     instance.get("/", (req, reply) => {
+ *       reply.view("protected.pug")
+ *     })
+ *     
+ *     instance.get("/me", (req, reply) => {
+ *       reply.send(reply.session?.user)
+ *     })
+ *   },
+ *   { prefix: "/protected" }
+ * )
  * ```
  *
  * @module @auth/fastify
@@ -156,13 +147,13 @@ export type {
 } from "@auth/core/types"
 
 export function FastifyAuth(config: Omit<AuthConfig, "raw">): FastifyPluginAsync {
+  setEnvDefaults(process.env, config)
   return async (fastify, opts) => {
     fastify.route({
       method: ['GET', 'POST'],
       url: '/*',
       handler: async (request, reply) => {
         config.basePath = getBasePath(request)
-        setEnvDefaults(process.env, config)
         const response = await Auth(toWebRequest(request), config)
         return toFastifyReply(response, reply)
       }
