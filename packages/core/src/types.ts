@@ -600,7 +600,7 @@ export interface Authenticator {
    */
   credentialDeviceType: string
   /**
-   * AAGUID of the authenticator.
+   * AAGUID of the authenticator. Useful to identify authenticators in the UI, see: https://github.com/passkeydeveloper/passkey-authenticator-aaguids
    */
   credentialAAGUID: string
   /**
