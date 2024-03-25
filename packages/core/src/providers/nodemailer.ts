@@ -51,32 +51,35 @@ export type NodemailerUserConfig = Omit<
 export default function Nodemailer(
   config: NodemailerUserConfig
 ): NodemailerConfig {
-  if (!config.server)
-    throw new AuthError("Nodemailer requires a `server` configuration")
+  if (!config.sendVerificationRequest && !config.server)
+    throw new AuthError(
+      "Nodemailer requires a `server` configuration when sendVerificationRequest isn't overridden"
+    )
 
   return {
     id: "nodemailer",
     type: "email",
     name: "Nodemailer",
-    server: { host: "localhost", port: 25, auth: { user: "", pass: "" } },
-    from: "Auth.js <no-reply@authjs.dev>",
+    from: config.from ?? "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
-    async sendVerificationRequest(params) {
-      const { identifier, url, provider, theme } = params
-      const { host } = new URL(url)
-      const transport = createTransport(provider.server)
-      const result = await transport.sendMail({
-        to: identifier,
-        from: provider.from,
-        subject: `Sign in to ${host}`,
-        text: text({ url, host }),
-        html: html({ url, host, theme }),
-      })
-      const failed = result.rejected.concat(result.pending).filter(Boolean)
-      if (failed.length) {
-        throw new Error(`Email (${failed.join(", ")}) could not be sent`)
-      }
-    },
+    sendVerificationRequest: config.sendVerificationRequest
+      ? config.sendVerificationRequest
+      : async (params) => {
+          const { identifier, url, provider, theme } = params
+          const { host } = new URL(url)
+          const transport = createTransport(provider.server)
+          const result = await transport.sendMail({
+            to: identifier,
+            from: provider.from,
+            subject: `Sign in to ${host}`,
+            text: text({ url, host }),
+            html: html({ url, host, theme }),
+          })
+          const failed = result.rejected.concat(result.pending).filter(Boolean)
+          if (failed.length) {
+            throw new Error(`Email (${failed.join(", ")}) could not be sent`)
+          }
+        },
     options: config,
   }
 }
