@@ -139,7 +139,7 @@ declare module "next-auth" {
   interface Session {}
 }
 
-declare module "next-auth/jwt" {
+declare module "@auth/core/jwt" {
   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
