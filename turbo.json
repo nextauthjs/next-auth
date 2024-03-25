@@ -74,6 +74,7 @@
         "@auth/surrealdb-adapter#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
+        "@auth/fastify#build",
         "@auth/typeorm-adapter#build",
         "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
@@ -122,7 +123,8 @@
         "docs/reference/nextjs/**/*",
         "docs/reference/solidstart/**/*",
         "docs/reference/sveltekit/**/*",
-        "docs/reference/express/**/*"
+        "docs/reference/express/**/*",
+        "docs/reference/fastify/**/*"
       ]
     }
   }
