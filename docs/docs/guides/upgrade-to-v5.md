@@ -26,6 +26,7 @@ First, let's see what is new!
 ## Breaking Changes
 
 - NextAuth.js now builds on `@auth/core` with stricter [OAuth](https://www.ietf.org/rfc/rfc6749.html)/[OIDC](https://openid.net/specs/openid-connect-core-1_0.html) spec-compliance, which might break some existing OAuth providers. See our [open issues](https://github.com/nextauthjs/next-auth/issues?q=is%3Aopen+is%3Aissue+label%3Aproviders) for more details.
+- Remove `AUTH_URL` from your env file.
 - OAuth 1.0 support is deprecated.
 - Minimum required Next.js version is now [13.4](https://nextjs.org/13-4).
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
