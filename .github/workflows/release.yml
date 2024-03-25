@@ -25,6 +25,7 @@ on:
           - "@auth/mikro-orm-adapter"
           - "@auth/mongodb-adapter"
           - "@auth/neo4j-adapter"
+          - "@auth/orchid-orm-adapter"
           - "@auth/pouchdb-adapter"
           - "@auth/prisma-adapter"
           - "@auth/sequelize-adapter"

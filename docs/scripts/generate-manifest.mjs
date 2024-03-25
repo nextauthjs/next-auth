@@ -87,6 +87,7 @@ const content = JSON.stringify(
       { id: "mikro-orm", name: "Mikro ORM", img: "mikro-orm.png" },
       { id: "mongodb", name: "MongoDB" },
       { id: "neo4j", name: "Neo4j" },
+      { id: "orchid-orm", name: "OrchidORM" },
       { id: "pg", name: "pg", img: "pg.png" },
       { id: "pouchdb", name: "PouchDB" },
       { id: "prisma", name: "Prisma" },
