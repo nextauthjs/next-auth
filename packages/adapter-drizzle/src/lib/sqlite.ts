@@ -1,15 +1,19 @@
-import { eq, and } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import {
-  integer,
-  sqliteTable as defaultSqliteTableFn,
-  text,
-  primaryKey,
   BaseSQLiteDatabase,
   SQLiteTableFn,
+  sqliteTable as defaultSqliteTableFn,
+  integer,
+  primaryKey,
+  text,
 } from "drizzle-orm/sqlite-core"
 import { stripUndefined } from "./utils.js"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterAuthenticator,
+} from "@auth/core/adapters"
 
 export function createTables(sqliteTable: SQLiteTableFn) {
   const users = sqliteTable("user", {
@@ -62,7 +66,23 @@ export function createTables(sqliteTable: SQLiteTableFn) {
     })
   )
 
-  return { users, accounts, sessions, verificationTokens }
+  const authenticators = sqliteTable("authenticator", {
+    id: text("id").notNull().primaryKey(),
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: integer("credentialBackedUp", {
+      mode: "boolean",
+    }).notNull(),
+    transports: text("transports"),
+  })
+
+  return { users, accounts, sessions, verificationTokens, authenticators }
 }
 
 export type DefaultSchema = ReturnType<typeof createTables>
@@ -71,7 +91,7 @@ export function SQLiteDrizzleAdapter(
   client: InstanceType<typeof BaseSQLiteDatabase>,
   tableFn = defaultSqliteTableFn
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
+  const { users, accounts, sessions, verificationTokens, authenticators } =
     createTables(tableFn)
 
   return {
@@ -207,5 +227,64 @@ export function SQLiteDrizzleAdapter(
         )
         .run()
     },
+    async getAccount(providerAccountId, provider) {
+      return await client
+        .select()
+        .from(accounts)
+        .where(
+          and(
+            eq(accounts.providerAccountId, providerAccountId),
+            eq(accounts.provider, provider)
+          )
+        )
+        .then((res) => (res[0] as AdapterAccount) ?? null)
+    },
+    async createAuthenticator(data) {
+      const user = await client
+        .insert(authenticators)
+        .values({ ...data, id: crypto.randomUUID() })
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+
+      return user
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await client
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+      return authenticator ? authenticator : null
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return await client
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.userId, userId))
+        .then((res) => res.map(fromDBAuthenticator))
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      return await client
+        .update(authenticators)
+        .set({ counter: newCounter })
+        .where(eq(authenticators.credentialID, credentialID))
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
+  }
+}
+
+type BaseDrizzleAuthenticator = ReturnType<
+  typeof createTables
+>["authenticators"]["$inferInsert"]
+
+function fromDBAuthenticator(
+  authenticator: BaseDrizzleAuthenticator
+): AdapterAuthenticator {
+  const { transports, id, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }

@@ -12,8 +12,14 @@ const poolConnection = createPool({
 
 const mysqlTable = mysqlTableCreator((name) => `foobar_${name}`)
 
-export const { users, accounts, sessions, verificationTokens } =
+export const { users, accounts, sessions, verificationTokens, authenticators } =
   createTables(mysqlTable)
-export const schema = { users, accounts, sessions, verificationTokens }
+export const schema = {
+  users,
+  accounts,
+  sessions,
+  verificationTokens,
+  authenticators,
+}
 
 export const db = drizzle(poolConnection, { schema })
