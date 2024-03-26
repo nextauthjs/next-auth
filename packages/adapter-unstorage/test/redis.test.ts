@@ -10,7 +10,7 @@ const storage = createStorage({
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
   testWebAuthnMethods: true,
-  // Currently not implemented in KV Store
+  // Currently not fully implemented in KV Store
   skipTests: ["listAuthenticatorsByUserId"],
   db: {
     disconnect: storage.dispose,
