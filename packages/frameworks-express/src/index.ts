@@ -128,7 +128,7 @@ import type { AuthConfig, Session } from "@auth/core/types"
 import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
-export { AuthError, CredentialsSignin } from "@auth/core/errors"
+export { AuthError, CustomCredentials } from "@auth/core/errors"
 export type {
   Account,
   DefaultSession,

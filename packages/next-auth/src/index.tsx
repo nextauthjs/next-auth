@@ -82,7 +82,7 @@ import type {
 import type { AppRouteHandlerFn } from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-export { AuthError, CredentialsSignin } from "@auth/core/errors"
+export { AuthError, CustomCredentials } from "@auth/core/errors"
 
 export type {
   Session,

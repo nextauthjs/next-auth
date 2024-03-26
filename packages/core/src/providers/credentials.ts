@@ -31,21 +31,21 @@ export interface CredentialsConfig<
    *
    * This method expects a `User` object to be returned for a successful login.
    *
-   * If an `CredentialsSignin` is thrown or `null` is returned, two things can happen:
+   * If an `CredentialsSignin`, `CustomCredentials` is thrown or `null` is returned, two things can happen:
    * 1. The user is redirected to the login page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable, see below.
    * 2. If you throw this error in a framework that handles form actions server-side, this error is thrown by the login form action, so you'll need to handle it there.
    *
    * In case of 1., generally, we recommend not hinting if the user for example gave a wrong username or password specifically,
    * try rather something like "invalid-credentials". Try to be as generic with client-side errors as possible.
    *
-   * To customize the error code, you can create a custom error that extends {@link CredentialsSignin} and throw it in `authorize`.
+   * To customize the error code, you can create a custom error that extends {@link CustomCredentials} and throw it in `authorize`.
    *
    * @example
    * ```ts
-   * class CustomError extends CredentialsSignin {
+   * class CustomError extends CustomCredentials {
    *  code = "custom_error"
    * }
-   * // URL will contain `error=CredentialsSignin&code=custom_error`
+   * // URL will contain `error=CustomCredentials&code=custom_error`
    * ```
    *
    * @example
