@@ -289,16 +289,6 @@ export function UnstorageAdapter(
     credentialId: string,
     authenticator: AdapterAuthenticator
   ): Promise<AdapterAuthenticator> => {
-    console.log(
-      "setObjectAsJson.args",
-      authenticatorKeyPrefix + credentialId,
-      authenticator
-    )
-    console.log(
-      "setItem.args",
-      `${authenticatorUserKeyPrefix}${authenticator.userId}`,
-      credentialId
-    )
     await Promise.all([
       setObjectAsJson(authenticatorKeyPrefix + credentialId, authenticator),
       setItem(
@@ -310,23 +300,19 @@ export function UnstorageAdapter(
   }
 
   const getAuthenticator = async (credentialId: string) => {
-    console.log("getAuthenticator.credentialId", credentialId)
     const authenticator = await getItem<AdapterAuthenticator>(
       authenticatorKeyPrefix + credentialId
     )
-    console.log("getAuthenticator.auth", authenticator)
     if (!authenticator) return null
     return hydrateDates(authenticator)
   }
 
   const getAuthenticatorByUserId = async (userId: string) => {
-    console.log("getAuthenticatorByUserId.userId", userId)
     const credentialId = await getItem<string>(
       authenticatorUserKeyPrefix + userId
     )
     if (!credentialId) return null
     const authenticator = getAuthenticator(credentialId)
-    console.log("getAuthenticatorByUserId.auth", authenticator)
     if (!authenticator) return null
     return hydrateDates(authenticator)
   }
@@ -459,7 +445,6 @@ export function UnstorageAdapter(
 function fromDBAuthenticator(
   authenticator: AdapterAuthenticator & { id: string; user: string }
 ): AdapterAuthenticator {
-  console.log("fromDBAuthenticator.authenticator", authenticator)
   const { transports, id, user, ...other } = authenticator
 
   return {
