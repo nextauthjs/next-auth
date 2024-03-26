@@ -15,7 +15,7 @@ export function createTables(sqliteTable: SQLiteTableFn) {
   const users = sqliteTable("user", {
     id: text("id").notNull().primaryKey(),
     name: text("name"),
-    email: text("email").notNull(),
+    email: text("email"),
     emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
     image: text("image"),
   })

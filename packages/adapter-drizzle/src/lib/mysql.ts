@@ -15,7 +15,7 @@ export function createTables(mySqlTable: MySqlTableFn) {
   const users = mySqlTable("user", {
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }),
-    email: varchar("email", { length: 255 }).notNull(),
+    email: varchar("email", { length: 255 }),
     emailVerified: timestamp("emailVerified", {
       mode: "date",
       fsp: 3,
