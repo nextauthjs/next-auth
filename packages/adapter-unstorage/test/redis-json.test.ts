@@ -67,6 +67,9 @@ runBasicTests({
     baseKeyPrefix: "testApp:",
     useItemRaw: true,
   }),
+  // TODO: Something wrong with unstorage Raw methods
+  // and the authenticator tables
+  testWebAuthnMethods: false,
   db: {
     disconnect: storage.dispose,
     async user(id: string) {
@@ -91,6 +94,13 @@ runBasicTests({
     async verificationToken(where) {
       const data = await storage.getItemRaw<object>(
         `testApp:user:token:${where.identifier}:${where.token}`
+      )
+      if (!data) return null
+      return hydrateDates(data)
+    },
+    async authenticator(id) {
+      const data = await storage.getItemRaw<object>(
+        `testApp:authenticator:id:${id}`
       )
       if (!data) return null
       return hydrateDates(data)

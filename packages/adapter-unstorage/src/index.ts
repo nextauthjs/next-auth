@@ -207,6 +207,15 @@ export function UnstorageAdapter(
     }
   }
 
+  async function getItems(key: string[]) {
+    if (mergedOptions.useItemRaw) {
+      // getItemsRaw does not exist in unstorage
+      return JSON.stringify(await storage.getItems(key))
+    } else {
+      return await storage.getItems(key)
+    }
+  }
+
   async function setItem(key: string, value: string) {
     if (mergedOptions.useItemRaw) {
       return await storage.setItemRaw(key, value)
@@ -295,14 +304,31 @@ export function UnstorageAdapter(
     return hydrateDates(authenticator)
   }
 
-  const getAuthenticatorByUserId = async (userId: string) => {
-    const credentialId = await getItem<string>(
-      authenticatorUserKeyPrefix + userId
-    )
-    if (!credentialId) return null
-    const authenticator = getAuthenticator(credentialId)
-    if (!authenticator) return null
-    return hydrateDates(authenticator)
+  // TODO: This one doesn't really work with KV storage, as we can't set the same
+  // key multiple times, they'll just overwrite one another. Maybe with some
+  // additional logic to write an array as value instead if already set..
+  const getAuthenticatorByUserId = async (
+    userId: string
+  ): Promise<AdapterAuthenticator[] | []> => {
+    const credentialIds = await getItems([
+      `${authenticatorUserKeyPrefix}${userId}`,
+    ])
+    if (!credentialIds.length) return []
+
+    const authenticators = []
+    for (const credentialId of credentialIds) {
+      const credentialValue =
+        typeof credentialId === "string" ? credentialId : credentialId.value
+
+      const authenticator = await getAuthenticator(credentialValue as string)
+
+      if (authenticator) {
+        hydrateDates(authenticator)
+        authenticators.push(authenticator)
+      }
+    }
+
+    return authenticators
   }
 
   return {
@@ -359,9 +385,9 @@ export function UnstorageAdapter(
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
         verificationTokenKeyPrefix +
-        verificationToken.identifier +
-        ":" +
-        verificationToken.token,
+          verificationToken.identifier +
+          ":" +
+          verificationToken.token,
         verificationToken
       )
       return verificationToken
@@ -409,7 +435,7 @@ export function UnstorageAdapter(
     },
     async createAuthenticator(authenticator) {
       setAuthenticator(authenticator.credentialID, authenticator)
-      return fromDBAuthenticator(authenticator)
+      return fromDBAuthenticator(authenticator)!
     },
     async getAuthenticator(credentialID) {
       const authenticator = await getAuthenticator(credentialID)
@@ -417,21 +443,23 @@ export function UnstorageAdapter(
     },
     async listAuthenticatorsByUserId(userId) {
       const user = await getUser(userId)
-      if (!user) return null
-      return await getAuthenticatorByUserId(user.id)
+      if (!user) return []
+      const authenticators = await getAuthenticatorByUserId(user.id)
+      return authenticators
     },
     async updateAuthenticatorCounter(credentialID, counter) {
       const authenticator = await getAuthenticator(credentialID)
       authenticator.counter = Number(counter)
       setAuthenticator(credentialID, authenticator)
-      return fromDBAuthenticator(authenticator)
+      return fromDBAuthenticator(authenticator)!
     },
   }
 }
 
 function fromDBAuthenticator(
   authenticator: AdapterAuthenticator & { id?: string; user?: string }
-): AdapterAuthenticator {
+): AdapterAuthenticator | null {
+  if (!authenticator) return null
   const { transports, id, user, ...other } = authenticator
 
   return {
