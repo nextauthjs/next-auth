@@ -16,15 +16,11 @@
  *
  * ```ts title="src/routes/auth.route.ts"
  * import { FastifyAuth } from "@auth/fastify"
- * import formbodyParser from "@fastify/formbody"
  * import GitHub from "@auth/fastify/providers/github"
  * import Fastify from "fastify"
  *
  * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
  * const fastify = Fastify({ trustProxy: true });
- *
- * // Make sure to use a form body parser so Auth.js can receive data from the client
- * fastify.register(formbodyParser)
  *
  * fastify.register(FastifyAuth({ providers: [ GitHub ] }), { prefix: '/auth' })
  * ```
@@ -51,6 +47,7 @@
  * import { getSession } from "@auth/fastify"
  * 
  * // Decorating the reply is not required but will optimise performance
+ * // Only decorate the reply with a value type like null, as reference types like objects are shared among all requests, creating a security risk.
  * fastify.decorateReply('session', null)
 
  * export async function authSession(req: FastifyRequest, reply: FastifyReply) {
@@ -136,6 +133,7 @@
 import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
 import type { AuthConfig, Session } from "@auth/core/types"
 import type { FastifyRequest, FastifyPluginAsync } from 'fastify'
+import formbody from '@fastify/formbody'
 import { toWebRequest, toFastifyReply } from "./lib/index.js"
 
 export type {
@@ -148,7 +146,10 @@ export type {
 
 export function FastifyAuth(config: Omit<AuthConfig, "raw">): FastifyPluginAsync {
   setEnvDefaults(process.env, config)
-  return async (fastify, opts) => {
+  return async (fastify) => {
+    if (!fastify.hasContentTypeParser('application/x-www-form-urlencoded')) {
+      fastify.register(formbody)
+    }
     fastify.route({
       method: ['GET', 'POST'],
       url: '/*',
