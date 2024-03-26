@@ -1,12 +1,14 @@
+import { base } from "$app/paths"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
-import { base } from "$app/paths"
+import type { LiteralUnion } from "./types.js"
 
-type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
-
-interface SignInOptions extends Record<string, unknown> {
+/*
+ * @internal
+ */
+export interface SignInOptions extends Record<string, unknown> {
   /**
    * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
    *
