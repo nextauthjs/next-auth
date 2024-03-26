@@ -63,7 +63,6 @@ export interface UnstorageAdapterOptions {
    *
    * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
    */
-  authenticatorIdPrefix?: string
   authenticatorKeyPrefix?: string
   authenticatorUserKeyPrefix?: string
   useItemRaw?: boolean
@@ -78,8 +77,7 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
-  authenticatorKeyPrefix: "authenticator:",
-  authenticatorIdPrefix: "authenticator:id:",
+  authenticatorKeyPrefix: "authenticator:id:",
   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
   useItemRaw: false,
 }
@@ -141,8 +139,7 @@ export function hydrateDates(json: object) {
  *   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
  *   userKeyPrefix: "user:",
  *   verificationTokenKeyPrefix: "user:token:",
- *   authenticatorKeyPrefix: "authenticator:",
- *   authenticatorIdPrefix: "authenticator:id:",
+ *   authenticatorKeyPrefix: "authenticator:id:",
  *   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
  * }
  * ```
@@ -210,6 +207,18 @@ export function UnstorageAdapter(
     }
   }
 
+  // TODO: Implement getItems helper - https://unstorage.unjs.io/guide#getitemsitems-opts
+  async function getItems<T extends StorageValue[]>(key: string[]) {
+    if (mergedOptions.useItemRaw) {
+      // getItemsRaw doesn't exist yet, should we error
+      // or just return the first item
+      // or manually loop over keys?
+      return await storage.getItemRaw<T>(key[0])
+    } else {
+      return await storage.getItems(key)
+    }
+  }
+
   async function setItem(key: string, value: string) {
     if (mergedOptions.useItemRaw) {
       return await storage.setItemRaw(key, value)
@@ -259,6 +268,12 @@ export function UnstorageAdapter(
     return hydrateDates(session)
   }
 
+  const getUser = async (id: string) => {
+    const user = await getItem<AdapterUser>(userKeyPrefix + id)
+    if (!user) return null
+    return hydrateDates(user)
+  }
+
   const setUser = async (
     id: string,
     user: AdapterUser
@@ -294,24 +309,35 @@ export function UnstorageAdapter(
     return authenticator
   }
 
-  const getAuthenticator = async (id: string) => {
-    console.log("getAuthenticator.id", id)
+  const getAuthenticator = async (credentialId: string) => {
+    console.log("getAuthenticator.credentialId", credentialId)
     const authenticator = await getItem<AdapterAuthenticator>(
-      authenticatorKeyPrefix + id
+      authenticatorKeyPrefix + credentialId
     )
     console.log("getAuthenticator.auth", authenticator)
     if (!authenticator) return null
     return hydrateDates(authenticator)
   }
 
-  const getUser = async (id: string) => {
-    const user = await getItem<AdapterUser>(userKeyPrefix + id)
-    if (!user) return null
-    return hydrateDates(user)
+  const getAuthenticatorByUserId = async (userId: string) => {
+    console.log("getAuthenticatorByUserId.userId", userId)
+    const credentialId = await getItem<string>(
+      authenticatorUserKeyPrefix + userId
+    )
+    if (!credentialId) return null
+    const authenticator = getAuthenticator(credentialId)
+    console.log("getAuthenticatorByUserId.auth", authenticator)
+    if (!authenticator) return null
+    return hydrateDates(authenticator)
   }
 
   return {
-    getAccount,
+    async getAccount(providerAccountId: string, provider: string) {
+      const accountId = `${provider}:${providerAccountId}`
+      const account = await getAccount(accountId)
+      if (!account) return null
+      return account
+    },
     async createUser(user) {
       const id = crypto.randomUUID()
       return await setUser(id, { ...user, id })
@@ -419,7 +445,7 @@ export function UnstorageAdapter(
     async listAuthenticatorsByUserId(userId) {
       const user = await getUser(userId)
       if (!user) return null
-      return await getAuthenticator(user.id)
+      return await getAuthenticatorByUserId(user.id)
     },
     async updateAuthenticatorCounter(credentialID, counter) {
       const authenticator = await getAuthenticator(credentialID)
