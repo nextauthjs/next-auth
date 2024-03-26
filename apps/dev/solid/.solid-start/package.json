@@ -1,0 +1,17 @@
+{
+  "name": "example-bare",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "@solidjs/start": "^0.5.9",
+    "solid-js": "^1.8.15",
+    "vinxi": "^0.2.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

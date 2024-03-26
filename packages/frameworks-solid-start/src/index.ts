@@ -1,23 +1,37 @@
 /**
- *
- * :::warning
- * `@auth/solid-start` is currently experimental. The API _will_ change in the future.
- * :::
- *
- * SolidStart Auth is the official SolidStart integration for Auth.js.
- * It provides a simple way to add authentication to your SolidStart app in a few lines of code.
- *
- * ## Installation
- *
- * ```bash npm2yarn
- * npm install @auth/core @auth/solid-start
- * ```
+ * <p align="center">
+ *   <br/>
+ *   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+ *   <h3 align="center">Solid-Start Auth</a></h3>
+ *   <h4 align="center">Authentication for Solid-Start.</h4>
+ *   <p align="center" style="align: center;">
+ *     <a href="https://npm.im/next-auth">
+ *       <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
+ *     </a>
+ *     <a href="https://npm.im/@auth/solid-start">
+ *       <img alt="npm" src="https://img.shields.io/npm/v/@auth/solid-start?color=green&label=@auth/solid-start&style=flat-square">
+ *     </a>
+ *     <a href="https://www.npmtrends.com/@auth/solid-start">
+ *       <img src="https://img.shields.io/npm/dm/@auth/solid-start?label=%20downloads&style=flat-square" alt="Downloads" />
+ *     </a>
+ *     <a href="https://github.com/nextauthjs/next-auth/stargazers">
+ *       <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+ *     </a>
+ *   </p>
+ * </p>
  *
  * @module @auth/solid-start
  */
 
 import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type {
+  AuthAction,
+  AuthConfig as SolidAuthConfig,
+  Session,
+} from "@auth/core/types"
+import { setEnvDefaults } from "./env.js"
+import { auth, signIn, signOut } from "./actions.js"
+import type { APIEvent, FetchEvent } from "@solidjs/start/server"
 
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 export type {
@@ -47,8 +61,15 @@ const actions: AuthAction[] = [
   "error",
 ]
 
+/*
+ * TODO: Double check
+ * Was erroring out that 'crypto' isn't defined even though running on Node 20+ locally
+ */
+import { webcrypto } from "node:crypto"
+globalThis.crypto ??= webcrypto as Crypto
+
 function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
-  return async (event: any) => {
+  return async (event: APIEvent) => {
     const { request } = event
     const url = new URL(request.url)
     const action = url.pathname
@@ -59,14 +80,15 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
       return
     }
 
-    return await Auth(request, authOptions)
+    return Auth(request, authOptions)
   }
 }
 
 /**
+ * TODO: All of these instructions are now outdated / invalid. Need updated
  * ## Setup
  *
- * [Generate an auth secret](https://generate-secret.vercel.app/32), then set it as an environment variable:
+ * Generate an [auth secret](https://generate-secret.vercel.app/32), then set it as an environment variable:
  *
  * ```
  * AUTH_SECRET=your_auth_secret
@@ -77,23 +99,22 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * This example uses github, make sure to set the following environment variables:
  *
  * ```
- * GITHUB_ID=your_github_oauth_id
- * GITHUB_SECRET=your_github_oauth_secret
+ * AUTH_GITHUB_ID=your_github_oauth_id
+ * AUTH_GITHUB_SECRET=your_github_oauth_secret
  * ```
  *
- * ```ts
- * // routes/api/auth/[...solidauth].ts
+ * ```ts title="/routes/api/auth/[...solidauth].ts"
  * import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start"
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/solid-start/providers/github"
  *
  * export const authOpts: SolidAuthConfig = {
+ *   debug: false,
  *   providers: [
  *     GitHub({
- *       clientId: process.env.GITHUB_ID,
- *       clientSecret: process.env.GITHUB_SECRET,
+ *       clientId: process.env.AUTH_GITHUB_ID,
+ *       clientSecret: process.env.AUTH_GITHUB_SECRET,
  *     }),
  *   ],
- *   debug: false,
  * }
  *
  * export const { GET, POST } = SolidAuth(authOpts)
@@ -127,9 +148,8 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * When using SSR, it is recommended to create a `Protected` component that will trigger suspense using the `Show` component. It should look like this:
  *
  *
- * ```tsx
- * // components/Protected.tsx
- * import { type Session } from "@auth/core/types";
+ * ```tsx title="/components/Protected.tsx"
+ * import { type Session } from "@auth/solid-start";
  * import { getSession } from "@auth/solid-start";
  * import { Component, Show } from "solid-js";
  * import { useRouteData } from "solid-start";
@@ -171,8 +191,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * It can be used like this:
  *
  *
- * ```tsx
- * // routes/protected.tsx
+ * ```tsx title="/routes/protected.tsx"
  * import Protected from "~/components/Protected";
  *
  * export const { routeData, Page } = Protected((session) => {
@@ -190,10 +209,8 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  *
  * When using CSR, the `Protected` component will not work as expected and will cause the screen to flash. To fix this, a Solid-Start middleware is used:
  *
- * ```tsx
- * // entry-server.tsx
- * import { Session } from "@auth/core";
- * import { getSession } from "@auth/solid-start";
+ * ```tsx title="entry-server.tsx
+ * import { getSession, type Session } from "@auth/solid-start";
  * import { redirect } from "solid-start";
  * import {
  *   StartServer,
@@ -223,8 +240,7 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * And now a protected route can be created:
  *
  *
- * ```tsx
- * // routes/protected.tsx
+ * ```tsx title="/routes/protected.tsx"
  * export default () => {
  *   return (
  *     <main class="flex flex-col gap-2 items-center">
@@ -239,45 +255,72 @@ function SolidAuthHandler(prefix: string, authOptions: SolidAuthConfig) {
  * :::
  *
  */
-export function SolidAuth(config: SolidAuthConfig) {
-  const { prefix = "/api/auth", ...authOptions } = config
-  authOptions.secret ??= process.env.AUTH_SECRET
-  authOptions.trustHost ??= !!(
-    process.env.AUTH_TRUST_HOST ??
-    process.env.VERCEL ??
-    process.env.NODE_ENV !== "production"
-  )
-  const handler = SolidAuthHandler(prefix, authOptions)
+
+const authorizationParamsPrefix = "authorizationParams-"
+
+export function SolidAuth(
+  config: SolidAuthConfig | ((request: Request) => PromiseLike<SolidAuthConfig>)
+) {
   return {
-    async GET(event: any) {
-      return await handler(event)
+    signIn: async (event: APIEvent) => {
+      const { request } = event
+      const _config =
+        typeof config === "object" ? config : await config(event.request)
+      setEnvDefaults(_config)
+      const formData = await request.formData()
+      const { providerId: provider, ...options } = Object.fromEntries(formData)
+
+      // get the authorization params from the options prefixed with `authorizationParams-`
+      let authorizationParams: Parameters<typeof signIn>[2] = {}
+      let _options: Parameters<typeof signIn>[1] = {}
+      for (const key in options) {
+        if (key.startsWith(authorizationParamsPrefix)) {
+          authorizationParams[key.slice(authorizationParamsPrefix.length)] =
+            options[key] as string
+        } else {
+          _options[key] = options[key]
+        }
+      }
+      await signIn(
+        provider as string,
+        _options,
+        authorizationParams,
+        _config,
+        event
+      )
     },
-    async POST(event: any) {
-      return await handler(event)
+    signOut: async (event: APIEvent) => {
+      const _config =
+        typeof config === "object" ? config : await config(event.request)
+      setEnvDefaults(_config)
+      const options = Object.fromEntries(await event.request.formData())
+      await signOut(options, _config, event)
+    },
+    auth: async (event: FetchEvent) => {
+      const _config =
+        typeof config === "object" ? config : await config(event.request)
+      setEnvDefaults(_config)
+      return auth(event, _config)
+    },
+    handlers: async () => {
+      return {
+        async GET(event: APIEvent) {
+          const _config =
+            typeof config === "object" ? config : await config(event.request)
+          setEnvDefaults(_config)
+
+          const handler = SolidAuthHandler("/auth", _config)
+          return await handler(event)
+        },
+        async POST(event: APIEvent) {
+          const _config =
+            typeof config === "object" ? config : await config(event.request)
+          setEnvDefaults(_config)
+
+          const handler = SolidAuthHandler("/auth", _config)
+          return await handler(event)
+        },
+      }
     },
   }
-}
-
-export type GetSessionResult = Promise<Session | null>
-
-export async function getSession(
-  req: Request,
-  options: Omit<AuthConfig, "raw">
-): GetSessionResult {
-  options.secret ??= process.env.AUTH_SECRET
-  options.trustHost ??= true
-
-  const url = new URL("/api/auth/session", req.url)
-  const response = await Auth(
-    new Request(url, { headers: req.headers }),
-    options
-  )
-
-  const { status = 200 } = response
-
-  const data = await response.json()
-
-  if (!data || !Object.keys(data).length) return null
-  if (status === 200) return data
-  throw new Error(data.message)
 }

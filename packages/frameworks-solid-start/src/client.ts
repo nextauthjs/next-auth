@@ -46,28 +46,24 @@ export async function signIn<
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
+    ? P | BuiltInProviderType
+    : BuiltInProviderType
   >,
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
-  // TODO: Support custom providers
   const isCredentials = providerId === "credentials"
   const isEmail = providerId === "email"
   const isSupportingReturn = isCredentials || isEmail
 
-  // TODO: Handle custom base path
-  const signInUrl = `/api/auth/${
-    isCredentials ? "callback" : "signin"
-  }/${providerId}`
+  const signInUrl = `/auth/${isCredentials ? "callback" : "signin"
+    }/${providerId}`
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  // TODO: Handle custom base path
-  const csrfTokenResponse = await fetch("/api/auth/csrf")
+  const csrfTokenResponse = await fetch(`/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
 
   const res = await fetch(_signInUrl, {
@@ -76,7 +72,7 @@ export async function signIn<
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-ignore
+    // @ts-expect-error
     body: new URLSearchParams({
       ...options,
       csrfToken,
@@ -107,10 +103,9 @@ export async function signIn<
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
-  // TODO: Custom base path
-  const csrfTokenResponse = await fetch("/api/auth/csrf")
+  const csrfTokenResponse = await fetch(`/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
-  const res = await fetch(`/api/auth/signout`, {
+  const res = await fetch(`/auth/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
