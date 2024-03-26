@@ -19,6 +19,7 @@ import type {
   AdapterUser,
   AdapterAccount,
   AdapterSession,
+  AdapterAuthenticator,
   VerificationToken,
 } from "@auth/core/adapters"
 import type { Storage, StorageValue } from "unstorage"
@@ -62,6 +63,9 @@ export interface UnstorageAdapterOptions {
    *
    * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
    */
+  authenticatorIdPrefix?: string
+  authenticatorKeyPrefix?: string
+  authenticatorUserKeyPrefix?: string
   useItemRaw?: boolean
 }
 
@@ -74,6 +78,9 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
+  authenticatorKeyPrefix: "authenticator:",
+  authenticatorIdPrefix: "authenticator:id:",
+  authenticatorUserKeyPrefix: "authenticator:by-user-id:",
   useItemRaw: false,
 }
 
@@ -134,6 +141,9 @@ export function hydrateDates(json: object) {
  *   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
  *   userKeyPrefix: "user:",
  *   verificationTokenKeyPrefix: "user:token:",
+ *   authenticatorKeyPrefix: "authenticator:",
+ *   authenticatorIdPrefix: "authenticator:id:",
+ *   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
  * }
  * ```
  *
@@ -187,6 +197,10 @@ export function UnstorageAdapter(
   const userKeyPrefix = baseKeyPrefix + mergedOptions.userKeyPrefix
   const verificationTokenKeyPrefix =
     baseKeyPrefix + mergedOptions.verificationTokenKeyPrefix
+  const authenticatorKeyPrefix =
+    baseKeyPrefix + mergedOptions.authenticatorKeyPrefix
+  const authenticatorUserKeyPrefix =
+    baseKeyPrefix + mergedOptions.authenticatorUserKeyPrefix
 
   async function getItem<T extends StorageValue>(key: string) {
     if (mergedOptions.useItemRaw) {
@@ -256,6 +270,40 @@ export function UnstorageAdapter(
     return user
   }
 
+  const setAuthenticator = async (
+    credentialId: string,
+    authenticator: AdapterAuthenticator
+  ): Promise<AdapterAuthenticator> => {
+    console.log(
+      "setObjectAsJson.args",
+      authenticatorKeyPrefix + credentialId,
+      authenticator
+    )
+    console.log(
+      "setItem.args",
+      `${authenticatorUserKeyPrefix}${authenticator.userId}`,
+      credentialId
+    )
+    await Promise.all([
+      setObjectAsJson(authenticatorKeyPrefix + credentialId, authenticator),
+      setItem(
+        `${authenticatorUserKeyPrefix}${authenticator.userId}`,
+        credentialId
+      ),
+    ])
+    return authenticator
+  }
+
+  const getAuthenticator = async (id: string) => {
+    console.log("getAuthenticator.id", id)
+    const authenticator = await getItem<AdapterAuthenticator>(
+      authenticatorKeyPrefix + id
+    )
+    console.log("getAuthenticator.auth", authenticator)
+    if (!authenticator) return null
+    return hydrateDates(authenticator)
+  }
+
   const getUser = async (id: string) => {
     const user = await getItem<AdapterUser>(userKeyPrefix + id)
     if (!user) return null
@@ -263,6 +311,7 @@ export function UnstorageAdapter(
   }
 
   return {
+    getAccount,
     async createUser(user) {
       const id = crypto.randomUUID()
       return await setUser(id, { ...user, id })
@@ -310,9 +359,9 @@ export function UnstorageAdapter(
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
         verificationTokenKeyPrefix +
-          verificationToken.identifier +
-          ":" +
-          verificationToken.token,
+        verificationToken.identifier +
+        ":" +
+        verificationToken.token,
         verificationToken
       )
       return verificationToken
@@ -358,5 +407,37 @@ export function UnstorageAdapter(
         storage.removeItem(sessionByUserIdKey),
       ])
     },
+    async createAuthenticator(authenticator) {
+      setAuthenticator(authenticator.credentialID, authenticator)
+      // @ts-expect-error
+      return fromDBAuthenticator(authenticator)
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await getAuthenticator(credentialID)
+      return fromDBAuthenticator(authenticator)
+    },
+    async listAuthenticatorsByUserId(userId) {
+      const user = await getUser(userId)
+      if (!user) return null
+      return await getAuthenticator(user.id)
+    },
+    async updateAuthenticatorCounter(credentialID, counter) {
+      const authenticator = await getAuthenticator(credentialID)
+      authenticator.counter = Number(counter)
+      setAuthenticator(credentialID, authenticator)
+      return fromDBAuthenticator(authenticator)
+    },
+  }
+}
+
+function fromDBAuthenticator(
+  authenticator: AdapterAuthenticator & { id: string; user: string }
+): AdapterAuthenticator {
+  console.log("fromDBAuthenticator.authenticator", authenticator)
+  const { transports, id, user, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }
