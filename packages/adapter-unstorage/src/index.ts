@@ -207,18 +207,6 @@ export function UnstorageAdapter(
     }
   }
 
-  // TODO: Implement getItems helper - https://unstorage.unjs.io/guide#getitemsitems-opts
-  async function getItems<T extends StorageValue[]>(key: string[]) {
-    if (mergedOptions.useItemRaw) {
-      // getItemsRaw doesn't exist yet, should we error
-      // or just return the first item
-      // or manually loop over keys?
-      return await storage.getItemRaw<T>(key[0])
-    } else {
-      return await storage.getItems(key)
-    }
-  }
-
   async function setItem(key: string, value: string) {
     if (mergedOptions.useItemRaw) {
       return await storage.setItemRaw(key, value)
@@ -421,7 +409,6 @@ export function UnstorageAdapter(
     },
     async createAuthenticator(authenticator) {
       setAuthenticator(authenticator.credentialID, authenticator)
-      // @ts-expect-error
       return fromDBAuthenticator(authenticator)
     },
     async getAuthenticator(credentialID) {
@@ -443,7 +430,7 @@ export function UnstorageAdapter(
 }
 
 function fromDBAuthenticator(
-  authenticator: AdapterAuthenticator & { id: string; user: string }
+  authenticator: AdapterAuthenticator & { id?: string; user?: string }
 ): AdapterAuthenticator {
   const { transports, id, user, ...other } = authenticator
 
