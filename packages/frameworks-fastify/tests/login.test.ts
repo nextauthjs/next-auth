@@ -40,8 +40,6 @@ describe("Integration test with login and getSession", () => {
   it("Should return the session with username after logging in", async () => {
     let expectations: Function = () => {}
 
-    fastify.register(formbodyParser)
-
     fastify.register(FastifyAuth(authConfig), { prefix: "/api/auth" })
 
     fastify.post("/test", async (request, reply) => {
@@ -122,5 +120,11 @@ describe("Integration test with login and getSession", () => {
     expect(res.statusCode).toEqual(200)
     const expectationResult = await expectations()
     expect(expectationResult).toEqual(true)
+  })
+
+  it("Should not throw when form body parser already registered", async () => {
+    fastify.register(formbodyParser)
+    fastify.register(FastifyAuth(authConfig), { prefix: "/api/auth" })
+    await fastify.ready()
   })
 })
