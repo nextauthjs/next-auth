@@ -67,8 +67,7 @@ runBasicTests({
     baseKeyPrefix: "testApp:",
     useItemRaw: true,
   }),
-  // TODO: Something wrong with unstorage Raw methods
-  // and the authenticator tables
+  // TODO: Unstorage `*Raw` methods not working as expected
   testWebAuthnMethods: false,
   db: {
     disconnect: storage.dispose,

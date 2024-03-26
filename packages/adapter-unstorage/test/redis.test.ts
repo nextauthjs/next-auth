@@ -10,7 +10,7 @@ const storage = createStorage({
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
   testWebAuthnMethods: true,
-  // Unstorage method 'getItems' doesn't work for FS driver
+  // Currently not implemented in KV Store
   skipTests: ["listAuthenticatorsByUserId"],
   db: {
     disconnect: storage.dispose,

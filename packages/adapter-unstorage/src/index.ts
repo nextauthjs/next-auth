@@ -59,12 +59,18 @@ export interface UnstorageAdapterOptions {
    */
   verificationTokenKeyPrefix?: string
   /**
+   * The prefix for the `authenticator` key
+   */
+  authenticatorKeyPrefix?: string
+  /**
+   * The prefix for the `authenticator-by-user-id` key
+   */
+  authenticatorUserKeyPrefix?: string
+  /**
    * Use `getItemRaw/setItemRaw` instead of `getItem/setItem`.
    *
    * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
    */
-  authenticatorKeyPrefix?: string
-  authenticatorUserKeyPrefix?: string
   useItemRaw?: boolean
 }
 
@@ -209,7 +215,7 @@ export function UnstorageAdapter(
 
   async function getItems(key: string[]) {
     if (mergedOptions.useItemRaw) {
-      // getItemsRaw does not exist in unstorage
+      // Unstorage missing method to get multiple items raw, i.e. `getItemsRaw`
       return JSON.stringify(await storage.getItems(key))
     } else {
       return await storage.getItems(key)
@@ -265,12 +271,6 @@ export function UnstorageAdapter(
     return hydrateDates(session)
   }
 
-  const getUser = async (id: string) => {
-    const user = await getItem<AdapterUser>(userKeyPrefix + id)
-    if (!user) return null
-    return hydrateDates(user)
-  }
-
   const setUser = async (
     id: string,
     user: AdapterUser
@@ -280,6 +280,12 @@ export function UnstorageAdapter(
       setItem(`${emailKeyPrefix}${user.email as string}`, id),
     ])
     return user
+  }
+
+  const getUser = async (id: string) => {
+    const user = await getItem<AdapterUser>(userKeyPrefix + id)
+    if (!user) return null
+    return hydrateDates(user)
   }
 
   const setAuthenticator = async (
@@ -306,7 +312,8 @@ export function UnstorageAdapter(
 
   // TODO: This one doesn't really work with KV storage, as we can't set the same
   // key multiple times, they'll just overwrite one another. Maybe with some
-  // additional logic to write an array as value instead if already set..
+  // additional logic to write an array as the value instead of overwriting
+  // the pre-existing value. Probably in `setItems` implementation.
   const getAuthenticatorByUserId = async (
     userId: string
   ): Promise<AdapterAuthenticator[] | []> => {
@@ -385,9 +392,9 @@ export function UnstorageAdapter(
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
         verificationTokenKeyPrefix +
-          verificationToken.identifier +
-          ":" +
-          verificationToken.token,
+        verificationToken.identifier +
+        ":" +
+        verificationToken.token,
         verificationToken
       )
       return verificationToken
