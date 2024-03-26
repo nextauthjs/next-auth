@@ -101,11 +101,15 @@ export default function Home() {
       .fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
+        const stargazersCount = data?.stargazers_count
+
+        if (typeof stargazersCount !== 'number' || !isFinite(stargazersCount)) return
+
         const githubLink = document.querySelector(
           ".navbar__item.navbar__link[href*='github']"
         )
         const githubStat = document.createElement("span")
-        githubStat.innerHTML = kFormatter(data.stargazers_count)
+        githubStat.innerHTML = kFormatter(stargazersCount)
         githubStat.className = "github-counter"
         githubLink.appendChild(githubStat)
       })
