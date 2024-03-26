@@ -62,6 +62,7 @@ import GitHub from "next-auth/providers/github"
 // import Zitadel from "next-auth/providers/zitadel"
 // import Zoho from "next-auth/providers/zoho"
 // import Zoom from "next-auth/providers/zoom"
+// import WeChat from "next-auth/providers/wechat"
 
 import type { NextAuthConfig } from "next-auth"
 
@@ -132,6 +133,7 @@ export const config = {
     // Zitadel,
     // Zoho,
     // Zoom,
+    // WeChat
   ],
   basePath: "/auth",
   callbacks: {
