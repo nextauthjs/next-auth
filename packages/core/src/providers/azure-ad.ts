@@ -9,6 +9,7 @@
  * @module providers/azure-ad
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import * as jose from "jose"
 
 export interface AzureADProfile extends Record<string, any> {
   sub: string
@@ -121,7 +122,7 @@ export default function AzureAD<P extends AzureADProfile>(
      */
     profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
     /** @default "common" */
-    tenantId?: string
+    tenantId?: string,
   }
 ): OAuthConfig<P> {
   const { tenantId = "common", profilePhotoSize = 48, ...rest } = options
@@ -135,6 +136,31 @@ export default function AzureAD<P extends AzureADProfile>(
       params: {
         scope: "openid profile email User.Read",
       },
+      async conform(response) {
+        // Microsoft being special and non-compliant #9635
+        //
+        // MS doesn't follow the spec for some common tenant
+        // ID's ("common", "organizations", "customers"), returning
+        // a different issuer URL than used to make the request.
+        if (response.status !== 200) return response
+
+        let json = await response.json()
+        json.issuer = rest.issuer;
+        return new Response(JSON.stringify(json), response)
+      },
+      async serverConform(authServer, codeGrantResponse) {
+        if (codeGrantResponse.status !== 200) return authServer
+
+        const { id_token } = await codeGrantResponse.clone().json()
+        const jwt: jose.JWTPayload & { tid?: string } = jose.decodeJwt(id_token)
+
+        return {
+          ...authServer,
+          issuer: jwt.tid
+            ? authServer.issuer.replace(tenantId, jwt.tid)
+            : authServer.issuer,
+        }
+      }
     },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
@@ -151,7 +177,7 @@ export default function AzureAD<P extends AzureADProfile>(
           const pictureBuffer = await response.arrayBuffer()
           const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
           image = `data:image/jpeg;base64, ${pictureBase64}`
-        } catch {}
+        } catch { }
       }
 
       return {
