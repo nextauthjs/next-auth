@@ -18,7 +18,7 @@ Depending on your use case, you can initialize Auth.js in two different ways:
 
 In most cases, you won't need to worry about what `Auth.js` does, and you will get by just fine with the following initialization:
 
-```ts title="/pages/api/auth/[...nextauth].js"
+```ts title="/pages/api/auth/[...nextauth].ts"
 import NextAuth from "next-auth"
 
 export default NextAuth({
