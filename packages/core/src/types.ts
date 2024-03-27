@@ -603,10 +603,6 @@ export interface Authenticator {
    * AAGUID of the authenticator. Useful to identify authenticators in the UI, see: https://github.com/passkeydeveloper/passkey-authenticator-aaguids
    */
   credentialAAGUID: string
-  /**
-   * Origin of the website the authenticator is registered to.
-   */
-  credentialOrigin: string
 }
 
 /** @internal */

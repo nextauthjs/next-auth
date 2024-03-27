@@ -391,7 +391,6 @@ export async function verifyRegister(
         .transports as AuthenticatorTransport[]
     ),
     credentialAAGUID: verification.registrationInfo.aaguid,
-    credentialOrigin: verification.registrationInfo.origin,
   }
 
   // Return created stuff
