@@ -38,15 +38,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "@fastify/formbody": "^7.4.0"
   },
   "devDependencies": {
     "@auth/core": "workspace:experimental",
-    "@fastify/formbody": "^7.4.0",
     "fastify": "^4.25.2"
   },
   "peerDependencies": {
-    "@fastify/formbody": "^7.4.0",
     "fastify": "^4.25.2"
   },
   "keywords": [
