@@ -34,7 +34,7 @@ import type { Adapter } from "@auth/core/adapters"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@auth/drizzle-adapter"
- * import { db } from "./schema"
+ * import { db } from "./db/index"
  *
  * export default NextAuth({
  *   adapter: DrizzleAdapter(db),
@@ -61,8 +61,22 @@ import type { Adapter } from "@auth/core/adapters"
  * - [SQLite](#sqlite)
  *
  * ### Postgres
-
- * ```ts title="schema.ts"
+        
+ * ```ts title "./db/index.ts"
+ * import { drizzle } from "drizzle-orm/postgres-js";
+ * import { migrate } from "drizzle-orm/postgres-js/migrator";
+ * import postgres from "postgres";
+ * 
+ * const connectionString = process.env.DATABASE_URL;
+ * const sql = postgres(connectionString!, { max: 1 });
+ * export const db = drizzle(sql);
+ * 
+ * await migrate(db, { migrationsFolder: "drizzle" });
+ * 
+ * await sql.end();
+ * ```
+        
+ * ```ts title="./db/schema.ts"
  * import {
  *   timestamp,
  *   pgTable,
