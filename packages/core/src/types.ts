@@ -317,6 +317,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     account: A | null
     /**
      * The OAuth profile returned from your provider.
+     * (In case of credentials it will be the return of {@link CredentialsConfig.authorize}fetchckdctefrkuejrngvedvcftrnlhevklkvreveftf
+     * )
      * (In case of OIDC it will be the decoded ID Token or /userinfo response)
      * @note available when `trigger` is `"signIn"`.
      */

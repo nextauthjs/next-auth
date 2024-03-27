@@ -17,7 +17,7 @@ import type { AdapterSession } from "../../../adapters.js"
 import type {
   Account,
   Authenticator,
-  InternalOptions,
+  InternalOptions, Profile,
   RequestInternal,
   ResponseInternal,
   User,
@@ -335,10 +335,13 @@ export async function callback(
         sub: user.id,
       }
 
+      const profile = {...userFromAuthorize} satisfies Profile;
+
       const token = await callbacks.jwt({
         token: defaultToken,
         user,
         account,
+        profile: profile,
         isNewUser: false,
         trigger: "signIn",
       })
