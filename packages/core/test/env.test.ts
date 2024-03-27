@@ -108,7 +108,7 @@ describe("config is inferred from environment variables", () => {
 })
 
 describe("createActionURL", () => {
-  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => { })
+  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
 
   afterEach(() => {
     consoleWarnSpy.mockClear()
@@ -160,6 +160,56 @@ describe("createActionURL", () => {
         basePath: "/auth",
       },
       expected: "https://example.com/auth/signin",
+    },
+    {
+      args: {
+        action: "signin",
+        protocol: "http:",
+        headers: new Headers({
+          "x-forwarded-host": "example.com",
+        }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "http://example.com/auth/signin",
+    },
+    {
+      args: {
+        action: "signin",
+        protocol: "https:",
+        headers: new Headers({
+          "x-forwarded-host": "example.com",
+        }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "https://example.com/auth/signin",
+    },
+    {
+      args: {
+        action: "signin",
+        protocol: undefined,
+        headers: new Headers({
+          "x-forwarded-host": "example.com",
+          "x-forwarded-proto": "https:",
+        }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "https://example.com/auth/signin",
+    },
+    {
+      args: {
+        action: "signin",
+        protocol: undefined,
+        headers: new Headers({
+          "x-forwarded-host": "example.com",
+          "x-forwarded-proto": "http:",
+        }),
+        env: {},
+        basePath: "/auth",
+      },
+      expected: "http://example.com/auth/signin",
     },
     {
       args: {
