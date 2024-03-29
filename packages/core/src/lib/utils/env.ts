@@ -77,7 +77,7 @@ export function createActionURL(
     const detectedProtocol =
       headers.get("x-forwarded-proto") ?? protocol ?? "https"
 
-    url = new URL(`${detectedProtocol}://${detectedHost}`)
+    url = new URL(`${detectedProtocol}//${detectedHost}`)
   }
 
   // remove trailing slash
