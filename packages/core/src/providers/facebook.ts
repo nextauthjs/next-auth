@@ -50,6 +50,9 @@ export interface FacebookProfile extends Record<string, any> {
  * ### Notes
  *
  * :::tip
+ * clientId is your facebook app id, clientSecret is your facebook app secret.
+ *
+ * :::tip
  * Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use localhost callback URLs.
  * :::
  *
