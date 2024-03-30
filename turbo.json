@@ -2,9 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": [
         ".next",
         "dist/**",
@@ -26,13 +24,8 @@
       "cache": false
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ],
-      "inputs": [
-        "src/**/",
-        "test/**/"
-      ],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**/", "test/**/"],
       "outputMode": "new-only"
     },
     "test:e2e": {
@@ -44,14 +37,12 @@
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": [
-        "XATA_API_KEY",
-        "XATA_DATABASE_URL"
-      ]
+      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "docs#dev": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/appwrite-adapter#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
@@ -86,6 +77,7 @@
     "docs#build": {
       "dependsOn": [
         "@auth/core#build",
+        "@auth/appwrite-adapter#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
