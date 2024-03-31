@@ -15,21 +15,54 @@
  * @module @auth/kysely-adapter
  */
 
-import { Kysely, SqliteAdapter } from "kysely"
+import { GeneratedAlways, Kysely, Selectable, SqliteAdapter } from "kysely"
 
 import type {
   Adapter,
-  AdapterUser,
-  AdapterAccount,
-  AdapterSession,
-  VerificationToken,
 } from "@auth/core/adapters"
+import { ProviderType } from "@auth/core/providers"
 
+export interface DatabaseSchema {
+   User: {
+      id: GeneratedAlways<string>
+      name: string | null
+      email: string
+      emailVerified: Date | null
+      image: string | null
+    }
+    Account: {
+      id: GeneratedAlways<string>
+      userId: string
+      type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
+      provider: string
+      providerAccountId: string
+      refresh_token: string | null
+      access_token: string | null
+      expires_at: number | null
+      token_type: string | null
+      scope: string | null
+      id_token: string | null
+      session_state: string | null
+    }
+    Session: {
+      id: GeneratedAlways<string>
+      userId: string
+      sessionToken: string
+      expires: Date
+    }
+    VerificationToken: {
+      identifier: string
+      token: string
+      expires: Date
+    }
+}
+
+// Can also use Updatable and Insertabale for superior type safety
 export interface Database {
-  User: AdapterUser
-  Account: AdapterAccount
-  Session: AdapterSession
-  VerificationToken: VerificationToken
+  User: Selectable<DatabaseSchema["User"]>
+  Account: Selectable<DatabaseSchema["Account"]>
+  Session: Selectable<DatabaseSchema["Session"]>
+  VerificationToken: Selectable<DatabaseSchema["VerificationToken"]>
 }
 
 // https://github.com/honeinc/is-iso-date/blob/master/index.js
@@ -236,7 +269,7 @@ export const format = {
  * ### Naming conventions
  * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://kysely-org.github.io/kysely-apidoc/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
  */
-export function KyselyAdapter(db: Kysely<Database>): Adapter {
+export function KyselyAdapter(db: Kysely<DatabaseSchema>): Adapter {
   const { adapter } = db.getExecutor()
   const { supportsReturning } = adapter
   const isSqlite = adapter instanceof SqliteAdapter
@@ -390,7 +423,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
  * the second generic argument. The generated types will be used, and
  * `KyselyAuth` will only verify that the correct fields exist.
  */
-export class KyselyAuth<DB extends T, T = Database> extends Kysely<DB> {}
+export class KyselyAuth<DB extends T, T = DatabaseSchema> extends Kysely<DB> {}
 
 export type Codegen = {
   [K in keyof Database]: { [J in keyof Database[K]]: unknown }
