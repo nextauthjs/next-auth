@@ -191,7 +191,7 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({
           "x-forwarded-host": "example.com",
-          "x-forwarded-proto": "https:",
+          "x-forwarded-proto": "https",
         }),
         env: {},
         basePath: "/auth",
@@ -204,7 +204,7 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({
           "x-forwarded-host": "example.com",
-          "x-forwarded-proto": "http:",
+          "x-forwarded-proto": "http",
         }),
         env: {},
         basePath: "/auth",
