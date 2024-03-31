@@ -17,53 +17,53 @@
 
 import { GeneratedAlways, Kysely, Selectable, SqliteAdapter } from "kysely"
 
-import type {
-  Adapter,
-} from "@auth/core/adapters"
+import type { Adapter } from "@auth/core/adapters"
 import { ProviderType } from "@auth/core/providers"
 
+// Database Schema for Kysely, not to be confused with the actual types that should be inferred
 export interface DatabaseSchema {
-   User: {
-      id: GeneratedAlways<string>
-      name: string | null
-      email: string
-      emailVerified: Date | null
-      image: string | null
-    }
-    Account: {
-      id: GeneratedAlways<string>
-      userId: string
-      type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
-      provider: string
-      providerAccountId: string
-      refresh_token: string | null
-      access_token: string | null
-      expires_at: number | null
-      token_type: string | null
-      scope: string | null
-      id_token: string | null
-      session_state: string | null
-    }
-    Session: {
-      id: GeneratedAlways<string>
-      userId: string
-      sessionToken: string
-      expires: Date
-    }
-    VerificationToken: {
-      identifier: string
-      token: string
-      expires: Date
-    }
+  User: {
+    id: GeneratedAlways<string>
+    name: string | null
+    email: string
+    emailVerified: Date | null
+    image: string | null
+  }
+  Account: {
+    id: GeneratedAlways<string>
+    userId: string
+    type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
+    provider: string
+    providerAccountId: string
+    refresh_token: string | null
+    access_token: string | null
+    expires_at: number | null
+    token_type: string | null
+    scope: string | null
+    id_token: string | null
+    session_state: string | null
+  }
+  Session: {
+    id: GeneratedAlways<string>
+    userId: string
+    sessionToken: string
+    expires: Date
+  }
+  VerificationToken: {
+    identifier: string
+    token: string
+    expires: Date
+  }
 }
 
-// Can also use Updatable and Insertabale for superior type safety
-export interface Database {
-  User: Selectable<DatabaseSchema["User"]>
-  Account: Selectable<DatabaseSchema["Account"]>
-  Session: Selectable<DatabaseSchema["Session"]>
-  VerificationToken: Selectable<DatabaseSchema["VerificationToken"]>
-}
+// Actual types that should be inferred.
+// Can also use Selectable, Updatable and Insertabale for superior type safety like
+// export interface Database {
+//   User: Selectable<DatabaseSchema["User"]>
+//   Account: Selectable<DatabaseSchema["Account"]>
+//   Session: Selectable<DatabaseSchema["Session"]>
+//   VerificationToken: Selectable<DatabaseSchema["VerificationToken"]>
+// }
 
 // https://github.com/honeinc/is-iso-date/blob/master/index.js
 const isoDateRE =
@@ -426,5 +426,5 @@ export function KyselyAdapter(db: Kysely<DatabaseSchema>): Adapter {
 export class KyselyAuth<DB extends T, T = DatabaseSchema> extends Kysely<DB> {}
 
 export type Codegen = {
-  [K in keyof Database]: { [J in keyof Database[K]]: unknown }
+  [K in keyof DatabaseSchema]: { [J in keyof DatabaseSchema[K]]: unknown }
 }
