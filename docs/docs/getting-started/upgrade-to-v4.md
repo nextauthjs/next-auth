@@ -88,7 +88,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.1
 Providers now need to be imported individually.
 
 ```diff
-- import Provider from "next-auth/providers"
+- import Providers from "next-auth/providers"
 - Providers.Auth0({...})
 - Providers.Google({...})
 + import Auth0Provider from "next-auth/providers/auth0"
