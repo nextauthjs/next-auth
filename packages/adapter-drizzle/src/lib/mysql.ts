@@ -2,263 +2,270 @@ import { and, eq } from "drizzle-orm"
 import {
   int,
   timestamp,
-  mysqlTable as defaultMySqlTableFn,
   primaryKey,
   varchar,
-  MySqlTableFn,
   MySqlDatabase,
+  mysqlTable,
+  MySqlTableWithColumns,
+  TableConfig,
+  QueryResultHKT,
+  PreparedQueryHKTBase,
+  index
 } from "drizzle-orm/mysql-core"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterUser,
+  AdapterAccount,
+  AdapterSession,
+  VerificationToken,
+} from "@auth/core/adapters"
 
-export function createTables(mySqlTable: MySqlTableFn) {
-  const users = mySqlTable("user", {
-    id: varchar("id", { length: 255 }).notNull().primaryKey(),
-    name: varchar("name", { length: 255 }),
-    email: varchar("email", { length: 255 }).notNull(),
-    emailVerified: timestamp("emailVerified", {
-      mode: "date",
-      fsp: 3,
-    }).defaultNow(),
-    image: varchar("image", { length: 255 }),
-  })
+import { randomUUID } from "crypto"
 
-  const accounts = mySqlTable(
-    "account",
-    {
-      userId: varchar("userId", { length: 255 })
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      type: varchar("type", { length: 255 })
-        .$type<AdapterAccount["type"]>()
-        .notNull(),
-      provider: varchar("provider", { length: 255 }).notNull(),
-      providerAccountId: varchar("providerAccountId", {
-        length: 255,
-      }).notNull(),
-      refresh_token: varchar("refresh_token", { length: 255 }),
-      access_token: varchar("access_token", { length: 255 }),
-      expires_at: int("expires_at"),
-      token_type: varchar("token_type", { length: 255 }),
-      scope: varchar("scope", { length: 255 }),
-      id_token: varchar("id_token", { length: 255 }),
-      session_state: varchar("session_state", { length: 255 }),
-    },
-    (account) => ({
-      compoundKey: primaryKey(account.provider, account.providerAccountId),
-    })
-  )
+export const users = mysqlTable("users" as string, {
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+  name: varchar("name", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
+  image: varchar("image", { length: 255 }),
+})
 
-  const sessions = mySqlTable("session", {
-    sessionToken: varchar("sessionToken", { length: 255 })
-      .notNull()
-      .primaryKey(),
+export const accounts = mysqlTable(
+  "accounts" as string,
+  {
     userId: varchar("userId", { length: 255 })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    type: varchar("type", { length: 255 }).notNull(),
+    provider: varchar("provider", { length: 255 }).notNull(),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    refresh_token: varchar("refresh_token", { length: 255 }),
+    access_token: varchar("access_token", { length: 255 }),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type", { length: 255 }),
+    scope: varchar("scope", { length: 255 }),
+    id_token: varchar("id_token", { length: 2048 }),
+    session_state: varchar("session_state", { length: 255 }),
+  },
+  (account) => ({
+    compositePk: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+    userIdIdx: index('Account_userId_index').on(account.userId),
   })
+)
 
-  const verificationTokens = mySqlTable(
-    "verificationToken",
-    {
-      identifier: varchar("identifier", { length: 255 }).notNull(),
-      token: varchar("token", { length: 255 }).notNull(),
-      expires: timestamp("expires", { mode: "date" }).notNull(),
-    },
-    (vt) => ({
-      compoundKey: primaryKey(vt.identifier, vt.token),
-    })
-  )
+export const sessions = mysqlTable("sessions" as string, {
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+}, (session) => ({
+  userIdIdx: index('Session_userId_index').on(session.userId),
+}))
 
-  return { users, accounts, sessions, verificationTokens }
-}
+export const verificationTokens = mysqlTable(
+  "verificationTokens" as string,
+  {
+    identifier: varchar("identifier", { length: 255 }).notNull(),
+    token: varchar("token", { length: 255 }).notNull().unique(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+  })
+)
 
-export type DefaultSchema = ReturnType<typeof createTables>
-
-export function mySqlDrizzleAdapter(
-  client: InstanceType<typeof MySqlDatabase>,
-  tableFn = defaultMySqlTableFn
+export function MySqlDrizzleAdapter(
+  client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
+  schema: Partial<DefaultMySqlSchema> = {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const { usersTable = users, accountsTable = accounts, sessionsTable = sessions, verificationTokensTable = verificationTokens } =
+    schema
 
   return {
-    async createUser(data) {
-      const id = crypto.randomUUID()
-
-      await client.insert(users).values({ ...data, id })
-
-      return await client
-        .select()
-        .from(users)
-        .where(eq(users.id, id))
-        .then((res) => res[0])
-    },
-    async getUser(data) {
-      const thing =
-        (await client
-          .select()
-          .from(users)
-          .where(eq(users.id, data))
-          .then((res) => res[0])) ?? null
-
-      return thing
-    },
-    async getUserByEmail(data) {
-      const user =
-        (await client
-          .select()
-          .from(users)
-          .where(eq(users.email, data))
-          .then((res) => res[0])) ?? null
-
-      return user
-    },
-    async createSession(data) {
-      await client.insert(sessions).values(data)
+    async createUser(data: Omit<AdapterUser, "id">) {
+      const id = randomUUID()
+      
+      await client.insert(usersTable).values({ ...data, id })
 
       return await client
         .select()
-        .from(sessions)
-        .where(eq(sessions.sessionToken, data.sessionToken))
+        .from(usersTable)
+        .where(eq(usersTable.id, id))
+        .then((res) => res[0]) as AdapterUser
+    },
+    async getUser(userId: string) {
+      return await client
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.id, userId))
+        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
+    },
+    async getUserByEmail(email: string) {
+      return await client
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.email, email))
+        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
+    },
+    async createSession(data: {
+      sessionToken: string
+      userId: string
+      expires: Date
+    }) {
+      const id = randomUUID()
+
+      await client.insert(sessionsTable).values({ ...data, id })
+
+      return await client
+        .select()
+        .from(sessionsTable)
+        .where(eq(sessionsTable.id, id))
         .then((res) => res[0])
     },
-    async getSessionAndUser(data) {
-      const sessionAndUser =
-        (await client
-          .select({
-            session: sessions,
-            user: users,
-          })
-          .from(sessions)
-          .where(eq(sessions.sessionToken, data))
-          .innerJoin(users, eq(users.id, sessions.userId))
-          .then((res) => res[0])) ?? null
-
-      return sessionAndUser
+    async getSessionAndUser(sessionToken: string) {
+      return await client
+        .select({
+          session: sessionsTable,
+          user: usersTable,
+        })
+        .from(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
+        .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
+        .then((res) => res.length > 0 ? res[0] : null) as { session: AdapterSession; user: AdapterUser } | null
     },
-    async updateUser(data) {
+    async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      await client.update(users).set(data).where(eq(users.id, data.id))
+      await client.update(usersTable).set(data).where(eq(usersTable.id, data.id))
 
-      return await client
+      const result =  await client
         .select()
-        .from(users)
-        .where(eq(users.id, data.id))
-        .then((res) => res[0])
+        .from(usersTable)
+        .where(eq(usersTable.id, data.id))
+        .then((res) => res[0]) as AdapterUser | undefined
+
+      if (!result) {
+        throw new Error("No user found.")
+      }
+
+      return result
     },
-    async updateSession(data) {
+    async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
       await client
-        .update(sessions)
+        .update(sessionsTable)
         .set(data)
-        .where(eq(sessions.sessionToken, data.sessionToken))
+        .where(eq(sessionsTable.sessionToken, data.sessionToken))
 
       return await client
         .select()
-        .from(sessions)
-        .where(eq(sessions.sessionToken, data.sessionToken))
+        .from(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, data.sessionToken))
         .then((res) => res[0])
     },
-    async linkAccount(rawAccount) {
-      await client.insert(accounts).values(rawAccount)
+    async linkAccount(data: AdapterAccount) {
+      await client.insert(accountsTable).values(data)
     },
-    async getUserByAccount(account) {
-      const dbAccount =
-        (await client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
+    async getUserByAccount(account: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+      const result = await client.select({
+        account: accountsTable,
+        user: usersTable,
+      }).from(accountsTable)
+        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id)).where(
+          and(
+            eq(accountsTable.provider, account.provider),
+            eq(accountsTable.providerAccountId, account.providerAccountId),
           )
-          .leftJoin(users, eq(accounts.userId, users.id))
-          .then((res) => res[0])) ?? null
+        ).then((res) => res[0] as { account: AdapterAccount, user: AdapterUser } | undefined)
 
-      if (!dbAccount) {
-        return null
-      }
-
-      return dbAccount.user
+      return result?.user ?? null
     },
-    async deleteSession(sessionToken) {
-      const session =
-        (await client
-          .select()
-          .from(sessions)
-          .where(eq(sessions.sessionToken, sessionToken))
-          .then((res) => res[0])) ?? null
-
-      await client
-        .delete(sessions)
-        .where(eq(sessions.sessionToken, sessionToken))
-
-      return session
+    async deleteSession(sessionToken: string) {
+      await client.delete(sessionsTable).where(eq(sessionsTable.sessionToken, sessionToken))
     },
-    async createVerificationToken(token) {
-      await client.insert(verificationTokens).values(token)
+    async createVerificationToken(data: VerificationToken) {
+      await client.insert(verificationTokensTable).values(data)
 
       return await client
         .select()
-        .from(verificationTokens)
-        .where(eq(verificationTokens.identifier, token.identifier))
+        .from(verificationTokensTable)
+        .where(eq(verificationTokensTable.identifier, data.identifier))
         .then((res) => res[0])
     },
-    async useVerificationToken(token) {
-      try {
-        const deletedToken =
-          (await client
-            .select()
-            .from(verificationTokens)
-            .where(
-              and(
-                eq(verificationTokens.identifier, token.identifier),
-                eq(verificationTokens.token, token.token)
-              )
-            )
-            .then((res) => res[0])) ?? null
-
-        await client
-          .delete(verificationTokens)
-          .where(
-            and(
-              eq(verificationTokens.identifier, token.identifier),
-              eq(verificationTokens.token, token.token)
-            )
-          )
-
-        return deletedToken
-      } catch (err) {
-        throw new Error("No verification token found.")
-      }
-    },
-    async deleteUser(id) {
-      const user = await client
+    async useVerificationToken(params: {
+      identifier: string
+      token: string
+    }) {
+      const deletedToken = await client
         .select()
-        .from(users)
-        .where(eq(users.id, id))
-        .then((res) => res[0] ?? null)
-
-      await client.delete(users).where(eq(users.id, id))
-
-      return user
-    },
-    async unlinkAccount(account) {
-      await client
-        .delete(accounts)
+        .from(verificationTokensTable)
         .where(
           and(
-            eq(accounts.providerAccountId, account.providerAccountId),
-            eq(accounts.provider, account.provider)
+            eq(verificationTokensTable.identifier, params.identifier),
+            eq(verificationTokensTable.token, params.token)
           )
         )
+        .then((res) => res.length > 0 ? res[0] : null)
 
-      return undefined
+      if (deletedToken) {
+        await client
+          .delete(verificationTokensTable)
+          .where(
+            and(
+              eq(verificationTokensTable.identifier, params.identifier),
+              eq(verificationTokensTable.token, params.token)
+            )
+          )
+      }
+
+      return deletedToken
     },
+    async deleteUser(id: string) {
+      await client.delete(usersTable).where(eq(usersTable.id, id))
+    },
+    async unlinkAccount(params: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+      await client
+        .delete(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.provider, params.provider),
+            eq(accountsTable.providerAccountId, params.providerAccountId)
+          )
+        )
+    },
+  }
+}
+
+export type MySqlTableFn<T extends TableConfig> = MySqlTableWithColumns<{
+  name: T['name'],
+  columns: T['columns'],
+  dialect: T['dialect'],
+  schema: string | undefined
+}>
+
+export type DefaultMySqlSchema = {
+  usersTable: MySqlTableFn<typeof users['_']['config']>,
+  accountsTable: MySqlTableFn<typeof accounts['_']['config']>,
+  sessionsTable: MySqlTableFn<typeof sessions['_']['config']>,
+  verificationTokensTable: MySqlTableFn<typeof verificationTokens['_']['config']>,
+}
+
+export function getDefaultMySqlSchema(): DefaultMySqlSchema {
+  return {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
   }
 }

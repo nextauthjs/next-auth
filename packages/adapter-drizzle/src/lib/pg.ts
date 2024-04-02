@@ -1,217 +1,238 @@
 import { and, eq } from "drizzle-orm"
 import {
   timestamp,
-  pgTable as defaultPgTableFn,
   text,
   primaryKey,
   integer,
-  PgTableFn,
   PgDatabase,
+  pgTable,
+  index,
+  PgTableWithColumns,
+  QueryResultHKT,
+  TableConfig
 } from "drizzle-orm/pg-core"
 
-import type { Adapter, AdapterAccount } from "@auth/core/adapters"
-import { stripUndefined } from "./utils.js"
+import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
+import { randomUUID } from "crypto"
 
-export function createTables(pgTable: PgTableFn) {
-  const users = pgTable("user", {
-    id: text("id").notNull().primaryKey(),
-    name: text("name"),
-    email: text("email").notNull(),
-    emailVerified: timestamp("emailVerified", { mode: "date" }),
-    image: text("image"),
-  })
+export const users = pgTable("users" as string, {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  name: text("name"),
+  email: text("email").unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+})
 
-  const accounts = pgTable(
-    "account",
-    {
-      userId: text("userId")
-        .notNull()
-        .references(() => users.id, { onDelete: "cascade" }),
-      type: text("type").$type<AdapterAccount["type"]>().notNull(),
-      provider: text("provider").notNull(),
-      providerAccountId: text("providerAccountId").notNull(),
-      refresh_token: text("refresh_token"),
-      access_token: text("access_token"),
-      expires_at: integer("expires_at"),
-      token_type: text("token_type"),
-      scope: text("scope"),
-      id_token: text("id_token"),
-      session_state: text("session_state"),
-    },
-    (account) => ({
-      compoundKey: primaryKey(account.provider, account.providerAccountId),
-    })
-  )
-
-  const sessions = pgTable("session", {
-    sessionToken: text("sessionToken").notNull().primaryKey(),
+export const accounts = pgTable(
+  "accounts" as string,
+  {
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (table) => {
+    return {
+      userIdIdx: index().on(table.userId),
+      compositePk: primaryKey({ columns: [table.provider, table.providerAccountId] }),
+    }
+  }
+)
+
+export const sessions = pgTable("sessions" as string, {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: text("sessionToken").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+}, (table) => {
+  return {
+    userIdIdx: index().on(table.userId),
+  }
+})
+
+export const verificationTokens = pgTable(
+  "verificationTokens" as string,
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull().unique(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
-  })
+  },
+  (table) => {
+    return {
+      compositePk: primaryKey({ columns: [table.identifier, table.token] })
+    }
+  }
+)
 
-  const verificationTokens = pgTable(
-    "verificationToken",
-    {
-      identifier: text("identifier").notNull(),
-      token: text("token").notNull(),
-      expires: timestamp("expires", { mode: "date" }).notNull(),
-    },
-    (vt) => ({
-      compoundKey: primaryKey(vt.identifier, vt.token),
-    })
-  )
-
-  return { users, accounts, sessions, verificationTokens }
-}
-
-export type DefaultSchema = ReturnType<typeof createTables>
-
-export function pgDrizzleAdapter(
-  client: InstanceType<typeof PgDatabase>,
-  tableFn = defaultPgTableFn
+export function PostgresDrizzleAdapter(
+  client: PgDatabase<QueryResultHKT, any>,
+  schema: Partial<DefaultPostgresSchema> = {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }
 ): Adapter {
-  const { users, accounts, sessions, verificationTokens } =
-    createTables(tableFn)
+  const { usersTable = users, accountsTable = accounts, sessionsTable = sessions, verificationTokensTable = verificationTokens } = schema
 
   return {
-    async createUser(data) {
+    async createUser(data: Omit<AdapterUser, "id">) {
       return await client
-        .insert(users)
-        .values({ ...data, id: crypto.randomUUID() })
+        .insert(usersTable)
+        .values(data)
         .returning()
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0]) as AdapterUser
     },
-    async getUser(data) {
+    async getUser(userId: string) {
       return await client
         .select()
-        .from(users)
-        .where(eq(users.id, data))
-        .then((res) => res[0] ?? null)
+        .from(usersTable)
+        .where(eq(usersTable.id, userId))
+        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
     },
-    async getUserByEmail(data) {
+    async getUserByEmail(email: string) {
       return await client
         .select()
-        .from(users)
-        .where(eq(users.email, data))
-        .then((res) => res[0] ?? null)
+        .from(usersTable)
+        .where(eq(usersTable.email, email))
+        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
     },
-    async createSession(data) {
+    async createSession(data: {
+      sessionToken: string
+      userId: string
+      expires: Date
+    }) {
       return await client
-        .insert(sessions)
+        .insert(sessionsTable)
         .values(data)
         .returning()
         .then((res) => res[0])
     },
-    async getSessionAndUser(data) {
+    async getSessionAndUser(sessionToken: string) {
       return await client
         .select({
-          session: sessions,
-          user: users,
+          session: sessionsTable,
+          user: usersTable,
         })
-        .from(sessions)
-        .where(eq(sessions.sessionToken, data))
-        .innerJoin(users, eq(users.id, sessions.userId))
-        .then((res) => res[0] ?? null)
+        .from(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
+        .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
+        .then((res) => res.length > 0 ? res[0] : null) as { session: AdapterSession; user: AdapterUser } | null
     },
-    async updateUser(data) {
+    async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      return await client
-        .update(users)
+      const result =  await client
+        .update(usersTable)
         .set(data)
-        .where(eq(users.id, data.id))
+        .where(eq(usersTable.id, data.id))
         .returning()
-        .then((res) => res[0])
-    },
-    async updateSession(data) {
-      return await client
-        .update(sessions)
-        .set(data)
-        .where(eq(sessions.sessionToken, data.sessionToken))
-        .returning()
-        .then((res) => res[0])
-    },
-    async linkAccount(rawAccount) {
-      return stripUndefined(
-        await client
-          .insert(accounts)
-          .values(rawAccount)
-          .returning()
-          .then((res) => res[0])
-      )
-    },
-    async getUserByAccount(account) {
-      const dbAccount =
-        (await client
-          .select()
-          .from(accounts)
-          .where(
-            and(
-              eq(accounts.providerAccountId, account.providerAccountId),
-              eq(accounts.provider, account.provider)
-            )
-          )
-          .leftJoin(users, eq(accounts.userId, users.id))
-          .then((res) => res[0])) ?? null
+        .then((res) => res[0]) as AdapterUser | undefined
 
-      return dbAccount?.user ?? null
-    },
-    async deleteSession(sessionToken) {
-      const session = await client
-        .delete(sessions)
-        .where(eq(sessions.sessionToken, sessionToken))
-        .returning()
-        .then((res) => res[0] ?? null)
-
-      return session
-    },
-    async createVerificationToken(token) {
-      return await client
-        .insert(verificationTokens)
-        .values(token)
-        .returning()
-        .then((res) => res[0])
-    },
-    async useVerificationToken(token) {
-      try {
-        return await client
-          .delete(verificationTokens)
-          .where(
-            and(
-              eq(verificationTokens.identifier, token.identifier),
-              eq(verificationTokens.token, token.token)
-            )
-          )
-          .returning()
-          .then((res) => res[0] ?? null)
-      } catch (err) {
-        throw new Error("No verification token found.")
+      if (!result) {
+        throw new Error("No user found.")
       }
+
+      return result
     },
-    async deleteUser(id) {
-      await client
-        .delete(users)
-        .where(eq(users.id, id))
+    async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
+      return await client
+        .update(sessionsTable)
+        .set(data)
+        .where(eq(sessionsTable.sessionToken, data.sessionToken))
         .returning()
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0])
     },
-    async unlinkAccount(account) {
-      const { type, provider, providerAccountId, userId } = await client
-        .delete(accounts)
+    async linkAccount(data: AdapterAccount) {
+      await client.insert(accountsTable).values(data)
+    },
+    async getUserByAccount(account: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+      const result = await client.select({
+        account: accountsTable,
+        user: usersTable,
+      }).from(accountsTable)
+        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id)).where(
+          and(
+            eq(accountsTable.provider, account.provider),
+            eq(accountsTable.providerAccountId, account.providerAccountId),
+          )
+        ).then((res) => res[0] as { account: AdapterAccount, user: AdapterUser } | undefined)
+
+      return result?.user ?? null
+    },
+    async deleteSession(sessionToken: string) {
+      await client.delete(sessionsTable).where(eq(sessionsTable.sessionToken, sessionToken))
+    },
+    async createVerificationToken(data: VerificationToken) {
+      return await client
+        .insert(verificationTokensTable)
+        .values(data)
+        .returning()
+        .then((res) => res[0])
+    },
+    async useVerificationToken(params: {
+      identifier: string
+      token: string
+    }) {
+      return await client
+        .delete(verificationTokensTable)
         .where(
           and(
-            eq(accounts.providerAccountId, account.providerAccountId),
-            eq(accounts.provider, account.provider)
+            eq(verificationTokensTable.identifier, params.identifier),
+            eq(verificationTokensTable.token, params.token)
           )
         )
         .returning()
-        .then((res) => res[0] ?? null)
-
-      return { provider, type, providerAccountId, userId }
+        .then((res) => res.length > 0 ? res[0] : null)
     },
+    async deleteUser(id: string) {
+      await client.delete(usersTable).where(eq(usersTable.id, id))
+    },
+    async unlinkAccount(params: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+      await client
+        .delete(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.provider, params.provider),
+            eq(accountsTable.providerAccountId, params.providerAccountId)
+          )
+        )
+    },
+  }
+}
+
+export type PostgresTableFn<T extends TableConfig> = PgTableWithColumns<{
+  name: T['name'],
+  columns: T['columns'],
+  dialect: T['dialect'],
+  schema: string | undefined
+}>
+
+export type DefaultPostgresSchema = {
+  usersTable: PostgresTableFn<typeof users['_']['config']>,
+  accountsTable: PostgresTableFn<typeof accounts['_']['config']>,
+  sessionsTable: PostgresTableFn<typeof sessions['_']['config']>,
+  verificationTokensTable: PostgresTableFn<typeof verificationTokens['_']['config']>,
+}
+
+export function getDefaultPostgresSchema(): DefaultPostgresSchema {
+  return {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
   }
 }
