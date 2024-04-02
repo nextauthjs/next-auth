@@ -108,7 +108,8 @@ export async function decode<Payload = JWT>(
 }
 
 export interface GetTokenParams<R extends boolean = false>
-  extends Pick<JWTDecodeParams, "salt" | "secret"> {
+  extends Pick<JWTDecodeParams, "secret">,
+    Partial<Pick<JWTDecodeParams, "salt">> {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
   req: Request | { headers: Headers | Record<string, string> }
   /**
