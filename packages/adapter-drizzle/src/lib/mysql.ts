@@ -23,7 +23,7 @@ import type {
 
 import { randomUUID } from "crypto"
 
-export const mysqlUsersTable = mysqlTable("users" as string, {
+export const mysqlUsersTable = mysqlTable("user" as string, {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).unique(),
@@ -32,7 +32,7 @@ export const mysqlUsersTable = mysqlTable("users" as string, {
 })
 
 export const mysqlAccountsTable = mysqlTable(
-  "accounts" as string,
+  "account" as string,
   {
     userId: varchar("userId", { length: 255 })
       .notNull()
@@ -56,7 +56,7 @@ export const mysqlAccountsTable = mysqlTable(
   })
 )
 
-export const mysqlSessionsTable = mysqlTable("sessions" as string, {
+export const mysqlSessionsTable = mysqlTable("session" as string, {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
@@ -68,7 +68,7 @@ export const mysqlSessionsTable = mysqlTable("sessions" as string, {
 }))
 
 export const mysqlVerificationTokensTable = mysqlTable(
-  "verificationTokens" as string,
+  "verificationToken" as string,
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
     token: varchar("token", { length: 255 }).notNull().unique(),

@@ -15,7 +15,7 @@ import {
 import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
 import { randomUUID } from "crypto"
 
-export const postgresUsersTable = pgTable("users" as string, {
+export const postgresUsersTable = pgTable("user" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").unique(),
@@ -24,7 +24,7 @@ export const postgresUsersTable = pgTable("users" as string, {
 })
 
 export const postgresAccountsTable = pgTable(
-  "accounts" as string,
+  "account" as string,
   {
     userId: text("userId")
       .notNull()
@@ -48,7 +48,7 @@ export const postgresAccountsTable = pgTable(
   }
 )
 
-export const postgresSessionsTable = pgTable("sessions" as string, {
+export const postgresSessionsTable = pgTable("session" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
@@ -62,7 +62,7 @@ export const postgresSessionsTable = pgTable("sessions" as string, {
 })
 
 export const postgresVerificationTokensTable = pgTable(
-  "verificationTokens" as string,
+  "verificationToken" as string,
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull().unique(),

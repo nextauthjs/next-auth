@@ -14,7 +14,7 @@ export const db = drizzle(poolConnection)
 
 const mysqlTable = mysqlTableCreator((name) => `project1_${name}`);
 
-export const users = mysqlTable("users", {
+export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).unique(),
@@ -23,7 +23,7 @@ export const users = mysqlTable("users", {
  })
  
  export const accounts = mysqlTable(
-  "accounts",
+  "account",
    {
     userId: varchar("userId", { length: 255 })
        .notNull()
@@ -47,7 +47,7 @@ export const users = mysqlTable("users", {
  })
  )
  
- export const sessions = mysqlTable("sessions", {
+ export const sessions = mysqlTable("session", {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
@@ -59,7 +59,7 @@ export const users = mysqlTable("users", {
  }))
  
  export const verificationTokens = mysqlTable(
- "verificationTokens",
+ "verificationToken",
  {
    identifier: varchar("identifier", { length: 255 }).notNull(),
    token: varchar("token", { length: 255 }).notNull().unique(),

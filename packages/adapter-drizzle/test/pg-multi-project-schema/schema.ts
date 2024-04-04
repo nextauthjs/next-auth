@@ -10,7 +10,7 @@ export const db = drizzle(sql)
 
 const pgTable = pgTableCreator((name) => `project1_${name}`);
 
-export const users = pgTable("users", {
+export const users = pgTable("user", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").unique(),
@@ -19,7 +19,7 @@ export const users = pgTable("users", {
 })
 
 export const accounts = pgTable(
-  "accounts",
+  "account",
   {
     userId: text("userId")
       .notNull()
@@ -43,7 +43,7 @@ export const accounts = pgTable(
   }
 )
 
-export const sessions = pgTable("sessions", {
+export const sessions = pgTable("session", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
@@ -57,7 +57,7 @@ export const sessions = pgTable("sessions", {
 })
 
 export const verificationTokens = pgTable(
-  "verificationTokens",
+  "verificationToken",
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull().unique(),

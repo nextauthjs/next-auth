@@ -13,7 +13,7 @@ import {
 import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
 import { randomUUID } from "crypto"
 
-export const sqliteUsersTable = sqliteTable("users" as string, {
+export const sqliteUsersTable = sqliteTable("user" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").unique(),
@@ -22,7 +22,7 @@ export const sqliteUsersTable = sqliteTable("users" as string, {
  })
  
  export const sqliteAccountsTable = sqliteTable(
-  "accounts" as string,
+  "account" as string,
   {
     userId: text("userId")
       .notNull()
@@ -46,7 +46,7 @@ export const sqliteUsersTable = sqliteTable("users" as string, {
   })
  )
  
- export const sqliteSessionsTable = sqliteTable("sessions" as string, {
+ export const sqliteSessionsTable = sqliteTable("session" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  sessionToken: text("sessionToken").notNull().unique(),
  userId: text("userId")
@@ -58,7 +58,7 @@ export const sqliteUsersTable = sqliteTable("users" as string, {
  }))
  
  export const sqliteVerificationTokensTable = sqliteTable(
- "verificationTokens" as string,
+ "verificationToken" as string,
  {
    identifier: text("identifier").notNull(),
    token: text("token").notNull().unique(),

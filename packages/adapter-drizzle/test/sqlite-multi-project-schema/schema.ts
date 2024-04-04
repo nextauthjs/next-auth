@@ -9,7 +9,7 @@ export const db = drizzle(sqlite)
 
 const sqliteTable = sqliteTableCreator((name) => `foobar_${name}`)
 
-export const users = sqliteTable("users", {
+export const users = sqliteTable("user", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").unique(),
@@ -18,7 +18,7 @@ export const users = sqliteTable("users", {
  })
  
  export const accounts = sqliteTable(
-  "accounts",
+  "account",
   {
     userId: text("userId")
       .notNull()
@@ -42,7 +42,7 @@ export const users = sqliteTable("users", {
   })
  )
  
- export const sessions = sqliteTable("sessions", {
+ export const sessions = sqliteTable("session", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  sessionToken: text("sessionToken").notNull().unique(),
  userId: text("userId")
@@ -54,7 +54,7 @@ export const users = sqliteTable("users", {
  }))
  
  export const verificationTokens = sqliteTable(
- "verificationTokens",
+ "verificationToken",
  {
    identifier: text("identifier").notNull(),
    token: text("token").notNull().unique(),
