@@ -1,0 +1,48 @@
+{
+  "name": "@auth/convex-adapter",
+  "version": "1.0.0",
+  "description": "Convex adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/convex",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "ThatGuyJamal",
+  "contributors": [
+    "ThatGuyJamal <thatguyjamalbiz@gmail.com>"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "convex",
+    "realtime"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "",
+    "init:seed": "",
+    "init:dev": "convex dev --tail-logs",
+    "format": ""
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "convex": "1.9.1"
+  }
+}
