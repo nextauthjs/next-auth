@@ -93,7 +93,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * import type { AdapterAccount } from '@auth/core/adapters'
  * import { randomUUID } from "crypto"
  *
- * export const users = pgTable("users", {
+ * export const users = pgTable("user", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
  *  email: text("email").unique(),
@@ -102,7 +102,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * })
  *
  * export const accounts = pgTable(
- * "accounts",
+ * "account",
  * {
  *   userId: text("userId")
  *     .notNull()
@@ -124,7 +124,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * })
  * )
  *
- * export const sessions = pgTable("sessions", {
+ * export const sessions = pgTable("session", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  sessionToken: text("sessionToken").notNull().unique(),
  *  userId: text("userId")
@@ -136,7 +136,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * }))
  *
  * export const verificationTokens = pgTable(
- *  "verificationTokens",
+ *  "verificationToken",
  *  {
  *    identifier: text("identifier").notNull(),
  *    token: text("token").notNull().unique(),
@@ -160,7 +160,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * } from "drizzle-orm/mysql-core"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
- * export const users = mysqlTable("users", {
+ * export const users = mysqlTable("user", {
  *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
  *  name: varchar("name", { length: 255 }),
  *  email: varchar("email", { length: 255 }).unique(),
@@ -169,7 +169,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * })
  *
  * export const accounts = mysqlTable(
- *  "accounts",
+ *  "account",
  *   {
  *    userId: varchar("userId", { length: 255 })
  *       .notNull()
@@ -193,7 +193,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * })
  * )
  *
- * export const sessions = mysqlTable("sessions", {
+ * export const sessions = mysqlTable("session", {
  *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
  *  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
  *  userId: varchar("userId", { length: 255 })
@@ -205,7 +205,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * }))
  *
  * export const verificationTokens = mysqlTable(
- * "verificationTokens",
+ * "verificationToken",
  * {
  *   identifier: varchar("identifier", { length: 255 }).notNull(),
  *   token: varchar("token", { length: 255 }).notNull().unique(),
@@ -223,7 +223,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
- * export const users = sqliteTable("users", {
+ * export const users = sqliteTable("user", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
  *  email: text("email").unique(),
@@ -232,7 +232,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * })
  *
  * export const accounts = sqliteTable(
- *  "accounts",
+ *  "account",
  *  {
  *    userId: text("userId")
  *      .notNull()
@@ -256,7 +256,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  *  })
  * )
  *
- * export const sessions = sqliteTable("sessions", {
+ * export const sessions = sqliteTable("session", {
  * id: text("id").primaryKey().$defaultFn(() => randomUUID())
  * sessionToken: text("sessionToken").notNull().unique(),
  * userId: text("userId")
@@ -268,7 +268,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * }))
  *
  * export const verificationTokens = sqliteTable(
- * "verificationTokens",
+ * "verificationToken",
  * {
  *   identifier: text("identifier").notNull(),
  *   token: text("token").notNull().unique(),
