@@ -1,6 +1,6 @@
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
-import { db, sessions, verificationTokens, accounts, users } from "./schema"
+import { db, mysqlSessionsTable as sessions, mysqlVerificationTokensTable as verificationTokens, mysqlAccountsTable as accounts, mysqlUsersTable as users } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"
 

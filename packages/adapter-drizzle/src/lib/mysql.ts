@@ -23,7 +23,7 @@ import type {
 
 import { randomUUID } from "crypto"
 
-export const users = mysqlTable("users" as string, {
+export const mysqlUsersTable = mysqlTable("users" as string, {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).unique(),
@@ -31,12 +31,12 @@ export const users = mysqlTable("users" as string, {
   image: varchar("image", { length: 255 }),
 })
 
-export const accounts = mysqlTable(
+export const mysqlAccountsTable = mysqlTable(
   "accounts" as string,
   {
     userId: varchar("userId", { length: 255 })
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 }).notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
@@ -56,18 +56,18 @@ export const accounts = mysqlTable(
   })
 )
 
-export const sessions = mysqlTable("sessions" as string, {
+export const mysqlSessionsTable = mysqlTable("sessions" as string, {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 }, (session) => ({
   userIdIdx: index('Session_userId_index').on(session.userId),
 }))
 
-export const verificationTokens = mysqlTable(
+export const mysqlVerificationTokensTable = mysqlTable(
   "verificationTokens" as string,
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
@@ -81,15 +81,14 @@ export const verificationTokens = mysqlTable(
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
-  schema: Partial<DefaultMySqlSchema> = {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
+  schema: DefaultMySqlSchema = {
+    usersTable: mysqlUsersTable,
+    accountsTable: mysqlAccountsTable,
+    sessionsTable: mysqlSessionsTable,
+    verificationTokensTable: mysqlVerificationTokensTable,
   }
 ): Adapter {
-  const { usersTable = users, accountsTable = accounts, sessionsTable = sessions, verificationTokensTable = verificationTokens } =
-    schema
+  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } = schema
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
@@ -255,17 +254,8 @@ export type MySqlTableFn<T extends TableConfig> = MySqlTableWithColumns<{
 }>
 
 export type DefaultMySqlSchema = {
-  usersTable: MySqlTableFn<typeof users['_']['config']>,
-  accountsTable: MySqlTableFn<typeof accounts['_']['config']>,
-  sessionsTable: MySqlTableFn<typeof sessions['_']['config']>,
-  verificationTokensTable: MySqlTableFn<typeof verificationTokens['_']['config']>,
-}
-
-export function getDefaultMySqlSchema(): DefaultMySqlSchema {
-  return {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }
+  usersTable: MySqlTableFn<typeof mysqlUsersTable['_']['config']>,
+  accountsTable: MySqlTableFn<typeof mysqlAccountsTable['_']['config']>,
+  sessionsTable: MySqlTableFn<typeof mysqlSessionsTable['_']['config']>,
+  verificationTokensTable: MySqlTableFn<typeof mysqlVerificationTokensTable['_']['config']>,
 }

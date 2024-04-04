@@ -20,13 +20,16 @@ import { is } from "drizzle-orm"
 import { MySqlDatabase } from "drizzle-orm/mysql-core"
 import { PgDatabase } from "drizzle-orm/pg-core"
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
-import { DefaultSchema, SqlFlavorOptions } from "./lib/utils"
-import { DefaultSQLiteSchema, SQLiteDrizzleAdapter, getDefaultSQLiteSchema } from "./lib/sqlite"
-import { PostgresDrizzleAdapter, DefaultPostgresSchema, getDefaultPostgresSchema } from './lib/pg'
-import { MySqlDrizzleAdapter, DefaultMySqlSchema, getDefaultMySqlSchema } from './lib/mysql'
-// @ts-ignore
+import { DefaultMySqlSchema, MySqlDrizzleAdapter } from './lib/mysql.js'
+import { DefaultPostgresSchema, PostgresDrizzleAdapter } from './lib/pg.js'
+import { DefaultSQLiteSchema, SQLiteDrizzleAdapter } from "./lib/sqlite.js"
+import { DefaultSchema, SqlFlavorOptions } from "./lib/utils.js"
+
 import type { Adapter } from "@auth/core/adapters"
 
+export { postgresUsersTable, postgresAccountsTable, postgresSessionsTable, postgresVerificationTokensTable } from './lib/pg.js'
+export { sqliteUsersTable, sqliteAccountsTable, sqliteSessionsTable, sqliteVerificationTokensTable } from './lib/sqlite.js'
+export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificationTokensTable } from './lib/mysql.js'
 /**
  * Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
  *
@@ -287,7 +290,7 @@ import type { Adapter } from "@auth/core/adapters"
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  schema?: Partial<DefaultSchema<SqlFlavor>>
+  schema?: DefaultSchema<SqlFlavor>
 ): Adapter {
   if (is(db, MySqlDatabase)) {
     return MySqlDrizzleAdapter(db, schema as DefaultMySqlSchema)
@@ -295,22 +298,6 @@ export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
     return PostgresDrizzleAdapter(db, schema as DefaultPostgresSchema)
   } else if (is(db, BaseSQLiteDatabase)) {
     return SQLiteDrizzleAdapter(db, schema as DefaultSQLiteSchema)
-  }
-
-  throw new Error(
-    `Unsupported database type (${typeof db}) in Auth.js Drizzle adapter.`
-  )
-}
-
-export function getDefaultSchema<SqlFlavor extends SqlFlavorOptions>(
-  db: SqlFlavor
-) {
-  if (is(db, MySqlDatabase)) {
-    return getDefaultMySqlSchema()
-  } else if (is(db, PgDatabase)) {
-    return getDefaultPostgresSchema()
-  } else if (is(db, BaseSQLiteDatabase)) {
-    return getDefaultSQLiteSchema()
   }
 
   throw new Error(

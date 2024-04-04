@@ -13,4 +13,4 @@ type AnySQLiteDatabase = BaseSQLiteDatabase<'sync' | 'async', any, any>
 
 export type SqlFlavorOptions = AnyPostgresDatabase | AnyMySqlDatabase | AnySQLiteDatabase
 
-export type DefaultSchema<Flavor> = Flavor extends AnyMySqlDatabase ? DefaultMySqlSchema : Flavor extends AnyPostgresDatabase ? DefaultPostgresSchema : DefaultSQLiteSchema
+export type DefaultSchema<Flavor> = Flavor extends AnyMySqlDatabase ? DefaultMySqlSchema : Flavor extends AnyPostgresDatabase ? DefaultPostgresSchema : Flavor extends AnySQLiteDatabase ? DefaultSQLiteSchema : never

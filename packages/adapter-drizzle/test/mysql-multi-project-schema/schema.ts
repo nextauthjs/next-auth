@@ -49,7 +49,7 @@ export const users = mysqlTable("users", {
  
  export const sessions = mysqlTable("sessions", {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: varchar("sessionToken", { length: 255 }).unique(),
+  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),

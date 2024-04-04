@@ -13,7 +13,7 @@ import {
 import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
 import { randomUUID } from "crypto"
 
-export const users = sqliteTable("users" as string, {
+export const sqliteUsersTable = sqliteTable("users" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").unique(),
@@ -21,12 +21,12 @@ export const users = sqliteTable("users" as string, {
   image: text("image"),
  })
  
- export const accounts = sqliteTable(
+ export const sqliteAccountsTable = sqliteTable(
   "accounts" as string,
   {
     userId: text("userId")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
     type: text("type").notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
@@ -46,18 +46,18 @@ export const users = sqliteTable("users" as string, {
   })
  )
  
- export const sessions = sqliteTable("sessions" as string, {
+ export const sqliteSessionsTable = sqliteTable("sessions" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  sessionToken: text("sessionToken").notNull().unique(),
  userId: text("userId")
    .notNull()
-   .references(() => users.id, { onDelete: "cascade" }),
+   .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
  }, (table) => ({
     userIdIdx: index('Session_userId_index').on(table.userId),
  }))
  
- export const verificationTokens = sqliteTable(
+ export const sqliteVerificationTokensTable = sqliteTable(
  "verificationTokens" as string,
  {
    identifier: text("identifier").notNull(),
@@ -71,14 +71,14 @@ export const users = sqliteTable("users" as string, {
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<'sync' | 'async', any, any>,
-  schema: Partial<DefaultSQLiteSchema> = {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens
+  schema: DefaultSQLiteSchema = {
+    usersTable: sqliteUsersTable,
+    accountsTable: sqliteAccountsTable,
+    sessionsTable: sqliteSessionsTable,
+    verificationTokensTable: sqliteVerificationTokensTable
   }
 ): Adapter {
-  const { usersTable = users, accountsTable = accounts, sessionsTable = sessions, verificationTokensTable = verificationTokens } = schema
+  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } = schema
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
@@ -224,17 +224,8 @@ export type SQLiteTableFn<T extends TableConfig> = SQLiteTableWithColumns<{
 }>
 
 export type DefaultSQLiteSchema = {
-  usersTable: SQLiteTableFn<typeof users['_']['config']>,
-  accountsTable: SQLiteTableFn<typeof accounts['_']['config']>,
-  sessionsTable: SQLiteTableFn<typeof sessions['_']['config']>,
-  verificationTokensTable: SQLiteTableFn<typeof verificationTokens['_']['config']>,
-}
-
-export function getDefaultSQLiteSchema(): DefaultSQLiteSchema {
-  return {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }
+  usersTable: SQLiteTableFn<typeof sqliteUsersTable['_']['config']>,
+  accountsTable: SQLiteTableFn<typeof sqliteAccountsTable['_']['config']>,
+  sessionsTable: SQLiteTableFn<typeof sqliteSessionsTable['_']['config']>,
+  verificationTokensTable: SQLiteTableFn<typeof sqliteVerificationTokensTable['_']['config']>,
 }

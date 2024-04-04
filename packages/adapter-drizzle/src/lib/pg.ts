@@ -15,7 +15,7 @@ import {
 import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
 import { randomUUID } from "crypto"
 
-export const users = pgTable("users" as string, {
+export const postgresUsersTable = pgTable("users" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").unique(),
@@ -23,12 +23,12 @@ export const users = pgTable("users" as string, {
   image: text("image"),
 })
 
-export const accounts = pgTable(
+export const postgresAccountsTable = pgTable(
   "accounts" as string,
   {
     userId: text("userId")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
     type: text("type").notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
@@ -48,12 +48,12 @@ export const accounts = pgTable(
   }
 )
 
-export const sessions = pgTable("sessions" as string, {
+export const postgresSessionsTable = pgTable("sessions" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 }, (table) => {
   return {
@@ -61,7 +61,7 @@ export const sessions = pgTable("sessions" as string, {
   }
 })
 
-export const verificationTokens = pgTable(
+export const postgresVerificationTokensTable = pgTable(
   "verificationTokens" as string,
   {
     identifier: text("identifier").notNull(),
@@ -77,14 +77,14 @@ export const verificationTokens = pgTable(
 
 export function PostgresDrizzleAdapter(
   client: PgDatabase<QueryResultHKT, any>,
-  schema: Partial<DefaultPostgresSchema> = {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
+  schema: DefaultPostgresSchema = {
+    usersTable: postgresUsersTable,
+    accountsTable: postgresAccountsTable,
+    sessionsTable: postgresSessionsTable,
+    verificationTokensTable: postgresVerificationTokensTable,
   }
 ): Adapter {
-  const { usersTable = users, accountsTable = accounts, sessionsTable = sessions, verificationTokensTable = verificationTokens } = schema
+  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } = schema
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
@@ -222,17 +222,8 @@ export type PostgresTableFn<T extends TableConfig> = PgTableWithColumns<{
 }>
 
 export type DefaultPostgresSchema = {
-  usersTable: PostgresTableFn<typeof users['_']['config']>,
-  accountsTable: PostgresTableFn<typeof accounts['_']['config']>,
-  sessionsTable: PostgresTableFn<typeof sessions['_']['config']>,
-  verificationTokensTable: PostgresTableFn<typeof verificationTokens['_']['config']>,
-}
-
-export function getDefaultPostgresSchema(): DefaultPostgresSchema {
-  return {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }
+  usersTable: PostgresTableFn<typeof postgresUsersTable['_']['config']>,
+  accountsTable: PostgresTableFn<typeof postgresAccountsTable['_']['config']>,
+  sessionsTable: PostgresTableFn<typeof postgresSessionsTable['_']['config']>,
+  verificationTokensTable: PostgresTableFn<typeof postgresVerificationTokensTable['_']['config']>,
 }
