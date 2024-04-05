@@ -88,39 +88,39 @@ export function PostgresDrizzleAdapter(
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
-      return await client
+      return client
         .insert(usersTable)
         .values(data)
         .returning()
-        .then((res) => res[0]) as AdapterUser
+        .then((res) => res[0]) as Promise<AdapterUser>
     },
     async getUser(userId: string) {
-      return await client
+      return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
+        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
     },
     async getUserByEmail(email: string) {
-      return await client
+      return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
+        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
     },
     async createSession(data: {
       sessionToken: string
       userId: string
       expires: Date
     }) {
-      return await client
+      return client
         .insert(sessionsTable)
         .values(data)
         .returning()
         .then((res) => res[0])
     },
     async getSessionAndUser(sessionToken: string) {
-      return await client
+      return client
         .select({
           session: sessionsTable,
           user: usersTable,
@@ -128,19 +128,18 @@ export function PostgresDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => res.length > 0 ? res[0] : null) as { session: AdapterSession; user: AdapterUser } | null
+        .then((res) => res.length > 0 ? res[0] : null) as Promise<{ session: AdapterSession; user: AdapterUser } | null>
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      const result =  await client
+      const [result] =  await client
         .update(usersTable)
         .set(data)
         .where(eq(usersTable.id, data.id))
-        .returning()
-        .then((res) => res[0]) as AdapterUser | undefined
+        .returning() as Array<AdapterUser | undefined>
 
       if (!result) {
         throw new Error("No user found.")
@@ -149,7 +148,7 @@ export function PostgresDrizzleAdapter(
       return result
     },
     async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
-      return await client
+      return client
         .update(sessionsTable)
         .set(data)
         .where(eq(sessionsTable.sessionToken, data.sessionToken))
@@ -177,7 +176,7 @@ export function PostgresDrizzleAdapter(
       await client.delete(sessionsTable).where(eq(sessionsTable.sessionToken, sessionToken))
     },
     async createVerificationToken(data: VerificationToken) {
-      return await client
+      return client
         .insert(verificationTokensTable)
         .values(data)
         .returning()
@@ -187,7 +186,7 @@ export function PostgresDrizzleAdapter(
       identifier: string
       token: string
     }) {
-      return await client
+      return client
         .delete(verificationTokensTable)
         .where(
           and(

@@ -82,7 +82,7 @@ export function SQLiteDrizzleAdapter(
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
-      return await client
+      return client
         .insert(usersTable)
         .values(data)
         .returning()

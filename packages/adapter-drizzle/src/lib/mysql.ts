@@ -96,25 +96,25 @@ export function MySqlDrizzleAdapter(
       
       await client.insert(usersTable).values({ ...data, id })
 
-      return await client
+      return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, id))
-        .then((res) => res[0]) as AdapterUser
+        .then((res) => res[0]) as Promise<AdapterUser>
     },
     async getUser(userId: string) {
-      return await client
+      return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
+        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
     },
     async getUserByEmail(email: string) {
-      return await client
+      return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => res.length > 0 ? res[0] : null) as AdapterUser | null
+        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
     },
     async createSession(data: {
       sessionToken: string
@@ -125,14 +125,14 @@ export function MySqlDrizzleAdapter(
 
       await client.insert(sessionsTable).values({ ...data, id })
 
-      return await client
+      return client
         .select()
         .from(sessionsTable)
         .where(eq(sessionsTable.id, id))
         .then((res) => res[0])
     },
     async getSessionAndUser(sessionToken: string) {
-      return await client
+      return client
         .select({
           session: sessionsTable,
           user: usersTable,
@@ -140,7 +140,7 @@ export function MySqlDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => res.length > 0 ? res[0] : null) as { session: AdapterSession; user: AdapterUser } | null
+        .then((res) => res.length > 0 ? res[0] : null) as Promise<{ session: AdapterSession; user: AdapterUser } | null>
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -149,11 +149,10 @@ export function MySqlDrizzleAdapter(
 
       await client.update(usersTable).set(data).where(eq(usersTable.id, data.id))
 
-      const result =  await client
+      const [result] = await client
         .select()
         .from(usersTable)
-        .where(eq(usersTable.id, data.id))
-        .then((res) => res[0]) as AdapterUser | undefined
+        .where(eq(usersTable.id, data.id)) as Array<AdapterUser | undefined>
 
       if (!result) {
         throw new Error("No user found.")
@@ -167,7 +166,7 @@ export function MySqlDrizzleAdapter(
         .set(data)
         .where(eq(sessionsTable.sessionToken, data.sessionToken))
 
-      return await client
+      return client
         .select()
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, data.sessionToken))
@@ -196,7 +195,7 @@ export function MySqlDrizzleAdapter(
     async createVerificationToken(data: VerificationToken) {
       await client.insert(verificationTokensTable).values(data)
 
-      return await client
+      return client
         .select()
         .from(verificationTokensTable)
         .where(eq(verificationTokensTable.identifier, data.identifier))
