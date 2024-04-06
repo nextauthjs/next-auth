@@ -71,7 +71,24 @@ export const config = {
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
-  providers: [Apple, Auth0, AzureDevops, Cognito, Facebook, GitHub, Google, LinkedIn, Passage, Pinterest, Twitch, Twitter],
+  providers: [
+    Apple,
+    Auth0,
+    AzureDevops({
+      // TODO: Remove when env inference is corrected (prev. AUTH_AZURE-DEVOPS_ID)
+      clientId: process.env.AUTH_AZURE_DEVOPS_ID,
+      clientSecret: process.env.AUTH_AZURE_DEVOPS_SECRET,
+    }),
+    Cognito,
+    Facebook,
+    GitHub,
+    Google,
+    LinkedIn,
+    Passage,
+    Pinterest,
+    Twitch,
+    Twitter,
+  ],
   basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
