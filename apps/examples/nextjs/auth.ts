@@ -41,7 +41,11 @@ export const config = {
     Auth0,
     AzureAD,
     AzureB2C,
-    BoxyHQSAML,
+    BoxyHQSAML({
+      clientId: "dummy",
+      clientSecret: "dummy",
+      issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
+    }),
     Cognito,
     Coinbase,
     Discord,
