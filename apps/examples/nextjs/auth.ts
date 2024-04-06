@@ -66,7 +66,7 @@ export const config = {
     Spotify,
     Twitch,
     Twitter,
-    WorkOS,
+    WorkOS({ authorization: { params: { connection: process.env.AUTH_WORKOS_CONNECTION } } }),
     Zoom,
   ],
   basePath: "/auth",
