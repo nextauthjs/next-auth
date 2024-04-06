@@ -72,7 +72,7 @@ export const config = {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
   providers: [Apple, Auth0, AzureDevops, Cognito, Facebook, GitHub, Google, LinkedIn, Passage, Pinterest, Twitch, Twitter],
-  // basePath: "/auth",
+  basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
