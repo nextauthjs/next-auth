@@ -90,7 +90,6 @@ export default function Instagram(
       }
     },
     style: {
-      logo: "/instagram.svg",
       bg: "#fff",
       text: "#000",
     },

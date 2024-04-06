@@ -98,7 +98,7 @@ export default function Atlassian<P extends AtlassianProfile>(
         image: profile.picture,
       }
     },
-    style: { logo: "/atlassian.svg", bg: "#fff", text: "#0052cc" },
+    style: { bg: "#fff", text: "#0052cc" },
     options,
   }
 }

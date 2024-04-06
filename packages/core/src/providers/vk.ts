@@ -382,9 +382,9 @@ export default function VK<P extends Record<string, any> = VkProfile>(
           },
         }).then(async (res) => await res.json())
 
-        profile.response[0].email = tokens.email ? tokens.email : null;
+        profile.response[0].email = tokens.email ? tokens.email : null
 
-        return profile.response[0];
+        return profile.response[0]
       },
     },
     profile(profile: P) {
@@ -395,7 +395,7 @@ export default function VK<P extends Record<string, any> = VkProfile>(
         image: profile.photo_100,
       }
     },
-    style: { logo: "/vk.svg", bg: "#07F", text: "#fff" },
+    style: { bg: "#07F", text: "#fff" },
     options,
   }
 }
