@@ -132,7 +132,7 @@ export default function SigninPage(props: {
             ;({
               bg = "",
               text = "",
-              logo = `${provider.id}.svg`,
+              logo = "",
               bgDark = bg,
               textDark = text,
               logoDark = "",
