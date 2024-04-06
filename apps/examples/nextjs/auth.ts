@@ -62,7 +62,7 @@ export const config = {
     Passage,
     Pinterest,
     Reddit,
-    Slack,
+    Slack({ checks: ["nonce"] }), // TODO: Make this default in core
     Spotify,
     Twitch,
     Twitter,
