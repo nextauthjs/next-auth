@@ -54,7 +54,6 @@ import NextAuth from "next-auth"
 
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
-import AzureDevops from "next-auth/providers/azure-devops"
 import Cognito from "next-auth/providers/cognito"
 import Facebook from "next-auth/providers/facebook"
 import GitHub from "next-auth/providers/github"
@@ -71,7 +70,7 @@ export const config = {
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
-  providers: [Apple, Auth0, AzureDevops, Cognito, Facebook, GitHub, Google, LinkedIn, Passage, Pinterest, Twitch, Twitter],
+  providers: [Apple, Auth0, Cognito, Facebook, GitHub, Google, LinkedIn, Passage, Pinterest, Twitch, Twitter],
   basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
