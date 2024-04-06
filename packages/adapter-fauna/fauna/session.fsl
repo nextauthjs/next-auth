@@ -1,0 +1,20 @@
+collection Session {
+    unique [.sessionToken]
+    index bySessionToken {
+        terms [.sessionToken]
+    }
+    index byUserId {
+        terms [.userId]
+    }
+}
+
+collection CustomSession {
+    unique [.sessionToken]
+    index bySessionToken {
+        terms [.sessionToken]
+    }
+    index byUserId {
+        terms [.userId]
+    }
+}
+

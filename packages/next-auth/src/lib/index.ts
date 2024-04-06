@@ -1,8 +1,7 @@
-import { Auth, type AuthConfig } from "@auth/core"
+import { Auth, createActionURL, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 import { reqWithEnvURL } from "./env.js"
-import { createActionURL } from "./actions.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
@@ -60,7 +59,14 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
 }
 
 async function getSession(headers: Headers, config: NextAuthConfig) {
-  const url = createActionURL("session", headers, config.basePath)
+  const url = createActionURL(
+    "session",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const request = new Request(url, {
     headers: { cookie: headers.get("cookie") ?? "" },
   })
@@ -163,7 +169,9 @@ export function initAuth(
           const auth = await authResponse.json()
 
           for (const cookie of authResponse.headers.getSetCookie())
-            response.headers.append("set-cookie", cookie)
+            if ("headers" in response)
+              response.headers.append("set-cookie", cookie)
+            else response.appendHeader("set-cookie", cookie)
 
           return auth satisfies Session | null
         }
@@ -191,7 +199,9 @@ export function initAuth(
       return async (
         ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
       ) => {
-        return handleAuth(args, config, userMiddlewareOrRoute)
+        return handleAuth(args, config, userMiddlewareOrRoute).then((res) => {
+          return res
+        })
       }
     }
 
@@ -207,7 +217,8 @@ export function initAuth(
       const auth = await authResponse.json()
 
       for (const cookie of authResponse.headers.getSetCookie())
-        response.headers.append("set-cookie", cookie)
+        if ("headers" in response) response.headers.append("set-cookie", cookie)
+        else response.appendHeader("set-cookie", cookie)
 
       return auth satisfies Session | null
     })

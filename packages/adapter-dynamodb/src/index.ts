@@ -92,6 +92,48 @@ export interface DynamoDBAdapterOptions {
  *
  * (AWS secrets start with `NEXT_AUTH_` in order to not conflict with [Vercel's reserved environment variables](https://vercel.com/docs/environment-variables#reserved-environment-variables).)
  *
+ * ## AWS Credentials
+ *
+ * :::note
+ *   Always follow the **principle of least privilege** when giving access to AWS
+ *   services/resources -> identities should only be permitted to perform the
+ *   smallest set of actions necessary to fulfill a specific task.
+ * :::
+ *
+ * 1. Open the [AWS console](https://console.aws.amazon.com/) and go to "IAM", then "Users".
+ * 2. Create a new user. The purpose of this user is to give programmatic access to DynamoDB.
+ * 3. Create an Access Key and then copy Key ID and Secret to your `.env`/`.env.local` file.
+ * 4. Select "Add Permission" and "Create Inline Policy".
+ * 5. Copy the JSON below into the JSON input and replace `region`, `account_id` and `table_name` with your values.
+ *
+ * ```json
+ * {
+ *   "Version": "2012-10-17",
+ *   "Statement": [
+ *     {
+ *       "Sid": "DynamoDBAccess",
+ *       "Effect": "Allow",
+ *       "Action": [
+ *         "dynamodb:BatchGetItem",
+ *         "dynamodb:BatchWriteItem",
+ *         "dynamodb:Describe*",
+ *         "dynamodb:List*",
+ *         "dynamodb:PutItem",
+ *         "dynamodb:DeleteItem",
+ *         "dynamodb:GetItem",
+ *         "dynamodb:Scan",
+ *         "dynamodb:Query",
+ *         "dynamodb:UpdateItem"
+ *       ],
+ *       "Resource": [
+ *         "arn:aws:dynamodb:{region}:{account_id}:table/{table_name}",
+ *         "arn:aws:dynamodb:{region}:{account_id}:table/{table_name}/index/GSI1"
+ *       ]
+ *     }
+ *   ]
+ * }
+ * ```
+ *
  * ## Advanced usage
  *
  * ### Default schema

@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.26.2",
+  "version": "0.28.2",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -71,7 +71,7 @@
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
-    "@simplewebauthn/server": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
     "nodemailer": "^6.8.0"
   },
   "peerDependenciesMeta": {
@@ -91,7 +91,7 @@
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
     "test:e2e": "playwright test -c ../utils/playwright.config.ts",
-    "test": "vitest -c ../utils/vitest.config.ts",
+    "test": "vitest run -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {

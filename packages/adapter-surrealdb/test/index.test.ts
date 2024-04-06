@@ -7,11 +7,11 @@ const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
   const db = new Surreal()
   try {
     await db.connect("http://0.0.0.0:8000/rpc", {
-      ns: "test",
-      db: "test",
+      namespace: "test",
+      database: "test",
       auth: {
-        user: "test",
-        pass: "test",
+        username: "test",
+        password: "test",
       },
     })
     resolve(db)

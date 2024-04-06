@@ -98,8 +98,8 @@ export default function Okta<P extends OktaProfile>(
     id: "okta",
     name: "Okta",
     type: "oidc",
-    style: { logo: "/okta.svg", bg: "#000", text: "#fff" },
-    checks: ['pkce', 'state'],
+    style: { bg: "#000", text: "#fff" },
+    checks: ["pkce", "state"],
     options,
   }
 }

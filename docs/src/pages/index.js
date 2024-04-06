@@ -168,13 +168,16 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.heroClerk}>
-              Looking for a hosted alternative?
-              <a
-                href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
-                target="_blank"
-              >
-                Try Clerk →
-              </a>
+              <div>
+                Looking for a hosted alternative?
+                <a
+                  href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                  target="_blank"
+                >
+                  Try Clerk →
+                </a>
+              </div>
+              <div className={styles.sponsoredBadge}>Sponsored</div>
             </div>
             <div className="hero-marquee">
               <ProviderMarquee />
@@ -277,10 +280,11 @@ export default function Home() {
 }
 
 const svelteKitCode = `
+// src/auth.ts
 import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from '@auth/sveltekit/providers/github'
 import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
-export const handle = SvelteKitAuth({
+export const { handle } = SvelteKitAuth({
   providers: [
     GitHub({
       clientId: GITHUB_ID,
@@ -288,6 +292,9 @@ export const handle = SvelteKitAuth({
     })
   ],
 })
+
+// src/hooks.server.ts
+export { handle } from "./auth"
 `.trim()
 
 const solidStartCode = `import { SolidAuth } from "@auth/solid-start"
@@ -310,8 +317,8 @@ export const { auth, handlers } = NextAuth({ providers: [ GitHub ] })
 // middleware.ts
 export { auth as default } from "auth"
 
-// app/api/auth/[...nextauth].ts
+// app/api/auth/[...nextauth]/route.ts
 import { handlers } from "auth"
 export const { GET, POST } = handlers
-export const runtime = "edge"
+export const runtime = "edge" // Optional
 `.trim()

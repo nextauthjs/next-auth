@@ -12,3 +12,11 @@ The `debug` option was evaluated to `true`. It adds extra logs in the terminal w
 ## CSRF disabled
 
 You were trying to get a CSRF response from Auth.js (eg.: by calling a `/csrf` endpoint), but in this setup, CSRF protection via Auth.js was turned off. This is likely if you are not directly using `@auth/core` but a framework library (like `@auth/sveltekit`) that already has CSRF protection built-in. You likely won't need the CSRF response.
+
+## Env URL and basePath redundant
+
+`AUTH_URL` (or `NEXTAUTH_URL`) and `authConfig.basePath` are both declared. This is a configuration mistake - you should either remove the `authConfig.basePath` configuration, or remove the `pathname` of `AUTH_URL` (or `NEXTAUTH_URL`). Only one of them is needed.
+
+## Env URL basePath mismatch
+
+`AUTH_URL` (or `NEXTAUTH_URL`) and `authConfig.basePath` are both declared, but they don't match. This is a configuration mistake. `@auth/core` will use `basePath` to construct the full URL to the corresponding action (/signin, /signout, etc.) in this case.

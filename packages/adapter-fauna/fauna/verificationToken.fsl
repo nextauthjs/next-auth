@@ -1,0 +1,12 @@
+collection VerificationToken {
+    index byIdentifierAndToken {
+        terms [.identifier, .token]
+    }
+}
+
+collection CustomVerificationToken {
+    index byIdentifierAndToken {
+        terms [.identifier, .token]
+    }
+}
+
