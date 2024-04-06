@@ -83,6 +83,7 @@ app.use("/auth/*", ExpressAuth({ providers: [Facebook] }))
 
 - Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use localhost callback URLs.
 - Email address may not be returned for accounts created on mobile.
+- `clientId` is your Facebook App ID, `clientSecret` is your Facebook App Secret.
 
 By default, Auth.js assumes that the Facebook provider is
 based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
