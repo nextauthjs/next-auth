@@ -10,6 +10,12 @@ import { Code } from "@/components/Code"
 
 # Azure DevOps Provider
 
+<Callout type="info">
+  Azure DevOps OAuth 2.0 is still supported, but the Azure team is no longer
+  investing in this model. They recommend you [migrate to Microsoft Entra ID
+  OAuth](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops#available-oauth-models).
+</Callout>
+
 ## Documentation
 
 - [Azure DevOps Apps](https://aex.dev.azure.com)
@@ -54,7 +60,6 @@ In `.env.local` create the following entries:
 ```
 AZURE_DEVOPS_APP_ID=<copy App ID value here>
 AZURE_DEVOPS_CLIENT_SECRET=<copy generated client secret value here>
-AZURE_DEVOPS_SCOPE=<copy space separated Authorized Scopes list here>
 ```
 
 ## Example
@@ -63,48 +68,54 @@ AZURE_DEVOPS_SCOPE=<copy space separated Authorized Scopes list here>
   <Code.Next>
 
 ```ts filename="/auth.ts"
-import NextAuth from "next-auth";
-import AzureDevOps from "next-auth/providers/azure-devops";
+import NextAuth from "next-auth"
+import AzureDevOps from "next-auth/providers/azure-devops"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [AzureDevOps({
-    clientId: AUTH_AZURE_DEVOPS_APP_ID
-    clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET
-    scope: AUTH_AZURE_DEVOPS_SCOPE
-  })]
-});
+  providers: [
+    AzureDevOps({
+      clientId: AUTH_AZURE_DEVOPS_APP_ID,
+      clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+    }),
+  ],
+})
 ```
 
   </Code.Next>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit";
-import AzureDevOps from "@auth/sveltekit/providers/azure-devops";
+import SvelteKitAuth from "@auth/sveltekit"
+import AzureDevOps from "@auth/sveltekit/providers/azure-devops"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [AzureDevOps({
-    clientId: AUTH_AZURE_DEVOPS_APP_ID
-    clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET
-    scope: AUTH_AZURE_DEVOPS_SCOPE
-  })]
-});
+  providers: [
+    AzureDevOps({
+      clientId: AUTH_AZURE_DEVOPS_APP_ID,
+      clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+    }),
+  ],
+})
 ```
 
   </Code.Svelte>
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express";
-import AzureDevOps from "@auth/express/providers/azure-devops";
+import ExpressAuth from "@auth/express"
+import AzureDevOps from "@auth/express/providers/azure-devops"
 
-app.use("/auth/*", ExpressAuth({
-  providers: [AzureDevOps({
-    clientId: AUTH_AZURE_DEVOPS_APP_ID
-    clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET
-    scope: AUTH_AZURE_DEVOPS_SCOPE
-  })]
-}));
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      AzureDevOps({
+        clientId: AUTH_AZURE_DEVOPS_APP_ID,
+        clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+      }),
+    ],
+  })
+)
 ```
 
   </Code.Express>
