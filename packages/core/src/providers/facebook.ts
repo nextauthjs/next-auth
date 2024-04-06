@@ -85,9 +85,9 @@ export default function Facebook<P extends FacebookProfile>(
     name: "Facebook",
     type: "oauth",
     authorization: {
-      url: "https://www.facebook.com/v15.0/dialog/oauth",
+      url: "https://www.facebook.com/v19.0/dialog/oauth",
       params: {
-        scope: 'email',
+        scope: "email",
       },
     },
     token: "https://graph.facebook.com/oauth/access_token",
