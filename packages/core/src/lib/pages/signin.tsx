@@ -132,18 +132,11 @@ export default function SigninPage(props: {
             ;({
               bg = "",
               text = "",
-              logo = "",
+              logo = `${providerLogoPath}/${provider.id}.svg`,
               bgDark = bg,
               textDark = text,
-              logoDark = "",
+              logoDark = `${providerLogoPath}/${provider.id}.svg`,
             } = provider.style ?? {})
-
-            logo = logo.startsWith("/") ? providerLogoPath + logo : logo
-            logoDark = logoDark.startsWith("/")
-              ? providerLogoPath + logoDark
-              : logoDark || logo
-
-            logoDark ||= logo
           }
           return (
             <div key={provider.id} className="provider">

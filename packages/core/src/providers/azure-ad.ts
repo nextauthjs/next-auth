@@ -162,7 +162,7 @@ export default function AzureAD<P extends AzureADProfile>(
         image: image ?? null,
       }
     },
-    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
+    style: { text: "#fff", bg: "#0072c6" },
     options: rest,
   }
 }
