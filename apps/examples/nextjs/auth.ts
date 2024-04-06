@@ -57,7 +57,7 @@ export const config = {
     Hubspot,
     Keycloak,
     LinkedIn,
-    Netlify({ authorization: "https://app.netlify.com/authorize?scope=public" }),
+    Netlify({ authorization: "https://app.netlify.com/authorize?scope" }),
     Okta,
     Passage,
     Pinterest,
