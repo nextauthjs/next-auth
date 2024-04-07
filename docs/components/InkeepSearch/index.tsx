@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react"
 import { InkeepCustomTrigger, InkeepCustomTriggerProps } from "@inkeep/widgets"
 import useInkeepSettings from "@/utils/useInkeepSettings"
-import { Sparkle } from "@phosphor-icons/react/Sparkle"
+import { Sparkle } from "@phosphor-icons/react/dist/csr/Sparkle"
 
 export function InkeepTrigger() {
   const [isOpen, setIsOpen] = useState(false)

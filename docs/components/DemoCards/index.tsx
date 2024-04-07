@@ -1,9 +1,9 @@
 import { Link } from "@/components/Link"
 import { Tooltip } from "@/components/Tooltip"
-import { Plus } from "@phosphor-icons/react/Plus"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { GithubLogo } from "@phosphor-icons/react/GithubLogo"
-import { Flask } from "@phosphor-icons/react/Flask"
+import { Plus } from "@phosphor-icons/react/dist/csr/Plus"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/csr/ArrowSquareOut"
+import { GithubLogo } from "@phosphor-icons/react/dist/csr/GithubLogo"
+import { Flask } from "@phosphor-icons/react/dist/csr/Flask"
 
 export function DemoCards() {
   return (

@@ -7,9 +7,9 @@ import type {
   AccordionMultipleProps,
   AccordionSingleProps,
 } from "@radix-ui/react-accordion"
-import { Check } from "@phosphor-icons/react/Check"
-import { Link } from "@phosphor-icons/react/Link"
-import { CaretRight } from "@phosphor-icons/react/CaretRight"
+import { Check } from "@phosphor-icons/react/dist/csr/Check"
+import { Link } from "@phosphor-icons/react/dist/csr/Link"
+import { CaretRight } from "@phosphor-icons/react/dist/csr/CaretRight"
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
