@@ -1,7 +1,6 @@
 export default {
-  "index": "Overview",
-  "environment-variables": "Environment variables",
-  "oauth": "How OAuth works",
+  index: "Overview",
+  oauth: "How OAuth works",
   "session-strategies": "Session strategies",
-  "database-models": "Database models"
+  "database-models": "Database models",
 }
