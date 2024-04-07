@@ -1,4 +1,4 @@
-import { Code } from "@/components/Code";
+import { Code } from "@/components/Code"
 import { Screenshot } from "@/components/Screenshot"
 
 # Custom sign out page
@@ -11,9 +11,9 @@ Here's the code for a simple sign out page built on top of the [example app](htt
 <Code.Next>
 
 ```tsx filename="app/auth-signout/page.tsx"
-import { UserSwitch } from "@phosphor-icons/react";
-import { signOut } from "../../auth";
-import { AuthError } from "next-auth";
+import { UserSwitch } from "@phosphor-icons/react/UserSwitch"
+import { signOut } from "../../auth"
+import { AuthError } from "next-auth"
 
 export default function SignOutPage() {
   return (
@@ -25,15 +25,15 @@ export default function SignOutPage() {
         </h5>
         <form
           action={async (formData) => {
-            "use server";
-            await signOut();
+            "use server"
+            await signOut()
           }}
         >
           <button type="submit">Sign out</button>
         </form>
       </Card>
     </div>
-  );
+  )
 }
 ```
 
