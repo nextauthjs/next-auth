@@ -3,6 +3,7 @@
   import type { signIn } from "$lib/actions"
 
   export let className = ""
+  // TODO: Lookup provider type by id
   export let provider: Partial<Parameters<typeof signIn>[0]> = ""
   /** The path to the FormAction file in your route. @default signin */
   export let signInPage = "signin"
@@ -45,6 +46,7 @@
   {#if provider === "credentials"}
     <slot name="credentials" />
   {/if}
+  <!-- TODO: Filter by provider type only -->
   {#if provider === "email" || provider === "sendgrid" || provider === "resend"}
     <slot name="email">
       <label
