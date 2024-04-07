@@ -48,8 +48,8 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * const { handlers, auth, signin, signout } = NextAuth({
  *   providers: [
  *     Entra({
- *       clientId: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_ID,
- *       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_SECRET
+ *       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+ *       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET
  *     })
  *   ],
  * })
@@ -79,9 +79,9 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * In `.env.local` create the following entries:
  *
  * ```
- * AUTH_MICROSOFT_ENTRA_CLIENT_ID=<copy Application (client) ID here>
- * AUTH_MICROSOFT_ENTRA_CLIENT_SECRET=<copy generated client secret value here>
- * AUTH_MICROSOFT_ENTRA_TENANT_ID=<copy the tenant id here>
+ * AUTH_MICROSOFT_ENTRA_ID_ID=<copy Application (client) ID here>
+ * AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
+ * AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=<copy the tenant id here>
  * ```
  *
  * That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
@@ -97,9 +97,9 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * providers: [
  *   Entra({
- *     clientId: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_ID,
- *     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_SECRET,
- *     tenantId: process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID,
+ *     clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+ *     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+ *     tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
  *   }),
  * ]
  *
