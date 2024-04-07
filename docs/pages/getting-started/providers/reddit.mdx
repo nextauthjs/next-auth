@@ -5,6 +5,11 @@ import { Code } from "@/components/Code"
 
 # Reddit Provider
 
+## Resources
+
+- [Reddit API documentation](https://www.reddit.com/dev/api/)
+- [Reddit app console](https://www.reddit.com/prefs/apps/)
+
 ## Setup
 
 ### Callback URL
@@ -72,48 +77,24 @@ app.use("/auth/*", ExpressAuth({ providers: [Reddit] }))
   </Code.Express>
 </Code>
 
-### Resources
-
-- [Reddit API documentation](https://www.reddit.com/dev/api/)
-- [Reddit app console](https://www.reddit.com/prefs/apps/)
-
 ### Notes
 
-By default, Auth.js assumes that the Reddit provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+- Reddit requires authorization every time you go through their page.
+- Allows one callback URL per Client ID / Client Secret.
+- This Provider template only has a one hour access token to it and only has the "identity" scope. If you want to get a refresh token as well you must set these authorization params:
 
-<Callout type="warning">
-
-Reddit requires authorization every time you go through their page.
-Only allows one callback URL per Client ID / Client Secret.
-
-</Callout>
-
-<Callout>
-
-This Provider template only has a one hour access token to it and only has the "identity" scope. If you want to get a refresh token as well you must follow this:
-
-```js filename="pages/api/auth/[...nextauth].js"
-providers: [
-  RedditProvider({
-    clientId: process.env.REDDIT_CLIENT_ID,
-    clientSecret: process.env.REDDIT_CLIENT_SECRET,
-    authorization: {
-      params: {
-        duration: "permanent",
+```ts filename="./auth.ts"
+export const { handlers, auth, signin, signout } = NextAuth({
+  providers: [
+    RedditProvider({
+      clientId: process.env.REDDIT_CLIENT_ID,
+      clientSecret: process.env.REDDIT_CLIENT_SECRET,
+      authorization: {
+        params: {
+          duration: "permanent",
+        },
       },
-    },
-  }),
-]
+    }),
+  ],
+})
 ```
-
-</Callout>
-
-The Reddit provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/reddit.ts).
-To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

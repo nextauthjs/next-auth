@@ -5,6 +5,11 @@ import { Code } from "@/components/Code"
 
 # Facebook Provider
 
+## Resources
+
+- [Facebook OAuth documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/)
+- [Facebook Developer Apps](https://developers.facebook.com/apps/)
+
 ## Setup
 
 ### Callback URL
@@ -72,29 +77,8 @@ app.use("/auth/*", ExpressAuth({ providers: [Facebook] }))
   </Code.Express>
 </Code>
 
-### Resources
-
-- [Facebook OAuth documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/)
-- [Facebook Developer Apps](https://developers.facebook.com/apps/)
-
 ### Notes
 
 - Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use localhost callback URLs.
 - Email address may not be returned for accounts created on mobile.
 - `clientId` is your Facebook App ID, `clientSecret` is your Facebook App Secret.
-
-By default, Auth.js assumes that the Facebook provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
-
-<Callout>
-
-The Facebook provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/facebook.ts).
-To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-
-</Callout>
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

@@ -16,13 +16,31 @@ import { Code } from "@/components/Code"
   [here](https://learn.microsoft.com/en-us/entra/fundamentals/new-name).
 </Callout>
 
+## Resources
+
+- [Microsoft Entra OAuth documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
+- [Microsoft Entra OAuth apps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
+
 ## Setup
 
 ### Callback URL
 
-```
+<Code>
+  <Code.Next>
+
+```bash
 https://example.com/api/auth/callback/microsoft-entra-id
 ```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/microsoft-entra-id
+```
+
+  </Code.Svelte>
+</Code>
 
 ### Configuration
 
@@ -84,12 +102,9 @@ app.use(
   </Code.Express>
 </Code>
 
-### Resources
+### Notes
 
-- [Microsoft Entra OAuth documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
-- [Microsoft Entra OAuth apps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
-
-### Allow only Specific Active Directory Users
+1. Allow only Specific Active Directory Users
 
 - In https://entra.microsoft.com/ select Identity from the left bar menu.
 - Next, go to "App Registration" in the left menu, and create a new one.
@@ -113,42 +128,4 @@ AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=<copy the tenant id here>
 
 That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
 
-<Callout>
-  Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just
-  a URL to the image, so our provider converts it to a base64 encoded image
-  string and returns that instead. See:
-  https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples.
-  The default image size is 48x48 to avoid [running out of
-  space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F)
-  in case the session is saved as a JWT.
-</Callout>
-
-In `auth.ts` find or add the `Entra` entry.
-
-```ts
-import NextAuth from "next-auth"
-import Entra from "next-auth/providers/microsoft-entra-id"
-
-const { handlers, auth, signin, signout } = NextAuth({
-  providers: [
-    Entra({
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
-    }),
-  ],
-})
-```
-
-### Notes
-
-By default, Auth.js assumes that the Microsoft Entra ID provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
-
-<Callout>
-  The Microsoft Entra ID provider comes with a [default
-  configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/microsoft-entra-id.ts).
-  To override the defaults for your use case, check out [customizing a built-in
-  OAuth
-  provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-</Callout>
+- Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.

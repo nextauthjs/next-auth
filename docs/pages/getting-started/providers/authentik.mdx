@@ -5,9 +5,13 @@ import { Code } from "@/components/Code"
 
 # Authentik Provider
 
+## Resources
+
+- [Authentik OAuth documentation](https://goauthentik.io/docs/providers/oauth2)
+
 ## Setup
 
-#### Callback URL
+### Callback URL
 
 <Code>
   <Code.Next>
@@ -90,30 +94,4 @@ app.use("/auth/*", ExpressAuth({
 <Callout>
   issuer should include the slug without a trailing slash – e.g.,
   https://my-authentik-domain.com/application/o/My_Slug
-</Callout>
-
-### Resources
-
-- [Authentik OAuth documentation](https://goauthentik.io/docs/providers/oauth2)
-
-### Notes
-
-By default, Auth.js assumes that the Authentik provider is
-based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
-
-<Callout type="info">
-
-The Authentik provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/authentik.ts).
-To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-
-</Callout>
-
-<Callout>
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
-
 </Callout>

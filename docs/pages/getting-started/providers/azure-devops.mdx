@@ -17,18 +17,40 @@ import { Code } from "@/components/Code"
   ID](/getting-started/providers/microsoft-entra-id) instead.
 </Callout>
 
-<Callout type="info">
-  Azure DevOps OAuth 2.0 is still supported, but the Azure team is no longer
-  investing in this model. They recommend you [migrate to Microsoft Entra ID
-  OAuth](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops#available-oauth-models).
-</Callout>
-
-## Documentation
+## Resources
 
 - [Azure DevOps Apps](https://aex.dev.azure.com)
 - [Microsoft Docs](https://docs.microsoft.com/en-us) · [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/) · [Authorize access to REST APIs with OAuth 2.0](https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops])
 
-## Configuration
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/azure-devops
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/azure-devops
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment variables
+
+In `.env.local` create the following entries:
+
+```
+AZURE_DEVOPS_APP_ID=<copy App ID value here>
+AZURE_DEVOPS_CLIENT_SECRET=<copy generated client secret value here>
+```
 
 ### Register application
 
@@ -60,16 +82,7 @@ The following data is relevant for the next step:
 - Client Secret (after clicking the ‘Show’ button, ignore App Secret entry above it)
 - Authorized Scopes
 
-### Environment variables
-
-In `.env.local` create the following entries:
-
-```
-AZURE_DEVOPS_APP_ID=<copy App ID value here>
-AZURE_DEVOPS_CLIENT_SECRET=<copy generated client secret value here>
-```
-
-## Example
+### Configuration
 
 <Code>
   <Code.Next>
@@ -130,7 +143,7 @@ app.use(
 
 ### Refresh token rotation
 
-Use the [main guide](/guides/basics/refresh-token-rotation) as your starting point with the following considerations:
+Use the [main guide](/guides/refresh-token-rotation) as your starting point with the following considerations:
 
 ```ts filename="./auth.ts"
 export const { signIn, signOut, auth } = NextAuth({

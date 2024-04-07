@@ -5,6 +5,11 @@ import { Code } from "@/components/Code"
 
 # Instagram Provider
 
+## Resources
+
+- [Instagram OAuth documentation](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started)
+- [Instagram OAuth apps](https://developers.facebook.com/apps/)
+
 ## Setup
 
 ### Callback URL
@@ -72,32 +77,7 @@ app.use("/auth/*", ExpressAuth({ providers: [Instagram] }))
   </Code.Express>
 </Code>
 
-### Resources
-
-- [Instagram OAuth documentation](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started)
-- [Instagram OAuth apps](https://developers.facebook.com/apps/)
-
 ### Notes
 
-By default, Auth.js assumes that the Instagram provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
-
-<Callout type="warning">
-  Email address is not returned by the Instagram API.
-</Callout>
-
-Instagram display app required callback URL to be configured in your Facebook app and Facebook required you to use **https** even for localhost! In order to do that, you either need to [add an SSL to your localhost](https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/) or use a proxy such as [ngrok](https://ngrok.com/docs).
-
-<Callout>
-  The Instagram provider comes with a [default
-  configuration](https://instagram.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/instagram.ts).
-  To override the defaults for your use case, check out [customizing a built-in
-  OAuth
-  provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-</Callout>
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/instagram-discussions).
+- Email address is not returned by the Instagram API.
+- Instagram requires a callback URL to be configured in your Facebook app and Facebook requires you to use **https** even for localhost. In order to do that, you either need to [add an SSL to your localhost](https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/) or use a proxy such as [ngrok](https://ngrok.com/docs).
