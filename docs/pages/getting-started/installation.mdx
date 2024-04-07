@@ -50,25 +50,36 @@ AUTH_SECRET=secret
 
 ### Configure
 
-Next, create the Auth.js config object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. As of version 5, we recommend all frameworks to create an `auth.ts` file in the root of your project. In this file we'll pass in all the normal options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
+Next, create the Auth.js config object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. We recommend all frameworks to create an `auth.ts` file in the project. In this file we'll pass in all the options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
+
+<Callout type="info">
+  You can name this file whatever you want and place it wherever you like.
+</Callout>
 
 <Code>
   <Code.Next>
 
 Start by creating a new `auth.ts` file at the root of your app with the following content:
 
-<Callout type="info">
-  You can name this file whatever you want and place it wherever you like.
-  However, we recommend this structure as we'll be using its 3 main exports:
-  `signIn`, `signOut` and `auth` throughout the application.
-</Callout>
-
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 
-export const { signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [],
 })
+```
+
+Add a Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
+
+```ts filename="./app/api/auth/[...nextauth]/route.ts"
+import { handlers } from "@/auth" // Referring to the auth.ts we just created
+export const { GET, POST } = handlers
+```
+
+Add Middleware to keep the session alive.
+
+```ts filename="./middleware.ts"
+export { auth as middleware } from "auth"
 ```
 
   </Code.Next>
@@ -92,7 +103,7 @@ export { handle } from "./auth"
 
 Finally, we can add the session to our `$page` store in the `+layout.server.ts` file(s).
 
-```ts filename="./src/routes/+layout.server.ts" {5}
+```ts filename="./src/routes/+layout.server.ts" {4}
 import type { LayoutServerLoad } from "./$types"
 
 export const load: LayoutServerLoad = async (event) => {
@@ -113,7 +124,8 @@ import express from "express"
 
 const app = express()
 
-// If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
+// If app is served through a proxy
+// trust the proxy to allow HTTPS protocol to be detected
 app.use("trust proxy")
 app.use("/auth/*", ExpressAuth({ providers: [] }))
 ```
