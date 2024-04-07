@@ -73,6 +73,16 @@ export function OAuthProviderSelect() {
               </div>
               <div
                 role="button"
+                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
+                onClick={() =>
+                  handleSelectOption({ id: "github", name: "Github" })
+                }
+              >
+                <img src={`/img/providers/github.svg`} className="mt-2 w-11" />
+                <div className="text-sm text-center">Github</div>
+              </div>
+              <div
+                role="button"
                 onClick={() =>
                   handleSelectOption({ id: "twitter", name: "Twitter" })
                 }
@@ -84,35 +94,23 @@ export function OAuthProviderSelect() {
               <div
                 role="button"
                 onClick={() =>
-                  handleSelectOption({ id: "facebook", name: "Facebook" })
+                  handleSelectOption({ id: "keycloak", name: "keycloak" })
                 }
                 className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
                 <img
-                  src={`/img/providers/facebook.svg`}
+                  src={`/img/providers/keycloak.svg`}
                   className="mt-2 w-11"
                 />
-                <div className="text-sm text-center">Facebook</div>
+                <div className="text-sm text-center">Keycloak</div>
               </div>
               <div
                 role="button"
-                onClick={() =>
-                  handleSelectOption({ id: "auth0", name: "Auth0" })
-                }
+                onClick={() => handleSelectOption({ id: "okta", name: "okta" })}
                 className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
-                <img src={`/img/providers/auth0.svg`} className="mt-2 w-11" />
-                <div className="text-sm text-center">Auth0</div>
-              </div>
-              <div
-                role="button"
-                className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
-                onClick={() =>
-                  handleSelectOption({ id: "github", name: "Github" })
-                }
-              >
-                <img src={`/img/providers/github.svg`} className="mt-2 w-11" />
-                <div className="text-sm text-center">Github</div>
+                <img src={`/img/providers/okta.svg`} className="mt-2 w-11" />
+                <div className="text-sm text-center">Okta</div>
               </div>
             </div>
           </>
