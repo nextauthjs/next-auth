@@ -1,7 +1,7 @@
 export default {
   "azure-tables": "Azure Tables",
   d1: "Cloudflare D1",
-  dgraph: "DGraph",
+  dgraph: "Dgraph",
   drizzle: "Drizzle",
   dynamodb: "DynamoDB",
   edgedb: "EdgeDB",

@@ -3,9 +3,15 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 <img align="right" src="/img/adapters/prisma.svg" width="64" height="64" />
 
-# <a href="https://www.prisma.io/docs">Prisma</a> Adapter for Auth.js
+# Prisma Adapter
 
-## Installation
+## Resources
+
+- [Prisma Docs](https://www.prisma.io/docs)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @prisma/client @auth/prisma-adapter
@@ -16,8 +22,6 @@ npm install prisma --save-dev
   We recommend using version `@prisma/client@5.9.1` or above if using middleware
   or any other edge runtime(s).
 </Callout>
-
-## Setup
 
 Add the adapter to your Auth.js configuration file.
 
@@ -35,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-## Edge Compatibility
+### Edge Compatibility
 
 At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about early edge support in the `5.9.1` [changelog](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
 
@@ -88,7 +92,7 @@ export const middleware = NextAuth(authConfig).auth
 </Accordion>
 </Accordions>
 
-## Schema
+### Schema
 
 You need to use at least Prisma `2.26.0`. Create a schema file at `prisma/schema.prisma` with the following models.
 

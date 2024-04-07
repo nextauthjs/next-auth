@@ -1,14 +1,20 @@
 <img align="right" src="/img/adapters/pg.svg" height="64" width="64" />
 
-# <a href="https://www.postgresql.org/">PostgreSQL</a> Adapter for Auth.js
+# PostgreSQL Adapter
 
-## Installation
+## Resources
+
+- [Pg Docs](https://www.postgresql.org/docs/)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install next-auth @auth/pg-adapter pg
 ```
 
-## Schema
+### Schema
 
 The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our
 doc page on [Database Models](https://authjs.dev/docs/database).
@@ -64,13 +70,13 @@ CREATE TABLE users
 
 ```
 
-## Configuration
+### Configuration
 
 ```ts filename="auth.ts"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import PostgresAdapter from "@auth/pg-adapter";
-import { Pool } from "pg";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import PostgresAdapter from "@auth/pg-adapter"
+import { Pool } from "pg"
 
 const pool = new Pool({
   host: "localhost",
@@ -78,7 +84,7 @@ const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
-});
+})
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PostgresAdapter(pool),
@@ -88,5 +94,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+})
 ```

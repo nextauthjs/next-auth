@@ -5,15 +5,19 @@
   height="64"
 />
 
-# <a href="https://docs.upstash.com/redis">Upstash Redis</a> Adapter for Auth.js
+# Upstash Redis Adapter
 
-## Installation
+## Resources
+
+- [Upstash Docs](https://docs.upstash.com/redis)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @upstash/redis @auth/upstash-redis-adapter
 ```
-
-## Setup
 
 Configure Auth.js to use the Upstash Redis Adapter:
 
@@ -39,9 +43,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-## Advanced usage
+### Advanced usage
 
-### Using multiple apps with a single Upstash Redis instance
+#### Using multiple apps with a single Upstash Redis instance
 
 The Upstash free-tier allows for only one Redis instance. If you have multiple Auth.js connected apps using this instance, you need different key prefixes for every app.
 

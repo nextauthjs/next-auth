@@ -1,14 +1,18 @@
 <img align="right" src="/img/adapters/mikro-orm.svg" width="64" height="64" />
 
-# <a href="https://mikro-orm.io/docs/installation">MikroORM</a> Adapter for Auth.js
+# MikroORM Adapter
 
-## Installation
+## Resources
+
+- [MikroORM Docs](https://mikro-orm.io/docs/installation)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @mikro-orm/core @auth/mikro-orm-adapter
 ```
-
-## Setup
 
 Configure Auth.js to use the MikroORM Adapter:
 
@@ -27,9 +31,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-## Advanced usage
+### Advanced usage
 
-### Passing custom entities
+#### Passing custom entities
 
 The MikroORM adapter ships with its own set of entities. If you'd like to extend them, you can optionally pass them to the adapter.
 
@@ -95,7 +99,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-### Including default entities
+#### Including default entities
 
 You may want to include the defaultEntities in your MikroORM configuration to include them in Migrations etc.
 

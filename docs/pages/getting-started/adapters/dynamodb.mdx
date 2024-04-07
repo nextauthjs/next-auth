@@ -6,15 +6,19 @@ import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/dynamodb.svg" width="64" height="64" />
 
-# <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"> DynamoDB </a>{" "} Adapter for Auth.js
+# DynamoDB Adapter
 
-## Installation
+## Resources
+
+- [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install next-auth @auth/dynamodb-adapter
 ```
-
-## Setup
 
 By default, the adapter expects a table with a partition key `pk` and a sort key `sk`, as well as a global secondary index named `GSI1` with `GSI1PK` as partition key and `GSI1SK` as sorting key. To automatically delete sessions and verification requests after they expire using [dynamodb TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) you should [enable the TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-how-to.html) with attribute name 'expires'. You can set whatever you want as the table name and the billing method.
 You can find the full schema in the table structure section below.
@@ -108,9 +112,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 (AWS secrets start with `NEXT_AUTH_` in order to not conflict with [Vercel's reserved environment variables](https://vercel.com/docs/environment-variables#reserved-environment-variables).)
 
-## Advanced usage
+### Advanced usage
 
-### Default schema
+#### Default schema
 
 The table respects the single table design pattern. This has many advantages:
 
@@ -172,7 +176,7 @@ NextAuthTable:
       Enabled: true
 ```
 
-### Using a custom schema
+#### Using a custom schema
 
 You can configure your custom table schema by passing the `options` key to the adapter constructor:
 
@@ -187,7 +191,7 @@ const adapter = DynamoDBAdapter(client, {
 })
 ```
 
-## Terraform
+### Terraform
 
 If you're using Terraform to manage your infrastructure, you can use this resource definition:
 

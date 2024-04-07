@@ -1,10 +1,16 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/sequelize.svg" height="64" width="64" />
 
-# <a href="https://sequelize.org/docs/v6/getting-started/">Sequelize</a> Adapter for Auth.js
+# Sequelize Adapter
 
-## Installation
+## Resources
+
+- [Sequelize Docs](https://sequelize.org/docs/v6/getting-started/)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install next-auth @auth/sequelize-adapter sequelize
@@ -15,19 +21,17 @@ npm install next-auth @auth/sequelize-adapter sequelize
   database](https://sequelize.org/master/manual/getting-started.html) of choice.
 </Callout>
 
-## Setup
-
 ### Configuring Auth.js
 
 Add this adapter to your `./auth.js` Auth.js configuration file.
 
 ```js filename="./auth.js"
-import NextAuth from "next-auth";
-import SequelizeAdapter from "@auth/sequelize-adapter";
-import { Sequelize } from "sequelize";
+import NextAuth from "next-auth"
+import SequelizeAdapter from "@auth/sequelize-adapter"
+import { Sequelize } from "sequelize"
 
 // https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database
-const sequelize = new Sequelize("yourconnectionstring");
+const sequelize = new Sequelize("yourconnectionstring")
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/core#authconfig
@@ -35,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // https://authjs.dev/reference/providers/
   providers: [],
   adapter: SequelizeAdapter(sequelize),
-});
+})
 ```
 
 ### Schema
@@ -46,19 +50,19 @@ By default, the sequelize adapter will not create tables in your database. In pr
 > [schema](https://authjs.dev/docs/database)
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import SequelizeAdapter from "@auth/sequelize-adapter";
-import Sequelize from "sequelize";
+import NextAuth from "next-auth"
+import SequelizeAdapter from "@auth/sequelize-adapter"
+import Sequelize from "sequelize"
 
-const sequelize = new Sequelize("sqlite::memory:");
-const adapter = SequelizeAdapter(sequelize);
+const sequelize = new Sequelize("sqlite::memory:")
+const adapter = SequelizeAdapter(sequelize)
 
 // Calling sync() is not recommended in production
-sequelize.sync();
+sequelize.sync()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
-});
+})
 ```
 
 ## Advanced usage
@@ -68,11 +72,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 Sequelize models are option to customization like so:
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import SequelizeAdapter, { models } from "@auth/sequelize-adapter";
-import Sequelize, { DataTypes } from "sequelize";
+import NextAuth from "next-auth"
+import SequelizeAdapter, { models } from "@auth/sequelize-adapter"
+import Sequelize, { DataTypes } from "sequelize"
 
-const sequelize = new Sequelize("sqlite::memory:");
+const sequelize = new Sequelize("sqlite::memory:")
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // https://authjs.dev/reference/providers/
@@ -85,5 +89,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }),
     },
   }),
-});
+})
 ```

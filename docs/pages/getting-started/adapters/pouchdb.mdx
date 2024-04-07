@@ -2,9 +2,15 @@ import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/pouchdb.svg" width="64" height="64" />
 
-# <a href="https://pouchdb.com/api.html">PouchDB</a> Adapter for Auth.js
+# PouchDB Adapter
 
-## Installation
+## Resources
+
+- [PouchDB Docs](https://pouchdb.com/api.html)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install pouchdb pouchdb-find @auth/pouchdb-adapter
@@ -15,8 +21,6 @@ npm install pouchdb pouchdb-find @auth/pouchdb-adapter
   database compliant with the CouchDB protocol (CouchDB, Cloudant, etc.) or use
   any other PouchDB compatible adapter (leveldb, in-memory, etc.)
 </Callout>
-
-## Setup
 
 <Callout type="info">
   Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used
@@ -51,9 +55,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-## Advanced usage
+### Advanced usage
 
-### Memory-First Caching Strategy
+#### Memory-First Caching Strategy
 
 If you need to boost your authentication layer performance, you may use PouchDB's powerful sync features and various adapters, to build a memory-first caching strategy.
 

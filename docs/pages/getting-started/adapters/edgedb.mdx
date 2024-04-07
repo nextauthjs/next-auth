@@ -1,13 +1,14 @@
 <img align="right" src="/img/adapters/edgedb.svg" height="64" width="64" />
 
-# <a href="https://www.edgedb.com/">Edge DB</a> Adapter for Auth.js
+# EdgeDB Adapter
 
-## Installation
+## Resources
 
-```bash npm2yarn
-npm install edgedb @auth/edgedb-adapter
-npm install @edgedb/generate --save-dev
-```
+- [EdgeDB Docs](https://www.edgedb.com/docs/)
+
+## Setup
+
+### Installation
 
 To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the separate `@auth/edgedb-adapter` package:
 
@@ -15,8 +16,6 @@ To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the s
 npm install edgedb @auth/edgedb-adapter
 npm install @edgedb/generate --save-dev
 ```
-
-## Installation
 
 First, ensure you have the EdgeDB CLI installed.
 
@@ -43,8 +42,6 @@ edgedb project init
 ```
 
 This process will spin up an EdgeDB instance and [“link”](https://www.edgedb.com/docs/cli/edgedb_instance/edgedb_instance_link#edgedb-instance-link) it with your current directory. As long as you’re inside that directory, CLI commands and client libraries will be able to connect to the linked instance automatically, without additional configuration.
-
-## Setup
 
 ### Configuration
 
