@@ -5,16 +5,6 @@ import MagicLink from "../../../public/img/magic-links/start.webp"
 
 ### Nodemailer Setup
 
-To setup "magic links" we can use the builtin Nodemailer provider. This login mechanism starts by the user providing their email address at the login form. Then a **Verification Token** is sent to the provided email address. The user then has 24 hours to click the link in the email body to "consume" that token and register their account, otherwise the verification token will expire and they will have to request a new one.
-
-<Callout>
-  An Email Provider can be used with both [JSON Web Tokens](https://jwt.io/) and
-  [database](/concepts/session-strategies#database-session) session, whichever
-  you choose, you **must still configure a database** so that Auth.js can save
-  the verification tokens and look them up when the user attempts to login. It
-  is not possible to enable an email provider without using a database.
-</Callout>
-
 <Steps>
 
 ### Install `nodemailer`
@@ -29,7 +19,7 @@ You will need access to an SMTP server, ideally from one of [the services known 
 
 ### Database Adapter
 
-Please make sure you've [setup a database adapter](/docs/database), as mentioned earlier,
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
 a database is required for magic link login to work as verification tokens need to be stored.
 
 ### SMTP Transport Configuration
@@ -211,3 +201,5 @@ Start your application, click on the sign in button we just added, and you shoul
 Insert your email and click "Sign in with Email". You should receive an email from Auth.js, click on it and should be redirected to your application, landing already authenticated.
 
 </Steps>
+
+For more information on this provider go to the [Nodemailer docs page](/getting-started/providers/nodemailer).
