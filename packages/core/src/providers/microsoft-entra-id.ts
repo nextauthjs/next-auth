@@ -33,6 +33,10 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * Add Microsoft Entra ID login to your page.
  *
+ * :::note
+ * Entra is the [new name](https://learn.microsoft.com/en-us/entra/fundamentals/new-name) Microsoft has given to what was previously known as "Azure AD"
+ * :::
+ *
  * ## Setup
  *
  * ### Callback URL
