@@ -77,7 +77,23 @@ const config: DocsThemeConfig = {
           </Link>
           <div className="github-counter">20k</div>
         </div>
-        <ThemeSwitch lite />
+        <a
+          href="https://discord.authjs.dev/?utm_source=docs"
+          title="Join our Discord"
+          className="transition hover:contrast-125"
+          target="_blank"
+        >
+          <img
+            alt="Discord Logo"
+            src="/img/providers/discord.svg"
+            className="grayscale brightness-[0.85] dark:brightness-[1.7]"
+            width="20"
+          />
+        </a>
+        <ThemeSwitch
+          lite
+          className="*:justify-center *:gap-0 [&_svg]:size-4 p-0"
+        />
       </div>
     ),
   },
