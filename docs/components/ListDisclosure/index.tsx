@@ -26,7 +26,7 @@ export function ListDisclosure({ children, limit, className = "" }: Props) {
         {rendered}
       </div>
       <button
-        className="w-24 h-8 text-sm font-semibold text-white rounded-full bg-neutral-400 dark:bg-neutral-950"
+        className="p-2 px-4 text-sm font-semibold text-white rounded-full bg-neutral-400 dark:bg-neutral-950"
         onClick={isAllDisplayed ? handleCollapseAll : handleDisplayMore}
       >
         {isAllDisplayed ? "Collapse all" : "Show more"}
