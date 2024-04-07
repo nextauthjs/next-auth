@@ -1,5 +1,9 @@
 import { Steps, Callout, Tabs } from "nextra/components"
-import { LockKey, Password, Envelope, Fingerprint } from "@phosphor-icons/react"
+import { LockKey } from "@phosphor-icons/react/LockKey"
+import { Password } from "@phosphor-icons/react/Password"
+import { Envelope } from "@phosphor-icons/react/Envelope"
+import { Fingerprint } from "@phosphor-icons/react/Fingerprint"
+import { Flask } from "@phosphor-icons/react/Flask"
 import { Code } from "@/components/Code"
 import { Link } from "@/components/Link"
 import { RichTabs } from "@/components/RichTabs"
@@ -12,35 +16,27 @@ import manifest from "@/data/manifest.json"
 
 # Authentication
 
-At this point, you need to decide how you're gonna authenticate users in your application. Auth.js supports three main authentication paradigms.
-
-- [OAuth authentication](/getting-started/providers/oauth-tutorial) (_Sign in with Google, Github, LinkedIn, etc..._)
-- [Magic Links](/getting-started/providers/email-tutorial) (_Email Provider like Resend, Sendgrid, Nodemailer..._)
-- [Credentials](/getting-started/providers/credentials-tutorial) (_Username and Password, Integrating with external APIs, etc..._)
-
-<br />
+At this point, you need to decide how you're gonna authenticate users in your application. Auth.js supports four main authentication paradigms.
 
 <Accordions>
 <Accordion title="Why does Auth.js recommend OAuth as the primary authentication method for your application?">
 
-OAuth providers spend significant amounts of money, time, and engineering effort to build abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
+OAuth services spend significant amounts of money, time, and engineering effort to build abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch. Or if you don't want to pay for an OAuth service, we support many self-hosted OAuth providers like [Keycloak](/getting-started/providers/keycloak).
 
 </Accordion>
 <Accordion title="Do I need a database?">
 
-Auth.js by default uses [JSON Web Tokens](https://jwt.io/) for saving the user's session so you don't need to setup a database for authenticating users (_all of our JWT tokens are encrypted by default with `A256CBC-HS512`_). However, if you want to set up a database, you can use one of our official database adapters or create your own. The database will be used to persist the user's session. You can also force saving the users session in a JWT still when using a database adapter through the configuration options.
+Auth.js by default saves the session in a cookie using encrypted [JSON Web Tokens](https://jwt.io/) so that you don't need to setup a database. However, if you want to persist user data you can set up a database by using one of our official database adapters or create your own.
 
 </Accordion>
 <Accordion title="Can I set up more than one authentication method?">
 
-You can setup as many authentication methods as you'd like. But keep in mind, OAuth providers like Google and GitHub spend significant amounts of time, money, and engineering effort to build features such as abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch.
-
-However, if you have multiple providers setup Auth.js will attempt to link a user's multiple accounts from the various providers under certain circumstances. For example, if a user has already signed in with GitHub, and therefore has a `User` and `Account` table entry associated with that Email, and they then attempt to signin with an email provider / magic link using the same email address, then Auth.js will link the two accounts based upon the matching email address. See the [FAQ](/concepts/faq#security) for more information on account linking.
+Yes! You can setup as many authentication methods as you'd like. However, when using a database, if you have multiple providers set up Auth.js will attempt to link them together. For example, if a user has already signed in with GitHub, and therefore has a `User` and `Account` table entry associated with that Email, and they then attempt to signin with another method using the same email address, then the two accounts will be linked. See the [FAQ](/concepts/faq#security) for more information on account linking.
 
 </Accordion>
 </Accordions>
 
-Once you have decided how to authenticate users in your application (you can always add more authentication methods later), click on the instructions below for the initial setup.
+Once you have decided how to authenticate users in your application, click on the instructions below for the initial setup.
 
 <RichTabs defaultValue="oauth">
   <RichTabs.List className="gap-2">
@@ -67,7 +63,14 @@ Once you have decided how to authenticate users in your application (you can alw
         <Fingerprint fontSize="2.5rem" />
         <span>WebAuthn</span>
       </div>
+      <div
+        className="absolute p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
+        style={{ right: "-15px", top: "-12px" }}
+      >
+        <Flask size={24} />
+      </div>
     </RichTabs.Trigger>
+
   </RichTabs.List>
 
 <RichTabs.Content className="p-8" key="oauth" value="oauth">
@@ -410,9 +413,8 @@ export const { handlers, auth } = NextAuth({
         try {
           let user = null
 
-          const { email, password } = await createUserSchema.parseAsync(
-            credentials
-          )
+          const { email, password } =
+            await createUserSchema.parseAsync(credentials)
 
           // logic to salt and hash password
           const pwHash = saltAndHashPassword(password)
@@ -474,9 +476,8 @@ export const { handle } = SvelteKitAuth({
         try {
           let user = null
 
-          const { email, password } = await createUserSchema.parseAsync(
-            credentials
-          )
+          const { email, password } =
+            await createUserSchema.parseAsync(credentials)
 
           // logic to salt and hash password
           const pwHash = saltAndHashPassword(password)

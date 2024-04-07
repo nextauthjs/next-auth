@@ -1,16 +1,16 @@
-import { useState, useCallback } from "react";
-import { InkeepCustomTrigger, InkeepCustomTriggerProps } from "@inkeep/widgets";
-import useInkeepSettings from "@/utils/useInkeepSettings";
-import { Sparkle } from "@phosphor-icons/react";
+import { useState, useCallback } from "react"
+import { InkeepCustomTrigger, InkeepCustomTriggerProps } from "@inkeep/widgets"
+import useInkeepSettings from "@/utils/useInkeepSettings"
+import { Sparkle } from "@phosphor-icons/react/Sparkle"
 
 export function InkeepTrigger() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+    setIsOpen(false)
+  }, [])
 
-  const { baseSettings, aiChatSettings, modalSettings } = useInkeepSettings();
+  const { baseSettings, aiChatSettings, modalSettings } = useInkeepSettings()
 
   const inkeepCustomTriggerProps: InkeepCustomTriggerProps = {
     isOpen,
@@ -18,7 +18,7 @@ export function InkeepTrigger() {
     baseSettings,
     aiChatSettings,
     modalSettings,
-  };
+  }
 
   return (
     <div>
@@ -31,5 +31,5 @@ export function InkeepTrigger() {
       </button>
       <InkeepCustomTrigger {...inkeepCustomTriggerProps} />
     </div>
-  );
+  )
 }

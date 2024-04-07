@@ -1,6 +1,9 @@
 import { Link } from "@/components/Link"
 import { Tooltip } from "@/components/Tooltip"
-import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { GithubLogo } from "@phosphor-icons/react/GithubLogo"
+import { Flask } from "@phosphor-icons/react/Flask"
 
 export function DemoCards() {
   return (
@@ -47,8 +50,8 @@ export function DemoCards() {
             <div className="mt-3 text-sm">{name}</div>
             {wip ? (
               <div
-                className="absolute py-1 px-3 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
-                style={{ right: "-30px", top: "-15px" }}
+                className="absolute p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
+                style={{ right: "-20px", top: "-15px" }}
               >
                 <Flask size={24} />
               </div>
