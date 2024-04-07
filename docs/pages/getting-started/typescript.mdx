@@ -136,32 +136,7 @@ declare module "@auth/core/jwt" {
 
 The module declaration can be added to any file that is ["included"](https://www.typescriptlang.org/tsconfig#include) in your project's `tsconfig.json`.
 
-## Database Adapters
-
-Official adapters are all written in TypeScript. If you're writing your own custom Adapter, you can take advantage of the types that comes with `@auth/core` to make sure your implementation conforms to what's expected:
-
-```ts
-import type { Adapter } from "@auth/core/adapters"
-
-function MyAdapter(): Adapter {
-  return {
-    // your adapter methods here
-  }
-}
-```
-
-When writing your own custom Adapter in JavaScript, you can still use **JSDoc** to get helpful editor hints and auto-completion.
-
-```js
-/** @return { import("@auth/core/adapters").Adapter } */
-function MyAdapter() {
-  return {
-    // your adapter methods here
-  }
-}
-```
-
-## Useful links
+## Resources
 
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
 2. [Digital Ocean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
