@@ -57,7 +57,7 @@ export function Guides() {
                 </div>
               </li>
             </Link>
-            <Link href="/guides/custom-pages/signin">
+            <Link href="/guides/pages/signin">
               <li className="flex justify-between mb-8 w-full group">
                 <div className="flex gap-2">
                   <Browser size={32} />

@@ -8,5 +8,5 @@ export default {
   debugging: "Debugging",
   email: "Email",
   callbacks: "Callbacks",
-  "custom-pages": "Custom Pages",
+  pages: "Pages",
 }
