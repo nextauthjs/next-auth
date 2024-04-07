@@ -23,6 +23,8 @@ export interface AzureADProfile extends Record<string, any> {
  * Azure Active Directory is now known as [Microsoft Entra ID](/getting-started/providers/microsoft-entra-id).
  * Import this provider from the `providers/microsoft-entra-id` submodule instead of `providers/azure-ad`.
  *
+ * Add Azure AD login to your page.
+ *
  * ### Setup
  *
  * #### Callback URL
