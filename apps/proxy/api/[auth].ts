@@ -1,6 +1,5 @@
 import { Auth, setEnvDefaults, type AuthConfig } from "@auth/core"
 import Apple from "@auth/core/providers/apple"
-import Atlassian from "@auth/core/providers/atlassian"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
@@ -31,7 +30,6 @@ import Zoom from "@auth/core/providers/zoom"
 const authConfig: AuthConfig = {
   providers: [
     Apple,
-    Atlassian,
     Auth0,
     AzureAD,
     AzureB2C,
