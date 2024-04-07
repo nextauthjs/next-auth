@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Microsoft Entra ID</b> integration.</span>
  * <a href="https://learn.microsoft.com/en-us/entra/identity">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/microsoft-entra.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/microsoft-entra-id.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -33,21 +33,25 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * Add Microsoft Entra ID login to your page.
  *
- * ### Setup
+ * ## Setup
  *
- * #### Callback URL
+ * ### Callback URL
  * ```
  * https://example.com/api/auth/callback/microsoft-entra-id
  * ```
  *
- * #### Configuration
- *```js
- * import Auth from "@auth/core"
- * import MicrosoftEntra from "@auth/core/providers/microsoft-entra-id"
+ * ### Configuration
+ * ```ts
+ * import NextAuth from "next-auth"
+ * import Entra from "next-auth/providers/microsoft-entra-id"
  *
- * const request = new Request(origin)
- * const response = await Auth(request, {
- *   providers: [MicrosoftEntra({ clientId: MICROSOFT_ENTRA_CLIENT_ID, clientSecret: MICROSOFT_ENTRA_CLIENT_SECRET })],
+ * const { handlers, auth, signin, signout } = NextAuth({
+ *   providers: [
+ *     Entra({
+ *       clientId: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_ID,
+ *       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_SECRET
+ *     })
+ *   ],
  * })
  * ```
  *
@@ -75,9 +79,9 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * In `.env.local` create the following entries:
  *
  * ```
- * MICROSOFT_ENTRA_CLIENT_ID=<copy Application (client) ID here>
- * MICROSOFT_ENTRA_CLIENT_SECRET=<copy generated client secret value here>
- * MICROSOFT_ENTRA_TENANT_ID=<copy the tenant id here>
+ * AUTH_MICROSOFT_ENTRA_CLIENT_ID=<copy Application (client) ID here>
+ * AUTH_MICROSOFT_ENTRA_CLIENT_SECRET=<copy generated client secret value here>
+ * AUTH_MICROSOFT_ENTRA_TENANT_ID=<copy the tenant id here>
  * ```
  *
  * That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
@@ -86,20 +90,18 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
  * :::
  *
- * In `pages/api/auth/[...nextauth].js` find or add the `MicrosoftEntraID` entries:
+ * In `app/api/auth/[...nextauth]/route.js` find or add the `Entra` entries:
  *
  * ```js
- * import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
+ * import Entra from "next-auth/providers/microsoft-entra-id";
  *
- * ...
  * providers: [
- *   MicrosoftEntraIDProvider({
- *     clientId: process.env.MICROSOFT_ENTRA_CLIENT_ID,
- *     clientSecret: process.env.MICROSOFT_ENTRA_CLIENT_SECRET,
- *     tenantId: process.env.MICROSOFT_ENTRA_TENANT_ID,
+ *   Entra({
+ *     clientId: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_ID,
+ *     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_CLIENT_SECRET,
+ *     tenantId: process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID,
  *   }),
  * ]
- * ...
  *
  * ```
  *
@@ -110,7 +112,7 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * :::tip
  *
- * The MicrosoftEntra provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/microsoft-entra-id.ts).
+ * The Microsoft Entra ID provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/microsoft-entra-id.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
  *
  * :::
@@ -165,7 +167,7 @@ export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
         image: image ?? null,
       }
     },
-    style: { logo: "/microsoft-entra.svg", text: "#fff", bg: "#0072c6" },
+    style: { text: "#fff", bg: "#0072c6" },
     options: rest,
   }
 }
