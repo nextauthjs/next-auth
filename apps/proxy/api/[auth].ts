@@ -1,7 +1,6 @@
 import { Auth, setEnvDefaults, type AuthConfig } from "@auth/core"
 import Apple from "@auth/core/providers/apple"
 import Auth0 from "@auth/core/providers/auth0"
-import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 import Cognito from "@auth/core/providers/cognito"
@@ -31,7 +30,6 @@ const authConfig: AuthConfig = {
   providers: [
     Apple,
     Auth0,
-    AzureAD,
     AzureB2C,
     BoxyHQSAML({
       clientId: "dummy",
