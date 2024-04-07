@@ -163,7 +163,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
       <p className="mt-6 leading-7 first:mt-0">
         Auth.js will automatically pick up these if formatted like the example
         above. You can{" "}
-        <Link href="/concepts/environment-variables#oauth-variables">
+        <Link href="/guides/environment-variables#oauth-variables">
           also use a different name for the environment variables
         </Link>{" "}
         if needed, but then you’ll need to pass them to the provider manually.
