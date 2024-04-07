@@ -137,7 +137,7 @@ Just like in other frameworks, you can also pass a provider to the `signIn` func
   </Code.Svelte>
 </Code>
 
-You can also pass a provider to the `signIn` function which will attempt to login directly with that provider. Otherwise, when clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/guides/custom-pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
+You can also pass a provider to the `signIn` function which will attempt to login directly with that provider. Otherwise, when clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/guides/pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
 
 import DefaultSignInPage from "../../public/img/getting-started/default-signin-page.webp"
 
@@ -703,7 +703,7 @@ export { handle } from "./auth"
 </Code.Svelte>
 </Code>
 
-To continue setting up the custom page, checkout our [guide on custom pages](/guides/custom-pages/signin).
+To continue setting up the custom page, checkout our [guide on custom pages](/guides/pages/signin).
 
 </RichTabs.Content>
 </RichTabs>
