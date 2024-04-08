@@ -6,7 +6,6 @@ export default {
   "extending-the-session": "Extending the Session",
   "restricting-user-access": "Restricting users accessing to the app",
   "role-based-access-control": "Role-Based Access Control",
-  "updating-the-session": "Updating the Session",
   "configuring-github": "Configuring Github for OAuth",
   "configuring-resend": "Configuring Resend for magic links",
   "configuring-oauth-providers": "Configuring OAuth providers",
