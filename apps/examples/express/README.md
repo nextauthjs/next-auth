@@ -51,7 +51,7 @@ If you are using a version of Node.js lower than this (for example the minimum s
 Instead of using the experimental flag, you may use the following polyfill:
 
 ```ts
-// polyfill.cts
+// polyfill.cjs
 globalThis.crypto ??= require("crypto").webcrypto
 ```
 
