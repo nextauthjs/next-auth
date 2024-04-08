@@ -1,0 +1,47 @@
+{
+  "name": "@auth/orchid-orm-adapter",
+  "version": "0.0.0",
+  "description": "Orchid ORM adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/orchid-orm",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Roman Kushyn (https://github.com/romeerez)",
+  "license": "ISC",
+  "keywords": [
+    "authjs",
+    "next-auth",
+    "next.js",
+    "oauth",
+    "orchid-orm"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "test": "./test/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "devDependencies": {
+    "orchid-orm": "^1.23.11",
+    "orchid-orm-schema-to-zod": "^0.6.11",
+    "orchid-orm-test-factory": "^0.5.11",
+    "rake-db": "^2.15.10",
+    "tsx": "^4.7.1",
+    "zod": "^3.22.4"
+  }
+}
