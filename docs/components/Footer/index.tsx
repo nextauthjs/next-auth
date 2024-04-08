@@ -37,6 +37,9 @@ export function Footer({ className = "" }) {
               <a href="/getting-started">Introduction</a>
             </li>
             <li>
+              <a href="/security">Security</a>
+            </li>
+            <li>
               <a
                 className="flex gap-1 items-center text-current"
                 target="_blank"

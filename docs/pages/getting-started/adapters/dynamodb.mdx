@@ -3,6 +3,7 @@ title: DynamoDB
 ---
 
 import { Callout } from "nextra/components"
+import { Accordion, Accordions } from "@/components/Accordion"
 
 <img align="right" src="/img/adapters/dynamodb.svg" width="64" height="64" />
 
@@ -126,7 +127,10 @@ The table respects the single table design pattern. This has many advantages:
 
 ![DynamoDB Table](https://i.imgur.com/hGZtWDq.png)
 
-You can create this table with infrastructure as code using [`aws-cdk`](https://github.com/aws/aws-cdk) with the following table definition:
+### IaaC Templates
+
+<Accordions>
+<Accordion title="CDK">
 
 ```js filename="stack.js"
 new dynamodb.Table(this, `NextAuthTable`, {
@@ -141,7 +145,8 @@ new dynamodb.Table(this, `NextAuthTable`, {
 })
 ```
 
-Alternatively, you can use this cloudformation template:
+</Accordion>
+<Accordion title="Cloud Formation">
 
 ```yaml filename="cloudformation.yaml"
 NextAuthTable:
@@ -175,6 +180,53 @@ NextAuthTable:
       AttributeName: expires
       Enabled: true
 ```
+
+</Accordion>
+<Accordion title="Terraform">
+
+```hcl filename="dynamodb.tf"
+resource "aws_dynamodb_table" "authjs" {
+  name         = "next-auth"
+  billing_mode = "PAY_PER_REQUEST" # Alternatively, ON_DEMAND, see https://aws.amazon.com/dynamodb/pricing/
+  hash_key     = "pk"
+  range_key    = "sk"
+
+  attribute {
+    name = "pk"
+    type = "S"
+  }
+
+  attribute {
+    name = "sk"
+    type = "S"
+  }
+
+  attribute {
+    name = "GSI1PK"
+    type = "S"
+  }
+
+  attribute {
+    name = "GSI1SK"
+    type = "S"
+  }
+
+  global_secondary_index {
+    hash_key        = "GSI1PK"
+    name            = "GSI1"
+    projection_type = "ALL"
+    range_key       = "GSI1SK"
+  }
+
+  ttl {
+    attribute_name = "expires"
+    enabled        = true
+  }
+}
+```
+
+</Accordion>
+</Accordions>
 
 #### Using a custom schema
 
