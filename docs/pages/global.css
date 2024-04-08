@@ -222,3 +222,8 @@ aside.nextra-sidebar-container .nextra-scrollbar > div {
 article.nextra-content table {
   overflow-x: auto;
 }
+
+/* Hide Nextra Search 'kbd' on small screen sizes */
+div.nextra-search kbd {
+  @apply !hidden lg:!flex;
+}
