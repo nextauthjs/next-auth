@@ -90,7 +90,7 @@ export function MagicLinkInstructions() {
               "dark:bg-neutral-950 bg-neutral-100"
           )}
         >
-          <img className="size-16" src={`/img/providers/postmark.png`} />
+          <img className="size-16" src={`/img/providers/postmark.svg`} />
           <div className="text-sm text-center">Postmark</div>
         </button>
       </div>
