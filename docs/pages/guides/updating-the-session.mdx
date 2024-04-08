@@ -1,0 +1,44 @@
+import { Code } from "@/components/Code"
+import { Callout } from "nextra/components"
+
+
+# Updating the Session
+
+Auth.js libraries provide a way to update the session with additional information received from a user.
+
+## With JWT
+
+<Callout type="warning">
+  Although it is possible to update a JWT session, due to its stateless nature, the updated information will be lost on the next login.
+  To persist the updated information across logins, use a database session, or ask the user to update their information in the provider directly,
+  and then log in again in your app
+</Callout>
+
+To have access to the user id, add the following to your Auth.js configuration:
+
+```ts
+  callbacks: {
+    jwt({ token, user }) {
+      return token
+    },
+    session({ session, token }) {
+      return session
+    },
+  },
+```
+
+## With Database
+
+
+```ts
+  callbacks: {
+    session({ session, user }) {
+      return session
+    },
+  },
+```
+
+## Resources
+
+- [Concepts. Session strategies](/concepts/session-strategies)
+- [TypeScript](/getting-started/typescript)
