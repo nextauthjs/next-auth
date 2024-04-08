@@ -31,21 +31,18 @@ export { postgresUsersTable, postgresAccountsTable, postgresSessionsTable, postg
 export { sqliteUsersTable, sqliteAccountsTable, sqliteSessionsTable, sqliteVerificationTokensTable } from './lib/sqlite.js'
 export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificationTokensTable } from './lib/mysql.js'
 /**
- * Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
+ * Add this adapter to your `auth.ts` Auth.js configuration object:
  *
- * ```ts title="pages/api/auth/[...nextauth].ts"
+ * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
- * import GoogleProvider from "next-auth/providers/google"
+ * import Google from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db } from "./schema"
  *
- * export default NextAuth({
+ * export const { handlers, auth } = NextAuth({
  *   adapter: DrizzleAdapter(db),
  *   providers: [
- *     GoogleProvider({
- *       clientId: process.env.GOOGLE_CLIENT_ID,
- *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
- *     }),
+ *     Google,
  *   ],
  * })
  * ```
@@ -54,19 +51,16 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * If you want to use your own tables, you can pass them as a second argument
  * :::
  * 
- * ```ts title="pages/api/auth/[...nextauth].ts"
+ * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
- * import GoogleProvider from "next-auth/providers/google"
+ * import Google from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@auth/drizzle-adapter"
  * import { db, accounts, sessions, users, verificationTokens } from "./schema"
  *
- * export default NextAuth({
+ * export const { handlers, auth } = NextAuth({
  *   adapter: DrizzleAdapter(db, { usersTable: users, accountsTable: accounts, sessionsTable: sessions, verificationTokensTable: verificationTokens }),
  *   providers: [
- *     GoogleProvider({
- *       clientId: process.env.GOOGLE_CLIENT_ID,
- *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
- *     }),
+ *     Google,
  *   ],
  * })
  * ```
@@ -96,7 +90,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * export const users = pgTable("user", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
- *  email: text("email").unique(),
+ *  email: text("email").notNull().unique(),
  *  emailVerified: timestamp("emailVerified", { mode: "date" }),
  *  image: text("image"),
  * })
@@ -163,7 +157,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * export const users = mysqlTable("user", {
  *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
  *  name: varchar("name", { length: 255 }),
- *  email: varchar("email", { length: 255 }).unique(),
+ *  email: varchar("email", { length: 255 }).notNull().unique(),
  *  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
  *  image: varchar("image", { length: 255 }),
  * })
@@ -226,7 +220,7 @@ export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificat
  * export const users = sqliteTable("user", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
- *  email: text("email").unique(),
+ *  email: text("email").notNull().unique(),
  *  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
  *  image: text("image"),
  * })

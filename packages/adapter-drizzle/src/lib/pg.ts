@@ -18,7 +18,7 @@ import { randomUUID } from "crypto"
 export const postgresUsersTable = pgTable("user" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").unique(),
+  email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
@@ -92,21 +92,21 @@ export function PostgresDrizzleAdapter(
         .insert(usersTable)
         .values(data)
         .returning()
-        .then((res) => res[0]) as Promise<AdapterUser>
+        .then((res) => res[0])
     },
     async getUser(userId: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
+        .then((res) => res.length > 0 ? res[0] : null)
     },
     async getUserByEmail(email: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
+        .then((res) => res.length > 0 ? res[0] : null)
     },
     async createSession(data: {
       sessionToken: string
@@ -128,7 +128,7 @@ export function PostgresDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => res.length > 0 ? res[0] : null) as Promise<{ session: AdapterSession; user: AdapterUser } | null>
+        .then((res) => res.length > 0 ? res[0] : null)
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -139,7 +139,7 @@ export function PostgresDrizzleAdapter(
         .update(usersTable)
         .set(data)
         .where(eq(usersTable.id, data.id))
-        .returning() as Array<AdapterUser | undefined>
+        .returning()
 
       if (!result) {
         throw new Error("No user found.")
@@ -168,7 +168,7 @@ export function PostgresDrizzleAdapter(
             eq(accountsTable.provider, account.provider),
             eq(accountsTable.providerAccountId, account.providerAccountId),
           )
-        ).then((res) => res[0] as { account: AdapterAccount, user: AdapterUser } | undefined)
+        ).then((res) => res[0])
 
       return result?.user ?? null
     },

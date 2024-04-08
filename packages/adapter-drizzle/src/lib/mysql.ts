@@ -26,7 +26,7 @@ import { randomUUID } from "crypto"
 export const mysqlUsersTable = mysqlTable("user" as string, {
   id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).unique(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
   image: varchar("image", { length: 255 }),
 })
@@ -100,21 +100,21 @@ export function MySqlDrizzleAdapter(
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, id))
-        .then((res) => res[0]) as Promise<AdapterUser>
+        .then((res) => res[0])
     },
     async getUser(userId: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
+        .then((res) => res.length > 0 ? res[0] : null)
     },
     async getUserByEmail(email: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => res.length > 0 ? res[0] : null) as Promise<AdapterUser | null>
+        .then((res) => res.length > 0 ? res[0] : null)
     },
     async createSession(data: {
       sessionToken: string
@@ -140,7 +140,7 @@ export function MySqlDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => res.length > 0 ? res[0] : null) as Promise<{ session: AdapterSession; user: AdapterUser } | null>
+        .then((res) => res.length > 0 ? res[0] : null)
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -152,7 +152,7 @@ export function MySqlDrizzleAdapter(
       const [result] = await client
         .select()
         .from(usersTable)
-        .where(eq(usersTable.id, data.id)) as Array<AdapterUser | undefined>
+        .where(eq(usersTable.id, data.id))
 
       if (!result) {
         throw new Error("No user found.")
@@ -185,7 +185,7 @@ export function MySqlDrizzleAdapter(
             eq(accountsTable.provider, account.provider),
             eq(accountsTable.providerAccountId, account.providerAccountId),
           )
-        ).then((res) => res[0] as { account: AdapterAccount, user: AdapterUser } | undefined)
+        ).then((res) => res[0])
 
       return result?.user ?? null
     },

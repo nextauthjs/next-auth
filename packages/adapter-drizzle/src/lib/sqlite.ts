@@ -16,7 +16,7 @@ import { randomUUID } from "crypto"
 export const sqliteUsersTable = sqliteTable("user" as string, {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").unique(),
+  email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
  })
@@ -86,14 +86,14 @@ export function SQLiteDrizzleAdapter(
         .insert(usersTable)
         .values(data)
         .returning()
-        .get() as AdapterUser
+        .get()
     },
     async getUser(userId: string) {
       const result = await client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .get() as AdapterUser | undefined
+        .get()
   
       return result ?? null
     },
@@ -102,7 +102,7 @@ export function SQLiteDrizzleAdapter(
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .get() as AdapterUser | undefined
+        .get()
     
       return result ?? null
     },
@@ -122,7 +122,7 @@ export function SQLiteDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .get() as { session: AdapterSession; user: AdapterUser } | undefined
+        .get()
 
       return result ?? null 
     },
@@ -136,7 +136,7 @@ export function SQLiteDrizzleAdapter(
         .set(data)
         .where(eq(usersTable.id, data.id))
         .returning()
-        .get() as AdapterUser | undefined
+        .get()
 
         if(!result) {
           throw new Error("User not found.")
@@ -168,7 +168,7 @@ export function SQLiteDrizzleAdapter(
             eq(accountsTable.providerAccountId, account.providerAccountId),
           )
         )
-        .get() as { account: AdapterAccount; user: AdapterUser } | undefined
+        .get()
 
       return result?.user ?? null
     },

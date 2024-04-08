@@ -12,7 +12,7 @@ const sqliteTable = sqliteTableCreator((name) => `foobar_${name}`)
 export const users = sqliteTable("user", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").unique(),
+  email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
  })

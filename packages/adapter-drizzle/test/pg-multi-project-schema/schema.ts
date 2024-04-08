@@ -13,7 +13,7 @@ const pgTable = pgTableCreator((name) => `project1_${name}`);
 export const users = pgTable("user", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").unique(),
+  email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
