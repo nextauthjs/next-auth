@@ -51,7 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import neo4j from "neo4j-driver"
 import { Neo4jAdapter } from "@auth/neo4j-adapter"
 
@@ -72,7 +72,7 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import neo4j from "neo4j-driver"
 import { Neo4jAdapter } from "@auth/neo4j-adapter"
 

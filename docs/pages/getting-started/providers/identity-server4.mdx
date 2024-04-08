@@ -66,7 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import IdentityServer4 from "@auth/sveltekit/providers/identity-server4"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -78,7 +78,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import IdentityServer4 from "@auth/express/providers/identity-server4"
 
 app.use("/auth/*", ExpressAuth({ providers: [IdentityServer4] }))

@@ -65,7 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import FusionAuth from "@auth/sveltekit/providers/fusionauth"
 import {
   AUTH_FUSIONAUTH_ID,
@@ -90,7 +90,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import FusionAuth from "@auth/express/providers/fusionauth"
 
 app.use(

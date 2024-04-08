@@ -41,7 +41,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import { TypeORMAdapter } from "@auth/typeorm-adapter"
 
 export const { handler, signIn, signOut } = SvelteKitAuth({
@@ -53,7 +53,7 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import { TypeORMAdapter } from "@auth/typeorm-adapter"
 
 const app = express()

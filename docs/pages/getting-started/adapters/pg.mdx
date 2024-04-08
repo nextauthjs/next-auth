@@ -55,7 +55,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import PostgresAdapter from "@auth/pg-adapter"
 import { Pool } from "pg"
 
@@ -79,7 +79,7 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import PostgresAdapter from "@auth/pg-adapter"
 import { Pool } from "pg"
 

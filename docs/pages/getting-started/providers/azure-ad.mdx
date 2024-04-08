@@ -64,7 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import AzureAd from "@auth/sveltekit/providers/azure-ad"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -76,7 +76,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import AzureAd from "@auth/express/providers/azure-ad"
 
 app.use("/auth/*", ExpressAuth({ providers: [AzureAd] }))

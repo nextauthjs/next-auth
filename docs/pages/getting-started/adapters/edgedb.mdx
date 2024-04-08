@@ -47,7 +47,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```js filename="./auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import { EdgeDBAdapter } from "@auth/edgedb-adapter"
 import { createClient } from "edgedb"
 
@@ -63,7 +63,7 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import { EdgeDBAdapter } from "@auth/edgedb-adapter"
 import { createClient } from "edgedb"
 

@@ -45,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import { HasuraAdapter } from "@auth/hasura-adapter"
 
 export const { handler, signIn, signOut } = SvelteKitAuth({
@@ -60,7 +60,7 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import { HasuraAdapter } from "@auth/hasura-adapter"
 
 const app = express()

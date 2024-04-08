@@ -57,7 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import TikTok from "@auth/sveltekit/providers/tiktok"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -69,7 +69,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import TikTok from "@auth/express/providers/tiktok"
 
 app.use("/auth/*", ExpressAuth({ providers: [TikTok] }))

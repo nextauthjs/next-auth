@@ -49,7 +49,7 @@ export { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import { FirestoreAdapter } from "@auth/firebase-adapter"
 
 export { handler, signIn, signOut } = SvelteKitAuth({
@@ -61,7 +61,7 @@ export { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import { FirestoreAdapter } from "@auth/firebase-adapter"
 
 const app = express()

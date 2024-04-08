@@ -65,7 +65,7 @@ const { handlers, auth, signin, signout } = NextAuth({
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import Entra from "@auth/sveltekit/providers/microsoft-entra-id"
 import { env } from "$env/dynamic/private"
 
@@ -83,7 +83,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import Entra from "@auth/express/providers/microsoft-entra-id"
 
 app.use(

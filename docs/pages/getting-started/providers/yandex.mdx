@@ -59,7 +59,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import Yandex from "@auth/sveltekit/providers/yandex"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -71,7 +71,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   <Code.Express>
 
 ```ts filename="/src/app.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import Yandex from "@auth/express/providers/yandex"
 
 app.use("/auth/*", ExpressAuth({ providers: [Yandex] }))

@@ -69,7 +69,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -130,7 +130,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({

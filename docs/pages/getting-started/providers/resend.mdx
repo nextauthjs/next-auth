@@ -60,7 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import Resend from "@auth/sveltekit/providers/resend"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({

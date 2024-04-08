@@ -43,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./auth.ts"
-import SvelteKitAuth from "@auth/sveltekit"
+import { SvelteKitAuth } from "@auth/sveltekit"
 import { PouchDBAdapter } from "@auth/pouchdb-adapter"
 import PouchDB from "pouchdb"
 
@@ -63,7 +63,7 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 <Code.Express>
 
 ```ts filename="./src/routes/auth.route.ts"
-import ExpressAuth from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import { PouchDBAdapter } from "@auth/pouchdb-adapter"
 import PouchDB from "pouchdb"
 
