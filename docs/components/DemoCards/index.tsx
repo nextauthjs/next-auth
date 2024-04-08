@@ -50,7 +50,7 @@ export function DemoCards() {
             <div className="mt-3 text-sm">{name}</div>
             {wip ? (
               <div
-                className="absolute p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
+                className="absolute z-10 p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
                 style={{ right: "-20px", top: "-15px" }}
               >
                 <Flask size={24} />

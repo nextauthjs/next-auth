@@ -32,7 +32,7 @@ const InkeepChatButton = dynamic(
 const config: DocsThemeConfig = {
   logo: (
     <div className="flex flex-row items-center">
-      <img src="/img/etc/logo-sm.webp" width="30" />
+      <img src="/img/etc/logo-sm.webp" alt="Auth.js Logo" width="30" />
       <span className="ml-2 text-xl font-black">Auth.js</span>
     </div>
   ),
