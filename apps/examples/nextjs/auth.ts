@@ -1,9 +1,7 @@
 import NextAuth from "next-auth"
 
 import Apple from "next-auth/providers/apple"
-import Atlassian from "next-auth/providers/atlassian"
 import Auth0 from "next-auth/providers/auth0"
-import AzureAD from "next-auth/providers/azure-ad"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 import Cognito from "next-auth/providers/cognito"
@@ -37,10 +35,12 @@ export const config = {
   },
   providers: [
     Apple,
-    Atlassian,
     Auth0,
-    AzureAD,
-    AzureB2C,
+    AzureB2C({
+      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
+      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
+      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
+    }),
     BoxyHQSAML({
       clientId: "dummy",
       clientSecret: "dummy",
@@ -57,7 +57,7 @@ export const config = {
     Hubspot,
     Keycloak,
     LinkedIn,
-    Netlify,
+    Netlify({ authorization: "https://app.netlify.com/authorize?scope" }),
     Okta,
     Passage,
     Pinterest,
@@ -66,7 +66,9 @@ export const config = {
     Spotify,
     Twitch,
     Twitter,
-    WorkOS({ authorization: { params: { connection: process.env.AUTH_WORKOS_CONNECTION } } }),
+    WorkOS({
+      authorization: `https://api.workos.com/sso/authorize?${new URLSearchParams({ connection: process.env.AUTH_WORKOS_CONNECTION ?? "" })}`,
+    }),
     Zoom,
   ],
   basePath: "/auth",

@@ -1,8 +1,6 @@
 import { Auth, setEnvDefaults, type AuthConfig } from "@auth/core"
 import Apple from "@auth/core/providers/apple"
-import Atlassian from "@auth/core/providers/atlassian"
 import Auth0 from "@auth/core/providers/auth0"
-import AzureAD from "@auth/core/providers/azure-ad"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 import Cognito from "@auth/core/providers/cognito"
@@ -31,10 +29,12 @@ import Zoom from "@auth/core/providers/zoom"
 const authConfig: AuthConfig = {
   providers: [
     Apple,
-    Atlassian,
     Auth0,
-    AzureAD,
-    AzureB2C,
+    AzureB2C({
+      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
+      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
+      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
+    }),
     BoxyHQSAML({
       clientId: "dummy",
       clientSecret: "dummy",
