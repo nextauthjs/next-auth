@@ -1,22 +1,61 @@
-import type { Account as AdapterAccount } from "next-auth"
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.upstash.com/redis">Upstash Redis</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://docs.upstash.com/redis">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/upstash-redis.svg" width="60"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @upstash/redis @auth/upstash-redis-adapter
+ * ```
+ *
+ * @module @auth/upstash-redis-adapter
+ */
 import type {
   Adapter,
   AdapterUser,
+  AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import type { Redis } from "@upstash/redis"
 
-import { v4 as uuid } from "uuid"
-
+/** This is the interface of the Upstash Redis adapter options. */
 export interface UpstashRedisAdapterOptions {
+  /**
+   * The base prefix for your keys
+   */
   baseKeyPrefix?: string
+  /**
+   * The prefix for the `account` key
+   */
   accountKeyPrefix?: string
+  /**
+   * The prefix for the `accountByUserId` key
+   */
   accountByUserIdPrefix?: string
+  /**
+   * The prefix for the `emailKey` key
+   */
   emailKeyPrefix?: string
+  /**
+   * The prefix for the `sessionKey` key
+   */
   sessionKeyPrefix?: string
+  /**
+   * The prefix for the `sessionByUserId` key
+   */
   sessionByUserIdKeyPrefix?: string
+  /**
+   * The prefix for the `user` key
+   */
   userKeyPrefix?: string
+  /**
+   * The prefix for the `verificationToken` key
+   */
   verificationTokenKeyPrefix?: string
 }
 
@@ -44,6 +83,68 @@ export function hydrateDates(json: object) {
   }, {} as any)
 }
 
+/**
+ * ## Setup
+ *
+ * Configure Auth.js to use the Upstash Redis Adapter:
+ *
+ * ```javascript title="pages/api/auth/[...nextauth].js"
+ * import NextAuth from "next-auth"
+ * import GoogleProvider from "next-auth/providers/google"
+ * import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+ * import upstashRedisClient from "@upstash/redis"
+ *
+ * const redis = upstashRedisClient(
+ *   process.env.UPSTASH_REDIS_URL,
+ *   process.env.UPSTASH_REDIS_TOKEN
+ * )
+ *
+ * export default NextAuth({
+ *   adapter: UpstashRedisAdapter(redis),
+ *   providers: [
+ *     GoogleProvider({
+ *       clientId: process.env.GOOGLE_CLIENT_ID,
+ *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+ *     }),
+ *   ],
+ * })
+ * ```
+ *
+ * ## Advanced usage
+ *
+ * ### Using multiple apps with a single Upstash Redis instance
+ *
+ * The Upstash free-tier allows for only one Redis instance. If you have multiple Auth.js connected apps using this instance, you need different key prefixes for every app.
+ *
+ * You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
+ *
+ * The default values for this object are:
+ *
+ * ```js
+ * const defaultOptions = {
+ *   baseKeyPrefix: "",
+ *   accountKeyPrefix: "user:account:",
+ *   accountByUserIdPrefix: "user:account:by-user-id:",
+ *   emailKeyPrefix: "user:email:",
+ *   sessionKeyPrefix: "user:session:",
+ *   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
+ *   userKeyPrefix: "user:",
+ *   verificationTokenKeyPrefix: "user:token:",
+ * }
+ * ```
+ *
+ * Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
+ *
+ * Example:
+ *
+ * ```js
+ * export default NextAuth({
+ *   ...
+ *   adapter: UpstashRedisAdapter(redis, {baseKeyPrefix: "app2:"})
+ *   ...
+ * })
+ * ```
+ */
 export function UpstashRedisAdapter(
   client: Redis,
   options: UpstashRedisAdapterOptions = {}
@@ -114,10 +215,9 @@ export function UpstashRedisAdapter(
 
   return {
     async createUser(user) {
-      const id = uuid()
+      const id = crypto.randomUUID()
       // TypeScript thinks the emailVerified field is missing
       // but all fields are copied directly from user, so it's there
-      // @ts-expect-error
       return await setUser(id, { ...user, id })
     },
     getUser,
@@ -144,10 +244,7 @@ export function UpstashRedisAdapter(
       const id = `${account.provider}:${account.providerAccountId}`
       return await setAccount(id, { ...account, id })
     },
-    async createSession(session) {
-      const id = session.sessionToken
-      return await setSession(id, { ...session, id })
-    },
+    createSession: (session) => setSession(session.sessionToken, session),
     async getSessionAndUser(sessionToken) {
       const session = await getSession(sessionToken)
       if (!session) return null
@@ -165,13 +262,20 @@ export function UpstashRedisAdapter(
     },
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
-        verificationTokenKeyPrefix + verificationToken.identifier,
+        verificationTokenKeyPrefix +
+          verificationToken.identifier +
+          ":" +
+          verificationToken.token,
         verificationToken
       )
       return verificationToken
     },
     async useVerificationToken(verificationToken) {
-      const tokenKey = verificationTokenKeyPrefix + verificationToken.identifier
+      const tokenKey =
+        verificationTokenKeyPrefix +
+        verificationToken.identifier +
+        ":" +
+        verificationToken.token
 
       const token = await client.get<VerificationToken>(tokenKey)
       if (!token) return null

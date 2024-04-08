@@ -1,0 +1,106 @@
+{
+  "name": "@auth/core",
+  "version": "0.29.0",
+  "description": "Authentication for the Web.",
+  "keywords": [
+    "authentication",
+    "authjs",
+    "jwt",
+    "oauth",
+    "oidc",
+    "passwordless",
+    "standard",
+    "vanilla",
+    "webapi"
+  ],
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Balázs Orbán <info@balazsorban.com>",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <yo@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>",
+    "Thang Huu Vu <hi@thvu.dev>",
+    "Iain Collins <me@iaincollins.com"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "lib",
+    "providers",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./errors": {
+      "types": "./errors.d.ts",
+      "import": "./errors.js"
+    },
+    "./jwt": {
+      "types": "./jwt.d.ts",
+      "import": "./jwt.js"
+    },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    },
+    "./types": {
+      "types": "./types.d.ts"
+    }
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@panva/hkdf": "^1.1.1",
+    "@types/cookie": "0.6.0",
+    "cookie": "0.6.0",
+    "jose": "^5.1.3",
+    "oauth4webapi": "^2.4.0",
+    "preact": "10.11.3",
+    "preact-render-to-string": "5.2.3"
+  },
+  "peerDependencies": {
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
+    "nodemailer": "^6.8.0"
+  },
+  "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
+    "@simplewebauthn/server": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "pnpm css && pnpm providers && tsc",
+    "clean": "rm -rf *.js *.d.ts* lib providers",
+    "css": "node scripts/generate-css",
+    "dev": "pnpm css && pnpm providers && tsc -w",
+    "test:e2e": "playwright test -c ../utils/playwright.config.ts",
+    "test": "vitest run -c ../utils/vitest.config.ts",
+    "providers": "node scripts/generate-providers"
+  },
+  "devDependencies": {
+    "@simplewebauthn/browser": "v9.0.0",
+    "@types/node": "18.11.10",
+    "@types/nodemailer": "6.4.6",
+    "@types/react": "18.0.37",
+    "autoprefixer": "10.4.13",
+    "postcss": "8.4.19",
+    "postcss-nesting": "^12.0.2"
+  }
+}

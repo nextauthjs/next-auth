@@ -1,0 +1,121 @@
+/* Set min-height to avoid page reflow while session loading */
+.signedInStatus {
+  display: flex;
+  align-items: center;
+  min-height: 4rem;
+  padding: 1rem;
+  background-color: #f3f3f3;
+}
+
+.loading,
+.loaded {
+  position: relative;
+  top: 0;
+  opacity: 1;
+  overflow: hidden;
+  border-radius: 0 0 0.6rem 0.6rem;
+  padding: 0.6rem 1rem;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in;
+}
+
+.loading {
+  top: -2rem;
+  opacity: 0;
+}
+
+.signedInText,
+.notSignedInText {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  z-index: 1;
+  line-height: 1.3rem;
+  flex: 1;
+}
+
+.signedInText {
+  padding-top: 0rem;
+  left: 4.6rem;
+}
+
+.avatar {
+  border-radius: 2rem;
+  float: left;
+  height: 2.8rem;
+  width: 2.8rem;
+  margin-right: 1rem;
+  background-color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.button,
+.buttonPrimary {
+  justify-self: end;
+  font-weight: 500;
+  border-radius: 0.3rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1.4rem;
+  padding: 0.7rem 0.8rem;
+  position: relative;
+  z-index: 10;
+  background-color: transparent;
+  color: #555;
+}
+
+.buttonPrimary {
+  background-color: #346df1;
+  border-color: #346df1;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.7rem 1.4rem;
+}
+
+.buttonPrimary:hover {
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.2);
+}
+
+.navItems {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.navItem {
+  flex-grow: 1;
+  display: inline-block;
+  text-align: center;
+  background-color: #d5d5d5;
+  border-radius: 0 0 0.5rem 0.5rem;
+  padding: 1rem 0 1rem 0;
+  text-decoration: none;
+  color: black;
+}
+
+.navItem:hover {
+  background-color: #ccc;
+}
+
+.header {
+  border-radius: 0 0 0.6rem 0.6rem;
+  margin-bottom: 2rem;
+
+  @media screen and (max-width: 960px) {
+    padding: 0 1rem;
+  }
+}
+
+.passwordInput {
+  padding: 0.75rem;
+  border-radius: 0.3rem;
+  border: #ccc solid 2px;
+  margin-right: 1rem;
+}

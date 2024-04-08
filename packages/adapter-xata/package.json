@@ -1,0 +1,48 @@
+{
+  "name": "@auth/xata-adapter",
+  "version": "0.7.0",
+  "description": "Xata adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Tejas Kumar",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "xata"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest -c ../utils/vitest.config.ts"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@xata.io/client": ">=0.13.0"
+  },
+  "devDependencies": {
+    "@xata.io/client": "^0.13.0"
+  }
+}

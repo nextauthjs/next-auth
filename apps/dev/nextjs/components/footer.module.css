@@ -1,0 +1,49 @@
+.footer {
+  margin: 0;
+  padding: 0 1rem 0 1rem;
+
+  @media screen and (min-width: 960px) {
+    padding: 0;
+  }
+}
+
+.navItems {
+  padding: 2rem 0rem 2rem 0rem;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navItemsLeft {
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 460px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.navItem {
+  display: inline-block;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+.navItem a {
+  color: black;
+  font-weight: 300;
+  text-decoration: none;
+}
+.navItem svg {
+  margin-left: 0.2rem;
+  height: 16px;
+  width: 16px;
+}
+
+.footerLogo {
+  height: 24px;
+  width: 24px;
+  margin-right: 0.5rem;
+}

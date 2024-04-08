@@ -1,0 +1,13 @@
+collection User {
+    unique [.email]
+    index byEmail {
+        terms [.email]
+    }
+}
+
+collection CustomUser {
+    unique [.email]
+    index byEmail {
+        terms [.email]
+    }
+}

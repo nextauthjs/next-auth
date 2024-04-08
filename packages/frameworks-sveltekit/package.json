@@ -1,0 +1,84 @@
+{
+  "name": "@auth/sveltekit",
+  "version": "0.15.0",
+  "description": "Authentication for SvelteKit.",
+  "keywords": [
+    "authentication",
+    "authjs",
+    "jwt",
+    "sveltekit",
+    "oauth",
+    "oidc",
+    "passwordless",
+    "svelte"
+  ],
+  "homepage": "https://sveltekit.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Thang Huu Vu <hi@thvu.dev>",
+  "contributors": [
+    "Thang Huu Vu <hi@thvu.dev>",
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <yo@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>",
+    "Iain Collins <me@iaincollins.com>"
+  ],
+  "scripts": {
+    "build": "pnpm clean && pnpm providers && pnpm check && svelte-package",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "clean": "rm -rf client.* index.* package src/lib/providers",
+    "dev": "pnpm providers && svelte-package -w",
+    "preview": "vite preview",
+    "providers": "node ../utils/scripts/providers.js --out src/lib",
+    "test": "vitest run -c ../utils/vitest.config.ts"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^3.0.0",
+    "@sveltejs/kit": "^2.4.3",
+    "@sveltejs/package": "^2.0.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@types/set-cookie-parser": "^2.4.7",
+    "svelte": "^4.0.0",
+    "svelte-check": "^3.4.3",
+    "tslib": "^2.4.1"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "set-cookie-parser": "^2.6.0"
+  },
+  "peerDependencies": {
+    "@sveltejs/kit": "^1.0.0 || ^2.0.0",
+    "svelte": "^3.54.0 || ^4.0.0 || ^5"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "svelte": "./dist/components/index.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters.d.ts"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
+    },
+    "./package.json": "./package.json"
+  }
+}

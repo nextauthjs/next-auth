@@ -1,3 +1,9 @@
+.tailwind {
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+}
+
 /* stylelint-disable docusaurus/copyright-header */
 /**
  * Any CSS included here will be global. The classic template
@@ -31,6 +37,7 @@
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
   --ifm-h1-font-size: 3rem;
   --ifm-h1-font-size: 2rem;
+  --docusaurus-announcement-bar-height: auto !important;
 }
 
 html[data-theme="dark"]:root {
@@ -56,6 +63,7 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
 @import "providers.css";
 @import "navbar.css";
 @import "search.css";
+@import "cards.css";
 
 a {
   font-weight: 600;
@@ -77,7 +85,7 @@ a:hover,
 }
 
 .docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
+  background-color: rgb(44, 50, 65);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
@@ -100,6 +108,11 @@ html[data-theme="dark"] hr {
   border-color: #242526;
 }
 
+/* Docusaurus announcementBar close button */
+.close {
+  color: inherit !important;
+}
+
 .home-main .code {
   padding: 0;
   height: 100%;
@@ -117,6 +130,9 @@ html[data-theme="dark"] hr {
   font-size: 1rem;
   font-weight: 700;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .home-main .code .code-heading span {
@@ -140,19 +156,19 @@ html[data-theme="dark"] hr {
   border-radius: 10rem;
   overflow: visible;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.1);
-  background-image: url("/img/mesh-1.jpg");
+  background-image: url("/img/mesh-1.webp");
   background-size: cover;
   background-origin: center;
 }
 
 .home-main .section-features .row .col:nth-child(2) .feature-image-wrapper {
-  background-image: url("/img/mesh-2.jpg");
+  background-image: url("/img/mesh-2.webp");
   background-size: cover;
   background-origin: center;
 }
 
 .home-main .section-features .row .col:nth-child(3) .feature-image-wrapper {
-  background-image: url("/img/mesh-3.jpg");
+  background-image: url("/img/mesh-3.webp");
   background-size: cover;
   background-origin: center;
 }
@@ -243,6 +259,7 @@ html[data-theme="dark"] hr {
   line-height: 1.5;
   text-align: left;
 }
+
 #carbonads .carbon-poweredby {
   display: block;
   padding: 6px 8px;
@@ -263,13 +280,32 @@ html[data-theme="dark"] #carbonads .carbon-text {
   color: #ddd;
 }
 
-html[data-theme="dark"] #carbonads > span {
-  background: #1a1a1a;
-  box-shadow: 0 0 1px hsl(0deg 0% 0% / 9%), 0 0 2px hsl(0deg 0% 0% / 9%),
-    0 0 4px hsl(0deg 0% 0% / 9%), 0 0 8px hsl(0deg 0% 0% / 9%);
-}
-
 html[data-theme="dark"] #carbonads .carbon-poweredby {
   color: #aaa;
   background: #1e2021;
+}
+
+html[data-theme="dark"] #carbonads > span {
+  background: #1a1a1a;
+  box-shadow:
+    0 0 1px hsl(0deg 0% 0% / 9%),
+    0 0 2px hsl(0deg 0% 0% / 9%),
+    0 0 4px hsl(0deg 0% 0% / 9%),
+    0 0 8px hsl(0deg 0% 0% / 9%);
+}
+
+div.sponsoredBadge {
+  display: block;
+  font-size: 0.6rem !important;
+  line-height: 1rem;
+  border-radius: 2rem;
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  background-color: rgb(229 231 235 / 0.5) !important;
+  color: #a1a1a1;
+}
+
+html[data-theme="dark"] .sponsoredBadge {
+  background-color: #242526 !important;
+  color: #696969;
 }

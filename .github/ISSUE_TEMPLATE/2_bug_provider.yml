@@ -1,10 +1,11 @@
 name: Bug report (Provider)
 description: Create a provider-specific report
-labels: [triage, providers]
+labels: [triage, bug, providers]
 body:
   - type: markdown
     attributes:
       value: |
+        **NOTE:** Issues that are potentially security related should be reported to us by following the [Security guidelines](https://next-auth.js.org/security) rather than on GitHub.
         Thanks for taking the time to fill out this [Provider](https://next-auth.js.org/providers/overview) related issue!
         Is this your first time contributing? Check out this video: https://www.youtube.com/watch?v=cuoNzXFLitc
 
@@ -24,17 +25,22 @@ body:
         - "Custom provider"
         - "42 School"
         - "Apple"
-        - "Atlassian"
+        - "Asgardeo"
         - "Auth0"
         - "Authentik"
         - "Azure Active Directory"
         - "Azure Active Directory B2C"
+        - "Azure DevOps"
         - "Battlenet"
+        - "Beyond Identity"
         - "Box"
         - "Bungie"
+        - "ClickUp"
         - "Cognito"
         - "Coinbase"
+        - "Descope"
         - "Discord"
+        - "Dribbble"
         - "Dropbox"
         - "EVE Online"
         - "Facebook"
@@ -53,9 +59,11 @@ body:
         - "LinkedIn"
         - "Mailchimp"
         - "Mail.ru"
+        - "Mastodon"
         - "Medium"
         - "Naver"
         - "Netlify"
+        - "Notion"
         - "Okta"
         - "OneLogin"
         - "Osso"
@@ -67,10 +75,13 @@ body:
         - "Slack"
         - "Spotify"
         - "Strava"
+        - "Tiktok"
+        - "Todoist"
         - "Trakt"
         - "Twitch"
         - "Twitter"
         - "Vk"
+        - "Webex"
         - "Wordpress"
         - "WorkOS"
         - "Yandex"
@@ -84,9 +95,8 @@ body:
       description: |
         Run this command in your project's root folder and paste the result:
 
-        ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth"
-        ```
+        `npx envinfo --system --binaries --browsers --npmPackages "{next,react,next-auth,@auth/*}"`
+
         Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
     validations:
       required: true

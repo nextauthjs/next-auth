@@ -1,0 +1,29 @@
+{
+  "name": "sveltekit-auth-app",
+  "version": "1.0.0",
+  "description": "SvelteKit + Auth.js Developer app",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "next",
+    "@sveltejs/kit": "2.4.3",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "svelte": "^4",
+    "svelte-check": "2.10.2",
+    "typescript": "5.2.2",
+    "vite": "^5"
+  },
+  "dependencies": {
+    "@auth/sveltekit": "workspace:*",
+    "@auth/unstorage-adapter": "workspace:*",
+    "nodemailer": "^6.9.3",
+    "unstorage": "^1.10.1"
+  },
+  "type": "module"
+}

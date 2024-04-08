@@ -1,0 +1,12 @@
+{
+  "extends": "utils/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "outDir": ".",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
+}

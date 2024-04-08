@@ -1,42 +1,45 @@
 {
-  "name": "next-auth-docs",
-  "version": "0.2.0",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nextauthjs/docs.git"
-  },
+  "private": true,
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "name": "docs",
   "scripts": {
-    "start": "npm run generate-providers && docusaurus start --no-open --port 8000",
-    "dev": "npm run start",
-    "build": "npm run generate-providers && docusaurus build",
+    "start": "TYPEDOC_WATCH=true docusaurus start --no-open",
+    "dev": "pnpm manifest && pnpm snippets && pnpm start",
+    "build": "pnpm manifest && docusaurus build",
     "docusaurus": "docusaurus",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "lint": "prettier .",
-    "lint:fix": "prettier --write .",
-    "generate-providers": "node ./scripts/generate-providers.js"
+    "manifest": "node scripts/generate-manifest.mjs",
+    "snippets": "node scripts/generate-snippets.mjs"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-beta.21",
-    "@docusaurus/preset-classic": "^2.0.0-beta.21",
-    "@docusaurus/theme-common": "2.0.0-beta.21",
-    "@mdx-js/react": "1.6.22",
-    "@sapphire/docusaurus-plugin-npm2yarn2pnpm": "1.1.3",
-    "classnames": "^2.3.1",
-    "mdx-mermaid": "^1.2.2",
-    "mermaid": "^9.0.1",
-    "prism-react-renderer": "1.3.1",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "@mdx-js/react": "3.0.0",
+    "classnames": "^2.3.2",
+    "mdx-mermaid": "2.0.0",
+    "mermaid": "10.6.0",
+    "prism-react-renderer": "2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-marquee-slider": "^1.1.5",
-    "remark-github": "^10.1.0",
-    "styled-components": "5.3.3"
+    "styled-components": "5.3.6"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "2.0.0-beta.20",
-    "prettier": "^2.6.2"
+    "@docusaurus/core": "3.1.1",
+    "@docusaurus/eslint-plugin": "3.1.1",
+    "@docusaurus/module-type-aliases": "3.1.1",
+    "@docusaurus/preset-classic": "3.1.1",
+    "@docusaurus/remark-plugin-npm2yarn": "3.1.1",
+    "@docusaurus/theme-classic": "3.1.1",
+    "@docusaurus/theme-common": "3.1.1",
+    "@docusaurus/theme-mermaid": "3.1.1",
+    "@docusaurus/tsconfig": "3.1.1",
+    "@docusaurus/types": "3.1.1",
+    "docusaurus-plugin-typedoc": "1.0.0-next.22",
+    "typedoc": "0.25.3",
+    "typedoc-plugin-markdown": "4.0.0-next.29",
+    "typescript": "5.2.2"
   },
   "browserslist": {
     "production": [
@@ -49,9 +52,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": false
   }
 }

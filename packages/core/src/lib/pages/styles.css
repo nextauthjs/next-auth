@@ -1,0 +1,337 @@
+:root {
+  --border-width: 1px;
+  --border-radius: 0.5rem;
+  --color-error: #c94b4b;
+  --color-info: #157efb;
+  --color-info-hover: #0f6ddb;
+  --color-info-text: #fff;
+}
+
+.__next-auth-theme-auto,
+.__next-auth-theme-light {
+  --color-background: #ececec;
+  --color-background-hover: rgba(236, 236, 236, 0.8);
+  --color-background-card: #fff;
+  --color-text: #000;
+  --color-primary: #444;
+  --color-control-border: #bbb;
+  --color-button-active-background: #f9f9f9;
+  --color-button-active-border: #aaa;
+  --color-separator: #ccc;
+}
+
+.__next-auth-theme-dark {
+  --color-background: #161b22;
+  --color-background-hover: rgba(22, 27, 34, 0.8);
+  --color-background-card: #0d1117;
+  --color-text: #fff;
+  --color-primary: #ccc;
+  --color-control-border: #555;
+  --color-button-active-background: #060606;
+  --color-button-active-border: #666;
+  --color-separator: #444;
+}
+
+@media (prefers-color-scheme: dark) {
+  .__next-auth-theme-auto {
+    --color-background: #161b22;
+    --color-background-hover: rgba(22, 27, 34, 0.8);
+    --color-background-card: #0d1117;
+    --color-text: #fff;
+    --color-primary: #ccc;
+    --color-control-border: #555;
+    --color-button-active-background: #060606;
+    --color-button-active-border: #666;
+    --color-separator: #444;
+  }
+
+  button,
+  a.button {
+    color: var(--provider-dark-color, var(--color-primary));
+    background-color: var(--provider-dark-bg, var(--color-background));
+    &:hover {
+      background-color: var(
+        --provider-dark-bg-hover,
+        var(--color-background-hover)
+      ) !important;
+    }
+  }
+  #provider-logo {
+    display: none !important;
+  }
+  #provider-logo-dark {
+    width: 25px;
+    display: block !important;
+  }
+}
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-background);
+  margin: 0;
+  padding: 0;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+p {
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+  color: var(--color-text);
+}
+
+form {
+  margin: 0;
+  padding: 0;
+}
+
+label {
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 0.25rem;
+  display: block;
+  color: var(--color-text);
+}
+
+input[type] {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: var(--border-width) solid var(--color-control-border);
+  background: var(--color-background-card);
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  color: var(--color-text);
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 2rem;
+}
+
+a.button {
+  text-decoration: none;
+  line-height: 1rem;
+
+  &:link,
+  &:visited {
+    background-color: var(--color-background);
+    color: var(--color-primary);
+  }
+}
+
+button span {
+  flex-grow: 1;
+}
+
+button,
+a.button {
+  padding: 0.75rem 1rem;
+  color: var(--provider-color, var(--color-primary));
+  background-color: var(--provider-bg);
+  font-size: 1.1rem;
+  min-height: 62px;
+  border-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  transition: all 0.1s ease-in-out;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: var(--provider-bg-hover, var(--color-background-hover));
+    cursor: pointer;
+  }
+  &:active {
+    cursor: pointer;
+  }
+  #provider-logo {
+    width: 25px;
+    display: block;
+  }
+  #provider-logo-dark {
+    display: none;
+  }
+}
+
+#submitButton {
+  color: var(--button-text-color, var(--color-info-text));
+  background-color: var(--brand-color, var(--color-info));
+  width: 100%;
+
+  &:hover {
+    background-color: var(
+      --button-hover-bg,
+      var(--color-info-hover)
+    ) !important;
+  }
+}
+
+a.site {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 1rem;
+  line-height: 2rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  > div {
+    text-align: center;
+  }
+}
+
+.error {
+  a.button {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-top: 0.5rem;
+  }
+
+  .message {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.signin {
+  input[type="text"] {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  hr {
+    display: block;
+    border: 0;
+    border-top: 1px solid var(--color-separator);
+    margin: 2rem auto 1rem auto;
+    overflow: visible;
+
+    &::before {
+      content: "or";
+      background: var(--color-background-card);
+      color: #888;
+      padding: 0 0.4rem;
+      position: relative;
+      top: -0.7rem;
+    }
+  }
+
+  .error {
+    background: #f5f5f5;
+    font-weight: 500;
+    border-radius: 0.3rem;
+    background: var(--color-error);
+
+    p {
+      text-align: left;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      line-height: 1.2rem;
+      color: var(--color-info-text);
+    }
+  }
+
+  > div,
+  form {
+    display: block;
+
+    input[type] {
+      margin-bottom: 0.5rem;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .provider + .provider {
+    margin-top: 1rem;
+  }
+}
+
+.logo {
+  display: inline-block;
+  max-width: 150px;
+  margin: 1.25rem 0;
+  max-height: 70px;
+}
+
+.card {
+  background-color: var(--color-background-card);
+  border-radius: 2rem;
+  padding: 1.25rem 2rem;
+
+  .header {
+    color: var(--color-primary);
+  }
+}
+
+.section-header {
+  color: var(--color-text);
+}
+
+@media screen and (min-width: 450px) {
+  .card {
+    margin: 2rem 0;
+    width: 368px;
+  }
+}
+@media screen and (max-width: 450px) {
+  .card {
+    margin: 1rem 0;
+    width: 343px;
+  }
+}
