@@ -77,7 +77,6 @@ export default function Box(
       }
     },
     style: {
-      logo: "/box.svg",
       bg: "#0075C9",
       text: "#fff",
     },
