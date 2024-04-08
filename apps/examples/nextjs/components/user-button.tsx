@@ -24,8 +24,11 @@ export default async function UserButton() {
             <Avatar className="w-8 h-8">
               {session.user.image && (
                 <AvatarImage
-                  src={session.user.image}
-                  alt={session.user.name ?? "https://source.boringavatars.com/beam/120"}
+                  src={
+                    session.user.image ??
+                    "https://source.boringavatars.com/beam/120"
+                  }
+                  alt={session.user.name ?? ""}
                 />
               )}
               <AvatarFallback>{session.user.email}</AvatarFallback>

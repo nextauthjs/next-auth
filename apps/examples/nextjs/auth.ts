@@ -1,72 +1,31 @@
 import NextAuth from "next-auth"
 
-// import Asgardeo from "next-auth/providers/asgardeo"
-// import Atlassian from "next-auth/providers/atlassian"
-// import Authentik from "next-auth/providers/authentik"
-// import AzureAD from "next-auth/providers/azure-ad"
-// import AzureB2C from "next-auth/providers/azure-ad-b2c"
-// import Battlenet from "next-auth/providers/battlenet"
-// import Box from "next-auth/providers/box"
-// import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
-// import Bungie from "next-auth/providers/bungie"
-// import Coinbase from "next-auth/providers/coinbase"
-// import Discord from "next-auth/providers/discord"
-// import Dropbox from "next-auth/providers/dropbox"
-// import DuendeIDS6 from "next-auth/providers/duende-identity-server6"
-// import Eveonline from "next-auth/providers/eveonline"
-// import Faceit from "next-auth/providers/faceit"
-// import FortyTwoSchool from "next-auth/providers/42-school"
-// import Foursquare from "next-auth/providers/foursquare"
-// import Freshbooks from "next-auth/providers/freshbooks"
-// import Fusionauth from "next-auth/providers/fusionauth"
-// import Gitlab from "next-auth/providers/gitlab"
-// import Hubspot from "next-auth/providers/hubspot"
-// import Instagram from "next-auth/providers/instagram"
-// import Kakao from "next-auth/providers/kakao"
-// import Keycloak from "next-auth/providers/keycloak"
-// import Line from "next-auth/providers/line"
-// import Mailchimp from "next-auth/providers/mailchimp"
-// import Mailru from "next-auth/providers/mailru"
-// import Medium from "next-auth/providers/medium"
-// import Naver from "next-auth/providers/naver"
-// import Netlify from "next-auth/providers/netlify"
-// import Okta from "next-auth/providers/okta"
-// import Onelogin from "next-auth/providers/onelogin"
-// import Osso from "next-auth/providers/osso"
-// import Osu from "next-auth/providers/osu"
-// import Patreon from "next-auth/providers/patreon"
-// import Pipedrive from "next-auth/providers/pipedrive"
-// import Reddit from "next-auth/providers/reddit"
-// import Salesforce from "next-auth/providers/salesforce"
-// import Slack from "next-auth/providers/slack"
-// import Spotify from "next-auth/providers/spotify"
-// import Strava from "next-auth/providers/strava"
-// import Todoist from "next-auth/providers/todoist"
-// import Trakt from "next-auth/providers/trakt"
-// import UnitedEffects from "next-auth/providers/united-effects"
-// import Vk from "next-auth/providers/vk"
-// import Wikimedia from "next-auth/providers/wikimedia"
-// import Wordpress from "next-auth/providers/wordpress"
-// import WorkOS from "next-auth/providers/workos"
-// import Yandex from "next-auth/providers/yandex"
-// import Zitadel from "next-auth/providers/zitadel"
-// import Zoho from "next-auth/providers/zoho"
-// import Zoom from "next-auth/providers/zoom"
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
-import AzureDevops from "next-auth/providers/azure-devops"
+import AzureB2C from "next-auth/providers/azure-ad-b2c"
+import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 import Cognito from "next-auth/providers/cognito"
+import Coinbase from "next-auth/providers/coinbase"
+import Discord from "next-auth/providers/discord"
+import Dropbox from "next-auth/providers/dropbox"
 import Facebook from "next-auth/providers/facebook"
 import GitHub from "next-auth/providers/github"
+import Gitlab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
+import Hubspot from "next-auth/providers/hubspot"
+import Keycloak from "next-auth/providers/keycloak"
 import LinkedIn from "next-auth/providers/linkedin"
+import Netlify from "next-auth/providers/netlify"
+import Okta from "next-auth/providers/okta"
 import Passage from "next-auth/providers/passage"
-import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
+import Reddit from "next-auth/providers/reddit"
+import Slack from "next-auth/providers/slack"
+import Spotify from "next-auth/providers/spotify"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import WorkOS from "next-auth/providers/workos"
+import Zoom from "next-auth/providers/zoom"
 
 import type { NextAuthConfig } from "next-auth"
 
@@ -78,61 +37,45 @@ export const baseConfig = {
   theme: {
     logo: "https://next-auth.js.org/img/logo/logo-sm.png",
   },
-  // Asgardeo,
-  // Atlassian,
-  // Authentik,
-  // AzureAD,
-  // AzureB2C,
-  // Battlenet,
-  // Box,
-  // BoxyHQSAML,
-  // Bungie,
-  // Coinbase,
-  // Discord,
-  // Dropbox,
-  // DuendeIDS6,
-  // Eveonline,
-  // Faceit,
-  // FortyTwoSchool,
-  // Foursquare,
-  // Freshbooks,
-  // Fusionauth,
-  // Gitlab,
-  // Hubspot,
-  // Instagram,
-  // Kakao,
-  // Keycloak,
-  // Line,
-  // Mailchimp,
-  // Mailru,
-  // Medium,
-  // Naver,
-  // Netlify,
-  // Okta,
-  // Onelogin,
-  // Osso,
-  // Osu,
-  // Patreon,
-  // Pipedrive,
-  // Reddit,
-  // Salesforce,
-  // Slack,
-  // Spotify,
-  // Strava,
-  // Todoist,
-  // Trakt,
-  // UnitedEffects,
-  // Vk,
-  // Wikimedia,
-  // Wordpress,
-  // WorkOS,
-  // Yandex,
-  // Zitadel,
-  // Zoho,
-  // Zoom,
-  session: {
-    strategy: "jwt",
-  },
+  providers: [
+    Apple,
+    Auth0,
+    AzureB2C({
+      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
+      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
+      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
+    }),
+    BoxyHQSAML({
+      clientId: "dummy",
+      clientSecret: "dummy",
+      issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
+    }),
+    Cognito,
+    Coinbase,
+    Discord,
+    Dropbox,
+    Facebook,
+    GitHub,
+    Gitlab,
+    Google,
+    Hubspot,
+    Keycloak,
+    LinkedIn,
+    Netlify({ authorization: "https://app.netlify.com/authorize?scope" }),
+    Okta,
+    Passage,
+    Pinterest,
+    Reddit,
+    Slack({ checks: ["nonce"] }), // TODO: Make this default in core
+    Spotify,
+    Twitch,
+    Twitter,
+    WorkOS({
+      authorization: `https://api.workos.com/sso/authorize?${new URLSearchParams({ connection: process.env.AUTH_WORKOS_CONNECTION ?? "" })}`,
+    }),
+    Zoom,
+  ],
+  basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
