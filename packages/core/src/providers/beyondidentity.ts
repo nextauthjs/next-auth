@@ -86,7 +86,6 @@ export default function BeyondIdentity(
       }
     },
     style: {
-      logo: "/beyondidentity.svg",
       bg: "#5077c5",
       text: "#fff",
     },

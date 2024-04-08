@@ -179,7 +179,7 @@ export default function GitHub(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/github.svg", bg: "#24292f", text: "#fff" },
+    style: { bg: "#24292f", text: "#fff" },
     options: config,
   }
 }

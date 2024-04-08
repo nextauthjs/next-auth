@@ -91,7 +91,6 @@ export default function ClickUp(
       }
     },
     style: {
-      logo: "/click-up.svg",
       bg: "#24292f",
       text: "#fff",
     },
