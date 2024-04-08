@@ -95,7 +95,6 @@ export default function Reddit(
     userinfo: "https://oauth.reddit.com/api/v1/me",
     checks: ["state"],
     style: {
-      logo: "/reddit.svg",
       bg: "#000",
       text: "#fff",
     },
