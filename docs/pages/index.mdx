@@ -1,70 +1,61 @@
+import Link from "next/link"
+import Footer from "@/components/Footer"
 import { FrameworkExamples } from "@/components/FrameworkExamples"
 import { ProviderMarquee } from "@/components/LogosMarquee"
 import { Blur } from "@/components/Blur"
 import { Guides } from "@/components/Guides"
-import Footer from "@/components/Footer"
 
-<div className="overflow-hidden relative">
-  <section className="px-4 mx-auto w-full max-w-7xl h-64">
-    <div className="flex flex-col gap-14 items-center mt-20">
-      <div className="flex flex-col gap-8 justify-center items-center w-full">
+<div className="relative overflow-hidden w-full h-full flex flex-col">
+  <section className="flex justify-center w-full px-8 lg:px-4 flex-col lg:flex-row self-center items-center gap-6 max-w-7xl py-32 lg:py-56">
+    <div className="flex-col flex justify-between h-96 mx-8">
+      <div className="flex flex-col gap-8 justify-center py-2 items-center w-full">
         <span className="text-6xl font-black lg:text-8xl">Auth.js</span>
-        <div className="flex flex-col md:flex-row md:gap-8 justify-center md:items-baseline text-2xl font-bold text-center lg:text-3xl">
-          <h1>Authentication for the Web.</h1>
-          <div>
-            <span className="underline-highlight">Free and open source</span>.
-          </div>
+        <div className="flex flex-col gap-4 justify-center text-2xl font-bold text-center lg:text-3xl">
+          <div>Authentication for the Web.</div>
+          <div className="underline-highlight">Free and open source.</div>
         </div>
       </div>
-    </div>
-    <div className="flex flex-row justify-center pt-16 w-full">
-      <a
-        href="/getting-started"
-        className="overflow-hidden group inline-block py-3 px-8 text-xl font-medium text-white bg-violet-500 dark:bg-violet-900 rounded transition hover:scale-110 hover:rotate-2 focus-visible:ring focus:outline-none dark:active:bg-violet-950 active:bg-violet-600"
-      >
-        Get Started
-        <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(18deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(18deg)_translateX(100%)]">
-          <div className="relative h-full w-8 bg-white/20"></div>
-        </div>
-      </a>
-    </div>
-    <Blur />
-    <div className="overflow-hidden bg-animation -z-10">
-      <div id="stars"></div>
-      <div id="stars2"></div>
-      <div id="stars3"></div>
-      <div id="stars4"></div>
-    </div>
-  </section>
-  <section className="flex flex-col items-center px-4 pt-24 pb-24">
-    <div className="mb-20 text-lg flex-col items-center flex gap-2">
-      <div className="flex items-center flex-col sm:flex-row gap-2">
-        Looking for a hosted alternative?
-        <a
-          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
-          target="_blank"
-          className="flex gap-2 text-[#289ef9]"
-        >
-          Try Clerk{" "}
-          <svg
-            width="16"
-            data-slot="icon"
-            fill="none"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-            ></path>
+      <div className="text-lg justify-center items-center flex gap-4">
+        <Link href="/getting-started" className="p-3 px-5 text-sm font-semibold dark:bg-violet-800 text-white">Get Started</Link>
+        <Link href="/getting-started" className="p-3 px-3 text-sm flex gap-2 items-center justify-start dark:bg-gray-300 text-black">
+          <svg className="size-4" width="32" height="32" viewBox="0 0 256 256" version="1.1" preserveAspectRatio="xMidYMid">
+              <g>
+                  <polygon fill="#C12127" points="0 256 0 0 256 0 256 256"/>
+                  <polygon fill="#FFFFFF" points="48 48 208 48 208 208 176 208 176 80 128 80 128 208 48 208"/>
+              </g>
           </svg>
-        </a>
+          Latest Release
+        </Link>
       </div>
-      <div className="sponsoredBadge">Sponsored</div>
+      <div className="text-lg flex-col items-center flex gap-2">
+        <div className="flex text-base items-center gap-2">
+          Looking for a hosted alternative?
+          <a
+            href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+            target="_blank"
+            className="flex gap-2 text-[#289ef9]"
+          >
+            Try Clerk{" "}
+            <svg
+              width="16"
+              data-slot="icon"
+              fill="none"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div className="sponsoredBadge">Sponsored</div>
+      </div>
     </div>
     <FrameworkExamples />
   </section>
@@ -84,4 +75,11 @@ import Footer from "@/components/Footer"
     <ProviderMarquee />
   </section>
   <Footer className="bg-white dark:bg-neutral-950 py-8 !m-0" />
+  <Blur />
+  <div className="overflow-hidden bg-animation -z-10">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    <div id="stars4"></div>
+  </div>
 </div>
