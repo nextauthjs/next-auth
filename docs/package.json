@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "typedoc": "typedoc",
-    "dev": "typedoc & next dev",
+    "dev": "TYPEDOC_SKIP_ADAPTERS=1 typedoc & next dev",
+    "dev:adapters": "typedoc & next dev",
     "build": "typedoc && next build",
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
