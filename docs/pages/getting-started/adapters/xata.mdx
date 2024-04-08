@@ -1,8 +1,14 @@
 <img align="right" src="/img/adapters/xata.svg" width="64" height="64" />
 
-# <a href="https://xata.io/docs/overview">Xata</a> Adapter for Auth.js
+# Xata Adapter
 
-## Installation
+## Resources
+
+- [Xata Docs](https://xata.io/docs/overview)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @auth/xata-adapter
@@ -15,8 +21,6 @@ npm install --location=global @xata.io/cli
 # Login
 xata auth login
 ```
-
-## Setup
 
 This adapter allows using Auth.js with Xata as a database to store users, sessions, and more. The preferred way to create a Xata project and use Xata databases is using the [Xata Command Line Interface (CLI)](https://docs.xata.io/cli/getting-started).
 
@@ -190,10 +194,10 @@ The CLI will walk you through a setup process where you choose a [workspace](htt
 Once you're done, you can continue using Auth.js in your project as expected, like creating a `./pages/api/auth/[...nextauth]` route.
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
 
-const client = new XataClient();
+const client = new XataClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -202,7 +206,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+})
 ```
 
 Now to Xata-fy this route, let's add the Xata client and adapter:

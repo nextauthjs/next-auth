@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 ## Override default provider config
 
 For built-in providers, usually you only need to specify a client id and client secret, and in case of OIDC (OpenID Connect), an issuer as well.
-We can [infer these from environment variables](/concepts/environment-variables#oauth-variables).
+We can [infer these from environment variables](/guides/environment-variables#oauth-variables).
 
 If you need to override any of the defaults provider config options, you can add them in the provider's function call and they will be deeply-merged with our [defaults](https://github.com/nextauthjs/next-auth/tree/main/packages/core/src/providers).
 That means you only have to override part of the options that you need to be different. For example if you want different scopes, overriding `authorization.params.scope` is enough, instead of the whole `authorization` option.

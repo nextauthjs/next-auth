@@ -5,6 +5,10 @@ import { Code } from "@/components/Code"
 
 # WorkOS Provider
 
+## Resources
+
+- [WorkOS SSO OAuth documentation](https://workos.com/docs/reference/sso)
+
 ## Setup
 
 ### Callback URL
@@ -33,9 +37,6 @@ AUTH_WORKOS_ID
 AUTH_WORKOS_SECRET
 AUTH_WORKOS_ISSUER
 ```
-
-> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
-> setup, if you'd like to name them something else you must pass them in in your providers array.
 
 ### Configuration
 
@@ -76,14 +77,7 @@ app.use("/auth/*", ExpressAuth({ providers: [WorkOS] }))
   </Code.Express>
 </Code>
 
-### Resources
-
-- [WorkOS SSO OAuth documentation](https://workos.com/docs/reference/sso)
-
 ### Notes
-
-By default, Auth.js assumes that the WorkOS provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
 
 WorkOS is not an identity provider itself, but, rather, a bridge to multiple single sign-on (SSO) providers.
 As a result, we need to make some additional changes to authenticate users using WorkOS.
@@ -152,16 +146,3 @@ export async function getServerSideProps(context) {
   }
 }
 ```
-
-<Callout>
-
-The WorkOS provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/workos.ts).
-To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-
-</Callout>
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

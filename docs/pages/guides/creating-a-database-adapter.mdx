@@ -1,4 +1,4 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 # Creating a database adapter
 
@@ -177,32 +177,57 @@ If you created an adapter and want us to distribute it as an official package, p
 ```ts
 // https://github.com/honeinc/is-iso-date/blob/8831e79b5b5ee615920dcb350a355ffc5cbf7aed/index.js#L5
 const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
 
 const isDate = (val: any): val is ConstructorParameters<typeof Date>[0] =>
-  !!(val && isoDateRE.test(val) && !isNaN(Date.parse(val)));
+  !!(val && isoDateRE.test(val) && !isNaN(Date.parse(val)))
 
 export const format = {
   /** Takes an object that's coming from a database and converts it to plain JavaScript. */
   from<T>(object: Record<string, any> = {}): T {
-    const newObject: Record<string, unknown> = {};
+    const newObject: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(object))
-      if (isDate(value)) newObject[key] = new Date(value);
-      else newObject[key] = value;
-    return newObject as T;
+      if (isDate(value)) newObject[key] = new Date(value)
+      else newObject[key] = value
+    return newObject as T
   },
   /** Takes an object that's coming from Auth.js and prepares it to be written to the database. */
   to<T>(object: Record<string, any>): T {
-    const newObject: Record<string, unknown> = {};
+    const newObject: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(object))
-      if (value instanceof Date) newObject[key] = value.toISOString();
-      else newObject[key] = value;
-    return newObject as T;
+      if (value instanceof Date) newObject[key] = value.toISOString()
+      else newObject[key] = value
+    return newObject as T
   },
-};
+}
 ```
 
-## Useful resources
+## TypeScript
+
+You can take advantage of the types that comes with the framework packages (i.e. `next-auth/adapters`, `@auth/sveltekit/adapters`).
+
+```ts
+import type { Adapter } from "next-auth/adapters"
+
+function MyAdapter(): Adapter {
+  return {
+    // your adapter methods here
+  }
+}
+```
+
+When writing your Adapter in JavaScript, you can still use JSDoc to get helpful editor hints and auto-completion.
+
+```js {1}
+/** @return { import("next-auth/adapters").Adapter } */
+function MyAdapter() {
+  return {
+    // your adapter methods here
+  }
+}
+```
+
+## Resources
 
 - [Official adapters' source code](https://github.com/nextauthjs/next-auth/tree/main/packages)
 - [`Adapter` interface](/reference/core/adapters#adapter)

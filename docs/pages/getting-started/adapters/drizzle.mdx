@@ -1,12 +1,18 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <a href="https://orm.drizzle.team">
   <img align="right" src="/img/adapters/drizzle.svg" width="64" height="64" />
 </a>
 
-# <a href="https://orm.drizzle.team">Drizzle ORM</a> Adapter for Auth.js
+# Drizzle ORM Adapter
 
-## Installation
+## Resources
+
+- [Drizzle ORM Documentation](https://orm.drizzle.team)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install drizzle-orm @auth/drizzle-adapter
@@ -16,10 +22,10 @@ npm install drizzle-kit --save-dev
 Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "./schema";
+import NextAuth from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -29,15 +35,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+})
 ```
 
 <Callout>
   If you're using multi-project schemas, you can pass your table function as a
   second argument
 </Callout>
-
-## Setup
 
 First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/core/adapters#models). You can select your favorite SQL flavor below and copy it.
 Additionally, you may extend the schema from the minimum requirements to suit your needs.
@@ -55,8 +59,8 @@ import {
   text,
   primaryKey,
   integer,
-} from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "next-auth/adapters";
+} from "drizzle-orm/pg-core"
+import type { AdapterAccount } from "next-auth/adapters"
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -64,7 +68,7 @@ export const users = pgTable("user", {
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-});
+})
 
 export const accounts = pgTable(
   "account",
@@ -88,7 +92,7 @@ export const accounts = pgTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-);
+)
 
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
@@ -96,7 +100,7 @@ export const sessions = pgTable("session", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-});
+})
 
 export const verificationTokens = pgTable(
   "verificationToken",
@@ -108,7 +112,7 @@ export const verificationTokens = pgTable(
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-);
+)
 ```
 
 ### MySQL
@@ -120,8 +124,8 @@ import {
   mysqlTable,
   primaryKey,
   varchar,
-} from "drizzle-orm/mysql-core";
-import type { AdapterAccount } from "next-auth/adapters";
+} from "drizzle-orm/mysql-core"
+import type { AdapterAccount } from "next-auth/adapters"
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -132,7 +136,7 @@ export const users = mysqlTable("user", {
     fsp: 3,
   }).defaultNow(),
   image: varchar("image", { length: 255 }),
-});
+})
 
 export const accounts = mysqlTable(
   "account",
@@ -158,7 +162,7 @@ export const accounts = mysqlTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-);
+)
 
 export const sessions = mysqlTable("session", {
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
@@ -166,7 +170,7 @@ export const sessions = mysqlTable("session", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-});
+})
 
 export const verificationTokens = mysqlTable(
   "verificationToken",
@@ -178,19 +182,14 @@ export const verificationTokens = mysqlTable(
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-);
+)
 ```
 
 ### SQLite
 
 ```ts filename="schema.ts"
-import {
-  integer,
-  sqliteTable,
-  text,
-  primaryKey,
-} from "drizzle-orm/sqlite-core";
-import type { AdapterAccount } from "next-auth/adapters";
+import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
+import type { AdapterAccount } from "next-auth/adapters"
 
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -198,7 +197,7 @@ export const users = sqliteTable("user", {
   email: text("email").notNull(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
-});
+})
 
 export const accounts = sqliteTable(
   "account",
@@ -222,7 +221,7 @@ export const accounts = sqliteTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-);
+)
 
 export const sessions = sqliteTable("session", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
@@ -230,7 +229,7 @@ export const sessions = sqliteTable("session", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-});
+})
 
 export const verificationTokens = sqliteTable(
   "verificationToken",
@@ -242,7 +241,7 @@ export const verificationTokens = sqliteTable(
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-);
+)
 ```
 
 ## Migrating your database

@@ -26,7 +26,7 @@ openssl rand -base64 33
 If you are using an [OAuth Provider](/reference/oauth-providers), your provider will have a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's setup documentation).
 
 <Callout type="info">
-Auth.js now supports **environment variable inference**, meaning that if you name your provider environment variables following a specific syntax, you won't need to explicitly pass them to the providers in your configuration.
+Auth.js supports **environment variable inference**, meaning that if you name your provider environment variables following a specific syntax, you won't need to explicitly pass them to the providers in your configuration.
 
 Client ID's and client secrets should be named `AUTH_[PROVIDER]_ID` and `AUTH_[PROVIDER]_SECRET`. If your provider requires an issuer, that should be named `AUTH_[PROVIDER]_ISSUER`. For example:
 
@@ -45,7 +45,7 @@ This is the only strictly required environment variable. It is the secret used t
 ### `AUTH_TRUST_HOST`
 
 When deploying your application behind a reverse proxy, you'll need to set `AUTH_TRUST_HOST` equal
-to `true`. This tells Auth.js to trust the `X-Forwarded-Host` header from the reverse proxy. Auth.js will automatically infer this to be true if we detect the environment variable indicating that your application is running on one of the supported hosting providers. Currently `process.env.VERCEL` and `process.env.CF_PAGES` (Cloudflare Pages) are supported.
+to `true`. This tells Auth.js to trust the `X-Forwarded-Host` header from the reverse proxy. Auth.js will automatically infer this to be true if we detect the environment variable indicating that your application is running on one of the supported hosting providers. Currently `VERCEL` and `CF_PAGES` (Cloudflare Pages) are supported.
 
 ### `AUTH_URL`
 

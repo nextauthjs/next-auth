@@ -45,7 +45,9 @@ details > *:not(summary) {
 .button-primary {
   background-color: rgb(147 51 234);
   transition: background-color 0.2s ease-in-out;
-  box-shadow: inset 0 0 0 2px #f3e5f529, inset 0 -2px 1px #ce93d824,
+  box-shadow:
+    inset 0 0 0 2px #f3e5f529,
+    inset 0 -2px 1px #ce93d824,
     inset 0 0 0 1px #6a1b9a36;
 }
 
@@ -201,4 +203,22 @@ button[id^="headlessui-tabs-tab"] {
 /* Sidebar hack for padding for focus ring */
 aside.nextra-sidebar-container .nextra-scrollbar > div {
   padding: 4px;
+}
+
+.sponsoredBadge {
+  display: inline-block;
+  width: max-content;
+  font-size: 0.6rem;
+  border-radius: 2rem;
+  padding-inline: 0.5rem;
+  background-color: #cdcdcd;
+  color: #696969;
+}
+
+:is(html[class~="dark"] .sponsoredBadge) {
+  background-color: #141414;
+}
+
+article.nextra-content table {
+  overflow-x: auto;
 }

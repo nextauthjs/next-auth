@@ -5,6 +5,14 @@ import { Code } from "@/components/Code"
 
 # Yandex Provider
 
+## Resources
+
+- [Yandex - Creating an OAuth app](https://yandex.com/dev/id/doc/en/register-client#create)
+- [Yandex - Manage OAuth apps](https://oauth.yandex.com/)
+- [Yandex - OAuth documentation](https://yandex.com/dev/id/doc/en/)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
+
 ## Setup
 
 ### Callback URL
@@ -32,9 +40,6 @@ https://example.com/auth/callback/yandex
 AUTH_YANDEX_ID
 AUTH_YANDEX_SECRET
 ```
-
-> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
-> setup, if you'd like to name them something else you must pass them in in your providers array.
 
 ### Configuration
 
@@ -74,25 +79,3 @@ app.use("/auth/*", ExpressAuth({ providers: [Yandex] }))
 
   </Code.Express>
 </Code>
-
-## Resources
-
-- [Yandex - Creating an OAuth app](https://yandex.com/dev/id/doc/en/register-client#create)
-- [Yandex - Manage OAuth apps](https://oauth.yandex.com/)
-- [Yandex - OAuth documentation](https://yandex.com/dev/id/doc/en/)
-- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
-- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
-
-<Callout>
-  The Yandex provider comes with a [default
-  configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts).
-  To override the defaults for your use case, check out [customizing a built-in
-  OAuth
-  provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-</Callout>
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

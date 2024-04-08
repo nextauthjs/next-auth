@@ -35,22 +35,10 @@ export default {
   },
   providers: "Providers",
   adapters: "Adapters",
-  "-- more": {
-    type: "separator",
-    title: "More",
-  },
   integrations: {
     title: "Integrations",
     theme: {
       typesetting: "article",
     },
-  },
-  contributors: {
-    title: "Contributors",
-    href: "/contributors",
-  },
-  sponsors: {
-    title: "Sponsors",
-    href: "/sponsors",
   },
 }

@@ -1,10 +1,16 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/supabase.svg" width="64" height="64" />
 
-# <a href="https://supabase.com/docs">Supabase</a> Adapter for Auth.js
+# Supabase Adapter
 
-## Installation
+## Resources
+
+- [Supabase Docs](https://supabase.com/docs)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @supabase/supabase-js @auth/supabase-adapter
@@ -17,15 +23,13 @@ If you're looking for an officially maintained Auth server with additional featu
 
 </Callout>
 
-## Setup
-
 ### Configure Auth.js
 
 Add this adapter to your `./auth.ts` Auth.js configuration file.
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { SupabaseAdapter } from "@auth/supabase-adapter";
+import NextAuth from "next-auth"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/core#authconfig
@@ -36,7 +40,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
     secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
   }),
-});
+})
 ```
 
 ### Schema
@@ -176,9 +180,9 @@ Using the [NexthAuth.js Session callback](https://authjs.dev/docs/session-manage
 To sign the JWT use the Supabase JWT secret which can be found in the [API settings](https://app.supabase.com/project/_/settings/api)
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { SupabaseAdapter } from "@auth/supabase-adapter";
-import jwt from "jsonwebtoken";
+import NextAuth from "next-auth"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
+import jwt from "jsonwebtoken"
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/configuration/auth-options
@@ -191,7 +195,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   }),
   callbacks: {
     async session({ session, user }) {
-      const signingSecret = process.env.SUPABASE_JWT_SECRET;
+      const signingSecret = process.env.SUPABASE_JWT_SECRET
       if (signingSecret) {
         const payload = {
           aud: "authenticated",
@@ -199,13 +203,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           sub: user.id,
           email: user.email,
           role: "authenticated",
-        };
-        session.supabaseAccessToken = jwt.sign(payload, signingSecret);
+        }
+        session.supabaseAccessToken = jwt.sign(payload, signingSecret)
       }
-      return session;
+      return session
     },
   },
-});
+})
 ```
 
 #### Inject the Supabase `access_token` JWT into the client
@@ -246,10 +250,9 @@ create trigger on_auth_user_created
 The `supabaseAccessToken` is now available on the `session` object and can be passed to the supabase-js client. This works in any environment: client-side, server-side (API routes, SSR), as well as in middleware edge functions!
 
 ```js
-// ...
 // Use `useSession()` or `unstable_getServerSession()` to get the NextAuth session.
 
-const { supabaseAccessToken } = session;
+const { supabaseAccessToken } = session
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -261,9 +264,9 @@ const supabase = createClient(
       },
     },
   }
-);
+)
 // Now you can query with RLS enabled.
-const { data, error } = await supabase.from("users").select("*");
+const { data, error } = await supabase.from("users").select("*")
 ```
 
 ### TypeScript
@@ -273,10 +276,10 @@ You can pass types that were generated with the Supabase CLI to the Supabase Cli
 Creating a new supabase client object:
 
 ```ts
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "../database.types";
+import { createClient } from "@supabase/supabase-js"
+import { Database } from "../database.types"
 
-const supabase = createClient<Database>();
+const supabase = createClient<Database>()
 ```
 
 #### Extend the session type with the `supabaseAccessToken`
@@ -284,17 +287,17 @@ const supabase = createClient<Database>();
 In order to extend the `session` object with the `supabaseAccessToken` we need to extend the `session` interface in a `types/next-auth.d.ts` file:
 
 ```ts filename="types/next-auth.d.ts"
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth"
 
 declare module "next-auth" {
   // Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
   interface Session {
     // A JWT which can be used as Authorization header with supabase-js for RLS.
-    supabaseAccessToken?: string;
+    supabaseAccessToken?: string
     user: {
       // The user's postal address
-      address: string;
-    } & DefaultSession["user"];
+      address: string
+    } & DefaultSession["user"]
   }
 }
 ```

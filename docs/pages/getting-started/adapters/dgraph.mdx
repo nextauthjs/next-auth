@@ -1,22 +1,26 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/dgraph.svg" width="64" height="64" />
 
-# <a href="https://dgraph.io/docs">Dgraph</a> Adapter for Auth.js
+# Dgraph Adapter
 
-## Installation
+## Resources
+
+- [Dgraph Docs](https://dgraph.io/docs)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install next-auth @auth/dgraph-adapter
 ```
 
-## Setup
-
 Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object:
 
 ```ts filename="pages/api/auth/[...nextauth].js"
-import NextAuth from "next-auth";
-import { DgraphAdapter } from "@auth/dgraph-adapter";
+import NextAuth from "next-auth"
+import { DgraphAdapter } from "@auth/dgraph-adapter"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [],
@@ -27,10 +31,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     authHeader: process.env.AUTH_HEADER, // default: "Authorization",
     jwtSecret: process.env.SECRET,
   }),
-});
+})
 ```
 
-### Unsecure schema
+### Unsecure Schema
 
 The quickest way to use Dgraph is by applying the unsecure schema to your [local](https://dgraph.io/docs/graphql/admin/#modifying-a-schema) Dgraph instance or if using Dgraph [cloud](https://dgraph.io/docs/cloud/cloud-quick-start/#the-schema) you can paste the schema in the codebox to update.
 
@@ -219,8 +223,8 @@ database you must customize next-auth `encode` and `decode` functions, as the de
 further customize the jwt with roles if you want to implement [`RBAC logic`](https://dgraph.io/docs/graphql/authorization/directive/#role-based-access-control).
 
 ```js filename="./auth.js"
-import NextAuth from "next-auth";
-import * as jwt from "jsonwebtoken";
+import NextAuth from "next-auth"
+import * as jwt from "jsonwebtoken"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
@@ -232,13 +236,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return jwt.sign({ ...token, userId: token.id }, secret, {
         algorithm: "HS256",
         expiresIn: 30 * 24 * 60 * 60, // 30 days
-      });
+      })
     },
     decode: async ({ secret, token }) => {
-      return jwt.verify(token, secret, { algorithms: ["HS256"] });
+      return jwt.verify(token, secret, { algorithms: ["HS256"] })
     },
   },
-});
+})
 ```
 
 Once your `Dgraph.Authorization` is defined in your schema and the JWT settings are set, this will allow you to define [`@auth rules`](https://dgraph.io/docs/graphql/authorization/authorization-overview/) for every part of your schema.

@@ -1,16 +1,20 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/kysely.svg" width="64" height="64" />
 
-# <a href="https://kysely.dev/">Kysely</a> Adapter for Auth.js
+# Kysely Adapter
 
-## Installation
+## Resources
+
+- [Kysely Docs](https://kysely.dev/docs)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install kysely @auth/kysely-adapter
 ```
-
-## Setup
 
 This adapter supports the same first party dialects that Kysely (as of v0.24.2) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
 
@@ -20,10 +24,10 @@ npm install --save-dev @types/pg
 ```
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import { KyselyAdapter } from "@auth/kysely-adapter";
-import { db } from "../../../db";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { KyselyAdapter } from "@auth/kysely-adapter"
+import { db } from "../../../db"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: KyselyAdapter(db),
@@ -33,56 +37,56 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+})
 ```
 
 Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/reference/core/adapters#models) required by Auth.js.
 
 ```ts filename="db.ts"
-import { PostgresDialect } from "kysely";
-import { Pool } from "pg";
+import { PostgresDialect } from "kysely"
+import { Pool } from "pg"
 
 // This adapter exports a wrapper of the original `Kysely` class called `KyselyAuth`,
 // that can be used to provide additional type-safety.
 // While using it isn't required, it is recommended as it will verify
 // that the database interface has all the fields that Auth.js expects.
-import { KyselyAuth } from "@auth/kysely-adapter";
+import { KyselyAuth } from "@auth/kysely-adapter"
 
-import type { GeneratedAlways } from "kysely";
+import type { GeneratedAlways } from "kysely"
 
 interface Database {
   User: {
-    id: GeneratedAlways<string>;
-    name: string | null;
-    email: string;
-    emailVerified: Date | null;
-    image: string | null;
-  };
+    id: GeneratedAlways<string>
+    name: string | null
+    email: string
+    emailVerified: Date | null
+    image: string | null
+  }
   Account: {
-    id: GeneratedAlways<string>;
-    userId: string;
-    type: string;
-    provider: string;
-    providerAccountId: string;
-    refresh_token: string | null;
-    access_token: string | null;
-    expires_at: number | null;
-    token_type: string | null;
-    scope: string | null;
-    id_token: string | null;
-    session_state: string | null;
-  };
+    id: GeneratedAlways<string>
+    userId: string
+    type: string
+    provider: string
+    providerAccountId: string
+    refresh_token: string | null
+    access_token: string | null
+    expires_at: number | null
+    token_type: string | null
+    scope: string | null
+    id_token: string | null
+    session_state: string | null
+  }
   Session: {
-    id: GeneratedAlways<string>;
-    userId: string;
-    sessionToken: string;
-    expires: Date;
-  };
+    id: GeneratedAlways<string>
+    userId: string
+    sessionToken: string
+    expires: Date
+  }
   VerificationToken: {
-    identifier: string;
-    token: string;
-    expires: Date;
-  };
+    identifier: string
+    token: string
+    expires: Date
+  }
 }
 
 export const db = new KyselyAuth<Database>({
@@ -94,7 +98,7 @@ export const db = new KyselyAuth<Database>({
       password: process.env.DATABASE_PASSWORD,
     }),
   }),
-});
+})
 ```
 
 <Callout>
@@ -102,7 +106,7 @@ An alternative to manually defining types is generating them from the database s
 
 ```ts
 import type { Codegen } from "@auth/kysely-adapter"
-new KyselyAuth<Database, Codegen>(...)
+new KyselyAuth<Database, Codegen>()
 ```
 
 </Callout>
@@ -110,7 +114,7 @@ new KyselyAuth<Database, Codegen>(...)
 ### Schema
 
 ```ts filename="db/migrations/001_create_db.ts"
-import { Kysely, sql } from "kysely";
+import { Kysely, sql } from "kysely"
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
@@ -122,7 +126,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("email", "text", (col) => col.unique().notNull())
     .addColumn("emailVerified", "timestamptz")
     .addColumn("image", "text")
-    .execute();
+    .execute()
 
   await db.schema
     .createTable("Account")
@@ -142,7 +146,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("scope", "text")
     .addColumn("id_token", "text")
     .addColumn("session_state", "text")
-    .execute();
+    .execute()
 
   await db.schema
     .createTable("Session")
@@ -154,33 +158,33 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn("sessionToken", "text", (col) => col.notNull().unique())
     .addColumn("expires", "timestamptz", (col) => col.notNull())
-    .execute();
+    .execute()
 
   await db.schema
     .createTable("VerificationToken")
     .addColumn("identifier", "text", (col) => col.notNull())
     .addColumn("token", "text", (col) => col.notNull().unique())
     .addColumn("expires", "timestamptz", (col) => col.notNull())
-    .execute();
+    .execute()
 
   await db.schema
     .createIndex("Account_userId_index")
     .on("Account")
     .column("userId")
-    .execute();
+    .execute()
 
   await db.schema
     .createIndex("Session_userId_index")
     .on("Session")
     .column("userId")
-    .execute();
+    .execute()
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable("Account").ifExists().execute();
-  await db.schema.dropTable("Session").ifExists().execute();
-  await db.schema.dropTable("User").ifExists().execute();
-  await db.schema.dropTable("VerificationToken").ifExists().execute();
+  await db.schema.dropTable("Account").ifExists().execute()
+  await db.schema.dropTable("Session").ifExists().execute()
+  await db.schema.dropTable("User").ifExists().execute()
+  await db.schema.dropTable("VerificationToken").ifExists().execute()
 }
 ```
 

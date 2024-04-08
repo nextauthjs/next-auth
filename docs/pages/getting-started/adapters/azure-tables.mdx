@@ -5,15 +5,21 @@
   height="64"
 />
 
-# <a href="https://azure.microsoft.com/en-us/products/storage/tables"> Azure Table Storage </a> Adapter for Auth.js
+# Azure Table Storage Adapter
 
-## Installation
+## Resources
+
+- [Azure Tables](https://azure.microsoft.com/en-us/products/storage/tables)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install next-auth @auth/azure-tables-adapter
 ```
 
-## Environment variable
+### Environment variable
 
 ```
 AUTH_AZURE_ACCOUNT=storageaccountname
@@ -21,7 +27,7 @@ AUTH_AZURE_ACCESS_KEY=longRandomKey
 AUTH_AZURE_TABLES_ENDPOINT=https://$AZURE_ACCOUNT.table.core.windows.net
 ```
 
-## Migration
+### Migration
 
 1. Create a table for authentication data, `auth` in the example below.
 
@@ -45,10 +51,7 @@ const authClient = new TableClient(
 // https://authjs.dev/reference/configuration/auth-options
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // https://authjs.dev/reference/core/providers
-  providers: [
-    // ...
-  ],
+  providers: [],
   adapter: TableStorageAdapter(authClient),
-  // ...
 } satisfies AuthConfig)
 ```

@@ -5,6 +5,10 @@ import { Code } from "@/components/Code"
 
 # 42School Provider
 
+## Resources
+
+- [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
+
 ## Setup
 
 ### Callback URL
@@ -32,9 +36,6 @@ https://example.com/auth/callback/42-school
 AUTH_42_SCHOOL_ID
 AUTH_42_SCHOOL_SECRET
 ```
-
-> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
-> setup, if you'd like to name them something else you must pass them in in your providers array.
 
 ### Configuration
 
@@ -77,32 +78,6 @@ app.use("/auth/*",
   </Code.Express>
 </Code>
 
-### Resources
+## Notes
 
-- [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
-
-### Notes
-
-<Callout>
-  42 returns a field on `Account` called `created_at` which is a number. See the
-  [docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests).
-  Make sure to add this field to your database schema, in case if you are using
-  an [Adapter](https://authjs.dev/reference/core/adapters).
-</Callout>
-
-By default, Auth.js assumes that the 42School provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
-
-<Callout type="tip">
-  The 42School provider comes with a [default
-  configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/42-school.ts).
-  To override the defaults for your use case, check out [customizing a built-in
-  OAuth
-  provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-</Callout>
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-Auth.js strictly adheres to the specification and it cannot take responsibility for
-any deviation from the spec by the provider. You can open an issue, but if the problem
-is non-compliance with the spec, we might not pursue a resolution. You can ask for
-more help in [Discussions](https://authjs.dev/new/github-discussions).
+- 42 returns a field on `Account` called `created_at` which is a number, this is different from the default schema's datatype for this field. Check out the [42 School docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests) for more info. Make sure to add or edit this field in your database schema in case if you are using an [database adapter](/getting-started/database).

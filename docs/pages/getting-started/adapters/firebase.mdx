@@ -1,18 +1,22 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/firebase.svg" height="64" width="64" />
 
-# <a href="https://firebase.google.com/docs/firestore">Firebase</a>{" "} Adapter for Auth.js
+# Firebase Adapter
 
 > Using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) and [Firestore](https://firebase.google.com/docs/firestore).
 
-## Installation
+## Resources
+
+- [Firebase Admin Docs](https://firebase.google.com/docs/admin/setup)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @auth/firebase-adapter firebase-admin
 ```
-
-## Setup
 
 First, create a Firebase project and generate a service account key. Visit: `https://console.firebase.google.com/u/0/project/{project-id}/settings/serviceaccounts/adminsdk` (replace `{project-id}` with your project's id)
 
@@ -25,12 +29,12 @@ Now you have a few options to authenticate with the Firebase Admin SDK in your a
 - The adapter will automatically pick up the environment variable and use it to authenticate with the Firebase Admin SDK.
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { FirestoreAdapter } from "@auth/firebase-adapter";
+import NextAuth from "next-auth"
+import { FirestoreAdapter } from "@auth/firebase-adapter"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: FirestoreAdapter(),
-});
+})
 ```
 
 ### Service account values
@@ -40,9 +44,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 - Pass the config to the adapter, using the environment variables as shown in the example below.
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { FirestoreAdapter } from "@auth/firebase-adapter";
-import { cert } from "firebase-admin/app";
+import NextAuth from "next-auth"
+import { FirestoreAdapter } from "@auth/firebase-adapter"
+import { cert } from "firebase-admin/app"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: FirestoreAdapter({
@@ -52,7 +56,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       privateKey: process.env.FIREBASE_PRIVATE_KEY,
     }),
   }),
-});
+})
 ```
 
 ### Using an existing Firestore instance
@@ -70,22 +74,21 @@ If you already have a Firestore instance, you can pass that to the adapter direc
 </Callout>
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { FirestoreAdapter } from "@auth/firebase-adapter";
-import { firestore } from "lib/firestore";
+import NextAuth from "next-auth"
+import { FirestoreAdapter } from "@auth/firebase-adapter"
+import { firestore } from "lib/firestore"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: FirestoreAdapter(firestore),
-  // ...
-});
+})
 ```
 
 Utility function that helps making sure that there is no duplicate app initialization issues in serverless environments.
 If no parameter is passed, it will use the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to initialize a Firestore instance.
 
 ```ts filename="lib/firestore.ts"
-import { initFirestore } from "@auth/firebase-adapter";
-import { cert } from "firebase-admin/app";
+import { initFirestore } from "@auth/firebase-adapter"
+import { cert } from "firebase-admin/app"
 
 export const firestore = initFirestore({
   credential: cert({
@@ -93,5 +96,5 @@ export const firestore = initFirestore({
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_PRIVATE_KEY,
   }),
-});
+})
 ```

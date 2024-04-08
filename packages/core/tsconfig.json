@@ -5,7 +5,9 @@
     "jsxImportSource": "preact",
     "lib": ["dom", "dom.iterable", "esnext"],
     "outDir": ".",
-    "rootDir": "src"
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["*.js", "*.d.ts", "lib", "providers"]

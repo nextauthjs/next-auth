@@ -23,7 +23,7 @@ You're in charge of the building the UI for session management. Below we summari
     <RichTabs.Trigger value="login">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <SignIn fontSize="2.2rem" />
-        <span>Handle sign in/out</span>
+        <span>Handle signin and signout</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger value="get-session">
@@ -35,13 +35,13 @@ You're in charge of the building the UI for session management. Below we summari
     <RichTabs.Trigger value="protecting">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <GitFork fontSize="2.2rem" />
-        <span>Protecting routes</span>
+        <span>Protecting Resources</span>
       </div>
     </RichTabs.Trigger>
     <RichTabs.Trigger value="custom-pages">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
         <PaintBucket fontSize="2.2rem" />
-        <span>Custom pages</span>
+        <span>Custom Pages</span>
       </div>
     </RichTabs.Trigger>
   </RichTabs.List>
@@ -52,10 +52,6 @@ To signin your users, make sure you have at least one [authentication method](/g
 
 <Code>
   <Code.Next>
-
-Auth.js supports both server-side and client-side Signin and Signout methods.
-
-#### Server-side
 
 ```tsx filename="./components/auth/sign-in.tsx"
 import { signIn } from "../../auth.ts"
@@ -70,22 +66,6 @@ export function SignIn() {
     >
       <button type="submit">Sign in</button>
     </form>
-  )
-}
-```
-
-#### Client-side
-
-```tsx filename="app/client/page.tsx"
-"use client"
-
-import { signIn } from "next-auth/react"
-
-export default function Client() {
-  return (
-    <nav>
-      <button onClick={() => signIn("github")}>Sign in Github</button>
-    </nav>
   )
 }
 ```
@@ -157,7 +137,7 @@ Just like in other frameworks, you can also pass a provider to the `signIn` func
   </Code.Svelte>
 </Code>
 
-When clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/guides/custom-pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
+You can also pass a provider to the `signIn` function which will attempt to login directly with that provider. Otherwise, when clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/guides/pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
 
 import DefaultSignInPage from "../../public/img/getting-started/default-signin-page.webp"
 
@@ -230,16 +210,14 @@ export function SignIn() {
 </Code.Svelte>
 </Code>
 
-### Handling Signout
+### Signout
 
-Handling sign out can be done similarly to signing in. Most frameworks offer both a client-side and server-side method for signing out as well.
+Signing out can be done similarly to signing in. Most frameworks offer both a client-side and server-side method for signing out as well.
 
 <Code>
 <Code.Next>
 
-#### Server-side
-
-To sign out users with a form action, you can build a button that calls the exported sign-out function from your Auth.js config.
+To sign out users with a form action, you can build a button that calls the exported signout function from your Auth.js config.
 
 ```tsx filename="app/components/signout-button.tsx" {8}
 import { signOut } from "../../auth.ts"
@@ -254,26 +232,6 @@ export function SignOut() {
     >
       <button type="submit">Sign Out</button>
     </form>
-  )
-}
-```
-
-#### Client-side
-
-Alternatively, you can use the client-side methods from `next-auth/react` to sign out as well.
-
-```ts filename="app/client/page.tsx" {9}
-"use client"
-
-import { signOut } from "next-auth/react"
-
-export default function Client() {
-  return (
-    <nav className="card">
-      <div className="btn-wrapper">
-        <button onClick={() => signOut()}>Sign out</button>
-      </div>
-    </nav>
   )
 }
 ```
@@ -359,10 +317,6 @@ Once a user is logged in, you often want to get the session object in order to u
 <Code>
 <Code.Next>
 
-#### Server-side
-
-Be aware, this is an async function that needs to be awaited. That means you'll need to use it in an `async` component (i.e. a React Server Component) or in a `useEffect` hook, for example.
-
 ```tsx filename="./components/UserAvatar" {4} /async/
 import { auth } from "../auth"
 
@@ -375,25 +329,6 @@ export default async function UserAvatar() {
     <div>
       <img src={session.user.img} alt="User Avatar" />
     </div>
-  )
-}
-```
-
-#### Client-side
-
-In a client component, we can use the `useSession` import from `next-auth/react`.
-
-```tsx filename="./components/UserAvatar" {6}
-"use client"
-
-import { useSession } from "next-auth/react"
-
-export default function Client() {
-  const { data: session } = useSession()
-  return (
-    <nav>
-      <img src={session.user.img} alt="User Avatar" />
-    </nav>
   )
 }
 ```
@@ -502,15 +437,17 @@ export const load: PageServerLoad = async (events) => {
 
 Then you can access the `session` on the `$page.data` object in your page.
 
-```svelte filename="src/components/user-avatar.svelte" {6}
+```svelte filename="src/routes/+page.svelte" {6}
 <script lang="ts">
   import { page } from "$app/stores"
 </script>
 
-<img
-  src={$page.data.session?.user?.image ?? 'https://source.boringavatars.com/marble/120/'}
-  alt="User Avatar"
-/>
+<nav>
+  <img
+    src={$page.data.session?.user?.image ?? 'https://source.boringavatars.com/marble/120/'}
+    alt="User Avatar"
+  />
+</nav>
 ```
 
 </Code.Svelte>
@@ -527,28 +464,7 @@ Protecting routes can be done generally by checking for the session and taking a
 <Code>
 <Code.Next>
 
-Protecting pages also comes in two forms: server-side and client-side.
-
-For server-side protection, you can use the `auth` function returned from `NextAuth` and exported from your Auth.js configuration file directly. Client-side we can use the `useSession` hook from `next-auth/react`.
-
-```tsx filename="app/client/page.tsx" {6}
-"use client"
-
-import { useSession } from "next-auth/react"
-
-export default function Client() {
-  const { data: session, session } = useSession()
-  if (session.status === "unauthenticated") return <div>Not authenticated</div>
-
-  return (
-    <div>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-    </div>
-  )
-}
-```
-
-In a server component, we can use `auth` directly.
+You can use the `auth` function returned from `NextAuth()` and exported from your `auth.js` configuration file to get the session object.
 
 ```tsx filename="app/server/page.tsx" {4}
 import { auth } from "auth"
@@ -624,9 +540,6 @@ export const load: PageServerLoad = async (event) => {
   const session = await event.locals.auth()
 
   if (!session?.user?.userId) {
-    // const fromUrl = url.pathname + url.search
-    // redirect(303, `/login?redirectTo=${encodeURIComponent(fromUrl)}`)
-
     return fail(401, { type: "error", error: "Unauthenticated" })
   }
 
@@ -690,7 +603,7 @@ export default async function handler(
 </Code.NextPages>
 <Code.Svelte>
 
-API Routes in SvelteKit work like any other server-side file in Auth.js in SvelteKit, you can access the session by calling `event.locals.auth()`.
+API Routes in SvelteKit work like any other server-side file in Auth.js in SvelteKit, you can access the session by calling `event.locals.auth()` in the `+server.ts` files as well.
 
 ```ts filename="src/routes/api/users/+server.ts"
 import type { RequestHandler } from "./$types"
@@ -719,11 +632,7 @@ export default auth((req) => {
     return NextResponse.redirect("/login")
   }
 })
-
-export const config = { matcher: ["/admin"] }
 ```
-
-This will protect all routes under `/admin`.
 
 You can also use a regex to match multiple routes or you can negate certain routes in order to protect all remaining routes. The following example avoids running the middleware on paths such as the favicon or static images.
 
@@ -734,6 +643,8 @@ export const config = {
 ```
 
 Middleware will protect pages as defined by the `matcher` config export. For more details about the matcher, check out the [Next.js docs](https://nextjs.org/docs/pages/building-your-application/routing/middleware#matching-paths).
+
+You should not rely on middleware exclusively for authorization. Always ensure that the session is verified as close to your data fetching as possible.
 
 </RichTabs.Content>
 
@@ -792,7 +703,7 @@ export { handle } from "./auth"
 </Code.Svelte>
 </Code>
 
-To continue setting up the custom page, checkout our [guide on custom pages](/guides/custom-pages/signin).
+To continue setting up the custom page, checkout our [guide on custom pages](/guides/pages/signin).
 
 </RichTabs.Content>
 </RichTabs>

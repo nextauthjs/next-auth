@@ -2,19 +2,23 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 <img align="right" src="/img/adapters/fauna.svg" height="64" width="64" />
 
-# <a href="https://docs.fauna.com/fauna/current/">Fauna</a> Adapter for Auth.js
+# Fauna Adapter
 
-## Installation
+## Resources
+
+- [Fauna Docs](https://docs.fauna.com/fauna/current/)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @auth/fauna-adapter fauna
 ```
 
-## Setup
-
 This is the Fauna Adapter for [Auth.js](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` or other client package. It is not a standalone package.
 
-## Migrating to v2
+### Migrating to v2
 
 In `@auth/adapter-fauna@2.0.0`, we've renamed the collections to use an uppercase naming pattern in accordance with the Fauna best practices. If you're migrating from v1, you'll need to rename your collections to match the new naming scheme. Additionally, we've renamed the indexes to match the new method-like index names (i.e. `account_by_user_id` to `Account.byUserId`). For more information on migrating your Fauna schema, see their migration guide [here](https://docs.fauna.com/fauna/current/migration)
 
@@ -71,7 +75,7 @@ Collection.byName("verification_tokens")!.update({
   </Accordion>
 </Accordions>
 
-## Configure Auth.js
+### Configure Auth.js
 
 ```ts filename="auth.ts"
 import NextAuth from "next-auth"
@@ -90,7 +94,7 @@ export { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-### Schema
+#### Schema
 
 Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
 
@@ -161,4 +165,19 @@ Collection.create({
 })
 ```
 
-> This schema is adapted for use in Fauna and based upon our primary [database models](/concepts/database-models).
+#### Custom Collection Names
+
+If you want to use custom collection names, you can pass them as an option to the adapter, like this:
+
+```js
+FaunaAdapter(client, {
+  collectionNames: {
+    user: "CustomUser",
+    account: "CustomAccount",
+    session: "CustomSession",
+    verificationToken: "CustomVerificationToken",
+  },
+})
+```
+
+Make sure the collection names you pass to the provider match the collection names of your Fauna database.

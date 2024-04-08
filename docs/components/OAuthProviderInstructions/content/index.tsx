@@ -163,15 +163,13 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
       <p className="mt-6 leading-7 first:mt-0">
         Auth.js will automatically pick up these if formatted like the example
         above. You can{" "}
-        <Link href="/concepts/environment-variables#oauth-variables">
+        <Link href="/guides/environment-variables#oauth-variables">
           also use a different name for the environment variables
         </Link>{" "}
         if needed, but then you’ll need to pass them to the provider manually.
-        All other client libraries also require you to manually pass the
-        environment variables to the provider.
       </p>
       {/* Step 3 */}
-      <StepTitle>Setup Auth.js {providerName} Provider</StepTitle>
+      <StepTitle>Setup Provider</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
         Let’s enable {providerName} as a sign in option in our Auth.js
         configuration. You’ll have to import the <NXCode>{providerName}</NXCode>{" "}
@@ -184,9 +182,9 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         highlight={highlight}
       />
       {/* Step 4 */}
-      <StepTitle>Signin Button</StepTitle>
+      <StepTitle>Add Signin Button</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
-        Next, we can add a sign in button somewhere in your application like the
+        Next, we can add a signin button somewhere in your application like the
         Navbar. It will trigger Auth.js sign in when clicked.
       </p>
       <SignInCode
@@ -209,6 +207,13 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         </Link>{" "}
         for more details.
       </Callout>
+      <p className="mt-6 leading-7 first:mt-0">
+        For more information on this provider go to the{" "}
+        <Link href={`/getting-started/providers/${providerId}`}>
+          {providerName} docs page
+        </Link>
+        .
+      </p>
     </div>
   )
 }

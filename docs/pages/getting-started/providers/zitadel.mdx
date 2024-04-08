@@ -5,6 +5,11 @@ import { Code } from "@/components/Code"
 
 # Zitadel Provider
 
+## Resources
+
+- [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
+- [ZITADEL recommended OAuth Flows](https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows)
+
 ## Setup
 
 ### Callback URL
@@ -32,9 +37,6 @@ https://example.com/auth/callback/zitadel
 AUTH_ZITADEL_ID
 AUTH_ZITADEL_SECRET
 ```
-
-> Next.js and SvelteKit will automatically pick them up if named exactly this way, simplifying
-> setup, if you'd like to name them something else you must pass them in in your providers array.
 
 ### Configuration
 
@@ -75,15 +77,7 @@ app.use("/auth/*", ExpressAuth({ providers: [Zitadel] }))
   </Code.Express>
 </Code>
 
-### Resources
-
-- [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
-- [ZITADEL recommended OAuth Flows](https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows)
-
 ### Notes
-
-By default, Auth.js assumes that the ZITADEL provider is
-based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
 
 The Redirect URIs used when creating the credentials must include your full domain and end in the callback path. For example:
 
@@ -91,13 +85,6 @@ The Redirect URIs used when creating the credentials must include your full doma
 - For development: `http://localhost:3000/api/auth/callback/zitadel`
 
 Make sure to enable dev mode in ZITADEL console to allow redirects for local development.
-
-<Callout>
-
-The ZITADEL provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/zitadel.ts).
-To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-
-</Callout>
 
 ZITADEL also returns a email_verified boolean property in the profile. You can use this property to restrict access to people with verified accounts.
 
@@ -115,9 +102,3 @@ const options = {
   ...
 }
 ```
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).

@@ -1,34 +1,30 @@
 import { Callout, Steps, Tabs } from "nextra/components"
 import { Code } from "@/components/Code"
+import { Link } from "@/components/Link"
 import { Screenshot } from "@/components/Screenshot"
 import MagicLink from "../../../public/img/magic-links/start.webp"
 
 ### Resend Setup
 
-To setup "magic links" we can use the builtin Resend provider. This login mechanism starts by the user providing their email address at the login form. Then a **Verification Token** is sent to the provided email address. The user then has 24 hours to click the link in the email body to "consume" that token and register their account, otherwise the verification token will expire and they will have to request a new one.
-
-<Callout>
-  An Email Provider can be used with both [JSON Web Tokens](https://jwt.io/) and
-  [database](/concepts/session-strategies#database-session) session, whichever
-  you choose, you **must still configure a database** so that Auth.js can save
-  the verification tokens and look them up when the user attempts to login. It
-  is not possible to enable an email provider without using a database.
-</Callout>
-
 <Steps>
 
 ### Database Adapter
 
-Please make sure you've [setup a database adapter](/docs/database), as mentioned earlier,
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
 a database is required for passwordless login to work as verification tokens need to be stored.
 
-### Resend Provider
+### Setup Environment Variables
 
-To configure Resend, you'll just need to define your API key as an environment variable. If you use this exact name, `AUTH_RESEND_KEY`, then the Resend provider will automatically pick it up and your provider array in the Auth.js config can be simplified, see the example below.
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
 
 ```bash filename=".env"
 AUTH_RESEND_KEY=abc123
 ```
+
+### Setup Provider
+
+Let’s enable `Resend` as a sign in option in our Auth.js configuration. You’ll have to import the `Resend` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
 
 <Code>
 <Code.Next>
@@ -61,14 +57,9 @@ export { handle } from "./auth"
 </Code.Svelte>
 </Code>
 
-<Callout type="info">
-  Check our [Customising magic links emails](/) to learn how to change the look
-  and feel of the emails the user receives to sign in.
-</Callout>
+### Add Signin Button
 
-### Signin Button
-
-Next, we can add a sign in button somewhere in your application like the Navbar. This will forward the user on to the Auth.js default signin page.
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
 
 <Code>
 <Code.Next>
@@ -79,12 +70,13 @@ import { signIn } from "../../auth.ts"
 export function SignIn() {
   return (
     <form
-      action={async () => {
+      action={async (formData) => {
         "use server"
-        await signIn()
+        await signIn("resend", formData)
       }}
     >
-      <button type="submit">Sign In</button>
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Resend</button>
     </form>
   )
 }
@@ -93,15 +85,15 @@ export function SignIn() {
 </Code.Next>
 <Code.Svelte>
 
-```ts filename="src/routes/+page.svelte"
+```html filename="src/routes/+page.svelte"
 <script lang="ts">
-  import { signIn } from '@auth/sveltekit/client'
+  import { SignIn } from "@auth/sveltekit/components"
 </script>
 
 <div>
   <nav>
     <img src="/img/logo.svg" alt="Company Logo" />
-    <button on:click={signIn}>Signin</button>
+    <SignIn provider="resend" />
   </nav>
 </div>
 ```
@@ -111,10 +103,13 @@ export function SignIn() {
 
 ### Signin
 
-Start your application, click on the sign in button we just added, and you should see Auth.js [built-in sign in page](/tutorials/custom-pages/built-in-pages) with the option to sign in with your email:
-
-<Screenshot src={MagicLink} alt="Screenshot of sign in page" />
-
-Insert your email and click "Sign in with Email". You should receive an email from Auth.js, click on it and should be redirected to your application, landing already authenticated.
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
 
 </Steps>
+
+<Callout type="info">
+  Check our [Customising magic links emails](/) to learn how to change the look
+  and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Resend docs page](/getting-started/providers/resend).

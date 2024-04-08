@@ -1,13 +1,14 @@
 <img align="right" src="/img/adapters/edgedb.svg" height="64" width="64" />
 
-# <a href="https://www.edgedb.com/">Edge DB</a> Adapter for Auth.js
+# EdgeDB Adapter
 
-## Installation
+## Resources
 
-```bash npm2yarn
-npm install edgedb @auth/edgedb-adapter
-npm install @edgedb/generate --save-dev
-```
+- [EdgeDB Docs](https://www.edgedb.com/docs/)
+
+## Setup
+
+### Installation
 
 To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the separate `@auth/edgedb-adapter` package:
 
@@ -15,8 +16,6 @@ To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the s
 npm install edgedb @auth/edgedb-adapter
 npm install @edgedb/generate --save-dev
 ```
-
-## Installation
 
 First, ensure you have the EdgeDB CLI installed.
 
@@ -44,17 +43,15 @@ edgedb project init
 
 This process will spin up an EdgeDB instance and [“link”](https://www.edgedb.com/docs/cli/edgedb_instance/edgedb_instance_link#edgedb-instance-link) it with your current directory. As long as you’re inside that directory, CLI commands and client libraries will be able to connect to the linked instance automatically, without additional configuration.
 
-## Setup
-
 ### Configuration
 
 ```js filename="./auth.js"
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import { EdgeDBAdapter } from "@auth/edgedb-adapter";
-import { createClient } from "edgedb";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { EdgeDBAdapter } from "@auth/edgedb-adapter"
+import { createClient } from "edgedb"
 
-const client = createClient();
+const client = createClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: EdgeDBAdapter(client),
@@ -64,7 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-});
+})
 ```
 
 ### Schema
@@ -149,19 +146,19 @@ using future nonrecursive_access_policies;
 
 ### Migration
 
-Create a migration
+1. Create a migration
 
 ```
 edgedb migration create
 ```
 
-Apply the migration
+2. Apply the migration
 
 ```
 edgedb migrate
 ```
 
-To learn more about [EdgeDB migrations](https://www.edgedb.com/docs/intro/migrations#generate-a-migration), check out the [Migrations docs](https://www.edgedb.com/docs/intro/migrations).
+To learn more about [EdgeDB migrations](https://www.edgedb.com/docs/intro/migrations#generate-a-migration) check out the [Migrations docs](https://www.edgedb.com/docs/intro/migrations).
 
 ### Generate
 
@@ -181,18 +178,9 @@ const query = e.select(e.User, () => ({
   name: true,
   image: true,
   filter_single: { email: "johndoe@example.com" },
-}));
+}))
 
-return await query.run(client);
-
-// Return type:
-// {
-//     id: string;
-//     email: string;
-//     emailVerified: Date | null;
-//     image: string | null;
-//     name: string | null;
-// } | null
+return await query.run(client)
 ```
 
 ## Deploying
@@ -210,7 +198,7 @@ First deploy an EdgeDB instance on your preferred cloud provider:
 
 ### Find your instance’s DSN
 
-The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud you are deploying to.
+The DSN is also known as a connection string. It will have the format `edgedb://username:password@hostname:port`. The exact instructions for this depend on which cloud provider you're deploying to.
 
 ### Set an environment variable
 

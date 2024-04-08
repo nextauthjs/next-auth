@@ -36,5 +36,8 @@ export const { handlers, auth } = NextAuth({
 ```
 
 <Callout type="warning">
-  When `logger` options are set, the `debug` option is ignored
+  Enabling the `debug` option in production can lead to sensitive information
+  being saved in your logs. Make sure to sanitize any sensitive information.
 </Callout>
+
+When `logger` options are set, the `debug` option is ignored

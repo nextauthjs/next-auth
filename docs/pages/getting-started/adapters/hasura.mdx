@@ -1,16 +1,22 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/hasura.svg" width="64" height="64" />
 
-# <a href="https://hasura.io/">Hasura</a> Adapter for Auth.js
+# Hasura Adapter
 
-## Installation
+## Resources
+
+- [Hasura Docs](https://hasura.io/docs)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @auth/hasura-adapter
 ```
 
-## Schema
+### Schema
 
 1. Create the Auth.js schema in your database using SQL.
 
@@ -93,13 +99,13 @@ ALTER TABLE ONLY accounts
 2. Add the adapter to your `./auth.ts` Auth.js configuration file.
 
 ```js filename="./auth.js"
-import NextAuth from "next-auth";
-import { HasuraAdapter } from "@auth/hasura-adapter";
+import NextAuth from "next-auth"
+import { HasuraAdapter } from "@auth/hasura-adapter"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: HasuraAdapter({
     endpoint: "<Hasura-GraphQL-endpoint>",
     adminSecret: "<admin-secret>",
   }),
-});
+})
 ```

@@ -1,33 +1,37 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 <img align="right" src="/img/adapters/typeorm.svg" height="64" width="64" />
 
-# <a href="https://typeorm.io">TypeORM</a> Adapter for Auth.js
+# TypeORM Adapter
 
-## Installation
+## Resources
+
+- [TypeORM Docs](https://typeorm.io)
+
+## Setup
+
+### Installation
 
 ```bash npm2yarn
 npm install @auth/typeorm-adapter typeorm
 ```
 
-## Setup
-
 Configure Auth.js to use the TypeORM Adapter:
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { TypeORMAdapter } from "@auth/typeorm-adapter";
+import NextAuth from "next-auth"
+import { TypeORMAdapter } from "@auth/typeorm-adapter"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: TypeORMAdapter("yourconnectionstring"),
-});
+})
 ```
 
 `TypeORMAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
 
-## Advanced usage
+### Advanced usage
 
-### Custom models
+#### Custom models
 
 The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/blob/master/docs/entities.md) to define the shape of your data.
 
@@ -179,13 +183,13 @@ export class VerificationTokenEntity {
 2. Pass them to `TypeORMAdapter`
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { TypeORMAdapter } from "@auth/typeorm-adapter";
-import * as entities from "lib/entities";
+import NextAuth from "next-auth"
+import { TypeORMAdapter } from "@auth/typeorm-adapter"
+import * as entities from "lib/entities"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: TypeORMAdapter("yourconnectionstring", { entities }),
-});
+})
 ```
 
 <Callout type="info">
@@ -201,17 +205,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   build-time.
 </Callout>
 
-### Naming Conventions
+#### Naming Conventions
 
 If mixed snake_case and camelCase column names are an issue for you and/or your underlying database system, we recommend using TypeORM's naming strategy feature to change the target field names. There is a package called `typeorm-naming-strategies` which includes a `snake_case` strategy which will translate the fields from how Auth.js expects them, to snake_case in the actual database.
 
 For example, you can add the naming convention option to the connection object in your NextAuth config.
 
 ```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import { TypeORMAdapter } from "@auth/typeorm-adapter";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import { ConnectionOptions } from "typeorm";
+import NextAuth from "next-auth"
+import { TypeORMAdapter } from "@auth/typeorm-adapter"
+import { SnakeNamingStrategy } from "typeorm-naming-strategies"
+import { ConnectionOptions } from "typeorm"
 
 const connection: ConnectionOptions = {
   type: "mysql",
@@ -221,9 +225,9 @@ const connection: ConnectionOptions = {
   password: "test",
   database: "test",
   namingStrategy: new SnakeNamingStrategy(),
-};
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: TypeORMAdapter(connection),
-});
+})
 ```

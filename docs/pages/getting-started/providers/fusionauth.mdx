@@ -5,6 +5,11 @@ import { Code } from "@/components/Code"
 
 # Fusion Auth
 
+## Resources
+
+- [FusionAuth OAuth documentation](https://fusionauth.io/docs/v1/tech/oauth/)
+- [FusionAuth 5-minute setup guide](https://fusionauth.io/docs/v1/tech/5-minute-setup-guide).
+
 ## Setup
 
 ### Callback URL
@@ -111,23 +116,9 @@ app.use(
   apply the proper theme.
 </Callout>
 
-### Resources
-
-- [FusionAuth OAuth documentation](https://fusionauth.io/docs/v1/tech/oauth/)
-
 ### Notes
 
-By default, Auth.js assumes that the FusionAuth provider is
-based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
-
-## Configuration
-
-<Callout type="info">
-An application can be created at https://your-fusionauth-server-url/admin/application.
-
-For more information, follow the [FusionAuth 5-minute setup guide](https://fusionauth.io/docs/v1/tech/5-minute-setup-guide).
-
-</Callout>
+- An application can be created at `https://your-fusionauth-server-url/admin/application`
 
 In the OAuth settings for your application, configure the following.
 
@@ -136,15 +127,4 @@ In the OAuth settings for your application, configure the following.
 - Enabled grants
   - Make sure _Authorization Code_ is enabled.
 
-If using JSON Web Tokens, you need to make sure the signing algorithm is RS256, you can create an RS256 key pair by
-going to Settings, Key Master, generate RSA and choosing SHA-256 as algorithm. After that, go to the JWT settings of
-your application and select this key as Access Token signing key and Id Token signing key.
-
-The FusionAuth provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/fusionauth.ts).
-To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
-
-If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
-
-Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
-the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
-we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
+If using JSON Web Tokens, you need to make sure the signing algorithm is RS256, you can create an RS256 key pair by going to Settings, Key Master, generate RSA and choosing SHA-256 as algorithm. After that, go to the JWT settings of your application and select this key as Access Token signing key and Id Token signing key.

@@ -77,7 +77,23 @@ const config: DocsThemeConfig = {
           </Link>
           <div className="github-counter">20k</div>
         </div>
-        <ThemeSwitch lite />
+        <a
+          href="https://discord.authjs.dev/?utm_source=docs"
+          title="Join our Discord"
+          className="transition hover:contrast-125"
+          target="_blank"
+        >
+          <img
+            alt="Discord Logo"
+            src="/img/providers/discord.svg"
+            className="grayscale brightness-[0.85] dark:brightness-[1.7]"
+            width="20"
+          />
+        </a>
+        <ThemeSwitch
+          lite
+          className="*:justify-center *:gap-0 [&_svg]:size-4 p-0"
+        />
       </div>
     ),
   },
@@ -154,7 +170,7 @@ const config: DocsThemeConfig = {
           target="_blank"
         >
           <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-            (sponsored) Looking for a hosted alternative?
+            Looking for a hosted alternative? (sponsored)
             <span className="flex gap-2 text-[#289ef9]">
               Try Clerk{" "}
               <svg

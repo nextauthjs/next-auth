@@ -2,14 +2,13 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": [
         ".next",
         "dist/**",
         "lib/**",
         "providers/**",
+        "generated/**",
         "*.js",
         "*.d.ts",
         "*.d.ts.map",
@@ -26,13 +25,8 @@
       "cache": false
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ],
-      "inputs": [
-        "src/**/",
-        "test/**/"
-      ],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**/", "test/**/"],
       "outputMode": "new-only"
     },
     "test:e2e": {
@@ -44,10 +38,7 @@
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": [
-        "XATA_API_KEY",
-        "XATA_DATABASE_URL"
-      ]
+      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "docs#dev": {
       "dependsOn": [
@@ -84,9 +75,7 @@
       "cache": false
     },
     "docs#build": {
-      "inputs": [
-        "docs/pages"
-      ],
+      "inputs": ["docs/pages"],
       "dependsOn": [
         "@auth/core#build",
         "@auth/azure-tables-adapter#build",
@@ -120,12 +109,8 @@
       "outputs": [
         ".next/**/*",
         "!.next/cache/**",
-        "docs/reference/adapter/**",
-        "docs/reference/core/**/*",
-        "docs/reference/nextjs/**/*",
-        "docs/reference/solidstart/**/*",
-        "docs/reference/sveltekit/**/*",
-        "docs/reference/express/**/*"
+        "docs/reference/**",
+        "!docs/reference/_meta.js"
       ]
     }
   }

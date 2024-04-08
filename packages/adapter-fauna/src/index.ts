@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://fauna.com/features">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" height="30"/>
  *  </a>
@@ -14,7 +14,14 @@
  *
  * @module @auth/fauna-adapter
  */
-import { Client, TimeStub, fql, NullDocument, QueryValue, QueryValueObject } from "fauna"
+import {
+  Client,
+  TimeStub,
+  fql,
+  NullDocument,
+  QueryValue,
+  QueryValueObject,
+} from "fauna"
 
 import type {
   Adapter,
@@ -25,7 +32,13 @@ import type {
 } from "@auth/core/adapters"
 
 type ToFauna<T> = {
-  [P in keyof T]: T[P] extends Date | null ? TimeStub | null : T[P] extends undefined ? null : T[P] extends QueryValue ? T[P] : QueryValueObject
+  [P in keyof T]: T[P] extends Date | null
+    ? TimeStub | null
+    : T[P] extends undefined
+      ? null
+      : T[P] extends QueryValue
+        ? T[P]
+        : QueryValueObject
 }
 
 export type FaunaUser = ToFauna<AdapterUser>
@@ -43,7 +56,7 @@ export type FaunaAccount = ToFauna<AdapterAccount>
  *
  * ### Configure Auth.js
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { Client } from "fauna"
  * import { FaunaAdapter } from "@auth/fauna-adapter"
@@ -59,7 +72,6 @@ export type FaunaAccount = ToFauna<AdapterAccount>
  *   // https://authjs.dev/reference/providers/
  *   providers: [],
  *   adapter: FaunaAdapter(client)
- *   ...
  * })
  * ```
  *
@@ -195,20 +207,20 @@ export function FaunaAdapter(client: Client): Adapter {
   return {
     async createUser(user) {
       const response = await client.query<FaunaUser>(
-        fql`User.create(${format.to(user)})`,
+        fql`User.create(${format.to(user)})`
       )
       return format.from(response.data)
     },
     async getUser(id) {
       const response = await client.query<FaunaUser | NullDocument>(
-        fql`User.byId(${id})`,
+        fql`User.byId(${id})`
       )
       if (response.data instanceof NullDocument) return null
       return format.from(response.data)
     },
     async getUserByEmail(email) {
       const response = await client.query<FaunaUser>(
-        fql`User.byEmail(${email}).first()`,
+        fql`User.byEmail(${email}).first()`
       )
       if (response.data === null) return null
       return format.from(response.data)
@@ -228,7 +240,7 @@ export function FaunaAdapter(client: Client): Adapter {
       const _user: Partial<AdapterUser> = { ...user }
       delete _user.id
       const response = await client.query<FaunaUser>(
-        fql`User.byId(${user.id}).update(${format.to(_user)})`,
+        fql`User.byId(${user.id}).update(${format.to(_user)})`
       )
       return format.from(response.data)
     },
@@ -246,13 +258,13 @@ export function FaunaAdapter(client: Client): Adapter {
     },
     async linkAccount(account) {
       await client.query<FaunaAccount>(
-        fql`Account.create(${format.to(account)})`,
+        fql`Account.create(${format.to(account)})`
       )
       return account
     },
     async unlinkAccount({ provider, providerAccountId }) {
       const response = await client.query<FaunaAccount>(
-        fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`,
+        fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`
       )
       return format.from<AdapterAccount>(response.data)
     },
@@ -276,7 +288,7 @@ export function FaunaAdapter(client: Client): Adapter {
     },
     async createSession(session) {
       await client.query<FaunaSession>(
-        fql`Session.create(${format.to(session)})`,
+        fql`Session.create(${format.to(session)})`
       )
       return session
     },
@@ -284,33 +296,33 @@ export function FaunaAdapter(client: Client): Adapter {
       const response = await client.query<FaunaSession>(
         fql`Session.bySessionToken(${
           session.sessionToken
-        }).first().update(${format.to(session)})`,
+        }).first().update(${format.to(session)})`
       )
       return format.from(response.data)
     },
     async deleteSession(sessionToken) {
       await client.query(
-        fql`Session.bySessionToken(${sessionToken}).first().delete()`,
+        fql`Session.bySessionToken(${sessionToken}).first().delete()`
       )
     },
     async createVerificationToken(verificationToken) {
       await client.query<FaunaVerificationToken>(
-        fql`VerificationToken.create(${format.to(
-          verificationToken,
-        )})`,
+        fql`VerificationToken.create(${format.to(verificationToken)})`
       )
       return verificationToken
     },
     async useVerificationToken({ identifier, token }) {
       const response = await client.query<FaunaVerificationToken>(
-        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first()`,
+        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first()`
       )
       if (response.data === null) return null
       // Delete the verification token so it can only be used once
       await client.query(
-        fql`VerificationToken.byId(${response.data.id}).delete()`,
+        fql`VerificationToken.byId(${response.data.id}).delete()`
       )
-      const _verificationToken: Partial<FaunaVerificationToken> = { ...response.data }
+      const _verificationToken: Partial<FaunaVerificationToken> = {
+        ...response.data,
+      }
       delete _verificationToken.id
       return format.from(_verificationToken)
     },

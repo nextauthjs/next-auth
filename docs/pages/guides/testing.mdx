@@ -11,7 +11,9 @@ Below are one example of each strategy, leveraging [@playwright/test](https://pl
 
 ## Keycloak
 
-This test requires two environment variables to be set.
+First, set up a [Keycloak](https://www.keycloak.org/getting-started/getting-started-docker) instance. Then you have to add the [Keycloak provider](/getting-started/providers/keycloak) to your Auth.js configuration.
+
+This test requires two environment variables to be set. These credentials should be for a test user who can authenticate against your newly created Keycloak instance.
 
 ```bash filename=".env"
 TEST_KEYCLOAK_USERNAME=abc
