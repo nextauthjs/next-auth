@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img align="right" src="/img/adapters/mongodb.svg" width="48" height="48" />
 
 # MongoDB Adapter
@@ -14,7 +16,64 @@
 npm install @auth/mongodb-adapter mongodb
 ```
 
-The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already. Below you can see an example how to do this.
+### Environment Variables
+
+```sh
+MONGODB_URI=
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "./lib/db"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: MongoDBAdapter(clientPromise),
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "./lib/db"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: MongoDBAdapter(clientPromise),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "./lib/db"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: MongoDBAdapter(clientPromise),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already.
 
 ### Add the MongoDB client
 
@@ -49,18 +108,4 @@ if (process.env.NODE_ENV === "development") {
 // Export a module-scoped MongoClient promise. By doing this in a
 // separate module, the client can be shared across functions.
 export default clientPromise
-```
-
-### Configure Auth.js
-
-```ts filename="./auth.ts"
-import NextAuth from "next-auth"
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
-import clientPromise from "./lib/db"
-
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/providers/oauth
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: MongoDBAdapter(clientPromise),
-})
 ```

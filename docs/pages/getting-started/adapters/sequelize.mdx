@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/adapters/sequelize.svg" height="64" width="64" />
 
@@ -7,40 +8,85 @@ import { Callout } from "nextra/components"
 ## Resources
 
 - [Sequelize Docs](https://sequelize.org/docs/v6/getting-started/)
+- [Connecting to a Database](https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database)
 
 ## Setup
 
 ### Installation
 
 ```bash npm2yarn
-npm install next-auth @auth/sequelize-adapter sequelize
+npm install @auth/sequelize-adapter sequelize
 ```
+
+### Environment Variables
+
+```sh
+DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+```
+
+### Configuration
 
 <Callout type="warning">
   You'll also have to manually install [the driver for your
   database](https://sequelize.org/master/manual/getting-started.html) of choice.
 </Callout>
 
-### Configuring Auth.js
+<Code>
+<Code.Next>
 
-Add this adapter to your `./auth.js` Auth.js configuration file.
-
-```js filename="./auth.js"
+```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import SequelizeAdapter from "@auth/sequelize-adapter"
 import { Sequelize } from "sequelize"
 
-// https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database
-const sequelize = new Sequelize("yourconnectionstring")
+const sequelize = new Sequelize(process.env.DATABASE_URL)
 
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/core#authconfig
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  // https://authjs.dev/reference/providers/
   providers: [],
   adapter: SequelizeAdapter(sequelize),
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import SequelizeAdapter from "@auth/sequelize-adapter"
+import { Sequelize } from "sequelize"
+
+const sequelize = new Sequelize(process.env.DATABASE_URL)
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: SequelizeAdapter(sequelize),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import SequelizeAdapter from "@auth/sequelize-adapter"
+import { Sequelize } from "sequelize"
+
+const sequelize = new Sequelize(process.env.DATABASE_URL)
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: SequelizeAdapter(sequelize),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Schema
 

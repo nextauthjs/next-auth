@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/adapters/typeorm.svg" height="64" width="64" />
 
@@ -16,16 +17,59 @@ import { Callout } from "nextra/components"
 npm install @auth/typeorm-adapter typeorm
 ```
 
-Configure Auth.js to use the TypeORM Adapter:
+### Environment Variables
+
+```sh
+AUTH_TYPEORM_CONNECTION=postgres://postgres:adminadmin@0.0.0.0:5432/db
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { TypeORMAdapter } from "@auth/typeorm-adapter"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: TypeORMAdapter("yourconnectionstring"),
+  adapter: TypeORMAdapter(process.env.AUTH_TYPEORM_CONNECTION),
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { TypeORMAdapter } from "@auth/typeorm-adapter"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: TypeORMAdapter(process.env.AUTH_TYPEORM_CONNECTION),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { TypeORMAdapter } from "@auth/typeorm-adapter"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: TypeORMAdapter(process.env.AUTH_TYPEORM_CONNECTION),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 `TypeORMAdapter` takes either a connection string, or a [`ConnectionOptions`](https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md) object as its first parameter.
 
@@ -35,16 +79,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 The TypeORM adapter uses [`Entity` classes](https://github.com/typeorm/typeorm/blob/master/docs/entities.md) to define the shape of your data.
 
-If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
-
-> This schema is adapted for use in TypeORM and based upon our main
-> [schema](https://authjs.dev/docs/database)
+You can override the default entities and add additional fields with a custom entities file.
 
 1. Create a file containing your modified entities:
 
-(The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm/src/entities.ts))
-
-```diff filename="lib/entities.ts"
+```ts filename="lib/entities.ts"
 import {
   Entity,
   PrimaryGeneratedColumn,

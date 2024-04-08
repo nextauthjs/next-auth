@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/adapters/supabase.svg" width="64" height="64" />
 
@@ -16,32 +17,78 @@ import { Callout } from "nextra/components"
 npm install @supabase/supabase-js @auth/supabase-adapter
 ```
 
+### Environment Variables
+
+```sh
+SUPABASE_URL
+SUPABASE_SERVICE_ROLE_KEY
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: SupabaseAdapter({
+    url: process.env.SUPABASE_URL,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  }),
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: SupabaseAdapter({
+    url: process.env.SUPABASE_URL,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  }),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: SupabaseAdapter({
+      url: process.env.SUPABASE_URL,
+      secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    }),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
 <Callout>
 This adapter is developed by the community and not officially maintained or supported by Supabase. It uses the Supabase Database to store user and session data in a separate `next_auth` schema. It is a standalone Auth server that does not interface with Supabase Auth and therefore provides a different feature set.
 
 If you're looking for an officially maintained Auth server with additional features like [built-in email server](https://supabase.com/docs/guides/auth/auth-email#configure-email-settings?utm_source=authjs-docs&medium=referral&campaign=authjs), [phone auth](https://supabase.com/docs/guides/auth/auth-twilio?utm_source=authjs-docs&medium=referral&campaign=authjs), and [Multi Factor Authentication (MFA / 2FA)](https://supabase.com/contact/mfa?utm_source=authjs-docs&medium=referral&campaign=authjs), please use [Supabase Auth](https://supabase.com/auth) with the [Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/auth-helpers/nextjs?utm_source=authjs-docs&medium=referral&campaign=authjs).
 
 </Callout>
-
-### Configure Auth.js
-
-Add this adapter to your `./auth.ts` Auth.js configuration file.
-
-```ts filename="./auth.ts"
-import NextAuth from "next-auth"
-import { SupabaseAdapter } from "@auth/supabase-adapter"
-
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/core#authconfig
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  // https://authjs.dev/reference/core/providers
-  providers: [],
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  }),
-})
-```
 
 ### Schema
 

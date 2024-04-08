@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img align="right" src="/img/adapters/xata.svg" width="64" height="64" />
 
 # Xata Adapter
@@ -21,6 +23,67 @@ npm install --location=global @xata.io/cli
 # Login
 xata auth login
 ```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { XataAdapter } from "@auth/xata-adapter"
+import { XataClient } from "../../../xata" // Or wherever you've chosen for the generated client
+
+const client = new XataClient()
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: XataAdapter(client),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { XataAdapter } from "@auth/xata-adapter"
+import { XataClient } from "../../../xata" // Or wherever you've chosen for the generated client
+
+const client = new XataClient()
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: XataAdapter(client),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { XataAdapter } from "@auth/xata-adapter"
+import { XataClient } from "../../../xata" // Or wherever you've chosen for the generated client
+
+const client = new XataClient()
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: XataAdapter(client),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Xata Setup
 
 This adapter allows using Auth.js with Xata as a database to store users, sessions, and more. The preferred way to create a Xata project and use Xata databases is using the [Xata Command Line Interface (CLI)](https://docs.xata.io/cli/getting-started).
 
@@ -190,42 +253,3 @@ xata init --schema=./path/to/your/schema.json
 ```
 
 The CLI will walk you through a setup process where you choose a [workspace](https://xata.io/docs/api-reference/workspaces) (kind of like a GitHub org or a Vercel team) and an appropriate database. We recommend using a fresh database for this, as we'll augment it with tables that Auth.js needs.
-
-Once you're done, you can continue using Auth.js in your project as expected, like creating a `./pages/api/auth/[...nextauth]` route.
-
-```ts filename="./auth.ts"
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-
-const client = new XataClient()
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-})
-```
-
-Now to Xata-fy this route, let's add the Xata client and adapter:
-
-```diff
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-+import { XataAdapter } from "@auth/xata-adapter"
-+import { XataClient } from "../../../xata" // or wherever you've chosen to create the client
-
-+const client = new XataClient()
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-+ adapter: XataAdapter(client),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-})
-```

@@ -12,7 +12,7 @@ export default {
   "mikro-orm": "MikroORM",
   mongodb: "MongoDB",
   neo4j: "Neo4j",
-  pg: "PG",
+  pg: "PostgreSQL",
   pouchdb: "PouchDB",
   prisma: "Prisma",
   sequelize: "Sequelize",

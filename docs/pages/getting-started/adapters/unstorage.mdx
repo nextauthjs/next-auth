@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img align="right" src="/img/adapters/unstorage.svg" width="64" height="64" />
 
 # Unstorage Adapter
@@ -14,11 +16,13 @@
 npm install unstorage @auth/unstorage-adapter
 ```
 
-Configure Auth.js to use the Unstorage Adapter:
+### Configuration
+
+<Code>
+<Code.Next>
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import { createStorage } from "unstorage"
 
@@ -26,14 +30,50 @@ const storage = createStorage()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UnstorageAdapter(storage),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
+  providers: [],
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: UnstorageAdapter(storage),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: UnstorageAdapter(storage),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Advanced usage
 
