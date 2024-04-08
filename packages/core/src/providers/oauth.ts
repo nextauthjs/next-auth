@@ -98,7 +98,7 @@ export type ProfileCallback<Profile> = (
 export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
 
 export interface OAuthProviderButtonStyles {
-  logo: string
+  logo?: string
   logoDark?: string
   bg: string
   bgDark?: string
