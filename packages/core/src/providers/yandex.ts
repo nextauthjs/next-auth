@@ -143,7 +143,6 @@ export default function Yandex(
       }
     },
     style: {
-      logo: "/yandex.svg",
       bg: "#ffcc00",
       text: "#000",
     },

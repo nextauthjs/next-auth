@@ -163,7 +163,7 @@ export default function Discord<P extends DiscordProfile>(
         image: profile.image_url,
       }
     },
-    style: { logo: "/discord.svg", bg: "#5865F2", text: "#fff" },
+    style: { bg: "#5865F2", text: "#fff" },
     options,
   }
 }
