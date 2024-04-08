@@ -155,6 +155,26 @@ Now you will still be able to visit every page, but only `/dashboard` will requi
 
 If a user is not logged in, the default behavior is to redirect them to the sign-in page.
 
+### Usage with App Router
+
+At the moment, you have to handle the logic yourself:
+
+```ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export default async function middleware(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+  const session = !!req.cookies.get("next-auth.session-token")
+
+  if (!session) {
+    return NextResponse.redirect(new URL(`/api/auth/signin?callbackUrl=${path}`, req.url));
+  }
+  return NextResponse.next();
+}
+
+export const config = { matcher: ["/game/:path*", "/api/game/:path*"] }
+```
+
 ---
 ### `callbacks`
 
