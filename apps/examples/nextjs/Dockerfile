@@ -6,14 +6,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install package manager
-RUN --mount=type=cache,id=pnpm-auth-store,target=/root/.pnpm-store \
-  npm i --global --no-update-notifier --no-fund pnpm@latest
-
-
 # Install dependencies
 COPY package.json ./
-RUN pnpm i
+RUN npm i
 
 
 # Rebuild the source code only when needed
@@ -27,7 +22,7 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN pnpm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
