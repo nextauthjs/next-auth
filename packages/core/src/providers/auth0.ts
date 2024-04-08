@@ -123,7 +123,7 @@ export default function Auth0(
     id: "auth0",
     name: "Auth0",
     type: "oidc",
-    style: { logo: "/auth0.svg", text: "#fff", bg: "#EB5424" },
+    style: { text: "#fff", bg: "#EB5424" },
     options: config,
   }
 }

@@ -152,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/notion.svg", bg: "#fff", text: "#000" },
+    style: { bg: "#fff", text: "#000" },
     options,
   }
 }

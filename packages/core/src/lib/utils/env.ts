@@ -38,7 +38,7 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
-    const ID = finalProvider.id.toUpperCase()
+    const ID = finalProvider.id.toUpperCase().replace(/-/g, "_")
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
       finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
@@ -76,8 +76,10 @@ export function createActionURL(
     const detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
     const detectedProtocol =
       headers.get("x-forwarded-proto") ?? protocol ?? "https"
-    const _protocol = detectedProtocol.endsWith(":") ? detectedProtocol : detectedProtocol + ':'
-    
+    const _protocol = detectedProtocol.endsWith(":")
+      ? detectedProtocol
+      : detectedProtocol + ":"
+
     url = new URL(`${_protocol}//${detectedHost}`)
   }
 

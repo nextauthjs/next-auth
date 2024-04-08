@@ -122,7 +122,7 @@ export default function AzureADB2C(
         image: null,
       }
     },
-    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
+    style: { text: "#fff", bg: "#0072c6" },
     options,
   }
 }
