@@ -71,102 +71,71 @@ Auth.js can also be deployed anywhere you can deploy the framework of your choic
 
 ### Docker
 
-When using Auth.js in a Docker environment, make sure to set either `trustHost: true` in your Auth.js configuration or the `AUTH_TRUST_HOST` environment variable to `true`. Below is an example `Dockerfile` and matching `docker-compose.yml` for a Next.js application running Auth.js.
+In a Docker environment, make sure to set either `trustHost: true` in your Auth.js configuration or the `AUTH_TRUST_HOST` environment variable to `true`.
 
-<Accordions>
-  <Accordion title="Dockerfile">
+You can see an Auth.js app being hosted via Docker at https://nextjs-docker-example.authjs.dev (see the [source code](https://github.com/nextauthjs/next-auth-example)). Below is an example `Dockerfile` for a Next.js application running Auth.js.
 
 ```docker filename="Dockerfile"
-# syntax=docker/dockerfile-upstream:master-labs
+FROM node:20-alpine AS base
 
-# Loosely based on Next.js Dockerfile example:
-# https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
-
-FROM node:20-slim AS base
-
-# Install package manager
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store \
-  npm i --global --no-update-notifier --no-fund pnpm@latest
-
-USER node
-
-## DEPENDENCIES
+# Install dependencies only when needed
 FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# Copy over package.json and lock files
-COPY --chown=node:node pnpm-lock.yaml package.json ./
-
-# Avoid 'cross-device link not permitted' error with pnpm install
-RUN echo "package-import-method=copy" > .npmrc
 
 # Install dependencies
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
+COPY package.json ./
+RUN npm i
 
-## BUILDER
+
+# Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Copy all code files from your app into the container
-COPY --chown=node:node . ./
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+# ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy installed dependencies from previous 'deps' stage
-COPY --from=deps /app ./
+# This should be replaced with an actual secret in production.
+# REVIEW: Can we make this not required during build?
+RUN AUTH_SECRET=dummy npm run build
 
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
-
-# Build the Next.js production app
-RUN pnpm build
-
-# Remove node_modules
-RUN rm -rf node_modules
-
-## RUNNER
+# Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+# Uncomment the following line in case you want to disable telemetry during runtime.
+# ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy everything from builder stage
-COPY --chown=node:node --from=builder /app ./
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Install only prod dependencies and `sharp` (required by Next.js)
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install --prod
-RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install -w sharp
+COPY --from=builder /app/public ./public
 
-USER node
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
+
 ENV PORT 3000
 
-# Run the built project
-CMD ["pnpm", "exec", "next", "start"]
+# server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/next-config-js/output
+CMD HOSTNAME="0.0.0.0" node server.js
 ```
-
-  </Accordion>
-  <Accordion title="docker-compose.yml">
-
-```yaml filename="docker-compose.yml"
-version: "3"
-
-services:
-  authjs-docker:
-    environment:
-      - AUTH_GITHUB_ID=abc
-      - AUTH_GITHUB_SECRET=123
-      - AUTH_SECRET=abc123abc123
-      - AUTH_URL=http://localhost:3000/api/auth
-    build:
-      dockerfile: ./Dockerfile
-      labels:
-        - "com.example.description=Auth.js Next.js Example App"
-    ports:
-      - "3000:3000"
-```
-
-  </Accordion>
-</Accordions>
 
 ## Securing a preview deployment
 
