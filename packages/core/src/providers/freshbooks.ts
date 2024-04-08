@@ -77,7 +77,6 @@ export default function Freshbooks(
       }
     },
     style: {
-      logo: "/freshbooks.svg",
       bg: "#0075dd",
       text: "#fff",
     },
