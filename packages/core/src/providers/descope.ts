@@ -107,7 +107,6 @@ export default function Descope(
     type: "oidc",
     issuer: `https://api.descope.com/${config.clientId}`,
     style: {
-      logo: "/descope.svg",
       bg: "#1C1C23",
       text: "#ffffff",
     },

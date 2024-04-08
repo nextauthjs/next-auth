@@ -108,6 +108,10 @@ export default function Zoom(
         image: profile.pic_url,
       }
     },
+    style: {
+      bg: "#0b5cff",
+      text: "#fff",
+    },
     options: config,
   }
 }

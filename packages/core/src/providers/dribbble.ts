@@ -108,7 +108,6 @@ export default function Dribbble<P extends DribbbleProfile>(
     },
 
     style: {
-      logo: "/dribbble.svg",
       text: "#fff",
       bg: "#000",
     },
