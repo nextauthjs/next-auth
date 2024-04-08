@@ -53,7 +53,7 @@
     "turbo": "^1.11.3",
     "typescript": "5.3.3",
     "utils": "workspace:*",
-    "vite": "^5.0.12",
+    "vite": "^5.0.13",
     "vitest": "1.2.2"
   },
   "engines": {
