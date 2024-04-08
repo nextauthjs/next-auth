@@ -48,7 +48,7 @@ export function FrameworkExamples() {
       onTabChange={handleTabChange}
       orientation="horizontal"
       defaultValue="nextjs"
-      className="w-full flex flex-col !p-0 !m-0 max-w-2xl lg:self-start"
+      className="w-full flex flex-col !py-8 md:!py-16 !m-0 max-w-2xl lg:self-start"
     >
       <RichTabs.List className="justify-between p-2 bg-white rounded-t-lg shadow-md backdrop-blur dark:bg-neutral-950/40">
         <div className="flex gap-2">
@@ -63,7 +63,7 @@ export function FrameworkExamples() {
               alt="Next.js Logo"
               className="dark:invert"
             />
-            Next.js
+            <span className="hidden md:block">Next.js</span>
           </RichTabs.Trigger>
           <RichTabs.Trigger
             value="sveltekit"
@@ -71,18 +71,26 @@ export function FrameworkExamples() {
             className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-gray-200 !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300"
           >
             <Image width="24" src={SvelteKit} alt="SvelteKit Logo" />
-            SvelteKit
+            <span className="hidden md:block">SvelteKit</span>
           </RichTabs.Trigger>
           <RichTabs.Trigger
             value="express"
             orientation="vertical"
             className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-gray-200 !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300"
           >
-            <Image width="24" src={Express} alt="Express Logo" className="dark:invert" />
-            Express
+            <Image
+              width="24"
+              src={Express}
+              alt="Express Logo"
+              className="dark:invert"
+            />
+            <span className="hidden md:block">Express</span>
           </RichTabs.Trigger>
-          <Link href="/integrations" className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-gray-200 !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex gap-2 items-center">
-            More
+          <Link
+            href="/integrations"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-gray-200 !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex gap-2 items-center"
+          >
+            <span className="hidden md:block">More</span>
             <CaretRight />
           </Link>
         </div>
@@ -92,7 +100,7 @@ export function FrameworkExamples() {
           <div className="bg-red-300 rounded-full size-4"></div>
         </div>
       </RichTabs.List>
-      <div className="w-full p-2 pt-0 dark:bg-neutral-950/30 backdrop-blur bg-white rounded-b-lg shadow-md">
+      <div className="p-2 pt-0 w-full bg-white rounded-b-lg shadow-md backdrop-blur dark:bg-neutral-950/30">
         <RichTabs.Content
           orientation="vertical"
           value="nextjs"
