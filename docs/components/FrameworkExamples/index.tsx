@@ -87,7 +87,7 @@ export function FrameworkExamples() {
             <span className="hidden md:block">Express</span>
           </RichTabs.Trigger>
           <Link
-            href="/integrations"
+            href="/getting-started/integrations"
             className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-gray-200 !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex gap-2 items-center"
           >
             <span className="hidden md:block">More</span>
