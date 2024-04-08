@@ -1,13 +1,22 @@
-# Callbacks
+import { Callout } from "nextra/components"
 
-## `authorized`
+## Updating the session
 
-TODO
+Auth.js libraries provide a way to update the session with additional information received from a user.
 
-## `jwt`
+### With JWT
 
-TODO
+<Callout type="warning">
+  Although it is possible to update a JWT session, due to its stateless nature, the updated information will be lost on the next login. To persist the updated information across logins, use a database session, or ask the user to update their information in the provider directly, and then log in again.
+</Callout>
 
-## `session`
+### With Database
 
-TODO
+## Extend the default session
+
+Auth.js libraries only expose a subset of the user's information by default. This is `name`, `email`, and `image`. Below you can see how to extend the default session with additional information.
+
+### With JWT
+
+### With Database
+
