@@ -1,54 +1,21 @@
 import { Callout, Steps, Tabs } from "nextra/components"
 import { Screenshot } from "@/components/Screenshot"
 
-{/* * Needs to be moved to under /getting-started/authentication token auth -> nodemailer * */}
+# Magic links with Resend
 
-# Magic links authentication with Nodemailer
+In this tutorial, we'll be setting up Auth.js in a Next.js application to be able to log in with **Resend**.
 
-In addition to [OAuth](/getting-started/authentication), you can also allow users to authenticate via "magic links", or Email verification tokens.
-
-Magic links are links that are sent to the user's email. When the user clicks on them, they will be redirected to your Auth.js app and be logged in as long as the link is still valid.
-
-<Callout>
-  Adding login via magic links in addition to one or more OAuth services allows
-  users to always be able to login in your app even if they lose access to their
-  OAuth account (e.g. their Google account is locked or deleted).
-</Callout>
-
-## How it works
-
-On initial sign in, a **Verification Token** is sent to the email address provided by the user. By default this token **is valid for 24 hours**. If the verification token is used within that time (by clicking on the link in the email) an account is created for the user (if they did not had one yet) and they are signed in.
+Magic links (or passwordless) authentication is a login method using links that are sent to the user's email. When the user clicks on them, they will be redirected to your Auth.js app and be logged in as long as the link hasn't expired.
 
 <Callout type="info">
-  The Email Provider can be used with both JSON Web Tokens and database
-  sessions, but you [must configure a database
-  adapter](/getting-started/database) to use it. It is not possible to enable
-  email magic link sign in without using a database.
+  This tutorial uses Resend as the Passwordless provider and Next.js as the framework. Note that for any OAuth
+  provider or any framework, **the process will be the same/very similar**, mainly differing on how
+  you register your application in the chosen provider's dashboard.
 </Callout>
 
-## Overview
+## Setting up Auth.js
 
-<Steps>
-
-### Installing Auth.js
-
-Initial installation of Auth.js and Next.js
-
-### Setting up an Email provider
-
-We need to set up an email provider so that we can send emails containing sign in links to your users. For this tutorial we will be using [Sendgrid](https://sendgrid.com/solutions/email-api/).
-
-### Setting up a database adapter
-
-A database adapter is required for setting magic links. We need to store the verification tokens so that we can verify them when users come back to the app after clicking on the sign in link present in the email.
-
-### Wiring all together
-
-Finally, we'll need to wire all together to make Auth.js `EmailProvider` work with Next.js.
-
-</Steps>
-
-## Installing Auth.js & Next.js
+### Installing Auth.js and Next.js
 
 For this tutorial, we're gonna use the default [Auth.js & Next.js example app](https://github.com/nextauthjs/next-auth-example). If you already have an existing Next.js app, it should work too. If you haven't, clone the repository:
 
@@ -58,181 +25,32 @@ git clone https://github.com/nextauthjs/next-auth-example.git && cd next-auth-ex
 
 If you're using the example app, Auth.js is already installed, otherwise follow the [installation instructions](/installation).
 
-## Setting up Sendgrid
+### Creating the server config
 
-First, create an account in Sendgrid. Then login to Sendgrid's dashboard and navigate to **Settings** → **API Keys**. Lets create a new API key. Once created, store it in a safe place.
+Next, we're gonna create the main Auth.js configuration file (which is a Next.js API route). This route contains the necessary configuration for Auth.js, as well as the dynamic route handler:
 
-import DashboardSmtp from "../../public/img/magic-links/dashboard-smtp.webp"
-
-<Screenshot src={DashboardSmtp} alt="SendGrid Dashboard" />
-
-### Configuring Auth.js
-
-Next, as [per Sendgrid
-documentation](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api),
-let's add the following [environment variables](https://next.js.org/docs/basic-features/environment-variables) in our Next.js app:
-
-```bash filename=".env.local"
-AUTH_SENDGRID_KEY={API_KEY}
-EMAIL_FROM={SENDER_EMAIL}
-```
-
-Note that we're also specifying from which domain emails are going to be sent from. You're going to need to verify [your sender's identity](https://docs.sendgrid.com/for-developers/sending-email/sender-identity) so that Sendgrid can send emails from the specified email domain.
-
-Finally, we need to expose these configuration values to Auth.js `Sendgrid` provider.
-
-<Tabs items={["App router", "Pages router"]}>
-<Tabs.Tab>
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth";
-import Sendgrid from "next-auth/providers/sendgrid";
+import GitHub from "next-auth/providers/github";
  
 export const { handlers, auth } = NextAuth({
-  providers: [
-    Sendgrid({
-      from: process.env.EMAIL_FROM,
-    }),
-  ],
+  providers: [GitHub],
 });
 ```
 ```ts filename="app/api/auth/[...nextauth]/route.ts"
 export { GET, POST } from "./auth";
 export const runtime = "edge"; // optional
 ```
-</Tabs.Tab>
-<Tabs.Tab>
-```ts filename="./auth.ts"
-import NextAuth from "next-auth";
-import Email from "next-auth/providers/email";
- 
-export const { handlers, auth } = NextAuth({
-  providers: [
-    Sendgrid({
-      from: process.env.EMAIL_FROM,
-    }),
-  ],
-});
-```
-```ts filename="app/api/auth/[...nextauth]/route.ts"
-// Even in pages, we recommend moving this catch-all route to the app directory
-export { GET, POST } from "./auth";
-```
-</Tabs.Tab>
-</Tabs>
 
-## Setting up an adapter
+Behind the scenes, this creates all the relevant Auth.js API routes so that your application can interact with the chosen OAuth provider using the [OAuth 2](https://oauth.net/2) protocol.
 
-We now need to setup a [database adapter](/reference/adapters), to store the verification tokens that Auth.js will generate and send to your users via Sendgrid.
+### Adding environment variables
 
-For this tutorial, we're going to use the [MongoDB Adapter](/reference/adapter/mongodb), but any of the adapters will work.
+If you haven't, create an `.env.local` file as explained in the [installation section](/installation) and add the following two variables:
 
-Let's start by installing the adapter package:
-
-```bash npm2yarn
-npm install -D  @auth/mongodb-adapter mongodb
+```bash filename=".env.local"
+AUTH_GITHUB_ID="123"
+AUTH_GITHUB_SECRET="123"
 ```
 
-and create a simple MongoDB client:
-
-```ts filename="lib/mongodb/client.ts"
-// This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
-import { MongoClient } from "mongodb";
-
-const uri = process.env.MONGODB_URI;
-const options = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-};
-
-let client;
-let clientPromise;
-
-if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your Mongo URI to .env.local");
-}
-
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
-  }
-  clientPromise = global._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
-}
-
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export clientPromise;
-```
-
-And lets reference this new adapter from our Auth.js configuration file:
-
-```diff filename="./auth.ts"
-import NextAuth from "next-auth"
-import Sendgrid from "next-auth/providers/sendgrid"
-
-+ import { MongoDBAdapter } from "@auth/mongodb-adapter"
-+ import { clientPromise } from "./lib/mongodb/client"
-
-export const { handlers, auth } = NextAuth({
-+ adapter: MongoDBAdapter(clientPromise),
-  providers: [
-    Sendgrid({
-      from: process.env.EMAIL_FROM
-    }),
-  ],
-})
-```
-
-## Wiring all together
-
-Now that everything is properly configured, let's try to sign in via magic links in our application.
-
-Start the Next.js app:
-
-```bash npm2yarn
-npm run dev
-```
-
-And navigate to [`http://localhost:3000`](http://localhost:3000). Click on "Sign in" and you should see the default Auth.js sign in page:
-
-import MagicLinkStart from "../../public/img/magic-links/start.webp"
-
-<Screenshot src={MagicLinkStart} alt="Screenshot of sign in page" />
-
-<Callout type="info">
-  You can customize the look and feel of your Sign in page, check out [this
-  guide](/guides/pages/signin)
-</Callout>
-
-Then insert the email address we want to sign in with in the "Email" field and click on "Sign in with Email" to submit the form. Auth.js will then display another page hinting to us to check our email:
-
-import MagicLinkCheck from "../../public/img/magic-links/check.webp"
-
-<Screenshot src={MagicLinkCheck} alt="Screenshot of check email page" />
-
-Let's go to our mailbox, and look for an email sent from Auth.js (check your spam folder, just in case):
-
-import Mailbox from "../../public/img/magic-links/mailbox.webp"
-
-<Screenshot src={Mailbox} alt="Screenshot of mailbox" />
-
-We got one from the sender specified in the `EMAIL_FROM` environment variable we set up earlier.
-
-Click on "Sign in" in the Email body and a new browser tab should open, landing in our application already authenticated:
-
-import Logged from "../../public/img/magic-links/logged.webp"
-
-<Screenshot src={Logged} alt="Screenshot of logged in" />
-
-<Callout type="info">
-  A user account (i.e. an entry in the `User` table) will not be created for the
-  user until the first time they verify their email address. If an email address
-  is already associated with an account, the user will be signed in to that
-  account when they use the link in the email.
-</Callout>
+We will be filling `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` with proper values from the GitHub Developer Portal once we have registered our application in GitHub.
