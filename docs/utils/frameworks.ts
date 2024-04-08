@@ -97,7 +97,7 @@ function codeExpress() {
   return `
 // server.ts
 import { express } from "express"
-import { SolidAuth } from "@auth/express"
+import { ExpressAuth } from "@auth/express"
 import GitHub from "@auth/express/providers/github"
  
 const app = express()

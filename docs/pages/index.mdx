@@ -6,8 +6,8 @@ import { Blur } from "@/components/Blur"
 import { Guides } from "@/components/Guides"
 
 <div className="relative overflow-hidden w-full h-full flex flex-col">
-  <section className="flex justify-center w-full px-8 lg:px-4 flex-col lg:flex-row self-center items-center gap-6 max-w-7xl py-32 lg:py-56">
-    <div className="flex-col flex justify-between h-96 mx-8">
+  <section className="flex justify-center w-full px-8 lg:px-4 flex-col lg:flex-row self-center items-center gap-6 max-w-7xl pt-12 pb-24 sm:py-32 lg:py-56">
+    <div className="flex-col flex justify-between gap-10 mx-8">
       <div className="flex flex-col gap-8 justify-center py-2 items-center w-full">
         <span className="text-6xl font-black lg:text-8xl">Auth.js</span>
         <div className="flex flex-col gap-4 justify-center text-2xl font-bold text-center lg:text-3xl">
@@ -16,19 +16,48 @@ import { Guides } from "@/components/Guides"
         </div>
       </div>
       <div className="text-lg justify-center items-center flex gap-4">
-        <Link href="/getting-started" className="p-3 px-5 text-sm font-semibold dark:bg-violet-800 text-white">Get Started</Link>
-        <Link href="/getting-started" className="p-3 px-3 text-sm flex gap-2 items-center justify-start dark:bg-gray-300 text-black">
-          <svg className="size-4" width="32" height="32" viewBox="0 0 256 256" version="1.1" preserveAspectRatio="xMidYMid">
-              <g>
-                  <polygon fill="#C12127" points="0 256 0 0 256 0 256 256"/>
-                  <polygon fill="#FFFFFF" points="48 48 208 48 208 208 176 208 176 80 128 80 128 208 48 208"/>
-              </g>
+        <Link
+          href="/getting-started"
+          className="p-3 w-1/2 text-center text-sm font-semibold bg-violet-600 dark:bg-violet-800 text-white"
+        >
+          Get Started
+        </Link>
+        <Link
+          href="/getting-started"
+          className="p-3 w-1/2 justify-center text-sm flex gap-2 items-center dark:bg-gray-300 bg-gray-400 text-black"
+        >
+          <svg className="size-4" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <path
+              d="M119.83,56A52,52,0,0,0,76,32a51.92,51.92,0,0,0-3.49,44.7A49.28,49.28,0,0,0,64,104v8a48,48,0,0,0,48,48h48a48,48,0,0,0,48-48v-8a49.28,49.28,0,0,0-8.51-27.3A51.92,51.92,0,0,0,196,32a52,52,0,0,0-43.83,24Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+            <path
+              d="M104,232V192a32,32,0,0,1,32-32h0a32,32,0,0,1,32,32v40"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
+            <path
+              d="M104,208H72a32,32,0,0,1-32-32A32,32,0,0,0,8,144"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            />
           </svg>
-          Latest Release
+          Source
         </Link>
       </div>
       <div className="text-lg flex-col items-center flex gap-2">
-        <div className="flex text-base items-center gap-2">
+        <div className="flex flex-col sm:flex-row text-base items-center gap-2">
           Looking for a hosted alternative?
           <a
             href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
@@ -68,8 +97,8 @@ import { Guides } from "@/components/Guides"
       className="z-10 flex gap-4 justify-start items-center text-2xl md:text-3xl font-bold
       text-center text-white lg:text-4xl h-full"
     >
-      <div className="leading-normal text-slate-800 dark:text-slate-200 pb-12 dark:drop-shadow-none">
-        Supports a wide range of providers
+      <div className="leading-normal text-slate-800 px-12 dark:text-slate-200 pb-12 dark:drop-shadow-none">
+        Supports all these providers and more!
       </div>
     </div>
     <ProviderMarquee />
