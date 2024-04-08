@@ -4,12 +4,14 @@ import { Link } from "@/components/Link"
 import NodemailerSetup from "./content/NodemailerSetup.mdx"
 import ResendSetup from "./content/ResendSetup.mdx"
 import SendgridSetup from "./content/SendgridSetup.mdx"
+import PostmarkSetup from "./content/PostmarkSetup.mdx"
 import { Callout } from "nextra/components"
 
 const EmailTypes = {
-  Nodemailer: "Nodemailer",
   Resend: "Resend",
+  Postmark: "Postmark",
   Sendgrid: "Sendgrid",
+  Nodemailer: "Nodemailer",
 } as const
 
 export function MagicLinkInstructions() {
@@ -49,7 +51,7 @@ export function MagicLinkInstructions() {
           className={cx(
             "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300",
             activeEmailType === EmailTypes.Resend &&
-            "dark:bg-neutral-950 bg-neutral-100"
+              "dark:bg-neutral-950 bg-neutral-100"
           )}
         >
           <img className="size-16" src={`/img/providers/resend.svg`} />
@@ -61,7 +63,7 @@ export function MagicLinkInstructions() {
           className={cx(
             "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300",
             activeEmailType === EmailTypes.Sendgrid &&
-            "dark:bg-neutral-950 bg-neutral-100"
+              "dark:bg-neutral-950 bg-neutral-100"
           )}
         >
           <img className="size-16" src={`/img/providers/sendgrid.svg`} />
@@ -73,16 +75,29 @@ export function MagicLinkInstructions() {
           className={cx(
             "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300",
             activeEmailType === EmailTypes.Nodemailer &&
-            "dark:bg-neutral-950 bg-neutral-100"
+              "dark:bg-neutral-950 bg-neutral-100"
           )}
         >
-          <img className="w-16 h-12" src={`/img/providers/nodemailer.svg`} />
+          <img className="size-16" src={`/img/providers/nodemailer.svg`} />
           <div className="text-sm text-center">Nodemailer</div>
+        </button>
+        <button
+          aria-selected={activeEmailType === EmailTypes.Postmark}
+          onClick={() => setActiveEmailType(EmailTypes.Postmark)}
+          className={cx(
+            "flex flex-col gap-2 justify-around items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300",
+            activeEmailType === EmailTypes.Postmark &&
+              "dark:bg-neutral-950 bg-neutral-100"
+          )}
+        >
+          <img className="size-16" src={`/img/providers/postmark.svg`} />
+          <div className="text-sm text-center">Postmark</div>
         </button>
       </div>
       {activeEmailType === EmailTypes.Resend ? <ResendSetup /> : null}
       {activeEmailType === EmailTypes.Sendgrid ? <SendgridSetup /> : null}
       {activeEmailType === EmailTypes.Nodemailer ? <NodemailerSetup /> : null}
+      {activeEmailType === EmailTypes.Postmark ? <PostmarkSetup /> : null}
     </div>
   )
 }
