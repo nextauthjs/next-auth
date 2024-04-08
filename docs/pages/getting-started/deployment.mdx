@@ -23,7 +23,7 @@ Alternatively, you can use the following `openssl` command, which should be avai
 openssl rand -base64 33
 ```
 
-If you are using an [OAuth Provider](/reference/oauth-providers), your provider will have a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's setup documentation).
+If you are using an [OAuth Provider](/concepts/oauth), your provider will provide you with a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's specific documentation).
 
 <Callout type="info">
 Auth.js supports **environment variable inference**, meaning that if you name your provider environment variables following a specific syntax, you won't need to explicitly pass them to the providers in your configuration.
@@ -35,6 +35,8 @@ AUTH_OKTA_ID=abc
 AUTH_OKTA_SECRET=abc
 AUTH_OKTA_ISSUER=abc
 ```
+
+For more information, check out our [environment variables](/guides/environment-variables) page.
 
 </Callout>
 
@@ -53,27 +55,31 @@ This environment variable is mostly unnecessary with v5 as the host is inferred 
 
 ### `AUTH_REDIRECT_PROXY_URL`
 
-This environment variable is designed for advanced use-cases only, when using Auth.js as a proxy for preview deploys, for example. For more details, see the [securign preview deploys](#securing-a-preview-deployment) section below.
+This environment variable is designed for advanced use-cases only, when using Auth.js as a proxy for preview deploys, for example. For more details, see the [securing preview deploys](#securing-a-preview-deployment) section below.
 
 ## Serverless
 
-Hosting services like Vercel and Netlify are great for deploying apps with Auth.js authentication. The following steps should help you get started:
-
-1. Create the required [environment variables](#environment-variables) for your desired environments. Don't forget to also add the required environment variables for your provider of choice (i.e. OAuth clientId / secret, etc.).
-2. When using an OAuth provider, make sure the callback URL for your production URL is setup correctly. Many OAuth providers will only allow you to set 1 callbackUrl per OAuth application. In which case, you'll need to create separate applications for each environment (development, production, etc.). Other providers, like Google, allow you to add many callbackUrls.
+1. Create the required [environment variables](#environment-variables) for your desired environments. Don't forget to also add the required environment variables for your provider(s) of choice (i.e. OAuth `clientId` / `clientSecret`, etc.).
+2. When using an OAuth provider, make sure the callback URL for your production URL is setup correctly. Many OAuth providers will only allow you to set 1 `callbackUrl` per OAuth application. In which case, you'll need to create separate applications for each environment (development, production, etc.). Other providers, like Google, allow you to add many `callbackUrl`s to one application.
    - By default, the callbackUrl for `next-auth` (Next.js) applications should look something like this: `https://company.com/api/auth/callback/[provider]` (replace `company.com` with your domain and `provider` with the provider name, i.e. `github`).
-   - All other frameworks (`@auth/sveltekit`, `@auth/express`, etc.) by default will use the path `/auth/callback/[provider]`.
-3. Deploy! After having setup those two prerequisites, you should be able to deploy and run your Auth.js application in production!
+   - All other frameworks (`@auth/sveltekit`, `@auth/express`, etc.), by default, will use the path `/auth/callback/[provider]`.
+3. Deploy! After having setup those two prerequisites, you should be able to deploy and run your Auth.js application on Netlify, Vercel, etc.
+
+<Callout type="warning">
+  If you are storing users in a [database](/getting-started/database), we
+  recommend using a different OAuth app for development/production so that you
+  don't mix your test and production user base.
+</Callout>
 
 ## Self-hosted
 
-Auth.js can also be deployed anywhere you can deploy the framework of your choice. Check out the framework's documentation on self-hosting.
+Auth.js can also be deployed anywhere you can deploy your framework of choice. Check out the framework's documentation on self-hosting.
 
 ### Docker
 
 In a Docker environment, make sure to set either `trustHost: true` in your Auth.js configuration or the `AUTH_TRUST_HOST` environment variable to `true`.
 
-You can see an Auth.js app being hosted via Docker at https://nextjs-docker-example.authjs.dev (see the [source code](https://github.com/nextauthjs/next-auth-example)). Below is an example `Dockerfile` for a Next.js application running Auth.js.
+Our example application is also hosted via Docker [here](https://nextjs-docker-example.authjs.dev) (see the [source code](https://github.com/nextauthjs/next-auth-example)). Below is an example `Dockerfile` for a Next.js application using Auth.js.
 
 ```docker filename="Dockerfile"
 FROM node:20-alpine AS base
@@ -141,23 +147,17 @@ CMD HOSTNAME="0.0.0.0" node server.js
 
 Most OAuth providers cannot be configured with multiple callback URLs or using a wildcard.
 
-However, Auth.js **supports Preview deployments**, even **with OAuth providers**:
+However, Auth.js **supports Preview deployments**, even **with OAuth providers**. The idea is to have one deployment which proxies authentication requests to the dynamic URLs of your main application. So you could have 1 stable deployment, like at `auth.company.com` where you would point all your OAuth provider's `callbackUrl`s, and this application would then, upon successful authentication, redirect the user back to the preview deploy URL, like `https://git-abc123-myapp.vercel.app`. Follow these steps to get started with securing preview deploys with Auth.js.
 
-1. Determine a stable deployment URL. Eg.: A deployment whose URL does not change between builds, for example. `auth.yourdomain.com` (using a subdomain is not a requirement, this can be the main site's URL too, for example.)
-2. Set `AUTH_REDIRECT_PROXY_URL` to that stable deployment URL, including the path from where Auth.js handles the routes. Eg.: (`https://auth.yourdomain.com/api/auth`)
-3. For your OAuth provider, set the callback URL using the stable deployment URL. Eg.: For GitHub `https://auth.yourdomain.com/api/auth/callback/github`)
+1. Determine a stable deployment URL. For example, a deployment whose URL does not change between builds, for example. `auth.yourdomain.com` (using a subdomain is not a requirement, this can be the main site's URL too, for example.)
+2. In your preview deploy application, set `AUTH_REDIRECT_PROXY_URL` to that stable deployment URL, including the path from where Auth.js handles the routes. Eg.: (`https://auth.yourdomain.com/api/auth`)
+3. Update the `callbackUrl` in your OAuth provider's configuration to use the stable deployment URL. For example, for GitHub it would be `https://auth.yourdomain.com/api/auth/callback/github`.
 
-Fun fact: all of our example apps mentioned above are using the proxy functionality!
+Fun fact: all of our example apps are using the proxy functionality!
 
 <Callout type="info">
   To support preview deployments, the `AUTH_SECRET` value needs to be the same
   for the stable deployment and deployments that will need OAuth support.
-</Callout>
-
-<Callout type="warning">
-  If you are storing users in a [database](/reference/core/adapters), we
-  recommend using a different OAuth app for development/production so that you
-  don't mix your test and production user base.
 </Callout>
 
 <details>

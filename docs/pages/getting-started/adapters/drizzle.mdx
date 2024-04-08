@@ -1,4 +1,6 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Accordion, Accordions } from "@/components/Accordion"
 
 <a href="https://orm.drizzle.team">
   <img align="right" src="/img/adapters/drizzle.svg" width="64" height="64" />
@@ -19,38 +21,74 @@ npm install drizzle-orm @auth/drizzle-adapter
 npm install drizzle-kit --save-dev
 ```
 
-Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
+### Environment Variables
+
+```sh
+DRIZZLE_DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { db } from "./schema"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
+  providers: [],
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: DrizzleAdapter(db),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: DrizzleAdapter(db),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 <Callout>
   If you're using multi-project schemas, you can pass your table function as a
   second argument
 </Callout>
 
-First, create a schema that includes [the minimum requirements for a `next-auth` adapter](/reference/core/adapters#models). You can select your favorite SQL flavor below and copy it.
-Additionally, you may extend the schema from the minimum requirements to suit your needs.
+Apply one of the below schema's to your database to setup the required tables. You may of course extend the schema with additional fields, etc.
 
-- [Postgres](#postgres)
-- [MySQL](#mysql)
-- [SQLite](#sqlite)
-
-### Postgres
+<Accordions>
+<Accordion title="PostgreSQL">
 
 ```ts filename="schema.ts"
 import {
@@ -115,7 +153,8 @@ export const verificationTokens = pgTable(
 )
 ```
 
-### MySQL
+</Accordion>
+<Accordion title="MySQL">
 
 ```ts filename="schema.ts"
 import {
@@ -185,7 +224,8 @@ export const verificationTokens = mysqlTable(
 )
 ```
 
-### SQLite
+</Accordion>
+<Accordion title="SQLite">
 
 ```ts filename="schema.ts"
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
@@ -244,8 +284,5 @@ export const verificationTokens = sqliteTable(
 )
 ```
 
-## Migrating your database
-
-With your schema now described in your code, you'll need to migrate your database to your schema.
-
-For full documentation on how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations).
+</Accordion>
+</Accordions>

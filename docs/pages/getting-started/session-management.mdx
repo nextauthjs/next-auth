@@ -84,9 +84,7 @@ export function SignIn() {
   </Code.NextPages>
   <Code.Svelte>
 
-The SvelteKit client also supports two signin / signout methods, one server-side using Form Actions, and one client-side using normal requests and redirects.
-
-### Handling Signin
+The SvelteKit client supports two signin and signout methods, one server-side using Form Actions, and one client-side using requests and redirects.
 
 #### Form Action (Server-Side)
 
@@ -135,6 +133,11 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 Just like in other frameworks, you can also pass a provider to the `signIn` function which will attempt to login directly with that provider.
 
   </Code.Svelte>
+  <Code.Express>
+
+The Express package runs server-side and therefore it doesn't make sense to create a "SignIn button component". However, to signin or signout with Express, send a request to the appropriate [REST API Endpoints](/reference/core/types#authaction) from your client (i.e. `/auth/signin`, `/auth/signout`, etc.).
+
+  </Code.Express>
 </Code>
 
 You can also pass a provider to the `signIn` function which will attempt to login directly with that provider. Otherwise, when clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/guides/pages/signin), the user will be redirected to `/api/auth/signin`, the sign in page Auth.js ships with. There the configured authentication methods will be displayed:
@@ -295,12 +298,17 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 <div>
   <nav>
     <img src="/img/logo.svg" alt="Company Logo" />
-    <button on:click={signOut}>Signin</button>
+    <button on:click={signOut}>Signout</button>
   </nav>
 </div>
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+The Express package runs server-side and therefore it doesn't make sense to create a "SignIn button component". However, to signin or signout with Express, send a request to the appropriate [REST API Endpoints](/reference/core/types#authaction) from your client (i.e. `/auth/signin`, `/auth/signout`, etc.).
+
+</Code.Express>
 </Code>
 
 <Callout>
@@ -451,6 +459,26 @@ Then you can access the `session` on the `$page.data` object in your page.
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="app.ts"
+import { getSession } from "@auth/express"
+
+export function authSession(req: Request, res: Response, next: NextFunction) {
+  res.locals.session = await getSession(req)
+  next()
+}
+
+app.use(authSession)
+
+// Now in your route
+app.get("/", (req, res) => {
+  const { session } = res.locals
+  res.render("index", { user: session?.user })
+})
+```
+
+</Code.Express>
 </Code>
 
 </RichTabs.Content>
@@ -550,6 +578,45 @@ export const load: PageServerLoad = async (event) => {
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+You can protect routes by checking for the presence of a session and then redirect to a login page if the session is not present. This can either be done per route, or for a group of routes using a middleware such as the following:
+
+```ts filename="lib.ts"
+import { getSession } from "@auth/express"
+
+export async function authenticatedUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const session = res.locals.session ?? (await getSession(req, authConfig))
+  if (!session?.user) {
+    res.redirect("/login")
+  } else {
+    next()
+  }
+}
+```
+
+```ts filename="app.ts"
+import { authenticatedUser } from "./lib.ts"
+
+// This route is protected
+app.get("/profile", authenticatedUser, (req, res) => {
+  const { session } = res.locals
+  res.render("profile", { user: session?.user })
+})
+
+// This route is not protected
+app.get("/", (req, res) => {
+  res.render("index")
+})
+
+app.use("/", root)
+```
+
+</Code.Express>
 </Code>
 
 ### API Routes
@@ -618,6 +685,11 @@ export const GET: RequestHandler = async (event) => {
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+API Routes are protected in the same way as any other route in Express, see [the examples above](/getting-started/session-management?tab=protecting&framework=express#pages).
+
+</Code.Express>
 </Code>
 
 ### Next.js Middleware
@@ -701,6 +773,28 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="src/routes/auth.route.ts" {12-14}
+import express from "express"
+import { ExpressAuth } from "@auth/express"
+import GitHub from "@auth/express/providers/github"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [GitHub],
+    pages: {
+      signIn: "/signin",
+    },
+  })
+)
+```
+
+</Code.Express>
 </Code>
 
 To continue setting up the custom page, checkout our [guide on custom pages](/guides/pages/signin).

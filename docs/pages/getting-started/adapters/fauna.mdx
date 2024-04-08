@@ -1,4 +1,5 @@
 import { Accordion, Accordions } from "@/components/Accordion"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/adapters/fauna.svg" height="64" width="64" />
 
@@ -16,7 +17,80 @@ import { Accordion, Accordions } from "@/components/Accordion"
 npm install @auth/fauna-adapter fauna
 ```
 
-This is the Fauna Adapter for [Auth.js](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` or other client package. It is not a standalone package.
+### Environment Variables
+
+```sh
+AUTH_FAUNA_CLIENT=http://localhost:8443
+AUTH_FAUNA_SECRET=abc123
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const client = new Client({
+  secret: process.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(process.env.AUTH_FAUNA_CLIENT)
+})
+
+export { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: FaunaAdapter(client)
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const client = new Client({
+  secret: process.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(process.env.AUTH_FAUNA_CLIENT)
+})
+
+export { handler, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: FaunaAdapter(client)
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const app = express()
+
+const client = new Client({
+  secret: process.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(process.env.AUTH_FAUNA_CLIENT),
+})
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: FaunaAdapter(client),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Migrating to v2
 
@@ -74,25 +148,6 @@ Collection.byName("verification_tokens")!.update({
 
   </Accordion>
 </Accordions>
-
-### Configure Auth.js
-
-```ts filename="auth.ts"
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
-import { Client } from "fauna"
-import { FaunaAdapter } from "@auth/fauna-adapter"
-
-const client = new Client({
-  secret: "secret",
-  endpoint: new URL('http://localhost:8443')
-})
-
-export { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [GitHub],
-  adapter: FaunaAdapter(client)
-})
-```
 
 #### Schema
 

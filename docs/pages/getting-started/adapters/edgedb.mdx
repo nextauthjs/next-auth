@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img align="right" src="/img/adapters/edgedb.svg" height="64" width="64" />
 
 # EdgeDB Adapter
@@ -10,24 +12,87 @@
 
 ### Installation
 
-To use this Adapter, you need to install `edgedb`, `@edgedb/generate`, and the separate `@auth/edgedb-adapter` package:
-
 ```bash npm2yarn
 npm install edgedb @auth/edgedb-adapter
 npm install @edgedb/generate --save-dev
 ```
 
-First, ensure you have the EdgeDB CLI installed.
+Ensure you have the EdgeDB CLI installed. Follow the instructions below, or read the [EdgeDB quickstart](https://www.edgedb.com/docs/intro/quickstart) to install the EdgeDB CLI and initialize a project
 
-Follow the instructions below, or read the [EdgeDB quickstart](https://www.edgedb.com/docs/intro/quickstart) to install the EdgeDB CLI and initialize a project
+### Environment Variables
 
-### Linux or macOS
+```sh
+AUTH_EDGEDB_DSN="edgedb://edgedb:p4ssw0rd@10.0.0.1"
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```js filename="./auth.ts"
+import NextAuth from "next-auth"
+import { EdgeDBAdapter } from "@auth/edgedb-adapter"
+import { createClient } from "edgedb"
+
+const client = createClient({ dsn: process.env.AUTH_EDGEDB_DSN })
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: EdgeDBAdapter(client),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```js filename="./auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { EdgeDBAdapter } from "@auth/edgedb-adapter"
+import { createClient } from "edgedb"
+
+const client = createClient({ dsn: process.env.AUTH_EDGEDB_DSN })
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: EdgeDBAdapter(client),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { EdgeDBAdapter } from "@auth/edgedb-adapter"
+import { createClient } from "edgedb"
+
+const app = express()
+
+const client = createClient({ dsn: process.env.AUTH_EDGEDB_DSN })
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: EdgeDBAdapter(client),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### EdgeDB CLI
+
+#### Linux or macOS
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com | sh
 ```
 
-### Windows
+#### Windows
 
 ```powershell
 iwr https://ps1.edgedb.com -useb | iex
@@ -43,34 +108,11 @@ edgedb project init
 
 This process will spin up an EdgeDB instance and [“link”](https://www.edgedb.com/docs/cli/edgedb_instance/edgedb_instance_link#edgedb-instance-link) it with your current directory. As long as you’re inside that directory, CLI commands and client libraries will be able to connect to the linked instance automatically, without additional configuration.
 
-### Configuration
-
-```js filename="./auth.js"
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-import { EdgeDBAdapter } from "@auth/edgedb-adapter"
-import { createClient } from "edgedb"
-
-const client = createClient()
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: EdgeDBAdapter(client),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-})
-```
-
 ### Schema
 
 Replace the contents of the auto-generated file in `dbschema/default.esdl` with the following:
 
-> This schema is adapted for use in EdgeDB and based upon our main [schema](https://authjs.dev/getting-started/adapters#models)
-
-```json filename="default.esdl"
+```js filename="default.esdl"
 module default {
     type User {
         property name -> str;
@@ -168,8 +210,6 @@ npx @edgedb/generate edgeql-js
 
 This will generate the [query builder](https://www.edgedb.com/docs/clients/js/querybuilder) so that you can write fully typed EdgeQL queries with TypeScript in a code-first way.
 
-For example
-
 ```ts
 const query = e.select(e.User, () => ({
   id: true,
@@ -203,29 +243,7 @@ The DSN is also known as a connection string. It will have the format `edgedb://
 ### Set an environment variable
 
 ```env filename=".env"
-EDGEDB_DSN=edgedb://johndoe:supersecure@myhost.com:420
-```
-
-### Update the client
-
-```diff filename="./auth.js"
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-import { EdgeDBAdapter } from "@auth/edgedb-adapter"
-import { createClient } from "edgedb"
-
-- const client = createClient()
-+ const client = createClient({ dsn: process.env.EDGEDB_DSN })
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: EdgeDBAdapter(client),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-})
+AUTH_EDGEDB_DSN=edgedb://johndoe:supersecure@myhost.com:420
 ```
 
 ### Apply migrations
