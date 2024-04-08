@@ -124,13 +124,13 @@ pre code.nextra-code:not(:has(span)) {
 .github-counter {
   position: absolute;
   color: #000;
-  top: 11px;
+  top: -5px;
   right: -16px;
   font-size: 9px;
   background-color: #ccc;
   padding: 2px 4px;
   border-radius: 10px;
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
 }
 
