@@ -24,8 +24,7 @@ COPY . .
 
 # This should be replaced with an actual secret in production.
 # REVIEW: Can we make this not required during build?
-ENV AUTH_SECRET dummy 
-RUN npm run build
+RUN AUTH_SECRET=dummy npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -57,4 +56,4 @@ ENV PORT 3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD node server.js
+CMD HOSTNAME="0.0.0.0" node server.js
