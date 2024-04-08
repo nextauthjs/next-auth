@@ -120,21 +120,21 @@ export function Guides() {
                 </div>
                 <div className="flex gap-4">
                   <Link
-                    className="flex gap-2 items-center p-2 px-4 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
+                    className="flex gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
                     target="_blank"
                     href={f.demo}
                     rel="noreferrer"
                   >
-                    <LinkIcon size={28} />
+                    <LinkIcon size={24} />
                     Visit
                   </Link>
                   <Link
                     target="_blank"
                     href={`https://github.com/nextauthjs/${f.repo}`}
-                    className="flex gap-2 items-center p-2 px-4 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
+                    className="flex gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
                     rel="noreferrer"
                   >
-                    <GithubLogo size={28} />
+                    <GithubLogo size={24} />
                     Clone
                   </Link>
                 </div>
