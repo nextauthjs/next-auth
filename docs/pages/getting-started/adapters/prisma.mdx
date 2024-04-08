@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 import { Accordion, Accordions } from "@/components/Accordion"
 
 <img align="right" src="/img/adapters/prisma.svg" width="64" height="64" />
@@ -18,16 +19,24 @@ npm install @prisma/client @auth/prisma-adapter
 npm install prisma --save-dev
 ```
 
+### Environment Variables
+
+```sh
+DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+```
+
+### Configuration
+
 <Callout>
   We recommend using version `@prisma/client@5.9.1` or above if using middleware
   or any other edge runtime(s).
 </Callout>
 
-Add the adapter to your Auth.js configuration file.
+<Code>
+<Code.Next>
 
-```js filename="./auth.js"
+```ts filename="./auth.ts"
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
@@ -35,9 +44,50 @@ const prisma = new PrismaClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [Google],
+  providers: [],
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: PrismaAdapter(prisma),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Edge Compatibility
 

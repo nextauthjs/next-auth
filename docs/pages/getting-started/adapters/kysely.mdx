@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/adapters/kysely.svg" width="64" height="64" />
 
@@ -16,6 +17,17 @@ import { Callout } from "nextra/components"
 npm install kysely @auth/kysely-adapter
 ```
 
+### Environment Variables
+
+```sh
+DATABASE_HOST=
+DATABASE_NAME=
+DATABASE_USER=
+DATABASE_PASSWORD=
+```
+
+### Configuration
+
 This adapter supports the same first party dialects that Kysely (as of v0.24.2) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
 
 ```bash npm2yarn
@@ -23,24 +35,58 @@ npm install pg
 npm install --save-dev @types/pg
 ```
 
+<Code>
+<Code.Next>
+
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
 import { KyselyAdapter } from "@auth/kysely-adapter"
 import { db } from "../../../db"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: KyselyAdapter(db),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
+  providers: [],
 })
 ```
 
-Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/reference/core/adapters#models) required by Auth.js.
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { KyselyAdapter } from "@auth/kysely-adapter"
+import { db } from "../../../db"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: KyselyAdapter(db),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { KyselyAdapter } from "@auth/kysely-adapter"
+import { db } from "../../../db"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: KyselyAdapter(db),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/guides/creating-a-database-adapter) required by Auth.js.
 
 ```ts filename="db.ts"
 import { PostgresDialect } from "kysely"

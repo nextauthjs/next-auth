@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img
   align="right"
   src="/img/adapters/upstash-redis.svg"
@@ -19,11 +21,20 @@
 npm install @upstash/redis @auth/upstash-redis-adapter
 ```
 
-Configure Auth.js to use the Upstash Redis Adapter:
+### Environment Variables
+
+```sh
+UPSTASH_REDIS_URL,
+UPSTASH_REDIS_TOKEN
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
 import upstashRedisClient from "@upstash/redis"
 
@@ -34,14 +45,56 @@ const redis = upstashRedisClient(
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UpstashRedisAdapter(redis),
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
+  providers: [],
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import upstashRedisClient from "@upstash/redis"
+
+const redis = upstashRedisClient(
+  process.env.UPSTASH_REDIS_URL,
+  process.env.UPSTASH_REDIS_TOKEN
+)
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: UpstashRedisAdapter(redis),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import upstashRedisClient from "@upstash/redis"
+
+const redis = upstashRedisClient(
+  process.env.UPSTASH_REDIS_URL,
+  process.env.UPSTASH_REDIS_TOKEN
+)
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: UpstashRedisAdapter(redis),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Advanced usage
 

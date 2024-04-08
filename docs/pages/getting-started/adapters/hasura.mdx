@@ -1,4 +1,5 @@
 import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
 
 <img align="right" src="/img/adapters/hasura.svg" width="64" height="64" />
 
@@ -16,7 +17,71 @@ import { Callout } from "nextra/components"
 npm install @auth/hasura-adapter
 ```
 
-### Schema
+### Environment variables
+
+```sh
+AUTH_HASURA_GRAPHQL=http://localhost:8000/graphql
+AUTH_HASURA_SECRET=abc123
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { HasuraAdapter } from "@auth/hasura-adapter"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: HasuraAdapter({
+    endpoint: process.env.AUTH_HASURA_GRAPHQL,
+    adminSecret: process.env.AUTH_HASURA_SECRET,
+  }),
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { HasuraAdapter } from "@auth/hasura-adapter"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: HasuraAdapter({
+    endpoint: process.env.AUTH_HASURA_GRAPHQL,
+    adminSecret: process.env.AUTH_HASURA_SECRET,
+  }),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { HasuraAdapter } from "@auth/hasura-adapter"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: HasuraAdapter({
+      endpoint: process.env.AUTH_HASURA_GRAPHQL,
+      adminSecret: process.env.AUTH_HASURA_SECRET,
+    }),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Migrations
 
 1. Create the Auth.js schema in your database using SQL.
 
@@ -95,17 +160,3 @@ ALTER TABLE ONLY accounts
   Tips: [Track all the tables and relationships in
   Hasura](https://hasura.io/docs/latest/schema/postgres/using-existing-database/#step-1-track-tablesviews)
 </Callout>
-
-2. Add the adapter to your `./auth.ts` Auth.js configuration file.
-
-```js filename="./auth.js"
-import NextAuth from "next-auth"
-import { HasuraAdapter } from "@auth/hasura-adapter"
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: HasuraAdapter({
-    endpoint: "<Hasura-GraphQL-endpoint>",
-    adminSecret: "<admin-secret>",
-  }),
-})
-```

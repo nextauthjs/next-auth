@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img align="right" src="/img/adapters/mikro-orm.svg" width="64" height="64" />
 
 # MikroORM Adapter
@@ -14,7 +16,16 @@
 npm install @mikro-orm/core @auth/mikro-orm-adapter
 ```
 
-Configure Auth.js to use the MikroORM Adapter:
+### Environment Variables
+
+```sh
+DATABASE_CONNECTION_STRING=./db.sqlite
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
@@ -22,14 +33,59 @@ import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MikroOrmAdapter({
-    // MikroORM options object. Ref: https://mikro-orm.io/docs/next/configuration#driver
-    dbName: "./db.sqlite",
+    // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
+    dbName: process.env.DATABASE_CONNECTION_STRING,
     type: "sqlite",
-    debug: process.env.DEBUG === "true" || process.env.DEBUG?.includes("db"),
+    debug: true,
   }),
   providers: [],
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  adapter: MikroOrmAdapter({
+    // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
+    dbName: process.env.DATABASE_CONNECTION_STRING,
+    type: "sqlite",
+    debug: true,
+  }),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: MikroOrmAdapter({
+      // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
+      dbName: process.env.DATABASE_CONNECTION_STRING,
+      type: "sqlite",
+      debug: true,
+    }),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Advanced usage
 

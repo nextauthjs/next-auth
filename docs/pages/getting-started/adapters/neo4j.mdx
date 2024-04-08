@@ -1,3 +1,5 @@
+import { Code } from "@/components/Code"
+
 <img align="right" src="/img/adapters/neo4j.svg" height="64" width="128" />
 
 # Neo4j Adapter
@@ -14,28 +16,87 @@
 npm install @auth/neo4j-adapter neo4j-driver
 ```
 
-Add this adapter to your `./auth.js` Auth.js configuration object.
+### Environment Variables
 
-```js filename="auth.js"
+```sh
+NEO4J_URI=bolt://localhost
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=abc
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import neo4j from "neo4j-driver"
 import { Neo4jAdapter } from "@auth/neo4j-adapter"
 
 const driver = neo4j.driver(
-  "bolt://localhost",
-  neo4j.auth.basic("neo4j", "password")
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 )
 
 const neo4jSession = driver.session()
 
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/configuration/auth-options
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  // https://authjs.dev/reference/core/providers
   providers: [],
   adapter: Neo4jAdapter(neo4jSession),
 })
 ```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import neo4j from "neo4j-driver"
+import { Neo4jAdapter } from "@auth/neo4j-adapter"
+
+const driver = neo4j.driver(
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
+)
+
+const neo4jSession = driver.session()
+
+export const { handler, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: Neo4jAdapter(neo4jSession),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import ExpressAuth from "@auth/express"
+import neo4j from "neo4j-driver"
+import { Neo4jAdapter } from "@auth/neo4j-adapter"
+
+const app = express()
+
+const driver = neo4j.driver(
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
+)
+
+const neo4jSession = driver.session()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: Neo4jAdapter(neo4jSession),
+  })
+)
+```
+
+</Code.Express>
+</Code>
 
 ### Schema
 
@@ -82,7 +143,7 @@ CREATE INDEX session_session_token_index IF NOT EXISTS
 FOR (s:Session) ON (s.sessionToken);
 ```
 
-2.a. For Community Edition **only** create single-property indexes
+2a. For Community Edition **only** create single-property indexes
 
 ```sql
 CREATE INDEX account_provider_index IF NOT EXISTS
@@ -98,7 +159,7 @@ CREATE INDEX verification_token_token_index IF NOT EXISTS
 FOR (v:VerificationToken) ON (v.token);
 ```
 
-2.b. For Enterprise Edition **only** create composite node key constraints and indexes
+2b. For Enterprise Edition **only** create composite node key constraints and indexes
 
 ```sql
 CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS
