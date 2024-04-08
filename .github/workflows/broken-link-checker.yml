@@ -2,6 +2,7 @@ name: "Broken Link Checker"
 on:
   pull_request:
     types: [opened, synchronize]
+    paths: /docs
 
 permissions:
   pull-requests: write
