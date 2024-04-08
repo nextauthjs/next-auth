@@ -18,7 +18,12 @@ export interface AzureADProfile extends Record<string, any> {
 }
 
 /**
- * Add AzureAd login to your page.
+ *
+ * @deprecated
+ * Azure Active Directory is now known as [Microsoft Entra ID](/getting-started/providers/microsoft-entra-id).
+ * Import this provider from the `providers/microsoft-entra-id` submodule instead of `providers/azure-ad`.
+ *
+ * Add Azure AD login to your page.
  *
  * ### Setup
  *
@@ -54,6 +59,7 @@ export interface AzureADProfile extends Record<string, any> {
  *   - Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
  * - When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
  * - After your App Registration is created, under "Client Credential" create your Client secret.
+ * - Click on "API Permissions" and click "Grant admin consent for..." to allow User.Read access to your tenant.
  * - Now copy your:
  *   - Application (client) ID
  *   - Directory (tenant) ID
@@ -161,7 +167,7 @@ export default function AzureAD<P extends AzureADProfile>(
         image: image ?? null,
       }
     },
-    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
+    style: { text: "#fff", bg: "#0072c6" },
     options: rest,
   }
 }
