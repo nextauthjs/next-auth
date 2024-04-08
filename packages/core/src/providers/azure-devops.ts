@@ -9,6 +9,10 @@ export interface AzureDevOpsProfile extends Record<string, any> {
 }
 
 /**
+ *
+ * @deprecated
+ * While still available, Microsoft is [no longer supporting](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops#available-oauth-models) Azure DevOps OAuth and recommends using [Microsoft Entra ID](/getting-started/providers/microsoft-entra-id) instead.
+ *
  * ## Documentation
  *
  * [Microsoft Docs](https://docs.microsoft.com/en-us) · [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/) · [Authorize access to REST APIs with OAuth 2.0](https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops])

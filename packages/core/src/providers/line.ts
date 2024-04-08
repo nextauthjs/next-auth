@@ -90,7 +90,7 @@ export default function LINE<P extends LineProfile>(
     client: {
       id_token_signed_response_alg: "HS256",
     },
-    style: { logo: "/line.svg", bg: "#00C300", text: "#fff" },
+    style: { bg: "#00C300", text: "#fff" },
     options,
   }
 }
