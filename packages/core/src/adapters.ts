@@ -10,7 +10,7 @@
  * based session store (`strategy: "jwt"`),
  * but you can also use a database adapter to store the session in a database.
  *
- * Before you continue, Auth.js has a list of {@link https://authjs.dev/reference/core/getting-started/adapters official database adapters}. If your database is listed there, you
+ * Before you continue, Auth.js has a list of {@link https://adapters.authjs.dev official database adapters}. If your database is listed there, you
  * probably do not need to create your own. If you are using a data solution that cannot be integrated with an official adapter, this module will help you create a compatible adapter.
  *
  * :::caution Note
