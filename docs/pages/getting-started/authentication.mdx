@@ -102,7 +102,7 @@ The `@simplewebauthn/browser` peer dependency **is only required for custom sign
 
 ### Apply the required schema Migrations
 
-This is the raw SQL migration, for more details including an example MongoDB migration, check out the updated Prisma schemas at the [`@auth/prisma-adapter` docs](/getting-started/adapters/prisma).
+This is the raw SQL migration for PostgreSQL, for more details including example migrations for other databases, check out the updated Prisma schemas at the [`@auth/prisma-adapter` docs](/getting-started/adapters/prisma).
 
 In short, the Passkeys provider requires an additional table called `Authenticator`.
 
@@ -143,11 +143,16 @@ export default {
 }
 ```
 
-If you're using the built-in Auth.js pages, then you are good to go now! Navigating to your `/signin` route should include a "Signin with Passkeys" button now.
+If you're using the built-in Auth.js pages, then you are good to go! Navigating to your `/signin` route should include a "Signin with Passkeys" button.
 
 ### Custom Pages
 
-If you're using a custom signin page, you can leverage the `next-auth` `signIn` function to initiate a WebAuthn registration and login with the following code. Remember, when using the WebAuthn `signIn` function, you'll also need the `@simplewebauth/browser` peer dependency installed.
+If you're using a custom signin page, you can leverage the `next-auth` `signIn` function to initiate WebAuthn registration and login flows with the following code.
+
+<Callout>
+  When using the WebAuthn `signIn` function, you'll also need the
+  `@simplewebauth/browser` peer dependency installed.
+</Callout>
 
 ```ts filename="app/login/page.tsx"
 "use client"
@@ -174,7 +179,7 @@ export default function Login() {
 
   </Steps>
 
-<Callout>
+<Callout type="warning">
 WebAuthn support is currently not supported in `edge` environments out of the box due to an issue with an upstream library and `crypto` support.
 
 </Callout>
