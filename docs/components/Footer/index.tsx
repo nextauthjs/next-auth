@@ -29,7 +29,7 @@ export function Footer({ className = "" }) {
         className
       )}
     >
-      <div className="flex flex-col justify-between w-full sm:flex-row max-w-[90rem]">
+      <div className="flex flex-col gap-6 justify-between w-full sm:flex-row sm:gap-0 max-w-[90rem]">
         <div className="flex flex-col">
           <h3 className="mb-4 text-lg font-black">About Auth.js</h3>
           <ul className="flex flex-col gap-2">
@@ -86,7 +86,7 @@ export function Footer({ className = "" }) {
           </ul>
         </div>
       </div>
-      <div className="flex-grow mx-auto text-gray-400 dark:text-gray-500">
+      <div className="flex-grow mx-auto mt-4 text-gray-400 sm:mt-0 dark:text-gray-500">
         Auth.js &copy; Balázs Orbán and Team - {new Date().getFullYear()}
       </div>
     </div>
