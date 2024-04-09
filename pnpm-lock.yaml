@@ -189,6 +189,9 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.0.4
         version: 1.0.4(@types/react@18.2.67)(react-dom@18.2.0)(react@18.2.0)
+      '@shikijs/twoslash':
+        specifier: ^1.2.4
+        version: 1.2.4(typescript@5.3.3)
       '@vercel/analytics':
         specifier: ^1.2.2
         version: 1.2.2(next@14.2.0-canary.61)(react@18.2.0)
@@ -695,13 +698,13 @@ importers:
         version: 3.1.1(@sveltejs/kit@2.4.3)
       '@sveltejs/kit':
         specifier: ^2.4.3
-        version: 2.4.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.12)
+        version: 2.4.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.13)
       '@sveltejs/package':
         specifier: ^2.0.0
         version: 2.2.6(svelte@4.2.9)(typescript@5.3.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
-        version: 3.0.1(svelte@4.2.9)(vite@5.0.12)
+        version: 3.0.1(svelte@4.2.9)(vite@5.0.13)
       '@types/set-cookie-parser':
         specifier: ^2.4.7
         version: 2.4.7
@@ -763,7 +766,7 @@ importers:
         version: link:../core
       '@preact/preset-vite':
         specifier: ^2.8.1
-        version: 2.8.1(@babel/core@7.23.9)(preact@10.11.3)(vite@5.0.12)
+        version: 2.8.1(@babel/core@7.23.9)(preact@10.11.3)(vite@5.0.13)
       dotenv:
         specifier: ^10.0.0
         version: 10.0.0
@@ -6794,7 +6797,7 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
-  /@preact/preset-vite@2.8.1(@babel/core@7.23.9)(preact@10.11.3)(vite@5.0.12):
+  /@preact/preset-vite@2.8.1(@babel/core@7.23.9)(preact@10.11.3)(vite@5.0.13):
     resolution: {integrity: sha512-a9KV4opdj17X2gOFuGup0aE+sXYABX/tJi/QDptOrleX4FlnoZgDWvz45tHOdVfrZX+3uvVsIYPHxRsTerkDNA==}
     peerDependencies:
       '@babel/core': 7.x
@@ -6803,7 +6806,7 @@ packages:
       '@babel/core': 7.23.9
       '@babel/plugin-transform-react-jsx': 7.23.4(@babel/core@7.23.9)
       '@babel/plugin-transform-react-jsx-development': 7.22.5(@babel/core@7.23.9)
-      '@prefresh/vite': 2.4.5(preact@10.11.3)(vite@5.0.12)
+      '@prefresh/vite': 2.4.5(preact@10.11.3)(vite@5.0.13)
       '@rollup/pluginutils': 4.2.1
       babel-plugin-transform-hook-names: 1.0.2(@babel/core@7.23.9)
       debug: 4.3.4(supports-color@8.1.1)
@@ -6811,7 +6814,7 @@ packages:
       magic-string: 0.30.5
       node-html-parser: 6.1.12
       resolve: 1.22.8
-      vite: 5.0.12(@types/node@20.11.7)
+      vite: 5.0.13(@types/node@20.11.7)
     transitivePeerDependencies:
       - preact
       - supports-color
@@ -6833,7 +6836,7 @@ packages:
     resolution: {integrity: sha512-KtC/fZw+oqtwOLUFM9UtiitB0JsVX0zLKNyRTA332sqREqSALIIQQxdUCS1P3xR/jT1e2e8/5rwH6gdcMLEmsQ==}
     dev: true
 
-  /@prefresh/vite@2.4.5(preact@10.11.3)(vite@5.0.12):
+  /@prefresh/vite@2.4.5(preact@10.11.3)(vite@5.0.13):
     resolution: {integrity: sha512-iForDVJ2M8gQYnm5pHumvTEJjGGc7YNYC0GVKnHFL+GvFfKHfH9Rpq67nUAzNbjuLEpqEOUuQVQajMazWu2ZNQ==}
     peerDependencies:
       preact: ^10.4.0
@@ -6845,7 +6848,7 @@ packages:
       '@prefresh/utils': 1.2.0
       '@rollup/pluginutils': 4.2.1
       preact: 10.11.3
-      vite: 5.0.12(@types/node@20.11.7)
+      vite: 5.0.13(@types/node@20.11.7)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7491,11 +7494,15 @@ packages:
   /@shikijs/core@1.2.0:
     resolution: {integrity: sha512-OlFvx+nyr5C8zpcMBnSGir0YPD6K11uYhouqhNmm1qLiis4GA7SsGtu07r9gKS9omks8RtQqHrJL4S+lqWK01A==}
 
-  /@shikijs/twoslash@1.2.0(typescript@5.3.3):
-    resolution: {integrity: sha512-rVIpuL40tXG5hItVf+4aYTEEwQO6R5pvzqMZa5r6bLMpHK720Op25e/BnCohNIdsUOEaFH9xqRSJo8ubjCiM1w==}
+  /@shikijs/core@1.2.4:
+    resolution: {integrity: sha512-ClaUWpt8oTzjcF0MM1P81AeWyzc1sNSJlAjMG80CbwqbFqXSNz+NpQVUC0icobt3sZn43Sn27M4pHD/Jmp3zHw==}
+    dev: false
+
+  /@shikijs/twoslash@1.2.4(typescript@5.3.3):
+    resolution: {integrity: sha512-4F2gNlCFN9HY0jV3J/IBfqkI7w2HBwycwUBx9fLYGYxzbfu0gYRJdQYWtvJC/sG2rYTYlJrS5BpWdXYoMHwbXw==}
     dependencies:
-      '@shikijs/core': 1.2.0
-      twoslash: 0.2.4(typescript@5.3.3)
+      '@shikijs/core': 1.2.4
+      twoslash: 0.2.5(typescript@5.3.3)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -8028,7 +8035,7 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@sveltejs/kit': 2.4.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.12)
+      '@sveltejs/kit': 2.4.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.13)
       import-meta-resolve: 4.0.0
     dev: true
 
@@ -8057,6 +8064,33 @@ packages:
       svelte: 4.2.9
       tiny-glob: 0.2.9
       vite: 5.0.12(@types/node@20.11.7)
+    dev: true
+
+  /@sveltejs/kit@2.4.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.13):
+    resolution: {integrity: sha512-nKNhUdt61vtD961kQpUk6vLDhpnV0yku5F1uYNWvrJYFV0+cGfmW7ol0JVMSjHMXlMtmmv2FTc+nPRrTFwb2UA==}
+    engines: {node: '>=18.13'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@sveltejs/vite-plugin-svelte': ^3.0.0
+      svelte: ^4.0.0 || ^5.0.0-next.0
+      vite: ^5.0.3
+    dependencies:
+      '@sveltejs/vite-plugin-svelte': 3.0.1(svelte@4.2.9)(vite@5.0.13)
+      '@types/cookie': 0.6.0
+      cookie: 0.6.0
+      devalue: 4.3.2
+      esm-env: 1.0.0
+      import-meta-resolve: 4.0.0
+      kleur: 4.1.5
+      magic-string: 0.30.5
+      mrmime: 2.0.0
+      sade: 1.8.1
+      set-cookie-parser: 2.6.0
+      sirv: 2.0.4
+      svelte: 4.2.9
+      tiny-glob: 0.2.9
+      vite: 5.0.13(@types/node@20.11.7)
     dev: true
 
   /@sveltejs/package@2.2.6(svelte@4.2.9)(typescript@5.3.3):
@@ -8092,6 +8126,22 @@ packages:
       - supports-color
     dev: true
 
+  /@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.13):
+    resolution: {integrity: sha512-gjr9ZFg1BSlIpfZ4PRewigrvYmHWbDrq2uvvPB1AmTWKuM+dI1JXQSUu2pIrYLb/QncyiIGkFDFKTwJ0XqQZZg==}
+    engines: {node: ^18.0.0 || >=20}
+    peerDependencies:
+      '@sveltejs/vite-plugin-svelte': ^3.0.0
+      svelte: ^4.0.0 || ^5.0.0-next.0
+      vite: ^5.0.0
+    dependencies:
+      '@sveltejs/vite-plugin-svelte': 3.0.1(svelte@4.2.9)(vite@5.0.13)
+      debug: 4.3.4(supports-color@8.1.1)
+      svelte: 4.2.9
+      vite: 5.0.13(@types/node@20.11.7)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.9)(vite@5.0.12):
     resolution: {integrity: sha512-CGURX6Ps+TkOovK6xV+Y2rn8JKa8ZPUHPZ/NKgCxAmgBrXReavzFl8aOSCj3kQ1xqT7yGJj53hjcV/gqwDAaWA==}
     engines: {node: ^18.0.0 || >=20}
@@ -8108,6 +8158,26 @@ packages:
       svelte-hmr: 0.15.3(svelte@4.2.9)
       vite: 5.0.12(@types/node@20.11.7)
       vitefu: 0.2.5(vite@5.0.12)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.9)(vite@5.0.13):
+    resolution: {integrity: sha512-CGURX6Ps+TkOovK6xV+Y2rn8JKa8ZPUHPZ/NKgCxAmgBrXReavzFl8aOSCj3kQ1xqT7yGJj53hjcV/gqwDAaWA==}
+    engines: {node: ^18.0.0 || >=20}
+    peerDependencies:
+      svelte: ^4.0.0 || ^5.0.0-next.0
+      vite: ^5.0.0
+    dependencies:
+      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.9)(vite@5.0.13)
+      debug: 4.3.4(supports-color@8.1.1)
+      deepmerge: 4.3.1
+      kleur: 4.1.5
+      magic-string: 0.30.5
+      svelte: 4.2.9
+      svelte-hmr: 0.15.3(svelte@4.2.9)
+      vite: 5.0.13(@types/node@20.11.7)
+      vitefu: 0.2.5(vite@5.0.13)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -19412,7 +19482,7 @@ packages:
       '@mdx-js/mdx': 3.0.0
       '@mdx-js/react': 3.0.0(@types/react@18.2.67)(react@18.2.0)
       '@napi-rs/simple-git': 0.1.16
-      '@shikijs/twoslash': 1.2.0(typescript@5.3.3)
+      '@shikijs/twoslash': 1.2.4(typescript@5.3.3)
       '@theguild/remark-mermaid': 0.0.5(react@18.2.0)
       '@theguild/remark-npm2yarn': 0.3.0
       better-react-mathjax: 2.0.3(react@18.2.0)
@@ -23770,17 +23840,17 @@ packages:
       turbo-windows-arm64: 1.11.3
     dev: true
 
-  /twoslash-protocol@0.2.4:
-    resolution: {integrity: sha512-AEGTJj4mFGfvQc/M6qi0+s82Zq+mxLcjWZU+EUHGG8LQElyHDs+uDR+/3+m1l+WP7WL+QmWrVzFXgFX+hBg+bg==}
+  /twoslash-protocol@0.2.5:
+    resolution: {integrity: sha512-oUr5ZAn37CgNa6p1mrCuuR/pINffsnGCee2aS170Uj1IObxCjsHzu6sgdPUdxGLLn6++gd/qjNH1/iR6RrfLeg==}
     dev: false
 
-  /twoslash@0.2.4(typescript@5.3.3):
-    resolution: {integrity: sha512-hc3y11BjLHP4kV37TR6lUKksxpZp0LQi9kCy95ka6qobye/gV49PqXZIuWlRaRVGNvp4AJBMg8aiwkp0M8x/nQ==}
+  /twoslash@0.2.5(typescript@5.3.3):
+    resolution: {integrity: sha512-U8rqsfVh8jQMO1NJekUtglb52b7xD9+FrzeFrgzpHsRTKl8IQgqnZP6ld4PeKaHXhLfoZPuju9K50NXJ7wom8g==}
     peerDependencies:
       typescript: '*'
     dependencies:
       '@typescript/vfs': 1.5.0
-      twoslash-protocol: 0.2.4
+      twoslash-protocol: 0.2.5
       typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
@@ -24833,6 +24903,17 @@ packages:
         optional: true
     dependencies:
       vite: 5.0.12(@types/node@20.11.7)
+    dev: true
+
+  /vitefu@0.2.5(vite@5.0.13):
+    resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      vite: 5.0.13(@types/node@20.11.7)
     dev: true
 
   /vitest@1.2.2(@types/node@20.11.7)(@vitest/ui@1.2.2):
