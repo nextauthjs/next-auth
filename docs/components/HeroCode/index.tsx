@@ -10,6 +10,7 @@ export function HeroCode({ children }) {
   return (
     <RichTabs
       orientation="horizontal"
+      tabKey="hero"
       defaultValue="nextjs"
       className="w-full flex flex-col !py-8 md:!py-16 !m-0 max-w-xl xl:max-w-2xl lg:self-start"
     >
@@ -51,7 +52,7 @@ export function HeroCode({ children }) {
           </RichTabs.Trigger>
           <Link
             href="/getting-started/integrations"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex gap-2 items-center"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex items-center"
           >
             <span className="hidden md:block">More</span>
             <CaretRight />
