@@ -6,9 +6,8 @@ import type {
   TabsProps,
 } from "@radix-ui/react-tabs"
 import cx from "classnames"
-import { useRouter } from "next/router"
-import { useQueryState } from "nuqs"
 import { useRichTabs } from "./useRichTabs"
+import { useState } from "react"
 
 RichTabs.List = function TabsList({ className, ...rest }: TabsListProps) {
   return (
@@ -60,6 +59,7 @@ RichTabs.Content = function TabsContent({
 
 type Props = TabsProps & { onTabChange?: (value: string) => void } & {
   defaultValue: string
+  tabKey?: string
 }
 
 export function RichTabs({
@@ -68,23 +68,25 @@ export function RichTabs({
   orientation = "horizontal",
   defaultValue,
   onTabChange,
+  tabKey,
 }: Props) {
-  const { tabValue, handleValueChanged } = useRichTabs({
+  const [value, setValue] = useState<string>(defaultValue)
+  const { handleValueChanged } = useRichTabs({
     onTabChange,
+    value,
+    setValue,
     defaultValue,
+    tabKey,
   })
 
-  return tabValue ? (
+  return (
     <Root
       className={cx("px-0 pt-4 m-0 rounded-lg mt-2", className)}
       orientation={orientation}
       onValueChange={handleValueChanged}
-      value={tabValue}
-      defaultValue={defaultValue}
+      value={value}
     >
       {children}
     </Root>
-  ) : (
-    <p>...</p>
   )
 }
