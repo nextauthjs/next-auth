@@ -1,7 +1,6 @@
 import {
   Combobox,
   ComboboxItem,
-  ComboboxLabel,
   ComboboxPopover,
   ComboboxProvider,
 } from "@ariakit/react"
@@ -21,11 +20,8 @@ export function OAuthProviderSelect() {
     useOAuthProviderSelect()
 
   return (
-    <>
+    <div className="mt-8">
       <ComboboxProvider value={term} selectedValue={selected}>
-        <ComboboxLabel className="block mb-2 text-xl font-semibold">
-          Select an OAuth Provider
-        </ComboboxLabel>
         <Combobox
           placeholder="Search for your favorite OAuth provider"
           className="py-2 px-4 w-full font-medium rounded-sm shadow-sm md:w-96 bg-neutral-100 border-neutral-400 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300"
@@ -134,6 +130,6 @@ export function OAuthProviderSelect() {
           }
         />
       ) : null}
-    </>
+    </div>
   )
 }
