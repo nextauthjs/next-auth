@@ -24,7 +24,7 @@ export function HeroCode({ children }) {
             <Image
               width="24"
               src={NextJs}
-              alt="Next.js Logo"
+              alt="Next.js"
               className="dark:invert"
             />
             <span className="hidden md:block">Next.js</span>
