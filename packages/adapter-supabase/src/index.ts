@@ -77,12 +77,11 @@ export interface SupabaseAdapterOptions {
  * // https://authjs.dev/reference/core#authconfig
  * export default NextAuth({
  *   // https://authjs.dev/reference/core/providers
- *   providers: [...],
+ *   providers: [],
  *   adapter: SupabaseAdapter({
  *     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
  *     secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
  *   }),
- *   // ...
  * })
  * ```
  *
@@ -195,6 +194,7 @@ export interface SupabaseAdapterOptions {
  * GRANT ALL ON TABLE next_auth.verification_tokens TO postgres;
  * GRANT ALL ON TABLE next_auth.verification_tokens TO service_role;
  * ```
+ *
  * ### Expose the NextAuth schema in Supabase
  *
  * Expose the `next_auth` schema via the Serverless API in the [API settings](https://app.supabase.com/project/_/settings/api) by adding `next_auth` to the "Exposed schemas" list.
@@ -230,12 +230,12 @@ export interface SupabaseAdapterOptions {
  * // https://authjs.dev/reference/configuration/auth-options
  * export default NextAuth({
  *   // https://authjs.dev/reference/core/providers
- *   providers: [...],
+ *   providers: [],
  *   adapter: SupabaseAdapter({
  *     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
  *     secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
  *   }),
- * 	callbacks: {
+ * 	 callbacks: {
  *     async session({ session, user }) {
  *       const signingSecret = process.env.SUPABASE_JWT_SECRET
  *       if (signingSecret) {
@@ -251,7 +251,6 @@ export interface SupabaseAdapterOptions {
  *       return session
  *     },
  *   },
- *   // ...
  * })
  * ```
  *
@@ -293,7 +292,6 @@ export interface SupabaseAdapterOptions {
  * The `supabaseAccessToken` is now available on the `session` object and can be passed to the supabase-js client. This works in any environment: client-side, server-side (API routes, SSR), as well as in middleware edge functions!
  *
  * ```js
- * // ...
  * // Use `useSession()` or `unstable_getServerSession()` to get the NextAuth session.
  *
  * const { supabaseAccessToken } = session
@@ -312,7 +310,8 @@ export interface SupabaseAdapterOptions {
  * // Now you can query with RLS enabled.
  * const { data, error } = await supabase.from("users").select("*")
  * ```
- *  ### Usage with TypeScript
+ *
+ * ### Usage with TypeScript
  *
  * You can pass types that were generated with the Supabase CLI to the Supabase Client to get enhanced type safety and auto-completion.
  *

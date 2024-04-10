@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://fauna.com/features">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" height="30"/>
  *  </a>
@@ -25,7 +25,13 @@ import type {
 } from "@auth/core/adapters"
 
 type ToFauna<T> = {
-  [P in keyof T]: T[P] extends Date | null ? TimeStub | null : T[P] extends undefined ? null : T[P] extends QueryValue ? T[P] : QueryValueObject
+  [P in keyof T]: T[P] extends Date | null
+    ? TimeStub | null
+    : T[P] extends undefined
+      ? null
+      : T[P] extends QueryValue
+        ? T[P]
+        : QueryValueObject
 }
 
 export type FaunaUser = ToFauna<AdapterUser>
@@ -59,7 +65,7 @@ const defaultCollectionNames = {
  *
  * ### Configure Auth.js
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { Client } from "fauna"
  * import { FaunaAdapter } from "@auth/fauna-adapter"
@@ -75,7 +81,6 @@ const defaultCollectionNames = {
  *   // https://authjs.dev/reference/providers/
  *   providers: [],
  *   adapter: FaunaAdapter(client)
- *   ...
  * })
  * ```
  *
@@ -318,7 +323,7 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
       const response = await client.query<FaunaSession>(
         fql`Collection(${collectionNames.session}).bySessionToken(${
           session.sessionToken
-        }).first().update(${format.to(session)})`,
+        }).first().update(${format.to(session)})`
       )
       return format.from(response.data)
     },
@@ -344,7 +349,9 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
       await client.query(
         fql`Collection(${collectionNames.verificationToken}).byId(${response.data.id}).delete()`,
       )
-      const _verificationToken: Partial<FaunaVerificationToken> = { ...response.data }
+      const _verificationToken: Partial<FaunaVerificationToken> = {
+        ...response.data,
+      }
       delete _verificationToken.id
       return format.from(_verificationToken)
     },

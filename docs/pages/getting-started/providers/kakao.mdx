@@ -1,0 +1,99 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/kakao.svg" height="64" width="64" />
+
+# Kakao Provider
+
+## Resources
+
+- [Kakao OAuth documentation](https://developers.kakao.com/product/kakaoLogin)
+- [Kakao OAuth configuration](https://developers.kakao.com/docs/latest/en/kakaologin/common)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/kakao
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/kakao
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_KAKAO_ID
+AUTH_KAKAO_SECRET
+```
+
+### Configuration
+
+Create a provider and a Kakao application at https://developers.kakao.com/console/app. In the settings of the app under Kakao Login, activate web app, change consent items and configure callback URL.
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Kakao from "next-auth/providers/kakao"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Kakao],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Kakao from "@auth/sveltekit/providers/kakao"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Kakao],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Kakao from "@auth/express/providers/kakao"
+
+app.use("/auth/*", ExpressAuth({ providers: [Kakao] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- The "Authorized redirect URIs" used when creating the credentials must include your full domain and end in the callback path as shown above.
+
+![스크린샷 2023-11-28 오후 9 27 41](https://github.com/nextauthjs/next-auth/assets/66895208/7d4c2df6-45a6-4937-bb10-4b47c987bff4)
+
+- For production: `https://{YOUR_DOMAIN}/api/auth/callback/kakao`
+- For development: `http://localhost:3000/api/auth/callback/kakao`
+
+- Kakao's client key is in **Summary(It is written as 요약정보 in Korean.) tab's App Keys Field** (My Application > App Settings > Summary)
+
+![스크린샷 2023-11-28 오후 9 47 17](https://github.com/nextauthjs/next-auth/assets/66895208/a87e5705-26b9-4f83-99d7-6df097a3632c)
+
+- Kakao's clientSecret key is in **Security(It is written as 보안 in Korean.) tab's App Keys Field** (My Application > Product Settings > Kakao Login > Security)
+
+![스크린샷 2023-11-28 오후 9 38 25](https://github.com/nextauthjs/next-auth/assets/66895208/6a763921-4f70-40f4-a3e1-9abc78276d45)
+
+- Kakao dev console has a button at the top right to change from KR to ENG
