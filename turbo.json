@@ -41,6 +41,7 @@
       "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "@auth/hasura-adapter#build": {
+      "dependsOn": ["@auth/core#build"],
       "outputs": [
         "lib/**",
         "*.js",
