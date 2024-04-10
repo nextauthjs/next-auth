@@ -8,6 +8,10 @@ details > *:not(summary) {
   @apply p-4;
 }
 
+::selection {
+  @apply bg-violet-400;
+}
+
 /* Here because we can't safelist Nextra's tailwind classes
 * and this is used on the index.mdx page */
 ._bg-primary-500 {
