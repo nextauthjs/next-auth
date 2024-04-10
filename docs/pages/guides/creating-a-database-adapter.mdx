@@ -159,12 +159,9 @@ If you created an adapter and want us to distribute it as an official package, p
 
 1. Configure the monorepo to help us maintain the package
 
-   - Add the Adapter to our documentation generator
-     [file](https://github.com/nextauthjs/next-auth/blob/9ac0f98b73d6e52a8cb3a859f203915b994d6d19/docs/scripts/generate-manifest.mjs#L68)
-   - Add a (preferably `.svg`) logo to [this
-     directory](https://github.com/nextauthjs/next-auth/tree/main/docs/static/img/adapters)
-   - Add the Adapter to our GitHub workflow files [here](https://github.com/nextauthjs/next-auth/blob/9ac0f98b73d6e52a8cb3a859f203915b994d6d19/.github/workflows/release.yml#L12) and [here](https://github.com/nextauthjs/next-auth/blob/main/.github/pr-labeler.yml)
-   - Make sure to [`.gitignore` generated files](https://github.com/nextauthjs/next-auth/blob/9ac0f98b73d6e52a8cb3a859f203915b994d6d19/.gitignore#L58) if any
+   - Add a (preferably `.svg`) logo to [this directory](https://github.com/nextauthjs/next-auth/tree/main/docs/public/img/adapters)
+   - Add the Adapter to our GitHub workflow files [here](https://github.com/nextauthjs/next-auth/tree/main/.github/workflows/release.yml#L12) and [here](https://github.com/nextauthjs/next-auth/tree/main/.github/pr-labeler.yml)
+   - Make sure to [`.gitignore` generated files](https://github.com/nextauthjs/next-auth/tree/main/.gitignore#L58) if there are any
 
 1. The Adapter _must_ be able to handle any property coming from the user
 
