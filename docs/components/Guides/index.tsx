@@ -41,7 +41,7 @@ export function Guides() {
                 </div>
               </li>
             </Link>
-            <Link href="/guides/oauth-github-setup">
+            <Link href="/guides/configuring-github">
               <li className="flex justify-between mb-8 w-full group">
                 <div className="flex gap-2">
                   <GithubLogo size={32} />
