@@ -50,20 +50,21 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       {/* Step 1 */}
       <StepTitle>Register OAuth App in {providerName}'s dashboard</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
-        First you must setup an OAuth application on {providerName} developers
-        dashboard.
+        First you have to setup an OAuth application on the {providerName}{" "}
+        developers dashboard.
       </p>
       <Callout>
-        If you haven’t used OAuth before, you can read the deep dive guide on{" "}
+        If you haven’t used OAuth before, you can read the beginners
+        step-by-step guide on{" "}
         <Link href="/guides/configuring-github">
-          how to setup Sign in with Github with Auth.js
+          how to setup "Sign in with Github" with Auth.js
         </Link>
         .
       </Callout>
       <p className="mt-6 leading-7 first:mt-0">
         When registering an OAuth application on {providerName}, they will all
         ask you to enter your application’s callback URL. See below for the
-        callback URL you must insert based on your client library.
+        callback URL you must insert based on your framework.
       </p>
       <h4 className="mt-4 -mb-3 text-lg font-bold">Callback URL</h4>
       <Code>
@@ -90,16 +91,16 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
         </Code.Express>
       </Code>
       <Callout type="info">
-        Replace <code>origin</code> with the URL your application is accessed.
-        If it's running locally that might be for example
-        <code>http://localhost:3000</code>, otherwise the URL of your
-        application with schema (i.e. <code>https://</code>).
+        Replace <code>origin</code> with your application's hostname. If it's
+        running locally that might be
+        <code>http://localhost:3000</code> for example.
       </Callout>
       <Callout type="info">
         Many providers only allow you to register one callback URL at a time.
         Therefore, if you want to have an active OAuth configuration for
-        development and production URLs, you'll need to register a second OAuth
-        app in the {providerName} dashboard for the other environment(s).
+        development and production environments, you'll need to register a
+        second OAuth app in the {providerName} dashboard for the other
+        environment(s).
       </Callout>
       {/* Step 2 */}
       <StepTitle>Setup Environment Variables</StepTitle>
@@ -208,10 +209,9 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         for more details.
       </Callout>
       <p className="mt-6 leading-7 first:mt-0">
-        For more information on this provider go to the{" "}
-        <Link href={`/getting-started/providers/${providerId}`}>
-          {providerName} docs page
-        </Link>
+        For more information on this provider check out the detailed{" "}
+        {providerName} provider{" "}
+        <Link href={`/getting-started/providers/${providerId}`}>docs page</Link>
         .
       </p>
     </div>
