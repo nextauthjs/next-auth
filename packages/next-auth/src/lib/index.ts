@@ -116,6 +116,13 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
   return typeof arg === "function"
 }
 
+function isMiddleware(
+  _userMiddlewareOrRoute: NextAuthMiddleware | AppRouteHandlerFn,
+  arg1: NextFetchEvent | Parameters<AppRouteHandlerFn>[1]
+): _userMiddlewareOrRoute is NextAuthMiddleware {
+  return "sourcePage" in arg1 && arg1.sourcePage.includes("middleware")
+}
+
 export function initAuth(
   config:
     | NextAuthConfig
@@ -256,7 +263,13 @@ async function handleAuth(
     ) {
       authorized = true
     }
-  } else if (userMiddlewareOrRoute) {
+  } else if (
+    userMiddlewareOrRoute &&
+    // If userMiddlewareOrRoute is a route handler, execute it
+    // If it's a middleware, only execute it if the user is authorized
+    (!isMiddleware(userMiddlewareOrRoute, args[1]) ||
+      (isMiddleware(userMiddlewareOrRoute, args[1]) && authorized))
+  ) {
     // Execute user's middleware/handler with the augmented request
     const augmentedReq = request as NextAuthRequest
     augmentedReq.auth = auth
