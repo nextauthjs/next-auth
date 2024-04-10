@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsup --clean --minify --format esm src/index.ts",
+    "build": "npx tsup --clean --minify --format esm src/index.ts",
     "types": "tsc"
   },
   "keywords": [
