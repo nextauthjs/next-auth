@@ -7,8 +7,4 @@ const withNextra = nextra({
   codeHighlight: true,
 })
 
-export default withNextra({
-  experimental: {
-    serverComponentsExternalPackages: ["@shikijs/twoslash"],
-  },
-})
+export default withNextra()
