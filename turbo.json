@@ -40,6 +40,15 @@
     "@auth/xata-adapter#test": {
       "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
+    "@auth/hasura-adapter#build": {
+      "outputs": [
+        "lib/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/generated/**"
+      ]
+    },
     "docs#dev": {
       "dependsOn": [
         "next-auth#build",
