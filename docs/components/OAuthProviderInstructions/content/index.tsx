@@ -55,7 +55,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       </p>
       <Callout>
         If you haven’t used OAuth before, you can read the deep dive guide on{" "}
-        <Link href="/guides/oauth-github-setup">
+        <Link href="/guides/configuring-github">
           how to setup Sign in with Github with Auth.js
         </Link>
         .

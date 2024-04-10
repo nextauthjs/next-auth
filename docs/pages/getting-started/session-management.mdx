@@ -18,7 +18,7 @@ Auth.js ships with lightweight utilities to help you manage the user's session e
 
 You're in charge of the building the UI for session management. Below we summarise some of the most common patterns for handling user sessions that you'll need to build before shipping your app to production.
 
-<RichTabs defaultValue="login">
+<RichTabs defaultValue="login" tabKey="sessionTab">
   <RichTabs.List className="gap-2">
     <RichTabs.Trigger value="login">
       <div className="flex flex-col justify-center gap-1 items-center h-full">
@@ -697,6 +697,12 @@ API Routes are protected in the same way as any other route in Express, see [the
 With Next.js 12+, the easiest way to protect a set of pages is using the middleware file. You can create a `middleware.ts` file in your root pages directory with the following contents.
 
 ```ts filename="middleware.ts"
+export { auth as middleware } from "@/auth"
+```
+
+You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the middleware.
+
+```ts filename="middleware.ts"
 import { auth } from "./auth"
 
 export default auth((req) => {
@@ -716,7 +722,10 @@ export const config = {
 
 Middleware will protect pages as defined by the `matcher` config export. For more details about the matcher, check out the [Next.js docs](https://nextjs.org/docs/pages/building-your-application/routing/middleware#matching-paths).
 
-You should not rely on middleware exclusively for authorization. Always ensure that the session is verified as close to your data fetching as possible.
+<Callout>
+  You should not rely on middleware exclusively for authorization. Always ensure
+  that the session is verified as close to your data fetching as possible.
+</Callout>
 
 </RichTabs.Content>
 

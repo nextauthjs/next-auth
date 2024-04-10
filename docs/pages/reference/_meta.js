@@ -6,7 +6,7 @@ export default {
   },
   core: "@auth/core",
   "next-auth": "next-auth",
-  sveltekit: "@auth-sveltekit",
+  sveltekit: "@auth/sveltekit",
   express: "@auth/express",
   "solid-start": "@auth/solid-start",
   "--- adapters": {

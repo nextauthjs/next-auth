@@ -87,7 +87,7 @@ export default function Patreon<P extends PatreonProfile>(
         image: profile.data.attributes.image_url,
       }
     },
-    style: { logo: "/patreon.svg", bg: "#e85b46", text: "#fff" },
+    style: { bg: "#e85b46", text: "#fff" },
     options,
   }
 }
