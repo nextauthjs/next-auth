@@ -199,13 +199,14 @@ import type {
  * }
  *
  * model User {
- *   id            String    @id @default(cuid())
- *   name          String?
- *   email         String?   @unique
- *   emailVerified DateTime? @map("email_verified")
- *   image         String?
- *   accounts      Account[]
- *   sessions      Session[]
+ *   id             String    @id @default(cuid())
+ *   name           String?
+ *   email          String?   @unique
+ *   emailVerified  DateTime? @map("email_verified")
+ *   image          String?
+ *   accounts       Account[]
+ *   sessions       Session[]
+ *   authenticators Authenticator[]
  *
  *   @@map("users")
  * }

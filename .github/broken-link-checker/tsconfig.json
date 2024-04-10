@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "esnext",
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "types": ["./index.d.ts", "node"],
+    "strict": true,
+    "noImplicitAny": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
