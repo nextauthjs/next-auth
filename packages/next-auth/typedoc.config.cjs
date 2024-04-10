@@ -6,7 +6,7 @@ const path = require("node:path")
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').PluginOptions}
  */
 module.exports = {
-  entryPoints: ["src/index.tsx", "src/adapters.ts", "src/middleware.ts", "src/jwt.ts", "src/next.ts", "src/react.tsx", "webauthn.ts"],
+  entryPoints: ["src/index.tsx", "src/adapters.ts", "src/middleware.ts", "src/jwt.ts", "src/next.ts", "src/react.tsx", "src/webauthn.ts"],
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "next-auth",
