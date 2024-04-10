@@ -9,14 +9,22 @@ import {
   index,
   PgTableWithColumns,
   QueryResultHKT,
-  TableConfig
+  TableConfig,
 } from "drizzle-orm/pg-core"
 
-import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterUser,
+  AdapterSession,
+  VerificationToken,
+} from "@auth/core/adapters"
 import { randomUUID } from "crypto"
 
 export const postgresUsersTable = pgTable("user" as string, {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -43,23 +51,31 @@ export const postgresAccountsTable = pgTable(
   (table) => {
     return {
       userIdIdx: index().on(table.userId),
-      compositePk: primaryKey({ columns: [table.provider, table.providerAccountId] }),
+      compositePk: primaryKey({
+        columns: [table.provider, table.providerAccountId],
+      }),
     }
   }
 )
 
-export const postgresSessionsTable = pgTable("session" as string, {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: text("sessionToken").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-}, (table) => {
-  return {
-    userIdIdx: index().on(table.userId),
+export const postgresSessionsTable = pgTable(
+  "session" as string,
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: text("sessionToken").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index().on(table.userId),
+    }
   }
-})
+)
 
 export const postgresVerificationTokensTable = pgTable(
   "verificationToken" as string,
@@ -70,7 +86,7 @@ export const postgresVerificationTokensTable = pgTable(
   },
   (table) => {
     return {
-      compositePk: primaryKey({ columns: [table.identifier, table.token] })
+      compositePk: primaryKey({ columns: [table.identifier, table.token] }),
     }
   }
 )
@@ -84,7 +100,8 @@ export function PostgresDrizzleAdapter(
     verificationTokensTable: postgresVerificationTokensTable,
   }
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } = schema
+  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
+    schema
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
@@ -99,14 +116,14 @@ export function PostgresDrizzleAdapter(
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async getUserByEmail(email: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async createSession(data: {
       sessionToken: string
@@ -128,14 +145,14 @@ export function PostgresDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      const [result] =  await client
+      const [result] = await client
         .update(usersTable)
         .set(data)
         .where(eq(usersTable.id, data.id))
@@ -147,7 +164,9 @@ export function PostgresDrizzleAdapter(
 
       return result
     },
-    async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
+    async updateSession(
+      data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+    ) {
       return client
         .update(sessionsTable)
         .set(data)
@@ -158,22 +177,30 @@ export function PostgresDrizzleAdapter(
     async linkAccount(data: AdapterAccount) {
       await client.insert(accountsTable).values(data)
     },
-    async getUserByAccount(account: Pick<AdapterAccount, "provider" | "providerAccountId">) {
-      const result = await client.select({
-        account: accountsTable,
-        user: usersTable,
-      }).from(accountsTable)
-        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id)).where(
+    async getUserByAccount(
+      account: Pick<AdapterAccount, "provider" | "providerAccountId">
+    ) {
+      const result = await client
+        .select({
+          account: accountsTable,
+          user: usersTable,
+        })
+        .from(accountsTable)
+        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id))
+        .where(
           and(
             eq(accountsTable.provider, account.provider),
-            eq(accountsTable.providerAccountId, account.providerAccountId),
+            eq(accountsTable.providerAccountId, account.providerAccountId)
           )
-        ).then((res) => res[0])
+        )
+        .then((res) => res[0])
 
       return result?.user ?? null
     },
     async deleteSession(sessionToken: string) {
-      await client.delete(sessionsTable).where(eq(sessionsTable.sessionToken, sessionToken))
+      await client
+        .delete(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
     },
     async createVerificationToken(data: VerificationToken) {
       return client
@@ -182,10 +209,7 @@ export function PostgresDrizzleAdapter(
         .returning()
         .then((res) => res[0])
     },
-    async useVerificationToken(params: {
-      identifier: string
-      token: string
-    }) {
+    async useVerificationToken(params: { identifier: string; token: string }) {
       return client
         .delete(verificationTokensTable)
         .where(
@@ -195,12 +219,14 @@ export function PostgresDrizzleAdapter(
           )
         )
         .returning()
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async deleteUser(id: string) {
       await client.delete(usersTable).where(eq(usersTable.id, id))
     },
-    async unlinkAccount(params: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+    async unlinkAccount(
+      params: Pick<AdapterAccount, "provider" | "providerAccountId">
+    ) {
       await client
         .delete(accountsTable)
         .where(
@@ -214,15 +240,17 @@ export function PostgresDrizzleAdapter(
 }
 
 export type PostgresTableFn<T extends TableConfig> = PgTableWithColumns<{
-  name: T['name'],
-  columns: T['columns'],
-  dialect: T['dialect'],
+  name: T["name"]
+  columns: T["columns"]
+  dialect: T["dialect"]
   schema: string | undefined
 }>
 
 export type DefaultPostgresSchema = {
-  usersTable: PostgresTableFn<typeof postgresUsersTable['_']['config']>,
-  accountsTable: PostgresTableFn<typeof postgresAccountsTable['_']['config']>,
-  sessionsTable: PostgresTableFn<typeof postgresSessionsTable['_']['config']>,
-  verificationTokensTable: PostgresTableFn<typeof postgresVerificationTokensTable['_']['config']>,
+  usersTable: PostgresTableFn<(typeof postgresUsersTable)["_"]["config"]>
+  accountsTable: PostgresTableFn<(typeof postgresAccountsTable)["_"]["config"]>
+  sessionsTable: PostgresTableFn<(typeof postgresSessionsTable)["_"]["config"]>
+  verificationTokensTable: PostgresTableFn<
+    (typeof postgresVerificationTokensTable)["_"]["config"]
+  >
 }

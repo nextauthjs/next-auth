@@ -1,5 +1,5 @@
-import { migrate } from 'drizzle-orm/mysql2/migrator'
-import { db } from './schema.ts'
+import { migrate } from "drizzle-orm/mysql2/migrator"
+import { db } from "./schema.ts"
 
 const migrator = async () => {
   await migrate(db, { migrationsFolder: "./test/mysql/.drizzle" })

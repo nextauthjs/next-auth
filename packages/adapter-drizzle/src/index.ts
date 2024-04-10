@@ -20,16 +20,31 @@ import { is } from "drizzle-orm"
 import { MySqlDatabase } from "drizzle-orm/mysql-core"
 import { PgDatabase } from "drizzle-orm/pg-core"
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
-import { DefaultMySqlSchema, MySqlDrizzleAdapter } from './lib/mysql.js'
-import { DefaultPostgresSchema, PostgresDrizzleAdapter } from './lib/pg.js'
+import { DefaultMySqlSchema, MySqlDrizzleAdapter } from "./lib/mysql.js"
+import { DefaultPostgresSchema, PostgresDrizzleAdapter } from "./lib/pg.js"
 import { DefaultSQLiteSchema, SQLiteDrizzleAdapter } from "./lib/sqlite.js"
 import { DefaultSchema, SqlFlavorOptions } from "./lib/utils.js"
 
 import type { Adapter } from "@auth/core/adapters"
 
-export { postgresUsersTable, postgresAccountsTable, postgresSessionsTable, postgresVerificationTokensTable } from './lib/pg.js'
-export { sqliteUsersTable, sqliteAccountsTable, sqliteSessionsTable, sqliteVerificationTokensTable } from './lib/sqlite.js'
-export { mysqlUsersTable, mysqlAccountsTable, mysqlSessionsTable, mysqlVerificationTokensTable } from './lib/mysql.js'
+export {
+  postgresUsersTable,
+  postgresAccountsTable,
+  postgresSessionsTable,
+  postgresVerificationTokensTable,
+} from "./lib/pg.js"
+export {
+  sqliteUsersTable,
+  sqliteAccountsTable,
+  sqliteSessionsTable,
+  sqliteVerificationTokensTable,
+} from "./lib/sqlite.js"
+export {
+  mysqlUsersTable,
+  mysqlAccountsTable,
+  mysqlSessionsTable,
+  mysqlVerificationTokensTable,
+} from "./lib/mysql.js"
 /**
  * Add this adapter to your `auth.ts` Auth.js configuration object:
  *

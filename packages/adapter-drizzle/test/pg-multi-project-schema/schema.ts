@@ -1,5 +1,12 @@
 import { randomUUID } from "crypto"
-import { index, integer, pgTableCreator, primaryKey, text, timestamp } from "drizzle-orm/pg-core"
+import {
+  index,
+  integer,
+  pgTableCreator,
+  primaryKey,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
 
@@ -8,10 +15,12 @@ const sql = postgres(connectionString)
 
 export const db = drizzle(sql)
 
-const pgTable = pgTableCreator((name) => `project1_${name}`);
+const pgTable = pgTableCreator((name) => `project1_${name}`)
 
 export const users = pgTable("user", {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -38,23 +47,31 @@ export const accounts = pgTable(
   (table) => {
     return {
       userIdIdx: index().on(table.userId),
-      compositePk: primaryKey({ columns: [table.provider, table.providerAccountId] }),
+      compositePk: primaryKey({
+        columns: [table.provider, table.providerAccountId],
+      }),
     }
   }
 )
 
-export const sessions = pgTable("session", {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: text("sessionToken").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-}, (table) => {
-  return {
-    userIdIdx: index().on(table.userId),
+export const sessions = pgTable(
+  "session",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: text("sessionToken").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index().on(table.userId),
+    }
   }
-})
+)
 
 export const verificationTokens = pgTable(
   "verificationToken",
@@ -65,7 +82,7 @@ export const verificationTokens = pgTable(
   },
   (table) => {
     return {
-      compositePk: primaryKey({ columns: [table.identifier, table.token] })
+      compositePk: primaryKey({ columns: [table.identifier, table.token] }),
     }
   }
 )

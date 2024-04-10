@@ -7,21 +7,29 @@ import {
   sqliteTable,
   index,
   TableConfig,
-  SQLiteTableWithColumns
+  SQLiteTableWithColumns,
 } from "drizzle-orm/sqlite-core"
 
-import type { Adapter, AdapterAccount, AdapterUser, AdapterSession, VerificationToken } from "@auth/core/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterUser,
+  AdapterSession,
+  VerificationToken,
+} from "@auth/core/adapters"
 import { randomUUID } from "crypto"
 
 export const sqliteUsersTable = sqliteTable("user" as string, {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
- })
- 
- export const sqliteAccountsTable = sqliteTable(
+})
+
+export const sqliteAccountsTable = sqliteTable(
   "account" as string,
   {
     userId: text("userId")
@@ -39,54 +47,57 @@ export const sqliteUsersTable = sqliteTable("user" as string, {
     session_state: text("session_state"),
   },
   (account) => ({
-    userIdIdx: index('Account_userId_index').on(account.userId),
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compositePk: primaryKey({
-        columns: [account.provider, account.providerAccountId],
-      }),
+      columns: [account.provider, account.providerAccountId],
+    }),
   })
- )
- 
- export const sqliteSessionsTable = sqliteTable("session" as string, {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
- sessionToken: text("sessionToken").notNull().unique(),
- userId: text("userId")
-   .notNull()
-   .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
- expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
- }, (table) => ({
-    userIdIdx: index('Session_userId_index').on(table.userId),
- }))
- 
- export const sqliteVerificationTokensTable = sqliteTable(
- "verificationToken" as string,
- {
-   identifier: text("identifier").notNull(),
-   token: text("token").notNull().unique(),
-   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
- },
- (vt) => ({
-  compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
- })
- )
+)
+
+export const sqliteSessionsTable = sqliteTable(
+  "session" as string,
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: text("sessionToken").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  },
+  (table) => ({
+    userIdIdx: index("Session_userId_index").on(table.userId),
+  })
+)
+
+export const sqliteVerificationTokensTable = sqliteTable(
+  "verificationToken" as string,
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull().unique(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  },
+  (vt) => ({
+    compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+  })
+)
 
 export function SQLiteDrizzleAdapter(
-  client: BaseSQLiteDatabase<'sync' | 'async', any, any>,
+  client: BaseSQLiteDatabase<"sync" | "async", any, any>,
   schema: DefaultSQLiteSchema = {
     usersTable: sqliteUsersTable,
     accountsTable: sqliteAccountsTable,
     sessionsTable: sqliteSessionsTable,
-    verificationTokensTable: sqliteVerificationTokensTable
+    verificationTokensTable: sqliteVerificationTokensTable,
   }
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } = schema
+  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
+    schema
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
-      return client
-        .insert(usersTable)
-        .values(data)
-        .returning()
-        .get()
+      return client.insert(usersTable).values(data).returning().get()
     },
     async getUser(userId: string) {
       const result = await client
@@ -94,7 +105,7 @@ export function SQLiteDrizzleAdapter(
         .from(usersTable)
         .where(eq(usersTable.id, userId))
         .get()
-  
+
       return result ?? null
     },
     async getUserByEmail(email: string) {
@@ -103,10 +114,10 @@ export function SQLiteDrizzleAdapter(
         .from(usersTable)
         .where(eq(usersTable.email, email))
         .get()
-    
+
       return result ?? null
     },
-   async createSession(data: {
+    async createSession(data: {
       sessionToken: string
       userId: string
       expires: Date
@@ -124,7 +135,7 @@ export function SQLiteDrizzleAdapter(
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
         .get()
 
-      return result ?? null 
+      return result ?? null
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -138,13 +149,15 @@ export function SQLiteDrizzleAdapter(
         .returning()
         .get()
 
-        if(!result) {
-          throw new Error("User not found.")
-        }
-      
-        return result
+      if (!result) {
+        throw new Error("User not found.")
+      }
+
+      return result
     },
-    async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
+    async updateSession(
+      data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+    ) {
       const result = await client
         .update(sessionsTable)
         .set(data)
@@ -155,17 +168,22 @@ export function SQLiteDrizzleAdapter(
       return result ?? null
     },
     async linkAccount(data: AdapterAccount) {
-        await client.insert(accountsTable).values(data).run()
+      await client.insert(accountsTable).values(data).run()
     },
-    async getUserByAccount(account: Pick<AdapterAccount, "provider" | "providerAccountId">) {
-      const result = await client.select({
-        account: accountsTable,
-        user: usersTable,
-      }).from(accountsTable)
-        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id)).where(
+    async getUserByAccount(
+      account: Pick<AdapterAccount, "provider" | "providerAccountId">
+    ) {
+      const result = await client
+        .select({
+          account: accountsTable,
+          user: usersTable,
+        })
+        .from(accountsTable)
+        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id))
+        .where(
           and(
             eq(accountsTable.provider, account.provider),
-            eq(accountsTable.providerAccountId, account.providerAccountId),
+            eq(accountsTable.providerAccountId, account.providerAccountId)
           )
         )
         .get()
@@ -173,7 +191,10 @@ export function SQLiteDrizzleAdapter(
       return result?.user ?? null
     },
     async deleteSession(sessionToken: string) {
-      await client.delete(sessionsTable).where(eq(sessionsTable.sessionToken, sessionToken)).run()
+      await client
+        .delete(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
+        .run()
     },
     async createVerificationToken(data: VerificationToken) {
       return await client
@@ -182,11 +203,8 @@ export function SQLiteDrizzleAdapter(
         .returning()
         .get()
     },
-    async useVerificationToken(params: {
-      identifier: string
-      token: string
-    }) {
-        const result = await client
+    async useVerificationToken(params: { identifier: string; token: string }) {
+      const result = await client
         .delete(verificationTokensTable)
         .where(
           and(
@@ -202,13 +220,15 @@ export function SQLiteDrizzleAdapter(
     async deleteUser(id: string) {
       await client.delete(usersTable).where(eq(usersTable.id, id)).run()
     },
-    async unlinkAccount(params: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+    async unlinkAccount(
+      params: Pick<AdapterAccount, "provider" | "providerAccountId">
+    ) {
       await client
         .delete(accountsTable)
         .where(
           and(
             eq(accountsTable.provider, params.provider),
-            eq(accountsTable.providerAccountId, params.providerAccountId),
+            eq(accountsTable.providerAccountId, params.providerAccountId)
           )
         )
         .run()
@@ -217,15 +237,17 @@ export function SQLiteDrizzleAdapter(
 }
 
 export type SQLiteTableFn<T extends TableConfig> = SQLiteTableWithColumns<{
-  name: T['name'],
-  columns: T['columns'],
-  dialect: T['dialect'],
+  name: T["name"]
+  columns: T["columns"]
+  dialect: T["dialect"]
   schema: string | undefined
 }>
 
 export type DefaultSQLiteSchema = {
-  usersTable: SQLiteTableFn<typeof sqliteUsersTable['_']['config']>,
-  accountsTable: SQLiteTableFn<typeof sqliteAccountsTable['_']['config']>,
-  sessionsTable: SQLiteTableFn<typeof sqliteSessionsTable['_']['config']>,
-  verificationTokensTable: SQLiteTableFn<typeof sqliteVerificationTokensTable['_']['config']>,
+  usersTable: SQLiteTableFn<(typeof sqliteUsersTable)["_"]["config"]>
+  accountsTable: SQLiteTableFn<(typeof sqliteAccountsTable)["_"]["config"]>
+  sessionsTable: SQLiteTableFn<(typeof sqliteSessionsTable)["_"]["config"]>
+  verificationTokensTable: SQLiteTableFn<
+    (typeof sqliteVerificationTokensTable)["_"]["config"]
+  >
 }

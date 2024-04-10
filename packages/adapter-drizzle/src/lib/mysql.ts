@@ -10,7 +10,7 @@ import {
   TableConfig,
   QueryResultHKT,
   PreparedQueryHKTBase,
-  index
+  index,
 } from "drizzle-orm/mysql-core"
 
 import type {
@@ -24,7 +24,9 @@ import type {
 import { randomUUID } from "crypto"
 
 export const mysqlUsersTable = mysqlTable("user" as string, {
-  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
@@ -52,20 +54,26 @@ export const mysqlAccountsTable = mysqlTable(
     compositePk: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-    userIdIdx: index('Account_userId_index').on(account.userId),
+    userIdIdx: index("Account_userId_index").on(account.userId),
   })
 )
 
-export const mysqlSessionsTable = mysqlTable("session" as string, {
-  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-}, (session) => ({
-  userIdIdx: index('Session_userId_index').on(session.userId),
-}))
+export const mysqlSessionsTable = mysqlTable(
+  "session" as string,
+  {
+    id: varchar("id", { length: 255 })
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (session) => ({
+    userIdIdx: index("Session_userId_index").on(session.userId),
+  })
+)
 
 export const mysqlVerificationTokensTable = mysqlTable(
   "verificationToken" as string,
@@ -88,12 +96,13 @@ export function MySqlDrizzleAdapter(
     verificationTokensTable: mysqlVerificationTokensTable,
   }
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } = schema
+  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
+    schema
 
   return {
     async createUser(data: Omit<AdapterUser, "id">) {
       const id = randomUUID()
-      
+
       await client.insert(usersTable).values({ ...data, id })
 
       return client
@@ -107,14 +116,14 @@ export function MySqlDrizzleAdapter(
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async getUserByEmail(email: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async createSession(data: {
       sessionToken: string
@@ -140,14 +149,17 @@ export function MySqlDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
       }
 
-      await client.update(usersTable).set(data).where(eq(usersTable.id, data.id))
+      await client
+        .update(usersTable)
+        .set(data)
+        .where(eq(usersTable.id, data.id))
 
       const [result] = await client
         .select()
@@ -160,7 +172,9 @@ export function MySqlDrizzleAdapter(
 
       return result
     },
-    async updateSession(data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">) {
+    async updateSession(
+      data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+    ) {
       await client
         .update(sessionsTable)
         .set(data)
@@ -175,22 +189,30 @@ export function MySqlDrizzleAdapter(
     async linkAccount(data: AdapterAccount) {
       await client.insert(accountsTable).values(data)
     },
-    async getUserByAccount(account: Pick<AdapterAccount, "provider" | "providerAccountId">) {
-      const result = await client.select({
-        account: accountsTable,
-        user: usersTable,
-      }).from(accountsTable)
-        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id)).where(
+    async getUserByAccount(
+      account: Pick<AdapterAccount, "provider" | "providerAccountId">
+    ) {
+      const result = await client
+        .select({
+          account: accountsTable,
+          user: usersTable,
+        })
+        .from(accountsTable)
+        .innerJoin(usersTable, eq(accountsTable.userId, usersTable.id))
+        .where(
           and(
             eq(accountsTable.provider, account.provider),
-            eq(accountsTable.providerAccountId, account.providerAccountId),
+            eq(accountsTable.providerAccountId, account.providerAccountId)
           )
-        ).then((res) => res[0])
+        )
+        .then((res) => res[0])
 
       return result?.user ?? null
     },
     async deleteSession(sessionToken: string) {
-      await client.delete(sessionsTable).where(eq(sessionsTable.sessionToken, sessionToken))
+      await client
+        .delete(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
     },
     async createVerificationToken(data: VerificationToken) {
       await client.insert(verificationTokensTable).values(data)
@@ -201,10 +223,7 @@ export function MySqlDrizzleAdapter(
         .where(eq(verificationTokensTable.identifier, data.identifier))
         .then((res) => res[0])
     },
-    async useVerificationToken(params: {
-      identifier: string
-      token: string
-    }) {
+    async useVerificationToken(params: { identifier: string; token: string }) {
       const deletedToken = await client
         .select()
         .from(verificationTokensTable)
@@ -214,7 +233,7 @@ export function MySqlDrizzleAdapter(
             eq(verificationTokensTable.token, params.token)
           )
         )
-        .then((res) => res.length > 0 ? res[0] : null)
+        .then((res) => (res.length > 0 ? res[0] : null))
 
       if (deletedToken) {
         await client
@@ -232,7 +251,9 @@ export function MySqlDrizzleAdapter(
     async deleteUser(id: string) {
       await client.delete(usersTable).where(eq(usersTable.id, id))
     },
-    async unlinkAccount(params: Pick<AdapterAccount, "provider" | "providerAccountId">) {
+    async unlinkAccount(
+      params: Pick<AdapterAccount, "provider" | "providerAccountId">
+    ) {
       await client
         .delete(accountsTable)
         .where(
@@ -246,15 +267,17 @@ export function MySqlDrizzleAdapter(
 }
 
 export type MySqlTableFn<T extends TableConfig> = MySqlTableWithColumns<{
-  name: T['name'],
-  columns: T['columns'],
-  dialect: T['dialect'],
+  name: T["name"]
+  columns: T["columns"]
+  dialect: T["dialect"]
   schema: string | undefined
 }>
 
 export type DefaultMySqlSchema = {
-  usersTable: MySqlTableFn<typeof mysqlUsersTable['_']['config']>,
-  accountsTable: MySqlTableFn<typeof mysqlAccountsTable['_']['config']>,
-  sessionsTable: MySqlTableFn<typeof mysqlSessionsTable['_']['config']>,
-  verificationTokensTable: MySqlTableFn<typeof mysqlVerificationTokensTable['_']['config']>,
+  usersTable: MySqlTableFn<(typeof mysqlUsersTable)["_"]["config"]>
+  accountsTable: MySqlTableFn<(typeof mysqlAccountsTable)["_"]["config"]>
+  sessionsTable: MySqlTableFn<(typeof mysqlSessionsTable)["_"]["config"]>
+  verificationTokensTable: MySqlTableFn<
+    (typeof mysqlVerificationTokensTable)["_"]["config"]
+  >
 }
