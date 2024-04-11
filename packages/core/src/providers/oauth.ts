@@ -100,6 +100,7 @@ export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
 export interface OAuthProviderButtonStyles {
   logo?: string
   bg?: string
+  bgDark?: string
   text?: string
 }
 
