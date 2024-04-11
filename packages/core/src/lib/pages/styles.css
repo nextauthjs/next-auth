@@ -47,8 +47,9 @@
 
   button,
   a.button {
-    color: var(--provider-dark-color, var(--color-primary));
-    background-color: var(--provider-dark-bg, var(--color-background));
+    color: var(--provider-dark-color, var(--color-primary)) !important;
+    background-color: var(--provider-dark-bg,
+        var(--color-background)) !important;
 
     &:hover {
       background-color: var(--provider-dark-bg-hover,

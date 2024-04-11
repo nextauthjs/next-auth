@@ -152,10 +152,11 @@ export default function SigninPage(props: {
                     type="submit"
                     className="button"
                     style={{
-                      "--provider-bg": `color-mix(in srgb, ${bg} 75%, #000)`,
-                      "--provider-dark-bg": `color-mix(in srgb, ${bgDark} 85%, #000)`,
-                      "--provider-bg-hover": hexToRgba(bg, 0.8),
-                      "--provider-dark-bg-hover": hexToRgba(bgDark, 0.8),
+                      transition: "background-color 250ms ease-in-out",
+                      "--provider-bg": `color-mix(in srgb, ${bg} 75%, #fff)`,
+                      "--provider-dark-bg": `color-mix(in srgb, ${bgDark} 75%, #000)`,
+                      "--provider-bg-hover": `color-mix(in srgb, ${bg} 70%, #000)`,
+                      "--provider-dark-bg-hover": `color-mix(in srgb, ${bgDark} 35%, #000)`,
                     }}
                     tabIndex={0}
                   >
