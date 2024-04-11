@@ -1,4 +1,5 @@
-<svg width="256px" height="256px" viewBox="0 0 256 256" version="1.1" preserveAspectRatio="xMidYMid">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="256px" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid">
     <title>Zoom</title>
     <defs>
         <linearGradient x1="23.666%" y1="95.6118%" x2="76.334%" y2="4.3882%" id="zoomLinearGradient-1">
