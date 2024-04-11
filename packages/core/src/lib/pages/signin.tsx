@@ -127,15 +127,13 @@ export default function SigninPage(props: {
         )}
         {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {providers.map((provider, i) => {
-          let bg, text, logo, logoDark, bgDark, textDark
+          let bg, text, logo, bgDark
           if (provider.type === "oauth" || provider.type === "oidc") {
             ;({
-              bg = "",
+              bg = "#fff",
               text = "",
               logo = `${providerLogoPath}/${provider.id}.svg`,
               bgDark = bg,
-              textDark = text,
-              logoDark = `${providerLogoPath}/${provider.id}.svg`,
             } = provider.style ?? {})
           }
           return (
@@ -154,10 +152,8 @@ export default function SigninPage(props: {
                     type="submit"
                     className="button"
                     style={{
-                      "--provider-bg": bg,
-                      "--provider-dark-bg": bgDark,
-                      "--provider-color": text,
-                      "--provider-dark-color": textDark,
+                      "--provider-bg": `color-mix(in srgb, ${bg} 75%, #000)`,
+                      "--provider-dark-bg": `color-mix(in srgb, ${bgDark} 85%, #000)`,
                       "--provider-bg-hover": hexToRgba(bg, 0.8),
                       "--provider-dark-bg-hover": hexToRgba(bgDark, 0.8),
                     }}
@@ -172,16 +168,17 @@ export default function SigninPage(props: {
                         src={logo}
                       />
                     )}
-                    {logoDark && (
-                      <img
-                        loading="lazy"
-                        height={24}
-                        width={24}
-                        id="provider-logo-dark"
-                        src={logoDark}
-                      />
-                    )}
-                    <span>Sign in with {provider.name}</span>
+                    <span
+                      style={{
+                        color: bg,
+                        filter:
+                          "invert(1) grayscale(1) brightness(1.3) contrast(9000)",
+                        "mix-blend-mode": "luminosity",
+                        opacity: 0.95,
+                      }}
+                    >
+                      Sign in with {provider.name}
+                    </span>
                   </button>
                 </form>
               ) : null}

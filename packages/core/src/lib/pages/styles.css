@@ -49,26 +49,20 @@
   a.button {
     color: var(--provider-dark-color, var(--color-primary));
     background-color: var(--provider-dark-bg, var(--color-background));
+
     &:hover {
-      background-color: var(
-        --provider-dark-bg-hover,
-        var(--color-background-hover)
-      ) !important;
+      background-color: var(--provider-dark-bg-hover,
+          var(--color-background-hover)) !important;
     }
   }
-  #provider-logo {
-    display: none !important;
-  }
-  #provider-logo-dark {
-    width: 25px;
-    display: block !important;
-  }
 }
+
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 *,
 *:before,
 *:after {
@@ -182,15 +176,14 @@ a.button {
     background-color: var(--provider-bg-hover, var(--color-background-hover));
     cursor: pointer;
   }
+
   &:active {
     cursor: pointer;
   }
+
   #provider-logo {
     width: 25px;
     display: block;
-  }
-  #provider-logo-dark {
-    display: none;
   }
 }
 
@@ -200,10 +193,8 @@ a.button {
   width: 100%;
 
   &:hover {
-    background-color: var(
-      --button-hover-bg,
-      var(--color-info-hover)
-    ) !important;
+    background-color: var(--button-hover-bg,
+        var(--color-info-hover)) !important;
   }
 }
 
@@ -228,7 +219,7 @@ a.site {
   padding: 0;
   box-sizing: border-box;
 
-  > div {
+  >div {
     text-align: center;
   }
 }
@@ -284,7 +275,7 @@ a.site {
     }
   }
 
-  > div,
+  >div,
   form {
     display: block;
 
@@ -297,7 +288,7 @@ a.site {
     }
   }
 
-  .provider + .provider {
+  .provider+.provider {
     margin-top: 1rem;
   }
 }
@@ -329,6 +320,7 @@ a.site {
     width: 368px;
   }
 }
+
 @media screen and (max-width: 450px) {
   .card {
     margin: 1rem 0;
