@@ -80,7 +80,9 @@ export default function Cognito<P extends CognitoProfile>(
     id: "cognito",
     name: "Cognito",
     type: "oidc",
-    style: { bg: "#fff", text: "#000" },
+    style: {
+      brandColor: "#C17B9E",
+    },
     options,
   }
 }

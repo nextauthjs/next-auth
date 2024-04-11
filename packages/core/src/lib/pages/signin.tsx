@@ -101,15 +101,15 @@ export default function SigninPage(props: {
         )}
         {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {providers.map((provider, i) => {
-          let bg, text, logo, bgDark
+          let bg, brandColor, logo
           if (provider.type === "oauth" || provider.type === "oidc") {
             ;({
               bg = "#fff",
-              text = "",
+              brandColor,
               logo = `${providerLogoPath}/${provider.id}.svg`,
-              bgDark = bg,
             } = provider.style ?? {})
           }
+          const color = brandColor ?? bg ?? "#fff"
           return (
             <div key={provider.id} className="provider">
               {provider.type === "oauth" || provider.type === "oidc" ? (
@@ -126,11 +126,10 @@ export default function SigninPage(props: {
                     type="submit"
                     className="button"
                     style={{
-                      transition: "background-color 250ms ease-in-out",
-                      "--provider-bg": `color-mix(in srgb, ${bg} 75%, #fff)`,
-                      "--provider-dark-bg": `color-mix(in srgb, ${bgDark} 75%, #000)`,
-                      "--provider-bg-hover": `color-mix(in srgb, ${bg} 70%, #000)`,
-                      "--provider-dark-bg-hover": `color-mix(in srgb, ${bgDark} 35%, #000)`,
+                      "--provider-bg": "#fff",
+                      "--provider-bg-hover": `color-mix(in srgb, ${color} 30%, #fff)`,
+                      "--provider-dark-bg": "#161b22",
+                      "--provider-dark-bg-hover": `color-mix(in srgb, ${color} 30%, #000)`,
                     }}
                     tabIndex={0}
                   >
@@ -145,7 +144,6 @@ export default function SigninPage(props: {
                     )}
                     <span
                       style={{
-                        color: bg,
                         filter:
                           "invert(1) grayscale(1) brightness(1.3) contrast(9000)",
                         "mix-blend-mode": "luminosity",
