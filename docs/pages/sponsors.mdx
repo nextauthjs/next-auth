@@ -1,4 +1,4 @@
-import { Callout } from "nextra/components";
+import { Callout } from "nextra/components"
 
 # Sponsors
 
@@ -14,7 +14,7 @@ Therefore, it is easy to forget that Auth.js is created and maintained by [actua
 It would not be possible without the generous support of our sponsors.
 
 <a
-  className="flex items-center justify-start gap-4 text-3xl mt-8"
+  className="flex items-center justify-start gap-4 mt-8"
   style={{
     color: "#6c47ff",
   }}
@@ -24,14 +24,16 @@ It would not be possible without the generous support of our sponsors.
   <img
     src="/img/etc/clerk-logo.svg"
     alt="Clerk Logo"
-    className="rounded-xl w-24 dark:grayscale dark:bg-[#f0f4f9] px-6 py-4"
+    className="rounded-xl w-24 dark:bg-[#f0f4f9] px-6 py-4"
   />
-  <span className="text-sky-600">Clerk - More than authentication.</span>
+  <span className="text-xl md:text-3xl text-sky-600">
+    Clerk - More than authentication.
+  </span>
 </a>
 
 ## 🥇 Gold sponsors
 
-<div style={{ display: "flex", gap: "2em" }}>
+<div className="flex flex-wrap gap-2">
   {[].map(([href, src, name]) => (
     <a
       key={name}
@@ -51,13 +53,8 @@ It would not be possible without the generous support of our sponsors.
 
 ## 🥈 Silver sponsors
 
-<div className="flex flex-row gap-16 pt-8">
+<div className="flex flex-wrap flex-row gap-8 md:gap-16 pt-8">
   {[
-    [
-      "https://www.beyondidentity.com",
-      "https://avatars.githubusercontent.com/u/69811361?s=200&v=4",
-      "Beyond Identity",
-    ],
     [
       "https://fusionauth.io",
       "https://avatars.githubusercontent.com/u/41974756?s=200&v=4",
@@ -67,6 +64,11 @@ It would not be possible without the generous support of our sponsors.
       "https://stytch.com",
       "https://avatars.githubusercontent.com/u/69983493?s=200&v=4",
       "Stytch",
+    ],
+    [
+      "https://www.beyondidentity.com",
+      "https://avatars.githubusercontent.com/u/69811361?s=200&v=4",
+      "Beyond Identity",
     ],
   ].map(([href, src, name]) => (
     <a
@@ -87,7 +89,7 @@ It would not be possible without the generous support of our sponsors.
 
 ## 🥉 Bronze sponsors
 
-<div className="flex flex-row gap-16 pt-8">
+<div className="flex flex-wrap flex-row gap-8 md:gap-16 pt-8">
   {[
     [
       "https://descope.com",
