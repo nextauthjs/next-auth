@@ -48,12 +48,16 @@
   button,
   a.button {
     color: var(--provider-dark-color, var(--color-primary)) !important;
-    background-color: var(--provider-dark-bg,
-        var(--color-background)) !important;
+    background-color: var(
+      --provider-dark-bg,
+      var(--color-background)
+    ) !important;
 
     &:hover {
-      background-color: var(--provider-dark-bg-hover,
-          var(--color-background-hover)) !important;
+      background-color: var(
+        --provider-dark-bg-hover,
+        var(--color-background-hover)
+      ) !important;
     }
   }
 }
@@ -194,8 +198,10 @@ a.button {
   width: 100%;
 
   &:hover {
-    background-color: var(--button-hover-bg,
-        var(--color-info-hover)) !important;
+    background-color: var(
+      --button-hover-bg,
+      var(--color-info-hover)
+    ) !important;
   }
 }
 
@@ -220,7 +226,7 @@ a.site {
   padding: 0;
   box-sizing: border-box;
 
-  >div {
+  > div {
     text-align: center;
   }
 }
@@ -276,7 +282,7 @@ a.site {
     }
   }
 
-  >div,
+  > div,
   form {
     display: block;
 
@@ -289,7 +295,7 @@ a.site {
     }
   }
 
-  .provider+.provider {
+  .provider + .provider {
     margin-top: 1rem;
   }
 }
