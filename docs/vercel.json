@@ -23,22 +23,17 @@
       "permanent": true
     },
     {
-      "source": "/",
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "sveltekit.authjs.dev" }],
       "destination": "https://authjs.dev/reference/sveltekit"
     },
     {
-      "source": "/",
-      "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/nextjs"
-    },
-    {
-      "source": "/",
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "solid-start.authjs.dev" }],
       "destination": "https://authjs.dev/reference/solid-start"
     },
     {
-      "source": "/",
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "express.authjs.dev" }],
       "destination": "https://authjs.dev/reference/express"
     },
@@ -55,12 +50,12 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "warnings.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/warnings/:path*"
+      "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
     {
       "source": "/",
       "has": [{ "type": "host", "value": "adapters.authjs.dev" }],
-      "destination": "https://authjs.dev/getting-started/adapters"
+      "destination": "https://authjs.dev/getting-started/database"
     },
     {
       "source": "/:path(.*)",
@@ -70,12 +65,12 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "providers.authjs.dev" }],
-      "destination": "https://authjs.dev/getting-started/providers"
+      "destination": "https://authjs.dev/getting-started/authentication/oauth"
     },
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "providers.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/core/providers/:path"
+      "destination": "https://authjs.dev/reference/providers/:path"
     },
     {
       "source": "/reference/core/providers_:slug(.*)",
