@@ -20,32 +20,6 @@ const signinErrors: Record<SignInPageErrorParam | "default", string> = {
     "Sign in failed. Check the details you provided are correct.",
   SessionRequired: "Please sign in to access this page.",
 }
-function hexToRgba(hex?: string, alpha = 1) {
-  if (!hex) {
-    return
-  }
-  // Remove the "#" character if it's included
-  hex = hex.replace(/^#/, "")
-
-  // Expand 3-digit hex codes to their 6-digit equivalents
-  if (hex.length === 3) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
-  }
-
-  // Parse the hex value to separate R, G, and B components
-  const bigint = parseInt(hex, 16)
-  const r = (bigint >> 16) & 255
-  const g = (bigint >> 8) & 255
-  const b = bigint & 255
-
-  // Ensure the alpha value is within the valid range [0, 1]
-  alpha = Math.min(Math.max(alpha, 0), 1)
-
-  // Construct the RGBA string
-  const rgba = `rgba(${r}, ${g}, ${b}, ${alpha})`
-
-  return rgba
-}
 
 function ConditionalUIScript(providerID: string) {
   const startConditionalUIScript = `
