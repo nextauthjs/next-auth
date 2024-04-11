@@ -93,6 +93,10 @@
     {
       "source": "/getting-started/providers/email",
       "destination": "/getting-started/providers/nodemailer"
+    },
+    {
+      "source": "/guides/basics/role-based-access-control",
+      "destination": "/guides/role-based-access-control"
     }
   ]
 }
