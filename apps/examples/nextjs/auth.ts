@@ -30,9 +30,7 @@ import Zoom from "next-auth/providers/zoom"
 import type { NextAuthConfig } from "next-auth"
 
 export const config = {
-  theme: {
-    logo: "https://next-auth.js.org/img/logo-sm.png",
-  },
+  theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   providers: [
     Apple,
     Auth0,
