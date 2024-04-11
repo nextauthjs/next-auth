@@ -102,7 +102,7 @@ export function Guides() {
             ].map((f) => (
               <li
                 key={f.id}
-                className="flex justify-between items-center p-2 mb-8 w-full transition duration-300 grayscale hover:grayscale-0"
+                className="flex flex-col sm:flex-row justify-between p-2 mb-8 w-full transition duration-300 grayscale hover:grayscale-0 gap-4"
               >
                 <div className="flex gap-2 items-center">
                   <Image
@@ -118,9 +118,9 @@ export function Guides() {
                   />
                   {f.name}
                 </div>
-                <div className="flex gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <Link
-                    className="flex gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
+                    className="flex justify-center gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
                     target="_blank"
                     href={f.demo}
                     rel="noreferrer"
@@ -131,7 +131,7 @@ export function Guides() {
                   <Link
                     target="_blank"
                     href={`https://github.com/nextauthjs/${f.repo}`}
-                    className="flex gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
+                    className="flex justify-center gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
                     rel="noreferrer"
                   >
                     <GithubLogo size={24} />

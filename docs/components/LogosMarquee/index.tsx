@@ -10,18 +10,18 @@ const logoSize = 96 // px
 function changeScale() {
   if (typeof window !== "undefined") {
     const width = window.innerWidth
-    return clamp(30, Number((40 + width * 0.01).toFixed(2)), 80)
+    return clamp(40, Number((40 + width * 0.01).toFixed(2)), 80)
   }
 }
 
 function changeLogoCount() {
   if (typeof window !== "undefined") {
     const width = window.innerWidth
-    return clamp(10, Number((10 + width * 0.005).toFixed(0)), 30)
+    return clamp(8, Number((8 + width * 0.004).toFixed(0)), 30)
   }
 }
 
-export const ProviderMarquee = memo(() => {
+export const LogosMarquee = memo(() => {
   const [scale, setScale] = useState(changeScale)
   const [logoCount, setLogoCount] = useState(changeLogoCount)
 
@@ -76,5 +76,3 @@ export const ProviderMarquee = memo(() => {
     </div>
   )
 })
-
-ProviderMarquee.displayName = "ProviderMarquee"
