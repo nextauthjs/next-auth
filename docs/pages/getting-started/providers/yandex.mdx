@@ -1,0 +1,81 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/yandex.svg" height="64" width="64" />
+
+# Yandex Provider
+
+## Resources
+
+- [Yandex - Creating an OAuth app](https://yandex.com/dev/id/doc/en/register-client#create)
+- [Yandex - Manage OAuth apps](https://oauth.yandex.com/)
+- [Yandex - OAuth documentation](https://yandex.com/dev/id/doc/en/)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/yandex
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/yandex
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_YANDEX_ID
+AUTH_YANDEX_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Yandex from "next-auth/providers/yandex"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Yandex],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Yandex from "@auth/sveltekit/providers/yandex"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Yandex],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Yandex from "@auth/express/providers/yandex"
+
+app.use("/auth/*", ExpressAuth({ providers: [Yandex] }))
+```
+
+  </Code.Express>
+</Code>

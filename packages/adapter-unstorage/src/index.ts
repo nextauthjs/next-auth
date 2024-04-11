@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://unstorage.unjs.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/unstorage.svg" width="60"/>
  *  </a>
@@ -19,6 +19,7 @@ import type {
   AdapterUser,
   AdapterAccount,
   AdapterSession,
+  AdapterAuthenticator,
   VerificationToken,
 } from "@auth/core/adapters"
 import type { Storage, StorageValue } from "unstorage"
@@ -58,6 +59,14 @@ export interface UnstorageAdapterOptions {
    */
   verificationTokenKeyPrefix?: string
   /**
+   * The prefix for the `authenticator` key
+   */
+  authenticatorKeyPrefix?: string
+  /**
+   * The prefix for the `authenticator-by-user-id` key
+   */
+  authenticatorUserKeyPrefix?: string
+  /**
    * Use `getItemRaw/setItemRaw` instead of `getItem/setItem`.
    *
    * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
@@ -74,6 +83,8 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
+  authenticatorKeyPrefix: "authenticator:id:",
+  authenticatorUserKeyPrefix: "authenticator:by-user-id:",
   useItemRaw: false,
 }
 
@@ -93,9 +104,9 @@ export function hydrateDates(json: object) {
 /**
  * ## Setup
  *
- * Configure Auth.js to use the Unstorage Adapter:
+ * Configure Auth.js to use the Unstorage Adapter.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { UnstorageAdapter } from "@auth/unstorage-adapter"
@@ -134,6 +145,8 @@ export function hydrateDates(json: object) {
  *   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
  *   userKeyPrefix: "user:",
  *   verificationTokenKeyPrefix: "user:token:",
+ *   authenticatorKeyPrefix: "authenticator:id:",
+ *   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
  * }
  * ```
  *
@@ -143,9 +156,7 @@ export function hydrateDates(json: object) {
  *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UnstorageAdapter(storage, {baseKeyPrefix: "app2:"})
- *   ...
  * })
  * ```
  *
@@ -157,15 +168,12 @@ export function hydrateDates(json: object) {
  *
  * You can enable this functionality by passing `useItemRaw: true` (default: false) in the `options` object as the second argument to the adapter factory function.
  *
- * Example:
- *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UnstorageAdapter(storage, {useItemRaw: true})
- *   ...
  * })
  * ```
+ *
  */
 export function UnstorageAdapter(
   storage: Storage,
@@ -187,12 +195,25 @@ export function UnstorageAdapter(
   const userKeyPrefix = baseKeyPrefix + mergedOptions.userKeyPrefix
   const verificationTokenKeyPrefix =
     baseKeyPrefix + mergedOptions.verificationTokenKeyPrefix
+  const authenticatorKeyPrefix =
+    baseKeyPrefix + mergedOptions.authenticatorKeyPrefix
+  const authenticatorUserKeyPrefix =
+    baseKeyPrefix + mergedOptions.authenticatorUserKeyPrefix
 
   async function getItem<T extends StorageValue>(key: string) {
     if (mergedOptions.useItemRaw) {
       return await storage.getItemRaw<T>(key)
     } else {
       return await storage.getItem<T>(key)
+    }
+  }
+
+  async function getItems(key: string[]) {
+    if (mergedOptions.useItemRaw) {
+      // Unstorage missing method to get multiple items raw, i.e. `getItemsRaw`
+      return JSON.stringify(await storage.getItems(key))
+    } else {
+      return await storage.getItems(key)
     }
   }
 
@@ -262,7 +283,63 @@ export function UnstorageAdapter(
     return hydrateDates(user)
   }
 
+  const setAuthenticator = async (
+    credentialId: string,
+    authenticator: AdapterAuthenticator
+  ): Promise<AdapterAuthenticator> => {
+    await Promise.all([
+      setObjectAsJson(authenticatorKeyPrefix + credentialId, authenticator),
+      setItem(
+        `${authenticatorUserKeyPrefix}${authenticator.userId}`,
+        credentialId
+      ),
+    ])
+    return authenticator
+  }
+
+  const getAuthenticator = async (credentialId: string) => {
+    const authenticator = await getItem<AdapterAuthenticator>(
+      authenticatorKeyPrefix + credentialId
+    )
+    if (!authenticator) return null
+    return hydrateDates(authenticator)
+  }
+
+  // TODO: This one doesn't really work with KV storage, as we can't set the same
+  // key multiple times, they'll just overwrite one another. Maybe with some
+  // additional logic to write an array as the value instead of overwriting
+  // the pre-existing value. Probably in `setItems` implementation.
+  const getAuthenticatorByUserId = async (
+    userId: string
+  ): Promise<AdapterAuthenticator[] | []> => {
+    const credentialIds = await getItems([
+      `${authenticatorUserKeyPrefix}${userId}`,
+    ])
+    if (!credentialIds.length) return []
+
+    const authenticators = []
+    for (const credentialId of credentialIds) {
+      const credentialValue =
+        typeof credentialId === "string" ? credentialId : credentialId.value
+
+      const authenticator = await getAuthenticator(credentialValue as string)
+
+      if (authenticator) {
+        hydrateDates(authenticator)
+        authenticators.push(authenticator)
+      }
+    }
+
+    return authenticators
+  }
+
   return {
+    async getAccount(providerAccountId: string, provider: string) {
+      const accountId = `${provider}:${providerAccountId}`
+      const account = await getAccount(accountId)
+      if (!account) return null
+      return account
+    },
     async createUser(user) {
       const id = crypto.randomUUID()
       return await setUser(id, { ...user, id })
@@ -310,9 +387,9 @@ export function UnstorageAdapter(
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
         verificationTokenKeyPrefix +
-          verificationToken.identifier +
-          ":" +
-          verificationToken.token,
+        verificationToken.identifier +
+        ":" +
+        verificationToken.token,
         verificationToken
       )
       return verificationToken
@@ -358,5 +435,37 @@ export function UnstorageAdapter(
         storage.removeItem(sessionByUserIdKey),
       ])
     },
+    async createAuthenticator(authenticator) {
+      setAuthenticator(authenticator.credentialID, authenticator)
+      return fromDBAuthenticator(authenticator)!
+    },
+    async getAuthenticator(credentialID) {
+      const authenticator = await getAuthenticator(credentialID)
+      return fromDBAuthenticator(authenticator)
+    },
+    async listAuthenticatorsByUserId(userId) {
+      const user = await getUser(userId)
+      if (!user) return []
+      const authenticators = await getAuthenticatorByUserId(user.id)
+      return authenticators
+    },
+    async updateAuthenticatorCounter(credentialID, counter) {
+      const authenticator = await getAuthenticator(credentialID)
+      authenticator.counter = Number(counter)
+      setAuthenticator(credentialID, authenticator)
+      return fromDBAuthenticator(authenticator)!
+    },
+  }
+}
+
+function fromDBAuthenticator(
+  authenticator: AdapterAuthenticator & { id?: string; user?: string }
+): AdapterAuthenticator | null {
+  if (!authenticator) return null
+  const { transports, id, user, ...other } = authenticator
+
+  return {
+    ...other,
+    transports: transports || undefined,
   }
 }

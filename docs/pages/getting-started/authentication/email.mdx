@@ -1,0 +1,20 @@
+---
+title: Email Providers
+---
+
+import { Callout } from "nextra/components"
+import { MagicLinkInstructions } from "@/components/MagicLinkInstructions"
+
+# Email Provider
+
+This login mechanism starts by the user providing their email address at the login form. Then a **Verification Token** is sent to the provided email address. The user then has 24 hours to click the link in the email body to "consume" that token and register their account, otherwise the verification token will expire and they will have to request a new one.
+
+<Callout>
+  An Email Provider can be used with both [JSON Web Tokens](https://jwt.io/) and
+  [database](/concepts/session-strategies#database-session) session, whichever
+  you choose, you **must still configure a database** so that Auth.js can save
+  the verification tokens and look them up when the user attempts to login. It
+  is not possible to enable an email provider without using a database.
+</Callout>
+
+<MagicLinkInstructions />

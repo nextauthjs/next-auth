@@ -37,8 +37,7 @@ export function mapExpiresAt(account: any): any {
  * The SQL schema for the tables used by this adapter is as follows. Learn more about the models at our doc page on [Database Models](https://authjs.dev/getting-started/adapters#models).
  *
  * ```sql
- * CREATE TABLE verification_token
- * (
+ * CREATE TABLE verification_token (
  *   identifier TEXT NOT NULL,
  *   expires TIMESTAMPTZ NOT NULL,
  *   token TEXT NOT NULL,
@@ -46,8 +45,7 @@ export function mapExpiresAt(account: any): any {
  *   PRIMARY KEY (identifier, token)
  * );
  *
- * CREATE TABLE accounts
- * (
+ * CREATE TABLE accounts (
  *   id SERIAL,
  *   "userId" INTEGER NOT NULL,
  *   type VARCHAR(255) NOT NULL,
@@ -64,8 +62,7 @@ export function mapExpiresAt(account: any): any {
  *   PRIMARY KEY (id)
  * );
  *
- * CREATE TABLE sessions
- * (
+ * CREATE TABLE sessions (
  *   id SERIAL,
  *   "userId" INTEGER NOT NULL,
  *   expires TIMESTAMPTZ NOT NULL,
@@ -74,8 +71,7 @@ export function mapExpiresAt(account: any): any {
  *   PRIMARY KEY (id)
  * );
  *
- * CREATE TABLE users
- * (
+ * CREATE TABLE users (
  *   id SERIAL,
  *   name VARCHAR(255),
  *   email VARCHAR(255),
@@ -84,10 +80,9 @@ export function mapExpiresAt(account: any): any {
  *
  *   PRIMARY KEY (id)
  * );
- *
  * ```
  *
- * ```typescript title="auth.ts"
+ * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import PostgresAdapter from "@auth/pg-adapter"

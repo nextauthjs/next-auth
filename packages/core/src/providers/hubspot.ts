@@ -106,7 +106,7 @@ export default function HubSpot<P extends HubSpotProfile>(
         image: null,
       }
     },
-    style: { logo: "/hubspot.svg", bg: "#ff7a59", text: "#fff" },
+    style: { bg: "#ff7a59", text: "#fff" },
     options,
   }
 }

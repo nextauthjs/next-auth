@@ -8,7 +8,7 @@
  *
  * @module providers/mattermost
  */
-import type { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 /** [Get a user](https://api.mattermost.com/#tag/users/operation/GetUser) */
 export interface MattermostProfile {
@@ -142,7 +142,7 @@ export default function Mattermost<P extends MattermostProfile>(
         image: null,
       }
     },
-    style: { logo: "/mattermost.svg", bg: "#000", text: "#fff" },
+    style: { bg: "#000", text: "#fff" },
     options: rest,
   }
 }

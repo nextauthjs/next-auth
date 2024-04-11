@@ -3,7 +3,7 @@ import path from "path"
 import postcss from "postcss"
 
 import autoprefixer from "autoprefixer"
-import postCssNested from "postcss-nested"
+import postCssNested from "postcss-nesting"
 
 const from = path.join(process.cwd(), "src/lib/pages/styles.css")
 const css = fs.readFileSync(from)

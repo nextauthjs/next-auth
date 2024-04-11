@@ -1,6 +1,6 @@
 <p align="center">
   <br/>
-  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo-sm.png" /></a>
   <h3 align="center">Auth.js</h3>
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
@@ -17,15 +17,18 @@
     <a href="https://www.npmjs.com/package/next-auth">
       <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="Github Stable Release" />
     </a>
+    <a href="https://codecov.io/gh/nextauthjs/next-auth" > 
+      <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov">
+    </a>
   </p>
   <p align="center">
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
   </p>
   <p align="center">
-    See <a href="https://authjs.dev">authjs.dev</a> for our framework-specific libraries, or check out <a href="https://next-auth.js.org">next-auth.js.org</a> for next-auth (Next.js).
+    See <a href="https://authjs.dev">authjs.dev</a> for our documentation and more information.
   </p>
   <p align="center">
-    Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+     <kbd>Sponsored</kbd> Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
   </p>
 </p>
 
@@ -53,7 +56,7 @@ Auth.js can be used with or without a database.
 - Designed to be secure by default and encourage best practices for safeguarding user data
 - Uses Cross-Site Request Forgery (CSRF) Tokens on POST routes (sign in, sign out)
 - Default cookie policy aims for the most restrictive policy appropriate for each cookie
-- When JSON Web Tokens are used, they are encrypted by default (JWE) with A256GCM
+- When JSON Web Tokens are used, they are encrypted by default (JWE) with A256CBC-HS512
 - Features tab/window syncing and session polling to support short-lived sessions
 - Attempts to implement the latest guidance published by [Open Web Application Security Project](https://owasp.org)
 
@@ -94,13 +97,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://vercel.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
-        </a><br />
-        <div>Vercel</div>
-        <sub>💵☁️</sub>
-      </td>
-      <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
         </a><br />
@@ -136,11 +132,11 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://workos.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
+        <a href="https://vercel.com" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
         </a><br />
-        <div>WorkOS</div>
-        <sub>💵</sub>
+        <div>Vercel</div>
+        <sub>💵☁️</sub>
       </td>
     </tr>
     <tr>
@@ -179,6 +175,9 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
 
 We're open to all community contributions! If you'd like to contribute in any way, please first read
 our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
+
+> [!NOTE]
+> The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
 
 ## License
 

@@ -1,0 +1,119 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/bungie.svg" height="64" width="128" />
+
+# Bungie Provider
+
+## Resources
+
+- [Bungie OAuth documentation](https://github.com/Bungie-net/api/wiki/OAuth-Documentation)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/bungie
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/bungie
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_BUNGIE_ID
+AUTH_BUNGIE_SECRET
+AUTH_BUNGIE_API_KEY
+```
+
+### Configuration
+
+Navigate to https://www.bungie.net/en/Application and fill in the required details:
+
+- Application name
+- Application Status
+- Website
+- OAuth Client Type
+  - Confidential
+- Redirect URL
+  - https://localhost:3000/api/auth/callback/bungie
+- Scope
+  - `Access items like your Bungie.net notifications, memberships, and recent Bungie.Net forum activity.`
+- Origin Header
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Bungie from "next-auth/providers/boxyhq-saml";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Bungie({
+      clientId: AUTH_BUNGIE_ID
+      clientSecret: AUTH_BUNGIE_SECRET
+      headers: { "X-API-Key": AUTH_BUNGIE_API_KEY }
+    }),
+  ],
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit";
+import Bungie from "@auth/sveltekit/providers/boxyhq-saml";
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Bungie({
+      clientId: AUTH_BUNGIE_ID
+      clientSecret: AUTH_BUNGIE_SECRET
+      headers: { "X-API-Key": AUTH_BUNGIE_API_KEY }
+    }),
+  ],
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express";
+import Bungie from "@auth/express/providers/boxyhq-saml";
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Bungie({
+        clientId: AUTH_BUNGIE_ID
+        clientSecret: AUTH_BUNGIE_SECRET
+        headers: { "X-API-Key": AUTH_BUNGIE_API_KEY }
+      }),
+    ],
+  })
+);
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Bungie requires all clients to be using **https**.
+- Bungie does not allow the hostname `localhost`, so for local development, you must use `127.0.0.1` for example

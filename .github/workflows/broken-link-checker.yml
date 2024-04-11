@@ -1,0 +1,35 @@
+name: "Broken Link Checker"
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+
+permissions:
+  pull-requests: write
+  checks: write
+
+jobs:
+  broken-link-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: corepack enable
+      - name: Get Vercel Preview URL
+        id: vercelDeployment
+        uses: mishkeTz/get-vercel-preview-url-by-project-id@main
+        with:
+          vercel_access_token: ${{ secrets.VERCEL_TOKEN }}
+          vercel_team_id: ${{ secrets.VERCEL_TEAM_ID }}
+          vercel_project_id: ${{ secrets.VERCEL_PROJECT_ID }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install dependencies
+        run: cd ./.github/broken-link-checker && pnpm install --ignore-workspace && pnpm build
+      - name: Run link checker
+        uses: ./.github/broken-link-checker
+        id: broken-links
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_PREVIEW_URL: ${{ steps.vercelDeployment.outputs.preview_url }}

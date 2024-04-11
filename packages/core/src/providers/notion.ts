@@ -9,7 +9,7 @@
  * @module providers/notion
  */
 
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 export interface Person extends Record<string, any> {
   email: string
@@ -152,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/notion.svg", bg: "#fff", text: "#000" },
+    style: { bg: "#fff", text: "#000" },
     options,
   }
 }

@@ -1,0 +1,69 @@
+import { Callout } from "nextra/components"
+import { ListDisclosure } from "@/components/ListDisclosure"
+import { Link } from "@/components/Link"
+import { Screenshot } from "@/components/Screenshot"
+import { DemoCards } from "@/components/DemoCards"
+import manifest from "@/data/manifest.json"
+
+# What is Auth.js?
+
+Auth.js is a runtime agnostic library based on standard Web APIs that deeply integrates with modern JavaScript frameworks via additional libraries that wrap the core functionality and tailor it to the framework's best practices. This documentation covers `next-auth@5.0.0-beta` and later and all other frameworks under the `@auth/*` namespace. Documentation for `next-auth@4.x.y` can still be found at [next-auth.js.org](https://next-auth.js.org).
+
+Select your framework of choice to get started, or view the example application deployment or repository with the buttons below.
+
+<DemoCards />
+
+Check the [integrations page](/getting-started/integrations) for all supported packages. We are working on supporting more frameworks, but you can create own or
+help us create one for your favorite framework.
+
+<Callout type="info">
+  To reduce migration overhead, NextAuth.js for Next.js will continue to be
+  released under the `next-auth` package name, instead of the `@auth/*`
+  convention. Auth.js was born out of `next-auth` but [over the years has
+  evolved](/contributors#history) to be framework agnostic.
+
+Confused about Auth.js and NextAuth.js? Have a look at [our
+history](/contributors#history).
+
+</Callout>
+
+## Authentication methods
+
+There are 4 ways to authenticate users with Auth.js:
+
+- [OAuth authentication](/getting-started/authentication/oauth) (_Sign in with Google, Github, LinkedIn, etc..._)
+- [Magic Links](/getting-started/authentication/email) (_Email Provider like Resend, Sendgrid, Nodemailer etc..._)
+- [Credentials](/getting-started/authentication/credentials) (_Username and Password, Integrating with external APIs, etc..._)
+- [WebAuthn](/getting-started/authentication/webauthn) (_Passkeys, etc..._)
+
+### Official Providers
+
+<ListDisclosure limit={8}>
+  {Object.entries(manifest.providersOAuth).map(([id, name]) => (
+    <Link
+      href={`/getting-started/providers/${id}`}
+      key={name}
+      className="p-4 border border-solid dark:border-neutral-800 border-neutral-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-sm h-32 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300 !no-underline"
+    >
+      <img src={`/img/providers/${id}.svg`} className="w-11 mt-2" />
+      <div className="text-sm text-center">{name}</div>
+    </Link>
+  ))}
+</ListDisclosure>
+
+### Supported Databases
+
+Optionally, Auth.js can be integrated with an external database via Database adapters, in case you need or want to store user data.
+
+<ListDisclosure limit={8}>
+  {Object.entries(manifest.adapters).map(([value, label]) => (
+    <Link
+      href={`/getting-started/adapters/${value}`}
+      key={value}
+      className="p-4 border border-solid dark:border-neutral-800 border-neutral-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-sm h-32 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300 !no-underline"
+    >
+      <img src={`/img/adapters/${value}.svg`} className="h-12 mt-2" />
+      <div className="text-sm text-center">{label}</div>
+    </Link>
+  ))}
+</ListDisclosure>

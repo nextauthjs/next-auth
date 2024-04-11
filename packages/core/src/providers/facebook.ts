@@ -84,7 +84,12 @@ export default function Facebook<P extends FacebookProfile>(
     id: "facebook",
     name: "Facebook",
     type: "oauth",
-    authorization: "https://www.facebook.com/v15.0/dialog/oauth?scope=email",
+    authorization: {
+      url: "https://www.facebook.com/v19.0/dialog/oauth",
+      params: {
+        scope: "email",
+      },
+    },
     token: "https://graph.facebook.com/oauth/access_token",
     userinfo: {
       // https://developers.facebook.com/docs/graph-api/reference/user/#fields
@@ -103,7 +108,7 @@ export default function Facebook<P extends FacebookProfile>(
         image: profile.picture.data.url,
       }
     },
-    style: { logo: "/facebook.svg", bg: "#006aff", text: "#fff" },
+    style: { bg: "#006aff", text: "#fff" },
     options,
   }
 }
