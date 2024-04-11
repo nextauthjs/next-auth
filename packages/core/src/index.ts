@@ -86,7 +86,7 @@ export async function Auth(
  *
  * const request = new Request("https://example.com")
  * const response = await AuthHandler(request, {
- *   providers: [...],
+ *   providers: [Google],
  *   secret: "...",
  *   trustHost: true,
  * })

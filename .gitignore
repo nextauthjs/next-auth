@@ -27,7 +27,6 @@ build
 dist
 
 # Generated files
-.docusaurus
 .cache-loader
 packages/next-auth/providers
 # copied from @auth/core
@@ -80,8 +79,8 @@ playwright/.cache
 # Turborepo
 .turbo
 
-# docusaurus
-docs/.docusaurus
+# Docs
+docs/.next
 docs/manifest.mjs
 
 # Core

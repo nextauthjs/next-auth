@@ -26,7 +26,6 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
      *
      * @example
      * ```ts title="app/auth.ts"
-     * ...
      * async authorized({ request, auth }) {
      *   const url = request.nextUrl
      *
@@ -41,7 +40,6 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
      *   // Logged in users are authenticated, otherwise redirect to login page
      *   return !!auth.user
      * }
-     * ...
      * ```
      *
      * :::warning
