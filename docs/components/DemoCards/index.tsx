@@ -82,7 +82,7 @@ export function DemoCards() {
         </div>
       ))}
       <Link
-        href={`/reference`}
+        href="/guides/creating-a-framework-integration"
         className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-sm border-slate-200 dark:border-neutral-800 dark:bg-neutral-900"
       >
         <Plus size={36} />
