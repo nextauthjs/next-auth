@@ -23,7 +23,7 @@
     "vite": "5.0.13"
   },
   "dependencies": {
-    "@auth/sveltekit": "latest"
+    "@auth/sveltekit": "^0.15.0"
   },
   "type": "module"
 }

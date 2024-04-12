@@ -91,6 +91,12 @@ app.use(
 
 ### Edge Compatibility
 
+Prisma has shipped edge runtime support for their client in version `5.12.0`. You can read more about it on their [edge documentation](https://www.prisma.io/docs/orm/prisma-client/deployment/edge/overview). This requires specific database drivers and therefore is only compatible with certain database types / hosting providers. Check their [list of supported drivers](https://www.prisma.io/docs/orm/prisma-client/deployment/edge/overview#which-database-drivers-are-edge-compatible) before getting started. You can check out an example Auth.js application with `next-auth` and Prisma on the edge [here](https://github.com/ndom91/authjs-prisma-edge-example).
+
+For posterities sake, the original workaround to split your `auth.ts` configuration into two files will be kept below for the time being.
+
+#### Old Edge Workaround
+
 At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about early edge support in the `5.9.1` [changelog](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
 
 - Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
@@ -103,7 +109,7 @@ Since `@prisma/client@5.9.1`, Prisma no longer throws about being incompatible w
 <Accordions>
 <Accordion title="Using '@prisma/client' before 'v5.9.1' requires some additional workarounds">
 
-You will need to separate your Auth.js configuration into two files and use the [lazy initialization](/getting-started/advanced) feature to instantiate a second copy of Auth.js in the middleware without the adapter.
+You will need to separate your Auth.js configuration into two files and use the [lazy initialization](/reference/next-auth#lazy-initialization) feature to instantiate a second copy of Auth.js in the middleware without the adapter.
 
 Define the `auth.config.ts` file:
 

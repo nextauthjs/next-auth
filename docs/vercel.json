@@ -40,7 +40,7 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/nextjs"
+      "destination": "https://authjs.dev/reference/next-auth"
     },
     {
       "source": "/:path(.*)",
@@ -93,6 +93,14 @@
     {
       "source": "/getting-started/providers/email",
       "destination": "/getting-started/providers/nodemailer"
+    },
+    {
+      "source": "/guides/basics/role-based-access-control",
+      "destination": "/guides/role-based-access-control"
+    },
+    {
+      "source": "/getting-started/providers/credentials-tutorial",
+      "destination": "/getting-started/providers/credentials"
     }
   ]
 }

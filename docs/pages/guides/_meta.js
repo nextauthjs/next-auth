@@ -11,4 +11,5 @@ export default {
   "configuring-oauth-providers": "Configuring OAuth providers",
   "creating-a-database-adapter": "Creating a Database Adapter",
   "creating-a-framework-integration": "Creating a Framework Integration",
+  "refresh-token-rotation": "Refresh Token Rotation",
 }
