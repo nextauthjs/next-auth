@@ -1,6 +1,7 @@
-import type { AuthAction, AuthConfig } from "../../types.js"
+import type { AuthAction } from "../../types.js"
 import { MissingSecret } from "../../errors.js"
 import { logger } from "./logger.js"
+import type { AuthConfig } from "../../index.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {

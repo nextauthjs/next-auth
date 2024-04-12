@@ -8,7 +8,8 @@ import parseProviders from "./utils/providers.js"
 import { logger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 
-import type { AuthConfig, InternalOptions, RequestInternal } from "../types.js"
+import type { InternalOptions, RequestInternal } from "../types.js"
+import type { AuthConfig } from "../index.js"
 
 interface InitParams {
   url: URL
