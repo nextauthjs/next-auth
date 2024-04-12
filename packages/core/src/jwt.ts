@@ -2,7 +2,7 @@
  *
  *
  * This module contains functions and types
- * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt JWT}s
+ * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt-session JWT}s
  * issued and used by Auth.js.
  *
  * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
@@ -30,7 +30,7 @@
  *
  * ## Resources
  *
- * - [What is a JWT session strategy](https://authjs.dev/concepts/session-strategies#jwt)
+ * - [What is a JWT session strategy](https://authjs.dev/concepts/session-strategies#jwt-session)
  * - [RFC7519 - JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519)
  *
  * @module jwt
@@ -220,9 +220,9 @@ export interface DefaultJWT extends Record<string, unknown> {
 }
 
 /**
- * Returned by the `jwt` callback and `getToken`, when using JWT sessions
+ * Returned by the `jwt` callback when using JWT sessions
  *
- * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
+ * [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
  */
 export interface JWT extends Record<string, unknown>, DefaultJWT {}
 
