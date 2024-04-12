@@ -76,10 +76,10 @@ import { handlers } from "@/auth" // Referring to the auth.ts we just created
 export const { GET, POST } = handlers
 ```
 
-Add Middleware to keep the session alive.
+Add optional Middleware to keep the session alive, this will update the session expiry every time its called.
 
 ```ts filename="./middleware.ts"
-export { auth as middleware } from "auth"
+export { auth as middleware } from "@/auth"
 ```
 
   </Code.Next>

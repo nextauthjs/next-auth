@@ -9,6 +9,11 @@ export default {
   sveltekit: "@auth/sveltekit",
   express: "@auth/express",
   "solid-start": "@auth/solid-start",
+  warnings: "Warnings",
+  errors: {
+    title: "Errors",
+    href: "core/errors",
+  },
   "--- adapters": {
     type: "separator",
     title: "Adapters",

@@ -85,8 +85,8 @@ export type SemverString =
 /**
  * Change the theme of the built-in pages.
  *
- * [Documentation](https://authjs.dev/reference/core#authconfig#theme) |
- * [Pages](https://authjs.dev/guides/basics/pages)
+ * [Documentation](https://authjs.dev/reference/core#theme) |
+ * [Pages](https://authjs.dev/guides/pages/signin)
  */
 export interface Theme {
   colorScheme?: "auto" | "dark" | "light"
@@ -131,7 +131,7 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   /**
    * id of the user this account belongs to
    *
-   * @see https://authjs.dev/reference/core/adapters#user
+   * @see https://authjs.dev/reference/core/adapters#adapteruser
    */
   userId?: string
   /**
@@ -141,7 +141,7 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
    *
    * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
    *
-   * @see https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy
+   * @see https://authjs.dev/guides/refresh-token-rotation#database-strategy
    * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
    */
   expires_at?: number
@@ -296,8 +296,8 @@ export interface PublicProvider {
  * changes the state of the server.
  *
  * - **`"callback"`**:
- *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers/oauth).
- *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers/credentials).
+ *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers#oauth2configprofile).
+ *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/getting-started/providers/credentials#credentialsconfigcredentialsinputs).
  * - **`"csrf"`**: Returns the raw CSRF token, which is saved in a cookie (encrypted).
  * It is used for CSRF protection, implementing the [double submit cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) technique.
  * :::note
