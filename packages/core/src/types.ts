@@ -87,8 +87,8 @@ export type SemverString =
 /**
  * Change the theme of the built-in pages.
  *
- * [Documentation](https://authjs.dev/reference/core#authconfig#theme) |
- * [Pages](https://authjs.dev/guides/basics/pages)
+ * [Documentation](https://authjs.dev/reference/core#theme) |
+ * [Pages](https://authjs.dev/guides/pages/signin)
  */
 export interface Theme {
   colorScheme?: "auto" | "dark" | "light"
@@ -133,7 +133,7 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
   /**
    * id of the user this account belongs to
    *
-   * @see https://authjs.dev/reference/core/adapters#user
+   * @see https://authjs.dev/reference/core/adapters#adapteruser
    */
   userId?: string
   /**
@@ -143,7 +143,7 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
    *
    * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
    *
-   * @see https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy
+   * @see https://authjs.dev/guides/refresh-token-rotation#database-strategy
    * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
    */
   expires_at?: number
@@ -235,8 +235,6 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * By default only URLs on the same host as the origin are allowed.
    * You can use this callback to customise that behaviour.
    *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#redirect-callback)
-   *
    * @example
    * callbacks: {
    *   async redirect({ url, baseUrl }) {
@@ -314,8 +312,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    * will be kept from your frontend. The JWT is encrypted by default via your
    * AUTH_SECRET environment variable.
    *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
-   * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
+   * [`session` callback](https://authjs.dev/reference/core/types#session)
    */
   jwt: (params: {
     /**
@@ -330,8 +327,8 @@ export interface CallbacksOptions<P = Profile, A = Account> {
      * @note available when `trigger` is `"signIn"` or `"signUp"`.
      *
      * Resources:
-     * - [Credentials Provider](https://authjs.dev/reference/core/providers/credentials)
-     * - [User database model](https://authjs.dev/reference/core/adapters#user)
+     * - [Credentials Provider](https://authjs.dev/getting-started/authentication/credentials)
+     * - [User database model](https://authjs.dev/guides/creating-a-database-adapter#user-management)
      */
     user: User | AdapterUser
     /**
@@ -350,7 +347,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
      * Check why was the jwt callback invoked. Possible reasons are:
      * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
      * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
-     * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+     * - update event: Triggered by the `useSession().update` method.
      * In case of the latter, `trigger` will be `undefined`.
      */
     trigger?: "signIn" | "signUp" | "update"
@@ -358,7 +355,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     isNewUser?: boolean
     /**
      * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
-     * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+     * sent from the client via the `useSession().update` method.
      *
      * ⚠ Note, you should validate this data before using it.
      */
@@ -385,8 +382,6 @@ export interface CookiesOptions {
 
 /**
  *  The various event callbacks you can register for from next-auth
- *
- * [Documentation](https://authjs.dev/guides/basics/events)
  */
 export interface EventCallbacks {
   /**
@@ -526,8 +521,8 @@ export interface PublicProvider {
  * changes the state of the server.
  *
  * - **`"callback"`**:
- *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers/oauth).
- *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/reference/core/providers/credentials).
+ *   - **`GET`**: Handles the callback from an [OAuth provider](https://authjs.dev/reference/core/providers#oauth2configprofile).
+ *   - **`POST`**: Handles the callback from a [Credentials provider](https://authjs.dev/getting-started/providers/credentials#credentialsconfigcredentialsinputs).
  * - **`"csrf"`**: Returns the raw CSRF token, which is saved in a cookie (encrypted).
  * It is used for CSRF protection, implementing the [double submit cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie) technique.
  * :::note

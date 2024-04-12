@@ -8,7 +8,7 @@
  *
  * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
  * and {@link https://developer.mozilla.org/en-US/docs/Web/API/Response Response} Web standard APIs.
- * Primarily used to implement [framework](https://authjs.dev/concepts/frameworks)-specific packages,
+ * Primarily used to implement [framework](https://authjs.dev/getting-started/integrations)-specific packages,
  * but it can also be used directly.
  *
  * ## Installation
@@ -30,8 +30,8 @@
  *
  * ## Resources
  *
- * - [Getting started](https://authjs.dev/getting-started/introduction)
- * - [Most common use case guides](https://authjs.dev/guides)
+ * - [Getting started](https://authjs.dev/getting-started)
+ * - [Guides](https://authjs.dev/guides)
  *
  * @module @auth/core
  */
