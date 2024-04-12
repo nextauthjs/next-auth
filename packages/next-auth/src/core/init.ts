@@ -42,7 +42,7 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const url = parseUrl(origin)
+  const url = parseUrl(process.env.NEXTAUTH_URL ?? origin)
 
   const secret = createSecret({ authOptions, url })
 
