@@ -40,7 +40,7 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/nextjs"
+      "destination": "https://authjs.dev/reference/next-auth"
     },
     {
       "source": "/:path(.*)",
