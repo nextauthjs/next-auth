@@ -429,7 +429,7 @@ export interface AuthConfig {
      * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
      * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
      */
-    jwt: (params: {
+    jwt?: (params: {
       /**
        * When `trigger` is `"signIn"` or `"signUp"`, it will be a subset of {@link JWT},
        * `name`, `email` and `image` will be included.
