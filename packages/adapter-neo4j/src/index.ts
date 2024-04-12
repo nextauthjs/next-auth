@@ -17,15 +17,17 @@
 import { type Session, isInt, integer } from "neo4j-driver"
 import type { Adapter } from "@auth/core/adapters"
 
-/** This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument. */
-export interface Neo4jOptions extends Session {}
+/**
+ * This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument.
+ **/
+export interface Neo4jOptions extends Session { }
 
 /**
  * ## Setup
  *
  * Add this adapter to your `pages/api/[...nextauth].js` Auth.js configuration object.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import neo4j from "neo4j-driver"
  * import { Neo4jAdapter } from "@auth/neo4j-adapter"
  *
@@ -42,9 +44,9 @@ export interface Neo4jOptions extends Session {}
  *   // https://authjs.dev/reference/core/providers
  *   providers: [],
  *   adapter: Neo4jAdapter(neo4jSession),
- *   ...
  * })
  * ```
+ *
  * ## Advanced usage
  *
  * ### Schema
@@ -62,8 +64,8 @@ export interface Neo4jOptions extends Session {}
  *
  * The following relationships and relationship labels are used.
  *
- * - (:User)-[:HAS_ACCOUNT]->(:Account)
- * - (:User)-[:HAS_SESSION]->(:Session)
+ * - `(:User)-[:HAS_ACCOUNT]->(:Account)`
+ * - `(:User)-[:HAS_SESSION]->(:Session)`
  *
  * #### Properties
  *
@@ -75,8 +77,7 @@ export interface Neo4jOptions extends Session {}
  *
  * 1. For **both** Community Edition & Enterprise Edition create constraints and indexes
  *
- * ```cypher
- *
+ * ```sql
  * CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
  * ON (u:User) ASSERT u.id IS UNIQUE;
  *
@@ -93,9 +94,11 @@ export interface Neo4jOptions extends Session {}
  * FOR (s:Session) ON (s.sessionToken);
  * ```
  *
- * 2.a. For Community Edition **only** create single-property indexes
+ * 2. Indexes
  *
- * ```cypher
+ * 2.1. For Community Edition **only** create single-property indexes
+ *
+ * ```sql
  * CREATE INDEX account_provider_index IF NOT EXISTS
  * FOR (a:Account) ON (a.provider);
  *
@@ -109,9 +112,9 @@ export interface Neo4jOptions extends Session {}
  * FOR (v:VerificationToken) ON (v.token);
  * ```
  *
- * 2.b. For Enterprise Edition **only** create composite node key constraints and indexes
+ * 2.2. For Enterprise Edition **only** create composite node key constraints and indexes
  *
- * ```cypher
+ * ```sql
  * CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS
  * ON (a:Account) ASSERT (a.provider, a.providerAccountId) IS NODE KEY;
  *
@@ -124,6 +127,7 @@ export interface Neo4jOptions extends Session {}
  * CREATE INDEX verification_token_composite_index IF NOT EXISTS
  * FOR (v:VerificationToken) ON (v.identifier, v.token);
  * ```
+ *
  */
 export function Neo4jAdapter(session: Session): Adapter {
   const { read, write } = client(session)

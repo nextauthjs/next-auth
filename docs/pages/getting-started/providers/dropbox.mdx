@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/dropbox.svg" height="64" width="64" />
+
+# Dropbox Provider
+
+## Resources
+
+- [Dropbox OAuth documentation](https://developers.dropbox.com/oauth-guide)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/dropbox
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/dropbox
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_DROPBOX_ID
+AUTH_DROPBOX_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Dropbox from "next-auth/providers/dropbox"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Dropbox],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Dropbox from "@auth/sveltekit/providers/dropbox"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Dropbox],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Dropbox from "@auth/express/providers/dropbox"
+
+app.use("/auth/*", ExpressAuth({ providers: [Dropbox] }))
+```
+
+  </Code.Express>
+</Code>

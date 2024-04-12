@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/mailru.svg" height="64" width="128" />
+
+# Mailru Provider
+
+## Resources
+
+- [Mailru OAuth documentation](https://o2.mail.ru/docs)
+- [Mailru app console](https://o2.mail.ru/app/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/mailru
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/mailru
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_MAILRU_ID
+AUTH_MAILRU_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import MailRu from "next-auth/providers/mailru"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [MailRu],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import MailRu from "@auth/sveltekit/providers/mailru"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [MailRu],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import MailRu from "@auth/express/providers/mailru"
+
+app.use("/auth/*", ExpressAuth({ providers: [MailRu] }))
+```
+
+  </Code.Express>
+</Code>

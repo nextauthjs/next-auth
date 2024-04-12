@@ -1,7 +1,7 @@
 <p align="center">
   <br/>
   <a href="https://authjs.dev" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
+    <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
   </a>
   <a href="https://azure.microsoft.com/en-us/products/storage/tables" target="_blank">
     <img height="64px" src="https://authjs.dev/img/adapters/azure-tables.svg"/>

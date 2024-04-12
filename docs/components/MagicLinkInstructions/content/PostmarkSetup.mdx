@@ -1,0 +1,115 @@
+import { Callout, Steps } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Link } from "@/components/Link"
+import { Screenshot } from "@/components/Screenshot"
+import MagicLink from "../../../public/img/magic-links/start.webp"
+
+### Postmark Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+AUTH_POSTMARK_KEY=abc123
+```
+
+### Setup Provider
+
+Let’s enable `Postmark` as a sign in option in our Auth.js configuration. You’ll have to import the `Postmark` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Postmark from "next-auth/providers/postmark"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Postmark],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Postmark from "@auth/sveltekit/providers/postmark"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Postmark],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("postmark", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Postmark</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="postmark" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  Check our [Customising magic links emails](/) to learn how to change the look
+  and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Postmark docs page](/getting-started/providers/postmark).

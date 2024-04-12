@@ -43,10 +43,6 @@
  * ```
  * :::
  *
- * :::info
- * We are advocates of TypeScript, as it will help you catch errors at build-time, before your users do. 😉
- * :::
- *
  * ## Resources
  *
  * - [TypeScript - The Basics](https://www.typescriptlang.org/docs/handbook/2/basic-types.html)
@@ -201,7 +197,7 @@ export interface CallbacksOptions<P = Profile, A = Account> {
    *
    * Unhandled errors will throw an `AccessDenied` with the message set to the original error.
    *
-   * @see [`AccessDenied`](https://authjs.dev/reference/errors#accessdenied)
+   * [`AccessDenied`](https://authjs.dev/reference/errors#accessdenied)
    *
    * @example
    * ```ts
@@ -235,11 +231,24 @@ export interface CallbacksOptions<P = Profile, A = Account> {
     credentials?: Record<string, CredentialInput>
   }) => Awaitable<boolean | string>
   /**
-   * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
-   * By default only URLs on the same URL as the site are allowed,
-   * you can use this callback to customise that behaviour.
+   * This callback is called anytime the user is redirected to a callback URL (i.e. on signin or signout).
+   * By default only URLs on the same host as the origin are allowed.
+   * You can use this callback to customise that behaviour.
    *
    * [Documentation](https://authjs.dev/guides/basics/callbacks#redirect-callback)
+   *
+   * @example
+   * callbacks: {
+   *   async redirect({ url, baseUrl }) {
+   *     // Allows relative callback URLs
+   *     if (url.startsWith("/")) return `${baseUrl}${url}`
+   *
+   *     // Allows callback URLs on the same origin
+   *     if (new URL(url).origin === baseUrl) return url
+   *
+   *     return baseUrl
+   *   }
+   * }
    */
   redirect: (params: {
     /** URL provided as callback URL by the client */
@@ -249,15 +258,32 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   }) => Awaitable<string>
   /**
    * This callback is called whenever a session is checked.
-   * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
+   * (i.e. when invoking the `/api/session` endpoint, using `useSession` or `getSession`).
+   * The return value will be exposed to the client, so be careful what you return here!
+   * If you want to make anything available to the client which you've added to the token
+   * through the JWT callback, you have to explicitly return it here as well.
    *
+   * :::note
    * ⚠ By default, only a subset (email, name, image)
    * of the token is returned for increased security.
+   * :::
    *
-   * If you want to make something available you added to the token through the `jwt` callback,
-   * you have to explicitly forward it here to make it available to the client.
+   * The token argument is only available when using the jwt session strategy, and the
+   * user argument is only available when using the database session strategy.
    *
-   * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
+   * [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
+   *
+   * @example
+   * ```ts
+   * callbacks: {
+   *   async session({ session, token, user }) {
+   *     // Send properties to the client, like an access_token from a provider.
+   *     session.accessToken = token.accessToken
+   *
+   *     return session
+   *   }
+   * }
+   * ```
    */
   session: (
     params: ({
@@ -282,12 +308,11 @@ export interface CallbacksOptions<P = Profile, A = Account> {
   ) => Awaitable<Session | DefaultSession>
   /**
    * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
-   * or updated (i.e whenever a session is accessed in the client).
-   * Its content is forwarded to the `session` callback,
-   * where you can control what should be returned to the client.
-   * Anything else will be kept from your front-end.
-   *
-   * The JWT is encrypted by default.
+   * or updated (i.e whenever a session is accessed in the client). Anything you
+   * return here will be saved in the JWT and forwarded to the session callback.
+   * There you can control what should be returned to the client. Anything else
+   * will be kept from your frontend. The JWT is encrypted by default via your
+   * AUTH_SECRET environment variable.
    *
    * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
    * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)

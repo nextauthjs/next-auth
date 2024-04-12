@@ -1,5 +1,5 @@
 /**
- * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/guides/upgrade-to-v5)._
+ * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/getting-started/migrating-to-v5)._
  *
  * ## Installation
  *
@@ -214,7 +214,7 @@ export interface NextAuthResult {
    * @example
    * ```ts title="pages/protected-ssr.ts"
    * import { auth } from "../auth"
-   * //...
+   *
    * export const getServerSideProps: GetServerSideProps = async (context) => {
    *   const session = await auth(context)
    *
@@ -230,11 +230,11 @@ export interface NextAuthResult {
   auth: ((
     ...args: [NextApiRequest, NextApiResponse]
   ) => Promise<Session | null>) &
-    ((...args: []) => Promise<Session | null>) &
-    ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
-    ((
-      ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
-    ) => AppRouteHandlerFn)
+  ((...args: []) => Promise<Session | null>) &
+  ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
+  ((
+    ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
+  ) => AppRouteHandlerFn)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
    *
@@ -287,11 +287,11 @@ export interface NextAuthResult {
     options?:
       | FormData
       | ({
-          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-          redirectTo?: string
-          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-          redirect?: R
-        } & Record<string, any>),
+        /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+        redirectTo?: string
+        /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+        redirect?: R
+      } & Record<string, any>),
     authorizationParams?:
       | string[][]
       | Record<string, string>
@@ -344,6 +344,7 @@ export interface NextAuthResult {
  * ```
  *
  * Lazy initialization:
+ *
  * @example
  * ```ts title="auth.ts"
  * import NextAuth from "next-auth"

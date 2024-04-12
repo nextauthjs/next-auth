@@ -88,7 +88,7 @@ export function hydrateDates(json: object) {
  *
  * Configure Auth.js to use the Upstash Redis Adapter:
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
@@ -135,13 +135,9 @@ export function hydrateDates(json: object) {
  *
  * Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
  *
- * Example:
- *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UpstashRedisAdapter(redis, {baseKeyPrefix: "app2:"})
- *   ...
  * })
  * ```
  */

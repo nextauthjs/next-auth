@@ -1,0 +1,82 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/webex.svg" height="64" width="64" />
+
+# Webex Provider
+
+## Resources
+
+- [Webex OAuth 2.0 Integration Guide](https://developer.webex.com/docs/integrations)
+- [Login with Webex](https://developer.webex.com/docs/login-with-webex)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/webex
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/webex
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_WEBEX_ID
+AUTH_WEBEX_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Webex from "next-auth/providers/webex"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Webex],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Webex from "@auth/sveltekit/providers/webex"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Webex],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Webex from "@auth/express/providers/webex"
+
+app.use("/auth/*", ExpressAuth({ providers: [Webex] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- The returned user profile from Webex when using the profile callback. Please refer to [People - Get My Own Details](https://developer.webex.com/docs/api/v1/people/get-my-own-details) on Webex Developer portal for additional fields. Returned fields may vary depending on the user's role, the OAuth integration's scope, and the organization the OAuth integration belongs to.
