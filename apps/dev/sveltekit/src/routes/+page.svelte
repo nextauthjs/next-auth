@@ -41,12 +41,7 @@
         <SignIn provider="discord">
           <span slot="submitButton">Sign In with Discord</span>
         </SignIn>
-        <SignIn
-          provider="credentials"
-          authorizationParams={{
-            foo: "bar",
-          }}
-        >
+        <SignIn provider="credentials">
           <span slot="submitButton">Sign In with Credentials</span>
           <div slot="credentials" class="input-wrapper">
             <label for="server-password">Password</label>
