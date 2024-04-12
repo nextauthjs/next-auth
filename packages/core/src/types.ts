@@ -43,10 +43,6 @@
  * ```
  * :::
  *
- * :::info
- * We are advocates of TypeScript, as it will help you catch errors at build-time, before your users do. 😉
- * :::
- *
  * ## Resources
  *
  * - [TypeScript - The Basics](https://www.typescriptlang.org/docs/handbook/2/basic-types.html)
