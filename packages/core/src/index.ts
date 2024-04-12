@@ -347,7 +347,7 @@ export interface AuthConfig {
      * By default only URLs on the same host as the origin are allowed.
      * You can use this callback to customise that behaviour.
      *
-     * [Documentation](https://authjs.dev/guides/basics/callbacks#redirect-callback)
+     * [Documentation](https://authjs.dev/reference/core/types#redirect)
      *
      * @example
      * callbacks: {
@@ -426,8 +426,7 @@ export interface AuthConfig {
      * will be kept from your frontend. The JWT is encrypted by default via your
      * AUTH_SECRET environment variable.
      *
-     * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
-     * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
+     * [`session` callback](https://authjs.dev/reference/core/types#session)
      */
     jwt?: (params: {
       /**
@@ -442,8 +441,8 @@ export interface AuthConfig {
        * @note available when `trigger` is `"signIn"` or `"signUp"`.
        *
        * Resources:
-       * - [Credentials Provider](https://authjs.dev/reference/core/providers/credentials)
-       * - [User database model](https://authjs.dev/reference/core/adapters#user)
+       * - [Credentials Provider](https://authjs.dev/getting-started/authentication/credentials)
+       * - [User database model](https://authjs.dev/guides/creating-a-database-adapter#user-management)
        */
       user: User | AdapterUser
       /**
@@ -462,7 +461,7 @@ export interface AuthConfig {
        * Check why was the jwt callback invoked. Possible reasons are:
        * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
        * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
-       * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+       * - update event: Triggered by the `useSession().update` method.
        * In case of the latter, `trigger` will be `undefined`.
        */
       trigger?: "signIn" | "signUp" | "update"
@@ -470,7 +469,7 @@ export interface AuthConfig {
       isNewUser?: boolean
       /**
        * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
-       * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
+       * sent from the client via the `useSession().update` method.
        *
        * ⚠ Note, you should validate this data before using it.
        */
