@@ -495,7 +495,7 @@ Protecting routes can be done generally by checking for the session and taking a
 You can use the `auth` function returned from `NextAuth()` and exported from your `auth.js` configuration file to get the session object.
 
 ```tsx filename="app/server/page.tsx" {4}
-import { auth } from "auth"
+import { auth } from "@/auth"
 
 export default async function Page() {
   const session = await auth()
@@ -629,7 +629,7 @@ Protecting API routes in the various frameworks can also be done with the `auth`
 In Next.js, you can use the `auth` function to wrap and API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
 
 ```ts filename="./app/api/admin/route.ts"
-import { auth } from "auth"
+import { auth } from "@/auth"
 import { NextResponse } from "next/server"
 
 export const GET = auth(function GET(req) {
