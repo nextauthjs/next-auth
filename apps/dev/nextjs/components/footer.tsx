@@ -68,7 +68,7 @@ export default function Footer() {
         <li className={styles.navItem} style={{ margin: "0" }}>
           <img
             className={styles.footerLogo}
-            src="https://authjs.dev/img/logo/logo-sm.webp"
+            src="https://authjs.dev/img/logo-sm.png"
             alt="Auth.js Logo"
           />
           <span>{packageJSON.version}</span>

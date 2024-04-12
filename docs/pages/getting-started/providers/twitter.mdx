@@ -1,0 +1,92 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/twitter.svg" height="64" width="64" />
+
+# Twitter Provider
+
+## Resources
+
+- [Twitter App documentation](https://developer.twitter.com/en/apps)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/twitter
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/twitter
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_TWITTER_ID
+AUTH_TWITTER_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Twitter from "next-auth/providers/twitter"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Twitter],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Twitter from "@auth/sveltekit/providers/twitter"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Twitter],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Twitter from "@auth/express/providers/twitter"
+
+app.use("/auth/*", ExpressAuth({ providers: [Twitter] }))
+```
+
+  </Code.Express>
+</Code>
+
+To enable OAuth 2.0, simply add version: "2.0" to your Provider configuration.
+
+```ts filename="./auth.ts" {4}
+Twitter({
+  clientId: process.env.TWITTER_ID,
+  clientSecret: process.env.TWITTER_SECRET,
+  version: "2.0", // opt-in to Twitter OAuth 2.0
+})
+```
+
+### Notes
+
+- Email is currently not supported by Twitter OAuth 2.0.
+- You must enable the "Request email address from users" option in your app permissions if you want to obtain the users email address.

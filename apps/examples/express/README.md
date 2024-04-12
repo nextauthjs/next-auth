@@ -3,7 +3,7 @@
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank">
-   <img height="64" src="https://authjs.dev/img/logo/logo-sm.png" />
+   <img height="64" src="https://authjs.dev/img/logo-sm.png" />
    </a>
    <a href="https://expressjs.com" target="_blank">
    <img height="64" src="https://i.cloudup.com/zfY6lL7eFa-3000x3000.png" />

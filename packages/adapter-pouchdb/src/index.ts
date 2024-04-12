@@ -84,7 +84,7 @@ export interface PouchDBAdapterOptions {
 
 /**
  * :::info
- * Depending on your architecture you can use PouchDB's http adapter to reach any database compliant with the CouchDB protocol (CouchDB, Cloudant, ...) or use any other PouchDB compatible adapter (leveldb, in-memory, ...)
+ * Depending on your architecture you can use PouchDB's http adapter to reach any database compliant with the CouchDB protocol (CouchDB, Cloudant, etc.) or use any other PouchDB compatible adapter (leveldb, in-memory, etc.)
  * :::
  *
  * ## Setup
@@ -95,7 +95,7 @@ export interface PouchDBAdapterOptions {
  *
  * Add this adapter to your `pages/api/auth/[...nextauth].js` next-auth configuration object:
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { PouchDBAdapter } from "@auth/pouchdb-adapter"
@@ -119,7 +119,6 @@ export interface PouchDBAdapterOptions {
  *     }),
  *   ],
  *   adapter: PouchDBAdapter(pouchdb),
- *   // ...
  * })
  * ```
  *

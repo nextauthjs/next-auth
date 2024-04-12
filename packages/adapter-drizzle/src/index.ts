@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://orm.drizzle.team">Drizzle ORM</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://orm.drizzle.team">
- *   <img style={{display: "block"}} src="/img/adapters/drizzle-orm.png" width="38" />
+ *   <img style={{display: "block"}} src="/img/adapters/drizzle.svg" width="38" />
  *  </a>
  * </div>
  *
