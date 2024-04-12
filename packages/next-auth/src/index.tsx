@@ -1,5 +1,5 @@
 /**
- * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/guides/upgrade-to-v5)._
+ * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/getting-started/migrating-to-v5)._
  *
  * ## Installation
  *
