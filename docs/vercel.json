@@ -97,6 +97,10 @@
     {
       "source": "/guides/basics/role-based-access-control",
       "destination": "/guides/role-based-access-control"
+    },
+    {
+      "source": "/getting-started/providers/credentials-tutorial",
+      "destination": "/getting-started/providers/credentials"
     }
   ]
 }
