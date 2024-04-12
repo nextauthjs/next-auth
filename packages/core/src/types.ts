@@ -56,13 +56,12 @@ import type {
   OAuth2TokenEndpointResponse,
   OpenIDTokenEndpointResponse,
 } from "oauth4webapi"
-import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
+import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
-import type { JWT, JWTOptions } from "./jwt.js"
+import type { JWTOptions } from "./jwt.js"
 import type { Cookie } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
-  CredentialInput,
   CredentialsConfig,
   EmailConfig,
   OAuthConfigInternal,
@@ -74,7 +73,6 @@ import type {
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
 
-export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
 export type Awaited<T> = T extends Promise<infer U> ? U : T
