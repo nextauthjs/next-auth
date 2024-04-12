@@ -185,158 +185,6 @@ export interface Profile {
   [claim: string]: unknown
 }
 
-// TODO: rename `signIn` to `authorized`
-
-/** Override the default session creation flow of Auth.js */
-export interface CallbacksOptions<P = Profile, A = Account> {
-  /**
-   * Controls whether a user is allowed to sign in or not.
-   * Returning `true` continues the sign-in flow.
-   * Returning `false` or throwing an error will stop the sign-in flow and redirect the user to the error page.
-   * Returning a string will redirect the user to the specified URL.
-   *
-   * Unhandled errors will throw an `AccessDenied` with the message set to the original error.
-   *
-   * @see [`AccessDenied`](https://authjs.dev/reference/errors#accessdenied)
-   *
-   * @example
-   * ```ts
-   * callbacks: {
-   *  async signIn({ profile }) {
-   *   // Only allow sign in for users with email addresses ending with "yourdomain.com"
-   *   return profile?.email?.endsWith("@yourdomain.com")
-   * }
-   * ```
-   */
-  signIn: (params: {
-    user: User | AdapterUser
-    account: A | null
-    /**
-     * If OAuth provider is used, it contains the full
-     * OAuth profile returned by your provider.
-     */
-    profile?: P
-    /**
-     * If Email provider is used, on the first call, it contains a
-     * `verificationRequest: true` property to indicate it is being triggered in the verification request flow.
-     * When the callback is invoked after a user has clicked on a sign in link,
-     * this property will not be present. You can check for the `verificationRequest` property
-     * to avoid sending emails to addresses or domains on a blocklist or to only explicitly generate them
-     * for email address in an allow list.
-     */
-    email?: {
-      verificationRequest?: boolean
-    }
-    /** If Credentials provider is used, it contains the user credentials */
-    credentials?: Record<string, CredentialInput>
-  }) => Awaitable<boolean | string>
-  /**
-   * This callback is called anytime the user is redirected to a callback URL (e.g. on signin or signout).
-   * By default only URLs on the same URL as the site are allowed,
-   * you can use this callback to customise that behaviour.
-   *
-   * [Documentation](https://authjs.dev/guides/basics/callbacks#redirect-callback)
-   */
-  redirect: (params: {
-    /** URL provided as callback URL by the client */
-    url: string
-    /** Default base URL of site (can be used as fallback) */
-    baseUrl: string
-  }) => Awaitable<string>
-  /**
-   * This callback is called whenever a session is checked.
-   * (Eg.: invoking the `/api/session` endpoint, using `useSession` or `getSession`)
-   *
-   * ⚠ By default, only a subset (email, name, image)
-   * of the token is returned for increased security.
-   *
-   * If you want to make something available you added to the token through the `jwt` callback,
-   * you have to explicitly forward it here to make it available to the client.
-   *
-   * @see [`jwt` callback](https://authjs.dev/reference/core/types#jwt)
-   */
-  session: (
-    params: ({
-      session: { user: AdapterUser } & AdapterSession
-      /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-      user: AdapterUser
-    } & {
-      session: Session
-      /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-      token: JWT
-    }) & {
-      /**
-       * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
-       *
-       * :::note
-       * You should validate this data before using it.
-       * :::
-       */
-      newSession: any
-      trigger?: "update"
-    }
-  ) => Awaitable<Session | DefaultSession>
-  /**
-   * This callback is called whenever a JSON Web Token is created (i.e. at sign in)
-   * or updated (i.e whenever a session is accessed in the client).
-   * Its content is forwarded to the `session` callback,
-   * where you can control what should be returned to the client.
-   * Anything else will be kept from your front-end.
-   *
-   * The JWT is encrypted by default.
-   *
-   * [Documentation](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
-   * [`session` callback](https://next-auth.js.org/configuration/callbacks#session-callback)
-   */
-  jwt: (params: {
-    /**
-     * When `trigger` is `"signIn"` or `"signUp"`, it will be a subset of {@link JWT},
-     * `name`, `email` and `image` will be included.
-     *
-     * Otherwise, it will be the full {@link JWT} for subsequent calls.
-     */
-    token: JWT
-    /**
-     * Either the result of the {@link OAuthConfig.profile} or the {@link CredentialsConfig.authorize} callback.
-     * @note available when `trigger` is `"signIn"` or `"signUp"`.
-     *
-     * Resources:
-     * - [Credentials Provider](https://authjs.dev/reference/core/providers/credentials)
-     * - [User database model](https://authjs.dev/reference/core/adapters#user)
-     */
-    user: User | AdapterUser
-    /**
-     * Contains information about the provider that was used to sign in.
-     * Also includes {@link TokenSet}
-     * @note available when `trigger` is `"signIn"` or `"signUp"`
-     */
-    account: A | null
-    /**
-     * The OAuth profile returned from your provider.
-     * (In case of OIDC it will be the decoded ID Token or /userinfo response)
-     * @note available when `trigger` is `"signIn"`.
-     */
-    profile?: P
-    /**
-     * Check why was the jwt callback invoked. Possible reasons are:
-     * - user sign-in: First time the callback is invoked, `user`, `profile` and `account` will be present.
-     * - user sign-up: a user is created for the first time in the database (when {@link AuthConfig.session}.strategy is set to `"database"`)
-     * - update event: Triggered by the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
-     * In case of the latter, `trigger` will be `undefined`.
-     */
-    trigger?: "signIn" | "signUp" | "update"
-    /** @deprecated use `trigger === "signUp"` instead */
-    isNewUser?: boolean
-    /**
-     * When using {@link AuthConfig.session} `strategy: "jwt"`, this is the data
-     * sent from the client via the [`useSession().update`](https://next-auth.js.org/getting-started/client#update-session) method.
-     *
-     * ⚠ Note, you should validate this data before using it.
-     */
-    session?: any
-  }) => Awaitable<JWT | null>
-}
-
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookieOption {
   name: string
@@ -353,53 +201,6 @@ export interface CookiesOptions {
   nonce: Partial<CookieOption>
   webauthnChallenge: Partial<CookieOption>
 }
-
-/**
- *  The various event callbacks you can register for from next-auth
- *
- * [Documentation](https://authjs.dev/guides/basics/events)
- */
-export interface EventCallbacks {
-  /**
-   * If using a `credentials` type auth, the user is the raw response from your
-   * credential provider.
-   * For other providers, you'll get the User object from your adapter, the account,
-   * and an indicator if the user was new to your Adapter.
-   */
-  signIn: (message: {
-    user: User
-    account: Account | null
-    profile?: Profile
-    isNewUser?: boolean
-  }) => Awaitable<void>
-  /**
-   * The message object will contain one of these depending on
-   * if you use JWT or database persisted sessions:
-   * - `token`: The JWT for this session.
-   * - `session`: The session object from your adapter that is being ended.
-   */
-  signOut: (
-    message:
-      | { session: Awaited<ReturnType<Required<Adapter>["deleteSession"]>> }
-      | { token: Awaited<ReturnType<JWTOptions["decode"]>> }
-  ) => Awaitable<void>
-  createUser: (message: { user: User }) => Awaitable<void>
-  updateUser: (message: { user: User }) => Awaitable<void>
-  linkAccount: (message: {
-    user: User | AdapterUser
-    account: Account
-    profile: User | AdapterUser
-  }) => Awaitable<void>
-  /**
-   * The message object will contain one of these depending on
-   * if you use JWT or database persisted sessions:
-   * - `token`: The JWT for this session.
-   * - `session`: The session object from your adapter.
-   */
-  session: (message: { session: Session; token: JWT }) => Awaitable<void>
-}
-
-export type EventType = keyof EventCallbacks
 
 /** TODO: Check if all these are used/correct */
 export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
@@ -616,9 +417,9 @@ export interface InternalOptions<TProviderType = ProviderType> {
   session: NonNullable<Required<AuthConfig["session"]>>
   pages: Partial<PagesOptions>
   jwt: JWTOptions
-  events: Partial<EventCallbacks>
+  events: NonNullable<AuthConfig["events"]>
   adapter: Required<Adapter> | undefined
-  callbacks: CallbacksOptions
+  callbacks: NonNullable<Required<AuthConfig["callbacks"]>>
   cookies: Record<keyof CookiesOptions, CookieOption>
   callbackUrl: string
   /**
