@@ -5,4 +5,5 @@ tsconfig.tsbuildinfo
 
 # Generated Typedoc
 !pages/reference/_meta.js
+!pages/reference/warnings.mdx
 pages/reference/*
