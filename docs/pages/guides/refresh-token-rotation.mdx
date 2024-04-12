@@ -1,4 +1,5 @@
 import { Code } from "@/components/Code"
+import { Callout } from "nextra/components"
 
 Refresh token rotation is the practice of updating an `access_token` on behalf of the user, without requiring interaction (eg.: re-sign in). `access_token`s are usually issued for a limited time. After they expire, the service verifying them will ignore the value. Instead of asking the user to sign in again to obtain a new `access_token`, certain providers support exchanging a `refresh_token` for a new `access_token`, renewing the expiry time. Let's see how this can be achieved.
 
@@ -215,7 +216,7 @@ The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()`
 
 We can handle this functionality as a side effect:
 
-```js title="pages/home.js"
+```ts filename="pages/home.js"
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
@@ -228,7 +229,7 @@ const HomePage() {
     }
   }, [session]);
 
-return (...)
+  return <div>Home Page</div>;
 }
 ```
 
