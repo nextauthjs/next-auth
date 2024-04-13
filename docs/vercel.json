@@ -50,7 +50,7 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "warnings.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/core/errors/:path*"
+      "destination": "https://authjs.dev/reference/warnings/:path*"
     },
     {
       "source": "/",
@@ -97,6 +97,10 @@
     {
       "source": "/guides/basics/role-based-access-control",
       "destination": "/guides/role-based-access-control"
+    },
+    {
+      "source": "/guides/basics/refresh-token-rotation",
+      "destination": "/guides/refresh-token-rotation"
     },
     {
       "source": "/getting-started/providers/credentials-tutorial",
