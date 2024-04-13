@@ -203,7 +203,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
       <Callout>
         You can build your own Signin, Signout, etc. pages to match the style of
         your application, check out{" "}
-        <Link href="/getting-started/session-management?tab=custom-pages">
+        <Link href="/getting-started/session-management/custom-pages">
           session management
         </Link>{" "}
         for more details.
