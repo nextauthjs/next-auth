@@ -24,7 +24,7 @@ export function OAuthProviderSelect() {
       <ComboboxProvider value={term} selectedValue={selected}>
         <Combobox
           placeholder="Search for your favorite OAuth provider"
-          className="py-2 px-4 w-full font-medium rounded-sm shadow-sm md:w-96 bg-neutral-100 border-neutral-400 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300"
+          className="py-2 px-4 w-full font-medium rounded-md border-2 border-gray-200 shadow-sm md:w-96 bg-neutral-100 text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleSearchItem(e.target.value)
           }
