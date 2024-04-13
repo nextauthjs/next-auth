@@ -253,7 +253,7 @@ To use the SvelteKit form action for signing out, we can use the `SignOut` compo
 </header>
 ```
 
-This requires a server action at `/signout`, this path can be customized with the `signOutPage` prop.
+This requires a server action at `/signout`, this path can be customized with the `signOutPage` prop on the `<SignOut>` component.
 
 ```ts filename="src/routes/signout/+page.server.ts"
 import { signOut } from "../../auth"
