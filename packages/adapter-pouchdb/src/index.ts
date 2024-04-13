@@ -109,9 +109,9 @@ export interface PouchDBAdapterOptions {
  * const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
+ * // https://authjs.dev/reference/core/types#authconfig
  * export default NextAuth({
- *   // https://authjs.dev/reference/providers/
+ *   // https://authjs.dev/getting-started/authentication/oauth
  *   providers: [
  *     GoogleProvider({
  *       clientId: process.env.GOOGLE_ID,
@@ -215,7 +215,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
     },
 
     /** @todo Implement */
-    async deleteUser(id) {},
+    async deleteUser(id) { },
 
     async linkAccount(account) {
       const doc = {

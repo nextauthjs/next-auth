@@ -209,7 +209,7 @@ export async function Auth(
  * const response = await AuthHandler(request, authConfig)
  * ```
  *
- * @see [Initialization](https://authjs.dev/reference/configuration/auth-options)
+ * @see [Initialization](https://authjs.dev/reference/core/types#authconfig)
  */
 export interface AuthConfig {
   /**
