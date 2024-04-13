@@ -99,6 +99,10 @@
       "destination": "/guides/role-based-access-control"
     },
     {
+      "source": "/guides/basics/refresh-token-rotation",
+      "destination": "/guides/refresh-token-rotation"
+    },
+    {
       "source": "/getting-started/providers/credentials-tutorial",
       "destination": "/getting-started/providers/credentials"
     }
