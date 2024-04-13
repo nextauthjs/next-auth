@@ -79,21 +79,23 @@ Auth.js has had a few different ways to authenticate server-side in the past, so
 
 Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function call in most cases.
 
+### Authentication methods
+
 See the table below for a summary of the changes. Below that are `diff` examples of how to use the new `auth()` method in various environments and contexts.
 
-| Where                                                                                  | v4                                                    | v5                               |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------- |
-| [Server Component](?authentication-method=server-component#authenticate-methods)       | `getServerSession(authOptions)`                       | `auth()` call                    |
-| [Middleware](?authentication-method=middleware#authenticate-methods)                   | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
-| [Client Component](?authentication-method=client-component#authenticate-methods)       | `useSession()` hook                                   | `useSession()` hook              |
-| [Route Handler](/reference/nextjs#in-route-handlers)                                   | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Edge)](/reference/nextjs#in-edge-api-routes)                               | _Previously not supported_                            | `auth()` wrapper                 |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| [API Route (Node.js)](?authentication-method=api-route#authenticate-methods)           | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
-| [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
-| [getServerSideProps](?authentication-method=get-serverside-props#authenticate-methods) | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
+| Where                   | v4                                                    | v5                               |
+| ----------------------- | ----------------------------------------------------- | -------------------------------- |
+| **Server Component**    | `getServerSession(authOptions)`                       | `auth()` call                    |
+| **Middleware**          | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| **Client Component**    | `useSession()` hook                                   | `useSession()` hook              |
+| **Route Handler**       | _Previously not supported_                            | `auth()` wrapper                 |
+| **API Route (Edge)**    | _Previously not supported_                            | `auth()` wrapper                 |
+| **API Route (Node.js)** | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| **API Route (Node.js)** | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| **getServerSideProps**  | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
+| **getServerSideProps**  | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
 
-### Authentication methods
+#### Details
 
 <Tabs items={["Server Component (App)", "Client Component (App)", "Middleware", "API Routes (Pages)", "getServerSideProps (Pages)"]}>
 
@@ -102,7 +104,7 @@ See the table below for a summary of the changes. Below that are `diff` examples
 Auth.js v4 has supported reading the session in Server Components for a while via `getServerSession`. This has been also simplified to the same `auth()` function.
 
 ```diff filename="app/page.tsx"
-- import { authOptions } from 'pages/api/auth/[...nextauth]'
+- import { authOptions } from "pages/api/auth/[...nextauth]"
 - import { getServerSession } from "next-auth/next"
 + import { auth } from "@/auth"
 
@@ -116,16 +118,19 @@ export default async function Page() {
 </Tabs.Tab>
 <Tabs.Tab>
 
-Imports from `next-auth/react` are now marked with the `"use client"` directive. [Read
-more](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive).
+Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions.
 
-If you have previously used `getSession()` or other imports server-side, you'll have to change it to use the [`auth()`](/reference/nextjs#auth) method instead.
+<Callout type="warning">
+  If you have previously used `getSession()` or other imports from
+  `next-auth/react` server-side, you'll have to refactor them to use
+  [`auth()`](/reference/nextjs#auth) instead.
+</Callout>
 
 </Tabs.Tab>
 <Tabs.Tab>
 
-```diff filename='middleware.ts'
-- export { default } from 'next-auth/middleware'
+```diff filename="middleware.ts"
+- export { default } from "next-auth/middleware"
 + export { auth as middleware } from "@/auth"
 ```
 
@@ -147,15 +152,14 @@ export const config = {
 Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
 
 </Tabs.Tab>
-
 <Tabs.Tab>
 
-Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function exported from your `auth.ts` config file and call it without passing `authOptions`.
 
 ```diff filename='pages/api/example.ts'
 - import { getServerSession } from "next-auth/next"
 - import { getToken } from "next-auth/jwt"
-- import { authOptions } from 'pages/api/auth/[...nextauth]'
+- import { authOptions } from "pages/api/auth/[...nextauth]"
 + import { auth } from "@/auth"
 + import { NextApiRequest, NextApiResponse } from "next"
 
@@ -163,7 +167,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 -  const session = await getServerSession(req, res, authOptions)
 -  const token = await getToken({ req })
 +  const session = await auth(req, res)
-  if (session) return res.json('Success')
+  if (session) return res.json("Success")
   return res.status(401).json("You must be logged in.");
 }
 ```
@@ -182,22 +186,25 @@ Instead of importing `getServerSession` from `next-auth/next` or `getToken` from
 ```diff filename="pages/protected.tsx"
 - import { getServerSession } from "next-auth/next"
 - import { getToken } from "next-auth/jwt"
-- import { authOptions } from 'pages/api/auth/[...nextauth]'
+- import { authOptions } from "pages/api/auth/[...nextauth]"
 + import { auth } from "@/auth"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 -  const session = await getServerSession(context.req, context.res, authOptions)
 -  const token = await getToken({ req: context.req })
 +  const session = await auth(context)
-  if (session) // Do something with the session
+  if (session) {
+    // Do something with the session
+  }
 
   return { props: { session } }
 }
 ```
 
 <Callout>
-  Whenever `auth()` is passed the res object, it will rotate the session expiry.
-  This was not the case with `getToken()` previously.
+  Whenever `auth()` is passed the `res` object (i.e. as a part of `context`), it
+  will rotate the session expiry. This was not the case with `getToken()`
+  previously.
 </Callout>
 
 </Tabs.Tab>
@@ -253,7 +260,7 @@ export default { providers: [GitHub] } satisfies NextAuthConfig
 
 2. Next, create an `auth.ts` file and add your adapter and the `jwt` session strategy there. This is the `auth.ts` configuration file you will import from in the rest of your application, other than in the middleware.
 
-```ts filename="auth.ts" {4,11}
+```ts filename="auth.ts" {4, 9, 11}
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
@@ -268,15 +275,13 @@ export const { handlers, auth } = NextAuth({
 })
 ```
 
-3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, **initializing Auth.js separately without the non-edge compatible adapter**.
+3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, initializing Auth.js separately with all of your common options, but **without the edge incompatible adapter**.
 
 ```ts filename="middleware.ts" {1} /NextAuth/
 import authConfig from "./auth.config"
 import NextAuth from "next-auth"
 export const { auth: middleware } = NextAuth(authConfig)
 ```
-
-That's it! Now you can keep using a database for user data, even if your adapter is not compatible with the Edge runtime yet.
 
 Please follow up with your database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
 
@@ -285,10 +290,10 @@ Please follow up with your database/ORM's maintainer to see if they are planning
 There are **no breaking changes to the environment variables**, but we have cleaned up a few things which make some of them unnecessary. Therefore, we wanted to share some best practices around environment variables.
 
 - All environment variables should be prefixed with `AUTH_`, `NEXTAUTH_` is no longer in use.
-- If you name your provider `secret` / `clientId` variables using this syntax, `AUTH_GITHUB_SECRET` and `AUTH_GITHUB_ID`, they will be auto-detected and you won't have to explicitly pass them into your provider's configuration.
-- The `NEXTAUTH_URL`/`AUTH_URL` is not necessary anymore in most environments. We will auto-detect the host based on the request headers.
-- The `AUTH_TRUST_HOST` environment variable serves the same purpose as setting `trustHost: true` in your Auth.js configuration. This is necessary when running Auth.js behind a proxy. When set to true we will trust the `X-Forwarded-Host` and `X-Forwarded-Proto` headers to determine the host URL.
-- The `AUTH_SECRET` environment variable is the only variable that is really necessary. You do not need to additionally pass this value into your config as the `secret` configuration option if you've set the environment variable.
+- If you name your provider `secret` / `clientId` variables using this syntax, i.e. `AUTH_GITHUB_SECRET` and `AUTH_GITHUB_ID`, they will be auto-detected and you won't have to explicitly pass them into your provider's configuration.
+- The `NEXTAUTH_URL`/`AUTH_URL` is not strictly necessary anymore in most environments. We will auto-detect the host based on the request headers.
+- The `AUTH_TRUST_HOST` environment variable serves the same purpose as setting `trustHost: true` in your Auth.js configuration. This is necessary when running Auth.js behind a proxy. When set to true we will trust the `X-Forwarded-Host` and `X-Forwarded-Proto` headers passed to the app by the proxy to auto-detect the host URL (`AUTH_URL`)
+- The `AUTH_SECRET` environment variable is the **only variable that is really necessary**. You do not need to additionally pass this value into your config as the `secret` configuration option if you've set the environment variable.
 
 For more information about environment variables and environment variable inference, check out our [environment variable](/guides/environment-variables) page.
 
@@ -307,7 +312,7 @@ export type {
 } from "@auth/core/types"
 ```
 
-- All `Adapter` types are re-exported from `/adapters` in the framework packages, i.e. `next-auth/adapters`, `@auth/sveltekit/adapters`, etc.
+- All `Adapter` types are re-exported from `/adapters` in the framework packages as well, i.e. from `next-auth/adapters`, `@auth/sveltekit/adapters`, etc.
 
 </Steps>
 

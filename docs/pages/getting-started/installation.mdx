@@ -4,7 +4,7 @@ import { Code } from "@/components/Code"
 <Steps>
 ### Installing Auth.js
 
-Start by installing the appropriate package for your framework:
+Start by installing the appropriate package for your framework.
 
 <Code>
   <Code.Next>
@@ -29,7 +29,10 @@ Start by installing the appropriate package for your framework:
   </Code.Express>
 </Code>
 
-<Callout type="info">Installing `@auth/core` is not necessary.</Callout>
+<Callout type="info">
+  Installing `@auth/core` is not necessary, as a user you should never have to
+  interact with `@auth/core`.
+</Callout>
 
 ### Setup Environment
 
@@ -50,16 +53,17 @@ AUTH_SECRET=secret
 
 ### Configure
 
-Next, create the Auth.js config object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. We recommend all frameworks to create an `auth.ts` file in the project. In this file we'll pass in all the options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
+Next, create the Auth.js config file and object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. We recommend all frameworks to create an `auth.ts` file in the project. In this file we'll pass in all the options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
 
 <Callout type="info">
-  You can name this file whatever you want and place it wherever you like.
+  You can name this file whatever you want and place it wherever you like, these
+  are just conventions we've come up with.
 </Callout>
 
 <Code>
   <Code.Next>
 
-Start by creating a new `auth.ts` file at the root of your app with the following content:
+1. Start by creating a new `auth.ts` file at the root of your app with the following content.
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
@@ -69,14 +73,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 })
 ```
 
-Add a Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
+2. Add an Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
+
+<Callout>
+  This file must be an App Router Route Handler, however, the rest of your app
+  can stay under `page/` if you'd like.
+</Callout>
 
 ```ts filename="./app/api/auth/[...nextauth]/route.ts"
 import { handlers } from "@/auth" // Referring to the auth.ts we just created
 export const { GET, POST } = handlers
 ```
 
-Add optional Middleware to keep the session alive, this will update the session expiry every time its called.
+3. Add optional Middleware to keep the session alive, this will update the session expiry every time its called.
 
 ```ts filename="./middleware.ts"
 export { auth as middleware } from "@/auth"
@@ -85,7 +94,7 @@ export { auth as middleware } from "@/auth"
   </Code.Next>
   <Code.Svelte>
 
-First, setup a basic `SvelteKitAuth` configuration in `src/auth.ts`.
+1. Start by creating a new `auth.ts` file in your `src/` directory with the following content.
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
@@ -95,13 +104,13 @@ export const { handle } = SvelteKitAuth({
 })
 ```
 
-Next, we'll re-export that `handle` method in SvelteKit's `src/hooks.server.ts`.
+2. Re-export the `handle` method in SvelteKit's `src/hooks.server.ts` file.
 
 ```ts filename="./src/hooks.server.ts"
 export { handle } from "./auth"
 ```
 
-Finally, we can add the session to our `$page` store in the `+layout.server.ts` file(s).
+3. That handle function adds an `auth()` method onto our `event.locals`, which is available in any `+layout.server.ts` or `+page.server.ts` file. Therefore, we can access the session in our `load` function like this.
 
 ```ts filename="./src/routes/+layout.server.ts" {4}
 import type { LayoutServerLoad } from "./$types"
@@ -118,15 +127,17 @@ export const load: LayoutServerLoad = async (event) => {
   </Code.Svelte>
   <Code.Express>
 
-```ts filename="./src/routes/auth.route.ts"
+1. Start by importing `ExpressAuth` and adding it to any routes you want to protect.
+
+```ts filename="./src/routes/auth.route.ts" {1, 9}
 import { ExpressAuth } from "@auth/express"
 import express from "express"
 
 const app = express()
 
-// If app is served through a proxy
-// trust the proxy to allow HTTPS protocol to be detected
-app.use("trust proxy")
+// If your app is served through a proxy
+// trust the proxy to allow us to read the `X-Forwarded-*` headers
+app.set("trust proxy", true)
 app.use("/auth/*", ExpressAuth({ providers: [] }))
 ```
 
