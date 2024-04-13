@@ -23,6 +23,17 @@ See below for more detailed provider settings.
 3. Add your provider's client ID and client secret to environment variables. _(Skip this step if not using an [OAuth Provider](/configuration/providers/oauth))_
 4. Deploy!
 
+## With Prisma Adapter deploy in vercel
+1. edit packegae.json file build script and add prisma generate like this ``` next build && prisma generate ```
+2. Make sure to expose the Vercel [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) in your project settings.
+3.  Create a `NEXTAUTH_SECRET` environment variable for all environments.
+    - You can use `openssl rand -base64 32` or https://generate-secret.vercel.app/32 to generate a random value.
+    - You **do not** need the `NEXTAUTH_URL` environment variable in Vercel.
+  
+4. Add your provider's client ID and client secret to environment variables. _(Skip this step if not using an [OAuth Provider](/configuration/providers/oauth))_
+5. Deploy!  
+
+
 Example repository: https://github.com/nextauthjs/next-auth-example
 
 A few notes about deploying to Vercel. The environment variables are read server-side, so you do not need to prefix them with `NEXT_PUBLIC_`. When deploying here, you do not need to explicitly set the `NEXTAUTH_URL` environment variable. With other providers **you will** need to also set this environment variable.
