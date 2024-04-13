@@ -26,7 +26,7 @@
   </p>
   <p align="center">
     Need help? See <a href="https://authjs.dev">authjs.dev</a> for the documentation, or <a href="https://discord.authjs.dev">
-    join our community on Discord
+    join our community on Discord&nbsp;
       <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" height=12 alt="TypeScript" />
     </a>
     .
