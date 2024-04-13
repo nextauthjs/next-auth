@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/zoho.svg" height="64" width="64" />
+
+# Zoho Provider
+
+## Resources
+
+- [Zoho OAuth 2.0 Integration Guide](https://www.zoho.com/accounts/protocol/oauth/web-server-applications.html)
+- [Zoho API Console](https://api-console.zoho.com)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/zoho
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/zoho
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ZOHO_ID
+AUTH_ZOHO_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Zoho from "next-auth/providers/zoho"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Zoho],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Zoho from "@auth/sveltekit/providers/zoho"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Zoho],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Zoho from "@auth/express/providers/zoho"
+
+app.use("/auth/*", ExpressAuth({ providers: [Zoho] }))
+```
+
+  </Code.Express>
+</Code>

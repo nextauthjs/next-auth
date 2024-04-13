@@ -116,7 +116,7 @@ export default function NotionProvider<P extends NotionProfile>(
 
       // The result of this method will be the input to the `profile` callback.
       // We use a custom request handler, since we need to do things such as pass the "Notion-Version" header
-      // More info: https://next-auth.js.org/configuration/providers/oauth
+      // More info: https://authjs.dev/getting-started/providers/notion
       async request(context) {
         const profile = await fetch(`${NOTION_HOST}/v1/users/me`, {
           headers: {
@@ -152,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/notion.svg", bg: "#fff", text: "#000" },
+    style: { bg: "#fff", text: "#000" },
     options,
   }
 }

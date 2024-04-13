@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 
 // import Apple from "next-auth/providers/apple"
-// import Atlassian from "next-auth/providers/atlassian"
 // import Auth0 from "next-auth/providers/auth0"
 // import Authentik from "next-auth/providers/authentik"
 // import AzureAD from "next-auth/providers/azure-ad"
@@ -67,11 +66,10 @@ import type { NextAuthConfig } from "next-auth"
 
 export const config = {
   theme: {
-    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    logo: "https://next-auth.js.org/img/logo-sm.png",
   },
   providers: [
     // Apple,
-    // Atlassian,
     // Auth0,
     // Authentik,
     // AzureAD,

@@ -77,7 +77,6 @@ export default function Mailchimp(
       }
     },
     style: {
-      logo: "/mailchimp.svg",
       bg: "#000",
       text: "#fff",
     },

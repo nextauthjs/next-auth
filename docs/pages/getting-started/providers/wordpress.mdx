@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/wordpress.svg" height="64" width="64" />
+
+# Wordpress Provider
+
+## Resources
+
+- [WordPress OAuth documentation](https://developer.wordpress.com/docs/oauth2/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/wordpress
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/wordpress
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_WORDPRESS_ID
+AUTH_WORDPRESS_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Wordpress from "next-auth/providers/wordpress"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Wordpress],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Wordpress from "@auth/sveltekit/providers/wordpress"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Wordpress],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Wordpress from "@auth/express/providers/wordpress"
+
+app.use("/auth/*", ExpressAuth({ providers: [Wordpress] }))
+```
+
+  </Code.Express>
+</Code>

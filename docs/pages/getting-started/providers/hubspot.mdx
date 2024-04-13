@@ -1,0 +1,82 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/hubspot.svg" height="64" width="64" />
+
+# Hubspot Provider
+
+## Resources
+
+- [HubSpot OAuth documentation](https://developers.hubspot.com/docs/api/oauth-quickstart-guide)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/hubspot
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/hubspot
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_HUBSPOT_ID
+AUTH_HUBSPOT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Hubspot from "next-auth/providers/hubspot"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Hubspot],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Hubspot from "@auth/sveltekit/providers/hubspot"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Hubspot],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Hubspot from "@auth/express/providers/hubspot"
+
+app.use("/auth/*", ExpressAuth({ providers: [Hubspot] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- HubSpot returns a limited amount of information on the token holder (see [docs](https://legacydocs.hubspot.com/docs/methods/oauth2/get-access-token-information)).
+- One other issue is that the name and profile photo cannot be fetched through API as discussed [here](https://community.hubspot.com/t5/APIs-Integrations/Profile-photo-is-not-retrieved-with-User-API/m-p/325521).
