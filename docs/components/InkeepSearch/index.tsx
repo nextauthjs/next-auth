@@ -27,7 +27,8 @@ export function InkeepTrigger() {
         onClick={() => setIsOpen(!isOpen)}
       >
         <Sparkle size={18} />
-        Ask AI
+        <span className="hidden md:inline xl:hidden">AI</span>
+        <span className="hidden xl:inline">Ask AI</span>
       </button>
       <InkeepCustomTrigger {...inkeepCustomTriggerProps} />
     </div>
