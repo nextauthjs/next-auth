@@ -144,15 +144,20 @@ export interface WorkOSProfile extends Record<string, any> {
  * :::
  */
 export default function WorkOS<P extends WorkOSProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & { connection?: string }
 ): OAuthConfig<P> {
-  const { issuer = "https://api.workos.com/" } = options
+  const {
+    issuer = "https://api.workos.com/",
+    connection = process.env.AUTH_WORKOS_CONNECTION ?? "",
+  } = options
+
+  const connectionParams = new URLSearchParams({ connection })
 
   return {
     id: "workos",
     name: "WorkOS",
     type: "oauth",
-    authorization: `${issuer}sso/authorize`,
+    authorization: `${issuer}sso/authorize?${connectionParams}`,
     token: `${issuer}sso/token`,
     client: {
       token_endpoint_auth_method: "client_secret_post",
