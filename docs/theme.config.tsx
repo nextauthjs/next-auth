@@ -169,7 +169,7 @@ const config: DocsThemeConfig = {
     extraContent: (
       <div className="flex flex-col gap-2 max-w-96">
         <a
-          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=nav"
           target="_blank"
         >
           <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
