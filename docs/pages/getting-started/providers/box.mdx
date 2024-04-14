@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/box.svg" height="64" width="64" />
+
+# Box Provider
+
+## Resources
+
+- [Box developers documentation](https://developer.box.com/reference/)
+- [Box OAuth documentation](https://developer.box.com/guides/sso-identities-and-app-users/connect-okta-to-app-users/configure-box/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/box
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/box
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_BOX_CLIENT_ID
+AUTH_BOX_CLIENT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Box from "next-auth/providers/box"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Box],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Box from "@auth/sveltekit/providers/box"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Box],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Box from "@auth/express/providers/box"
+
+app.use("/auth/*", ExpressAuth({ providers: [Box] }))
+```
+
+  </Code.Express>
+</Code>

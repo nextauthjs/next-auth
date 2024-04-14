@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>An official <a href="https://azure.microsoft.com/en-us/products/storage/tables">Azure Table Storage</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>An official <a href="https://azure.microsoft.com/en-us/products/storage/tables">Azure Table Storage</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://azure.microsoft.com/en-us/products/storage/tables">
  *   <img style={{display: "block"}} src="/img/adapters/azure-tables.svg" width="48" />
  *  </a>
@@ -71,9 +71,9 @@ export function withoutKeys<T>(
  * )
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
+ * // https://authjs.dev/reference/core/types#authconfig
  * export default const authConfig = {
- *   // https://authjs.dev/reference/core/providers
+ *   // https://authjs.dev/getting-started/authentication/oauth
  *   providers: [
  *     // ...
  *   ],

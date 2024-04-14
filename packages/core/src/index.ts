@@ -8,7 +8,7 @@
  *
  * Based on the {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Request}
  * and {@link https://developer.mozilla.org/en-US/docs/Web/API/Response Response} Web standard APIs.
- * Primarily used to implement [framework](https://authjs.dev/concepts/frameworks)-specific packages,
+ * Primarily used to implement [framework](https://authjs.dev/getting-started/integrations)-specific packages,
  * but it can also be used directly.
  *
  * ## Installation
@@ -30,8 +30,8 @@
  *
  * ## Resources
  *
- * - [Getting started](https://authjs.dev/getting-started/introduction)
- * - [Most common use case guides](https://authjs.dev/guides)
+ * - [Getting started](https://authjs.dev/getting-started)
+ * - [Guides](https://authjs.dev/guides)
  *
  * @module @auth/core
  */
@@ -87,7 +87,7 @@ export async function Auth(
  *
  * const request = new Request("https://example.com")
  * const response = await AuthHandler(request, {
- *   providers: [...],
+ *   providers: [Google],
  *   secret: "...",
  *   trustHost: true,
  * })
@@ -210,7 +210,7 @@ export async function Auth(
  * const response = await AuthHandler(request, authConfig)
  * ```
  *
- * @see [Initialization](https://authjs.dev/reference/configuration/auth-options)
+ * @see [Initialization](https://authjs.dev/reference/core/types#authconfig)
  */
 export interface AuthConfig {
   /**
