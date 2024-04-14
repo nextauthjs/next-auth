@@ -29,14 +29,18 @@ export function Tooltip({ label, framework, children }: Props) {
       <div className="relative w-full">
         <button
           id={`anchor-${framework}-${slug}`}
+          // @ts-expect-error
           popovertarget={`popover-${framework}-${slug}`}
           className="w-full tooltip-anchor"
+          // @ts-expect-error
           onMouseEnter={() => popoverTargetRef.current?.showPopover()}
+          // @ts-expect-error
           onMouseLeave={() => popoverTargetRef.current?.hidePopover()}
         >
           {children}
         </button>
         <div
+          // @ts-expect-error
           popover="auto"
           ref={popoverTargetRef}
           className="py-2 px-4 max-w-xs text-sm text-center text-fuchsia-900 bg-purple-100 rounded-lg border shadow-md"
