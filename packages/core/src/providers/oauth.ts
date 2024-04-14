@@ -99,11 +99,15 @@ export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
 
 export interface OAuthProviderButtonStyles {
   logo?: string
-  logoDark?: string
-  bg: string
-  bgDark?: string
-  text: string
-  textDark?: string
+  /**
+   * @deprecated
+   */
+  text?: string
+  /**
+   * @deprecated Please use 'brandColor' instead
+   */
+  bg?: string
+  brandColor?: string
 }
 
 /** TODO: Document */

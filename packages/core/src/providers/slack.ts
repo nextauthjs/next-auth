@@ -106,7 +106,7 @@ export default function Slack<P extends SlackProfile>(
     name: "Slack",
     type: "oidc",
     issuer: "https://slack.com",
-    style: { bg: "#000", text: "#fff" },
+    style: { brandColor: "#611f69" },
     options,
   }
 }
