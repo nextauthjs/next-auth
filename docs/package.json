@@ -27,6 +27,7 @@
     "@ark-ui/react": "^2.2.3",
     "@inkeep/widgets": "^0.2.272",
     "@next/third-parties": "^14.2.1",
+    "@oddbird/css-anchor-positioning": "^0.0.5",
     "@phosphor-icons/react": "^2.0.15",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.4",
