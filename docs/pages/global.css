@@ -8,8 +8,12 @@ details > *:not(summary) {
   @apply p-4;
 }
 
+:is(html[class~="dark"]) ::selection {
+  @apply bg-purple-500/40;
+}
+
 ::selection {
-  @apply bg-violet-400;
+  @apply bg-purple-200/80;
 }
 
 /* Here because we can't safelist Nextra's tailwind classes

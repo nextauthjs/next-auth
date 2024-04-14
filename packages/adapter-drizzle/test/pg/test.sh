@@ -20,7 +20,8 @@ docker run -d --rm \
 echo "Waiting 5s for db to start..." && sleep 5
 
 # Push schema and seed
-NODE_OPTIONS='--import tsx' drizzle-kit generate:pg --config=./test/pg/drizzle.config.ts
+drizzle-kit generate:pg --config=./test/pg/drizzle.config.ts
+NODE_OPTIONS='--import tsx'
 tsx ./test/pg/migrator.ts
 
 if vitest run -c ../utils/vitest.config.ts ./test/pg/index.test.ts; then

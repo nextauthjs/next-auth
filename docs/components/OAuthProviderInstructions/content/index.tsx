@@ -18,7 +18,7 @@ interface Props {
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
   const [highlighter, setHighlighter] = useState(null)
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const hl = await getHighlighter({
         themes: ["github-light", "github-dark"],
         langs: ["ts", "tsx", "bash"],
@@ -69,32 +69,27 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       <h4 className="mt-4 -mb-3 text-lg font-bold">Callback URL</h4>
       <Code>
         <Code.Next>
-          <Pre>
+          <Pre data-copy="">
             <NXCode>
               <span>{`[origin]/api/auth/callback/${providerId}`}</span>
             </NXCode>
           </Pre>
         </Code.Next>
         <Code.Svelte>
-          <Pre>
+          <Pre data-copy="">
             <NXCode>
               <span>{`[origin]/auth/callback/${providerId}`}</span>
             </NXCode>
           </Pre>
         </Code.Svelte>
         <Code.Express>
-          <Pre>
+          <Pre data-copy="">
             <NXCode>
               <span>{`[origin]/auth/callback/${providerId}`}</span>
             </NXCode>
           </Pre>
         </Code.Express>
       </Code>
-      <Callout type="info">
-        Replace <code>origin</code> with your application's hostname. If it's
-        running locally that might be
-        <code>http://localhost:3000</code> for example.
-      </Callout>
       <Callout type="info">
         Many providers only allow you to register one callback URL at a time.
         Therefore, if you want to have an active OAuth configuration for
@@ -112,6 +107,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       <Code>
         <Code.Next>
           <Pre
+            data-copy=""
             data-filename=".env.local"
             dangerouslySetInnerHTML={{
               __html: highlight(
@@ -125,6 +121,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         </Code.Next>
         <Code.Svelte>
           <Pre
+            data-copy=""
             data-filename=".env.local"
             dangerouslySetInnerHTML={{
               __html: highlight(
@@ -138,6 +135,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         </Code.Svelte>
         <Code.Express>
           <Pre
+            data-copy=""
             data-filename=".env.local"
             dangerouslySetInnerHTML={{
               __html: highlight(
@@ -203,7 +201,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
       <Callout>
         You can build your own Signin, Signout, etc. pages to match the style of
         your application, check out{" "}
-        <Link href="/getting-started/session-management?tab=custom-pages">
+        <Link href="/getting-started/session-management/custom-pages">
           session management
         </Link>{" "}
         for more details.

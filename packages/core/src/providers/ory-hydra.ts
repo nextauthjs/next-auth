@@ -79,11 +79,8 @@ export default function OryHydra<P extends OryHydraProfile>(
     name: "Hydra",
     type: "oidc",
     style: {
-      logoDark: "https://authjs.dev/img/providers/ory-dark.svg",
       bg: "#fff",
       text: "#0F172A",
-      bgDark: "#4F46E5",
-      textDark: "#fff",
     },
     options,
   }

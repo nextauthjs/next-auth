@@ -71,9 +71,9 @@ export function withoutKeys<T>(
  * )
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
+ * // https://authjs.dev/reference/core/types#authconfig
  * export default const authConfig = {
- *   // https://authjs.dev/reference/core/providers
+ *   // https://authjs.dev/getting-started/authentication/oauth
  *   providers: [
  *     // ...
  *   ],

@@ -39,9 +39,9 @@ export interface Neo4jOptions extends Session { }
  * const neo4jSession = driver.session()
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
+ * // https://authjs.dev/reference/core/types#authconfig
  * export default NextAuth({
- *   // https://authjs.dev/reference/core/providers
+ *   // https://authjs.dev/getting-started/authentication/oauth
  *   providers: [],
  *   adapter: Neo4jAdapter(neo4jSession),
  * })

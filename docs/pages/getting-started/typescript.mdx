@@ -33,7 +33,7 @@ Auth.js libraries come with certain interfaces that are shared across submodules
 Good examples of such interfaces are `Session` or `User`. You can use TypeScript's [Module
 Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to extend these types to add your own properties across Auth.js without having to pass generic all over the place.
 
-Let's look at `Session` for example:
+Let's look at extending `Session` for example.
 
 <Code>
 <Code.Next>
@@ -43,21 +43,26 @@ import NextAuth, { type DefaultSession } from "next-auth"
 
 declare module "next-auth" {
   /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
     user: {
       /** The user's postal address. */
       address: string
-      // By default, TypeScript merges new interface properties and overwrite existing ones. In this case, the default session user properties will be overwritten, with the new one defined above. To keep the default session user properties, you need to add them back into the newly declared interface
-    } & DefaultSession["user"] // To keep the default types
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"]
   }
 }
 
-export const { auth } = NextAuth({
+export const { auth, handlers } = NextAuth({
   callbacks: {
     session({ session, token, user }) {
-      // session.user.address is now a valid property, and will be type-checked
+      // `session.user.address` is now a valid property, and will be type-checked
       // in places like `useSession().data.user` or `auth().user`
       return {
         ...session,
@@ -74,24 +79,31 @@ export const { auth } = NextAuth({
 </Code.Next>
 <Code.Svelte>
 
-```ts filename="app.d.ts"
-import "@auth/sveltekit"
+```ts filename="auth.ts"
+import SvelteKitAuth, { type DefaultSession } from "@auth/sveltekit"
 
 declare module "@auth/sveltekit" {
-  interface User {
-    userId: string
+  interface Session {
+    user: {
+      userId: string
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"]
   }
 }
-```
 
-```ts filename="auth.ts"
-export const { auth } = SvelteKitAuth({
-  providers,
+export const { handle } = SvelteKitAuth({
   callbacks: {
     session: async ({ session, token }) => {
       if (token) {
         session.user.userId = token.sub
       }
+      // `session.user.userId` is now a valid property, and will be type-checked
+      // in places like `useSession().data.user` or `auth().user`
       return session
     },
   },
@@ -104,7 +116,7 @@ export const { auth } = SvelteKitAuth({
 Module augmentation is not limited to specific interfaces. You can augment any `interface` we've defined, here are some of the more common interfaces that you might want to override based on your use case.
 
 ```ts filename="types.d.ts"
-declare module "@auth/core" {
+declare module "next-auth" {
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
    * or the second parameter of the `session` callback, when using a database.
@@ -123,9 +135,9 @@ declare module "@auth/core" {
 }
 
 // The `JWT` interface can be found in the `next-auth/jwt` submodule
-import { JWT } from "@auth/core/jwt"
+import { JWT } from "next-auth/jwt"
 
-declare module "@auth/core/jwt" {
+declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
@@ -134,7 +146,11 @@ declare module "@auth/core/jwt" {
 }
 ```
 
-The module declaration can be added to any file that is ["included"](https://www.typescriptlang.org/tsconfig#include) in your project's `tsconfig.json`.
+<Callout type="info">
+  The module declaration can be added to any file that is
+  ["included"](https://www.typescriptlang.org/tsconfig#include) in your
+  project&apos;s `tsconfig.json`.
+</Callout>
 
 ## Resources
 

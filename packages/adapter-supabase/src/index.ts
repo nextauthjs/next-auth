@@ -227,9 +227,9 @@ export interface SupabaseAdapterOptions {
  * import jwt from "jsonwebtoken"
  *
  * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
+ * // https://authjs.dev/reference/core/types#authconfig
  * export default NextAuth({
- *   // https://authjs.dev/reference/core/providers
+ *   // https://authjs.dev/getting-started/authentication/oauth
  *   providers: [],
  *   adapter: SupabaseAdapter({
  *     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
