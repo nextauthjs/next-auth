@@ -29,14 +29,8 @@ import Zoom from "next-auth/providers/zoom"
 
 import type { NextAuthConfig } from "next-auth"
 
-const prisma = new PrismaClient()
-
-const providers = [Apple, Auth0, AzureDevops, Cognito, Facebook, GitHub, Google, LinkedIn, Passage, Pinterest, Twitch, Twitter]
-
-export const baseConfig = {
-  theme: {
-    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
-  },
+export const config = {
+  theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   providers: [
     Apple,
     Auth0,

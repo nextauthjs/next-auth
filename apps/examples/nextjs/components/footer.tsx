@@ -17,7 +17,7 @@ export default function Footer() {
       <div className="flex gap-2 justify-start items-center">
         <img
           className="size-5"
-          src="https://authjs.dev/img/logo/logo-sm.webp"
+          src="https://authjs.dev/img/logo-sm.png"
           alt="Auth.js Logo"
         />
         <CustomLink href="https://npmjs.org/package/next-auth">

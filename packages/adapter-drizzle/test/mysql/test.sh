@@ -17,8 +17,9 @@ docker run -d --rm \
 echo "Waiting 10s for db to start..." && sleep 10
 
 # Push schema and seed
-NODE_OPTIONS='--import tsx' drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
-NODE_OPTIONS='--import tsx' drizzle-kit push:mysql --config=./test/mysql/drizzle.config.ts
+drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
+NODE_OPTIONS='--import tsx'
+tsx ./test/mysql/migrator.ts
 
 if vitest run -c ../utils/vitest.config.ts ./test/mysql/index.test.ts; then
   docker stop ${MYSQL_CONTAINER_NAME}

@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/clickup.svg" height="64" width="64" />
+
+# Click-Up Provider
+
+## Resources
+
+- [ClickUp - Authorizing OAuth Apps](https://clickup.com/api/developer-portal/authentication#oauth-flow)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/clickup
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/clickup
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_CLICKUP_ID
+AUTH_CLICKUP_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import ClickUp from "next-auth/providers/click-up"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [ClickUp],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import ClickUp from "@auth/sveltekit/providers/click-up"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [ClickUp],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import ClickUp from "@auth/express/providers/click-up"
+
+app.use("/auth/*", ExpressAuth({ providers: [ClickUp] }))
+```
+
+  </Code.Express>
+</Code>
