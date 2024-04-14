@@ -2,7 +2,6 @@ import { useThemeConfig } from "nextra-theme-docs"
 import { useRouter } from "next/router"
 import { Tabs } from "nextra/components"
 import React, { Children, ReactNode, useEffect, useState } from "react"
-import styles from "./styles.module.css"
 
 interface ChildrenProps {
   children: ReactNode
@@ -70,7 +69,7 @@ export function Code({ children }: ChildrenProps) {
   }, [framework, renderedFrameworks])
 
   return (
-    <div className={styles["tablist-fix"]}>
+    <div className="[&_div[role='tablist']]:!pb-0">
       <Tabs
         storageKey={AUTHJS_TAB_KEY}
         items={Object.values(renderedFrameworks)}
