@@ -66,7 +66,7 @@ export default function Netlify(
     id: "netlify",
     name: "Netlify",
     type: "oauth",
-    authorization: "https://app.netlify.com/authorize",
+    authorization: "https://app.netlify.com/authorize?scope",
     token: "https://api.netlify.com/oauth/token",
     userinfo: "https://api.netlify.com/api/v1/user",
     profile(profile) {
