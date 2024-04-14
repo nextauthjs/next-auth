@@ -1,6 +1,7 @@
 {
   "name": "docs",
   "description": "Auth.js Documenation",
+  "private": true,
   "type": "module",
   "scripts": {
     "typedoc": "typedoc",
