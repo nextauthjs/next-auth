@@ -18,7 +18,7 @@ interface Props {
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
   const [highlighter, setHighlighter] = useState(null)
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const hl = await getHighlighter({
         themes: ["github-light", "github-dark"],
         langs: ["ts", "tsx", "bash"],
