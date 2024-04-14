@@ -157,9 +157,8 @@ const generateOutputMd = (output: Output): string => {
 
     // @ts-expect-error
     links.forEach((link: TODO) => {
-      outputMd += `| [${new URL(link.url.resolved).pathname}](${
-        link.url.resolved
-      }) | "${link.html?.text?.trim().replaceAll("\n", "")}" |
+      outputMd += `| [${new URL(link.url.resolved).pathname}](${link.url.resolved
+        }) | "${link.html?.text?.trim().replaceAll("\n", "")}" |
 `
     })
   })
@@ -195,6 +194,7 @@ async function brokenLinkChecker(): Promise<void> {
 
   const options = {
     excludeExternalLinks: true,
+    honorRobotExclusions: false,
     excludedKeywords: [],
   }
 
@@ -208,6 +208,7 @@ async function brokenLinkChecker(): Promise<void> {
       }
     },
     end: async () => {
+      console.log("end.output", output)
       if (output.links.length) {
         const outputMd = generateOutputMd(output)
         await postComment(outputMd)
