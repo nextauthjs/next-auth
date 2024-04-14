@@ -62,7 +62,11 @@ const config = {
     LinkedIn,
     Netlify({ authorization: "https://app.netlify.com/authorize?scope" }),
     Okta,
-    Passkey,
+    Passkey({
+      formFields: {
+        username: { label: "Username", required: true, autocomplete: "username webauthn email" },
+      },
+    }),
     Passage,
     Pinterest,
     Reddit,
