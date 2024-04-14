@@ -77,6 +77,9 @@ export default function Netlify(
         image: profile.avatar_url,
       }
     },
+    style: {
+      brandColor: "#32e6e2",
+    },
     options: config,
   }
 }
