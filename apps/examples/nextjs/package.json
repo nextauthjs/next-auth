@@ -9,10 +9,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "db:generate": "pnpx prisma generate",
-    "db:migrate": "pnpx prisma migrate dev",
-    "db:studio": "pnpx prisma studio"
+    "start": "next start"
   },
   "author": "Iain Collins <me@iaincollins.com>",
   "contributors": [
@@ -21,9 +18,9 @@
     "Lluis Agusti <hi@llu.lu>",
     "Thang Huu Vu <hi@thvu.dev>"
   ],
+  "packageManager": "pnpm@9.0.0-rc.2+sha256.56c6fdb47aaccbd84f172f5dd032820ad8ba66aeb4727832fb3158f8537f11cd",
   "dependencies": {
-    "@auth/prisma-adapter": "latest",
-    "@prisma/client": "5.9.1",
+    "@auth/unstorage-adapter": "github:nextauthjs/next-auth#main&path:packages/adapter-unstorage",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.5",
@@ -38,7 +35,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "unstorage": "^1.10.1"
   },
   "devDependencies": {
     "@types/node": "^18",
@@ -46,7 +44,6 @@
     "@types/react-dom": "^18.2.8",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
-    "prisma": "5.9.1",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
   }

@@ -18,6 +18,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Netlify from "next-auth/providers/netlify"
 import Okta from "next-auth/providers/okta"
 import Passage from "next-auth/providers/passage"
+import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
@@ -26,11 +27,20 @@ import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
+import { createStorage } from "unstorage"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
 
-import type { NextAuthConfig } from "next-auth"
+const storage = createStorage()
 
-export const config = {
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+  unstable_update: update,
+} = NextAuth({
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
+  adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
     Auth0,
@@ -57,6 +67,7 @@ export const config = {
     LinkedIn,
     Netlify({ authorization: "https://app.netlify.com/authorize?scope" }),
     Okta,
+    Passkey,
     Passage,
     Pinterest,
     Reddit,
@@ -84,42 +95,5 @@ export const config = {
   experimental: {
     enableWebAuthn: true,
   },
-  adapter: undefined,
   debug: true,
-} satisfies NextAuthConfig
-
-export const {
-  handlers,
-  auth,
-  signIn,
-  signOut,
-  unstable_update: update,
-} = NextAuth((request) => {
-  if (
-    request?.nextUrl?.pathname.includes("webauthn") ||
-    request?.nextUrl?.pathname.includes("passkey") ||
-    request?.nextUrl?.pathname.endsWith("signin")
-  ) {
-    return {
-      ...baseConfig,
-      providers: [
-        ...providers,
-        Passkey({
-          formFields: {
-            username: {
-              label: "Username",
-              required: true,
-              autocomplete: "username webauthn",
-            },
-          },
-        }),
-      ],
-      adapter: PrismaAdapter(prisma),
-    }
-  }
-  console.log(request?.nextUrl.pathname)
-  return {
-    ...baseConfig,
-    providers,
-  }
 })
