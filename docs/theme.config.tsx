@@ -95,7 +95,7 @@ const config: DocsThemeConfig = {
         </a>
         <ThemeSwitch
           lite
-          className="*:justify-center *:gap-0 [&_svg]:size-4 p-0 [&_span]:hidden"
+          className="!bg-transparent *:justify-center *:gap-0 [&_svg]:size-4 p-0 [&_span]:hidden"
         />
       </div>
     ),
