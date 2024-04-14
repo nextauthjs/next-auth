@@ -1,8 +1,0 @@
-.step-title-align:before {
-  /* Make sure the number within the circle is aligned */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Make sure circle is aligned against the title  */
-  margin-top: 1px !important;
-}
