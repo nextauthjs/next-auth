@@ -166,38 +166,7 @@ const config: DocsThemeConfig = {
     labels: "feedback",
   },
   toc: {
-    extraContent: (
-      <div className="flex flex-col gap-2 max-w-96">
-        <a
-          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=nav"
-          target="_blank"
-        >
-          <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-            Looking for a hosted alternative? (sponsored)
-            <span className="flex gap-2 text-[#289ef9]">
-              Try Clerk{" "}
-              <svg
-                width="16"
-                data-slot="icon"
-                fill="none"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-                ></path>
-              </svg>
-            </span>
-          </div>
-        </a>
-        <script id="_carbonads_js" />
-      </div>
-    ),
+    extraContent: <script id="_carbonads_js" />,
     backToTop: true,
   },
   docsRepositoryBase: "https://github.com/nextauthjs/next-auth/docs",
