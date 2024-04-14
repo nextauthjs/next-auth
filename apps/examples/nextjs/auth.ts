@@ -29,16 +29,11 @@ import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import type { NextAuthConfig } from "next-auth"
 
 const storage = createStorage()
 
-export const {
-  handlers,
-  auth,
-  signIn,
-  signOut,
-  unstable_update: update,
-} = NextAuth({
+const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
   providers: [
@@ -96,4 +91,6 @@ export const {
     enableWebAuthn: true,
   },
   debug: true,
-})
+} satisfies NextAuthConfig
+
+export const { handlers, auth, signIn, signOut } = NextAuth(config)
