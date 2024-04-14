@@ -4,8 +4,9 @@ import { Callout, Tabs, Steps } from "nextra/components"
 
 <Callout type="info">
   This guide only applies to `next-auth` upgrades for users of Next.js. Feel
-  free to skip to the next section, [Installation](/overview/installation), if
-  you are not upgrading to `next-auth@5`.
+  free to skip to the next section,
+  [Installation](/getting-started/installation), if you are not upgrading to
+  `next-auth@5`.
 </Callout>
 
 **NextAuth.js version 5** is a major rewrite of the `next-auth` package, that being said, we introduced as few breaking changes as possible. For all else, this document will guide you through the migration process.
@@ -22,7 +23,7 @@ npm install next-auth@beta
 
 - App Router-first (`pages/` still supported)
 - OAuth support on preview deployments ([Read more](/getting-started/deployment#securing-a-preview-deployment))
-- Simplified setup (shared config, inferred [env variables](/reference/nextjs#environment-variable-inferrence))
+- Simplified setup (shared config, inferred [env variables](/guides/environment-variables#environment-variable-inference))
 - New `account()` callback on providers ([`account()` docs](/reference/core/providers#account))
 - Edge-compatible
 
