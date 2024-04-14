@@ -1,6 +1,6 @@
 <p align="center">
   <br/>
-  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo-sm.png" /></a>
   <h3 align="center">Auth.js</h3>
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
@@ -25,7 +25,11 @@
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
   </p>
   <p align="center">
-    See <a href="https://authjs.dev">authjs.dev</a> for our documentation and more information.
+    Need help? See <a href="https://authjs.dev">authjs.dev</a> for the documentation, or <a href="https://discord.authjs.dev">
+    join our community on Discord&nbsp;
+      <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" height=12 alt="TypeScript" />
+    </a>
+    .
   </p>
   <p align="center">
      <kbd>Sponsored</kbd> Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>

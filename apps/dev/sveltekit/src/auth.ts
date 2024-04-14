@@ -33,6 +33,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Discord,
   ],
   theme: {
-    logo: "https://authjs.dev/img/logo/logo-sm.webp",
+    logo: "https://authjs.dev/img/logo-sm.png",
   },
 })

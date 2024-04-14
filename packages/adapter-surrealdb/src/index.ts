@@ -130,11 +130,11 @@ export const toId = (surrealId: string) => {
  * ```js
  * import { Surreal } from "surrealdb.js";
  *
- * const connectionString = ... // i.e. "http://0.0.0.0:8000"
- * const username = ...
- * const password = ...
- * const namespace = ...
- * const database = ...
+ * const connectionString = "http://0.0.0.0:8000"
+ * const username = ""
+ * const password = ""
+ * const namespace = ""
+ * const database = ""
  *
  * const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
  *   const db = new Surreal();
@@ -162,11 +162,11 @@ export const toId = (surrealId: string) => {
  * ```js
  * import { ExperimentalSurrealHTTP } from "surrealdb.js"
  *
- * const connectionString = ... // i.e. "http://0.0.0.0:8000"
- * const username = ...
- * const password = ...
- * const namespace = ...
- * const database = ...
+ * const connectionString = "http://0.0.0.0:8000"
+ * const username = ""
+ * const password = ""
+ * const namespace = ""
+ * const database = ""
  *
  * const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
  *   try {
@@ -198,7 +198,6 @@ export const toId = (surrealId: string) => {
  * // https://authjs.dev/reference/providers/oauth
  * export default NextAuth({
  *   adapter: SurrealDBAdapter(clientPromise),
- *   ...
  * })
  * ```
  **/
@@ -233,7 +232,7 @@ export function SurrealDBAdapter<T>(
         if (doc) {
           return docToUser(doc)
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async getUserByEmail(email: string) {
@@ -245,7 +244,7 @@ export function SurrealDBAdapter<T>(
         )
         const doc = users[0]?.[0]
         if (doc) return docToUser(doc)
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async getUserByAccount({
@@ -265,7 +264,7 @@ export function SurrealDBAdapter<T>(
 
         const user = users[0]?.[0]?.userId
         if (user) return docToUser(user)
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
@@ -304,7 +303,7 @@ export function SurrealDBAdapter<T>(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch (e) {}
+      } catch (e) { }
 
       // delete session
       try {
@@ -320,7 +319,7 @@ export function SurrealDBAdapter<T>(
           const sessionId = extractId(session.id)
           await surreal.delete(`session:${sessionId}`)
         }
-      } catch (e) {}
+      } catch (e) { }
 
       // delete user
       await surreal.delete(`user:${surrealId}`)
@@ -351,7 +350,7 @@ export function SurrealDBAdapter<T>(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch (e) {}
+      } catch (e) { }
     },
     async createSession({ sessionToken, userId, expires }) {
       const surreal = await client
@@ -390,7 +389,7 @@ export function SurrealDBAdapter<T>(
             }),
           }
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async updateSession(
@@ -426,7 +425,7 @@ export function SurrealDBAdapter<T>(
             return null
           }
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
     async deleteSession(sessionToken: string) {
@@ -445,7 +444,7 @@ export function SurrealDBAdapter<T>(
           await surreal.delete(`session:${sessionId}`)
           return
         }
-      } catch (e) {}
+      } catch (e) { }
     },
     async createVerificationToken({
       identifier,
@@ -493,7 +492,7 @@ export function SurrealDBAdapter<T>(
         } else {
           return null
         }
-      } catch (e) {}
+      } catch (e) { }
       return null
     },
   }

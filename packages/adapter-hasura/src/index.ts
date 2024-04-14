@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://hasura.io/">Hasura</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://hasura.io/">Hasura</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://hasura.io/">
  *   <img style={{display: "block"}} src="/img/adapters/hasura.svg" width="38" />
  *  </a>
@@ -125,7 +125,7 @@ import {
  *
  * 2. Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
  *
- *   ```javascript title="pages/api/auth/[...nextauth].js"
+ *   ```js title="pages/api/auth/[...nextauth].js"
  *   import NextAuth from "next-auth"
  *   import { HasuraAdapter } from "@auth/hasura-adapter"
  *
@@ -134,7 +134,6 @@ import {
  *       endpoint: "<Hasura-GraphQL-endpoint>",
  *       adminSecret: "<admin-secret>",
  *     }),
- *   ...
  *   })
  *   ```
  */

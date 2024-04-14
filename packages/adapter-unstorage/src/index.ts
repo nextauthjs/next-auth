@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://unstorage.unjs.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/unstorage.svg" width="60"/>
  *  </a>
@@ -104,9 +104,9 @@ export function hydrateDates(json: object) {
 /**
  * ## Setup
  *
- * Configure Auth.js to use the Unstorage Adapter:
+ * Configure Auth.js to use the Unstorage Adapter.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import GoogleProvider from "next-auth/providers/google"
  * import { UnstorageAdapter } from "@auth/unstorage-adapter"
@@ -156,9 +156,7 @@ export function hydrateDates(json: object) {
  *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UnstorageAdapter(storage, {baseKeyPrefix: "app2:"})
- *   ...
  * })
  * ```
  *
@@ -170,15 +168,12 @@ export function hydrateDates(json: object) {
  *
  * You can enable this functionality by passing `useItemRaw: true` (default: false) in the `options` object as the second argument to the adapter factory function.
  *
- * Example:
- *
  * ```js
  * export default NextAuth({
- *   ...
  *   adapter: UnstorageAdapter(storage, {useItemRaw: true})
- *   ...
  * })
  * ```
+ *
  */
 export function UnstorageAdapter(
   storage: Storage,

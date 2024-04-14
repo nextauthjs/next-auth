@@ -1,0 +1,134 @@
+import { Accordion, Accordions } from "@/components/Accordion"
+
+# About Auth.js
+
+### Is Auth.js commercial software?
+
+Auth.js is an open-source project built by individual contributors.
+
+It is not commercial software and is not associated with a commercial organization.
+
+### Compatibility
+
+<Accordions>
+<Accordion title="What databases does Auth.js support?">
+
+You can use Auth.js with many flavors of MySQL, MariaDB, PostgreSQL, MongoDB and SQLite. See our [using a database adapter guide](/getting-started/database). There are adapters for most popular database types available.
+
+You can use also Auth.js with any database using a custom database adapter, or by using a custom credentials authentication provider - e.g. to support signing in with a username and password stored in an existing database.
+
+You do not need a database to use Auth.js, however. You can use Auth.js with JWT-based sessions, which do not require a database.
+
+</Accordion>
+
+<Accordion title="What authentication services does Auth.js support?">
+
+Auth.js includes built-in support for 4 high-level authentication types - OAuth / OICD, Email magic-links, WebAuthn / Passkeys and username/password credentials. Check out our [authentication page](/getting-started/authentication) for more information.
+
+</Accordion>
+
+<Accordion title="Does Auth.js support signing in with a username and password?">
+
+Auth.js is designed to avoid the need to store passwords and user accounts.
+
+However, if you'd still like to use username/password based login, then you can use our [Credentials provider](/getting-started/authentication/credentials) to allow signing in with a username and password.
+
+_If you use a custom credentials provider user accounts will not be persisted in a database by Auth.js (even if one is configured). The option to use JSON Web Tokens for session tokens (which allow sign-in without using a session database) must be enabled to use a custom credentials provider._
+
+</Accordion>
+
+<Accordion title="Can I use Auth.js with a website that does not use Next.js?">
+
+Auth.js was initially designed for use with Next.js and Serverless, however, over time we've evolved into a framework-agnostic authentication solution. If you're curious, take a look at [our history page](/contributors#history). We currently have framework packages available for Next.js (`next-auth`), SvelteKit (`@auth/sveltekit`), SolidStart (`@auth/solid`), Express (`@auth/express`) and more in the pipeline.
+
+</Accordion>
+
+<Accordion title="Can I use Auth.js with React Native?">
+
+Auth.js is designed as a secure, confidential client and implements a server-side authentication flow.
+
+It is not intended to be used in native applications on desktop or mobile applications, which typically implement public clients (e.g. with client/secrets embedded in the application).
+
+</Accordion>
+
+<Accordion title="Is Auth.js supporting TypeScript?">
+
+Yes! Check out the [TypeScript docs](/getting-started/typescript)
+
+</Accordion>
+
+<Accordion title="Is Auth.js compatible with Next.js 12 Middleware?">
+
+[Next.js middleware](https://nextjs.org/docs/middleware) is supported and is recommended as of version 5. An example middleware setup can be found [here](/getting-started/session-management/protecting#nextjs-middleware).
+
+</Accordion>
+</Accordions>
+
+### Session strategies
+
+Check out the [Session strategies page](/concepts/session-strategies) to learn more.
+
+### Security
+
+Parts of this section have been moved to their own [page](/security).
+
+<Accordions>
+<Accordion title="How do I get Refresh Tokens and Access Tokens for an OAuth account?">
+
+Auth.js provides a solution for authentication, session management and user account creation.
+
+Auth.js records Refresh Tokens and Access Tokens on sign-in (if supplied by the provider) and it will pass them, along with the User ID, Provider and Provider Account ID, to either:
+
+1. A database - if a database connection string is provided
+2. The JSON Web Token callback - if JWT sessions are enabled (e.g. if no database is specified)
+
+You can then look them up from the database or persist them to the JSON Web Token.
+
+Note: Auth.js does not currently handle Access Token rotation for OAuth providers for you, however, you can check out [this tutorial](/guides/TODO) if you want to implement it.
+
+</Accordion>
+<Accordion title="When I sign in with another account with the same email address, why are accounts not linked automatically?">
+
+Automatic account linking on sign-in is not secure between arbitrary providers - except for allowing users to sign in via email addresses as a fallback (as they must verify their email address as part of the flow).
+
+When an email address is associated with an OAuth account it does not necessarily mean that it has been verified as belonging to the account holder — how email address verification is handled is not part of the OAuth specification and varies between providers (e.g. some do not verify first, some do verify first, others return metadata indicating the verification status).
+
+With automatic account linking on sign-in, this can be exploited by bad parties to hijack accounts by creating an OAuth account associated with the email address of another user.
+
+For this reason, it is not secure to automatically link accounts between arbitrary providers on sign-in, which is why this feature is generally not provided by an authentication service and is not provided by Auth.js.
+
+Automatic account linking is seen on some sites, sometimes insecurely. It can be technically possible to do automatic account linking securely if you trust all the providers involved to ensure they have securely verified the email address associated with the account, but requires placing trust (and transferring the risk) to those providers to handle the process securely.
+
+Examples of scenarios where this is secure include an OAuth provider you control (e.g. that only authorizes users internal to your organization) or a provider you explicitly trust to have verified the users' email address.
+
+Automatic account linking is not a planned feature of Auth.js, however, there is scope to improve the user experience of account linking and of handling this flow, securely. Typically this involves providing a fallback option to sign in via email, which is already possible (and recommended), but the current implementation of this flow could be improved.
+
+Providing support for secure account linking and unlinking of additional providers - which can only be done if a user is already signed in - was originally a feature in v1.x but has not been present since v2.0, and is planned to return in a future release.
+
+</Accordion>
+</Accordions>
+
+### Feature Requests
+
+<Accordions>
+<Accordion title="Why doesn't Auth.js support [a particular feature]?">
+
+Auth.js is an open-source project built by individual contributors who are volunteers writing code and providing support in their spare time.
+
+If you would like Auth.js to support a particular feature, the best way to help make it happen is to raise a feature request describing the feature and offer to work with other contributors to develop and test it.
+
+If you are not able to develop a feature yourself, you can offer to sponsor someone to work on it.
+
+</Accordion>
+<Accordion title="I disagree with a design decision, how can I change your mind?">
+
+Product design decisions on Auth.js are made by core team members.
+
+You can raise suggestions as feature requests for enhancement.
+
+Requests that provide the detail requested in the template and follow the format requested may be more likely to be supported, as additional detail prompted in the templates often provides important context.
+
+Ultimately if your request is not accepted or is not actively in development, you are always free to fork the project under the terms of the ISC License.
+
+</Accordion>
+</Accordions>
