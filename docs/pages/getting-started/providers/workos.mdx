@@ -49,7 +49,7 @@ import NextAuth from "next-auth"
 import WorkOS from "next-auth/providers/workos"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [WorkOS({ connection: "connection_id" })],
+  providers: [WorkOS({ connection: "conn_abc123" })],
 })
 ```
 
@@ -61,7 +61,7 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import WorkOS from "@auth/sveltekit/providers/workos"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [WorkOS({ connection: "connection_id" })],
+  providers: [WorkOS({ connection: "conn_abc123" })],
 })
 ```
 
@@ -74,7 +74,7 @@ import WorkOS from "@auth/express/providers/workos"
 
 app.use(
   "/auth/*",
-  ExpressAuth({ providers: [WorkOS({ connection: "connection_id" })] })
+  ExpressAuth({ providers: [WorkOS({ connection: "conn_abc123" })] })
 )
 ```
 
