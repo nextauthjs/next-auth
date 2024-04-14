@@ -1,4 +1,3 @@
-import { and, eq } from "drizzle-orm"
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import {

@@ -2,15 +2,17 @@ import { and, eq, getTableColumns } from "drizzle-orm"
 import {
   MySqlColumn,
   MySqlDatabase,
-  MySqlTableWithColumns,
-  PreparedQueryHKTBase,
-  QueryResultHKT,
   boolean,
   int,
   mysqlTable,
   primaryKey,
   timestamp,
   varchar,
+  index,
+  QueryResultHKT,
+  PreparedQueryHKTBase,
+  TableConfig,
+  MySqlTableWithColumns,
 } from "drizzle-orm/mysql-core"
 
 import type {

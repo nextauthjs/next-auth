@@ -17,6 +17,7 @@ runBasicTests({
     accountsTable: accounts,
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
+    authenticatorsTable: authenticators,
   }),
   fixtures,
   testWebAuthnMethods: true,
