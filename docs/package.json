@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
     "lint:fix": "eslint ./{components,pages,utils} --fix",
-    "postinstall": "pnpm exec simple-git-hooks"
+    "postinstall": "pnpm exec simple-git-hooks",
+    "build:sitemap": "next-sitemap --config next-sitemap.config.cjs"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "@vercel/analytics": "^1.2.2",
     "classnames": "^2.5.1",
     "next": "14.2.1",
+    "next-sitemap": "^4.2.3",
     "nextra": "3.0.0-alpha.22",
     "nextra-theme-docs": "3.0.0-alpha.22",
     "react": "^18.2.0",
