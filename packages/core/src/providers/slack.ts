@@ -106,6 +106,7 @@ export default function Slack<P extends SlackProfile>(
     name: "Slack",
     type: "oidc",
     issuer: "https://slack.com",
+    checks: ["nonce"],
     style: { bg: "#000", text: "#fff" },
     options,
   }
