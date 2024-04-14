@@ -93,6 +93,9 @@ export default function PinterestProvider<P extends PinterestProfile>(
         email: null,
       }
     },
+    style: {
+      brandColor: "#bd081c",
+    },
     options,
   }
 }

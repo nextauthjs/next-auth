@@ -69,37 +69,39 @@ export function Code({ children }: ChildrenProps) {
   }, [framework, renderedFrameworks])
 
   return (
-    <Tabs
-      storageKey={AUTHJS_TAB_KEY}
-      items={Object.values(renderedFrameworks)}
-      selectedIndex={tabIndex}
-    >
-      {Object.keys(renderedFrameworks).map((f) => {
-        // @ts-expect-error: Hacky dynamic child wrangling
-        const child = childs.find((c) => c?.type?.name === f)
+    <div className="[&_div[role='tablist']]:!pb-0">
+      <Tabs
+        storageKey={AUTHJS_TAB_KEY}
+        items={Object.values(renderedFrameworks)}
+        selectedIndex={tabIndex}
+      >
+        {Object.keys(renderedFrameworks).map((f) => {
+          // @ts-expect-error: Hacky dynamic child wrangling
+          const child = childs.find((c) => c?.type?.name === f)
 
-        // @ts-expect-error: Hacky dynamic child wrangling
-        return Object.keys(child?.props ?? {}).length ? (
-          child
-        ) : (
-          <Tabs.Tab key={f}>
-            <p className="p-6 font-semibold rounded-lg bg-slate-100 dark:bg-neutral-950">
-              {renderedFrameworks[f]} not documented yet. Help us by
-              contributing{" "}
-              <a
-                className="underline"
-                target="_blank"
-                href={`${project.link}/edit/main/docs/pages${router.pathname}.mdx`}
-                rel="noreferrer"
-              >
-                here
-              </a>
-              .
-            </p>
-          </Tabs.Tab>
-        )
-      })}
-    </Tabs>
+          // @ts-expect-error: Hacky dynamic child wrangling
+          return Object.keys(child?.props ?? {}).length ? (
+            child
+          ) : (
+            <Tabs.Tab key={f}>
+              <p className="p-6 font-semibold rounded-lg bg-slate-100 dark:bg-neutral-950">
+                {renderedFrameworks[f]} not documented yet. Help us by
+                contributing{" "}
+                <a
+                  className="underline"
+                  target="_blank"
+                  href={`${project.link}/edit/main/docs/pages${router.pathname}.mdx`}
+                  rel="noreferrer"
+                >
+                  here
+                </a>
+                .
+              </p>
+            </Tabs.Tab>
+          )
+        })}
+      </Tabs>
+    </div>
   )
 }
 

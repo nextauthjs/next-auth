@@ -19,7 +19,7 @@ export function HeroCode({ children }) {
           <RichTabs.Trigger
             value="nextjs"
             orientation="vertical"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
           >
             <Image
               width="24"
@@ -32,7 +32,7 @@ export function HeroCode({ children }) {
           <RichTabs.Trigger
             value="sveltekit"
             orientation="vertical"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
           >
             <Image width="24" src={SvelteKit} alt="SvelteKit Logo" />
             <span className="hidden md:block">SvelteKit</span>
@@ -40,7 +40,7 @@ export function HeroCode({ children }) {
           <RichTabs.Trigger
             value="express"
             orientation="vertical"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
           >
             <Image
               width="24"
