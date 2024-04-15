@@ -26,7 +26,6 @@
   "homepage": "https://authjs.dev",
   "dependencies": {
     "@ariakit/react": "^0.4.5",
-    "@ark-ui/react": "^2.2.3",
     "@inkeep/widgets": "^0.2.272",
     "@next/third-parties": "^14.2.1",
     "@oddbird/css-anchor-positioning": "^0.0.5",
