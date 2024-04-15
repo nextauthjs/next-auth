@@ -1,6 +1,6 @@
-import type { AuthConfig } from "@auth/core"
-import type { BuiltInProviderType } from "@auth/core/providers"
-import type { Session } from "@auth/core/types"
+import type { AuthConfig } from "@auth/core";
+import type { BuiltInProviderType } from "@auth/core/providers";
+import type { Session } from "@auth/core/types";
 
 /** Configure the {@link SvelteKitAuth} method. */
 export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {}

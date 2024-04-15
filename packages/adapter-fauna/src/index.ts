@@ -34,12 +34,12 @@ import type {
 
 type ToFauna<T> = {
   [P in keyof T]: T[P] extends Date | null
-    ? TimeStub | null
-    : T[P] extends undefined
-      ? null
-      : T[P] extends QueryValue
-        ? T[P]
-        : QueryValueObject
+  ? TimeStub | null
+  : T[P] extends undefined
+  ? null
+  : T[P] extends QueryValue
+  ? T[P]
+  : QueryValueObject
 }
 
 export type FaunaUser = ToFauna<AdapterUser>
@@ -275,9 +275,8 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
       const _user: Partial<AdapterUser> = { ...user }
       delete _user.id
       const response = await client.query<FaunaUser>(
-        fql`Collection(${collectionNames.user}).byId(${
-          user.id
-        }).update(${format.to(_user)})`
+        fql`Collection(${collectionNames.user}).byId(${user.id
+          }).update(${format.to(_user)})`
       )
       return format.from(response.data)
     },
@@ -335,9 +334,8 @@ export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
     },
     async updateSession(session) {
       const response = await client.query<FaunaSession>(
-        fql`Collection(${collectionNames.session}).bySessionToken(${
-          session.sessionToken
-        }).first().update(${format.to(session)})`
+        fql`Collection(${collectionNames.session}).bySessionToken(${session.sessionToken
+          }).first().update(${format.to(session)})`
       )
       return format.from(response.data)
     },

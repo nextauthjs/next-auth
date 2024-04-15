@@ -157,9 +157,8 @@ const generateOutputMd = (output: Output): string => {
 
     // @ts-expect-error
     links.forEach((link: TODO) => {
-      outputMd += `| [${new URL(link.url.resolved).pathname}](${
-        link.url.resolved
-      }) | "${link.html?.text?.trim().replaceAll("\n", "")}" |
+      outputMd += `| [${new URL(link.url.resolved).pathname}](${link.url.resolved
+        }) | "${link.html?.text?.trim().replaceAll("\n", "")}" |
 `
     })
   })

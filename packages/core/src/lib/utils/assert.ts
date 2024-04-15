@@ -152,10 +152,7 @@ export function assertConfig(
       hasWebAuthn = true
 
       // Validate simpleWebAuthnBrowserVersion
-      if (
-        provider.simpleWebAuthnBrowserVersion &&
-        !isSemverString(provider.simpleWebAuthnBrowserVersion)
-      ) {
+      if (provider.simpleWebAuthnBrowserVersion && !isSemverString(provider.simpleWebAuthnBrowserVersion)) {
         return new AuthError(
           `Invalid provider config for "${provider.id}": simpleWebAuthnBrowserVersion "${provider.simpleWebAuthnBrowserVersion}" must be a valid semver string.`
         )
@@ -171,10 +168,9 @@ export function assertConfig(
         hasConditionalUIProvider = true
 
         // Make sure at least one formField has "webauthn" in its autocomplete param
-        const hasWebauthnFormField = Object.values(provider.formFields).some(
-          (f) =>
-            f.autocomplete && f.autocomplete.toString().indexOf("webauthn") > -1
-        )
+        const hasWebauthnFormField = Object.values(
+          provider.formFields
+        ).some((f) => f.autocomplete && f.autocomplete.toString().indexOf("webauthn") > -1)
         if (!hasWebauthnFormField) {
           return new MissingWebAuthnAutocomplete(
             `Provider "${provider.id}" has 'enableConditionalUI' set to True, but none of its formFields have 'webauthn' in their autocomplete param.`
@@ -210,18 +206,12 @@ export function assertConfig(
 
   let requiredMethods: (keyof Adapter)[] = []
 
-  if (
-    hasEmail ||
-    session?.strategy === "database" ||
-    (!session?.strategy && adapter)
-  ) {
+  if (hasEmail || session?.strategy === "database" || (!session?.strategy && adapter)) {
     if (hasEmail) {
-      if (!adapter)
-        return new MissingAdapter("Email login requires an adapter.")
+      if (!adapter) return new MissingAdapter("Email login requires an adapter.")
       requiredMethods.push(...emailMethods)
     } else {
-      if (!adapter)
-        return new MissingAdapter("Database session requires an adapter.")
+      if (!adapter) return new MissingAdapter("Database session requires an adapter.")
       requiredMethods.push(...sessionMethods)
     }
   }
@@ -231,9 +221,7 @@ export function assertConfig(
     if (options.experimental?.enableWebAuthn) {
       warnings.push("experimental-webauthn")
     } else {
-      return new ExperimentalFeatureNotEnabled(
-        "WebAuthn is an experimental feature. To enable it, set `experimental.enableWebAuthn` to `true` in your config."
-      )
+      return new ExperimentalFeatureNotEnabled("WebAuthn is an experimental feature. To enable it, set `experimental.enableWebAuthn` to `true` in your config.")
     }
 
     if (!adapter) return new MissingAdapter("WebAuthn requires an adapter.")
