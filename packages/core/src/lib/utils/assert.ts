@@ -97,7 +97,7 @@ export function assertConfig(
     return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
   }
 
-  if (!options.secret) {
+  if (!options.secret?.length) {
     return new MissingSecret("Please define a `secret`.")
   }
 
