@@ -49,7 +49,7 @@ export const config = (
           user: `user:${surrealId}`,
         })
         const user = users[0][0]
-      if (user !== undefined) return docToUser(user)
+        if (user !== undefined) return docToUser(user)
       } catch (e) {}
       return null
     },

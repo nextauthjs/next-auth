@@ -135,7 +135,10 @@ export function parseActionAndProviderId(
   if (!isAuthAction(action))
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  if (providerId && !["signin", "callback", "webauthn-options"].includes(action))
+  if (
+    providerId &&
+    !["signin", "callback", "webauthn-options"].includes(action)
+  )
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   return { action, providerId }
