@@ -60,7 +60,7 @@ import { signIn, config, auth } from "../../../auth.ts"
 import { redirect } from "next/navigation"
 
 export default async function SignInPage() {
-  const { session } = await auth()
+  const session = await auth()
 
   // The user is already logged in, redirect to homepage.
   // Make sure is not the same URL to avoid an infinite loop!
