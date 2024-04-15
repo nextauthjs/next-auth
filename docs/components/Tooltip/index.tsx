@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useRef } from "react"
 import polyfill from "@oddbird/css-anchor-positioning/fn"
 
