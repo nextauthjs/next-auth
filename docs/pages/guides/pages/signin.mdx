@@ -116,7 +116,7 @@ export default async function SignInPage() {
 </div>
 ```
 
-You'll need to create this server action in SvelteKit to handle the action at `/signin`. That's the default path, but this can be changed with the `signInPage` prop on the `SignIn` component above.
+You'll also need to create this server action in SvelteKit to handle the action at `/signin`. That's the default path, but this can be changed with the `signInPage` prop on the `SignIn` component above.
 
 ```ts filename="src/routes/signin/+page.server.ts"
 import { signIn } from "../../auth"
