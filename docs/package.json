@@ -7,7 +7,7 @@
     "typedoc": "typedoc",
     "dev": "TYPEDOC_SKIP_ADAPTERS=1 typedoc & next dev",
     "dev:adapters": "typedoc & next dev",
-    "build": "typedoc && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
     "lint:fix": "eslint ./{components,pages,utils} --fix",
@@ -43,6 +43,7 @@
     "react-marquee-slider": "^1.1.5"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^14.2.1",
     "@types/node": "20.12.7",
     "@types/react": "18.2.78",
     "autoprefixer": "^10.4.19",

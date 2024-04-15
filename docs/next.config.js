@@ -1,4 +1,7 @@
 import nextra from "nextra"
+import bundleAnalyzer from "@next/bundle-analyzer"
+
+const withBundleAnalyzer = bundleAnalyzer({ enabled: !!process.env.ANALYZE })
 
 const withNextra = nextra({
   theme: "nextra-theme-docs",
@@ -7,4 +10,4 @@ const withNextra = nextra({
   codeHighlight: true,
 })
 
-export default withNextra()
+export default withBundleAnalyzer(withNextra())
