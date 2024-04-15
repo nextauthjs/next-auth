@@ -17,7 +17,6 @@ const adapters = process.env.TYPEDOC_SKIP_ADAPTERS
       .filter((dir) => dir.startsWith("adapter-"))
       .map((dir) => `../packages/${dir}`)
 
-console.log(adapters)
 /**
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').PluginOptions}
  */
