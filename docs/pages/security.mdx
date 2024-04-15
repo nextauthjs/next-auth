@@ -1,9 +1,8 @@
 import { Callout, Steps } from "nextra/components"
-import { ChatCircleText } from "@phosphor-icons/react/dist/csr/ChatCircleText"
-import { GitBranch } from "@phosphor-icons/react/dist/csr/GitBranch"
+import { ChatCircleText, GitBranch } from "@/icons"
 
 <h2 className="flex flex-row items-center gap-2 font-semibold tracking-tight text-slate-900 dark:text-slate-100 mt-10 border-b pb-1 text-3xl border-neutral-200/70 contrast-more:border-neutral-400 dark:border-primary-100/10 contrast-more:dark:border-neutral-400">
-  <GitBranch fontSize="2rem" /> <span>Supported versions</span>
+  <GitBranch className="size-8" /> <span>Supported versions</span>
 </h2>
 
 - Security updates are only released for the current `latest` version.
@@ -18,7 +17,7 @@ import { GitBranch } from "@phosphor-icons/react/dist/csr/GitBranch"
 </Callout>
 
 <h2 className="flex flex-row items-center gap-2 font-semibold tracking-tight text-slate-900 dark:text-slate-100 mt-10 border-b pb-1 text-3xl border-neutral-200/70 contrast-more:border-neutral-400 dark:border-primary-100/10 contrast-more:dark:border-neutral-400">
-  <ChatCircleText fontSize="2rem" /> <span>Reporting a Vulnerability</span>
+  <ChatCircleText className="size-8" /> <span>Reporting a Vulnerability</span>
 </h2>
 
 Auth.js practices responsible disclosure. We request that you contact us directly to report serious issues that might impact the security of sites using Auth.js.
