@@ -23,12 +23,6 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     }
   }
 
-  if (!config.secret?.length) {
-    throw new MissingSecret(
-      "Missing secret, please set AUTH_SECRET or config.secret"
-    )
-  }
-
   config.redirectProxyUrl ??= envObject.AUTH_REDIRECT_PROXY_URL
   config.trustHost ??= !!(
     envObject.AUTH_URL ??
