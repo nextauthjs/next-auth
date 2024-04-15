@@ -10,21 +10,16 @@ interface Props {
 }
 
 export function Tooltip({ label, framework, children }: Props) {
-  if (typeof window === "undefined") return null
-
   // CSS Anchor Positioning Polyfill
   // https://github.com/oddbird/css-anchor-positioning
   polyfill()
 
   const popoverTargetRef = useRef()
   const slug = label.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()
-  const supportsPopover =
-    HTMLElement?.prototype.hasOwnProperty("popover") ?? false
 
   return (
     <div className="relative w-full">
       <button
-        title={supportsPopover ? "" : label}
         id={`anchor-${framework}-${slug}`}
         // @ts-expect-error
         popovertarget={`popover-${framework}-${slug}`}
