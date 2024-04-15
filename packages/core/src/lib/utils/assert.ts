@@ -14,9 +14,10 @@ import {
   UntrustedHost,
 } from "../../errors.js"
 
-import type { AuthConfig, RequestInternal, SemverString } from "../../types.js"
+import type { RequestInternal, SemverString } from "../../types.js"
 import type { WarningCode } from "./logger.js"
 import { Adapter } from "../../adapters.js"
+import type { AuthConfig } from "../../index.js"
 
 type ConfigError =
   | InvalidCallbackUrl
@@ -96,7 +97,7 @@ export function assertConfig(
     return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
   }
 
-  if (!options.secret) {
+  if (!options.secret?.length) {
     return new MissingSecret("Please define a `secret`.")
   }
 

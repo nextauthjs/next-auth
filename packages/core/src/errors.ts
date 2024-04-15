@@ -462,6 +462,7 @@ const clientErrors = new Set<ErrorType>([
  * Used to only allow sending a certain subset of errors to the client.
  * Errors are always logged on the server, but to prevent leaking sensitive information,
  * only a subset of errors are sent to the client as-is.
+ * @internal
  */
 export function isClientError(error: Error): error is AuthError {
   if (error instanceof AuthError) return clientErrors.has(error.type)

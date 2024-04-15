@@ -4,11 +4,11 @@ import { logger } from "./logger.js"
 
 import type {
   AuthAction,
-  AuthConfig,
   RequestInternal,
   ResponseInternal,
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
+import type { AuthConfig } from "../../index.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return

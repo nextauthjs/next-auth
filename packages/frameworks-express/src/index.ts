@@ -124,8 +124,13 @@
  * @module @auth/express
  */
 
-import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
-import type { AuthConfig, Session } from "@auth/core/types"
+import {
+  Auth,
+  type AuthConfig,
+  setEnvDefaults,
+  createActionURL,
+} from "@auth/core"
+import type { Session } from "@auth/core/types"
 import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 

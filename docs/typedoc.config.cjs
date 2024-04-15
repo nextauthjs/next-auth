@@ -6,6 +6,8 @@ const path = require("node:path")
 const frameworks = fs
   .readdirSync(path.resolve(__dirname, "../packages"))
   .filter((dir) => dir.startsWith("frameworks-"))
+  .map((dir) => `../packages/${dir}`)
+
 frameworks.push("../packages/next-auth", "../packages/core")
 
 const adapters = process.env.TYPEDOC_SKIP_ADAPTERS
@@ -13,7 +15,9 @@ const adapters = process.env.TYPEDOC_SKIP_ADAPTERS
   : fs
       .readdirSync(path.resolve(__dirname, "../packages"))
       .filter((dir) => dir.startsWith("adapter-"))
+      .map((dir) => `../packages/${dir}`)
 
+console.log(adapters)
 /**
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').PluginOptions}
  */

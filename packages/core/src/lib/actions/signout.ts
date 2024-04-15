@@ -8,7 +8,7 @@ import type { Cookie, SessionStore } from "../utils/cookie.js"
  * If the session strategy is database,
  * The session is also deleted from the database.
  * In any case, the session cookie is cleared and
- * {@link EventCallbacks.signOut} is emitted.
+ * {@link AuthConfig["events"].signOut} is emitted.
  */
 export async function signOut(
   cookies: Cookie[],
@@ -16,7 +16,6 @@ export async function signOut(
   options: InternalOptions
 ): Promise<ResponseInternal> {
   const { jwt, events, callbackUrl: redirect, logger, session } = options
-
   const sessionToken = sessionStore.value
   if (!sessionToken) return { redirect, cookies }
 
