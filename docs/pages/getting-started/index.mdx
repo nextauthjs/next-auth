@@ -3,10 +3,7 @@ import { ListDisclosure } from "@/components/ListDisclosure"
 import { Link } from "@/components/Link"
 import { Tooltip } from "@/components/Tooltip"
 import { Screenshot } from "@/components/Screenshot"
-import { Plus } from "@phosphor-icons/react/dist/csr/Plus"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/csr/ArrowSquareOut"
-import { GithubLogo } from "@phosphor-icons/react/dist/csr/GithubLogo"
-import { Flask } from "@phosphor-icons/react/dist/csr/Flask"
+import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@/icons"
 import manifest from "@/data/manifest.json"
 
 # What is Auth.js?
@@ -37,7 +34,7 @@ Select your framework of choice to get started, or view the example application 
           target="_blank"
           className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
         >
-          <ArrowSquareOut size={20} />
+          <ArrowSquareOut className="size-5" />
         </a>
       </Tooltip>
       <Tooltip framework="nextjs" label="Github Repository">
@@ -47,7 +44,7 @@ Select your framework of choice to get started, or view the example application 
           target="_blank"
           className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
         >
-          <GithubLogo size={20} />
+          <GithubLogo className="size-5" />
         </a>
       </Tooltip>
     </div>
@@ -63,7 +60,7 @@ Select your framework of choice to get started, or view the example application 
         className="absolute z-10 p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
         style={{ right: "-20px", top: "-15px" }}
       >
-        <Flask size={24} />
+        <Flask className="size-6" />
       </div>
     </Link>
     <div className="flex gap-2">
@@ -74,7 +71,7 @@ Select your framework of choice to get started, or view the example application 
           target="_blank"
           className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
         >
-          <ArrowSquareOut size={20} />
+          <ArrowSquareOut className="size-5" />
         </a>
       </Tooltip>
       <Tooltip framework="sveltekit" label="Github Repository">
@@ -84,7 +81,7 @@ Select your framework of choice to get started, or view the example application 
           target="_blank"
           className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
         >
-          <GithubLogo size={20} />
+          <GithubLogo className="size-5" />
         </a>
       </Tooltip>
     </div>
@@ -105,7 +102,7 @@ Select your framework of choice to get started, or view the example application 
         className="absolute z-10 p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
         style={{ right: "-20px", top: "-15px" }}
       >
-        <Flask size={24} />
+        <Flask className="size-6" />
       </div>
     </Link>
     <div className="flex gap-2">
@@ -116,7 +113,7 @@ Select your framework of choice to get started, or view the example application 
           target="_blank"
           className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
         >
-          <ArrowSquareOut size={20} />
+          <ArrowSquareOut className="size-5" />
         </a>
       </Tooltip>
       <Tooltip framework="express" label="Github Repository">
@@ -126,7 +123,7 @@ Select your framework of choice to get started, or view the example application 
           target="_blank"
           className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
         >
-          <GithubLogo size={20} />
+          <GithubLogo className="size-5" />
         </a>
       </Tooltip>
     </div>
@@ -135,7 +132,7 @@ Select your framework of choice to get started, or view the example application 
     href="/guides/creating-a-framework-integration"
     className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-sm border-slate-200 dark:border-neutral-800 dark:bg-neutral-900 hover:bg-neutral-100 hover:dark:bg-neutral-950 transition !no-underline duration-300"
   >
-    <Plus size={36} />
+    <Plus className="size-9" />
     <div className="mt-3 text-sm">Add New</div>
   </Link>
 </div>
