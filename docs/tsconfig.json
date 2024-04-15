@@ -18,6 +18,8 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/utils/*": ["utils/*"],
+      "@/icons/*": ["components/Icons/*"],
+      "@/icons": ["components/Icons"],
       "@/data/*": ["pages/data/*"]
     }
   },
