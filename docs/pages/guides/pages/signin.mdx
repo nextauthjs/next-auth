@@ -59,16 +59,8 @@ We can now build our own custom sign in page:
 import { signIn, config, auth } from "../../../auth.ts"
 import { redirect } from "next/navigation"
 
-async function getSession() {
-  const session = await auth()
-
-  return {
-    session,
-  }
-}
-
 export default async function SignInPage() {
-  const { session } = await getSession()
+  const { session } = await auth()
 
   // The user is already logged in, redirect to homepage.
   // Make sure is not the same URL to avoid an infinite loop!
