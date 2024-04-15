@@ -55,7 +55,7 @@ export function HeroCode({ children }) {
             className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex items-center hover:bg-violet-200 hover:dark:bg-violet-900/20"
           >
             <span className="hidden text-sm md:block">More</span>
-            <CaretRight />
+            <CaretRight className="size-4" />
           </Link>
         </div>
         <div className="inline-flex gap-2 items-center self-end pr-4 h-12">
