@@ -4,7 +4,7 @@ import { RichTabs } from "@/components/RichTabs"
 import SvelteKit from "../../public/img/etc/sveltekit.svg"
 import Express from "../../public/img/etc/express.svg"
 import NextJs from "../../public/img/etc/nextjs.svg"
-import { CaretRight } from "@phosphor-icons/react/dist/csr/CaretRight"
+import { CaretRight } from "@/icons"
 
 export function HeroCode({ children }) {
   return (
