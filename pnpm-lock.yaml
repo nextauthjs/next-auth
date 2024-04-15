@@ -313,10 +313,10 @@ importers:
         version: 0.20.14
       drizzle-orm:
         specifier: ^0.30.5
-        version: 0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@8.7.0)(mysql2@3.9.0)(postgres@3.4.3)
+        version: 0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@8.7.0)(mysql2@3.9.4)(postgres@3.4.3)
       mysql2:
-        specifier: ^3.2.0
-        version: 3.9.0
+        specifier: ^3.9.4
+        version: 3.9.4
       postgres:
         specifier: ^3.3.4
         version: 3.4.3
@@ -405,8 +405,8 @@ importers:
         specifier: ^0.24.2
         version: 0.24.2
       mysql2:
-        specifier: ^3.2.0
-        version: 3.9.0
+        specifier: ^3.9.4
+        version: 3.9.4
       pg:
         specifier: ^8.10.0
         version: 8.11.3
@@ -13572,7 +13572,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@8.7.0)(mysql2@3.9.0)(postgres@3.4.3):
+  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@8.7.0)(mysql2@3.9.4)(postgres@3.4.3):
     resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -13654,7 +13654,7 @@ packages:
     dependencies:
       '@types/better-sqlite3': 7.6.9
       better-sqlite3: 8.7.0
-      mysql2: 3.9.0
+      mysql2: 3.9.4
       postgres: 3.4.3
     dev: true
 
@@ -19127,8 +19127,8 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dev: true
 
-  /mysql2@3.9.0:
-    resolution: {integrity: sha512-yS7FtbnO9sYqUZbjaiUwflh1bJAENJ3DQ9aHEYj9G+Hi15+FP7UKaTDNe6SeXx/LpkU6coAQ6vIYQaAmsFA+qQ==}
+  /mysql2@3.9.4:
+    resolution: {integrity: sha512-OEESQuwxMza803knC1YSt7NMuc1BrK9j7gZhCSs2WAyxr1vfiI7QLaLOKTh5c9SWGz98qVyQUbK8/WckevNQhg==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0

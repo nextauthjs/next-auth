@@ -54,7 +54,7 @@
     "better-sqlite3": "^8.6.0",
     "drizzle-kit": "^0.20.14",
     "drizzle-orm": "^0.30.5",
-    "mysql2": "^3.2.0",
+    "mysql2": "^3.9.4",
     "postgres": "^3.3.4",
     "tsx": "^4.7.0"
   }
