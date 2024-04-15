@@ -31,8 +31,8 @@ const allFrameworks = {
 }
 
 const findTabIndex = (frameworks: Record<string, string>, tab: string) => {
+  // TODO: Slugify instead of matching on indexes
   return Object.values(frameworks).findIndex(
-    // TODO: Maybe slugify for better results?
     (f) => f.toLowerCase() === tab.toLowerCase()
   )
 }
