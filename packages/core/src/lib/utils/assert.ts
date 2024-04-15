@@ -14,9 +14,10 @@ import {
   UntrustedHost,
 } from "../../errors.js"
 
-import type { AuthConfig, RequestInternal, SemverString } from "../../types.js"
+import type { RequestInternal, SemverString } from "../../types.js"
 import type { WarningCode } from "./logger.js"
 import { Adapter } from "../../adapters.js"
+import type { AuthConfig } from "../../index.js"
 
 type ConfigError =
   | InvalidCallbackUrl

@@ -5,7 +5,8 @@ import renderPage from "./pages/index.js"
 import * as actions from "./actions/index.js"
 import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
 
-import type { AuthConfig, RequestInternal, ResponseInternal } from "../types.js"
+import type { RequestInternal, ResponseInternal } from "../types.js"
+import type { AuthConfig } from "../index.js"
 
 /** @internal */
 export async function AuthInternal(
