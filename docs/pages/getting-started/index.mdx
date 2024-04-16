@@ -1,7 +1,6 @@
 import { Callout } from "nextra/components"
 import { ListDisclosure } from "@/components/ListDisclosure"
 import { Link } from "@/components/Link"
-import { Tooltip } from "@/components/Tooltip"
 import { Screenshot } from "@/components/Screenshot"
 import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@/icons"
 import manifest from "@/data/manifest.json"
@@ -27,26 +26,24 @@ Select your framework of choice to get started, or view the example application 
       <div className="mt-3 text-sm">Next.js</div>
     </Link>
     <div className="flex justify-stretch gap-2">
-      <Tooltip framework="nextjs" label="Live Example">
-        <a
-          href="https://next-auth-example.vercel.app/"
-          rel="noreferrer"
-          target="_blank"
-          className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
-        >
-          <ArrowSquareOut className="size-5" />
-        </a>
-      </Tooltip>
-      <Tooltip framework="nextjs" label="Github Repository">
-        <a
-          href="https://github.com/nextauthjs/next-auth-example"
-          rel="noreferrer"
-          target="_blank"
-          className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
-        >
-          <GithubLogo className="size-5" />
-        </a>
-      </Tooltip>
+      <a
+        title="Live Example"
+        href="https://next-auth-example.vercel.app/"
+        rel="noreferrer"
+        target="_blank"
+        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+      >
+        <ArrowSquareOut className="size-5" />
+      </a>
+      <a
+        title="GitHub Repository"
+        href="https://github.com/nextauthjs/next-auth-example"
+        rel="noreferrer"
+        target="_blank"
+        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+      >
+        <GithubLogo className="size-5" />
+      </a>
     </div>
   </div>
   <div className="flex flex-col gap-2 group">
@@ -64,26 +61,24 @@ Select your framework of choice to get started, or view the example application 
       </div>
     </Link>
     <div className="flex gap-2">
-      <Tooltip framework="sveltekit" label="Live Example">
-        <a
-          href="https://sveltekit-auth-example.vercel.app/"
-          rel="noreferrer"
-          target="_blank"
-          className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
-        >
-          <ArrowSquareOut className="size-5" />
-        </a>
-      </Tooltip>
-      <Tooltip framework="sveltekit" label="Github Repository">
-        <a
-          href="https://github.com/nextauthjs/sveltekit-auth-example"
-          rel="noreferrer"
-          target="_blank"
-          className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
-        >
-          <GithubLogo className="size-5" />
-        </a>
-      </Tooltip>
+      <a
+        title="Live Example"
+        href="https://sveltekit-auth-example.vercel.app/"
+        rel="noreferrer"
+        target="_blank"
+        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+      >
+        <ArrowSquareOut className="size-5" />
+      </a>
+      <a
+        title="GitHub Repository"
+        href="https://github.com/nextauthjs/sveltekit-auth-example"
+        rel="noreferrer"
+        target="_blank"
+        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+      >
+        <GithubLogo className="size-5" />
+      </a>
     </div>
   </div>
   <div className="flex flex-col gap-2 group">
@@ -106,26 +101,24 @@ Select your framework of choice to get started, or view the example application 
       </div>
     </Link>
     <div className="flex gap-2">
-      <Tooltip framework="express" label="Live Example">
-        <a
-          href="https://express-auth-example.vercel.app/"
-          rel="noreferrer"
-          target="_blank"
-          className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
-        >
-          <ArrowSquareOut className="size-5" />
-        </a>
-      </Tooltip>
-      <Tooltip framework="express" label="Github Repository">
-        <a
-          href="https://github.com/nextauthjs/express-auth-example"
-          rel="noreferrer"
-          target="_blank"
-          className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
-        >
-          <GithubLogo className="size-5" />
-        </a>
-      </Tooltip>
+      <a
+        title="Live Example"
+        href="https://express-auth-example.vercel.app/"
+        rel="noreferrer"
+        target="_blank"
+        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+      >
+        <ArrowSquareOut className="size-5" />
+      </a>
+      <a
+        title="GitHub Repository"
+        href="https://github.com/nextauthjs/express-auth-example"
+        rel="noreferrer"
+        target="_blank"
+        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+      >
+        <GithubLogo className="size-5" />
+      </a>
     </div>
   </div>
   <Link
