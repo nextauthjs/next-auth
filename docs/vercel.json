@@ -121,6 +121,10 @@
     {
       "source": "/getting-started/providers/credentials-tutorial",
       "destination": "/getting-started/providers/credentials"
+    },
+    {
+      "source": "/guides/providers/email-http",
+      "destination": "/guides/configuring-http-email"
     }
   ]
 }
