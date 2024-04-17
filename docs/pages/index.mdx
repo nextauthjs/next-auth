@@ -5,6 +5,7 @@ import { LogosMarquee } from "@/components/LogosMarquee"
 import { Blur } from "@/components/Blur"
 import { Guides } from "@/components/Guides"
 import { Pre, Code } from "nextra/components"
+import { CaretRight } from "@/icons"
 
 <div className="relative overflow-hidden w-full h-full flex flex-col">
   <section className="flex justify-center w-full px-8 xl:px-0 flex-col lg:flex-row self-center items-center lg:items-start gap-6 max-w-7xl pt-12 pb-24 sm:py-32 lg:py-56">
@@ -19,7 +20,7 @@ import { Pre, Code } from "nextra/components"
       <div className="text-lg justify-center items-center flex gap-4">
         <Link
           href="/getting-started"
-          className="p-3 w-1/2 text-center font-semibold bg-violet-600 dark:bg-violet-800 text-white hover:dark:bg-violet-900 transition hover:bg-violet-700 duration-300"
+          className="p-3 w-1/2 text-center bg-violet-600 dark:bg-violet-800 text-white hover:dark:bg-violet-900 transition hover:bg-violet-700 duration-300"
         >
           Get Started
         </Link>
@@ -58,39 +59,24 @@ import { Pre, Code } from "nextra/components"
           Source
         </Link>
       </div>
-      <div className="text-lg flex-col items-center flex gap-2">
-        <div className="flex flex-col sm:flex-row text-base items-center gap-2">
-          Looking for a hosted alternative?
+      <div className="text-lg flex-col flex gap-2 items-center">
+        <div className="flex flex-col md:flex-row w-full items-center md:justify-between text-sm dark:bg-neutral-900/50 text-neutral-600 dark:text-neutral-500 bg-neutral-50/60 backdrop-blur p-3 border border-neutral-300 dark:border-neutral-800 rounded-md">
+          <span>Looking for a hosted alternative?</span>
           <a
             href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
             target="_blank"
-            className="flex gap-2 text-[#289ef9]"
+            className="flex gap-1 items-center text-violet-600"
           >
-            Try Clerk{" "}
-            <svg
-              width="16"
-              data-slot="icon"
-              fill="none"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-              ></path>
-            </svg>
+            Use Clerk
+            <CaretRight className="size-4" />
           </a>
         </div>
-        <div className="sponsoredBadge">Sponsored</div>
+        <span className="text-xs text-neutral-400">Sponsored</span>
       </div>
     </div>
     <HeroCode>
       <HeroCode.Next>
-        <Pre data-language="tsx" data-copy="" data-theme="dracula">
+        <Pre data-language="tsx" data-copy="">
           <Code>
 
           ```tsx
@@ -111,7 +97,7 @@ import { Pre, Code } from "nextra/components"
         </Pre>
       </HeroCode.Next>
       <HeroCode.Svelte>
-        <Pre data-language="tsx" data-copy="" data-theme="dracula">
+        <Pre data-language="tsx" data-copy="">
           <Code>
 
           ```tsx
@@ -131,7 +117,7 @@ import { Pre, Code } from "nextra/components"
         </Pre>
       </HeroCode.Svelte>
       <HeroCode.Express>
-        <Pre data-language="tsx" data-copy="" data-theme="dracula">
+        <Pre data-language="tsx" data-copy="">
           <Code>
 
           ```tsx
@@ -175,4 +161,3 @@ import { Pre, Code } from "nextra/components"
     <div id="stars4"></div>
   </div>
 </div>
-```

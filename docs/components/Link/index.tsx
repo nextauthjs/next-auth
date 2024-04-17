@@ -1,5 +1,5 @@
-import React from "react";
-import { ChildrenProps } from "../../utils/types";
+import React from "react"
+import { ChildrenProps } from "../../utils/types"
 
 export function Link({
   children,
@@ -12,5 +12,5 @@ export function Link({
     >
       {children}
     </a>
-  );
+  )
 }

@@ -90,8 +90,7 @@ export default function Passage(
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_basic" },
     style: {
-      bg: "#fff",
-      text: "#000",
+      brandColor: "#3d53f6",
     },
     options: config,
   }

@@ -87,6 +87,10 @@
       "destination": "https://discord.gg/CGAPMawPng"
     },
     {
+      "source": "/img/providers/:providerId*-dark.svg",
+      "destination": "/img/providers/:providerId*.svg"
+    },
+    {
       "source": "/reference/adapter/:path(.*)",
       "destination": "/getting-started/adapters/:path(.*)"
     },
@@ -117,6 +121,10 @@
     {
       "source": "/getting-started/providers/credentials-tutorial",
       "destination": "/getting-started/providers/credentials"
+    },
+    {
+      "source": "/guides/upgrade-to-v5",
+      "destination": "/getting-started/migrating-to-v5"
     }
   ]
 }

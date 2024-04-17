@@ -88,7 +88,7 @@ export default function Spotify<P extends SpotifyProfile>(
         image: profile.images?.[0]?.url,
       }
     },
-    style: { text: "#fff", bg: "#000" },
+    style: { brandColor: "#1db954" },
     options,
   }
 }

@@ -99,7 +99,7 @@ export default function Keycloak<P extends KeycloakProfile>(
     id: "keycloak",
     name: "Keycloak",
     type: "oidc",
-    style: { bg: "#fff", text: "#000" },
+    style: { brandColor: "#428bca" },
     options,
   }
 }
