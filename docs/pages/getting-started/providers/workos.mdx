@@ -35,8 +35,9 @@ https://example.com/auth/callback/workos
 ```
 AUTH_WORKOS_ID
 AUTH_WORKOS_SECRET
-AUTH_WORKOS_ISSUER
 ```
+
+WorkOS also requires you to pass in your `connection` ID to the provider.
 
 ### Configuration
 
@@ -48,7 +49,7 @@ import NextAuth from "next-auth"
 import WorkOS from "next-auth/providers/workos"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [WorkOS],
+  providers: [WorkOS({ connection: "conn_abc123" })],
 })
 ```
 
@@ -60,7 +61,7 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import WorkOS from "@auth/sveltekit/providers/workos"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [WorkOS],
+  providers: [WorkOS({ connection: "conn_abc123" })],
 })
 ```
 
@@ -71,7 +72,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import WorkOS from "@auth/express/providers/workos"
 
-app.use("/auth/*", ExpressAuth({ providers: [WorkOS] }))
+app.use(
+  "/auth/*",
+  ExpressAuth({ providers: [WorkOS({ connection: "conn_abc123" })] })
+)
 ```
 
   </Code.Express>

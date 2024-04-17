@@ -268,7 +268,11 @@ export function handleState(
 const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 type WebAuthnChallengeCookie = { challenge: string; registerData?: User }
 export const webauthnChallenge = {
-  async create(options: InternalOptions<WebAuthnProviderType>, challenge: string, registerData?: User) {
+  async create(
+    options: InternalOptions<WebAuthnProviderType>,
+    challenge: string,
+    registerData?: User
+  ) {
     const maxAge = WEBAUTHN_CHALLENGE_MAX_AGE
     const data: WebAuthnChallengeCookie = { challenge, registerData }
     const cookie = await signCookie(
@@ -286,12 +290,11 @@ export const webauthnChallenge = {
   async use(
     options: InternalOptions<WebAuthnProviderType>,
     cookies: RequestInternal["cookies"],
-    resCookies: Cookie[],
+    resCookies: Cookie[]
   ): Promise<WebAuthnChallengeCookie> {
     const challenge = cookies?.[options.cookies.webauthnChallenge.name]
 
-    if (!challenge)
-      throw new InvalidCheck("Challenge cookie missing.")
+    if (!challenge) throw new InvalidCheck("Challenge cookie missing.")
 
     const value = await decode<CheckPayload>({
       ...options.jwt,

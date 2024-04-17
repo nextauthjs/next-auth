@@ -66,7 +66,7 @@ The User model is for information such as the user's name and email address. Ema
 
 If the first sign-in is via the [OAuth Provider](/reference/core/providers/oauth), the default data
 saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra
-fields in your [OAuth provider](/guides/configuring-oauth#use-your-own-provider)'s [`profile()`](/reference/core/providers#profile) callback.
+fields in your [OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
 **Magic links sign in**
 
@@ -86,9 +86,9 @@ The Account model is for information about accounts associated with a `User`. A 
 
 The default data saved is `access_token`, `expires_at`, `refresh_token`, `id_token`, `token_type`,
 `scope` and `session_state`. You can save other fields or remove the ones you don't need by
-returning them in the [OAuth provider](/guides/configuring-oauth#use-your-own-provider)'s [`account()`](/reference/core/providers#account) callback.
+returning them in the [OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider)'s [`account()`](/reference/core/providers#account) callback.
 
-Linking `Accounts`(s) to `User`(s) happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/concepts/faq#security) for more information on why this is a requirement.
+Linking `Accounts`(s) to `User`(s) happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/concepts#security) for more information on why this is a requirement.
 
 You can manually unlink accounts if your adapter implements the
 `unlinkAccount` method. Make sure to take all the necessary security steps to

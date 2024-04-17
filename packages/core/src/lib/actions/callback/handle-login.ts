@@ -151,13 +151,21 @@ export async function handleLoginOrRegister(
       session = useJwtSession
         ? {}
         : await createSession({
-          sessionToken: generateSessionToken(),
-          userId: userByAccount.id,
-          expires: fromDate(options.session.maxAge),
-        })
+            sessionToken: generateSessionToken(),
+            userId: userByAccount.id,
+            expires: fromDate(options.session.maxAge),
+          })
 
-      const currentAccount: AdapterAccount = { ...account, userId: userByAccount.id }
-      return { session, user: userByAccount, isNewUser, account: currentAccount }
+      const currentAccount: AdapterAccount = {
+        ...account,
+        userId: userByAccount.id,
+      }
+      return {
+        session,
+        user: userByAccount,
+        isNewUser,
+        account: currentAccount,
+      }
     } else {
       // If the account doesn't exist, we'll create it
       if (user) {
@@ -202,10 +210,10 @@ export async function handleLoginOrRegister(
       session = useJwtSession
         ? {}
         : await createSession({
-          sessionToken: generateSessionToken(),
-          userId: user.id,
-          expires: fromDate(options.session.maxAge),
-        })
+            sessionToken: generateSessionToken(),
+            userId: user.id,
+            expires: fromDate(options.session.maxAge),
+          })
 
       const currentAccount: AdapterAccount = { ...account, userId: user.id }
       return { session, user, isNewUser: true, account: currentAccount }

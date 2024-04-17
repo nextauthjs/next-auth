@@ -74,7 +74,7 @@ it("should redirect to the custom error page is custom error page is defined", a
     path: "/credentials",
     config: {
       pages: {
-        error:'/custom/error'
+        error: "/custom/error",
       },
       providers: [Credentials],
     },

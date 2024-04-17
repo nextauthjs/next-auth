@@ -1,11 +1,11 @@
 import {
+  ShieldStar,
   CaretRight,
   Link as LinkIcon,
-  ShieldStar,
+  ArrowRight,
   Browser,
   GithubLogo,
-  ArrowRight,
-} from "@phosphor-icons/react"
+} from "@/icons"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -21,14 +21,14 @@ export function Guides() {
               className="flex gap-2 items-center text-[#289ef9]"
             >
               See all
-              <ArrowRight size={14} />
+              <ArrowRight className="size-3.5" />
             </Link>
           </div>
           <ul className="w-full list-none">
             <Link href="/guides/configuring-oauth-providers">
               <li className="flex justify-between mb-8 w-full group">
                 <div className="flex gap-2">
-                  <ShieldStar size={32} />
+                  <ShieldStar className="size-8" />
                   <div className="flex flex-col items-start">
                     Configuring OAuth providers
                     <span className="text-neutral-400 dark:text-neutral-700">
@@ -37,14 +37,14 @@ export function Guides() {
                   </div>
                 </div>
                 <div className="opacity-0 transition duration-300 group-hover:opacity-100">
-                  <CaretRight size={32} className="" />
+                  <CaretRight className="size-6" />
                 </div>
               </li>
             </Link>
             <Link href="/guides/configuring-github">
               <li className="flex justify-between mb-8 w-full group">
                 <div className="flex gap-2">
-                  <GithubLogo size={32} />
+                  <GithubLogo className="size-8" />
                   <div className="flex flex-col items-start">
                     OAuth with Github
                     <span className="text-neutral-400 dark:text-neutral-700">
@@ -53,14 +53,14 @@ export function Guides() {
                   </div>
                 </div>
                 <div className="opacity-0 transition duration-300 group-hover:opacity-100">
-                  <CaretRight size={32} className="" />
+                  <CaretRight className="size-6" />
                 </div>
               </li>
             </Link>
             <Link href="/guides/pages/signin">
               <li className="flex justify-between mb-8 w-full group">
                 <div className="flex gap-2">
-                  <Browser size={32} />
+                  <Browser className="size-8" />
                   <div className="flex flex-col items-start">
                     Custom Signin Page
                     <span className="text-neutral-400 dark:text-neutral-700">
@@ -69,7 +69,7 @@ export function Guides() {
                   </div>
                 </div>
                 <div className="opacity-0 transition duration-300 group-hover:opacity-100">
-                  <CaretRight size={32} className="" />
+                  <CaretRight className="size-6" />
                 </div>
               </li>
             </Link>
@@ -102,7 +102,7 @@ export function Guides() {
             ].map((f) => (
               <li
                 key={f.id}
-                className="flex flex-col sm:flex-row justify-between p-2 mb-8 w-full transition duration-300 grayscale hover:grayscale-0 gap-4"
+                className="flex flex-col gap-4 justify-between p-2 mb-8 w-full transition duration-300 sm:flex-row grayscale hover:grayscale-0"
               >
                 <div className="flex gap-2 items-center">
                   <Image
@@ -120,21 +120,21 @@ export function Guides() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <Link
-                    className="flex justify-center gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
+                    className="flex gap-2 justify-center items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
                     target="_blank"
                     href={f.demo}
                     rel="noreferrer"
                   >
-                    <LinkIcon size={24} />
+                    <LinkIcon className="size-5" />
                     Visit
                   </Link>
                   <Link
                     target="_blank"
                     href={`https://github.com/nextauthjs/${f.repo}`}
-                    className="flex justify-center gap-2 items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
+                    className="flex gap-2 justify-center items-center p-3 px-5 rounded-md transition duration-300 outline-none focus-visible:ring-2 bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 hover:bg-neutral-300"
                     rel="noreferrer"
                   >
-                    <GithubLogo size={24} />
+                    <GithubLogo className="size-5" />
                     Clone
                   </Link>
                 </div>

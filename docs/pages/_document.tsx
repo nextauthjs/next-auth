@@ -1,5 +1,5 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
-import { SkipNavLink } from "nextra-theme-docs";
+import Document, { Html, Head, Main, NextScript } from "next/document"
+import { SkipNavLink } from "nextra-theme-docs"
 
 class AuthDocument extends Document {
   render() {
@@ -12,8 +12,8 @@ class AuthDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }
 
-export default AuthDocument;
+export default AuthDocument
