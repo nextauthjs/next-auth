@@ -10,11 +10,10 @@ Additionally, we'll have to export a map of `provider.id` and `provider.name` to
 <Code>
 <Code.Next>
 
-```tsx filename="./auth.ts" {7, 22-29, 33-35}
+```tsx filename="./auth.ts" {6, 21-28, 32-34}
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
-import type { NextAuthConfig } from "next-auth"
 import type { Provider } from "next-auth/providers"
 
 const providers: Provider[] = [
@@ -52,7 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 </Code.Next>
 <Code.Svelte>
 
-```tsx filename="./auth.ts" {6, 21-28, 32-34}
+```tsx filename="./src/auth.ts" {6, 21-28, 32-34}
 import SvelteKitAuth from "@auth/sveltekit"
 import GitHub from "@auth/sveltekit/providers/github"
 import Credentials from "@auth/sveltekit/providers/credentials"
@@ -105,7 +104,7 @@ export default async function SignInPage() {
   const session = await auth()
 
   return (
-    <div className="flex flex-col gap-4 max-w-80 mx-auto justify-center h-screen">
+    <div className="flex flex-col gap-2">
       {Object.values(providerMap).map((provider) => (
         <form
           action={async () => {
@@ -113,9 +112,9 @@ export default async function SignInPage() {
             await signIn(provider.id)
           }}
         >
-          <Button className="flex flex-row gap-2" type="submit">
+          <button type="submit">
             <span>Sign in with {provider.name}</span>
-          </Button>
+          </button>
         </form>
       ))}
     </div>
