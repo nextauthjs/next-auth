@@ -9,6 +9,7 @@ import { Code } from "@/components/Code"
 
 - [Cognito Portal](https://console.aws.amazon.com/cognito/v2/home)
 - [Cognito OAuth documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
+- [Cognito Hosted Domain](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html)
 
 ## Setup
 
@@ -82,6 +83,18 @@ app.use(
 
   </Code.Express>
 </Code>
+
+### Options
+
+The **Amazon Cognito Provider** comes with a set of default options:
+
+- [Amazon Cognito Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/cognito.ts)
+  You can override any of the options to suit your own use case.
+
+<Callout type="info">
+  Before you can set these settings, you must set up an Amazon Cognito hosted
+  domain. The setting can be found in `App Client/Edit Hosted UI`.
+</Callout>
 
 ### Notes
 
