@@ -1,28 +1,44 @@
-import React from "react"
-import { Tooltip as ArkTooltip } from "@ark-ui/react/tooltip"
+import React, { useRef } from "react"
+import polyfill from "@oddbird/css-anchor-positioning/fn"
 
 interface Props {
   label: string
+  framework: string
   children: React.ReactNode
 }
 
-export function Tooltip({ label, children }: Props) {
+export function Tooltip({ label, framework, children }: Props) {
+  // CSS Anchor Positioning Polyfill
+  // https://github.com/oddbird/css-anchor-positioning
+  polyfill()
+
+  const popoverTargetRef = useRef()
+  const slug = label.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()
+
   return (
-    <ArkTooltip.Root
-      positioning={{ placement: "bottom" }}
-      openDelay={0}
-      lazyMount
-      unmountOnExit
-    >
-      <ArkTooltip.Trigger asChild={true}>{children}</ArkTooltip.Trigger>
-      <ArkTooltip.Positioner>
-        <ArkTooltip.Content
-          className="py-2 px-4 max-w-xs text-sm text-center text-fuchsia-900 bg-purple-100 rounded-lg border shadow-md"
-          style={{ animation: "	animation: fadeIn .2s linear" }}
-        >
-          {label}
-        </ArkTooltip.Content>
-      </ArkTooltip.Positioner>
-    </ArkTooltip.Root>
+    <div className="relative w-full">
+      <button
+        id={`anchor-${framework}-${slug}`}
+        // @ts-expect-error
+        popovertarget={`popover-${framework}-${slug}`}
+        className="w-full tooltip-anchor"
+        // @ts-expect-error
+        onMouseEnter={() => popoverTargetRef.current?.showPopover?.()}
+        // @ts-expect-error
+        onMouseLeave={() => popoverTargetRef.current?.hidePopover?.()}
+      >
+        {children}
+      </button>
+      <div
+        // @ts-expect-error
+        popover="auto"
+        ref={popoverTargetRef}
+        className="py-2 px-4 max-w-xs text-sm text-center text-fuchsia-900 bg-purple-100 rounded-lg border shadow-md"
+        anchor={`anchor-${framework}-${slug}`}
+        id={`popover-${framework}-${slug}`}
+      >
+        {label}
+      </div>
+    </div>
   )
 }

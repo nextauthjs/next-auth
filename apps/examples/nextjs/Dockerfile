@@ -22,9 +22,7 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-# This should be replaced with an actual secret in production.
-# REVIEW: Can we make this not required during build?
-RUN AUTH_SECRET=dummy npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

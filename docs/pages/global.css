@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @import url("./animated-stars.css");
 
 details > *:not(summary) {
@@ -183,7 +182,7 @@ button[id^="headlessui-tabs-tab"] {
   margin: 0 3px 0 3px;
 }
 
-#carbonads {
+#carbonads_bak {
   @apply flex flex-col gap-1 p-3 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
 
   .carbon-text {
@@ -230,4 +229,31 @@ article.nextra-content table {
 /* Hide Nextra Search 'kbd' on small screen sizes */
 div.nextra-search kbd {
   @apply !hidden lg:!flex;
+}
+
+/* Native popover */
+[popover] {
+  position: absolute;
+  top: calc(3rem + anchor(top));
+  left: anchor(implicit center);
+  translate: -50% 0;
+  position-try-options: flip-block, flip-inline;
+
+  /* Final state of the exit animation */
+  opacity: 0;
+  transition:
+    opacity 300ms,
+    transform 300ms,
+    overlay 300ms allow-discrete,
+    display 300ms allow-discrete;
+}
+
+[popover]:popover-open {
+  opacity: 1;
+}
+
+@starting-style {
+  [popover]:popover-open {
+    opacity: 0;
+  }
 }

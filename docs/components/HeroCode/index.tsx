@@ -4,7 +4,7 @@ import { RichTabs } from "@/components/RichTabs"
 import SvelteKit from "../../public/img/etc/sveltekit.svg"
 import Express from "../../public/img/etc/express.svg"
 import NextJs from "../../public/img/etc/nextjs.svg"
-import { CaretRight } from "@phosphor-icons/react/dist/csr/CaretRight"
+import { CaretRight } from "@/icons"
 
 export function HeroCode({ children }) {
   return (
@@ -19,7 +19,7 @@ export function HeroCode({ children }) {
           <RichTabs.Trigger
             value="nextjs"
             orientation="vertical"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
           >
             <Image
               width="24"
@@ -32,7 +32,7 @@ export function HeroCode({ children }) {
           <RichTabs.Trigger
             value="sveltekit"
             orientation="vertical"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
           >
             <Image width="24" src={SvelteKit} alt="SvelteKit Logo" />
             <span className="hidden md:block">SvelteKit</span>
@@ -40,7 +40,7 @@ export function HeroCode({ children }) {
           <RichTabs.Trigger
             value="express"
             orientation="vertical"
-            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
           >
             <Image
               width="24"
@@ -55,7 +55,7 @@ export function HeroCode({ children }) {
             className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex items-center hover:bg-violet-200 hover:dark:bg-violet-900/20"
           >
             <span className="hidden text-sm md:block">More</span>
-            <CaretRight />
+            <CaretRight className="size-4" />
           </Link>
         </div>
         <div className="inline-flex gap-2 items-center self-end pr-4 h-12">
