@@ -3,40 +3,82 @@ import { Screenshot } from "@/components/Screenshot"
 
 # Custom Sign-in Page
 
-To add a custom sign-in page, you'll need to define the path to your page in the `pages` object in your Auth.js configuration. Make sure a route / page actually exists at the path you're defining here!
+To add a custom sign-in page, you'll need to define the path to your page in the [`pages`](/reference/core/types#pagesoptions) object in your Auth.js configuration. Make sure a route / page actually exists at the path you're defining here!
+
+Additionally, we'll have to export a map of `provider.id` and `provider.name` to easily consume in our custom page if we want to dynamically render the correct buttons, based on what we've defined in our `auth.ts` configuration. Because you can pass your providers to the `providers` array as both a function, or the result of calling that function, this example `providerMap` handles both cases.
 
 <Code>
 <Code.Next>
 
-```tsx filename="./auth.ts" {7, 9-11}
+```tsx filename="./auth.ts" {6, 21-28, 32-34}
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
-import type { NextAuthConfig } from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import type { Provider } from "next-auth/providers"
 
-// Define your configuration in a separate variable and pass it to NextAuth()
-// This way we can also export the config object to use later
-export const config = {
-  providers: [GitHub],
+const providers: Provider[] = [
+  Github,
+  Credentials({
+    credentials: { password: { label: "Password", type: "password" } },
+    authorize(c) {
+      if (c.password !== "password") return null
+      return {
+        id: "test",
+        name: "Test User",
+        email: "test@example.com",
+      }
+    },
+  }),
+]
+
+export const providerMap = providers.map((provider) => {
+  if (typeof provider === "function") {
+    const providerData = provider()
+    return { id: providerData.id, name: providerData.name }
+  } else {
+    return { id: provider.id, name: provider.name }
+  }
+})
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers,
   pages: {
     signIn: "/signin",
   },
-} satisfies NextAuthConfig
-
-export const { handlers, auth, signIn, signOut } = NextAuth(config)
+})
 ```
 
 </Code.Next>
 <Code.Svelte>
 
-```tsx filename="./auth.ts" {13-15}
+```tsx filename="./src/auth.ts" {6, 21-28, 32-34}
 import SvelteKitAuth from "@auth/sveltekit"
 import GitHub from "@auth/sveltekit/providers/github"
+import Credentials from "@auth/sveltekit/providers/credentials"
 import type { Provider } from "@auth/sveltekit/providers"
 
-const providers: Provider[] = [Github]
+const providers: Provider[] = [
+  Github,
+  Credentials({
+    credentials: { password: { label: "Password", type: "password" } },
+    authorize(c) {
+      if (c.password !== "password") return null
+      return {
+        id: "test",
+        name: "Test User",
+        email: "test@example.com",
+      }
+    },
+  }),
+]
 
 export const providerMap = providers.map((provider) => {
-  return { id: provider.id, name: provider.name }
+  if (typeof provider === "function") {
+    const providerData = provider()
+    return { id: providerData.id, name: providerData.name }
+  } else {
+    return { id: provider.id, name: provider.name }
+  }
 })
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -50,29 +92,29 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 </Code.Svelte>
 </Code>
 
-We can now build our own custom sign in page:
+We can now build our own custom sign in page.
 
 <Code>
 <Code.Next>
 
-```tsx filename="app/signin/page.tsx"
-import { signIn, config, auth } from "@/auth.ts"
-import { redirect } from "next/navigation"
+```tsx filename="app/signin/page.tsx" /providerMap/
+import { signIn, auth, providerMap } from "@/auth.ts"
 
 export default async function SignInPage() {
   const session = await auth()
 
-  // The user is already logged in, redirect to homepage.
-  // Make sure is not the same URL to avoid an infinite loop!
-  if (session) return redirect("/")
-
   return (
-    <div className="flex flex-col gap-4 max-w-80 mx-auto justify-center h-screen">
-      {Object.values(config.providers).map((provider) => (
-        <form action={provider.authorization.url} method="POST">
-          <Button className="flex flex-row gap-2" type="submit">
+    <div className="flex flex-col gap-2">
+      {Object.values(providerMap).map((provider) => (
+        <form
+          action={async () => {
+            "use server"
+            await signIn(provider.id)
+          }}
+        >
+          <button type="submit">
             <span>Sign in with {provider.name}</span>
-          </Button>
+          </button>
         </form>
       ))}
     </div>
@@ -83,34 +125,32 @@ export default async function SignInPage() {
 </Code.Next>
 <Code.Svelte>
 
-```svelte filename="src/routes/signin/+page.svelte" {13-17} /submitButton/
+```svelte filename="src/routes/signin/+page.svelte" /submitButton/ /providerMap/
 <script lang="ts">
   import { SignIn } from "@auth/sveltekit/components"
+  import { providerMap } from "../../auth.ts"
 </script>
 
-<div class="flex overflow-hidden relative w-full h-full">
-  <div class="h-dvh z-20 flex w-full items-center justify-center md:ml-[15%] md:w-[22rem]">
-    <div class="flex flex-col justify-center items-center w-80 text-xl">
-      <h2 class="flex items-center mb-4 space-x-2 text-3xl font-light text-slate-600">
-        <img src="/img/logo.png" alt="Company Logo" class="size-5" />
-        <span class="text-4xl font-medium text-white">Company</span>
-      </h2>
-      <div class="flex flex-col gap-2 p-6 m-8 w-full bg-white rounded shadow-lg">
+<div>
+  <div>
+    <h2>
+      <img src="/img/logo.png" alt="Company Logo" />
+      <span>Company</span>
+    </h2>
+    <div>
+      {#each providerMap as provider}
         <SignIn
-          provider="github"
+          provider={provider.id}
           signInPage="signin"
           className="w-full"
         >
-          <div
-            slot="submitButton"
-            class="mt-2 flex h-12 w-full items-center space-x-2 rounded px-4 text-base font-light transition focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
-          >
-            <span class="flex justify-center w-full">
-              Signin with GitHub
+          <div slot="submitButton">
+            <span>
+              Signin with {provider.name}
             </span>
           </div>
         </SignIn>
-      </div>
+      {/each}
     </div>
   </div>
 </div>
@@ -128,7 +168,7 @@ export const actions = { default: signIn } satisfies Actions
 </Code.Svelte>
 </Code>
 
-Then when clicking on "Sign in" on the app (calling `signIn`), our custom sign in page will appear with the available sign in options:
+Then when calling `signIn` without any arguments anywhere in your application, the custom signin page will appear.
 
 import CustomSignInPage from "../../../public/img/tutorials/custom-sign-in-page.webp"
 
