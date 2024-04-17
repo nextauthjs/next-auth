@@ -76,6 +76,7 @@ export default function Dropbox(
         image: profile.profile_photo_url,
       }
     },
+    style: { brandColor: "#0061fe" },
     options,
   }
 }

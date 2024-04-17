@@ -66,7 +66,7 @@ export default function Netlify(
     id: "netlify",
     name: "Netlify",
     type: "oauth",
-    authorization: "https://app.netlify.com/authorize",
+    authorization: "https://app.netlify.com/authorize?scope",
     token: "https://api.netlify.com/oauth/token",
     userinfo: "https://api.netlify.com/api/v1/user",
     profile(profile) {
@@ -76,6 +76,9 @@ export default function Netlify(
         email: profile.email,
         image: profile.avatar_url,
       }
+    },
+    style: {
+      brandColor: "#32e6e2",
     },
     options: config,
   }

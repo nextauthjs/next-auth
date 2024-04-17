@@ -142,7 +142,9 @@ export default function Google<P extends GoogleProfile>(
     name: "Google",
     type: "oidc",
     issuer: "https://accounts.google.com",
-    style: { bg: "#fff", text: "#000" },
+    style: {
+      brandColor: "#1a73e8",
+    },
     options,
   }
 }

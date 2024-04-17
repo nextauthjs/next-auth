@@ -80,6 +80,9 @@ export default function Coinbase(
         image: profile.data.avatar_url,
       }
     },
+    style: {
+      brandColor: "#0052ff",
+    },
     options,
   }
 }

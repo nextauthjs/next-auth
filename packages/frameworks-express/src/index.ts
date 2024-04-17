@@ -23,7 +23,7 @@
  *
  * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
  * // https://expressjs.com/en/guide/behind-proxies.html
- * app.set('trust proxy', true) 
+ * app.set('trust proxy', true)
  * app.use("/auth/*", ExpressAuth({ providers: [ GitHub ] }))
  * ```
  *
@@ -124,8 +124,13 @@
  * @module @auth/express
  */
 
-import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
-import type { AuthConfig, Session } from "@auth/core/types"
+import {
+  Auth,
+  type AuthConfig,
+  setEnvDefaults,
+  createActionURL,
+} from "@auth/core"
+import type { Session } from "@auth/core/types"
 import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 

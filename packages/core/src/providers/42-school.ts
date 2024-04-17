@@ -146,12 +146,12 @@ export interface CampusUser {
 }
 
 export interface Image {
-  link: string,
+  link: string
   versions: {
-    micro: string,
-    small: string,
-    medium: string,
-    large: string,
+    micro: string
+    small: string
+    medium: string
+    large: string
   }
 }
 

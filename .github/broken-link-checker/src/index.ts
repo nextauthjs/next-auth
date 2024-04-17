@@ -195,6 +195,8 @@ async function brokenLinkChecker(): Promise<void> {
 
   const options = {
     excludeExternalLinks: true,
+    honorRobotExclusions: false,
+    filterLevel: 0,
     excludedKeywords: [],
   }
 
@@ -209,7 +211,17 @@ async function brokenLinkChecker(): Promise<void> {
     },
     end: async () => {
       if (output.links.length) {
-        const outputMd = generateOutputMd(output)
+        // Skip links that returned 308
+        const links404 = output.links.filter(
+          (link) => link.broken && !["HTTP_308"].includes(link.brokenReason)
+        )
+
+        const outputMd = generateOutputMd({
+          errors: output.errors,
+          links: links404,
+          pages: [],
+          sites: [],
+        })
         await postComment(outputMd)
 
         // const commentUrl = await postComment(outputMd);
