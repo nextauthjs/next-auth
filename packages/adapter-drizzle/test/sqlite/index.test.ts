@@ -13,6 +13,7 @@ import { fixtures } from "../fixtures"
 runBasicTests({
   adapter: DrizzleAdapter(db),
   fixtures,
+  testWebAuthnMethods: true,
   db: {
     connect: async () => {
       await Promise.all([

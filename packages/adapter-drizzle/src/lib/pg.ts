@@ -282,7 +282,7 @@ export function PostgresDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
       return authenticator ? authenticator : null
     },
     async listAuthenticatorsByUserId(userId) {
