@@ -35,69 +35,17 @@ providers: [
 
 WorkOS is not an identity provider itself, but, rather, a bridge to multiple single sign-on (SSO) providers. As a result, we need to make some additional changes to authenticate users using WorkOS.
 
-In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use. A common way to do this is to collect the user's email address and extract the domain.
+In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use. You should use the `organization` or `connection` `authorizationParams` to specifiy which connection to use:
 
-This can be done using a custom login page.
+```js
+import { signIn } from "next-auth/react"
 
-To add a custom login page, you can use the `pages` option:
+// [...]
 
-```javascript title="pages/api/auth/[...nextauth].js"
-...
-  pages: {
-    signIn: "/auth/signin",
-  }
+const organization = 'ORGANIZATION_ID';
+signIn(provider.id, undefined, {
+  organization,
+});
 ```
 
-We can then add a custom login page that displays an input where the user can enter their email address. We then extract the domain from the user's email address and pass it to the `authorizationParams` parameter on the `signIn` function:
-
-```jsx title="pages/auth/signin.js"
-import { useState } from "react"
-import { getProviders, signIn } from "next-auth/react"
-
-export default function SignIn({ providers }) {
-  const [email, setEmail] = useState("")
-
-  return (
-    <>
-      {Object.values(providers).map((provider) => {
-        if (provider.id === "workos") {
-          return (
-            <div key={provider.id}>
-              <input
-                type="email"
-                value={email}
-                placeholder="Email"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <button
-                onClick={() =>
-                  signIn(provider.id, undefined, {
-                    domain: email.split("@")[1],
-                  })
-                }
-              >
-                Sign in with SSO
-              </button>
-            </div>
-          )
-        }
-
-        return (
-          <div key={provider.id}>
-            <button onClick={() => signIn(provider.id)}>
-              Sign in with {provider.name}
-            </button>
-          </div>
-        )
-      })}
-    </>
-  )
-}
-
-export async function getServerSideProps(context) {
-  const providers = await getProviders()
-  return {
-    props: { providers },
-  }
-}
-```
+This can be done using a custom login page. See [Create a Next.js application with WorkOS SSO and NextAuth.js](https://workos.com/docs/integrations/next-auth/6-creating-a-custom-login-page).
