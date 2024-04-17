@@ -121,6 +121,10 @@
     {
       "source": "/getting-started/providers/credentials-tutorial",
       "destination": "/getting-started/providers/credentials"
+    },
+    {
+      "source": "/guides/upgrade-to-v5",
+      "destination": "/getting-started/migrating-to-v5"
     }
   ]
 }
