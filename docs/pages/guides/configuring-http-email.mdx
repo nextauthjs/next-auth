@@ -49,6 +49,32 @@ export const { handle, auth } = SvelteKitAuth({
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { sendVerificationRequest } from "../lib/authSendRequest"
+import express from "express"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    adapter,
+    providers: [
+      {
+        id: "http-email",
+        type: "email",
+        sendVerificationRequest,
+      },
+    ],
+  })
+)
+```
+
+</Code.Express>
 </Code>
 
 After we've setup the initial configuration, you've got to write `sendVerificationRequest` function. Below is a simple version which just sends a text email with a link to the user.
