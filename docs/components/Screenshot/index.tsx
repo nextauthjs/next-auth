@@ -1,5 +1,5 @@
-import cx from "classnames";
-import Image from "next/image";
+import cx from "classnames"
+import Image from "next/image"
 
 export function Screenshot({ src, alt, full, className }) {
   return (
@@ -19,5 +19,5 @@ export function Screenshot({ src, alt, full, className }) {
         )}
       />
     </div>
-  );
+  )
 }

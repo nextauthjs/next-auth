@@ -12,7 +12,7 @@ export default {
   warnings: "Warnings",
   errors: {
     title: "Errors",
-    href: "core/errors",
+    href: "/reference/core/errors",
   },
   "--- adapters": {
     type: "separator",

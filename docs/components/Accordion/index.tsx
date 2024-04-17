@@ -7,9 +7,7 @@ import type {
   AccordionMultipleProps,
   AccordionSingleProps,
 } from "@radix-ui/react-accordion"
-import { Check } from "@phosphor-icons/react/dist/csr/Check"
-import { Link } from "@phosphor-icons/react/dist/csr/Link"
-import { CaretRight } from "@phosphor-icons/react/dist/csr/CaretRight"
+import { Check, Link, CaretRight } from "@/icons"
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -114,7 +112,7 @@ export const Accordion = forwardRef<
     >
       <>
         <AccordionPrimitive.Trigger className="flex gap-1 items-center py-[1.125rem] px-2 w-full text-left focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring data-[state=open]:bg-neutral-100 data-[state=open]:dark:bg-neutral-950 transition-colors duration-300">
-          <CaretRight className="size-5 transition-transform duration-200 group-data-[state=open]/accordion:rotate-90" />
+          <CaretRight className="size-4 transition-transform duration-200 group-data-[state=open]/accordion:rotate-90" />
           <span className="font-medium text-medium text-foreground">
             {title}
           </span>

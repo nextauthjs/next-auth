@@ -19,8 +19,7 @@ pnpm-lock.yaml
 # --------------- Docs ---------------
 
 .next
-docs/docs/reference/core
-docs/docs/reference/sveltekit
+docs/pages/reference
 static
 docs/manifest.mjs
 
