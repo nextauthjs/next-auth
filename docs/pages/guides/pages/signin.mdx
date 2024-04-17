@@ -101,8 +101,6 @@ We can now build our own custom sign in page.
 import { signIn, auth, providerMap } from "@/auth.ts"
 
 export default async function SignInPage() {
-  const session = await auth()
-
   return (
     <div className="flex flex-col gap-2">
       {Object.values(providerMap).map((provider) => (
