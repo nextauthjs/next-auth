@@ -123,6 +123,10 @@
       "destination": "/getting-started/providers/credentials"
     },
     {
+      "source": "/guides/providers/email-http",
+      "destination": "/guides/configuring-http-email"
+    },
+    {
       "source": "/guides/upgrade-to-v5",
       "destination": "/getting-started/migrating-to-v5"
     }
