@@ -1,3 +1,7 @@
+---
+title: Migrating to v5
+---
+
 import { Callout, Tabs, Steps } from "nextra/components"
 
 # Upgrade Guide (NextAuth.js v5)
@@ -150,7 +154,7 @@ export const config = {
 }
 ```
 
-Read the [Middleware docs](/reference/nextjs#in-middleware) for more details.
+Check out additional [Middleware docs](/getting-started/session-management/protecting#nextjs-middleware) for more details.
 
 </Tabs.Tab>
 <Tabs.Tab>
@@ -237,13 +241,13 @@ Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in`
 required to be added to the `account` table. This is no longer the case, and you can remove it if
 you are not using it. If you do use it, please make sure to return it via the new [`account()` callback](/reference/core/providers#account).
 
-### Edge compatibility
+## Edge compatibility
 
-While Auth.js strictly uses standard [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) (and thus can run in any environment which supports them), some libraries or ORMs (Object-Relational Mapping) packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files.
+While Auth.js strictly uses standard [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) (and thus can run in any environment that supports them), some libraries or ORMs (Object-Relational Mapping) packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files.
 
 Auth.js supports two [session strategies](/concepts/session-strategies). When you are using an adapter, it will default to the `database` strategy. **Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use the `"database"` session strategy**.
 
-If you are using an adapter which relies on an ORM/library that is not yet compatible with Edge runtime(s) below is an example where we force the `jwt` strategy and split up the configuration so the library doesn't attempt to access the database in edge environments, like in the middleware.
+So for example, if you are using an adapter that relies on an ORM/library that is not yet compatible with Edge runtime(s) below is an example where we force the `jwt` strategy and split up the configuration so the library doesn't attempt to access the database in edge environments, like in the middleware.
 
 <Callout>
   The following filenames are only a convention, they can be named anything you
@@ -276,7 +280,7 @@ export const { handlers, auth } = NextAuth({
 })
 ```
 
-3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, initializing Auth.js separately with all of your common options, but **without the edge incompatible adapter**.
+3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, initialize Auth.js separately with all of your common options, but **without the edge incompatible adapter**.
 
 ```ts filename="middleware.ts" {1} /NextAuth/
 import authConfig from "./auth.config"
@@ -284,7 +288,9 @@ import NextAuth from "next-auth"
 export const { auth: middleware } = NextAuth(authConfig)
 ```
 
-Please follow up with your database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
+The above is an example. The takeaway is to separate the part of the configuration that is edge-compatible from the rest, and only import that in Middleware/Edge pages/routes.
+
+Please follow up with your library/database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
 
 ## Environment Variables
 

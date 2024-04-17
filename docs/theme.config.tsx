@@ -169,7 +169,7 @@ const config: DocsThemeConfig = {
     extraContent: <script id="_carbonads_js" />,
     backToTop: true,
   },
-  docsRepositoryBase: "https://github.com/nextauthjs/next-auth/docs",
+  docsRepositoryBase: "https://github.com/nextauthjs/next-auth/edit/main/docs",
   footer: {
     component: <Footer />,
   },
