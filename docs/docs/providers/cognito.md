@@ -47,7 +47,5 @@ Make sure you select all the appropriate client settings or the OAuth flow will 
 :::
 
 :::tip
-Before you can set these settings, you must [set up an Amazon Cognito hosted domain](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html)
+Before you can set these settings, you must [set up an Amazon Cognito hosted domain](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html). The setting can be found in `App Client/Edit Hosted UI`.
 :::
-
-![cognito](https://private-user-images.githubusercontent.com/11452899/297044112-41954090-1169-4c1b-9f09-ae7ee80a7cbd.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTMyMTI1ODksIm5iZiI6MTcxMzIxMjI4OSwicGF0aCI6Ii8xMTQ1Mjg5OS8yOTcwNDQxMTItNDE5NTQwOTAtMTE2OS00YzFiLTlmMDktYWU3ZWU4MGE3Y2JkLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA0MTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNDE1VDIwMTgwOVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWFmY2YzZjExOGNkYTdiY2JjZjc4ZmRjZTIyYWI5NzU5ZmRiNzdmMjEwOTkzMWY5MzRjODc0Y2NjODgwZjMzNDgmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.ic0p91xFA7YGbdf2wP5OfzpjkI3p70uGDmAU8a5ir1M)
