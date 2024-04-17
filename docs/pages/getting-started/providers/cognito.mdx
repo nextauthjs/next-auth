@@ -84,18 +84,6 @@ app.use(
   </Code.Express>
 </Code>
 
-### Options
-
-The **Amazon Cognito Provider** comes with a set of default options:
-
-- [Amazon Cognito Provider options](https://github.com/nextauthjs/next-auth/blob/v4/packages/next-auth/src/providers/cognito.ts)
-  You can override any of the options to suit your own use case.
-
-<Callout type="info">
-  Before you can set these settings, you must set up an Amazon Cognito hosted
-  domain. The setting can be found in `App Client/Edit Hosted UI`.
-</Callout>
-
 ### Notes
 
 You need to select your AWS region to go the the Cognito dashboard.
@@ -104,6 +92,11 @@ You need to select your AWS region to go the the Cognito dashboard.
   The issuer is a URL, that looks like this: `https://cognito-idp.{region}
   .amazonaws.com/{PoolId}`, where `PoolId` is from General Settings in Cognito, not
   to be confused with the App Client ID.
+</Callout>
+
+<Callout type="info">
+  Before you can set these settings, you must set up an Amazon Cognito hosted
+  domain. The setting can be found in `App Client/Edit Hosted UI`.
 </Callout>
 
 <Callout type="warning">
