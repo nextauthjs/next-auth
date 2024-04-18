@@ -212,7 +212,7 @@ export interface OAuth2Config<Profile>
    *
    * Automatic account linking on sign in is not secure
    * between arbitrary providers and is disabled by default.
-   * Learn more in our [Security FAQ](https://authjs.dev/reference/faq#security).
+   * Learn more in our [Security FAQ](https://authjs.dev/concepts#security).
    *
    * However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address
    * associated with the account. Set `allowDangerousEmailAccountLinking: true`
