@@ -3,13 +3,27 @@ import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
+/** Estimate the base path from the config and request pathname. */
+function estimateBasePath(configPathName: string, requestPathname: string): string {
+  const configSegments = configPathName.slice(1).split("/")
+  const requestSegments = requestPathname.slice(1).split("/")
+  if (configSegments[0] === requestSegments[0]) return ""
+
+  let i = 0
+  while (i < configSegments.length && i < requestSegments.length && configSegments[i] !== requestSegments[0]) {
+    i++
+  }
+  return "/" + configSegments.slice(0, i).join("/")
+}
+
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
 export function reqWithEnvURL(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
   if (!url) return req
-  const { origin: envOrigin } = new URL(url)
-  const { href, origin } = req.nextUrl
-  return new NextRequest(href.replace(origin, envOrigin), req)
+  const { origin: envOrigin, pathname: envPathname } = new URL(url)
+  const { href, origin, pathname } = req.nextUrl
+  const basePath = estimateBasePath(envPathname, pathname)
+  return new NextRequest(href.replace(origin, envOrigin).replace(pathname, basePath + pathname), req)
 }
 
 /**
