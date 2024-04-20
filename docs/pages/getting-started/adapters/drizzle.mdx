@@ -99,11 +99,12 @@ import {
   integer,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccount } from "next-auth/adapters"
+import { randomUUID } from "crypto"
 
 export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
@@ -126,6 +127,7 @@ export const accounts = pgTable(
     session_state: text("session_state"),
   },
   (account) => ({
+    userIdIdx: index().on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -133,12 +135,18 @@ export const accounts = pgTable(
 )
 
 export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+},
+(table) => {
+  return {
+    userIdIdx: index().on(table.userId),
+  }
+)
 
 export const verificationTokens = pgTable(
   "verificationToken",
