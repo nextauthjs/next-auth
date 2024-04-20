@@ -127,7 +127,7 @@ export const accounts = pgTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    userIdIdx: index().on(table.userId),
+    userIdIdx: index().on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -221,7 +221,7 @@ export const sessions = mysqlTable("session", {
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 }, (s) => ({
-  userIdIdx: index("Session_userId_index").on(session.userId),
+  userIdIdx: index("Session_userId_index").on(s.userId),
 }))
 
 export const verificationTokens = mysqlTable(
@@ -286,7 +286,7 @@ export const sessions = sqliteTable("session", {
     .references(() => users.id, { onDelete: "cascade" }),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 }, (s) => ({
-  userIdIdx: index("Session_userId_index").on(table.userId),
+  userIdIdx: index("Session_userId_index").on(s.userId),
 }))
 
 export const verificationTokens = sqliteTable(
