@@ -127,7 +127,7 @@ export const accounts = pgTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    userIdIdx: index("account_userId_idx").on(account.userId),
+    userIdIdx: index().on(table.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -144,7 +144,7 @@ export const sessions = pgTable("session", {
 },
 (table) => {
   return {
-    userIdIdx: index("session_userId_idx").on(table.userId),
+    userIdIdx: index().on(table.userId),
   }
 )
 
@@ -176,7 +176,7 @@ import type { AdapterAccount } from "next-auth/adapters"
 import { randomUUID } from "crypto"
 
 export const users = mysqlTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey().$defaultFn(() => randomUUID()),
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", {
@@ -206,7 +206,7 @@ export const accounts = mysqlTable(
     session_state: varchar("session_state", { length: 255 }),
   },
   (account) => ({
-    userIdIdx: index("account_userId_idx").on(account.userId),
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -214,14 +214,14 @@ export const accounts = mysqlTable(
 )
 
 export const sessions = mysqlTable("session", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey().$defaultFn(() => randomUUID()),
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 }, (s) => ({
-  idxUserId: index("session_userId_idx").on(s.userId),
+  userIdIdx: index("Session_userId_index").on(session.userId),
 }))
 
 export const verificationTokens = mysqlTable(
@@ -246,7 +246,7 @@ import type { AdapterAccount } from "next-auth/adapters"
 import { randomUUID } from "crypto"
 
 export const users = sqliteTable("user", {
-  id: text("id").notNull().primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
@@ -271,7 +271,7 @@ export const accounts = sqliteTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    userIdIdx: index("account_userId_idx").on(account.userId),
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -279,14 +279,14 @@ export const accounts = sqliteTable(
 )
 
 export const sessions = sqliteTable("session", {
-  id: text("id").notNull().primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 }, (s) => ({
-  idxUserId: index("session_userId_idx").on(s.userId),
+  userIdIdx: index("Session_userId_index").on(table.userId),
 }))
 
 export const verificationTokens = sqliteTable(
