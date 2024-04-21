@@ -68,7 +68,7 @@
  */
 
 import { Auth, customFetch } from "@auth/core"
-import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
+import { reqWithBasePathURL, reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
@@ -376,9 +376,10 @@ export default function NextAuth(
     | NextAuthConfig
     | ((request: NextRequest | undefined) => Awaitable<NextAuthConfig>)
 ): NextAuthResult {
+  let _config: NextAuthConfig
   if (typeof config === "function") {
     const httpHandler = async (req: NextRequest) => {
-      const _config = await config(req)
+      _config = await config(req)
       setEnvDefaults(_config)
       return Auth(reqWithEnvURL(req), _config)
     }
@@ -406,19 +407,21 @@ export default function NextAuth(
     }
   }
   setEnvDefaults(config)
-  const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
+  _config = config
+  const httpHandler = (req: NextRequest) =>
+    Auth(reqWithBasePathURL(reqWithEnvURL(req), _config), _config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error
-    auth: initAuth(config),
+    auth: initAuth(_config),
     signIn: (provider, options, authorizationParams) => {
-      return signIn(provider, options, authorizationParams, config)
+      return signIn(provider, options, authorizationParams, _config)
     },
     signOut: (options) => {
-      return signOut(options, config)
+      return signOut(options, _config)
     },
     unstable_update: (data) => {
-      return update(data, config)
+      return update(data, _config)
     },
   }
 }
