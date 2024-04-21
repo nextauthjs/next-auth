@@ -2,6 +2,7 @@
   "name": "@auth/frameworks-template",
   "description": "Authentication for <framework-name>.",
   "version": "0.3.0",
+  "private": true,
   "type": "module",
   "files": [
     "*.js",
