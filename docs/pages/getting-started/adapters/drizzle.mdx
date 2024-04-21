@@ -89,7 +89,17 @@ Apply one of the below schema's to your database to setup the required tables. Y
 
 <Accordions>
 <Accordion title="PostgreSQL">
+You can use the Drizzle Adapter's default table schema if you don't want to add your own fields by re-exporting the tables.
+```ts filename="schema.ts"
+export {
+  postgresUsersTable as users,
+  postgresAccountsTable as accounts,
+  postgresSessionsTable as sessions,
+  postgresVerificationTokensTable as verificationTokens,
+} from '@auth/drizzle-adapter'
+```
 
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
 ```ts filename="schema.ts"
 import {
   timestamp,
@@ -163,7 +173,17 @@ export const verificationTokens = pgTable(
 
 </Accordion>
 <Accordion title="MySQL">
+You can use the Drizzle Adapter's default table schema if you don't want to add your own fields by re-exporting the tables.
+```ts filename="schema.ts"
+export {
+  mysqlUsersTable as users,
+  mysqlAccountsTable as accounts,
+  mysqlSessionsTable as sessions,
+  mysqlVerificationTokensTable as verificationTokens,
+} from '@auth/drizzle-adapter'
+```
 
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
 ```ts filename="schema.ts"
 import {
   int,
@@ -239,7 +259,17 @@ export const verificationTokens = mysqlTable(
 
 </Accordion>
 <Accordion title="SQLite">
+You can use the Drizzle Adapter's default table schema if you don't want to add your own fields by re-exporting the tables.
+```ts filename="schema.ts"
+export {
+  sqliteUsersTable as users,
+  sqliteAccountsTable as accounts,
+  sqliteSessionsTable as sessions,
+  sqliteVerificationTokensTable as verificationTokens,
+} from '@auth/drizzle-adapter'
+```
 
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
 ```ts filename="schema.ts"
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "next-auth/adapters"
