@@ -12,7 +12,7 @@
 import type { OIDCConfig, OAuthUserConfig } from "./index.js"
 
 /**
- * The returned user profile from ZITADEL when using the profile callback. See the standard claims reference [here](https://docs.zitadel.com/docs/apis/openidoauth/claims#standard-claims).
+ * The returned user profile from ZITADEL when using the profile callback. See the standard claims reference [here](https://zitadel.com/docs/apis/openidoauth/claims#standard-claims).
  * If you need access to ZITADEL APIs or need additional information, make sure to add the corresponding scopes.
  */
 export interface ZitadelProfile extends Record<string, any> {
@@ -61,8 +61,8 @@ export interface ZitadelProfile extends Record<string, any> {
  * ```
  *
  * ### Resources
- * - [ZITADEL OpenID Endpoints](https://docs.zitadel.com/docs/apis/openidoauth/endpoints)
- * - [ZITADEL recommended OAuth Flows](https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows)
+ * - [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
+ * - [ZITADEL recommended OAuth Flows](https://zitadel.com/docs/guides/integrate/oauth-recommended-flows)
  *
  * ### Notes
  *

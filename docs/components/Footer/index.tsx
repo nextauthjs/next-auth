@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { useRouter } from "next/router"
 import cx from "classnames"
 
 function kFormatter(num: number) {
@@ -6,6 +7,8 @@ function kFormatter(num: number) {
 }
 
 export function Footer({ className = "" }) {
+  const router = useRouter()
+
   useEffect(() => {
     fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
@@ -20,6 +23,10 @@ export function Footer({ className = "" }) {
     if (carbonAdsEl) {
       carbonAdsEl.src =
         "https://cdn.carbonads.com/carbon.js?serve=CWYD42JY&placement=authjsdev&format=cover"
+
+      router.events.on("routeChangeComplete", () => {
+        window._carbonads?.refresh()
+      })
     }
   }, [])
   return (
