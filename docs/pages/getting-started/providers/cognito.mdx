@@ -9,6 +9,7 @@ import { Code } from "@/components/Code"
 
 - [Cognito Portal](https://console.aws.amazon.com/cognito/v2/home)
 - [Cognito OAuth documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
+- [Cognito Hosted Domain](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html)
 
 ## Setup
 
@@ -91,6 +92,11 @@ You need to select your AWS region to go the the Cognito dashboard.
   The issuer is a URL, that looks like this: `https://cognito-idp.{region}
   .amazonaws.com/{PoolId}`, where `PoolId` is from General Settings in Cognito, not
   to be confused with the App Client ID.
+</Callout>
+
+<Callout type="info">
+  Before you can set these settings, you must set up an Amazon Cognito hosted
+  domain. The setting can be found in `App Client/Edit Hosted UI`.
 </Callout>
 
 <Callout type="warning">
