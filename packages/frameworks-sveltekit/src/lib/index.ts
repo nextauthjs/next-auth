@@ -268,12 +268,10 @@
  *
  * ## Notes
  *
- * :::info
- * Learn more about `@auth/sveltekit` [here](https://vercel.com/blog/announcing-sveltekit-auth).
- * :::
+ * - If you build your SvelteKit application with `prerender` enabled, pages which have an anchor tag to the default signin page (i.e. `<a href="/auth/signin" ...`) will have trouble building. Please use the [builtin functions or components](https://authjs.dev/getting-started/session-management/login?framework=sveltekit) to sign in or out instead.
  *
  * :::info
- * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
+ * Learn more about `@auth/sveltekit` [here](https://vercel.com/blog/announcing-sveltekit-auth).
  * :::
  *
  * @module @auth/sveltekit
