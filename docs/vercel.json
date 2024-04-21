@@ -108,15 +108,15 @@
     },
     {
       "source": "/getting-started/providers",
-      "destination": "/getting-started/getting-started/authentication/oauth"
+      "destination": "/getting-started/authentication/oauth"
     },
     {
       "source": "/getting-started/providers/oauth-tutorial",
-      "destination": "/getting-started/getting-started/authentication/oauth"
+      "destination": "/getting-started/authentication/oauth"
     },
     {
       "source": "/getting-started/providers/email-tutorial",
-      "destination": "/getting-started/getting-started/authentication/email"
+      "destination": "/getting-started/authentication/email"
     },
     {
       "source": "/getting-started/providers/credentials-tutorial",
