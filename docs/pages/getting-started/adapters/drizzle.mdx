@@ -100,6 +100,7 @@ export {
 ```
 
 If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
+
 ```ts filename="schema.ts"
 import {
   timestamp,
@@ -107,12 +108,15 @@ import {
   text,
   primaryKey,
   integer,
+  index,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccount } from "next-auth/adapters"
 import { randomUUID } from "crypto"
 
 export const users = pgTable("user", {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -144,17 +148,22 @@ export const accounts = pgTable(
   })
 )
 
-export const sessions = pgTable("session", {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: text("sessionToken").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-},
-(table) => {
-  return {
-    userIdIdx: index().on(table.userId),
+export const sessions = pgTable(
+  "session",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: text("sessionToken").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index().on(table.userId),
+    }
   }
 )
 
@@ -184,6 +193,7 @@ export {
 ```
 
 If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
+
 ```ts filename="schema.ts"
 import {
   int,
@@ -191,12 +201,15 @@ import {
   mysqlTable,
   primaryKey,
   varchar,
+  index,
 } from "drizzle-orm/mysql-core"
 import type { AdapterAccount } from "next-auth/adapters"
 import { randomUUID } from "crypto"
 
 export const users = mysqlTable("user", {
-  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", {
@@ -233,16 +246,22 @@ export const accounts = mysqlTable(
   })
 )
 
-export const sessions = mysqlTable("session", {
-  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-}, (s) => ({
-  userIdIdx: index("Session_userId_index").on(s.userId),
-}))
+export const sessions = mysqlTable(
+  "session",
+  {
+    id: varchar("id", { length: 255 })
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (s) => ({
+    userIdIdx: index("Session_userId_index").on(s.userId),
+  })
+)
 
 export const verificationTokens = mysqlTable(
   "verificationToken",
@@ -270,13 +289,22 @@ export {
 ```
 
 If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
+
 ```ts filename="schema.ts"
-import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
+import {
+  integer,
+  sqliteTable,
+  text,
+  primaryKey,
+  index,
+} from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "next-auth/adapters"
 import { randomUUID } from "crypto"
 
 export const users = sqliteTable("user", {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
@@ -308,16 +336,22 @@ export const accounts = sqliteTable(
   })
 )
 
-export const sessions = sqliteTable("session", {
-  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
-  sessionToken: text("sessionToken").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-}, (s) => ({
-  userIdIdx: index("Session_userId_index").on(s.userId),
-}))
+export const sessions = sqliteTable(
+  "session",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    sessionToken: text("sessionToken").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  },
+  (s) => ({
+    userIdIdx: index("Session_userId_index").on(s.userId),
+  })
+)
 
 export const verificationTokens = sqliteTable(
   "verificationToken",
