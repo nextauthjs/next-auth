@@ -24,12 +24,12 @@ app.set("port", process.env.PORT || 3000)
 // Set up views engine and path
 // @ts-expect-error (See https://stackoverflow.com/questions/45342307/error-cannot-find-module-pug)
 app.engine("pug", pug.__express)
-app.set("views", path.join(__dirname, "../views"))
+app.set("views", path.join(import.meta.dirname, "..", "views"))
 app.set("view engine", "pug")
 
 // Trust Proxy for Proxies (Heroku, Render.com, etc)
 // https://stackoverflow.com/questions/40459511/in-express-js-req-protocol-is-not-picking-up-https-for-my-secure-link-it-alwa
-app.enable("trust proxy")
+app.set("trust proxy", true)
 
 app.use(logger("dev"))
 
@@ -59,12 +59,12 @@ app.get("/protected", async (_req: Request, res: Response) => {
 app.get(
   "/api/protected",
   authenticatedUser,
-  async (req: Request, res: Response) => {
+  async (_req: Request, res: Response) => {
     res.json(res.locals.session)
   },
 )
 
-app.get("/", async (req: Request, res: Response) => {
+app.get("/", async (_req: Request, res: Response) => {
   res.render("index", {
     title: "Express Auth Example",
     user: res.locals.session?.user,
