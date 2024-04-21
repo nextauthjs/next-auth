@@ -56,9 +56,9 @@ export { default } from "next-auth/middleware"
 export const config = { matcher: ["/dashboard"] }
 ```
 
-For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
+When using an adapter, you must set the [session strategy](/configuration/options#session) to `jwt`, because the middleware only supports jwt sessions.
 
-More details can be found [here](https://next-auth.js.org/configuration/nextjs#middleware).
+More details can be found [here](/configuration/nextjs#middleware).
 
 :::tip
 To include all `dashboard` nested routes (sub pages like `/dashboard/settings`, `/dashboard/profile`) you can pass `matcher: "/dashboard/:path*"` to `config`.

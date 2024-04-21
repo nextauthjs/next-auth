@@ -131,6 +131,8 @@ You must set the same secret in the middleware that you use in NextAuth. The eas
 
 Alternatively, you can provide the secret using the [`secret`](#secret) option in the middleware config.
 
+When using an adapter, you must set the [session strategy](/configuration/options#session) to `jwt`, because the middleware only supports jwt sessions.
+
 **We strongly recommend** replacing the `secret` value completely with this `NEXTAUTH_SECRET` environment variable.
 
 ### Basic usage
