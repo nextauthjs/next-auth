@@ -309,7 +309,7 @@ export interface AuthConfig {
      *
      * Unhandled errors will throw an `AccessDenied` with the message set to the original error.
      *
-     * [`AccessDenied`](https://authjs.dev/reference/errors#accessdenied)
+     * [`AccessDenied`](https://authjs.dev/reference/core/errors#accessdenied)
      *
      * @example
      * ```ts
