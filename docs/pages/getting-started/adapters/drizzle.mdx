@@ -173,11 +173,12 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core"
 import type { AdapterAccount } from "next-auth/adapters"
+import { randomUUID } from "crypto"
 
 export const users = mysqlTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
     fsp: 3,
@@ -205,6 +206,7 @@ export const accounts = mysqlTable(
     session_state: varchar("session_state", { length: 255 }),
   },
   (account) => ({
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -212,12 +214,15 @@ export const accounts = mysqlTable(
 )
 
 export const sessions = mysqlTable("session", {
-  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+}, (s) => ({
+  userIdIdx: index("Session_userId_index").on(s.userId),
+}))
 
 export const verificationTokens = mysqlTable(
   "verificationToken",
@@ -238,11 +243,12 @@ export const verificationTokens = mysqlTable(
 ```ts filename="schema.ts"
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "next-auth/adapters"
+import { randomUUID } from "crypto"
 
 export const users = sqliteTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
 })
@@ -265,6 +271,7 @@ export const accounts = sqliteTable(
     session_state: text("session_state"),
   },
   (account) => ({
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -272,12 +279,15 @@ export const accounts = sqliteTable(
 )
 
 export const sessions = sqliteTable("session", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-})
+}, (s) => ({
+  userIdIdx: index("Session_userId_index").on(s.userId),
+}))
 
 export const verificationTokens = sqliteTable(
   "verificationToken",
