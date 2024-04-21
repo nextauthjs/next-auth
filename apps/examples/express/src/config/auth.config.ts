@@ -1,5 +1,3 @@
-// import GitHub from "@auth/express/providers/github"
-// import Google from "@auth/express/providers/google"
 import Apple from "@auth/express/providers/apple"
 import Auth0 from "@auth/express/providers/auth0"
 import AzureB2C from "@auth/express/providers/azure-ad-b2c"

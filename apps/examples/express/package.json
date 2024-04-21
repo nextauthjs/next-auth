@@ -2,15 +2,15 @@
   "type": "module",
   "description": "Express Auth example app",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.11.0"
   },
   "private": true,
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node --env-file .env dist/server.js",
     "build": "pnpm build:ts && pnpm build:css",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
-    "dev": "tsx watch src/server.ts & pnpm build:css -w",
+    "dev": "tsx watch --env-file=.env src/server.ts & pnpm build:css -w",
     "lint": "eslint src/*.ts --fix",
     "prettier": "prettier src/*.ts --write"
   },
@@ -18,7 +18,6 @@
   "license": "MIT",
   "dependencies": {
     "@auth/express": "latest",
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "morgan": "^1.10.0",
     "pug": "^3.0.2",
