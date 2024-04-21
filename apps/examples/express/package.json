@@ -10,9 +10,7 @@
     "build": "pnpm build:ts && pnpm build:css",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
-    "build:watch": "pnpm build:ts -w & pnpm build:css -w",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"Build,Node\" -c \"cyan.bold,green.bold\" \"pnpm run build:watch\" \"pnpm run dev:node\"",
-    "dev:node": "nodemon dist/server.js",
+    "dev": "tsx watch src/server.ts & pnpm build:css -w",
     "lint": "eslint src/*.ts --fix",
     "prettier": "prettier src/*.ts --write"
   },
@@ -34,11 +32,10 @@
     "@types/pug": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
-    "concurrently": "8.2.2",
     "eslint": "^8.56.0",
-    "nodemon": "3.1.0",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
+    "tsx": "^4.7.0",
     "typescript": "5.4.5"
   }
 }
