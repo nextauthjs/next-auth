@@ -35,11 +35,11 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
       issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
     }),
-    BoxyHQSAML({
-      clientId: "dummy",
-      clientSecret: "dummy",
-      issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
-    }),
+    // BoxyHQSAML({
+    //   clientId: "dummy",
+    //   clientSecret: "dummy",
+    //   issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
+    // }),
     Cognito,
     Coinbase,
     Discord,
