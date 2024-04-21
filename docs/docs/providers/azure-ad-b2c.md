@@ -11,7 +11,7 @@ Azure AD B2C returns the following fields on `Account`:
 - `id_token_expires_in` (number)
 - `profile_info` (string).
 
-See their [docs](https://docs.microsoft.com/en-us/azure/active-directory-b2c/access-tokens). Remember to add these fields to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+See their [docs](https://docs.microsoft.com/en-us/azure/active-directory-b2c/access-tokens). Remember to add these fields to your database schema, in case if you are using an [Adapter](https://next-auth.js.org/adapters).
 :::
 
 ## Documentation

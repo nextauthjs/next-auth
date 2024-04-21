@@ -46,4 +46,6 @@ The issuer is a URL, that looks like this: `https://cognito-idp.{region}.amazona
 Make sure you select all the appropriate client settings or the OAuth flow will not work.
 :::
 
-![cognito](https://user-images.githubusercontent.com/7902980/83951604-cd096e80-a832-11ea-8bd2-c496ec9a16cb.PNG)
+:::tip
+Before you can set these settings, you must [set up an Amazon Cognito hosted domain](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html). The setting can be found in `App Client/Edit Hosted UI`.
+:::
