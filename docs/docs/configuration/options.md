@@ -27,7 +27,7 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 ### NEXTAUTH_SECRET
 
-Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](https://authjs.dev/getting-started/adapters#verification-token). This is the default value for the `secret` option in [NextAuth](/configuration/options#secret) and [Middleware](/configuration/nextjs#secret).
+Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens). This is the default value for the `secret` option in [NextAuth](/configuration/options#secret) and [Middleware](/configuration/nextjs#secret).
 
 
 ### NEXTAUTH_URL_INTERNAL
@@ -310,7 +310,7 @@ events: {
 
 #### Description
 
-By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](https://authjs.dev/getting-started/adapters).
+By default NextAuth.js does not include an adapter any longer. If you would like to persist user / account data, please install one of the many available adapters. More information can be found in the [adapter documentation](https://authjs.dev/getting-started/database).
 
 ---
 
