@@ -49,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Resend({
       // If your environment variable is named differently than default
-      apiKey: COMPANY_AUTH_RESEND_API_KEY,
+      apiKey: AUTH_RESEND_KEY,
       from: "no-reply@company.com"
     }),
   ],
@@ -68,7 +68,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Resend({
       // If your environment variable is named differently than default
-      apiKey: COMPANY_AUTH_RESEND_API_KEY,
+      apiKey: AUTH_RESEND_KEY,
       from: "no-reply@company.com",
     }),
   ],
@@ -113,7 +113,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 As an example, the following shows the source for our built-in `sendVerificationRequest()` method. Notice that we're rendering the HTML (`html()`) and making the network call (`fetch()`) to Resend to actually do the sending here in this method.
 
-```ts {6, 16} filename="./lib/authSendRequest.ts"
+```ts filename="./lib/authSendRequest.ts" {4, 14}
 export async function sendVerificationRequest(params) {
   const { identifier: to, provider, url, theme } = params
   const { host } = new URL(url)

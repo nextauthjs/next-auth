@@ -136,6 +136,9 @@ export default function SAMLJackson<P extends BoxyHQSAMLProfile>(
         image: null,
       }
     },
+    style: {
+      brandColor: "#25c2a0",
+    },
     options,
   }
 }

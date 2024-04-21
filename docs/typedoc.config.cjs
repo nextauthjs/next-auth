@@ -1,44 +1,29 @@
 // @ts-check
 
+const fs = require("node:fs")
+const path = require("node:path")
+
+const frameworks = fs
+  .readdirSync(path.resolve(__dirname, "../packages"))
+  .filter((dir) => dir.startsWith("frameworks-"))
+  .filter((dir) => dir !== "frameworks-template")
+  .map((dir) => `../packages/${dir}`)
+
+frameworks.push("../packages/next-auth", "../packages/core")
+
+const adapters = process.env.TYPEDOC_SKIP_ADAPTERS
+  ? []
+  : fs
+    .readdirSync(path.resolve(__dirname, "../packages"))
+    .filter((dir) => dir.startsWith("adapter-"))
+    .map((dir) => `../packages/${dir}`)
+
 /**
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').PluginOptions}
  */
 module.exports = {
   // typedoc options
-  entryPoints: [
-    "../packages/next-auth",
-    "../packages/core",
-    "../packages/frameworks-sveltekit",
-    "../packages/frameworks-express",
-    "../packages/frameworks-solid-start",
-    ...(process.env.TYPEDOC_SKIP_ADAPTERS
-      ? []
-      : [
-          "../packages/adapter-prisma",
-          "../packages/adapter-azure-tables",
-          "../packages/adapter-d1",
-          "../packages/adapter-dgraph",
-          "../packages/adapter-drizzle",
-          "../packages/adapter-dynamodb",
-          "../packages/adapter-edgedb",
-          "../packages/adapter-fauna",
-          "../packages/adapter-firebase",
-          "../packages/adapter-hasura",
-          "../packages/adapter-kysely",
-          "../packages/adapter-mikro-orm",
-          "../packages/adapter-mongodb",
-          "../packages/adapter-neo4j",
-          "../packages/adapter-pg",
-          "../packages/adapter-pouchdb",
-          "../packages/adapter-sequelize",
-          "../packages/adapter-supabase",
-          "../packages/adapter-surrealdb",
-          "../packages/adapter-typeorm",
-          "../packages/adapter-unstorage",
-          "../packages/adapter-upstash-redis",
-          "../packages/adapter-xata",
-        ]),
-  ],
+  entryPoints: [...frameworks, ...adapters],
   entryPointStrategy: "packages",
   out: "pages/reference",
   tsconfig: "./tsconfig.json",

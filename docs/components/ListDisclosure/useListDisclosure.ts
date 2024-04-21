@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState } from "react"
 
 export function useListDisclosure(initialLimit: number) {
-  const [displayLimit, setDisplayed] = useState<number>(initialLimit);
+  const [displayLimit, setDisplayed] = useState<number>(initialLimit)
 
   function handleDisplayMore() {
-    setDisplayed((s: number) => Number(s) + Number(initialLimit));
+    setDisplayed((s: number) => Number(s) + Number(initialLimit))
   }
 
   function handleCollapseAll() {
-    setDisplayed(initialLimit);
+    setDisplayed(initialLimit)
   }
 
   return {
     handleDisplayMore,
     handleCollapseAll,
     displayLimit,
-  };
+  }
 }

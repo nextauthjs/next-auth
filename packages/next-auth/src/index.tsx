@@ -79,7 +79,7 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "./lib/types.js"
+import type { AppRouteHandlerFn, AppRouteHandlerFnContext } from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
@@ -230,11 +230,11 @@ export interface NextAuthResult {
   auth: ((
     ...args: [NextApiRequest, NextApiResponse]
   ) => Promise<Session | null>) &
-  ((...args: []) => Promise<Session | null>) &
-  ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
-  ((
-    ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
-  ) => AppRouteHandlerFn)
+    ((...args: []) => Promise<Session | null>) &
+    ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
+    ((
+      ...args: [(req: NextAuthRequest, ctx: AppRouteHandlerFnContext) => ReturnType<AppRouteHandlerFn>]
+    ) => AppRouteHandlerFn)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
    *
@@ -287,11 +287,11 @@ export interface NextAuthResult {
     options?:
       | FormData
       | ({
-        /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-        redirectTo?: string
-        /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-        redirect?: R
-      } & Record<string, any>),
+          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          redirectTo?: string
+          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+          redirect?: R
+        } & Record<string, any>),
     authorizationParams?:
       | string[][]
       | Record<string, string>

@@ -62,7 +62,7 @@ export interface ZitadelProfile extends Record<string, any> {
  *
  * ### Resources
  * - [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
- * - [ZITADEL recommended OAuth Flows](https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows)
+ * - [ZITADEL recommended OAuth Flows](https://zitadel.com/docs/guides/integrate/oauth-recommended-flows)
  *
  * ### Notes
  *

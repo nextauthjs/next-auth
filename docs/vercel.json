@@ -87,6 +87,10 @@
       "destination": "https://discord.gg/CGAPMawPng"
     },
     {
+      "source": "/img/providers/:providerId*-dark.svg",
+      "destination": "/img/providers/:providerId*.svg"
+    },
+    {
       "source": "/reference/adapter/:path(.*)",
       "destination": "/getting-started/adapters/:path(.*)"
     },
@@ -103,8 +107,28 @@
       "destination": "/guides/refresh-token-rotation"
     },
     {
+      "source": "/getting-started/providers",
+      "destination": "/getting-started/authentication/oauth"
+    },
+    {
+      "source": "/getting-started/providers/oauth-tutorial",
+      "destination": "/getting-started/authentication/oauth"
+    },
+    {
+      "source": "/getting-started/providers/email-tutorial",
+      "destination": "/getting-started/authentication/email"
+    },
+    {
       "source": "/getting-started/providers/credentials-tutorial",
       "destination": "/getting-started/providers/credentials"
+    },
+    {
+      "source": "/guides/providers/email-http",
+      "destination": "/guides/configuring-http-email"
+    },
+    {
+      "source": "/guides/upgrade-to-v5",
+      "destination": "/getting-started/migrating-to-v5"
     }
   ]
 }

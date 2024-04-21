@@ -22,7 +22,8 @@ const InkeepChatButton = dynamic(
           >
             <path d="M197.58,129.06l-51.61-19-19-51.65a15.92,15.92,0,0,0-29.88,0L78.07,110l-51.65,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0l19-51.61,51.65-19a15.92,15.92,0,0,0,0-29.88ZM140.39,163a15.87,15.87,0,0,0-9.43,9.43l-19,51.46L93,172.39A15.87,15.87,0,0,0,83.61,163h0L32.15,144l51.46-19A15.87,15.87,0,0,0,93,115.61l19-51.46,19,51.46a15.87,15.87,0,0,0,9.43,9.43l51.46,19ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"></path>
           </svg>
-          Ask AI
+          <span className="hidden md:inline xl:hidden">AI</span>
+          <span className="hidden xl:inline">Ask AI</span>
         </button>
       </div>
     ),
@@ -94,7 +95,7 @@ const config: DocsThemeConfig = {
         </a>
         <ThemeSwitch
           lite
-          className="*:justify-center *:gap-0 [&_svg]:size-4 p-0 [&_span]:hidden"
+          className="!bg-transparent *:justify-center *:gap-0 [&_svg]:size-4 p-0 [&_span]:hidden"
         />
       </div>
     ),
@@ -165,41 +166,10 @@ const config: DocsThemeConfig = {
     labels: "feedback",
   },
   toc: {
-    extraContent: (
-      <div className="flex flex-col gap-2 max-w-96">
-        <a
-          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
-          target="_blank"
-        >
-          <div className="flex flex-col gap-1 p-2 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-            Looking for a hosted alternative? (sponsored)
-            <span className="flex gap-2 text-[#289ef9]">
-              Try Clerk{" "}
-              <svg
-                width="16"
-                data-slot="icon"
-                fill="none"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-                ></path>
-              </svg>
-            </span>
-          </div>
-        </a>
-        <script id="_carbonads_js" />
-      </div>
-    ),
+    extraContent: <script id="_carbonads_js" />,
     backToTop: true,
   },
-  docsRepositoryBase: "https://github.com/nextauthjs/next-auth/docs",
+  docsRepositoryBase: "https://github.com/nextauthjs/next-auth/edit/main/docs",
   footer: {
     component: <Footer />,
   },
