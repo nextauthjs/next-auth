@@ -12,7 +12,6 @@ Azure Active Directory returns the following fields on `Account`:
 - `access_token` (string).
 
 Remember to add these fields to your database schema, in case if you are using an [Adapter](https://authjs.dev/getting-started/database).
-:::
 
 ## Documentation
 

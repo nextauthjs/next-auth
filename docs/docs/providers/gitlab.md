@@ -4,7 +4,7 @@ title: GitLab
 ---
 
 :::note
-GitLab returns a field on `Account` called `created_at` which is a number. See their [docs](https://docs.gitlab.com/ee/api/oauth2.html). Remember to add this field as optional to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+GitLab returns a field on `Account` called `created_at` which is a number. See their [docs](https://docs.gitlab.com/ee/api/oauth2.html). Remember to add this field as optional to your database schema, in case if you are using an [Adapter](https://next-auth.js.org/adapters).
 :::
 
 ## Documentation
