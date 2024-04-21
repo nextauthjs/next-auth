@@ -10,15 +10,13 @@
  */
 
 /*
-* This NetSuite provider uses OAuth 2 Features. Ensure you have an integration record and access token set up in order to use this provider.
-*  Read more about Oauth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
-*/
+ * This NetSuite provider uses OAuth 2 Features. Ensure you have an integration record and access token set up in order to use this provider.
+ *  Read more about Oauth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
+ */
 
-import type { OAuth2Config, OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-export interface OAuthNetSuiteOptions<P extends OAuthUserConfig<Record<string, any>>> {
-  clientId: string,
-  clientSecret: string,
+export interface OAuthNetSuiteOptions {
   /**
    *  The prompt options - also viewable below
    *
@@ -33,10 +31,19 @@ export interface OAuthNetSuiteOptions<P extends OAuthUserConfig<Record<string, a
    * "consent" - the consent screen appears every time. The user must authenticate if there is no active session.
    * login consent or consent login - the consent screen appears every time, and the user must authenticate even if there is an active session and allow the connection to the NetSuite. Similar to GitHub, Google, and Facebook data consent screens.
    */
-  prompt: string | 'none' | 'login' | 'consent',
-  issuer: string, // EX: TSTDRV1234567 or 81555 for prod
-  scope: string, // EX: restlets rest_webservices or restlets or rest_webservices suiteanalytics_connect restlets
-  userinfo: string, // Either a restlet or suitelet returning runtime info or record info -> RESTlet reccommended
+  prompt: string | "none" | "login" | "consent"
+  /**
+   * EX: TSTDRV1234567 or 81555 for prod
+   */
+  issuer: string
+  /**
+   * restlets rest_webservices or restlets or rest_webservices suiteanalytics_connect restlets
+   */
+  scope: string
+  /**
+   * Either a restlet or suitelet returning runtime info or record info -> RESTlet reccommended
+   */
+  userinfo: string
 }
 
 export interface NetSuiteProfile {
@@ -58,7 +65,7 @@ export interface NetSuiteProfile {
  * - [NetSuite RESTLets](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_4567507062.html#Tracking-RESTlet-Calls-Made-with-TBA-and-OAuth-2.0).
  * - [NetSuite REST Web Services](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/book_1559132836.html#SuiteTalk-REST-Web-Services-API-Guide).
  *
- * ### Setup
+ * ## Setup
  *
  * ### Disclaimer
  * By using this provider, you consent to sharing your data with NetSuite.
@@ -83,12 +90,12 @@ export interface NetSuiteProfile {
  *   - **Save** the Integration record.
  *   - The Integration record will be used to generate the `clientId` and `clientSecret` for the provider. **Save the generated values for later**
  *
- * #### Callback URL
+ * ### Callback URL
+ *
  * :::tip
  * When setting the Redirect URI in the Integration record, you must use the `https` protocol.
  * Otherwise, you will get an error when trying to sign in. (_INVALID_LOGIN_ATTEMPT_).
  * If you are testing locally, you can use a service like [ngrok](https://ngrok.com/) to create a secure tunnel to your localhost.
- *
  * :::
  *
  * ```
@@ -98,10 +105,9 @@ export interface NetSuiteProfile {
  * :::tip
  * Our `userinfo` needs to compose of a suitelet or RESTLet url that gives us the information about the user. This has to be very fast in which the handshake profile gather execution can't take long.
  * The best bet is to use the `N/runtime` module to get the basics first. - Here is an example of a RESTlet below. Be sure to deploy and enable access to "All Roles".
- *
  * :::
  *
- * #### Example RESTLet Callback Handler
+ * ### Example RESTLet Callback Handler
  * Be sure to deploy and use the **external** RESTLet url of any usage of the URIs.
  *
  * ```js
@@ -110,7 +116,7 @@ export interface NetSuiteProfile {
  * * @NScriptType Restlet
  * *\/
  * define(["N/runtime"], /**
- *  @param{runtime} runtime
+ *  @param{runtime} runtimee
  * \/ (runtime) => {
  *  /**
  *   * Defines the function that is executed when a GET request is sent to a RESTlet.
@@ -155,8 +161,8 @@ export interface NetSuiteProfile {
  *
  * > **Note**: Above is an example of returning the basic runtime information. Be sure to create a new script record and deployment record. Upon saving the deployment record. We will get our URLs for our RESTlet.
  *
+ * ## Configuration
  *
- * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
  * import Netsuite from "@auth/core/providers/netsuite"
@@ -185,32 +191,19 @@ export interface NetSuiteProfile {
  * - [NetSuite - Authorizing OAuth Requests](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
  * - [NetSuite - Configure OAuth Roles](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771510070.html#Set-Up-OAuth-2.0-Roles)
  * - [Learn more about NetSuite OAuth 2.0](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_157769826287.html#OAuth-2.0)
- * - [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/netsuite.ts)
  *
  * ### Notes
- *
- * By default, Auth.js assumes that the NetSuite provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
  * Make sure the `userinfo` matches the return type of the profile callback to ensure the user session gets read correctly.
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
- *
  * :::
  *
- * :::info **Disclaimer**
- * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
- *
- * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
- * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
- * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
- *
- * :::
  */
 export default function NetSuite<P extends NetSuiteProfile>(
-  config: OAuthNetSuiteOptions<P>
+  options: OAuthUserConfig<P> & OAuthNetSuiteOptions
 ): OAuthConfig<P> {
-  const { issuer, userinfo: userInfo, prompt = 'none', scope = 'restlets rest_webservices', clientId, clientSecret } = config
+  const { issuer, clientId, userinfo: userInfo, prompt = "none" } = options
 
   return {
     id: "netsuite",
@@ -222,31 +215,29 @@ export default function NetSuite<P extends NetSuiteProfile>(
       params: {
         client_id: clientId,
         prompt: prompt,
-        response_type: 'code',
-        scope,
-      }
+        response_type: "code",
+        scope: "restlets rest_webservices",
+      },
     },
     token: {
       url: `https://${issuer}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`,
       params: {
         grant_type: "authorization_code",
-      }
+      },
     },
     userinfo: userInfo,
     profile(profile) {
       // This is the default runtime.getCurrentUser() object returned from the RESTlet or SUITELet
       return {
-        id: profile.id,
+        id: String(profile.id),
         name: profile.name,
         email: profile.email,
         location: profile.location,
         role: profile.role,
-        contact: profile?.contact
+        contact: profile?.contact,
       }
     },
-    clientId,
-    clientSecret,
     style: { logo: "/netsuite.png", bg: "#3a4f5f", text: "#fff" },
-    options: config,
+    options,
   }
 }
