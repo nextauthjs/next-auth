@@ -5,6 +5,8 @@ import { Code } from "@/components/Code"
 
 # Postmark Provider
 
+<Callout>To be released in `next-auth@5.0.0-beta.17`</Callout>
+
 ## Overview
 
 The Postmark provider uses email to send "magic links" that contain URLs with verification tokens can be used to sign in.
@@ -113,7 +115,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 As an example, the following shows the source for our built-in `sendVerificationRequest()` method. Notice that we're rendering the HTML (`html()`) and making the network call (`fetch()`) to Postmark to actually do the sending here in this method.
 
-```ts {6, 16} filename="./lib/authSendRequest.ts"
+```ts filename="./lib/authSendRequest.ts" {4, 14}
 export async function sendVerificationRequest(params) {
   const { identifier: to, provider, url, theme } = params
   const { host } = new URL(url)
