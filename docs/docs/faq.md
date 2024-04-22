@@ -207,7 +207,7 @@ NextAuth.js records Refresh Tokens and Access Tokens on sign in (if supplied by 
 
 You can then look them up from the database or persist them to the JSON Web Token.
 
-Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](https://authjs.dev/guides/basics/refresh-token-rotation) if you want to implement it.
+Note: NextAuth.js does not currently handle Access Token rotation for OAuth providers for you, however you can check out [this tutorial](https://authjs.dev/guides/refresh-token-rotation) if you want to implement it.
 
 We also have an [example repository](https://github.com/nextauthjs/next-auth-refresh-token-example) / project based upon NextAuth.js v4 where we demonstrate how to use a refresh token to refresh the provided access token.
 
@@ -289,7 +289,7 @@ Ultimately if your request is not accepted or is not actively in development, yo
 </summary>
 <p>
 
-NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](https://authjs.dev/reference/adapters), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
+NextAuth.js by default uses JSON Web Tokens for saving the user's session. However, if you use a [database adapter](https://authjs.dev/getting-started/database), the database will be used to persist the user's session. You can force the usage of JWT when using a database [through the configuration options](/configuration/options#session). Since v4 all our JWT tokens are now encrypted by default with A256GCM.
 
 </p>
 </details>
@@ -334,7 +334,6 @@ JSON Web Tokens can be used for session tokens, but are also used for lots of ot
   Avoid storing any data in a token that might be problematic if it were to be decrypted in the future.
 
 - If you do not explicitly specify a secret for NextAuth.js, existing sessions will be invalidated any time your NextAuth.js configuration changes, as NextAuth.js will default to an auto-generated secret. Since v4 this only impacts development and generating a secret is required in production.
-
 
 </p>
 </details>

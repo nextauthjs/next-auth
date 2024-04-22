@@ -7,7 +7,7 @@ Using a custom adapter you can connect to any database back-end or even several 
 
 ## How to create an adapter
 
-For more information about the data these methods need to manage see [models](https://authjs.dev/getting-started/adapters#models).
+For more information about the data these methods need to manage see [models](https://authjs.dev/guides/creating-a-database-adapter).
 
 _See the code below for practical example._
 

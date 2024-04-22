@@ -13,4 +13,4 @@ To learn more about databases in NextAuth.js and how they are used, check out [d
 
 ## How to use a database
 
-See the [documentation for adapters](https://authjs.dev/getting-started/adapters) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](/tutorials/creating-a-database-adapter).
+See the [documentation for adapters](https://authjs.dev/getting-started/database) for more information on advanced configuration, including how to use NextAuth.js with other databases using a [custom adapter](https://authjs.dev/guides/creating-a-database-adapter).
