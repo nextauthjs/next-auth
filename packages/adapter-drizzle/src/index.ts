@@ -28,23 +28,17 @@ import { DefaultSchema, SqlFlavorOptions } from "./lib/utils.js"
 import type { Adapter } from "@auth/core/adapters"
 
 export {
-  postgresUsersTable,
+  mysqlAccountsTable,
+  mysqlSessionsTable, mysqlUsersTable, mysqlVerificationTokensTable
+} from "./lib/mysql.js"
+export {
   postgresAccountsTable,
-  postgresSessionsTable,
-  postgresVerificationTokensTable,
+  postgresSessionsTable, postgresUsersTable, postgresVerificationTokensTable
 } from "./lib/pg.js"
 export {
-  sqliteUsersTable,
   sqliteAccountsTable,
-  sqliteSessionsTable,
-  sqliteVerificationTokensTable,
+  sqliteSessionsTable, sqliteUsersTable, sqliteVerificationTokensTable
 } from "./lib/sqlite.js"
-export {
-  mysqlUsersTable,
-  mysqlAccountsTable,
-  mysqlSessionsTable,
-  mysqlVerificationTokensTable,
-} from "./lib/mysql.js"
 /**
  * Add this adapter to your `auth.ts` Auth.js configuration object:
  *
@@ -63,7 +57,7 @@ export {
  * ```
  * 
  * :::info
- * If you want to use your own tables, you can pass them as a second argument
+ * If you want to use your own tables, you can pass them as a second argument. If you add non-nullable columns, make sure to provide a default value or rewrite functions to handle the missing values.
  * :::
  * 
  * ```ts title="auth.ts"
@@ -128,21 +122,17 @@ export {
  *   session_state: text("session_state"),
  * },
  * (account) => ({
- *   userIdIdx: index().on(account.userId),
  *   compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] }),
  * })
  * )
  *
  * export const sessions = pgTable("session", {
- *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
- *  sessionToken: text("sessionToken").notNull().unique(),
+ *  sessionToken: text("sessionToken").primaryKey(),
  *  userId: text("userId")
  *    .notNull()
  *    .references(() => users.id, { onDelete: "cascade" }),
  *  expires: timestamp("expires", { mode: "date" }).notNull(),
- * }, (session) => ({
- *   userIdIdx: index().on(session.userId)
- * }))
+ * })
  *
  * export const verificationTokens = pgTable(
  *  "verificationToken",
@@ -180,49 +170,45 @@ export {
  * export const accounts = mysqlTable(
  *  "account",
  *   {
- *    userId: varchar("userId", { length: 255 })
- *       .notNull()
- *       .references(() => users.id, { onDelete: "cascade" }),
- *    type: varchar("type", { length: 255 }).notNull(),
- *    provider: varchar("provider", { length: 255 }).notNull(),
- *    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
- *    refresh_token: varchar("refresh_token", { length: 255 }),
- *    access_token: varchar("access_token", { length: 255 }),
- *    expires_at: int("expires_at"),
- *   token_type: varchar("token_type", { length: 255 }),
- *   scope: varchar("scope", { length: 255 }),
- *   id_token: varchar("id_token", { length: 2048 }),
- *   session_state: varchar("session_state", { length: 255 }),
- * },
- * (account) => ({
- *    compoundKey: primaryKey({
-        columns: [account.provider, account.providerAccountId],
-      }),
-      userIdIdx: index('Account_userId_index').on(account.userId)
- * })
+ *     userId: varchar("userId", { length: 255 })
+ *        .notNull()
+ *        .references(() => users.id, { onDelete: "cascade" }),
+ *     type: varchar("type", { length: 255 }).notNull(),
+ *     provider: varchar("provider", { length: 255 }).notNull(),
+ *     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+ *     refresh_token: varchar("refresh_token", { length: 255 }),
+ *     access_token: varchar("access_token", { length: 255 }),
+ *     expires_at: int("expires_at"),
+ *     token_type: varchar("token_type", { length: 255 }),
+ *     scope: varchar("scope", { length: 255 }),
+ *     id_token: varchar("id_token", { length: 2048 }),
+ *     session_state: varchar("session_state", { length: 255 }),
+ *   },
+ *   (account) => ({
+ *     compoundKey: primaryKey({
+         columns: [account.provider, account.providerAccountId],
+       })
+ *   })
  * )
  *
  * export const sessions = mysqlTable("session", {
- *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
- *  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
+ *  sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
  *  userId: varchar("userId", { length: 255 })
  *    .notNull()
  *    .references(() => users.id, { onDelete: "cascade" }),
  *  expires: timestamp("expires", { mode: "date" }).notNull(),
- * }, (session) => ({
- *  userIdIdx: index('Session_userId_index').on(session.userId)
- * }))
+ * })
  *
  * export const verificationTokens = mysqlTable(
- * "verificationToken",
- * {
- *   identifier: varchar("identifier", { length: 255 }).notNull(),
- *   token: varchar("token", { length: 255 }).notNull().unique(),
- *   expires: timestamp("expires", { mode: "date" }).notNull(),
- * },
- * (vt) => ({
- *   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
- * })
+ *  "verificationToken",
+ *  {
+ *    identifier: varchar("identifier", { length: 255 }).notNull(),
+ *    token: varchar("token", { length: 255 }).notNull().unique(),
+ *    expires: timestamp("expires", { mode: "date" }).notNull(),
+ *  },
+ *  (vt) => ({
+ *    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+ *  })
  * )
  * ```
  *
@@ -260,39 +246,35 @@ export {
  *  (account) => ({
  *    compoundKey: primaryKey({
         columns: [account.provider, account.providerAccountId],
-      }),
-      userIdIdx: index('Account_userId_index').on(account.userId)
+      })
  *  })
  * )
  *
  * export const sessions = sqliteTable("session", {
- * id: text("id").primaryKey().$defaultFn(() => randomUUID())
- * sessionToken: text("sessionToken").notNull().unique(),
- * userId: text("userId")
- *   .notNull()
- *   .references(() => users.id, { onDelete: "cascade" }),
- * expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
- * }, (table) => ({
- *  userIdIdx: index('Session_userId_index').on(table.userId)
- * }))
+ *  sessionToken: text("sessionToken").primaryKey(),
+ *  userId: text("userId")
+ *    .notNull()
+ *    .references(() => users.id, { onDelete: "cascade" }),
+ *  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+ * })
  *
  * export const verificationTokens = sqliteTable(
- * "verificationToken",
- * {
- *   identifier: text("identifier").notNull(),
- *   token: text("token").notNull().unique(),
- *   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
- * },
- * (vt) => ({
- *   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
- * })
+ *  "verificationToken",
+ *  {
+ *    identifier: text("identifier").notNull(),
+ *    token: text("token").notNull().unique(),
+ *    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+ *  },
+ *  (vt) => ({
+ *    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+ *  })
  * )
  * ```
  *
  * ## Migrating your database
  * With your schema now described in your code, you'll need to migrate your database to your schema.
  *
- * For full documentation on how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations).
+ * For full documentation on how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations) or check how to apply changes directly to the database with [push command](https://orm.drizzle.team/kit-docs/overview#prototyping-with-db-push).
  *
  * ---
  *
