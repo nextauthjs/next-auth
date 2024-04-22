@@ -149,10 +149,14 @@ export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
       if (err) return next(err)
       e.urlencoded({ extended: true })(req, res, async (err) => {
         if (err) return next(err)
-        config.basePath = getBasePath(req)
-        setEnvDefaults(process.env, config)
-        await toExpressResponse(await Auth(toWebRequest(req), config), res)
-        next()
+        try {
+          config.basePath = getBasePath(req)
+          setEnvDefaults(process.env, config)
+          await toExpressResponse(await Auth(toWebRequest(req), config), res)
+          if (!res.headersSent) next()
+        } catch (error) {
+          next(error)
+        }
       })
     })
   }
