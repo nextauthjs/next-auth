@@ -1,6 +1,6 @@
 import type {
   QueryResultHKT as MySQLQueryResultHKT,
-  PreparedQueryHKTBase
+  PreparedQueryHKTBase,
 } from "drizzle-orm/mysql-core"
 import { MySqlDatabase } from "drizzle-orm/mysql-core"
 import type { QueryResultHKT as PostgresQueryResultHKT } from "drizzle-orm/pg-core"
@@ -23,10 +23,11 @@ export type SqlFlavorOptions =
   | AnyMySqlDatabase
   | AnySQLiteDatabase
 
-  export type DefaultSchema<Flavor extends SqlFlavorOptions> = Flavor extends AnyMySqlDatabase
-  ? DefaultMySqlSchema
-  : Flavor extends AnyPostgresDatabase
-    ? DefaultPostgresSchema
-    : Flavor extends AnySQLiteDatabase
-      ? DefaultSQLiteSchema
-      : never
+export type DefaultSchema<Flavor extends SqlFlavorOptions> =
+  Flavor extends AnyMySqlDatabase
+    ? DefaultMySqlSchema
+    : Flavor extends AnyPostgresDatabase
+      ? DefaultPostgresSchema
+      : Flavor extends AnySQLiteDatabase
+        ? DefaultSQLiteSchema
+        : never

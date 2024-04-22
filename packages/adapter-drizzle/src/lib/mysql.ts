@@ -10,7 +10,7 @@ import {
   primaryKey,
   text,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/mysql-core"
 
 import type {
@@ -53,20 +53,17 @@ export const mysqlAccountsTable = mysqlTable(
   (account) => ({
     compositePk: primaryKey({
       columns: [account.provider, account.providerAccountId],
-    })
+    }),
   })
 )
 
-export const mysqlSessionsTable = mysqlTable(
-  "session",
-  {
-    sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
-    userId: varchar("userId", { length: 255 })
-      .notNull()
-      .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  }
-)
+export const mysqlSessionsTable = mysqlTable("session", {
+  sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+})
 
 export const mysqlVerificationTokensTable = mysqlTable(
   "verificationToken",
@@ -87,7 +84,7 @@ export function MySqlDrizzleAdapter(
     accountsTable: mysqlAccountsTable,
     sessionsTable: mysqlSessionsTable,
     verificationTokensTable: mysqlVerificationTokensTable,
-  },
+  }
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
     schema
@@ -260,42 +257,42 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
   columns: {
     id: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      driverParam: string | number;
+      driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     name: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     email: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     emailVerified: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'date'
-      columnType: 'MySqlTimestamp'
+      dataType: "date"
+      columnType: "MySqlTimestamp"
       data: Date
       driverParam: string | number
       notNull: boolean
@@ -306,8 +303,8 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
     image: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -316,7 +313,7 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
       baseColumn: never
     }>
   }
-  dialect: 'mysql'
+  dialect: "mysql"
   schema: string | undefined
 }>
 
@@ -325,42 +322,42 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
   columns: {
     userId: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      driverParam: string | number;
+      driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     type: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     provider: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     providerAccountId: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
@@ -371,8 +368,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     refresh_token: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -383,8 +380,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     access_token: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -395,8 +392,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     expires_at: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'number'
-      columnType: 'MySqlInt'
+      dataType: "number"
+      columnType: "MySqlInt"
       data: number
       driverParam: string | number
       notNull: boolean
@@ -407,8 +404,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     token_type: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -419,8 +416,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     scope: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -431,8 +428,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     id_token: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -443,8 +440,8 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     session_state: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'string'
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: boolean
@@ -453,7 +450,7 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
       baseColumn: never
     }>
   }
-  dialect: 'mysql'
+  dialect: "mysql"
   schema: string | undefined
 }>
 
@@ -462,31 +459,31 @@ export type DefaultMySqlSessionsTable = MySqlTableWithColumns<{
   columns: {
     sessionToken: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     userId: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     expires: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'date'
-      columnType: 'MySqlTimestamp'
+      dataType: "date"
+      columnType: "MySqlTimestamp"
       data: Date
       driverParam: string | number
       notNull: true
@@ -495,7 +492,7 @@ export type DefaultMySqlSessionsTable = MySqlTableWithColumns<{
       baseColumn: never
     }>
   }
-  dialect: 'mysql'
+  dialect: "mysql"
   schema: string | undefined
 }>
 
@@ -504,31 +501,31 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
   columns: {
     identifier: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     token: MySqlColumn<{
       name: string
-      columnType: 'MySqlVarChar' | 'MySqlText'
+      columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
       notNull: true
       hasDefault: boolean
       enumValues: any
-      dataType: 'string'
+      dataType: "string"
       tableName: string
     }>
     expires: MySqlColumn<{
       name: string
       tableName: string
-      dataType: 'date'
-      columnType: 'MySqlTimestamp'
+      dataType: "date"
+      columnType: "MySqlTimestamp"
       data: Date
       driverParam: string | number
       notNull: true
@@ -537,7 +534,7 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
       baseColumn: never
     }>
   }
-  dialect: 'mysql'
+  dialect: "mysql"
   schema: string | undefined
 }>
 

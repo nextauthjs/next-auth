@@ -29,15 +29,21 @@ import type { Adapter } from "@auth/core/adapters"
 
 export {
   mysqlAccountsTable,
-  mysqlSessionsTable, mysqlUsersTable, mysqlVerificationTokensTable
+  mysqlSessionsTable,
+  mysqlUsersTable,
+  mysqlVerificationTokensTable,
 } from "./lib/mysql.js"
 export {
   postgresAccountsTable,
-  postgresSessionsTable, postgresUsersTable, postgresVerificationTokensTable
+  postgresSessionsTable,
+  postgresUsersTable,
+  postgresVerificationTokensTable,
 } from "./lib/pg.js"
 export {
   sqliteAccountsTable,
-  sqliteSessionsTable, sqliteUsersTable, sqliteVerificationTokensTable
+  sqliteSessionsTable,
+  sqliteUsersTable,
+  sqliteVerificationTokensTable,
 } from "./lib/sqlite.js"
 /**
  * Add this adapter to your `auth.ts` Auth.js configuration object:
