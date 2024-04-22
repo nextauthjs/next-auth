@@ -25,21 +25,22 @@ import Twitch from "@auth/sveltekit/providers/twitch"
 import Twitter from "@auth/sveltekit/providers/twitter"
 import WorkOS from "@auth/sveltekit/providers/workos"
 import Zoom from "@auth/sveltekit/providers/zoom"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Apple,
     Auth0,
     AzureB2C({
-      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
-      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
-      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
+      clientId: env.AUTH_AZURE_AD_B2C_ID,
+      clientSecret: env.AUTH_AZURE_AD_B2C_SECRET,
+      issuer: env.AUTH_AZURE_AD_B2C_ISSUER,
     }),
-    // BoxyHQSAML({
-    //   clientId: "dummy",
-    //   clientSecret: "dummy",
-    //   issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
-    // }),
+    BoxyHQSAML({
+      clientId: "dummy",
+      clientSecret: "dummy",
+      issuer: env.AUTH_BOXYHQ_SAML_ISSUER,
+    }),
     Cognito,
     Coinbase,
     Discord,
@@ -61,7 +62,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Twitch,
     Twitter,
     WorkOS({
-      connection: process.env.AUTH_WORKOS_CONNECTION,
+      connection: env.AUTH_WORKOS_CONNECTION,
     }),
     Zoom,
   ],
