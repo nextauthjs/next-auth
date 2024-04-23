@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "e2e": "pnpm dlx playwright test"
@@ -18,7 +18,8 @@
     "next-auth": "workspace:*",
     "nodemailer": "^6.9.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "next-easy-middlewares": "^1.0.10"
   },
   "devDependencies": {
     "@types/react": "^18.2.23",

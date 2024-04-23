@@ -4,6 +4,7 @@ import * as React from "react"
 import type { BuiltInProviderType, ProviderType } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
 import { AuthError } from "@auth/core/errors"
+import type { RedirectableProviderType } from "@auth/core/providers"
 
 /** @todo */
 class ClientFetchError extends AuthError {}
@@ -56,6 +57,7 @@ export interface SignInOptions extends Record<string, unknown> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
   redirect?: boolean
+  config: AuthClientConfig
 }
 
 export interface SignInResponse {
@@ -64,6 +66,24 @@ export interface SignInResponse {
   ok: boolean
   url: string | null
 }
+
+export type SignIn = <
+  P extends RedirectableProviderType | undefined = undefined,
+>(
+  options: SignInOptions,
+  provider?: LiteralUnion<
+    P extends RedirectableProviderType
+      ? P | BuiltInProviderType
+      : BuiltInProviderType
+  >,
+  authorizationParams?: SignInAuthorizationParams
+) => Promise<
+  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
+>
+
+export type SignOut = <R extends boolean = true>(
+  options: SignOutParams<R>
+) => Promise<R extends true ? undefined : SignOutResponse>
 
 /**
  * Match `inputType` of `new URLSearchParams(inputType)`
@@ -85,6 +105,7 @@ export interface SignOutParams<R extends boolean = true> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
   redirect?: R
+  config: AuthClientConfig
 }
 
 /**
@@ -98,6 +119,7 @@ export interface SessionProviderProps {
   session?: Session | null
   baseUrl?: string
   basePath?: string
+  name?: string
   /**
    * A time interval (in seconds) after which the session will be re-fetched.
    * If set to `0` (default), the session is not polled.
@@ -133,6 +155,7 @@ export async function fetchData<T = any>(
   req: any = {}
 ): Promise<T | null> {
   const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`
+  console.log({ url })
   try {
     const options: RequestInit = {
       headers: {
@@ -145,7 +168,15 @@ export async function fetchData<T = any>(
       options.body = JSON.stringify(req.body)
       options.method = "POST"
     }
-
+    // ?? double fetch
+    if (path === "csrf") {
+      try {
+        console.log("doing first fetch")
+        await fetch(url, options)
+      } catch (ex) {
+        console.log("ignoring", (ex as Error).message)
+      }
+    }
     const res = await fetch(url, options)
     const data = await res.json()
     if (!res.ok) throw data

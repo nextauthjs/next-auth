@@ -1,23 +1,23 @@
 import * as React from "react"
-import { signIn, signOut, useSession } from "next-auth/react"
-import { SignInResponse, SignOutResponse } from "next-auth/react"
+import { useSession } from "next-auth/react"
+import type { SignInResponse, SignOutResponse } from "next-auth/react"
 
 export default function Page() {
   const [response, setResponse] = React.useState<
     SignInResponse | SignOutResponse
   >()
 
-  const { data: session } = useSession()
+  const { signIn, signOut, config, data: session } = useSession()
 
   if (session) {
     return (
       <>
         <h1>Test different flows for Credentials logout</h1>
         <span className="spacing">Default: </span>
-        <button onClick={() => signOut()}>Logout</button>
+        <button onClick={() => signOut({ config })}>Logout</button>
         <br />
         <span className="spacing">No redirect: </span>
-        <button onClick={() => signOut({ redirect: false }).then(setResponse)}>
+        <button onClick={() => signOut({ config, redirect: false }).then(setResponse)}>
           Logout
         </button>
         <br />
@@ -33,14 +33,14 @@ export default function Page() {
     <>
       <h1>Test different flows for Credentials login</h1>
       <span className="spacing">Default: </span>
-      <button onClick={() => signIn("credentials", { password: "password" })}>
+      <button onClick={() => signIn({ config, password: "password" }, "credentials")}>
         Login
       </button>
       <br />
       <span className="spacing">No redirect: </span>
       <button
         onClick={() =>
-          signIn("credentials", { redirect: false, password: "password" }).then(
+          signIn({ config, redirect: false, password: "password" }, "credentials").then(
             setResponse
           )
         }

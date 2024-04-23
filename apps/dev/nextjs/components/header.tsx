@@ -1,44 +1,53 @@
+
 import type { Session } from "next-auth"
 import Link from "next/link"
 import styles from "./header.module.css"
 
-export function Header({
-  session,
-  signIn,
-  signOut,
-}: {
-  session: Session | null
-  signIn: any
-  signOut: any
+export function Header({ sessions, sign }: {
+  sessions: {
+    session: Session | null
+    signIn: any
+    signOut: any
+  }[];
+  sign: (any) => () => Promise<void>;
 }) {
   return (
     <header className={styles.header}>
-      <div className={styles.signedInStatus}>
-        <img
-          src={
-            session?.user?.image ?? "https://source.boringavatars.com/beam/120"
-          }
-          className={styles.avatar}
-        />
-        {session?.user ? (
-          <>
-            <span className={styles.signedInText}>
-              <small>Signed in as</small>
-              <br />
-              <strong>{session.user?.email} </strong>
-              {session.user?.name ? `(${session.user.name})` : null}
-            </span>
-            {signOut}
-          </>
-        ) : (
-          <>
-            <span className={styles.notSignedInText}>
-              You are not signed in
-            </span>
-            {signIn}
-          </>
-        )}
-      </div>
+      {sessions.map(
+        ({
+          session,
+          signIn,
+          signOut
+        }, i) => (
+          <div key={i} className={styles.signedInStatus}>
+            <img
+              src={
+                session?.user?.image ?? "https://source.boringavatars.com/beam/120"
+              }
+              className={styles.avatar}
+            />
+            {session?.user ? (
+              <>
+                <span className={styles.signedInText}>
+                  <small>Signed in as</small>
+                  <br />
+                  <strong>{session.user?.email} </strong>
+                  {session.user?.name ? `(${session.user.name})` : null}
+                </span>
+                {signOut}
+              </>
+            ) : (
+              <>
+                <span className={styles.notSignedInText}>
+                  You are not signed in
+                </span>
+                {signIn}
+              </>
+            )}
+          </div>
+
+        )
+      )}
       <nav>
         <ul className={styles.navItems}>
           <Link href="/" className={styles.navItem}>

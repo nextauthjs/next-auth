@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       process.env.NEXTAUTH_URL ??
       (process.env.VERCEL
         ? "https://next-auth-example-v5.vercel.app"
-        : "http://localhost:3000")
+        : "http://localhost:3001")
     const res = await fetch(`${hostname}/api/examples/protected`, {
       headers: { cookie: context.req.headers.cookie ?? "" },
     })

@@ -1,10 +1,10 @@
 "use client"
 
-import { signIn, signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 export default function Client() {
-  const { data: session, update, status } = useSession()
+  const { data: session, signIn, signOut, update, status } = useSession()
   const router = useRouter()
   return (
     <div className="card">
@@ -33,6 +33,7 @@ export default function Client() {
             </>
           ) : (
             <>
+              <button onClick={() => signIn("facebook")}>Sign in Facebook</button>
               <button onClick={() => signIn("github")}>Sign in Github</button>
               <button onClick={() => signIn("credentials", {})}>
                 Sign in Credentials

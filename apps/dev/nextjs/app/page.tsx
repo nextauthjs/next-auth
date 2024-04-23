@@ -1,4 +1,6 @@
 import { auth, unstable_update as update } from "auth"
+import { auth as auth2, unstable_update as update2 } from "auth-2"
+
 import { SessionProvider } from "next-auth/react"
 import Client from "./client"
 import { revalidatePath } from "next/cache"
@@ -6,6 +8,7 @@ import { redirect } from "next/navigation"
 
 export default async function Page() {
   const session = await auth()
+  const session2 = await auth2()
   return (
     <div className="container">
       <h1>NextAuth.js Example</h1>
@@ -23,7 +26,7 @@ export default async function Page() {
               action={async () => {
                 "use server"
                 await update({ user: { name: "Server Fill Murray" } })
-                // revalidatePath("/")
+                revalidatePath("/")
                 redirect("/")
               }}
             >
@@ -40,9 +43,13 @@ export default async function Page() {
        NOTE: The `auth()` result is not run through the `session` callback, be careful passing down data
        to a client component, this will be exposed via the /api/auth/session endpoint
       */}
-      <SessionProvider session={session} basePath="/auth">
+      <SessionProvider basePath="/auth">
         <Client />
       </SessionProvider>
+      <SessionProvider basePath="/auth-2">
+        <Client />
+      </SessionProvider>
+
     </div>
   )
 }

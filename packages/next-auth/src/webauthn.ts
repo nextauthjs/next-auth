@@ -1,6 +1,6 @@
 import { apiBaseUrl } from "./lib/client.js"
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
-import { getCsrfToken, getProviders, __NEXTAUTH } from "./react.js"
+import { getCsrfToken, getProviders } from "./react.js"
 
 import type { LoggerInstance } from "@auth/core/types"
 import type { WebAuthnOptionsResponseBody } from "@auth/core/lib/utils/webauthn-utils"
@@ -14,6 +14,8 @@ import type {
   SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
+  SignIn,
+  SignOut,
 } from "./lib/client.js"
 
 const logger: LoggerInstance = {
@@ -61,23 +63,15 @@ async function webAuthnOptions(
  * Initiate a signin flow or send the user to the signin page listing all possible providers.
  * Handles CSRF protection.
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined,
->(
-  provider?: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
-  options?: SignInOptions,
-  authorizationParams?: SignInAuthorizationParams
-): Promise<
-  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
-> {
+export const signIn: SignIn = async (
+  options,
+  provider,
+  authorizationParams,
+) => {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
-  const baseUrl = apiBaseUrl(__NEXTAUTH)
-  const providers = await getProviders()
+  const baseUrl = apiBaseUrl(options.config)
+  const providers = await getProviders(options.config)
 
   if (!providers) {
     window.location.href = `${baseUrl}/error`
@@ -105,7 +99,7 @@ export async function signIn<
   if (isWebAuthn) {
     const { data, error, action } = await webAuthnOptions(
       provider,
-      __NEXTAUTH,
+      options.config,
       options
     )
     if (error) {
@@ -116,7 +110,7 @@ export async function signIn<
     webAuthnBody.action = action
   }
 
-  const csrfToken = await getCsrfToken()
+  const csrfToken = await getCsrfToken(options.config)
   const res = await fetch(
     `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
     {
@@ -149,7 +143,7 @@ export async function signIn<
   const error = new URL(data.url).searchParams.get("error")
 
   if (res.ok) {
-    await __NEXTAUTH._getSession({ event: "storage" })
+    await options.config._getSession({ event: "storage" })
   }
 
   return {

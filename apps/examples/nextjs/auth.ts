@@ -81,6 +81,7 @@ export const config = {
       return token
     },
   },
+  secret: 'its a kind of magic'
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
