@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm"
+import { and, eq, getTableColumns } from "drizzle-orm"
 import {
   PgColumn,
   PgDatabase,
@@ -19,12 +19,10 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters"
 
-import { randomUUID } from "crypto"
-
 export const postgresUsersTable = pgTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -93,9 +91,11 @@ export function PostgresDrizzleAdapter(
 
   return {
     async createUser(data: AdapterUser) {
+      const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
+
       return client
         .insert(usersTable)
-        .values(data)
+        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
         .returning()
         .then((res) => res[0])
     },
@@ -227,65 +227,57 @@ export function PostgresDrizzleAdapter(
   }
 }
 
+type DefaultPostgresColumn<
+  T extends {
+    data: string | number | Date
+    dataType: "string" | "number" | "date"
+    notNull: boolean
+    columnType: "PgVarchar" | "PgText" | "PgTimestamp" | "PgInteger"
+  },
+> = PgColumn<{
+  name: string
+  columnType: T["columnType"]
+  data: T["data"]
+  driverParam: string | number
+  notNull: T["notNull"]
+  hasDefault: boolean
+  enumValues: any
+  dataType: T["dataType"]
+  tableName: string
+}>
+
 export type DefaultPostgresUsersTable = PgTableWithColumns<{
   name: string
   columns: {
-    id: PgColumn<{
-      name: string
+    id: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    name: PgColumn<{
-      name: string
+    name: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    email: PgColumn<{
-      name: string
+    email: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    emailVerified: PgColumn<{
-      name: string
-      tableName: string
+    emailVerified: DefaultPostgresColumn<{
       dataType: "date"
       columnType: "PgTimestamp"
       data: Date
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    image: PgColumn<{
-      name: string
-      tableName: string
+    image: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "pg"
@@ -295,134 +287,71 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
 export type DefaultPostgresAccountsTable = PgTableWithColumns<{
   name: string
   columns: {
-    userId: PgColumn<{
-      name: string
+    userId: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    type: PgColumn<{
-      name: string
+    type: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    provider: PgColumn<{
-      name: string
+    provider: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    providerAccountId: PgColumn<{
-      name: string
-      tableName: string
+    providerAccountId: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    refresh_token: PgColumn<{
-      name: string
-      tableName: string
+    refresh_token: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    access_token: PgColumn<{
-      name: string
-      tableName: string
+    access_token: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    expires_at: PgColumn<{
-      name: string
-      tableName: string
+    expires_at: DefaultPostgresColumn<{
       dataType: "number"
       columnType: "PgInteger"
       data: number
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    token_type: PgColumn<{
-      name: string
-      tableName: string
+    token_type: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    scope: PgColumn<{
-      name: string
-      tableName: string
+    scope: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    id_token: PgColumn<{
-      name: string
-      tableName: string
+    id_token: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    session_state: PgColumn<{
-      name: string
-      tableName: string
+    session_state: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "pg"
@@ -432,39 +361,23 @@ export type DefaultPostgresAccountsTable = PgTableWithColumns<{
 export type DefaultPostgresSessionsTable = PgTableWithColumns<{
   name: string
   columns: {
-    sessionToken: PgColumn<{
-      name: string
+    sessionToken: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    userId: PgColumn<{
-      name: string
+    userId: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    expires: PgColumn<{
-      name: string
-      tableName: string
+    expires: DefaultPostgresColumn<{
       dataType: "date"
       columnType: "PgTimestamp"
       data: Date
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "pg"
@@ -474,39 +387,23 @@ export type DefaultPostgresSessionsTable = PgTableWithColumns<{
 export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
   name: string
   columns: {
-    identifier: PgColumn<{
-      name: string
+    identifier: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    token: PgColumn<{
-      name: string
+    token: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    expires: PgColumn<{
-      name: string
-      tableName: string
+    expires: DefaultPostgresColumn<{
       dataType: "date"
       columnType: "PgTimestamp"
       data: Date
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "pg"

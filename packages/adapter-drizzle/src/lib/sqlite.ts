@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm"
+import { and, eq, getTableColumns } from "drizzle-orm"
 import {
   BaseSQLiteDatabase,
   SQLiteColumn,
@@ -17,12 +17,10 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters"
 
-import { randomUUID } from "crypto"
-
 export const sqliteUsersTable = sqliteTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
@@ -87,7 +85,13 @@ export function SQLiteDrizzleAdapter(
 
   return {
     async createUser(data: AdapterUser) {
-      return client.insert(usersTable).values(data).returning().get()
+      const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
+
+      return client
+        .insert(usersTable)
+        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .returning()
+        .get()
     },
     async getUser(userId: string) {
       const result = await client
@@ -226,65 +230,57 @@ export function SQLiteDrizzleAdapter(
   }
 }
 
+type DefaultSQLiteColumn<
+  T extends {
+    data: string | number | Date
+    dataType: "string" | "number" | "date"
+    notNull: boolean
+    columnType: "SQLiteText" | "SQLiteTimestamp" | "SQLiteInteger"
+  },
+> = SQLiteColumn<{
+  name: string
+  columnType: T["columnType"]
+  data: T["data"]
+  driverParam: string | number
+  notNull: T["notNull"]
+  hasDefault: boolean
+  enumValues: any
+  dataType: T["dataType"]
+  tableName: string
+}>
+
 export type DefaultSQLiteUsersTable = SQLiteTableWithColumns<{
   name: string
   columns: {
-    id: SQLiteColumn<{
-      name: string
+    id: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    name: SQLiteColumn<{
-      name: string
+    name: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    email: SQLiteColumn<{
-      name: string
+    email: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    emailVerified: SQLiteColumn<{
-      name: string
-      tableName: string
+    emailVerified: DefaultSQLiteColumn<{
       dataType: "date"
       columnType: "SQLiteTimestamp"
       data: Date
-      driverParam: number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    image: SQLiteColumn<{
-      name: string
-      tableName: string
+    image: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "sqlite"
@@ -294,134 +290,71 @@ export type DefaultSQLiteUsersTable = SQLiteTableWithColumns<{
 export type DefaultSQLiteAccountsTable = SQLiteTableWithColumns<{
   name: string
   columns: {
-    userId: SQLiteColumn<{
-      name: string
+    userId: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    type: SQLiteColumn<{
-      name: string
+    type: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    provider: SQLiteColumn<{
-      name: string
+    provider: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    providerAccountId: SQLiteColumn<{
-      name: string
-      tableName: string
+    providerAccountId: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    refresh_token: SQLiteColumn<{
-      name: string
-      tableName: string
+    refresh_token: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    access_token: SQLiteColumn<{
-      name: string
-      tableName: string
+    access_token: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    expires_at: SQLiteColumn<{
-      name: string
-      tableName: string
+    expires_at: DefaultSQLiteColumn<{
       dataType: "number"
       columnType: "SQLiteInteger"
       data: number
-      driverParam: number
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    token_type: SQLiteColumn<{
-      name: string
-      tableName: string
+    token_type: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    scope: SQLiteColumn<{
-      name: string
-      tableName: string
+    scope: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    id_token: SQLiteColumn<{
-      name: string
-      tableName: string
+    id_token: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
-    session_state: SQLiteColumn<{
-      name: string
-      tableName: string
+    session_state: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: boolean
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "sqlite"
@@ -431,39 +364,23 @@ export type DefaultSQLiteAccountsTable = SQLiteTableWithColumns<{
 export type DefaultSQLiteSessionsTable = SQLiteTableWithColumns<{
   name: string
   columns: {
-    sessionToken: SQLiteColumn<{
-      name: string
+    sessionToken: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    userId: SQLiteColumn<{
-      name: string
+    userId: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    expires: SQLiteColumn<{
-      name: string
-      tableName: string
+    expires: DefaultSQLiteColumn<{
       dataType: "date"
       columnType: "SQLiteTimestamp"
       data: Date
-      driverParam: number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "sqlite"
@@ -473,39 +390,23 @@ export type DefaultSQLiteSessionsTable = SQLiteTableWithColumns<{
 export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
   name: string
   columns: {
-    identifier: SQLiteColumn<{
-      name: string
+    identifier: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    token: SQLiteColumn<{
-      name: string
+    token: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      driverParam: string | number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
       dataType: "string"
-      tableName: string
     }>
-    expires: SQLiteColumn<{
-      name: string
-      tableName: string
+    expires: DefaultSQLiteColumn<{
       dataType: "date"
       columnType: "SQLiteTimestamp"
       data: Date
-      driverParam: number
       notNull: true
-      hasDefault: boolean
-      enumValues: any
-      baseColumn: never
     }>
   }
   dialect: "sqlite"
