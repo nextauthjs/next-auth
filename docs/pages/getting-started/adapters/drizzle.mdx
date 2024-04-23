@@ -89,7 +89,17 @@ Apply one of the below schema's to your database to setup the required tables. Y
 
 <Accordions>
 <Accordion title="PostgreSQL">
+You can use the Drizzle Adapter's default table schema if you don't want to add your own fields by re-exporting the tables.
+```ts filename="schema.ts"
+export {
+  postgresUsersTable as users,
+  postgresAccountsTable as accounts,
+  postgresSessionsTable as sessions,
+  postgresVerificationTokensTable as verificationTokens,
+} from '@auth/drizzle-adapter'
+```
 
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
 ```ts filename="schema.ts"
 import {
   timestamp,
@@ -99,11 +109,12 @@ import {
   integer,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccount } from "next-auth/adapters"
+import { randomUUID } from "crypto"
 
 export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
@@ -126,6 +137,7 @@ export const accounts = pgTable(
     session_state: text("session_state"),
   },
   (account) => ({
+    userIdIdx: index().on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -133,12 +145,18 @@ export const accounts = pgTable(
 )
 
 export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+},
+(table) => {
+  return {
+    userIdIdx: index().on(table.userId),
+  }
+)
 
 export const verificationTokens = pgTable(
   "verificationToken",
@@ -155,7 +173,17 @@ export const verificationTokens = pgTable(
 
 </Accordion>
 <Accordion title="MySQL">
+You can use the Drizzle Adapter's default table schema if you don't want to add your own fields by re-exporting the tables.
+```ts filename="schema.ts"
+export {
+  mysqlUsersTable as users,
+  mysqlAccountsTable as accounts,
+  mysqlSessionsTable as sessions,
+  mysqlVerificationTokensTable as verificationTokens,
+} from '@auth/drizzle-adapter'
+```
 
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
 ```ts filename="schema.ts"
 import {
   int,
@@ -165,15 +193,16 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core"
 import type { AdapterAccount } from "next-auth/adapters"
+import { randomUUID } from "crypto"
 
 export const users = mysqlTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
     fsp: 3,
-  }).defaultNow(),
+  }),
   image: varchar("image", { length: 255 }),
 })
 
@@ -197,6 +226,7 @@ export const accounts = mysqlTable(
     session_state: varchar("session_state", { length: 255 }),
   },
   (account) => ({
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -204,12 +234,15 @@ export const accounts = mysqlTable(
 )
 
 export const sessions = mysqlTable("session", {
-  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
+  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+}, (s) => ({
+  userIdIdx: index("Session_userId_index").on(s.userId),
+}))
 
 export const verificationTokens = mysqlTable(
   "verificationToken",
@@ -226,15 +259,26 @@ export const verificationTokens = mysqlTable(
 
 </Accordion>
 <Accordion title="SQLite">
+You can use the Drizzle Adapter's default table schema if you don't want to add your own fields by re-exporting the tables.
+```ts filename="schema.ts"
+export {
+  sqliteUsersTable as users,
+  sqliteAccountsTable as accounts,
+  sqliteSessionsTable as sessions,
+  sqliteVerificationTokensTable as verificationTokens,
+} from '@auth/drizzle-adapter'
+```
 
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
 ```ts filename="schema.ts"
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import type { AdapterAccount } from "next-auth/adapters"
+import { randomUUID } from "crypto"
 
 export const users = sqliteTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
 })
@@ -257,6 +301,7 @@ export const accounts = sqliteTable(
     session_state: text("session_state"),
   },
   (account) => ({
+    userIdIdx: index("Account_userId_index").on(account.userId),
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
@@ -264,12 +309,15 @@ export const accounts = sqliteTable(
 )
 
 export const sessions = sqliteTable("session", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: text("sessionToken").notNull().unique(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-})
+}, (s) => ({
+  userIdIdx: index("Session_userId_index").on(s.userId),
+}))
 
 export const verificationTokens = sqliteTable(
   "verificationToken",

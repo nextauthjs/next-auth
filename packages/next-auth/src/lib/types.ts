@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server"
  * AppRouteHandlerFnContext is the context that is passed to the handler as the
  * second argument.
  */
-type AppRouteHandlerFnContext = {
+export type AppRouteHandlerFnContext = {
   params?: Record<string, string | string[]>
 }
 /**
