@@ -6,7 +6,11 @@
 You can create a helper function so you don't need to pass `authOptions` around:
 
 ```ts title=auth.ts
-import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
+import type {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next"
 import type { NextAuthOptions } from "next-auth"
 import { getServerSession } from "next-auth"
 
@@ -17,10 +21,16 @@ export const config = {
 } satisfies NextAuthOptions
 
 // Use it in server contexts
-export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []) {
+export function auth(
+  ...args:
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+    | [NextApiRequest, NextApiResponse]
+    | []
+) {
   return getServerSession(...args, config)
 }
 ```
+
 :::
 
 When calling from the server-side i.e. in Route Handlers, React Server Components, API routes or in `getServerSideProps`, we recommend using this function instead of `getSession` to retrieve the `session` object. This method is especially useful when you are using NextAuth.js with a database. This method can _drastically_ reduce response time when used over `getSession` on server-side, due to avoiding an extra `fetch` to an API Route (this is generally [not recommended in Next.js](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes)). In addition, `getServerSession` will correctly update the cookie expiry time and update the session content if `callbacks.jwt` or `callbacks.session` changed something.
@@ -28,20 +38,22 @@ When calling from the server-side i.e. in Route Handlers, React Server Component
 `getServerSession` requires passing the same object you would pass to `NextAuth` when initializing NextAuth.js. To do so, you can export your NextAuth.js options in the following way:
 
 In `[...nextauth].ts`:
+
 ```ts
-import NextAuth from 'next-auth'
-import type { NextAuthOptions } from 'next-auth'
+import NextAuth from "next-auth"
+import type { NextAuthOptions } from "next-auth"
 
 export const authOptions: NextAuthOptions = {
   // your configs
 }
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions)
 ```
 
 ### In `getServerSideProps`:
+
 ```js
-import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { authOptions } from "pages/api/auth/[...nextauth]"
 import { getServerSession } from "next-auth/next"
 
 export async function getServerSideProps(context) {
@@ -50,7 +62,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: '/',
+        destination: "/",
         permanent: false,
       },
     }
@@ -65,21 +77,21 @@ export async function getServerSideProps(context) {
 ```
 
 ### In API Routes:
-```js
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { getServerSession } from "next-auth/next"
 
+```js
+import { authOptions } from "pages/api/auth/[...nextauth]"
+import { getServerSession } from "next-auth/next"
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions)
 
   if (!session) {
-    res.status(401).json({ message: "You must be logged in." });
-    return;
+    res.status(401).json({ message: "You must be logged in." })
+    return
   }
 
   return res.json({
-    message: 'Success',
+    message: "Success",
   })
 }
 ```
@@ -109,7 +121,6 @@ Currently, the underlying Next.js `cookies()` method [only provides read access]
 ### Caching
 
 Note that using this function implies personalized data and that you should not store pages or APIs using this in a [public cache](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control). For example a host like [Vercel](https://vercel.com/docs/concepts/functions/serverless-functions/edge-caching) will implicitly prevent you from caching publicly due to the `set-cookie` header set by this function.
-
 
 ## `unstable_getServerSession`
 
@@ -156,6 +167,7 @@ Now you will still be able to visit every page, but only `/dashboard` will requi
 If a user is not logged in, the default behavior is to redirect them to the sign-in page.
 
 ---
+
 ### `callbacks`
 
 - **Required:** No
@@ -196,9 +208,9 @@ import { withAuth } from "next-auth/middleware"
 export default withAuth({
   // Matches the pages config in `[...nextauth]`
   pages: {
-    signIn: '/login',
-    error: '/error',
-  }
+    signIn: "/login",
+    error: "/error",
+  },
 })
 ```
 
@@ -244,7 +256,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ token }) => token?.role === "admin",
     },
-  }
+  },
 )
 
 export const config = { matcher: ["/admin"] }
@@ -282,7 +294,7 @@ And:
 
 ```ts title="middleware.ts"
 import withAuth from "next-auth/middleware"
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { authOptions } from "pages/api/auth/[...nextauth]"
 
 export default withAuth({
   jwt: { decode: authOptions.jwt?.decode },
@@ -295,4 +307,4 @@ export default withAuth({
 ### Caveats
 
 - Currently only supports session verification, as parts of the sign-in code need to run in a Node.js environment. In the future, we would like to make sure that NextAuth.js can fully run at the [Edge](https://nextjs.org/docs/api-reference/edge-runtime)
-- Only supports the `"jwt"` [session strategy](/configuration/options#session). We need to wait until databases at the Edge become mature enough to ensure a fast experience. (If you know of an Edge-compatible database, we would like if you proposed a new [Adapter](/tutorials/creating-a-database-adapter))
+- Only supports the `"jwt"` [session strategy](/configuration/options#session). We need to wait until databases at the Edge become mature enough to ensure a fast experience. (If you know of an Edge-compatible database, we would like if you proposed a new [Adapter](https://authjs.dev/guides/creating-a-database-adapter))

@@ -35,7 +35,7 @@ NextAuth.js lets you send emails either via HTTP or SMTP.
 
 ### HTTP
 
-Check out our [HTTP-based Email Provider](https://authjs.dev/guides/providers/email-http) guide.
+Check out our [HTTP-based Email Provider](https://authjs.dev/guides/configuring-http-email) guide.
 
 ### SMTP
 

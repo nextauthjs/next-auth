@@ -311,7 +311,7 @@ export default NextAuth({
 
 3. The `typeorm-legacy` adapter has been upgraded to use the newer adapter API, but has retained the `typeorm-legacy` name. We aim to migrate this to individual lighter weight adapters for each database type in the future, or switch out `typeorm`.
 
-4. MongoDB has been moved to its own adapter under `@next-auth/mongodb-adapter`. See the [MongoDB Adapter docs](https://authjs.dev/reference/adapter/mongodb).
+4. MongoDB has been moved to its own adapter under `@next-auth/mongodb-adapter`. See the [MongoDB Adapter docs](https://authjs.dev/getting-started/adapters/mongodb).
 
 Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8 and https://github.com/nextauthjs/next-auth/pull/2361
 
@@ -319,7 +319,7 @@ Introduced in https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.8
 
 **This does not require any changes from the user - these are adapter specific changes only**
 
-The Adapter API has been rewritten and significantly simplified in NextAuth.js v4. The adapters now have less work to do as some functionality has been migrated to the core of NextAuth, like hashing the [verification token](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens).
+The Adapter API has been rewritten and significantly simplified in NextAuth.js v4. The adapters now have less work to do as some functionality has been migrated to the core of NextAuth, like hashing the [verification token](https://authjs.dev/concepts/database-models#verificationtoken).
 
 If you are an adapter maintainer or are interested in writing your own adapter, you can find more information about this change in https://github.com/nextauthjs/next-auth/pull/2361 and release https://github.com/nextauthjs/next-auth/releases/tag/v4.0.0-next.22.
 
@@ -405,7 +405,7 @@ VerificationToken {
 </pre>
 </details>
 
-For more info, see the [Models page](https://authjs.dev/reference/adapters#models).
+For more info, see the [Models page](https://authjs.dev/concepts/database-models).
 
 ### Database migration
 

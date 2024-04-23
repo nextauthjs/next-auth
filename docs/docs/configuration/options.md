@@ -29,7 +29,6 @@ Using [System Environment Variables](https://vercel.com/docs/concepts/projects/e
 
 Used to encrypt the NextAuth.js JWT, and to hash [email verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens). This is the default value for the `secret` option in [NextAuth](/configuration/options#secret) and [Middleware](/configuration/nextjs#secret).
 
-
 ### NEXTAUTH_URL_INTERNAL
 
 If provided, server-side calls will use this instead of `NEXTAUTH_URL`. Useful in environments when the server doesn't have access to the canonical URL of your site. Defaults to `NEXTAUTH_URL`.
@@ -114,7 +113,7 @@ session: {
   // Use it to limit write operations. Set to 0 to always update the database.
   // Note: This option is ignored if using JSON Web Tokens
   updateAge: 24 * 60 * 60, // 24 hours
-  
+
   // The session token is usually either a random UUID or string, however if you
   // need a more customized session token string, you can define your own generate function.
   generateSessionToken: () => {
