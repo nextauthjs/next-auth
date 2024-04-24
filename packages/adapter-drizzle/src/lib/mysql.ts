@@ -8,7 +8,6 @@ import {
   int,
   mysqlTable,
   primaryKey,
-  text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core"
@@ -26,10 +25,10 @@ export const mysqlUsersTable = mysqlTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
   image: varchar("image", { length: 255 }),
-})
+}) satisfies DefaultMySqlUsersTable
 
 export const mysqlAccountsTable = mysqlTable(
   "account",
@@ -37,7 +36,9 @@ export const mysqlAccountsTable = mysqlTable(
     userId: varchar("userId", { length: 255 })
       .notNull()
       .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 }).notNull(),
+    type: varchar("type", { length: 255 })
+      .$type<AdapterAccount["type"]>()
+      .notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
     refresh_token: varchar("refresh_token", { length: 255 }),
@@ -53,7 +54,7 @@ export const mysqlAccountsTable = mysqlTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
+) satisfies DefaultMySqlAccountsTable
 
 export const mysqlSessionsTable = mysqlTable("session", {
   sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
@@ -61,19 +62,19 @@ export const mysqlSessionsTable = mysqlTable("session", {
     .notNull()
     .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+}) satisfies DefaultMySqlSessionsTable
 
 export const mysqlVerificationTokensTable = mysqlTable(
   "verificationToken",
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull().unique(),
+    token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (vt) => ({
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-)
+) satisfies DefaultMySqlVerificationTokenTable
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,

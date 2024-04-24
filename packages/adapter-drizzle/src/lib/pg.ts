@@ -24,10 +24,10 @@ export const postgresUsersTable = pgTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-})
+}) satisfies DefaultPostgresUsersTable
 
 export const postgresAccountsTable = pgTable(
   "account",
@@ -35,7 +35,7 @@ export const postgresAccountsTable = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -53,7 +53,7 @@ export const postgresAccountsTable = pgTable(
       }),
     }
   }
-)
+) satisfies DefaultPostgresAccountsTable
 
 export const postgresSessionsTable = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
@@ -61,13 +61,13 @@ export const postgresSessionsTable = pgTable("session", {
     .notNull()
     .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+}) satisfies DefaultPostgresSessionsTable
 
 export const postgresVerificationTokensTable = pgTable(
   "verificationToken",
   {
     identifier: text("identifier").notNull(),
-    token: text("token").notNull().unique(),
+    token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (table) => {
@@ -75,7 +75,7 @@ export const postgresVerificationTokensTable = pgTable(
       compositePk: primaryKey({ columns: [table.identifier, table.token] }),
     }
   }
-)
+) satisfies DefaultPostgresVerificationTokenTable
 
 export function PostgresDrizzleAdapter(
   client: PgDatabase<QueryResultHKT, any>,
@@ -232,7 +232,7 @@ type DefaultPostgresColumn<
     data: string | number | Date
     dataType: "string" | "number" | "date"
     notNull: boolean
-    columnType: "PgVarchar" | "PgText" | "PgTimestamp" | "PgInteger"
+    columnType: "PgVarchar" | "PgText" | "PgTimestamp" | "PgInteger" | "PgUUID"
   },
 > = PgColumn<{
   name: string
@@ -250,7 +250,7 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
   name: string
   columns: {
     id: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
+      columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
       dataType: "string"

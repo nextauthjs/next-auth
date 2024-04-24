@@ -26,33 +26,14 @@ import { DefaultSQLiteSchema, SQLiteDrizzleAdapter } from "./lib/sqlite.js"
 import { DefaultSchema, SqlFlavorOptions } from "./lib/utils.js"
 
 import type { Adapter } from "@auth/core/adapters"
-
-export {
-  mysqlAccountsTable,
-  mysqlSessionsTable,
-  mysqlUsersTable,
-  mysqlVerificationTokensTable,
-} from "./lib/mysql.js"
-export {
-  postgresAccountsTable,
-  postgresSessionsTable,
-  postgresUsersTable,
-  postgresVerificationTokensTable,
-} from "./lib/pg.js"
-export {
-  sqliteAccountsTable,
-  sqliteSessionsTable,
-  sqliteUsersTable,
-  sqliteVerificationTokensTable,
-} from "./lib/sqlite.js"
 /**
- * Add this adapter to your `auth.ts` Auth.js configuration object:
+ * Create db instance and pass it to adapter. Add this adapter to your `auth.ts` Auth.js configuration object:
  *
  * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
  * import Google from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@auth/drizzle-adapter"
- * import { db } from "./schema"
+ * import { db } from "./db.ts"
  *
  * export const { handlers, auth } = NextAuth({
  *   adapter: DrizzleAdapter(db),
@@ -62,6 +43,8 @@ export {
  * })
  * ```
  * 
+ * Follow the Drizzle documentation for [PostgreSQL setup](https://orm.drizzle.team/docs/get-started-postgresql), [MySQL setup](https://orm.drizzle.team/docs/get-started-mysql) and [SQLite setup](https://orm.drizzle.team/docs/get-started-sqlite).
+ * 
  * :::info
  * If you want to use your own tables, you can pass them as a second argument. If you add non-nullable columns, make sure to provide a default value or rewrite functions to handle the missing values.
  * :::
@@ -70,7 +53,8 @@ export {
  * import NextAuth from "next-auth"
  * import Google from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@auth/drizzle-adapter"
- * import { db, accounts, sessions, users, verificationTokens } from "./schema"
+ * import { accounts, sessions, users, verificationTokens } from "./schema"
+ * import { db } from "./db.ts"
  *
  * export const { handlers, auth } = NextAuth({
  *   adapter: DrizzleAdapter(db, { usersTable: users, accountsTable: accounts, sessionsTable: sessions, verificationTokensTable: verificationTokens }),
@@ -105,7 +89,7 @@ export {
  * export const users = pgTable("user", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
- *  email: text("email").notNull().unique(),
+ *  email: text("email").notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date" }),
  *  image: text("image"),
  * })
@@ -144,7 +128,7 @@ export {
  *  "verificationToken",
  *  {
  *    identifier: text("identifier").notNull(),
- *    token: text("token").notNull().unique(),
+ *    token: text("token").notNull(),
  *    expires: timestamp("expires", { mode: "date" }).notNull(),
  *  },
  *  (vt) => ({
@@ -155,6 +139,8 @@ export {
  *
  * ### MySQL
  *
+ *  In MySQL, there's no `returning` clause, so in the `createUser` function, we first insert a new user and then search by `email` to get the user's data. To make the search faster, we suggest adding an index to the `email` column.
+ * 
  * ```ts title="schema.ts"
  * import {
  *  int,
@@ -168,7 +154,7 @@ export {
  * export const users = mysqlTable("user", {
  *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
  *  name: varchar("name", { length: 255 }),
- *  email: varchar("email", { length: 255 }).notNull().unique(),
+ *  email: varchar("email", { length: 255 }).notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
  *  image: varchar("image", { length: 255 }),
  * })
@@ -209,7 +195,7 @@ export {
  *  "verificationToken",
  *  {
  *    identifier: varchar("identifier", { length: 255 }).notNull(),
- *    token: varchar("token", { length: 255 }).notNull().unique(),
+ *    token: varchar("token", { length: 255 }).notNull(),
  *    expires: timestamp("expires", { mode: "date" }).notNull(),
  *  },
  *  (vt) => ({
@@ -227,7 +213,7 @@ export {
  * export const users = sqliteTable("user", {
  *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
- *  email: text("email").notNull().unique(),
+ *  email: text("email").notNull(),
  *  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
  *  image: text("image"),
  * })
@@ -268,7 +254,7 @@ export {
  *  "verificationToken",
  *  {
  *    identifier: text("identifier").notNull(),
- *    token: text("token").notNull().unique(),
+ *    token: text("token").notNull(),
  *    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
  *  },
  *  (vt) => ({

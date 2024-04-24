@@ -22,10 +22,10 @@ export const sqliteUsersTable = sqliteTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
-})
+}) satisfies DefaultSQLiteUsersTable
 
 export const sqliteAccountsTable = sqliteTable(
   "account",
@@ -33,7 +33,7 @@ export const sqliteAccountsTable = sqliteTable(
     userId: text("userId")
       .notNull()
       .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -49,7 +49,7 @@ export const sqliteAccountsTable = sqliteTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
+) satisfies DefaultSQLiteAccountsTable
 
 export const sqliteSessionsTable = sqliteTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
@@ -57,19 +57,19 @@ export const sqliteSessionsTable = sqliteTable("session", {
     .notNull()
     .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-})
+}) satisfies DefaultSQLiteSessionsTable
 
 export const sqliteVerificationTokensTable = sqliteTable(
   "verificationToken",
   {
     identifier: text("identifier").notNull(),
-    token: text("token").notNull().unique(),
+    token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
   (vt) => ({
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-)
+) satisfies DefaultSQLiteVerificationTokenTable
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<"sync" | "async", any, any>,
