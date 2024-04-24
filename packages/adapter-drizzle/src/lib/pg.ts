@@ -288,7 +288,7 @@ export type DefaultPostgresAccountsTable = PgTableWithColumns<{
   name: string
   columns: {
     userId: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
+      columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
       dataType: "string"
@@ -368,7 +368,7 @@ export type DefaultPostgresSessionsTable = PgTableWithColumns<{
       dataType: "string"
     }>
     userId: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
+      columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
       dataType: "string"
