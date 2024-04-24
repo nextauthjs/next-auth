@@ -38,8 +38,9 @@ export const { handlers, auth } = NextAuth({
 })
 ```
 
-```ts filename="app/api/auth/[...nextauth]/route.ts"
-export { GET, POST } from "./auth"
+```ts filename="./app/api/auth/[...nextauth]/route.ts"
+import { handlers } from "@/auth" // Referring to the auth.ts we just created
+export const { GET, POST } = handlers
 export const runtime = "edge" // optional
 ```
 
