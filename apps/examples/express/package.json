@@ -1,5 +1,6 @@
 {
   "type": "module",
+  "name": "express-example-app",
   "description": "Express Auth example app",
   "engines": {
     "node": ">=20.0.0"
