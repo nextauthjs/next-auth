@@ -74,12 +74,12 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
-import upstashRedisClient from "@upstash/redis"
-
-const redis = upstashRedisClient(
-  process.env.UPSTASH_REDIS_URL,
-  process.env.UPSTASH_REDIS_TOKEN
-)
+import { Redis } from "@upstash/redis"
+ 
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL || '',
+  token: process.env.UPSTASH_REDIS_TOKEN || ''
+})
 
 const app = express()
 
