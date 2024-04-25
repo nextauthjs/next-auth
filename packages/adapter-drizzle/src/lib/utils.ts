@@ -1,14 +1,14 @@
-import { MySqlDatabase } from "drizzle-orm/mysql-core"
-import { PgDatabase } from "drizzle-orm/pg-core"
-import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 import type {
   QueryResultHKT as MySQLQueryResultHKT,
   PreparedQueryHKTBase,
 } from "drizzle-orm/mysql-core"
+import { MySqlDatabase } from "drizzle-orm/mysql-core"
 import type { QueryResultHKT as PostgresQueryResultHKT } from "drizzle-orm/pg-core"
-import { DefaultSQLiteSchema } from "./sqlite"
-import { DefaultPostgresSchema } from "./pg"
-import { DefaultMySqlSchema } from "./mysql"
+import { PgDatabase } from "drizzle-orm/pg-core"
+import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
+import { DefaultMySqlSchema } from "./mysql.js"
+import { DefaultPostgresSchema } from "./pg.js"
+import { DefaultSQLiteSchema } from "./sqlite.js"
 
 type AnyPostgresDatabase = PgDatabase<PostgresQueryResultHKT, any>
 type AnyMySqlDatabase = MySqlDatabase<
@@ -23,10 +23,11 @@ export type SqlFlavorOptions =
   | AnyMySqlDatabase
   | AnySQLiteDatabase
 
-export type DefaultSchema<Flavor> = Flavor extends AnyMySqlDatabase
-  ? DefaultMySqlSchema
-  : Flavor extends AnyPostgresDatabase
-    ? DefaultPostgresSchema
-    : Flavor extends AnySQLiteDatabase
-      ? DefaultSQLiteSchema
-      : never
+export type DefaultSchema<Flavor extends SqlFlavorOptions> =
+  Flavor extends AnyMySqlDatabase
+    ? DefaultMySqlSchema
+    : Flavor extends AnyPostgresDatabase
+      ? DefaultPostgresSchema
+      : Flavor extends AnySQLiteDatabase
+        ? DefaultSQLiteSchema
+        : never

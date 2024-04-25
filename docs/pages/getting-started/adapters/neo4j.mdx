@@ -62,7 +62,7 @@ const driver = neo4j.driver(
 
 const neo4jSession = driver.session()
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: Neo4jAdapter(neo4jSession),
 })
