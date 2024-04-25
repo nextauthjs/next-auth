@@ -89,28 +89,28 @@ export interface IdentitySecureCloudProfile extends Record<string, any> {
  */
 
 export default function SailPoint(
-  config: OAuthUserConfig<IdentitySecureCloudProfile> & {
-    baseUrl: string,
-    clidentId: string,
-    clientSecret: string,
-    scope: string
-  }
-): OAuthConfig<IdentitySecureCloudProfile> {
-
-  return {
-    id: "identitySecureCloud",
-    name: "Identity Secure Cloud",
-    type: "oauth",
-    clientId: clidentId,
-    clientSecret: clientSecret,
-    authorization: {
-      url: `${baseUrl}/oauth/authorize`,
-      params: { scope: scope },
-    },
-    token: `${baseUrl}/oauth/token`,
-    userinfo: `${baseUrl}/oauth/userinfo`,
-    profile(profile: IdentitySecureCloudProfile) {
-      return {
+    config: OAuthUserConfig<IdentitySecureCloudProfile> & {
+      baseUrl: string,
+      apiUrl: string,
+      clientId: string,
+      clientSecret: string,
+      scope: string
+    }
+  ): OAuthConfig<IdentitySecureCloudProfile> {
+  
+    return {
+      id: "identitySecureCloud",
+      name: "Identity Secure Cloud",
+      type: "oauth",
+      clientId: config.clientId,
+      clientSecret: config.clientSecret,
+      authorization: {
+        url: `${config.baseUrl}/oauth/authorize`,
+        params: { scope: config.scope },
+      },
+      token: `${config.apiUrl}/oauth/token`,
+      userinfo: `${config.apiUrl}/oauth/userinfo`,
+      profile(profile: IdentitySecureCloudProfile) {
         return {
             tenant: profile.tenant,
             id: profile.id,
@@ -123,10 +123,9 @@ export default function SailPoint(
             capabilities: profile.capabilities,
             displayName: profile.displayName,
             name: profile.uid,
-          }
-      }
-    },
-    style: { bg: "#24292f", text: "#fff" },
-    options: config,
-  }
+        }
+      },
+      style: { text: "#fff", bg: "#011E69", logo: 'sailpoint.svg' },
+      options: config,
+    }
 }
