@@ -76,11 +76,65 @@ export const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
-    jwt({ token, trigger, session }) {
+    jwt({ token, trigger, session, account, user }) {
       if (trigger === "update") token.name = session.user.name
-      return token
+      if (account && user) {
+        token.accessToken = account.access_token!
+        token.refreshToken = account.refresh_token!
+        token.accessTokenExpires = account.expires_at!
+        return token
+      }
+
+      if (Date.now() < token.accessTokenExpires) {
+        return token;
+      } else {
+        return refreshAccessToken(token);
+      }
     },
+    async session({session, token}) {
+      session.accessToken = token.accessToken;
+      session.error = token.error;
+      return session;
+    }
   },
 } satisfies NextAuthConfig
+
+async function refreshAccessToken(token: any) {
+  try {
+    const url = `${process.env.AUTH_KEYCLOAK_ISSUER}/protocol/openid-connect/token`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: process.env.AUTH_KEYCLOAK_ID!,
+        client_secret: process.env.AUTH_KEYCLOAK_SECRET!,
+        grant_type: 'refresh_token',
+        refresh_token: token.refreshToken,
+      }),
+    });
+
+    const refreshedTokens = await response.json();
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000, // expires_in is in seconds
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+    };
+  } catch (error) {
+    console.error('Error refreshing access token:', error);
+
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    };
+  }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

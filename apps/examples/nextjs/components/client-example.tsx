@@ -43,10 +43,23 @@ const UpdateForm = () => {
 
 export default function ClientExample() {
   const { data: session, status } = useSession()
+  const [apiResponse, setApiResponse] = useState("")
+
+  const makeRequestWithToken = async () => {
+    try {
+      const response = await fetch("/api/authenticated/greeting")
+      const data = await response.json()
+      setApiResponse(JSON.stringify(data, null, 2))
+    } catch (error) {
+      setApiResponse("Failed to fetch data: " + error)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-bold">Client Side Rendering</h1>
+      <Button onClick={makeRequestWithToken}>Make API Request</Button>
+      <pre>{apiResponse}</pre>
       <p>
         This page fetches session data client side using the{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#usesession">
