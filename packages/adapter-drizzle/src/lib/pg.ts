@@ -1,4 +1,4 @@
-import { and, eq, getTableColumns } from "drizzle-orm"
+import { InferInsertModel, and, eq, getTableColumns } from "drizzle-orm"
 import {
   PgColumn,
   PgDatabase,
@@ -145,28 +145,6 @@ export function PostgresDrizzleAdapter(
         .where(eq(usersTable.email, email))
         .then((res) => (res.length > 0 ? res[0] : null))
     },
-    async createSession(data: {
-      sessionToken: string
-      userId: string
-      expires: Date
-    }) {
-      return client
-        .insert(sessionsTable)
-        .values(data)
-        .returning()
-        .then((res) => res[0])
-    },
-    async getSessionAndUser(sessionToken: string) {
-      return client
-        .select({
-          session: sessionsTable,
-          user: usersTable,
-        })
-        .from(sessionsTable)
-        .where(eq(sessionsTable.sessionToken, sessionToken))
-        .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => (res.length > 0 ? res[0] : null))
-    },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
@@ -184,18 +162,8 @@ export function PostgresDrizzleAdapter(
 
       return result
     },
-    async updateSession(
-      data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
-    ) {
-      return client
-        .update(sessionsTable)
-        .set(data)
-        .where(eq(sessionsTable.sessionToken, data.sessionToken))
-        .returning()
-        .then((res) => res[0])
-    },
-    async linkAccount(data: AdapterAccount) {
-      await client.insert(accountsTable).values(data)
+    async deleteUser(id: string) {
+      await client.delete(usersTable).where(eq(usersTable.id, id))
     },
     async getUserByAccount(
       account: Pick<AdapterAccount, "provider" | "providerAccountId">
@@ -217,32 +185,8 @@ export function PostgresDrizzleAdapter(
 
       return result?.user ?? null
     },
-    async deleteSession(sessionToken: string) {
-      await client
-        .delete(sessionsTable)
-        .where(eq(sessionsTable.sessionToken, sessionToken))
-    },
-    async createVerificationToken(data: VerificationToken) {
-      return client
-        .insert(verificationTokensTable)
-        .values(data)
-        .returning()
-        .then((res) => res[0])
-    },
-    async useVerificationToken(params: { identifier: string; token: string }) {
-      return client
-        .delete(verificationTokensTable)
-        .where(
-          and(
-            eq(verificationTokensTable.identifier, params.identifier),
-            eq(verificationTokensTable.token, params.token)
-          )
-        )
-        .returning()
-        .then((res) => (res.length > 0 ? res[0] : null))
-    },
-    async deleteUser(id: string) {
-      await client.delete(usersTable).where(eq(usersTable.id, id))
+    async linkAccount(data: AdapterAccount) {
+      await client.insert(accountsTable).values(data)
     },
     async unlinkAccount(
       params: Pick<AdapterAccount, "provider" | "providerAccountId">
@@ -256,7 +200,7 @@ export function PostgresDrizzleAdapter(
           )
         )
     },
-    async getAccount(providerAccountId, provider) {
+    async getAccount(providerAccountId: string, provider: string) {
       return await client
         .select()
         .from(accountsTable)
@@ -268,47 +212,111 @@ export function PostgresDrizzleAdapter(
         )
         .then((res) => (res[0] as AdapterAccount) ?? null)
     },
-    async createAuthenticator(data) {
-      const user = await client
-        .insert(authenticatorsTable)
-        .values({ ...data, id: crypto.randomUUID() })
-        .returning()
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    ...(sessionsTable && {
+      async createSession(data: {
+        sessionToken: string
+        userId: string
+        expires: Date
+      }) {
+        return client
+          .insert(sessionsTable)
+          .values(data)
+          .returning()
+          .then((res) => res[0])
+      },
+      async getSessionAndUser(sessionToken: string) {
+        return client
+          .select({
+            session: sessionsTable,
+            user: usersTable,
+          })
+          .from(sessionsTable)
+          .where(eq(sessionsTable.sessionToken, sessionToken))
+          .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
+          .then((res) => (res.length > 0 ? res[0] : null))
+      },
+      async updateSession(
+        data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+      ) {
+        return client
+          .update(sessionsTable)
+          .set(data)
+          .where(eq(sessionsTable.sessionToken, data.sessionToken))
+          .returning()
+          .then((res) => res[0])
+      },
+      async deleteSession(sessionToken: string) {
+        await client
+          .delete(sessionsTable)
+          .where(eq(sessionsTable.sessionToken, sessionToken))
+      },
+    }),
+    ...(verificationTokensTable && {
+      async createVerificationToken(data: VerificationToken) {
+        return client
+          .insert(verificationTokensTable)
+          .values(data)
+          .returning()
+          .then((res) => res[0])
+      },
+      async useVerificationToken(params: {
+        identifier: string
+        token: string
+      }) {
+        return client
+          .delete(verificationTokensTable)
+          .where(
+            and(
+              eq(verificationTokensTable.identifier, params.identifier),
+              eq(verificationTokensTable.token, params.token)
+            )
+          )
+          .returning()
+          .then((res) => (res.length > 0 ? res[0] : null))
+      },
+    }),
+    ...(authenticatorsTable && {
+      async createAuthenticator(data: AdapterAuthenticator) {
+        const user = await client
+          .insert(authenticatorsTable)
+          .values({ ...data, id: crypto.randomUUID() })
+          .returning()
+          .then((res) => fromDBAuthenticator(res[0]) ?? null)
 
-      return user
-    },
-    async getAuthenticator(credentialID) {
-      const authenticator = await client
-        .select()
-        .from(authenticatorsTable)
-        .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
-      return authenticator ? authenticator : null
-    },
-    async listAuthenticatorsByUserId(userId) {
-      return await client
-        .select()
-        .from(authenticatorsTable)
-        .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res.map(fromDBAuthenticator))
-    },
-    async updateAuthenticatorCounter(credentialID, newCounter) {
-      return await client
-        .update(authenticatorsTable)
-        .set({ counter: newCounter })
-        .where(eq(authenticatorsTable.credentialID, credentialID))
-        .returning()
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
-    },
+        return user
+      },
+      async getAuthenticator(credentialID: string) {
+        const authenticator = await client
+          .select()
+          .from(authenticatorsTable)
+          .where(eq(authenticatorsTable.credentialID, credentialID))
+          .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
+        return authenticator ? authenticator : null
+      },
+      async listAuthenticatorsByUserId(userId: string) {
+        return await client
+          .select()
+          .from(authenticatorsTable)
+          .where(eq(authenticatorsTable.userId, userId))
+          .then((res) => res.map(fromDBAuthenticator))
+      },
+      async updateAuthenticatorCounter(
+        credentialID: string,
+        newCounter: number
+      ) {
+        return await client
+          .update(authenticatorsTable)
+          .set({ counter: newCounter })
+          .where(eq(authenticatorsTable.credentialID, credentialID))
+          .returning()
+          .then((res) => fromDBAuthenticator(res[0]) ?? null)
+      },
+    }),
   }
 }
 
-type BaseDrizzleAuthenticator = Required<
-  DefaultPostgresSchema["authenticatorsTable"]["$inferInsert"]
->
-
 function fromDBAuthenticator(
-  authenticator: BaseDrizzleAuthenticator
+  authenticator: InferInsertModel<typeof postgresAuthenticatorsTable>
 ): AdapterAuthenticator {
   const { transports, id, ...other } = authenticator
 
@@ -574,5 +582,5 @@ export type DefaultPostgresSchema = {
   accountsTable: DefaultPostgresAccountsTable
   sessionsTable?: DefaultPostgresSessionsTable
   verificationTokensTable?: DefaultPostgresVerificationTokenTable
-  authenticatorsTable: DefaultPostgresAuthenticatorTable
+  authenticatorsTable?: DefaultPostgresAuthenticatorTable
 }
