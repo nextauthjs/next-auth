@@ -62,7 +62,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Twitch,
     Twitter,
     WorkOS({
-      connection: env.AUTH_WORKOS_CONNECTION,
+      connection: env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
   ],
