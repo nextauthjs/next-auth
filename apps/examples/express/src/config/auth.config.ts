@@ -26,6 +26,7 @@ import WorkOS from "@auth/express/providers/workos"
 import Zoom from "@auth/express/providers/zoom"
 
 export const authConfig = {
+  trustHost: true,
   providers: [
     Apple,
     Auth0,
