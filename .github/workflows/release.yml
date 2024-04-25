@@ -62,10 +62,15 @@ on:
           - "adapter-upstash-redis"
           - "adapter-xata"
           - "next-auth"
+
+permissions:
+  id-token: write
+
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
   FORCE_COLOR: true
+  NPM_CONFIG_PROVENANCE: true
 
 jobs:
   test:

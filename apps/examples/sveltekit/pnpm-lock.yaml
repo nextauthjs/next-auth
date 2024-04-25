@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@auth/sveltekit':
-    specifier: ^0.15.0
-    version: 0.15.0(@sveltejs/kit@2.4.3)(svelte@4.2.9)
+    specifier: latest
+    version: 1.0.1(@sveltejs/kit@2.4.3)(svelte@4.2.9)
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -41,8 +41,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.4
       '@jridgewell/trace-mapping': 0.3.23
 
-  /@auth/core@0.29.0:
-    resolution: {integrity: sha512-MdfEjU6WRjUnPG1+XeBWrTIlAsLZU6V0imCIqVDDDPxLI6UZWldXVqAA2EsDazGofV78jqiCLHaN85mJITDqdg==}
+  /@auth/core@0.30.0:
+    resolution: {integrity: sha512-8AE4m/nk+4EIiVCJwxZAsJeAQuzpEC8M8768mmKVn60CGDdupKQkVhxbRlm5Qh7eNRCoFFME+0DvtaX2aXrYaA==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -64,13 +64,13 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/sveltekit@0.15.0(@sveltejs/kit@2.4.3)(svelte@4.2.9):
-    resolution: {integrity: sha512-fhV31dWhk5KvgoHtBOKwkrXMU9pB+zddwd/Rqujv7/qn8hEaRk/I/FSkR2xYKgfrdETwkUESJAPG6cTY+7Jt3Q==}
+  /@auth/sveltekit@1.0.1(@sveltejs/kit@2.4.3)(svelte@4.2.9):
+    resolution: {integrity: sha512-PNV/r20o1fRNs72CjwMgiw4Ti12BYm/GVpuMbTzNxHE+eZLWuw4MZY05LtMvy9VmN8LWlEKxTmAQKj7nUmYJNA==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0 || ^2.0.0
       svelte: ^3.54.0 || ^4.0.0 || ^5
     dependencies:
-      '@auth/core': 0.29.0
+      '@auth/core': 0.30.0
       '@sveltejs/kit': 2.4.3(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.9)(vite@5.0.13)
       set-cookie-parser: 2.6.0
       svelte: 4.2.9
