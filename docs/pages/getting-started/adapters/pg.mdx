@@ -69,7 +69,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 })
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: PostgresAdapter(pool),
   providers: [],
 })

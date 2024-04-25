@@ -79,7 +79,10 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn, AppRouteHandlerFnContext } from "./lib/types.js"
+import type {
+  AppRouteHandlerFn,
+  AppRouteHandlerFnContext,
+} from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
@@ -233,7 +236,12 @@ export interface NextAuthResult {
     ((...args: []) => Promise<Session | null>) &
     ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
     ((
-      ...args: [(req: NextAuthRequest, ctx: AppRouteHandlerFnContext) => ReturnType<AppRouteHandlerFn>]
+      ...args: [
+        (
+          req: NextAuthRequest,
+          ctx: AppRouteHandlerFnContext
+        ) => ReturnType<AppRouteHandlerFn>,
+      ]
     ) => AppRouteHandlerFn)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
