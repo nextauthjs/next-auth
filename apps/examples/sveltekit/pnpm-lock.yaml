@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@auth/sveltekit':
-    specifier: ^1.0.0
-    version: 1.0.0(@sveltejs/kit@2.5.7)(svelte@4.2.15)
+    specifier: latest
+    version: 1.0.1(@sveltejs/kit@2.4.3)(svelte@4.2.9)
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -64,14 +64,14 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/sveltekit@1.0.0(@sveltejs/kit@2.5.7)(svelte@4.2.15):
-    resolution: {integrity: sha512-q14RQMEBSnyrkygC8HWQmqhGbHftlxXz1YwRIneKTMOB573wuRoW35q27Qjp7JZn1CiHDc+sgxyAOAkQvPkyvg==}
+  /@auth/sveltekit@1.0.1(@sveltejs/kit@2.4.3)(svelte@4.2.9):
+    resolution: {integrity: sha512-PNV/r20o1fRNs72CjwMgiw4Ti12BYm/GVpuMbTzNxHE+eZLWuw4MZY05LtMvy9VmN8LWlEKxTmAQKj7nUmYJNA==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0 || ^2.0.0
       svelte: ^3.54.0 || ^4.0.0 || ^5
     dependencies:
       '@auth/core': 0.30.0
-      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.15)(vite@5.2.10)
+      '@sveltejs/kit': 2.4.3(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.9)(vite@5.0.13)
       set-cookie-parser: 2.6.0
       svelte: 4.2.15
     transitivePeerDependencies:
