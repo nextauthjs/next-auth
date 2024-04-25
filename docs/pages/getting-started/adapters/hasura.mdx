@@ -48,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { HasuraAdapter } from "@auth/hasura-adapter"
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: HasuraAdapter({
     endpoint: process.env.AUTH_HASURA_GRAPHQL,
     adminSecret: process.env.AUTH_HASURA_SECRET,

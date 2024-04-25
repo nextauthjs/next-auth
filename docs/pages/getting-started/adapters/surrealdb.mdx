@@ -50,7 +50,7 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
 import clientPromise from "./lib/surrealdb"
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: SurrealDBAdapter(clientPromise),
 })
