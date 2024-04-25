@@ -28,6 +28,7 @@ import Zoom from "@auth/sveltekit/providers/zoom"
 import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
+  trustHost: true,
   providers: [
     Apple,
     Auth0,
