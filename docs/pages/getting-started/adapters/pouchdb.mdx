@@ -53,7 +53,7 @@ PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
 
 const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: PouchDBAdapter(pouchdb),
 })

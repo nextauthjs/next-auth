@@ -57,7 +57,7 @@ import { Sequelize } from "sequelize"
 
 const sequelize = new Sequelize(process.env.DATABASE_URL)
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: SequelizeAdapter(sequelize),
 })
