@@ -1,4 +1,4 @@
-import type { AuthConfig } from "@auth/core/types"
+import type { AuthConfig } from "@auth/core"
 import type { APIContext } from "astro"
 
 export function defineConfig(config: AuthConfig): typeof config

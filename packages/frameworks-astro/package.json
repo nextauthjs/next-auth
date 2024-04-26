@@ -1,27 +1,56 @@
 {
   "name": "@auth/astro",
-  "description": "Authentication for Astro.",
   "version": "0.1.0",
+  "description": "Authentication for Astro.",
+  "keywords": [
+    "astro",
+    "withastro",
+    "astro-component",
+    "authjs",
+    "auth"
+  ],
+  "homepage": "https://astro.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Reuben Tier <otterlord.dev@gmail.com>",
+  "license": "ISC",
   "type": "module",
   "scripts": {
-    "build": "pnpm clean && pnpm providers",
-    "clean": "rm -rf src/lib/providers",
+    "build": "pnpm clean && pnpm providers && tsc",
+    "clean": "rm -rf dist src/lib",
     "providers": "node ../utils/scripts/providers.js --out src/lib"
   },
   "files": [
-    "api",
-    "providers",
-    "src",
-    "*.d.ts"
+    "dist"
   ],
   "exports": {
-    ".": "./src/index.ts",
-    "./config": "./src/config.ts",
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    "./middleware": "./src/middleware.ts",
-    "./providers": "./src/lib/providers/index.ts",
-    "./providers/*": "./src/lib/providers/*.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    },
+    "./middleware": {
+      "types": "./dist/middleware.d.ts",
+      "import": "./dist/middleware.js"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
+    },
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public"
@@ -37,16 +66,20 @@
     "vite": "^5.0.12"
   },
   "peerDependencies": {
-    "astro": "^4.0.0"
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
+    "astro": "^4.0.0",
+    "nodemailer": "^6.8.0"
   },
-  "keywords": [
-    "astro",
-    "withastro",
-    "astro-component",
-    "authjs",
-    "auth"
-  ],
-  "author": "Reuben Tier <otterlord.dev@gmail.com>",
-  "repository": "https://github.com/nextauthjs/next-auth",
-  "license": "ISC"
+  "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
+    "@simplewebauthn/server": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    }
+  }
 }

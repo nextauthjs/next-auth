@@ -1,7 +1,9 @@
 {
   "extends": "utils/tsconfig.json",
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"]
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
   "exclude": ["*.js", "*.d.ts"]
