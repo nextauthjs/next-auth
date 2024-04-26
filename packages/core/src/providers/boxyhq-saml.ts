@@ -101,7 +101,7 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
  * :::tip
  *
  * The BoxyHQ provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/boxyhq-saml.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -135,6 +135,9 @@ export default function SAMLJackson<P extends BoxyHQSAMLProfile>(
         name: [profile.firstName, profile.lastName].filter(Boolean).join(" "),
         image: null,
       }
+    },
+    style: {
+      brandColor: "#25c2a0",
     },
     options,
   }

@@ -106,7 +106,7 @@ export interface Auth0Profile extends Record<string, any> {
  *
  * ### Notes
  *
- * The Auth0 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * The Auth0 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * ## Help
  *
@@ -123,7 +123,7 @@ export default function Auth0(
     id: "auth0",
     name: "Auth0",
     type: "oidc",
-    style: { logo: "/auth0.svg", text: "#fff", bg: "#EB5424" },
+    style: { text: "#fff", bg: "#EB5424" },
     options: config,
   }
 }

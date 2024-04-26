@@ -131,7 +131,7 @@ export interface AppleProfile extends Record<string, any> {
 
  * ### Notes
  * 
- * The Apple provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/apple.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * The Apple provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/apple.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * ## Help
  *
@@ -170,7 +170,6 @@ export default function Apple<P extends AppleProfile>(
       }
     },
     style: {
-      logo: "/apple.svg",
       text: "#fff",
       bg: "#000",
     },

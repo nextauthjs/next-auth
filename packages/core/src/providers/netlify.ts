@@ -45,7 +45,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * :::tip
  *
  * The Netlify provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/netlify.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -66,7 +66,7 @@ export default function Netlify(
     id: "netlify",
     name: "Netlify",
     type: "oauth",
-    authorization: "https://app.netlify.com/authorize",
+    authorization: "https://app.netlify.com/authorize?scope",
     token: "https://api.netlify.com/oauth/token",
     userinfo: "https://api.netlify.com/api/v1/user",
     profile(profile) {
@@ -76,6 +76,9 @@ export default function Netlify(
         email: profile.email,
         image: profile.avatar_url,
       }
+    },
+    style: {
+      brandColor: "#32e6e2",
     },
     options: config,
   }

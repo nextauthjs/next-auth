@@ -92,7 +92,7 @@ export interface GitLabProfile extends Record<string, any> {
  * :::tip
  *
  * The GitLab provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/gitlab.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -124,7 +124,7 @@ export default function GitLab<P extends GitLabProfile>(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/gitlab.svg", bg: "#FC6D26", text: "#fff" },
+    style: { bg: "#FC6D26", text: "#fff" },
     options,
   }
 }

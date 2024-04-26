@@ -69,7 +69,7 @@ export interface SequelizeAdapterOptions {
  *
  *  Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import SequelizeAdapter from "@auth/sequelize-adapter"
  * import { Sequelize } from "sequelize"
@@ -88,7 +88,7 @@ export interface SequelizeAdapterOptions {
  *
  * ### Updating the database schema
  *
- * By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://authjs.dev/reference/core/adapters/models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
+ * By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://authjs.dev/reference/core/adapters#models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
  *
  * > This schema is adapted for use in Sequelize and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
  *
@@ -104,9 +104,7 @@ export interface SequelizeAdapterOptions {
  * sequelize.sync()
  *
  * export default NextAuth({
- *   ...
  *   adapter
- *   ...
  * })
  * ```
  *

@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html">DynamoDB</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p style={{fontWeight: "300"}}>Official <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html">DynamoDB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://docs.aws.amazon.com/dynamodb/index.html">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/dynamodb.png" width="48"/>
  *  </a>
@@ -47,7 +47,7 @@ export interface DynamoDBAdapterOptions {
  * You need to pass `DynamoDBDocument` client from the modular [`aws-sdk`](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-dynamodb-utilities.html) v3 to the adapter.
  * The default table name is `next-auth`, but you can customise that by passing `{ tableName: 'your-table-name' }` as the second parameter in the adapter.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
  * import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
  * import NextAuth from "next-auth";
@@ -86,11 +86,52 @@ export interface DynamoDBAdapterOptions {
  *   adapter: DynamoDBAdapter(
  *     client
  *   ),
- *   ...
  * });
  * ```
  *
  * (AWS secrets start with `NEXT_AUTH_` in order to not conflict with [Vercel's reserved environment variables](https://vercel.com/docs/environment-variables#reserved-environment-variables).)
+ *
+ * ## AWS Credentials
+ *
+ * :::note
+ *   Always follow the **principle of least privilege** when giving access to AWS
+ *   services/resources -> identities should only be permitted to perform the
+ *   smallest set of actions necessary to fulfill a specific task.
+ * :::
+ *
+ * 1. Open the [AWS console](https://console.aws.amazon.com/) and go to "IAM", then "Users".
+ * 2. Create a new user. The purpose of this user is to give programmatic access to DynamoDB.
+ * 3. Create an Access Key and then copy Key ID and Secret to your `.env`/`.env.local` file.
+ * 4. Select "Add Permission" and "Create Inline Policy".
+ * 5. Copy the JSON below into the JSON input and replace `region`, `account_id` and `table_name` with your values.
+ *
+ * ```json
+ * {
+ *   "Version": "2012-10-17",
+ *   "Statement": [
+ *     {
+ *       "Sid": "DynamoDBAccess",
+ *       "Effect": "Allow",
+ *       "Action": [
+ *         "dynamodb:BatchGetItem",
+ *         "dynamodb:BatchWriteItem",
+ *         "dynamodb:Describe*",
+ *         "dynamodb:List*",
+ *         "dynamodb:PutItem",
+ *         "dynamodb:DeleteItem",
+ *         "dynamodb:GetItem",
+ *         "dynamodb:Scan",
+ *         "dynamodb:Query",
+ *         "dynamodb:UpdateItem"
+ *       ],
+ *       "Resource": [
+ *         "arn:aws:dynamodb:{region}:{account_id}:table/{table_name}",
+ *         "arn:aws:dynamodb:{region}:{account_id}:table/{table_name}/index/GSI1"
+ *       ]
+ *     }
+ *   ]
+ * }
+ * ```
  *
  * ## Advanced usage
  *
@@ -108,7 +149,7 @@ export interface DynamoDBAdapterOptions {
  *
  * You can create this table with infrastructure as code using [`aws-cdk`](https://github.com/aws/aws-cdk) with the following table definition:
  *
- * ```javascript title=stack.ts
+ * ```js title="stack.ts"
  * new dynamodb.Table(this, `NextAuthTable`, {
  *   tableName: "next-auth",
  *   partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
@@ -160,7 +201,7 @@ export interface DynamoDBAdapterOptions {
  *
  * You can configure your custom table schema by passing the `options` key to the adapter constructor:
  *
- * ```javascript
+ * ```js
  * const adapter = DynamoDBAdapter(client, {
  *   tableName: "custom-table-name",
  *   partitionKey: "custom-pk",

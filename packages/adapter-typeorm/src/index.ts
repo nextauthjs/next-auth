@@ -1,8 +1,8 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://typeorm.io">TypeORM</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://typeorm.io">
- *   <img style={{display: "block", height: "56px" }} src="https://authjs.dev/img/adapters/typeorm.png" />
+ *   <img style={{display: "block" }} width="56" src="/img/adapters/typeorm.svg" />
  *  </a>
  * </div>
  *
@@ -14,6 +14,7 @@
  *
  * @module @auth/typeorm-adapter
  */
+
 import type {
   Adapter,
   AdapterUser,
@@ -68,14 +69,12 @@ export async function getManager(options: {
  *
  * Configure Auth.js to use the TypeORM Adapter:
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```ts title="pages/api/auth/[...nextauth].ts"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  *
- *
  * export default NextAuth({
  *   adapter: TypeORMAdapter("yourconnectionstring"),
- *   ...
  * })
  * ```
  *
@@ -89,13 +88,11 @@ export async function getManager(options: {
  *
  * If you want to override the default entities (for example to add a `role` field to your `UserEntity`), you will have to do the following:
  *
- * > This schema is adapted for use in TypeORM and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
- *
  * 1. Create a file containing your modified entities:
  *
  * (The file below is based on the [default entities](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-typeorm/src/entities.ts))
  *
- * ```diff title="lib/entities.ts"
+ * ```ts title="lib/entities.ts" {37-38}
  * import {
  *   Entity,
  *   PrimaryGeneratedColumn,
@@ -133,8 +130,8 @@ export async function getManager(options: {
  *   @Column({ type: "varchar", nullable: true })
  *   image!: string | null
  *
- * + @Column({ type: "varchar", nullable: true })
- * + role!: string | null
+ *   @Column({ type: "varchar", nullable: true })
+ *   role!: string | null
  *
  *   @OneToMany(() => SessionEntity, (session) => session.userId)
  *   sessions!: SessionEntity[]
@@ -233,23 +230,22 @@ export async function getManager(options: {
  *
  * 2. Pass them to `TypeORMAdapter`
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  * import * as entities from "lib/entities"
  *
  * export default NextAuth({
- *   adapter: TypeORMAdapter("yourconnectionstring", { entities }),
- *   ...
+ *   adapter: TypeORMAdapter("yourconnectionstring", { entities })
  * })
  * ```
  *
- * :::tip Synchronize your database ♻
+ * :::tip Synchronize your database
  * The `synchronize: true` option in TypeORM will generate SQL that exactly matches the entities. This will automatically apply any changes it finds in the entity model. This is a useful option in development.
  * :::
  *
  * :::warning Using synchronize in production
- * `synchronize: true` should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema! We recommend that you synchronize/migrate your production database at build-time.
+ * The option `synchronize: true` should not be enabled against production databases as it may cause data loss if the configured schema does not match the expected schema! We recommend that you synchronize/migrate your production database at build-time.
  * :::
  *
  * ### Naming Conventions
@@ -258,27 +254,27 @@ export async function getManager(options: {
  *
  * For example, you can add the naming convention option to the connection object in your NextAuth config.
  *
- * ```javascript title="pages/api/auth/[...nextauth].js"
+ * ```js title="pages/api/auth/[...nextauth].js"
  * import NextAuth from "next-auth"
  * import { TypeORMAdapter } from "@auth/typeorm-adapter"
  * import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
  * import { ConnectionOptions } from "typeorm"
  *
  * const connection: ConnectionOptions = {
- *     type: "mysql",
- *     host: "localhost",
- *     port: 3306,
- *     username: "test",
- *     password: "test",
- *     database: "test",
- *     namingStrategy: new SnakeNamingStrategy()
+ *   type: "mysql",
+ *   host: "localhost",
+ *   port: 3306,
+ *   username: "test",
+ *   password: "test",
+ *   database: "test",
+ *   namingStrategy: new SnakeNamingStrategy()
  * }
  *
  * export default NextAuth({
- *   adapter: TypeORMAdapter(connection),
- *   ...
+ *   adapter: TypeORMAdapter(connection)
  * })
  * ```
+ *
  */
 export function TypeORMAdapter(
   dataSource: string | DataSourceOptions,

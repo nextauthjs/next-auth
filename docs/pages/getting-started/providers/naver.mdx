@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/naver.svg" height="64" width="128" />
+
+# Naver Provider
+
+## Resources
+
+- [Naver OAuth documentation](https://developers.naver.com/docs/login/overview/overview.md)
+- [Naver OAuth documentation 2](https://developers.naver.com/docs/login/api/api.md)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/naver
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/naver
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_NAVER_ID
+AUTH_NAVER_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Naver from "next-auth/providers/naver"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Naver],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Naver from "@auth/sveltekit/providers/naver"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Naver],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Naver from "@auth/express/providers/naver"
+
+app.use("/auth/*", ExpressAuth({ providers: [Naver] }))
+```
+
+  </Code.Express>
+</Code>

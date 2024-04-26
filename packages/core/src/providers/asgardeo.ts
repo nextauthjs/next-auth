@@ -89,7 +89,7 @@ export interface AsgardeoProfile extends Record<string, any> {
  *
  * ### Notes
  *
- * The Asgardeo provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/asgardeo.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * The Asgardeo provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/asgardeo.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::info
  * By default, Auth.js assumes that the Asgardeo provider is based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) spec
@@ -112,7 +112,6 @@ export default function Asgardeo(
     type: "oidc",
     wellKnown: `${config?.issuer}/oauth2/token/.well-known/openid-configuration`,
     style: {
-      logo: "/asgardeo.svg",
       bg: "#000",
       text: "#fff",
     },

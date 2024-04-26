@@ -1,0 +1,26 @@
+import { Screenshot } from "@/components/Screenshot"
+import { Accordion, Accordions } from "@/components/Accordion"
+
+# Authentication
+
+At this point, you need to decide how you're gonna authenticate users in your application. Auth.js supports four main authentication paradigms.
+
+<Accordions>
+<Accordion title="Why does Auth.js recommend OAuth as the primary authentication method for your application?">
+
+OAuth services spend significant amounts of money, time, and engineering effort to build abuse detection (_bot-protection, rate-limiting_), password management (_password reset, credential stuffing, rotation_), data security (_encryption/salting, strength validation_), and much more. It is likely that your application would benefit from leveraging these battle-tested solutions rather than try to rebuild them from scratch. Or if you don't want to pay for an OAuth service, we support many self-hosted OAuth providers like [Keycloak](/getting-started/providers/keycloak).
+
+</Accordion>
+<Accordion title="Do I need a database?">
+
+Auth.js by default saves the session in a cookie using encrypted [JSON Web Tokens](https://jwt.io/) so that you don't need to setup a database. However, if you want to persist user data you can set up a database by using one of our official database adapters or create your own.
+
+</Accordion>
+<Accordion title="Can I set up more than one authentication method?">
+
+Yes! You can setup as many authentication methods as you'd like. However, when using a database, if you have multiple providers set up Auth.js will attempt to link them together. For example, if a user has already signed in with GitHub, and therefore has a `User` and `Account` table entry associated with that Email, and they then attempt to signin with another method using the same email address, then the two accounts will be linked. See the [FAQ](/concepts#security) for more information on account linking.
+
+</Accordion>
+</Accordions>
+
+Once you have decided how to authenticate users in your application, click on your authentication method of choice under "Authentication" in the sidebar to continue.

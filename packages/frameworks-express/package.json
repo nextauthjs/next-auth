@@ -1,7 +1,7 @@
 {
   "name": "@auth/express",
   "description": "Authentication for Express.",
-  "version": "0.5.0",
+  "version": "0.5.4",
   "type": "module",
   "files": [
     "*.js",
@@ -30,7 +30,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf lib index.* src/lib/providers",
-    "test": "vitest -c ../utils/vitest.config.ts",
+    "test": "vitest run -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "publishConfig": {

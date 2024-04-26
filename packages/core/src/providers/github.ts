@@ -105,7 +105,7 @@ export interface GitHubProfile {
  * :::tip
  *
  * The GitHub provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -179,7 +179,7 @@ export default function GitHub(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/github.svg", bg: "#24292f", text: "#fff" },
+    style: { bg: "#24292f", text: "#fff" },
     options: config,
   }
 }

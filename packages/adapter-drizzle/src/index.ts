@@ -2,7 +2,7 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p style={{fontWeight: "normal"}}>Official <a href="https://orm.drizzle.team">Drizzle ORM</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://orm.drizzle.team">
- *   <img style={{display: "block"}} src="/img/adapters/drizzle-orm.png" width="38" />
+ *   <img style={{display: "block"}} src="/img/adapters/drizzle.svg" width="38" />
  *  </a>
  * </div>
  *
@@ -16,40 +16,53 @@
  * @module @auth/drizzle-adapter
  */
 
-import { MySqlDatabase, MySqlTableFn } from "drizzle-orm/mysql-core"
-import { PgDatabase, PgTableFn } from "drizzle-orm/pg-core"
-import { BaseSQLiteDatabase, SQLiteTableFn } from "drizzle-orm/sqlite-core"
-import { mySqlDrizzleAdapter } from "./lib/mysql.js"
-import { pgDrizzleAdapter } from "./lib/pg.js"
-import { SQLiteDrizzleAdapter } from "./lib/sqlite.js"
-import { SqlFlavorOptions, TableFn } from "./lib/utils.js"
 import { is } from "drizzle-orm"
+import { MySqlDatabase } from "drizzle-orm/mysql-core"
+import { PgDatabase } from "drizzle-orm/pg-core"
+import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
+import { DefaultMySqlSchema, MySqlDrizzleAdapter } from "./lib/mysql.js"
+import { DefaultPostgresSchema, PostgresDrizzleAdapter } from "./lib/pg.js"
+import { DefaultSQLiteSchema, SQLiteDrizzleAdapter } from "./lib/sqlite.js"
+import { DefaultSchema, SqlFlavorOptions } from "./lib/utils.js"
 
 import type { Adapter } from "@auth/core/adapters"
-
 /**
- * Add the adapter to your `pages/api/[...nextauth].ts` next-auth configuration object.
+ * Create db instance and pass it to adapter. Add this adapter to your `auth.ts` Auth.js configuration object:
  *
- * ```ts title="pages/api/auth/[...nextauth].ts"
+ * ```ts title="auth.ts"
  * import NextAuth from "next-auth"
- * import GoogleProvider from "next-auth/providers/google"
+ * import Google from "next-auth/providers/google"
  * import { DrizzleAdapter } from "@auth/drizzle-adapter"
- * import { db } from "./schema"
+ * import { db } from "./db.ts"
  *
- * export default NextAuth({
+ * export const { handlers, auth } = NextAuth({
  *   adapter: DrizzleAdapter(db),
  *   providers: [
- *     GoogleProvider({
- *       clientId: process.env.GOOGLE_CLIENT_ID,
- *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
- *     }),
+ *     Google,
  *   ],
  * })
  * ```
  * 
+ * Follow the Drizzle documentation for [PostgreSQL setup](https://orm.drizzle.team/docs/get-started-postgresql), [MySQL setup](https://orm.drizzle.team/docs/get-started-mysql) and [SQLite setup](https://orm.drizzle.team/docs/get-started-sqlite).
+ * 
  * :::info
- * If you're using multi-project schemas, you can pass your table function as a second argument
+ * If you want to use your own tables, you can pass them as a second argument. If you add non-nullable columns, make sure to provide a default value or rewrite functions to handle the missing values.
  * :::
+ * 
+ * ```ts title="auth.ts"
+ * import NextAuth from "next-auth"
+ * import Google from "next-auth/providers/google"
+ * import { DrizzleAdapter } from "@auth/drizzle-adapter"
+ * import { accounts, sessions, users, verificationTokens } from "./schema"
+ * import { db } from "./db.ts"
+ *
+ * export const { handlers, auth } = NextAuth({
+ *   adapter: DrizzleAdapter(db, { usersTable: users, accountsTable: accounts, sessionsTable: sessions, verificationTokensTable: verificationTokens }),
+ *   providers: [
+ *     Google,
+ *   ],
+ * })
+ * ```
  *
  * ## Setup
  *
@@ -71,9 +84,10 @@ import type { Adapter } from "@auth/core/adapters"
  *  integer
  * } from "drizzle-orm/pg-core"
  * import type { AdapterAccount } from '@auth/core/adapters'
+ * import { randomUUID } from "crypto"
  *
  * export const users = pgTable("user", {
- *  id: text("id").notNull().primaryKey(),
+ *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
  *  email: text("email").notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -86,7 +100,7 @@ import type { Adapter } from "@auth/core/adapters"
  *   userId: text("userId")
  *     .notNull()
  *     .references(() => users.id, { onDelete: "cascade" }),
- *   type: text("type").$type<AdapterAccount["type"]>().notNull(),
+ *   type: text("type").notNull(),
  *   provider: text("provider").notNull(),
  *   providerAccountId: text("providerAccountId").notNull(),
  *   refresh_token: text("refresh_token"),
@@ -103,7 +117,7 @@ import type { Adapter } from "@auth/core/adapters"
  * )
  *
  * export const sessions = pgTable("session", {
- *  sessionToken: text("sessionToken").notNull().primaryKey(),
+ *  sessionToken: text("sessionToken").primaryKey(),
  *  userId: text("userId")
  *    .notNull()
  *    .references(() => users.id, { onDelete: "cascade" }),
@@ -125,6 +139,8 @@ import type { Adapter } from "@auth/core/adapters"
  *
  * ### MySQL
  *
+ *  In MySQL, there's no `returning` clause, so in the `createUser` function, we first insert a new user and then search by `email` to get the user's data. To make the search faster, we suggest adding an index to the `email` column.
+ * 
  * ```ts title="schema.ts"
  * import {
  *  int,
@@ -136,39 +152,39 @@ import type { Adapter } from "@auth/core/adapters"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
  * export const users = mysqlTable("user", {
- *  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+ *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
  *  name: varchar("name", { length: 255 }),
  *  email: varchar("email", { length: 255 }).notNull(),
- *   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }).defaultNow(),
+ *  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
  *  image: varchar("image", { length: 255 }),
  * })
  *
  * export const accounts = mysqlTable(
  *  "account",
  *   {
- *    userId: varchar("userId", { length: 255 })
- *       .notNull()
- *       .references(() => users.id, { onDelete: "cascade" }),
- *    type: varchar("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
+ *     userId: varchar("userId", { length: 255 })
+ *        .notNull()
+ *        .references(() => users.id, { onDelete: "cascade" }),
+ *     type: varchar("type", { length: 255 }).notNull(),
  *     provider: varchar("provider", { length: 255 }).notNull(),
- *    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
- *    refresh_token: varchar("refresh_token", { length: 255 }),
- *    access_token: varchar("access_token", { length: 255 }),
- *    expires_at: int("expires_at"),
- *   token_type: varchar("token_type", { length: 255 }),
- *   scope: varchar("scope", { length: 255 }),
- *   id_token: varchar("id_token", { length: 2048 }),
- *   session_state: varchar("session_state", { length: 255 }),
- * },
- * (account) => ({
- *    compoundKey: primaryKey({
-        columns: [account.provider, account.providerAccountId],
-      }),
- * })
+ *     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+ *     refresh_token: varchar("refresh_token", { length: 255 }),
+ *     access_token: varchar("access_token", { length: 255 }),
+ *     expires_at: int("expires_at"),
+ *     token_type: varchar("token_type", { length: 255 }),
+ *     scope: varchar("scope", { length: 255 }),
+ *     id_token: varchar("id_token", { length: 2048 }),
+ *     session_state: varchar("session_state", { length: 255 }),
+ *   },
+ *   (account) => ({
+ *     compoundKey: primaryKey({
+         columns: [account.provider, account.providerAccountId],
+       })
+ *   })
  * )
  *
  * export const sessions = mysqlTable("session", {
- *  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
+ *  sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
  *  userId: varchar("userId", { length: 255 })
  *    .notNull()
  *    .references(() => users.id, { onDelete: "cascade" }),
@@ -176,15 +192,15 @@ import type { Adapter } from "@auth/core/adapters"
  * })
  *
  * export const verificationTokens = mysqlTable(
- * "verificationToken",
- * {
- *   identifier: varchar("identifier", { length: 255 }).notNull(),
- *   token: varchar("token", { length: 255 }).notNull(),
- *   expires: timestamp("expires", { mode: "date" }).notNull(),
- * },
- * (vt) => ({
- *   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
- * })
+ *  "verificationToken",
+ *  {
+ *    identifier: varchar("identifier", { length: 255 }).notNull(),
+ *    token: varchar("token", { length: 255 }).notNull(),
+ *    expires: timestamp("expires", { mode: "date" }).notNull(),
+ *  },
+ *  (vt) => ({
+ *    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+ *  })
  * )
  * ```
  *
@@ -195,7 +211,7 @@ import type { Adapter } from "@auth/core/adapters"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
  * export const users = sqliteTable("user", {
- *  id: text("id").notNull().primaryKey(),
+ *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
  *  name: text("name"),
  *  email: text("email").notNull(),
  *  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
@@ -208,7 +224,7 @@ import type { Adapter } from "@auth/core/adapters"
  *    userId: text("userId")
  *      .notNull()
  *      .references(() => users.id, { onDelete: "cascade" }),
- *    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+ *    type: text("type").notNull(),
  *    provider: text("provider").notNull(),
  *    providerAccountId: text("providerAccountId").notNull(),
  *    refresh_token: text("refresh_token"),
@@ -222,49 +238,49 @@ import type { Adapter } from "@auth/core/adapters"
  *  (account) => ({
  *    compoundKey: primaryKey({
         columns: [account.provider, account.providerAccountId],
-      }),
+      })
  *  })
  * )
  *
  * export const sessions = sqliteTable("session", {
- * sessionToken: text("sessionToken").notNull().primaryKey(),
- * userId: text("userId")
- *   .notNull()
- *   .references(() => users.id, { onDelete: "cascade" }),
- * expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+ *  sessionToken: text("sessionToken").primaryKey(),
+ *  userId: text("userId")
+ *    .notNull()
+ *    .references(() => users.id, { onDelete: "cascade" }),
+ *  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
  * })
  *
  * export const verificationTokens = sqliteTable(
- * "verificationToken",
- * {
- *   identifier: text("identifier").notNull(),
- *   token: text("token").notNull(),
- *   expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
- * },
- * (vt) => ({
- *   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
- * })
+ *  "verificationToken",
+ *  {
+ *    identifier: text("identifier").notNull(),
+ *    token: text("token").notNull(),
+ *    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+ *  },
+ *  (vt) => ({
+ *    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+ *  })
  * )
  * ```
  *
  * ## Migrating your database
  * With your schema now described in your code, you'll need to migrate your database to your schema.
  *
- * For full documentation on how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations).
+ * For full documentation on how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations) or check how to apply changes directly to the database with [push command](https://orm.drizzle.team/kit-docs/overview#prototyping-with-db-push).
  *
  * ---
  *
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  table?: TableFn<SqlFlavor>
+  schema?: DefaultSchema<SqlFlavor>
 ): Adapter {
   if (is(db, MySqlDatabase)) {
-    return mySqlDrizzleAdapter(db, table as MySqlTableFn)
+    return MySqlDrizzleAdapter(db, schema as DefaultMySqlSchema)
   } else if (is(db, PgDatabase)) {
-    return pgDrizzleAdapter(db, table as PgTableFn)
+    return PostgresDrizzleAdapter(db, schema as DefaultPostgresSchema)
   } else if (is(db, BaseSQLiteDatabase)) {
-    return SQLiteDrizzleAdapter(db, table as SQLiteTableFn)
+    return SQLiteDrizzleAdapter(db, schema as DefaultSQLiteSchema)
   }
 
   throw new Error(

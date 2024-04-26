@@ -55,7 +55,7 @@ interface HubSpotProfile extends Record<string, any> {
  * :::tip
  *
  * The HubSpot provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/hubspot.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -106,7 +106,7 @@ export default function HubSpot<P extends HubSpotProfile>(
         image: null,
       }
     },
-    style: { logo: "/hubspot.svg", bg: "#ff7a59", text: "#fff" },
+    style: { bg: "#ff7a59", text: "#fff" },
     options,
   }
 }
