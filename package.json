@@ -91,7 +91,6 @@
     ".next",
     ".nuxt",
     ".astro",
-    ".docusaurus",
     "build",
     "docs/docs/reference/core",
     "docs/docs/reference/sveltekit",
