@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= title
+    title=title
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
   body
     div
@@ -17,7 +17,7 @@ html
             href="/api/auth/signout"
           ) Sign out
         else
-          span You are not signed in
+          span You are not signed in #{ ' ' }
           a#sign-indiv(
             href="/api/auth/signin"
           ) Sign in
