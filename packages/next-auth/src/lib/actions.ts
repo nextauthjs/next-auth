@@ -2,7 +2,6 @@ import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers.js"
 import { redirect } from "next/navigation.js"
 
-import type { AuthAction } from "@auth/core/types"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
 import type { ProviderType } from "@auth/core/providers"
