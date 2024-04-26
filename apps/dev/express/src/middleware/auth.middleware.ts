@@ -5,7 +5,7 @@ import type { NextFunction, Request, Response } from "express"
 export async function authenticatedUser(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   const session = res.locals.session ?? (await getSession(req, authConfig))
 
@@ -21,7 +21,7 @@ export async function authenticatedUser(
 export async function currentSession(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   const session = await getSession(req, authConfig)
   res.locals.session = session

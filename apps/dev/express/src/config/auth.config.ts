@@ -27,6 +27,7 @@ import Zoom from "@auth/express/providers/zoom"
 
 export const authConfig = {
   trustHost: true,
+  debug: process.env.NODE_ENV !== "production" ? true : false,
   providers: [
     Apple,
     Auth0,
