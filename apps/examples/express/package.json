@@ -1,12 +1,13 @@
 {
-  "type": "module",
   "description": "Express Auth example app",
   "engines": {
     "node": ">=20.11.0"
   },
+  "type": "module",
   "private": true,
   "scripts": {
-    "start": "node --env-file .env dist/server.js",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist",
     "build": "pnpm build:ts && pnpm build:css",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",

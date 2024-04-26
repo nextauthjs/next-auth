@@ -1,4 +1,4 @@
-import { app } from "./app.js"
+const { app } = await import("./app.js")
 
 const port = app.get("port")
 
