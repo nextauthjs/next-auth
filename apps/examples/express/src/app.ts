@@ -32,7 +32,7 @@ app.use(logger("dev"))
 // Serve static files
 // NB: Uncomment this out if you want Express to serve static files for you vs. using a
 // hosting provider which does so for you (for example through a CDN).
-// app.use(express.static(path.join(import.meta.dirname, "..", "public")))
+app.use(express.static(path.join(import.meta.dirname, "..", "public")))
 
 // Parse incoming requests data
 app.use(express.urlencoded({ extended: true }))
