@@ -30,6 +30,6 @@
     "@types/node": "^20.12.7",
     "@types/pug": "^2.0.10",
     "tsx": "^4.7.0",
-    "typescript": "5.4.5"
+    "typescript": "5.3.3"
   }
 }
