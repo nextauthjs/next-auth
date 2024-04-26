@@ -1,4 +1,15 @@
-\set ON_ERROR_STOP true
+BEGIN TRANSACTION;
+
+CREATE TABLE users
+(
+  id SERIAL,
+  name VARCHAR(255),
+  email VARCHAR(255),
+  "emailVerified" TIMESTAMPTZ,
+  image TEXT,
+
+  PRIMARY KEY (id)
+);
 
 CREATE TABLE verification_token
 (
@@ -24,26 +35,18 @@ CREATE TABLE accounts
   session_state TEXT,
   token_type TEXT,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE sessions
 (
-  id SERIAL,
+  "sessionToken" VARCHAR(255) NOT NULL,
   "userId" INTEGER NOT NULL,
   expires TIMESTAMPTZ NOT NULL,
-  "sessionToken" VARCHAR(255) NOT NULL,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY ("sessionToken"),
+  FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE users
-(
-  id SERIAL,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  "emailVerified" TIMESTAMPTZ,
-  image TEXT,
-
-  PRIMARY KEY (id)
-);
+COMMIT;
