@@ -44,7 +44,7 @@ import { createStorage } from "unstorage"
 
 const storage = createStorage()
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: UnstorageAdapter(storage),
   providers: [],
 })

@@ -24,65 +24,20 @@ npm install drizzle-kit --save-dev
 ### Environment Variables
 
 ```sh
-DRIZZLE_DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+AUTH_DRIZZLE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
 ```
 
 ### Configuration
 
-Follow the Drizzle documentation for [PostgreSQL setup](https://orm.drizzle.team/docs/get-started-postgresql), [MySQL setup](https://orm.drizzle.team/docs/get-started-mysql) and [SQLite setup](https://orm.drizzle.team/docs/get-started-sqlite).
+To use this adapter, you must have setup Drizzle ORM and Drizzle Kit in your project. Drizzle provides a simple [quick start guide](https://orm.drizzle.team/kit-docs/quick). For more details, follow the Drizzle documentation for your respective database ([PostgreSQL](https://orm.drizzle.team/docs/get-started-postgresql), [MySQL](https://orm.drizzle.team/docs/get-started-mysql) or [SQLite](https://orm.drizzle.team/docs/get-started-sqlite)). In summary, that setup should look something like this.
 
-<Code>
-<Code.Next>
+1. Create your schema file, based off of one of the ones below.
+2. Install a supported database driver to your project, like `@libsql/client`, `mysql2` or `postgres`.
+3. Create a `drizzle.config.ts` [file](https://orm.drizzle.team/kit-docs/conf).
+4. Generate the initial migration from your schema file with a command like, `drizzle-kit generate:pg`.
+5. Push that migration to your configured database with a command like, `drizzle-kit push:pg`.
 
-```ts filename="./auth.ts"
-import NextAuth from "next-auth"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
-import { db } from "./db.ts"
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db),
-  providers: [],
-})
-```
-
-</Code.Next>
-<Code.Svelte>
-
-```ts filename="./src/auth.ts"
-import { SvelteKitAuth } from "@auth/sveltekit"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
-import { db } from "./db.ts"
-
-export const { handler, signIn, signOut } = SvelteKitAuth({
-  adapter: DrizzleAdapter(db),
-  providers: [],
-})
-```
-
-</Code.Svelte>
-<Code.Express>
-
-```ts filename="./src/routes/auth.route.ts"
-import { ExpressAuth } from "@auth/express"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
-import { db } from "./db.ts"
-
-const app = express()
-
-app.set("trust proxy", true)
-app.use(
-  "/auth/*",
-  ExpressAuth({
-    providers: [],
-    adapter: DrizzleAdapter(db),
-  })
-)
-```
-
-</Code.Express>
-</Code>
-
-Apply one of the below schema's to your database to setup the required tables.
+#### Schemas
 
 <Accordions>
 <Accordion title="PostgreSQL">
@@ -96,7 +51,14 @@ import {
   primaryKey,
   integer,
 } from "drizzle-orm/pg-core"
+import postgres from "postgres"
+import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccount } from "next-auth/adapters"
+
+const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
+const pool = postgres(connectionString, { max: 1 })
+
+export const db = drizzle(pool)
 
 export const users = pgTable("user", {
   id: text("id")
@@ -165,7 +127,18 @@ import {
   primaryKey,
   varchar,
 } from "drizzle-orm/mysql-core"
+import mysql from "mysql2/promise"
+import { drizzle } from "drizzle-orm/mysql2"
 import type { AdapterAccount } from "next-auth/adapters"
+
+export const connection = await mysql.createConnection({
+  host: "host",
+  user: "user",
+  password: "password",
+  database: "database",
+})
+
+export const db = drizzle(connection)
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 })
@@ -233,7 +206,15 @@ If you want to modify the schema or add additional fields, you can use the follo
 
 ```ts filename="schema.ts"
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
+import { createClient } from "@libsql/client"
+import { drizzle } from "drizzle-orm/libsql"
 import type { AdapterAccount } from "next-auth/adapters"
+
+const client = createClient({
+  url: "DATABASE_URL",
+  authToken: "DATABASE_AUTH_TOKEN",
+})
+export const db = drizzle(client)
 
 export const users = sqliteTable("user", {
   id: text("id")
@@ -293,8 +274,73 @@ export const verificationTokens = sqliteTable(
 </Accordion>
 </Accordions>
 
-## Migrating your database
+### Adapter Setup
 
-With your schema now described in your code, you'll need to migrate your database to your schema.
+<Code>
+<Code.Next>
 
-For full documentation on how to run migrations with Drizzle, [visit the Drizzle documentation](https://orm.drizzle.team/kit-docs/overview#running-migrations) or check how to apply changes directly to the database with [push command](https://orm.drizzle.team/kit-docs/overview#prototyping-with-db-push).
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: DrizzleAdapter(db),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: DrizzleAdapter(db),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: DrizzleAdapter(db),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Migrating your database
+
+With your schema now described in your code, you'll need to migrate your database to your schema. An example `migrate.ts` file looks like this. For more information, check out Drizzle's migration [quick start guide](https://orm.drizzle.team/docs/migrations).
+
+```ts filename="migrate.ts"
+import "dotenv/config"
+import { migrate } from "drizzle-orm/mysql2/migrator"
+import { db, connection } from "./db"
+
+// This will run migrations on the database, skipping the ones already applied
+await migrate(db, { migrationsFolder: "./drizzle" })
+
+// Don't forget to close the connection, otherwise the script will hang
+await connection.end()
+```
+
+Full documentation on how to manage migrations with Drizzle can be found at the Drizzle Kit [Migrations page](https://orm.drizzle.team/kit-docs/overview#running-migrations).

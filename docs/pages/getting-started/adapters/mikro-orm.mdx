@@ -49,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: MikroOrmAdapter({
     // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
     dbName: process.env.DATABASE_CONNECTION_STRING,
