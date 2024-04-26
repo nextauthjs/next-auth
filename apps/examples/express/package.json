@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "clean": "rm -rf dist",
-    "build": "pnpm build:ts && pnpm build:css",
+    "build": "pnpm build:ts && pnpm build:css && cp -r views dist",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
     "dev": "tsx watch --env-file=.env src/server.ts & pnpm build:css -w",
