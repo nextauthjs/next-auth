@@ -58,8 +58,12 @@ export default function ClientExample() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-bold">Client Side Rendering</h1>
-      <Button onClick={makeRequestWithToken}>Make API Request</Button>
-      <pre>{apiResponse}</pre>
+      {session?.accessToken && (
+        <div>
+          <Button onClick={makeRequestWithToken}>Make API Request</Button>
+          <pre>{apiResponse}</pre>
+        </div>
+      )}
       <p>
         This page fetches session data client side using the{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#usesession">
