@@ -1,11 +1,4 @@
-import "./globals.js"
-import * as dotenv from "dotenv"
-
-// Load environment variables
-dotenv.config({ path: __dirname + "/../.env" })
-
-// Import app after environment variables are set
-const { app } = await import("./app.js")
+import { app } from "./app.js"
 
 const port = app.get("port")
 
