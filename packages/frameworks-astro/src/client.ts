@@ -1,13 +1,15 @@
-import '../module.d.ts'
+import "../module.d.ts"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
-import clientConfig from 'auth:config/client'
+import clientConfig from "auth:config/client"
 
 const { basePath } = clientConfig
 
-export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
+export type LiteralUnion<T extends U, U = string> =
+  | T
+  | (U & Record<never, never>)
 
 export interface SignInOptions extends Record<string, unknown> {
   /**

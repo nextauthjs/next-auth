@@ -1,7 +1,7 @@
 <p align="center">
   <br/>
   <a href="https://authjs.dev" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
+    <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
   </a>
   <a href="https://aws.amazon.com/dynamodb" target="_blank">
     <img height="64px" src="https://authjs.dev/img/adapters/dynamodb.svg"/>

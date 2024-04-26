@@ -12,36 +12,36 @@
  * ```bash npm2yarn
  * npm run astro add @auth/astro
  * ```
- * 
+ *
  * ### Manual installation
- * 
+ *
  * Install the required dependencies.
- * 
+ *
  * ```bash npm2yarn
  * npm i @auth/astro
  * ```
- * 
+ *
  * Add the `@auth/astro` integration to your Astro config.
- * 
+ *
  * ```ts
  * // astro.config.mjs
  * import { defineConfig } from 'astro/config';
  * import auth from '@auth/astro';
- * 
+ *
  * export default defineConfig({
  *   // ...
  *   integrations: [auth()]
  * })
  * ```
- * 
+ *
  * ## Configure
- * 
+ *
  * Create your auth config file `auth.config.ts`.
- * 
+ *
  * ```ts
  * import { defineConfig } from '@auth/astro/config'
  * import GitHub from '@auth/astro/providers/github'
- * 
+ *
  * export default defineConfig({
  *   providers: [
  *     GitHub({
@@ -51,28 +51,28 @@
  *   ]
  * })
  * ```
- * 
+ *
  * ## Get the current session
- * 
+ *
  * You can access the current session from [`Astro.locals`](https://docs.astro.build/en/reference/api-reference/#astrolocals) (or [`context.locals`](https://docs.astro.build/en/reference/api-reference/#contextlocals) in an endpoint).
- * 
+ *
  * ```tsx
  * ---
  * const { session } = Astro.locals
  * ---
- * 
+ *
  * {JSON.stringify(session)}
  * ```
- * 
+ *
  * ## Protected routes
- * 
+ *
  * ```tsx
  * ---
  * import Layout from '~/layouts/Base.astro'
- * 
+ *
  * if (!Astro.locals.session) return Astro.redirect('/')
  * ---
- * 
+ *
  * <Layout>
  *   <h1>Welcome {Astro.locals.session.user.name}</h1>
  * </Layout>
@@ -165,8 +165,8 @@ export default (config: AstroAuthConfig = {}): AstroIntegration => ({
       })
 
       addMiddleware({
-        entrypoint: '@auth/astro/middleware',
-        order: 'pre'
+        entrypoint: "@auth/astro/middleware",
+        order: "pre",
       })
 
       if (config.injectEndpoints !== false) {

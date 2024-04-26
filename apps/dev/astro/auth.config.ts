@@ -1,5 +1,5 @@
-import { defineConfig } from '@auth/astro/config'
-import GitHub from '@auth/astro/providers/github'
+import { defineConfig } from "@auth/astro/config"
+import GitHub from "@auth/astro/providers/github"
 
 export default defineConfig({
   providers: [
@@ -7,5 +7,5 @@ export default defineConfig({
       clientId: import.meta.env.GITHUB_CLIENT_ID,
       clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
     }),
-  ]
+  ],
 })

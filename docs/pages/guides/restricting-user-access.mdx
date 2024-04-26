@@ -1,0 +1,27 @@
+import { Callout } from "nextra/components"
+
+# Restricting user access to the app
+
+Auth.js libraries allow you to restrict users by intercepting the registration/login flow. You can use the `signIn` callback to control whether a user is allowed to sign up or not.
+
+<Callout type="info">
+  All callbacks are async functions, so you can also get extra information from
+  a database or external APIs.
+</Callout>
+
+## Restrict the app to company employees
+
+For example, it is possible to only allow your company's employees to sign up with their company email addresses.
+
+Add the following code to your Auth.js configuration:
+
+```ts
+callbacks: {
+  signIn({ profile }) {
+    return profile.email.endsWith("@yourdomain.com")
+  }
+}
+```
+
+If the user's email does not end with `@yourdomain.com`,
+the sign-up (in case of a database strategy) process will be blocked, and subsequent login attempts will be rejected as well.

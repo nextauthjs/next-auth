@@ -1,0 +1,238 @@
+import { Accordion, Accordions } from "@/components/Accordion"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/fauna.svg" height="64" width="64" />
+
+# Fauna Adapter
+
+## Resources
+
+- [Fauna Docs](https://docs.fauna.com/fauna/current/)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install @auth/fauna-adapter fauna
+```
+
+### Environment Variables
+
+```sh
+AUTH_FAUNA_CLIENT=http://localhost:8443
+AUTH_FAUNA_SECRET=abc123
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const client = new Client({
+  secret: process.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(process.env.AUTH_FAUNA_CLIENT)
+})
+
+export { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: FaunaAdapter(client)
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const client = new Client({
+  secret: process.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(process.env.AUTH_FAUNA_CLIENT)
+})
+
+export { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: FaunaAdapter(client)
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const app = express()
+
+const client = new Client({
+  secret: process.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(process.env.AUTH_FAUNA_CLIENT),
+})
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: FaunaAdapter(client),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Migrating to v2
+
+In `@auth/adapter-fauna@2.0.0`, we've renamed the collections to use an uppercase naming pattern in accordance with the Fauna best practices. If you're migrating from v1, you'll need to rename your collections to match the new naming scheme. Additionally, we've renamed the indexes to match the new method-like index names (i.e. `account_by_user_id` to `Account.byUserId`). For more information on migrating your Fauna schema, see their migration guide [here](https://docs.fauna.com/fauna/current/migration)
+
+<Accordions>
+  <Accordion title="Migration Example">
+
+```ts filename="authjs-adapter-fauna-v2-migration.fql"
+Collection.byName("accounts")!.update({
+  name: "Account"
+  indexes: {
+    byUserId: {
+        terms: [{ field: "userId" }]
+    },
+    byProviderAndProviderAccountId: {
+        terms: [{ field: "provider" }, { field: "providerAccountId" }]
+    },
+    account_by_provider_and_provider_account_id: null,
+    accounts_by_user_id: null
+  }
+})
+Collection.byName("sessions")!.update({
+  name: "Session",
+  indexes: {
+    bySessionToken: {
+        terms: [{ field: "sessionToken" }]
+    },
+    byUserId: {
+        terms: [{ field: "userId" }]
+    },
+    session_by_session_token: null,
+    sessions_by_user_id: null
+  }
+})
+Collection.byName("users")!.update({
+  name: "User",
+  indexes: {
+    byEmail: {
+        terms: [{ field: "email" }]
+    },
+    user_by_email: null
+  }
+})
+Collection.byName("verification_tokens")!.update({
+  name: "VerificationToken",
+  indexes: {
+    byIdentifierAndToken: {
+        terms: [{ field: "identifier" }, { field: "token" }]
+    },
+    verification_token_by_identifier_and_token: null
+  }
+})
+```
+
+  </Accordion>
+</Accordions>
+
+#### Schema
+
+Run the following commands inside of the `Shell` tab in the Fauna dashboard to setup the appropriate collections and indexes.
+
+```ts filename="authjs-fauna-adapter-schema.fql"
+Collection.create({
+  name: "Account",
+  indexes: {
+    byUserId: {
+      terms: [
+        { field: "userId" }
+      ]
+    },
+    byProviderAndProviderAccountId: {
+      terms [
+        { field: "provider" },
+        { field: "providerAccountId" }
+      ]
+    },
+  }
+})
+Collection.create({
+  name: "Session",
+  constraints: [
+    {
+      unique: ["sessionToken"],
+      status: "active",
+    }
+  ],
+  indexes: {
+    bySessionToken: {
+      terms: [
+        { field: "sessionToken" }
+      ]
+    },
+    byUserId: {
+      terms [
+        { field: "userId" }
+      ]
+    },
+  }
+})
+Collection.create({
+  name: "User",
+  constraints: [
+    {
+      unique: ["email"],
+      status: "active",
+    }
+  ],
+  indexes: {
+    byEmail: {
+      terms [
+        { field: "email" }
+      ]
+    },
+  }
+})
+Collection.create({
+  name: "VerificationToken",
+  indexes: {
+    byIdentifierAndToken: {
+      terms [
+        { field: "identifier" },
+        { field: "token" }
+      ]
+    },
+  }
+})
+```
+
+#### Custom Collection Names
+
+If you want to use custom collection names, you can pass them as an option to the adapter, like this:
+
+```js
+FaunaAdapter(client, {
+  collectionNames: {
+    user: "CustomUser",
+    account: "CustomAccount",
+    session: "CustomSession",
+    verificationToken: "CustomVerificationToken",
+  },
+})
+```
+
+Make sure the collection names you pass to the provider match the collection names of your Fauna database.

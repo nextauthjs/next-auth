@@ -130,11 +130,11 @@ export const toId = (surrealId: string) => {
  * ```js
  * import { Surreal } from "surrealdb.js";
  *
- * const connectionString = ... // i.e. "http://0.0.0.0:8000"
- * const username = ...
- * const password = ...
- * const namespace = ...
- * const database = ...
+ * const connectionString = "http://0.0.0.0:8000"
+ * const username = ""
+ * const password = ""
+ * const namespace = ""
+ * const database = ""
  *
  * const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
  *   const db = new Surreal();
@@ -162,11 +162,11 @@ export const toId = (surrealId: string) => {
  * ```js
  * import { ExperimentalSurrealHTTP } from "surrealdb.js"
  *
- * const connectionString = ... // i.e. "http://0.0.0.0:8000"
- * const username = ...
- * const password = ...
- * const namespace = ...
- * const database = ...
+ * const connectionString = "http://0.0.0.0:8000"
+ * const username = ""
+ * const password = ""
+ * const namespace = ""
+ * const database = ""
  *
  * const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
  *   try {
@@ -198,7 +198,6 @@ export const toId = (surrealId: string) => {
  * // https://authjs.dev/reference/providers/oauth
  * export default NextAuth({
  *   adapter: SurrealDBAdapter(clientPromise),
- *   ...
  * })
  * ```
  **/

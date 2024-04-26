@@ -1,0 +1,88 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/identity-server4.svg"
+  height="64"
+  width="64"
+/>
+
+# Identity Server Provider
+
+<Callout>
+  This provider has been deprecated and is superceded by [Duende
+  IdentityServer6](/getting-started/providers/duende-identity-server6).
+</Callout>
+
+## Resources
+
+- [IdentityServer4 OAuth documentation](https://identityserver4.readthedocs.io/en/latest/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/identity-server4
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/identity-server4
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_IDENTITY_SERVER4_ID
+AUTH_IDENTITY_SERVER4_SECRET
+AUTH_IDENTITY_SERVER4_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import IdentityServer4 from "next-auth/providers/identity-server4"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [IdentityServer4],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import IdentityServer4 from "@auth/sveltekit/providers/identity-server4"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [IdentityServer4],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import IdentityServer4 from "@auth/express/providers/identity-server4"
+
+app.use("/auth/*", ExpressAuth({ providers: [IdentityServer4] }))
+```
+
+  </Code.Express>
+</Code>

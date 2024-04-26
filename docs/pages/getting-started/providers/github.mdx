@@ -1,0 +1,81 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/github.svg" height="64" width="64" />
+
+# GitHub Provider
+
+## Resources
+
+- [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
+- [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
+- [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/github
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/github
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_GITHUB_ID
+AUTH_GITHUB_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [GitHub],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import GitHub from "@auth/sveltekit/providers/github"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [GitHub],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import GitHub from "@auth/express/providers/github"
+
+app.use("/auth/*", ExpressAuth({ providers: [GitHub] }))
+```
+
+  </Code.Express>
+</Code>

@@ -146,12 +146,12 @@ export interface CampusUser {
 }
 
 export interface Image {
-  link: string,
+  link: string
   versions: {
-    micro: string,
-    small: string,
-    medium: string,
-    large: string,
+    micro: string
+    small: string
+    medium: string
+    large: string
   }
 }
 
@@ -211,7 +211,7 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  * :::tip
  *
  * The 42School provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/42-school.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *

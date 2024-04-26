@@ -39,10 +39,6 @@ a {
   font-weight: 500;
 }
 
-hr {
-  border: 1px solid #ddd;
-}
-
 iframe {
   background: #ccc;
   border: 1px solid #ccc;
@@ -58,8 +54,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0;
-  margin-bottom: 0.5rem;
+  margin: 0px;
 }
 
 main {
@@ -100,12 +95,21 @@ main {
   }
 }
 
+.login-cards {
+  display: flex;
+  gap: 2rem;
+}
+
 .card {
+  width: calc(50% - 1rem);
   border-radius: 0.75rem;
   background-color: #f3f3f3;
+  display: flex;
+  flex-direction: column;
 
   .card-header {
     border-radius: 0.75rem 0.75rem 0 0;
+    margin: 0 !important;
     background-color: #dfdfdf;
     padding: 1.1rem;
   }
@@ -113,8 +117,8 @@ main {
   .card-body {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding-bottom: 1.1rem;
+    height: 100%;
+    justify-content: space-between;
     color: #555;
 
     .actions {
@@ -123,23 +127,36 @@ main {
       justify-content: center;
       flex-wrap: wrap;
       gap: 1rem;
+
+      & > div:first-of-type {
+        flex-basis: 100%;
+      }
+
+      & > form:first-of-type {
+        flex-basis: 100%;
+      }
     }
 
     .wrapper-form,
     form {
-      flex-basis: 100%;
-      background-color: #ddd;
-      padding: 1rem;
       border-radius: 0.35rem;
-      flex: 1;
       display: flex;
       gap: 0.5rem;
       flex-direction: column;
       justify-content: end;
       align-items: start;
+      width: calc(50% - 0.5rem);
 
       button {
         width: 100%;
+      }
+
+      .input-wrapper {
+        width: 100%;
+      }
+
+      input::placeholder {
+        color: #ccc;
       }
     }
 
@@ -199,6 +216,7 @@ main {
   align-items: center;
 
   label {
+    width: 8rem;
     font-size: 1.1rem;
   }
 

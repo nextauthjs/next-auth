@@ -30,9 +30,7 @@ import Zoom from "next-auth/providers/zoom"
 import type { NextAuthConfig } from "next-auth"
 
 export const config = {
-  theme: {
-    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
-  },
+  theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   providers: [
     Apple,
     Auth0,
@@ -57,17 +55,17 @@ export const config = {
     Hubspot,
     Keycloak,
     LinkedIn,
-    Netlify({ authorization: "https://app.netlify.com/authorize?scope" }),
+    Netlify,
     Okta,
     Passage,
     Pinterest,
     Reddit,
-    Slack({ checks: ["nonce"] }), // TODO: Make this default in core
+    Slack,
     Spotify,
     Twitch,
     Twitter,
     WorkOS({
-      authorization: `https://api.workos.com/sso/authorize?${new URLSearchParams({ connection: process.env.AUTH_WORKOS_CONNECTION ?? "" })}`,
+      connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
   ],

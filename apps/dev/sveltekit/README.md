@@ -2,7 +2,7 @@
 
 <p align="center">
    <br/>
-   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo-sm.png" /></a>
    <h3 align="center">Auth.js Example App with <a href="https://kit.svelte.dev">SvelteKit</a></h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.

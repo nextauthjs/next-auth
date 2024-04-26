@@ -1,6 +1,6 @@
 <p align="center">
    <br/>
-   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo-sm.png" /></a>
    <h3 align="center">Express Auth</a></h3>
    <h4 align="center">Authentication for Express.</h4>
    <p align="center" style="align: center;">

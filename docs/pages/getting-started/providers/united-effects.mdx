@@ -1,0 +1,86 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/united-effects.svg"
+  height="64"
+  width="64"
+/>
+
+# United Effects Provider
+
+## Resources
+
+- [UnitedEffects Auth.js documentation](https://docs.unitedeffects.com/integrations/nextauthjs)",
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/united-effects
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/united-effects
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_UNITEDEFFECTS_ID
+AUTH_UNITEDEFFECTS_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import UnitedEffects from "next-auth/providers/united-effects"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [UnitedEffects],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import UnitedEffects from "@auth/sveltekit/providers/united-effects"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [UnitedEffects],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import UnitedEffects from "@auth/express/providers/united-effects"
+
+app.use("/auth/*", ExpressAuth({ providers: [UnitedEffects] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- `issuer` should be the fully qualified URL including your Auth Group ID – e.g. `https://auth.unitedeffects.com/YQpbQV5dbW-224dCovz-3`

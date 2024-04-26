@@ -1,0 +1,634 @@
+---
+title: Email Providers
+---
+
+import { useState } from "react"
+import { RichTabs } from "@/components/RichTabs"
+
+import { Callout, Steps, Tabs } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Link } from "@/components/Link"
+import { Screenshot } from "@/components/Screenshot"
+import MagicLink from "../../../public/img/magic-links/start.webp"
+
+# Email Provider
+
+This login mechanism starts by the user providing their email address at the login form. Then a **Verification Token** is sent to the provided email address. The user then has 24 hours to click the link in the email body to "consume" that token and register their account, otherwise the verification token will expire and they will have to request a new one.
+
+<Callout>
+  An Email Provider can be used with both [JSON Web Tokens](https://jwt.io/) and
+  [database](/concepts/session-strategies#database-session) session, whichever
+  you choose, you **must still configure a database** so that Auth.js can save
+  the verification tokens and look them up when the user attempts to login. It
+  is not possible to enable an email provider without using a database.
+</Callout>
+
+### Providers
+
+<div className="flex flex-col w-full gap-6 items-start">
+  <RichTabs
+    orientation="horizontal"
+    tabKey="Resend"
+    defaultValue="resend"
+    className="w-full flex flex-col"
+  >
+    <RichTabs.List className="flex gap-4 flex-wrap">
+      <RichTabs.Trigger
+        value="resend"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/resend.svg`} />
+        <div className="text-sm text-center">Resend</div>
+      </RichTabs.Trigger>
+      <RichTabs.Trigger
+        value="sendgrid"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/sendgrid.svg`} />
+        <div className="text-sm text-center">Sendgrid</div>
+      </RichTabs.Trigger>
+      <RichTabs.Trigger
+        value="nodemailer"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/nodemailer.svg`} />
+        <div className="text-sm text-center">Nodemailer</div>
+      </RichTabs.Trigger>
+      <RichTabs.Trigger
+        value="postmark"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/postmark.svg`} />
+        <div className="text-sm text-center">Postmark</div>
+      </RichTabs.Trigger>
+    </RichTabs.List>
+  <RichTabs.Content
+    orientation="vertical"
+    value="resend"
+    className="h-full !border-0 !w-full"
+    tabIndex={-1}
+  >
+
+### Resend Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+AUTH_RESEND_KEY=abc123
+```
+
+### Setup Provider
+
+Let’s enable `Resend` as a sign in option in our Auth.js configuration. You’ll have to import the `Resend` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Resend from "next-auth/providers/resend"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Resend],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Resend from "@auth/sveltekit/providers/resend"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Resend],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("resend", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Resend</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="resend" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  Check our [Customising magic links
+  emails](/getting-started/providers/resend#customization) to learn how to
+  change the look and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Resend docs page](/getting-started/providers/resend).
+
+</RichTabs.Content>
+
+<RichTabs.Content
+  orientation="vertical"
+  value="sendgrid"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
+
+### Sendgrid Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+AUTH_SENDGRID_KEY=abc123
+```
+
+### Setup Provider
+
+Let’s enable `Sendgrid` as a sign in option in our Auth.js configuration. You’ll have to import the `Sendgrid` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Sendgrid from "next-auth/providers/sendgrid"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Sendgrid],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Sendgrid from "@auth/sveltekit/providers/sendgrid"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Sendgrid],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("sendgrid", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Sendgrid</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="sendgrid" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  Check our [Customising magic links
+  emails](/getting-started/providers/sendgrid#customization) to learn how to
+  change the look and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Sendgrid docs page](/getting-started/providers/sendgrid).
+
+</RichTabs.Content>
+
+<RichTabs.Content
+  orientation="vertical"
+  value="nodemailer"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
+
+### Nodemailer Setup
+
+<Steps>
+
+### Install `nodemailer`
+
+Auth.js does not include `nodemailer` as a dependency, so you'll need to install it yourself if you want to use the Nodemailer provider.
+
+```sh npm2yarn
+npm install nodemailer
+```
+
+You will need access to an SMTP server, ideally from one of [the services known to work with nodemailer](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/). Alternatively, Nodemailer does support [other transport mechanisms](https://nodemailer.com/transports/).
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for magic link login to work as verification tokens need to be stored.
+
+### SMTP Transport Configuration
+
+There are two ways to configure the SMTP server connection: using a connection string or a configuration object.
+
+<Tabs items={['Connection string', 'Configuration object']}>
+  <Tabs.Tab>
+
+```bash filename=".env"
+EMAIL_SERVER=smtp://username:password@smtp.example.com:587
+EMAIL_FROM=noreply@example.com
+```
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Nodemailer from "next-auth/providers/nodemailer"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Nodemailer({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Nodemailer({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+    }),
+  ],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+
+```bash filename=".env"
+EMAIL_SERVER_USER=username
+EMAIL_SERVER_PASSWORD=password
+EMAIL_SERVER_HOST=smtp.example.com
+EMAIL_SERVER_PORT=587
+EMAIL_FROM=noreply@example.com
+```
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Nodemailer from "next-auth/providers/nodemailer"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Nodemailer({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Nodemailer({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
+  ],
+})
+```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+  </Tabs.Tab>
+</Tabs>
+
+### Signin Button
+
+Next, we can add a sign in button somewhere in your application like the Navbar. This will forward the user on to the Auth.js default signin page.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signIn()
+      }}
+    >
+      <button type="submit">Sign In</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { signIn } from '@auth/sveltekit/client'
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <button on:click={signIn}>Signin</button>
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, click on the sign in button we just added, and you should see Auth.js built-in sign in page with the option to sign in with your email:
+
+<Screenshot src={MagicLink} alt="Screenshot of sign in page" />
+
+Insert your email and click "Sign in with Email". You should receive an email from Auth.js, click on it and should be redirected to your application, landing already authenticated.
+
+</Steps>
+
+For more information on this provider go to the [Nodemailer docs page](/getting-started/providers/nodemailer).
+
+</RichTabs.Content>
+<RichTabs.Content
+  orientation="vertical"
+  value="postmark"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
+
+### Postmark Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+AUTH_POSTMARK_KEY=abc123
+```
+
+### Setup Provider
+
+Let’s enable `Postmark` as a sign in option in our Auth.js configuration. You’ll have to import the `Postmark` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Postmark from "next-auth/providers/postmark"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Postmark],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Postmark from "@auth/sveltekit/providers/postmark"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Postmark],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("postmark", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Postmark</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="postmark" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  Check our [Customising magic links
+  emails](/getting-started/providers/postmark#customization) to learn how to
+  change the look and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Postmark docs page](/getting-started/providers/postmark).
+
+</RichTabs.Content>
+
+  </RichTabs>
+</div>
