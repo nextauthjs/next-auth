@@ -19,7 +19,7 @@ Here are the _state_ of planned and released integrations under the `@auth/*` an
 | `@auth/solid-start`    | Released (experimental). See [docs](/reference/solidstart) Community package: [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth)                             |
 | `@auth/express`        | Released (experimental). See [docs](/reference/express)                                                                                                                                |
 | `@auth/remix`          | Planned.                                                                                                                                                                               |
-| `@auth/astro`          | Released (experimental): See [docs](/reference/astro)                                                                                             |
+| `@auth/astro`          | Planned. Community packages: [`auth-astro`](https://github.com/nowaythatworked/auth-astro)                                                                                             |
 | `@auth/nuxt`           | Planned. Community packages: [`@sidebase/nuxt-auth`](https://github.com/sidebase/nuxt-auth), [`@hebilicious/authjs-nuxt`](https://authjs-nuxt.pages.dev/)                              |
 | `@builder.io/qwik-auth`| Community package: [qwik integrations](https://qwik.builder.io/docs/integrations/authjs/#authjs)                                                                                       |
 
