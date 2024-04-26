@@ -80,17 +80,17 @@ export async function getSession(
   // @ts-expect-error
   setEnvDefaults(import.meta.env, config)
 
-  // @ts-expect-error
   const protocol =
     ctx.request.headers.get("x-forwarded-proto") === "http" ||
+    // @ts-expect-error
     import.meta.env.DEV
       ? "http"
       : "https"
-  // @ts-expect-error
   const url = createActionURL(
     "session",
     protocol,
     ctx.request.headers,
+    // @ts-expect-error
     import.meta.env,
     config.basePath
   )
