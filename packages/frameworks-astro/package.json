@@ -20,7 +20,8 @@
     "providers": "node ../utils/scripts/providers.js --out src/lib"
   },
   "files": [
-    "dist"
+    "dist",
+    "api"
   ],
   "exports": {
     ".": {
@@ -63,7 +64,7 @@
     "@types/node": "^18.7.14",
     "@types/set-cookie-parser": "^2.4.7",
     "astro": "^4.2.4",
-    "vite": "^5.0.12"
+    "vite": "^5.2.10"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
