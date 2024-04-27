@@ -1,12 +1,13 @@
 {
-  "type": "module",
   "description": "Express Auth example app",
   "engines": {
     "node": ">=20.11.0"
   },
+  "type": "module",
   "private": true,
   "scripts": {
-    "start": "node --env-file .env dist/server.js",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist",
     "build": "pnpm build:ts && pnpm build:css",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
@@ -24,17 +25,11 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@prettier/plugin-pug": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.7",
     "@types/pug": "^2.0.10",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "@typescript-eslint/parser": "^7.7.0",
-    "eslint": "^8.56.0",
-    "prettier": "3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.14",
     "tsx": "^4.7.0",
-    "typescript": "5.4.5"
+    "typescript": "5.3.3"
   }
 }
