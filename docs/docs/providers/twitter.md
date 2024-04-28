@@ -4,7 +4,7 @@ title: Twitter
 ---
 
 :::note
-Twitter is currently the only built-in provider using the OAuth 1.0 spec. This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://authjs.dev/getting-started/adapters).
+Twitter is currently the only built-in provider using the OAuth 1.0 spec. This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://next-auth.js.org/adapters).
 :::
 
 ## Documentation

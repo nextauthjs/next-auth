@@ -3,10 +3,10 @@ id: initialization
 title: Initialization
 ---
 
-The main entry point of NextAuth.js is the `NextAuth` method that you import from `next-auth`. It handles different types of requests, as defined in the [REST API](../getting-started/rest-api.md) section.
+The main entry point of NextAuth.js is the `NextAuth` method that you import from `next-auth`. It handles different types of requests, as defined in the [REST API](/getting-started/rest-api.md) section.
 
 :::info
-NextAuth.js cannot use the run [Edge Runtime](https://nextjs.org/docs/api-reference/edge-runtime) for initialization. The upcoming [`@auth/nextjs` library](https://authjs.dev/reference/nextjs) (which will replace `next-auth`) on the other hand will be fully compatible.
+NextAuth.js cannot use the run [Edge Runtime](https://nextjs.org/docs/api-reference/edge-runtime) for initialization. The upcoming [`@auth/nextjs` library](https://authjs.dev/reference/next-auth) (which will replace `next-auth`) on the other hand will be fully compatible.
 :::
 
 You can initialize NextAuth.js in a few different ways.
@@ -57,7 +57,7 @@ Technically, in a Route Handler, the `api/` prefix is not necessary, but we deci
 
 :::info
 The following describes the advanced initialization with API Routes, but everything will apply similarily when using [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers) too.
-Instead, `NextAuth` will receive the first two arguments of a Route Handler, and the third argument will be the [auth options](../configuration/options.md)
+Instead, `NextAuth` will receive the first two arguments of a Route Handler, and the third argument will be the [auth options](/configuration/options)
 :::
 
 If you have a specific use case and need to make NextAuth.js do something slightly different than what it is designed for, keep in mind, the `[...nextauth].ts` config file is just **a regular [API Route](https://nextjs.org/docs/api-routes/introduction)**.

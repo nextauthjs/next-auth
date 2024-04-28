@@ -4,7 +4,7 @@ title: Zoho
 ---
 
 :::note
-Zoho returns a field on `Account` called `api_domain` which is a string. See their [docs](https://www.zoho.com/accounts/protocol/oauth/web-apps/access-token.html). Remember to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/adapters).
+Zoho returns a field on `Account` called `api_domain` which is a string. See their [docs](https://www.zoho.com/accounts/protocol/oauth/web-apps/access-token.html). Remember to add this field to your database schema, in case if you are using an [Adapter](https://next-auth.js.org/adapters).
 :::
 
 ## Documentation
