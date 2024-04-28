@@ -26,7 +26,7 @@ Depending on the session strategy, `refresh_token` can be persisted either in a 
 
 Using the [jwt](/reference/core/types#jwt) and [session](/reference/core/types#session) callbacks, we can persist OAuth tokens and refresh them when they expire.
 
-Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request in the `refreshAccessToken()` function will vary between different providers, but the core logic should remain similar.
+Below is a sample implementation using Google's Identity Provider. Please note that the OAuth 2.0 request to get the `refresh_token` will vary between different providers, but the core logic should remain similar.
 
 <Code>
   <Code.Next>
@@ -124,21 +124,20 @@ declare module "next-auth/jwt" {
 
 ### Database strategy
 
-Using the database strategy is very similar, but instead of preserving the `access_token` and `refresh_token`, we save it, well, in the database.
+Using the database session strategy is very similar, but instead of preserving the `access_token` and `refresh_token` in the JWT, we will save it in the database by updating the `account` value.
 
 <Code>
   <Code.Next>
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
-import { type TokenSet } from "next-auth/types"
 import Google from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
-export const { handlers, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
@@ -149,10 +148,10 @@ export const { handlers, auth } = NextAuth({
   ],
   callbacks: {
     async session({ session, user }) {
-      const [google] = await prisma.account.findMany({
+      const [googleAccount] = await prisma.account.findMany({
         where: { userId: user.id, provider: "google" },
       })
-      if (google.expires_at * 1000 < Date.now()) {
+      if (googleAccount.expires_at * 1000 < Date.now()) {
         // If the access token has expired, try to refresh it
         try {
           // https://accounts.google.com/.well-known/openid-configuration
@@ -160,15 +159,15 @@ export const { handlers, auth } = NextAuth({
           const response = await fetch("https://oauth2.googleapis.com/token", {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-              client_id: process.env.AUTH_GOOGLE_ID,
-              client_secret: process.env.AUTH_GOOGLE_SECRET,
+              client_id: process.env.AUTH_GOOGLE_ID!,
+              client_secret: process.env.AUTH_GOOGLE_SECRET!,
               grant_type: "refresh_token",
-              refresh_token: google.refresh_token,
+              refresh_token: googleAccount.refresh_token,
             }),
             method: "POST",
           })
 
-          const tokens: TokenSet = await response.json()
+          const tokens = await response.json()
 
           if (!response.ok) throw tokens
 
@@ -176,12 +175,12 @@ export const { handlers, auth } = NextAuth({
             data: {
               access_token: tokens.access_token,
               expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
-              refresh_token: tokens.refresh_token ?? google.refresh_token,
+              refresh_token: tokens.refresh_token ?? googleAccount.refresh_token,
             },
             where: {
               provider_providerAccountId: {
                 provider: "google",
-                providerAccountId: google.providerAccountId,
+                providerAccountId: googleAccount.providerAccountId,
               },
             },
           })
@@ -217,13 +216,13 @@ declare module "next-auth/jwt" {
 
 ### Client Side
 
-The `RefreshAccessTokenError` error that is caught in the `refreshAccessToken()` method is passed to the client. This means that you can direct the user to the sign-in flow if we cannot refresh their token. Don't forget, calling `useSession` client-side, for example, requires your component is wrapped with the `<SessionProvider />`.
+The `RefreshAccessTokenError` error that is caught in the `session` callback is passed to the client. This means that you can direct the user to the sign-in flow if we cannot refresh their token. Don't forget, calling `useSession` client-side, for example, requires your component is wrapped with the `<SessionProvider />`.
 
 We can handle this functionality as a side effect:
 
 ```ts filename="pages/home.js"
-import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 const HomePage() {
   const { data: session } = useSession();
