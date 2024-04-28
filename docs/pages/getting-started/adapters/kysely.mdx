@@ -57,7 +57,7 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import { KyselyAdapter } from "@auth/kysely-adapter"
 import { db } from "../../../db"
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: KyselyAdapter(db),
   providers: [],
 })

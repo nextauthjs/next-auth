@@ -45,7 +45,7 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import { MongoDBAdapter } from "@auth/mongodb-adapter"
 import clientPromise from "./lib/db"
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: MongoDBAdapter(clientPromise),
 })
 ```
