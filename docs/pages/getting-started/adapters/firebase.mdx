@@ -52,7 +52,7 @@ export { handlers, auth, signIn, signOut } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { FirestoreAdapter } from "@auth/firebase-adapter"
 
-export { handler, signIn, signOut } = SvelteKitAuth({
+export { handle, signIn, signOut } = SvelteKitAuth({
   adapter: FirestoreAdapter(),
 })
 ```

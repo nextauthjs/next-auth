@@ -91,7 +91,7 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
   },
 })
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: []
   adapter: DynamoDBAdapter(client),
 })
