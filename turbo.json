@@ -61,7 +61,17 @@
       "cache": false
     },
     "docs#build": {
-      "inputs": ["docs/**"],
+      "inputs": [
+        "pages/**",
+        "utils/**",
+        "public/**",
+        "components/**",
+        "theme.config.tsx",
+        "typedoc*",
+        "vercel.json",
+        "next-sitemap.config.cjs",
+        "next.config.js"
+      ],
       "dependsOn": [
         "@auth/core#build",
         "@auth/azure-tables-adapter#build",
