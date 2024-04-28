@@ -22,7 +22,7 @@ import Reddit from "@auth/core/providers/reddit"
 import Slack from "@auth/core/providers/slack"
 import Spotify from "@auth/core/providers/spotify"
 import Twitch from "@auth/core/providers/twitch"
-import Tiktok from "@auth/core/providers/tiktok"
+import TikTok from "@auth/core/providers/tiktok"
 import Twitter from "@auth/core/providers/twitter"
 import WorkOS from "@auth/core/providers/workos"
 import Zoom from "@auth/core/providers/zoom"
@@ -59,7 +59,7 @@ const authConfig: AuthConfig = {
     Reddit,
     Slack,
     Spotify,
-    Tiktok,
+    TikTok,
     Twitch,
     Twitter,
     WorkOS,
