@@ -34,7 +34,7 @@ npm install next-auth@beta
 #### Universal `auth()`
 
 - A single method to authenticate anywhere
-- Use `auth()` instead of `getServerSession`, `getSession`, `withAuth`, `getToken`, and `useSession` ([Read more](#authenticating-server-side))
+- Use `auth()` instead of `getServerSession`, `getSession`, `withAuth`, `getToken` ([Read more](#authenticating-server-side))
 
 ## Breaking Changes
 
@@ -74,8 +74,7 @@ Some things to note about the new configuration:
 The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts` / `app/api/auth/[...nextauth]/route.ts`), now becomes much shorter. **These exports are designed to be used in an App Router API Route**, but the rest of your app can stay in the Pages Router if you are gradually migrating!
 
 ```ts filename="app/api/auth/[...nextauth]/route.ts"
-import { handlers } from "@/auth"
-export const { GET, POST } = handlers
+export { GET, POST } from '@/auth';
 ```
 
 ## Authenticating server-side
@@ -125,11 +124,15 @@ export default async function Page() {
 
 Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions.
 
-<Callout type="warning">
-  If you have previously used `getSession()` or other imports from
-  `next-auth/react` server-side, you'll have to refactor them to use `auth()` as
-  shown above instead.
-</Callout>
+```ts filename="app/ClientComponent.tsx"
+import { useSession } from 'next-auth/react';
+
+const ClientComponent = () => {
+  const session = useSession();
+
+  return (<></>}
+}
+```
 
 </Tabs.Tab>
 <Tabs.Tab>
@@ -273,7 +276,12 @@ import authConfig from "./auth.config"
 
 const prisma = new PrismaClient()
 
-export const { handlers, auth } = NextAuth({
+export const { 
+  auth,
+  handlers: { GET, POST },
+  signIn,
+  signOut,
+} = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,
@@ -285,7 +293,15 @@ export const { handlers, auth } = NextAuth({
 ```ts filename="middleware.ts" {1} /NextAuth/
 import authConfig from "./auth.config"
 import NextAuth from "next-auth"
+
+// Use middleware directly
 export const { auth: middleware } = NextAuth(authConfig)
+
+// Wrapped middleware option, use one or the other but not both
+const { auth } = NextAuth(authConfig);
+export default auth(async function middleware(req: NextRequest) {
+  // Your custom middleware logic goes here
+}
 ```
 
 The above is an example. The takeaway is to separate the part of the configuration that is edge-compatible from the rest, and only import that in Middleware/Edge pages/routes.
