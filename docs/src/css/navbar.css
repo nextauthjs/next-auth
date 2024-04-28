@@ -43,13 +43,18 @@
 
 .navbar__search-input:focus {
   outline: none;
-  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
-    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  box-shadow:
+    rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(19, 19, 19, 0.2) 0px 0px 0px 4px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px;
   transition: box-shadow 350ms ease-in-out;
 }
+
 html[data-theme="dark"] .navbar__search-input:focus {
-  box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px,
-    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+  box-shadow:
+    rgb(255, 255, 255) 0px 0px 0px 0px,
+    rgba(29, 29, 29, 0.5) 0px 0px 0px 4px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px;
 }
 
 html[data-theme="dark"] .navbar__item.navbar__link[href*="github"]:before {
@@ -70,6 +75,7 @@ html[data-theme="dark"] .navbar__item.navbar__link[href*="npm"]:before {
 }
 
 @media screen and (max-width: 966px) {
+
   .navbar__item.navbar__link[href*="github"],
   .navbar__item.navbar__link[href*="npmjs"] {
     display: none;
@@ -85,8 +91,8 @@ html[data-theme="dark"] .navbar__item.navbar__link[href*="npm"]:before {
 .github-counter {
   position: absolute;
   color: #000;
-  top: -10px;
-  right: -45px;
+  top: -13px;
+  right: -51px;
   font-size: 9px;
   background-color: #ccc;
   padding: 2px 5px;
