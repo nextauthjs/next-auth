@@ -62,7 +62,7 @@ const redis = upstashRedisClient(
   process.env.UPSTASH_REDIS_TOKEN
 )
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: UpstashRedisAdapter(redis),
   providers: [],
 })
