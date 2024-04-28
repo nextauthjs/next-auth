@@ -47,11 +47,12 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.11",
-    "eslint-plugin-svelte3": "^4.0.0",
+    "eslint-plugin-svelte": "^2.38.0",
     "fake-smtp-server": "^0.8.0",
     "prettier": "3.1.1",
     "prettier-plugin-svelte": "^3.1.2",
     "prettier-plugin-tailwindcss": "^0.5.13",
+    "svelte-eslint-parser": "^0.35.0",
     "turbo": "^1.11.3",
     "typescript": "5.3.3",
     "utils": "workspace:*",
@@ -93,8 +94,6 @@
     ".next",
     ".nuxt",
     "build",
-    "docs/docs/reference/core",
-    "docs/docs/reference/sveltekit",
     "static",
     "coverage",
     "dist",
@@ -110,7 +109,6 @@
     "firestore-debug.log",
     "migrations",
     "test.schema.gql",
-    "apps/example-sveltekit",
     "apps",
     "packages/**/*test*"
   ],
@@ -192,20 +190,27 @@
         "files": [
           "packages/frameworks-sveltekit"
         ],
-        "plugins": [
-          "svelte3"
+        "extends": [
+          "plugin:svelte/recommended"
         ],
         "overrides": [
           {
             "files": [
               "*.svelte"
             ],
-            "processor": "svelte3/svelte3"
+            "parser": "svelte-eslint-parser",
+            "parserOptions": {
+              "parser": "@typescript-eslint/parser"
+            }
           }
         ],
+        "parser": "@typescript-eslint/parser",
         "parserOptions": {
           "sourceType": "module",
-          "ecmaVersion": 2020
+          "ecmaVersion": 2020,
+          "extraFileExtensions": [
+            ".svelte"
+          ]
         },
         "env": {
           "browser": true,
@@ -226,19 +231,7 @@
   "prettier": {
     "semi": false,
     "singleQuote": false,
-    "trailingComma": "es5",
-    "overrides": [
-      {
-        "files": [
-          "apps/dev/nextjs/app/api/auth/[...nextauth]/route.ts",
-          "packages/next-auth/src/lib/env.ts",
-          "apps/examples/nextjs/auth.ts"
-        ],
-        "options": {
-          "printWidth": 150
-        }
-      }
-    ]
+    "trailingComma": "es5"
   },
   "pnpm": {
     "overrides": {
