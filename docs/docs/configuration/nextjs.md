@@ -164,6 +164,14 @@ export const config = { matcher: ["/dashboard"] }
 
 Now you will still be able to visit every page, but only `/dashboard` will require authentication.
 
+If you want to secure all pages under dashboard, export a `config` object with a `matcher`:
+
+```js
+export { default } from "next-auth/middleware"
+
+export const config = { matcher: "/dashboard/:path*" }
+```
+
 If a user is not logged in, the default behavior is to redirect them to the sign-in page.
 
 ---
