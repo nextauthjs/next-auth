@@ -61,7 +61,7 @@
       "cache": false
     },
     "docs#build": {
-      "inputs": ["docs/pages"],
+      "inputs": ["docs/"],
       "dependsOn": [
         "@auth/core#build",
         "@auth/azure-tables-adapter#build",
