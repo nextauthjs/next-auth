@@ -40,7 +40,6 @@ In order to sign a user in using WorkOS, we need to specify which WorkOS Connect
 ```js
 import { signIn } from "next-auth/react"
 
-// [...]
 
 const organization = 'ORGANIZATION_ID';
 signIn(provider.id, undefined, {
