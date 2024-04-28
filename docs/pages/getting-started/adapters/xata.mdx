@@ -52,7 +52,7 @@ import { XataClient } from "../../../xata" // Or wherever you've chosen for the 
 
 const client = new XataClient()
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: XataAdapter(client),
   providers: [],
 })

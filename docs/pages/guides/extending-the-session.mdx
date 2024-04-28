@@ -16,7 +16,8 @@ A common use case is to add the user's id to the session. Below it is shown how 
 
 To have access to the user id, add the following to your Auth.js configuration:
 
-```ts
+```ts filename="auth.ts"
+  providers,
   callbacks: {
     jwt({ token, user }) {
       if (user) { // User is available during sign-in
@@ -29,6 +30,7 @@ To have access to the user id, add the following to your Auth.js configuration:
       return session
     },
   },
+}
 ```
 
 During sign-in, the `jwt` callback exposes the user's profile information coming from the provider.
@@ -41,13 +43,15 @@ Calls to `auth()` or `useSession()` will now have access to the user's id.
 
 If you are using a database session strategy, you can add the user's id to the session by modifying the `session` callback:
 
-```ts
+```ts filename="auth.ts"
+  providers,
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id
       return session
     },
-  },
+  }
+}
 ```
 
 This will add the user's id to the session object. Notice that in this case, we are getting the id from the `user` object, not the `token`.
