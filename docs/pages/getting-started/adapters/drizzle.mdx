@@ -50,7 +50,6 @@ import {
   text,
   primaryKey,
   integer,
-  index,
 } from "drizzle-orm/pg-core"
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
@@ -95,7 +94,6 @@ export const accounts = pgTable(
   })
 )
 
-  
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
@@ -128,7 +126,6 @@ import {
   mysqlTable,
   primaryKey,
   varchar,
-  index,
 } from "drizzle-orm/mysql-core"
 import mysql from "mysql2/promise"
 import { drizzle } from "drizzle-orm/mysql2"
@@ -189,7 +186,6 @@ export const sessions = mysqlTable("session", {
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 })
-
 
 export const verificationTokens = mysqlTable(
   "verificationToken",
