@@ -21,7 +21,7 @@
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
     "Thang Huu Vu <hi@thvu.dev>",
-    "Iain Collins <me@iaincollins.com"
+    "Iain Collins <me@iaincollins.com>"
   ],
   "type": "module",
   "types": "./index.d.ts",

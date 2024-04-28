@@ -16,8 +16,6 @@ import { Code } from "@/components/Code"
   [here](https://learn.microsoft.com/en-us/entra/fundamentals/new-name).
 </Callout>
 
-<Callout>To be released in `next-auth@5.0.0-beta.17`</Callout>
-
 ## Resources
 
 - [Microsoft Entra OAuth documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
@@ -44,6 +42,14 @@ https://example.com/auth/callback/microsoft-entra-id
   </Code.Svelte>
 </Code>
 
+### Environment Variables
+
+```
+AUTH_MICROSOFT_ENTRA_ID_ID
+AUTH_MICROSOFT_ENTRA_ID_SECRET
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID
+```
+
 ### Configuration
 
 <Code>
@@ -58,6 +64,7 @@ const { handlers, auth, signin, signout } = NextAuth({
     Entra({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
     }),
   ],
 })
@@ -76,6 +83,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Entra({
       clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
     }),
   ],
 })
@@ -95,6 +103,7 @@ app.use(
       Entra({
         clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
         clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+        tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
       }),
     ],
   })
