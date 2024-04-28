@@ -3,7 +3,7 @@ id: databases
 title: Databases
 ---
 
-NextAuth.js offers multiple database adapters. Check out [the overview](https://authjs.dev/getting-started/adapters).
+NextAuth.js offers multiple database adapters. Check out [the overview](https://authjs.dev/getting-started/database).
 
 > As of **v4** NextAuth.js no longer ships with an adapter included by default. If you would like to persist any information, you need to install one of the many available adapters yourself. See the individual adapter documentation pages for more details.
 
