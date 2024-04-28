@@ -19,7 +19,7 @@
     "url": "git+https://github.com/nextauthjs/next-auth"
   },
   "author": "Auth.js Team (https://authjs.dev/contributors)",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
