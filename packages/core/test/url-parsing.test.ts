@@ -59,6 +59,12 @@ describe("parse the action and provider id", () => {
       basePath: "/auth",
     },
     {
+      path: "/auth/signin/auth0///",
+      action: "signin",
+      providerId: "auth0",
+      basePath: "/auth",
+    },
+    {
       path: "/auth/signin/auth0",
       action: "signin",
       providerId: "auth0",
