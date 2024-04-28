@@ -20,8 +20,8 @@ import type {
 } from "@auth/core/adapters"
 
 export function defineTables(
-  schema: Partial<DefaultPostgresSchema>
-): DefaultPostgresSchema {
+  schema: Partial<DefaultPostgresSchema> = {}
+): Required<DefaultPostgresSchema> {
   const usersTable =
     schema.usersTable ??
     (pgTable("user", {
@@ -98,7 +98,7 @@ export function defineTables(
 
 export function PostgresDrizzleAdapter(
   client: PgDatabase<QueryResultHKT, any>,
-  schema: Partial<DefaultPostgresSchema> = {}
+  schema?: DefaultPostgresSchema
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
     defineTables(schema)
@@ -430,6 +430,6 @@ export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
 export type DefaultPostgresSchema = {
   usersTable: DefaultPostgresUsersTable
   accountsTable: DefaultPostgresAccountsTable
-  sessionsTable: DefaultPostgresSessionsTable
-  verificationTokensTable: DefaultPostgresVerificationTokenTable
+  sessionsTable?: DefaultPostgresSessionsTable
+  verificationTokensTable?: DefaultPostgresVerificationTokenTable
 }

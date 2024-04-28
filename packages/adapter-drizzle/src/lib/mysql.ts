@@ -21,8 +21,8 @@ import type {
 } from "@auth/core/adapters"
 
 export function defineTables(
-  schema: Partial<DefaultMySqlSchema>
-): DefaultMySqlSchema {
+  schema: Partial<DefaultMySqlSchema> = {}
+): Required<DefaultMySqlSchema> {
   const usersTable =
     schema.usersTable ??
     (mysqlTable("user", {
@@ -99,7 +99,7 @@ export function defineTables(
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
-  schema: Partial<DefaultMySqlSchema> = {}
+  schema?: DefaultMySqlSchema
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
     defineTables(schema)
@@ -461,6 +461,6 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
 export type DefaultMySqlSchema = {
   usersTable: DefaultMySqlUsersTable
   accountsTable: DefaultMySqlAccountsTable
-  sessionsTable: DefaultMySqlSessionsTable
-  verificationTokensTable: DefaultMySqlVerificationTokenTable
+  sessionsTable?: DefaultMySqlSessionsTable
+  verificationTokensTable?: DefaultMySqlVerificationTokenTable
 }

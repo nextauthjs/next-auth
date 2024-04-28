@@ -272,7 +272,7 @@ import type { Adapter } from "@auth/core/adapters"
  **/
 export function DrizzleAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  schema?: Partial<DefaultSchema<SqlFlavor>>
+  schema?: DefaultSchema<SqlFlavor>
 ): Adapter {
   if (is(db, MySqlDatabase)) {
     return MySqlDrizzleAdapter(db, schema as DefaultMySqlSchema)

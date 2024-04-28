@@ -18,8 +18,8 @@ import type {
 } from "@auth/core/adapters"
 
 export function defineTables(
-  schema: Partial<DefaultSQLiteSchema>
-): DefaultSQLiteSchema {
+  schema: Partial<DefaultSQLiteSchema> = {}
+): Required<DefaultSQLiteSchema> {
   const usersTable =
     schema.usersTable ??
     (sqliteTable("user", {
@@ -92,7 +92,7 @@ export function defineTables(
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<"sync" | "async", any, any>,
-  schema: Partial<DefaultSQLiteSchema> = {}
+  schema?: DefaultSQLiteSchema
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
     defineTables(schema)
@@ -433,6 +433,6 @@ export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
 export type DefaultSQLiteSchema = {
   usersTable: DefaultSQLiteUsersTable
   accountsTable: DefaultSQLiteAccountsTable
-  sessionsTable: DefaultSQLiteSessionsTable
-  verificationTokensTable: DefaultSQLiteVerificationTokenTable
+  sessionsTable?: DefaultSQLiteSessionsTable
+  verificationTokensTable?: DefaultSQLiteVerificationTokenTable
 }
