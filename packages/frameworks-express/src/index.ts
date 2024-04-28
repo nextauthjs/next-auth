@@ -141,6 +141,7 @@ export type {
   Profile,
   Session,
   User,
+  TokenSet,
 } from "@auth/core/types"
 
 export function ExpressAuth(config: Omit<AuthConfig, "raw">) {

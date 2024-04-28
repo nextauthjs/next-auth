@@ -93,6 +93,7 @@ export type {
   Profile,
   DefaultSession,
   User,
+  TokenSet,
 } from "@auth/core/types"
 
 type AppRouteHandlers = Record<
@@ -233,16 +234,16 @@ export interface NextAuthResult {
   auth: ((
     ...args: [NextApiRequest, NextApiResponse]
   ) => Promise<Session | null>) &
-    ((...args: []) => Promise<Session | null>) &
-    ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
-    ((
-      ...args: [
-        (
-          req: NextAuthRequest,
-          ctx: AppRouteHandlerFnContext
-        ) => ReturnType<AppRouteHandlerFn>,
-      ]
-    ) => AppRouteHandlerFn)
+  ((...args: []) => Promise<Session | null>) &
+  ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
+  ((
+    ...args: [
+      (
+        req: NextAuthRequest,
+        ctx: AppRouteHandlerFnContext
+      ) => ReturnType<AppRouteHandlerFn>,
+    ]
+  ) => AppRouteHandlerFn)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
    *
@@ -295,11 +296,11 @@ export interface NextAuthResult {
     options?:
       | FormData
       | ({
-          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
-          redirectTo?: string
-          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-          redirect?: R
-        } & Record<string, any>),
+        /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+        redirectTo?: string
+        /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+        redirect?: R
+      } & Record<string, any>),
     authorizationParams?:
       | string[][]
       | Record<string, string>

@@ -295,6 +295,7 @@ export type {
   Profile,
   Session,
   User,
+  TokenSet,
 } from "@auth/core/types"
 
 export type { SvelteKitAuthConfig }
