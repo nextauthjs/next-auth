@@ -91,6 +91,10 @@ function writeMetaJsFiles(app) {
         }
       })
 
+      if (new RegExp(".*docs/pages/reference/nextjs$").test(outputDirectory)) {
+        fs.renameSync('./pages/reference/next-auth', './pages/reference/nextjs')
+      }
+
       const metaJString = `
 export default ${JSON.stringify(pages, null, 2)}`
       if (new RegExp(".*docs/pages/reference$").test(outputDirectory)) return
