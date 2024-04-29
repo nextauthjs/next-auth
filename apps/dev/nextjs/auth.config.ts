@@ -49,14 +49,6 @@ export default {
       if (trigger === "update") token.name = session.user.name
       return token
     },
-    async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...token,
-        },
-      }
-    },
   },
   basePath: "/auth",
 } satisfies NextAuthConfig
