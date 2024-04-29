@@ -51,7 +51,7 @@ export const { handlers, auth } = NextAuth({
           access_token: account.access_token,
           expires_at: account.expires_at,
           refresh_token: account.refresh_token,
-          user: token
+          user: token,
         }
       } else if (Date.now() < token.expires_at * 1000) {
         // If the access token has not expired yet, return it
@@ -97,7 +97,7 @@ export const { handlers, auth } = NextAuth({
       session.error = token.error
       return {
         ...session,
-        ...token
+        ...token,
       }
     },
   },
@@ -175,7 +175,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data: {
               access_token: tokens.access_token,
               expires_at: Math.floor(Date.now() / 1000 + tokens.expires_in),
-              refresh_token: tokens.refresh_token ?? googleAccount.refresh_token,
+              refresh_token:
+                tokens.refresh_token ?? googleAccount.refresh_token,
             },
             where: {
               provider_providerAccountId: {

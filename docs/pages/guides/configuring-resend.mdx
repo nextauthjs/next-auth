@@ -40,8 +40,7 @@ export const { handlers, auth } = NextAuth({
 ```
 
 ```ts filename="app/api/auth/[...nextauth]/route.ts"
-export { GET, POST } from "./auth"
-export const runtime = "edge" // optional
+export { GET, POST } from "@/auth"
 ```
 
 Since this is a [catch-all dynamic route](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#catch-all-segments), it will respond to all the relevant Auth.js API routes so that your application can interact with the chosen OAuth provider using the [OAuth 2](https://oauth.net/2) protocol.
