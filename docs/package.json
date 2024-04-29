@@ -40,7 +40,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-instantsearch": "^7.7.2",
-    "react-instantsearch-nextjs": "^0.2.1",
     "react-marquee-slider": "^1.1.5"
   },
   "devDependencies": {

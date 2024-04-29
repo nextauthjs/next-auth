@@ -1,10 +1,12 @@
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Hits, useInstantSearch } from 'react-instantsearch';
-// import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import Hit from "./hit"
 import { CustomSearchBox } from "./searchbox"
 
-const algoliaClient = algoliasearch('OUEDA16KPG', '97c0894508f2d1d4a2fef4fe6db28448');
+const algoliaClient = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+  process.env.NEXT_PUBLIC_ALGOLIA_KEY
+);
 
 const searchClient = {
   ...algoliaClient,
