@@ -93,7 +93,7 @@ function writeMetaJsFiles(app) {
 
       // Rename generated 'next-auth' dir to 'nextjs'
       if (new RegExp(".*docs/pages/reference/nextjs$").test(outputDirectory)) {
-        if (fs.statSync('./pages/reference/nextjs')) {
+        if (fs.existsSync('./pages/reference/nextjs')) {
           fs.rmdirSync('./pages/reference/nextjs', { recursive: true })
         }
         fs.renameSync('./pages/reference/next-auth', './pages/reference/nextjs')
