@@ -65,7 +65,7 @@ export const config = {
     Twitch,
     Twitter,
     WorkOS({
-      connection: process.env.AUTH_WORKOS_CONNECTION,
+      connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
   ],

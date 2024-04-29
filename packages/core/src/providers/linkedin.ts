@@ -78,8 +78,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
     name: "LinkedIn",
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_post" },
-    issuer: "https://www.linkedin.com",
-    jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
+    issuer: "https://www.linkedin.com/oauth",
     async profile(profile) {
       return {
         id: profile.sub,
