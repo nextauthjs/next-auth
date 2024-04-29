@@ -31,7 +31,7 @@ export const { handlers, auth } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Auth0 from "@auth/sveltekit/providers/auth0";
 
-export const { handle } = SvelteKitAuth({
+export const { handle, signIn } = SvelteKitAuth({
   providers: [
     Auth0({ authorization: { params: { scope: "openid custom_scope" } } }),
   ],
