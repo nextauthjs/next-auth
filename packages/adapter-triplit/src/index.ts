@@ -209,7 +209,11 @@ export function TriplitAdapter(
 
   return {
     async createUser(user) {
-      const result = await client.insert(collectionNames.user, user)
+      const result = await client.insert(
+        collectionNames.user,
+        // @ts-expect-error
+        user
+      )
       return result?.output
     },
     async getUser(id) {

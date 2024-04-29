@@ -39,11 +39,11 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@triplit/client": "^0.3.18"
+    "@triplit/client": "^0.3.38"
   },
   "devDependencies": {
-    "@triplit/cli": "^0.3.23",
-    "@triplit/client": "^0.3.18",
-    "@triplit/db": "^0.3.15"
+    "@triplit/cli": "^0.3.46",
+    "@triplit/client": "^0.3.38",
+    "@triplit/db": "^0.3.30"
   }
 }

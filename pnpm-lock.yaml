@@ -521,13 +521,13 @@ importers:
         version: link:../core
     devDependencies:
       '@triplit/cli':
-        specifier: ^0.3.23
+        specifier: ^0.3.46
         version: 0.3.46(react-router@6.23.0)
       '@triplit/client':
-        specifier: ^0.3.18
+        specifier: ^0.3.38
         version: 0.3.38(react@18.2.0)
       '@triplit/db':
-        specifier: ^0.3.15
+        specifier: ^0.3.30
         version: 0.3.30(react@18.2.0)
 
   packages/adapter-typeorm:
@@ -18683,6 +18683,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: true
+    bundledDependencies: []
 
   /jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
