@@ -1,96 +1,18 @@
-import { useEffect } from "react"
-import algoliasearch from "algoliasearch/lite"
-import { InstantSearch, Hits, useInstantSearch } from "react-instantsearch"
-import { CustomSearchBox } from "./searchbox"
-import Hit from "./hit"
+import dynamic from "next/dynamic"
 
-const algoliaClient = algoliasearch(
-  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
-  process.env.NEXT_PUBLIC_ALGOLIA_KEY
+const DocSearch = dynamic(
+  () => import("./wrapper").then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="relative max-md:ml-6 h-8 appearance-none rounded-lg px-3 py-1.5 transition-colors text-base leading-tight md:text-sm bg-black/[.05] dark:bg-gray-50/10 focus:!bg-transparent pr-2 w-[194px] text-gray-500 dark:text-gray-400">
+        Search..
+        <kbd className="flex absolute top-0 right-0 gap-1 items-center px-1.5 my-1.5 h-5 font-mono font-medium text-gray-500 bg-white rounded border transition-opacity pointer-events-none select-none ltr:right-1.5 rtl:left-1.5 text-[10px] contrast-more:border-current contrast-more:text-current contrast-more:dark:border-current max-sm:hidden dark:border-gray-100/20 dark:bg-black/50">
+          CTRL K
+        </kbd>
+      </div>
+    ),
+  }
 )
 
-const searchClient = {
-  ...algoliaClient,
-  search(requests: any) {
-    if (requests.every(({ params }) => !params.query)) {
-      return Promise.resolve({
-        results: requests.map(() => ({
-          hits: [],
-          nbHits: 0,
-          nbPages: 0,
-          page: 0,
-          processingTimeMS: 0,
-          hitsPerPage: 0,
-          exhaustiveNbHits: false,
-          query: "",
-          params: "",
-        })),
-      })
-    }
-    return algoliaClient.search(requests)
-  },
-}
-
-export default function() {
-  const ctrlKHandler = (e: KeyboardEvent) => {
-    if (e.repeat || e.target instanceof HTMLInputElement) return
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault()
-      document.querySelector<HTMLInputElement>('input[type="search"]')?.focus()
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener("keydown", ctrlKHandler)
-
-    return window.addEventListener("keydown", ctrlKHandler)
-  }, [])
-
-  return (
-    <div className="relative">
-      <InstantSearch
-        indexName="next-auth"
-        // @ts-expect-error
-        searchClient={searchClient}
-        future={{
-          preserveSharedStateOnUnmount: true,
-        }}
-      >
-        <CustomSearchBox />
-        <EmptyQueryBoundary fallback={null}>
-          <NoResultsBoundary fallback={null}>
-            <Hits
-              hitComponent={Hit}
-              className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
-            />
-          </NoResultsBoundary>
-        </EmptyQueryBoundary>
-      </InstantSearch>
-    </div>
-  )
-}
-
-function NoResultsBoundary({ children, fallback }) {
-  const { results } = useInstantSearch()
-
-  if (!results.__isArtificial && results.nbHits === 0) {
-    return fallback
-  }
-
-  return children
-}
-
-function EmptyQueryBoundary({ children, fallback }) {
-  const { indexUiState } = useInstantSearch()
-
-  if (!indexUiState.query) {
-    return (
-      <>
-        {fallback}
-        <div hidden>{children}</div>
-      </>
-    )
-  }
-
-  return children
-}
+export default DocSearch
