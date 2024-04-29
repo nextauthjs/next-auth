@@ -8,9 +8,9 @@ overrides:
   mailparser: 3.6.6
 
 patchedDependencies:
-  '@balazsorban/monorepo-release@0.5.0':
+  '@balazsorban/monorepo-release@0.5.1':
     hash: cqvuvq5dn5jyeeoklla3tkfope
-    path: patches/@balazsorban__monorepo-release@0.5.0.patch
+    path: patches/@balazsorban__monorepo-release@0.5.1.patch
 
 importers:
 
@@ -20,8 +20,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.1
       '@balazsorban/monorepo-release':
-        specifier: 0.5.0
-        version: 0.5.0(patch_hash=cqvuvq5dn5jyeeoklla3tkfope)
+        specifier: 0.5.1
+        version: 0.5.1(patch_hash=cqvuvq5dn5jyeeoklla3tkfope)
       '@playwright/test':
         specifier: 1.41.2
         version: 1.41.2
@@ -3133,8 +3133,8 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
-  /@balazsorban/monorepo-release@0.5.0(patch_hash=cqvuvq5dn5jyeeoklla3tkfope):
-    resolution: {integrity: sha512-h6yw7OyEaVD6lxFTzTASnqcXIOqhVVDjP34kB4AvCJ9H7MWSxAUXy2nG8NrBGoQeef4INmL98vSwxZpUxyavwA==}
+  /@balazsorban/monorepo-release@0.5.1(patch_hash=cqvuvq5dn5jyeeoklla3tkfope):
+    resolution: {integrity: sha512-4FhT53KFZqnZYVPOcFOqsMECG+zaxXzArGILlyzCNz/uqm84P4xNNZ9a2a5RuiM9/3qK9zBomfaryoTEOnmsqQ==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     dependencies:
