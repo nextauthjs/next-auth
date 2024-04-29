@@ -41,9 +41,9 @@ const config: DocsThemeConfig = {
   components: {
     a: (props: ChildrenProps) => <Link href="" {...props} />,
   },
-  project: {
-    link: "https://github.com/nextauthjs/next-auth",
-  },
+  // project: {
+  //   link: "https://github.com/nextauthjs/next-auth",
+  // },
   darkMode: false,
   color: {
     hue: {

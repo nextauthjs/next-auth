@@ -31,8 +31,14 @@ const searchClient = {
 export default function() {
   return (
     <div className="relative">
-      {/*  @ts-expect-error */}
-      <InstantSearch indexName="next-auth" searchClient={searchClient}>
+      <InstantSearch
+        indexName="next-auth"
+        // @ts-expect-error 
+        searchClient={searchClient}
+        future={{
+          preserveSharedStateOnUnmount: true,
+        }}
+      >
         <CustomSearchBox />
         <EmptyQueryBoundary fallback={null}>
           <NoResultsBoundary fallback={null}>

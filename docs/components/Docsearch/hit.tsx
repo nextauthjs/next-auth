@@ -1,11 +1,12 @@
 import { Highlight } from 'react-instantsearch';
+import Link from 'next/link';
 
 export default function Hit({ hit }) {
   const hierarchy = Object.values(hit.hierarchy)?.filter(Boolean)
   const path = new URL(hit.url_without_anchor).pathname
 
   return (
-    <article className="flex flex-col gap-2 p-4 px-2 rounded-md hover:cursor-pointer text-neutral-800 group dark:text-neutral-100 hover:dark:bg-neutral-900 hover:bg-neutral-300">
+    <Link href={hit.url} className="flex flex-col gap-2 p-4 px-2 rounded-md text-neutral-800 group dark:text-neutral-100 hover:dark:bg-neutral-900 hover:bg-neutral-300">
       <h3 className="flex items-center text-sm font-semibold after:content-[''] whitespace-nowrap after:absolute after:bg-gradient-to-r after:h-6 after:right-0 after:w-12 after:from-transparent after:to-neutral-200 after:dark:to-neutral-800 relative overflow-hidden group-hover:dark:after:to-neutral-900 group-hover:after:to-neutral-300">
         {hierarchy.map((label: string, idx: number) => (
           <>
@@ -20,7 +21,7 @@ export default function Hit({ hit }) {
         hit={hit}
       />
       <p className="text-xs text-neutral-400 dark:text-neutral-600">{path}</p>
-    </article>
+    </Link>
   );
 }
 
