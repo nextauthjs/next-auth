@@ -96,6 +96,8 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Run unit tests
+        run: pnpm lint
+      - name: Lint
         run: pnpm test
         timeout-minutes: 15
       - name: Get installed Playwright version
