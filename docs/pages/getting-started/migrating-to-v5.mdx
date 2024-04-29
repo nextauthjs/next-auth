@@ -123,7 +123,7 @@ export default async function Page() {
 </Tabs.Tab>
 <Tabs.Tab>
 
-Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions.  Don't forget, client components that attempt to access the session will need to be wrapped in a `<SessionProvider />`.
+Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions. Don't forget, client components that attempt to access the session will need to be wrapped in a `<SessionProvider />`.
 
 ```ts filename="app/ClientComponent.tsx"
 import { useSession } from 'next-auth/react';
@@ -146,7 +146,7 @@ const ClientComponent = () => {
 For advanced use cases, you can use `auth` as a wrapper for your Middleware:
 
 ```ts filename="middleware.ts"
-import { auth } from "./auth"
+import { auth } from "@/auth"
 
 export default auth((req) => {
   // req.auth
@@ -277,7 +277,7 @@ import authConfig from "./auth.config"
 
 const prisma = new PrismaClient()
 
-export const { 
+export const {
   auth,
   handlers: { GET, POST },
   signIn,
