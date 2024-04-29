@@ -88,6 +88,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
       }
     },
     style: { bg: "#069", text: "#fff" },
+    checks: ["state"],
     options,
   }
 }
