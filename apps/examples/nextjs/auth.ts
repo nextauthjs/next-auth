@@ -80,10 +80,12 @@ export const config = {
     jwt({ token, trigger, session, account, user }) {
       if (trigger === "update") token.name = session.user.name
       if (account && user && account.provider === "keycloak") {
-        token.accessToken = account.access_token
-        token.refreshToken = account.refresh_token
-        token.accessTokenExpires = account.expires_at
-        return token
+        return {
+          ...token,
+          accessToken: account.access_token,
+          refreshToken: account.refresh_token,
+          expiresAt: account.expires_at,
+        }
       }
       if (token.accessTokenExpires && Date.now() > token.accessTokenExpires) {
         return refreshAccessToken(token)
