@@ -28,7 +28,7 @@ export default async function Page() {
 ```
 
 </Code.Next>
-<Code.NextPages>
+<Code.NextClient>
 
 To protect a page in the Next.js Pages router, we can use `auth` in `getServerSideProps` to return the `session` to the page as props.
 
@@ -71,7 +71,7 @@ export default function MyApp({
 }
 ```
 
-</Code.NextPages>
+</Code.NextClient>
 <Code.Svelte>
 
 In SvelteKit, you can leverage the `event.locals.auth()` function that is put there by the Auth.js `handle` function we're importing and using in `hooks.server.ts`.
@@ -157,7 +157,7 @@ export const GET = auth(function GET(req) {
 ```
 
 </Code.Next>
-<Code.NextPages>
+<Code.NextClient>
 
 ```ts filename="./pages/api/admin.ts"
 // TODO: Update once server-side API methods are implemented for pages router again
@@ -185,7 +185,7 @@ export default async function handler(
 }
 ```
 
-</Code.NextPages>
+</Code.NextClient>
 <Code.Svelte>
 
 API Routes in SvelteKit work like any other server-side file in Auth.js in SvelteKit, you can access the session by calling `event.locals.auth()` in the `+server.ts` files as well.
