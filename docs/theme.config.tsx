@@ -16,8 +16,8 @@ const InkeepChatButton = dynamic(
         <button className="flex gap-2 items-center py-1.5 px-3 text-base leading-tight text-gray-800 rounded-lg transition-colors md:text-sm dark:text-gray-200 bg-black/[.05] dark:bg-gray-50/10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
+            width="16"
+            height="16"
             fill="currentColor"
             viewBox="0 0 256 256"
           >
