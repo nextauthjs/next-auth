@@ -11,9 +11,11 @@ export default function() {
     <div className="relative">
       <InstantSearch indexName="next-auth" searchClient={searchClient}>
         <CustomSearchBox />
-        <NoResultsBoundary fallback={<></>}>
-          <Hits hitComponent={Hit} className="absolute left-0 top-12 max-w-sm" />
-        </NoResultsBoundary>
+        <EmptyQueryBoundary fallback={null}>
+          <NoResultsBoundary fallback={null}>
+            <Hits hitComponent={Hit} className="absolute left-0 top-12 max-w-sm" />
+          </NoResultsBoundary>
+        </EmptyQueryBoundary>
       </InstantSearch>
     </div>
   )
@@ -24,6 +26,21 @@ function NoResultsBoundary({ children, fallback }) {
 
   if (!results.__isArtificial && results.nbHits === 0) {
     return fallback;
+  }
+
+  return children;
+}
+
+function EmptyQueryBoundary({ children, fallback }) {
+  const { indexUiState } = useInstantSearch();
+
+  if (!indexUiState.query) {
+    return (
+      <>
+        {fallback}
+        <div hidden>{children}</div>
+      </>
+    );
   }
 
   return children;
