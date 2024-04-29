@@ -43,7 +43,7 @@ const config: DocsThemeConfig = {
   },
   project: {
     link: "https://github.com/nextauthjs/next-auth",
-    icon: null
+    icon: null,
   },
   darkMode: false,
   color: {
@@ -57,7 +57,7 @@ const config: DocsThemeConfig = {
     },
   },
   search: {
-    component: <Docsearch />
+    component: <Docsearch />,
   },
   navbar: {
     extraContent: (

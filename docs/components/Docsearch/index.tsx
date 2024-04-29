@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch, Hits, useInstantSearch } from 'react-instantsearch';
+import { useEffect } from "react"
+import algoliasearch from "algoliasearch/lite"
+import { InstantSearch, Hits, useInstantSearch } from "react-instantsearch"
 import { CustomSearchBox } from "./searchbox"
 import Hit from "./hit"
 
 const algoliaClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
   process.env.NEXT_PUBLIC_ALGOLIA_KEY
-);
+)
 
 const searchClient = {
   ...algoliaClient,
@@ -22,35 +22,35 @@ const searchClient = {
           processingTimeMS: 0,
           hitsPerPage: 0,
           exhaustiveNbHits: false,
-          query: '',
-          params: '',
+          query: "",
+          params: "",
         })),
-      });
+      })
     }
-    return algoliaClient.search(requests);
+    return algoliaClient.search(requests)
   },
-};
+}
 
 export default function() {
   const ctrlKHandler = (e: KeyboardEvent) => {
     if (e.repeat || e.target instanceof HTMLInputElement) return
-    if (e.ctrlKey && e.key === 'k') {
+    if (e.ctrlKey && e.key === "k") {
       e.preventDefault()
       document.querySelector<HTMLInputElement>('input[type="search"]')?.focus()
     }
   }
 
   useEffect(() => {
-    window.addEventListener('keydown', ctrlKHandler)
+    window.addEventListener("keydown", ctrlKHandler)
 
-    return window.addEventListener('keydown', ctrlKHandler)
+    return window.addEventListener("keydown", ctrlKHandler)
   }, [])
 
   return (
     <div className="relative">
       <InstantSearch
         indexName="next-auth"
-        // @ts-expect-error 
+        // @ts-expect-error
         searchClient={searchClient}
         future={{
           preserveSharedStateOnUnmount: true,
@@ -59,7 +59,10 @@ export default function() {
         <CustomSearchBox />
         <EmptyQueryBoundary fallback={null}>
           <NoResultsBoundary fallback={null}>
-            <Hits hitComponent={Hit} className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50" />
+            <Hits
+              hitComponent={Hit}
+              className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
+            />
           </NoResultsBoundary>
         </EmptyQueryBoundary>
       </InstantSearch>
@@ -68,17 +71,17 @@ export default function() {
 }
 
 function NoResultsBoundary({ children, fallback }) {
-  const { results } = useInstantSearch();
+  const { results } = useInstantSearch()
 
   if (!results.__isArtificial && results.nbHits === 0) {
-    return fallback;
+    return fallback
   }
 
-  return children;
+  return children
 }
 
 function EmptyQueryBoundary({ children, fallback }) {
-  const { indexUiState } = useInstantSearch();
+  const { indexUiState } = useInstantSearch()
 
   if (!indexUiState.query) {
     return (
@@ -86,8 +89,8 @@ function EmptyQueryBoundary({ children, fallback }) {
         {fallback}
         <div hidden>{children}</div>
       </>
-    );
+    )
   }
 
-  return children;
+  return children
 }
