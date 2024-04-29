@@ -84,15 +84,10 @@ export const config = {
         token.accessTokenExpires = account.expires_at
         return token
       }
-      if (token.accessToken) {
-        if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
-          return token
-        } else {
-          return refreshAccessToken(token)
-        }
-      } else {
-        return token
+      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires) {
+        return refreshAccessToken(token)
       }
+      return token
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken
@@ -127,8 +122,8 @@ async function refreshAccessToken(token: any) {
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000, // expires_in is in seconds
-      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token,
     }
   } catch (error) {
     console.error("Error refreshing access token:", error)
