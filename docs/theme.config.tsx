@@ -60,7 +60,7 @@ const config: DocsThemeConfig = {
   },
   navbar: {
     extraContent: (
-      <div className="flex gap-4 items-center !h-12">
+      <div className="flex md:gap-4 items-center !h-12">
         <div className="hidden lg:block">
           <InkeepChatButton />
         </div>

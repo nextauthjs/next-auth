@@ -44,7 +44,7 @@ export default function() {
         <CustomSearchBox />
         <EmptyQueryBoundary fallback={null}>
           <NoResultsBoundary fallback={null}>
-            <Hits hitComponent={Hit} className="absolute right-0 top-12 p-2 w-96 rounded-md bg-neutral-200 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50" />
+            <Hits hitComponent={Hit} className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md bg-neutral-200 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50" />
           </NoResultsBoundary>
         </EmptyQueryBoundary>
       </InstantSearch>
