@@ -12,6 +12,7 @@
     "passwordless",
     "svelte"
   ],
+  "license": "ISC",
   "homepage": "https://sveltekit.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Thang Huu Vu <hi@thvu.dev>",
