@@ -4,16 +4,39 @@ import { InstantSearch, Hits, useInstantSearch } from 'react-instantsearch';
 import Hit from "./hit"
 import { CustomSearchBox } from "./searchbox"
 
-const searchClient = algoliasearch('OUEDA16KPG', '97c0894508f2d1d4a2fef4fe6db28448');
+const algoliaClient = algoliasearch('OUEDA16KPG', '97c0894508f2d1d4a2fef4fe6db28448');
+
+const searchClient = {
+  ...algoliaClient,
+  search(requests: any) {
+    if (requests.every(({ params }) => !params.query)) {
+      return Promise.resolve({
+        results: requests.map(() => ({
+          hits: [],
+          nbHits: 0,
+          nbPages: 0,
+          page: 0,
+          processingTimeMS: 0,
+          hitsPerPage: 0,
+          exhaustiveNbHits: false,
+          query: '',
+          params: '',
+        })),
+      });
+    }
+    return algoliaClient.search(requests);
+  },
+};
 
 export default function() {
   return (
     <div className="relative">
+      {/*  @ts-expect-error */}
       <InstantSearch indexName="next-auth" searchClient={searchClient}>
         <CustomSearchBox />
         <EmptyQueryBoundary fallback={null}>
           <NoResultsBoundary fallback={null}>
-            <Hits hitComponent={Hit} className="absolute left-0 top-12 max-w-sm" />
+            <Hits hitComponent={Hit} className="absolute right-0 top-12 p-2 w-96 rounded-md bg-neutral-200 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-700" />
           </NoResultsBoundary>
         </EmptyQueryBoundary>
       </InstantSearch>
