@@ -72,11 +72,7 @@ export function CustomSearchBox(props: UseSearchBoxProps) {
             </svg>
           </button>
         ) : (
-          <svg className="absolute top-2 right-3 text-gray-800 dark:text-gray-200 size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-            <rect width="256" height="256" fill="none" />
-            <circle cx="112" cy="112" r="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-            <line x1="168.57" y1="168.57" x2="224" y2="224" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" />
-          </svg>
+          <kbd className="flex absolute top-0 right-0 gap-1 items-center px-1.5 my-1.5 h-5 font-mono font-medium text-gray-500 bg-white rounded border transition-opacity pointer-events-none select-none ltr:right-1.5 rtl:left-1.5 text-[10px] contrast-more:border-current contrast-more:text-current contrast-more:dark:border-current max-sm:hidden dark:border-gray-100/20 dark:bg-black/50">CTRL K</kbd>
         )}
         <span hidden={!isSearchStalled}>Searching…</span>
       </form>

@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, Hits, useInstantSearch } from 'react-instantsearch';
-import Hit from "./hit"
 import { CustomSearchBox } from "./searchbox"
+import Hit from "./hit"
 
 const algoliaClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
@@ -31,6 +32,20 @@ const searchClient = {
 };
 
 export default function() {
+  const ctrlKHandler = (e: KeyboardEvent) => {
+    if (e.repeat || e.target instanceof HTMLInputElement) return
+    if (e.ctrlKey && e.key === 'k') {
+      e.preventDefault()
+      document.querySelector<HTMLInputElement>('input[type="search"]')?.focus()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', ctrlKHandler)
+
+    return window.addEventListener('keydown', ctrlKHandler)
+  }, [])
+
   return (
     <div className="relative">
       <InstantSearch
