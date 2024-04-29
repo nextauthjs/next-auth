@@ -20,8 +20,9 @@ export async function handler(request: NextRequest) {
     const headers = new Headers(request.headers)
     headers.set("Authorization", `Bearer ${session.accessToken}`)
 
-    let backendUrl = "https://authjs-third-party-backend.onrender.com"
-    // let backendUrl = "http://localhost:8081"
+    let backendUrl =
+      process.env.THIRD_PARTY_API_EXAMPLE_BACKEND ??
+      "https://authjs-third-party-backend.onrender.com"
 
     let url = request.nextUrl.href.replace(request.nextUrl.origin, backendUrl)
     let result = await fetch(new Request(url, { headers, body: request.body }))
