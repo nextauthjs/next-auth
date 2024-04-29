@@ -1,45 +1,44 @@
-import { and, eq } from "drizzle-orm"
+import { and, eq, getTableColumns } from "drizzle-orm"
 import {
-  int,
-  timestamp,
-  primaryKey,
-  varchar,
+  MySqlColumn,
   MySqlDatabase,
-  mysqlTable,
   MySqlTableWithColumns,
-  TableConfig,
-  QueryResultHKT,
   PreparedQueryHKTBase,
-  index,
+  QueryResultHKT,
+  int,
+  mysqlTable,
+  primaryKey,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core"
 
 import type {
   Adapter,
-  AdapterUser,
   AdapterAccount,
   AdapterSession,
+  AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
 
-import { randomUUID } from "crypto"
-
-export const mysqlUsersTable = mysqlTable("user" as string, {
+export const mysqlUsersTable = mysqlTable("user", {
   id: varchar("id", { length: 255 })
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
   image: varchar("image", { length: 255 }),
-})
+}) satisfies DefaultMySqlUsersTable
 
 export const mysqlAccountsTable = mysqlTable(
-  "account" as string,
+  "account",
   {
     userId: varchar("userId", { length: 255 })
       .notNull()
       .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 }).notNull(),
+    type: varchar("type", { length: 255 })
+      .$type<AdapterAccount["type"]>()
+      .notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
     refresh_token: varchar("refresh_token", { length: 255 }),
@@ -54,38 +53,28 @@ export const mysqlAccountsTable = mysqlTable(
     compositePk: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-    userIdIdx: index("Account_userId_index").on(account.userId),
   })
-)
+) satisfies DefaultMySqlAccountsTable
 
-export const mysqlSessionsTable = mysqlTable(
-  "session" as string,
-  {
-    id: varchar("id", { length: 255 })
-      .primaryKey()
-      .$defaultFn(() => randomUUID()),
-    sessionToken: varchar("sessionToken", { length: 255 }).notNull().unique(),
-    userId: varchar("userId", { length: 255 })
-      .notNull()
-      .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("Session_userId_index").on(session.userId),
-  })
-)
+export const mysqlSessionsTable = mysqlTable("session", {
+  sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+}) satisfies DefaultMySqlSessionsTable
 
 export const mysqlVerificationTokensTable = mysqlTable(
-  "verificationToken" as string,
+  "verificationToken",
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull().unique(),
+    token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (vt) => ({
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-)
+) satisfies DefaultMySqlVerificationTokenTable
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
@@ -100,15 +89,17 @@ export function MySqlDrizzleAdapter(
     schema
 
   return {
-    async createUser(data: Omit<AdapterUser, "id">) {
-      const id = randomUUID()
+    async createUser(data: AdapterUser) {
+      const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
 
-      await client.insert(usersTable).values({ ...data, id })
+      await client
+        .insert(usersTable)
+        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
 
       return client
         .select()
         .from(usersTable)
-        .where(eq(usersTable.id, id))
+        .where(eq(usersTable.email, data.email))
         .then((res) => res[0])
     },
     async getUser(userId: string) {
@@ -130,14 +121,12 @@ export function MySqlDrizzleAdapter(
       userId: string
       expires: Date
     }) {
-      const id = randomUUID()
-
-      await client.insert(sessionsTable).values({ ...data, id })
+      await client.insert(sessionsTable).values(data)
 
       return client
         .select()
         .from(sessionsTable)
-        .where(eq(sessionsTable.id, id))
+        .where(eq(sessionsTable.sessionToken, data.sessionToken))
         .then((res) => res[0])
     },
     async getSessionAndUser(sessionToken: string) {
@@ -266,18 +255,193 @@ export function MySqlDrizzleAdapter(
   }
 }
 
-export type MySqlTableFn<T extends TableConfig> = MySqlTableWithColumns<{
-  name: T["name"]
-  columns: T["columns"]
-  dialect: T["dialect"]
+type DefaultMyqlColumn<
+  T extends {
+    data: string | number | Date
+    dataType: "string" | "number" | "date"
+    notNull: boolean
+    columnType: "MySqlVarChar" | "MySqlText" | "MySqlTimestamp" | "MySqlInt"
+  },
+> = MySqlColumn<{
+  name: string
+  columnType: T["columnType"]
+  data: T["data"]
+  driverParam: string | number
+  notNull: T["notNull"]
+  hasDefault: boolean
+  enumValues: any
+  dataType: T["dataType"]
+  tableName: string
+}>
+
+export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
+  name: string
+  columns: {
+    id: DefaultMyqlColumn<{
+      data: string
+      dataType: "string"
+      notNull: true
+      columnType: "MySqlVarChar" | "MySqlText"
+    }>
+    name: DefaultMyqlColumn<{
+      data: string
+      dataType: "string"
+      notNull: boolean
+      columnType: "MySqlVarChar" | "MySqlText"
+    }>
+    email: DefaultMyqlColumn<{
+      data: string
+      dataType: "string"
+      notNull: true
+      columnType: "MySqlVarChar" | "MySqlText"
+    }>
+    emailVerified: DefaultMyqlColumn<{
+      data: Date
+      dataType: "date"
+      notNull: boolean
+      columnType: "MySqlTimestamp"
+    }>
+    image: DefaultMyqlColumn<{
+      data: string
+      dataType: "string"
+      notNull: boolean
+      columnType: "MySqlVarChar" | "MySqlText"
+    }>
+  }
+  dialect: "mysql"
+  schema: string | undefined
+}>
+
+export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
+  name: string
+  columns: {
+    userId: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    type: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    provider: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    providerAccountId: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+    }>
+    refresh_token: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: boolean
+    }>
+    access_token: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      driverParam: string | number
+      notNull: boolean
+    }>
+    expires_at: DefaultMyqlColumn<{
+      dataType: "number"
+      columnType: "MySqlInt"
+      data: number
+      notNull: boolean
+    }>
+    token_type: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: boolean
+    }>
+    scope: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: boolean
+    }>
+    id_token: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: boolean
+    }>
+    session_state: DefaultMyqlColumn<{
+      dataType: "string"
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: boolean
+    }>
+  }
+  dialect: "mysql"
+  schema: string | undefined
+}>
+
+export type DefaultMySqlSessionsTable = MySqlTableWithColumns<{
+  name: string
+  columns: {
+    sessionToken: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    userId: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    expires: DefaultMyqlColumn<{
+      dataType: "date"
+      columnType: "MySqlTimestamp"
+      data: Date
+      notNull: true
+    }>
+  }
+  dialect: "mysql"
+  schema: string | undefined
+}>
+
+export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
+  name: string
+  columns: {
+    identifier: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    token: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    expires: DefaultMyqlColumn<{
+      dataType: "date"
+      columnType: "MySqlTimestamp"
+      data: Date
+      notNull: true
+    }>
+  }
+  dialect: "mysql"
   schema: string | undefined
 }>
 
 export type DefaultMySqlSchema = {
-  usersTable: MySqlTableFn<(typeof mysqlUsersTable)["_"]["config"]>
-  accountsTable: MySqlTableFn<(typeof mysqlAccountsTable)["_"]["config"]>
-  sessionsTable: MySqlTableFn<(typeof mysqlSessionsTable)["_"]["config"]>
-  verificationTokensTable: MySqlTableFn<
-    (typeof mysqlVerificationTokensTable)["_"]["config"]
-  >
+  usersTable: DefaultMySqlUsersTable
+  accountsTable: DefaultMySqlAccountsTable
+  sessionsTable: DefaultMySqlSessionsTable
+  verificationTokensTable: DefaultMySqlVerificationTokenTable
 }

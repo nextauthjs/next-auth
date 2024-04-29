@@ -1,44 +1,35 @@
 {
-  "type": "module",
   "description": "Express Auth example app",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.11.0"
   },
+  "type": "module",
   "private": true,
   "scripts": {
     "start": "node dist/server.js",
+    "clean": "rm -rf dist",
     "build": "pnpm build:ts && pnpm build:css",
     "build:ts": "tsc",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
-    "build:watch": "pnpm build:ts -w & pnpm build:css -w",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"Build,Node\" -c \"cyan.bold,green.bold\" \"pnpm run build:watch\" \"pnpm run dev:node\"",
-    "dev:node": "nodemon dist/server.js",
+    "dev": "tsx watch --env-file=.env src/server.ts & pnpm build:css -w",
     "lint": "eslint src/*.ts --fix",
     "prettier": "prettier src/*.ts --write"
   },
   "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "@auth/express": "latest",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "morgan": "^1.10.0",
     "pug": "^3.0.2",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@prettier/plugin-pug": "^3.0.0",
     "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^20.10.7",
+    "@types/node": "^20.12.7",
     "@types/pug": "^2.0.10",
-    "@typescript-eslint/eslint-plugin": "^6.18.0",
-    "@typescript-eslint/parser": "^6.18.0",
-    "concurrently": "6.5.1",
-    "eslint": "^8.56.0",
-    "nodemon": "2.0.22",
-    "prettier": "3.1.1",
-    "prettier-plugin-tailwindcss": "^0.5.11",
+    "tsx": "^4.7.0",
     "typescript": "5.3.3"
   }
 }
