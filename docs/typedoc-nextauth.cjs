@@ -92,7 +92,7 @@ function writeMetaJsFiles(app) {
       })
 
       if (new RegExp(".*docs/pages/reference/nextjs$").test(outputDirectory)) {
-        fs.renameSync('./pages/reference/next-auth', './pages/reference/nextjs')
+        fs.renameSync("./pages/reference/next-auth", "./pages/reference/nextjs")
       }
 
       const metaJString = `

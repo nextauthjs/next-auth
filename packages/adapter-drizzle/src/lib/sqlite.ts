@@ -104,9 +104,7 @@ export function SQLiteDrizzleAdapter(
 
       return client
         .insert(usersTable)
-        .values(
-          hasDefaultId ? insertData : { ...insertData, id: crypto.randomUUID() }
-        )
+        .values(hasDefaultId ? insertData : { ...insertData, id })
         .returning()
         .get()
     },

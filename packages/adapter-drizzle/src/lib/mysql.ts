@@ -111,9 +111,7 @@ export function MySqlDrizzleAdapter(
 
       await client
         .insert(usersTable)
-        .values(
-          hasDefaultId ? insertData : { ...insertData, id: crypto.randomUUID() }
-        )
+        .values(hasDefaultId ? insertData : { ...insertData, id })
 
       return client
         .select()
