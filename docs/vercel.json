@@ -87,8 +87,8 @@
       "destination": "https://discord.gg/CGAPMawPng"
     },
     {
-      "source": "/reference/next-auth",
-      "destination": "/reference/nextjs"
+      "source": "/reference/next-auth:path(.*)",
+      "destination": "/reference/nextjs:path(.*)"
     },
     {
       "source": "/img/providers/:providerId*-dark.svg",
