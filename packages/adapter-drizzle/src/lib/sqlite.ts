@@ -1,41 +1,39 @@
-import { eq, and } from "drizzle-orm"
+import { and, eq, getTableColumns } from "drizzle-orm"
 import {
-  integer,
-  text,
-  primaryKey,
   BaseSQLiteDatabase,
-  sqliteTable,
-  index,
-  TableConfig,
+  SQLiteColumn,
   SQLiteTableWithColumns,
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
 } from "drizzle-orm/sqlite-core"
 
 import type {
   Adapter,
   AdapterAccount,
-  AdapterUser,
   AdapterSession,
+  AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
-import { randomUUID } from "crypto"
 
-export const sqliteUsersTable = sqliteTable("user" as string, {
+export const sqliteUsersTable = sqliteTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => randomUUID()),
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
-})
+}) satisfies DefaultSQLiteUsersTable
 
 export const sqliteAccountsTable = sqliteTable(
-  "account" as string,
+  "account",
   {
     userId: text("userId")
       .notNull()
       .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -47,41 +45,31 @@ export const sqliteAccountsTable = sqliteTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    userIdIdx: index("Account_userId_index").on(account.userId),
     compositePk: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
+) satisfies DefaultSQLiteAccountsTable
 
-export const sqliteSessionsTable = sqliteTable(
-  "session" as string,
-  {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => randomUUID()),
-    sessionToken: text("sessionToken").notNull().unique(),
-    userId: text("userId")
-      .notNull()
-      .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-  },
-  (table) => ({
-    userIdIdx: index("Session_userId_index").on(table.userId),
-  })
-)
+export const sqliteSessionsTable = sqliteTable("session", {
+  sessionToken: text("sessionToken").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+}) satisfies DefaultSQLiteSessionsTable
 
 export const sqliteVerificationTokensTable = sqliteTable(
-  "verificationToken" as string,
+  "verificationToken",
   {
     identifier: text("identifier").notNull(),
-    token: text("token").notNull().unique(),
+    token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
   (vt) => ({
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
-)
+) satisfies DefaultSQLiteVerificationTokenTable
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<"sync" | "async", any, any>,
@@ -96,8 +84,14 @@ export function SQLiteDrizzleAdapter(
     schema
 
   return {
-    async createUser(data: Omit<AdapterUser, "id">) {
-      return client.insert(usersTable).values(data).returning().get()
+    async createUser(data: AdapterUser) {
+      const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
+
+      return client
+        .insert(usersTable)
+        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .returning()
+        .get()
     },
     async getUser(userId: string) {
       const result = await client
@@ -236,18 +230,192 @@ export function SQLiteDrizzleAdapter(
   }
 }
 
-export type SQLiteTableFn<T extends TableConfig> = SQLiteTableWithColumns<{
-  name: T["name"]
-  columns: T["columns"]
-  dialect: T["dialect"]
+type DefaultSQLiteColumn<
+  T extends {
+    data: string | number | Date
+    dataType: "string" | "number" | "date"
+    notNull: boolean
+    columnType: "SQLiteText" | "SQLiteTimestamp" | "SQLiteInteger"
+  },
+> = SQLiteColumn<{
+  name: string
+  columnType: T["columnType"]
+  data: T["data"]
+  driverParam: string | number
+  notNull: T["notNull"]
+  hasDefault: boolean
+  enumValues: any
+  dataType: T["dataType"]
+  tableName: string
+}>
+
+export type DefaultSQLiteUsersTable = SQLiteTableWithColumns<{
+  name: string
+  columns: {
+    id: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    name: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+      dataType: "string"
+    }>
+    email: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    emailVerified: DefaultSQLiteColumn<{
+      dataType: "date"
+      columnType: "SQLiteTimestamp"
+      data: Date
+      notNull: boolean
+    }>
+    image: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+  }
+  dialect: "sqlite"
+  schema: string | undefined
+}>
+
+export type DefaultSQLiteAccountsTable = SQLiteTableWithColumns<{
+  name: string
+  columns: {
+    userId: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    type: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    provider: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    providerAccountId: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+    }>
+    refresh_token: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+    access_token: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+    expires_at: DefaultSQLiteColumn<{
+      dataType: "number"
+      columnType: "SQLiteInteger"
+      data: number
+      notNull: boolean
+    }>
+    token_type: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+    scope: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+    id_token: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+    session_state: DefaultSQLiteColumn<{
+      dataType: "string"
+      columnType: "SQLiteText"
+      data: string
+      notNull: boolean
+    }>
+  }
+  dialect: "sqlite"
+  schema: string | undefined
+}>
+
+export type DefaultSQLiteSessionsTable = SQLiteTableWithColumns<{
+  name: string
+  columns: {
+    sessionToken: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    userId: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    expires: DefaultSQLiteColumn<{
+      dataType: "date"
+      columnType: "SQLiteTimestamp"
+      data: Date
+      notNull: true
+    }>
+  }
+  dialect: "sqlite"
+  schema: string | undefined
+}>
+
+export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
+  name: string
+  columns: {
+    identifier: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    token: DefaultSQLiteColumn<{
+      columnType: "SQLiteText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    expires: DefaultSQLiteColumn<{
+      dataType: "date"
+      columnType: "SQLiteTimestamp"
+      data: Date
+      notNull: true
+    }>
+  }
+  dialect: "sqlite"
   schema: string | undefined
 }>
 
 export type DefaultSQLiteSchema = {
-  usersTable: SQLiteTableFn<(typeof sqliteUsersTable)["_"]["config"]>
-  accountsTable: SQLiteTableFn<(typeof sqliteAccountsTable)["_"]["config"]>
-  sessionsTable: SQLiteTableFn<(typeof sqliteSessionsTable)["_"]["config"]>
-  verificationTokensTable: SQLiteTableFn<
-    (typeof sqliteVerificationTokensTable)["_"]["config"]
-  >
+  usersTable: DefaultSQLiteUsersTable
+  accountsTable: DefaultSQLiteAccountsTable
+  sessionsTable: DefaultSQLiteSessionsTable
+  verificationTokensTable: DefaultSQLiteVerificationTokenTable
 }

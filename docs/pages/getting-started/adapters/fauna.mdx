@@ -58,7 +58,7 @@ const client = new Client({
   endpoint: new URL(process.env.AUTH_FAUNA_CLIENT)
 })
 
-export { handler, signIn, signOut } = SvelteKitAuth({
+export { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: FaunaAdapter(client)
 })
