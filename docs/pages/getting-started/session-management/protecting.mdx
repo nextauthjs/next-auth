@@ -221,11 +221,12 @@ export { auth as middleware } from "@/auth"
 You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the middleware.
 
 ```ts filename="middleware.ts"
-import { auth } from "./auth"
+import { auth } from "@/auth"
 
 export default auth((req) => {
   if (!req.auth) {
-    return NextResponse.redirect("/login")
+    const url = req.url.replace(req.nextUrl.pathname, "/login")
+    return Response.redirect(url)
   }
 })
 ```
