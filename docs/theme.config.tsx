@@ -2,6 +2,7 @@ import { DocsThemeConfig, ThemeSwitch } from "nextra-theme-docs"
 import { Link } from "@/components/Link"
 import { ChildrenProps } from "@/utils/types"
 import Footer from "@/components/Footer"
+import Docsearch from "@/components/Docsearch"
 import dynamic from "next/dynamic"
 import { usePathname } from "next/navigation"
 import { useConfig } from "nextra-theme-docs"
@@ -53,6 +54,9 @@ const config: DocsThemeConfig = {
       light: 100,
       dark: 50,
     },
+  },
+  search: {
+    component: <Docsearch />
   },
   navbar: {
     extraContent: (
