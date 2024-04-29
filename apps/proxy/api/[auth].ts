@@ -21,7 +21,6 @@ import Pinterest from "@auth/core/providers/pinterest"
 import Reddit from "@auth/core/providers/reddit"
 import Slack from "@auth/core/providers/slack"
 import Spotify from "@auth/core/providers/spotify"
-import TikTok from "@auth/core/providers/tiktok"
 import Twitch from "@auth/core/providers/twitch"
 import Twitter from "@auth/core/providers/twitter"
 import WorkOS from "@auth/core/providers/workos"
@@ -59,7 +58,6 @@ const authConfig: AuthConfig = {
     Reddit,
     Slack,
     Spotify,
-    TikTok,
     Twitch,
     Twitter,
     WorkOS,

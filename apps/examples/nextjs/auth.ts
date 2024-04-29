@@ -22,7 +22,6 @@ import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
 import Spotify from "next-auth/providers/spotify"
-import TikTok from "next-auth/providers/tiktok"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
 import WorkOS from "next-auth/providers/workos"
@@ -63,7 +62,6 @@ export const config = {
     Reddit,
     Slack,
     Spotify,
-    TikTok,
     Twitch,
     Twitter,
     WorkOS({
