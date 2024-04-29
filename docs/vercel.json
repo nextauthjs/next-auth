@@ -40,7 +40,7 @@
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "nextjs.authjs.dev" }],
-      "destination": "https://authjs.dev/reference/next-auth"
+      "destination": "https://authjs.dev/reference/nextjs"
     },
     {
       "source": "/:path(.*)",
@@ -85,6 +85,10 @@
       "source": "/",
       "has": [{ "type": "host", "value": "discord.authjs.dev" }],
       "destination": "https://discord.gg/CGAPMawPng"
+    },
+    {
+      "source": "/reference/next-auth:path(.*)",
+      "destination": "/reference/nextjs:path(.*)"
     },
     {
       "source": "/img/providers/:providerId*-dark.svg",

@@ -38,8 +38,8 @@ devDependencies:
     specifier: ^4.7.0
     version: 4.7.3
   typescript:
-    specifier: 5.4.5
-    version: 5.4.5
+    specifier: 5.3.3
+    version: 5.3.3
 
 packages:
 
@@ -1805,8 +1805,8 @@ packages:
       mime-types: 2.1.35
     dev: false
 
-  /typescript@5.4.5:
-    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
