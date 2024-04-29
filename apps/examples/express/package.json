@@ -16,7 +16,7 @@
     "prettier": "prettier src/*.ts --write"
   },
   "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "@auth/express": "latest",
     "express": "^4.19.2",
