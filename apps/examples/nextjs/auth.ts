@@ -84,7 +84,7 @@ export const config = {
           ...token,
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
-          expiresAt: account.expires_at,
+          accessTokenExpires: account.expires_at,
         }
       }
       if (token.accessTokenExpires && Date.now() > token.accessTokenExpires) {
