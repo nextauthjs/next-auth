@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
-    "@balazsorban/monorepo-release": "0.5.0",
+    "@balazsorban/monorepo-release": "0.5.1",
     "@playwright/test": "1.41.2",
     "@prettier/plugin-pug": "^3.0.0",
     "@types/node": "^20.8.10",
@@ -238,7 +238,7 @@
       "mailparser": "3.6.6"
     },
     "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.5.0": "patches/@balazsorban__monorepo-release@0.5.0.patch"
+      "@balazsorban/monorepo-release@0.5.1": "patches/@balazsorban__monorepo-release@0.5.1.patch"
     }
   }
 }
