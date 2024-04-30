@@ -37,10 +37,10 @@ UPSTASH_REDIS_TOKEN
 import NextAuth from "next-auth"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
 import { Redis } from "@upstash/redis"
- 
+
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_URL!,
-  token: process.env.UPSTASH_REDIS_TOKEN!
+  token: process.env.UPSTASH_REDIS_TOKEN!,
 })
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -56,10 +56,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
 import { Redis } from "@upstash/redis"
- 
+
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_URL!,
-  token: process.env.UPSTASH_REDIS_TOKEN!
+  token: process.env.UPSTASH_REDIS_TOKEN!,
 })
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -75,10 +75,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
 import { Redis } from "@upstash/redis"
- 
+
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_URL!,
-  token: process.env.UPSTASH_REDIS_TOKEN!
+  token: process.env.UPSTASH_REDIS_TOKEN!,
 })
 
 const app = express()
