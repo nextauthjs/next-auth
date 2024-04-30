@@ -142,7 +142,7 @@ Imports from `next-auth/react` are now marked with the [`"use client"`](https://
 For advanced use cases, you can use `auth` as a wrapper for your Middleware:
 
 ```ts filename="middleware.ts"
-import { auth } from "./auth"
+import { auth } from "@/auth"
 
 export default auth((req) => {
   // req.auth

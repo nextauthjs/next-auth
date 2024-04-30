@@ -74,7 +74,7 @@ env:
 
 jobs:
   test:
-    name: Test
+    name: Run release
     runs-on: ubuntu-latest
     steps:
       - name: Init
@@ -97,6 +97,8 @@ jobs:
         run: pnpm build
       - name: Run unit tests
         run: pnpm test
+      - name: Lint
+        run: pnpm lint
         timeout-minutes: 15
       - name: Get installed Playwright version
         id: playwright-version
