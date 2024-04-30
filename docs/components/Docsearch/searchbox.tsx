@@ -57,7 +57,7 @@ export function CustomSearchBox(props: UseSearchBoxProps) {
           onChange={(event) => {
             setQuery(event.currentTarget.value)
           }}
-          className="w-full md:w-auto appearance-none rounded-lg px-3 py-1.5 transition-colors text-base leading-tight md:text-sm bg-black/[.05] dark:bg-gray-50/10 focus:!bg-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400 pr-2"
+          className="max-w-48 w-full appearance-none rounded-lg px-3 py-1.5 transition-colors text-base leading-tight md:text-sm bg-black/[.05] dark:bg-gray-50/10 focus:!bg-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400 pr-2"
         />
         {inputValue.length ? (
           <button
@@ -77,9 +77,9 @@ export function CustomSearchBox(props: UseSearchBoxProps) {
                 x2="56"
                 y2="200"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
               />
               <line
                 x1="200"
@@ -87,9 +87,9 @@ export function CustomSearchBox(props: UseSearchBoxProps) {
                 x2="56"
                 y2="56"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
               />
             </svg>
           </button>

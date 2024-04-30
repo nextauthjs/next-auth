@@ -7,6 +7,7 @@ export default function Hit({ hit }) {
 
   return (
     <Link
+      key={hit.objectID}
       href={hit.url}
       className="flex flex-col gap-2 p-4 px-2 rounded-md text-neutral-800 group dark:text-neutral-100 hover:dark:bg-neutral-900 hover:bg-neutral-200"
     >
@@ -43,9 +44,9 @@ function CaretRight() {
         points="96 48 176 128 96 208"
         fill="none"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="16"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
       />
     </svg>
   )
