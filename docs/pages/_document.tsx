@@ -5,7 +5,9 @@ class AuthDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <meta property="og:image" content="/api/og" />
+        </Head>
         <body>
           <SkipNavLink styled />
           <Main />
