@@ -57,39 +57,32 @@ export default function() {
         }}
       >
         <CustomSearchBox />
-        <EmptyQueryBoundary fallback={null}>
-          <NoResultsBoundary fallback={null}>
-            <Hits
-              hitComponent={Hit}
-              className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
-            />
-          </NoResultsBoundary>
-        </EmptyQueryBoundary>
+        <NoResultsBoundary>
+          <Hits
+            hitComponent={Hit}
+            className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
+          />
+        </NoResultsBoundary>
       </InstantSearch>
     </div>
   )
 }
 
-function NoResultsBoundary({ children, fallback }) {
-  const { results } = useInstantSearch()
+function NoResultsBoundary({ children }) {
+  const { indexUiState, results } = useInstantSearch()
 
-  if (!results.__isArtificial && results.nbHits === 0) {
-    return fallback
+  if (indexUiState.query !== undefined && !results.__isArtificial && results.nbHits === 0) {
+    return (
+      <div
+        className="fixed text-center top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
+      >
+        No Results
+      </div>
+    )
   }
 
-  return children
-}
-
-function EmptyQueryBoundary({ children, fallback }) {
-  const { indexUiState } = useInstantSearch()
-
-  if (!indexUiState.query) {
-    return (
-      <>
-        {fallback}
-        <div hidden>{children}</div>
-      </>
-    )
+  if (indexUiState.query === undefined) {
+    return null
   }
 
   return children

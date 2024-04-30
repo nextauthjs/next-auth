@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 const DocSearch = dynamic(
-  () => import("./wrapper").then((mod) => mod.default),
+  () => import("./search").then((mod) => mod.default),
   {
     ssr: false,
     loading: () => (
