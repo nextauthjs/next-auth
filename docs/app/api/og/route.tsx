@@ -50,7 +50,7 @@ function OG({
 }) {
   return (
     <div
-      tw="flex flex-col w-full h-full p-12"
+      tw="flex flex-col w-full h-full pb-12 pt-16 px-16"
       style={{
         fontFamily: "'Inter', system-ui, sans-serif",
         color: foreground,
@@ -63,7 +63,7 @@ function OG({
         src={bgSvg}
       ></img>
       <div
-        tw="flex flex-col justify-center rounded-2xl p-4 shadow-2xl"
+        tw="flex flex-col justify-center rounded-2xl p-3 shadow-2xl"
         style={{
           background:
             "linear-gradient(to right bottom, rgb(255, 68, 0), rgb(187, 68, 204))",
