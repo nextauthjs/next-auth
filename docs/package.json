@@ -31,7 +31,6 @@
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@vercel/analytics": "^1.2.2",
-    "@vercel/og": "^0.6.2",
     "classnames": "^2.5.1",
     "next": "14.2.1",
     "next-sitemap": "^4.2.3",

@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   return new ImageResponse(
     OG({
       title: title ?? "Auth.js",
-      description: description ?? "Authentication for the web.",
+      description: description ?? "Authentication for the Web.",
     }),
     {
       width: 1200,
