@@ -18,33 +18,32 @@
  *
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth({
- *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+ *   providers: [GitHub],
  * })
  * ```
  *
- * or to use SvelteKit platform environment variables for platforms like Cloudflare
+ * ### Lazy initialization
+ * `@auth/sveltekit` supports lazy initialization where you can read the `event` object to lazily set the configuration. This is especially useful when you have to get the environment variables from `event.platform` for platforms like Cloudflare Workers.
  *
  * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import type { Handle } from "@sveltejs/kit";
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
  *     providers: [
  *       GitHub({
- *         clientId: event.platform.env.GITHUB_ID,
- *         clientSecret: event.platform.env.GITHUB_SECRET
+ *         clientId: event.platform.env.AUTH_GITHUB_ID,
+ *         clientSecret: event.platform.env.AUTH_GITHUB_SECRET
  *       })
  *     ],
  *     secret: event.platform.env.AUTH_SECRET,
  *     trustHost: true
  *   }
  *   return authOptions
- * }) satisfies Handle;
+ * })
  * ```
  *
  * Re-export the handle in `src/hooks.server.ts`:
