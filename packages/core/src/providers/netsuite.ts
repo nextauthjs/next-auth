@@ -11,7 +11,7 @@
 
 /*
  * This NetSuite provider uses OAuth 2 Features. Ensure you have an integration record and access token set up in order to use this provider.
- *  Read more about Oauth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
+ *  Read more about OAuth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"

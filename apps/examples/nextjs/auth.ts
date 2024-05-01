@@ -10,7 +10,7 @@ import Discord from "next-auth/providers/discord"
 import Dropbox from "next-auth/providers/dropbox"
 import Facebook from "next-auth/providers/facebook"
 import GitHub from "next-auth/providers/github"
-import Gitlab from "next-auth/providers/gitlab"
+import GitLab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
 import Hubspot from "next-auth/providers/hubspot"
 import Keycloak from "next-auth/providers/keycloak"
@@ -50,7 +50,7 @@ export const config = {
     Dropbox,
     Facebook,
     GitHub,
-    Gitlab,
+    GitLab,
     Google,
     Hubspot,
     Keycloak,
