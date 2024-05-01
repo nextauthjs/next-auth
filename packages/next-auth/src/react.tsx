@@ -69,15 +69,22 @@ export const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
+let broadcastChannel: BroadcastChannel | null = null
+
 function broadcast() {
-  if (typeof BroadcastChannel !== "undefined") {
-    return new BroadcastChannel("next-auth")
+  if (typeof BroadcastChannel === "undefined") {
+    return {
+      postMessage: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }
   }
-  return {
-    postMessage: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
+
+  if (broadcastChannel === null) {
+    broadcastChannel = new BroadcastChannel("next-auth")
   }
+
+  return broadcastChannel
 }
 
 // TODO:
