@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>NetSuite</b> integration.</span>
  * <a href="https://system.netsuite.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/netsuite.png" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/netsuite.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
@@ -11,7 +11,7 @@
 
 /*
  * This NetSuite provider uses OAuth 2 Features. Ensure you have an integration record and access token set up in order to use this provider.
- *  Read more about Oauth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
+ * Read more about OAuth 2 setup here: https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771281570.html
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
@@ -35,13 +35,13 @@ export interface OAuthNetSuiteOptions {
   /**
    * EX: TSTDRV1234567 or 81555 for prod
    */
-  issuer: string
+  accountID: string
   /**
    * restlets rest_webservices or restlets or rest_webservices suiteanalytics_connect restlets
    */
   scope: string
   /**
-   * Either a restlet or suitelet returning runtime info or record info -> RESTlet reccommended
+   * Either a restlet or suitelet returning runtime info or record info -> RESTlet recommended
    */
   userinfo: string
 }
@@ -171,15 +171,10 @@ export interface NetSuiteProfile {
  * const response = await Auth(request, {
  *   providers: [
  *       NetSuite({
- *         clientId: NETSUITE_CLIENT_ID,
- *         clientSecret: NETSUITE_CLIENT_SECRET,
- *         issuer: NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
+ *         accountID: NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
  *        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
  *        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
  *         userinfo: "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
- *         // Optional
- *         prompt: "login", // Required if you want to force the user to login every time.
- *         scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
  *       })
  *   ],
  * })
@@ -201,9 +196,9 @@ export interface NetSuiteProfile {
  *
  */
 export default function NetSuite<P extends NetSuiteProfile>(
-  options: OAuthUserConfig<P> & OAuthNetSuiteOptions
+  config: OAuthUserConfig<P> & OAuthNetSuiteOptions
 ): OAuthConfig<P> {
-  const { issuer, clientId, userinfo: userInfo, prompt = "none" } = options
+  const { accountID } = config
 
   return {
     id: "netsuite",
@@ -211,25 +206,14 @@ export default function NetSuite<P extends NetSuiteProfile>(
     type: "oauth",
     checks: ["state"],
     authorization: {
-      url: `https://${issuer}.app.netsuite.com/app/login/oauth2/authorize.nl`,
-      params: {
-        client_id: clientId,
-        prompt: prompt,
-        response_type: "code",
-        scope: "restlets rest_webservices",
-      },
+      url: `https://${accountID}.app.netsuite.com/app/login/oauth2/authorize.nl`,
+      params: { scope: "restlets rest_webservices" },
     },
-    token: {
-      url: `https://${issuer}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`,
-      params: {
-        grant_type: "authorization_code",
-      },
-    },
-    userinfo: userInfo,
+    token: `https://${accountID}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`,
     profile(profile) {
       // This is the default runtime.getCurrentUser() object returned from the RESTlet or SUITELet
       return {
-        id: String(profile.id),
+        id: profile.id.toString(),
         name: profile.name,
         email: profile.email,
         location: profile.location,
@@ -237,7 +221,7 @@ export default function NetSuite<P extends NetSuiteProfile>(
         contact: profile?.contact,
       }
     },
-    style: { logo: "/netsuite.png", bg: "#3a4f5f", text: "#fff" },
-    options,
+    style: { logo: "/netsuite.svg", bg: "#3a4f5f", text: "#fff" },
+    options: config,
   }
 }
