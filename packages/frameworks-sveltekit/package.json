@@ -27,7 +27,7 @@
     "build": "pnpm clean && pnpm providers && pnpm check && svelte-package",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "clean": "rm -rf client.* index.* package src/lib/providers",
+    "clean": "rm -rf dist src/lib/providers",
     "dev": "pnpm providers && svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
