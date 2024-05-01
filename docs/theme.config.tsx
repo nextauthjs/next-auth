@@ -109,8 +109,8 @@ const config: DocsThemeConfig = {
     const { frontMatter } = useConfig()
     const url = `https://authjs.dev${pathname}`
 
-    const lastPathParam = pathname.split("/").at(-1).replaceAll("-", " ")
-    const capitalizedPathTitle = lastPathParam.replace(/\b\w/g, (l) =>
+    const lastPathParam = pathname?.split("/").at(-1)?.replaceAll("-", " ")
+    const capitalizedPathTitle = lastPathParam?.replace(/\b\w/g, (l) =>
       l.toUpperCase()
     )
     const title = frontMatter.title

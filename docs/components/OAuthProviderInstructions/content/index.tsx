@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getHighlighter } from "shiki"
+import { type Highlighter, getHighlighter } from "shiki"
 import cx from "classnames"
 import { Callout, Pre, Code as NXCode } from "nextra/components"
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
-  const [highlighter, setHighlighter] = useState(null)
+  const [highlighter, setHighlighter] = useState<Highlighter | null>(null)
   useEffect(() => {
     ;(async () => {
       const hl = await getHighlighter({
@@ -28,7 +28,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
   }, [])
 
   const highlight = (code: string): string => {
-    if (!highlighter) return null
+    if (!highlighter) return ""
     return highlighter.codeToHtml(code, {
       lang: "tsx",
       themes: {
