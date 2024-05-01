@@ -127,7 +127,7 @@ pre code.nextra-code:not(:has(span)) {
   cursor: pointer;
 }
 
-/* Navbar Github Star Counter */
+/* Navbar GitHub Star Counter */
 .github-counter {
   position: absolute;
   color: #000;
