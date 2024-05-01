@@ -59,7 +59,7 @@ function OG({
     >
       <img
         tw="absolute top-0 left-0"
-        style={{ width: 1200, height: 700 }}
+        style={{ width: 1200, height: 660 }}
         src={bgSvg}
       ></img>
       <div
