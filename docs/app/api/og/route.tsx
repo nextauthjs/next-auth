@@ -13,7 +13,7 @@ const bold = fetch(new URL("./Inter-Bold.ttf", import.meta.url)).then((res) =>
 
 const foreground = "hsl(0 0% 98%)"
 const mutedForeground = "hsl(0 0% 53.9%)"
-const background = "rgba(10, 10, 10, 0.95)"
+const background = "rgba(10, 10, 10, 0.90)"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url!)
