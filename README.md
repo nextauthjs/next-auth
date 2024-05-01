@@ -12,10 +12,10 @@
       <img src="https://img.shields.io/npm/dm/next-auth?style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
     </a>
     <a href="https://www.npmjs.com/package/next-auth">
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="Github Stable Release" />
+      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="GitHub Stable Release" />
     </a>
     <a href="https://codecov.io/gh/nextauthjs/next-auth" > 
       <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov">
