@@ -1,6 +1,6 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Linkedin</b> integration.</span>
+ * <span>Built-in <b>LinkedIn</b> integration.</span>
  * <a href="https://linkedin.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/linkedin.svg" height="48" width="48"/>
  * </a>

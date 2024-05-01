@@ -89,7 +89,7 @@ const postComment = async (outputMd: string) => {
     const prNumber = pullRequest.number
     if (isFork) {
       setFailed(
-        "The action could not create a Github comment because it is initiated from a forked repo. View the action logs for a list of broken links."
+        "The action could not create a GitHub comment because it is initiated from a forked repo. View the action logs for a list of broken links."
       )
       return ""
     }
