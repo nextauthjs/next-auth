@@ -216,9 +216,7 @@ export default function NetSuite<P extends NetSuiteProfile>(
         id: profile.id.toString(),
         name: profile.name,
         email: profile.email,
-        location: profile.location,
-        role: profile.role,
-        contact: profile?.contact,
+        image: null,
       }
     },
     style: { logo: "/netsuite.svg", bg: "#3a4f5f", text: "#fff" },
