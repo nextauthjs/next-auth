@@ -1,0 +1,99 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/netlify.svg" height="64" width="64" />
+
+# SailPoint Identity Secure Cloud Provider
+
+## Resources
+
+- [SailPoint Identity Secure Cloud Authentication](https://developer.sailpoint.com/docs/api/authentication#choose-authorization-grant-flow)
+- [Managing API Keys and Personal Access Tokens](https://documentation.sailpoint.com/saas/help/common/api_keys.html?h=oauth+client#creating-an-api-key)
+- [SailPoint Developer Community](https://developer.sailpoint.com/discuss/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/identitySecureCloud
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/api/auth/callback/identitySecureCloud
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+ISC_BASE_API_URL=https://{tenant}.api.identitynow.com
+ISC_BASE_URL=https://{tenant}.identitynow.com
+ISC_CLIENT_ID=
+ISC_CLIENT_SECRET=
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import SailPoint from "next-auth/providers/sailpoint"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [SailPoint({
+          baseUrl: process.env.ISC_BASE_URL!,
+          apiUrl: process.env.ISC_BASE_API_URL!,
+          clientId: process.env.ISC_CLIENT_ID!,
+          clientSecret: process.env.ISC_CLIENT_SECRET!,
+          scope: 'sp:scopes:all',
+      }],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import SailPoint from "@auth/sveltekit/providers/sailpoint"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [SailPoint({
+          baseUrl: process.env.ISC_BASE_URL!,
+          apiUrl: process.env.ISC_BASE_API_URL!,
+          clientId: process.env.ISC_CLIENT_ID!,
+          clientSecret: process.env.ISC_CLIENT_SECRET!,
+          scope: 'sp:scopes:all',
+      }],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import SailPoint from "@auth/express/providers/sailpoint"
+
+app.use("/auth/*", ExpressAuth({ providers: [SailPoint({
+          baseUrl: process.env.ISC_BASE_URL!,
+          apiUrl: process.env.ISC_BASE_API_URL!,
+          clientId: process.env.ISC_CLIENT_ID!,
+          clientSecret: process.env.ISC_CLIENT_SECRET!,
+          scope: 'sp:scopes:all',
+      }] }))
+```
+
+  </Code.Express>
+</Code>
