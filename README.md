@@ -32,7 +32,7 @@
     .
   </p>
   <p align="center">
-     <kbd>Sponsored</kbd> Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+     <kbd>Sponsored</kbd> Looking for a hosted alternative? <a href="https://go.clerk.com/5115vfK" target="_blank">Use Clerk →</a>
   </p>
 </p>
 
