@@ -1,4 +1,5 @@
 import NextAuth from "next-auth"
+import "next-auth/jwt"
 
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
@@ -76,24 +77,30 @@ export const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
-    jwt({ token, trigger, session, account, user }) {
+    jwt({ token, trigger, session, account }) {
       if (trigger === "update") token.name = session.user.name
-      if (account && user && account.provider === "keycloak") {
-        return {
-          ...token,
-          accessToken: account.access_token,
-          refreshToken: account.refresh_token,
-          accessTokenExpires: account.expires_at,
-        }
+      if (account?.provider === "keycloak") {
+        return { ...token, accessToken: account.access_token }
       }
       return token
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken
-      session.error = token.error
       return session
     },
   },
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
+
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken?: string
+  }
+}

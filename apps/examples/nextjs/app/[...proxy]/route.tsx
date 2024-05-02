@@ -1,13 +1,12 @@
 import { auth } from "@/auth"
 import { NextRequest } from "next/server"
 
-async function stripContentEncoding(result: Response) {
-  const data = await result.arrayBuffer()
-
+// Review if we need this, and why
+function stripContentEncoding(result: Response) {
   const responseHeaders = new Headers(result.headers)
-  responseHeaders.delete("content-encoding") // Response is already decoded at this point
+  responseHeaders.delete("content-encoding")
 
-  return new Response(data, {
+  return new Response(result.body, {
     status: result.status,
     statusText: result.statusText,
     headers: responseHeaders,
@@ -15,21 +14,20 @@ async function stripContentEncoding(result: Response) {
 }
 
 export async function handler(request: NextRequest) {
+  console.log("proxy")
   const session = await auth()
-  if (session) {
-    const headers = new Headers(request.headers)
-    headers.set("Authorization", `Bearer ${session.accessToken}`)
 
-    let backendUrl =
-      process.env.THIRD_PARTY_API_EXAMPLE_BACKEND ??
-      "https://authjs-third-party-backend.authjs.dev/"
+  const headers = new Headers(request.headers)
+  headers.set("Authorization", `Bearer ${session?.accessToken}`)
 
-    let url = request.nextUrl.href.replace(request.nextUrl.origin, backendUrl)
-    let result = await fetch(new Request(url, { headers, body: request.body }))
-    return await stripContentEncoding(result)
-  }
+  let backendUrl =
+    process.env.THIRD_PARTY_API_EXAMPLE_BACKEND ??
+    "https://authjs-third-party-backend.authjs.dev/"
 
-  return request
+  let url = request.nextUrl.href.replace(request.nextUrl.origin, backendUrl)
+  let result = await fetch(url, { headers, body: request.body })
+  console.log("fetched", result)
+  return stripContentEncoding(result)
 }
 
 export const dynamic = "force-dynamic"

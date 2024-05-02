@@ -82,29 +82,34 @@ export default function ClientExample() {
         to provide the session data.
       </p>
 
-      {session?.accessToken && (
-        <div>
-          <h2 className="text-xl font-bold">Third Party Backend Integration</h2>
-          <p>
-            Since you logged in using the{" "}
-            <CustomLink href="https://keycloak.authjs.dev">
-              <code>authjs example keycloak</code>
-            </CustomLink>
-            , you can now integrate with API backends that reference it as
-            issuer. Press the button below to send a request to our
-            <CustomLink href="https://github.com/nextauthjs/authjs-third-party-backend">
-              <code>example backend</code>
-            </CustomLink>
-            .
-          </p>
-          <div className="flex flex-col ">
-            <Button className="mt-4 mb-4" onClick={makeRequestWithToken}>
-              Make API Request
-            </Button>
-          </div>
-          <pre>{apiResponse}</pre>
+      <div>
+        <h2 className="text-xl font-bold">Third-party backend integration</h2>
+        <p>
+          Press the button below to send a request to our{" "}
+          <CustomLink href="https://github.com/nextauthjs/authjs-third-party-backend">
+            <code>example backend</code>
+          </CustomLink>
+          .
+        </p>
+        <div className="flex flex-col ">
+          <p>Note: This example only works when using the Keycloak provider.</p>
+          <Button
+            disabled={!session?.accessToken}
+            className="mt-4 mb-4"
+            onClick={makeRequestWithToken}
+          >
+            Make API Request
+          </Button>
         </div>
-      )}
+        <p>
+          Read more{" "}
+          <CustomLink href="https://authjs.dev/guides/integrating-third-party-backends">
+            <code>here</code>
+          </CustomLink>
+        </p>
+        <pre>{apiResponse}</pre>
+      </div>
+
       {status === "loading" ? (
         <div>Loading...</div>
       ) : (
