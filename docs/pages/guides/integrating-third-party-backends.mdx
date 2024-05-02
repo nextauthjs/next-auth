@@ -1,0 +1,92 @@
+# Integrating with third party backends
+
+When logging in through a provider, you can use the received OAuth tokens to authenticate against a third party API.
+In which way the tokens can be used depends on the provider.
+
+For example:
+
+- github.com issues a single access_token which can be used to authenticate against the github.com API.
+- Keycloak supports integration against any backend, since the token issued can be verified using JSON-Web-Key-Sets
+
+## Storing the token in the session
+
+The token(s) are made availale in the `account` parameter of the jwt callback.
+To store them in the session, they can be attached to the token.
+
+```typescript
+jwt({ token, trigger, session, account, user }) {
+  if (account && user && account.provider === "my-provider") {
+    return {
+      ...token,
+      accessToken: account.access_token,
+      refreshToken: account.refresh_token,
+      accessTokenExpires: account.expires_at,
+    }
+  }
+  // ...
+}
+```
+
+In order to access the token when making API requests, it needs to be made available to the authjs-session.
+
+```typescript
+async session({ session, token }) {
+  session.accessToken = token.accessToken
+  return session
+}
+```
+
+## Using the token to make authorized API requests on client side
+
+It is recommended to proxy authorized requests through an [API Route](https://nextjs.org/docs/pages/building-your-application/routing/api-routes).
+In this way it can be avoided that the OAuth tokens need to be stored client-side. Note, however, that the unencrypted tokens are still exposed in the session endpoint.
+
+OAuth-Tokens are commonly attached as `Authorization: Bearer <>` header.
+
+```typescript
+export async function handler(request: NextRequest) {
+  const session = await auth()
+  if (session) {
+    const headers = new Headers(request.headers)
+    headers.set("Authorization", `Bearer ${session.accessToken}`)
+    let url = request.nextUrl.href.replace(
+      request.nextUrl.origin /*<your-backend-url>*/
+    )
+    return await fetch(new Request(url, { headers, body: request.body }))
+  }
+  // ...
+}
+```
+
+## Configuring the backend to authorize requests through your IdP
+
+In order to authorize requests based on the Identity-Provider (IdP) that is used, the backend
+needs to configure it as issuer, and point to the JSON-Web-Key-Set (JWKS), in order to validate the token.
+
+The following is an example for the authjs keycloak test instance [keycloak.authjs.dev](https://keycloak.authjs.dev/).
+
+```javascript
+const app = express()
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri:
+      "https://keycloak.authjs.dev/realms/master/protocol/openid-connect/certs",
+  }),
+  issuer: "https://keycloak.authjs.dev/realms/master",
+  algorithms: ["RS256"],
+})
+app.get("/api/authenticated/greeting", jwtCheck, (req, res) => {
+  const name = req.auth && req.auth.name ? req.auth.name : "unknown name"
+  res.json({ greeting: `Hello, ${name}!` })
+})
+// ...
+```
+
+## Resources
+
+- Further examples for different server-side frameworks can be found [here](https://github.com/nextauthjs/authjs-third-party-backend/tree/main).
+- Please refer to the [refresh-token rotation](/guides/refresh-token-rotation) guide for more information on handling token refresh in authjs.
+- A full example of how to integrate with third party API's can be found in the [next-auth-example](https://github.com/nextauthjs/next-auth-example).
