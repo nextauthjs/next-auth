@@ -28,7 +28,6 @@ import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 
 import type { NextAuthConfig } from "next-auth"
-import { refreshAccessToken } from "./lib/refreshAccessToken"
 
 export const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
@@ -86,9 +85,6 @@ export const config = {
           refreshToken: account.refresh_token,
           accessTokenExpires: account.expires_at,
         }
-      }
-      if (token.accessTokenExpires && Date.now() > token.accessTokenExpires) {
-        return refreshAccessToken(token)
       }
       return token
     },
