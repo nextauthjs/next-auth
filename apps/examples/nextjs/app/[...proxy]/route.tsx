@@ -14,7 +14,6 @@ function stripContentEncoding(result: Response) {
 }
 
 export async function handler(request: NextRequest) {
-  console.log("proxy")
   const session = await auth()
 
   const headers = new Headers(request.headers)
