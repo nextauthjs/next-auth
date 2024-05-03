@@ -1,10 +1,8 @@
 name: "Broken Link Checker"
+
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "docs/**"
+  issue_comment:
+    types: [edited]
 
 permissions:
   pull-requests: write
