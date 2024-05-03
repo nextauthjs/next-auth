@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import algoliasearch from "algoliasearch/lite"
-import { InstantSearch, Hits, useInstantSearch } from "react-instantsearch"
+import { Hits, useInstantSearch } from "react-instantsearch"
+import { InstantSearchNext } from "react-instantsearch-nextjs"
 import { CustomSearchBox } from "./searchbox"
 import Hit from "./hit"
 
@@ -48,13 +49,10 @@ export default function() {
 
   return (
     <div className="relative">
-      <InstantSearch
+      <InstantSearchNext
         indexName="next-auth"
         // @ts-expect-error
         searchClient={searchClient}
-        future={{
-          preserveSharedStateOnUnmount: true,
-        }}
       >
         <CustomSearchBox />
         <NoResultsBoundary>
@@ -63,7 +61,7 @@ export default function() {
             className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-lg bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
           />
         </NoResultsBoundary>
-      </InstantSearch>
+      </InstantSearchNext>
     </div>
   )
 }
@@ -71,11 +69,13 @@ export default function() {
 function NoResultsBoundary({ children }) {
   const { indexUiState, results } = useInstantSearch()
 
-  if (indexUiState.query !== undefined && !results.__isArtificial && results.nbHits === 0) {
+  if (
+    indexUiState.query !== undefined &&
+    !results.__isArtificial &&
+    results.nbHits === 0
+  ) {
     return (
-      <div
-        className="fixed text-center top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
-      >
+      <div className="fixed text-center top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50">
         No Results
       </div>
     )

@@ -225,6 +225,9 @@ importers:
       react-instantsearch:
         specifier: ^7.7.2
         version: 7.7.2(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0)
+      react-instantsearch-nextjs:
+        specifier: ^0.2.2
+        version: 0.2.2(next@14.2.1)(react-instantsearch@7.7.2)
       react-marquee-slider:
         specifier: ^1.1.5
         version: 1.1.5(styled-components@5.3.6)
@@ -20791,6 +20794,16 @@ packages:
       instantsearch.js: 4.67.0(algoliasearch@4.23.3)
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /react-instantsearch-nextjs@0.2.2(next@14.2.1)(react-instantsearch@7.7.2):
+    resolution: {integrity: sha512-tRyUVeQHcsv9mRiNR6d8pzmA1cQMZXXyAp0kNX/Y1D1l6mCkX0CkLkIupPfZPzsthCJ/oe1FfFbEiQ7lHkiqlg==}
+    peerDependencies:
+      next: '>= 13.4 && < 15'
+      react-instantsearch: '>= 7.1.0 && < 8'
+    dependencies:
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
+      react-instantsearch: 7.7.2(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /react-instantsearch@7.7.2(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0):
