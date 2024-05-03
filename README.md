@@ -165,6 +165,13 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>superblog</div>
         <sub>☁️</sub>
       </td>
+      <td align="center" valign="top">
+        <a href="https://www.netlight.com/" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
+        </a><br />
+        <div>Netlight</div>
+        <sub>☁️</sub>
+      </td>
     </tr>
   </tbody>
 </table>
