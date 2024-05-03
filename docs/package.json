@@ -34,8 +34,8 @@
     "classnames": "^2.5.1",
     "next": "14.2.1",
     "next-sitemap": "^4.2.3",
-    "nextra": "3.0.0-alpha.23",
-    "nextra-theme-docs": "3.0.0-alpha.23",
+    "nextra": "3.0.0-alpha.22",
+    "nextra-theme-docs": "3.0.0-alpha.22",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-marquee-slider": "^1.1.5"
