@@ -109,7 +109,18 @@ export async function handleOAuth(
     client,
     codeGrantParams,
     redirect_uri,
-    codeVerifier ?? "auth" // TODO: review fallback code verifier
+    codeVerifier ?? "auth", // TODO: review fallback code verifier,
+    {
+      [o.experimental_customFetch]: (...args) => {
+        if (
+          !provider.checks.includes("pkce") &&
+          args[1]?.body instanceof URLSearchParams
+        ) {
+          args[1].body.delete("code_verifier")
+        }
+        return fetch(...args)
+      },
+    }
   )
 
   if (provider.token?.conform) {

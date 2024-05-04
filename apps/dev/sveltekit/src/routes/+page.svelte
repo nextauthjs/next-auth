@@ -66,7 +66,7 @@
             <span slot="submitButton">
               <img
                 src="https://authjs.dev/img/providers/github.svg"
-                alt="Github Logo"
+                alt="GitHub Logo"
                 width="32"
                 height="32"
               />
@@ -124,7 +124,7 @@
             <button on:click={() => signIn("github")}>
               <img
                 src="https://authjs.dev/img/providers/github.svg"
-                alt="Github Logo"
+                alt="GitHub Logo"
                 width="32"
                 height="32"
               />

@@ -69,7 +69,7 @@ export interface Neo4jOptions extends Session {}
  *
  * #### Properties
  *
- * This schema is adapted for use in Neo4J and is based upon our main [models](https://authjs.dev/reference/core/adapters#models). Please check there for the node properties. Relationships have no properties.
+ * This schema is adapted for use in Neo4j and is based upon our main [models](https://authjs.dev/reference/core/adapters#models). Please check there for the node properties. Relationships have no properties.
  *
  * #### Indexes
  *

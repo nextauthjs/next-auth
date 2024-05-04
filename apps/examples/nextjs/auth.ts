@@ -1,4 +1,5 @@
 import NextAuth from "next-auth"
+import "next-auth/jwt"
 
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
@@ -10,7 +11,7 @@ import Discord from "next-auth/providers/discord"
 import Dropbox from "next-auth/providers/dropbox"
 import Facebook from "next-auth/providers/facebook"
 import GitHub from "next-auth/providers/github"
-import Gitlab from "next-auth/providers/gitlab"
+import GitLab from "next-auth/providers/gitlab"
 import Google from "next-auth/providers/google"
 import Hubspot from "next-auth/providers/hubspot"
 import Keycloak from "next-auth/providers/keycloak"
@@ -55,7 +56,7 @@ const config = {
     Dropbox,
     Facebook,
     GitHub,
-    Gitlab,
+    GitLab,
     Google,
     Hubspot,
     Keycloak,
@@ -75,7 +76,7 @@ const config = {
     Twitch,
     Twitter,
     WorkOS({
-      connection: process.env.AUTH_WORKOS_CONNECTION,
+      connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
   ],
@@ -86,9 +87,16 @@ const config = {
       if (pathname === "/middleware-example") return !!auth
       return true
     },
-    jwt({ token, trigger, session }) {
-      if (trigger === "update") token.name = session?.user?.name
+    jwt({ token, trigger, session, account }) {
+      if (trigger === "update") token.name = session.user.name
+      if (account?.provider === "keycloak") {
+        return { ...token, accessToken: account.access_token }
+      }
       return token
+    },
+    async session({ session, token }) {
+      session.accessToken = token.accessToken
+      return session
     },
   },
   experimental: {
@@ -98,3 +106,15 @@ const config = {
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
+
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken?: string
+  }
+}

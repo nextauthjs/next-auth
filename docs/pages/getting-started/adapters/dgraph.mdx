@@ -52,7 +52,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { DgraphAdapter } from "@auth/dgraph-adapter"
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: DgraphAdapter({
     endpoint: process.env.DGRAPH_GRAPHQL_ENDPOINT,

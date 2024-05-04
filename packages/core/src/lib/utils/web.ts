@@ -123,9 +123,9 @@ export function parseActionAndProviderId(
 
   if (a === null) throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  const [_, actionAndProviderId] = a
+  const actionAndProviderId = a.at(-1)!
 
-  const b = actionAndProviderId.replace(/^\//, "").split("/")
+  const b = actionAndProviderId.replace(/^\//, "").split("/").filter(Boolean)
 
   if (b.length !== 1 && b.length !== 2)
     throw new UnknownAction(`Cannot parse action at ${pathname}`)

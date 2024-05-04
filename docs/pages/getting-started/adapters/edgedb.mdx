@@ -53,7 +53,7 @@ import { createClient } from "edgedb"
 
 const client = createClient({ dsn: process.env.AUTH_EDGEDB_DSN })
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: EdgeDBAdapter(client),
   providers: [],
 })
