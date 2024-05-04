@@ -18,9 +18,8 @@
     "Lluis Agusti <hi@llu.lu>",
     "Thang Huu Vu <hi@thvu.dev>"
   ],
-  "packageManager": "pnpm@9.0.0-rc.2+sha256.56c6fdb47aaccbd84f172f5dd032820ad8ba66aeb4727832fb3158f8537f11cd",
   "dependencies": {
-    "@auth/unstorage-adapter": "github:nextauthjs/next-auth#main&path:packages/adapter-unstorage",
+    "@auth/unstorage-adapter": "^2.0.0",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dropdown-menu": "^2.0.5",
@@ -39,12 +38,15 @@
     "unstorage": "^1.10.1"
   },
   "devDependencies": {
-    "@types/node": "^18",
+    "@types/node": "^20.12.8",
     "@types/react": "^18.2.23",
     "@types/react-dom": "^18.2.8",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

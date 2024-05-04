@@ -64,7 +64,7 @@ const config = {
     Okta,
     Passkey({
       formFields: {
-        username: { label: "Username", required: true, autocomplete: "username webauthn email" },
+        email: { label: "Email", required: true, autocomplete: "webauthn email username" },
       },
     }),
     Passage,
@@ -94,7 +94,7 @@ const config = {
   experimental: {
     enableWebAuthn: true,
   },
-  debug: true,
+  debug: process.env.NODE_ENV !== "production" ? true : false,
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
