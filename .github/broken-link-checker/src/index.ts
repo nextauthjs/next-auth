@@ -80,21 +80,7 @@ const postComment = async (outputMd: string) => {
     const { context, getOctokit } = github
     const octokit = getOctokit(process.env.GITHUB_TOKEN!)
     const { owner, repo } = context.repo
-    console.log("CONTEXT", context.payload)
-    // const pullRequest = context.payload.pull_request
-    // if (!pullRequest) {
-    //   console.log("Skipping since this is not a pull request")
-    //   process.exit(0)
-    // }
-    // const isFork = pullRequest.head.repo.fork
-    // const prNumber = pullRequest.number
-    // if (isFork) {
-    //   setFailed(
-    //     "The action could not create a GitHub comment because it is initiated from a forked repo. View the action logs for a list of broken links."
-    //   )
-    //   return ""
-    // }
-    //
+
     const prNumber = context.payload?.issue?.number
     if (!prNumber) {
       setFailed("Count not find PR Number")
