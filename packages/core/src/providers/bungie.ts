@@ -68,7 +68,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * [How to edit my host file?](https://phoenixnap.com/kb/how-to-edit-hosts-file-in-windows-mac-or-linux)
  *
- * On Windows (Run Powershell as administrator)
+ * On Windows (Run PowerShell as administrator)
  *
  * ```ps
  * Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdev.example.com" -Force

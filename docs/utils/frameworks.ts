@@ -7,14 +7,14 @@ type Details = {
 }
 
 export enum Framework {
-  NextJs = "nextjs",
+  Next = "nextjs",
   Svelte = "sveltekit",
   // SolidStart = "solidstart",
   Express = "express",
 }
 
 export const frameworkDetails: Record<Framework, Details> = {
-  [Framework.NextJs]: {
+  [Framework.Next]: {
     title: "Next.js",
     code: codeNextJs(),
     logo: "/img/etc/nextjs.svg",

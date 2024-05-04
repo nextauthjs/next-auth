@@ -528,7 +528,7 @@ function isDate(value: any) {
 }
 
 const format = {
-  /** Takes a plain old JavaScript object and turns it into a Dynamodb object */
+  /** Takes a plain old JavaScript object and turns it into a DynamoDB object */
   to(object: Record<string, any>) {
     const newObject: Record<string, unknown> = {}
     for (const key in object) {

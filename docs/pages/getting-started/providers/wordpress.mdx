@@ -3,7 +3,7 @@ import { Code } from "@/components/Code"
 
 <img align="right" src="/img/providers/wordpress.svg" height="64" width="64" />
 
-# Wordpress Provider
+# WordPress Provider
 
 ## Resources
 
@@ -44,10 +44,10 @@ AUTH_WORDPRESS_SECRET
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import Wordpress from "next-auth/providers/wordpress"
+import WordPress from "next-auth/providers/wordpress"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [Wordpress],
+  providers: [WordPress],
 })
 ```
 
@@ -56,10 +56,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import Wordpress from "@auth/sveltekit/providers/wordpress"
+import WordPress from "@auth/sveltekit/providers/wordpress"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [Wordpress],
+  providers: [WordPress],
 })
 ```
 
@@ -68,9 +68,9 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import Wordpress from "@auth/express/providers/wordpress"
+import WordPress from "@auth/express/providers/wordpress"
 
-app.use("/auth/*", ExpressAuth({ providers: [Wordpress] }))
+app.use("/auth/*", ExpressAuth({ providers: [WordPress] }))
 ```
 
   </Code.Express>

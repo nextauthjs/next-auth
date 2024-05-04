@@ -16,7 +16,8 @@ export function Header({
       <div className={styles.signedInStatus}>
         <img
           src={
-            session?.user?.image ?? "https://source.boringavatars.com/beam/120"
+            session?.user?.image ??
+            "https://source.boringavatars.com/marble/120"
           }
           className={styles.avatar}
         />

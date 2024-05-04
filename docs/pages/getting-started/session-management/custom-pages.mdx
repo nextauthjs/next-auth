@@ -10,12 +10,12 @@ To enable custom pages add the following to your Auth.js configuration. In the `
 
 ```ts filename="./auth.ts" {8-10}
 import { NextAuth } from "next-auth"
-import Github from "next-auth/providers/github"
+import GitHub from "next-auth/providers/github"
 
 // Define your configuration in a separate variable and pass it to NextAuth()
 // This way we can also 'export const config' for use later
 export const config = {
-  providers: [Github],
+  providers: [GitHub],
   pages: {
     signIn: "/login",
   },
@@ -32,7 +32,7 @@ import SvelteKitAuth from "@auth/sveltekit"
 import GitHub from "@auth/sveltekit/providers/github"
 import type { Provider } from "@auth/sveltekit/providers"
 
-const providers: Provider[] = [Github]
+const providers: Provider[] = [GitHub]
 
 // Export this map of provider details to use in the sign-in page later
 export const providerMap = providers.map((provider) => {
