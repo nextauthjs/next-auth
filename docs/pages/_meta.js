@@ -61,10 +61,10 @@ export default {
           Sponsored
         </span>
         <a
-          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=nav"
+          href="https://go.clerk.com/DefS1u4"
           target="_blank"
         >
-          <div className="flex flex-col gap-1 p-2 text-xs font-normal rounded-md border ml-[1px] bg-neutral-100 text-neutral-500 border-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700">
+          <div className="flex flex-col gap-1 p-2 text-xs font-normal rounded-md border ml-[1px] bg-neutral-100 text-neutral-500 border-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700 mt-2">
             Looking for a hosted alternative?
             <span className="text-sky-600 dark:text-sky-500">Use Clerk ›</span>
           </div>

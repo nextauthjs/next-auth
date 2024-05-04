@@ -32,7 +32,7 @@
     .
   </p>
   <p align="center">
-     <kbd>Sponsored</kbd> Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+     <kbd>Sponsored</kbd> Looking for a hosted alternative? <a href="https://go.clerk.com/5115vfK" target="_blank">Use Clerk →</a>
   </p>
 </p>
 
@@ -163,6 +163,13 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
           <img width="108" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
         </a><br />
         <div>superblog</div>
+        <sub>☁️</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://www.netlight.com/" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
+        </a><br />
+        <div>Netlight</div>
         <sub>☁️</sub>
       </td>
     </tr>
