@@ -136,7 +136,7 @@ importers:
         version: 5.8.1
       sqlite3:
         specifier: ^5.0.8
-        version: 5.1.7
+        version: 5.1.6
 
   apps/dev/sveltekit:
     dependencies:
@@ -224,10 +224,10 @@ importers:
         version: 18.2.0(react@18.2.0)
       react-instantsearch:
         specifier: ^7.7.2
-        version: 7.7.2(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.7.3(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0)
       react-instantsearch-nextjs:
         specifier: ^0.2.2
-        version: 0.2.2(next@14.2.1)(react-instantsearch@7.7.2)
+        version: 0.2.2(next@14.2.1)(react-instantsearch@7.7.3)
       react-marquee-slider:
         specifier: ^1.1.5
         version: 1.1.5(styled-components@5.3.6)
@@ -310,13 +310,13 @@ importers:
         version: 8.3.4
       better-sqlite3:
         specifier: ^9.4.0
-        version: 9.5.0
+        version: 9.6.0
       drizzle-kit:
         specifier: ^0.20.17
         version: 0.20.17
       drizzle-orm:
         specifier: ^0.30.8
-        version: 0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.7)(postgres@3.4.3)
+        version: 0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.6.0)(mysql2@3.9.7)(postgres@3.4.3)
       mysql2:
         specifier: ^3.9.7
         version: 3.9.7
@@ -547,10 +547,10 @@ importers:
         version: 8.11.3
       sqlite3:
         specifier: ^5.0.8
-        version: 5.1.7
+        version: 5.1.6
       typeorm:
         specifier: 0.3.17
-        version: 0.3.17(mssql@7.3.5)(pg@8.11.3)(sqlite3@5.1.7)
+        version: 0.3.17(mssql@7.3.5)(pg@8.11.3)(sqlite3@5.1.6)
       typeorm-naming-strategies:
         specifier: ^4.1.0
         version: 4.1.0(typeorm@0.3.17)
@@ -5397,7 +5397,7 @@ packages:
   /@internationalized/date@3.5.2:
     resolution: {integrity: sha512-vo1yOMUt2hzp63IutEaTUxROdvQg1qlMRsbCvbay2AK2Gai7wIgCyK5weEX3nHkiLgo4qCXHijFNC/ILhlRpOQ==}
     dependencies:
-      '@swc/helpers': 0.5.2
+      '@swc/helpers': 0.5.5
     dev: false
 
   /@ioredis/commands@1.2.0:
@@ -5541,7 +5541,7 @@ packages:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.5.4
+      semver: 7.6.0
       tar: 6.2.0
     transitivePeerDependencies:
       - encoding
@@ -8243,6 +8243,7 @@ packages:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
       tslib: 2.6.2
+    dev: true
 
   /@swc/helpers@0.5.5:
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
@@ -8473,8 +8474,8 @@ packages:
     dev: true
     optional: true
 
-  /@types/google.maps@3.55.7:
-    resolution: {integrity: sha512-SlWFx0vo7RSAOC63+PTz8FeqLDaRYs7PrS/L0bZSKswxIN5TnCuckbeIwZpgD/S+DWalPteXfDbg5JsUER5Cyw==}
+  /@types/google.maps@3.55.8:
+    resolution: {integrity: sha512-aSyvlCRXzF9Jtjqq4zmA24sczKZ0QWJnn4zRrkufCoohHulS6LCf4KsF22eAlnHBuVYwEhQoMXIufUS7kXF5uA==}
     dev: false
 
   /@types/hast@2.3.9:
@@ -10624,8 +10625,8 @@ packages:
       uri-js: 4.4.1
     dev: true
 
-  /algoliasearch-helper@3.18.0(algoliasearch@4.23.3):
-    resolution: {integrity: sha512-ZXvA8r6VG46V343jnIE7Tei8Xr0/9N8YhD27joC0BKxeogQyvNu7O37i510wA7FnrDjoa/tFhK90WUaBlkaqnw==}
+  /algoliasearch-helper@3.19.0(algoliasearch@4.23.3):
+    resolution: {integrity: sha512-AaSb5DZDMZmDQyIy6lf4aL0OZGgyIdqvLIIvSuVQOIOqfhrYSY7TvotIFI2x0Q3cP3xUpTd7lI1astUC4aXBJw==}
     peerDependencies:
       algoliasearch: '>= 3.1 < 6'
     dependencies:
@@ -11200,8 +11201,8 @@ packages:
       prebuild-install: 7.1.1
     dev: true
 
-  /better-sqlite3@9.5.0:
-    resolution: {integrity: sha512-01qVcM4gPNwE+PX7ARNiHINwzVuD6nx0gdldaAAcu+MrzyIAukQ31ZDKEpzRO/CNA9sHpxoTZ8rdjoyAin4dyg==}
+  /better-sqlite3@9.6.0:
+    resolution: {integrity: sha512-yR5HATnqeYNVnkaUTf4bOP2dJSnyhP4puJN/QPRyx4YkBEEUxib422n2XzPqDEHjQQqazoYoADdAm5vE15+dAQ==}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -11399,7 +11400,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /bundle-n-require@1.1.1:
@@ -13035,18 +13036,13 @@ packages:
       json-diff: 0.9.0
       minimatch: 7.4.6
       semver: 7.6.0
-      semver: 7.5.4
-      semver: 7.5.4
       superjson: 2.2.1
       zod: 3.22.4
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@8.7.0)(mysql2@3.9.7)(postgres@3.4.3):
-  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(better-sqlite3@8.7.0)(mysql2@3.9.4)(postgres@3.4.3):
-    resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
-  /drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.7)(postgres@3.4.3):
+  /drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.6.0)(mysql2@3.9.7)(postgres@3.4.3):
     resolution: {integrity: sha512-9pBJA0IjnpPpzZ6s9jlS1CQAbKoBmbn2GJesPhXaVblAA/joOJ4AWWevYcqvLGj9SvThBAl7WscN8Zwgg5mnTw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -13127,10 +13123,7 @@ packages:
         optional: true
     dependencies:
       '@types/better-sqlite3': 7.6.9
-      better-sqlite3: 8.7.0
-      better-sqlite3: 8.7.0
-      mysql2: 3.9.4
-      better-sqlite3: 9.5.0
+      better-sqlite3: 9.6.0
       mysql2: 3.9.7
       postgres: 3.4.3
     dev: true
@@ -15845,27 +15838,27 @@ packages:
       wrap-ansi: 6.2.0
     dev: true
 
-  /instantsearch-ui-components@0.4.0:
-    resolution: {integrity: sha512-Isa9Ankm89e9PUXsUto6TxYzcQpXKlWZMsKLXc//dO4i9q5JS8s0Es+c+U65jRLK2j1DiVlNx/Z6HshRIZwA8w==}
+  /instantsearch-ui-components@0.5.0:
+    resolution: {integrity: sha512-iDdbAbPDyKZOCdOd4aiMkMVJ1WFhc+QU0dM0EIgfZqDYHFuw8XfyLakRK+S7YcQi4bomoqWZ4FiQ/gTFFWo4rQ==}
     dependencies:
       '@babel/runtime': 7.23.9
     dev: false
 
-  /instantsearch.js@4.67.0(algoliasearch@4.23.3):
-    resolution: {integrity: sha512-RKbLBbpysAHOjOBtuSnxsYRnYydEB+Y/R/W0XMC+HZRro6FKUmLexXJR2MkVJXwuC3AG7RNC75jPx1WbVREWMA==}
+  /instantsearch.js@4.68.0(algoliasearch@4.23.3):
+    resolution: {integrity: sha512-eIh7jgXAd/TH3OBSgNmfXo6Dl2Apg05EKWqxrbOv0QCAKaouColPkmF6xujhNhjCUM/MVLyidMpSbGbEHa+GUw==}
     peerDependencies:
       algoliasearch: '>= 3.1 < 6'
     dependencies:
       '@algolia/events': 4.0.1
       '@types/dom-speech-recognition': 0.0.1
-      '@types/google.maps': 3.55.7
+      '@types/google.maps': 3.55.8
       '@types/hogan.js': 3.0.5
       '@types/qs': 6.9.11
       algoliasearch: 4.23.3
-      algoliasearch-helper: 3.18.0(algoliasearch@4.23.3)
+      algoliasearch-helper: 3.19.0(algoliasearch@4.23.3)
       hogan.js: 3.0.2
       htm: 3.1.1
-      instantsearch-ui-components: 0.4.0
+      instantsearch-ui-components: 0.5.0
       preact: 10.11.3
       qs: 6.9.7
       search-insights: 2.13.0
@@ -19022,7 +19015,7 @@ packages:
     resolution: {integrity: sha512-p7eGEiQil0YUV3ItH4/tBb781L5impVmmx2E9FRKF7d18XXzp4PGT2tdYMFY6wQqgxD0IwNZOiSJ0/K0fSi/OA==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /node-abort-controller@2.0.0:
@@ -19106,7 +19099,7 @@ packages:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.5.4
+      semver: 7.6.0
       tar: 6.2.0
       which: 2.0.2
     transitivePeerDependencies:
@@ -19243,7 +19236,7 @@ packages:
     dependencies:
       execa: 6.1.0
       parse-package-name: 1.0.0
-      semver: 7.5.4
+      semver: 7.6.0
       validate-npm-package-name: 4.0.0
     dev: true
 
@@ -20790,32 +20783,32 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-instantsearch-core@7.7.2(algoliasearch@4.23.3)(react@18.2.0):
-    resolution: {integrity: sha512-jQXeVaLnk/P7O3NuldL+wgJI2QUntgZVvA5lVuqpqJ2u8dsOFwJFP+rfisFkgo2Q030lrn3sJTs6UGHIafdJqQ==}
+  /react-instantsearch-core@7.7.3(algoliasearch@4.23.3)(react@18.2.0):
+    resolution: {integrity: sha512-6ZwyLY4qPSFI3zPbBeJG5umoV3w+BA/2BAodZ72Ww0X/eQveG0dKxO6cHMubBCOROyqi+p13xnOQnrviFLkw0A==}
     peerDependencies:
       algoliasearch: '>= 3.1 < 5'
       react: '>= 16.8.0 < 19'
     dependencies:
       '@babel/runtime': 7.23.9
       algoliasearch: 4.23.3
-      algoliasearch-helper: 3.18.0(algoliasearch@4.23.3)
-      instantsearch.js: 4.67.0(algoliasearch@4.23.3)
+      algoliasearch-helper: 3.19.0(algoliasearch@4.23.3)
+      instantsearch.js: 4.68.0(algoliasearch@4.23.3)
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /react-instantsearch-nextjs@0.2.2(next@14.2.1)(react-instantsearch@7.7.2):
+  /react-instantsearch-nextjs@0.2.2(next@14.2.1)(react-instantsearch@7.7.3):
     resolution: {integrity: sha512-tRyUVeQHcsv9mRiNR6d8pzmA1cQMZXXyAp0kNX/Y1D1l6mCkX0CkLkIupPfZPzsthCJ/oe1FfFbEiQ7lHkiqlg==}
     peerDependencies:
       next: '>= 13.4 && < 15'
       react-instantsearch: '>= 7.1.0 && < 8'
     dependencies:
       next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
-      react-instantsearch: 7.7.2(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0)
+      react-instantsearch: 7.7.3(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /react-instantsearch@7.7.2(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YyJCrBOoEotd0IjsUJshmfkdGsABYSvB0ajHg2QXwqCToWprunLYrkFEboeDv+nfdb4PxbrltvNl/zXM4Ay3iA==}
+  /react-instantsearch@7.7.3(algoliasearch@4.23.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-ncXGoWsJYLcdWgtMLSQrtIkMZ0D7jP5jUvJX/zJEx8vNUzUk8Zm/OruS/vY48EAJ76TKTUCzC7Wl7cxgBQnrBg==}
     peerDependencies:
       algoliasearch: '>= 3.1 < 5'
       react: '>= 16.8.0 < 19'
@@ -20823,11 +20816,11 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.9
       algoliasearch: 4.23.3
-      instantsearch-ui-components: 0.4.0
-      instantsearch.js: 4.67.0(algoliasearch@4.23.3)
+      instantsearch-ui-components: 0.5.0
+      instantsearch.js: 4.68.0(algoliasearch@4.23.3)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      react-instantsearch-core: 7.7.2(algoliasearch@4.23.3)(react@18.2.0)
+      react-instantsearch-core: 7.7.3(algoliasearch@4.23.3)(react@18.2.0)
     dev: false
 
   /react-is@16.13.1:
@@ -22267,24 +22260,6 @@ packages:
       - supports-color
     dev: true
 
-  /sqlite3@5.1.7:
-    resolution: {integrity: sha512-GGIyOiFaG+TUra3JIfkI/zGP8yZYLPQ0pl1bH+ODjiX57sPhrLU5sQJn1y9bDKZUFYkX1crlrPfSYt0BKKdkog==}
-    requiresBuild: true
-    peerDependenciesMeta:
-      node-gyp:
-        optional: true
-    dependencies:
-      bindings: 1.5.0
-      node-addon-api: 7.1.0
-      prebuild-install: 7.1.1
-      tar: 6.2.0
-    optionalDependencies:
-      node-gyp: 8.4.1
-    transitivePeerDependencies:
-      - bluebird
-      - supports-color
-    dev: true
-
   /sqlstring-sqlite@0.1.1:
     resolution: {integrity: sha512-9CAYUJ0lEUPYJrswqiqdINNSfq3jqWo/bFJ7tufdoNeSK0Fy+d1kFTxjqO9PIqza0Kri+ZtYMfPVf1aZaFOvrQ==}
     engines: {node: '>= 0.6'}
@@ -23662,10 +23637,10 @@ packages:
     peerDependencies:
       typeorm: ^0.2.0 || ^0.3.0
     dependencies:
-      typeorm: 0.3.17(mssql@7.3.5)(pg@8.11.3)(sqlite3@5.1.7)
+      typeorm: 0.3.17(mssql@7.3.5)(pg@8.11.3)(sqlite3@5.1.6)
     dev: true
 
-  /typeorm@0.3.17(mssql@7.3.5)(pg@8.11.3)(sqlite3@5.1.7):
+  /typeorm@0.3.17(mssql@7.3.5)(pg@8.11.3)(sqlite3@5.1.6):
     resolution: {integrity: sha512-UDjUEwIQalO9tWw9O2A4GU+sT3oyoUXheHJy4ft+RFdnRdQctdQ34L9SqE2p7LdwzafHx1maxT+bqXON+Qnmig==}
     engines: {node: '>= 12.9.0'}
     hasBin: true
@@ -23737,7 +23712,7 @@ packages:
       pg: 8.11.3
       reflect-metadata: 0.1.14
       sha.js: 2.4.11
-      sqlite3: 5.1.7
+      sqlite3: 5.1.6
       tslib: 2.6.2
       uuid: 9.0.1
       yargs: 17.7.2
