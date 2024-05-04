@@ -32,7 +32,7 @@ const searchClient = {
   },
 }
 
-export default function() {
+export default function () {
   const ctrlKHandler = (e: KeyboardEvent) => {
     if (e.repeat || e.target instanceof HTMLInputElement) return
     if (e.ctrlKey && e.key === "k") {
