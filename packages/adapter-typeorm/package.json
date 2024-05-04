@@ -38,13 +38,12 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
-    "clean": "rm -rf dist",
-    "init:db": "test/init.sh",
-    "mysql": "pnpm init:db && test/mysql/test.sh",
-    "postgres": "pnpm init:db && test/postgresql/test.sh",
-    "sqlite": "test/sqlite/test.sh",
-    "test:containers": "test/test.sh",
-    "test": "test/test.sh"
+    "clean": "rm -f *.d.ts* *.js",
+    "test": "test/test.sh",
+    "test:init:db": "test/init.sh",
+    "test:mysql": "pnpm init:db && test/mysql/test.sh",
+    "test:postgres": "pnpm init:db && test/postgresql/test.sh",
+    "test:sqlite": "test/sqlite/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
