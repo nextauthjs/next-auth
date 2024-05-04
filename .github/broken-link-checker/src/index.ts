@@ -80,8 +80,17 @@ const postComment = async (outputMd: string) => {
     const { context, getOctokit } = github
     const octokit = getOctokit(process.env.GITHUB_TOKEN!)
     const { owner, repo } = context.repo
+    let prNumber
 
-    const prNumber = context.payload?.issue?.number
+    // Handle various trigger events
+    if (context.payload.pull_request) {
+      // Triggered by `pull_request`
+      prNumber = context.payload.pull_request?.number
+    } else if (context.payload.issue) {
+      // Triggered by `issue_comment`
+      prNumber = context.payload?.issue?.number
+    }
+
     if (!prNumber) {
       setFailed("Count not find PR Number")
       return ""
