@@ -43,6 +43,17 @@ const UpdateForm = () => {
 
 export default function ClientExample() {
   const { data: session, status } = useSession()
+  const [apiResponse, setApiResponse] = useState("")
+
+  const makeRequestWithToken = async () => {
+    try {
+      const response = await fetch("/api/authenticated/greeting")
+      const data = await response.json()
+      setApiResponse(JSON.stringify(data, null, 2))
+    } catch (error) {
+      setApiResponse("Failed to fetch data: " + error)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -70,6 +81,34 @@ export default function ClientExample() {
         </strong>{" "}
         to provide the session data.
       </p>
+
+      <div>
+        <h2 className="text-xl font-bold">Third-party backend integration</h2>
+        <p>
+          Press the button below to send a request to our{" "}
+          <CustomLink href="https://github.com/nextauthjs/authjs-third-party-backend">
+            <code>example backend</code>
+          </CustomLink>
+          .
+        </p>
+        <div className="flex flex-col ">
+          <p>Note: This example only works when using the Keycloak provider.</p>
+          <Button
+            disabled={!session?.accessToken}
+            className="mt-4 mb-4"
+            onClick={makeRequestWithToken}
+          >
+            Make API Request
+          </Button>
+        </div>
+        <p>
+          Read more{" "}
+          <CustomLink href="https://authjs.dev/guides/integrating-third-party-backends">
+            <code>here</code>
+          </CustomLink>
+        </p>
+        <pre>{apiResponse}</pre>
+      </div>
 
       {status === "loading" ? (
         <div>Loading...</div>
