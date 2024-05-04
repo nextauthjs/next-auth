@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import algoliasearch from "algoliasearch/lite"
 import { Hits, useInstantSearch } from "react-instantsearch"
 import { InstantSearchNext } from "react-instantsearch-nextjs"
-import { CustomSearchBox } from "./searchbox"
+import { CustomSearchBox } from "./searchInput"
 import Hit from "./hit"
 
 const algoliaClient = algoliasearch(

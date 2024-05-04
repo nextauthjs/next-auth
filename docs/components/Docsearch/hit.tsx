@@ -1,14 +1,23 @@
-import { Highlight } from "react-instantsearch"
+import { Highlight, useInstantSearch } from "react-instantsearch"
 import Link from "next/link"
 
 export default function Hit({ hit }) {
+  const { setIndexUiState } = useInstantSearch()
   const hierarchy = Object.values(hit.hierarchy)?.filter(Boolean)
   const path = new URL(hit.url_without_anchor).pathname
+
+  const onClick = () => {
+    setIndexUiState((prevIndexUiState) => ({
+      ...prevIndexUiState,
+      query: "",
+    }))
+  }
 
   return (
     <Link
       key={hit.objectID}
       href={hit.url}
+      onClick={onClick}
       className="flex flex-col gap-2 p-4 px-2 rounded-md text-neutral-800 group dark:text-neutral-100 hover:dark:bg-neutral-900 hover:bg-neutral-200"
     >
       <h3 className="flex items-center text-sm font-semibold after:content-[''] whitespace-nowrap after:absolute after:bg-gradient-to-r after:h-6 after:right-0 after:w-12 after:from-transparent after:to-neutral-100 after:dark:to-neutral-800 relative overflow-hidden group-hover:dark:after:to-neutral-900 group-hover:after:to-neutral-200">
