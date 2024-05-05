@@ -19,10 +19,12 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters"
 
+import uuid from 'v4-uuid';
+
 export const postgresUsersTable = pgTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => uuid()),
   name: text("name"),
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -95,7 +97,7 @@ export function PostgresDrizzleAdapter(
 
       return client
         .insert(usersTable)
-        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .values(hasDefaultId ? data : { ...data, id: uuid() })
         .returning()
         .then((res) => res[0])
     },

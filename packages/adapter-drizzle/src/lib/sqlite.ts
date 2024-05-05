@@ -17,10 +17,12 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters"
 
+import uuid from 'v4-uuid';
+
 export const sqliteUsersTable = sqliteTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => uuid()),
   name: text("name"),
   email: text("email").notNull(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
@@ -89,7 +91,7 @@ export function SQLiteDrizzleAdapter(
 
       return client
         .insert(usersTable)
-        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .values(hasDefaultId ? data : { ...data, id: uuid() })
         .returning()
         .get()
     },

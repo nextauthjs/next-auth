@@ -15,6 +15,10 @@ patchedDependencies:
 importers:
 
   .:
+    dependencies:
+      v4-uuid:
+        specifier: ^1.1.0
+        version: 1.1.0
     devDependencies:
       '@actions/core':
         specifier: ^1.10.0
@@ -301,6 +305,9 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+      v4-uuid:
+        specifier: ^1.1.0
+        version: 1.1.0
     devDependencies:
       '@types/better-sqlite3':
         specifier: ^7.6.4
@@ -24274,6 +24281,11 @@ packages:
       diff: 5.1.0
       kleur: 4.1.5
       sade: 1.8.1
+    dev: false
+
+  /v4-uuid@1.1.0:
+    resolution: {integrity: sha512-osa5a9XnMc5G4Z+n7hK+hhY7Qx4MDArd2vuNKlL3MiekpABMXAY9+9tNXCUg13D6HxTJ6M34X5c3ui/H4hKifA==}
+    engines: {node: '>=6.9'}
     dev: false
 
   /v8-compile-cache-lib@3.0.1:

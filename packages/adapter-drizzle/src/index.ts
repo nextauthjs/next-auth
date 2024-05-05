@@ -24,6 +24,7 @@ import { DefaultMySqlSchema, MySqlDrizzleAdapter } from "./lib/mysql.js"
 import { DefaultPostgresSchema, PostgresDrizzleAdapter } from "./lib/pg.js"
 import { DefaultSQLiteSchema, SQLiteDrizzleAdapter } from "./lib/sqlite.js"
 import { DefaultSchema, SqlFlavorOptions } from "./lib/utils.js"
+// import uuid from 'v4-uuid';
 
 import type { Adapter } from "@auth/core/adapters"
 /**
@@ -84,10 +85,10 @@ import type { Adapter } from "@auth/core/adapters"
  *  integer
  * } from "drizzle-orm/pg-core"
  * import type { AdapterAccount } from '@auth/core/adapters'
- * import { randomUUID } from "crypto"
+ * import uuid from 'v4-uuid';
  *
  * export const users = pgTable("user", {
- *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+ *  id: text("id").primaryKey().$defaultFn(() => uuid()),
  *  name: text("name"),
  *  email: text("email").notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -152,7 +153,7 @@ import type { Adapter } from "@auth/core/adapters"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
  * export const users = mysqlTable("user", {
- *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+ *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => uuid()),
  *  name: varchar("name", { length: 255 }),
  *  email: varchar("email", { length: 255 }).notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
@@ -211,7 +212,7 @@ import type { Adapter } from "@auth/core/adapters"
  * import type { AdapterAccount } from "@auth/core/adapters"
  *
  * export const users = sqliteTable("user", {
- *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+ *  id: text("id").primaryKey().$defaultFn(() => uuid()),
  *  name: text("name"),
  *  email: text("email").notNull(),
  *  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),

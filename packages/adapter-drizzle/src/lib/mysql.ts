@@ -20,10 +20,12 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters"
 
+import uuid from 'v4-uuid';
+
 export const mysqlUsersTable = mysqlTable("user", {
   id: varchar("id", { length: 255 })
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => uuid()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
@@ -94,7 +96,7 @@ export function MySqlDrizzleAdapter(
 
       await client
         .insert(usersTable)
-        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .values(hasDefaultId ? data : { ...data, id: uuid() })
 
       return client
         .select()
