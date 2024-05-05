@@ -85,7 +85,7 @@ export default function RSO<P extends RSOProfile>(
            * 
            * `offline_access` is required to get a refresh token
            * 
-           * `access_tokens` is required to get an access token that have access to the  `https://auth.riotgames.com/userinfo` or `https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me` endpoint with more information.
+           * `access_tokens` is required to get an access token that has access to the  `https://auth.riotgames.com/userinfo` or `https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me` endpoint with more information.
            * 
            * `cpid` is required to get the user's region id
            */
@@ -112,17 +112,16 @@ export default function RSO<P extends RSOProfile>(
      },
     profile(profile) {
       return {
-        id: profile.id,
+        id: profile.sub,
         sub: profile.sub,
         cpid: profile?.cpid,
         jiti: profile.jiti,
       }
     },
     style: {
-      logo: "https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/next-auth/provider-logos/riot-games.svg",
-      bg: "#fff",
+      bg: "#f05b5e",
       text: "#fff",
     },
-    options,
+    options: options,
   }
 }
