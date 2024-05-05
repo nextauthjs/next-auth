@@ -34,16 +34,17 @@ export interface RSOProfile extends Record<string, any> {
  *
  * ### Resources
  *
- *  - [Riot Sign On google docs](https://docs.google.com/document/u/0/d/e/2PACX-1vTSthxkWOIqPFe8Xqqjv4Ona5pRa5W3X6bLg4I47X15gJjG9ae-HU5a0by7VIVLWdPMgB9fTr5gvQcY/pub?pli=1)
  *  - [App Registration](https://developer.riotgames.com/)
  *  - [Riot Sign On Registration (after your app registration is approved)](https://beta.developer.riotgames.com/)
+ *  - [Riot Sign On FAQ](https://beta.developer.riotgames.com/RSO-Riot-Sign-On)
+ *  - [Riot Sign On Google Docs Client Secret Example](https://docs.google.com/document/d/1_8i2PvPA3edFHIh1IwfO5vs5rcl04O62Xfj0o7zCP3c/edit?pli=1#heading=h.pwmsw8poieso)
+ *  - [Riot Sign On Google Docs JWT Example (Old)](https://docs.google.com/document/d/e/2PACX-1vTSthxkWOIqPFe8Xqqjv4Ona5pRa5W3X6bLg4I47X15gJjG9ae-HU5a0by7VIVLWdPMgB9fTr5gvQcY/pub)
  *
  * ### Notes
  *
- * By default, Auth.js assumes that the RSO provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- * 
- * Riot Sign On currently does not allow local development so you need to have a public domain to test it or create a proxy in your environment.
+ *  - By default, Auth.js assumes that the RSO provider is based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ *  - Riot Sign On currently does not allow local development so you need to have a public domain to test it or create a proxy in your environment.
+ *  - As of 05-05-2024 riot changed the default authentication method from jwt to client secret since they found this was a more effective standard.
  *
  * :::tip
  *
