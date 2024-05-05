@@ -79,3 +79,63 @@ app.use("/auth/*", ExpressAuth({ providers: [RSO] }))
 
   </Code.Express>
 </Code>
+
+#### How to get RSO Access
+
+- The be granted RSO access, the first step is to register an **Production** App in the
+  developer portal `https://developer.riotgames.com/`. Before requesting a production app
+  make sure you read `General Policies` and `Tournament Policies` carefully
+  (it's a popup when trying to create an app) and prepare yourself with it. Another note
+  - requesting RSO access with the intent of "testing" it out will result in a deny.
+- After the Application has been created and reviewed/approved by one of the developers
+  you will need to create another app in the beta developer portal.
+  Prepare yourself with the following information in order to complete the creation:
+  - Contact Emails
+  - Name of the company/service (Client Name)
+    - Will also appear on the RSO Login Page
+  - Logo of the company/service
+    - Should scale between **275x275** and **60x60**
+    - For best results, they recommend using a PNG file
+    - The logo will be displayed on both light and dark backgrounds
+  - Privacy policy URL
+  - Terms of service URL
+  - Redirect URLs (can be changed after creation (but not to localhost as explained below))
+    - A list of URLs you would like the RSO Client to redirect the players after login
+    - Typically the base callback url for AuthJS - NextJS: https://example.com/api/auth/callback/rso
+  - Post Logout Redirect URLs
+    - https://example.com/api/auth/signout
+
+In `.env` create the following entries:
+
+```
+RSO_CLIENT_ID=<copy Application (client) ID here>
+RSO_CLIENT_SECRET=<copy generated client secret value here>
+```
+
+<Callout type="warning">
+  Riot Sign On currently does not allow local development so you need to have a
+  public domain to test it or create a proxy in your environment.
+</Callout>
+
+### Signed-JWT Method
+
+<Callout type="warning">
+  As of 05-05-2024 every new created RSO App will be granted access with
+  `clientId` and `clientSecret` which means this provider is also configured for
+  it. If you have an older RSO App which uses the signed-jwt (for 100 years)
+  method you will need to edit this provider. A good example can be found here
+  https://gist.github.com/Henrik-3/d6b631fb7c61821bc16b17cd347a3811#using-tokens-endpoint-with-a-jwt-token-new-method
+</Callout>
+
+In `pages/api/auth/[...nextauth].js` find or add the `AzureAD` entries:
+
+```js
+import RSOProvider from "next-auth/providers/rso"
+
+providers: [
+  RSOProvider({
+    clientId: process.env.RSO_CLIENT_ID,
+    clientSecret: process.env.RSO_CLIENT_SECRET,
+  }),
+]
+```
