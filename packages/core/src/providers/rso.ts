@@ -98,15 +98,13 @@ export default function RSO<P extends RSOProfile>(
         const { provider, params: parameters, checks, client } = context;
         const { callbackUrl } = provider;
 
-        console.warn("Code: " + parameters.code);
-
         const tokenset = await client.grant({
           grant_type: "authorization_code",
           code: parameters.code,
           redirect_uri: callbackUrl,
           code_verifier: checks.code_verifier,
-          client_id: process.env.RSO_CLIENT_ID,
-          client_secret: process.env.RSO_CLIENT_SECRET,
+          client_id: provider.clientId,
+          client_secret: provider.clientSecret,
         });
 
         return { tokens: tokenset };
