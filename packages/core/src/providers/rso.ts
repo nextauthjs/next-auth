@@ -42,6 +42,8 @@ export interface RSOProfile extends Record<string, any> {
  *
  * By default, Auth.js assumes that the RSO provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ * 
+ * Riot Sign On currently does not allow local development so you need to have a public domain to test it or create a proxy in your environment.
  *
  * :::tip
  *
