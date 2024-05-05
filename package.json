@@ -240,8 +240,5 @@
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.5.1": "patches/@balazsorban__monorepo-release@0.5.1.patch"
     }
-  },
-  "dependencies": {
-    "v4-uuid": "^1.1.0"
   }
 }

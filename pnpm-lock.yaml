@@ -15,10 +15,6 @@ patchedDependencies:
 importers:
 
   .:
-    dependencies:
-      v4-uuid:
-        specifier: ^1.1.0
-        version: 1.1.0
     devDependencies:
       '@actions/core':
         specifier: ^1.10.0
