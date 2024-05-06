@@ -95,6 +95,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
