@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-# Init MyDQL container
+# Init MySQL container
 echo "Initializing container for MySQL tests"
 
 MYSQL_DATABASE=next-auth
