@@ -14,6 +14,7 @@ import {
 import type {
   Adapter,
   AdapterAccount,
+  AdapterAccountType,
   AdapterSession,
   AdapterUser,
   VerificationToken,
@@ -42,7 +43,7 @@ export function defineTables(
         userId: text("userId")
           .notNull()
           .references(() => usersTable.id, { onDelete: "cascade" }),
-        type: text("type").$type<AdapterAccount["type"]>().notNull(),
+        type: text("type").$type<AdapterAccountType>().notNull(),
         provider: text("provider").notNull(),
         providerAccountId: text("providerAccountId").notNull(),
         refresh_token: text("refresh_token"),
