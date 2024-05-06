@@ -40,10 +40,9 @@
     "kysely": "^0.26.1"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.3",
     "@types/pg": "^8.6.5",
-    "better-sqlite3": "^8.6.0",
     "kysely": "^0.24.2",
+    "libsql": "^0.3.18",
     "mysql2": "^3.9.7",
     "pg": "^8.10.0"
   }

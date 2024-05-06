@@ -392,18 +392,15 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@types/better-sqlite3':
-        specifier: ^7.6.3
-        version: 7.6.9
       '@types/pg':
         specifier: ^8.6.5
         version: 8.11.0
-      better-sqlite3:
-        specifier: ^8.6.0
-        version: 8.7.0
       kysely:
         specifier: ^0.24.2
         version: 0.24.2
+      libsql:
+        specifier: ^0.3.18
+        version: 0.3.18
       mysql2:
         specifier: ^3.9.7
         version: 3.9.7
