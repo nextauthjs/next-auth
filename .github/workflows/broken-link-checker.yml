@@ -19,7 +19,7 @@ jobs:
         id: vercel_preview_url
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          preview_url_regexp: "authjs.vercel.app"
+          preview_url_regexp: https.*\/(.*-authjs.vercel.app)
       - name: Install dependencies
         run: cd ./.github/broken-link-checker && pnpm install --ignore-workspace && pnpm build
       - name: Run link checker
@@ -27,4 +27,4 @@ jobs:
         id: broken-links
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERCEL_PREVIEW_URL: ${{ steps.vercel_preview_url.outputs.vercel_preview_url }}
+          VERCEL_PREVIEW_URL: https://${{ steps.vercel_preview_url.outputs.vercel_preview_url }}
