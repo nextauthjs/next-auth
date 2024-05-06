@@ -302,21 +302,18 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@types/better-sqlite3':
-        specifier: ^7.6.4
-        version: 7.6.9
       '@types/uuid':
         specifier: ^8.3.3
         version: 8.3.4
-      better-sqlite3:
-        specifier: ^9.4.0
-        version: 9.5.0
       drizzle-kit:
         specifier: ^0.20.17
         version: 0.20.17
       drizzle-orm:
         specifier: ^0.30.8
-        version: 0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.7)(postgres@3.4.3)
+        version: 0.30.8(mysql2@3.9.7)(postgres@3.4.3)
+      libsql:
+        specifier: ^0.3.18
+        version: 0.3.18
       mysql2:
         specifier: ^3.9.7
         version: 3.9.7
@@ -11305,14 +11302,6 @@ packages:
       prebuild-install: 7.1.1
     dev: true
 
-  /better-sqlite3@9.5.0:
-    resolution: {integrity: sha512-01qVcM4gPNwE+PX7ARNiHINwzVuD6nx0gdldaAAcu+MrzyIAukQ31ZDKEpzRO/CNA9sHpxoTZ8rdjoyAin4dyg==}
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      prebuild-install: 7.1.1
-    dev: true
-
   /better-sqlite3@9.6.0:
     resolution: {integrity: sha512-yR5HATnqeYNVnkaUTf4bOP2dJSnyhP4puJN/QPRyx4YkBEEUxib422n2XzPqDEHjQQqazoYoADdAm5vE15+dAQ==}
     requiresBuild: true
@@ -13159,7 +13148,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.8(@types/better-sqlite3@7.6.9)(better-sqlite3@9.5.0)(mysql2@3.9.7)(postgres@3.4.3):
+  /drizzle-orm@0.30.8(mysql2@3.9.7)(postgres@3.4.3):
     resolution: {integrity: sha512-9pBJA0IjnpPpzZ6s9jlS1CQAbKoBmbn2GJesPhXaVblAA/joOJ4AWWevYcqvLGj9SvThBAl7WscN8Zwgg5mnTw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -13239,8 +13228,6 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@types/better-sqlite3': 7.6.9
-      better-sqlite3: 9.5.0
       mysql2: 3.9.7
       postgres: 3.4.3
     dev: true
