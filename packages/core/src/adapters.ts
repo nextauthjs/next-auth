@@ -186,6 +186,14 @@ export interface AdapterUser extends User {
 }
 
 /**
+ * The type of account.
+ */
+export type AdapterAccountType = Extract<
+  ProviderType,
+  "oauth" | "oidc" | "email" | "webauthn"
+>
+
+/**
  * An account is a connection between a user and a provider.
  *
  * There are two types of accounts:
@@ -196,7 +204,7 @@ export interface AdapterUser extends User {
  */
 export interface AdapterAccount extends Account {
   userId: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
+  type: AdapterAccountType
 }
 
 /**
