@@ -1,7 +1,7 @@
 import { Callout } from "nextra/components"
 import { Code } from "@/components/Code"
 
-<img align="right" src="/img/providers/netlify.svg" height="64" width="64" />
+<img align="right" src="/img/providers/sailpoint.svg" height="64" width="64" />
 
 # SailPoint Identity Secure Cloud Provider
 
@@ -95,7 +95,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import SailPoint from "@auth/sveltekit/providers/sailpoint"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
@@ -103,14 +102,14 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       id: "identitySecureCloud",
       name: "Identity Secure Cloud",
       type: "oauth",
-      clientId: process.env.ISC_CLIENT_ID!,
-      clientSecret: process.env.ISC_CLIENT_SECRET!,
+      clientId: env.ISC_CLIENT_ID!,
+      clientSecret: env.ISC_CLIENT_SECRET!,
       authorization: {
-        url: `${process.env.ISC_BASE_URL!}/oauth/authorize`,
+        url: `${env.ISC_BASE_URL!}/oauth/authorize`,
         params: { scope: 'sp:scopes:all' },
       },
-      token: `${process.env.ISC_BASE_API_URL!}/oauth/token`,
-      userinfo: `${process.env.ISC_BASE_API_URL!}/oauth/userinfo`,
+      token: `${env.ISC_BASE_API_URL!}/oauth/token`,
+      userinfo: `${env.ISC_BASE_API_URL!}/oauth/userinfo`,
       profile(profile: IdentitySecureCloudProfile) {
         return {
             tenant: profile.tenant,
@@ -137,7 +136,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import SailPoint from "@auth/express/providers/sailpoint"
 
 app.use("/auth/*", ExpressAuth({ providers: [
   {
@@ -178,6 +176,7 @@ app.use("/auth/*", ExpressAuth({ providers: [
 ### Configuration for Refresh Token
 
 We can utilize callback functions to [rotate the refresh token](https://authjs.dev/guides/refresh-token-rotation), please find an example code below as a starting point: 
+Note: replace process.env with env while deploying Svelte.
 
 ```
 export const { handle, signIn, signOut } = SvelteKitAuth({
