@@ -21,11 +21,11 @@ export async function handler(request: NextRequest) {
 
   let backendUrl =
     process.env.THIRD_PARTY_API_EXAMPLE_BACKEND ??
-    "https://authjs-third-party-backend.authjs.dev/"
+    "https://authjs-third-party-backend.authjs.dev"
 
   let url = request.nextUrl.href.replace(request.nextUrl.origin, backendUrl)
   let result = await fetch(url, { headers, body: request.body })
-  console.log("fetched", result)
+
   return stripContentEncoding(result)
 }
 
