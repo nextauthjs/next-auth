@@ -36,7 +36,7 @@ https://example.com/auth/callback/identitySecureCloud
 
 ### Create OAuth Client
 
-Find your Identity Secure Cloud Tenant OAuth Information (can be retrieved under https://{tenant}.api.identitynow.com/oauth/info). Create OAuth Client ([guide](https://documentation.sailpoint.com/saas/help/common/api_keys.html?h=oauth+client#creating-an-api-key))with grant types: AUTHORIZATION_TOKEN and REFRESH_TOKEN, Redirect URL: Callback URL above,   select scopes: sp:scope:all. Note down the clientId and clientSecret.
+Find your Identity Secure Cloud Tenant OAuth Information which can be found at `https://{tenant}.api.identitynow.com/oauth/info`. Create an OAuth Client (following this [guide](https://documentation.sailpoint.com/saas/help/common/api_keys.html?h=oauth+client#creating-an-api-key)) with grant types: `AUTHORIZATION_TOKEN` and `REFRESH_TOKEN`. Redirect URL should match your version of the Callback URL above. Finally, select the scopes `sp:scope:all`. Note down the generated `clientId` and `clientSecret`.
 
 ### Environment Variables
 
