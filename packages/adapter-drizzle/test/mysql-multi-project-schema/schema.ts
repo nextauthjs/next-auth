@@ -1,4 +1,4 @@
-import type { AdapterAccount } from "@auth/core/adapters"
+import type { AdapterAccountType } from "@auth/core/adapters"
 import {
   int,
   mysqlTableCreator,
@@ -37,7 +37,7 @@ export const accounts = mysqlTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
-      .$type<AdapterAccount["type"]>()
+      .$type<AdapterAccountType>()
       .notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),

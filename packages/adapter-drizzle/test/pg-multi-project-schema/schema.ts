@@ -1,4 +1,4 @@
-import type { AdapterAccount } from "@auth/core/adapters"
+import type { AdapterAccountType } from "@auth/core/adapters"
 import {
   integer,
   pgTableCreator,
@@ -32,7 +32,7 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
