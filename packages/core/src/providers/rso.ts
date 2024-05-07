@@ -1,7 +1,7 @@
 /**
  * <div style={{backgroundColor: "#f05b5e", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Riot Sign On</b> integration.</span>
- * <a href="https://discord.com/">
+ * <a href="https://www.riotgames.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/riot-games.svg" height="48" width="48"/>
  * </a>
  * </div>
