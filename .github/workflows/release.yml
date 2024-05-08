@@ -82,7 +82,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -114,7 +114,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true' && github.repository == 'nextauthjs/next-auth'
         run: |
           pnpm exec playwright install --with-deps chromium
-      - name: Run Docker E2E
+      - name: Run E2E tests (Nextjs-Docker)
         continue-on-error: true
         if: false
         timeout-minutes: 15
@@ -162,15 +162,15 @@ jobs:
     environment: Production
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           # Please upvote https://github.com/orgs/community/discussions/13836
           token: ${{ secrets.GH_PAT }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: "pnpm"
       - name: Install dependencies
@@ -189,11 +189,11 @@ jobs:
     environment: Preview
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "pnpm"
@@ -228,11 +228,11 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "pnpm"
