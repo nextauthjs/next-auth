@@ -94,38 +94,48 @@ export function defineTables(
       })
     ) satisfies DefaultMySqlVerificationTokenTable)
 
+  const authenticatorsTable =
+    schema.authenticatorsTable ??
+    (mysqlTable("authenticator", {
+      id: varchar("id", { length: 255 }).notNull().primaryKey(),
+      credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+      userId: varchar("userId", { length: 255 })
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+      providerAccountId: varchar("providerAccountId", {
+        length: 255,
+      }).notNull(),
+      credentialPublicKey: varchar("credentialPublicKey", {
+        length: 255,
+      }).notNull(),
+      counter: int("counter").notNull(),
+      credentialDeviceType: varchar("credentialDeviceType", {
+        length: 255,
+      }).notNull(),
+      credentialBackedUp: boolean("credentialBackedUp").notNull(),
+      transports: varchar("transports", { length: 255 }),
+    }) satisfies DefaultMySqlAuthenticatorTable)
+
   return {
     usersTable,
     accountsTable,
     sessionsTable,
     verificationTokensTable,
+    authenticatorsTable,
   }
 }
-
-export const mysqlAuthenticatorsTable = mysqlTable("authenticator", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-  providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-  credentialPublicKey: varchar("credentialPublicKey", {
-    length: 255,
-  }).notNull(),
-  counter: int("counter").notNull(),
-  credentialDeviceType: varchar("credentialDeviceType", {
-    length: 255,
-  }).notNull(),
-  credentialBackedUp: boolean("credentialBackedUp").notNull(),
-  transports: varchar("transports", { length: 255 }),
-}) satisfies DefaultMySqlAuthenticatorTable
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
   schema?: DefaultMySqlSchema
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    defineTables(schema)
+  const {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
+    authenticatorsTable,
+  } = defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
@@ -358,8 +368,25 @@ export function MySqlDrizzleAdapter(
   }
 }
 
+type BaseAuthenticator = InferInsertModel<
+  ReturnType<typeof defineTables>["authenticatorsTable"]
+>
+type DrizzleAuthenticator = BaseAuthenticator &
+  Required<
+    Pick<
+      BaseAuthenticator,
+      | "userId"
+      | "providerAccountId"
+      | "counter"
+      | "credentialBackedUp"
+      | "credentialID"
+      | "credentialPublicKey"
+      | "credentialDeviceType"
+    >
+  >
+
 function fromDBAuthenticator(
-  authenticator: InferInsertModel<typeof mysqlAuthenticatorsTable>
+  authenticator: DrizzleAuthenticator
 ): AdapterAuthenticator {
   const { transports, id, ...other } = authenticator
 

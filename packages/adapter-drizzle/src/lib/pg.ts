@@ -91,34 +91,42 @@ export function defineTables(
       }
     ) satisfies DefaultPostgresVerificationTokenTable)
 
+  const authenticatorsTable =
+    schema.authenticatorsTable ??
+    (pgTable("authenticator", {
+      id: text("id").notNull().primaryKey(),
+      credentialID: text("credentialID").notNull().unique(),
+      userId: text("userId")
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+      providerAccountId: text("providerAccountId").notNull(),
+      credentialPublicKey: text("credentialPublicKey").notNull(),
+      counter: integer("counter").notNull(),
+      credentialDeviceType: text("credentialDeviceType").notNull(),
+      credentialBackedUp: boolean("credentialBackedUp").notNull(),
+      transports: text("transports"),
+    }) satisfies DefaultPostgresAuthenticatorTable)
+
   return {
     usersTable,
     accountsTable,
     sessionsTable,
     verificationTokensTable,
+    authenticatorsTable,
   }
 }
-
-export const postgresAuthenticatorsTable = pgTable("authenticator", {
-  id: text("id").notNull().primaryKey(),
-  credentialID: text("credentialID").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
-  providerAccountId: text("providerAccountId").notNull(),
-  credentialPublicKey: text("credentialPublicKey").notNull(),
-  counter: integer("counter").notNull(),
-  credentialDeviceType: text("credentialDeviceType").notNull(),
-  credentialBackedUp: boolean("credentialBackedUp").notNull(),
-  transports: text("transports"),
-}) satisfies DefaultPostgresAuthenticatorTable
 
 export function PostgresDrizzleAdapter(
   client: PgDatabase<QueryResultHKT, any>,
   schema?: DefaultPostgresSchema
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    defineTables(schema)
+  const {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
+    authenticatorsTable,
+  } = defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
@@ -315,8 +323,25 @@ export function PostgresDrizzleAdapter(
   }
 }
 
+type BaseAuthenticator = InferInsertModel<
+  ReturnType<typeof defineTables>["authenticatorsTable"]
+>
+type DrizzleAuthenticator = BaseAuthenticator &
+  Required<
+    Pick<
+      BaseAuthenticator,
+      | "userId"
+      | "providerAccountId"
+      | "counter"
+      | "credentialBackedUp"
+      | "credentialID"
+      | "credentialPublicKey"
+      | "credentialDeviceType"
+    >
+  >
+
 function fromDBAuthenticator(
-  authenticator: InferInsertModel<typeof postgresAuthenticatorsTable>
+  authenticator: DrizzleAuthenticator
 ): AdapterAuthenticator {
   const { transports, id, ...other } = authenticator
 

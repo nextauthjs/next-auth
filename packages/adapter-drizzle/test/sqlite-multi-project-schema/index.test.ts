@@ -1,7 +1,13 @@
-import { and, eq } from "drizzle-orm"
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
-import { db, accounts, sessions, users, verificationTokens } from "./schema"
+import {
+  db,
+  accounts,
+  sessions,
+  users,
+  verificationTokens,
+  authenticators,
+} from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"
 
@@ -11,7 +17,7 @@ runBasicTests({
     accountsTable: accounts,
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
-    authenticatorsTable: authenticators
+    authenticatorsTable: authenticators,
   }),
   fixtures,
   db: {

@@ -6,6 +6,7 @@ import {
   sessionsTable as sessions,
   usersTable as users,
   verificationTokensTable as verificationTokens,
+  authenticatorsTable as authenticators,
 } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"

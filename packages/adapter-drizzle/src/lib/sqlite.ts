@@ -84,36 +84,44 @@ export function defineTables(
       })
     ) satisfies DefaultSQLiteVerificationTokenTable)
 
+  const authenticatorsTable =
+    schema.authenticatorsTable ??
+    (sqliteTable("authenticator", {
+      id: text("id").notNull().primaryKey(),
+      credentialID: text("credentialID").notNull().unique(),
+      userId: text("userId")
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+      providerAccountId: text("providerAccountId").notNull(),
+      credentialPublicKey: text("credentialPublicKey").notNull(),
+      counter: integer("counter").notNull(),
+      credentialDeviceType: text("credentialDeviceType").notNull(),
+      credentialBackedUp: integer("credentialBackedUp", {
+        mode: "boolean",
+      }).notNull(),
+      transports: text("transports"),
+    }) satisfies DefaultSQLiteAuthenticatorTable)
+
   return {
     usersTable,
     accountsTable,
     sessionsTable,
     verificationTokensTable,
+    authenticatorsTable,
   }
 }
-
-export const sqliteAuthenticatorsTable = sqliteTable("authenticator", {
-  id: text("id").notNull().primaryKey(),
-  credentialID: text("credentialID").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
-  providerAccountId: text("providerAccountId").notNull(),
-  credentialPublicKey: text("credentialPublicKey").notNull(),
-  counter: integer("counter").notNull(),
-  credentialDeviceType: text("credentialDeviceType").notNull(),
-  credentialBackedUp: integer("credentialBackedUp", {
-    mode: "boolean",
-  }).notNull(),
-  transports: text("transports"),
-}) satisfies DefaultSQLiteAuthenticatorTable
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<"sync" | "async", any, any>,
   schema?: DefaultSQLiteSchema
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    defineTables(schema)
+  const {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
+    authenticatorsTable,
+  } = defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
@@ -319,8 +327,25 @@ export function SQLiteDrizzleAdapter(
   }
 }
 
+type BaseAuthenticator = InferInsertModel<
+  ReturnType<typeof defineTables>["authenticatorsTable"]
+>
+export type DrizzleAuthenticator = BaseAuthenticator &
+  Required<
+    Pick<
+      BaseAuthenticator,
+      | "userId"
+      | "providerAccountId"
+      | "counter"
+      | "credentialBackedUp"
+      | "credentialID"
+      | "credentialPublicKey"
+      | "credentialDeviceType"
+    >
+  >
+
 function fromDBAuthenticator(
-  authenticator: InferInsertModel<typeof sqliteAuthenticatorsTable>
+  authenticator: DrizzleAuthenticator
 ): AdapterAuthenticator {
   const { transports, id, ...other } = authenticator
 

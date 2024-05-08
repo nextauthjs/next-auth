@@ -1,5 +1,6 @@
 import type { AdapterAccountType } from "@auth/core/adapters"
 import {
+  boolean,
   integer,
   pgTableCreator,
   primaryKey,

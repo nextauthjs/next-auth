@@ -8,6 +8,7 @@ export const {
   accountsTable,
   sessionsTable,
   verificationTokensTable,
+  authenticatorsTable,
 } = defineTables({})
 
 const connectionString = "postgres://nextauth:nextauth@127.0.0.1:5432/nextauth"
