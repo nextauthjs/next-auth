@@ -46,6 +46,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 
 ```ts filename="schema.ts"
 import {
+  boolean
   timestamp,
   pgTable,
   text,
@@ -114,6 +115,20 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 )
+
+export const authenticators = pgTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+  transports: text("transports"),
+})
 ```
 
 </Accordion>
@@ -122,6 +137,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 
 ```ts filename="schema.ts"
 import {
+  boolean,
   int,
   timestamp,
   mysqlTable,
@@ -199,6 +215,24 @@ export const verificationTokens = mysqlTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 )
+
+export const authenticators = pgTable("authenticator", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+  credentialPublicKey: varchar("credentialPublicKey", {
+    length: 255,
+  }).notNull(),
+  counter: int("counter").notNull(),
+  credentialDeviceType: varchar("credentialDeviceType", {
+    length: 255,
+  }).notNull(),
+  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+  transports: varchar("transports", { length: 255 }),
+})
 ```
 
 </Accordion>
@@ -270,6 +304,22 @@ export const verificationTokens = sqliteTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 )
+
+export const authenticators = sqliteTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: integer("credentialBackedUp", {
+    mode: "boolean",
+  }).notNull(),
+  transports: text("transports"),
+})
 ```
 
 </Accordion>
@@ -317,7 +367,7 @@ const app = express()
 
 app.set("trust proxy", true)
 app.use(
-  "/auth/*",
+  "/auth/",
   ExpressAuth({
     providers: [],
     adapter: DrizzleAdapter(db),

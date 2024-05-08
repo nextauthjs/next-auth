@@ -152,6 +152,26 @@ export function SQLiteDrizzleAdapter(
 
       return result ?? null
     },
+    async createSession(data: {
+      sessionToken: string
+      userId: string
+      expires: Date
+    }) {
+      return await client.insert(sessionsTable).values(data).returning().get()
+    },
+    async getSessionAndUser(sessionToken: string) {
+      const result = await client
+        .select({
+          session: sessionsTable,
+          user: usersTable,
+        })
+        .from(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
+        .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
+        .get()
+
+      return result ?? null
+    },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
         throw new Error("No user id.")
@@ -170,8 +190,20 @@ export function SQLiteDrizzleAdapter(
 
       return result
     },
-    async deleteUser(id: string) {
-      await client.delete(usersTable).where(eq(usersTable.id, id)).run()
+    async updateSession(
+      data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+    ) {
+      const result = await client
+        .update(sessionsTable)
+        .set(data)
+        .where(eq(sessionsTable.sessionToken, data.sessionToken))
+        .returning()
+        .get()
+
+      return result ?? null
+    },
+    async linkAccount(data: AdapterAccount) {
+      await client.insert(accountsTable).values(data).run()
     },
     async getUserByAccount(
       account: Pick<AdapterAccount, "provider" | "providerAccountId">
@@ -193,8 +225,35 @@ export function SQLiteDrizzleAdapter(
 
       return result?.user ?? null
     },
-    async linkAccount(data: AdapterAccount) {
-      await client.insert(accountsTable).values(data).run()
+    async deleteSession(sessionToken: string) {
+      await client
+        .delete(sessionsTable)
+        .where(eq(sessionsTable.sessionToken, sessionToken))
+        .run()
+    },
+    async createVerificationToken(data: VerificationToken) {
+      return await client
+        .insert(verificationTokensTable)
+        .values(data)
+        .returning()
+        .get()
+    },
+    async useVerificationToken(params: { identifier: string; token: string }) {
+      const result = await client
+        .delete(verificationTokensTable)
+        .where(
+          and(
+            eq(verificationTokensTable.identifier, params.identifier),
+            eq(verificationTokensTable.token, params.token)
+          )
+        )
+        .returning()
+        .get()
+
+      return result ?? null
+    },
+    async deleteUser(id: string) {
+      await client.delete(usersTable).where(eq(usersTable.id, id)).run()
     },
     async unlinkAccount(
       params: Pick<AdapterAccount, "provider" | "providerAccountId">
@@ -209,121 +268,38 @@ export function SQLiteDrizzleAdapter(
         )
         .run()
     },
-    async getAccount(providerAccountId: string, provider: string) {
+    async createAuthenticator(data: AdapterAuthenticator) {
+      const user = await client
+        .insert(authenticatorsTable)
+        .values({ ...data, id: crypto.randomUUID() })
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+
+      return user
+    },
+    async getAuthenticator(credentialID: string) {
+      const authenticator = await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
+      return authenticator ? authenticator : null
+    },
+    async listAuthenticatorsByUserId(userId: string) {
       return await client
         .select()
-        .from(accountsTable)
-        .where(
-          and(
-            eq(accountsTable.providerAccountId, providerAccountId),
-            eq(accountsTable.provider, provider)
-          )
-        )
-        .then((res) => (res[0] as AdapterAccount) ?? null)
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.userId, userId))
+        .then((res) => res.map(fromDBAuthenticator))
     },
-    ...(sessionsTable && {
-      async createSession(data: {
-        sessionToken: string
-        userId: string
-        expires: Date
-      }) {
-        return await client.insert(sessionsTable).values(data).returning().get()
-      },
-      async getSessionAndUser(sessionToken: string) {
-        const result = await client
-          .select({
-            session: sessionsTable,
-            user: usersTable,
-          })
-          .from(sessionsTable)
-          .where(eq(sessionsTable.sessionToken, sessionToken))
-          .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-          .get()
-
-        return result ?? null
-      },
-      async updateSession(
-        data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
-      ) {
-        const result = await client
-          .update(sessionsTable)
-          .set(data)
-          .where(eq(sessionsTable.sessionToken, data.sessionToken))
-          .returning()
-          .get()
-
-        return result ?? null
-      },
-      async deleteSession(sessionToken: string) {
-        await client
-          .delete(sessionsTable)
-          .where(eq(sessionsTable.sessionToken, sessionToken))
-          .run()
-      },
-    }),
-    ...(verificationTokensTable && {
-      async createVerificationToken(data: VerificationToken) {
-        return await client
-          .insert(verificationTokensTable)
-          .values(data)
-          .returning()
-          .get()
-      },
-      async useVerificationToken(params: {
-        identifier: string
-        token: string
-      }) {
-        const result = await client
-          .delete(verificationTokensTable)
-          .where(
-            and(
-              eq(verificationTokensTable.identifier, params.identifier),
-              eq(verificationTokensTable.token, params.token)
-            )
-          )
-          .returning()
-          .get()
-
-        return result ?? null
-      },
-    }),
-    ...(authenticatorsTable && {
-      async createAuthenticator(data: AdapterAuthenticator) {
-        const user = await client
-          .insert(authenticatorsTable)
-          .values({ ...data, id: crypto.randomUUID() })
-          .returning()
-          .then((res) => fromDBAuthenticator(res[0]) ?? null)
-
-        return user
-      },
-      async getAuthenticator(credentialID: string) {
-        const authenticator = await client
-          .select()
-          .from(authenticatorsTable)
-          .where(eq(authenticatorsTable.credentialID, credentialID))
-          .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
-        return authenticator ? authenticator : null
-      },
-      async listAuthenticatorsByUserId(userId: string) {
-        return await client
-          .select()
-          .from(authenticatorsTable)
-          .where(eq(authenticatorsTable.userId, userId))
-          .then((res) => res.map(fromDBAuthenticator))
-      },
-      async updateAuthenticatorCounter(
-        credentialID: string,
-        newCounter: number
-      ) {
-        return await client
-          .update(authenticatorsTable)
-          .set({ counter: newCounter })
-          .where(eq(authenticatorsTable.credentialID, credentialID))
-          .returning()
-          .then((res) => fromDBAuthenticator(res[0]) ?? null)
-      },
-    }),
+    async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
+      return await client
+        .update(authenticatorsTable)
+        .set({ counter: newCounter })
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .returning()
+        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+    },
   }
 }
 
