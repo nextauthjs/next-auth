@@ -2,10 +2,10 @@ import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import {
   db,
-  postgresAccountsTable as accounts,
-  postgresSessionsTable as sessions,
-  postgresUsersTable as users,
-  postgresVerificationTokensTable as verificationTokens,
+  accountsTable as accounts,
+  sessionsTable as sessions,
+  usersTable as users,
+  verificationTokensTable as verificationTokens,
 } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"

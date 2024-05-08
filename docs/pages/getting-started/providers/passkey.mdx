@@ -25,7 +25,7 @@ Support for more frameworks and adapters are coming soon.{" "}
 ### Install peer dependencies
 
 ```bash npm2yarn
-npm install @simplewebauthn/browser @simplewebauthn/server
+npm install @simplewebauthn/browser@9.0.1 @simplewebauthn/server@9.0.3
 ```
 
 The `@simplewebauthn/browser` peer dependency is only required for custom signin pages. If you're using the Auth.js default pages, you can skip installing that peer dependency.
@@ -212,3 +212,21 @@ export default function Login() {
 ## Options
 
 You can find all of the Passkeys provider options under the [API reference](/reference/core/providers/webauthn#webauthnconfig).
+
+## Notes
+
+- If you only pass a field named `username`, like below. 1Password **will not** offer to save new Passkeys in your login form.
+
+```ts filename="@/auth.ts" /username/
+providers = [
+  Passkey({
+    formFields: {
+      username: {
+        label: "Username",
+        required: true,
+        autocomplete: "webauthn username",
+      },
+    },
+  }),
+]
+```

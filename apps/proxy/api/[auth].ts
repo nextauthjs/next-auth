@@ -9,7 +9,7 @@ import Discord from "@auth/core/providers/discord"
 import Dropbox from "@auth/core/providers/dropbox"
 import Facebook from "@auth/core/providers/facebook"
 import GitHub from "@auth/core/providers/github"
-import Gitlab from "@auth/core/providers/gitlab"
+import GitLab from "@auth/core/providers/gitlab"
 import Google from "@auth/core/providers/google"
 import Hubspot from "@auth/core/providers/hubspot"
 import Keycloak from "@auth/core/providers/keycloak"
@@ -46,7 +46,7 @@ const authConfig: AuthConfig = {
     Dropbox,
     Facebook,
     GitHub,
-    Gitlab,
+    GitLab,
     Google,
     Hubspot,
     Keycloak,

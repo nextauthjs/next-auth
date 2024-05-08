@@ -1,11 +1,13 @@
 import { drizzle } from "drizzle-orm/mysql2"
 import { createPool } from "mysql2"
-export {
-  mysqlUsersTable,
-  mysqlAccountsTable,
-  mysqlSessionsTable,
-  mysqlVerificationTokensTable,
-} from "../../src/lib/mysql"
+import { defineTables } from "../../src/lib/mysql"
+
+export const {
+  usersTable,
+  accountsTable,
+  sessionsTable,
+  verificationTokensTable,
+} = defineTables({})
 
 const poolConnection = createPool({
   host: "localhost",

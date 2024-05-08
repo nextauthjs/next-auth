@@ -9,7 +9,7 @@ import Discord from "@auth/sveltekit/providers/discord"
 import Dropbox from "@auth/sveltekit/providers/dropbox"
 import Facebook from "@auth/sveltekit/providers/facebook"
 import GitHub from "@auth/sveltekit/providers/github"
-import Gitlab from "@auth/sveltekit/providers/gitlab"
+import GitLab from "@auth/sveltekit/providers/gitlab"
 import Google from "@auth/sveltekit/providers/google"
 import Hubspot from "@auth/sveltekit/providers/hubspot"
 import Keycloak from "@auth/sveltekit/providers/keycloak"
@@ -48,7 +48,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Dropbox,
     Facebook,
     GitHub,
-    Gitlab,
+    GitLab,
     Google,
     Hubspot,
     Keycloak,

@@ -15,86 +15,104 @@ import {
 import type {
   Adapter,
   AdapterAccount,
+  AdapterAccountType,
   AdapterSession,
   AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
 
-export const mysqlUsersTable = mysqlTable("user", {
-  id: varchar("id", { length: 255 })
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
-  image: varchar("image", { length: 255 }),
-}) satisfies DefaultMySqlUsersTable
+export function defineTables(
+  schema: Partial<DefaultMySqlSchema> = {}
+): Required<DefaultMySqlSchema> {
+  const usersTable =
+    schema.usersTable ??
+    (mysqlTable("user", {
+      id: varchar("id", { length: 255 })
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+      name: varchar("name", { length: 255 }),
+      email: varchar("email", { length: 255 }).notNull(),
+      emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
+      image: varchar("image", { length: 255 }),
+    }) satisfies DefaultMySqlUsersTable)
 
-export const mysqlAccountsTable = mysqlTable(
-  "account",
-  {
-    userId: varchar("userId", { length: 255 })
-      .notNull()
-      .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 })
-      .$type<AdapterAccount["type"]>()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-    refresh_token: varchar("refresh_token", { length: 255 }),
-    access_token: varchar("access_token", { length: 255 }),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
-    id_token: varchar("id_token", { length: 2048 }),
-    session_state: varchar("session_state", { length: 255 }),
-  },
-  (account) => ({
-    compositePk: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  })
-) satisfies DefaultMySqlAccountsTable
+  const accountsTable =
+    schema.accountsTable ??
+    (mysqlTable(
+      "account",
+      {
+        userId: varchar("userId", { length: 255 })
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        type: varchar("type", { length: 255 })
+          .$type<AdapterAccountType>()
+          .notNull(),
+        provider: varchar("provider", { length: 255 }).notNull(),
+        providerAccountId: varchar("providerAccountId", {
+          length: 255,
+        }).notNull(),
+        refresh_token: varchar("refresh_token", { length: 255 }),
+        access_token: varchar("access_token", { length: 255 }),
+        expires_at: int("expires_at"),
+        token_type: varchar("token_type", { length: 255 }),
+        scope: varchar("scope", { length: 255 }),
+        id_token: varchar("id_token", { length: 2048 }),
+        session_state: varchar("session_state", { length: 255 }),
+      },
+      (account) => ({
+        compositePk: primaryKey({
+          columns: [account.provider, account.providerAccountId],
+        }),
+      })
+    ) satisfies DefaultMySqlAccountsTable)
 
-export const mysqlSessionsTable = mysqlTable("session", {
-  sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => mysqlUsersTable.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-}) satisfies DefaultMySqlSessionsTable
+  const sessionsTable =
+    schema.sessionsTable ??
+    (mysqlTable("session", {
+      sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
+      userId: varchar("userId", { length: 255 })
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+      expires: timestamp("expires", { mode: "date" }).notNull(),
+    }) satisfies DefaultMySqlSessionsTable)
 
-export const mysqlVerificationTokensTable = mysqlTable(
-  "verificationToken",
-  {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (vt) => ({
-    compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
-) satisfies DefaultMySqlVerificationTokenTable
+  const verificationTokensTable =
+    schema.verificationTokensTable ??
+    (mysqlTable(
+      "verificationToken",
+      {
+        identifier: varchar("identifier", { length: 255 }).notNull(),
+        token: varchar("token", { length: 255 }).notNull(),
+        expires: timestamp("expires", { mode: "date" }).notNull(),
+      },
+      (vt) => ({
+        compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+      })
+    ) satisfies DefaultMySqlVerificationTokenTable)
+
+  return {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
+  }
+}
 
 export function MySqlDrizzleAdapter(
   client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
-  schema: DefaultMySqlSchema = {
-    usersTable: mysqlUsersTable,
-    accountsTable: mysqlAccountsTable,
-    sessionsTable: mysqlSessionsTable,
-    verificationTokensTable: mysqlVerificationTokensTable,
-  }
+  schema?: DefaultMySqlSchema
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    schema
+    defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
+      const { id, ...insertData } = data
       const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
 
       await client
         .insert(usersTable)
-        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .values(hasDefaultId ? insertData : { ...insertData, id })
 
       return client
         .select()
@@ -442,6 +460,6 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
 export type DefaultMySqlSchema = {
   usersTable: DefaultMySqlUsersTable
   accountsTable: DefaultMySqlAccountsTable
-  sessionsTable: DefaultMySqlSessionsTable
-  verificationTokensTable: DefaultMySqlVerificationTokenTable
+  sessionsTable?: DefaultMySqlSessionsTable
+  verificationTokensTable?: DefaultMySqlVerificationTokenTable
 }
