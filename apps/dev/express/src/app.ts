@@ -56,7 +56,7 @@ app.get(
   authenticatedUser,
   async (_req: Request, res: Response) => {
     res.json(res.locals.session)
-  },
+  }
 )
 
 app.get("/", async (_req: Request, res: Response) => {

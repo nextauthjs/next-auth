@@ -106,14 +106,14 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       const result = supportsReturning
         ? query.returningAll().executeTakeFirstOrThrow()
         : query
-          .executeTakeFirstOrThrow()
-          .then(() =>
-            db
-              .selectFrom("User")
-              .selectAll()
-              .where("id", "=", id)
-              .executeTakeFirstOrThrow()
-          )
+            .executeTakeFirstOrThrow()
+            .then(() =>
+              db
+                .selectFrom("User")
+                .selectAll()
+                .where("id", "=", id)
+                .executeTakeFirstOrThrow()
+            )
       return from(await result)
     },
     async deleteUser(userId) {
@@ -162,12 +162,12 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirstOrThrow()
         : await query.executeTakeFirstOrThrow().then(async () => {
-          return await db
-            .selectFrom("Session")
-            .selectAll()
-            .where("Session.sessionToken", "=", sessionData.sessionToken)
-            .executeTakeFirstOrThrow()
-        })
+            return await db
+              .selectFrom("Session")
+              .selectAll()
+              .where("Session.sessionToken", "=", sessionData.sessionToken)
+              .executeTakeFirstOrThrow()
+          })
       return from(result)
     },
     async deleteSession(sessionToken) {
@@ -189,14 +189,14 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
       const result = supportsReturning
         ? await query.returningAll().executeTakeFirst()
         : await db
-          .selectFrom("VerificationToken")
-          .selectAll()
-          .where("token", "=", token)
-          .executeTakeFirst()
-          .then(async (res) => {
-            await query.executeTakeFirst()
-            return res
-          })
+            .selectFrom("VerificationToken")
+            .selectAll()
+            .where("token", "=", token)
+            .executeTakeFirst()
+            .then(async (res) => {
+              await query.executeTakeFirst()
+              return res
+            })
       if (!result) return null
       return from(result)
     },
@@ -211,7 +211,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
  * the second generic argument. The generated types will be used, and
  * `KyselyAuth` will only verify that the correct fields exist.
  */
-export class KyselyAuth<DB extends T, T = Database> extends Kysely<DB> { }
+export class KyselyAuth<DB extends T, T = Database> extends Kysely<DB> {}
 
 export type Codegen = {
   [K in keyof Database]: { [J in keyof Database[K]]: unknown }

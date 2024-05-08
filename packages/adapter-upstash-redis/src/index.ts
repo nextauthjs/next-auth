@@ -201,9 +201,9 @@ export function UpstashRedisAdapter(
     async createVerificationToken(verificationToken) {
       await setObjectAsJson(
         verificationTokenKeyPrefix +
-        verificationToken.identifier +
-        ":" +
-        verificationToken.token,
+          verificationToken.identifier +
+          ":" +
+          verificationToken.token,
         verificationToken
       )
       return verificationToken

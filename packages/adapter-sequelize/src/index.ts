@@ -30,16 +30,16 @@ export { defaultModels as models }
 //@ts-expect-error
 interface AccountInstance
   extends Model<AdapterAccount, Partial<AdapterAccount>>,
-  AdapterAccount { }
+    AdapterAccount {}
 interface UserInstance
   extends Model<AdapterUser, Partial<AdapterUser>>,
-  AdapterUser { }
+    AdapterUser {}
 interface SessionInstance
   extends Model<AdapterSession, Partial<AdapterSession>>,
-  AdapterSession { }
+    AdapterSession {}
 interface VerificationTokenInstance
   extends Model<VerificationToken, Partial<VerificationToken>>,
-  VerificationToken { }
+    VerificationToken {}
 
 /** This is the interface of the Sequelize adapter options. */
 export interface SequelizeAdapterOptions {

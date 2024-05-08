@@ -20,7 +20,7 @@ import type { Adapter } from "@auth/core/adapters"
 /**
  * This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument.
  **/
-export interface Neo4jOptions extends Session { }
+export interface Neo4jOptions extends Session {}
 
 export function Neo4jAdapter(session: Session): Adapter {
   const { read, write } = client(session)
