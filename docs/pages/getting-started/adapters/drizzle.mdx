@@ -54,7 +54,7 @@ import {
 } from "drizzle-orm/pg-core"
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
-import type { AdapterAccountType } from "@auth/core/adapters"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
 const pool = postgres(connectionString, { max: 1 })
@@ -130,7 +130,7 @@ import {
 } from "drizzle-orm/mysql-core"
 import mysql from "mysql2/promise"
 import { drizzle } from "drizzle-orm/mysql2"
-import type { AdapterAccountType } from "@auth/core/adapters"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 export const connection = await mysql.createConnection({
   host: "host",
@@ -209,7 +209,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import type { AdapterAccountType } from "@auth/core/adapters"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 const client = createClient({
   url: "DATABASE_URL",
@@ -327,6 +327,30 @@ app.use(
 
 </Code.Express>
 </Code>
+
+#### Passing your own Schemas
+
+If you want to use your own tables, you can pass them as a second argument to `DrizzleAdapter`.
+
+- The `sessionsTable` is optional and only required if you're using the database session strategy.
+- The `verificationTokensTable` is optional and only required if you're using a Magic Link provider.
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db, accounts, sessions, users, verificationTokens } from "./schema"
+
+export const { handlers, auth } = NextAuth({
+  adapter: DrizzleAdapter(db, {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }),
+  providers: [Google],
+})
+```
 
 ### Migrating your database
 
