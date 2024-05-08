@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  authjs-docker-test:
+    environment:
+      - TEST_KEYCLOAK_USERNAME
+      - TEST_KEYCLOAK_PASSWORD
+      - AUTH_KEYCLOAK_ID
+      - AUTH_KEYCLOAK_SECRET
+      - AUTH_KEYCLOAK_ISSUER
+      - AUTH_SECRET="MohY0/2zSQw/psWEnejC2ka3Al0oifvY4YjOkUaFfnI="
+      - AUTH_URL=http://localhost:3000/auth
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
