@@ -14,7 +14,7 @@ docker run -d --rm \
   mysql:8 \
   --default-authentication-plugin=mysql_native_password
 
-echo "Waiting 15s for db to start..." && sleep 15
+echo "Waiting 20s for db to start..." && sleep 20
 
 # Push schema and seed
 drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
