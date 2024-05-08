@@ -367,7 +367,7 @@ const app = express()
 
 app.set("trust proxy", true)
 app.use(
-  "/auth/",
+  "/auth/*",
   ExpressAuth({
     providers: [],
     adapter: DrizzleAdapter(db),
