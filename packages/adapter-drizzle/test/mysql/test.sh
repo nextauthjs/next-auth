@@ -14,7 +14,7 @@ docker run -d --rm \
   mysql:8 \
   --default-authentication-plugin=mysql_native_password
 
-echo "Waiting 15s for db to start..." && sleep 15
+echo "Waiting 30s for db to start..." && sleep 30
 
 # Generate Migration from Schema
 drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
