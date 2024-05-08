@@ -2,10 +2,10 @@ import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import {
   db,
-  mysqlSessionsTable as sessions,
-  mysqlVerificationTokensTable as verificationTokens,
-  mysqlAccountsTable as accounts,
-  mysqlUsersTable as users,
+  sessionsTable as sessions,
+  verificationTokensTable as verificationTokens,
+  accountsTable as accounts,
+  usersTable as users,
 } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"

@@ -83,11 +83,10 @@ import type { Adapter } from "@auth/core/adapters"
  *   primaryKey,
  *  integer
  * } from "drizzle-orm/pg-core"
- * import type { AdapterAccount } from '@auth/core/adapters'
- * import { randomUUID } from "crypto"
+ * import type { AdapterAccountType } from '@auth/core/adapters'
  *
  * export const users = pgTable("user", {
- *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+ *  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
  *  name: text("name"),
  *  email: text("email").notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -100,7 +99,7 @@ import type { Adapter } from "@auth/core/adapters"
  *   userId: text("userId")
  *     .notNull()
  *     .references(() => users.id, { onDelete: "cascade" }),
- *   type: text("type").notNull(),
+ *   type: text("type").$type<AdapterAccountType>().notNull(),
  *   provider: text("provider").notNull(),
  *   providerAccountId: text("providerAccountId").notNull(),
  *   refresh_token: text("refresh_token"),
@@ -149,10 +148,10 @@ import type { Adapter } from "@auth/core/adapters"
  *  primaryKey,
  *  varchar,
  * } from "drizzle-orm/mysql-core"
- * import type { AdapterAccount } from "@auth/core/adapters"
+ * import type { AdapterAccountType } from "@auth/core/adapters"
  *
  * export const users = mysqlTable("user", {
- *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => randomUUID()),
+ *  id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
  *  name: varchar("name", { length: 255 }),
  *  email: varchar("email", { length: 255 }).notNull(),
  *  emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
@@ -165,7 +164,7 @@ import type { Adapter } from "@auth/core/adapters"
  *     userId: varchar("userId", { length: 255 })
  *        .notNull()
  *        .references(() => users.id, { onDelete: "cascade" }),
- *     type: varchar("type", { length: 255 }).notNull(),
+ *     type: varchar("type", { length: 255 }).$type<AdapterAccountType>().notNull(),
  *     provider: varchar("provider", { length: 255 }).notNull(),
  *     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
  *     refresh_token: varchar("refresh_token", { length: 255 }),
@@ -208,10 +207,10 @@ import type { Adapter } from "@auth/core/adapters"
  *
  * ```ts title="schema.ts"
  * import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
- * import type { AdapterAccount } from "@auth/core/adapters"
+ * import type { AdapterAccountType } from "@auth/core/adapters"
  *
  * export const users = sqliteTable("user", {
- *  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+ *  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
  *  name: text("name"),
  *  email: text("email").notNull(),
  *  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
@@ -224,7 +223,7 @@ import type { Adapter } from "@auth/core/adapters"
  *    userId: text("userId")
  *      .notNull()
  *      .references(() => users.id, { onDelete: "cascade" }),
- *    type: text("type").notNull(),
+ *    type: text("type").$type<AdapterAccountType>().notNull(),
  *    provider: text("provider").notNull(),
  *    providerAccountId: text("providerAccountId").notNull(),
  *    refresh_token: text("refresh_token"),
