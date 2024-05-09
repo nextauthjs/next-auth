@@ -116,10 +116,9 @@ jobs:
           pnpm exec playwright install --with-deps chromium
       - name: Run E2E tests (Nextjs-Docker)
         continue-on-error: true
-        if: false
         timeout-minutes: 15
         run: |
-          cd apps/examples/nextjs-docker && pnpm test:docker
+          cd apps/examples/nextjs && pnpm test
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
@@ -129,7 +128,6 @@ jobs:
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
       - name: Run E2E tests
-        continue-on-error: true # TODO: Make this less flakey
         if: github.repository == 'nextauthjs/next-auth'
         timeout-minutes: 15
         run: |
@@ -143,6 +141,7 @@ jobs:
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
       - uses: actions/upload-artifact@v4
+        if: failure()
         name: Upload Playwright artifacts
         with:
           name: playwright-traces
