@@ -9,7 +9,7 @@ export const {
   verificationTokensTable,
 } = defineTables({})
 
-const connectionString = "postgres://nextauth:nextauth@localhost:5432/nextauth"
+const connectionString = "postgres://nextauth:nextauth@127.0.0.1:5432/nextauth"
 const sql = postgres(connectionString)
 
 export const db = drizzle(sql)
