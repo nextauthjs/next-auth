@@ -8,7 +8,7 @@
   "homepage": "https://next-auth-example.vercel.app",
   "scripts": {
     "dev": "next",
-    "test": "./test-docker.sh",
+    "test:docker": "./test-docker.sh",
     "build": "next build",
     "start": "next start"
   },
