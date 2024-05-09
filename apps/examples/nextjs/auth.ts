@@ -73,16 +73,16 @@ export const config = {
     Zoom,
     process.env.TEST_DOCKER
       ? Credentials({
-        credentials: { password: { label: "Password", type: "password" } },
-        authorize(c) {
-          if (c.password !== "password") return null
-          return {
-            id: "test",
-            name: "Test User",
-            email: "test@example.com",
-          }
-        },
-      })
+          credentials: { password: { label: "Password", type: "password" } },
+          authorize(c) {
+            if (c.password !== "password") return null
+            return {
+              id: "test",
+              name: "Test User",
+              email: "test@example.com",
+            }
+          },
+        })
       : undefined,
   ].filter(Boolean) as Provider[],
   basePath: "/auth",
