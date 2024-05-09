@@ -18,7 +18,6 @@ echo "Waiting 10s for db to start..." && sleep 10
 
 # Push schema and seed
 drizzle-kit generate:mysql --config=./test/mysql-multi-project-schema/drizzle.config.ts
-NODE_OPTIONS='--import tsx'
 tsx ./test/mysql-multi-project-schema/migrator.ts
 
 if vitest run -c ../utils/vitest.config.ts ./test/mysql-multi-project-schema/index.test.ts; then
