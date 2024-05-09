@@ -221,7 +221,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -232,6 +231,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
@@ -310,7 +311,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -321,6 +321,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
@@ -404,7 +406,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -415,6 +416,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
@@ -490,7 +493,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
   credentialID         String  @unique
   userId               String  @db.ObjectId
   providerAccountId    String
@@ -501,6 +503,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
