@@ -7,7 +7,6 @@ echo "Running SQLite tests."
 rm -f db.sqlite
 
 drizzle-kit generate:sqlite --config=./test/sqlite/drizzle.config.ts
-NODE_OPTIONS='--import tsx'
 tsx ./test/sqlite/migrator.ts
 
 if vitest run -c ../utils/vitest.config.ts ./test/sqlite/index.test.ts; then
