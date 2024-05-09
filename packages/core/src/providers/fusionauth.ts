@@ -98,7 +98,7 @@ export interface FusionAuthProfile extends Record<string, any> {
  *
  * :::
  */
- export default function FusionAuth<P extends FusionAuthProfile>(
+export default function FusionAuth<P extends FusionAuthProfile>(
   // tenantId only needed if there is more than one tenant configured on the server
   options: OAuthUserConfig<P> & { tenantId?: string }
 ): OAuthConfig<P> {
