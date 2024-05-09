@@ -6,7 +6,6 @@ import { createClient } from "redis"
 import type { RedisClientType, RedisClientOptions } from "redis"
 
 // TODO: These tests just hang and time out so currently we are skipping them
-
 const redisJSONDriver = defineDriver((options: RedisClientOptions) => {
   let redisClient: RedisClientType
   const getRedisClient = async () => {

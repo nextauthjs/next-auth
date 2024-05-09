@@ -5,25 +5,15 @@ import redisDriver from "unstorage/drivers/redis"
 
 const storage = createStorage({
   driver: redisDriver({
-    // username: "default",
-    // host: "localhost",
-    // port: 6379,
-    // retryStrategy: () => {
-    //   return null
-    // },
+    username: "default",
   }),
 })
 
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
   testWebAuthnMethods: true,
-  // Currently not fully implemented in KV Store
-  // skipTests: ["listAuthenticatorsByUserId"],
   db: {
-    disconnect: async () => {
-      console.log("DISCONNECT")
-      storage.dispose()
-    },
+    disconnect: storage.dispose,
     async user(id: string) {
       const data = await storage.getItem<object>(`testApp:user:${id}`)
       if (!data) return null
