@@ -548,7 +548,7 @@ export async function runBasicTests(options: TestOptions) {
 
     const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
     expect(authenticators1).not.toBeNull()
-    expect([authenticator1, authenticator2]).toMatchObject(
+    expect([authenticator2, authenticator1]).toMatchObject(
       authenticators1 || []
     )
 

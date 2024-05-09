@@ -305,49 +305,25 @@ export function PrismaAdapter(
       }) as Promise<AdapterAccount | null>
     },
     async createAuthenticator(authenticator) {
-      return p.authenticator
-        .create({
-          data: authenticator,
-        })
-        .then((authenticator) => {
-          const { id, ...rest } = authenticator
-          return {
-            ...rest,
-          }
-        })
+      return p.authenticator.create({
+        data: authenticator,
+      })
     },
     async getAuthenticator(credentialID) {
-      const authenticator = await p.authenticator.findUnique({
+      return p.authenticator.findUnique({
         where: { credentialID },
       })
-      if (!authenticator) return null
-      const { id, ...rest } = authenticator
-      return {
-        ...rest,
-      }
     },
     async listAuthenticatorsByUserId(userId) {
-      const authenticators = await p.authenticator.findMany({
+      return p.authenticator.findMany({
         where: { userId },
-      })
-
-      return authenticators.map((authenticator) => {
-        const { id, ...rest } = authenticator
-        return {
-          ...rest,
-        }
       })
     },
     async updateAuthenticatorCounter(credentialID, counter) {
-      return p.authenticator
-        .update({
-          where: { credentialID: credentialID },
-          data: { counter },
-        })
-        .then((authenticator) => {
-          const { id, ...rest } = authenticator
-         return rest
-        })
+      return p.authenticator.update({
+        where: { credentialID },
+        data: { counter },
+      })
     },
   }
 }
