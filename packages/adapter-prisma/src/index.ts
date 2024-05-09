@@ -19,7 +19,6 @@ import type { PrismaClient, Prisma } from "@prisma/client"
 import type {
   Adapter,
   AdapterAccount,
-  AdapterAuthenticator,
   AdapterSession,
   AdapterUser,
 } from "@auth/core/adapters"
@@ -310,20 +309,34 @@ export function PrismaAdapter(
         .create({
           data: authenticator,
         })
-        .then(fromDBAuthenticator)
+        .then((authenticator) => {
+          const { id, ...rest } = authenticator
+          return {
+            ...rest,
+          }
+        })
     },
     async getAuthenticator(credentialID) {
       const authenticator = await p.authenticator.findUnique({
         where: { credentialID },
       })
-      return authenticator ? fromDBAuthenticator(authenticator) : null
+      if (!authenticator) return null
+      const { id, ...rest } = authenticator
+      return {
+        ...rest,
+      }
     },
     async listAuthenticatorsByUserId(userId) {
       const authenticators = await p.authenticator.findMany({
         where: { userId },
       })
 
-      return authenticators.map(fromDBAuthenticator)
+      return authenticators.map((authenticator) => {
+        const { id, ...rest } = authenticator
+        return {
+          ...rest,
+        }
+      })
     },
     async updateAuthenticatorCounter(credentialID, counter) {
       return p.authenticator
@@ -331,24 +344,12 @@ export function PrismaAdapter(
           where: { credentialID: credentialID },
           data: { counter },
         })
-        .then(fromDBAuthenticator)
+        .then((authenticator) => {
+          const { id, ...rest } = authenticator
+          return {
+            ...rest,
+          }
+        })
     },
-  }
-}
-
-type BasePrismaAuthenticator = Parameters<
-  PrismaClient["authenticator"]["create"]
->[0]["data"]
-type PrismaAuthenticator = BasePrismaAuthenticator &
-  Required<Pick<BasePrismaAuthenticator, "userId">>
-
-function fromDBAuthenticator(
-  authenticator: PrismaAuthenticator
-): AdapterAuthenticator {
-  const { transports, id, user, ...other } = authenticator
-
-  return {
-    ...other,
-    transports: transports || undefined,
   }
 }
