@@ -346,9 +346,7 @@ export function PrismaAdapter(
         })
         .then((authenticator) => {
           const { id, ...rest } = authenticator
-          return {
-            ...rest,
-          }
+         return rest
         })
     },
   }
