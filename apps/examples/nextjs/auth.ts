@@ -7,6 +7,7 @@ import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 import Cognito from "next-auth/providers/cognito"
 import Coinbase from "next-auth/providers/coinbase"
+import Credentials from "next-auth/providers/credentials"
 import Discord from "next-auth/providers/discord"
 import Dropbox from "next-auth/providers/dropbox"
 import Facebook from "next-auth/providers/facebook"
@@ -29,6 +30,7 @@ import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 
 import type { NextAuthConfig } from "next-auth"
+import type { Provider } from "next-auth/providers"
 
 export const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
@@ -69,7 +71,20 @@ export const config = {
       connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
-  ],
+    process.env.TEST_DOCKER
+      ? Credentials({
+        credentials: { password: { label: "Password", type: "password" } },
+        authorize(c) {
+          if (c.password !== "password") return null
+          return {
+            id: "test",
+            name: "Test User",
+            email: "test@example.com",
+          }
+        },
+      })
+      : undefined,
+  ].filter(Boolean) as Provider[],
   basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
