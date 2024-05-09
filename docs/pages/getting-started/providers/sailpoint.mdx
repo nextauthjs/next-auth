@@ -71,17 +71,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       userinfo: `${process.env.ISC_BASE_API_URL!}/oauth/userinfo`,
       profile(profile: IdentitySecureCloudProfile) {
         return {
-            tenant: profile.tenant,
             id: profile.id,
-            uid: profile.uid,
             email: profile.email,
-            phone: profile.phone,
-            workPhone: profile.workPhone,
-            firstname: profile.firstname,
-            lastname: profile.lastname,
-            capabilities: profile.capabilities,
-            displayName: profile.displayName,
             name: profile.uid,
+            image: null
         }
       },
       style: { text: "#011E69", bg: "#fff", logo: "sailpoint.svg" },
@@ -113,17 +106,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       userinfo: `${env.ISC_BASE_API_URL!}/oauth/userinfo`,
       profile(profile: IdentitySecureCloudProfile) {
         return {
-            tenant: profile.tenant,
             id: profile.id,
-            uid: profile.uid,
             email: profile.email,
-            phone: profile.phone,
-            workPhone: profile.workPhone,
-            firstname: profile.firstname,
-            lastname: profile.lastname,
-            capabilities: profile.capabilities,
-            displayName: profile.displayName,
             name: profile.uid,
+            image: null
         }
       },
       style: { text: "#011E69", bg: "#fff", logo: "sailpoint.svg" },
@@ -153,17 +139,10 @@ app.use("/auth/*", ExpressAuth({ providers: [
       userinfo: `${process.env.ISC_BASE_API_URL!}/oauth/userinfo`,
       profile(profile: IdentitySecureCloudProfile) {
         return {
-            tenant: profile.tenant,
             id: profile.id,
-            uid: profile.uid,
             email: profile.email,
-            phone: profile.phone,
-            workPhone: profile.workPhone,
-            firstname: profile.firstname,
-            lastname: profile.lastname,
-            capabilities: profile.capabilities,
-            displayName: profile.displayName,
             name: profile.uid,
+            image: null
         }
       },
       style: { text: "#011E69", bg: "#fff", logo: "sailpoint.svg" },
@@ -174,3 +153,18 @@ app.use("/auth/*", ExpressAuth({ providers: [
   </Code.Express>
 </Code>
 
+Your `userprofile` endpoint will return more fields, but by default the [User table](https://authjs.dev/getting-started/database#models) only supports `id`, `name`, `email`, and `image`. Therefore, if you'd like to use any of the following fields, make sure you modify the `User` table schema in whichever adapter / database you're using.
+	```ts
+	tenant: profile.tenant,
+	id: profile.id,
+	uid: profile.uid,
+	email: profile.email,
+	phone: profile.phone,
+	workPhone: profile.workPhone,
+	firstname: profile.firstname,
+	lastname: profile.lastname,
+	capabilities: profile.capabilities,
+	displayName: profile.displayName,
+	name: profile.uid
+	```
+The above fields will all be available in the `profile` callback.
