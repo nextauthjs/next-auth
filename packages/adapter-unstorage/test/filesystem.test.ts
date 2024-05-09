@@ -10,9 +10,7 @@ const storage = createStorage({
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
   // TODO: Reenable; failing in CI, passing locally
-  testWebAuthnMethods: false,
-  // Currently not fully implemented in KV Store
-  skipTests: ["listAuthenticatorsByUserId"],
+  testWebAuthnMethods: true,
   db: {
     disconnect: storage.dispose,
     async user(id: string) {
@@ -42,9 +40,7 @@ runBasicTests({
       return hydrateDates(data)
     },
     async authenticator(id) {
-      const data = await storage.getItem<object>(
-        `testApp:authenticator:id:${id}`
-      )
+      const data = await storage.getItem<object>(`testApp:authenticator:${id}`)
       if (!data) return null
       return hydrateDates(data)
     },

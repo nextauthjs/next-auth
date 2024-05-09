@@ -7,8 +7,6 @@ const storage = createStorage()
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
   testWebAuthnMethods: true,
-  // Currently not fully implemented in KV Store
-  skipTests: ["listAuthenticatorsByUserId"],
   db: {
     disconnect: storage.dispose,
     async user(id: string) {
@@ -38,9 +36,7 @@ runBasicTests({
       return hydrateDates(data)
     },
     async authenticator(id) {
-      const data = await storage.getItem<object>(
-        `testApp:authenticator:id:${id}`
-      )
+      const data = await storage.getItem<object>(`testApp:authenticator:${id}`)
       if (!data) return null
       return hydrateDates(data)
     },

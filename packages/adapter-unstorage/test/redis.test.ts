@@ -4,16 +4,26 @@ import { hydrateDates, UnstorageAdapter } from "../src"
 import redisDriver from "unstorage/drivers/redis"
 
 const storage = createStorage({
-  driver: redisDriver({ username: "default" }),
+  driver: redisDriver({
+    // username: "default",
+    // host: "localhost",
+    // port: 6379,
+    // retryStrategy: () => {
+    //   return null
+    // },
+  }),
 })
 
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
   testWebAuthnMethods: true,
   // Currently not fully implemented in KV Store
-  skipTests: ["listAuthenticatorsByUserId"],
+  // skipTests: ["listAuthenticatorsByUserId"],
   db: {
-    disconnect: storage.dispose,
+    disconnect: async () => {
+      console.log("DISCONNECT")
+      storage.dispose()
+    },
     async user(id: string) {
       const data = await storage.getItem<object>(`testApp:user:${id}`)
       if (!data) return null
@@ -41,9 +51,7 @@ runBasicTests({
       return hydrateDates(data)
     },
     async authenticator(id) {
-      const data = await storage.getItem<object>(
-        `testApp:authenticator:id:${id}`
-      )
+      const data = await storage.getItem<object>(`testApp:authenticator:${id}`)
       if (!data) return null
       return hydrateDates(data)
     },

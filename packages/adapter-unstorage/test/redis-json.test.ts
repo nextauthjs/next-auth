@@ -99,7 +99,7 @@ runBasicTests({
     },
     async authenticator(id) {
       const data = await storage.getItemRaw<object>(
-        `testApp:authenticator:id:${id}`
+        `testApp:authenticator:${id}`
       )
       if (!data) return null
       return hydrateDates(data)
