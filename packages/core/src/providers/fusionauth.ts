@@ -98,23 +98,42 @@ export interface FusionAuthProfile extends Record<string, any> {
  *
  * :::
  */
-export default function FusionAuth<P extends FusionAuthProfile>(
+ export default function FusionAuth<P extends FusionAuthProfile>(
   // tenantId only needed if there is more than one tenant configured on the server
   options: OAuthUserConfig<P> & { tenantId?: string }
 ): OAuthConfig<P> {
   return {
     id: "fusionauth",
     name: "FusionAuth",
-    type: "oauth",
+    type: "oidc",
     wellKnown: options?.tenantId
       ? `${options.issuer}/.well-known/openid-configuration?tenantId=${options.tenantId}`
       : `${options.issuer}/.well-known/openid-configuration`,
     authorization: {
       params: {
-        scope: "openid offline_access",
+        scope: "openid offline_access email profile",
         ...(options?.tenantId && { tenantId: options.tenantId }),
       },
     },
+  userinfo: `${options.issuer}/oauth2/userinfo`,
+  // This is due to a known processing issue
+  // TODO: https://github.com/nextauthjs/next-auth/issues/8745#issuecomment-1907799026
+  token: {
+    url: `${options.issuer}/oauth2/token`,
+    conform: async (response: Response) => {
+      if (response.status === 401) return response;
+
+      const newHeaders = Array.from(response.headers.entries())
+        .filter(([key]) => key.toLowerCase() !== "www-authenticate")
+        .reduce((headers, [key, value]) => (headers.append(key, value), headers), new Headers());
+
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: newHeaders,
+      });
+    },
+  },
     checks: ["pkce", "state"],
     profile(profile) {
       return {
