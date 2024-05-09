@@ -383,7 +383,7 @@ export function UnstorageAdapter(
     async updateAuthenticatorCounter(credentialID, counter) {
       const authenticator = await getAuthenticator(credentialID)
       authenticator.counter = Number(counter)
-      setAuthenticator(credentialID, authenticator)
+      await setAuthenticator(credentialID, authenticator)
       return authenticator
     },
   }
