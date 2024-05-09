@@ -148,7 +148,7 @@ jobs:
           name: playwright-traces
           path: "**/packages/utils/test-results/*/trace.zip"
           retention-days: 7
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         if: always()
         name: Coverage
         with:
