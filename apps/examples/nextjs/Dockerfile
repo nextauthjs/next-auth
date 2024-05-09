@@ -7,8 +7,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies
-COPY package.json ./
-RUN npm i
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm install
 
 
 # Rebuild the source code only when needed

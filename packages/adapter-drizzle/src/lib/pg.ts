@@ -14,88 +14,104 @@ import {
 import type {
   Adapter,
   AdapterAccount,
+  AdapterAccountType,
   AdapterSession,
   AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
 
-export const postgresUsersTable = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-}) satisfies DefaultPostgresUsersTable
+export function defineTables(
+  schema: Partial<DefaultPostgresSchema> = {}
+): Required<DefaultPostgresSchema> {
+  const usersTable =
+    schema.usersTable ??
+    (pgTable("user", {
+      id: text("id")
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+      name: text("name"),
+      email: text("email").notNull(),
+      emailVerified: timestamp("emailVerified", { mode: "date" }),
+      image: text("image"),
+    }) satisfies DefaultPostgresUsersTable)
 
-export const postgresAccountsTable = pgTable(
-  "account",
-  {
-    userId: text("userId")
-      .notNull()
-      .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
-  },
-  (table) => {
-    return {
-      compositePk: primaryKey({
-        columns: [table.provider, table.providerAccountId],
-      }),
-    }
+  const accountsTable =
+    schema.accountsTable ??
+    (pgTable(
+      "account",
+      {
+        userId: text("userId")
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        type: text("type").$type<AdapterAccountType>().notNull(),
+        provider: text("provider").notNull(),
+        providerAccountId: text("providerAccountId").notNull(),
+        refresh_token: text("refresh_token"),
+        access_token: text("access_token"),
+        expires_at: integer("expires_at"),
+        token_type: text("token_type"),
+        scope: text("scope"),
+        id_token: text("id_token"),
+        session_state: text("session_state"),
+      },
+      (table) => {
+        return {
+          compositePk: primaryKey({
+            columns: [table.provider, table.providerAccountId],
+          }),
+        }
+      }
+    ) satisfies DefaultPostgresAccountsTable)
+
+  const sessionsTable =
+    schema.sessionsTable ??
+    (pgTable("session", {
+      sessionToken: text("sessionToken").primaryKey(),
+      userId: text("userId")
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+      expires: timestamp("expires", { mode: "date" }).notNull(),
+    }) satisfies DefaultPostgresSessionsTable)
+
+  const verificationTokensTable =
+    schema.verificationTokensTable ??
+    (pgTable(
+      "verificationToken",
+      {
+        identifier: text("identifier").notNull(),
+        token: text("token").notNull(),
+        expires: timestamp("expires", { mode: "date" }).notNull(),
+      },
+      (table) => {
+        return {
+          compositePk: primaryKey({ columns: [table.identifier, table.token] }),
+        }
+      }
+    ) satisfies DefaultPostgresVerificationTokenTable)
+
+  return {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
   }
-) satisfies DefaultPostgresAccountsTable
-
-export const postgresSessionsTable = pgTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => postgresUsersTable.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-}) satisfies DefaultPostgresSessionsTable
-
-export const postgresVerificationTokensTable = pgTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (table) => {
-    return {
-      compositePk: primaryKey({ columns: [table.identifier, table.token] }),
-    }
-  }
-) satisfies DefaultPostgresVerificationTokenTable
+}
 
 export function PostgresDrizzleAdapter(
   client: PgDatabase<QueryResultHKT, any>,
-  schema: DefaultPostgresSchema = {
-    usersTable: postgresUsersTable,
-    accountsTable: postgresAccountsTable,
-    sessionsTable: postgresSessionsTable,
-    verificationTokensTable: postgresVerificationTokensTable,
-  }
+  schema?: DefaultPostgresSchema
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    schema
+    defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
+      const { id, ...insertData } = data
       const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
 
       return client
         .insert(usersTable)
-        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .values(hasDefaultId ? insertData : { ...insertData, id })
         .returning()
         .then((res) => res[0])
     },
@@ -413,6 +429,6 @@ export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
 export type DefaultPostgresSchema = {
   usersTable: DefaultPostgresUsersTable
   accountsTable: DefaultPostgresAccountsTable
-  sessionsTable: DefaultPostgresSessionsTable
-  verificationTokensTable: DefaultPostgresVerificationTokenTable
+  sessionsTable?: DefaultPostgresSessionsTable
+  verificationTokensTable?: DefaultPostgresVerificationTokenTable
 }

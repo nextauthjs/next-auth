@@ -11,12 +11,11 @@
     "test:e2e": "turbo run test:e2e",
     "test:e2e:watch": "turbo run test:e2e -- --ui",
     "clean": "turbo run clean --no-cache",
-    "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
-    "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=@auth/core --filter=!./packages/adapter-*",
-    "dev-v4:db": "turbo run dev --parallel --continue --filter=next-auth-app-v4...",
-    "dev-v4": "turbo run dev --parallel --continue --filter=next-auth-app-v4... --filter=!./packages/adapter-*",
+    "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
+    "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
+    "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
     "dev:docs": "turbo run dev --filter=docs",
     "dev:docs:adapters": "turbo run dev --filter=docs",
     "email": "fake-smtp-server",
@@ -26,7 +25,6 @@
     "release": "release",
     "peek": "pnpm release --peek",
     "version:pr": "node ./config/version-pr",
-    "e2e": "turbo run e2e --filter=next-auth-app",
     "setup-fw-integration": "pnpm clean --filter=@auth/frameworks-template && node packages/utils/scripts/setup-fw-integration.js"
   },
   "devDependencies": {
