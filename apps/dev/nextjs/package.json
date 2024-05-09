@@ -8,6 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test:docker": "./test-docker.sh",
     "e2e": "pnpm dlx playwright test"
   },
   "license": "ISC",
