@@ -15,7 +15,7 @@
  * @module @auth/neo4j-adapter
  */
 import { type Session, isInt, integer } from "neo4j-driver"
-import type { Adapter } from "@auth/core/adapters"
+import { isDate, type Adapter } from "@auth/core/adapters"
 
 /**
  * This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument.
@@ -180,14 +180,6 @@ export function Neo4jAdapter(session: Session): Adapter {
       return format.from<any>(result?.properties)
     },
   }
-}
-
-// https://github.com/honeinc/is-iso-date/blob/master/index.js
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 export const format = {
