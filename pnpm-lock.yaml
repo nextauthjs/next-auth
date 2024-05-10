@@ -240,7 +240,7 @@ importers:
         version: 2.5.1
       next:
         specifier: 14.2.1
-        version: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
       next-sitemap:
         specifier: ^4.2.3
         version: 4.2.3(next@14.2.1)
@@ -2000,10 +2000,10 @@ packages:
       '@babel/helpers': 7.23.9
       '@babel/parser': 7.23.9
       '@babel/template': 7.23.9
-      '@babel/traverse': 7.23.9(supports-color@5.5.0)
+      '@babel/traverse': 7.23.9
       '@babel/types': 7.23.9
       convert-source-map: 2.0.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -2219,7 +2219,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/template': 7.23.9
-      '@babel/traverse': 7.23.9(supports-color@5.5.0)
+      '@babel/traverse': 7.23.9
       '@babel/types': 7.23.9
     transitivePeerDependencies:
       - supports-color
@@ -3251,11 +3251,10 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.23.9
       '@babel/types': 7.23.9
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@8.1.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /@babel/traverse@7.23.9(supports-color@5.5.0):
     resolution: {integrity: sha512-I/4UJ9vs90OkBtY6iiiTORVMyIhJ4kAVmsKo9KFc8UOxMeUfi2hvtIBsET5u9GizXE6/GFSuKCTNfgCswuEjRg==}
@@ -3273,6 +3272,7 @@ packages:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@babel/types@7.23.9:
     resolution: {integrity: sha512-dQjSq/7HaSjRM43FFGnv5keM2HsxpmyV1PfaSVm0nzzjwwTmjOe6J4bC8e3+pTEIgHaHj+1ZlLThRJ2auc/w1Q==}
@@ -6278,7 +6278,7 @@ packages:
       next: ^13.0.0 || ^14.0.0
       react: ^18.2.0
     dependencies:
-      next: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       third-party-capital: 1.0.20
     dev: false
@@ -9294,7 +9294,7 @@ packages:
   /@typescript/vfs@1.5.0:
     resolution: {integrity: sha512-AJS307bPgbsZZ9ggCT3wwpg3VbTKMFNHfaY/uF0ahSkYYrPF2dSSKDNIDIQAHm9qJqbLvCsSJH7yN4Vs/CsMMg==}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -9320,7 +9320,7 @@ packages:
       react:
         optional: true
     dependencies:
-      next: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       server-only: 0.0.1
     dev: false
@@ -12852,17 +12852,6 @@ packages:
       ms: 2.1.3
     dev: true
 
-  /debug@4.3.4:
-    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.2
-
   /debug@4.3.4(supports-color@5.5.0):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
@@ -12874,6 +12863,7 @@ packages:
     dependencies:
       ms: 2.1.2
       supports-color: 5.5.0
+    dev: false
 
   /debug@4.3.4(supports-color@8.1.1):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -16147,7 +16137,7 @@ packages:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@8.1.1)
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -18557,7 +18547,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@8.1.1)
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -18581,7 +18571,7 @@ packages:
     resolution: {integrity: sha512-o/sd0nMof8kYff+TqcDx3VSrgBTcZpSvYcAHIfHhv5VAuNmisCxjhx6YmxS8PFEpb9z5WKWKPdzf0jM23ro3RQ==}
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@8.1.1)
       decode-named-character-reference: 1.0.2
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.0
@@ -19068,7 +19058,7 @@ packages:
       '@next/env': 13.5.6
       fast-glob: 3.3.2
       minimist: 1.2.8
-      next: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /next-themes@0.2.1(next@14.2.1)(react-dom@18.2.0)(react@18.2.0):
@@ -19078,7 +19068,7 @@ packages:
       react: '*'
       react-dom: '*'
     dependencies:
-      next: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -19148,7 +19138,7 @@ packages:
       '@playwright/test': 1.41.2
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001594
+      caniuse-lite: 1.0.30001609
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.2.0
@@ -19227,7 +19217,7 @@ packages:
       flexsearch: 0.7.43
       focus-visible: 5.2.0
       intersection-observer: 0.12.2
-      next: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@14.2.1)(react-dom@18.2.0)(react@18.2.0)
       nextra: 3.0.0-alpha.22(@types/react@18.2.78)(next@14.2.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.5)
       react: 18.2.0
@@ -19260,7 +19250,7 @@ packages:
       gray-matter: 4.0.3
       hast-util-to-estree: 3.1.0
       katex: 0.16.9
-      next: 14.2.1(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(@babel/core@7.23.9)(@playwright/test@1.41.2)(react-dom@18.2.0)(react@18.2.0)
       p-limit: 4.0.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
