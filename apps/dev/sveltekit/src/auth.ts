@@ -4,15 +4,17 @@ import Credentials from "@auth/sveltekit/providers/credentials"
 import Facebook from "@auth/sveltekit/providers/facebook"
 import Discord from "@auth/sveltekit/providers/discord"
 import Google from "@auth/sveltekit/providers/google"
+import Passkey from "@auth/sveltekit/providers/passkey"
 import { createStorage } from "unstorage"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 
 const storage = createStorage()
+
 export const { handle, signIn, signOut } = SvelteKitAuth({
   debug: true,
   adapter: UnstorageAdapter(storage),
-  session: {
-    strategy: "jwt",
+  experimental: {
+    enableWebAuthn: true,
   },
   providers: [
     Credentials({
@@ -31,6 +33,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Google,
     Facebook,
     Discord,
+    Passkey,
   ],
   theme: {
     logo: "https://authjs.dev/img/logo-sm.png",
