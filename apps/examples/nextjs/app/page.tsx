@@ -20,6 +20,11 @@ export default async function Index() {
         </CustomLink>{" "}
         examples to see how to secure pages and get session data.
       </div>
+      <div>
+        WebAuthn users are reset on every deploy, don't expect your test user(s)
+        to still be available after a few days. It is designed to only
+        demonstrate registration, login, and logout briefly.
+      </div>
       <div className="flex flex-col bg-gray-100 rounded-md">
         <div className="p-4 font-bold bg-gray-200 rounded-t-md">
           Current Session
