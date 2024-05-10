@@ -63,11 +63,7 @@ const config = {
     LinkedIn,
     Netlify,
     Okta,
-    Passkey({
-      formFields: {
-        email: { label: "Email", required: true, autocomplete: "webauthn email username" },
-      },
-    }),
+    Passkey,
     Passage,
     Pinterest,
     Reddit,
@@ -95,7 +91,9 @@ const config = {
       return token
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken
+      if (token?.accessToken) {
+        session.accessToken = token.accessToken
+      }
       return session
     },
   },
