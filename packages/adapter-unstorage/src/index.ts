@@ -362,14 +362,12 @@ export function UnstorageAdapter(
       return authenticator
     },
     async getAuthenticator(credentialID) {
-      const authenticator = await getAuthenticator(credentialID)
-      return authenticator
+      return getAuthenticator(credentialID)
     },
     async listAuthenticatorsByUserId(userId) {
       const user = await getUser(userId)
       if (!user) return []
-      const authenticators = await getAuthenticatorByUserId(user.id)
-      return authenticators
+      return getAuthenticatorByUserId(user.id)
     },
     async updateAuthenticatorCounter(credentialID, counter) {
       const authenticator = await getAuthenticator(credentialID)
