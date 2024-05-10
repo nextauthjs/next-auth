@@ -117,17 +117,17 @@ import { env } from "$env/dynamic/prviate"
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     {
-      id: "identitySecureCloud",
-      name: "Identity Secure Cloud",
+      id: "sailpoint",
+      name: "SailPoint",
       type: "oauth",
-      clientId: env.ISC_CLIENT_ID!,
-      clientSecret: env.ISC_CLIENT_SECRET!,
+      clientId: env.AUTH_SAILPOINT_ID!,
+      clientSecret: env.AUTH_SAILPOINT_SECRET!,
       authorization: {
-        url: `${env.ISC_BASE_URL!}/oauth/authorize`,
+        url: `${env.AUTH_SAILPOINT_BASE_URL!}/oauth/authorize`,
         params: { scope: "sp:scopes:all" },
       },
-      token: `${env.ISC_BASE_API_URL!}/oauth/token`,
-      userinfo: `${env.ISC_BASE_API_URL!}/oauth/userinfo`,
+      token: `${env.AUTH_SAILPOINT_BASE_API_URL!}/oauth/token`,
+      userinfo: `${env.AUTH_SAILPOINT_BASE_API_URL!}/oauth/userinfo`,
       profile(profile) {
         return {
           id: profile.id,
@@ -153,17 +153,17 @@ app.use(
   ExpressAuth({
     providers: [
       {
-        id: "identitySecureCloud",
-        name: "Identity Secure Cloud",
+        id: "sailpoint",
+        name: "SailPoint",
         type: "oauth",
-        clientId: process.env.ISC_CLIENT_ID!,
-        clientSecret: process.env.ISC_CLIENT_SECRET!,
+        clientId: process.env.AUTH_SAILPOINT_ID!,
+        clientSecret: process.env.AUTH_SAILPOINT_SECRET!,
         authorization: {
-          url: `${process.env.ISC_BASE_URL!}/oauth/authorize`,
+          url: `${process.env.AUTH_SAILPOINT_BASE_URL!}/oauth/authorize`,
           params: { scope: "sp:scopes:all" },
         },
-        token: `${process.env.ISC_BASE_API_URL!}/oauth/token`,
-        userinfo: `${process.env.ISC_BASE_API_URL!}/oauth/userinfo`,
+        token: `${process.env.AUTH_SAILPOINT_BASE_API_URL!}/oauth/token`,
+        userinfo: `${process.env.AUTH_SAILPOINT_BASE_API_URL!}/oauth/userinfo`,
         profile(profile) {
           return {
             id: profile.id,
