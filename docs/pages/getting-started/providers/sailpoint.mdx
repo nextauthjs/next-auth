@@ -1,0 +1,172 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/sailpoint.svg" height="64" width="64" />
+
+# SailPoint Identity Secure Cloud Provider
+
+SailPoint Identity Secure Cloud (ISC) is an enterprise SaaS platform for identity and security. In order to use this OAuth integration, you will need an ISC tenant. If you're a SailPoint customer or partner, please talk to your SailPoint account manager for more details. If you are a developer, you can check out the [SailPoint Developer Community](https://developer.sailpoint.com/discuss/). 
+
+## Resources
+
+- [SailPoint Identity Secure Cloud Authentication](https://developer.sailpoint.com/docs/api/authentication#choose-authorization-grant-flow)
+- [Managing API Keys and Personal Access Tokens](https://documentation.sailpoint.com/saas/help/common/api_keys.html?h=oauth+client#creating-an-api-key)
+- [SailPoint Developer Community](https://developer.sailpoint.com/discuss/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/identitySecureCloud
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/identitySecureCloud
+```
+
+  </Code.Svelte>
+</Code>
+
+### Create OAuth Client
+
+Find your Identity Secure Cloud Tenant OAuth Information which can be found at `https://{tenant}.api.identitynow.com/oauth/info`. Create an OAuth Client (following this [guide](https://documentation.sailpoint.com/saas/help/common/api_keys.html?h=oauth+client#creating-an-api-key)) with grant types: `AUTHORIZATION_TOKEN` and `REFRESH_TOKEN`. Redirect URL should match your version of the Callback URL above. Finally, select the scopes `sp:scope:all`. Note down the generated `clientId` and `clientSecret`.
+
+### Environment Variables
+
+```
+ISC_BASE_API_URL=https://{tenant}.api.identitynow.com
+ISC_BASE_URL=https://{tenant}.identitynow.com
+ISC_CLIENT_ID=
+ISC_CLIENT_SECRET=
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    {
+      id: "identitySecureCloud",
+      name: "Identity Secure Cloud",
+      type: "oauth",
+      clientId: process.env.ISC_CLIENT_ID!,
+      clientSecret: process.env.ISC_CLIENT_SECRET!,
+      authorization: {
+        url: `${process.env.ISC_BASE_URL!}/oauth/authorize`,
+        params: { scope: 'sp:scopes:all' },
+      },
+      token: `${process.env.ISC_BASE_API_URL!}/oauth/token`,
+      userinfo: `${process.env.ISC_BASE_API_URL!}/oauth/userinfo`,
+      profile(profile) {
+        return {
+            id: profile.id,
+            email: profile.email,
+            name: profile.uid,
+            image: null
+        }
+      },
+      style: { text: "#011E69", bg: "#fff", logo: "sailpoint.svg" },
+    },
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { env } from "$env/dynamic/prviate"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    {
+      id: "identitySecureCloud",
+      name: "Identity Secure Cloud",
+      type: "oauth",
+      clientId: env.ISC_CLIENT_ID!,
+      clientSecret: env.ISC_CLIENT_SECRET!,
+      authorization: {
+        url: `${env.ISC_BASE_URL!}/oauth/authorize`,
+        params: { scope: 'sp:scopes:all' },
+      },
+      token: `${env.ISC_BASE_API_URL!}/oauth/token`,
+      userinfo: `${env.ISC_BASE_API_URL!}/oauth/userinfo`,
+      profile(profile) {
+        return {
+            id: profile.id,
+            email: profile.email,
+            name: profile.uid,
+            image: null
+        }
+      },
+      style: { text: "#011E69", bg: "#fff", logo: "sailpoint.svg" },
+    },
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+
+app.use("/auth/*", ExpressAuth({ providers: [
+  {
+      id: "identitySecureCloud",
+      name: "Identity Secure Cloud",
+      type: "oauth",
+      clientId: process.env.ISC_CLIENT_ID!,
+      clientSecret: process.env.ISC_CLIENT_SECRET!,
+      authorization: {
+        url: `${process.env.ISC_BASE_URL!}/oauth/authorize`,
+        params: { scope: 'sp:scopes:all' },
+      },
+      token: `${process.env.ISC_BASE_API_URL!}/oauth/token`,
+      userinfo: `${process.env.ISC_BASE_API_URL!}/oauth/userinfo`,
+      profile(profile) {
+        return {
+            id: profile.id,
+            email: profile.email,
+            name: profile.uid,
+            image: null
+        }
+      },
+      style: { text: "#011E69", bg: "#fff", logo: "sailpoint.svg" },
+    },
+] }))
+```
+
+  </Code.Express>
+</Code>
+
+Your `userprofile` endpoint will return more fields, but by default the [User table](https://authjs.dev/getting-started/database#models) only supports `id`, `name`, `email`, and `image`. Therefore, if you'd like to use any of the following fields, make sure you modify the `User` table schema in whichever adapter / database you're using.
+
+```ts
+tenant: profile.tenant,
+id: profile.id,
+uid: profile.uid,
+email: profile.email,
+phone: profile.phone,
+workPhone: profile.workPhone,
+firstname: profile.firstname,
+lastname: profile.lastname,
+capabilities: profile.capabilities,
+displayName: profile.displayName,
+name: profile.uid
+```
+
+The above fields will all be available in the `profile` callback.
