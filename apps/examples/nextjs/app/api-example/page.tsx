@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 export default function Page() {
   const [data, setData] = useState()
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const res = await fetch("/api/protected")
       const json = await res.json()
       setData(json)
