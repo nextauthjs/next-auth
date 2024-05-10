@@ -89,32 +89,43 @@ export function defineTables(
         token: varchar("token", { length: 255 }).notNull(),
         expires: timestamp("expires", { mode: "date" }).notNull(),
       },
-      (vt) => ({
-        compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+      (verficationToken) => ({
+        compositePk: primaryKey({
+          columns: [verficationToken.identifier, verficationToken.token],
+        }),
       })
     ) satisfies DefaultMySqlVerificationTokenTable)
 
   const authenticatorsTable =
     schema.authenticatorsTable ??
-    (mysqlTable("authenticator", {
-      id: varchar("id", { length: 255 }).notNull().primaryKey(),
-      credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
-      userId: varchar("userId", { length: 255 })
-        .notNull()
-        .references(() => usersTable.id, { onDelete: "cascade" }),
-      providerAccountId: varchar("providerAccountId", {
-        length: 255,
-      }).notNull(),
-      credentialPublicKey: varchar("credentialPublicKey", {
-        length: 255,
-      }).notNull(),
-      counter: int("counter").notNull(),
-      credentialDeviceType: varchar("credentialDeviceType", {
-        length: 255,
-      }).notNull(),
-      credentialBackedUp: boolean("credentialBackedUp").notNull(),
-      transports: varchar("transports", { length: 255 }),
-    }) satisfies DefaultMySqlAuthenticatorTable)
+    (mysqlTable(
+      "authenticator",
+      {
+        credentialID: varchar("credentialID", { length: 255 })
+          .notNull()
+          .unique(),
+        userId: varchar("userId", { length: 255 })
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        providerAccountId: varchar("providerAccountId", {
+          length: 255,
+        }).notNull(),
+        credentialPublicKey: varchar("credentialPublicKey", {
+          length: 255,
+        }).notNull(),
+        counter: int("counter").notNull(),
+        credentialDeviceType: varchar("credentialDeviceType", {
+          length: 255,
+        }).notNull(),
+        credentialBackedUp: boolean("credentialBackedUp").notNull(),
+        transports: varchar("transports", { length: 255 }),
+      },
+      (authenticator) => ({
+        compositePk: primaryKey({
+          columns: [authenticator.userId, authenticator.credentialID],
+        }),
+      })
+    ) satisfies DefaultMySqlAuthenticatorTable)
 
   return {
     usersTable,
@@ -303,9 +314,7 @@ export function MySqlDrizzleAdapter(
         )
     },
     async createAuthenticator(data: AdapterAuthenticator) {
-      await client
-        .insert(authenticatorsTable)
-        .values({ ...data, id: crypto.randomUUID() })
+      await client.insert(authenticatorsTable).values(data)
 
       return await client
         .select()
@@ -535,12 +544,6 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
 export type DefaultMySqlAuthenticatorTable = MySqlTableWithColumns<{
   name: string
   columns: {
-    id: DefaultMyqlColumn<{
-      columnType: "MySqlVarChar" | "MySqlText"
-      data: string
-      notNull: true
-      dataType: "string"
-    }>
     credentialID: DefaultMyqlColumn<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string

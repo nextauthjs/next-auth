@@ -56,13 +56,11 @@ export function defineTables(
         id_token: text("id_token"),
         session_state: text("session_state"),
       },
-      (table) => {
-        return {
-          compositePk: primaryKey({
-            columns: [table.provider, table.providerAccountId],
-          }),
-        }
-      }
+      (account) => ({
+        compositePk: primaryKey({
+          columns: [account.provider, account.providerAccountId],
+        }),
+      })
     ) satisfies DefaultPostgresAccountsTable)
 
   const sessionsTable =
@@ -84,28 +82,35 @@ export function defineTables(
         token: text("token").notNull(),
         expires: timestamp("expires", { mode: "date" }).notNull(),
       },
-      (table) => {
-        return {
-          compositePk: primaryKey({ columns: [table.identifier, table.token] }),
-        }
-      }
+      (verficationToken) => ({
+        compositePk: primaryKey({
+          columns: [verficationToken.identifier, verficationToken.token],
+        }),
+      })
     ) satisfies DefaultPostgresVerificationTokenTable)
 
   const authenticatorsTable =
     schema.authenticatorsTable ??
-    (pgTable("authenticator", {
-      id: text("id").notNull().primaryKey(),
-      credentialID: text("credentialID").notNull().unique(),
-      userId: text("userId")
-        .notNull()
-        .references(() => usersTable.id, { onDelete: "cascade" }),
-      providerAccountId: text("providerAccountId").notNull(),
-      credentialPublicKey: text("credentialPublicKey").notNull(),
-      counter: integer("counter").notNull(),
-      credentialDeviceType: text("credentialDeviceType").notNull(),
-      credentialBackedUp: boolean("credentialBackedUp").notNull(),
-      transports: text("transports"),
-    }) satisfies DefaultPostgresAuthenticatorTable)
+    (pgTable(
+      "authenticator",
+      {
+        credentialID: text("credentialID").notNull().unique(),
+        userId: text("userId")
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        providerAccountId: text("providerAccountId").notNull(),
+        credentialPublicKey: text("credentialPublicKey").notNull(),
+        counter: integer("counter").notNull(),
+        credentialDeviceType: text("credentialDeviceType").notNull(),
+        credentialBackedUp: boolean("credentialBackedUp").notNull(),
+        transports: text("transports"),
+      },
+      (authenticator) => ({
+        compositePK: primaryKey({
+          columns: [authenticator.userId, authenticator.credentialID],
+        }),
+      })
+    ) satisfies DefaultPostgresAuthenticatorTable)
 
   return {
     usersTable,
@@ -267,7 +272,7 @@ export function PostgresDrizzleAdapter(
     async createAuthenticator(data: AdapterAuthenticator) {
       const user = await client
         .insert(authenticatorsTable)
-        .values({ ...data, id: crypto.randomUUID() })
+        .values(data)
         .returning()
         .then((res) => res[0] ?? null)
 
@@ -491,12 +496,6 @@ export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
 export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
   name: string
   columns: {
-    id: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
-      data: string
-      notNull: true
-      dataType: "string"
-    }>
     credentialID: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string

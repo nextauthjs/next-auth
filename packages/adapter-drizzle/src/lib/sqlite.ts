@@ -79,15 +79,14 @@ export function defineTables(
         token: text("token").notNull(),
         expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
       },
-      (vt) => ({
-        compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+      (verficationToken) => ({
+        compositePk: primaryKey({ columns: [verficationToken.identifier, verficationToken.token] }),
       })
     ) satisfies DefaultSQLiteVerificationTokenTable)
 
   const authenticatorsTable =
     schema.authenticatorsTable ??
     (sqliteTable("authenticator", {
-      id: text("id").notNull().primaryKey(),
       credentialID: text("credentialID").notNull().unique(),
       userId: text("userId")
         .notNull()
@@ -100,7 +99,9 @@ export function defineTables(
         mode: "boolean",
       }).notNull(),
       transports: text("transports"),
-    }) satisfies DefaultSQLiteAuthenticatorTable)
+    }, (authenticator) => ({
+      compositePK: primaryKey({ columns: [authenticator.userId, authenticator.credentialID]})
+    })) satisfies DefaultSQLiteAuthenticatorTable)
 
   return {
     usersTable,
@@ -271,7 +272,7 @@ export function SQLiteDrizzleAdapter(
     async createAuthenticator(data: AdapterAuthenticator) {
       const user = await client
         .insert(authenticatorsTable)
-        .values({ ...data, id: crypto.randomUUID() })
+        .values(data)
         .returning()
         .then((res) => (res[0]) ?? null)
 
@@ -290,7 +291,7 @@ export function SQLiteDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res.map())
+        .then((res) => res)
     },
     async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
       return await client
@@ -521,12 +522,6 @@ export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
 export type DefaultSQLiteAuthenticatorTable = SQLiteTableWithColumns<{
   name: string
   columns: {
-    id: DefaultSQLiteColumn<{
-      columnType: "SQLiteText"
-      data: string
-      notNull: true
-      dataType: "string"
-    }>
     credentialID: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
