@@ -145,6 +145,10 @@ const config: DocsThemeConfig = {
           property="og:description"
           content={frontMatter.description || "Authentication for the Web"}
         />
+        <meta
+          property="og:image"
+          content={`/api/og?title=${encodeURIComponent(title)}`}
+        />
       </>
     )
   },
