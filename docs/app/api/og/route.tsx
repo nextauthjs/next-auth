@@ -66,7 +66,8 @@ function OG({
         tw="flex flex-col justify-center rounded-2xl p-3 shadow-2xl"
         style={{
           background:
-            "linear-gradient(to right bottom, rgb(255, 68, 0), rgb(187, 68, 204))",
+            "linear-gradient(to right bottom, rgb(40, 158, 249), rgb(91, 33, 182))",
+          // New colors: "linear-gradient(to right bottom, rgb(255, 68, 0), rgb(187, 68, 204))",
         }}
       >
         <div
@@ -82,6 +83,8 @@ function OG({
               fontWeight: 300,
               maxHeight: "14rem",
               overflow: "hidden",
+              textAlign: "center",
+              textWrap: "balance",
             }}
           >
             {title}
@@ -131,7 +134,7 @@ const backgroundSvg = `
 </g>
 <defs>
 <radialGradient id="paint0_radial_511_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1016.5 939) rotate(93.0267) scale(757.557 879.417)">
-<stop stop-color="#44BBCC"/>
+<stop stop-color="#FF7722"/>
 <stop offset="1" stop-color="#111111"/>
 </radialGradient>
 <radialGradient id="paint1_radial_511_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1653 619) rotate(-46.5881) scale(548.572 1194.34)">
@@ -139,7 +142,7 @@ const backgroundSvg = `
 <stop offset="1" stop-color="#111111"/>
 </radialGradient>
 <radialGradient id="paint2_radial_511_47" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(666.999 571.116) rotate(-129.513) scale(513.947 862.777)">
-<stop stop-color="#FF4400"/>
+<stop stop-color="rgb(40, 158, 249)"/>
 <stop offset="1" stop-color="#111111"/>
 </radialGradient>
 <clipPath id="clip0_511_47">
@@ -148,3 +151,5 @@ const backgroundSvg = `
 </defs>
 </svg>
 `
+
+// New colors - '#44BBCC', '#BB44CC', '#FF4400'
