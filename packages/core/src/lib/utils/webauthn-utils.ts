@@ -9,9 +9,6 @@ import type {
   User,
 } from "../../types.js"
 import type { Cookie } from "./cookie.js"
-import { signCookie } from "../actions/callback/oauth/checks.js"
-import { InvalidCheck } from "../../errors.js"
-import { decode } from "../../jwt.js"
 import {
   AdapterError,
   AuthError,
@@ -19,6 +16,7 @@ import {
   MissingAdapter,
   WebAuthnVerificationError,
 } from "../../errors.js"
+import { webauthnChallenge } from "../actions/callback/oauth/checks.js"
 import type {
   AuthenticationResponseJSON,
   PublicKeyCredentialCreationOptionsJSON,
@@ -40,10 +38,6 @@ import type {
 export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
 export type WebAuthnAction = WebAuthnRegister | WebAuthnAuthenticate
-
-interface CheckPayload {
-  value: string
-}
 
 type InternalOptionsWebAuthn = InternalOptions<WebAuthnProviderType> & {
   adapter: Required<Adapter>
@@ -534,56 +528,4 @@ export function stringToTransports(
   return tstring
     ? (tstring.split(",") as InternalAuthenticator["transports"])
     : undefined
-}
-
-const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-type WebAuthnChallengeCookie = { challenge: string; registerData?: User }
-export const webauthnChallenge = {
-  async create(
-    options: InternalOptions<WebAuthnProviderType>,
-    challenge: string,
-    registerData?: User
-  ) {
-    const maxAge = WEBAUTHN_CHALLENGE_MAX_AGE
-    const data: WebAuthnChallengeCookie = { challenge, registerData }
-    const cookie = await signCookie(
-      "webauthnChallenge",
-      JSON.stringify(data),
-      maxAge,
-      options
-    )
-    return { cookie }
-  },
-
-  /**
-   * Returns challenge if present,
-   */
-  async use(
-    options: InternalOptions<WebAuthnProviderType>,
-    cookies: RequestInternal["cookies"],
-    resCookies: Cookie[]
-  ): Promise<WebAuthnChallengeCookie> {
-    const challenge = cookies?.[options.cookies.webauthnChallenge.name]
-
-    if (!challenge) throw new InvalidCheck("Challenge cookie missing.")
-
-    const value = await decode<CheckPayload>({
-      ...options.jwt,
-      token: challenge,
-      salt: options.cookies.webauthnChallenge.name,
-    })
-
-    if (!value?.value)
-      throw new InvalidCheck("Challenge value could not be parsed.")
-
-    // Clear the pkce code verifier cookie after use
-    const cookie = {
-      name: options.cookies.webauthnChallenge.name,
-      value: "",
-      options: { ...options.cookies.webauthnChallenge.options, maxAge: 0 },
-    }
-    resCookies.push(cookie)
-
-    return JSON.parse(value.value) as WebAuthnChallengeCookie
-  },
 }
