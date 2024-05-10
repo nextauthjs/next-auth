@@ -19,6 +19,11 @@ export default async function Index() {
           Client
         </CustomLink>{" "}
         examples to see how to secure pages and get session data.
+        <div>
+          To sign in, feel free to use the hosted keycloak provider that is
+          configured by default (credentials bob/bob) for testing or
+          demonstration purposes.
+        </div>
       </div>
       <div className="flex flex-col rounded-md bg-neutral-100">
         <div className="p-4 font-bold rounded-t-md bg-neutral-200">
