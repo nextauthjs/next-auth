@@ -389,7 +389,7 @@ export interface Authenticator {
   /**
    * Concatenated transport flags.
    */
-  transports?: string
+  transports?: string | null
   /**
    * Device type of the authenticator.
    */

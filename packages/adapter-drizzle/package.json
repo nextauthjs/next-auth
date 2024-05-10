@@ -49,11 +49,10 @@
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.4",
     "@types/uuid": "^8.3.3",
-    "better-sqlite3": "^9.4.0",
     "drizzle-kit": "^0.20.17",
     "drizzle-orm": "^0.30.9",
+    "libsql": "^0.3.18",
     "mysql2": "^3.9.7",
     "postgres": "^3.4.3",
     "tsx": "^4.7.0"

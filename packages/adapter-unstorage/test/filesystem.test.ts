@@ -9,41 +9,40 @@ const storage = createStorage({
 
 runBasicTests({
   adapter: UnstorageAdapter(storage, { baseKeyPrefix: "testApp:" }),
-  // TODO: Reenable; failing in CI, passing locally
-  testWebAuthnMethods: false,
-  // Currently not fully implemented in KV Store
-  skipTests: ["listAuthenticatorsByUserId"],
+  testWebAuthnMethods: true,
   db: {
     disconnect: storage.dispose,
     async user(id: string) {
-      const data = await storage.getItem<object>(`testApp:user:${id}`)
+      const data = await storage.getItem<Record<string, unknown>>(
+        `testApp:user:${id}`
+      )
       if (!data) return null
       return hydrateDates(data)
     },
     async account({ provider, providerAccountId }) {
-      const data = await storage.getItem<object>(
+      const data = await storage.getItem<Record<string, unknown>>(
         `testApp:user:account:${provider}:${providerAccountId}`
       )
       if (!data) return null
       return hydrateDates(data)
     },
     async session(sessionToken) {
-      const data = await storage.getItem<object>(
+      const data = await storage.getItem<Record<string, unknown>>(
         `testApp:user:session:${sessionToken}`
       )
       if (!data) return null
       return hydrateDates(data)
     },
     async verificationToken(where) {
-      const data = await storage.getItem<object>(
+      const data = await storage.getItem<Record<string, unknown>>(
         `testApp:user:token:${where.identifier}:${where.token}`
       )
       if (!data) return null
       return hydrateDates(data)
     },
     async authenticator(id) {
-      const data = await storage.getItem<object>(
-        `testApp:authenticator:id:${id}`
+      const data = await storage.getItem<Record<string, unknown>>(
+        `testApp:authenticator:${id}`
       )
       if (!data) return null
       return hydrateDates(data)
