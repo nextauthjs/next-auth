@@ -64,13 +64,13 @@ The User model is for information such as the user's name and email address. Ema
 
 **OAuth sign in**
 
-If the first sign-in is via the [OAuth Provider](/reference/core/providers/oauth), the default data
+If the first sign-in is via the [OAuth Provider](/getting-started/authentication/oauth), the default data
 saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra
 fields in your [OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider)'s [`profile()`](/reference/core/providers#profile) callback.
 
 **Magic links sign in**
 
-If the first sign-in is via the [Email Provider](/reference/core/providers/email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
+If the first sign-in is via the [Email Provider](/getting-started/authentication/email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
 
 ### Account
 

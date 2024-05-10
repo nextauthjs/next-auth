@@ -6,7 +6,7 @@ CONTAINER_NAME=authjs-unstorage-test
 docker run -d --rm \
   -p 6379:6379 \
   --name ${CONTAINER_NAME} \
-  redis/redis-stack-server:6.2.6-v10
+  redis/redis-stack:7.2.0-v10
 
 sleep 10
 

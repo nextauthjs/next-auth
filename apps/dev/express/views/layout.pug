@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title=title
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+  body
+    div
+      div
+        if session
+          div
+            if session.user.image
+              img(src=`${session.user.image}` style="width:64px;border-radius:50%;")
+            span
+              | Signed in as #{ ' ' }
+              strong= session.user.email || session.user.name
+          a(
+            href="/api/auth/signout"
+          ) Sign out
+        else
+          span You are not signed in #{ ' ' }
+          a#sign-indiv(
+            href="/api/auth/signin"
+          ) Sign in
+
+      nav
+        ul
+          li
+            a(href="/") Home
+          li
+            a(href="/protected") Protected
+          li
+            a(href="/api/protected") Protected (API)
+
+      block content
