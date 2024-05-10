@@ -95,11 +95,11 @@ jobs:
         if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       - name: Build
         run: pnpm build
-      - name: Run unit tests
-        run: pnpm test
       - name: Lint
         run: pnpm lint
         timeout-minutes: 15
+      - name: Run unit tests
+        run: pnpm test
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
