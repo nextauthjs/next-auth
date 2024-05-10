@@ -4,7 +4,7 @@ import * as entities from "../custom-entities"
 import { db } from "../helpers"
 
 const sqliteConfig = {
-  type: "sqlite" as const,
+  type: "better-sqlite3" as const,
   name: "next-auth-test-memory",
   database: "./test/sqlite/dev.db",
   synchronize: true,

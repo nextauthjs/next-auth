@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
- *  <p style={{fontWeight: "300"}}>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>Official <a href="https://unstorage.unjs.io/">Unstorage</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://unstorage.unjs.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/unstorage.svg" width="60"/>
  *  </a>
@@ -101,80 +101,6 @@ export function hydrateDates(json: object) {
   }, {} as any)
 }
 
-/**
- * ## Setup
- *
- * Configure Auth.js to use the Unstorage Adapter.
- *
- * ```js title="pages/api/auth/[...nextauth].js"
- * import NextAuth from "next-auth"
- * import GoogleProvider from "next-auth/providers/google"
- * import { UnstorageAdapter } from "@auth/unstorage-adapter"
- * import { createStorage } from "unstorage";
- *
- * const storage = createStorage();
- *
- * export default NextAuth({
- *   adapter: UnstorageAdapter(storage),
- *   providers: [
- *     GoogleProvider({
- *       clientId: process.env.GOOGLE_CLIENT_ID,
- *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
- *     }),
- *   ],
- * })
- * ```
- *
- * ## Advanced usage
- *
- * ### Using multiple apps with a single storage
- *
- * If you have multiple Auth.js connected apps using the same storage, you need different key prefixes for every app.
- *
- * You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
- *
- * The default values for this object are:
- *
- * ```js
- * const defaultOptions = {
- *   baseKeyPrefix: "",
- *   accountKeyPrefix: "user:account:",
- *   accountByUserIdPrefix: "user:account:by-user-id:",
- *   emailKeyPrefix: "user:email:",
- *   sessionKeyPrefix: "user:session:",
- *   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
- *   userKeyPrefix: "user:",
- *   verificationTokenKeyPrefix: "user:token:",
- *   authenticatorKeyPrefix: "authenticator:id:",
- *   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
- * }
- * ```
- *
- * Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
- *
- * Example:
- *
- * ```js
- * export default NextAuth({
- *   adapter: UnstorageAdapter(storage, {baseKeyPrefix: "app2:"})
- * })
- * ```
- *
- * ### Using getItemRaw/setItemRaw instead of getItem/setItem
- *
- * If you are using storage that supports JSON, you can make it use `getItemRaw/setItemRaw` instead of `getItem/setItem`.
- *
- * This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
- *
- * You can enable this functionality by passing `useItemRaw: true` (default: false) in the `options` object as the second argument to the adapter factory function.
- *
- * ```js
- * export default NextAuth({
- *   adapter: UnstorageAdapter(storage, {useItemRaw: true})
- * })
- * ```
- *
- */
 export function UnstorageAdapter(
   storage: Storage,
   options: UnstorageAdapterOptions = {}

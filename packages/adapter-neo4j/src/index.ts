@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://neo4j.com/docs/">Neo4j</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>Official <a href="https://neo4j.com/docs/">Neo4j</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://neo4j.com/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/neo4j.png" height="30"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/neo4j.svg" width="128" />
  *  </a>
  * </div>
  *
@@ -22,113 +22,6 @@ import type { Adapter } from "@auth/core/adapters"
  **/
 export interface Neo4jOptions extends Session {}
 
-/**
- * ## Setup
- *
- * Add this adapter to your `pages/api/[...nextauth].js` Auth.js configuration object.
- *
- * ```js title="pages/api/auth/[...nextauth].js"
- * import neo4j from "neo4j-driver"
- * import { Neo4jAdapter } from "@auth/neo4j-adapter"
- *
- * const driver = neo4j.driver(
- *   "bolt://localhost",
- *   neo4j.auth.basic("neo4j", "password")
- * )
- *
- * const neo4jSession = driver.session()
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/core/types#authconfig
- * export default NextAuth({
- *   // https://authjs.dev/getting-started/authentication/oauth
- *   providers: [],
- *   adapter: Neo4jAdapter(neo4jSession),
- * })
- * ```
- *
- * ## Advanced usage
- *
- * ### Schema
- *
- * #### Node labels
- *
- * The following node labels are used.
- *
- * - User
- * - Account
- * - Session
- * - VerificationToken
- *
- * #### Relationships
- *
- * The following relationships and relationship labels are used.
- *
- * - `(:User)-[:HAS_ACCOUNT]->(:Account)`
- * - `(:User)-[:HAS_SESSION]->(:Session)`
- *
- * #### Properties
- *
- * This schema is adapted for use in Neo4j and is based upon our main [models](https://authjs.dev/reference/core/adapters#models). Please check there for the node properties. Relationships have no properties.
- *
- * #### Indexes
- *
- * Optimum indexes will vary on your edition of Neo4j i.e. community or enterprise, and in case you have your own additional data on the nodes. Below are basic suggested indexes.
- *
- * 1. For **both** Community Edition & Enterprise Edition create constraints and indexes
- *
- * ```sql
- * CREATE CONSTRAINT user_id_constraint IF NOT EXISTS
- * ON (u:User) ASSERT u.id IS UNIQUE;
- *
- * CREATE INDEX user_id_index IF NOT EXISTS
- * FOR (u:User) ON (u.id);
- *
- * CREATE INDEX user_email_index IF NOT EXISTS
- * FOR (u:User) ON (u.email);
- *
- * CREATE CONSTRAINT session_session_token_constraint IF NOT EXISTS
- * ON (s:Session) ASSERT s.sessionToken IS UNIQUE;
- *
- * CREATE INDEX session_session_token_index IF NOT EXISTS
- * FOR (s:Session) ON (s.sessionToken);
- * ```
- *
- * 2. Indexes
- *
- * 2.1. For Community Edition **only** create single-property indexes
- *
- * ```sql
- * CREATE INDEX account_provider_index IF NOT EXISTS
- * FOR (a:Account) ON (a.provider);
- *
- * CREATE INDEX account_provider_account_id_index IF NOT EXISTS
- * FOR (a:Account) ON (a.providerAccountId);
- *
- * CREATE INDEX verification_token_identifier_index IF NOT EXISTS
- * FOR (v:VerificationToken) ON (v.identifier);
- *
- * CREATE INDEX verification_token_token_index IF NOT EXISTS
- * FOR (v:VerificationToken) ON (v.token);
- * ```
- *
- * 2.2. For Enterprise Edition **only** create composite node key constraints and indexes
- *
- * ```sql
- * CREATE CONSTRAINT account_provider_composite_constraint IF NOT EXISTS
- * ON (a:Account) ASSERT (a.provider, a.providerAccountId) IS NODE KEY;
- *
- * CREATE INDEX account_provider_composite_index IF NOT EXISTS
- * FOR (a:Account) ON (a.provider, a.providerAccountId);
- *
- * CREATE CONSTRAINT verification_token_composite_constraint IF NOT EXISTS
- * ON (v:VerificationToken) ASSERT (v.identifier, v.token) IS NODE KEY;
- *
- * CREATE INDEX verification_token_composite_index IF NOT EXISTS
- * FOR (v:VerificationToken) ON (v.identifier, v.token);
- * ```
- *
- */
 export function Neo4jAdapter(session: Session): Adapter {
   const { read, write } = client(session)
 
