@@ -71,11 +71,11 @@ export function OAuthProviderSelect() {
                 role="button"
                 className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
                 onClick={() =>
-                  handleSelectOption({ id: "github", name: "Github" })
+                  handleSelectOption({ id: "github", name: "GitHub" })
                 }
               >
                 <img src={`/img/providers/github.svg`} className="mt-2 w-11" />
-                <div className="text-sm text-center">Github</div>
+                <div className="text-sm text-center">GitHub</div>
               </div>
               <div
                 role="button"

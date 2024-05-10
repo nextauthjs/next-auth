@@ -12,7 +12,7 @@
  *
  * ## Usage
  *
- * Even if you don't use TypeScript, IDEs like VSCode will pick up types to provide you with a better developer experience.
+ * Even if you don't use TypeScript, IDEs like VS Code will pick up types to provide you with a better developer experience.
  * While you are typing, you will get suggestions about what certain objects/functions look like,
  * and sometimes links to documentation, examples, and other valuable resources.
  *
@@ -391,7 +391,7 @@ export interface Authenticator {
   /**
    * Concatenated transport flags.
    */
-  transports?: string
+  transports?: string | null
   /**
    * Device type of the authenticator.
    */

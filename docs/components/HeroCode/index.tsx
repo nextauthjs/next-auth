@@ -3,7 +3,7 @@ import Image from "next/image"
 import { RichTabs } from "@/components/RichTabs"
 import SvelteKit from "../../public/img/etc/sveltekit.svg"
 import Express from "../../public/img/etc/express.svg"
-import NextJs from "../../public/img/etc/nextjs.svg"
+import Next from "../../public/img/etc/nextjs.svg"
 import { CaretRight } from "@/icons"
 
 export function HeroCode({ children }) {
@@ -23,7 +23,7 @@ export function HeroCode({ children }) {
           >
             <Image
               width="24"
-              src={NextJs}
+              src={Next}
               alt="Next.js"
               className="dark:invert"
             />

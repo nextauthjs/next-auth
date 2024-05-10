@@ -35,7 +35,8 @@ To use this adapter, you must have setup Drizzle ORM and Drizzle Kit in your pro
 2. Install a supported database driver to your project, like `@libsql/client`, `mysql2` or `postgres`.
 3. Create a `drizzle.config.ts` [file](https://orm.drizzle.team/kit-docs/conf).
 4. Generate the initial migration from your schema file with a command like, `drizzle-kit generate:pg`.
-5. Push that migration to your configured database with a command like, `drizzle-kit push:pg`.
+5. Apply migrations by using `migrate()` function or push changes directly to your database with a command like, `drizzle-kit push:pg`.
+6. If your schemas differ from the default ones, pass them as the second parameter to the adapter.
 
 #### Schemas
 
@@ -53,7 +54,7 @@ import {
 } from "drizzle-orm/pg-core"
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
-import type { AdapterAccount } from "next-auth/adapters"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
 const pool = postgres(connectionString, { max: 1 })
@@ -76,7 +77,7 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -129,7 +130,7 @@ import {
 } from "drizzle-orm/mysql-core"
 import mysql from "mysql2/promise"
 import { drizzle } from "drizzle-orm/mysql2"
-import type { AdapterAccount } from "next-auth/adapters"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 export const connection = await mysql.createConnection({
   host: "host",
@@ -160,7 +161,7 @@ export const accounts = mysqlTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
-      .$type<AdapterAccount["type"]>()
+      .$type<AdapterAccountType>()
       .notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
@@ -208,7 +209,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import type { AdapterAccount } from "next-auth/adapters"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 const client = createClient({
   url: "DATABASE_URL",
@@ -232,7 +233,7 @@ export const accounts = sqliteTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -326,6 +327,30 @@ app.use(
 
 </Code.Express>
 </Code>
+
+#### Passing your own Schemas
+
+If you want to use your own tables, you can pass them as a second argument to `DrizzleAdapter`.
+
+- The `sessionsTable` is optional and only required if you're using the database session strategy.
+- The `verificationTokensTable` is optional and only required if you're using a Magic Link provider.
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db, accounts, sessions, users, verificationTokens } from "./schema"
+
+export const { handlers, auth } = NextAuth({
+  adapter: DrizzleAdapter(db, {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }),
+  providers: [Google],
+})
+```
 
 ### Migrating your database
 

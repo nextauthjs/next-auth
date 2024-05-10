@@ -9,7 +9,7 @@ import Discord from "@auth/core/providers/discord"
 import Dropbox from "@auth/core/providers/dropbox"
 import Facebook from "@auth/core/providers/facebook"
 import GitHub from "@auth/core/providers/github"
-import Gitlab from "@auth/core/providers/gitlab"
+import GitLab from "@auth/core/providers/gitlab"
 import Google from "@auth/core/providers/google"
 import Hubspot from "@auth/core/providers/hubspot"
 import Keycloak from "@auth/core/providers/keycloak"
@@ -46,7 +46,7 @@ const authConfig: AuthConfig = {
     Dropbox,
     Facebook,
     GitHub,
-    Gitlab,
+    GitLab,
     Google,
     Hubspot,
     Keycloak,
@@ -62,6 +62,31 @@ const authConfig: AuthConfig = {
     Twitter,
     WorkOS,
     Zoom,
+    {
+      id: "tiktok",
+      name: "TikTok",
+      type: "oauth",
+      checks: ["state"],
+      clientId: process.env.AUTH_TIKTOK_ID,
+      clientSecret: process.env.AUTH_TIKTOK_SECRET,
+      authorization: {
+        url: "https://www.tiktok.com/v2/auth/authorize",
+        params: {
+          client_key: process.env.AUTH_TIKTOK_ID,
+          scope: "user.info.basic",
+        },
+      },
+      token: "https://open.tiktokapis.com/v2/oauth/token/",
+      userinfo:
+        "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username",
+      profile(profile: any) {
+        return profile
+      },
+      style: {
+        bg: "#000",
+        text: "#fff",
+      },
+    },
   ],
   basePath: "/api",
 }
