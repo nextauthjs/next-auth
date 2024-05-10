@@ -7,11 +7,12 @@ import Google from "@auth/sveltekit/providers/google"
 import Passkey from "@auth/sveltekit/providers/passkey"
 import { createStorage } from "unstorage"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { dev } from "$app/environment"
 
 const storage = createStorage()
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  debug: true,
+  debug: dev ? true : false,
   adapter: UnstorageAdapter(storage),
   experimental: {
     enableWebAuthn: true,
