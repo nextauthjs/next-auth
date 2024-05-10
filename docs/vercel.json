@@ -13,6 +13,11 @@
   ],
   "redirects": [
     {
+      "source": "/security.txt",
+      "destination": "/.well-known/security.txt",
+      "permanent": true
+    },
+    {
       "source": "/new/provider-issue",
       "destination": "https://github.com/nextauthjs/next-auth/issues/new?assignees=&labels=triage%2Cproviders&template=2_bug_provider.yml",
       "permanent": true
