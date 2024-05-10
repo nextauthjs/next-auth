@@ -38,7 +38,8 @@
       "import": "./index.js"
     },
     "./adapters": {
-      "types": "./adapters.d.ts"
+      "types": "./adapters.d.ts",
+      "import": "./adapters.js"
     },
     "./errors": {
       "types": "./errors.d.ts",

@@ -437,6 +437,13 @@ export interface Adapter {
   ): Awaitable<AdapterAuthenticator>
 }
 
+const isoDateRE =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+
+export function isDate(value: any) {
+  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
+}
+
 // For compatibility with older versions of NextAuth.js
 // @ts-expect-error
 declare module "next-auth/adapters" {
