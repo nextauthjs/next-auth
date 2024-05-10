@@ -41,20 +41,17 @@ runBasicTests({
         .from(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
         .get() ?? null,
-    account: (provider_providerAccountId) => {
-      return (
-        db
-          .select()
-          .from(accounts)
-          .where(
-            eq(
-              accounts.providerAccountId,
-              provider_providerAccountId.providerAccountId
-            )
+    account: (provider_providerAccountId) =>
+      db
+        .select()
+        .from(accounts)
+        .where(
+          eq(
+            accounts.providerAccountId,
+            provider_providerAccountId.providerAccountId
           )
-          .get() ?? null
-      )
-    },
+        )
+        .get() ?? null,
     verificationToken: (identifier_token) =>
       db
         .select()

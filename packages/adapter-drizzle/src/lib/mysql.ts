@@ -311,14 +311,14 @@ export function MySqlDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, data.credentialID))
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => res[0] ?? null)
     },
     async getAuthenticator(credentialID: string) {
       const authenticator = await client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
+        .then((res) => (res.length ? res[0] : null))
       return authenticator ? authenticator : null
     },
     async listAuthenticatorsByUserId(userId: string) {
@@ -326,7 +326,7 @@ export function MySqlDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res.map(fromDBAuthenticator))
+        .then((res) => res)
     },
     async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
       await client
@@ -338,36 +338,8 @@ export function MySqlDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => res[0] ?? null)
     },
-  }
-}
-
-type BaseAuthenticator = InferInsertModel<
-  ReturnType<typeof defineTables>["authenticatorsTable"]
->
-type DrizzleAuthenticator = BaseAuthenticator &
-  Required<
-    Pick<
-      BaseAuthenticator,
-      | "userId"
-      | "providerAccountId"
-      | "counter"
-      | "credentialBackedUp"
-      | "credentialID"
-      | "credentialPublicKey"
-      | "credentialDeviceType"
-    >
-  >
-
-function fromDBAuthenticator(
-  authenticator: DrizzleAuthenticator
-): AdapterAuthenticator {
-  const { transports, id, ...other } = authenticator
-
-  return {
-    ...other,
-    transports: transports || undefined,
   }
 }
 

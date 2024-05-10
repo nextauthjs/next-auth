@@ -34,25 +34,20 @@ runBasicTests({
         db.delete(authenticators),
       ])
     },
-    user: async (id) => {
-      const user = await db
+    user: (id) =>
+      db
         .select()
         .from(users)
         .where(eq(users.id, id))
-        .then((res) => res[0] ?? null)
-      return user
-    },
-    session: async (sessionToken) => {
-      const session = await db
+        .then((res) => res[0] ?? null),
+    session: (sessionToken) =>
+      db
         .select()
         .from(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
-        .then((res) => res[0] ?? null)
-
-      return session
-    },
-    account: (provider_providerAccountId) => {
-      const account = db
+        .then((res) => res[0] ?? null),
+    account: (provider_providerAccountId) =>
+      db
         .select()
         .from(accounts)
         .where(
@@ -61,9 +56,7 @@ runBasicTests({
             provider_providerAccountId.providerAccountId
           )
         )
-        .then((res) => res[0] ?? null)
-      return account
-    },
+        .then((res) => res[0] ?? null),
     verificationToken: (identifier_token) =>
       db
         .select()

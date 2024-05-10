@@ -269,7 +269,7 @@ export function PostgresDrizzleAdapter(
         .insert(authenticatorsTable)
         .values({ ...data, id: crypto.randomUUID() })
         .returning()
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => res[0] ?? null)
 
       return user
     },
@@ -278,7 +278,7 @@ export function PostgresDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
+        .then((res) => (res.length ? res[0] : null))
       return authenticator ? authenticator : null
     },
     async listAuthenticatorsByUserId(userId: string) {
@@ -286,7 +286,7 @@ export function PostgresDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res.map(fromDBAuthenticator))
+        .then((res) => res)
     },
     async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
       return await client
@@ -294,36 +294,8 @@ export function PostgresDrizzleAdapter(
         .set({ counter: newCounter })
         .where(eq(authenticatorsTable.credentialID, credentialID))
         .returning()
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => res[0] ?? null)
     },
-  }
-}
-
-type BaseAuthenticator = InferInsertModel<
-  ReturnType<typeof defineTables>["authenticatorsTable"]
->
-type DrizzleAuthenticator = BaseAuthenticator &
-  Required<
-    Pick<
-      BaseAuthenticator,
-      | "userId"
-      | "providerAccountId"
-      | "counter"
-      | "credentialBackedUp"
-      | "credentialID"
-      | "credentialPublicKey"
-      | "credentialDeviceType"
-    >
-  >
-
-function fromDBAuthenticator(
-  authenticator: DrizzleAuthenticator
-): AdapterAuthenticator {
-  const { transports, id, ...other } = authenticator
-
-  return {
-    ...other,
-    transports: transports || undefined,
   }
 }
 

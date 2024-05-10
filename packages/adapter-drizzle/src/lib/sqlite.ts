@@ -273,7 +273,7 @@ export function SQLiteDrizzleAdapter(
         .insert(authenticatorsTable)
         .values({ ...data, id: crypto.randomUUID() })
         .returning()
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => (res[0]) ?? null)
 
       return user
     },
@@ -282,7 +282,7 @@ export function SQLiteDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => (res.length ? fromDBAuthenticator(res[0]) : null))
+        .then((res) => (res.length ? (res[0]) : null))
       return authenticator ? authenticator : null
     },
     async listAuthenticatorsByUserId(userId: string) {
@@ -290,7 +290,7 @@ export function SQLiteDrizzleAdapter(
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res.map(fromDBAuthenticator))
+        .then((res) => res.map())
     },
     async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
       return await client
@@ -298,7 +298,7 @@ export function SQLiteDrizzleAdapter(
         .set({ counter: newCounter })
         .where(eq(authenticatorsTable.credentialID, credentialID))
         .returning()
-        .then((res) => fromDBAuthenticator(res[0]) ?? null)
+        .then((res) => (res[0]) ?? null)
     },
   }
 }
@@ -320,7 +320,7 @@ export type DrizzleAuthenticator = BaseAuthenticator &
     >
   >
 
-function fromDBAuthenticator(
+function (
   authenticator: DrizzleAuthenticator
 ): AdapterAuthenticator {
   const { transports, id, ...other } = authenticator
