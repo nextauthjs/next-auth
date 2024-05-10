@@ -30,8 +30,8 @@ import {
   toBase64,
   stringToTransports,
   transportsToString,
-  webauthnChallenge,
 } from "../src/lib/utils/webauthn-utils"
+import { webauthnChallenge } from "../src/lib/actions/callback/oauth/checks"
 import {
   InternalOptions,
   InternalProvider,
@@ -442,79 +442,79 @@ describe("inferWebAuthnOptions", () => {
     userInfo: Awaited<ReturnType<GetUserInfo>>
     expected: WebAuthnAction | null
   }[] = [
-      {
-        action: "authenticate",
-        loggedIn: true,
-        userInfo: { user: {}, exists: true },
-        expected: "authenticate",
-      },
-      {
-        action: "authenticate",
-        loggedIn: false,
-        userInfo: { user: {}, exists: true },
-        expected: "authenticate",
-      },
-      {
-        action: "authenticate",
-        loggedIn: false,
-        userInfo: null,
-        expected: "authenticate",
-      },
-      {
-        action: "register",
-        loggedIn: false,
-        userInfo: { user: {}, exists: false },
-        expected: "register",
-      },
-      {
-        action: "register",
-        loggedIn: true,
-        userInfo: { user: {}, exists: true },
-        expected: "register",
-      },
-      {
-        action: "register",
-        loggedIn: false,
-        userInfo: null,
-        expected: null,
-      },
-      {
-        action: "register",
-        loggedIn: false,
-        userInfo: { user: {}, exists: true },
-        expected: null,
-      },
-      {
-        action: undefined,
-        loggedIn: false,
-        userInfo: { user: {}, exists: true },
-        expected: "authenticate",
-      },
-      {
-        action: undefined,
-        loggedIn: false,
-        userInfo: { user: {}, exists: false },
-        expected: "register",
-      },
-      {
-        action: undefined,
-        loggedIn: false,
-        userInfo: null,
-        expected: "authenticate",
-      },
-      {
-        action: undefined,
-        loggedIn: true,
-        userInfo: { user: {}, exists: true },
-        expected: null,
-      },
-      {
-        action: undefined,
-        loggedIn: true,
-        userInfo: null,
-        expected: null,
-      },
-    ]
+    {
+      action: "authenticate",
+      loggedIn: true,
+      userInfo: { user: {}, exists: true },
+      expected: "authenticate",
+    },
+    {
+      action: "authenticate",
+      loggedIn: false,
+      userInfo: { user: {}, exists: true },
+      expected: "authenticate",
+    },
+    {
+      action: "authenticate",
+      loggedIn: false,
+      userInfo: null,
+      expected: "authenticate",
+    },
+    {
+      action: "register",
+      loggedIn: false,
+      userInfo: { user: {}, exists: false },
+      expected: "register",
+    },
+    {
+      action: "register",
+      loggedIn: true,
+      userInfo: { user: {}, exists: true },
+      expected: "register",
+    },
+    {
+      action: "register",
+      loggedIn: false,
+      userInfo: null,
+      expected: null,
+    },
+    {
+      action: "register",
+      loggedIn: false,
+      userInfo: { user: {}, exists: true },
+      expected: null,
+    },
+    {
+      action: undefined,
+      loggedIn: false,
+      userInfo: { user: {}, exists: true },
+      expected: "authenticate",
+    },
+    {
+      action: undefined,
+      loggedIn: false,
+      userInfo: { user: {}, exists: false },
+      expected: "register",
+    },
+    {
+      action: undefined,
+      loggedIn: false,
+      userInfo: null,
+      expected: "authenticate",
+    },
+    {
+      action: undefined,
+      loggedIn: true,
+      userInfo: { user: {}, exists: true },
+      expected: null,
+    },
+    {
+      action: undefined,
+      loggedIn: true,
+      userInfo: null,
+      expected: null,
+    },
+  ]
 
   test.each(cases)(
     "(%#) ($action, $userInfo, loggedIn: $loggedIn) = $expected",
