@@ -94,7 +94,7 @@ function isDate(value: any) {
   return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
-export function hydrateDates(json: object) {
+export function hydrateDates(json: Record<string, any>) {
   return Object.entries(json).reduce((acc, [key, val]) => {
     acc[key] = isDate(val) ? new Date(val as string) : val
     return acc
@@ -134,15 +134,6 @@ export function UnstorageAdapter(
     }
   }
 
-  async function getItems(key: string[]) {
-    if (mergedOptions.useItemRaw) {
-      // Unstorage missing method to get multiple items raw, i.e. `getItemsRaw`
-      return JSON.stringify(await storage.getItems(key))
-    } else {
-      return await storage.getItems(key)
-    }
-  }
-
   async function setItem(key: string, value: string) {
     if (mergedOptions.useItemRaw) {
       return await storage.setItemRaw(key, value)
@@ -151,7 +142,7 @@ export function UnstorageAdapter(
     }
   }
 
-  const setObjectAsJson = async (key: string, obj: any) => {
+  const setObjectAsJson = async (key: string, obj: Record<string, any>) => {
     if (mergedOptions.useItemRaw) {
       await storage.setItemRaw(key, obj)
     } else {
