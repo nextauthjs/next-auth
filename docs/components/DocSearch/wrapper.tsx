@@ -6,8 +6,8 @@ import { CustomSearchBox } from "./searchInput"
 import Hit from "./hit"
 
 const algoliaClient = algoliasearch(
-  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
-  process.env.NEXT_PUBLIC_ALGOLIA_KEY
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
+  process.env.NEXT_PUBLIC_ALGOLIA_KEY!
 )
 
 const searchClient = {

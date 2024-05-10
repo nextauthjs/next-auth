@@ -529,7 +529,7 @@ export function transportsToString(
 }
 
 export function stringToTransports(
-  tstring: string | undefined
+  tstring: string | undefined | null
 ): InternalAuthenticator["transports"] {
   return tstring
     ? (tstring.split(",") as InternalAuthenticator["transports"])
