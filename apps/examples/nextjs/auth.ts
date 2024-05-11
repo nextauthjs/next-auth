@@ -19,6 +19,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Netlify from "next-auth/providers/netlify"
 import Okta from "next-auth/providers/okta"
 import Passage from "next-auth/providers/passage"
+import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
@@ -27,11 +28,15 @@ import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
-
+import { createStorage } from "unstorage"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 
-export const config = {
+const storage = createStorage()
+
+const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
+  adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
     Auth0,
@@ -58,6 +63,7 @@ export const config = {
     LinkedIn,
     Netlify,
     Okta,
+    Passkey,
     Passage,
     Pinterest,
     Reddit,
@@ -85,10 +91,16 @@ export const config = {
       return token
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken
+      if (token?.accessToken) {
+        session.accessToken = token.accessToken
+      }
       return session
     },
   },
+  experimental: {
+    enableWebAuthn: true,
+  },
+  debug: process.env.NODE_ENV !== "production" ? true : false,
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
