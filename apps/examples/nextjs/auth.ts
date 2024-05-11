@@ -29,10 +29,13 @@ import Twitter from "next-auth/providers/twitter"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
+import fsDriver from "unstorage/drivers/fs"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 
-const storage = createStorage()
+const storage = createStorage({
+  driver: fsDriver({ base: "./tmp-unstorage" }),
+})
 
 const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
