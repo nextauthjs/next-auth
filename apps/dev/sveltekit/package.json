@@ -12,12 +12,11 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "2.4.3",
+    "@sveltejs/kit": "^2.5.7",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "svelte": "^4",
     "svelte-check": "2.10.2",
-    "typescript": "5.2.2",
-    "vite": "^5"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "@auth/sveltekit": "workspace:*",

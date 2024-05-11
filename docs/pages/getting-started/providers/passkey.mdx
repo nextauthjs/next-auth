@@ -212,21 +212,3 @@ export default function Login() {
 ## Options
 
 You can find all of the Passkeys provider options under the [API reference](/reference/core/providers/webauthn#webauthnconfig).
-
-## Notes
-
-- If you only pass a field named `username`, like below. 1Password **will not** offer to save new Passkeys in your login form.
-
-```ts filename="@/auth.ts" /username/
-providers = [
-  Passkey({
-    formFields: {
-      username: {
-        label: "Username",
-        required: true,
-        autocomplete: "webauthn username",
-      },
-    },
-  }),
-]
-```
