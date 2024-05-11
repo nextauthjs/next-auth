@@ -54,7 +54,7 @@ import {
 } from "drizzle-orm/pg-core"
 import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
-import type { AdapterAccountType } from "next-auth/adapters"
+import type { AdapterAccount } from "next-auth/adapters"
 
 const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
 const pool = postgres(connectionString, { max: 1 })
@@ -77,7 +77,7 @@ export const accounts = pgTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
@@ -130,7 +130,7 @@ import {
 } from "drizzle-orm/mysql-core"
 import mysql from "mysql2/promise"
 import { drizzle } from "drizzle-orm/mysql2"
-import type { AdapterAccountType } from "next-auth/adapters"
+import type { AdapterAccount } from "next-auth/adapters"
 
 export const connection = await mysql.createConnection({
   host: "host",
@@ -161,7 +161,7 @@ export const accounts = mysqlTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
-      .$type<AdapterAccountType>()
+      .$type<AdapterAccount["type"]>()
       .notNull(),
     provider: varchar("provider", { length: 255 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
@@ -209,7 +209,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import type { AdapterAccountType } from "next-auth/adapters"
+import type { AdapterAccount } from "next-auth/adapters"
 
 const client = createClient({
   url: "DATABASE_URL",
@@ -233,7 +233,7 @@ export const accounts = sqliteTable(
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
