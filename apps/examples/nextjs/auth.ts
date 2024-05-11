@@ -30,11 +30,18 @@ import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
 import fsDriver from "unstorage/drivers/fs"
+import vercelKVDriver from "unstorage/drivers/vercel-kv"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 
 const storage = createStorage({
-  driver: fsDriver({ base: "./tmp-unstorage" }),
+  driver: process.env.VERCEL
+    ? vercelKVDriver({
+      // @ts-expect-error
+      url: process.env.AUTH_KV_REST_API_URL,
+      token: process.env.AUTH_KV_REST_API_TOKEN,
+    })
+    : fsDriver({ base: "./tmp-unstorage" }),
 })
 
 const config = {
