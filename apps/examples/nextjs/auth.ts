@@ -29,7 +29,7 @@ import Twitter from "next-auth/providers/twitter"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
-import fsDriver from "unstorage/drivers/fs"
+import memoryDriver from "unstorage/drivers/memory"
 import vercelKVDriver from "unstorage/drivers/vercel-kv"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
@@ -41,7 +41,7 @@ const storage = createStorage({
       token: process.env.AUTH_KV_REST_API_TOKEN,
       env: false,
     })
-    : fsDriver({ base: "./tmp-unstorage" }),
+    : memoryDriver(),
 })
 
 const config = {
