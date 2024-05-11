@@ -21,7 +21,13 @@
       "@/icons/*": ["components/Icons/*"],
       "@/icons": ["components/Icons"],
       "@/data/*": ["pages/data/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
@@ -29,7 +35,8 @@
     "**/*.ts",
     "**/*.tsx",
     "tailwind.config.js",
-    "pages/_meta.js"
+    "pages/_meta.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
