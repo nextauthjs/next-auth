@@ -2,6 +2,10 @@ import type { AuthConfig } from "@auth/core"
 import type { BuiltInProviderType } from "@auth/core/providers"
 import type { Session } from "@auth/core/types"
 
+export type LiteralUnion<T extends U, U = string> =
+  | T
+  | (U & Record<never, never>)
+
 /** Configure the {@link SvelteKitAuth} method. */
 export interface SvelteKitAuthConfig extends Omit<AuthConfig, "raw"> {}
 
