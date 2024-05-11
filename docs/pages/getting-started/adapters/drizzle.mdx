@@ -111,24 +111,32 @@ export const verificationTokens = pgTable(
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
   })
 )
 
-export const authenticators = pgTable("authenticator", {
-  id: text("id").notNull().primaryKey(),
-  credentialID: text("credentialID").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  providerAccountId: text("providerAccountId").notNull(),
-  credentialPublicKey: text("credentialPublicKey").notNull(),
-  counter: integer("counter").notNull(),
-  credentialDeviceType: text("credentialDeviceType").notNull(),
-  credentialBackedUp: boolean("credentialBackedUp").notNull(),
-  transports: text("transports"),
-})
+export const authenticators = pgTable("authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)
 ```
 
 </Accordion>
@@ -211,28 +219,37 @@ export const verificationTokens = mysqlTable(
     token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
   })
 )
 
-export const authenticators = pgTable("authenticator", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-  credentialPublicKey: varchar("credentialPublicKey", {
-    length: 255,
-  }).notNull(),
-  counter: int("counter").notNull(),
-  credentialDeviceType: varchar("credentialDeviceType", {
-    length: 255,
-  }).notNull(),
-  credentialBackedUp: boolean("credentialBackedUp").notNull(),
-  transports: varchar("transports", { length: 255 }),
-})
+export const authenticators = pgTable(
+  "authenticator",
+  {
+    credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    credentialPublicKey: varchar("credentialPublicKey", {
+      length: 255,
+    }).notNull(),
+    counter: int("counter").notNull(),
+    credentialDeviceType: varchar("credentialDeviceType", {
+      length: 255,
+    }).notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: varchar("transports", { length: 255 }),
+  },
+  (authenticator) => ({
+    compositePk: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)
 ```
 
 </Accordion>
@@ -300,26 +317,35 @@ export const verificationTokens = sqliteTable(
     token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
   })
 )
 
-export const authenticators = sqliteTable("authenticator", {
-  id: text("id").notNull().primaryKey(),
-  credentialID: text("credentialID").notNull().unique(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  providerAccountId: text("providerAccountId").notNull(),
-  credentialPublicKey: text("credentialPublicKey").notNull(),
-  counter: integer("counter").notNull(),
-  credentialDeviceType: text("credentialDeviceType").notNull(),
-  credentialBackedUp: integer("credentialBackedUp", {
-    mode: "boolean",
-  }).notNull(),
-  transports: text("transports"),
-})
+export const authenticators = sqliteTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: integer("credentialBackedUp", {
+      mode: "boolean",
+    }).notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)
 ```
 
 </Accordion>
