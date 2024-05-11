@@ -7,9 +7,12 @@ import Google from "@auth/sveltekit/providers/google"
 import Passkey from "@auth/sveltekit/providers/passkey"
 import { createStorage } from "unstorage"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import fsDriver from "unstorage/drivers/fs"
 import { dev } from "$app/environment"
 
-const storage = createStorage()
+const storage = createStorage({
+  driver: fsDriver({ base: "./tmp-unstorage" }),
+})
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   debug: dev ? true : false,
