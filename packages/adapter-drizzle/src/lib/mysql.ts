@@ -323,12 +323,11 @@ export function MySqlDrizzleAdapter(
         .then((res) => res[0] ?? null)
     },
     async getAuthenticator(credentialID: string) {
-      const authenticator = await client
+      return await client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => (res.length ? res[0] : null))
-      return authenticator ? authenticator : null
+        .then((res) => res[0] ?? null)
     },
     async listAuthenticatorsByUserId(userId: string) {
       return await client

@@ -80,28 +80,36 @@ export function defineTables(
         expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
       },
       (verficationToken) => ({
-        compositePk: primaryKey({ columns: [verficationToken.identifier, verficationToken.token] }),
+        compositePk: primaryKey({
+          columns: [verficationToken.identifier, verficationToken.token],
+        }),
       })
     ) satisfies DefaultSQLiteVerificationTokenTable)
 
   const authenticatorsTable =
     schema.authenticatorsTable ??
-    (sqliteTable("authenticator", {
-      credentialID: text("credentialID").notNull().unique(),
-      userId: text("userId")
-        .notNull()
-        .references(() => usersTable.id, { onDelete: "cascade" }),
-      providerAccountId: text("providerAccountId").notNull(),
-      credentialPublicKey: text("credentialPublicKey").notNull(),
-      counter: integer("counter").notNull(),
-      credentialDeviceType: text("credentialDeviceType").notNull(),
-      credentialBackedUp: integer("credentialBackedUp", {
-        mode: "boolean",
-      }).notNull(),
-      transports: text("transports"),
-    }, (authenticator) => ({
-      compositePK: primaryKey({ columns: [authenticator.userId, authenticator.credentialID]})
-    })) satisfies DefaultSQLiteAuthenticatorTable)
+    (sqliteTable(
+      "authenticator",
+      {
+        credentialID: text("credentialID").notNull().unique(),
+        userId: text("userId")
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        providerAccountId: text("providerAccountId").notNull(),
+        credentialPublicKey: text("credentialPublicKey").notNull(),
+        counter: integer("counter").notNull(),
+        credentialDeviceType: text("credentialDeviceType").notNull(),
+        credentialBackedUp: integer("credentialBackedUp", {
+          mode: "boolean",
+        }).notNull(),
+        transports: text("transports"),
+      },
+      (authenticator) => ({
+        compositePK: primaryKey({
+          columns: [authenticator.userId, authenticator.credentialID],
+        }),
+      })
+    ) satisfies DefaultSQLiteAuthenticatorTable)
 
   return {
     usersTable,
@@ -274,17 +282,16 @@ export function SQLiteDrizzleAdapter(
         .insert(authenticatorsTable)
         .values(data)
         .returning()
-        .then((res) => (res[0]) ?? null)
+        .then((res) => res[0] ?? null)
 
       return user
     },
     async getAuthenticator(credentialID: string) {
-      const authenticator = await client
+      return await client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => (res.length ? (res[0]) : null))
-      return authenticator ? authenticator : null
+        .then((res) => res[0] ?? null)
     },
     async listAuthenticatorsByUserId(userId: string) {
       return await client
@@ -299,36 +306,8 @@ export function SQLiteDrizzleAdapter(
         .set({ counter: newCounter })
         .where(eq(authenticatorsTable.credentialID, credentialID))
         .returning()
-        .then((res) => (res[0]) ?? null)
+        .then((res) => res[0] ?? null)
     },
-  }
-}
-
-type BaseAuthenticator = InferInsertModel<
-  ReturnType<typeof defineTables>["authenticatorsTable"]
->
-export type DrizzleAuthenticator = BaseAuthenticator &
-  Required<
-    Pick<
-      BaseAuthenticator,
-      | "userId"
-      | "providerAccountId"
-      | "counter"
-      | "credentialBackedUp"
-      | "credentialID"
-      | "credentialPublicKey"
-      | "credentialDeviceType"
-    >
-  >
-
-function (
-  authenticator: DrizzleAuthenticator
-): AdapterAuthenticator {
-  const { transports, id, ...other } = authenticator
-
-  return {
-    ...other,
-    transports: transports || undefined,
   }
 }
 
