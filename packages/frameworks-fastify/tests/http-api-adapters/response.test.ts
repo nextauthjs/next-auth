@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from "vitest"
 import Fastify from "fastify"
-import type { LightMyRequestResponse } from 'fastify';
+import type { LightMyRequestResponse } from "fastify"
 import { toFastifyReply } from "../../src/lib"
 
 function expectMatchingResponseHeaders(
@@ -10,7 +10,7 @@ function expectMatchingResponseHeaders(
   for (let [headerName] of response.headers) {
     const resValue = res.headers[headerName.toLowerCase()] as string
     expect(response.headers.get(headerName)).toEqual(
-      resValue.split('; charset=utf-8')[0]
+      resValue.split("; charset=utf-8")[0]
     )
   }
 }
@@ -37,14 +37,14 @@ describe("toWebResponse", () => {
       return toFastifyReply(webResponse, reply)
     })
 
-    await fastify.ready();
+    await fastify.ready()
 
     const res = await fastify.inject({
-      method: 'POST',
-      url: '/',
-    });
+      method: "POST",
+      url: "/",
+    })
 
-    expect(res.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(200)
     expectMatchingResponseHeaders(webResponse, res)
     expect(res.body).toEqual(JSON.stringify({ name: "Rexford" }))
   })

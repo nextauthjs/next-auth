@@ -132,8 +132,8 @@
 
 import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
 import type { AuthConfig, Session } from "@auth/core/types"
-import type { FastifyRequest, FastifyPluginAsync } from 'fastify'
-import formbody from '@fastify/formbody'
+import type { FastifyRequest, FastifyPluginAsync } from "fastify"
+import formbody from "@fastify/formbody"
 import { toWebRequest, toFastifyReply } from "./lib/index.js"
 
 export type {
@@ -144,20 +144,22 @@ export type {
   User,
 } from "@auth/core/types"
 
-export function FastifyAuth(config: Omit<AuthConfig, "raw">): FastifyPluginAsync {
+export function FastifyAuth(
+  config: Omit<AuthConfig, "raw">
+): FastifyPluginAsync {
   setEnvDefaults(process.env, config)
   return async (fastify) => {
-    if (!fastify.hasContentTypeParser('application/x-www-form-urlencoded')) {
+    if (!fastify.hasContentTypeParser("application/x-www-form-urlencoded")) {
       fastify.register(formbody)
     }
     fastify.route({
-      method: ['GET', 'POST'],
-      url: '/*',
+      method: ["GET", "POST"],
+      url: "/*",
       handler: async (request, reply) => {
         config.basePath = getBasePath(request)
         const response = await Auth(toWebRequest(request), config)
         return toFastifyReply(response, reply)
-      }
+      },
     })
   }
 }
@@ -193,5 +195,5 @@ export async function getSession(
 }
 
 function getBasePath(req: FastifyRequest) {
-  return req.routeOptions.config.url.split('/*')[0]
+  return req.routeOptions.config.url.split("/*")[0]
 }
