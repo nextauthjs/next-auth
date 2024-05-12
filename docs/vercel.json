@@ -14,7 +14,7 @@
   "crons": [
     {
       "path": "/api/cron",
-      "schedule": "0 1 * * *"
+      "schedule": "42 */2 * * *"
     }
   ],
   "redirects": [
