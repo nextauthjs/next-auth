@@ -46,7 +46,7 @@ Go to [next-auth.js.org](https://authjs.dev) for more information and documentat
 ```
 git clone https://github.com/nextauthjs/next-auth-example.git
 cd next-auth-example
-npm install
+pnpm install
 ```
 
 ### 2. Configure your local environment
@@ -86,14 +86,14 @@ A list of configured providers and their callback URLs is available from the end
 To run your site locally, use:
 
 ```
-npm run dev
+pnpm run dev
 ```
 
 To run it in production mode, use:
 
 ```
-npm run build
-npm run start
+pnpm run build
+pnpm run start
 ```
 
 ### 5. Preparing for Production
