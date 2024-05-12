@@ -9,6 +9,7 @@ export default {
   sveltekit: "@auth/sveltekit",
   express: "@auth/express",
   "solid-start": "@auth/solid-start",
+  fastify: "@auth/fastify",
   warnings: "Warnings",
   errors: {
     title: "Errors",
