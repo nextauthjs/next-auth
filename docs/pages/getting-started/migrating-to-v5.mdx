@@ -1,0 +1,328 @@
+---
+title: Migrating to v5
+---
+
+import { Callout, Tabs, Steps } from "nextra/components"
+
+# Upgrade Guide (NextAuth.js v5)
+
+<Callout type="info">
+  This guide only applies to `next-auth` upgrades for users of Next.js. Feel
+  free to skip to the next section,
+  [Installation](/getting-started/installation), if you are not upgrading to
+  `next-auth@5`.
+</Callout>
+
+**NextAuth.js version 5** is a major rewrite of the `next-auth` package, that being said, we introduced as few breaking changes as possible. For all else, this document will guide you through the migration process.
+
+Get started by installing the latest version of `next-auth` with the `beta` tag.
+
+```bash npm2yarn
+npm install next-auth@beta
+```
+
+## New Features
+
+#### Main changes
+
+- App Router-first (`pages/` still supported)
+- OAuth support on preview deployments ([Read more](/getting-started/deployment#securing-a-preview-deployment))
+- Simplified setup (shared config, inferred [env variables](/guides/environment-variables#environment-variable-inference))
+- New `account()` callback on providers ([`account()` docs](/reference/core/providers#account))
+- Edge-compatible
+
+#### Universal `auth()`
+
+- A single method to authenticate anywhere
+- Use `auth()` instead of `getServerSession`, `getSession`, `withAuth`, `getToken`, and `useSession` ([Read more](#authenticating-server-side))
+
+## Breaking Changes
+
+- Auth.js now builds on `@auth/core` with stricter [OAuth](https://www.ietf.org/rfc/rfc6749.html)/[OIDC](https://openid.net/specs/openid-connect-core-1_0.html) spec-compliance, which might break some existing OAuth providers. See our [open issues](https://github.com/nextauthjs/next-auth/issues?q=is%3Aopen+is%3Aissue+label%3Aproviders) for more details.
+- OAuth 1.0 support is deprecated.
+- The minimum required Next.js version is now [14.0](https://nextjs.org/14).
+- The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+
+## Migration
+
+<Steps>
+
+### Configuration File
+
+One of our goals was to avoid exporting your configuration from one file and passing it around as `authOptions` throughout your application. To achieve this, we settled on moving the configuration file to the root of the repository and having it export the necessary functions you can use everywhere else. (`auth`, `signIn`, `signOut`, `handlers` etc.).
+
+The configuration file should look very similar to your previous route-based Auth.js configuration. Except that we're doing it in a new file in the root of the repository now, and we're exporting methods to be used elsewhere. Below is a simple example of a v5 configuration file.
+
+```ts filename="./auth.ts" {5}
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
+
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  providers: [GitHub, Google],
+})
+```
+
+Some things to note about the new configuration:
+
+1. This is now in a file named `auth.ts` in the root of your repository. It can technically be named anything, but you'll be importing the exported methods from here across your app, so we'd recommend keeping it short.
+2. There is no need to install `@auth/core` to import the provider definitions from, these come from `next-auth` itself.
+3. The configuration object passed to the `NextAuth()` function is the same as before.
+4. The returned methods exported from the `NextAuth()` function call are new and will be required elsewhere in your application.
+
+The old configuration file, contained in the API Route (`pages/api/auth/[...nextauth].ts` / `app/api/auth/[...nextauth]/route.ts`), now becomes much shorter. **These exports are designed to be used in an App Router API Route**, but the rest of your app can stay in the Pages Router if you are gradually migrating!
+
+```ts filename="app/api/auth/[...nextauth]/route.ts"
+import { handlers } from "@/auth"
+export const { GET, POST } = handlers
+```
+
+## Authenticating server-side
+
+Auth.js has had a few different ways to authenticate server-side in the past, so we've tried to simplify this as much as possible.
+
+Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function call in most cases.
+
+### Authentication methods
+
+See the table below for a summary of the changes. Below that are `diff` examples of how to use the new `auth()` method in various environments and contexts.
+
+| Where                   | v4                                                    | v5                               |
+| ----------------------- | ----------------------------------------------------- | -------------------------------- |
+| **Server Component**    | `getServerSession(authOptions)`                       | `auth()` call                    |
+| **Middleware**          | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| **Client Component**    | `useSession()` hook                                   | `useSession()` hook              |
+| **Route Handler**       | _Previously not supported_                            | `auth()` wrapper                 |
+| **API Route (Edge)**    | _Previously not supported_                            | `auth()` wrapper                 |
+| **API Route (Node.js)** | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
+| **API Route (Node.js)** | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| **getServerSideProps**  | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
+| **getServerSideProps**  | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
+
+#### Details
+
+<Tabs items={["Server Component (App)", "Client Component (App)", "Middleware", "API Routes (Pages)", "getServerSideProps (Pages)"]}>
+
+<Tabs.Tab>
+
+Auth.js v4 has supported reading the session in Server Components for a while via `getServerSession`. This has been also simplified to the same `auth()` function.
+
+```diff filename="app/page.tsx"
+- import { authOptions } from "pages/api/auth/[...nextauth]"
+- import { getServerSession } from "next-auth/next"
++ import { auth } from "@/auth"
+
+export default async function Page() {
+-  const session = await getServerSession(authOptions)
++  const session = await auth()
+  return (<p>Welcome {session?.user.name}!</p>)
+}
+```
+
+</Tabs.Tab>
+<Tabs.Tab>
+
+Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions.
+
+<Callout type="warning">
+  If you have previously used `getSession()` or other imports from
+  `next-auth/react` server-side, you'll have to refactor them to use `auth()` as
+  shown above instead.
+</Callout>
+
+</Tabs.Tab>
+<Tabs.Tab>
+
+```diff filename="middleware.ts"
+- export { default } from "next-auth/middleware"
++ export { auth as middleware } from "@/auth"
+```
+
+For advanced use cases, you can use `auth` as a wrapper for your Middleware:
+
+```ts filename="middleware.ts"
+import { auth } from "@/auth"
+
+export default auth((req) => {
+  // req.auth
+})
+
+// Optionally, don't invoke Middleware on some paths
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
+```
+
+Check out additional [Middleware docs](/getting-started/session-management/protecting#nextjs-middleware) for more details.
+
+</Tabs.Tab>
+<Tabs.Tab>
+
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function exported from your `auth.ts` config file and call it without passing `authOptions`.
+
+```diff filename='pages/api/example.ts'
+- import { getServerSession } from "next-auth/next"
+- import { getToken } from "next-auth/jwt"
+- import { authOptions } from "pages/api/auth/[...nextauth]"
++ import { auth } from "@/auth"
++ import { NextApiRequest, NextApiResponse } from "next"
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+-  const session = await getServerSession(req, res, authOptions)
+-  const token = await getToken({ req })
++  const session = await auth(req, res)
+  if (session) return res.json("Success")
+  return res.status(401).json("You must be logged in.");
+}
+```
+
+<Callout>
+  Whenever `auth()` is passed the res object, it will rotate the session expiry.
+  This was not the case with `getToken()` previously. The default session expiry
+  is 30 days, but you can change it by setting `authOptions.session.maxAge`.
+</Callout>
+
+</Tabs.Tab>
+<Tabs.Tab>
+
+Instead of importing `getServerSession` from `next-auth/next` or `getToken` from `next-auth/jwt`, you can now import the `auth` function from your config file and call it without passing `authOptions`.
+
+```diff filename="pages/protected.tsx"
+- import { getServerSession } from "next-auth/next"
+- import { getToken } from "next-auth/jwt"
+- import { authOptions } from "pages/api/auth/[...nextauth]"
++ import { auth } from "@/auth"
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+-  const session = await getServerSession(context.req, context.res, authOptions)
+-  const token = await getToken({ req: context.req })
++  const session = await auth(context)
+  if (session) {
+    // Do something with the session
+  }
+
+  return { props: { session } }
+}
+```
+
+<Callout>
+  Whenever `auth()` is passed the `res` object (i.e. as a part of `context`), it
+  will rotate the session expiry. This was not the case with `getToken()`
+  previously.
+</Callout>
+
+</Tabs.Tab>
+</Tabs>
+
+## Adapters
+
+### Adapter packages
+
+Beginning with `next-auth` v5, you should now install database adapters from the `@auth/*-adapter` scope, instead of `@next-auth/*-adapter`. Database adapters don't rely on any Next.js features, so it made more sense to move them to this new scope.
+
+```diff
+- npm install @next-auth/prisma-adapter
++ npm install @auth/prisma-adapter
+```
+
+<Callout type="info">
+  Check out the [adapters page](/getting-started/database) for a list of
+  official adapters, or the "[create a database
+  adapter](/guides/creating-a-database-adapter)" guide to learn how to create
+  your own.
+</Callout>
+
+### Database Migrations
+
+NextAuth.js v5 **does not introduce any breaking changes to the database schema**. However, since OAuth 1.0 support is dropped, the (previously optional) `oauth_token_secret` and `oauth_token` fields can be removed from the `account` table if you are not using them.
+
+Furthermore, previously uncommon fields like GitHub's `refresh_token_expires_in` fields were
+required to be added to the `account` table. This is no longer the case, and you can remove it if
+you are not using it. If you do use it, please make sure to return it via the new [`account()` callback](/reference/core/providers#account).
+
+## Edge compatibility
+
+While Auth.js strictly uses standard [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) (and thus can run in any environment that supports them), some libraries or ORMs (Object-Relational Mapping) packages that you rely on might not be ready yet. In this case, you can split the auth configuration into multiple files.
+
+Auth.js supports two [session strategies](/concepts/session-strategies). When you are using an adapter, it will default to the `database` strategy. **Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use the `"database"` session strategy**.
+
+So for example, if you are using an adapter that relies on an ORM/library that is not yet compatible with Edge runtime(s) below is an example where we force the `jwt` strategy and split up the configuration so the library doesn't attempt to access the database in edge environments, like in the middleware.
+
+<Callout>
+  The following filenames are only a convention, they can be named anything you
+  like.
+</Callout>
+
+1. Create an `auth.config.ts` file which exports an object containing your Auth.js configuration options. You can put all common configuration here **which does not rely on the adapter**. Notice this is exporting a configuration object only, we're not calling `NextAuth()` here.
+
+```ts filename="auth.config.ts"
+import GitHub from "next-auth/providers/github"
+import type { NextAuthConfig } from "next-auth"
+
+export default { providers: [GitHub] } satisfies NextAuthConfig
+```
+
+2. Next, create an `auth.ts` file and add your adapter and the `jwt` session strategy there. This is the `auth.ts` configuration file you will import from in the rest of your application, other than in the middleware.
+
+```ts filename="auth.ts" {4, 9, 11}
+import NextAuth from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+import authConfig from "./auth.config"
+
+const prisma = new PrismaClient()
+
+export const { handlers, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  ...authConfig,
+})
+```
+
+3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, initialize Auth.js separately with all of your common options, but **without the edge incompatible adapter**.
+
+```ts filename="middleware.ts" {1} /NextAuth/
+import authConfig from "./auth.config"
+import NextAuth from "next-auth"
+export const { auth: middleware } = NextAuth(authConfig)
+```
+
+The above is an example. The takeaway is to separate the part of the configuration that is edge-compatible from the rest, and only import that in Middleware/Edge pages/routes.
+
+Please follow up with your library/database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
+
+## Environment Variables
+
+There are **no breaking changes to the environment variables**, but we have cleaned up a few things which make some of them unnecessary. Therefore, we wanted to share some best practices around environment variables.
+
+- All environment variables should be prefixed with `AUTH_`, `NEXTAUTH_` is no longer in use.
+- If you name your provider `secret` / `clientId` variables using this syntax, i.e. `AUTH_GITHUB_SECRET` and `AUTH_GITHUB_ID`, they will be auto-detected and you won't have to explicitly pass them into your provider's configuration.
+- The `NEXTAUTH_URL`/`AUTH_URL` is not strictly necessary anymore in most environments. We will auto-detect the host based on the request headers.
+- The `AUTH_TRUST_HOST` environment variable serves the same purpose as setting `trustHost: true` in your Auth.js configuration. This is necessary when running Auth.js behind a proxy. When set to true we will trust the `X-Forwarded-Host` and `X-Forwarded-Proto` headers passed to the app by the proxy to auto-detect the host URL (`AUTH_URL`)
+- The `AUTH_SECRET` environment variable is the **only variable that is really necessary**. You do not need to additionally pass this value into your config as the `secret` configuration option if you've set the environment variable.
+
+For more information about environment variables and environment variable inference, check out our [environment variable](/guides/environment-variables) page.
+
+## TypeScript
+
+- `NextAuthOptions` is renamed to `NextAuthConfig`
+- The following types are now exported from all framework packages like `next-auth` and `@auth/sveltekit`.
+
+```ts
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
+```
+
+- All `Adapter` types are re-exported from `/adapters` in the framework packages as well, i.e. from `next-auth/adapters`, `@auth/sveltekit/adapters`, etc.
+
+</Steps>
+
+## Summary
+
+We hope this migration goes smoothly for everyone! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub, or come chat with us in the [Discord](https://discord.authjs.dev) server.

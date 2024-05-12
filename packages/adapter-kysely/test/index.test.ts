@@ -10,7 +10,7 @@ import {
   SqliteDialect,
 } from "kysely"
 import { createPool } from "mysql2"
-import SqliteDatabase from "better-sqlite3"
+import SqliteDatabase from "libsql"
 import { KyselyAdapter, KyselyAuth } from "../src"
 import type { Database } from "../src"
 

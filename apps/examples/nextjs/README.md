@@ -2,7 +2,7 @@
 
 <p align="center">
    <br/>
-   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo-sm.png" /></a>
    <h3 align="center">NextAuth.js Example App</h3>
    <p align="center">
    Open Source. Full Stack. Own Your Data.

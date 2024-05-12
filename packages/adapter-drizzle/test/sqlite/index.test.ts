@@ -1,10 +1,18 @@
 import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
-import { db, accounts, sessions, users, verificationTokens } from "./schema"
+import {
+  db,
+  accountsTable as accounts,
+  sessionsTable as sessions,
+  usersTable as users,
+  verificationTokensTable as verificationTokens,
+} from "./schema"
 import { eq, and } from "drizzle-orm"
+import { fixtures } from "../fixtures"
 
 runBasicTests({
   adapter: DrizzleAdapter(db),
+  fixtures,
   db: {
     connect: async () => {
       await Promise.all([

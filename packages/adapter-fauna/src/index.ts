@@ -1,8 +1,8 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://fauna.com/features">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" height="30"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" width="64" />
  *  </a>
  * </div>
  *
@@ -14,7 +14,15 @@
  *
  * @module @auth/fauna-adapter
  */
-import { Client, TimeStub, fql, NullDocument, QueryValue, QueryValueObject } from "fauna"
+import {
+  Client,
+  TimeStub,
+  fql,
+  NullDocument,
+  QueryValue,
+  QueryValueObject,
+  Module,
+} from "fauna"
 
 import type {
   Adapter,
@@ -25,7 +33,13 @@ import type {
 } from "@auth/core/adapters"
 
 type ToFauna<T> = {
-  [P in keyof T]: T[P] extends Date | null ? TimeStub | null : T[P] extends undefined ? null : T[P] extends QueryValue ? T[P] : QueryValueObject
+  [P in keyof T]: T[P] extends Date | null
+    ? TimeStub | null
+    : T[P] extends undefined
+      ? null
+      : T[P] extends QueryValue
+        ? T[P]
+        : QueryValueObject
 }
 
 export type FaunaUser = ToFauna<AdapterUser>
@@ -33,191 +47,51 @@ export type FaunaSession = ToFauna<AdapterSession>
 export type FaunaVerificationToken = ToFauna<VerificationToken> & { id: string }
 export type FaunaAccount = ToFauna<AdapterAccount>
 
-/**
- *
- * ## Setup
- *
- * This is the Fauna Adapter for [Auth.js](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` and other framework packages. It is not a standalone package.
- *
- * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapter/fauna](https://authjs.dev/reference/adapter/fauna).
- *
- * ### Configure Auth.js
- *
- * ```javascript title="pages/api/auth/[...nextauth].js"
- * import NextAuth from "next-auth"
- * import { Client } from "fauna"
- * import { FaunaAdapter } from "@auth/fauna-adapter"
- *
- * const client = new Client({
- *   secret: "secret",
- *   endpoint: new URL('http://localhost:8443')
- * })
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
- * export default NextAuth({
- *   // https://authjs.dev/reference/providers/
- *   providers: [],
- *   adapter: FaunaAdapter(client)
- *   ...
- * })
- * ```
- *
- * ### Schema
- *
- * Run the following FQL code inside the `Shell` tab in the Fauna dashboard to set up the appropriate collections and indexes.
- *
- * ```javascript
- * Collection.create({
- *   name: "Account",
- *   indexes: {
- *     byUserId: {
- *       terms: [
- *         { field: "userId" }
- *       ]
- *     },
- *     byProviderAndProviderAccountId: {
- *       terms [
- *         { field: "provider" },
- *         { field: "providerAccountId" }
- *       ]
- *     },
- *   }
- * })
- * Collection.create({
- *   name: "Session",
- *   constraints: [
- *     {
- *       unique: ["sessionToken"],
- *       status: "active",
- *     }
- *   ],
- *   indexes: {
- *     bySessionToken: {
- *       terms: [
- *         { field: "sessionToken" }
- *       ]
- *     },
- *     byUserId: {
- *       terms [
- *         { field: "userId" }
- *       ]
- *     },
- *   }
- * })
- * Collection.create({
- *   name: "User",
- *   constraints: [
- *     {
- *       unique: ["email"],
- *       status: "active",
- *     }
- *   ],
- *   indexes: {
- *     byEmail: {
- *       terms [
- *         { field: "email" }
- *       ]
- *     },
- *   }
- * })
- * Collection.create({
- *   name: "VerificationToken",
- *   indexes: {
- *     byIdentifierAndToken: {
- *       terms [
- *         { field: "identifier" },
- *         { field: "token" }
- *       ]
- *     },
- *   }
- * })
- * ```
- *
- * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
- *
- * ### Migrating from v1
- * In v2, we've renamed the collections to use uppercase naming, in accordance with Fauna best practices. If you're migrating from v1, you'll need to rename your collections to match the new naming scheme.
- * Additionally, we've renamed the indexes to match the new method-like index names.
- *
- * #### Migration script
- * Run this FQL script inside a Fauna shell for the database you're migrating from v1 to v2 (it will rename your collections and indexes to match):
- *
- * ```javascript
- * Collection.byName("accounts")!.update({
- *   name: "Account"
- *   indexes: {
- *     byUserId: {
- *         terms: [{ field: "userId" }]
- *     },
- *     byProviderAndProviderAccountId: {
- *         terms: [{ field: "provider" }, { field: "providerAccountId" }]
- *     },
- *     account_by_provider_and_provider_account_id: null,
- *     accounts_by_user_id: null
- *   }
- * })
- * Collection.byName("sessions")!.update({
- *   name: "Session",
- *   indexes: {
- *     bySessionToken: {
- *         terms: [{ field: "sessionToken" }]
- *     },
- *     byUserId: {
- *         terms: [{ field: "userId" }]
- *     },
- *     session_by_session_token: null,
- *     sessions_by_user_id: null
- *   }
- * })
- * Collection.byName("users")!.update({
- *   name: "User",
- *   indexes: {
- *     byEmail: {
- *         terms: [{ field: "email" }]
- *     },
- *     user_by_email: null
- *   }
- * })
- * Collection.byName("verification_tokens")!.update({
- *   name: "VerificationToken",
- *   indexes: {
- *     byIdentifierAndToken: {
- *         terms: [{ field: "identifier" }, { field: "token" }]
- *     },
- *     verification_token_by_identifier_and_token: null
- *   }
- * })
- * ```
- *
- **/
-export function FaunaAdapter(client: Client): Adapter {
+type AdapterConfig = {
+  collectionNames: {
+    user: string
+    session: string
+    account: string
+    verificationToken: string
+  }
+}
+
+const defaultCollectionNames = {
+  user: "User",
+  session: "Session",
+  account: "Account",
+  verificationToken: "VerificationToken",
+}
+
+export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
+  const { collectionNames = defaultCollectionNames } = config || {}
+
   return {
     async createUser(user) {
       const response = await client.query<FaunaUser>(
-        fql`User.create(${format.to(user)})`,
+        fql`Collection(${collectionNames.user}).create(${format.to(user)})`
       )
       return format.from(response.data)
     },
     async getUser(id) {
       const response = await client.query<FaunaUser | NullDocument>(
-        fql`User.byId(${id})`,
+        fql`Collection(${collectionNames.user}).byId(${id})`
       )
       if (response.data instanceof NullDocument) return null
       return format.from(response.data)
     },
     async getUserByEmail(email) {
       const response = await client.query<FaunaUser>(
-        fql`User.byEmail(${email}).first()`,
+        fql`Collection(${collectionNames.user}).byEmail(${email}).first()`
       )
       if (response.data === null) return null
       return format.from(response.data)
     },
     async getUserByAccount({ provider, providerAccountId }) {
       const response = await client.query<FaunaUser>(fql`
-        let account = Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()
+        let account = Collection(${collectionNames.account}).byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()
         if (account != null) {
-          User.byId(account.userId)
+          Collection(${collectionNames.user}).byId(account.userId)
         } else {
           null
         }
@@ -228,39 +102,43 @@ export function FaunaAdapter(client: Client): Adapter {
       const _user: Partial<AdapterUser> = { ...user }
       delete _user.id
       const response = await client.query<FaunaUser>(
-        fql`User.byId(${user.id}).update(${format.to(_user)})`,
+        fql`Collection(${collectionNames.user}).byId(${
+          user.id
+        }).update(${format.to(_user)})`
       )
       return format.from(response.data)
     },
     async deleteUser(userId) {
       await client.query(fql`
         // Delete the user's sessions
-        Session.byUserId(${userId}).forEach(session => session.delete())
+        Collection(${collectionNames.session}).byUserId(${userId}).forEach(session => session.delete())
         
         // Delete the user's accounts
-        Account.byUserId(${userId}).forEach(account => account.delete())
+        Collection(${collectionNames.account}).byUserId(${userId}).forEach(account => account.delete())
         
         // Delete the user
-        User.byId(${userId}).delete()
+        Collection(${collectionNames.user}).byId(${userId}).delete()
       `)
     },
     async linkAccount(account) {
       await client.query<FaunaAccount>(
-        fql`Account.create(${format.to(account)})`,
+        fql`Collection(${collectionNames.account}).create(${format.to(
+          account
+        )})`
       )
       return account
     },
     async unlinkAccount({ provider, providerAccountId }) {
       const response = await client.query<FaunaAccount>(
-        fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`,
+        fql`Collection(${collectionNames.account}).byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`
       )
       return format.from<AdapterAccount>(response.data)
     },
     async getSessionAndUser(sessionToken) {
       const response = await client.query<[FaunaUser, FaunaSession]>(fql`
-        let session = Session.bySessionToken(${sessionToken}).first()
+        let session = Collection(${collectionNames.session}).bySessionToken(${sessionToken}).first()
         if (session != null) {
-          let user = User.byId(session.userId)
+          let user = Collection(${collectionNames.user}).byId(session.userId)
           if (user != null) {
             [user, session]
           } else {
@@ -276,41 +154,45 @@ export function FaunaAdapter(client: Client): Adapter {
     },
     async createSession(session) {
       await client.query<FaunaSession>(
-        fql`Session.create(${format.to(session)})`,
+        fql`Collection(${collectionNames.session}).create(${format.to(
+          session
+        )})`
       )
       return session
     },
     async updateSession(session) {
       const response = await client.query<FaunaSession>(
-        fql`Session.bySessionToken(${
+        fql`Collection(${collectionNames.session}).bySessionToken(${
           session.sessionToken
-        }).first().update(${format.to(session)})`,
+        }).first().update(${format.to(session)})`
       )
       return format.from(response.data)
     },
     async deleteSession(sessionToken) {
       await client.query(
-        fql`Session.bySessionToken(${sessionToken}).first().delete()`,
+        fql`Collection(${collectionNames.session}).bySessionToken(${sessionToken}).first().delete()`
       )
     },
     async createVerificationToken(verificationToken) {
       await client.query<FaunaVerificationToken>(
-        fql`VerificationToken.create(${format.to(
-          verificationToken,
-        )})`,
+        fql`Collection(${collectionNames.verificationToken}).create(${format.to(
+          verificationToken
+        )})`
       )
       return verificationToken
     },
     async useVerificationToken({ identifier, token }) {
       const response = await client.query<FaunaVerificationToken>(
-        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first()`,
+        fql`Collection(${collectionNames.verificationToken}).byIdentifierAndToken(${identifier}, ${token}).first()`
       )
       if (response.data === null) return null
       // Delete the verification token so it can only be used once
       await client.query(
-        fql`VerificationToken.byId(${response.data.id}).delete()`,
+        fql`Collection(${collectionNames.verificationToken}).byId(${response.data.id}).delete()`
       )
-      const _verificationToken: Partial<FaunaVerificationToken> = { ...response.data }
+      const _verificationToken: Partial<FaunaVerificationToken> = {
+        ...response.data,
+      }
       delete _verificationToken.id
       return format.from(_verificationToken)
     },

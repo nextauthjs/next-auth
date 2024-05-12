@@ -18,10 +18,8 @@ pnpm-lock.yaml
 
 # --------------- Docs ---------------
 
-.docusaurus
-build
-docs/docs/reference/core
-docs/docs/reference/sveltekit
+.next
+docs/pages/reference
 static
 docs/manifest.mjs
 

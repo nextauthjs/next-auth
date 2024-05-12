@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/zitadel.svg" height="64" width="64" />
+
+# Zitadel Provider
+
+## Resources
+
+- [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
+- [ZITADEL recommended OAuth Flows](https://zitadel.com/docs/guides/integrate/oauth-recommended-flows)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/zitadel
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/zitadel
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ZITADEL_ID
+AUTH_ZITADEL_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Zitadel from "next-auth/providers/zitadel"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Zitadel],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Zitadel from "@auth/sveltekit/providers/zitadel"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Zitadel],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Zitadel from "@auth/express/providers/zitadel"
+
+app.use("/auth/*", ExpressAuth({ providers: [Zitadel] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+The Redirect URIs used when creating the credentials must include your full domain and end in the callback path. For example:
+
+- For production: `https://{YOUR_DOMAIN}/api/auth/callback/zitadel`
+- For development: `http://localhost:3000/api/auth/callback/zitadel`
+
+Make sure to enable dev mode in ZITADEL console to allow redirects for local development.
+
+ZITADEL also returns a email_verified boolean property in the profile. You can use this property to restrict access to people with verified accounts.
+
+```ts filename=pages/api/auth/[...nextauth].js
+const options = {
+  ...
+  callbacks: {
+    async signIn({ account, profile }) {
+      if (account.provider === "zitadel") {
+        return profile.email_verified;
+      }
+      return true; // Do different verification for other providers that don't have `email_verified`
+    },
+  }
+  ...
+}
+```

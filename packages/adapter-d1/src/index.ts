@@ -1,6 +1,6 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>An official <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> adapter for Auth.js / NextAuth.js.</p>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p>An official <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://developers.cloudflare.com/d1/">
  *   <img style={{display: "block"}} src="/img/adapters/d1.svg" width="48" />
  *  </a>
@@ -189,60 +189,6 @@ export async function deleteRecord(
   }
 }
 
-/**
- *
- * ## Setup
- *
- * This is the D1 Adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` package. It is not a standalone package.
- *
- * ### Configure Auth.js
- *
- * ```javascript title="pages/api/auth/[...nextauth].js"
- * import NextAuth from "next-auth"
- * import { D1Adapter, up } from "@auth/d1-adapter"
- *
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/configuration/auth-options
- * export default NextAuth({
- *   // https://authjs.dev/reference/providers/
- *   providers: [],
- *   adapter: D1Adapter(env.db)
- *   ...
- * })
- * ```
- *
- * ### Migrations
- *
- * Somewhere in the initialization of your application you need to run the `up(env.db)` function to create the tables in D1.
- * It will create 4 tables if they don't already exist:
- * `accounts`, `sessions`, `users`, `verification_tokens`.
- *
- * The table prefix "" is not configurable at this time.
- *
- * You can use something like the following to attempt the migration once each time your worker starts up.  Running migrations more than once will not erase your existing tables.
- * ```javascript
- * import { up } from "@auth/d1-adapter"
- *
- * let migrated = false;
- * async function migrationHandle({event, resolve}) {
- *  if(!migrated) {
- *    try {
- *      await up(event.platform.env.db)
- *      migrated = true
- *    } catch(e) {
- *      console.log(e.cause.message, e.message)
- *    }
- *  }
- *  return resolve(event)
- * }
- * ```
- *
- *
- * You can also initialize your tables manually.  Look in [migrations.ts](https://github.com/nextauthjs/next-auth/blob/main/packages/adapter-d1/src/migrations.ts) for the relevant sql.
- * Paste and execute the SQL from within your D1 database's console in the [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/workers/d1).
- *
- **/
 export function D1Adapter(db: D1Database): Adapter {
   // we need to run migrations if we dont have the right tables
 
