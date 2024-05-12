@@ -11,6 +11,12 @@
       ]
     }
   ],
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 1 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/security.txt",
