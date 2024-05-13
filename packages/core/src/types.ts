@@ -73,6 +73,8 @@ import type {
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
 
+export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
+export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
 export type Awaited<T> = T extends Promise<infer U> ? U : T
@@ -389,7 +391,7 @@ export interface Authenticator {
   /**
    * Concatenated transport flags.
    */
-  transports?: string
+  transports?: string | null
   /**
    * Device type of the authenticator.
    */

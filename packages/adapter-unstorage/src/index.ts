@@ -83,7 +83,7 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
-  authenticatorKeyPrefix: "authenticator:id:",
+  authenticatorKeyPrefix: "authenticator:",
   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
   useItemRaw: false,
 }
@@ -94,7 +94,7 @@ function isDate(value: any) {
   return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
-export function hydrateDates(json: object) {
+export function hydrateDates(json: Record<string, any>) {
   return Object.entries(json).reduce((acc, [key, val]) => {
     acc[key] = isDate(val) ? new Date(val as string) : val
     return acc
@@ -134,15 +134,6 @@ export function UnstorageAdapter(
     }
   }
 
-  async function getItems(key: string[]) {
-    if (mergedOptions.useItemRaw) {
-      // Unstorage missing method to get multiple items raw, i.e. `getItemsRaw`
-      return JSON.stringify(await storage.getItems(key))
-    } else {
-      return await storage.getItems(key)
-    }
-  }
-
   async function setItem(key: string, value: string) {
     if (mergedOptions.useItemRaw) {
       return await storage.setItemRaw(key, value)
@@ -151,7 +142,7 @@ export function UnstorageAdapter(
     }
   }
 
-  const setObjectAsJson = async (key: string, obj: any) => {
+  const setObjectAsJson = async (key: string, obj: Record<string, any>) => {
     if (mergedOptions.useItemRaw) {
       await storage.setItemRaw(key, obj)
     } else {
@@ -213,11 +204,21 @@ export function UnstorageAdapter(
     credentialId: string,
     authenticator: AdapterAuthenticator
   ): Promise<AdapterAuthenticator> => {
+    let newCredsToSet = [credentialId]
+
+    const getItemReturn = await getItem<string[]>(
+      `${authenticatorUserKeyPrefix}${authenticator.userId}`
+    )
+
+    if (getItemReturn && getItemReturn[0] !== newCredsToSet[0]) {
+      newCredsToSet.push(...getItemReturn)
+    }
+
     await Promise.all([
       setObjectAsJson(authenticatorKeyPrefix + credentialId, authenticator),
       setItem(
         `${authenticatorUserKeyPrefix}${authenticator.userId}`,
-        credentialId
+        JSON.stringify(newCredsToSet)
       ),
     ])
     return authenticator
@@ -231,24 +232,19 @@ export function UnstorageAdapter(
     return hydrateDates(authenticator)
   }
 
-  // TODO: This one doesn't really work with KV storage, as we can't set the same
-  // key multiple times, they'll just overwrite one another. Maybe with some
-  // additional logic to write an array as the value instead of overwriting
-  // the pre-existing value. Probably in `setItems` implementation.
   const getAuthenticatorByUserId = async (
     userId: string
   ): Promise<AdapterAuthenticator[] | []> => {
-    const credentialIds = await getItems([
-      `${authenticatorUserKeyPrefix}${userId}`,
-    ])
-    if (!credentialIds.length) return []
+    const credentialIds = await getItem<string[]>(
+      `${authenticatorUserKeyPrefix}${userId}`
+    )
 
-    const authenticators = []
+    if (!credentialIds) return []
+
+    const authenticators: AdapterAuthenticator[] = []
+
     for (const credentialId of credentialIds) {
-      const credentialValue =
-        typeof credentialId === "string" ? credentialId : credentialId.value
-
-      const authenticator = await getAuthenticator(credentialValue as string)
+      const authenticator = await getAuthenticator(credentialId)
 
       if (authenticator) {
         hydrateDates(authenticator)
@@ -362,36 +358,22 @@ export function UnstorageAdapter(
       ])
     },
     async createAuthenticator(authenticator) {
-      setAuthenticator(authenticator.credentialID, authenticator)
-      return fromDBAuthenticator(authenticator)!
+      await setAuthenticator(authenticator.credentialID, authenticator)
+      return authenticator
     },
     async getAuthenticator(credentialID) {
-      const authenticator = await getAuthenticator(credentialID)
-      return fromDBAuthenticator(authenticator)
+      return getAuthenticator(credentialID)
     },
     async listAuthenticatorsByUserId(userId) {
       const user = await getUser(userId)
       if (!user) return []
-      const authenticators = await getAuthenticatorByUserId(user.id)
-      return authenticators
+      return getAuthenticatorByUserId(user.id)
     },
     async updateAuthenticatorCounter(credentialID, counter) {
       const authenticator = await getAuthenticator(credentialID)
       authenticator.counter = Number(counter)
-      setAuthenticator(credentialID, authenticator)
-      return fromDBAuthenticator(authenticator)!
+      await setAuthenticator(credentialID, authenticator)
+      return authenticator
     },
-  }
-}
-
-function fromDBAuthenticator(
-  authenticator: AdapterAuthenticator & { id?: string; user?: string }
-): AdapterAuthenticator | null {
-  if (!authenticator) return null
-  const { transports, id, user, ...other } = authenticator
-
-  return {
-    ...other,
-    transports: transports || undefined,
   }
 }
