@@ -40,10 +40,10 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^2.0.5"
+    "@supabase/supabase-js": "^2.43.1"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "^2.0.5",
+    "@supabase/supabase-js": "^2.43.1",
     "supabase": "^1.165.0"
   }
 }
