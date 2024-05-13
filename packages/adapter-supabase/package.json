@@ -33,6 +33,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf *.d.ts* *.js dist/ coverage/ supabase/.branches",
     "test": "./test/test.sh"
   },
   "dependencies": {
