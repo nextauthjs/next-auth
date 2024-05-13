@@ -26,9 +26,9 @@ runBasicTests({
       ])
     },
     disconnect: async () => {
+      await db.delete(accounts)
       await Promise.all([
         db.delete(sessions),
-        db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
         db.delete(authenticators),

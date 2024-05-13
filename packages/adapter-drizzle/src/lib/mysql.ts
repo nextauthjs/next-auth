@@ -313,6 +313,18 @@ export function MySqlDrizzleAdapter(
           )
         )
     },
+    async getAccount(providerAccountId: string, provider: string) {
+      return client
+        .select()
+        .from(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.provider, provider),
+            eq(accountsTable.providerAccountId, providerAccountId)
+          )
+        )
+        .then((res) => res[0] ?? null) as Promise<AdapterAccount | null>
+    },
     async createAuthenticator(data: AdapterAuthenticator) {
       await client.insert(authenticatorsTable).values(data)
 
@@ -342,11 +354,15 @@ export function MySqlDrizzleAdapter(
         .set({ counter: newCounter })
         .where(eq(authenticatorsTable.credentialID, credentialID))
 
-      return await client
+      const authenticator = await client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0])
+
+      if (!authenticator) throw new Error("Authenticator not found.")
+
+      return authenticator
     },
   }
 }
