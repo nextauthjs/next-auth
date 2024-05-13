@@ -22,7 +22,7 @@ port = 54322
 major_version = 14
 
 [db.pooler]
-enabled = false
+enabled = true
 
 [realtime]
 enabled = false
