@@ -13,7 +13,7 @@ function stripContentEncoding(result: Response) {
   })
 }
 
-export async function handler(request: NextRequest) {
+async function handler(request: NextRequest) {
   const session = await auth()
 
   const headers = new Headers(request.headers)

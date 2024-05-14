@@ -15,8 +15,7 @@
  * @module @auth/dgraph-adapter
  */
 import { client as dgraphClient } from "./lib/client.js"
-import { format } from "./lib/utils.js"
-import type { Adapter } from "@auth/core/adapters"
+import { isDate, type Adapter } from "@auth/core/adapters.js"
 import type { DgraphClientParams } from "./lib/client.js"
 import * as defaultFragments from "./lib/graphql/fragments.js"
 
@@ -38,8 +37,6 @@ export interface DgraphAdapterOptions {
     VerificationToken?: string
   }
 }
-
-export { format }
 
 export function DgraphAdapter(
   client: DgraphClientParams,
@@ -335,4 +332,21 @@ export function DgraphAdapter(
       return format.from<any>(result.verificationToken[0])
     },
   }
+}
+
+export const format = {
+  from<T>(object?: Record<string, any>): T | null {
+    const newObject: Record<string, unknown> = {}
+    if (!object) return null
+    for (const key in object) {
+      const value = object[key]
+      if (isDate(value)) {
+        newObject[key] = new Date(value)
+      } else {
+        newObject[key] = value
+      }
+    }
+
+    return newObject as T
+  },
 }

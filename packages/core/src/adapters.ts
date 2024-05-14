@@ -186,6 +186,14 @@ export interface AdapterUser extends User {
 }
 
 /**
+ * The type of account.
+ */
+export type AdapterAccountType = Extract<
+  ProviderType,
+  "oauth" | "oidc" | "email" | "webauthn"
+>
+
+/**
  * An account is a connection between a user and a provider.
  *
  * There are two types of accounts:
@@ -196,7 +204,7 @@ export interface AdapterUser extends User {
  */
 export interface AdapterAccount extends Account {
   userId: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
+  type: AdapterAccountType
 }
 
 /**
@@ -427,6 +435,14 @@ export interface Adapter {
     credentialID: AdapterAuthenticator["credentialID"],
     newCounter: AdapterAuthenticator["counter"]
   ): Awaitable<AdapterAuthenticator>
+}
+
+// https://github.com/honeinc/is-iso-date/blob/master/index.js
+const isoDateRE =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+
+export function isDate(value: any) {
+  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 // For compatibility with older versions of NextAuth.js
