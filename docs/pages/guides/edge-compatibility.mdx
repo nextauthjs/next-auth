@@ -10,7 +10,7 @@ We're going to be talking specifically about Auth.js and how it intersects with 
 
 First things first, **what is "edge"** in this context? Edge here is borrowed from the network engineering folks and refers to a compute node (i.e. server) that is located on the edge of a network, i.e. closer to the users. Usually these are compute nodes that are lower power than the kind of full-fledged servers that can be found in the core of a datacenter that run most important workloads. Some advantages of running code here include lower latency to the users end devices, better scalability story, and more cost-effective compute. Some disadvantages include less powerful hardware and potentially different compatibility in terms of the software stack.
 
-So when we say <abbr title="The JavaScript execution environment usually running at the edge of a network, closer to the user, that is explicitly NOT Node.js and is therefore different in various aspects compared to what we're used to running our code with (i.e. Node.js).">**edge runtimes**</abbr>, we mean a server-side JavaScript runtime that is **not** NodeJS and is optimized to run on these edge compute nodes (servers). That generally means that the code is executing closer to your users on lower power hardware that is optimized for other things like quick startup times, low memory usage, etc.
+So when we say <abbr title="The JavaScript execution environment usually running at the edge of a network, closer to the user, that is explicitly NOT Node.js and is therefore different in various aspects compared to what we're used to running our code with (i.e. Node.js).">**edge runtimes**</abbr>, we mean a server-side JavaScript runtime that is **not** Node.js and is optimized to run on these edge compute nodes (servers). That generally means that the code is executing closer to your users on lower power hardware that is optimized for other things like quick startup times, low memory usage, etc.
 
 This is a problem because these runtimes are often missing features that Node.js has and sometimes these are critical to the functioning of the libraries and packages you rely on. When a package says it's "edge compatible" or "edge ready", what they really mean is that they've engineered their software to avoid any of the Node.js features / modules that are missing in some of the edge runtimes, thereby making them more universally compatible. Check out unjs's [compatibility matrix](https://runtime-compat.unjs.io) to get an idea of which runtimes support which features. While not critical to Auth.js, this is a good time to mention that there is an industry group designed to provide a space for JavaScript runtimes to collaborate on API interop - [WinterCG](https://wintercg.org).
 
@@ -27,7 +27,7 @@ Because this Node.js vs. other runtimes situation is so fragmented and fluid at 
 
 ## Auth.js
 
-Edge compatibility is something Auth.js has optimized for and achieved with v5 as well. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here, however, being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, middleware, etc. then you can use it wherever you want!
+Edge compatibility is something Auth.js has optimized for. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here, however, being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, Middleware, etc. then you can use it wherever you want!
 
 Issues begin to arise when you want to use other libraries with Auth.js.
 
@@ -43,13 +43,13 @@ As edge runtimes have matured and become more popular, however, people have gott
 
 ### Middleware
 
-In Next.js and `next-auth` you can also use Next.js [middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware) to protect routes by checking if a session exists and deciding where to route next. By default, on Vercel and other hosting providers, **Middleware code always runs in an edge runtime**. This means that our code will be trying to execute, for example, PostgreSQL queries in an environment where the underlying functionality is not available (i.e. TCP sockets). Therefore, **to use a database adapter that isn't explicitly "edge compatible", we will need to find a way to query the database using the features that we do have available to us**.
+In Next.js and `next-auth` you can also use Next.js [Middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware) to protect routes by checking if a session exists and deciding where to route next. By default, on Vercel and other hosting providers, **Middleware code always runs in an edge runtime**. This means that our code will be trying to execute, for example, PostgreSQL queries in an environment where the underlying functionality is not available (i.e. TCP sockets). Therefore, **to use a database adapter that isn't explicitly "edge compatible", we will need to find a way to query the database using the features that we do have available to us**.
 
 ## The Solution
 
 Auth.js used with the [database session strategy](/concepts/session-strategies#database-session) and a database adapter makes many calls to the database during normal operations. No matter which framework you're using, every Auth.js client can fetch the currently active session and this is done by querying the database to check if the user's `sessionToken` is both in the database and valid (i.e. not expired).
 
-This means that everywhere in your application where you may want to check if the user is authenticated or not will require a database call. Now in real life Auth.js is a bit smarter about this and uses caching and other tricks to avoid unnecessary database requests, but you can imagine that every `auth()` or `getSession()` call will trigger a database query. Therefore, we need some sort of workaround to use Auth.js in edge runtimes with many database adapters!
+This means that everywhere in your application where you may want to check if the user is authenticated or not will require a database call. Now in real life Auth.js is a bit smarter about this and uses caching and other tricks to avoid unnecessary database requests, but you can imagine that every `auth()` call will trigger a database query. Therefore, we need some sort of workaround to use Auth.js in edge runtimes with many database adapters!
 
 ### Split Config
 
@@ -84,7 +84,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-3. Our middleware, which would then import the configuration **without the database adapter** and instantiate its own Auth.js client.
+3. Our Middleware, which would then import the configuration **without the database adapter** and instantiate its own Auth.js client.
 
 ```ts filename="middleware.ts" {2, 4}
 import NextAuth from "next-auth"
@@ -113,4 +113,4 @@ export default async function Page() {
 }
 ```
 
-It is important to note here that we've now removed database functionality and support from `next-auth` **in the middleware**. That means that we won't be able to fetch the session or other info like the user's account details, etc. while executing code in middleware. That means you'll want to rely on checks like the one demonstrated above in the `/app/protected/page.tsx` file to ensure you're [protecting your routes](/getting-started/session-management/protecting) effectively. Middleware is then still useful for bumping your Cookie's expiry time, for example.
+It is important to note here that we've now removed database functionality and support from `next-auth` **in the middleware**. That means that we won't be able to fetch the session or other info like the user's account details, etc. while executing code in middleware. That means you'll want to rely on checks like the one demonstrated above in the `/app/protected/page.tsx` file to ensure you're [protecting your routes](/getting-started/session-management/protecting) effectively. Middleware is then still used for bumping the session cookie's expiry time, for example.
