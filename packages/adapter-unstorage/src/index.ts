@@ -22,6 +22,7 @@ import type {
   AdapterAuthenticator,
   VerificationToken,
 } from "@auth/core/adapters"
+import { isDate } from "@auth/core/adapters"
 import type { Storage, StorageValue } from "unstorage"
 
 /** This is the interface of the Unstorage adapter options. */
@@ -86,12 +87,6 @@ export const defaultOptions = {
   authenticatorKeyPrefix: "authenticator:",
   authenticatorUserKeyPrefix: "authenticator:by-user-id:",
   useItemRaw: false,
-}
-
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 export function hydrateDates(json: Record<string, any>) {

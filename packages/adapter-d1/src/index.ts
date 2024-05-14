@@ -21,12 +21,13 @@
 
 import type { D1Database as WorkerDatabase } from "@cloudflare/workers-types"
 import type { D1Database as MiniflareD1Database } from "@miniflare/d1"
-import type {
-  Adapter,
-  AdapterSession,
-  AdapterUser,
-  AdapterAccount,
-  VerificationToken as AdapterVerificationToken,
+import {
+  type Adapter,
+  type AdapterSession,
+  type AdapterUser,
+  type AdapterAccount,
+  type VerificationToken as AdapterVerificationToken,
+  isDate,
 } from "@auth/core/adapters"
 import {
   CREATE_ACCOUNT_SQL,
@@ -55,16 +56,6 @@ export { up } from "./migrations.js"
  * @type @cloudflare/workers-types.D1Database | @miniflare/d1.D1Database
  */
 export type D1Database = WorkerDatabase | MiniflareD1Database
-
-// helper functions
-
-// isDate is borrowed from the supabase adapter, graciously
-// depending on error messages ("Invalid Date") is always precarious, but probably fine for a built in native like Date
-function isDate(date: any) {
-  return (
-    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
-  )
-}
 
 // format is borrowed from the supabase adapter, graciously
 function format<T>(obj: Record<string, any>): T {
@@ -217,7 +208,6 @@ export function D1Adapter(db: D1Database): Adapter {
           params.id,
         ])
         if (res.success) {
-          // we could probably just return
           const user = await getRecord<AdapterUser>(db, GET_USER_BY_ID_SQL, [
             params.id,
           ])
@@ -230,8 +220,7 @@ export function D1Adapter(db: D1Database): Adapter {
       throw new Error("Error updating user: Failed to run the update SQL.")
     },
     async deleteUser(userId) {
-      // this should probably be in a db.batch but batch has problems right now in miniflare
-      // no multi line sql statements
+      // miniflare doesn't support batch operations or multiline sql statements
       await deleteRecord(db, DELETE_ACCOUNT_BY_USER_ID_SQL, [userId])
       await deleteRecord(db, DELETE_SESSION_BY_USER_ID_SQL, [userId])
       await deleteRecord(db, DELETE_USER_SQL, [userId])
@@ -292,10 +281,8 @@ export function D1Adapter(db: D1Database): Adapter {
         GET_SESSION_BY_TOKEN_SQL,
         [sessionToken]
       )
-      // no session?  no user!
       if (session === null) return null
 
-      // this shouldnt happen, but just in case
       const user = await getRecord<AdapterUser>(db, GET_USER_BY_ID_SQL, [
         session.userId,
       ])
@@ -304,8 +291,6 @@ export function D1Adapter(db: D1Database): Adapter {
       return { session, user }
     },
     async updateSession({ sessionToken, expires }) {
-      // kinda strange that we have to deal with an undefined expires,
-      // we dont have any policy to enforce, lets just expire it now.
       if (expires === undefined) {
         await deleteRecord(db, DELETE_SESSION_SQL, [sessionToken])
         return null

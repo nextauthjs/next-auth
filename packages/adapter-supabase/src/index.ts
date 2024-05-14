@@ -16,17 +16,12 @@
  */
 import { createClient } from "@supabase/supabase-js"
 import {
-  Adapter,
-  AdapterSession,
-  AdapterUser,
-  VerificationToken,
+  type Adapter,
+  type AdapterSession,
+  type AdapterUser,
+  type VerificationToken,
+  isDate,
 } from "@auth/core/adapters"
-
-function isDate(date: any) {
-  return (
-    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
-  )
-}
 
 export function format<T>(obj: Record<string, any>): T {
   for (const [key, value] of Object.entries(obj)) {

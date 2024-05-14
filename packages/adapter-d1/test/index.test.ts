@@ -1,4 +1,4 @@
-import { test, beforeAll, expect } from "vitest"
+import { beforeAll } from "vitest"
 
 import {
   D1Adapter,
@@ -22,7 +22,6 @@ const sqliteDB = new Database(":memory:")
 let db = new D1Database(new D1DatabaseAPI(sqliteDB as any))
 let adapter = D1Adapter(db)
 
-// put stuff here if we need some async init
 beforeAll(async () => await up(db))
 runBasicTests({
   adapter,
