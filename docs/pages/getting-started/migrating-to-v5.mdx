@@ -288,9 +288,11 @@ import NextAuth from "next-auth"
 export const { auth: middleware } = NextAuth(authConfig)
 ```
 
-The above is an example. The takeaway is to separate the part of the configuration that is edge-compatible from the rest, and only import that in Middleware/Edge pages/routes.
+The above is just an example. **The main idea**, is to separate the part of the configuration that is edge-compatible from the rest, and only import the edge-compatible part in Middleware/Edge pages/routes. You can read more about this workaround in the [Prisma docs](/getting-started/adapters/prisma), for example.
 
 Please follow up with your library/database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
+
+For more information in general about edge compatibility and how Auth.js fits into this, check out our [edge compatibility article](/guides/edge-compatibility).
 
 ## Environment Variables
 
