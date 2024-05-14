@@ -6,7 +6,7 @@
    <img height="64" src="https://authjs.dev/img/logo-sm.png" />
    </a>
    <a href="https://start.solidjs.com" target="_blank">
-   <img height="64" src="https://www.solidjs.com/assets/logo-123b04bc.svg" />
+   <img height="64" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/public/img/etc/solidstart.svg" />
    </a>
    <h3 align="center"><b>SolidStart Auth</b> - Example App</h3>
    <p align="center">
