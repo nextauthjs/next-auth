@@ -23,11 +23,11 @@ This is a problem because these runtimes are often missing features that Node.js
   won't be able to implement the `fs` module no matter how hard they try.
 </Callout>
 
-Because this Node.js vs. other runtimes situation is so fragmented and fluid at the moment, many libraries are optimizing their workloads to use only the most common denominator features, like `fetch` or other HTTP clients. For example, if you're a database provider and you can engineer your system so that your client library only has to make HTTP requests to communicate with your backend, then you can ship your library as "edge compatible" and run in any place your users may want to. This is as opposed to other database client libraries which had to use raw TCP sockets from Node.js to communicate with their backend, for example.
+Because this Node.js vs. other runtimes situation is so fragmented and fluid at the moment, many libraries are optimizing their workloads to use only the most common denominator features, like `fetch`. For example, if you're a database provider and you can engineer your system so that your client library only has to make HTTP requests to communicate with your backend, then you can advertise your library as "edge compatible" and run in any place your users may want to. This is as opposed to other database client libraries which have to use raw TCP sockets from Node.js to communicate with their backend, for example.
 
 ## Auth.js
 
-Edge compatibility is something Auth.js has optimized for and achieved with v5 as well. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, middleware, etc. then you can use it wherever you want!
+Edge compatibility is something Auth.js has optimized for and achieved with v5 as well. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here, however, being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, middleware, etc. then you can use it wherever you want!
 
 Issues begin to arise when you want to use other libraries with Auth.js.
 
