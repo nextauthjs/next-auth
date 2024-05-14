@@ -1,0 +1,24 @@
+Auth.js is a library that is very much affected by the compatibility (or lack thereof) of other libraries and the framework of your choosing in regards to edge runtimes. This document aims to provide a high-level overview of the situation, what the challenges are, and what you can do about them.
+
+## Definitions
+
+For those of you unfamiliar, we're talking here specifically about Auth.js and how it intersects with the [edge runtimes](https://runtime-compat.unjs.io) that are very popular today with various frameworks, hosting providers, libraries, etc.
+
+When we say **edge runtimes**, we mean a server-side JavaScript runtime that is **not** NodeJS and is optimized to run "on the edge". That means they're executing your code closer to the user and in technical terms that means they're often running on lower power hardware and are optimized for quick start-up times (to avoid the infamous cold-boot delays).
+
+This is a problem only in that these runtimes are often missing many features that Node.js offers and are critical to the functioning of various libraries and packages. When a package says it's "edge compatible" or "edge ready", what they really mean is that they've engineered their software to avoid any of the Node.js features / modules that are missing in some of the edge runtimes, thereby making them more universally compatible. Check out unjs's [compatibility matrix](https://runtime-compat.unjs.io) to get an idea of which runtimes support which features.
+
+<Callout>
+  I want to note here that these features / modules are often missing because
+  the underlying environment they're running on doesn't provide them. For
+  example, developers can invest as much time as they want, but if their
+  server-side JavaScript runtime is going to be running in a sandboxed operating
+  system environment that doesn't give them access to the Filesystem, then they
+  won't be able to implement the `fs` module no matter how hard they try.
+</Callout>
+
+Because this Node.js vs. other runtimes situation is so fragmented and fluid at the moment, many libraries are optimizing their workloads to use only the most common denominator features, like `fetch` or other HTTP clients. For example, if you're a database provider and you can engineer your system so that your client library only has to make HTTP requests to communicate with your backend, then you can ship your library as "edge compatible" and run in any place your users may want to. This is as opposed to other database client libraries which had to use raw TCP sockets from Node.js to communicate with their backend, for example.
+
+## Auth.js
+
+This "edge compatibility" is a goal Auth.js has optimized for with v5 and we've gotten there as well. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose.
