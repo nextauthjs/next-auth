@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
- *  <p style={{fontWeight: "normal"}}>An official <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>An official <a href="https://developers.cloudflare.com/d1/">Cloudflare D1</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://developers.cloudflare.com/d1/">
  *   <img style={{display: "block"}} src="/img/adapters/d1.svg" width="48" />
  *  </a>
@@ -21,12 +21,13 @@
 
 import type { D1Database as WorkerDatabase } from "@cloudflare/workers-types"
 import type { D1Database as MiniflareD1Database } from "@miniflare/d1"
-import type {
-  Adapter,
-  AdapterSession,
-  AdapterUser,
-  AdapterAccount,
-  VerificationToken as AdapterVerificationToken,
+import {
+  type Adapter,
+  type AdapterSession,
+  type AdapterUser,
+  type AdapterAccount,
+  type VerificationToken as AdapterVerificationToken,
+  isDate,
 } from "@auth/core/adapters"
 
 export { up } from "./migrations.js"
@@ -36,8 +37,6 @@ export { up } from "./migrations.js"
  */
 export type D1Database = WorkerDatabase | MiniflareD1Database
 
-// all the sqls
-// USER
 export const CREATE_USER_SQL = `INSERT INTO users (id, name, email, emailVerified, image) VALUES (?, ?, ?, ?, ?)`
 export const GET_USER_BY_ID_SQL = `SELECT * FROM users WHERE id = ?`
 export const GET_USER_BY_EMAIL_SQL = `SELECT * FROM users WHERE email = ?`
@@ -81,17 +80,6 @@ export const GET_VERIFICATION_TOKEN_BY_IDENTIFIER_AND_TOKEN_SQL = `SELECT * FROM
 export const CREATE_VERIFICATION_TOKEN_SQL = `INSERT INTO verification_tokens (identifier, expires, token) VALUES (?,?,?)`
 export const DELETE_VERIFICATION_TOKEN_SQL = `DELETE FROM verification_tokens WHERE identifier = ? and token = ?`
 
-// helper functions
-
-// isDate is borrowed from the supabase adapter, graciously
-// depending on error messages ("Invalid Date") is always precarious, but probably fine for a built in native like Date
-function isDate(date: any) {
-  return (
-    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
-  )
-}
-
-// format is borrowed from the supabase adapter, graciously
 function format<T>(obj: Record<string, any>): T {
   for (const [key, value] of Object.entries(obj)) {
     if (value === null) {
@@ -242,7 +230,6 @@ export function D1Adapter(db: D1Database): Adapter {
           params.id,
         ])
         if (res.success) {
-          // we could probably just return
           const user = await getRecord<AdapterUser>(db, GET_USER_BY_ID_SQL, [
             params.id,
           ])
@@ -255,8 +242,7 @@ export function D1Adapter(db: D1Database): Adapter {
       throw new Error("Error updating user: Failed to run the update SQL.")
     },
     async deleteUser(userId) {
-      // this should probably be in a db.batch but batch has problems right now in miniflare
-      // no multi line sql statements
+      // miniflare doesn't support batch operations or multiline sql statements
       await deleteRecord(db, DELETE_ACCOUNT_BY_USER_ID_SQL, [userId])
       await deleteRecord(db, DELETE_SESSION_BY_USER_ID_SQL, [userId])
       await deleteRecord(db, DELETE_USER_SQL, [userId])
@@ -317,10 +303,8 @@ export function D1Adapter(db: D1Database): Adapter {
         GET_SESSION_BY_TOKEN_SQL,
         [sessionToken]
       )
-      // no session?  no user!
       if (session === null) return null
 
-      // this shouldnt happen, but just in case
       const user = await getRecord<AdapterUser>(db, GET_USER_BY_ID_SQL, [
         session.userId,
       ])
@@ -329,8 +313,6 @@ export function D1Adapter(db: D1Database): Adapter {
       return { session, user }
     },
     async updateSession({ sessionToken, expires }) {
-      // kinda strange that we have to deal with an undefined expires,
-      // we dont have any policy to enforce, lets just expire it now.
       if (expires === undefined) {
         await deleteRecord(db, DELETE_SESSION_SQL, [sessionToken])
         return null

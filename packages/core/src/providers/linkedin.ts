@@ -1,6 +1,6 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Linkedin</b> integration.</span>
+ * <span>Built-in <b>LinkedIn</b> integration.</span>
  * <a href="https://linkedin.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/linkedin.svg" height="48" width="48"/>
  * </a>
@@ -79,15 +79,8 @@ export default function LinkedIn<P extends LinkedInProfile>(
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_post" },
     issuer: "https://www.linkedin.com/oauth",
-    async profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
     style: { bg: "#069", text: "#fff" },
+    checks: ["state"],
     options,
   }
 }

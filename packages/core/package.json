@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -38,7 +38,8 @@
       "import": "./index.js"
     },
     "./adapters": {
-      "types": "./adapters.d.ts"
+      "types": "./adapters.d.ts",
+      "import": "./adapters.js"
     },
     "./errors": {
       "types": "./errors.d.ts",
