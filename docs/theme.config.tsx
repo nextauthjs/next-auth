@@ -147,7 +147,9 @@ const config: DocsThemeConfig = {
         />
         <meta
           property="og:image"
-          content={`/api/og?title=${encodeURIComponent(title)}`}
+          content={`https://authjs.dev/api/og?title=${encodeURIComponent(
+            title
+          )}`}
         />
       </>
     )

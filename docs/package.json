@@ -31,6 +31,7 @@
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@vercel/analytics": "^1.2.2",
+    "@vercel/kv": "^1.0.1",
     "algoliasearch": "^4.23.3",
     "classnames": "^2.5.1",
     "next": "14.2.1",

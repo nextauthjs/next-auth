@@ -15,7 +15,7 @@
  * @module @auth/hasura-adapter
  */
 
-import type { Adapter } from "@auth/core/adapters"
+import { isDate, type Adapter } from "@auth/core/adapters"
 
 import {
   client as hasuraClient,
@@ -172,14 +172,6 @@ export function HasuraAdapter(client: HasuraAdapterClient): Adapter {
       )
     },
   }
-}
-
-// https://github.com/honeinc/is-iso-date/blob/master/index.js
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 export const format = {
