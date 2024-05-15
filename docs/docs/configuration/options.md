@@ -206,7 +206,7 @@ It also supports the following options:
   If set to `true` returns the raw token without decrypting or verifying it.
 
 :::tip
-When using a custom Session Token `cookieName`, the same name should also be provided to `getToken` calls and to the `withAuth` middleware.
+When using a custom Session Token `cookieName`, the same name should also be provided to `getToken`. If you are using the NextJS [`withAuth`](/configuration/nextjs#middleware) Middleware, you will also need to configure this to using the same `cookieName`.
 :::
 
 :::note
