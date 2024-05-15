@@ -205,6 +205,10 @@ It also supports the following options:
 
   If set to `true` returns the raw token without decrypting or verifying it.
 
+:::tip
+When using a custom Session Token `cookieName`, the same name should also be provided to `getToken` calls and to the `withAuth` middleware.
+:::
+
 :::note
 The JWT is stored in the Session Token cookie, the same cookie used for tokens with database sessions.
 :::
