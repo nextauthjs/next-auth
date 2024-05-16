@@ -205,6 +205,10 @@ It also supports the following options:
 
   If set to `true` returns the raw token without decrypting or verifying it.
 
+:::tip
+When using a custom session token `cookieName`, the same name should also be provided to `getToken`. If you are using the Next.js [`withAuth`](/configuration/nextjs#middleware) middleware, you will also need to configure this using the same `cookieName`.
+:::
+
 :::note
 The JWT is stored in the Session Token cookie, the same cookie used for tokens with database sessions.
 :::
