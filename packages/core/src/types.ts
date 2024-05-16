@@ -309,8 +309,8 @@ export interface PublicProvider {
  * - **`"error"`**: Renders the built-in error page.
  * - **`"providers"`**: Returns a client-safe list of all configured providers.
  * - **`"session"`**:
- *   - **`GET**`: Returns the user's session if it exists, otherwise `null`.
- *   - **`POST**`: Updates the user's session and returns the updated session.
+ *   - **`GET`**: Returns the user's session if it exists, otherwise `null`.
+ *   - **`POST`**: Updates the user's session and returns the updated session.
  * - **`"signin"`**:
  *   - **`GET`**: Renders the built-in sign-in page.
  *   - **`POST`**: Initiates the sign-in flow.
