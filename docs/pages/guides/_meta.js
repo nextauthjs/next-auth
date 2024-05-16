@@ -13,4 +13,5 @@ export default {
   "creating-a-database-adapter": "Creating a Database Adapter",
   "creating-a-framework-integration": "Creating a Framework Integration",
   "refresh-token-rotation": "Refresh Token Rotation",
+  "edge-compatibility": "Edge Compatibility",
 }

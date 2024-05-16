@@ -1,0 +1,116 @@
+import { Callout } from "nextra/components"
+
+As Edge runtimes become more and more popular people are naturally trying to deploy Auth.js and `next-auth` in these environments and are running into some fundamental compatibility issues that plague the entire ecosystem at the moment. We're hoping with this document we can pick people up no matter where they currently are in terms of understanding and experience and help them understand the challenges and hopefully get Auth.js up and running in whichever runtime they choose!
+
+To begin, let us get some background knowledge out of the way. If you're familiar with this, feel free to skip this section!
+
+## Definitions
+
+We're going to be talking specifically about Auth.js and how it intersects with the [edge runtimes](https://runtime-compat.unjs.io) that are very popular today with various frameworks, hosting providers, libraries, etc.
+
+First things first, **what is "edge"** in this context? Edge here is borrowed from the network engineering folks and refers to a compute node (i.e. server) that is located on the edge of a network, i.e. closer to the users. Usually these are compute nodes that are lower power than the kind of full-fledged servers that can be found in the core of a datacenter that run most important workloads. Some advantages of running code here include lower latency to the users end devices, better scalability story, and more cost-effective compute. Some disadvantages include less powerful hardware and potentially different compatibility in terms of the software stack.
+
+So when we say <abbr title="The JavaScript execution environment usually running at the edge of a network, closer to the user, that is explicitly NOT Node.js and is therefore different in various aspects compared to what we're used to running our code with (i.e. Node.js).">**edge runtimes**</abbr>, we mean a server-side JavaScript runtime that is **not** Node.js and is optimized to run on these edge compute nodes (servers). That generally means that the code is executing closer to your users on lower power hardware that is optimized for other things like quick startup times, low memory usage, etc.
+
+This is a problem because these runtimes are often missing features that Node.js has and sometimes these are critical to the functioning of the libraries and packages you rely on. When a package says it's "edge compatible" or "edge ready", what they really mean is that they've engineered their software to avoid any of the Node.js features / modules that are missing in some of the edge runtimes, thereby making them more universally compatible. Check out unjs's [compatibility matrix](https://runtime-compat.unjs.io) to get an idea of which runtimes support which features. While not critical to Auth.js, this is a good time to mention that there is an industry group designed to provide a space for JavaScript runtimes to collaborate on API interop - [WinterCG](https://wintercg.org).
+
+<Callout>
+  I want to note here that these features / modules are often missing because
+  the underlying environment they're running on doesn't provide them. For
+  example, developers can invest as much time as they want, but if their
+  server-side JavaScript runtime is going to be running in a sandboxed operating
+  system environment that doesn't give them access to the Filesystem, then they
+  won't be able to implement the `fs` module no matter how hard they try.
+</Callout>
+
+Because this Node.js vs. other runtimes situation is so fragmented and fluid at the moment, many libraries are optimizing their workloads to use only the most common denominator features, like `fetch`. For example, if you're a database provider and you can engineer your system so that your client library only has to make HTTP requests to communicate with your backend, then you can advertise your library as "edge compatible" and run in any place your users may want to. This is as opposed to other database client libraries which have to use raw TCP sockets from Node.js to communicate with their backend, for example.
+
+## Auth.js
+
+Edge compatibility is something Auth.js has optimized for. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here, however, being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, Middleware, etc. then you can use it wherever you want!
+
+Issues begin to arise when you want to use other libraries with Auth.js.
+
+## The Problem
+
+### Database Adapters
+
+A common package to pair with Auth.js to implement a holistic authentication system is a database client. Database clients are troublesome in that they often leverage TCP sockets to communicate directly with the database server. One such common database which does this is PostgreSQL.
+
+PostgreSQL is a database that uses a message-based protocol for communication between a the client and server that is transported via **TCP (or Unix) sockets**. Raw TCP sockets are one of those Node.js features that are generally not available to edge runtimes. Therefore, on the surface, it seems like it's not possible to communicate with a PostgreSQL database from JavaScript running on edge runtime. The same goes for many other databases and their respective communication protocols.
+
+As edge runtimes have matured and become more popular, however, people have gotten creative and implemented various solutions to this problem. One such common solution is to put some sort of API server in front of the database whose goal is to translate database queries sent to it via HTTP into a protocol the database can understand. This allows the client side to only have to make HTTP requests to the API server, which is something that every edge runtime supports.
+
+### Middleware
+
+In Next.js and `next-auth` you can also use Next.js [Middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware) to protect routes by checking if a session exists and deciding where to route next. By default, on Vercel and other hosting providers, **Middleware code always runs in an edge runtime**. This means that our code will be trying to execute, for example, PostgreSQL queries in an environment where the underlying functionality is not available (i.e. TCP sockets). Therefore, **to use a database adapter that isn't explicitly "edge compatible", we will need to find a way to query the database using the features that we do have available to us**.
+
+## The Solution
+
+Auth.js used with the [database session strategy](/concepts/session-strategies#database-session) and a database adapter makes many calls to the database during normal operations. No matter which framework you're using, every Auth.js client can fetch the currently active session and this is done by querying the database to check if the user's `sessionToken` is both in the database and valid (i.e. not expired).
+
+This means that everywhere in your application where you may want to check if the user is authenticated or not will require a database call. Now in real life Auth.js is a bit smarter about this and uses caching and other tricks to avoid unnecessary database requests, but you can imagine that every `auth()` call will trigger a database query. Therefore, we need some sort of workaround to use Auth.js in edge runtimes with many database adapters!
+
+### Split Config
+
+With Next.js and `next-auth` in mind, let's think about what we need to do to make Auth.js be able to both run some of its code in an edge runtime, but also use a database to store its sessions. We would need a separate "version" of `next-auth` without the database settings for the edge environment and another one with the database for everywhere else. To achieve this, we can use the ["lazy initialization"](/reference/nextjs#lazy-initialization) features of Auth.js to instantiate a standalone client without the adapter for middleware and another one to be used everywhere else.
+
+1. First, a common Auth.js configuration object to be used everywhere. This **will not** include the database adapter.
+
+```ts filename="auth.config.ts" /NextAuthConfig/
+import GitHub from "next-auth/providers/github"
+import type { NextAuthConfig } from "next-auth"
+
+// Notice this is only an object, not a full Auth.js instance
+export default {
+  providers: [GitHub],
+} satisfies NextAuthConfig
+```
+
+2. Next, a separate **instantiated** Auth.js instance which imports that configuration, but also adds the adapter.
+
+```ts filename="auth.ts" {2, 10}
+import NextAuth from "next-auth"
+import authConfig from "auth.config"
+
+import { PrismaClient } from "@prisma/client"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+
+const prisma = new PrismaClient()
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  ...authConfig,
+})
+```
+
+3. Our Middleware, which would then import the configuration **without the database adapter** and instantiate its own Auth.js client.
+
+```ts filename="middleware.ts" {2, 4}
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
+
+export const { auth as middleware } = NextAuth(authConfig)
+```
+
+4. Finally, everywhere else we can import from the primary `auth.ts` configuration and use `next-auth` as usual. See our [session management docs](/getting-started/session-management/protecting) for more examples.
+
+```tsx filename="app/protected/page.tsx" {4} /session/
+import { auth } from "@/auth"
+
+export default async function Page() {
+  const session = await auth()
+
+  if (!session) {
+    return <div>Not authenticated</div>
+  }
+
+  return (
+    <div className="container">
+      <pre>{session}</pre>
+    </div>
+  )
+}
+```
+
+It is important to note here that we've now removed database functionality and support from `next-auth` **in the middleware**. That means that we won't be able to fetch the session or other info like the user's account details, etc. while executing code in middleware. That means you'll want to rely on checks like the one demonstrated above in the `/app/protected/page.tsx` file to ensure you're [protecting your routes](/getting-started/session-management/protecting) effectively. Middleware is then still used for bumping the session cookie's expiry time, for example.
