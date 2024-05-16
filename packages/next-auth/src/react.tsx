@@ -286,6 +286,7 @@ export async function signIn<
   }
 
   const error = new URL(data.url).searchParams.get("error")
+  const code = new URL(data.url).searchParams.get("code")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -293,6 +294,7 @@ export async function signIn<
 
   return {
     error,
+    code,
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,

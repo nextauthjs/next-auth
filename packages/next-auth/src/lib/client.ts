@@ -60,6 +60,7 @@ export interface SignInOptions extends Record<string, unknown> {
 
 export interface SignInResponse {
   error: string | undefined
+  code: string | undefined
   status: number
   ok: boolean
   url: string | null
