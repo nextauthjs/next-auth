@@ -122,7 +122,7 @@ const defaultOptions = {
 Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
 
 ```ts
-export default NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UpstashRedisAdapter(redis, { baseKeyPrefix: "app2:" }),
 })
 ```

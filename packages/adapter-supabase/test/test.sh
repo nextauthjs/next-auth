@@ -1,21 +1,13 @@
 #!/usr/bin/env bash
 
-# install Supabase CLI when run on CI
-if [ "$CI" = true ]; then
-  wget -q -O supabase.deb https://github.com/supabase/cli/releases/download/v1.91.1/supabase_1.91.1_linux_amd64.deb
-  sudo dpkg -i supabase.deb
-fi
+# Start database and apply migrations
+pnpm exec supabase start
 
-# Start Supabase, grep key and set it as SUPABASE_SERVICE_ROLE_KEY environment variable
-line=$(supabase start | grep 'service_role key')
-IFS=':'
-arr=("$line")
-unset IFS
-export SUPABASE_SERVICE_ROLE_KEY=${arr[1]}
+printf "\nWaiting 10s for db to start..." && sleep 10
 
 # Always stop Supabase, but exit with 1 when tests are failing
 if vitest run -c ../utils/vitest.config.ts; then
-  supabase stop
+  pnpm exec supabase stop --no-backup
 else
-  supabase stop && exit 1
+  pnpm exec supabase stop --no-backup && exit 1
 fi

@@ -1,6 +1,6 @@
 {
   "name": "@auth/d1-adapter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Cloudflare D1 adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -47,6 +47,6 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230321.0",
     "@miniflare/d1": "^2.12.2",
-    "better-sqlite3": "^8.6.0"
+    "better-sqlite3": "^9.6.0"
   }
 }

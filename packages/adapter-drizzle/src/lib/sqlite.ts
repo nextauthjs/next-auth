@@ -12,84 +12,100 @@ import {
 import type {
   Adapter,
   AdapterAccount,
+  AdapterAccountType,
   AdapterSession,
   AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
 
-export const sqliteUsersTable = sqliteTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").notNull(),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
-  image: text("image"),
-}) satisfies DefaultSQLiteUsersTable
+export function defineTables(
+  schema: Partial<DefaultSQLiteSchema> = {}
+): Required<DefaultSQLiteSchema> {
+  const usersTable =
+    schema.usersTable ??
+    (sqliteTable("user", {
+      id: text("id")
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+      name: text("name"),
+      email: text("email").notNull(),
+      emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+      image: text("image"),
+    }) satisfies DefaultSQLiteUsersTable)
 
-export const sqliteAccountsTable = sqliteTable(
-  "account",
-  {
-    userId: text("userId")
-      .notNull()
-      .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
-  },
-  (account) => ({
-    compositePk: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  })
-) satisfies DefaultSQLiteAccountsTable
+  const accountsTable =
+    schema.accountsTable ??
+    (sqliteTable(
+      "account",
+      {
+        userId: text("userId")
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        type: text("type").$type<AdapterAccountType>().notNull(),
+        provider: text("provider").notNull(),
+        providerAccountId: text("providerAccountId").notNull(),
+        refresh_token: text("refresh_token"),
+        access_token: text("access_token"),
+        expires_at: integer("expires_at"),
+        token_type: text("token_type"),
+        scope: text("scope"),
+        id_token: text("id_token"),
+        session_state: text("session_state"),
+      },
+      (account) => ({
+        compositePk: primaryKey({
+          columns: [account.provider, account.providerAccountId],
+        }),
+      })
+    ) satisfies DefaultSQLiteAccountsTable)
 
-export const sqliteSessionsTable = sqliteTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => sqliteUsersTable.id, { onDelete: "cascade" }),
-  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-}) satisfies DefaultSQLiteSessionsTable
+  const sessionsTable =
+    schema.sessionsTable ??
+    (sqliteTable("session", {
+      sessionToken: text("sessionToken").primaryKey(),
+      userId: text("userId")
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+      expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    }) satisfies DefaultSQLiteSessionsTable)
 
-export const sqliteVerificationTokensTable = sqliteTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
-  },
-  (vt) => ({
-    compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
-) satisfies DefaultSQLiteVerificationTokenTable
+  const verificationTokensTable =
+    schema.verificationTokensTable ??
+    (sqliteTable(
+      "verificationToken",
+      {
+        identifier: text("identifier").notNull(),
+        token: text("token").notNull(),
+        expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+      },
+      (vt) => ({
+        compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+      })
+    ) satisfies DefaultSQLiteVerificationTokenTable)
+
+  return {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
+  }
+}
 
 export function SQLiteDrizzleAdapter(
   client: BaseSQLiteDatabase<"sync" | "async", any, any>,
-  schema: DefaultSQLiteSchema = {
-    usersTable: sqliteUsersTable,
-    accountsTable: sqliteAccountsTable,
-    sessionsTable: sqliteSessionsTable,
-    verificationTokensTable: sqliteVerificationTokensTable,
-  }
+  schema?: DefaultSQLiteSchema
 ): Adapter {
   const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    schema
+    defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
+      const { id, ...insertData } = data
       const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
 
       return client
         .insert(usersTable)
-        .values(hasDefaultId ? data : { ...data, id: crypto.randomUUID() })
+        .values(hasDefaultId ? insertData : { ...insertData, id })
         .returning()
         .get()
     },
@@ -416,6 +432,6 @@ export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
 export type DefaultSQLiteSchema = {
   usersTable: DefaultSQLiteUsersTable
   accountsTable: DefaultSQLiteAccountsTable
-  sessionsTable: DefaultSQLiteSessionsTable
-  verificationTokensTable: DefaultSQLiteVerificationTokenTable
+  sessionsTable?: DefaultSQLiteSessionsTable
+  verificationTokensTable?: DefaultSQLiteVerificationTokenTable
 }
