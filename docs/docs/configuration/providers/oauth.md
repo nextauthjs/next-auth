@@ -173,6 +173,7 @@ interface OAuthConfig {
   region?: string
   issuer?: string
   client?: Partial<ClientMetadata>
+  clientOptions?: ClientOptions
   allowDangerousEmailAccountLinking?: boolean
   /**
    * Object containing the settings for the styling of the providers sign-in buttons
@@ -282,6 +283,14 @@ If your Provider is OpenID Connect (OIDC) compliant, we recommend using the `wel
 ### `client` option
 
 An advanced option, hopefully you won't need it in most cases. `next-auth` uses `openid-client` under the hood, see the docs on this option [here](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-clientmetadata-jwks-options).
+
+The `client` option is passed in as the `metadata` argument to the `Client` initializer.
+
+### `clientOptions` option
+
+An advanced option, hopefully you won't need it in most cases. `next-auth` uses `openid-client` under the hood, see the docs on this option [here](https://github.com/panva/node-openid-client/blob/main/docs/README.md#new-clientmetadata-jwks-options).
+
+The `clientOptions` option is passed in as the `options` argument to the `Client` initializer.
 
 ### `allowDangerousEmailAccountLinking` option
 
