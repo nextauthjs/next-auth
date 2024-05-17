@@ -6,6 +6,7 @@ import type {
   CallbackParamsType,
   Issuer,
   ClientMetadata,
+  ClientOptions,
   IssuerMetadata,
   OAuthCallbackChecks,
   OpenIDCallbackChecks,
@@ -124,6 +125,7 @@ export interface OAuthConfig<P> extends CommonProviderOptions, PartialIssuer {
   checks?: ChecksType | ChecksType[]
   client?: Partial<ClientMetadata>
   jwks?: { keys: JWK[] }
+  clientOptions?: ClientOptions
   clientId?: string
   clientSecret?: string
   /**
