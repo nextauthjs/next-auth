@@ -287,6 +287,8 @@ An advanced option, hopefully you won't need it in most cases. `next-auth` uses 
 
 Normally, when you sign in with an OAuth provider and another account with the same email address already exists, the accounts are not linked automatically. Automatic account linking on sign in is not secure between arbitrary providers and is disabled by default (see our [Security FAQ](https://next-auth.js.org/faq#security)). However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address associated with the account. Just set `allowDangerousEmailAccountLinking: true` in your provider configuration to enable automatic account linking.
 
+If the user is already signed in with any provider, when using `signIn` again via a different provider, the new provider account _will_ be linked automatically to the same authenticated user. This happens regardless of the primary emails for each provider accounts. This flow is not affected by the `allowDangerousEmailAccountLinking` option.
+
 ## Using a custom provider
 
 You can use an OAuth provider that isn't built-in by using a custom object.
