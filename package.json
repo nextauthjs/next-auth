@@ -17,7 +17,6 @@
     "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
     "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
     "dev:docs": "turbo run dev --filter=docs",
-    "dev:docs:adapters": "turbo run dev --filter=docs",
     "email": "fake-smtp-server",
     "eslint": "eslint --cache .",
     "lint": "prettier --cache --check .",
