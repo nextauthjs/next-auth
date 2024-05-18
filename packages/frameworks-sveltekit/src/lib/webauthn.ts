@@ -18,7 +18,7 @@ import type { LiteralUnion } from "./types.js"
  * @returns WebAuthn response or error
  */
 async function webAuthnOptions(providerId: string, options?: SignInOptions) {
-  const baseUrl = `${base}/auth/`
+  const baseUrl = `${base}/auth`
 
   // @ts-expect-error
   const params = new URLSearchParams(options)
