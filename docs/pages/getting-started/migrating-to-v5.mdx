@@ -134,9 +134,9 @@ const ClientComponent = () => {
   const session = useSession();
 
   return (
-	  <SessionProvider>
-	  	<p>Welcome {session?.user?.name}</p>
-	  </SessionProvider>
+    <SessionProvider>
+      <p>Welcome {session?.user?.name}</p>
+    </SessionProvider>
   )
 }
 ```
