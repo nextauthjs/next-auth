@@ -11,7 +11,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
   distinguished from other environment variables more easily.
 </Callout>
 
-Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a random string of at least 32 characters. On Unix based systems you can use this command:
+Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a random string of at least 32 characters. On UNIX based systems you can use this command:
 
 ```bash npm2yarn
 npm exec auth secret
@@ -70,6 +70,30 @@ This environment variable is designed for advanced use-cases only, when using Au
   recommend using a different OAuth app for development/production so that you
   don't mix your test and production user base.
 </Callout>
+
+## Observability
+
+To pass on your current user's details on to your observability tools, you can use the callbacks provided by Auth.js. For example, in the `session` callback, you could pass the `user.id` on to Sentry.
+
+```ts filename="auth.ts"
+import * as Sentry from "@sentry/browser"
+import NextAuth from "next-auth"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  callbacks: {
+    session({ session, user }) {
+      const scope = Sentry.getCurrentScope()
+
+      scope.setUser({
+        id: user.id,
+        email: user.email,
+      })
+
+      return session
+    },
+  },
+})
+```
 
 ## Self-hosted
 

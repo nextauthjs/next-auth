@@ -8,7 +8,7 @@ import Discord from "@auth/express/providers/discord"
 import Dropbox from "@auth/express/providers/dropbox"
 import Facebook from "@auth/express/providers/facebook"
 import GitHub from "@auth/express/providers/github"
-import Gitlab from "@auth/express/providers/gitlab"
+import GitLab from "@auth/express/providers/gitlab"
 import Google from "@auth/express/providers/google"
 import Hubspot from "@auth/express/providers/hubspot"
 import Keycloak from "@auth/express/providers/keycloak"
@@ -46,7 +46,7 @@ export const authConfig = {
     Dropbox,
     Facebook,
     GitHub,
-    Gitlab,
+    GitLab,
     Google,
     Hubspot,
     Keycloak,

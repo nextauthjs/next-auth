@@ -17,7 +17,7 @@ export async function authenticatedUser(
     return next()
   }
 
-  res.status(400).json({ message: "Not Authenticated" })
+  res.status(401).json({ message: "Not Authenticated" })
 }
 
 export async function currentSession(
