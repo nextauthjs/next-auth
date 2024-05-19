@@ -14,19 +14,8 @@ const UpdateForm = () => {
   if (!session?.user) return null
   return (
     <>
-      <h2 className="text-xl font-bold">Updating the session</h2>
-      <form
-        onSubmit={async () => {
-          if (session) {
-            const newSession = await update({
-              ...session,
-              user: { ...session.user, name },
-            })
-            console.log({ newSession })
-          }
-        }}
-        className="flex items-center space-x-2 w-full max-w-sm"
-      >
+      <h2 className="text-xl font-bold">Updating the session client-side</h2>
+      <div className="flex items-center space-x-2 w-full max-w-sm">
         <Input
           type="text"
           placeholder="New name"
@@ -35,14 +24,27 @@ const UpdateForm = () => {
             setName(e.target.value)
           }}
         />
-        <Button type="submit">Update</Button>
-      </form>
+        <Button onClick={() => update({ user: { name } })} type="submit">
+          Update
+        </Button>
+      </div>
     </>
   )
 }
 
 export default function ClientExample() {
   const { data: session, status } = useSession()
+  const [apiResponse, setApiResponse] = useState("")
+
+  const makeRequestWithToken = async () => {
+    try {
+      const response = await fetch("/api/authenticated/greeting")
+      const data = await response.json()
+      setApiResponse(JSON.stringify(data, null, 2))
+    } catch (error) {
+      setApiResponse("Failed to fetch data: " + error)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -70,6 +72,32 @@ export default function ClientExample() {
         </strong>{" "}
         to provide the session data.
       </p>
+
+      <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-md">
+        <h2 className="text-xl font-bold">Third-party backend integration</h2>
+        <p>
+          Press the button to send a request to our{" "}
+          <CustomLink href="https://github.com/nextauthjs/authjs-third-party-backend">
+            <code>example backend</code>
+          </CustomLink>
+          . Read more{" "}
+          <CustomLink href="https://authjs.dev/guides/integrating-third-party-backends">
+            <code>here</code>
+          </CustomLink>
+        </p>
+        <div className="flex flex-col">
+          <Button
+            disabled={!session?.accessToken}
+            onClick={makeRequestWithToken}
+          >
+            Make API Request
+          </Button>
+        </div>
+        <pre>{apiResponse}</pre>
+        <p className="italic">
+          Note: This example only works when using the Keycloak provider.
+        </p>
+      </div>
 
       {status === "loading" ? (
         <div>Loading...</div>

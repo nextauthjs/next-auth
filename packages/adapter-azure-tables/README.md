@@ -18,7 +18,7 @@
       <img src="https://img.shields.io/npm/dm/@auth/azure-tables-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
     </a>
   </p>
 </p>

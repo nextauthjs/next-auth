@@ -18,7 +18,7 @@ import type { OIDCConfig, OAuthUserConfig } from "./index.js"
 export interface ZitadelProfile extends Record<string, any> {
   amr: string // Authentication Method References as defined in RFC8176
   aud: string // The audience of the token, by default all client id's and the project id are included
-  auth_time: number // Unix time of the authentication
+  auth_time: number // UNIX time of the authentication
   azp: string // Client id of the client who requested the token
   email: string // Email Address of the subject
   email_verified: boolean // if the email was verified by ZITADEL

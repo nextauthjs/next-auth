@@ -46,7 +46,7 @@ export function Guides() {
                 <div className="flex gap-2">
                   <GithubLogo className="size-8" />
                   <div className="flex flex-col items-start">
-                    OAuth with Github
+                    OAuth with GitHub
                     <span className="text-neutral-400 dark:text-neutral-700">
                       Step-by-step guide to set up an OAuth provider.
                     </span>
