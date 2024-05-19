@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-docker run --name pg-adapter \
-  -d \
+CONTAINER_NAME=authjs-pg-test
+
+docker run -d --rm \
+  --name ${CONTAINER_NAME} \
   -e POSTGRES_DB=adapter-postgres-test \
   -e POSTGRES_USER=pg \
   -e POSTGRES_PASSWORD=pg \
@@ -9,12 +11,12 @@ docker run --name pg-adapter \
   -v "$(pwd)"/schema.sql:/docker-entrypoint-initdb.d/schema.sql \
   postgres:latest
 
-echo "waiting 10 seconds for databases to start..."
-sleep 10
+echo "waiting 5s for db to start..."
+sleep 5
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest -c ../utils/vitest.config.ts; then
-  docker stop pg-adapter
+if vitest run -c ../utils/vitest.config.ts; then
+  docker stop ${CONTAINER_NAME}
 else
-  docker stop pg-adapter && exit 1
+  docker stop ${CONTAINER_NAME} && exit 1
 fi

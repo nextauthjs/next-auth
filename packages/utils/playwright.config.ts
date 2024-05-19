@@ -2,8 +2,12 @@ import { join } from "node:path"
 import { defineConfig, devices } from "@playwright/test"
 import * as dotenv from "dotenv"
 
-if (process.env.NODE_ENV !== "production" && !process.env.CI) {
-  dotenv.config({ path: join(process.cwd(), "..", "core", ".env") })
+if (!process.env.CI) {
+  const path = process.env.TEST_DOCKER
+    ? join(process.cwd(), "..", "..", "..", "packages", "core", ".env")
+    : join(process.cwd(), "..", "core", ".env")
+
+  dotenv.config({ path })
 }
 
 /** See https://playwright.dev/docs/api/class-testconfig. */
@@ -20,7 +24,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], channel: "chrome" },
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
   webServer: {
@@ -30,5 +34,6 @@ export default defineConfig({
     timeout: 20_000,
     stdout: process.env.CI ? "ignore" : "pipe",
     stderr: "pipe",
+    reuseExistingServer: true,
   },
 })

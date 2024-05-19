@@ -1,0 +1,163 @@
+import Link from "next/link"
+import Footer from "@/components/Footer"
+import { HeroCode } from "@/components/HeroCode"
+import { LogosMarquee } from "@/components/LogosMarquee"
+import { Blur } from "@/components/Blur"
+import { Guides } from "@/components/Guides"
+import { Pre, Code } from "nextra/components"
+import { CaretRight } from "@/icons"
+
+<div className="relative overflow-hidden w-full h-full flex flex-col">
+  <section className="flex justify-center w-full px-8 xl:px-0 flex-col lg:flex-row self-center items-center lg:items-start gap-6 max-w-7xl pt-12 pb-24 sm:py-32 lg:py-56">
+    <div className="flex-col flex justify-start gap-10 lg:py-8 mx-8">
+      <div className="flex flex-col gap-8 justify-center py-2 items-center w-full">
+        <span className="text-6xl font-black lg:text-8xl">Auth.js</span>
+        <div className="flex flex-col gap-4 justify-center text-2xl font-bold text-center lg:text-3xl">
+          <div>Authentication for the Web.</div>
+          <div className="underline-highlight">Free and open source.</div>
+        </div>
+      </div>
+      <div className="text-lg justify-center items-center flex gap-4">
+        <Link
+          href="/getting-started"
+          className="p-3 w-1/2 text-center bg-violet-600 dark:bg-violet-800 text-white hover:dark:bg-violet-900 transition hover:bg-violet-700 duration-300"
+        >
+          Get Started
+        </Link>
+        <Link
+          href="https://github.com/nextauthjs/next-auth"
+          target="_blank"
+          className="p-3 w-1/2 justify-center flex gap-2 items-center dark:bg-gray-300 bg-violet-200 text-black transition duration-300 hover:dark:bg-gray-400 hover:bg-violet-300"
+        >
+          <svg className="size-5" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <path
+              d="M119.83,56A52,52,0,0,0,76,32a51.92,51.92,0,0,0-3.49,44.7A49.28,49.28,0,0,0,64,104v8a48,48,0,0,0,48,48h48a48,48,0,0,0,48-48v-8a49.28,49.28,0,0,0-8.51-27.3A51.92,51.92,0,0,0,196,32a52,52,0,0,0-43.83,24Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+            <path
+              d="M104,232V192a32,32,0,0,1,32-32h0a32,32,0,0,1,32,32v40"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+            <path
+              d="M104,208H72a32,32,0,0,1-32-32A32,32,0,0,0,8,144"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+          Source
+        </Link>
+      </div>
+      <div className="text-lg flex-col flex gap-2 items-center">
+        <div className="flex flex-col md:flex-row w-full items-center md:justify-between text-sm dark:bg-neutral-900/50 text-neutral-600 dark:text-neutral-500 bg-neutral-50/60 backdrop-blur p-3 border border-neutral-300 dark:border-neutral-800 rounded-md">
+          <span>Looking for a hosted alternative?</span>
+          <a
+            href="https://go.clerk.com/ew92wBC"
+            target="_blank"
+            className="flex gap-1 items-center text-violet-600"
+          >
+            Use Clerk
+            <CaretRight className="size-4" />
+          </a>
+        </div>
+        <span className="text-xs text-neutral-400">Sponsored</span>
+      </div>
+    </div>
+    <HeroCode>
+      <HeroCode.Next>
+        <Pre data-language="tsx" data-copy="">
+          <Code>
+
+          ```tsx
+          // auth.ts
+          import NextAuth from "next-auth"
+          import GitHub from "next-auth/providers/github"
+          export const { auth, handlers } = NextAuth({ providers: [GitHub] })
+
+          // middleware.ts
+          export { auth as middleware } from "@/auth"
+
+          // app/api/auth/[...nextauth]/route.ts
+          import { handlers } from "@/auth"
+          export const { GET, POST } = handlers
+          ```
+
+          </Code>
+        </Pre>
+      </HeroCode.Next>
+      <HeroCode.Svelte>
+        <Pre data-language="tsx" data-copy="">
+          <Code>
+
+          ```tsx
+          // src/auth.ts
+          import { SvelteKitAuth } from "@auth/sveltekit"
+          import GitHub from '@auth/sveltekit/providers/github'
+
+          export const { handle } = SvelteKitAuth({
+            providers: [GitHub],
+          })
+
+          // src/hooks.server.ts
+          export { handle } from "./auth"
+          ```
+
+          </Code>
+        </Pre>
+      </HeroCode.Svelte>
+      <HeroCode.Express>
+        <Pre data-language="tsx" data-copy="">
+          <Code>
+
+          ```tsx
+          // server.ts
+          import { express } from "express"
+          import { ExpressAuth } from "@auth/express"
+          import GitHub from "@auth/express/providers/github"
+
+          const app = express()
+
+          app.use("/auth/*", ExpressAuth({ providers: [GitHub] }))
+          ```
+
+          </Code>
+        </Pre>
+      </HeroCode.Express>
+    </HeroCode>
+
+  </section>
+  <Guides />
+  <section
+    className="flex relative h-[40rem] flex-col justify-between items-center pt-24 pb-12
+    bg-neutral-200 dark:bg-neutral-900 overflow-hidden"
+  >
+    <div
+      className="z-10 flex gap-4 justify-start items-center text-2xl md:text-3xl font-bold
+      text-center text-white lg:text-4xl h-full"
+    >
+      <div className="leading-normal text-slate-800 px-12 dark:text-slate-200 pb-12 dark:drop-shadow-none">
+        Supports all these providers and more!
+      </div>
+    </div>
+    <LogosMarquee />
+  </section>
+  <Footer className="bg-white dark:bg-neutral-950 py-8 !m-0" />
+  <Blur />
+  <div className="overflow-hidden bg-animation -z-10">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    <div id="stars4"></div>
+  </div>
+</div>

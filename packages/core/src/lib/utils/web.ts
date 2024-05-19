@@ -1,13 +1,14 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
+import { logger } from "./logger.js"
 
 import type {
   AuthAction,
-  AuthConfig,
   RequestInternal,
   ResponseInternal,
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
+import type { AuthConfig } from "../../index.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -24,7 +25,7 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
 export async function toInternalRequest(
   req: Request,
   config: AuthConfig
-): Promise<RequestInternal | Error> {
+): Promise<RequestInternal | undefined> {
   try {
     if (req.method !== "GET" && req.method !== "POST")
       throw new UnknownAction("Only GET and POST requests are supported.")
@@ -51,7 +52,8 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
-    return e as Error
+    logger.error(e as Error)
+    logger.debug("request", req)
   }
 }
 
@@ -119,12 +121,11 @@ export function parseActionAndProviderId(
 } {
   const a = pathname.match(new RegExp(`^${base}(.+)`))
 
-  if (a === null)
-    throw new UnknownAction(`Cannot parse action at ${pathname}`)
+  if (a === null) throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  const [_, actionAndProviderId] = a
+  const actionAndProviderId = a.at(-1)!
 
-  const b = actionAndProviderId.replace(/^\//, "").split("/")
+  const b = actionAndProviderId.replace(/^\//, "").split("/").filter(Boolean)
 
   if (b.length !== 1 && b.length !== 2)
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
@@ -134,7 +135,10 @@ export function parseActionAndProviderId(
   if (!isAuthAction(action))
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  if (providerId && !["signin", "callback", "webauthn-options"].includes(action))
+  if (
+    providerId &&
+    !["signin", "callback", "webauthn-options"].includes(action)
+  )
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
   return { action, providerId }

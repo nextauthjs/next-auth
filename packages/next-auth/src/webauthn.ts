@@ -3,7 +3,7 @@ import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import { getCsrfToken, getProviders, __NEXTAUTH } from "./react.js"
 
 import type { LoggerInstance } from "@auth/core/types"
-import type { WebAuthnOptionsResponseBody } from "@auth/core/lib/utils/webauthn-utils"
+import type { WebAuthnOptionsResponseBody } from "@auth/core/types"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,

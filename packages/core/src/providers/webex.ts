@@ -13,15 +13,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 /**
  * The returned user profile from Webex when using the profile callback.
  *
- * Please refer to {@link https://developer.webex.com/docs/api/v1/people/get-my-own-details|People - Get My Own Details}
+ * Please refer to {@link https://developer.webex.com/docs/api/v1/people/get-my-own-details People - Get My Own Details}
  * on Webex Developer portal for additional fields. Returned fields may vary depending on the user's role, the OAuth
  * integration's scope, and the organization the OAuth integration belongs to.
  */
 export interface WebexProfile extends Record<string, any> {
-  id: string;
-  emails: string[];
-  displayName?: string;
-  avatar?: string;
+  id: string
+  emails: string[]
+  displayName?: string
+  avatar?: string
 }
 
 /**
@@ -58,7 +58,7 @@ export interface WebexProfile extends Record<string, any> {
  * :::tip
  *
  * The Webex provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/webex.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -73,17 +73,17 @@ export interface WebexProfile extends Record<string, any> {
  * :::
  */
 export default function Webex<P extends WebexProfile>(
-  config: OAuthUserConfig<P> &  { apiBaseUrl: string }
+  config: OAuthUserConfig<P> & { apiBaseUrl?: string }
 ): OAuthConfig<P> {
-  const apiBaseUrl = config?.apiBaseUrl ?? 'https://webexapis.com/v1';
+  const apiBaseUrl = config?.apiBaseUrl ?? "https://webexapis.com/v1"
 
   return {
-    id: 'webex',
-    name: 'Webex',
-    type: 'oauth',
+    id: "webex",
+    name: "Webex",
+    type: "oauth",
     authorization: {
       url: `${apiBaseUrl}/authorize`,
-      params: { scope: 'spark:kms spark:people_read' }
+      params: { scope: "spark:kms spark:people_read" },
     },
     token: `${apiBaseUrl}/access_token`,
     userinfo: `${apiBaseUrl}/people/me`,
@@ -92,9 +92,9 @@ export default function Webex<P extends WebexProfile>(
         id: profile.id,
         email: profile.emails[0],
         name: profile.displayName,
-        image: profile.avatar
+        image: profile.avatar,
       }
     },
-    options: config
-  };
+    options: config,
+  }
 }

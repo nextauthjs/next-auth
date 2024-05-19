@@ -1,5 +1,5 @@
 /**
- * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/guides/upgrade-to-v5)._
+ * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/getting-started/migrating-to-v5)._
  *
  * ## Installation
  *
@@ -79,10 +79,13 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "./lib/types.js"
+import type {
+  AppRouteHandlerFn,
+  AppRouteHandlerFnContext,
+} from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-export { AuthError } from "@auth/core/errors"
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export type {
   Session,
@@ -214,7 +217,7 @@ export interface NextAuthResult {
    * @example
    * ```ts title="pages/protected-ssr.ts"
    * import { auth } from "../auth"
-   * //...
+   *
    * export const getServerSideProps: GetServerSideProps = async (context) => {
    *   const session = await auth(context)
    *
@@ -233,7 +236,12 @@ export interface NextAuthResult {
     ((...args: []) => Promise<Session | null>) &
     ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
     ((
-      ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
+      ...args: [
+        (
+          req: NextAuthRequest,
+          ctx: AppRouteHandlerFnContext
+        ) => ReturnType<AppRouteHandlerFn>,
+      ]
     ) => AppRouteHandlerFn)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
@@ -344,6 +352,7 @@ export interface NextAuthResult {
  * ```
  *
  * Lazy initialization:
+ *
  * @example
  * ```ts title="auth.ts"
  * import NextAuth from "next-auth"

@@ -162,7 +162,7 @@ export interface TwitterProfile {
  * :::tip
  *
  * The Twitter provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/twitter.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -197,7 +197,7 @@ export default function Twitter(
         image: data.profile_image_url,
       }
     },
-    style: { logo: "/twitter.svg", bg: "#1da1f2", text: "#fff" },
+    style: { bg: "#1da1f2", text: "#fff" },
     options: config,
   }
 }

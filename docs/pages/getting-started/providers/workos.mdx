@@ -1,0 +1,86 @@
+---
+title: WorkOS
+---
+
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/workos.svg" height="64" width="64" />
+
+# WorkOS Provider
+
+## Resources
+
+- [WorkOS SSO OAuth documentation](https://workos.com/docs/reference/sso)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/workos
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/workos
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_WORKOS_ID
+AUTH_WORKOS_SECRET
+```
+
+WorkOS also requires you to pass in your `connection` ID to the provider.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import WorkOS from "next-auth/providers/workos"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [WorkOS({ connection: "conn_abc123" })],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import WorkOS from "@auth/sveltekit/providers/workos"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [WorkOS({ connection: "conn_abc123" })],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import WorkOS from "@auth/express/providers/workos"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({ providers: [WorkOS({ connection: "conn_abc123" })] })
+)
+```
+
+  </Code.Express>
+</Code>

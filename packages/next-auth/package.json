@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.10",
+  "version": "5.0.0-beta.18",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -65,7 +65,7 @@
     "build": "pnpm clean && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "dev": "pnpm providers && tsc -w",
-    "test": "vitest -c ../utils/vitest.config.ts",
+    "test": "vitest run -c ../utils/vitest.config.ts",
     "providers": "node ../utils/scripts/providers"
   },
   "files": [
@@ -84,7 +84,7 @@
     "@simplewebauthn/server": "^9.0.2",
     "next": "^14",
     "nodemailer": "^6.6.5",
-    "react": "^18.2.0"
+    "react": "^18.2.0 || ^19.0.0-0"
   },
   "peerDependenciesMeta": {
     "@simplewebauthn/browser": {

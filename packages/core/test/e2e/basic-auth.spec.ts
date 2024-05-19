@@ -14,10 +14,6 @@ test.describe("Basic Auth", () => {
         user: {
           email: "test@example.com",
           name: "Test User",
-          sub: expect.any(String),
-          iat: expect.any(Number),
-          exp: expect.any(Number),
-          jti: expect.any(String),
         },
         expires: expect.any(String),
       })
@@ -28,6 +24,9 @@ test.describe("Basic Auth", () => {
         .getByRole("banner")
         .getByRole("button", { name: "Sign out" })
         .click()
+
+      // Wait on server-side signout req
+      await page.waitForTimeout(1000)
 
       const session = await page.locator("pre").textContent()
       expect(JSON.parse(session ?? "{}")).toBeNull()
@@ -55,11 +54,7 @@ test.describe("Basic Auth", () => {
         user: {
           email: "bob@alice.com",
           name: "Bob Alice",
-          picture: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
-          sub: expect.any(String),
-          iat: expect.any(Number),
-          exp: expect.any(Number),
-          jti: expect.any(String),
+          image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
         },
         expires: expect.any(String),
       })
@@ -70,6 +65,9 @@ test.describe("Basic Auth", () => {
         .getByRole("banner")
         .getByRole("button", { name: "Sign out" })
         .click()
+
+      // Wait on server-side signout req
+      await page.waitForTimeout(1000)
 
       const session = await page.locator("pre").textContent()
       expect(JSON.parse(session ?? "{}")).toBeNull()

@@ -7,8 +7,17 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from "@simplewebauthn/server"
-import type { Adapter, AdapterAccount, AdapterUser, AdapterAuthenticator } from "../src/adapters"
-import WebAuthn, { GetUserInfo, WebAuthnConfig, WebAuthnProviderType } from "../src/providers/webauthn"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterUser,
+  AdapterAuthenticator,
+} from "../src/adapters"
+import WebAuthn, {
+  GetUserInfo,
+  WebAuthnConfig,
+  WebAuthnProviderType,
+} from "../src/providers/webauthn"
 import {
   WebAuthnAction,
   assertInternalOptionsWebAuthn,
@@ -21,23 +30,33 @@ import {
   toBase64,
   stringToTransports,
   transportsToString,
-
 } from "../src/lib/utils/webauthn-utils"
 import { webauthnChallenge } from "../src/lib/actions/callback/oauth/checks"
-import { InternalOptions, InternalProvider, RequestInternal } from "../src/types"
-import { AdapterError, AuthError, InvalidProvider, MissingAdapter, WebAuthnVerificationError } from "../src/errors"
+import {
+  InternalOptions,
+  InternalProvider,
+  RequestInternal,
+} from "../src/types"
+import {
+  AdapterError,
+  AuthError,
+  InvalidProvider,
+  MissingAdapter,
+  WebAuthnVerificationError,
+} from "../src/errors"
 import { randomString } from "../src/lib/utils/web"
 import { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/server/script/deps"
 import { Cookie } from "../src/lib/utils/cookie"
 import { randomInt } from "crypto"
 
-const getMockAdapter = () => ({
-  getAuthenticator: vi.fn(),
-  updateAuthenticatorCounter: vi.fn(),
-  getAccount: vi.fn(),
-  listAuthenticatorsByUserId: vi.fn(),
-  getUser: vi.fn(),
-}) as unknown as Required<Adapter>
+const getMockAdapter = () =>
+  ({
+    getAuthenticator: vi.fn(),
+    updateAuthenticatorCounter: vi.fn(),
+    getAccount: vi.fn(),
+    listAuthenticatorsByUserId: vi.fn(),
+    getUser: vi.fn(),
+  }) as unknown as Required<Adapter>
 
 function getMockOptions(
   defaultOptions?: Partial<InternalOptions>,
@@ -66,7 +85,9 @@ function getMockOptions(
   } as InternalOptions<WebAuthnProviderType> & { adapter: Required<Adapter> }
 }
 
-function createAuthenticator(partial?: Partial<AdapterAuthenticator>): AdapterAuthenticator {
+function createAuthenticator(
+  partial?: Partial<AdapterAuthenticator>
+): AdapterAuthenticator {
   const id = randomString(32)
   return {
     userId: randomString(32),
@@ -87,7 +108,9 @@ function getExpectedResponse(
   cookies: Cookie[] = []
 ) {
   const cookie = {
-    name: "test", value: "test", options: {}
+    name: "test",
+    value: "test",
+    options: {},
   }
   vi.mocked(webauthnChallenge.create).mockResolvedValue({ cookie })
   return {
@@ -99,25 +122,37 @@ function getExpectedResponse(
     },
     headers: {
       "Content-Type": "application/json",
-    }
+    },
   }
 }
 
 /**
  * Generates default params for verifyAuthenticate and verifyRegister tests
  */
-function prepareVerifyTest(action: WebAuthnAction, requestData?: Record<string, unknown>) {
+function prepareVerifyTest(
+  action: WebAuthnAction,
+  requestData?: Record<string, unknown>
+) {
   const options = getMockOptions()
   const credentialID = toBase64(new Uint8Array([1, 2, 3, 4, 5]))
-  requestData ??= { key: "value", id: credentialID, response: { transports: ["ble", "nfc"] } }
-  const request = { body: { data: JSON.stringify(requestData) }, cookies: "reqcookies" } as unknown as RequestInternal
+  requestData ??= {
+    key: "value",
+    id: credentialID,
+    response: { transports: ["ble", "nfc"] },
+  }
+  const request = {
+    body: { data: JSON.stringify(requestData) },
+    cookies: "reqcookies",
+  } as unknown as RequestInternal
   const cookies = [{ name: "other", value: "value", options: {} }]
 
   const authenticator = createAuthenticator({
     credentialID,
     providerAccountId: credentialID,
     // @ts-expect-error
-    transports: requestData.response?.transports ? transportsToString(requestData.response?.transports) : "usb,ble,nfc",
+    transports: requestData.response?.transports
+      ? transportsToString(requestData.response?.transports)
+      : "usb,ble,nfc",
   })
   vi.mocked(options.adapter.getAuthenticator).mockResolvedValue(authenticator)
 
@@ -143,7 +178,7 @@ function prepareVerifyTest(action: WebAuthnAction, requestData?: Record<string, 
         credentialBackedUp: authenticator.credentialBackedUp,
         // @ts-expect-error
         credentialDeviceType: authenticator.credentialDeviceType,
-      }
+      },
     })
   }
 
@@ -155,7 +190,10 @@ function prepareVerifyTest(action: WebAuthnAction, requestData?: Record<string, 
   } as unknown as AdapterAccount
   vi.mocked(options.adapter.getAccount).mockResolvedValue(account)
 
-  const user = { id: authenticator.userId, email: "user@example.com" } as unknown as AdapterUser
+  const user = {
+    id: authenticator.userId,
+    email: "user@example.com",
+  } as unknown as AdapterUser
   vi.mocked(options.adapter.getUser).mockResolvedValue(user)
 
   const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
@@ -206,7 +244,7 @@ vi.mock("../src/lib/actions/callback/oauth/checks", () => ({
   webauthnChallenge: {
     create: vi.fn(),
     use: vi.fn(),
-  }
+  },
 }))
 
 const defaultWebAuthnConfig = WebAuthn({})
@@ -228,7 +266,9 @@ describe("assertInternalOptionsWebAuthn", () => {
   it("errors on non-webauthn provider", () => {
     const options = getMockOptions()
     options.provider.type = "email" as unknown as WebAuthnProviderType
-    expect(() => assertInternalOptionsWebAuthn(options)).toThrow(InvalidProvider)
+    expect(() => assertInternalOptionsWebAuthn(options)).toThrow(
+      InvalidProvider
+    )
   })
 })
 
@@ -285,7 +325,10 @@ describe("transportsToString", () => {
 describe("getRelayingParty", () => {
   it("returns relaying party with default values", () => {
     const options = getMockOptions()
-    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
+    const relayingParty = options.provider.getRelayingParty(
+      options,
+      {} as RequestInternal
+    )
 
     expect(relayingParty).toEqual({
       id: options.url.hostname,
@@ -295,14 +338,20 @@ describe("getRelayingParty", () => {
   })
 
   it("returns relaying party with custom values", () => {
-    const options = getMockOptions({}, {
-      relayingParty: {
-        id: "my-id",
-        name: "My Relaying Party",
-        origin: "https://custom.com",
+    const options = getMockOptions(
+      {},
+      {
+        relayingParty: {
+          id: "my-id",
+          name: "My Relaying Party",
+          origin: "https://custom.com",
+        },
       }
-    })
-    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
+    )
+    const relayingParty = options.provider.getRelayingParty(
+      options,
+      {} as RequestInternal
+    )
 
     expect(relayingParty).toEqual({
       id: "my-id",
@@ -312,13 +361,19 @@ describe("getRelayingParty", () => {
   })
 
   it("returns relaying party with mixed values", () => {
-    const options = getMockOptions({}, {
-      relayingParty: {
-        id: "my-id",
-        origin: "https://custom.com",
+    const options = getMockOptions(
+      {},
+      {
+        relayingParty: {
+          id: "my-id",
+          origin: "https://custom.com",
+        },
       }
-    })
-    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
+    )
+    const relayingParty = options.provider.getRelayingParty(
+      options,
+      {} as RequestInternal
+    )
 
     expect(relayingParty).toEqual({
       id: "my-id",
@@ -328,14 +383,20 @@ describe("getRelayingParty", () => {
   })
 
   it("uses the first value if array by default", () => {
-    const options = getMockOptions({}, {
-      relayingParty: {
-        id: ["other-id", "my-id"],
-        name: ["Other Relaying Party", "My Relaying Party"],
-        origin: ["https://other.com", "https://custom.com"],
+    const options = getMockOptions(
+      {},
+      {
+        relayingParty: {
+          id: ["other-id", "my-id"],
+          name: ["Other Relaying Party", "My Relaying Party"],
+          origin: ["https://other.com", "https://custom.com"],
+        },
       }
-    })
-    const relayingParty = options.provider.getRelayingParty(options, {} as RequestInternal)
+    )
+    const relayingParty = options.provider.getRelayingParty(
+      options,
+      {} as RequestInternal
+    )
 
     expect(relayingParty).toEqual({
       id: "other-id",
@@ -345,20 +406,23 @@ describe("getRelayingParty", () => {
   })
 
   it("accepts custom getRelayingParty function", () => {
-    const options = getMockOptions({}, {
-      relayingParty: {
-        id: "my-id",
-        origin: "https://custom.com",
-      },
-      getRelayingParty: (opts, req) => {
-        const id = opts.provider.relayingParty!.id as string
-        return {
-          id,
-          name: req.url.host,
-          origin: req.url.origin,
-        }
+    const options = getMockOptions(
+      {},
+      {
+        relayingParty: {
+          id: "my-id",
+          origin: "https://custom.com",
+        },
+        getRelayingParty: (opts, req) => {
+          const id = opts.provider.relayingParty!.id as string
+          return {
+            id,
+            name: req.url.host,
+            origin: req.url.origin,
+          }
+        },
       }
-    })
+    )
     const relayingParty = options.provider.getRelayingParty(options, {
       url: new URL("https://myapp.com"),
     } as RequestInternal)
@@ -378,94 +442,100 @@ describe("inferWebAuthnOptions", () => {
     userInfo: Awaited<ReturnType<GetUserInfo>>
     expected: WebAuthnAction | null
   }[] = [
-      {
-        action: "authenticate",
-        loggedIn: true,
-        userInfo: { user: {}, exists: true },
-        expected: "authenticate",
-      },
-      {
-        action: "authenticate",
-        loggedIn: false,
-        userInfo: { user: {}, exists: true },
-        expected: "authenticate",
-      },
-      {
-        action: "authenticate",
-        loggedIn: false,
-        userInfo: null,
-        expected: "authenticate",
-      },
-      {
-        action: "register",
-        loggedIn: false,
-        userInfo: { user: {}, exists: false },
-        expected: "register",
-      },
-      {
-        action: "register",
-        loggedIn: true,
-        userInfo: { user: {}, exists: true },
-        expected: "register",
-      },
-      {
-        action: "register",
-        loggedIn: false,
-        userInfo: null,
-        expected: null,
-      },
-      {
-        action: "register",
-        loggedIn: false,
-        userInfo: { user: {}, exists: true },
-        expected: null,
-      },
-      {
-        action: undefined,
-        loggedIn: false,
-        userInfo: { user: {}, exists: true },
-        expected: "authenticate",
-      },
-      {
-        action: undefined,
-        loggedIn: false,
-        userInfo: { user: {}, exists: false },
-        expected: "register",
-      },
-      {
-        action: undefined,
-        loggedIn: false,
-        userInfo: null,
-        expected: "authenticate",
-      },
-      {
-        action: undefined,
-        loggedIn: true,
-        userInfo: { user: {}, exists: true },
-        expected: null,
-      },
-      {
-        action: undefined,
-        loggedIn: true,
-        userInfo: null,
-        expected: null,
-      },
-    ]
+    {
+      action: "authenticate",
+      loggedIn: true,
+      userInfo: { user: {}, exists: true },
+      expected: "authenticate",
+    },
+    {
+      action: "authenticate",
+      loggedIn: false,
+      userInfo: { user: {}, exists: true },
+      expected: "authenticate",
+    },
+    {
+      action: "authenticate",
+      loggedIn: false,
+      userInfo: null,
+      expected: "authenticate",
+    },
+    {
+      action: "register",
+      loggedIn: false,
+      userInfo: { user: {}, exists: false },
+      expected: "register",
+    },
+    {
+      action: "register",
+      loggedIn: true,
+      userInfo: { user: {}, exists: true },
+      expected: "register",
+    },
+    {
+      action: "register",
+      loggedIn: false,
+      userInfo: null,
+      expected: null,
+    },
+    {
+      action: "register",
+      loggedIn: false,
+      userInfo: { user: {}, exists: true },
+      expected: null,
+    },
+    {
+      action: undefined,
+      loggedIn: false,
+      userInfo: { user: {}, exists: true },
+      expected: "authenticate",
+    },
+    {
+      action: undefined,
+      loggedIn: false,
+      userInfo: { user: {}, exists: false },
+      expected: "register",
+    },
+    {
+      action: undefined,
+      loggedIn: false,
+      userInfo: null,
+      expected: "authenticate",
+    },
+    {
+      action: undefined,
+      loggedIn: true,
+      userInfo: { user: {}, exists: true },
+      expected: null,
+    },
+    {
+      action: undefined,
+      loggedIn: true,
+      userInfo: null,
+      expected: null,
+    },
+  ]
 
-  test.each(cases)("(%#) ($action, $userInfo, loggedIn: $loggedIn) = $expected", ({ action, userInfo, expected, loggedIn }) => {
-    expect(inferWebAuthnOptions(action, loggedIn, userInfo)).toEqual(expected)
-  })
+  test.each(cases)(
+    "(%#) ($action, $userInfo, loggedIn: $loggedIn) = $expected",
+    ({ action, userInfo, expected, loggedIn }) => {
+      expect(inferWebAuthnOptions(action, loggedIn, userInfo)).toEqual(expected)
+    }
+  )
 })
-
 
 describe("getRegistrationResponse", () => {
   it("generates registration response", async () => {
     const options = getMockOptions()
     const user = { id: "123", email: "test@example.com", name: "Test User" }
     const authenticators = [createAuthenticator(), createAuthenticator()]
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
-    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
+    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(
+      authenticators
+    )
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
@@ -476,40 +546,66 @@ describe("getRegistrationResponse", () => {
       userID: expect.any(String),
       userName: user.email,
       userDisplayName: user.name,
-      excludeCredentials: authenticators.map(a => ({
+      excludeCredentials: authenticators.map((a) => ({
         id: fromBase64(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
     }
     const cookies = [{ name: "other", value: "value", options: {} }]
-    const expectedResponse = getExpectedResponse("register", returnedOptions, cookies)
+    const expectedResponse = getExpectedResponse(
+      "register",
+      returnedOptions,
+      cookies
+    )
 
-    expect(await getRegistrationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
+    expect(
+      await getRegistrationResponse(
+        options,
+        {} as RequestInternal,
+        user,
+        cookies
+      )
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
-    expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
-    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith("123")
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge",
+      user
+    )
+    expect(generateRegistrationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
+    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith(
+      "123"
+    )
   })
 
   it("uses provider override options", async () => {
-    const options = getMockOptions({}, {
-      registrationOptions: {
-        // @ts-expect-error
-        userID: "test",
-        attestationType: "none",
-        timeout: 1000,
-        authenticatorSelection: {
-          requireResidentKey: true,
+    const options = getMockOptions(
+      {},
+      {
+        registrationOptions: {
+          // @ts-expect-error
+          userID: "test",
+          attestationType: "none",
+          timeout: 1000,
+          authenticatorSelection: {
+            requireResidentKey: true,
+          },
+          supportedAlgorithmIDs: [1, 2, 3],
         },
-        supportedAlgorithmIDs: [1, 2, 3],
       }
-    })
+    )
     const user = { id: "123", email: "test@example.com", name: "Test User" }
     const authenticators = [createAuthenticator(), createAuthenticator()]
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
-    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
+    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(
+      authenticators
+    )
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
@@ -520,7 +616,7 @@ describe("getRegistrationResponse", () => {
       userID: expect.any(String),
       userName: user.email,
       userDisplayName: user.name,
-      excludeCredentials: authenticators.map(a => ({
+      excludeCredentials: authenticators.map((a) => ({
         id: fromBase64(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
@@ -534,17 +630,29 @@ describe("getRegistrationResponse", () => {
     }
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
-    expect(await getRegistrationResponse(options, {} as RequestInternal, user)).toEqual(expectedResponse)
+    expect(
+      await getRegistrationResponse(options, {} as RequestInternal, user)
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
-    expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
-    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith("123")
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge",
+      user
+    )
+    expect(generateRegistrationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
+    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith(
+      "123"
+    )
   })
 
   it("doesn't get authenticators for new users", async () => {
     const options = getMockOptions()
     const user = { email: "test@example.com", name: "Test User" }
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
@@ -560,17 +668,27 @@ describe("getRegistrationResponse", () => {
     }
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
-    expect(await getRegistrationResponse(options, {} as RequestInternal, user)).toEqual(expectedResponse)
+    expect(
+      await getRegistrationResponse(options, {} as RequestInternal, user)
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
-    expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge",
+      user
+    )
+    expect(generateRegistrationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
     expect(options.adapter.listAuthenticatorsByUserId).not.toHaveBeenCalled()
   })
 
   it("allows missing userName", async () => {
     const options = getMockOptions()
     const user = { email: "test@example.com" }
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
@@ -586,67 +704,103 @@ describe("getRegistrationResponse", () => {
     }
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
-    expect(await getRegistrationResponse(options, {} as RequestInternal, user)).toEqual(expectedResponse)
+    expect(
+      await getRegistrationResponse(options, {} as RequestInternal, user)
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge", user)
-    expect(generateRegistrationOptions).toHaveBeenCalledWith(expectedOptionsParams)
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge",
+      user
+    )
+    expect(generateRegistrationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
     expect(options.adapter.listAuthenticatorsByUserId).not.toHaveBeenCalled()
   })
 })
-
 
 describe("getAuthenticationResponse", () => {
   it("generates authentication response", async () => {
     const options = getMockOptions()
     const user = { id: "123", email: "test@example.com", name: "Test User" }
     const authenticators = [createAuthenticator(), createAuthenticator()]
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
-    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
+    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(
+      authenticators
+    )
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
-      allowCredentials: authenticators.map(a => ({
+      allowCredentials: authenticators.map((a) => ({
         id: fromBase64(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
     }
     const cookies = [{ name: "other", value: "value", options: {} }]
-    const expectedResponse = getExpectedResponse("authenticate", returnedOptions, cookies)
+    const expectedResponse = getExpectedResponse(
+      "authenticate",
+      returnedOptions,
+      cookies
+    )
 
-    expect(await getAuthenticationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
+    expect(
+      await getAuthenticationResponse(
+        options,
+        {} as RequestInternal,
+        user,
+        cookies
+      )
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge")
-    expect(generateAuthenticationOptions).toHaveBeenCalledWith(expectedOptionsParams)
-    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith("123")
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge"
+    )
+    expect(generateAuthenticationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
+    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith(
+      "123"
+    )
   })
 
   it("uses provider override options", async () => {
-    const options = getMockOptions({}, {
-      authenticationOptions: {
-        extensions: {
-          appid: "test",
+    const options = getMockOptions(
+      {},
+      {
+        authenticationOptions: {
+          extensions: {
+            appid: "test",
+          },
+          timeout: 1000,
+          userVerification: "required",
         },
-        timeout: 1000,
-        userVerification: "required",
       }
-    })
+    )
     const user = { id: "123", email: "test@example.com", name: "Test User" }
     const authenticators = [createAuthenticator(), createAuthenticator()]
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
-    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(authenticators)
+    vi.mocked(options.adapter.listAuthenticatorsByUserId).mockResolvedValue(
+      authenticators
+    )
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
     const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
-      allowCredentials: authenticators.map(a => ({
+      allowCredentials: authenticators.map((a) => ({
         id: fromBase64(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
@@ -658,19 +812,39 @@ describe("getAuthenticationResponse", () => {
       },
     }
     const cookies = [{ name: "other", value: "value", options: {} }]
-    const expectedResponse = getExpectedResponse("authenticate", returnedOptions, cookies)
+    const expectedResponse = getExpectedResponse(
+      "authenticate",
+      returnedOptions,
+      cookies
+    )
 
-    expect(await getAuthenticationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
+    expect(
+      await getAuthenticationResponse(
+        options,
+        {} as RequestInternal,
+        user,
+        cookies
+      )
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge")
-    expect(generateAuthenticationOptions).toHaveBeenCalledWith(expectedOptionsParams)
-    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith("123")
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge"
+    )
+    expect(generateAuthenticationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
+    expect(options.adapter.listAuthenticatorsByUserId).toHaveBeenCalledWith(
+      "123"
+    )
   })
 
   it("accepts undefined user", async () => {
     const options = getMockOptions()
     const user = undefined
-    const returnedOptions = { challenge: "mychallenge" } as unknown as PublicKeyCredentialCreationOptionsJSON
+    const returnedOptions = {
+      challenge: "mychallenge",
+    } as unknown as PublicKeyCredentialCreationOptionsJSON
 
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
@@ -681,12 +855,28 @@ describe("getAuthenticationResponse", () => {
       allowCredentials: undefined,
     }
     const cookies = [{ name: "other", value: "value", options: {} }]
-    const expectedResponse = getExpectedResponse("authenticate", returnedOptions, cookies)
+    const expectedResponse = getExpectedResponse(
+      "authenticate",
+      returnedOptions,
+      cookies
+    )
 
-    expect(await getAuthenticationResponse(options, {} as RequestInternal, user, cookies)).toEqual(expectedResponse)
+    expect(
+      await getAuthenticationResponse(
+        options,
+        {} as RequestInternal,
+        user,
+        cookies
+      )
+    ).toEqual(expectedResponse)
 
-    expect(webauthnChallenge.create).toHaveBeenCalledWith(options, "mychallenge")
-    expect(generateAuthenticationOptions).toHaveBeenCalledWith(expectedOptionsParams)
+    expect(webauthnChallenge.create).toHaveBeenCalledWith(
+      options,
+      "mychallenge"
+    )
+    expect(generateAuthenticationOptions).toHaveBeenCalledWith(
+      expectedOptionsParams
+    )
     expect(options.adapter.listAuthenticatorsByUserId).not.toHaveBeenCalled()
   })
 })
@@ -701,7 +891,7 @@ describe("verifyAuthenticate", () => {
       cookies,
       credentialID,
       newCounter,
-      expectedAuthenticationResponse
+      expectedAuthenticationResponse,
     } = prepareVerifyTest("authenticate")
 
     expect(await verifyAuthenticate(options, request, cookies)).toEqual({
@@ -709,12 +899,23 @@ describe("verifyAuthenticate", () => {
       user,
     })
 
-
     expect(options.adapter.getAuthenticator).toHaveBeenCalledWith(credentialID)
-    expect(webauthnChallenge.use).toHaveBeenCalledWith(options, "reqcookies", cookies)
-    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(expectedAuthenticationResponse)
-    expect(options.adapter.updateAuthenticatorCounter).toHaveBeenCalledWith(credentialID, newCounter)
-    expect(options.adapter.getAccount).toHaveBeenCalledWith(credentialID, "webauthn")
+    expect(webauthnChallenge.use).toHaveBeenCalledWith(
+      options,
+      "reqcookies",
+      cookies
+    )
+    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(
+      expectedAuthenticationResponse
+    )
+    expect(options.adapter.updateAuthenticatorCounter).toHaveBeenCalledWith(
+      credentialID,
+      newCounter
+    )
+    expect(options.adapter.getAccount).toHaveBeenCalledWith(
+      credentialID,
+      "webauthn"
+    )
     expect(options.adapter.getUser).toHaveBeenCalledWith(user.id)
   })
 
@@ -725,7 +926,7 @@ describe("verifyAuthenticate", () => {
       options,
       request,
       cookies,
-      expectedAuthenticationResponse
+      expectedAuthenticationResponse,
     } = prepareVerifyTest("authenticate")
     options.provider.verifyAuthenticationOptions = {
       ...options.provider.verifyAuthenticationOptions,
@@ -746,29 +947,31 @@ describe("verifyAuthenticate", () => {
   })
 
   it("errors on invalid request body", async () => {
-    const {
-      options,
-      request,
-      cookies,
-    } = prepareVerifyTest("authenticate", { "key": "value" })
+    const { options, request, cookies } = prepareVerifyTest("authenticate", {
+      key: "value",
+    })
 
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrowErrorMatchingInlineSnapshot(`[AuthError: Invalid WebAuthn Authentication response. .Read more at https://errors.authjs.dev#autherror]`)
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[AuthError: Invalid WebAuthn Authentication response. Read more at https://errors.authjs.dev#autherror]`
+    )
 
     expect(webauthnChallenge.use).not.toHaveBeenCalled()
     expect(options.adapter.updateAuthenticatorCounter).not.toHaveBeenCalled()
   })
 
   it("errors on invalid authenticator", async () => {
-    const {
-      options,
-      request,
-      cookies,
-      credentialID,
-    } = prepareVerifyTest("authenticate")
+    const { options, request, cookies, credentialID } =
+      prepareVerifyTest("authenticate")
 
     vi.mocked(options.adapter.getAuthenticator).mockResolvedValue(null)
 
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrowErrorMatchingInlineSnapshot(`[AuthError: WebAuthn authenticator not found in database: {"credentialID":"AQIDBAU="} .Read more at https://errors.authjs.dev#autherror]`)
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[AuthError: WebAuthn authenticator not found in database: {"credentialID":"AQIDBAU="}. Read more at https://errors.authjs.dev#autherror]`
+    )
 
     expect(options.adapter.getAuthenticator).toHaveBeenCalledWith(credentialID)
     expect(webauthnChallenge.use).not.toHaveBeenCalled()
@@ -776,80 +979,87 @@ describe("verifyAuthenticate", () => {
   })
 
   it("errors on failed response verification", async () => {
-    const {
-      options,
-      request,
-      cookies,
+    const { options, request, cookies, expectedAuthenticationResponse } =
+      prepareVerifyTest("authenticate")
+
+    vi.mocked(verifyAuthenticationResponse).mockRejectedValue(
+      new Error("mytesterror")
+    )
+
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrow(WebAuthnVerificationError)
+
+    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(
       expectedAuthenticationResponse
-    } = prepareVerifyTest("authenticate")
-
-    vi.mocked(verifyAuthenticationResponse).mockRejectedValue(new Error("mytesterror"))
-
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrow(WebAuthnVerificationError)
-
-    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(expectedAuthenticationResponse)
+    )
     expect(options.adapter.updateAuthenticatorCounter).not.toHaveBeenCalled()
   })
 
   it("errors on failed verification verified", async () => {
-    const {
-      options,
-      request,
-      cookies,
-      expectedAuthenticationResponse
-    } = prepareVerifyTest("authenticate")
+    const { options, request, cookies, expectedAuthenticationResponse } =
+      prepareVerifyTest("authenticate")
 
     // @ts-expect-error
-    vi.mocked(verifyAuthenticationResponse).mockResolvedValue({ verified: false })
+    vi.mocked(verifyAuthenticationResponse).mockResolvedValue({
+      verified: false,
+    })
 
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrow(WebAuthnVerificationError)
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrow(WebAuthnVerificationError)
 
-    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(expectedAuthenticationResponse)
+    expect(verifyAuthenticationResponse).toHaveBeenCalledWith(
+      expectedAuthenticationResponse
+    )
     expect(options.adapter.updateAuthenticatorCounter).not.toHaveBeenCalled()
   })
 
   it("errors if authenticator update fails", async () => {
-    const {
-      options,
-      request,
-      cookies,
+    const { options, request, cookies, credentialID, newCounter } =
+      prepareVerifyTest("authenticate")
+
+    vi.mocked(options.adapter.updateAuthenticatorCounter).mockRejectedValue(
+      new Error("mytesterror")
+    )
+
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrowError(AdapterError)
+
+    expect(options.adapter.updateAuthenticatorCounter).toHaveBeenCalledWith(
       credentialID,
       newCounter
-    } = prepareVerifyTest("authenticate")
-
-    vi.mocked(options.adapter.updateAuthenticatorCounter).mockRejectedValue(new Error("mytesterror"))
-
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrowError(AdapterError)
-
-    expect(options.adapter.updateAuthenticatorCounter).toHaveBeenCalledWith(credentialID, newCounter)
+    )
   })
 
   it("errors if account does not exist", async () => {
-    const {
-      options,
-      request,
-      cookies,
-      credentialID,
-    } = prepareVerifyTest("authenticate")
+    const { options, request, cookies, credentialID } =
+      prepareVerifyTest("authenticate")
 
     vi.mocked(options.adapter.getAccount).mockResolvedValue(null)
 
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrowErrorMatchingInlineSnapshot(`[AuthError: WebAuthn account not found in database: {"credentialID":"AQIDBAU=","providerAccountId":"AQIDBAU="} .Read more at https://errors.authjs.dev#autherror]`)
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[AuthError: WebAuthn account not found in database: {"credentialID":"AQIDBAU=","providerAccountId":"AQIDBAU="}. Read more at https://errors.authjs.dev#autherror]`
+    )
 
-    expect(options.adapter.getAccount).toHaveBeenCalledWith(credentialID, "webauthn")
+    expect(options.adapter.getAccount).toHaveBeenCalledWith(
+      credentialID,
+      "webauthn"
+    )
   })
 
   it("errors if user does not exist", async () => {
-    const {
-      options,
-      request,
-      cookies,
-      user,
-    } = prepareVerifyTest("authenticate")
+    const { options, request, cookies, user } =
+      prepareVerifyTest("authenticate")
 
     vi.mocked(options.adapter.getUser).mockResolvedValue(null)
 
-    await expect(() => verifyAuthenticate(options, request, cookies)).rejects.toThrow(AuthError)
+    await expect(() =>
+      verifyAuthenticate(options, request, cookies)
+    ).rejects.toThrow(AuthError)
 
     expect(options.adapter.getUser).toHaveBeenCalledWith(user.id)
   })
@@ -864,9 +1074,12 @@ describe("verifyRegister", () => {
       request,
       cookies,
       authenticator: { userId: auid, ...authenticator },
-      expectedRegistrationResponse
+      expectedRegistrationResponse,
     } = prepareVerifyTest("register")
-    vi.mocked(webauthnChallenge.use).mockResolvedValue({ challenge: "mychallenge", registerData: user })
+    vi.mocked(webauthnChallenge.use).mockResolvedValue({
+      challenge: "mychallenge",
+      registerData: user,
+    })
 
     expect(await verifyRegister(options, request, cookies)).toEqual({
       account,
@@ -874,8 +1087,14 @@ describe("verifyRegister", () => {
       authenticator,
     })
 
-    expect(webauthnChallenge.use).toHaveBeenCalledWith(options, request.cookies, cookies)
-    expect(verifyRegistrationResponse).toHaveBeenCalledWith(expectedRegistrationResponse)
+    expect(webauthnChallenge.use).toHaveBeenCalledWith(
+      options,
+      request.cookies,
+      cookies
+    )
+    expect(verifyRegistrationResponse).toHaveBeenCalledWith(
+      expectedRegistrationResponse
+    )
   })
 
   it("provider overrides verification options", async () => {
@@ -886,9 +1105,12 @@ describe("verifyRegister", () => {
       request,
       cookies,
       authenticator: { userId: auid, ...authenticator },
-      expectedRegistrationResponse
+      expectedRegistrationResponse,
     } = prepareVerifyTest("register")
-    vi.mocked(webauthnChallenge.use).mockResolvedValue({ challenge: "mychallenge", registerData: user })
+    vi.mocked(webauthnChallenge.use).mockResolvedValue({
+      challenge: "mychallenge",
+      registerData: user,
+    })
     options.provider.verifyRegistrationOptions = {
       ...options.provider.verifyRegistrationOptions,
       expectedType: "public-key",
@@ -916,24 +1138,32 @@ describe("verifyRegister", () => {
       options,
       request,
       cookies,
-    } = prepareVerifyTest("register", { "key": "value" })
+    } = prepareVerifyTest("register", { key: "value" })
 
-    await expect(() => verifyRegister(options, request, cookies)).rejects.toThrowErrorMatchingInlineSnapshot(`[AuthError: Invalid WebAuthn Registration response. .Read more at https://errors.authjs.dev#autherror]`)
+    await expect(() =>
+      verifyRegister(options, request, cookies)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[AuthError: Invalid WebAuthn Registration response. Read more at https://errors.authjs.dev#autherror]`
+    )
 
     expect(webauthnChallenge.use).not.toHaveBeenCalled()
     expect(verifyRegistrationResponse).not.toHaveBeenCalled()
   })
 
   it("errors on missing registration data in challenge cookie", async () => {
-    const {
+    const { options, request, cookies } = prepareVerifyTest("register")
+
+    await expect(() =>
+      verifyRegister(options, request, cookies)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[AuthError: Missing user registration data in WebAuthn challenge cookie. Read more at https://errors.authjs.dev#autherror]`
+    )
+
+    expect(webauthnChallenge.use).toHaveBeenCalledWith(
       options,
-      request,
-      cookies,
-    } = prepareVerifyTest("register")
-
-    await expect(() => verifyRegister(options, request, cookies)).rejects.toThrowErrorMatchingInlineSnapshot(`[AuthError: Missing user registration data in WebAuthn challenge cookie. .Read more at https://errors.authjs.dev#autherror]`)
-
-    expect(webauthnChallenge.use).toHaveBeenCalledWith(options, request.cookies, cookies)
+      request.cookies,
+      cookies
+    )
     expect(verifyRegistrationResponse).not.toHaveBeenCalled()
   })
 
@@ -945,15 +1175,28 @@ describe("verifyRegister", () => {
       request,
       cookies,
       authenticator: { userId: auid, ...authenticator },
-      expectedRegistrationResponse
+      expectedRegistrationResponse,
     } = prepareVerifyTest("register")
-    vi.mocked(webauthnChallenge.use).mockResolvedValue({ challenge: "mychallenge", registerData: user })
-    vi.mocked(verifyRegistrationResponse).mockRejectedValue(new Error("mytesterror"))
+    vi.mocked(webauthnChallenge.use).mockResolvedValue({
+      challenge: "mychallenge",
+      registerData: user,
+    })
+    vi.mocked(verifyRegistrationResponse).mockRejectedValue(
+      new Error("mytesterror")
+    )
 
-    await expect(() => verifyRegister(options, request, cookies)).rejects.toThrow(WebAuthnVerificationError)
+    await expect(() =>
+      verifyRegister(options, request, cookies)
+    ).rejects.toThrow(WebAuthnVerificationError)
 
-    expect(webauthnChallenge.use).toHaveBeenCalledWith(options, request.cookies, cookies)
-    expect(verifyRegistrationResponse).toHaveBeenCalledWith(expectedRegistrationResponse)
+    expect(webauthnChallenge.use).toHaveBeenCalledWith(
+      options,
+      request.cookies,
+      cookies
+    )
+    expect(verifyRegistrationResponse).toHaveBeenCalledWith(
+      expectedRegistrationResponse
+    )
   })
 
   it("errors on failed verification verified", async () => {
@@ -964,14 +1207,25 @@ describe("verifyRegister", () => {
       request,
       cookies,
       authenticator: { userId: auid, ...authenticator },
-      expectedRegistrationResponse
+      expectedRegistrationResponse,
     } = prepareVerifyTest("register")
-    vi.mocked(webauthnChallenge.use).mockResolvedValue({ challenge: "mychallenge", registerData: user })
+    vi.mocked(webauthnChallenge.use).mockResolvedValue({
+      challenge: "mychallenge",
+      registerData: user,
+    })
     vi.mocked(verifyRegistrationResponse).mockResolvedValue({ verified: false })
 
-    await expect(() => verifyRegister(options, request, cookies)).rejects.toThrow(WebAuthnVerificationError)
+    await expect(() =>
+      verifyRegister(options, request, cookies)
+    ).rejects.toThrow(WebAuthnVerificationError)
 
-    expect(webauthnChallenge.use).toHaveBeenCalledWith(options, request.cookies, cookies)
-    expect(verifyRegistrationResponse).toHaveBeenCalledWith(expectedRegistrationResponse)
+    expect(webauthnChallenge.use).toHaveBeenCalledWith(
+      options,
+      request.cookies,
+      cookies
+    )
+    expect(verifyRegistrationResponse).toHaveBeenCalledWith(
+      expectedRegistrationResponse
+    )
   })
 })

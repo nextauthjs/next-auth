@@ -1,35 +1,94 @@
-import { collections, FaunaAdapter, format, indexes, query } from "../src"
+import { FaunaAdapter, format } from "../src"
 import { runBasicTests } from "utils/adapter"
-import { Client as FaunaClient, Get, Match, Ref } from "faunadb"
+import { Client, fql, NullDocument } from "fauna"
 
-const client = new FaunaClient({
+import type {
+  FaunaUser,
+  FaunaAccount,
+  FaunaSession,
+  FaunaVerificationToken,
+} from "../src"
+
+const client = new Client({
   secret: "secret",
-  scheme: "http",
-  domain: "localhost",
-  port: 8443,
+  endpoint: new URL("http://localhost:8443"),
 })
-
-const q = query(client, format.from)
 
 runBasicTests({
   adapter: FaunaAdapter(client),
   db: {
-    disconnect: async () => await client.close({ force: true }),
-    user: async (id) => await q(Get(Ref(collections.Users, id))),
-    session: async (sessionToken) =>
-      await q(Get(Match(indexes.SessionByToken, sessionToken))),
+    // UUID is not a valid ID in Fauna (see https://docs.fauna.com/fauna/current/reference/fql_reference/types#id)
+    id: () => String(Math.floor(Math.random() * 10 ** 18)),
+    user: async (id) => {
+      const response = await client.query<FaunaUser>(fql`User.byId(${id})`)
+      if (response.data instanceof NullDocument) return null
+      return format.from(response.data)
+    },
+    async session(sessionToken) {
+      const response = await client.query<FaunaSession>(
+        fql`Session.bySessionToken(${sessionToken}).first()`
+      )
+      return format.from(response.data)
+    },
     async account({ provider, providerAccountId }) {
-      const key = [provider, providerAccountId]
-      const ref = Match(indexes.AccountByProviderAndProviderAccountId, key)
-      return await q(Get(ref))
+      const response = await client.query<FaunaAccount>(
+        fql`Account.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()`
+      )
+      return format.from(response.data)
     },
     async verificationToken({ identifier, token }) {
-      const key = [identifier, token]
-      const ref = Match(indexes.VerificationTokenByIdentifierAndToken, key)
-      const verificationToken = await q(Get(ref))
-      // @ts-expect-error
-      if (verificationToken) delete verificationToken.id
-      return verificationToken
+      const response = await client.query<FaunaVerificationToken>(
+        fql`VerificationToken.byIdentifierAndToken(${identifier}, ${token}).first()`
+      )
+      const _verificationToken: Partial<FaunaVerificationToken> = {
+        ...response.data,
+      }
+      delete _verificationToken.id
+      return format.from(_verificationToken)
+    },
+  },
+})
+
+runBasicTests({
+  adapter: FaunaAdapter(client, {
+    collectionNames: {
+      user: "CustomUser",
+      account: "CustomAccount",
+      session: "CustomSession",
+      verificationToken: "CustomVerificationToken",
+    },
+  }),
+  db: {
+    // UUID is not a valid ID in Fauna (see https://docs.fauna.com/fauna/current/reference/fql_reference/types#id)
+    id: () => String(Math.floor(Math.random() * 10 ** 18)),
+    user: async (id) => {
+      const response = await client.query<FaunaUser>(
+        fql`CustomUser.byId(${id})`
+      )
+      if (response.data instanceof NullDocument) return null
+      return format.from(response.data)
+    },
+    async session(sessionToken) {
+      const response = await client.query<FaunaSession>(
+        fql`CustomSession.bySessionToken(${sessionToken}).first()`
+      )
+      return format.from(response.data)
+    },
+    async account({ provider, providerAccountId }) {
+      const response = await client.query<FaunaAccount>(
+        fql`CustomAccount.byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()`
+      )
+      return format.from(response.data)
+    },
+    async verificationToken({ identifier, token }) {
+      const response = await client.query<FaunaVerificationToken>(
+        fql`CustomVerificationToken.byIdentifierAndToken(${identifier}, ${token}).first()`
+      )
+      const _verificationToken: Partial<FaunaVerificationToken> = {
+        ...response.data,
+      }
+      delete _verificationToken.id
+      return format.from(_verificationToken)
     },
   },
 })

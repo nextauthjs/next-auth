@@ -1,6 +1,6 @@
 <p align="center">
   <br/>
-  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>
+  <a href="https://authjs.dev" target="_blank"><img width="96px" src="https://authjs.dev/img/logo-sm.png" /></a>
   <h3 align="center">Auth.js</h3>
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
@@ -12,10 +12,10 @@
       <img src="https://img.shields.io/npm/dm/next-auth?style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
     </a>
     <a href="https://www.npmjs.com/package/next-auth">
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="Github Stable Release" />
+      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="GitHub Stable Release" />
     </a>
     <a href="https://codecov.io/gh/nextauthjs/next-auth" > 
       <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov">
@@ -25,10 +25,14 @@
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
   </p>
   <p align="center">
-    See <a href="https://authjs.dev">authjs.dev</a> for our framework-specific libraries, or check out <a href="https://next-auth.js.org">next-auth.js.org</a> for next-auth (Next.js).
+    Need help? See <a href="https://authjs.dev">authjs.dev</a> for the documentation, or <a href="https://discord.authjs.dev">
+    join our community on Discord&nbsp;
+      <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg" height=12 alt="TypeScript" />
+    </a>
+    .
   </p>
   <p align="center">
-    Don't want to manage auth yourself? <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=cta" target="_blank">Check out Clerk →</a>
+     <kbd>Sponsored</kbd> Looking for a hosted alternative? <a href="https://go.clerk.com/5115vfK" target="_blank">Use Clerk →</a>
   </p>
 </p>
 
@@ -97,13 +101,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://workos.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/47638084?s=200&v=4" alt="WorkOS Logo" />
-        </a><br />
-        <div>WorkOS</div>
-        <sub>💵</sub>
-      </td>
-      <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
         </a><br />
@@ -168,6 +165,13 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>superblog</div>
         <sub>☁️</sub>
       </td>
+      <td align="center" valign="top">
+        <a href="https://www.netlight.com/" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
+        </a><br />
+        <div>Netlight</div>
+        <sub>☁️</sub>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -182,6 +186,9 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
 
 We're open to all community contributions! If you'd like to contribute in any way, please first read
 our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
+
+> [!NOTE]
+> The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
 
 ## License
 
