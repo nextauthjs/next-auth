@@ -5,7 +5,7 @@ export default {
     title: "Frameworks",
   },
   core: "@auth/core",
-  "next-auth": "next-auth",
+  "nextjs": "next-auth",
   sveltekit: "@auth/sveltekit",
   express: "@auth/express",
   "solid-start": "@auth/solid-start",

@@ -13,7 +13,7 @@ export function Footer({ className = "" }) {
     fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
-        const githubStat = document.querySelector(".github-counter")
+        const githubStat = document.querySelector(".github-counter")!
         githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
       })
 

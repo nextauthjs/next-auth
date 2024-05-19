@@ -2,10 +2,11 @@ import { runBasicTests } from "utils/adapter"
 import { DrizzleAdapter } from "../../src"
 import {
   db,
-  postgresAccountsTable as accounts,
-  postgresSessionsTable as sessions,
-  postgresUsersTable as users,
-  postgresVerificationTokensTable as verificationTokens,
+  accountsTable as accounts,
+  sessionsTable as sessions,
+  usersTable as users,
+  verificationTokensTable as verificationTokens,
+  authenticatorsTable as authenticators,
 } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"
@@ -13,6 +14,7 @@ import { fixtures } from "../fixtures"
 runBasicTests({
   adapter: DrizzleAdapter(db),
   fixtures,
+  testWebAuthnMethods: true,
   db: {
     connect: async () => {
       await Promise.all([
@@ -20,6 +22,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     disconnect: async () => {
@@ -28,9 +31,10 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
-    user: async (id) =>
+    user: (id) =>
       db
         .select()
         .from(users)
@@ -42,8 +46,8 @@ runBasicTests({
         .from(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
         .then((res) => res[0] ?? null),
-    account: (provider_providerAccountId) => {
-      return db
+    account: (provider_providerAccountId) =>
+      db
         .select()
         .from(accounts)
         .where(
@@ -52,8 +56,7 @@ runBasicTests({
             provider_providerAccountId.providerAccountId
           )
         )
-        .then((res) => res[0] ?? null)
-    },
+        .then((res) => res[0] ?? null),
     verificationToken: (identifier_token) =>
       db
         .select()
@@ -64,6 +67,12 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         )
-        .then((res) => res[0] ?? null),
+        .then((res) => res[0]) ?? null,
+    authenticator: (credentialID) =>
+      db
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
+        .then((res) => res[0]),
   },
 })

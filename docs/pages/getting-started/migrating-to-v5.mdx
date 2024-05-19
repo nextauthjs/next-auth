@@ -123,13 +123,23 @@ export default async function Page() {
 </Tabs.Tab>
 <Tabs.Tab>
 
-Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions.
+Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions. Don't forget, client components that attempt to access the session via context will need to be wrapped in a `<SessionProvider />`.
 
-<Callout type="warning">
-  If you have previously used `getSession()` or other imports from
-  `next-auth/react` server-side, you'll have to refactor them to use `auth()` as
-  shown above instead.
-</Callout>
+```ts filename="components/clientComponent.tsx"
+'use client';
+
+import { useSession, SessionProvider } from 'next-auth/react';
+
+const ClientComponent = () => {
+  const session = useSession();
+
+  return (
+    <SessionProvider>
+      <p>Welcome {session?.user?.name}</p>
+    </SessionProvider>
+  )
+}
+```
 
 </Tabs.Tab>
 <Tabs.Tab>
@@ -142,7 +152,7 @@ Imports from `next-auth/react` are now marked with the [`"use client"`](https://
 For advanced use cases, you can use `auth` as a wrapper for your Middleware:
 
 ```ts filename="middleware.ts"
-import { auth } from "./auth"
+import { auth } from "@/auth"
 
 export default auth((req) => {
   // req.auth
@@ -273,7 +283,12 @@ import authConfig from "./auth.config"
 
 const prisma = new PrismaClient()
 
-export const { handlers, auth } = NextAuth({
+export const {
+  auth,
+  handlers: { GET, POST },
+  signIn,
+  signOut,
+} = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,
@@ -285,12 +300,23 @@ export const { handlers, auth } = NextAuth({
 ```ts filename="middleware.ts" {1} /NextAuth/
 import authConfig from "./auth.config"
 import NextAuth from "next-auth"
-export const { auth: middleware } = NextAuth(authConfig)
+
+// Use only one of the two middleware options below
+// 1. Use middleware directly
+// export const { auth: middleware } = NextAuth(authConfig)
+
+// 2. Wrapped middleware option
+const { auth } = NextAuth(authConfig);
+export default auth(async function middleware(req: NextRequest) {
+  // Your custom middleware logic goes here
+}
 ```
 
-The above is an example. The takeaway is to separate the part of the configuration that is edge-compatible from the rest, and only import that in Middleware/Edge pages/routes.
+The above is just an example. **The main idea**, is to separate the part of the configuration that is edge-compatible from the rest, and only import the edge-compatible part in Middleware/Edge pages/routes. You can read more about this workaround in the [Prisma docs](/getting-started/adapters/prisma), for example.
 
 Please follow up with your library/database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
+
+For more information in general about edge compatibility and how Auth.js fits into this, check out our [edge compatibility article](/guides/edge-compatibility).
 
 ## Environment Variables
 

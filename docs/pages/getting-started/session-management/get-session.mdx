@@ -25,7 +25,7 @@ export default async function UserAvatar() {
 ```
 
 </Code.Next>
-<Code.NextPages>
+<Code.NextClient>
 
 In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
 
@@ -105,7 +105,7 @@ export function UserAvatar({ session }) {
 }
 ```
 
-</Code.NextPages>
+</Code.NextClient>
 <Code.Svelte>
 
 With SvelteKit, you have to return the `session` object from the load function in your `+page.server.ts` or `+layout.server.ts` files.

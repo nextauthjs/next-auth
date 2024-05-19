@@ -1,13 +1,17 @@
+import { pgTable } from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
-export {
-  postgresUsersTable,
-  postgresAccountsTable,
-  postgresSessionsTable,
-  postgresVerificationTokensTable,
-} from "../../src/lib/pg"
+import { defineTables } from "../../src/lib/pg"
 
-const connectionString = "postgres://nextauth:nextauth@localhost:5432/nextauth"
+export const {
+  usersTable,
+  accountsTable,
+  sessionsTable,
+  verificationTokensTable,
+  authenticatorsTable,
+} = defineTables({})
+
+const connectionString = "postgres://nextauth:nextauth@127.0.0.1:5432/nextauth"
 const sql = postgres(connectionString)
 
 export const db = drizzle(sql)

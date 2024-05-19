@@ -4,7 +4,7 @@
     <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
   </a>
   <a href="https://typeorm.io" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/typeorm.png"/>
+    <img height="64px" src="https://authjs.dev/img/adapters/typeorm.svg"/>
   </a>
   <h3 align="center"><b>TypeORM Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
@@ -18,7 +18,7 @@
       <img src="https://img.shields.io/npm/dm/@auth/typeorm-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
     </a>
   </p>
 </p>

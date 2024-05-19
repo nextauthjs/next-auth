@@ -37,7 +37,7 @@ export function SignIn() {
 ```
 
   </Code.Next>
-  <Code.NextPages>
+  <Code.NextClient>
 
 ```tsx filename="./components/auth/signin-button.tsx"
 import { signIn } from "next-auth/react"
@@ -47,7 +47,7 @@ export function SignIn() {
 }
 ```
 
-  </Code.NextPages>
+  </Code.NextClient>
   <Code.Svelte>
 
 The SvelteKit client supports two signin and signout methods, one server-side using Form Actions, and one client-side using requests and redirects.
@@ -137,7 +137,7 @@ export function SignIn() {
 ```
 
 </Code.Next>
-<Code.NextPages>
+<Code.NextClient>
 
 ```tsx filename="src/components/signin-button.tsx" {5}
 import { signIn } from "next-auth/react"
@@ -151,7 +151,7 @@ export function SignIn() {
 }
 ```
 
-</Code.NextPages>
+</Code.NextClient>
 <Code.Svelte>
 
 ```svelte filename="src/routes/+page.svelte" {9-13}
@@ -216,7 +216,7 @@ export function SignOut() {
 ```
 
 </Code.Next>
-<Code.NextPages>
+<Code.NextClient>
 
 ```tsx filename="src/components/signout-button.tsx" {5}
 import { signOut } from "next-auth/react"
@@ -226,7 +226,7 @@ export function SignOut() {
 }
 ```
 
-</Code.NextPages>
+</Code.NextClient>
 <Code.Svelte>
 
 SvelteKit supports both server and client-side methods for signing out as well.

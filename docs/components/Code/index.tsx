@@ -10,7 +10,7 @@ interface ChildrenProps {
 const AUTHJS_TAB_KEY = "authjs.codeTab.framework"
 
 Code.Next = NextCode
-Code.NextPages = NextPagesCode
+Code.NextClient = NextClientCode
 Code.Svelte = SvelteCode
 // Code.Solid = SolidCode;
 Code.Express = ExpressCode
@@ -24,7 +24,7 @@ const baseFrameworks = {
 
 const allFrameworks = {
   [NextCode.name]: "Next.js",
-  [NextPagesCode.name]: "Next.js (Pages)",
+  [NextClientCode.name]: "Next.js (Client)",
   [SvelteCode.name]: "SvelteKit",
   // [SolidCode.name]: "SolidStart",
   [ExpressCode.name]: "Express",
@@ -47,7 +47,7 @@ export function Code({ children }: ChildrenProps) {
 
   const withNextJsPages = childs.some(
     // @ts-expect-error: Hacky dynamic child wrangling
-    (p) => p && p.type.name === NextPagesCode.name
+    (p) => p && p.type.name === NextClientCode.name
   )
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
@@ -105,7 +105,7 @@ export function Code({ children }: ChildrenProps) {
   )
 }
 
-function NextPagesCode({ children }: ChildrenProps) {
+function NextClientCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }
 

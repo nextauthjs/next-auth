@@ -17,7 +17,7 @@ import Credentials from "next-auth/providers/credentials"
 import type { Provider } from "next-auth/providers"
 
 const providers: Provider[] = [
-  Github,
+  GitHub,
   Credentials({
     credentials: { password: { label: "Password", type: "password" } },
     authorize(c) {
@@ -58,7 +58,7 @@ import Credentials from "@auth/sveltekit/providers/credentials"
 import type { Provider } from "@auth/sveltekit/providers"
 
 const providers: Provider[] = [
-  Github,
+  GitHub,
   Credentials({
     credentials: { password: { label: "Password", type: "password" } },
     authorize(c) {
