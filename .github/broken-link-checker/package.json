@@ -1,12 +1,13 @@
 {
   "name": "broken-link-checker",
-  "version": "0.1.0",
+  "private": true,
+  "version": "0.2.0",
   "description": "Find broken links as a GitHub Action",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsup --clean --minify --format esm src/index.ts",
+    "build": "npx tsup --clean --minify --format esm src/index.ts",
     "types": "tsc"
   },
   "keywords": [

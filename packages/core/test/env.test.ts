@@ -26,7 +26,6 @@ beforeEach(() => {
 describe("config is inferred from environment variables", () => {
   it("providers (client id, client secret, issuer, api key)", () => {
     const env = {
-      AUTH_SECRET: "asdf",
       AUTH_AUTH0_ID: "asdf",
       AUTH_AUTH0_SECRET: "fdsa",
       AUTH_AUTH0_ISSUER: "https://example.com",
@@ -64,22 +63,19 @@ describe("config is inferred from environment variables", () => {
   })
 
   it("AUTH_REDIRECT_PROXY_URL", () => {
-    const env = {
-      AUTH_REDIRECT_PROXY_URL: "http://example.com",
-      AUTH_SECRET: "asdf",
-    }
+    const env = { AUTH_REDIRECT_PROXY_URL: "http://example.com" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.redirectProxyUrl).toBe(env.AUTH_REDIRECT_PROXY_URL)
   })
 
   it("AUTH_URL", () => {
-    const env = { AUTH_URL: "http://n/api/auth", AUTH_SECRET: "asdf" }
+    const env = { AUTH_URL: "http://n/api/auth" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.basePath).toBe("/api/auth")
   })
 
   it("AUTH_URL + prefer config", () => {
-    const env = { AUTH_URL: "http://n/api/auth", AUTH_SECRET: "asdf" }
+    const env = { AUTH_URL: "http://n/api/auth" }
     const fromConfig = "/basepath-from-config"
     authConfig.basePath = fromConfig
     setEnvDefaults(env, authConfig)
@@ -87,20 +83,17 @@ describe("config is inferred from environment variables", () => {
   })
 
   it("AUTH_URL, but invalid value", () => {
-    const env = { AUTH_URL: "secret", AUTH_SECRET: "asdf" }
+    const env = { AUTH_URL: "secret" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.basePath).toBe("/auth")
   })
 
   it.each([
-    [{ AUTH_TRUST_HOST: "1", AUTH_SECRET: "asdf" }, { trustHost: true }],
-    [{ VERCEL: "1", AUTH_SECRET: "asdf" }, { trustHost: true }],
-    [{ NODE_ENV: "development", AUTH_SECRET: "asdf" }, { trustHost: true }],
-    [{ NODE_ENV: "test", AUTH_SECRET: "asdf" }, { trustHost: true }],
-    [
-      { AUTH_URL: "http://example.com", AUTH_SECRET: "asdf" },
-      { trustHost: true },
-    ],
+    [{ AUTH_TRUST_HOST: "1" }, { trustHost: true }],
+    [{ VERCEL: "1" }, { trustHost: true }],
+    [{ NODE_ENV: "development" }, { trustHost: true }],
+    [{ NODE_ENV: "test" }, { trustHost: true }],
+    [{ AUTH_URL: "http://example.com" }, { trustHost: true }],
   ])(`%j`, (env, expected) => {
     setEnvDefaults(env, authConfig)
     expect(authConfig).toMatchObject(expected)

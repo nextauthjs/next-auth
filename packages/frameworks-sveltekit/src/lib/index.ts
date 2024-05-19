@@ -18,33 +18,32 @@
  *
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth({
- *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+ *   providers: [GitHub],
  * })
  * ```
  *
- * or to use SvelteKit platform environment variables for platforms like Cloudflare
+ * ### Lazy initialization
+ * `@auth/sveltekit` supports lazy initialization where you can read the `event` object to lazily set the configuration. This is especially useful when you have to get the environment variables from `event.platform` for platforms like Cloudflare Workers.
  *
  * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import type { Handle } from "@sveltejs/kit";
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
  *     providers: [
  *       GitHub({
- *         clientId: event.platform.env.GITHUB_ID,
- *         clientSecret: event.platform.env.GITHUB_SECRET
+ *         clientId: event.platform.env.AUTH_GITHUB_ID,
+ *         clientSecret: event.platform.env.AUTH_GITHUB_SECRET
  *       })
  *     ],
  *     secret: event.platform.env.AUTH_SECRET,
  *     trustHost: true
  *   }
  *   return authOptions
- * }) satisfies Handle;
+ * })
  * ```
  *
  * Re-export the handle in `src/hooks.server.ts`:
@@ -268,12 +267,10 @@
  *
  * ## Notes
  *
- * :::info
- * Learn more about `@auth/sveltekit` [here](https://vercel.com/blog/announcing-sveltekit-auth).
- * :::
+ * - If you build your SvelteKit application with `prerender` enabled, pages which have an anchor tag to the default signin page (i.e. `<a href="/auth/signin" ...`) will have trouble building. Please use the [builtin functions or components](https://authjs.dev/getting-started/session-management/login?framework=sveltekit) to sign in or out instead.
  *
  * :::info
- * PRs to improve this documentation are welcome! See [this file](https://github.com/nextauthjs/next-auth/blob/main/packages/frameworks-sveltekit/src/lib/index.ts).
+ * Learn more about `@auth/sveltekit` [here](https://vercel.com/blog/announcing-sveltekit-auth).
  * :::
  *
  * @module @auth/sveltekit
@@ -287,6 +284,7 @@ import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
 import { Auth, isAuthAction } from "@auth/core"
+import { building } from "$app/environment"
 
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
@@ -317,6 +315,8 @@ export function SvelteKitAuth(
 } {
   return {
     signIn: async (event) => {
+      if (building) return
+
       const { request } = event
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
@@ -342,12 +342,20 @@ export function SvelteKitAuth(
       )
     },
     signOut: async (event) => {
+      if (building) return
+
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
       const options = Object.fromEntries(await event.request.formData())
       await signOut(options, _config, event)
     },
     async handle({ event, resolve }) {
+      if (building) {
+        event.locals.auth ??= async () => null
+        event.locals.getSession ??= event.locals.auth
+        return resolve(event)
+      }
+
       const _config = typeof config === "object" ? config : await config(event)
       setEnvDefaults(env, _config)
 

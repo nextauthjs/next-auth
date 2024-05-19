@@ -9,7 +9,8 @@ import type {
   ProfileCallback,
   Provider,
 } from "../../providers/index.js"
-import type { AuthConfig, InternalProvider, Profile } from "../../types.js"
+import type { InternalProvider, Profile } from "../../types.js"
+import type { AuthConfig } from "../../index.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider

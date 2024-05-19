@@ -22,7 +22,7 @@ import NextAuth from "next-auth"
 // import Freshbooks from "next-auth/providers/freshbooks"
 // import Fusionauth from "next-auth/providers/fusionauth"
 import GitHub from "next-auth/providers/github"
-// import Gitlab from "next-auth/providers/gitlab"
+// import GitLab from "next-auth/providers/gitlab"
 // import Google from "next-auth/providers/google"
 // import Hubspot from "next-auth/providers/hubspot"
 // import Instagram from "next-auth/providers/instagram"
@@ -55,7 +55,7 @@ import GitHub from "next-auth/providers/github"
 // import UnitedEffects from "next-auth/providers/united-effects"
 // import Vk from "next-auth/providers/vk"
 // import Wikimedia from "next-auth/providers/wikimedia"
-// import Wordpress from "next-auth/providers/wordpress"
+// import WordPress from "next-auth/providers/wordpress"
 // import WorkOS from "next-auth/providers/workos"
 // import Yandex from "next-auth/providers/yandex"
 // import Zitadel from "next-auth/providers/zitadel"
@@ -66,7 +66,7 @@ import type { NextAuthConfig } from "next-auth"
 
 export const config = {
   theme: {
-    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    logo: "https://next-auth.js.org/img/logo-sm.png",
   },
   providers: [
     // Apple,
@@ -91,7 +91,7 @@ export const config = {
     // Freshbooks,
     // Fusionauth,
     GitHub,
-    // Gitlab,
+    // GitLab,
     // Google,
     // Hubspot,
     // Instagram,
@@ -124,7 +124,7 @@ export const config = {
     // UnitedEffects,
     // Vk,
     // Wikimedia,
-    // Wordpress,
+    // WordPress,
     // WorkOS,
     // Yandex,
     // Zitadel,

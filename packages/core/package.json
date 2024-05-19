@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.29.0",
+  "version": "0.31.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -21,7 +21,7 @@
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
     "Thang Huu Vu <hi@thvu.dev>",
-    "Iain Collins <me@iaincollins.com"
+    "Iain Collins <me@iaincollins.com>"
   ],
   "type": "module",
   "types": "./index.d.ts",
@@ -38,7 +38,8 @@
       "import": "./index.js"
     },
     "./adapters": {
-      "types": "./adapters.d.ts"
+      "types": "./adapters.d.ts",
+      "import": "./adapters.js"
     },
     "./errors": {
       "types": "./errors.d.ts",
@@ -101,6 +102,8 @@
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
-    "postcss-nesting": "^12.0.2"
+    "postcss-nesting": "^12.0.2",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-markdown": "4.0.0-next.53"
   }
 }

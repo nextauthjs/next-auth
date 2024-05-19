@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import type { AuthAction } from "@auth/core/types"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
-import type { ProviderType } from "../providers/index.js"
+import type { ProviderType } from "@auth/core/providers"
 import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>

@@ -1,0 +1,111 @@
+---
+title: WebAuthn
+---
+
+import { Steps, Callout } from "nextra/components"
+
+# WebAuthn (Passkeys)
+
+<Callout type="warning">
+  The WebAuthn / Passkeys provider is experimental and not recommended for
+  production use.
+</Callout>
+
+The WebAuthn provider requires changes to all of the framework integration as well
+as any database adapter that plans to support it. Therefore, the WebAuthn provider
+is currently only supported in the following framework integration and database adapters.
+Support for more frameworks and adapters are coming soon.
+
+- `next-auth@5.0.0-beta.8` or above
+- `@auth/prisma-adapter@1.3.0` or above
+- `node@20.0.0` or above
+
+<Steps>
+
+### Install peer dependencies
+
+```bash npm2yarn
+npm install @simplewebauthn/server@9.0.3 @simplewebauthn/browser@9.0.1
+```
+
+The `@simplewebauthn/browser` peer dependency **is only required for custom signin pages**. If you're using the Auth.js default pages, you can skip installing that peer dependency.
+
+### Apply the required schema Migrations
+
+This is the raw SQL migration for PostgreSQL, for more details including example migrations for other databases, check out the updated Prisma schemas at the [`@auth/prisma-adapter` docs](/getting-started/adapters/prisma).
+
+In short, the Passkeys provider requires an additional table called `Authenticator`.
+
+```sql filename="./migration/add-webauthn-authenticator-table.sql"
+-- CreateTable
+CREATE TABLE "Authenticator" (
+    "credentialID" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "credentialPublicKey" TEXT NOT NULL,
+    "counter" INTEGER NOT NULL,
+    "credentialDeviceType" TEXT NOT NULL,
+    "credentialBackedUp" BOOLEAN NOT NULL,
+    "transports" TEXT,
+    PRIMARY KEY ("userId", "credentialID"),
+    CONSTRAINT "Authenticator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Authenticator_credentialID_key" ON "Authenticator"("credentialID");
+```
+
+### Update Auth.js Configuration
+
+Add the `Passkeys` provider to your configuration. Also make sure you're using a compatible database adapter.
+
+```ts filename="./auth.ts"
+import Passkey from "next-auth/providers/passkey"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
+export default {
+  adapter: PrismaAdapter(prisma),
+  providers: [Passkey],
+  experimental: { enableWebAuthn: true },
+}
+```
+
+If you're using the built-in Auth.js pages, then you are good to go! Navigating to your `/signin` route should include a "Signin with Passkeys" button.
+
+### Custom Pages
+
+If you're using a custom signin page, you can leverage the `next-auth` `signIn` function to initiate WebAuthn registration and login flows with the following code.
+
+<Callout>
+  When using the WebAuthn `signIn` function, you'll also need the
+  `@simplewebauth/browser` peer dependency installed.
+</Callout>
+
+```ts filename="app/login/page.tsx"
+"use client"
+
+import { useSession } from "next-auth/react"
+import { signIn } from "next-auth/webauthn"
+
+export default function Login() {
+  const { data: session, update, status } = useSession()
+
+  return (
+    <div>
+      {status === "authenticated" ? (
+        <button onClick={() => signIn("passkey", { action: "register" })}>
+          Register new Passkey
+        </button>
+      ) : status === "unauthenticated" ? (
+        <button onClick={() => signIn("passkey")}>Sign in with Passkey</button>
+      ) : null}
+    </div>
+  )
+}
+```
+
+</Steps>

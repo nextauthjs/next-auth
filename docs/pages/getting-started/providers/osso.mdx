@@ -1,0 +1,87 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/osso.svg" height="64" width="64" />
+
+# Osso Provider
+
+## Resources
+
+- [Osso OAuth documentation](https://ossoapp.com/)
+- [Osso Admin](https://demo.ossoapp.com/admin/config)
+- [Osso Docs](https://ossoapp.com/docs/configure/overview)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/osso
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/osso
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_OSSO_ID
+AUTH_OSSO_SECRET
+AUTH_OSSO_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Osso from "next-auth/providers/osso"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Osso],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Osso from "@auth/sveltekit/providers/osso"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Osso],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Osso from "@auth/express/providers/osso"
+
+app.use("/auth/*", ExpressAuth({ providers: [Osso] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- If you don't yet have an Osso instance, you can use [Osso's Demo App](https://demo.ossoapp.com) for your testing purposes. For documentation on deploying an Osso instance, see https://ossoapp.com/docs/deploy/overview/
+- You can configure your OAuth Clients on your Osso Admin UI, i.e. https://demo.ossoapp.com/admin/config - you'll need to get a Client ID and Secret and allow-list your redirect URIs.
+- [SAML - SSO differs a bit from OAuth](https://ossoapp.com/blog/saml-vs-oauth) for every tenant who wants to sign in to your application using SAML, you and your customer need to perform a multi-step configuration in Osso's Admin UI and the admin dashboard of the tenant's Identity Provider. Osso provides documentation for providers like Okta and Osso, cloud-based IDPs who also offer a developer account that's useful for testing. Osso also provides a [Mock IDP](https://idp.ossoapp.com) that you can use for testing without needing to sign up for an Identity Provider service.
+- `issuer` should be the fully qualified domain – e.g. `demo.ossoapp.com`

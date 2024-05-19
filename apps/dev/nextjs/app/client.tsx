@@ -1,9 +1,11 @@
 "use client"
 
 import { signIn, signOut, useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 export default function Client() {
   const { data: session, update, status } = useSession()
+  const router = useRouter()
   return (
     <div className="card">
       <div className="card-header">
@@ -20,7 +22,10 @@ export default function Client() {
           {session ? (
             <>
               <button
-                onClick={() => update({ user: { name: "Client Fill Murray" } })}
+                onClick={async () => {
+                  await update({ user: { name: "Client Fill Murray" } })
+                  router.refresh()
+                }}
               >
                 Update Session - New Name
               </button>
@@ -28,7 +33,7 @@ export default function Client() {
             </>
           ) : (
             <>
-              <button onClick={() => signIn("github")}>Sign in Github</button>
+              <button onClick={() => signIn("github")}>Sign in GitHub</button>
               <button onClick={() => signIn("credentials", {})}>
                 Sign in Credentials
               </button>

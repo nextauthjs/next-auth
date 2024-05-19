@@ -51,46 +51,55 @@ async function updateCheckStatus(
   const { context, getOctokit } = github
   const octokit = getOctokit(process.env.GITHUB_TOKEN!)
   const { owner, repo } = context.repo
-  const pullRequest = context.payload.pull_request
-  const sha = pullRequest?.head.sha
 
-  const checkParams = {
-    owner,
-    repo,
-    name: checkName,
-    head_sha: sha,
-    status: "completed" as const,
-    conclusion: "failure" as const,
-    output: {
-      title: checkName,
-      summary: summary,
-      text: text,
-    },
-  }
+  // Can only update status on 'pull_request' events
+  if (context.payload.pull_request) {
+    const pullRequest = context.payload.pull_request
+    const sha = pullRequest?.head.sha
 
-  try {
-    await octokit.rest.checks.create(checkParams)
-  } catch (error) {
-    setFailed("Failed to create check: " + error)
+    const checkParams = {
+      owner,
+      repo,
+      name: checkName,
+      head_sha: sha,
+      status: "completed" as const,
+      conclusion: "failure" as const,
+      output: {
+        title: checkName,
+        summary: summary,
+        text: text,
+      },
+    }
+
+    try {
+      await octokit.rest.checks.create(checkParams)
+    } catch (error) {
+      setFailed("Failed to create check: " + error)
+    }
   }
 }
 
-const postComment = async (outputMd: string) => {
+const postComment = async (
+  outputMd: string,
+  brokenLinkCount: number = 0
+): Promise<string> => {
   try {
     const { context, getOctokit } = github
     const octokit = getOctokit(process.env.GITHUB_TOKEN!)
     const { owner, repo } = context.repo
-    const pullRequest = context.payload.pull_request
-    if (!pullRequest) {
-      console.log("Skipping since this is not a pull request")
-      process.exit(0)
+    let prNumber
+
+    // Handle various trigger events
+    if (context.payload.pull_request) {
+      // Triggered by `pull_request`
+      prNumber = context.payload.pull_request?.number
+    } else if (context.payload.issue) {
+      // Triggered by `issue_comment`
+      prNumber = context.payload?.issue?.number
     }
-    const isFork = pullRequest.head.repo.fork
-    const prNumber = pullRequest.number
-    if (isFork) {
-      setFailed(
-        "The action could not create a Github comment because it is initiated from a forked repo. View the action logs for a list of broken links."
-      )
+
+    if (!prNumber) {
+      setFailed("Count not find PR Number")
       return ""
     }
 
@@ -100,7 +109,6 @@ const postComment = async (outputMd: string) => {
       repo,
       prNumber,
     })
-    console.log("botComment", botComment)
     if (botComment) {
       console.log("Updating Comment")
       const { data } = await octokit.rest.issues.updateComment({
@@ -111,7 +119,7 @@ const postComment = async (outputMd: string) => {
       })
 
       return data.html_url
-    } else {
+    } else if (brokenLinkCount > 0) {
       console.log("Creating Comment")
       const { data } = await octokit.rest.issues.createComment({
         owner,
@@ -121,6 +129,7 @@ const postComment = async (outputMd: string) => {
       })
       return data.html_url
     }
+    return ""
   } catch (error) {
     setFailed("Error commenting: " + error)
     return ""
@@ -195,6 +204,8 @@ async function brokenLinkChecker(): Promise<void> {
 
   const options = {
     excludeExternalLinks: true,
+    honorRobotExclusions: false,
+    filterLevel: 0,
     excludedKeywords: [],
   }
 
@@ -209,13 +220,29 @@ async function brokenLinkChecker(): Promise<void> {
     },
     end: async () => {
       if (output.links.length) {
-        const outputMd = generateOutputMd(output)
-        await postComment(outputMd)
+        // DEBUG
+        // console.debug(output.links)
 
-        // const commentUrl = await postComment(outputMd);
-        // NOTE: Do we need this additional check in GH output?
-        // await updateCheckStatus(output.links.length, commentUrl);
-        setFailed(`Found broken links`)
+        // Skip links that returned 308
+        const brokenLinksForAttention = output.links.filter(
+          (link) => link.broken && !["HTTP_308"].includes(link.brokenReason)
+        )
+
+        const outputMd = generateOutputMd({
+          errors: output.errors,
+          links: brokenLinksForAttention,
+          pages: [],
+          sites: [],
+        })
+        const commentUrl = await postComment(
+          outputMd,
+          brokenLinksForAttention.length
+        )
+
+        // Update GitHub "check" status
+        await updateCheckStatus(brokenLinksForAttention.length, commentUrl)
+
+        brokenLinksForAttention.length && setFailed(`Found broken links`)
       }
     },
   })

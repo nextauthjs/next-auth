@@ -1,17 +1,19 @@
-import { mysqlTable } from "drizzle-orm/mysql-core"
 import { drizzle } from "drizzle-orm/mysql2"
 import { createPool } from "mysql2"
-import { createTables } from "../../src/lib/mysql"
+import { defineTables } from "../../src/lib/mysql"
+
+export const {
+  usersTable,
+  accountsTable,
+  sessionsTable,
+  verificationTokensTable,
+} = defineTables({})
 
 const poolConnection = createPool({
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   password: "password",
   database: "next-auth",
 })
 
-export const { users, accounts, sessions, verificationTokens } =
-  createTables(mysqlTable)
-export const schema = { users, accounts, sessions, verificationTokens }
-
-export const db = drizzle(poolConnection, { schema, mode: "default" })
+export const db = drizzle(poolConnection)

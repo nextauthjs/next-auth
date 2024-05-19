@@ -25,74 +25,121 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h3>Server Actions</h3>
-    </div>
-    <div class="card-body">
-      <p>
-        These actions are all using the components exported from
-        <code>@auth/sveltekit/components</code> to run via form actions.
-      </p>
-      <div class="actions">
-        <SignIn provider="github">
-          <span slot="submitButton">Sign In with GitHub</span>
-        </SignIn>
-        <SignIn provider="discord">
-          <span slot="submitButton">Sign In with Discord</span>
-        </SignIn>
-        <SignIn
-          provider="credentials"
-          authorizationParams={{
-            foo: "bar",
-          }}
-        >
-          <span slot="submitButton">Sign In with Credentials</span>
-          <div slot="credentials" class="input-wrapper">
-            <label for="server-password">Password</label>
-            <input
-              type="password"
-              id="server-password"
-              name="password"
-              required
-            />
-          </div>
-        </SignIn>
+  <div class="login-cards">
+    <div class="card">
+      <div class="card-header">
+        <h3>Server</h3>
+      </div>
+      <div class="card-body">
+        <p>
+          These actions are all using the components exported from
+          <code>@auth/sveltekit/components</code> to run via form actions.
+        </p>
+        <div class="actions">
+          <SignIn provider="credentials">
+            <span slot="submitButton">Sign In with Credentials</span>
+            <div slot="credentials" style="width: 100%;">
+              <div class="wrapper-form" style="width: 100%;">
+                <div class="input-wrapper">
+                  <label for="server-username">Username</label>
+                  <input
+                    placeholder="Anything"
+                    type="text"
+                    id="server-username"
+                    name="username"
+                  />
+                </div>
+                <div class="input-wrapper">
+                  <label for="server-password">Password</label>
+                  <input
+                    type="password"
+                    id="server-password"
+                    name="password"
+                    placeholder="password"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          </SignIn>
+          <SignIn provider="github">
+            <span slot="submitButton">
+              <img
+                src="https://authjs.dev/img/providers/github.svg"
+                alt="GitHub Logo"
+                width="32"
+                height="32"
+              />
+            </span>
+          </SignIn>
+          <SignIn provider="discord">
+            <span slot="submitButton">
+              <img
+                src="https://authjs.dev/img/providers/discord.svg"
+                alt="Discord Logo"
+                width="32"
+                height="32"
+              />
+            </span>
+          </SignIn>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>Client Actions</h3>
-    </div>
-    <div class="card-body">
-      <p>
-        These actions are all using the methods exported from
-        <code>@auth/sveltekit/client</code>
-      </p>
-      <div class="actions">
-        <div class="wrapper-form">
-          <button on:click={() => signIn("github")}>Sign In with GitHub</button>
-        </div>
-        <div class="wrapper-form">
-          <button on:click={() => signIn("discord")}
-            >Sign In with Discord</button
-          >
-        </div>
-        <div class="wrapper-form">
-          <div class="input-wrapper">
-            <label for="client-password">Password</label>
-            <input
-              bind:value={password}
-              type="password"
-              id="client-password"
-              name="password"
-              required
-            />
+    <div class="card">
+      <div class="card-header">
+        <h3>Client</h3>
+      </div>
+      <div class="card-body">
+        <p>
+          These actions are all using the methods exported from
+          <code>@auth/sveltekit/client</code>
+        </p>
+        <div class="actions">
+          <div class="wrapper-form">
+            <div class="input-wrapper">
+              <label for="client-username">Username</label>
+              <input
+                placeholder="Anything"
+                type="text"
+                id="client-username"
+                name="username"
+              />
+            </div>
+            <div class="input-wrapper">
+              <label for="client-password">Password</label>
+              <input
+                bind:value={password}
+                type="password"
+                placeholder="password"
+                id="client-password"
+                name="password"
+                required
+              />
+            </div>
+            <button on:click={() => signIn("credentials", { password })}>
+              Sign In with Credentials
+            </button>
           </div>
-          <button on:click={() => signIn("credentials", { password })}>
-            Sign In with Credentials
-          </button>
+          <div class="wrapper-form">
+            <button on:click={() => signIn("github")}>
+              <img
+                src="https://authjs.dev/img/providers/github.svg"
+                alt="GitHub Logo"
+                width="32"
+                height="32"
+              />
+            </button>
+          </div>
+          <div class="wrapper-form">
+            <button on:click={() => signIn("discord")}>
+              <img
+                src="https://authjs.dev/img/providers/discord.svg"
+                alt="Discord Logo"
+                width="32"
+                height="32"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>

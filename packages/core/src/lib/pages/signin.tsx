@@ -20,32 +20,6 @@ const signinErrors: Record<SignInPageErrorParam | "default", string> = {
     "Sign in failed. Check the details you provided are correct.",
   SessionRequired: "Please sign in to access this page.",
 }
-function hexToRgba(hex?: string, alpha = 1) {
-  if (!hex) {
-    return
-  }
-  // Remove the "#" character if it's included
-  hex = hex.replace(/^#/, "")
-
-  // Expand 3-digit hex codes to their 6-digit equivalents
-  if (hex.length === 3) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
-  }
-
-  // Parse the hex value to separate R, G, and B components
-  const bigint = parseInt(hex, 16)
-  const r = (bigint >> 16) & 255
-  const g = (bigint >> 8) & 255
-  const b = bigint & 255
-
-  // Ensure the alpha value is within the valid range [0, 1]
-  alpha = Math.min(Math.max(alpha, 0), 1)
-
-  // Construct the RGBA string
-  const rgba = `rgba(${r}, ${g}, ${b}, ${alpha})`
-
-  return rgba
-}
 
 function ConditionalUIScript(providerID: string) {
   const startConditionalUIScript = `
@@ -127,17 +101,15 @@ export default function SigninPage(props: {
         )}
         {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         {providers.map((provider, i) => {
-          let bg, text, logo, logoDark, bgDark, textDark
+          let bg, brandColor, logo
           if (provider.type === "oauth" || provider.type === "oidc") {
             ;({
-              bg = "",
-              text = "",
+              bg = "#fff",
+              brandColor,
               logo = `${providerLogoPath}/${provider.id}.svg`,
-              bgDark = bg,
-              textDark = text,
-              logoDark = `${providerLogoPath}/${provider.id}.svg`,
             } = provider.style ?? {})
           }
+          const color = brandColor ?? bg ?? "#fff"
           return (
             <div key={provider.id} className="provider">
               {provider.type === "oauth" || provider.type === "oidc" ? (
@@ -154,12 +126,10 @@ export default function SigninPage(props: {
                     type="submit"
                     className="button"
                     style={{
-                      "--provider-bg": bg,
-                      "--provider-dark-bg": bgDark,
-                      "--provider-color": text,
-                      "--provider-dark-color": textDark,
-                      "--provider-bg-hover": hexToRgba(bg, 0.8),
-                      "--provider-dark-bg-hover": hexToRgba(bgDark, 0.8),
+                      "--provider-bg": "#fff",
+                      "--provider-bg-hover": `color-mix(in srgb, ${color} 30%, #fff)`,
+                      "--provider-dark-bg": "#161b22",
+                      "--provider-dark-bg-hover": `color-mix(in srgb, ${color} 30%, #000)`,
                     }}
                     tabIndex={0}
                   >
@@ -172,16 +142,16 @@ export default function SigninPage(props: {
                         src={logo}
                       />
                     )}
-                    {logoDark && (
-                      <img
-                        loading="lazy"
-                        height={24}
-                        width={24}
-                        id="provider-logo-dark"
-                        src={logoDark}
-                      />
-                    )}
-                    <span>Sign in with {provider.name}</span>
+                    <span
+                      style={{
+                        filter:
+                          "invert(1) grayscale(1) brightness(1.3) contrast(9000)",
+                        "mix-blend-mode": "luminosity",
+                        opacity: 0.95,
+                      }}
+                    >
+                      Sign in with {provider.name}
+                    </span>
                   </button>
                 </form>
               ) : null}

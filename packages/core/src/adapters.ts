@@ -6,7 +6,7 @@
  * This module contains utility functions and types to create an Auth.js compatible adapter.
  *
  * Auth.js supports 2 session strategies to persist the login state of a user.
- * The default is to use a cookie + {@link https://authjs.dev/concepts/session-strategies#jwt JWT}
+ * The default is to use a cookie + {@link https://authjs.dev/concepts/session-strategies#jwt-session JWT}
  * based session store (`strategy: "jwt"`),
  * but you can also use a database adapter to store the session in a database.
  *
@@ -143,21 +143,20 @@
  *
  * ### Token rotation
  *
- * Auth.js _currently_ does not support {@link https://authjs.dev/concepts/oauth#token-rotation `access_token` rotation} out of the box.
+ * Auth.js _currently_ does not support {@link https://authjs.dev/concepts/oauth `access_token` rotation} out of the box.
  * The necessary information (`refresh_token`, expiry, etc.) is being stored in the database, but the logic to rotate the token is not implemented
  * in the core library.
- * [This guide](https://authjs.dev/guides/basics/refresh-token-rotation#database-strategy) should provide the necessary steps to do this in user land.
+ * [This guide](https://authjs.dev/guides/refresh-token-rotation#database-strategy) should provide the necessary steps to do this in user land.
  *
  * ### Federated logout
  *
- * Auth.js _currently_ does not support {@link https://authjs.dev/concepts/oauth#federated-logout federated logout} out of the box.
+ * Auth.js _currently_ does not support federated logout out of the box.
  * This means that even if an active session is deleted from the database, the user will still be signed in to the identity provider,
  * they will only be signed out of the application.
  * Eg. if you use Google as an identity provider, and you delete the session from the database,
  * the user will still be signed in to Google, but they will be signed out of your application.
  *
  * If your users might be using the application from a publicly shared computer (eg: library), you might want to implement federated logout.
- * {@link https://authjs.dev/guides/providers/federated-logout This guide} should provide the necessary steps.
  *
  * @module adapters
  */
@@ -180,24 +179,32 @@ export interface AdapterUser extends User {
   /** The user's email address. */
   email: string
   /**
-   * Whether the user has verified their email address via an [Email provider](https://authjs.dev/reference/core/providers/email).
+   * Whether the user has verified their email address via an [Email provider](https://authjs.dev/getting-started/authentication/email).
    * It is `null` if the user has not signed in with the Email provider yet, or the date of the first successful signin.
    */
   emailVerified: Date | null
 }
 
 /**
+ * The type of account.
+ */
+export type AdapterAccountType = Extract<
+  ProviderType,
+  "oauth" | "oidc" | "email" | "webauthn"
+>
+
+/**
  * An account is a connection between a user and a provider.
  *
  * There are two types of accounts:
  * - OAuth/OIDC accounts, which are created when a user signs in with an OAuth provider.
- * - Email accounts, which are created when a user signs in with an [Email provider](https://authjs.dev/reference/core/providers/email).
+ * - Email accounts, which are created when a user signs in with an [Email provider](https://authjs.dev/getting-started/authentication/email).
  *
  * One user can have multiple accounts.
  */
 export interface AdapterAccount extends Account {
   userId: string
-  type: Extract<ProviderType, "oauth" | "oidc" | "email" | "webauthn">
+  type: AdapterAccountType
 }
 
 /**
@@ -228,7 +235,7 @@ export interface AdapterSession {
 
 /**
  * A verification token is a temporary token that is used to sign in a user via their email address.
- * It is created when a user signs in with an [Email provider](https://authjs.dev/reference/core/providers/email).
+ * It is created when a user signs in with an [Email provider](https://authjs.dev/getting-started/authentication/email).
  * When the user clicks the link in the email, the token and email is sent back to the server
  * where it is hashed and compared to the value in the database.
  * If the tokens and emails match, and the token hasn't expired yet, the user is signed in.
@@ -240,7 +247,7 @@ export interface VerificationToken {
   /** The absolute date when the token expires. */
   expires: Date
   /**
-   * A [hashed](https://authjs.dev/concepts/hashing) token, using the `AuthConfig.secret` value.
+   * A [hashed](https://en.wikipedia.org/wiki/Hash_function) token, using the `AuthConfig.secret` value.
    */
   token: string
 }
@@ -276,25 +283,25 @@ export interface Adapter {
   /**
    * Creates a user in the database and returns it.
    *
-   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)
    */
   createUser?(user: AdapterUser): Awaitable<AdapterUser>
   /**
    * Returns a user from the database via the user id.
    *
-   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)
    */
   getUser?(id: string): Awaitable<AdapterUser | null>
   /**
    * Returns a user from the database via the user's email address.
    *
-   * See also [Verification tokens](https://authjs.dev/guides/adapters/creating-a-database-adapter#verification-tokens)
+   * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
    */
   getUserByEmail?(email: string): Awaitable<AdapterUser | null>
   /**
    * Using the provider id and the id of the user for a specific account, get the user.
    *
-   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)
    */
   getUserByAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
@@ -302,7 +309,7 @@ export interface Adapter {
   /**
    * Updates a user in the database and returns it.
    *
-   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)
    */
   updateUser?(
     user: Partial<AdapterUser> & Pick<AdapterUser, "id">
@@ -310,7 +317,7 @@ export interface Adapter {
   /**
    * @todo This method is currently not invoked yet.
    *
-   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)
    */
   deleteUser?(
     userId: string
@@ -319,7 +326,7 @@ export interface Adapter {
    * This method is invoked internally (but optionally can be used for manual linking).
    * It creates an [Account](https://authjs.dev/reference/core/adapters#models) in the database.
    *
-   * See also [User management](https://authjs.dev/guides/adapters/creating-a-database-adapter#user-management)
+   * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)
    */
   linkAccount?(
     account: AdapterAccount
@@ -331,7 +338,7 @@ export interface Adapter {
   /**
    * Creates a session for the user and returns it.
    *
-   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   * See also [Database Session management](https://authjs.dev/guides/creating-a-database-adapter#database-session-management)
    */
   createSession?(session: {
     sessionToken: string
@@ -345,7 +352,7 @@ export interface Adapter {
    * If the database supports joins, it's recommended to reduce the number of database queries.
    * :::
    *
-   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   * See also [Database Session management](https://authjs.dev/guides/creating-a-database-adapter#database-session-management)
    */
   getSessionAndUser?(
     sessionToken: string
@@ -353,7 +360,7 @@ export interface Adapter {
   /**
    * Updates a session in the database and returns it.
    *
-   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   * See also [Database Session management](https://authjs.dev/guides/creating-a-database-adapter#database-session-management)
    */
   updateSession?(
     session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
@@ -362,7 +369,7 @@ export interface Adapter {
    * Deletes a session from the database. It is preferred that this method also
    * returns the session that is being deleted for logging purposes.
    *
-   * See also [Database Session management](https://authjs.dev/guides/adapters/creating-a-database-adapter#database-session-management)
+   * See also [Database Session management](https://authjs.dev/guides/creating-a-database-adapter#database-session-management)
    */
   deleteSession?(
     sessionToken: string
@@ -370,7 +377,7 @@ export interface Adapter {
   /**
    * Creates a verification token and returns it.
    *
-   * See also [Verification tokens](https://authjs.dev/guides/adapters/creating-a-database-adapter#verification-tokens)
+   * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
    */
   createVerificationToken?(
     verificationToken: VerificationToken
@@ -379,7 +386,7 @@ export interface Adapter {
    * Return verification token from the database and deletes it
    * so it can only be used once.
    *
-   * See also [Verification tokens](https://authjs.dev/guides/adapters/creating-a-database-adapter#verification-tokens)
+   * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
    */
   useVerificationToken?(params: {
     identifier: string
@@ -387,23 +394,24 @@ export interface Adapter {
   }): Awaitable<VerificationToken | null>
   /**
    * Get account by provider account id and provider.
-   * 
+   *
    * If an account is not found, the adapter must return `null`.
    */
   getAccount?(
-    providerAccountId: AdapterAccount["providerAccountId"], provider: AdapterAccount["provider"]
+    providerAccountId: AdapterAccount["providerAccountId"],
+    provider: AdapterAccount["provider"]
   ): Awaitable<AdapterAccount | null>
   /**
    * Returns an authenticator from its credentialID.
-   * 
+   *
    * If an authenticator is not found, the adapter must return `null`.
    */
   getAuthenticator?(
-    credentialID: AdapterAuthenticator['credentialID']
+    credentialID: AdapterAuthenticator["credentialID"]
   ): Awaitable<AdapterAuthenticator | null>
   /**
    * Create a new authenticator.
-   * 
+   *
    * If the creation fails, the adapter must throw an error.
    */
   createAuthenticator?(
@@ -416,17 +424,25 @@ export interface Adapter {
    * If the retrieval fails for some other reason, the adapter must throw an error.
    */
   listAuthenticatorsByUserId?(
-    userId: AdapterAuthenticator['userId']
+    userId: AdapterAuthenticator["userId"]
   ): Awaitable<AdapterAuthenticator[]>
   /**
    * Updates an authenticator's counter.
-   * 
+   *
    * If the update fails, the adapter must throw an error.
    */
   updateAuthenticatorCounter?(
-    credentialID: AdapterAuthenticator['credentialID'],
-    newCounter: AdapterAuthenticator['counter']
+    credentialID: AdapterAuthenticator["credentialID"],
+    newCounter: AdapterAuthenticator["counter"]
   ): Awaitable<AdapterAuthenticator>
+}
+
+// https://github.com/honeinc/is-iso-date/blob/master/index.js
+const isoDateRE =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
+
+export function isDate(value: any) {
+  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 // For compatibility with older versions of NextAuth.js
