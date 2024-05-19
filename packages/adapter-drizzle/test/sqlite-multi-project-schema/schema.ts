@@ -67,3 +67,19 @@ export const verificationTokens = sqliteTable(
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 )
+
+export const authenticators = sqliteTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: integer("credentialBackedUp", {
+    mode: "boolean",
+  }).notNull(),
+  transports: text("transports"),
+})

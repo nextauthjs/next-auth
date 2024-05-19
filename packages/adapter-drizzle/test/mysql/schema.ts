@@ -7,6 +7,7 @@ export const {
   accountsTable,
   sessionsTable,
   verificationTokensTable,
+  authenticatorsTable,
 } = defineTables({})
 
 const poolConnection = createPool({
