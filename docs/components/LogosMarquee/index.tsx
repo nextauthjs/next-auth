@@ -49,7 +49,7 @@ export const LogosMarquee = memo(() => {
       >
         {Object.entries(manifest.providersOAuth)
           .sort(() => Math.random() - 0.5)
-          .filter((_, i) => i < logoCount)
+          .filter((_, i) => i < logoCount!)
           .map(([key, name]) => (
             <Motion
               key={`company-${key}`}
@@ -61,7 +61,7 @@ export const LogosMarquee = memo(() => {
               initDeg={randomIntFromInterval(0, 360)}
               direction={Math.random() > 0.5 ? "clockwise" : "counterclockwise"}
               velocity={10}
-              radius={scale}
+              radius={scale!}
             >
               <Img
                 src={`/img/providers/${key}.svg`}

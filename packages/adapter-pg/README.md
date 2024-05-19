@@ -4,7 +4,7 @@
     <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
   </a>
   <a href="https://www.postgresql.org/" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/pg.png"/>
+    <img height="64px" src="https://authjs.dev/img/adapters/pg.svg"/>
   </a>
   <h3 align="center"><b>Postgres Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">

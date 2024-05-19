@@ -3,9 +3,9 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation"
 interface Args {
   onTabChange: ((value: string) => void) | undefined
   defaultValue: string
+  value: string
   persist?: boolean
   tabKey?: string
-  value?: string
   setValue?: any
 }
 
@@ -19,11 +19,11 @@ export function useRichTabs({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const searchParamsTab = searchParams.get(tabKey)
+  const searchParamsTab = searchParams?.get(tabKey)
 
   // Handle searchParams
   if (searchParamsTab && value !== searchParamsTab) {
-    router.push(pathname)
+    router.push(pathname!)
     setValue((prevVal: string) => {
       if (prevVal !== searchParamsTab) {
         return searchParamsTab

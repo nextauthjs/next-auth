@@ -9,32 +9,34 @@ import { Accordion, Accordions } from "@/components/Accordion"
 ## Setup
 
 <Callout type="warning">
-  The WebAuthn / Passkeys provider is experimental and not recommended for
+  The WebAuthn / Passkeys provider is experimental and not yet recommended for
   production use.
 </Callout>
-The WebAuthn provider requires changes to all of the framework integration as well
-as any database adapter that plans to support it. Therefore, the WebAuthn provider
-is currently only supported in the following framework integration and database adapters.
-Support for more frameworks and adapters are coming soon.{" "}
 
-- `next-auth@5.0.0-beta.9` or above
-- `@auth/prisma-adapter@1.3.3` or above
-- `@prisma/client@5.9.1` or above
+The Passkeys provider **requires a database adapter** as well as a new table in that database. Please see the docs page for your adapter for the respective migration details.
+
+Passkeys are currently supported in the following adapters / framework packages.
+
+| Package                   | Minmum Version  | Link                                        |
+| ------------------------- | --------------- | ------------------------------------------- |
+| `next-auth`               | `5.0.0-beta.17` |                                             |
+| `@auth/sveltekit`         | `1.0.2`         |                                             |
+| `@auth/prisma-adapter`    | `1.3.3`         | [Docs](/getting-started/adapters/prisma)    |
+| `@auth/unstorage-adapter` | `2.1.0`         | [Docs](/getting-started/adapters/unstorage) |
+| `@auth/drizzle-adapter`   | `1.1.1`         | [Docs](/getting-started/adapters/drizzle)   |
 
 <Steps>
 ### Install peer dependencies
 
 ```bash npm2yarn
-npm install @simplewebauthn/browser @simplewebauthn/server
+npm install @simplewebauthn/browser@9.0.1 @simplewebauthn/server@9.0.3
 ```
 
 The `@simplewebauthn/browser` peer dependency is only required for custom signin pages. If you're using the Auth.js default pages, you can skip installing that peer dependency.
 
 ### Database Setup
 
-This is the raw SQL migration, for more details including an example MongoDB migration, check out the Prisma `schema.prisma` [here](https://github.com/Maronato/next-auth/blob/main/packages/adapter-prisma/prisma/schema.prisma), or the PR adding support to Prisma [here](https://github.com/nextauthjs/next-auth/pull/9876).
-
-The Passkeys provider requires an additional table called `Authenticator`. Below are the updated Prisma schema and a raw SQL migration variation for both PostgreSQL and MySQL.
+The Passkeys provider requires an additional table called `Authenticator`. Passkeys are now supported in multiple adapters, please see their respective docs pages for more detailed migration steps. We'll use Prisma as an example going forward here, but there is also a raw SQL migration included below.
 
 <Accordions>
 <Accordion title="Prisma Schema">
@@ -156,15 +158,15 @@ CREATE UNIQUE INDEX Authenticator_credentialID_key ON Authenticator(credentialID
   </Accordion>
   </Accordions>
 
-### Prisma Edge Compatibility
+#### Edge Compatibility
 
-If you're using Auth.js in Next.js via middleware, you'll need to make some small adjustments as Prisma does not support edge runtimes yet. See the [Prisma adapter docs](/getting-started/adapters/prisma#edge-compatibility) for more details.
+If you're using `next-auth` with Next.js and middleware, you should ensure that your database client of choice is "edge compatible". If you're using an older version of Prisma or another adapter that is not edge compatible, you'll need to make some adjustments. Check out our [edge compatibility](/guides/edge-compatibility) guide for more details. There is also Prisma specific information in the [Prisma adapter docs](/getting-started/adapters/prisma#edge-compatibility).
 
 ### Update Auth.js Configuration
 
-Add the `Passkeys` provider to your configuration. Also make sure you're using a compatible database adapter.
+Add the `Passkey` provider to your configuration and make sure you're using a compatible database adapter. You'll also need to explicitly enable the experimental WebAuthn feature.
 
-```ts filename="./auth.ts"
+```ts filename="./auth.ts" {10}
 import Passkey from "next-auth/providers/passkey"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
@@ -182,9 +184,9 @@ If you're using the built-in Auth.js pages, then you are good to go now! Navigat
 
 ### Custom Pages
 
-If you're using a custom signin page, you can leverage the `next-auth` `signIn` function to initiate a WebAuthn registration and login with the following code. Remember, when using the WebAuthn `signIn` function, you'll also need the `@simplewebauth/browser` peer dependency installed.
+If you're building a custom signin page, you can leverage the `next-auth/webauthn` `signIn` function to initiate both WebAuthn registration and authentication. Remember, when using the WebAuthn `signIn` function, you'll also need the `@simplewebauth/browser` peer dependency installed.
 
-```ts filename="app/login/page.tsx"
+```ts filename="app/login/page.tsx" {4} /webauthn/
 "use client"
 
 import { useSession } from "next-auth/react"
@@ -212,21 +214,3 @@ export default function Login() {
 ## Options
 
 You can find all of the Passkeys provider options under the [API reference](/reference/core/providers/webauthn#webauthnconfig).
-
-## Notes
-
-- If you only pass a field named `username`, like below. 1Password **will not** offer to save new Passkeys in your login form.
-
-```ts filename="@/auth.ts" /username/
-providers = [
-  Passkey({
-    formFields: {
-      username: {
-        label: "Username",
-        required: true,
-        autocomplete: "webauthn username",
-      },
-    },
-  }),
-]
-```

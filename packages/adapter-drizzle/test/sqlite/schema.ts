@@ -1,11 +1,14 @@
 import { drizzle } from "drizzle-orm/better-sqlite3"
-import Database from "better-sqlite3"
-export {
-  sqliteUsersTable,
-  sqliteAccountsTable,
-  sqliteSessionsTable,
-  sqliteVerificationTokensTable,
-} from "../../src/lib/sqlite"
+import Database from "libsql"
+import { defineTables } from "../../src/lib/sqlite.ts"
+
+export const {
+  usersTable,
+  accountsTable,
+  sessionsTable,
+  verificationTokensTable,
+  authenticatorsTable,
+} = defineTables({})
 
 const sqlite = new Database("db.sqlite")
 
