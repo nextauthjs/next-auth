@@ -1,0 +1,82 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/faceit.svg" height="64" width="64" />
+
+# Faceit Provider
+
+## Resources
+
+- [FACEIT OAuth documentation](https://cdn.faceit.com/third_party/docs/FACEIT_Connect_3.0.pdf)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/faceit
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/faceit
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_FACEIT_ID
+AUTH_FACEIT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import FaceIt from "next-auth/providers/faceit"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [FaceIt],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import FaceIt from "@auth/sveltekit/providers/faceit"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [FaceIt],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import FaceIt from "@auth/express/providers/faceit"
+
+app.use("/auth/*", ExpressAuth({ providers: [FaceIt] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Grant type: `Authorization Code`
+- Scopes required to get basic infos like email, nickname, guid and avatar: `openid, email, profile`

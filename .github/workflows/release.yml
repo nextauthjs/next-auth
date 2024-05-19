@@ -29,6 +29,7 @@ on:
           - "@auth/prisma-adapter"
           - "@auth/sequelize-adapter"
           - "@auth/supabase-adapter"
+          - "@auth/surrealdb-adapter"
           - "@auth/typeorm-adapter"
           - "@auth/unstorage-adapter"
           - "@auth/upstash-redis-adapter"
@@ -55,15 +56,21 @@ on:
           - "adapter-prisma"
           - "adapter-sequelize"
           - "adapter-supabase"
+          - "adapter-surrealdb"
           - "adapter-typeorm"
           - "adapter-unstorage"
           - "adapter-upstash-redis"
           - "adapter-xata"
           - "next-auth"
+
+permissions:
+  id-token: write
+
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
   FORCE_COLOR: true
+  NPM_CONFIG_PROVENANCE: true
 
 jobs:
   test:
@@ -75,7 +82,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -88,13 +95,11 @@ jobs:
         if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       - name: Build
         run: pnpm build
-      - name: Run unit tests
-        if: false
-        run: pnpm test
+      - name: Lint
+        run: pnpm lint
         timeout-minutes: 15
-        env:
-          UPSTASH_REDIS_URL: ${{ secrets.UPSTASH_REDIS_URL }}
-          UPSTASH_REDIS_KEY: ${{ secrets.UPSTASH_REDIS_KEY }}
+      - name: Run unit tests
+        run: pnpm test
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
@@ -109,6 +114,20 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true' && github.repository == 'nextauthjs/next-auth'
         run: |
           pnpm exec playwright install --with-deps chromium
+      - name: Run E2E tests (Nextjs-Docker)
+        continue-on-error: true
+        if: false
+        timeout-minutes: 15
+        run: |
+          cd apps/examples/nextjs-docker && pnpm test:docker
+        env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
+          TEST_KEYCLOAK_PASSWORD: ${{ secrets.TEST_KEYCLOAK_PASSWORD }}
+          AUTH_KEYCLOAK_ID: ${{ secrets.AUTH_KEYCLOAK_ID }}
+          AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
+          AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
+          AUTH_TRUST_HOST: 1
       - name: Run E2E tests
         continue-on-error: true # TODO: Make this less flakey
         if: github.repository == 'nextauthjs/next-auth'
@@ -129,7 +148,7 @@ jobs:
           name: playwright-traces
           path: "**/packages/utils/test-results/*/trace.zip"
           retention-days: 7
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         if: always()
         name: Coverage
         with:
@@ -137,21 +156,22 @@ jobs:
 
   release-branch:
     name: Publish branch
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     needs: test
     if: ${{ github.event_name == 'push' }}
     environment: Production
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           # Please upvote https://github.com/orgs/community/discussions/13836
           token: ${{ secrets.GH_PAT }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: "pnpm"
       - name: Install dependencies
@@ -164,17 +184,18 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-pr:
     name: Publish PR
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     needs: test
     if: ${{ github.event_name == 'pull_request' }}
     environment: Preview
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "pnpm"
@@ -209,11 +230,11 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Init
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "pnpm"

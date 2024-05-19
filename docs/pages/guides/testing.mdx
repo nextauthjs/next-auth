@@ -1,0 +1,146 @@
+# Testing
+
+Repeated and consistent testing of authentication has always been tricky. OAuth providers in particular are especially difficult to test in an automated fashion, because they often introduce additional verification steps that will trigger if you're logging in from a new geographic location, a datacenter IP address, or from a new user-agent, etc.
+
+To get around these limitations, we recommend you use one of the following strategies to run successful E2E tests against Auth.js applications.
+
+1. Run your own OAuth provider using software like [Keycloak](https://www.keycloak.org)
+2. Enable an authentication method like the Credentials provider in development mode
+
+Below are one example of each strategy, leveraging [@playwright/test](https://playwright.dev) for the automated E2E tests.
+
+## Keycloak
+
+First, set up a [Keycloak](https://www.keycloak.org/getting-started/getting-started-docker) instance. Then you have to add the [Keycloak provider](/getting-started/providers/keycloak) to your Auth.js configuration.
+
+This test requires two environment variables to be set. These credentials should be for a test user who can authenticate against your newly created Keycloak instance.
+
+```bash filename=".env"
+TEST_KEYCLOAK_USERNAME=abc
+TEST_KEYCLOAK_PASSWORD=123
+```
+
+Then we can use [`@playwright/test`](https://playwright.dev) to execute two test steps.
+
+1. Which will visit the signin URL, enter the authentication credentials, and then click the "Sign In" button. It ensures the session is then set correctly.
+2. Which will click the "Sign Out" button and ensure the session is then `null`.
+
+```ts filename="tests/e2e/basic-auth.spec.ts" {10, 32}
+import { test, expect, type Page } from "@playwright/test"
+
+test("Basic auth", async ({ page, browser }) => {
+  if (
+    !process.env.TEST_KEYCLOAK_USERNAME ||
+    !process.env.TEST_KEYCLOAK_PASSWORD
+  )
+    throw new TypeError("Incorrect TEST_KEYCLOAK_{USERNAME,PASSWORD}")
+
+  await test.step("should login", async () => {
+    await page.goto("http://localhost:3000/auth/signin")
+    await page.getByText("Keycloak").click()
+    await page.getByText("Username or email").waitFor()
+    await page
+      .getByLabel("Username or email")
+      .fill(process.env.TEST_KEYCLOAK_USERNAME)
+    await page.locator("#password").fill(process.env.TEST_KEYCLOAK_PASSWORD)
+    await page.getByRole("button", { name: "Sign In" }).click()
+    await page.waitForURL("http://localhost:3000")
+    const session = await page.locator("pre").textContent()
+
+    expect(JSON.parse(session ?? "{}")).toEqual({
+      user: {
+        email: "bob@alice.com",
+        name: "Bob Alice",
+        image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
+      },
+      expires: expect.any(String),
+    })
+  })
+
+  await test.step("should logout", async () => {
+    await page.getByText("Sign out").click()
+    await page
+      .locator("header")
+      .getByRole("button", { name: "Sign in", exact: true })
+      .waitFor()
+    await page.goto("http://localhost:3000/auth/session")
+
+    expect(await page.locator("html").textContent()).toBe("null")
+  })
+})
+```
+
+## `Credentials` Provider in Development
+
+This method requires less initial setup and maintenance as you do not need to maintain a separate OAuth provider (like Keycloak), but you also must be extremely careful that you do not leave insecure authentication methods available in production. For example, in this example we will be adding a Credentials provider which accepts the password `password`.
+
+```ts filename="auth.ts" {16}
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+
+const providers = [GitHub]
+
+if (process.env.NODE_ENV === "development") {
+  providers.push(
+    Credentials({
+      id: "password",
+      name: "Password",
+      credentials: {
+        password: { label: "Password", type: "password" },
+      },
+      authorize: (credentials) => {
+        if (credentials.password === "password") {
+          return {
+            email: "bob@alice.com",
+            name: "Bob Alice",
+            image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
+          }
+        }
+      },
+    })
+  )
+}
+
+export const { handlers, auth } = NextAuth({
+  providers,
+})
+```
+
+The above configuration example will add the GitHub provider all the time, and the `Credentials` provider only in development. After making that configuration tweak, we can write our `@playwright/test` tests just like above.
+
+```ts filename="tests/e2e/basic-auth.spec.ts" {8}
+import { test, expect, type Page } from "@playwright/test"
+
+test("Basic auth", async ({ page, browser }) => {
+  if (!process.env.TEST_PASSWORD) throw new TypeError("Missing TEST_PASSWORD")
+
+  await test.step("should login", async () => {
+    await page.goto("http://localhost:3000/auth/signin")
+    await page.getByLabel("Password").fill(process.env.TEST_PASSWORD)
+    await page.getByRole("button", { name: "Sign In" }).click()
+    await page.waitForURL("http://localhost:3000")
+    const session = await page.locator("pre").textContent()
+
+    expect(JSON.parse(session ?? "{}")).toEqual({
+      user: {
+        email: "bob@alice.com",
+        name: "Bob Alice",
+        image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
+      },
+      expires: expect.any(String),
+    })
+  })
+
+  await test.step("should logout", async () => {
+    await page.getByText("Sign out").click()
+    await page
+      .locator("header")
+      .getByRole("button", { name: "Sign in", exact: true })
+      .waitFor()
+    await page.goto("http://localhost:3000/auth/session")
+
+    expect(await page.locator("html").textContent()).toBe("null")
+  })
+})
+```

@@ -1,0 +1,81 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/gitlab.svg" height="64" width="64" />
+
+# GitLab Provider
+
+## Resources
+
+- [GitLab OAuth documentation](https://docs.gitlab.com/ee/api/oauth2.html)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/gitlab
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/gitlab
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_GITLAB_ID
+AUTH_GITLAB_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import GitLab from "next-auth/providers/gitlab"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [GitLab],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import GitLab from "@auth/sveltekit/providers/gitlab"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [GitLab],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import GitLab from "@auth/express/providers/gitlab"
+
+app.use("/auth/*", ExpressAuth({ providers: [GitLab] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Enable the `read_user` option in scope if you want to save the users email address on sign up.

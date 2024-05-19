@@ -1,0 +1,8 @@
+name: "Broken Link Checker"
+description: "Recursively checks input URL for broken links"
+outputs:
+  version:
+    description: "Check for broken internal links"
+runs:
+  using: "node20"
+  main: "dist/index.js"

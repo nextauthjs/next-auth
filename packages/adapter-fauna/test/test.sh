@@ -1,28 +1,24 @@
 #!/usr/bin/env bash
 
 CONTAINER_NAME=authjs-fauna-test
-export FAUNADB_PORT=8443
-export FAUNA_ADMIN_KEY=secret
-export FAUNADB_DOMAIN=localhost
-export FAUNADB_SCHEME=http
+FAUNADB_PORT=8443
+FAUNA_ADMIN_KEY=secret
 
-
-# Start db
+# Start Docker
 docker run -d --rm \
---name ${CONTAINER_NAME} \
--p ${FAUNADB_PORT}:${FAUNADB_PORT} \
-fauna/faunadb
+  --name ${CONTAINER_NAME} \
+  -p ${FAUNADB_PORT}:${FAUNADB_PORT} \
+  fauna/faunadb
 
-echo "Waiting 20 sec for db to start..."
-sleep 20
+echo "Waiting 15s for db to start..."
+sleep 15
 
-# Create tables and indeces
-npx fauna-schema-migrate generate
-npx fauna-schema-migrate apply all
+# Create collections and indexes
+fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}
 
 # Always stop container, but exit with 1 when tests are failing
-if vitest -c ../utils/vitest.config.ts;then
-    docker stop ${CONTAINER_NAME}
+if vitest run -c ../utils/vitest.config.ts; then
+  docker stop ${CONTAINER_NAME}
 else
-    docker stop ${CONTAINER_NAME} && exit 1
+  docker stop ${CONTAINER_NAME} && exit 1
 fi

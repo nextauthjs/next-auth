@@ -1,0 +1,81 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/medium.svg" height="64" width="64" />
+
+# Medium Provider
+
+## Resources
+
+- [Medium OAuth documentation](https://example.com)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/medium
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/medium
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_MEDIUM_ID
+AUTH_MEDIUM_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Medium from "next-auth/providers/medium"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Medium],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Medium from "@auth/sveltekit/providers/medium"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Medium],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Medium from "@auth/express/providers/medium"
+
+app.use("/auth/*", ExpressAuth({ providers: [Medium] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Email address is not returned by the Medium API.

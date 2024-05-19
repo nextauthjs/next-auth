@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/netlify.svg" height="64" width="64" />
+
+# Netlify Provider
+
+## Resources
+
+- [Netlify OAuth blog](https://www.netlify.com/blog/2016/10/10/integrating-with-netlify-oauth2/)
+- [Netlify OAuth example](https://github.com/netlify/netlify-oauth-example/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/netlify
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/netlify
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_NETLIFY_ID
+AUTH_NETLIFY_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Netlify from "next-auth/providers/netlify"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Netlify],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Netlify from "@auth/sveltekit/providers/netlify"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Netlify],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Netlify from "@auth/express/providers/netlify"
+
+app.use("/auth/*", ExpressAuth({ providers: [Netlify] }))
+```
+
+  </Code.Express>
+</Code>

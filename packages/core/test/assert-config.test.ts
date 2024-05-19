@@ -46,7 +46,7 @@ describe("Assert user config correctness", () => {
     })
     expect(logger?.error).toHaveBeenCalledWith(
       new UntrustedHost(
-        "Host must be trusted. URL was: http://authjs.test/auth/session"
+        "Host must be trusted. URL was: https://authjs.test/auth/session"
       )
     )
   })
@@ -58,7 +58,7 @@ describe("Assert user config correctness", () => {
         "from %s",
         async (type) => {
           const cookieName =
-            type === "cookie" ? "authjs.callback-url" : "custom-name"
+            type === "cookie" ? "__Secure-authjs.callback-url" : "custom-name"
 
           const { response, logger } = await makeAuthRequest({
             action: "session",

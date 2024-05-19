@@ -22,7 +22,8 @@
  * const app = express()
  *
  * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
- * app.use('trust proxy')
+ * // https://expressjs.com/en/guide/behind-proxies.html
+ * app.set('trust proxy', true)
  * app.use("/auth/*", ExpressAuth({ providers: [ GitHub ] }))
  * ```
  *
@@ -31,7 +32,7 @@
  * You will also need to load the environment variables into your runtime environment. For example in Node.js with a package like [`dotenv`](https://www.npmjs.com/package/dotenv) or `Deno.env` in Deno.
  *
  * ### Provider Configuration
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
+ * The callback URL used by the [providers](https://authjs.dev/reference/core/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
  *
  * ```
  * [origin]/auth/callback/[provider]
@@ -66,7 +67,7 @@
  * This can either be done per route, or for a group of routes using a middleware such as the following:
  *
  * ```ts
- * export function authenticatedUser(
+ * export async function authenticatedUser(
  *   req: Request,
  *   res: Response,
  *   next: NextFunction
@@ -123,11 +124,17 @@
  * @module @auth/express
  */
 
-import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
-import type { AuthConfig, Session } from "@auth/core/types"
+import {
+  Auth,
+  type AuthConfig,
+  setEnvDefaults,
+  createActionURL,
+} from "@auth/core"
+import type { Session } from "@auth/core/types"
 import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
 export type {
   Account,
   DefaultSession,
@@ -142,10 +149,14 @@ export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
       if (err) return next(err)
       e.urlencoded({ extended: true })(req, res, async (err) => {
         if (err) return next(err)
-        config.basePath = getBasePath(req)
-        setEnvDefaults(process.env, config)
-        await toExpressResponse(await Auth(toWebRequest(req), config), res)
-        next()
+        try {
+          config.basePath = getBasePath(req)
+          setEnvDefaults(process.env, config)
+          await toExpressResponse(await Auth(toWebRequest(req), config), res)
+          if (!res.headersSent) next()
+        } catch (error) {
+          next(error)
+        }
       })
     })
   }

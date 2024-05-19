@@ -1,7 +1,17 @@
-import type { InternalOptions, RequestInternal, ResponseInternal, User } from "../../types.js"
+import type {
+  InternalOptions,
+  RequestInternal,
+  ResponseInternal,
+  User,
+} from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
 import { getLoggedInUser } from "../utils/session.js"
-import { assertInternalOptionsWebAuthn, inferWebAuthnOptions, getAuthenticationResponse, getRegistrationResponse } from "../utils/webauthn-utils.js"
+import {
+  assertInternalOptionsWebAuthn,
+  inferWebAuthnOptions,
+  getAuthenticationResponse,
+  getRegistrationResponse,
+} from "../utils/webauthn-utils.js"
 
 /**
  * Returns authentication or registration options for a WebAuthn flow
@@ -22,14 +32,18 @@ export async function webAuthnOptions(
   const { action } = (request.query ?? {}) as Record<string, unknown>
 
   // Action must be either "register", "authenticate", or undefined
-  if (action !== "register" && action !== "authenticate" && typeof action !== "undefined") {
+  if (
+    action !== "register" &&
+    action !== "authenticate" &&
+    typeof action !== "undefined"
+  ) {
     return {
       status: 400,
       body: { error: "Invalid action" },
       cookies,
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }
   }
 
@@ -38,22 +52,38 @@ export async function webAuthnOptions(
 
   // Extract user info from request
   // If session user exists, we don't need to call getUserInfo
-  const getUserInfoResponse = sessionUser ? {
-    user: sessionUser,
-    exists: true
-  } : await provider.getUserInfo(options, request)
+  const getUserInfoResponse = sessionUser
+    ? {
+        user: sessionUser,
+        exists: true,
+      }
+    : await provider.getUserInfo(options, request)
 
   const userInfo = getUserInfoResponse?.user
 
   // Make a decision on what kind of webauthn options to return
-  const decision = inferWebAuthnOptions(action, !!sessionUser, getUserInfoResponse)
+  const decision = inferWebAuthnOptions(
+    action,
+    !!sessionUser,
+    getUserInfoResponse
+  )
 
   switch (decision) {
     case "authenticate":
-      return getAuthenticationResponse(narrowOptions, request, userInfo, cookies)
+      return getAuthenticationResponse(
+        narrowOptions,
+        request,
+        userInfo,
+        cookies
+      )
     case "register":
       if (typeof userInfo?.email === "string") {
-        return getRegistrationResponse(narrowOptions, request, userInfo as User & { email: string }, cookies)
+        return getRegistrationResponse(
+          narrowOptions,
+          request,
+          userInfo as User & { email: string },
+          cookies
+        )
       }
     default:
       return {
@@ -61,8 +91,8 @@ export async function webAuthnOptions(
         body: { error: "Invalid request" },
         cookies,
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
   }
 }

@@ -218,7 +218,7 @@ export async function verifyAuthenticate(
     !("id" in data) ||
     typeof data.id !== "string"
   ) {
-    throw new AuthError("Invalid WebAuthn Authentication response.")
+    throw new AuthError("Invalid WebAuthn Authentication response")
   }
 
   // Reset the ID so we smooth out implementation differences
@@ -335,7 +335,7 @@ export async function verifyRegister(
     !("id" in data) ||
     typeof data.id !== "string"
   ) {
-    throw new AuthError("Invalid WebAuthn Registration response.")
+    throw new AuthError("Invalid WebAuthn Registration response")
   }
 
   // Get challenge from request cookies
@@ -343,7 +343,7 @@ export async function verifyRegister(
     await webauthnChallenge.use(options, request.cookies, resCookies)
   if (!user) {
     throw new AuthError(
-      "Missing user registration data in WebAuthn challenge cookie."
+      "Missing user registration data in WebAuthn challenge cookie"
     )
   }
 
@@ -365,7 +365,7 @@ export async function verifyRegister(
   // Make sure the response was verified
   if (!verification.verified || !verification.registrationInfo) {
     throw new WebAuthnVerificationError(
-      "WebAuthn registration response could not be verified."
+      "WebAuthn registration response could not be verified"
     )
   }
 
@@ -523,7 +523,7 @@ export function transportsToString(
 }
 
 export function stringToTransports(
-  tstring: string | undefined
+  tstring: string | undefined | null
 ): InternalAuthenticator["transports"] {
   return tstring
     ? (tstring.split(",") as InternalAuthenticator["transports"])

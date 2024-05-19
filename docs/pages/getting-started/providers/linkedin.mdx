@@ -1,0 +1,78 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/linkedin.svg" height="64" width="64" />
+
+# LinkedIn Provider
+
+## Resources
+
+- [LinkedIn OAuth documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow)
+- [LinkedIn app console](https://www.linkedin.com/developers/apps/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/linkedin
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/linkedin
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_LINKEDIN_ID
+AUTH_LINKEDIN_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import LinkedIn from "next-auth/providers/linkedin"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [LinkedIn],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import LinkedIn from "@auth/sveltekit/providers/linkedin"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [LinkedIn],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import LinkedIn from "@auth/express/providers/linkedin"
+
+app.use("/auth/*", ExpressAuth({ providers: [LinkedIn] }))
+```
+
+  </Code.Express>
+</Code>

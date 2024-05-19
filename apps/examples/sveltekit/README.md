@@ -3,7 +3,7 @@
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank">
-   <img height="64" src="https://authjs.dev/img/logo/logo-sm.png" />
+   <img height="64" src="https://authjs.dev/img/logo-sm.png" />
    </a>
    <a href="https://kit.svelte.dev" target="_blank">
    <img height="64" src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" />
