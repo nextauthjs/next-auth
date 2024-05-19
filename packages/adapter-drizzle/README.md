@@ -4,7 +4,7 @@
     <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
   </a>
   <a href="https://github.com/drizzle-team/drizzle-orm" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/drizzle-orm.png"/>
+    <img height="64px" src="https://authjs.dev/img/adapters/drizzle.svg"/>
   </a>
   <h3 align="center"><b>Drizzle ORM Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
