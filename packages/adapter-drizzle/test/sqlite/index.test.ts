@@ -6,6 +6,7 @@ import {
   sessionsTable as sessions,
   usersTable as users,
   verificationTokensTable as verificationTokens,
+  authenticatorsTable as authenticators,
 } from "./schema"
 import { eq, and } from "drizzle-orm"
 import { fixtures } from "../fixtures"
@@ -13,6 +14,7 @@ import { fixtures } from "../fixtures"
 runBasicTests({
   adapter: DrizzleAdapter(db),
   fixtures,
+  testWebAuthnMethods: true,
   db: {
     connect: async () => {
       await Promise.all([
@@ -20,6 +22,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     disconnect: async () => {
@@ -28,6 +31,7 @@ runBasicTests({
         db.delete(accounts),
         db.delete(verificationTokens),
         db.delete(users),
+        db.delete(authenticators),
       ])
     },
     user: (id) => db.select().from(users).where(eq(users.id, id)).get() ?? null,
@@ -37,20 +41,17 @@ runBasicTests({
         .from(sessions)
         .where(eq(sessions.sessionToken, sessionToken))
         .get() ?? null,
-    account: (provider_providerAccountId) => {
-      return (
-        db
-          .select()
-          .from(accounts)
-          .where(
-            eq(
-              accounts.providerAccountId,
-              provider_providerAccountId.providerAccountId
-            )
+    account: (provider_providerAccountId) =>
+      db
+        .select()
+        .from(accounts)
+        .where(
+          eq(
+            accounts.providerAccountId,
+            provider_providerAccountId.providerAccountId
           )
-          .get() ?? null
-      )
-    },
+        )
+        .get() ?? null,
     verificationToken: (identifier_token) =>
       db
         .select()
@@ -61,6 +62,12 @@ runBasicTests({
             eq(verificationTokens.identifier, identifier_token.identifier)
           )
         )
+        .get() ?? null,
+    authenticator: (credentialID) =>
+      db
+        .select()
+        .from(authenticators)
+        .where(eq(authenticators.credentialID, credentialID))
         .get() ?? null,
   },
 })
