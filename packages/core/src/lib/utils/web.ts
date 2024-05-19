@@ -28,7 +28,7 @@ export async function toInternalRequest(
 ): Promise<RequestInternal | undefined> {
   try {
     if (req.method !== "GET" && req.method !== "POST")
-      throw new UnknownAction("Only GET and POST requests are supported.")
+      throw new UnknownAction("Only GET and POST requests are supported")
 
     // Defaults are usually set in the `init` function, but this is needed below
     config.basePath ??= "/auth"
