@@ -302,7 +302,7 @@ import authConfig from "./auth.config"
 import NextAuth from "next-auth"
 
 // Use middleware directly
-export const { auth: middleware } = NextAuth(authConfig)
+// export const { auth: middleware } = NextAuth(authConfig)
 
 // Wrapped middleware option, use one or the other but not both
 const { auth } = NextAuth(authConfig);
