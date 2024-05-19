@@ -133,7 +133,11 @@ import { useSession, SessionProvider } from 'next-auth/react';
 const ClientComponent = () => {
   const session = useSession();
 
-  return <p>Welcome {session.user.name}</p>
+  return (
+	  <SessionProvider>
+	  	<p>Welcome {session?.user?.name}</p>
+	  </SessionProvider>
+  )
 }
 ```
 
