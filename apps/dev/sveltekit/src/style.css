@@ -128,11 +128,11 @@ main {
       flex-wrap: wrap;
       gap: 1rem;
 
-      &>div:last-of-type {
+      & > div:last-of-type {
         flex-basis: 100%;
       }
 
-      &>form:last-of-type {
+      & > form:last-of-type {
         flex-basis: 100%;
       }
     }

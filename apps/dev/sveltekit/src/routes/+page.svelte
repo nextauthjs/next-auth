@@ -111,9 +111,7 @@
               Discord
             </button>
           </div>
-          <div class="or-split">
-            or
-          </div>
+          <div class="or-split">or</div>
           <div class="wrapper-form">
             <div class="input-wrapper">
               <label for="client-password">Password</label>
