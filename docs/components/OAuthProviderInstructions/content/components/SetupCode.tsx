@@ -12,8 +12,11 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
   return (
     <Code>
       <Code.Next>
+        In Next.js you should also setup your Auth.js configuration in a file
+        at <code>auth.ts</code>.
+        <br />
         <Pre
-          data-filename="@/auth"
+          data-filename="./auth.ts"
           data-theme="default"
           data-copy=""
           data-language="tsx"
@@ -23,15 +26,32 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
 import NextAuth from "next-auth"
 import ${providerName} from "next-auth/providers/${providerId}"
  
-export const { signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [${providerName}],
 })`),
+          }}
+        />
+        <br />
+        Add the <code>handlers</code> which <code>NextAuth</code> returns to
+        your <code>api/auth/[...nextauth]/route.ts</code> file so that Auth.js can run on any
+        incoming request.
+        <Pre
+          data-filename="./app/api/auth/[...nextauth]/route.ts"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+import { handlers } from "@/auth"
+export const { GET, POST } = handlers
+`),
           }}
         />
       </Code.Next>
       <Code.Svelte>
         In SvelteKit you should also setup your Auth.js configuration in a file
-        at `/src/auth.ts`.
+        at <code>/src/auth.ts</code>.
         <br />
         <Pre
           data-filename="./src/auth.ts"
@@ -44,7 +64,7 @@ export const { signIn, signOut, auth } = NextAuth({
 import { SvelteKitAuth } from "@auth/sveltekit"
 import ${providerName} from "@auth/sveltekit/providers/${providerId}"
  
-export const { handle } = SvelteKitAuth({
+export const { handle, signIn } = SvelteKitAuth({
   providers: [${providerName}],
 }) `),
           }}
