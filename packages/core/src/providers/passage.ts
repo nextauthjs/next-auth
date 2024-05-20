@@ -45,13 +45,19 @@ export interface PassageProfile {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Passage from "@auth/core/providers/passage"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Passage({ clientId: PASSAGE_ID, clientSecret: PASSAGE_SECRET, issuer: PASSAGE_ISSUER })],
+ *   providers: [
+ *     Passage({
+ *       clientId: PASSAGE_ID,
+ *       clientSecret: PASSAGE_SECRET,
+ *       issuer: PASSAGE_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

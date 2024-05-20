@@ -34,33 +34,37 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
  * #### Configuration
  *
  * For OAuth 2.0 Flow:
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import BoxyHQ from "@auth/core/providers/boxyhq-saml"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BoxyHQ({
- *    authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
- *    clientId: BOXYHQ_SAML_CLIENT_ID,
- *    clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
- *    issuer: BOXYHQ_SAML_ISSUER
- *   })],
+ *   providers: [
+ *     BoxyHQ({
+ *       authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+ *       clientId: BOXYHQ_SAML_CLIENT_ID,
+ *       clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
+ *       issuer: BOXYHQ_SAML_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  * For OIDC Flow:
  *
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import BoxyHQ from "@auth/core/providers/boxyhq-saml"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BoxyHQ({
- *    clientId: BOXYHQ_SAML_CLIENT_ID,
- *    clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
- *    issuer: BOXYHQ_SAML_ISSUER
- *   })],
+ *   providers: [
+ *     BoxyHQ({
+ *       clientId: BOXYHQ_SAML_CLIENT_ID,
+ *       clientSecret: BOXYHQ_SAML_CLIENT_SECRET,
+ *       issuer: BOXYHQ_SAML_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -78,7 +82,7 @@ export interface BoxyHQSAMLProfile extends Record<string, any> {
  * On the client side you'll need to pass additional parameters `tenant` and `product` to the `signIn` function. This will allow BoxyHQL SAML to figure out the right SAML configuration and take your user to the right SAML Identity Provider to sign them in.
  *
  * ```tsx
- * import { signIn } from "next-auth/react";
+ * import { signIn } from "auth";
  * ...
  *
  *   // Map your users's email to a tenant and product

@@ -22,13 +22,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Medium from "@auth/core/providers/medium"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Medium({ clientId: MEDIUM_CLIENT_ID, clientSecret: MEDIUM_CLIENT_SECRET })],
+ *   providers: [
+ *     Medium({ clientId: MEDIUM_CLIENT_ID, clientSecret: MEDIUM_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

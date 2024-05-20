@@ -21,13 +21,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Box from "@auth/core/providers/box"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Box({ clientId: BOX_CLIENT_ID, clientSecret: BOX_CLIENT_SECRET })],
+ *   providers: [
+ *     Box({ clientId: BOX_CLIENT_ID, clientSecret: BOX_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

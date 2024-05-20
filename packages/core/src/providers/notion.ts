@@ -59,26 +59,34 @@ const NOTION_API_VERSION = "2022-06-28"
 /**
  * Add Notion login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```ts
- * import { Auth } from "@auth/core"
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/notion
+ * ```
+ *
+ * #### Configuration
+ *```ts
+ * import Auth from "@auth/core"
  * import Notion from "@auth/core/providers/notion"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Notion({ clientId: NOTION_CLIENT_ID, clientSecret: NOTION_CLIENT_SECRET, redirectUri: NOTION_CLIENT_REDIRECT_URI })],
+ *   providers: [
+ *     Notion({
+ *       clientId: NOTION_CLIENT_ID,
+ *       clientSecret: NOTION_CLIENT_SECRET,
+ *       redirectUri: NOTION_CLIENT_REDIRECT_URI,
+ *     }),
+ *   ],
  * })
  * ```
- *
- * ---
  *
  * ### Resources
  * - [Notion Docs](https://developers.notion.com/docs)
  * - [Notion Authorization Docs](https://developers.notion.com/docs/authorization)
  * - [Notion Integrations](https://www.notion.so/my-integrations)
- *
- * ---
  *
  * ### Notes
  * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.

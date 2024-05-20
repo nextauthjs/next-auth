@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Instagram from "@auth/core/providers/instagram"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Instagram({ clientId: INSTAGRAM_CLIENT_ID, clientSecret: INSTAGRAM_CLIENT_SECRET })],
+ *   providers: [
+ *     Instagram({
+ *       clientId: INSTAGRAM_CLIENT_ID,
+ *       clientSecret: INSTAGRAM_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

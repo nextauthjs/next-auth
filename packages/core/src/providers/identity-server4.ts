@@ -21,13 +21,19 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import IdentityServer4 from "@auth/core/providers/identity-server4"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [IdentityServer4({ clientId: IDENTITY_SERVER4_CLIENT_ID, clientSecret: IDENTITY_SERVER4_CLIENT_SECRET, issuer: IDENTITY_SERVER4_ISSUER })],
+ *   providers: [
+ *     IdentityServer4({
+ *       clientId: IDENTITY_SERVER4_CLIENT_ID,
+ *       clientSecret: IDENTITY_SERVER4_CLIENT_SECRET,
+ *       issuer: IDENTITY_SERVER4_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

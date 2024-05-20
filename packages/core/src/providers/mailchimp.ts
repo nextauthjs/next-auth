@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Mailchimp from "@auth/core/providers/mailchimp"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Mailchimp({ clientId: MAILCHIMP_CLIENT_ID, clientSecret: MAILCHIMP_CLIENT_SECRET })],
+ *   providers: [
+ *     Mailchimp({
+ *       clientId: MAILCHIMP_CLIENT_ID,
+ *       clientSecret: MAILCHIMP_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

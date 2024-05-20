@@ -33,12 +33,17 @@ export interface ClickUpProfile {
  *
  * #### Configuration
  * ```ts
- * import { Auth } from "@auth/core"
+ * import Auth from "@auth/core"
  * import ClickUp from "@auth/core/providers/click-up"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [ClickUp({ clientId: CLICKUP_CLIENT_ID, clientSecret: CLICKUP_CLIENT_SECRET })],
+ *   providers: [
+ *     ClickUp({
+ *       clientId: CLICKUP_CLIENT_ID,
+ *       clientSecret: CLICKUP_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

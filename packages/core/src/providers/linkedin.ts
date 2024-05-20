@@ -33,13 +33,18 @@ export interface LinkedInProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import LinkedIn from "@auth/core/providers/linkedin"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [LinkedIn({ clientId: LINKEDIN_CLIENT_ID, clientSecret: LINKEDIN_CLIENT_SECRET })],
+ *   providers: [
+ *     LinkedIn({
+ *       clientId: LINKEDIN_CLIENT_ID,
+ *       clientSecret: LINKEDIN_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

@@ -33,13 +33,19 @@ export interface OryHydraProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import OryHydra from "@auth/core/providers/ory-hydra"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [OryHydra({ clientId: ORY_HYDRA_CLIENT_ID, clientSecret: ORY_HYDRA_CLIENT_SECRET, issuer: ORY_HYDRA_ISSUER })],
+ *   providers: [
+ *     OryHydra({
+ *       clientId: ORY_HYDRA_CLIENT_ID,
+ *       clientSecret: ORY_HYDRA_CLIENT_SECRET,
+ *       issuer: ORY_HYDRA_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

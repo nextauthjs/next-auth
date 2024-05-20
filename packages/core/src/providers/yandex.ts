@@ -84,17 +84,25 @@ export interface YandexProfile {
 }
 
 /**
- * Add Yandex login to your page
+ * Add Yandex login to your page.
  *
- * @example
+ * ### Setup
  *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/yandex
+ * ```
+ *
+ * #### Configuration
  * ```ts
- * import { Auth } from "@auth/core"
+ * import Auth from "@auth/core"
  * import Yandex from "@auth/core/providers/yandex"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *  providers: [Yandex({ clientId: YANDEX_CLIENT_ID, clientSecret: YANDEX_CLIENT_SECRET })],
+ *   providers: [
+ *     Yandex({ clientId: YANDEX_CLIENT_ID, clientSecret: YANDEX_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

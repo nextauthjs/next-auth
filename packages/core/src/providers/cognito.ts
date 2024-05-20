@@ -28,13 +28,19 @@ export interface CognitoProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Cognito from "@auth/core/providers/cognito"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Cognito({ clientId: COGNITO_CLIENT_ID, clientSecret: COGNITO_CLIENT_SECRET, issuer: COGNITO_ISSUER })],
+ *   providers: [
+ *     Cognito({
+ *       clientId: COGNITO_CLIENT_ID,
+ *       clientSecret: COGNITO_CLIENT_SECRET,
+ *       issuer: COGNITO_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

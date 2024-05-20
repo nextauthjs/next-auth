@@ -55,13 +55,19 @@ export interface OktaProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Okta from "@auth/core/providers/okta"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Okta({ clientId: OKTA_CLIENT_ID, clientSecret: OKTA_CLIENT_SECRET, issuer: OKTA_ISSUER })],
+ *   providers: [
+ *     Okta({
+ *       clientId: OKTA_CLIENT_ID,
+ *       clientSecret: OKTA_CLIENT_SECRET,
+ *       issuer: OKTA_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

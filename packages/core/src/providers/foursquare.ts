@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import FourSquare from "@auth/core/providers/foursquare"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FourSquare({ clientId: FOURSQUARE_CLIENT_ID, clientSecret: FOURSQUARE_CLIENT_SECRET })],
+ *   providers: [
+ *     FourSquare({
+ *       clientId: FOURSQUARE_CLIENT_ID,
+ *       clientSecret: FOURSQUARE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

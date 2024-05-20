@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Dropbox from "@auth/core/providers/dropbox"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Dropbox({ clientId: DROPBOX_CLIENT_ID, clientSecret: DROPBOX_CLIENT_SECRET })],
+ *   providers: [
+ *     Dropbox({
+ *       clientId: DROPBOX_CLIENT_ID,
+ *       clientSecret: DROPBOX_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

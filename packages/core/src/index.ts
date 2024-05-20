@@ -20,7 +20,7 @@
  * ## Usage
  *
  * ```ts
- * import { Auth } from "@auth/core"
+ * import Auth from "@auth/core"
  *
  * const request = new Request("https://example.com")
  * const response = await Auth(request, {...})
@@ -89,7 +89,7 @@ export async function Auth(
  * import Auth from "@auth/core"
  *
  * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
+ * const response = await Auth(request, {
  *   providers: [Google],
  *   secret: "...",
  *   trustHost: true,

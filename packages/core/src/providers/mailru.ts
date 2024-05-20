@@ -21,13 +21,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Mailru from "@auth/core/providers/mailru"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Mailru({ clientId: MAILRU_CLIENT_ID, clientSecret: MAILRU_CLIENT_SECRET })],
+ *   providers: [
+ *     Mailru({ clientId: MAILRU_CLIENT_ID, clientSecret: MAILRU_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

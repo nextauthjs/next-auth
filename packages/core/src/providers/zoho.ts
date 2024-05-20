@@ -21,13 +21,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import ZOHO from "@auth/core/providers/zoho"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [ZOHO({ clientId: ZOHO_CLIENT_ID, clientSecret: ZOHO_CLIENT_SECRET })],
+ *   providers: [
+ *     ZOHO({ clientId: ZOHO_CLIENT_ID, clientSecret: ZOHO_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

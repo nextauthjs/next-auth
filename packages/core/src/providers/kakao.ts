@@ -88,13 +88,15 @@ export interface KakaoProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Kakao from "@auth/core/providers/kakao"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Kakao({ clientId: KAKAO_CLIENT_ID, clientSecret: KAKAO_CLIENT_SECRET })],
+ *   providers: [
+ *     Kakao({ clientId: KAKAO_CLIENT_ID, clientSecret: KAKAO_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

@@ -31,13 +31,18 @@ export interface EVEOnlineProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import EveOnline from "@auth/core/providers/eveonline"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [EveOnline({ clientId: EVEONLINE_CLIENT_ID, clientSecret: EVEONLINE_CLIENT_SECRET })],
+ *   providers: [
+ *     EveOnline({
+ *       clientId: EVEONLINE_CLIENT_ID,
+ *       clientSecret: EVEONLINE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -53,7 +58,7 @@ export interface EVEOnlineProfile extends Record<string, any> {
  *
  * :::tip
  * If using JWT for the session, you can add the `CharacterID` to the JWT and session. Example:
- * ```js
+ * ```ts
  * options: {
  *   jwt: {
  *     secret: process.env.JWT_SECRET,

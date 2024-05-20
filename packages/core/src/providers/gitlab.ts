@@ -66,13 +66,15 @@ export interface GitLabProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import GitLab from "@auth/core/providers/gitlab"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [GitLab({ clientId: GITLAB_CLIENT_ID, clientSecret: GITLAB_CLIENT_SECRET })],
+ *   providers: [
+ *     GitLab({ clientId: GITLAB_CLIENT_ID, clientSecret: GITLAB_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

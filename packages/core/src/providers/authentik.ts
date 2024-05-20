@@ -42,13 +42,19 @@ export interface AuthentikProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Authentik from "@auth/core/providers/authentik"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Authentik({ clientId: AUTHENTIK_CLIENT_ID, clientSecret: AUTHENTIK_CLIENT_SECRET, issuer: AUTHENTIK_ISSUER })],
+ *   providers: [
+ *     Authentik({
+ *       clientId: AUTHENTIK_CLIENT_ID,
+ *       clientSecret: AUTHENTIK_CLIENT_SECRET,
+ *       issuer: AUTHENTIK_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

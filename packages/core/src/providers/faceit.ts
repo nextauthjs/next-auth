@@ -21,13 +21,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import FACEIT from "@auth/core/providers/faceit"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FACEIT({ clientId: FACEIT_CLIENT_ID, clientSecret: FACEIT_CLIENT_SECRET })],
+ *   providers: [
+ *     FACEIT({ clientId: FACEIT_CLIENT_ID, clientSecret: FACEIT_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

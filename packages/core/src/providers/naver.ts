@@ -40,13 +40,15 @@ export interface NaverProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Naver from "@auth/core/providers/naver"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Naver({ clientId: NAVER_CLIENT_ID, clientSecret: NAVER_CLIENT_SECRET })],
+ *   providers: [
+ *     Naver({ clientId: NAVER_CLIENT_ID, clientSecret: NAVER_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

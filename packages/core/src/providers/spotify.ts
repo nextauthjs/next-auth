@@ -32,13 +32,18 @@ export interface SpotifyProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Spotify from "@auth/core/providers/spotify"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Spotify({ clientId: SPOTIFY_CLIENT_ID, clientSecret: SPOTIFY_CLIENT_SECRET })],
+ *   providers: [
+ *     Spotify({
+ *       clientId: SPOTIFY_CLIENT_ID,
+ *       clientSecret: SPOTIFY_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

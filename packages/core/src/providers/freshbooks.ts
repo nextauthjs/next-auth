@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import FreshBooks from "@auth/core/providers/freshbooks"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FreshBooks({ clientId: FRESHBOOKS_CLIENT_ID, clientSecret: FRESHBOOKS_CLIENT_SECRET })],
+ *   providers: [
+ *     FreshBooks({
+ *       clientId: FRESHBOOKS_CLIENT_ID,
+ *       clientSecret: FRESHBOOKS_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

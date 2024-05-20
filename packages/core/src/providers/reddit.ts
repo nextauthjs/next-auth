@@ -21,13 +21,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Reddit from "@auth/core/providers/reddit"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Reddit({ clientId: REDDIT_CLIENT_ID, clientSecret: REDDIT_CLIENT_SECRET })],
+ *   providers: [
+ *     Reddit({ clientId: REDDIT_CLIENT_ID, clientSecret: REDDIT_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
@@ -51,9 +53,9 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * :::tip
  *
  * This Provider template only has a one hour access token to it and only has the "identity" scope. If you want to get a refresh token as well you must follow this:
- *```js title="pages/api/auth/[...nextauth].js"
+ *```ts
  * providers: [
- *  RedditProvider({
+ *  Reddit({
  *    clientId: process.env.REDDIT_CLIENT_ID,
  *    clientSecret: process.env.REDDIT_CLIENT_SECRET,
  *    authorization: {

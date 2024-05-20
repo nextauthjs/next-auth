@@ -28,13 +28,18 @@ export interface PatreonProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Patreon from "@auth/core/providers/patreon"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Patreon({ clientId: PATREON_CLIENT_ID, clientSecret: PATREON_CLIENT_SECRET })],
+ *   providers: [
+ *     Patreon({
+ *       clientId: PATREON_CLIENT_ID,
+ *       clientSecret: PATREON_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

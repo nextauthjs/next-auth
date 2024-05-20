@@ -21,13 +21,19 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import Osso from "@auth/core/providers/osso"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Osso({ clientId: OSSO_CLIENT_ID, clientSecret: OSSO_CLIENT_SECRET, issuer: OSSO_ISSUER })],
+ *   providers: [
+ *     Osso({
+ *       clientId: OSSO_CLIENT_ID,
+ *       clientSecret: OSSO_CLIENT_SECRET,
+ *       issuer: OSSO_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

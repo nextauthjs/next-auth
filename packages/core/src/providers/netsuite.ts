@@ -65,9 +65,9 @@ export interface NetSuiteProfile {
  * - [NetSuite RESTLets](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_4567507062.html#Tracking-RESTlet-Calls-Made-with-TBA-and-OAuth-2.0).
  * - [NetSuite REST Web Services](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/book_1559132836.html#SuiteTalk-REST-Web-Services-API-Guide).
  *
- * ## Setup
+ * ### Setup
  *
- * ### Disclaimer
+ * #### Disclaimer
  * By using this provider, you consent to sharing your data with NetSuite.
  * By using this provider we assume you comply with NetSuite's [Terms of Service](https://www.netsuite.com/portal/assets/pdf/terms_of_service.pdf) and [Privacy Policy](https://www.oracle.com/legal/privacy).
  * The author of this provider is not affiliated with NetSuite. Proceeding with this provider you must be a NetSuite customer and have a NetSuite account (Full access user).
@@ -90,7 +90,7 @@ export interface NetSuiteProfile {
  *   - **Save** the Integration record.
  *   - The Integration record will be used to generate the `clientId` and `clientSecret` for the provider. **Save the generated values for later**
  *
- * ### Callback URL
+ * #### Callback URL
  *
  * :::tip
  * When setting the Redirect URI in the Integration record, you must use the `https` protocol.
@@ -107,7 +107,7 @@ export interface NetSuiteProfile {
  * The best bet is to use the `N/runtime` module to get the basics first. - Here is an example of a RESTlet below. Be sure to deploy and enable access to "All Roles".
  * :::
  *
- * ### Example RESTLet Callback Handler
+ * #### Example RESTLet Callback Handler
  * Be sure to deploy and use the **external** RESTLet url of any usage of the URIs.
  *
  * ```js
@@ -161,10 +161,10 @@ export interface NetSuiteProfile {
  *
  * > **Note**: Above is an example of returning the basic runtime information. Be sure to create a new script record and deployment record. Upon saving the deployment record. We will get our URLs for our RESTlet.
  *
- * ## Configuration
+ * ### Configuration
  *
  * ```ts
- * import { Auth } from "@auth/core"
+ * import Auth from "@auth/core"
  * import Netsuite from "@auth/core/providers/netsuite"
  *
  * const request = new Request(origin)

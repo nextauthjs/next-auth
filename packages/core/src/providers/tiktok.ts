@@ -137,13 +137,15 @@ export interface TiktokProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import TikTok from "@auth/core/providers/tiktok"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [TikTok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET })],
+ *   providers: [
+ *     TikTok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

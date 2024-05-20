@@ -43,21 +43,19 @@ export interface AsgardeoProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
+ *```ts
+ * import Auth from "@auth/core"
+ * import Asgarde from "@auth/core/providers/asgardeo";
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import AsgardeoProvider from "next-auth/providers/asgardeo";
- *
- * export default NextAuth({
- *  providers: [
- *    AsgardeoProvider({
- *      clientId: process.env.ASGARDEO_CLIENT_ID,
- *      clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
- *      issuer: process.env.ASGARDEO_ISSUER
- *    }),
- *  ],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [
+ *     Asgardeo({
+ *       clientId: ASGARDEO_CLIENT_ID,
+ *       clientSecret: ASGARDEO_CLIENT_SECRET,
+ *       issuer: ASGARDEO_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
