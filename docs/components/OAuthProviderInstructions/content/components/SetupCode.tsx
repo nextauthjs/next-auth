@@ -12,8 +12,8 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
   return (
     <Code>
       <Code.Next>
-        In Next.js you should also setup your Auth.js configuration in a file
-        at <code>auth.ts</code>.
+        In Next.js you should also setup your Auth.js configuration in a file at{" "}
+        <code>auth.ts</code>.
         <br />
         <Pre
           data-filename="./auth.ts"
@@ -33,8 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         />
         <br />
         Add the <code>handlers</code> which <code>NextAuth</code> returns to
-        your <code>api/auth/[...nextauth]/route.ts</code> file so that Auth.js can run on any
-        incoming request.
+        your <code>api/auth/[...nextauth]/route.ts</code> file so that Auth.js
+        can run on any incoming request.
         <Pre
           data-filename="./app/api/auth/[...nextauth]/route.ts"
           data-theme="default"
