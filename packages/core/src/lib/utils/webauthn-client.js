@@ -8,9 +8,9 @@
 /**
  * @template {WebAuthnOptionsAction} T
  * @typedef {T extends WebAuthnAuthenticate ?
- *  { options: import("@simplewebauthn/server/script/deps.d.ts").PublicKeyCredentialRequestOptionsJSON; action: "authenticate" } :
+ *  { options: import("@simplewebauthn/types").PublicKeyCredentialRequestOptionsJSON; action: "authenticate" } :
  *  T extends WebAuthnRegister ?
- *  { options: import("@simplewebauthn/server/script/deps.d.ts").PublicKeyCredentialCreationOptionsJSON; action: "register" } :
+ *  { options: import("@simplewebauthn/types").PublicKeyCredentialCreationOptionsJSON; action: "register" } :
  * never
  * } WebAuthnOptionsReturn
  */

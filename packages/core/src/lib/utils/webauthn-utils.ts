@@ -22,7 +22,7 @@ import {
   type PublicKeyCredentialCreationOptionsJSON,
   type PublicKeyCredentialRequestOptionsJSON,
   type RegistrationResponseJSON,
-} from "@simplewebauthn/server/esm/deps"
+} from "@simplewebauthn/types"
 import type {
   Adapter,
   AdapterAccount,

@@ -652,6 +652,9 @@ importers:
       '@simplewebauthn/server':
         specifier: 9.0.3
         version: 9.0.3(encoding@0.1.13)
+      '@simplewebauthn/types':
+        specifier: ^9.0.1
+        version: 9.0.1
       '@types/node':
         specifier: 18.11.10
         version: 18.11.10

@@ -98,6 +98,7 @@
   "devDependencies": {
     "@simplewebauthn/browser": "9.0.1",
     "@simplewebauthn/server": "9.0.3",
+    "@simplewebauthn/types": "^9.0.1",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
