@@ -15,9 +15,10 @@
  * @module @auth/dgraph-adapter
  */
 import { client as dgraphClient } from "./lib/client.js"
-import { isDate, type Adapter } from "@auth/core/adapters.js"
+import { isDate, type Adapter } from "@auth/core/adapters"
 import type { DgraphClientParams } from "./lib/client.js"
 import * as defaultFragments from "./lib/graphql/fragments.js"
+import { AdapterAccount, AdapterSession, AdapterUser, VerificationToken } from "@auth/core/adapters"
 
 export type { DgraphClientParams, DgraphClientError } from "./lib/client.js"
 
@@ -46,7 +47,7 @@ export function DgraphAdapter(
 
   const fragments = { ...defaultFragments, ...options?.fragments }
   return {
-    async createUser(input) {
+    async createUser(input: AdapterUser) {
       const result = await c.run<{ user: any[] }>(
         /* GraphQL */ `
           mutation ($input: [AddUserInput!]!) {
@@ -63,7 +64,7 @@ export function DgraphAdapter(
 
       return format.from<any>(result?.user[0])
     },
-    async getUser(id) {
+    async getUser(id: string) {
       const result = await c.run<any>(
         /* GraphQL */ `
           query ($id: ID!) {
@@ -78,7 +79,7 @@ export function DgraphAdapter(
 
       return format.from<any>(result)
     },
-    async getUserByEmail(email) {
+    async getUserByEmail(email: string) {
       const [user] = await c.run<any>(
         /* GraphQL */ `
           query ($email: String = "") {
@@ -92,7 +93,7 @@ export function DgraphAdapter(
       )
       return format.from<any>(user)
     },
-    async getUserByAccount(provider_providerAccountId) {
+    async getUserByAccount(provider_providerAccountId: { provider: string, providerAccountId: string }) {
       const [account] = await c.run<any>(
         /* GraphQL */ `
           query ($providerAccountId: String = "", $provider: String = "") {
@@ -116,7 +117,7 @@ export function DgraphAdapter(
       )
       return format.from<any>(account?.user)
     },
-    async updateUser({ id, ...input }) {
+    async updateUser({ id, ...input }: { id: string }) {
       const result = await c.run<any>(
         /* GraphQL */ `
           mutation ($id: [ID!] = "", $input: UserPatch) {
@@ -132,7 +133,7 @@ export function DgraphAdapter(
       )
       return format.from<any>(result.user[0])
     },
-    async deleteUser(id) {
+    async deleteUser(id: string) {
       const result = await c.run<any>(
         /* GraphQL */ `
           mutation ($id: [ID!] = "") {
@@ -174,7 +175,7 @@ export function DgraphAdapter(
       return deletedUser
     },
 
-    async linkAccount(data) {
+    async linkAccount(data: AdapterAccount) {
       const { userId, ...input } = data
       await c.run<any>(
         /* GraphQL */ `
@@ -191,7 +192,7 @@ export function DgraphAdapter(
       )
       return data
     },
-    async unlinkAccount(provider_providerAccountId) {
+    async unlinkAccount(provider_providerAccountId: { provider: string, providerAccountId: string }) {
       await c.run<any>(
         /* GraphQL */ `
           mutation ($providerAccountId: String = "", $provider: String = "") {
@@ -211,7 +212,7 @@ export function DgraphAdapter(
       )
     },
 
-    async getSessionAndUser(sessionToken) {
+    async getSessionAndUser(sessionToken: string) {
       const [sessionAndUser] = await c.run<any>(
         /* GraphQL */ `
           query ($sessionToken: String = "") {
@@ -236,7 +237,7 @@ export function DgraphAdapter(
         session: { ...format.from<any>(session), userId: user.id },
       }
     },
-    async createSession(data) {
+    async createSession(data: AdapterSession) {
       const { userId, ...input } = data
 
       await c.run<any>(
@@ -255,7 +256,7 @@ export function DgraphAdapter(
 
       return data as any
     },
-    async updateSession({ sessionToken, ...input }) {
+    async updateSession({ sessionToken, ...input }: { sessionToken: string }) {
       const result = await c.run<any>(
         /* GraphQL */ `
           mutation ($input: SessionPatch = {}, $sessionToken: String) {
@@ -283,7 +284,7 @@ export function DgraphAdapter(
 
       return { ...session, userId: session.user.id }
     },
-    async deleteSession(sessionToken) {
+    async deleteSession(sessionToken: string) {
       await c.run<any>(
         /* GraphQL */ `
           mutation ($sessionToken: String = "") {
@@ -296,7 +297,7 @@ export function DgraphAdapter(
       )
     },
 
-    async createVerificationToken(input) {
+    async createVerificationToken(input: VerificationToken) {
       const result = await c.run<any>(
         /* GraphQL */ `
           mutation ($input: [AddVerificationTokenInput!]!) {
@@ -310,7 +311,7 @@ export function DgraphAdapter(
       return format.from<any>(result)
     },
 
-    async useVerificationToken(params) {
+    async useVerificationToken(params: { identifier: string; token: string }) {
       const result = await c.run<any>(
         /* GraphQL */ `
           mutation ($token: String = "", $identifier: String = "") {
