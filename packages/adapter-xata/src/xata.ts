@@ -8,7 +8,6 @@ import {
   BaseClientOptions,
   XataRecord,
   ClientConstructor,
-  // @ts-expect-error
 } from "@xata.io/client"
 
 export interface NextauthUser {
