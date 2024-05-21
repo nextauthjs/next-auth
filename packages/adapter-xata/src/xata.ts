@@ -8,6 +8,7 @@ import {
   BaseClientOptions,
   XataRecord,
   ClientConstructor,
+  type BaseSchema,
 } from "@xata.io/client"
 
 export interface NextauthUser {
@@ -67,27 +68,169 @@ export interface NextauthSession {
 export type NextauthSessionRecord = NextauthSession & XataRecord
 
 export type DatabaseSchema = {
-  nextauth_users: NextauthUser
-  nextauth_accounts: NextauthAccount
-  nextauth_verificationTokens: NextauthVerificationToken
-  nextauth_users_accounts: NextauthUsersAccount
-  nextauth_users_sessions: NextauthUsersSession
-  nextauth_sessions: NextauthSession
+  nextauth_users: NextauthUserRecord
+  nextauth_accounts: NextauthAccountRecord
+  nextauth_verificationTokens: NextauthVerificationTokenRecord
+  nextauth_users_accounts: NextauthUsersAccountRecord
+  nextauth_users_sessions: NextauthUsersSessionRecord
+  nextauth_sessions: NextauthSessionRecord
 }
 
-const tables = [
-  "nextauth_users",
-  "nextauth_accounts",
-  "nextauth_verificationTokens",
-  "nextauth_users_accounts",
-  "nextauth_users_sessions",
-  "nextauth_sessions",
+const schemas: BaseSchema[] = [
+  {
+    name: "nextauth_users",
+    columns: [
+      {
+        name: "email",
+        type: "email",
+      },
+      {
+        name: "emailVerified",
+        type: "datetime",
+      },
+      {
+        name: "name",
+        type: "string",
+      },
+      {
+        name: "image",
+        type: "string",
+      },
+    ],
+  },
+  {
+    name: "nextauth_accounts",
+    columns: [
+      {
+        name: "user",
+        type: "link",
+        link: {
+          table: "nextauth_users",
+        },
+      },
+      {
+        name: "type",
+        type: "string",
+      },
+      {
+        name: "provider",
+        type: "string",
+      },
+      {
+        name: "providerAccountId",
+        type: "string",
+      },
+      {
+        name: "refresh_token",
+        type: "string",
+      },
+      {
+        name: "access_token",
+        type: "string",
+      },
+      {
+        name: "expires_at",
+        type: "int",
+      },
+      {
+        name: "token_type",
+        type: "string",
+      },
+      {
+        name: "scope",
+        type: "string",
+      },
+      {
+        name: "id_token",
+        type: "text",
+      },
+      {
+        name: "session_state",
+        type: "string",
+      },
+    ],
+  },
+  {
+    name: "nextauth_verificationTokens",
+    columns: [
+      {
+        name: "identifier",
+        type: "string",
+      },
+      {
+        name: "token",
+        type: "string",
+      },
+      {
+        name: "expires",
+        type: "datetime",
+      },
+    ],
+  },
+ {
+    name: "nextauth_users_accounts",
+    columns: [
+      {
+        name: "user",
+        type: "link",
+        link: {
+          table: "nextauth_users",
+        },
+      },
+      {
+        name: "account",
+        type: "link",
+        link: {
+          table: "nextauth_accounts",
+        },
+      },
+    ],
+  },
+  {
+    name: "nextauth_users_sessions",
+    columns: [
+      {
+        name: "user",
+        type: "link",
+        link: {
+          table: "nextauth_users",
+        },
+      },
+      {
+        name: "session",
+        type: "link",
+        link: {
+          table: "nextauth_sessions",
+        },
+      },
+    ],
+  },
+  {
+    name: "nextauth_sessions",
+    columns: [
+      {
+        name: "sessionToken",
+        type: "string",
+      },
+      {
+        name: "expires",
+        type: "datetime",
+      },
+      {
+        name: "user",
+        type: "link",
+        link: {
+          table: "nextauth_users",
+        },
+      },
+    ],
+  },
 ]
 
 const DatabaseClient = buildClient() as ClientConstructor<any>
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
   constructor(options?: BaseClientOptions) {
-    super({ databaseURL: "", ...options }, tables)
+    super({ databaseURL: "", ...options }, schemas)
   }
 }
