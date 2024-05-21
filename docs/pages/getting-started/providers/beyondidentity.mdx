@@ -1,0 +1,88 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/beyondidentity.svg"
+  height="64"
+  width="64"
+/>
+
+# Beyond Identity Provider
+
+## Resources
+
+- [Beyond Identity Developer Docs](https://developer.beyondidentity.com/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/beyondidentity
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/beyondidentity
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_BEYOND_IDENTITY_ID
+AUTH_BEYOND_IDENTITY_SECRET
+AUTH_BEYOND_IDENTITY_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import BeyondIdentity from "next-auth/providers/beyondidentity"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [BeyondIdentity],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import BeyondIdentity from "@auth/sveltekit/providers/beyondidentity"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [BeyondIdentity],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import BeyondIdentity from "@auth/express/providers/beyondidentity"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [BeyondIdentity],
+  })
+)
+```
+
+  </Code.Express>
+</Code>

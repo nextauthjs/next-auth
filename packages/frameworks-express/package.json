@@ -1,7 +1,7 @@
 {
   "name": "@auth/express",
   "description": "Authentication for Express.",
-  "version": "0.5.1",
+  "version": "0.5.5",
   "type": "module",
   "files": [
     "*.js",
@@ -54,7 +54,7 @@
   ],
   "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
   "contributors": [
-    "Rexford Essilfie <rexfordessilfie09@gmail.com",
+    "Rexford Essilfie <rexfordessilfie09@gmail.com>",
     "Lachie Hill <lachiehill@gmail.com>"
   ],
   "repository": "https://github.com/nextauthjs/next-auth",

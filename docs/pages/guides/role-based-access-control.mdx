@@ -1,0 +1,274 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+# Role-based access control
+
+There are two ways to add [role-based access control (RBAC)](https://en.wikipedia.org/wiki/Role-based_access_control) to your application with Auth.js, based on the [session strategy](/concepts/session-strategies) you choose. Let's see an example for each of these.
+
+## Getting the role
+
+Start by adding a `profile()` callback to the providers' config to determine the user role:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+
+export const { handlers, auth } = NextAuth({
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      },
+    })
+  ],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+
+export const { handle } = SvelteKitAuth({
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      },
+    })
+  ],
+})
+```
+
+</Code.Svelte>
+</Code>
+
+<Callout>
+  Determining the users role is your responsibility, you can either add your own
+  logic or if your provider returns a role you can use that instead.
+</Callout>
+
+## Persisting the role
+
+Persisting the role will be different depending on the [session strategy](/concepts/session-strategies) you're using. If you don't know which session strategy you're using, then most likely you're using JWT (the default one).
+
+### With JWT
+
+When you don't have a database configured, the role will be persisted in a cookie, by using the `jwt()` callback. On sign-in, the `role` property is exposed from the `profile` callback on the `user` object. Persist the `user.role` value by assigning it to `token.role`. That's it!
+
+If you also want to use the role on the client, you can expose it via the `session` callback.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts" {8}
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+
+export const { handlers, auth } = NextAuth({
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      },
+    })
+  ],
+  callbacks: {
+    jwt({ token, user }) {
+      if(user) token.role = user.role
+      return token
+    },
+    session({ session, token }) {
+      session.user.role = token.role
+      return session
+    }
+  }
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts" {8}
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+
+export const { handle } = SvelteKitAuth({
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      },
+    })
+  ],
+  callbacks: {
+    jwt({ token, user }) {
+      if(user) token.role = user.role
+      return token
+    },
+    session({ session, token }) {
+      session.user.role = token.role
+      return session
+    }
+  }
+})
+```
+
+</Code.Svelte>
+</Code>
+
+<Callout type="info">
+  With this strategy, if you want to update the role, the user needs to be
+  forced to sign in again.
+</Callout>
+
+### With Database
+
+When you have a database, you can save the user role on the [User model](/reference/core/adapters#adapteruser). The below example is showing you how to do this with Prisma, but the idea is the same for all adapters.
+
+First, add a `role` column to the User model.
+
+```prisma filename="/prisma/schema.prisma"
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String?  // New column
+  accounts      Account[]
+  sessions      Session[]
+}
+```
+
+The `profile()` callback's return value is used to create users in the database. That's it! Your newly created users will now have an assigned role.
+
+If you also want to use the role on the client, you can expose it via the `session` callback.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import prisma from "lib/prisma"
+
+export const { handlers, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      }
+    })
+  ],
+  callbacks: {
+    session({ session, user }) {
+      session.user.role = user.role
+      return session
+    }
+  }
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+import prisma from "lib/prisma"
+
+export const { handle, auth } = SvelteKitAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    Google({
+      profile(profile) {
+        return { role: profile.role ?? "user", ... }
+      }
+      ...
+    })
+  ],
+  callbacks: {
+    session({ session, user }) {
+      session.user.role = user.role
+      return session
+    }
+  }
+})
+```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+<Callout type="info">
+  It is up to you how you want to manage to update the roles, either through
+  direct database access or building your role update API.
+</Callout>
+
+## Using the role
+
+If you want to use the role in the client, for both cases above, when using the `useSession` hook, `session.user.role` will have the required role if you exposed it via the `session` callback. You can use this to render a different UI for different users.
+
+<Code>
+<Code.Next>
+
+```ts filename="./app/admin/page.tsx"
+import { useSession } from "next-auth/react";
+
+export default function Page() {
+  const session = await useSession();
+
+  if (session?.user.role === "admin") {
+    return <p>You are an admin, welcome!</p>;
+  }
+
+  return <p>You are not authorized to view this page!</p>;
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./routes/+page.server.ts"
+import { redirect } from "@sveltejs/kit"
+
+export const load: PageServerLoad = async (event) => {
+  const session = await event.locals.auth()
+
+  if (!session && event.url.pathname !== "/login") {
+    const fromUrl = event.url.pathname + event.url.search
+    redirect(307, `/login?redirectTo=${encodeURIComponent(fromUrl)}`)
+  }
+
+  return {
+    session,
+  }
+}
+```
+
+</Code.Svelte>
+</Code>
+
+<Callout>
+  When using Next.js and JWT, you can alternatively also use
+  [Middleware](/getting-started/session-management/protecting#nextjs-middleware)
+  to redirect the user based on their role, even before rendering the page.
+</Callout>
+
+## Resources
+
+- [Concepts: Session strategies](/concepts/session-strategies)
+- [Adapters: User model](/getting-started/database#user-model)
+- [Adapters: Prisma adapter](/getting-started/adapters/prisma)
+- [Next.js: Middleware](/getting-started/session-management/protecting#nextjs-middleware)
+- [TypeScript](/getting-started/typescript)

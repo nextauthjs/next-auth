@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/zoom.svg" height="64" width="64" />
+
+# Zoom Provider
+
+## Resources
+
+- [Zoom OAuth 2.0 Integration Guide](https://developers.zoom.us/docs/integrations/oauth/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/zoom
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/zoom
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ZOOM_ID
+AUTH_ZOOM_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Zoom from "next-auth/providers/zoom"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Zoom],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Zoom from "@auth/sveltekit/providers/zoom"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Zoom],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Zoom from "@auth/express/providers/zoom"
+
+app.use("/auth/*", ExpressAuth({ providers: [Zoom] }))
+```
+
+  </Code.Express>
+</Code>

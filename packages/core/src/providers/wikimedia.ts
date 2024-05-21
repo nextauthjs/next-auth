@@ -214,7 +214,7 @@ export interface WikimediaProfile extends Record<string, any> {
  * :::tip
  *
  * The Wikimedia provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/wikimedia.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -247,7 +247,7 @@ export default function Wikimedia<P extends WikimediaProfile>(
         image: null,
       }
     },
-    style: { logo: "/wikimedia.svg", bg: "#000", text: "#fff" },
+    style: { bg: "#000", text: "#fff" },
     options,
   }
 }

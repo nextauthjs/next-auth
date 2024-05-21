@@ -1,0 +1,39 @@
+# Creating a Framework Integration
+
+The core functionalities of Auth.js - `@auth/core` - are built on top of the Web Standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request)/[Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) mental model, and therefore are framework-agnostic. For each framework, we provide an integration layer that allows you to use the authentication features in a way that is specific to the framework. See the [list of integrations](/getting-started/integrations) that are currently available.
+
+We welcome contributions of new official integrations. If you are interested in creating & maintaining a new integration, please read the following guidelines.
+
+## Official framework guidelines
+
+If you want to create a new official framework integration and distribute it under `@auth/` namespace, please make sure to follow the next steps and fulfill our maintenance requirements below:
+
+### Setting up a new integration
+
+We provide a script that generates all the required files for a new integration. To run the script, run the following command:
+
+```bash
+pnpm setup-fw-integration <framework-name>
+```
+
+This will copy all the files from our official template at `./packages/frameworks-template` to a new directory under `packages/` with all the required files, and rename the placeholders to the name of the framework you provided.
+
+- Coding styles. The source code files should:
+
+  - Be written in TypeScript
+  - Pass the linting rules of the monorepo
+  - Have a named export exported from its main module. For example: `export function ExpressAuth()`
+
+- API reference documentation - We use [TypeDoc](https://typedoc.org/) for automated documentation generation. The documentation should:
+
+  - Be written in JSDoc comments.
+  - Explain how to use and configure the integration: How to do Session management, how to login/logout, how to configure the base URL.
+  - Include a link to the official framework documentation in the reference section.
+
+- Deployed Example. This task can be in a follow-up PR. The deployed example should:
+
+  - All the actions (URL) should work as expected.
+  - Have at least one OAuth provider configured.
+  - The example code should live under `apps/examples/<framework-name>`. For example: `apps/examples/express`.
+
+The above are required for us to distribute the package as an official package. Once the checklist is completed, you can mark the PR as "Ready for review" and the maintainers will review it.

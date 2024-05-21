@@ -1,13 +1,15 @@
+// @ts-nocheck
 import { getSession } from "@auth/express"
-import { NextFunction, Request, Response } from "express"
 import { authConfig } from "../config/auth.config.js"
+import type { NextFunction, Request, Response } from "express"
 
 export async function authenticatedUser(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  const session = res.locals.session ?? (await getSession(req, authConfig))
+  const session =
+    res.locals.session ?? (await getSession(req, authConfig)) ?? undefined
 
   res.locals.session = session
 
@@ -15,7 +17,7 @@ export async function authenticatedUser(
     return next()
   }
 
-  res.status(400).json({ message: "Not Authenticated" })
+  res.status(401).json({ message: "Not Authenticated" })
 }
 
 export async function currentSession(
@@ -23,7 +25,7 @@ export async function currentSession(
   res: Response,
   next: NextFunction,
 ) {
-  const session = await getSession(req, authConfig)
+  const session = (await getSession(req, authConfig)) ?? undefined
   res.locals.session = session
   return next()
 }

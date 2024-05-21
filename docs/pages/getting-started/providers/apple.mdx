@@ -1,0 +1,78 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/apple.svg" width="64" height="65" />
+
+# Apple Provider
+
+## Resources
+
+- Sign in with Apple [Overview](https://developer.apple.com/sign-in-with-apple/get-started/)
+- Sign in with Apple [REST API](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api)
+- [How to retrieve](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple#3383773) the user's information from Apple ID servers
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/apple
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/apple
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_APPLE_ID
+AUTH_APPLE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Apple from "next-auth/providers/apple"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Apple],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Apple from "@auth/sveltekit/providers/apple"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Apple],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Apple from "@auth/express/providers/apple"
+
+app.use("/auth/*", ExpressAuth({ providers: [Apple] }))
+```
+
+  </Code.Express>
+</Code>

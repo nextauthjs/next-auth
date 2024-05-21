@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 export default function Page() {
   const [data, setData] = useState()
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const res = await fetch("/api/protected")
       const json = await res.json()
       setData(json)
@@ -25,8 +25,8 @@ export default function Page() {
         </CustomLink>{" "}
         method.
       </p>
-      <div className="flex flex-col rounded-md bg-neutral-100">
-        <div className="p-4 font-bold rounded-t-md bg-neutral-200">
+      <div className="flex flex-col bg-gray-100 rounded-md">
+        <div className="p-4 font-bold bg-gray-200 rounded-t-md">
           Data from API Route
         </div>
         <pre className="py-6 px-4 whitespace-pre-wrap break-all">
