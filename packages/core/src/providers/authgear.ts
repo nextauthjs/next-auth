@@ -56,11 +56,11 @@ export interface AuthgearProfile extends Record<string, any> {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Authgear({ clientId: process.env.AUTHGEAR_CLIENT_ID, clientSecret: process.env.AUTHGEAR_CLIENT_SECRET, issuer: process.env.AUTHGEAR_ISSUER,})],
+ *   providers: [Authgear({ clientId: process.env.AUTH_AUTHGEAR_CLIENT_ID, clientSecret: process.env.AUTH_AUTHGEAR_CLIENT_SECRET, issuer: process.env.AUTH_AUTHGEAR_ISSUER,})],
  * })
  * ```
  *
- * `AUTHGEAR_ISSUER` is your project endpoint. You can find it in your Authgear Portal.
+ * `AUTH_AUTHGEAR_ISSUER` is your project endpoint. You can find it in your Authgear Portal.
  *
  * ### Resources
  *
