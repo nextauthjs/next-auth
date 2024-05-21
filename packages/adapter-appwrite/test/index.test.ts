@@ -14,7 +14,6 @@ const config: AppwriteAdapterOptions = {
     verification_token_collection_id: process.env.VERIFICATION_TOKEN_COLLECTION_ID as string,
 }
 
-
 const client = new Client();
 client
     .setEndpoint(config.endpoint)
