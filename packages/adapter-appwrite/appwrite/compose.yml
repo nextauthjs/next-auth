@@ -192,15 +192,15 @@ services:
       - _APP_OPTIONS_ABUSE
       - _APP_OPTIONS_ROUTER_PROTECTION
       - _APP_OPENSSL_KEY_V1
-      - _APP_REDIS_HOST=redis
-      - _APP_REDIS_PORT=6379
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
       - _APP_REDIS_USER
       - _APP_REDIS_PASS=
-      - _APP_DB_HOST=mariadb
-      - _APP_DB_PORT=3306
-      - _APP_DB_SCHEMA=appwrite
-      - _APP_DB_USER=user
-      - _APP_DB_PASS=password
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
       - _APP_USAGE_STATS
       - _APP_LOGGING_PROVIDER
       - _APP_LOGGING_CONFIG
@@ -220,15 +220,15 @@ services:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
       - _APP_OPENSSL_KEY_V1
-      - _APP_REDIS_HOST=redis
-      - _APP_REDIS_PORT=6379
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
       - _APP_REDIS_USER
-      - _APP_REDIS_PASS=
-      - _APP_DB_HOST=mariadb
-      - _APP_DB_PORT=3306
-      - _APP_DB_SCHEMA=appwrite
-      - _APP_DB_USER=user
-      - _APP_DB_PASS=password
+      - _APP_REDIS_PASS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
       - _APP_LOGGING_PROVIDER
       - _APP_LOGGING_CONFIG
 
