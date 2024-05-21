@@ -7,7 +7,7 @@
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
     "build": "turbo run build --filter=next-auth --filter=@auth/* --no-deps",
-    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*supabase* --filter=!*dgraph* --filter=!*xata* --filter=!*typeorm*",
+    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*dgraph* --filter=!*xata* --filter=!*typeorm*",
     "test:e2e": "turbo run test:e2e",
     "test:e2e:watch": "turbo run test:e2e -- --ui",
     "clean": "turbo run clean --no-cache",
@@ -17,7 +17,6 @@
     "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
     "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
     "dev:docs": "turbo run dev --filter=docs",
-    "dev:docs:adapters": "turbo run dev --filter=docs",
     "email": "fake-smtp-server",
     "eslint": "eslint --cache .",
     "lint": "prettier --cache --check .",
@@ -31,7 +30,6 @@
     "@actions/core": "^1.10.0",
     "@balazsorban/monorepo-release": "0.5.1",
     "@playwright/test": "1.41.2",
-    "@prettier/plugin-pug": "^3.0.0",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "v6.19.1",
     "@typescript-eslint/parser": "v6.19.1",
@@ -60,7 +58,7 @@
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
   },
-  "packageManager": "pnpm@8.9.2",
+  "packageManager": "pnpm@9.0.6",
   "funding": [
     {
       "type": "github",

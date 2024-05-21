@@ -47,11 +47,11 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * ### Configuration
  * ```ts
  * import NextAuth from "next-auth"
- * import Entra from "next-auth/providers/microsoft-entra-id"
+ * import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
  *
- * const { handlers, auth, signin, signout } = NextAuth({
+ * const { handlers, auth, signIn, signOut } = NextAuth({
  *   providers: [
- *     Entra({
+ *     MicrosoftEntraID({
  *       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
  *       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET
  *     })
@@ -97,10 +97,10 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * In `app/api/auth/[...nextauth]/route.js` find or add the `Entra` entries:
  *
  * ```js
- * import Entra from "next-auth/providers/microsoft-entra-id";
+ * import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
  *
  * providers: [
- *   Entra({
+ *   MicrosoftEntraID({
  *     clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
  *     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
  *     tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
