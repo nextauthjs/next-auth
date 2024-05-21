@@ -243,7 +243,7 @@ export interface NextAuthResult {
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
    *
-   * By default, the user is redirected to the current page after signing in. You can override this behavior by setting the `redirectTo` option.
+   * By default, the user is redirected to the current page after signing in. You can override this behavior by setting the `redirectTo` option with a relative path.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -292,7 +292,7 @@ export interface NextAuthResult {
     options?:
       | FormData
       | ({
-          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          /** The relative path to redirect to after signing in. By default, the user is redirected to the current page. */
           redirectTo?: string
           /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
           redirect?: R
@@ -307,7 +307,7 @@ export interface NextAuthResult {
    * Sign out the user. If the session was created using a database strategy, the session will be removed from the database and the related cookie is invalidated.
    * If the session was created using a JWT, the cookie is invalidated.
    *
-   * By default the user is redirected to the current page after signing out. You can override this behavior by setting the `redirectTo` option.
+   * By default the user is redirected to the current page after signing out. You can override this behavior by setting the `redirectTo` option with a relative path.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -327,7 +327,7 @@ export interface NextAuthResult {
    *
    */
   signOut: <R extends boolean = true>(options?: {
-    /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
+    /** The relative path to redirect to after signing out. By default, the user is redirected to the current page. */
     redirectTo?: string
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
