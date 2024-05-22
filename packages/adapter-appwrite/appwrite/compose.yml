@@ -25,8 +25,6 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - appwrite-config:/storage/config:ro
-      - appwrite-certificates:/storage/certificates:ro
     depends_on:
       - appwrite
     networks:
@@ -54,17 +52,9 @@ services:
       - traefik.http.routers.appwrite_api_https.rule=PathPrefix(`/`)
       - traefik.http.routers.appwrite_api_https.service=appwrite_api
       - traefik.http.routers.appwrite_api_https.tls=true
-    volumes:
-      - appwrite-uploads:/storage/uploads:rw
-      - appwrite-cache:/storage/cache:rw
-      - appwrite-config:/storage/config:rw
-      - appwrite-certificates:/storage/certificates:rw
-      - appwrite-functions:/storage/functions:rw
     depends_on:
       - mariadb
       - redis
-#      - clamav
-      - influxdb
     environment:
       - _APP_ENV
       - _APP_WORKER_PER_CORE
@@ -148,62 +138,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_SCHEDULES
       - _APP_SMS_PROVIDER
       - _APP_SMS_FROM
-      - _APP_GRAPHQL_MAX_BATCH_SIZE
-      - _APP_GRAPHQL_MAX_COMPLEXITY
-      - _APP_GRAPHQL_MAX_DEPTH
-      - _APP_VCS_GITHUB_APP_NAME
-      - _APP_VCS_GITHUB_PRIVATE_KEY
-      - _APP_VCS_GITHUB_APP_ID
-      - _APP_VCS_GITHUB_WEBHOOK_SECRET
-      - _APP_VCS_GITHUB_CLIENT_SECRET
-      - _APP_VCS_GITHUB_CLIENT_ID
-      - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
-      - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
       - _APP_ASSISTANT_OPENAI_API_KEY
-
-  appwrite-realtime:
-    image: appwrite/appwrite:1.4.13
-    entrypoint: realtime
-    container_name: appwrite-realtime
-    <<: *x-logging
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.constraint-label-stack=appwrite"
-      - "traefik.docker.network=appwrite"
-      - "traefik.http.services.appwrite_realtime.loadbalancer.server.port=80"
-      #ws
-      - traefik.http.routers.appwrite_realtime_ws.entrypoints=appwrite_web
-      - traefik.http.routers.appwrite_realtime_ws.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_ws.service=appwrite_realtime
-      # wss
-      - traefik.http.routers.appwrite_realtime_wss.entrypoints=appwrite_websecure
-      - traefik.http.routers.appwrite_realtime_wss.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_wss.service=appwrite_realtime
-      - traefik.http.routers.appwrite_realtime_wss.tls=true
-    networks:
-      - appwrite
-    depends_on:
-      - mariadb
-      - redis
-    environment:
-      - _APP_ENV
-      - _APP_WORKER_PER_CORE
-      - _APP_OPTIONS_ABUSE
-      - _APP_OPTIONS_ROUTER_PROTECTION
-      - _APP_OPENSSL_KEY_V1
-      - _APP_REDIS_HOST
-      - _APP_REDIS_PORT
-      - _APP_REDIS_USER
-      - _APP_REDIS_PASS=
-      - _APP_DB_HOST
-      - _APP_DB_PORT
-      - _APP_DB_SCHEMA
-      - _APP_DB_USER
-      - _APP_DB_PASS
-      - _APP_USAGE_STATS
-      - _APP_LOGGING_PROVIDER
-      - _APP_LOGGING_CONFIG
 
   appwrite-worker-databases:
     image: appwrite/appwrite:1.4.13
@@ -239,8 +174,6 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
-    volumes:
-      - appwrite-mariadb:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=rootsecretpassword
       - MYSQL_DATABASE=appwrite
@@ -260,44 +193,9 @@ services:
       --maxmemory-samples    5
     networks:
       - appwrite
-    volumes:
-      - appwrite-redis:/data:rw
-
-  influxdb:
-    image: appwrite/influxdb:1.5.0
-    container_name: appwrite-influxdb
-    <<: *x-logging
-    restart: unless-stopped
-    networks:
-      - appwrite
-    volumes:
-      - appwrite-influxdb:/var/lib/influxdb:rw
-
-  telegraf:
-    image: appwrite/telegraf:1.4.0
-    container_name: appwrite-telegraf
-    <<: *x-logging
-    restart: unless-stopped
-    networks:
-      - appwrite
-    environment:
-      - _APP_INFLUXDB_HOST
-      - _APP_INFLUXDB_PORT
 
 networks:
   gateway:
     name: gateway
   appwrite:
     name: appwrite
-  runtimes:
-    name: runtimes
-
-volumes:
-  appwrite-mariadb:
-  appwrite-redis:
-  appwrite-cache:
-  appwrite-config:
-  appwrite-influxdb:
-  appwrite-certificates:
-  appwrite-uploads:
-  appwrite-functions:

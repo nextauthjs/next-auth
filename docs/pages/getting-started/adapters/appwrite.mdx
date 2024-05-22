@@ -1,0 +1,138 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/appwrite.svg" width="64" height="64" />
+
+# Appwrite Adapter
+
+## Resources
+
+- [Appwrite Docs](https://appwrite.io/docs)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install node-appwrite @auth/appwrite-adapter
+```
+
+### Environment Variables
+
+```sh
+APPWRITE_ENDPOINT=https://cloud.appwrite.io./v1
+APPWRITE_PROJECT_ID=98c64b51abf86b1f8131
+APPWRITE_API_KEY=0e870axxxxxxxxxxcbd8a
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { AppwriteAdapter } from "@auth/appwrite-adapter"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: AppwriteAdapter({
+    endpoint: process.env.APPWRITE_ENDPOINT,
+    project_id: process.env.APPWRITE_PROJECT_ID,
+    api_key_secret: process.env.APPWRITE_API_KEY
+  }),
+})
+```
+
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { AppwriteAdapter } from "@auth/appwrite-adapter"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: AppwriteAdapter({
+    endpoint: process.env.APPWRITE_ENDPOINT,
+    project_id: process.env.APPWRITE_PROJECT_ID,
+    api_key_secret: process.env.APPWRITE_API_KEY
+  }),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { AppwriteAdapter } from "@auth/appwrite-adapter"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: AppwriteAdapter({
+        endpoint: process.env.APPWRITE_ENDPOINT,
+        project_id: process.env.APPWRITE_PROJECT_ID,
+        api_key_secret: process.env.APPWRITE_API_KEY
+    }),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+Within the constructor you can also define `database_id`, `user_collection_id`, `session_collection_id`, `account_collection_id`, `verification_token_collection_id`. These default to the ID's explained in the [Schema](#schema) section.
+
+<Callout>
+This adapter uses Appwrite Database to store user and session data in a separate `next_auth` database. It is a standalone Auth server that does not interface with Appwrite Auth and therefore provides a different feature set.
+</Callout>
+
+### Schema
+
+Setup your database as described in our main [schema](https://authjs.dev/reference/core/adapters#models), by creating the `next_auth` database, if you keep the ID the same as the name you don't need to define the database ID in the constructor.
+
+Next create the following collections within the database you just created, just like the database if your ID's match the ones in the brackets you do not have to define them in the constructor.
+
+#### User Collection (`users`)
+| Attribute Name | Attribute Type | Max Length | Required |
+|----------------|----------------|------------|----------|
+| name           | string         | 100        | false    |
+| email          | string         | 100        | false    |
+| emailVerified  | datetime       | n/a        | false    |
+| image          | string         | 200        | false    |
+
+#### Session Collection (`sessions`)
+| Attribute Name | Attribute Type | Max Length | Required |
+|----------------|----------------|------------|----------|
+| sessionToken   | string         | 200        | true     |
+| expires        | datetime       | n/a        | true     |
+
+#### Account Collection (`accounts`)
+| Attribute Name     | Attribute Type | Max Length | Required |
+|--------------------|----------------|------------|----------|
+| type               | string         | 100        | true     |
+| provider           | string         | 100        | true     |
+| providerAccountId  | string         | 200        | true     |
+| refresh_token      | string         | 200        | false    |
+| access_token       | string         | 200        | false    |
+| expires_at         | integer        | n/a        | false    |
+| token_type         | string         | 100        | false    |
+| scope              | string         | 200        | false    |
+| id_token           | string         | 100        | false    |
+| session_state      | string         | 200        | false    |
+| oauth_token_secret | string         | 200        | false    |
+| oauth_token        | string         | 200        | false    |
+
+#### Verification Token Collection (`verification_tokens`)
+| Attribute Name | Attribute Type | Max Length | Required |
+|----------------|----------------|------------|----------|
+| identifier     | string         | 200        | false    |
+| token          | string         | 200        | false    |
+| expires        | datetime       | n/a        | true     |

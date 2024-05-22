@@ -22,11 +22,11 @@ export interface AppwriteAdapterOptions {
     endpoint: string,
     project_id: string,
     api_key_secret: string,
-    database_id: string,
-    user_collection_id: string,
-    session_collection_id: string,
-    account_collection_id: string,
-    verification_token_collection_id: string;
+    database_id?: string,
+    user_collection_id?: string,
+    session_collection_id?: string,
+    account_collection_id?: string,
+    verification_token_collection_id?: string;
 }
 
 function isDate(date: any) {
@@ -147,6 +147,13 @@ export function AppwriteAdapter(config: AppwriteAdapterOptions): Adapter {
         .setEndpoint(config.endpoint)
         .setProject(config.project_id)
         .setKey(config.api_key_secret);
+
+    // Set optional parameters
+    config.database_id = config.database_id ?? 'next_auth';
+    config.session_collection_id = config.session_collection_id ?? 'sessions';
+    config.user_collection_id = config.user_collection_id ?? 'users';
+    config.account_collection_id = config.account_collection_id ?? 'accounts';
+    config.verification_token_collection_id = config.verification_token_collection_id ?? 'verification_tokens';
 
     const databases = new Databases(client);
 

@@ -1,4 +1,5 @@
 export default {
+  appwrite: "Appwrite",
   "azure-tables": "Azure Tables",
   d1: "Cloudflare D1",
   dgraph: "Dgraph",
@@ -21,5 +22,5 @@ export default {
   typeorm: "TypeORM",
   unstorage: "Unstorage",
   "upstash-redis": "Upstash Redis",
-  xata: "Xata",
+  xata: "Xata"
 }
