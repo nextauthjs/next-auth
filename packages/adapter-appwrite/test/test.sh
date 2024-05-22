@@ -10,11 +10,6 @@ if [ $? -ne 0 ]; then
     cleanup_and_exit 1
 fi
 
-source .env && bun run ./appwrite/database.ts
-if [ $? -ne 0 ]; then
-    cleanup_and_exit 1
-fi
-
 # Run tests
 source .env && vitest run -c ../utils/vitest.config.ts
 if [ $? -ne 0 ]; then
