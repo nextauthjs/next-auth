@@ -8,6 +8,7 @@
         "dist/**",
         "lib/**",
         "providers/**",
+        "generated/**",
         "*.js",
         "*.d.ts",
         "*.d.ts.map",
@@ -39,42 +40,38 @@
     "@auth/xata-adapter#test": {
       "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
+    "@auth/hasura-adapter#build": {
+      "dependsOn": ["@auth/core#build"],
+      "outputs": [
+        "lib/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/generated/**"
+      ]
+    },
     "docs#dev": {
       "dependsOn": [
+        "next-auth#build",
         "@auth/core#build",
-        "@auth/appwrite-adapter#build",
-        "@auth/azure-tables-adapter#build",
-        "@auth/d1-adapter#build",
-        "@auth/dgraph-adapter#build",
-        "@auth/drizzle-adapter#build",
-        "@auth/dynamodb-adapter#build",
-        "@auth/edgedb-adapter#build",
-        "@auth/fauna-adapter#build",
-        "@auth/firebase-adapter#build",
-        "@auth/hasura-adapter#build",
-        "@auth/kysely-adapter#build",
-        "@auth/mikro-orm-adapter#build",
-        "@auth/mongodb-adapter#build",
-        "@auth/neo4j-adapter#build",
-        "@auth/pg-adapter#build",
-        "@auth/pouchdb-adapter#build",
-        "@auth/prisma-adapter#build",
-        "@auth/sequelize-adapter#build",
-        "@auth/solid-start#build",
-        "@auth/supabase-adapter#build",
-        "@auth/surrealdb-adapter#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
-        "@auth/typeorm-adapter#build",
-        "@auth/unstorage-adapter#build",
-        "@auth/upstash-redis-adapter#build",
-        "@auth/xata-adapter#build",
-        "next-auth#build",
-        "^build"
+        "@auth/solid-start#build"
       ],
       "cache": false
     },
     "docs#build": {
+      "inputs": [
+        "pages/**",
+        "utils/**",
+        "public/**",
+        "components/**",
+        "theme.config.tsx",
+        "typedoc*",
+        "vercel.json",
+        "next-sitemap.config.cjs",
+        "next.config.js"
+      ],
       "dependsOn": [
         "@auth/core#build",
         "@auth/appwrite-adapter#build",
@@ -107,14 +104,10 @@
         "^build"
       ],
       "outputs": [
-        ".docusaurus/**/*",
-        "build/**/*",
-        "docs/reference/adapter/**",
-        "docs/reference/core/**/*",
-        "docs/reference/nextjs/**/*",
-        "docs/reference/solidstart/**/*",
-        "docs/reference/sveltekit/**/*",
-        "docs/reference/express/**/*"
+        ".next/**/*",
+        "!.next/cache/**",
+        "docs/reference/**",
+        "!docs/reference/_meta.js"
       ]
     }
   }

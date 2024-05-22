@@ -1,12 +1,7 @@
 import type { Client } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
-import type {
-  AuthConfig,
-  Awaitable,
-  Profile,
-  TokenSet,
-  User,
-} from "../types.js"
+import type { Awaitable, Profile, TokenSet, User } from "../types.js"
+import type { AuthConfig } from "../index.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -98,12 +93,16 @@ export type ProfileCallback<Profile> = (
 export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
 
 export interface OAuthProviderButtonStyles {
-  logo: string
-  logoDark?: string
-  bg: string
-  bgDark?: string
-  text: string
-  textDark?: string
+  logo?: string
+  /**
+   * @deprecated
+   */
+  text?: string
+  /**
+   * @deprecated Please use 'brandColor' instead
+   */
+  bg?: string
+  brandColor?: string
 }
 
 /** TODO: Document */
@@ -213,7 +212,7 @@ export interface OAuth2Config<Profile>
    *
    * Automatic account linking on sign in is not secure
    * between arbitrary providers and is disabled by default.
-   * Learn more in our [Security FAQ](https://authjs.dev/reference/faq#security).
+   * Learn more in our [Security FAQ](https://authjs.dev/concepts#security).
    *
    * However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address
    * associated with the account. Set `allowDangerousEmailAccountLinking: true`

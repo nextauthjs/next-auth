@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Get help from the community (Discord)
+    url: https://discord.authjs.dev
+    about: Ask questions and discuss with other community members
   - name: Ask a question
     url: https://github.com/nextauthjs/next-auth/discussions/new?category=questions
     about: Ask questions and discuss with other community members

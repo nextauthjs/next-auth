@@ -1,0 +1,31 @@
+{
+  "name": "broken-link-checker",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Find broken links as a GitHub Action",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "npx tsup --clean --minify --format esm src/index.ts",
+    "types": "tsc"
+  },
+  "keywords": [
+    "typescript",
+    "broken-link-checker",
+    "github-action"
+  ],
+  "author": "ndom91 <yo@ndo.dev> (https://ndo.dev/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.15",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "broken-link-checker": "^0.7.8"
+  }
+}

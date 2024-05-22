@@ -1,6 +1,7 @@
-import type { AuthAction, AuthConfig } from "../../types.js"
+import type { AuthAction } from "../../types.js"
 import { MissingSecret } from "../../errors.js"
 import { logger } from "./logger.js"
+import type { AuthConfig } from "../../index.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
@@ -22,12 +23,6 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     }
   }
 
-  if (!config.secret?.length) {
-    throw new MissingSecret(
-      "Missing secret, please set AUTH_SECRET or config.secret"
-    )
-  }
-
   config.redirectProxyUrl ??= envObject.AUTH_REDIRECT_PROXY_URL
   config.trustHost ??= !!(
     envObject.AUTH_URL ??
@@ -38,7 +33,7 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
-    const ID = finalProvider.id.toUpperCase()
+    const ID = finalProvider.id.toUpperCase().replace(/-/g, "_")
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
       finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
@@ -76,8 +71,11 @@ export function createActionURL(
     const detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
     const detectedProtocol =
       headers.get("x-forwarded-proto") ?? protocol ?? "https"
+    const _protocol = detectedProtocol.endsWith(":")
+      ? detectedProtocol
+      : detectedProtocol + ":"
 
-    url = new URL(`${detectedProtocol}://${detectedHost}`)
+    url = new URL(`${_protocol}//${detectedHost}`)
   }
 
   // remove trailing slash

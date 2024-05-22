@@ -52,7 +52,6 @@ model VerificationToken {
 }
 
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -63,4 +62,6 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }

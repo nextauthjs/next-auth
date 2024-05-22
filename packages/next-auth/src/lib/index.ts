@@ -26,7 +26,6 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
      *
      * @example
      * ```ts title="app/auth.ts"
-     * ...
      * async authorized({ request, auth }) {
      *   const url = request.nextUrl
      *
@@ -41,7 +40,6 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
      *   // Logged in users are authenticated, otherwise redirect to login page
      *   return !!auth.user
      * }
-     * ...
      * ```
      *
      * :::warning
@@ -76,9 +74,9 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
     callbacks: {
       ...config.callbacks,
       // Since we are server-side, we don't need to filter out the session data
-      // See https://authjs.dev/guides/upgrade-to-v5/v5#authenticating-server-side
+      // See https://authjs.dev/getting-started/migrating-to-v5#authenticating-server-side
       // TODO: Taint the session data to prevent accidental leakage to the client
-      // https://react.devreference/nextjs/react/experimental_taintObjectReference
+      // https://react.dev/reference/react/experimental_taintObjectReference
       async session(...args) {
         const session =
           // If the user defined a custom session callback, use that instead

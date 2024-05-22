@@ -7,31 +7,28 @@
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
     "build": "turbo run build --filter=next-auth --filter=@auth/* --no-deps",
-    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*supabase* --filter=!*dgraph* --filter=!*xata* --filter=!*typeorm*",
+    "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*dgraph* --filter=!*xata* --filter=!*typeorm*",
     "test:e2e": "turbo run test:e2e",
     "test:e2e:watch": "turbo run test:e2e -- --ui",
     "clean": "turbo run clean --no-cache",
-    "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
-    "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=@auth/core --filter=!./packages/adapter-*",
-    "dev-v4:db": "turbo run dev --parallel --continue --filter=next-auth-app-v4...",
-    "dev-v4": "turbo run dev --parallel --continue --filter=next-auth-app-v4... --filter=!./packages/adapter-*",
+    "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev:kit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
-    "dev:docs": "TYPEDOC_SKIP_ADAPTERS=1 turbo run dev --filter=docs",
-    "dev:docs:adapters": "turbo run dev --filter=docs",
+    "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
+    "dev:example": "turbo run dev --parallel --continue --filter=nextjs-example-app... --filter=!./packages/adapter-*",
+    "dev:docs": "turbo run dev --filter=docs",
     "email": "fake-smtp-server",
     "eslint": "eslint --cache .",
-    "lint": "prettier --check .",
-    "format": "prettier --write .",
+    "lint": "prettier --cache --check .",
+    "format": "prettier --cache --write .",
     "release": "release",
     "peek": "pnpm release --peek",
     "version:pr": "node ./config/version-pr",
-    "e2e": "turbo run e2e --filter=next-auth-app",
     "setup-fw-integration": "pnpm clean --filter=@auth/frameworks-template && node packages/utils/scripts/setup-fw-integration.js"
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
-    "@balazsorban/monorepo-release": "0.5.0",
+    "@balazsorban/monorepo-release": "0.5.1",
     "@playwright/test": "1.41.2",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "v6.19.1",
@@ -46,20 +43,22 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.11",
-    "eslint-plugin-svelte3": "^4.0.0",
+    "eslint-plugin-svelte": "^2.38.0",
     "fake-smtp-server": "^0.8.0",
     "prettier": "3.1.1",
     "prettier-plugin-svelte": "^3.1.2",
+    "prettier-plugin-tailwindcss": "^0.5.13",
+    "svelte-eslint-parser": "^0.35.0",
     "turbo": "^1.11.3",
     "typescript": "5.3.3",
     "utils": "workspace:*",
-    "vite": "^5.0.12",
+    "vite": "^5.0.13",
     "vitest": "1.2.2"
   },
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
   },
-  "packageManager": "pnpm@8.9.2",
+  "packageManager": "pnpm@9.0.6+sha512.f6d863130973207cb7a336d6b439a242a26ac8068077df530d6a86069419853dc1ffe64029ec594a9c505a3a410d19643c870aba6776330f5cfddcf10a9c1617",
   "funding": [
     {
       "type": "github",
@@ -90,10 +89,7 @@
     ".svelte-kit",
     ".next",
     ".nuxt",
-    ".docusaurus",
     "build",
-    "docs/docs/reference/core",
-    "docs/docs/reference/sveltekit",
     "static",
     "coverage",
     "dist",
@@ -109,7 +105,6 @@
     "firestore-debug.log",
     "migrations",
     "test.schema.gql",
-    "apps/example-sveltekit",
     "apps",
     "packages/**/*test*"
   ],
@@ -160,17 +155,6 @@
       },
       {
         "files": [
-          "docs/**"
-        ],
-        "plugins": [
-          "@docusaurus"
-        ],
-        "extends": [
-          "plugin:@docusaurus/recommended"
-        ]
-      },
-      {
-        "files": [
           "packages/{core,sveltekit}/*.ts"
         ],
         "plugins": [
@@ -202,20 +186,27 @@
         "files": [
           "packages/frameworks-sveltekit"
         ],
-        "plugins": [
-          "svelte3"
+        "extends": [
+          "plugin:svelte/recommended"
         ],
         "overrides": [
           {
             "files": [
               "*.svelte"
             ],
-            "processor": "svelte3/svelte3"
+            "parser": "svelte-eslint-parser",
+            "parserOptions": {
+              "parser": "@typescript-eslint/parser"
+            }
           }
         ],
+        "parser": "@typescript-eslint/parser",
         "parserOptions": {
           "sourceType": "module",
-          "ecmaVersion": 2020
+          "ecmaVersion": 2020,
+          "extraFileExtensions": [
+            ".svelte"
+          ]
         },
         "env": {
           "browser": true,
@@ -236,27 +227,14 @@
   "prettier": {
     "semi": false,
     "singleQuote": false,
-    "trailingComma": "es5",
-    "overrides": [
-      {
-        "files": [
-          "apps/dev/nextjs/app/api/auth/[...nextauth]/route.ts",
-          "docs/{sidebars,docusaurus.config}.js",
-          "packages/next-auth/src/lib/env.ts",
-          "apps/examples/nextjs/auth.ts"
-        ],
-        "options": {
-          "printWidth": 150
-        }
-      }
-    ]
+    "trailingComma": "es5"
   },
   "pnpm": {
     "overrides": {
       "mailparser": "3.6.6"
     },
     "patchedDependencies": {
-      "@balazsorban/monorepo-release@0.5.0": "patches/@balazsorban__monorepo-release@0.5.0.patch"
+      "@balazsorban/monorepo-release@0.5.1": "patches/@balazsorban__monorepo-release@0.5.1.patch"
     }
   }
 }

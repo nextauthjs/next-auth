@@ -1,0 +1,76 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/auth0.svg" width="64" height="64" />
+
+# Auth0 Provider
+
+## Resources
+
+- [Auth0 docs](https://auth0.com/docs/authenticate)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/auth0
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/auth0
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_AUTH0_ID
+AUTH_AUTH0_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Auth0 from "next-auth/providers/auth0"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Auth0],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Auth0 from "@auth/sveltekit/providers/auth0"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Auth0],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Auth0 from "@auth/express/providers/auth0"
+
+app.use("/auth/*", ExpressAuth({ providers: [Auth0] }))
+```
+
+  </Code.Express>
+</Code>

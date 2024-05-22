@@ -5,6 +5,7 @@ import Google from "next-auth/providers/google"
 import Facebook from "next-auth/providers/facebook"
 import Twitter from "next-auth/providers/twitter"
 import Keycloak from "next-auth/providers/keycloak"
+import LinkedIn from "next-auth/providers/linkedin"
 
 declare module "next-auth" {
   /**
@@ -41,19 +42,12 @@ export default {
     Keycloak,
     Facebook,
     Twitter,
+    LinkedIn,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
       if (trigger === "update") token.name = session.user.name
       return token
-    },
-    async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...token,
-        },
-      }
     },
   },
   basePath: "/auth",

@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/battlenet.svg" height="64" width="64" />
+
+# Battle.net Provider
+
+## Resources
+
+- [BattleNet OAuth documentation](https://develop.battle.net/documentation/guides/using-oauth)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/battlenet
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/battlenet
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_BATTLENET_ID
+AUTH_BATTLENET_SECRET
+AUTH_BATTLENET_ISSUER
+```
+
+issuer must be one of these values, based on the available regions:
+
+```
+type BattleNetIssuer =
+| "https://www.battlenet.com.cn/oauth"
+| "https://us.battle.net/oauth"
+| "https://eu.battle.net/oauth"
+| "https://kr.battle.net/oauth"
+| "https://tw.battle.net/oauth"
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import BattleNet from "next-auth/providers/battlenet";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [BattleNet({
+    clientId: AUTH_BATTLENET_CLIENT_ID
+    clientSecret: AUTH_BATTLENET_CLIENT_SECRET
+    issuer: AUTH_BATTLENET_ISSUER
+  })]
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit";
+import BattleNet from "@auth/sveltekit/providers/battlenet";
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [BattleNet({
+    clientId: AUTH_BATTLENET_CLIENT_ID
+    clientSecret: AUTH_BATTLENET_CLIENT_SECRET
+    issuer: AUTH_BATTLENET_ISSUER
+  })]
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express";
+import BattleNet from "@auth/express/providers/battlenet";
+
+app.use("/auth/*", ExpressAuth({
+  providers: [BattleNet({
+    clientId: AUTH_BATTLENET_CLIENT_ID
+    clientSecret: AUTH_BATTLENET_CLIENT_SECRET
+    issuer: AUTH_BATTLENET_ISSUER
+  })]
+}));
+```
+
+  </Code.Express>
+</Code>
