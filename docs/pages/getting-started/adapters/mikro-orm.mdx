@@ -13,7 +13,7 @@ import { Code } from "@/components/Code"
 ### Installation
 
 ```bash npm2yarn
-npm install @mikro-orm/core @auth/mikro-orm-adapter
+npm install @mikro-orm/core @mikro-orm/knex @mikro-orm/sqlite @auth/mikro-orm-adapter
 ```
 
 ### Environment Variables
@@ -30,12 +30,13 @@ DATABASE_CONNECTION_STRING=./db.sqlite
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+import { SqliteDriver } from "@mikro-orm/sqlite"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MikroOrmAdapter({
     // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
     dbName: process.env.DATABASE_CONNECTION_STRING,
-    type: "sqlite",
+    driver: SqliteDriver,
     debug: true,
   }),
   providers: [],
@@ -48,12 +49,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+import { SqliteDriver } from "@mikro-orm/sqlite"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: MikroOrmAdapter({
     // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
     dbName: process.env.DATABASE_CONNECTION_STRING,
-    type: "sqlite",
+    driver: SqliteDriver,
     debug: true,
   }),
   providers: [],
@@ -66,6 +68,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+import { SqliteDriver } from "@mikro-orm/sqlite"
 
 const app = express()
 
@@ -77,7 +80,7 @@ app.use(
     adapter: MikroOrmAdapter({
       // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
       dbName: process.env.DATABASE_CONNECTION_STRING,
-      type: "sqlite",
+      driver: SqliteDriver,
       debug: true,
     }),
   })
