@@ -20,9 +20,9 @@ npm install node-appwrite @auth/appwrite-adapter
 ### Environment Variables
 
 ```sh
-APPWRITE_ENDPOINT
-APPWRITE_PROJECT_ID
-APPWRITE_API_KEY
+APPWRITE_ENDPOINT=https://cloud.appwrite.io./v1
+APPWRITE_PROJECT_ID=98c64b51abf86b1f8131
+APPWRITE_API_KEY=0e870axxxxxxxxxxcbd8a
 ```
 
 ### Configuration
@@ -91,7 +91,7 @@ app.use(
 Within the constructor you can also define `database_id`, `user_collection_id`, `session_collection_id`, `account_collection_id`, `verification_token_collection_id`. These default to the ID's explained in the [Schema](#schema) section.
 
 <Callout>
-This adapter is developed by the community and not officially maintained or supported by Appwrite. It uses the Appwrite Database to store user and session data in a separate `next_auth` database. It is a standalone Auth server that does not interface with Appwrite Auth and therefore provides a different feature set.
+This adapter uses Appwrite Database to store user and session data in a separate `next_auth` database. It is a standalone Auth server that does not interface with Appwrite Auth and therefore provides a different feature set.
 </Callout>
 
 ### Schema
