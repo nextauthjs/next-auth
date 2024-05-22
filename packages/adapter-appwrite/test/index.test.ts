@@ -7,13 +7,13 @@ import { provisionProject } from "./provisionProject.ts";
 
 const config: AppwriteAdapterOptions = {
     endpoint: process.env.ENDPOINT ?? 'http://localhost/v1' as string,
-    project_id: process.env.PROJECT_ID ?? '65eac3fb04f81494cd54' as string,
+    project_id: process.env.PROJECT_ID ?? 'test-project' as string,
     api_key_secret: process.env.API_KEY_SECRET ?? '' as string,
-    database_id: process.env.DATABASE_ID ?? '65f08e66dcd4c9ea5270'as string,
-    user_collection_id: process.env.USER_COLLECTION_ID ?? '65f08e516e74f05f2d74' as string,
-    session_collection_id: process.env.SESSION_COLLECTION_ID ?? '65ea775bh75376064dd' as string,
-    account_collection_id: process.env.ACCOUNT_COLLECTION_ID ?? '65f08e487033fbe725c0' as string,
-    verification_token_collection_id: process.env.VERIFICATION_TOKEN_COLLECTION_ID ?? '65f08b757487d402e4ba' as string,
+    database_id: process.env.DATABASE_ID ?? 'next_auth' as string,
+    user_collection_id: process.env.USER_COLLECTION_ID ?? 'users' as string,
+    session_collection_id: process.env.SESSION_COLLECTION_ID ?? 'sessions' as string,
+    account_collection_id: process.env.ACCOUNT_COLLECTION_ID ?? 'accounts' as string,
+    verification_token_collection_id: process.env.VERIFICATION_TOKEN_COLLECTION_ID ?? 'verification_tokens' as string,
 }
 
 config.api_key_secret = await provisionProject(config);
