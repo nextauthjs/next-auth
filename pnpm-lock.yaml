@@ -66,7 +66,7 @@ importers:
         version: 7.33.2(eslint@8.30.0)
       eslint-plugin-svelte:
         specifier: ^2.38.0
-        version: 2.38.0(eslint@8.30.0)(svelte@4.2.9)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.11.7)(typescript@5.3.3))
+        version: 2.38.0(eslint@8.30.0)(svelte@4.2.9)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))
       fake-smtp-server:
         specifier: ^0.8.0
         version: 0.8.0
@@ -179,7 +179,7 @@ importers:
         version: link:../../../packages/adapter-unstorage
       unstorage:
         specifier: ^1.10.2
-        version: 1.10.2(@azure/data-tables@13.2.2)(@azure/identity@1.5.2)(@upstash/redis@1.28.2)(@vercel/kv@1.0.1)(ioredis@5.4.1)
+        version: 1.10.2(@azure/data-tables@13.2.2)(@vercel/kv@1.0.1)(ioredis@5.4.1)
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: next
@@ -195,7 +195,7 @@ importers:
         version: 4.2.9
       svelte-check:
         specifier: 2.10.2
-        version: 2.10.2(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)
+        version: 2.10.2(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)
       typescript:
         specifier: 5.2.2
         version: 5.2.2
@@ -277,7 +277,7 @@ importers:
         version: 1.3.0
       tailwindcss:
         specifier: ^3.4.3
-        version: 3.4.3(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5))
+        version: 3.4.3(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))
       typedoc:
         specifier: ^0.25.13
         version: 0.25.13(typescript@5.4.5)
@@ -338,7 +338,7 @@ importers:
         version: 0.20.17
       drizzle-orm:
         specifier: ^0.30.9
-        version: 0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.13.4(typescript@5.4.5))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13)))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.2.0)(sqlite3@5.1.6(encoding@0.1.13))
+        version: 0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.13.4(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.2.0)(sqlite3@5.1.6)
       libsql:
         specifier: ^0.3.18
         version: 0.3.18
@@ -386,7 +386,7 @@ importers:
         version: 1.3.1
       fauna-shell:
         specifier: 1.2.1
-        version: 1.2.1(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(encoding@0.1.13)(typescript@5.4.5)
+        version: 1.2.1(@swc/core@1.3.106)(@types/node@20.12.7)(encoding@0.1.13)(typescript@5.4.5)
 
   packages/adapter-firebase:
     dependencies:
@@ -457,7 +457,7 @@ importers:
     devDependencies:
       mongodb:
         specifier: ^6.0.0
-        version: 6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1)
+        version: 6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0)(socks@2.7.1)
 
   packages/adapter-neo4j:
     dependencies:
@@ -575,10 +575,10 @@ importers:
         version: 8.11.3
       typeorm:
         specifier: 0.3.17
-        version: 0.3.17(better-sqlite3@9.6.0)(ioredis@5.4.1)(mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1))(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5))
+        version: 0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))
       typeorm-naming-strategies:
         specifier: ^4.1.0
-        version: 4.1.0(typeorm@0.3.17(better-sqlite3@9.6.0)(ioredis@5.4.1)(mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1))(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)))
+        version: 4.1.0(typeorm@0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))
 
   packages/adapter-unstorage:
     dependencies:
@@ -591,7 +591,7 @@ importers:
         version: 4.6.12
       unstorage:
         specifier: ^1.10.1
-        version: 1.10.1(@azure/data-tables@13.2.2)(@azure/identity@1.5.2)(@upstash/redis@1.28.2)(@vercel/kv@1.0.1)
+        version: 1.10.1(@azure/data-tables@13.2.2)(@upstash/redis@1.28.2)
 
   packages/adapter-upstash-redis:
     dependencies:
@@ -625,8 +625,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@simplewebauthn/server':
-        specifier: ^9.0.2
-        version: 9.0.2(encoding@0.1.13)
+        specifier: ^10.0.0
+        version: 10.0.0(encoding@0.1.13)
       '@types/cookie':
         specifier: 0.6.0
         version: 0.6.0
@@ -753,7 +753,7 @@ importers:
         version: 4.2.9
       svelte-check:
         specifier: ^3.4.3
-        version: 3.6.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)
+        version: 3.6.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)
       tslib:
         specifier: ^2.4.1
         version: 2.6.2
@@ -776,11 +776,11 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@simplewebauthn/browser':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^10.0.0
+        version: 10.0.0
       '@simplewebauthn/server':
-        specifier: ^9.0.2
-        version: 9.0.2(encoding@0.1.13)
+        specifier: ^10.0.0
+        version: 10.0.0(encoding@0.1.13)
     devDependencies:
       '@types/react':
         specifier: 18.0.37
@@ -1815,36 +1815,6 @@ packages:
 
   '@braintree/sanitize-url@6.0.4':
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
-
-  '@cbor-extract/cbor-extract-darwin-arm64@2.2.0':
-    resolution: {integrity: sha512-P7swiOAdF7aSi0H+tHtHtr6zrpF3aAq/W9FXx5HektRvLTM2O89xCyXF3pk7pLc7QpaY7AoaE8UowVf9QBdh3w==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@cbor-extract/cbor-extract-darwin-x64@2.2.0':
-    resolution: {integrity: sha512-1liF6fgowph0JxBbYnAS7ZlqNYLf000Qnj4KjqPNW4GViKrEql2MgZnAsExhY9LSy8dnvA4C0qHEBgPrll0z0w==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@cbor-extract/cbor-extract-linux-arm64@2.2.0':
-    resolution: {integrity: sha512-rQvhNmDuhjTVXSPFLolmQ47/ydGOFXtbR7+wgkSY0bdOxCFept1hvg59uiLPT2fVDuJFuEy16EImo5tE2x3RsQ==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@cbor-extract/cbor-extract-linux-arm@2.2.0':
-    resolution: {integrity: sha512-QeBcBXk964zOytiedMPQNZr7sg0TNavZeuUCD6ON4vEOU/25+pLhNN6EDIKJ9VLTKaZ7K7EaAriyYQ1NQ05s/Q==}
-    cpu: [arm]
-    os: [linux]
-
-  '@cbor-extract/cbor-extract-linux-x64@2.2.0':
-    resolution: {integrity: sha512-cWLAWtT3kNLHSvP4RKDzSTX9o0wvQEEAj4SKvhWuOVZxiDAeQazr9A+PSiRILK1VYMLeDml89ohxCnUNQNQNCw==}
-    cpu: [x64]
-    os: [linux]
-
-  '@cbor-extract/cbor-extract-win32-x64@2.2.0':
-    resolution: {integrity: sha512-l2M+Z8DO2vbvADOBNLbbh9y5ST1RY5sqkWOg/58GkUPBYou/cuNZ68SGQ644f1CvZ8kcOxyZtw06+dxWHIoN/w==}
-    cpu: [x64]
-    os: [win32]
 
   '@changesets/get-dependents-graph@1.3.6':
     resolution: {integrity: sha512-Q/sLgBANmkvUm09GgRsAvEtY3p1/5OCzgBE5vX3vgb5CvW0j7CEljocx5oPXeQSNph6FXulJlXV3Re/v3K3P3Q==}
@@ -4040,19 +4010,25 @@ packages:
   '@sideway/pinpoint@2.0.0':
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
 
+  '@simplewebauthn/browser@10.0.0':
+    resolution: {integrity: sha512-hG0JMZD+LiLUbpQcAjS4d+t4gbprE/dLYop/CkE01ugU/9sKXflxV5s0DRjdz3uNMFecatRfb4ZLG3XvF8m5zg==}
+
   '@simplewebauthn/browser@9.0.0':
     resolution: {integrity: sha512-8eukKf8ZuZUUTSwp97VRYJqv1t7Vg2LKKfGY5Ir8EtXOZhUbGCAFmL4mxSatb5gj0ARqmcGjyUXM6s6nYJxDsQ==}
 
   '@simplewebauthn/browser@9.0.1':
     resolution: {integrity: sha512-wD2WpbkaEP4170s13/HUxPcAV5y4ZXaKo1TfNklS5zDefPinIgXOpgz1kpEvobAsaLPa2KeH7AKKX/od1mrBJw==}
 
-  '@simplewebauthn/server@9.0.2':
-    resolution: {integrity: sha512-aaWA+qVOU4byk5IDb/l+M1+7dmrAJhTb4ISJHucpsgRQcMMEes76tbGIqO2JQuA7N50tc/OBrnGKBjoKYG1kSw==}
-    engines: {node: '>=16.0.0'}
+  '@simplewebauthn/server@10.0.0':
+    resolution: {integrity: sha512-w5eIoiF7ltg1sgggjY5Tx654j+DBuyEx2B3869jjmPp0xl2Z4BUP4kJ3yJ6DnZIv+ZYYntT3E6nZXNjPOQbrtw==}
+    engines: {node: '>=20.0.0'}
 
   '@simplewebauthn/server@9.0.3':
     resolution: {integrity: sha512-FMZieoBosrVLFxCnxPFD9Enhd1U7D8nidVDT4MsHc6l4fdVcjoeHjDueeXCloO1k5O/fZg1fsSXXPKbY2XTzDA==}
     engines: {node: '>=16.0.0'}
+
+  '@simplewebauthn/types@10.0.0':
+    resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
 
   '@simplewebauthn/types@9.0.0':
     resolution: {integrity: sha512-Lo6LLNQee66D//KueYy9AyX7oiQ7BBKJgdLzP3l0HJDrV4GRSzSAii8AtigBGOeNc8hOQsF/D8itItyuZX9djA==}
@@ -5872,13 +5848,6 @@ packages:
   catharsis@0.9.0:
     resolution: {integrity: sha512-prMTQVpcns/tzFgFVkVp6ak6RykZyWb3gu8ckUpd6YkTlacOd3DXGJjIpD4Q6zJirizvaiAjSSHlOsA+6sNh2A==}
     engines: {node: '>= 10'}
-
-  cbor-extract@2.2.0:
-    resolution: {integrity: sha512-Ig1zM66BjLfTXpNgKpvBePq271BPOvu8MR0Jl080yG7Jsl+wAZunfrwiwA+9ruzm/WEdIV5QF/bjDZTqyAIVHA==}
-    hasBin: true
-
-  cbor-x@1.5.8:
-    resolution: {integrity: sha512-gc3bHBsvG6GClCY6c0/iip+ghlqizkVp+TtaL927lwvP4VP9xBdi1HmqPR5uj/Mj/0TOlngMkIYa25wKg+VNrQ==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -8687,7 +8656,6 @@ packages:
 
   libsql@0.3.18:
     resolution: {integrity: sha512-lvhKr7WV3NLWRbXkjn/MeKqXOAqWKU0PX9QYrvDh7fneukapj+iUQ4qgJASrQyxcCrEsClXCQiiK5W6OoYPAlA==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lil-fp@1.4.5:
@@ -9665,10 +9633,6 @@ packages:
   node-forge@1.3.1:
     resolution: {integrity: sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==}
     engines: {node: '>= 6.13.0'}
-
-  node-gyp-build-optional-packages@5.1.1:
-    resolution: {integrity: sha512-+P72GAjVAbTxjjwUmwjVrqrdZROD4nf8KgpBoDxqXXTiYZZt/ud60dE5yvCSr9lRO8e8yv6kgJIC0K0PfZFVQw==}
-    hasBin: true
 
   node-gyp-build@4.1.1:
     resolution: {integrity: sha512-dSq1xmcPDKPZ2EED2S6zw/b9NKsqzXRE6dVr8TVQnI3FJOTteUMuqF3Qqs6LZg+mLGYJWqQzMbIjMtJqTv87nQ==}
@@ -14724,24 +14688,6 @@ snapshots:
 
   '@braintree/sanitize-url@6.0.4': {}
 
-  '@cbor-extract/cbor-extract-darwin-arm64@2.2.0':
-    optional: true
-
-  '@cbor-extract/cbor-extract-darwin-x64@2.2.0':
-    optional: true
-
-  '@cbor-extract/cbor-extract-linux-arm64@2.2.0':
-    optional: true
-
-  '@cbor-extract/cbor-extract-linux-arm@2.2.0':
-    optional: true
-
-  '@cbor-extract/cbor-extract-linux-x64@2.2.0':
-    optional: true
-
-  '@cbor-extract/cbor-extract-win32-x64@2.2.0':
-    optional: true
-
   '@changesets/get-dependents-graph@1.3.6':
     dependencies:
       '@changesets/types': 5.2.1
@@ -16318,7 +16264,7 @@ snapshots:
       supports-color: 8.1.1
       tslib: 2.6.2
 
-  '@oclif/core@2.15.0(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)':
+  '@oclif/core@2.15.0(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)':
     dependencies:
       '@types/cli-progress': 3.11.5
       ansi-escapes: 4.3.2
@@ -16343,7 +16289,7 @@ snapshots:
       strip-ansi: 6.0.1
       supports-color: 8.1.1
       supports-hyperlinks: 2.3.0
-      ts-node: 10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
+      ts-node: 10.9.2(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
       tslib: 2.6.2
       widest-line: 3.1.0
       wordwrap: 1.0.0
@@ -16364,19 +16310,19 @@ snapshots:
 
   '@oclif/linewrap@1.0.0': {}
 
-  '@oclif/plugin-help@5.2.20(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)':
+  '@oclif/plugin-help@5.2.20(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)':
     dependencies:
-      '@oclif/core': 2.15.0(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
+      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
       - typescript
 
-  '@oclif/plugin-plugins@2.4.7(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)':
+  '@oclif/plugin-plugins@2.4.7(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)':
     dependencies:
       '@oclif/color': 1.0.13
-      '@oclif/core': 2.15.0(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
+      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
       chalk: 4.1.2
       debug: 4.3.4(supports-color@8.1.1)
       fs-extra: 9.1.0
@@ -17162,6 +17108,10 @@ snapshots:
 
   '@sideway/pinpoint@2.0.0': {}
 
+  '@simplewebauthn/browser@10.0.0':
+    dependencies:
+      '@simplewebauthn/types': 10.0.0
+
   '@simplewebauthn/browser@9.0.0':
     dependencies:
       '@simplewebauthn/types': 9.0.0
@@ -17170,16 +17120,16 @@ snapshots:
     dependencies:
       '@simplewebauthn/types': 9.0.1
 
-  '@simplewebauthn/server@9.0.2(encoding@0.1.13)':
+  '@simplewebauthn/server@10.0.0(encoding@0.1.13)':
     dependencies:
       '@hexagon/base64': 1.1.28
+      '@levischuck/tiny-cbor': 0.2.2
       '@peculiar/asn1-android': 2.3.10
       '@peculiar/asn1-ecc': 2.3.8
       '@peculiar/asn1-rsa': 2.3.8
       '@peculiar/asn1-schema': 2.3.8
       '@peculiar/asn1-x509': 2.3.8
-      '@simplewebauthn/types': 9.0.1
-      cbor-x: 1.5.8
+      '@simplewebauthn/types': 10.0.0
       cross-fetch: 4.0.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
@@ -17197,6 +17147,8 @@ snapshots:
       cross-fetch: 4.0.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
+
+  '@simplewebauthn/types@10.0.0': {}
 
   '@simplewebauthn/types@9.0.0': {}
 
@@ -18388,6 +18340,11 @@ snapshots:
   '@wry/trie@0.5.0':
     dependencies:
       tslib: 2.6.2
+
+  '@xata.io/client@0.13.4(typescript@5.3.3)':
+    dependencies:
+      typescript: 5.3.3
+    optional: true
 
   '@xata.io/client@0.13.4(typescript@5.4.5)':
     dependencies:
@@ -19936,22 +19893,6 @@ snapshots:
       lodash: 4.17.21
     optional: true
 
-  cbor-extract@2.2.0:
-    dependencies:
-      node-gyp-build-optional-packages: 5.1.1
-    optionalDependencies:
-      '@cbor-extract/cbor-extract-darwin-arm64': 2.2.0
-      '@cbor-extract/cbor-extract-darwin-x64': 2.2.0
-      '@cbor-extract/cbor-extract-linux-arm': 2.2.0
-      '@cbor-extract/cbor-extract-linux-arm64': 2.2.0
-      '@cbor-extract/cbor-extract-linux-x64': 2.2.0
-      '@cbor-extract/cbor-extract-win32-x64': 2.2.0
-    optional: true
-
-  cbor-x@1.5.8:
-    optionalDependencies:
-      cbor-extract: 2.2.0
-
   ccount@2.0.1: {}
 
   chai@4.4.1:
@@ -20859,7 +20800,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.13.4(typescript@5.4.5))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13)))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.2.0)(sqlite3@5.1.6(encoding@0.1.13)):
+  drizzle-orm@0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.13.4(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.2.0)(sqlite3@5.1.6):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240117.0
       '@libsql/client': 0.6.0
@@ -20867,7 +20808,7 @@ snapshots:
       '@types/better-sqlite3': 7.6.9
       '@types/pg': 8.11.0
       '@types/react': 18.2.78
-      '@xata.io/client': 0.13.4(typescript@5.4.5)
+      '@xata.io/client': 0.13.4(typescript@5.3.3)
       better-sqlite3: 9.6.0
       knex: 2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(mysql@2.18.1)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13))
       kysely: 0.24.2
@@ -21336,7 +21277,7 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.10
 
-  eslint-plugin-svelte@2.38.0(eslint@8.30.0)(svelte@4.2.9)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.11.7)(typescript@5.3.3)):
+  eslint-plugin-svelte@2.38.0(eslint@8.30.0)(svelte@4.2.9)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.30.0)
       '@jridgewell/sourcemap-codec': 1.4.15
@@ -21346,7 +21287,7 @@ snapshots:
       esutils: 2.0.3
       known-css-properties: 0.30.0
       postcss: 8.4.38
-      postcss-load-config: 3.1.4(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.11.7)(typescript@5.3.3))
+      postcss-load-config: 3.1.4(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))
       postcss-safe-parser: 6.0.0(postcss@8.4.38)
       postcss-selector-parser: 6.0.16
       semver: 7.6.0
@@ -21716,12 +21657,12 @@ snapshots:
     dependencies:
       format: 0.2.2
 
-  fauna-shell@1.2.1(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(encoding@0.1.13)(typescript@5.4.5):
+  fauna-shell@1.2.1(@swc/core@1.3.106)(@types/node@20.12.7)(encoding@0.1.13)(typescript@5.4.5):
     dependencies:
       '@inquirer/prompts': 3.3.2
-      '@oclif/core': 2.15.0(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
-      '@oclif/plugin-help': 5.2.20(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
-      '@oclif/plugin-plugins': 2.4.7(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
+      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
+      '@oclif/plugin-help': 5.2.20(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
+      '@oclif/plugin-plugins': 2.4.7(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
       chalk: 4.1.2
       cli-table: 0.3.11
       cli-ux: 4.9.3
@@ -24610,7 +24551,7 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1):
+  mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0)(socks@2.7.1):
     dependencies:
       '@mongodb-js/saslprep': 1.1.4
       bson: 6.2.0
@@ -24898,11 +24839,6 @@ snapshots:
       formdata-polyfill: 4.0.10
 
   node-forge@1.3.1: {}
-
-  node-gyp-build-optional-packages@5.1.1:
-    dependencies:
-      detect-libc: 2.0.2
-    optional: true
 
   node-gyp-build@4.1.1: {}
 
@@ -25430,30 +25366,30 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.38
 
-  postcss-load-config@3.1.4(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.11.7)(typescript@5.3.3)):
+  postcss-load-config@3.1.4(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)):
     dependencies:
       lilconfig: 2.1.0
       yaml: 1.10.2
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.11.7)(typescript@5.3.3)
+      ts-node: 10.9.2(@types/node@20.11.7)(typescript@5.3.3)
 
-  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)):
+  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)):
     dependencies:
       lilconfig: 3.1.1
       yaml: 2.3.4
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)
+      ts-node: 10.9.2(@types/node@20.11.7)(typescript@5.3.3)
     optional: true
 
-  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)):
+  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5)):
     dependencies:
       lilconfig: 3.1.1
       yaml: 2.3.4
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
+      ts-node: 10.9.2(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5)
 
   postcss-merge-rules@6.0.4(postcss@8.4.38):
     dependencies:
@@ -27222,7 +27158,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  svelte-check@2.10.2(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9):
+  svelte-check@2.10.2(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.22
       chokidar: 3.5.3
@@ -27231,7 +27167,7 @@ snapshots:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.9
-      svelte-preprocess: 4.10.7(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.3.3)
+      svelte-preprocess: 4.10.7(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.3.3)
       typescript: 5.3.3
     transitivePeerDependencies:
       - '@babel/core'
@@ -27245,7 +27181,7 @@ snapshots:
       - stylus
       - sugarss
 
-  svelte-check@3.6.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9):
+  svelte-check@3.6.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.22
       chokidar: 3.5.3
@@ -27254,7 +27190,7 @@ snapshots:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.9
-      svelte-preprocess: 5.1.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.2.2)
+      svelte-preprocess: 5.1.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
       - '@babel/core'
@@ -27281,7 +27217,7 @@ snapshots:
     dependencies:
       svelte: 4.2.9
 
-  svelte-preprocess@4.10.7(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.3.3):
+  svelte-preprocess@4.10.7(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.3.3):
     dependencies:
       '@types/pug': 2.0.10
       '@types/sass': 1.45.0
@@ -27293,12 +27229,12 @@ snapshots:
     optionalDependencies:
       '@babel/core': 7.23.9
       postcss: 8.4.38
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))
       pug: 3.0.2
       sass: 1.70.0
       typescript: 5.3.3
 
-  svelte-preprocess@5.1.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.2.2):
+  svelte-preprocess@5.1.3(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9)(typescript@5.2.2):
     dependencies:
       '@types/pug': 2.0.10
       detect-indent: 6.1.0
@@ -27309,7 +27245,7 @@ snapshots:
     optionalDependencies:
       '@babel/core': 7.23.9
       postcss: 8.4.38
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))
       pug: 3.0.2
       sass: 1.70.0
       typescript: 5.2.2
@@ -27348,7 +27284,7 @@ snapshots:
 
   tabbable@6.2.0: {}
 
-  tailwindcss@3.4.3(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)):
+  tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -27367,7 +27303,7 @@ snapshots:
       postcss: 8.4.38
       postcss-import: 15.1.0(postcss@8.4.38)
       postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))
       postcss-nested: 6.0.1(postcss@8.4.38)
       postcss-selector-parser: 6.0.15
       resolve: 1.22.8
@@ -27594,49 +27530,7 @@ snapshots:
       '@ts-morph/common': 0.20.0
       code-block-writer: 12.0.0
 
-  ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.11.7)(typescript@5.3.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.11.7
-      acorn: 8.11.3
-      acorn-walk: 8.3.2
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.3.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.3.106(@swc/helpers@0.5.5)
-    optional: true
-
-  ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.2.2):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.7
-      acorn: 8.11.3
-      acorn-walk: 8.3.2
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.2.2
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.3.106(@swc/helpers@0.5.5)
-    optional: true
-
-  ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5):
+  ts-node@10.9.2(@swc/core@1.3.106)(@types/node@20.12.7)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -27655,6 +27549,25 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.3.106(@swc/helpers@0.5.5)
+
+  ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.9
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.11.7
+      acorn: 8.11.3
+      acorn-walk: 8.3.2
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.3.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optional: true
 
   ts-pattern@5.0.5: {}
 
@@ -27831,11 +27744,11 @@ snapshots:
       shiki: 0.14.7
       typescript: 5.4.5
 
-  typeorm-naming-strategies@4.1.0(typeorm@0.3.17(better-sqlite3@9.6.0)(ioredis@5.4.1)(mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1))(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5))):
+  typeorm-naming-strategies@4.1.0(typeorm@0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))):
     dependencies:
-      typeorm: 0.3.17(better-sqlite3@9.6.0)(ioredis@5.4.1)(mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1))(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5))
+      typeorm: 0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3))
 
-  typeorm@0.3.17(better-sqlite3@9.6.0)(ioredis@5.4.1)(mongodb@6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1))(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)):
+  typeorm@0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.11.7)(typescript@5.3.3)):
     dependencies:
       '@sqltools/formatter': 1.2.5
       app-root-path: 3.1.0
@@ -27853,15 +27766,13 @@ snapshots:
       uuid: 9.0.1
       yargs: 17.7.2
     optionalDependencies:
-      better-sqlite3: 9.6.0
       ioredis: 5.4.1
-      mongodb: 6.3.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0(encoding@0.1.13))(socks@2.7.1)
       mssql: 7.3.5(encoding@0.1.13)
       mysql2: 3.9.7
       pg: 8.11.3
       redis: 4.6.12
       sqlite3: 5.1.6(encoding@0.1.13)
-      ts-node: 10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.5))(@types/node@20.12.7)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@20.11.7)(typescript@5.3.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -28071,7 +27982,7 @@ snapshots:
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.6.1
 
-  unstorage@1.10.1(@azure/data-tables@13.2.2)(@azure/identity@1.5.2)(@upstash/redis@1.28.2)(@vercel/kv@1.0.1):
+  unstorage@1.10.1(@azure/data-tables@13.2.2)(@upstash/redis@1.28.2):
     dependencies:
       anymatch: 3.1.3
       chokidar: 3.5.3
@@ -28086,13 +27997,11 @@ snapshots:
       ufo: 1.3.2
     optionalDependencies:
       '@azure/data-tables': 13.2.2
-      '@azure/identity': 1.5.2(debug@4.3.4)
       '@upstash/redis': 1.28.2
-      '@vercel/kv': 1.0.1
     transitivePeerDependencies:
       - supports-color
 
-  unstorage@1.10.2(@azure/data-tables@13.2.2)(@azure/identity@1.5.2)(@upstash/redis@1.28.2)(@vercel/kv@1.0.1)(ioredis@5.4.1):
+  unstorage@1.10.2(@azure/data-tables@13.2.2)(@vercel/kv@1.0.1)(ioredis@5.4.1):
     dependencies:
       anymatch: 3.1.3
       chokidar: 3.6.0
@@ -28106,8 +28015,6 @@ snapshots:
       ufo: 1.5.3
     optionalDependencies:
       '@azure/data-tables': 13.2.2
-      '@azure/identity': 1.5.2(debug@4.3.4)
-      '@upstash/redis': 1.28.2
       '@vercel/kv': 1.0.1
       ioredis: 5.4.1
     transitivePeerDependencies:
