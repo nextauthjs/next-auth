@@ -24,7 +24,7 @@ import type {
 export type WebAuthnProviderType = "webauthn"
 
 export const DEFAULT_WEBAUTHN_TIMEOUT = 5 * 60 * 1000 // 5 minutes
-export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v9.0.1"
+export const DEFAULT_SIMPLEWEBAUTHN_BROWSER_VERSION: SemverString = "v10.0.0"
 
 export type RelayingParty = {
   /** Relaying Party ID. Use the website's domain name. */
