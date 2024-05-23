@@ -72,8 +72,8 @@ type RGetUserInfo = Awaited<ReturnType<GetUserInfo>>
  * Infers the WebAuthn options based on the provided parameters.
  *
  * @param action - The WebAuthn action to perform (optional).
- * @param loggedInUser - The logged-in user (optional).
- * @param userInfoResponse - The response containing user information (optional).
+ * @param loggedIn - Whether the user is logged in or not.
+ * @param userInfoResponse - The response containing user information.
  *
  * @returns The WebAuthn action to perform, or null if no inference could be made.
  */
