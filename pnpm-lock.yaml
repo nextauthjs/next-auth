@@ -650,8 +650,8 @@ importers:
         version: 5.2.3(preact@10.11.3)
     devDependencies:
       '@simplewebauthn/browser':
-        specifier: v9.0.0
-        version: 9.0.0
+        specifier: 10.0.0
+        version: 10.0.0
       '@types/node':
         specifier: 18.11.10
         version: 18.11.10
@@ -4013,18 +4013,12 @@ packages:
   '@simplewebauthn/browser@10.0.0':
     resolution: {integrity: sha512-hG0JMZD+LiLUbpQcAjS4d+t4gbprE/dLYop/CkE01ugU/9sKXflxV5s0DRjdz3uNMFecatRfb4ZLG3XvF8m5zg==}
 
-  '@simplewebauthn/browser@9.0.0':
-    resolution: {integrity: sha512-8eukKf8ZuZUUTSwp97VRYJqv1t7Vg2LKKfGY5Ir8EtXOZhUbGCAFmL4mxSatb5gj0ARqmcGjyUXM6s6nYJxDsQ==}
-
   '@simplewebauthn/server@10.0.0':
     resolution: {integrity: sha512-w5eIoiF7ltg1sgggjY5Tx654j+DBuyEx2B3869jjmPp0xl2Z4BUP4kJ3yJ6DnZIv+ZYYntT3E6nZXNjPOQbrtw==}
     engines: {node: '>=20.0.0'}
 
   '@simplewebauthn/types@10.0.0':
     resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
-
-  '@simplewebauthn/types@9.0.0':
-    resolution: {integrity: sha512-Lo6LLNQee66D//KueYy9AyX7oiQ7BBKJgdLzP3l0HJDrV4GRSzSAii8AtigBGOeNc8hOQsF/D8itItyuZX9djA==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -17102,10 +17096,6 @@ snapshots:
     dependencies:
       '@simplewebauthn/types': 10.0.0
 
-  '@simplewebauthn/browser@9.0.0':
-    dependencies:
-      '@simplewebauthn/types': 9.0.0
-
   '@simplewebauthn/server@10.0.0(encoding@0.1.13)':
     dependencies:
       '@hexagon/base64': 1.1.28
@@ -17121,8 +17111,6 @@ snapshots:
       - encoding
 
   '@simplewebauthn/types@10.0.0': {}
-
-  '@simplewebauthn/types@9.0.0': {}
 
   '@sinclair/typebox@0.27.8': {}
 

@@ -96,7 +96,7 @@
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
-    "@simplewebauthn/browser": "v9.0.0",
+    "@simplewebauthn/browser": "10.0.0",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
