@@ -128,12 +128,28 @@ main {
       flex-wrap: wrap;
       gap: 1rem;
 
-      & > div:first-of-type {
+      & > div:last-of-type {
         flex-basis: 100%;
       }
 
-      & > form:first-of-type {
+      & > form:last-of-type {
         flex-basis: 100%;
+      }
+    }
+
+    .or-split {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+
+      &::before,
+      &::after {
+        display: flex;
+        content: "";
+        width: 40%;
+        border-top: 1px solid #cccccc80;
       }
     }
 
@@ -158,6 +174,21 @@ main {
       input::placeholder {
         color: #ccc;
       }
+    }
+
+    .signInButton button,
+    .social-btn button {
+      padding: 0.5rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .signInButton button span {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
     }
 
     &:has(button) {
