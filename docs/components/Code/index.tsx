@@ -30,6 +30,7 @@ const allFrameworks = {
   [SvelteCode.name]: "SvelteKit",
   // [SolidCode.name]: "SolidStart",
   [ExpressCode.name]: "Express",
+  [FastifyCode.name]: "Fastify",
 }
 
 const findTabIndex = (frameworks: Record<string, string>, tab: string) => {

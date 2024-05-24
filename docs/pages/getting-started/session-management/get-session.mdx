@@ -162,6 +162,31 @@ app.get("/", (req, res) => {
 ```
 
 </Code.Express>
+<Code.Fastify>
+
+```ts filename="app.ts"
+import { getSession } from "@auth/fastify"
+
+// Decorating the reply is not required but will optimise performance
+// Only decorate the reply with a value type like null, as reference types like objects are shared among all requests, creating a security risk.
+fastify.decorateReply("session", null)
+
+export async function authSession(req: FastifyRequest, reply: FastifyReply) {
+  reply.session = await getSession(req, authConfig)
+}
+
+fastify.addHook("preHandler", authSession)
+
+// Now in your route
+fastify.get("/", (req, reply) => {
+  const session = reply.session
+  reply.view("index", { user: session?.user })
+})
+```
+
+Note for TypeScript, you may want to augment the Fastify types to include the `session` property on the reply object.
+
+</Code.Fastify>
 </Code>
 
 If you'd like to extend your session with more fields from your OAuth provider, for example, please check out our ["extending the session" guide](/guides/extending-the-session).

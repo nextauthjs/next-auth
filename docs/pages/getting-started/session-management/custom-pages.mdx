@@ -74,6 +74,27 @@ app.use(
 ```
 
 </Code.Express>
+<Code.Fastify>
+
+```ts filename="src/routes/auth.route.ts" {12-14}
+import { FastifyAuth } from "@auth/fastify"
+import Fastify from "fastify"
+import GitHub from "@auth/fastify/providers/github"
+
+const fastify = Fastify({ trustProxy: true })
+
+fastify.register(
+  FastifyAuth({
+    providers: [GitHub],
+    pages: {
+      signIn: "/signin",
+    },
+  }),
+  { prefix: "/auth" }
+)
+```
+
+</Code.Fastify>
 </Code>
 
 To continue setting up the custom page, checkout our [guide on custom pages](/guides/pages/signin).
