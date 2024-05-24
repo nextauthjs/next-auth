@@ -127,7 +127,7 @@ export const load: LayoutServerLoad = async (event) => {
   </Code.Svelte>
   <Code.Express>
 
-1. Start by importing `ExpressAuth` and adding it to any routes you want to protect.
+1. Start by importing `ExpressAuth` and adding the handler to the auth route.
 
 ```ts filename="./src/routes/auth.route.ts" {1, 9}
 import { ExpressAuth } from "@auth/express"
@@ -140,6 +140,8 @@ const app = express()
 app.set("trust proxy", true)
 app.use("/auth/*", ExpressAuth({ providers: [] }))
 ```
+
+Note this creates the auth API, but does not yet protect resources.
 
   </Code.Express>
 </Code>
