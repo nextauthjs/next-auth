@@ -14,12 +14,14 @@ Code.NextClient = NextClientCode
 Code.Svelte = SvelteCode
 // Code.Solid = SolidCode;
 Code.Express = ExpressCode
+Code.Fastify = FastifyCode
 
 const baseFrameworks = {
   [NextCode.name]: "Next.js",
   [SvelteCode.name]: "SvelteKit",
   [ExpressCode.name]: "Express",
   // [SolidCode.name]: "SolidStart",
+  [FastifyCode.name]: "Fastify",
 }
 
 const allFrameworks = {
@@ -122,5 +124,9 @@ function SvelteCode({ children }: ChildrenProps) {
 // }
 
 function ExpressCode({ children }: ChildrenProps) {
+  return <Tabs.Tab>{children}</Tabs.Tab>
+}
+
+function FastifyCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }

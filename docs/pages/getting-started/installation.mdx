@@ -27,6 +27,13 @@ Start by installing the appropriate package for your framework.
     ```
   
   </Code.Express>
+  <Code.Fastify>
+
+    ```bash npm2yarn
+    npm install @auth/fastify
+    ```
+
+  </Code.Fastify>
 </Code>
 
 <Callout type="info">
@@ -142,6 +149,21 @@ app.use("/auth/*", ExpressAuth({ providers: [] }))
 ```
 
   </Code.Express>
+  <Code.Fastify>
+
+1. Start by importing `FastifyAuth` registering it to your auth API route.
+
+```ts filename="./src/routes/auth.route.ts" {1, 9}
+import { FastifyAuth } from "@auth/fastify"
+import Fastify from "fastify"
+
+// If your app is served through a proxy
+// trust the proxy to allow us to read the `X-Forwarded-*` headers
+const fastify = Fastify({ trustProxy: true })
+fastify.register(FastifyAuth({ providers: [] }), { prefix: "/auth" })
+```
+
+  </Code.Fastify>
 </Code>
 
 ### Setup Authentication Methods
