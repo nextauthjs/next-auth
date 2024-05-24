@@ -163,6 +163,8 @@ const fastify = Fastify({ trustProxy: true })
 fastify.register(FastifyAuth({ providers: [] }), { prefix: "/auth" })
 ```
 
+Note this creates the Auth.js API, but does not yet protect resources. Continue on to [protecting resources](/getting-started/session-management/protecting) for more details.
+
   </Code.Fastify>
 </Code>
 
