@@ -555,6 +555,12 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0
 
+  packages/adapter-test:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/adapter-typeorm:
     dependencies:
       '@auth/core':
@@ -782,6 +788,9 @@ importers:
         specifier: ^9.0.2
         version: 9.0.2(encoding@0.1.13)
     devDependencies:
+      '@auth/test-adapter':
+        specifier: workspace:*
+        version: link:../adapter-test
       '@types/react':
         specifier: 18.0.37
         version: 18.0.37
