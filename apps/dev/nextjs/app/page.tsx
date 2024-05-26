@@ -1,6 +1,8 @@
 import { auth, unstable_update as update } from "auth"
 import { SessionProvider } from "next-auth/react"
 import Client from "./client"
+import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
 
 export default async function Page() {
   const session = await auth()
@@ -20,7 +22,9 @@ export default async function Page() {
             <form
               action={async () => {
                 "use server"
-                update({ user: { name: "Server Fill Murray" } })
+                await update({ user: { name: "Server Fill Murray" } })
+                // revalidatePath("/")
+                redirect("/")
               }}
             >
               <button>Update Session - New Name</button>

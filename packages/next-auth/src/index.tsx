@@ -1,5 +1,5 @@
 /**
- * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/guides/upgrade-to-v5)._
+ * _If you are looking to migrate from v4, visit the [Upgrade Guide (v5)](https://authjs.dev/getting-started/migrating-to-v5)._
  *
  * ## Installation
  *
@@ -79,10 +79,13 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next"
-import type { AppRouteHandlerFn } from "./lib/types.js"
+import type {
+  AppRouteHandlerFn,
+  AppRouteHandlerFnContext,
+} from "./lib/types.js"
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
-export { AuthError } from "@auth/core/errors"
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export type {
   Session,
@@ -214,7 +217,7 @@ export interface NextAuthResult {
    * @example
    * ```ts title="pages/protected-ssr.ts"
    * import { auth } from "../auth"
-   * //...
+   *
    * export const getServerSideProps: GetServerSideProps = async (context) => {
    *   const session = await auth(context)
    *
@@ -233,12 +236,17 @@ export interface NextAuthResult {
     ((...args: []) => Promise<Session | null>) &
     ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
     ((
-      ...args: [(req: NextAuthRequest) => ReturnType<AppRouteHandlerFn>]
+      ...args: [
+        (
+          req: NextAuthRequest,
+          ctx: AppRouteHandlerFnContext
+        ) => ReturnType<AppRouteHandlerFn>,
+      ]
     ) => AppRouteHandlerFn)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
    *
-   * By default, the user is redirected to the current page after signing in. You can override this behavior by setting the `redirectTo` option.
+   * By default, the user is redirected to the current page after signing in. You can override this behavior by setting the `redirectTo` option with a relative path.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -287,7 +295,7 @@ export interface NextAuthResult {
     options?:
       | FormData
       | ({
-          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          /** The relative path to redirect to after signing in. By default, the user is redirected to the current page. */
           redirectTo?: string
           /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
           redirect?: R
@@ -302,7 +310,7 @@ export interface NextAuthResult {
    * Sign out the user. If the session was created using a database strategy, the session will be removed from the database and the related cookie is invalidated.
    * If the session was created using a JWT, the cookie is invalidated.
    *
-   * By default the user is redirected to the current page after signing out. You can override this behavior by setting the `redirectTo` option.
+   * By default the user is redirected to the current page after signing out. You can override this behavior by setting the `redirectTo` option with a relative path.
    *
    * @example
    * ```ts title="app/layout.tsx"
@@ -322,7 +330,7 @@ export interface NextAuthResult {
    *
    */
   signOut: <R extends boolean = true>(options?: {
-    /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
+    /** The relative path to redirect to after signing out. By default, the user is redirected to the current page. */
     redirectTo?: string
     /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
     redirect?: R
@@ -344,6 +352,7 @@ export interface NextAuthResult {
  * ```
  *
  * Lazy initialization:
+ *
  * @example
  * ```ts title="auth.ts"
  * import NextAuth from "next-auth"

@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/pipedrive.svg" height="64" width="128" />
+
+# Pipedrive Provider
+
+## Resources
+
+- [Pipedrive OAuth documentation](https://pipedrive.readme.io/docs/marketplace-oauth-authorization)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/pipedrive
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/pipedrive
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_PIPEDRIVE_ID
+AUTH_PIPEDRIVE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import PipeDrive from "next-auth/providers/pipedrive"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [PipeDrive],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import PipeDrive from "@auth/sveltekit/providers/pipedrive"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [PipeDrive],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import PipeDrive from "@auth/express/providers/pipedrive"
+
+app.use("/auth/*", ExpressAuth({ providers: [PipeDrive] }))
+```
+
+  </Code.Express>
+</Code>

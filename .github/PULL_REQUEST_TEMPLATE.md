@@ -23,11 +23,11 @@ merge of your pull request!
 
 ## 🎫 Affected issues
 
-<!-- 
+<!--
 Please [scout and link issues](https://github.com/nextauthjs/next-auth/issues) that might be solved by this PR. And include text like the following to close them automatically when this is merged:
 
 Fixes: INSERT_ISSUE_LINK_HERE
---> 
+-->
 
 ## 📌 Resources
 

@@ -1,0 +1,247 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+# Protecting Resources
+
+Protecting routes can be done generally by checking for the session and taking an action if an active session is not found, like redirecting the user to the login page or simply returning a `401: Unauthenticated` response.
+
+### Pages
+
+<Code>
+<Code.Next>
+
+You can use the `auth` function returned from `NextAuth()` and exported from your `auth.js` configuration file to get the session object.
+
+```tsx filename="app/server/page.tsx" {4}
+import { auth } from "@/auth"
+
+export default async function Page() {
+  const session = await auth()
+  if (!session) return <div>Not authenticated</div>
+
+  return (
+    <div>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </div>
+  )
+}
+```
+
+</Code.Next>
+<Code.NextClient>
+
+To protect a page in the Next.js Pages router, we can use `auth` in `getServerSideProps` to return the `session` to the page as props.
+
+```tsx filename="./pages/dashboard.tsx" {4, 10}
+import { auth } from "../auth"
+
+export default function Dashboard({ session }) {
+  if (!session.user) return <div>Not authenticated</div>
+
+  return <div>{JSON.stringify(session, null, 2)}</div>
+}
+
+export async function getServerSideProps(ctx) {
+  const session = await auth(ctx)
+
+  return {
+    props: {
+      session,
+    },
+  }
+}
+```
+
+To access the session client-side using `useSession()`. Make sure `<SessionProvider />` is
+wrapping your application.
+
+```tsx filename="./pages/_app.tsx"
+import type { AppProps } from "next/app"
+import { SessionProvider } from "next-auth/react"
+
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />;
+    </SessionProvider>
+  )
+}
+```
+
+</Code.NextClient>
+<Code.Svelte>
+
+In SvelteKit, you can leverage the `event.locals.auth()` function that is put there by the Auth.js `handle` function we're importing and using in `hooks.server.ts`.
+
+By calling `event.locals.auth()` server-side, we can check for the session in any `+page.server.ts` or `+layout.server.ts` file and either allow the request on, or redirect to the `/login` page, for example.
+
+```ts filename="src/routes/dashboard/+page.server.ts" {5}
+import { fail, redirect } from "@sveltejs/kit"
+import type { PageServerLoad } from "./$types"
+
+export const load: PageServerLoad = async (event) => {
+  const session = await event.locals.auth()
+
+  if (!session?.user?.userId) {
+    return fail(401, { type: "error", error: "Unauthenticated" })
+  }
+
+  return {
+    session,
+  }
+}
+```
+
+</Code.Svelte>
+<Code.Express>
+
+You can protect routes by checking for the presence of a session and then redirect to a login page if the session is not present. This can either be done per route, or for a group of routes using a middleware such as the following:
+
+```ts filename="lib.ts"
+import { getSession } from "@auth/express"
+
+export async function authenticatedUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const session = res.locals.session ?? (await getSession(req, authConfig))
+  if (!session?.user) {
+    res.redirect("/login")
+  } else {
+    next()
+  }
+}
+```
+
+```ts filename="app.ts"
+import { authenticatedUser } from "./lib.ts"
+
+// This route is protected
+app.get("/profile", authenticatedUser, (req, res) => {
+  const { session } = res.locals
+  res.render("profile", { user: session?.user })
+})
+
+// This route is not protected
+app.get("/", (req, res) => {
+  res.render("index")
+})
+
+app.use("/", root)
+```
+
+</Code.Express>
+</Code>
+
+### API Routes
+
+Protecting API routes in the various frameworks can also be done with the `auth` export.
+
+<Code>
+<Code.Next>
+
+In Next.js, you can use the `auth` function to wrap and API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
+
+```ts filename="./app/api/admin/route.ts" {4}
+import { auth } from "@/auth"
+import { NextResponse } from "next/server"
+
+export const GET = auth(function GET(req) {
+  if (req.auth) return NextResponse.json(req.auth)
+  return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+})
+```
+
+</Code.Next>
+<Code.NextClient>
+
+```ts filename="./pages/api/admin.ts"
+// TODO: Update once server-side API methods are implemented for pages router again
+
+// import { auth } from "../../auth"
+// import { getSession } from "next-auth/react"
+import { NextApiRequest, NextApiResponse } from "next"
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  // const session = await auth(req, res)
+  // const session = await getSession(req, res)
+  const url = `${req.headers["x-forwarded-proto"]}://${req.headers.host}/api/auth/session`
+
+  const sessionRes = await fetch(url)
+  const session = await sessionRes.json()
+
+  if (!session.user) {
+    return res.status(401).json({ message: "Not authenticated" })
+  }
+
+  return res.json({ data: "Protected data" })
+}
+```
+
+</Code.NextClient>
+<Code.Svelte>
+
+API Routes in SvelteKit work like any other server-side file in Auth.js in SvelteKit, you can access the session by calling `event.locals.auth()` in the `+server.ts` files as well.
+
+```ts filename="src/routes/api/users/+server.ts"
+import type { RequestHandler } from "./$types"
+
+export const GET: RequestHandler = async (event) => {
+  const session = await event.locals.auth()
+
+  if (!session?.user?.userId) {
+    return new Response(null, { status: 401, statusText: "Unauthorized" })
+  }
+}
+```
+
+</Code.Svelte>
+<Code.Express>
+
+API Routes are protected in the same way as any other route in Express, see [the examples above](/getting-started/session-management/protecting?framework=express#pages).
+
+</Code.Express>
+</Code>
+
+### Next.js Middleware
+
+With Next.js 12+, the easiest way to protect a set of pages is using the middleware file. You can create a `middleware.ts` file in your root pages directory with the following contents.
+
+```ts filename="middleware.ts"
+export { auth as middleware } from "@/auth"
+```
+
+You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the middleware.
+
+```ts filename="middleware.ts"
+import { auth } from "@/auth"
+
+export default auth((req) => {
+  if (!req.auth && req.nextUrl.pathname !== "/login") {
+    const newUrl = new URL("/login", req.nextUrl.origin)
+    return Response.redirect(newUrl)
+  }
+})
+```
+
+You can also use a regex to match multiple routes or you can negate certain routes in order to protect all remaining routes. The following example avoids running the middleware on paths such as the favicon or static images.
+
+```ts filename="middleware.ts"
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
+```
+
+Middleware will protect pages as defined by the `matcher` config export. For more details about the matcher, check out the [Next.js docs](https://nextjs.org/docs/pages/building-your-application/routing/middleware#matching-paths).
+
+<Callout>
+  You should not rely on middleware exclusively for authorization. Always ensure
+  that the session is verified as close to your data fetching as possible.
+</Callout>

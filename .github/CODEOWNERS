@@ -2,10 +2,10 @@
 # https://help.github.com/en/articles/about-code-owners
 
 *                     @balazsorban44
-.github               @ThangHuuVu
-/apps/                @lluia @ndom91 @ThangHuuVu
-/docs/                @lluia @ndom91
+.github               @ThangHuuVu @ndom91
+/apps/                @ubbe-xyz @ndom91 @ThangHuuVu
+/docs/                @ubbe-xyz @ndom91
 /packages/            @ThangHuuVu
 /packages/adapter-*/  @ndom91
-/**/*test*            @lluia
-/**/*type*            @lluia
+/**/*test*            @ubbe-xyz
+/**/*type*            @ubbe-xyz

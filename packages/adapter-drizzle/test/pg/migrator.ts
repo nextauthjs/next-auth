@@ -1,8 +1,13 @@
 import { migrate } from "drizzle-orm/postgres-js/migrator"
-import { db } from "./schema"
+import { drizzle } from "drizzle-orm/postgres-js"
+import postgres from "postgres"
 
 const migrator = async () => {
-  await migrate(db, { migrationsFolder: "./test/pg/.drizzle" })
+  const connectionString =
+    "postgres://nextauth:nextauth@localhost:5432/nextauth"
+  const sql = postgres(connectionString, { max: 1 })
+
+  await migrate(drizzle(sql), { migrationsFolder: "./test/pg/.drizzle" })
 }
 
 migrator()

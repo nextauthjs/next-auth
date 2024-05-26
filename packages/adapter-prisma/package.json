@@ -1,6 +1,6 @@
 {
   "name": "@auth/prisma-adapter",
-  "version": "1.4.0",
+  "version": "2.1.0",
   "description": "Prisma adapter for Auth.js",
   "homepage": "https://authjs.dev/reference/adapter/prisma",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -39,10 +39,11 @@
     "clean": "rm ./prisma/dev.db* || echo 'File deleted'",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
-    "test:default": "pnpm init:default && vitest -c ../utils/vitest.config.ts",
-    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 vitest -c ../utils/vitest.config.ts",
+    "test:default": "pnpm init:default && vitest run -c ../utils/vitest.config.ts",
+    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 vitest run -c ../utils/vitest.config.ts",
     "test:mongodb": "./test/mongodb.test.sh",
-    "test": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
+    "test": "pnpm test:default && pnpm test:custom",
+    "test:og": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
     "build": "prisma generate && tsc",
     "dev": "prisma generate && tsc -w",
     "studio": "prisma studio"
