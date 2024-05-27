@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { EmailProviderType } from "../providers"
 import { TestAdapter } from "@auth/test-adapter"
-import { signIn } from "./actions"
-import { NextAuthConfig } from "."
+import { signIn } from "../src/lib/actions"
+import { NextAuthConfig } from "../src"
 
 let mockedHeaders = vi.hoisted(() => {
   return new globalThis.Headers()
@@ -96,7 +96,7 @@ describe("signIn", () => {
     })
     // Because we mock Auth we need to import dynamically
     // signIn from the module after mocking Auth
-    const actionModule = await import("./actions")
+    const actionModule = await import("../src/lib/actions")
     const signIn = actionModule.signIn
     let redirectTo: string | undefined | null
     redirectTo = await signIn(
