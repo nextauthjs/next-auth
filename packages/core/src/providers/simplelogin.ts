@@ -52,7 +52,6 @@ export interface SimpleLoginProfile {
  * By default, Auth.js assumes that the SimpleLogin provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
- *
  * The "Authorized redirect URIs" used must include your full domain and end in the callback path. By default, SimpleLogin whitelists all `http[s]://localhost:*` address to facilitate local development. For example;
  *
  * - For production: `https://{YOUR_DOMAIN}/api/auth/callback/simplelogin`
