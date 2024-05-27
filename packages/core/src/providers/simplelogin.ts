@@ -37,7 +37,12 @@ export interface SimpleLoginProfile {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [SimpleLogin({ clientId: SIMPLELOGIN_CLIENT_ID, clientSecret: SIMPLELOGIN_CLIENT_SECRET })],
+ *   providers: [
+ *     SimpleLogin({
+ *       clientId: SIMPLELOGIN_CLIENT_ID,
+ *       clientSecret: SIMPLELOGIN_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
