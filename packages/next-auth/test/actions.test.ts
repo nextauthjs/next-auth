@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { EmailProviderType } from "../providers"
-import { TestAdapter } from "@auth/test-adapter"
 import { signIn } from "../src/lib/actions"
 import { NextAuthConfig } from "../src"
+import { MemoryAdapter } from "../../core/test/memory-adapter"
 
 let mockedHeaders = vi.hoisted(() => {
   return new globalThis.Headers()
@@ -43,12 +43,11 @@ let options = {
   email: "jane@example.com",
 }
 let authorizationParams = {}
-const testAdapter = TestAdapter()
 let config: NextAuthConfig = {
   secret: ["supersecret"],
   trustHost: true,
   basePath: "/api/auth",
-  adapter: testAdapter,
+  adapter: MemoryAdapter(),
   providers: [
     {
       id: "nodemailer",

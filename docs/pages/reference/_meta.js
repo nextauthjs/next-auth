@@ -41,5 +41,4 @@ export default {
   "unstorage-adapter": "@auth/unstorage-adapter",
   "upstash-redis-adapter": "@auth/upstash-redis-adapter",
   "xata-adapter": "@auth/xata-adapter",
-  "test-adapter": "@auth/test-adapter",
 }
