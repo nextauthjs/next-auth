@@ -74,9 +74,13 @@ export async function signIn(
   const responseUrl =
     res instanceof Response ? res.headers.get("Location") : res.redirect
 
-  if (shouldRedirect) return redirect(responseUrl!)
+  // NOTE: if for some unexpected reason the responseUrl is not set,
+  // we redirect to the original url
+  const redirectUrl = responseUrl ?? url
 
-  return responseUrl as any
+  if (shouldRedirect) return redirect(redirectUrl)
+
+  return redirectUrl as any
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>

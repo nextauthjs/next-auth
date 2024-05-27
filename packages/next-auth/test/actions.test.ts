@@ -79,33 +79,53 @@ describe("signIn", () => {
     )
   })
 
-  it("handle web Response and get redirect URL from Location header", async () => {
-    vi.doMock("@auth/core", async (importOriginal) => {
-      const original = await importOriginal()
-      return {
-        // @ts-expect-error - not typed
-        ...original,
-        Auth: () =>
-          new Response(null, {
-            headers: {
-              Location: "http://localhost/api/auth/error?error=Configuration",
-            },
-          }),
-      }
+  describe("when Auth retunrs a web response", () => {
+    function mockAuthResponse(locationUrl?: string) {
+      vi.doMock("@auth/core", async (importOriginal) => {
+        const original = await importOriginal()
+        return {
+          // @ts-expect-error - not typed
+          ...original,
+          Auth: () =>
+            new Response(null, {
+              headers: {
+                ...(locationUrl && { Location: locationUrl }),
+              },
+            }),
+        }
+      })
+    }
+
+    it("handle web Response and get redirect URL from Location header", async () => {
+      mockAuthResponse("http://localhost/api/auth/error?error=Configuration")
+      const actionModule = await import("../src/lib/actions")
+      const signIn = actionModule.signIn
+      let redirectTo: string | undefined | null
+      redirectTo = await signIn(
+        "nodemailer",
+        { ...options, redirect: false },
+        authorizationParams,
+        config
+      )
+      expect(redirectTo).toEqual(
+        "http://localhost/api/auth/error?error=Configuration"
+      )
     })
-    // Because we mock Auth we need to import dynamically
-    // signIn from the module after mocking Auth
-    const actionModule = await import("../src/lib/actions")
-    const signIn = actionModule.signIn
-    let redirectTo: string | undefined | null
-    redirectTo = await signIn(
-      "nodemailer",
-      { ...options, redirect: false },
-      authorizationParams,
-      config
-    )
-    expect(redirectTo).toEqual(
-      "http://localhost/api/auth/error?error=Configuration"
-    )
+
+    it("redirects to signin URL when response is undefined", async () => {
+      mockAuthResponse()
+      const actionModule = await import("../src/lib/actions")
+      const signIn = actionModule.signIn
+      let redirectTo: string | undefined | null
+      redirectTo = await signIn(
+        "nodemailer",
+        { ...options, redirect: false },
+        authorizationParams,
+        config
+      )
+      expect(redirectTo).toEqual(
+        "http://localhost/api/auth/signin/nodemailer?"
+      )
+    })
   })
 })
