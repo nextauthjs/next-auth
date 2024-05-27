@@ -31,7 +31,7 @@ export interface SimpleLoginProfile {
  * ```
  *
  * #### Configuration
- *```js
+ *```ts
  * import Auth from "@auth/core"
  * import SimpleLogin from "@auth/core/providers/simplelogin"
  *
