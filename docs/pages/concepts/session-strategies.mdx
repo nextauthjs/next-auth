@@ -20,7 +20,6 @@ When a user signs out, Auth.js deletes the JWT from the cookies, destroying the 
 ### Advantages
 
 - JWTs as a session do not require a database to store sessions; this can be faster, cheaper, and easier to scale.
-- JWT sessions are most compatible with new runtimes, like on the Edge.
 - This strategy requires fewer resources as you don't need to manage an extra database/service.
 - You may then use the created token to pass information between services and APIs on the same domain without having to contact a database to verify the included information.
 - You can use JWT to securely store information without exposing it to third-party JavaScript running on your site.
