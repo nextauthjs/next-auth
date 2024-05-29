@@ -44,38 +44,38 @@ export const LogosMarquee = () => {
 
   return (
     <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-        {Object.entries(manifest.providersOAuth)
-          .sort(() => Math.random() - 0.5)
-          .filter((_, i) => i < logoCount!)
-          .map(([key, name]) => (
-            <motion.div
-              initial={{x: `${randomFloat(-20, 10)}%`, offsetDistance: "0%"  }}
-              animate={{  x: "100vw", offsetDistance: "100%"  }}
-              transition={{
-                delay: randomFloat(-10, 2),
-                duration: randomFloat(30, 40),
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-              style={{ 
-                offsetPath: "M43.25.25a43,43,0,1,1-43,43,43,43,0,0,1,43-43",
-                width: (scale ?? 60) * randomFloat(0.8, 1.2),
-              }}
-              key={`company-${key}`}
-              //initDeg={randomIntFromInterval(0, 360)}
-              //direction={Math.random() > 0.5 ? "clockwise" : "counterclockwise"}
-              //velocity={10}
-            >
-              <motion.img
-                src={`/img/providers/${key}.svg`}
-                className="opacity-40 grayscale dark:invert"
-                width={logoSize}
-                height={logoSize}
-                alt={`${name} logo`}
-              />
-            </motion.div>
-          ))}
+      {Object.entries(manifest.providersOAuth)
+        .sort(() => Math.random() - 0.5)
+        .filter((_, i) => i < logoCount!)
+        .map(([key, name]) => (
+          <motion.div
+            initial={{ x: `${randomFloat(-20, 10)}%`, offsetDistance: "0%" }}
+            animate={{ x: "100vw", offsetDistance: "100%" }}
+            transition={{
+              delay: randomFloat(-10, 2),
+              duration: randomFloat(30, 40),
+              ease: "linear",
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
+            style={{
+              offsetPath: "M43.25.25a43,43,0,1,1-43,43,43,43,0,0,1,43-43",
+              width: (scale ?? 60) * randomFloat(0.8, 1.2),
+            }}
+            key={`company-${key}`}
+            //initDeg={randomIntFromInterval(0, 360)}
+            //direction={Math.random() > 0.5 ? "clockwise" : "counterclockwise"}
+            //velocity={10}
+          >
+            <motion.img
+              src={`/img/providers/${key}.svg`}
+              className="opacity-40 grayscale dark:invert"
+              width={logoSize}
+              height={logoSize}
+              alt={`${name} logo`}
+            />
+          </motion.div>
+        ))}
     </div>
   )
 }
