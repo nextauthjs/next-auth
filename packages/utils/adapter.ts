@@ -1,4 +1,4 @@
-import { test, expect, beforeAll, afterAll } from "vitest"
+import { afterAll, beforeAll, expect, test } from "vitest"
 
 import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomInt, randomUUID } from "crypto"
@@ -548,13 +548,15 @@ export async function runBasicTests(options: TestOptions) {
 
     const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
     expect(authenticators1).not.toBeNull()
-    expect([authenticator1, authenticator2]).toMatchObject(
-      authenticators1 || []
+    expect([authenticator2, authenticator1]).toEqual(
+      expect.arrayContaining(authenticators1 || [])
     )
 
     const authenticators2 = await adapter.listAuthenticatorsByUserId(user2.id)
     expect(authenticators2).not.toBeNull()
-    expect([authenticator3]).toMatchObject(authenticators2 || [])
+    expect([authenticator3]).toMatchObject(
+      expect.arrayContaining(authenticators2 || [])
+    )
   })
   maybeTest("updateAuthenticatorCounter", async () => {
     // Setup

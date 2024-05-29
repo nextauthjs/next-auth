@@ -45,17 +45,13 @@ export const down = [
   `DROP TABLE IF EXISTS "accounts";`,
   `DROP TABLE IF EXISTS "sessions";`,
   `DROP TABLE IF EXISTS "users";`,
-  `DROP TABLE IF EXISTS "verification_token";`,
+  `DROP TABLE IF EXISTS "verification_tokens";`,
 ]
 
-/**
- * @param db
- */
 async function up(db: D1Database) {
-  // run the migration
   upSQLStatements.forEach(async (sql) => {
     try {
-      const res = await db.prepare(sql).run()
+      await db.prepare(sql).run()
     } catch (e: any) {
       console.error(e.cause?.message, e.message)
     }

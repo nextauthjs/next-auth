@@ -1,5 +1,6 @@
 import type { AdapterAccountType } from "@auth/core/adapters"
 import {
+  boolean,
   integer,
   pgTableCreator,
   primaryKey,
@@ -73,3 +74,17 @@ export const verificationTokens = pgTable(
     }
   }
 )
+
+export const authenticators = pgTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: boolean("credentialBackedUp").notNull(),
+  transports: text("transports"),
+})

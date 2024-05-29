@@ -14,12 +14,13 @@
  *
  * @module @auth/upstash-redis-adapter
  */
-import type {
-  Adapter,
-  AdapterUser,
-  AdapterAccount,
-  AdapterSession,
-  VerificationToken,
+import {
+  type Adapter,
+  type AdapterUser,
+  type AdapterAccount,
+  type AdapterSession,
+  type VerificationToken,
+  isDate,
 } from "@auth/core/adapters"
 import type { Redis } from "@upstash/redis"
 
@@ -68,12 +69,6 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
-}
-
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 export function hydrateDates(json: object) {
