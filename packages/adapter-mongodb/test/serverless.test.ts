@@ -1,15 +1,18 @@
 import { runBasicTests } from "utils/adapter"
 import { defaultCollections, format, MongoDBAdapter, _id } from "../src"
 import { MongoClient } from "mongodb"
+import { expect, test, vi } from "vitest"
 
-const name = "test"
+const name = "serverless-test"
 const clientPromise = new MongoClient(
   `mongodb://localhost:27017/${name}`
 ).connect()
 
-const onClose = jest.fn((client: MongoClient) => client.close())
+const onClose = vi.fn(async (client: MongoClient) => {
+  await client.close()
+})
 
-const allClients: Array<MongoClient> = []
+let mongoClientCount = 0
 
 runBasicTests({
   adapter: MongoDBAdapter(
@@ -17,7 +20,7 @@ runBasicTests({
       const client = await new MongoClient(
         `mongodb://localhost:27017/${name}`
       ).connect()
-      allClients.push(client)
+      mongoClientCount++
       return client
     },
     {
@@ -72,5 +75,6 @@ runBasicTests({
 })
 
 test("all the connections are closed", () => {
-  expect(onClose).toHaveBeenCalledTimes(allClients.length)
+  expect(mongoClientCount).toBeGreaterThan(0)
+  expect(onClose).toHaveBeenCalledTimes(mongoClientCount)
 })
