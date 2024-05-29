@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { Logo } from "./logo"
 import manifest from "@/data/manifest.json"
+
+let render = 0
 
 const clamp = (min: number, num: number, max: number) =>
   Math.min(Math.max(num, min), max)
-
-const logoSize = 96 // px
-
-function randomFloat(min: number, max: number): number {
-  const randomValue = Math.random() * (max - min) + min
-  return Number(randomValue.toFixed(2))
-}
 
 function changeScale() {
   if (typeof window !== "undefined") {
@@ -41,41 +36,19 @@ export const LogosMarquee = () => {
     return () => window.removeEventListener("resize", handleEvent)
   }, [])
 
+  render += 1
+  console.log("render", render)
+
   return (
     <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-        {Object.entries(manifest.providersOAuth)
-          .sort(() => Math.random() - 0.5)
-          .filter((_, i) => i < logoCount!)
-          .map(([id, name]) => (
-            <motion.div
-              initial={{ x: `${randomFloat(-10, 80)}vw` }}
-              animate={{ x: "100vw" }}
-              transition={{
-                delay: randomFloat(-10, 2),
-                duration: randomFloat(40, 70),
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-              style={{ 
-                width: (scale ?? 60) * randomFloat(0.8, 1.2),
-              }}
-              key={`company-${id}`}
-            >
-              <motion.img
-                src={`/img/providers/${id}.svg`}
-                className="opacity-40 animate-orbit grayscale dark:invert"
-                style={{
-                  // @ts-expect-error
-                  "--duration": randomFloat(20, 30),
-                  "--radius": randomFloat(10, 20),
-                }}
-                width={logoSize}
-                height={logoSize}
-                alt={`${name} logo`}
-              />
-            </motion.div>
-          ))}
+      {Object.entries(manifest.providersOAuth)
+        .sort(() => Math.random() - 0.5)
+        .filter((_, i) => i < logoCount!)
+        .map(([id, name]) => (
+          <Logo providerId={id} name={name} scale={scale} key={id}
+          />
+        )
+      )}
     </div>
   )
 }
