@@ -19,7 +19,7 @@ export const Logo = ({ providerId: id, name, scale }) => {
         repeat: Infinity,
         repeatType: "loop",
       }}
-      style={{ 
+      style={{
         width: (scale ?? 60) * randomFloat(0.8, 1.2),
       }}
     >
