@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import Img from "next/image"
 import manifest from "@/data/manifest.json"
 
 const clamp = (min: number, num: number, max: number) =>
@@ -47,29 +46,30 @@ export const LogosMarquee = () => {
         {Object.entries(manifest.providersOAuth)
           .sort(() => Math.random() - 0.5)
           .filter((_, i) => i < logoCount!)
-          .map(([key, name]) => (
+          .map(([id, name]) => (
             <motion.div
-              initial={{x: `${randomFloat(-20, 10)}%`, offsetDistance: "0%"  }}
-              animate={{  x: "100vw", offsetDistance: "100%"  }}
+              initial={{ x: `${randomFloat(-10, 80)}vw` }}
+              animate={{ x: "100vw" }}
               transition={{
                 delay: randomFloat(-10, 2),
-                duration: randomFloat(30, 40),
+                duration: randomFloat(40, 70),
                 ease: "linear",
                 repeat: Infinity,
                 repeatType: "loop",
               }}
               style={{ 
-                offsetPath: "M43.25.25a43,43,0,1,1-43,43,43,43,0,0,1,43-43",
                 width: (scale ?? 60) * randomFloat(0.8, 1.2),
               }}
-              key={`company-${key}`}
-              //initDeg={randomIntFromInterval(0, 360)}
-              //direction={Math.random() > 0.5 ? "clockwise" : "counterclockwise"}
-              //velocity={10}
+              key={`company-${id}`}
             >
               <motion.img
-                src={`/img/providers/${key}.svg`}
-                className="opacity-40 grayscale dark:invert"
+                src={`/img/providers/${id}.svg`}
+                className="opacity-40 animate-orbit grayscale dark:invert"
+                style={{
+                  // @ts-expect-error
+                  "--duration": randomFloat(20, 30),
+                  "--radius": randomFloat(10, 20),
+                }}
                 width={logoSize}
                 height={logoSize}
                 alt={`${name} logo`}
