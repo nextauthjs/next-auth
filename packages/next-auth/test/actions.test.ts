@@ -55,7 +55,7 @@ let config: NextAuthConfig = {
       name: "Email",
       from: "no-reply@authjs.dev",
       maxAge: 86400,
-      sendVerificationRequest: async () => { },
+      sendVerificationRequest: async () => {},
       options: {},
     },
   ],
@@ -123,9 +123,7 @@ describe("signIn", () => {
         authorizationParams,
         config
       )
-      expect(redirectTo).toEqual(
-        "http://localhost/api/auth/signin/nodemailer?"
-      )
+      expect(redirectTo).toEqual("http://localhost/api/auth/signin/nodemailer?")
     })
   })
 })
