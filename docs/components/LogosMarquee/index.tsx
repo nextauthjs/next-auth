@@ -40,10 +40,8 @@ export const LogosMarquee = () => {
         .sort(() => Math.random() - 0.5)
         .filter((_, i) => i < logoCount!)
         .map(([id, name]) => (
-          <Logo providerId={id} name={name} scale={scale} key={id}
-          />
-        )
-      )}
+          <Logo providerId={id} name={name} scale={scale} key={id} />
+        ))}
     </div>
   )
 }
