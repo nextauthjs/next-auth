@@ -2,8 +2,6 @@ import { useEffect, useState } from "react"
 import { Logo } from "./logo"
 import manifest from "@/data/manifest.json"
 
-let render = 0
-
 const clamp = (min: number, num: number, max: number) =>
   Math.min(Math.max(num, min), max)
 
@@ -35,9 +33,6 @@ export const LogosMarquee = () => {
     window.addEventListener("resize", handleEvent)
     return () => window.removeEventListener("resize", handleEvent)
   }, [])
-
-  render += 1
-  console.log("render", render)
 
   return (
     <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
