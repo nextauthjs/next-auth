@@ -152,6 +152,20 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://badass.dev" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/136839242?v=4" alt="Badass Courses Logo" />
+        </a><br />
+        <div>Badass Courses</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://github.com/encoredev/encore" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/50438175?v=4" alt="Encore Logo" />
+        </a><br />
+        <div>Encore</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
         </a><br />

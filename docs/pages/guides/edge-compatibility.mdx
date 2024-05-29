@@ -90,7 +90,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 import NextAuth from "next-auth"
 import authConfig from "./auth.config"
 
-export const { auth as middleware } = NextAuth(authConfig)
+export const { auth: middleware } = NextAuth(authConfig)
 ```
 
 4. Finally, everywhere else we can import from the primary `auth.ts` configuration and use `next-auth` as usual. See our [session management docs](/getting-started/session-management/protecting) for more examples.
