@@ -1,10 +1,10 @@
 import { useThemeConfig } from "nextra-theme-docs"
 import { useRouter } from "next/router"
 import { Tabs } from "nextra/components"
-import React, { Children, ReactNode, useEffect, useState } from "react"
+import { Children, useEffect, useState } from "react"
 
 interface ChildrenProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 const AUTHJS_TAB_KEY = "authjs.codeTab.framework"
