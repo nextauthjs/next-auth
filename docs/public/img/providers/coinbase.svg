@@ -1,16 +1,1 @@
-<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1527 1551" width="1527" height="1551">
-	<title>Consumer_Wordmark-svg</title>
-	<defs>
-		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
-			<path d="m0-600.49h12041.16v2151.49h-12041.16z"/>
-		</clipPath>
-	</defs>
-	<style>
-		.s0 { fill: #0052ff } 
-	</style>
-	<g id="Clip-Path" clip-path="url(#cp1)">
-		<g id="Layer">
-			<path id="Layer" class="s0" d="m350.4 777.1c0 259.8 176.7 453.3 428.7 453.3 182.5 0 327.4-115.5 379.5-283h365.1c-66.7 361-367.9 603.6-744.5 603.6-446 0-779.2-329.2-779.2-773.9 0-444.8 341.8-776.9 779.2-776.9 385.2 0 680.6 242.6 747.3 600.6h-367.9c-55-167.5-199.8-280.1-382.3-280.1-252 0-425.8 193.5-425.9 456.4z"/>
-		</g>
-	</g>
-</svg>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" viewBox="0 0 1527 1551"><defs><clipPath id="cp1" clipPathUnits="userSpaceOnUse"><path d="M0-600.5h12041.2V1551H0z"/></clipPath></defs><style>.s0{fill:#0052ff}</style><g id="Clip-Path" clip-path="url(#cp1)"><path id="Layer" d="M350.4 777.1c0 259.8 176.7 453.3 428.7 453.3 182.5 0 327.4-115.5 379.5-283h365.1c-66.7 361-367.9 603.6-744.5 603.6C333.2 1551 0 1221.8 0 777.1 0 332.3 341.8.2 779.2.2c385.2 0 680.6 242.6 747.3 600.6h-367.9c-55-167.5-199.8-280.1-382.3-280.1-252 0-425.8 193.5-425.9 456.4z" class="s0"/></g></svg>
