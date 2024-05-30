@@ -41,11 +41,11 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@mikro-orm/core": "^5"
+    "@mikro-orm/core": "^6"
   },
   "devDependencies": {
-    "@mikro-orm/core": "^5",
-    "@mikro-orm/sqlite": "^5"
+    "@mikro-orm/core": "^6",
+    "@mikro-orm/sqlite": "^6"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
