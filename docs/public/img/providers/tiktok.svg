@@ -1,14 +1,1 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="TikTok" role="img" viewBox="0 0 512.00 512.00" width="64px" height="64px" fill="#000000" stroke="#000000" stroke-width="0.00512">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.024"/>
-<g id="SVGRepo_iconCarrier">
-<rect rx="15%" height="512" width="512" fill="#ffffff"/>
-<defs>
-<path id="t" d="M219 200a117 117 0 1 0 101 115v-128a150 150 0 0 0 88 28v-63a88 88 0 0 1-88-88h-64v252a54 54 0 1 1-37-51z" style="mix-blend-mode:multiply"/>
-</defs>
-<use href="#t" fill="#f05" x="18" y="15"/>
-<use href="#t" fill="#0ee"/>
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" stroke="#000000" stroke-width="0" aria-label="TikTok" viewBox="0 0 512 512"><rect width="512" height="512" fill="#ffffff" stroke="none" rx="15%"/><defs><path id="a" d="M219 200a117 117 0 1 0 101 115V187a150 150 0 0 0 88 28v-63a88 88 0 0 1-88-88h-64v252a54 54 0 1 1-37-51z" style="mix-blend-mode:multiply"/></defs><use x="18" y="15" fill="#f05" href="#a"/><use fill="#0ee" href="#a"/></svg>
