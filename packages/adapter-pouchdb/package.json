@@ -1,6 +1,6 @@
 {
   "name": "@auth/pouchdb-adapter",
-  "version": "1.0.10",
+  "version": "2.1.0",
   "description": "PouchDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -29,8 +29,7 @@
   "scripts": {
     "build": "pnpm clean && tsc",
     "clean": "rm -rf index.*",
-    "test": "jest",
-    "test:dev": "jest --watch"
+    "test": "vitest run -c ../utils/vitest.config.ts"
   },
   "files": [
     "*.js",
@@ -49,8 +48,5 @@
     "pouchdb": "^8.0.1",
     "pouchdb-adapter-memory": "^8.0.1",
     "pouchdb-find": "^8.0.1"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

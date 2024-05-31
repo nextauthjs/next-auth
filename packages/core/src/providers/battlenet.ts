@@ -17,6 +17,8 @@ export interface BattleNetProfile extends Record<string, any> {
 
 /** See the [available regions](https://develop.battle.net/documentation/guides/regionality-and-apis) */
 export type BattleNetIssuer =
+  | "https://oauth.battle.net"
+  | "https://oauth.battlenet.com.cn"
   | "https://www.battlenet.com.cn/oauth"
   | `https://${"us" | "eu" | "kr" | "tw"}.battle.net/oauth`
 
@@ -43,6 +45,8 @@ export type BattleNetIssuer =
  * issuer must be one of these values, based on the available regions:
  * ```
  * type BattleNetIssuer =
+ *   | "https://oauth.battle.net"
+ *   | "https://oauth.battlenet.com.cn"
  *   | "https://www.battlenet.com.cn/oauth"
  *   | "https://us.battle.net/oauth"
  *   | "https://eu.battle.net/oauth"
@@ -62,7 +66,7 @@ export type BattleNetIssuer =
  * :::tip
  *
  * The BattleNet provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/battlenet.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -91,7 +95,7 @@ export default function BattleNet<P extends BattleNetProfile>(
         image: null,
       }
     },
-    style: { logo: "/battlenet.svg", bg: "#148eff", text: "#fff" },
+    style: { bg: "#148eff", text: "#fff" },
     options,
   }
 }

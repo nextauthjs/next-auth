@@ -1,0 +1,35 @@
+{
+  "description": "Express Auth example app",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist",
+    "build": "pnpm build:ts && pnpm build:css",
+    "build:ts": "tsc",
+    "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
+    "dev": "tsx watch --env-file=.env src/server.ts & pnpm build:css -w",
+    "lint": "eslint src/*.ts --fix",
+    "prettier": "prettier src/*.ts --write"
+  },
+  "author": "Rexford Essilfie <rexfordessilfie09@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@auth/express": "latest",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2",
+    "tailwindcss": "^3.4.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.12.7",
+    "@types/pug": "^2.0.10",
+    "tsx": "^4.7.0",
+    "typescript": "5.3.3"
+  }
+}

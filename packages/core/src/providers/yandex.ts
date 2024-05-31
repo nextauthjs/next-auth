@@ -1,7 +1,7 @@
 /**
  * <div style={{backgroundColor: "#ffcc00", display: "flex", justifyContent: "space-between", color: "#000", padding: 16}}>
  * <span>Built-in <b>Yandex</b> integration.</span>
- * <a href="https://github.com">
+ * <a href="https://yandex.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/yandex.svg" height="48" width="48"/>
  * </a>
  * </div>
@@ -9,7 +9,7 @@
  * @module providers/yandex
  */
 
-import { OAuthConfig, OAuthUserConfig } from "."
+import { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 /**
  * - {@link https://yandex.com/dev/id/doc/en/user-information | Getting information about the user}
@@ -108,7 +108,7 @@ export interface YandexProfile {
  *
  *:::tip
  * The Yandex provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/yandex.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  * :::
  *
  * :::info **Disclaimer**
@@ -143,7 +143,6 @@ export default function Yandex(
       }
     },
     style: {
-      logo: "/yandex.svg",
       bg: "#ffcc00",
       text: "#000",
     },

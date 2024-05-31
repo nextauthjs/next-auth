@@ -53,7 +53,7 @@ export { SessionProviderProps }
 //    relative URLs are valid in that context and so defaults to empty.
 // 2. When invoked server side the value is picked up from an environment
 //    variable and defaults to 'http://localhost:3000'.
-const __NEXTAUTH: AuthClientConfig = {
+export const __NEXTAUTH: AuthClientConfig = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL).origin,
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
@@ -69,15 +69,22 @@ const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
+let broadcastChannel: BroadcastChannel | null = null
+
 function broadcast() {
-  if (typeof BroadcastChannel !== "undefined") {
-    return new BroadcastChannel("next-auth")
+  if (typeof BroadcastChannel === "undefined") {
+    return {
+      postMessage: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }
   }
-  return {
-    postMessage: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
+
+  if (broadcastChannel === null) {
+    broadcastChannel = new BroadcastChannel("next-auth")
   }
+
+  return broadcastChannel
 }
 
 // TODO:
@@ -113,7 +120,7 @@ export const SessionContext = React.createContext?.<
  * React Hook that gives you access to the logged in user's session data and lets you modify it.
  *
  * :::info
- * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `useSession` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function useSession<R extends boolean>(
@@ -137,7 +144,7 @@ export function useSession<R extends boolean>(
 
   React.useEffect(() => {
     if (requiredAndNotLoading) {
-      const url = `/api/auth/signin?${new URLSearchParams({
+      const url = `${__NEXTAUTH.basePath}/signin?${new URLSearchParams({
         error: "SessionRequired",
         callbackUrl: window.location.href,
       })}`
@@ -184,7 +191,6 @@ export async function getSession(params?: GetSessionParams) {
  * required to make requests that changes state. (e.g. signing in or out, or updating the session).
  *
  * [CSRF Prevention: Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie)
- * @internal
  */
 export async function getCsrfToken() {
   const response = await fetchData<{ csrfToken: string }>(
@@ -203,7 +209,6 @@ type ProvidersType = Record<
 /**
  * Returns a client-safe configuration object of the currently
  * available providers.
- * @internal
  */
 export async function getProviders() {
   return fetchData<ProvidersType>("providers", __NEXTAUTH, logger)
@@ -214,7 +219,7 @@ export async function getProviders() {
  * Handles CSRF protection.
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   provider?: LiteralUnion<
     P extends RedirectableProviderType
@@ -261,7 +266,11 @@ export async function signIn<
         "X-Auth-Return-Redirect": "1",
       },
       // @ts-expect-error
-      body: new URLSearchParams({ ...options, csrfToken, callbackUrl }),
+      body: new URLSearchParams({
+        ...options,
+        csrfToken,
+        callbackUrl,
+      }),
     }
   )
 
@@ -333,7 +342,7 @@ export async function signOut<R extends boolean = true>(
  * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
  *
  * :::info
- * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `SessionProvider` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function SessionProvider(props: SessionProviderProps) {
@@ -465,8 +474,8 @@ export function SessionProvider(props: SessionProviderProps) {
       status: loading
         ? "loading"
         : session
-        ? "authenticated"
-        : "unauthenticated",
+          ? "authenticated"
+          : "unauthenticated",
       async update(data: any) {
         if (loading || !session) return
         setLoading(true)

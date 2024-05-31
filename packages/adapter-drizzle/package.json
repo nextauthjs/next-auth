@@ -1,6 +1,6 @@
 {
   "name": "@auth/drizzle-adapter",
-  "version": "0.3.12",
+  "version": "1.1.0",
   "description": "Drizzle adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -19,7 +19,8 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./index.js",
+      "require": "./index.js"
     }
   },
   "license": "ISC",
@@ -38,9 +39,9 @@
   "scripts": {
     "clean": "find . -type d -name \".drizzle\" | xargs rm -rf",
     "test": "pnpm test:mysql && pnpm test:sqlite && pnpm test:pg",
-    "test:mysql": "pnpm clean && ./tests/mysql/test.sh",
-    "test:sqlite": "pnpm clean && ./tests/sqlite/test.sh",
-    "test:pg": "pnpm clean && ./tests/pg/test.sh",
+    "test:mysql": "pnpm clean && ./test/mysql/test.sh",
+    "test:sqlite": "pnpm clean && ./test/sqlite/test.sh",
+    "test:pg": "pnpm clean && ./test/pg/test.sh",
     "build": "tsc",
     "dev": "drizzle-kit generate:mysql --schema=src/schema.ts --out=.drizzle && tsc -w"
   },
@@ -48,16 +49,12 @@
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@libsql/client": "0.4.0-pre.5",
-    "@types/better-sqlite3": "^7.6.4",
     "@types/uuid": "^8.3.3",
-    "better-sqlite3": "^8.6.0",
-    "drizzle-kit": "^0.20.6",
-    "drizzle-orm": "^0.29.1",
-    "mysql2": "^3.2.0",
-    "postgres": "^3.3.4"
-  },
-  "jest": {
-    "preset": "utils/adapter"
+    "drizzle-kit": "^0.20.17",
+    "drizzle-orm": "^0.30.9",
+    "libsql": "^0.3.18",
+    "mysql2": "^3.9.7",
+    "postgres": "^3.4.3",
+    "tsx": "^4.7.0"
   }
 }

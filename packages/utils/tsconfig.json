@@ -15,6 +15,6 @@
     "strict": true,
     "strictNullChecks": true,
     "stripInternal": true,
-    "target": "ES2020",
-  },
+    "target": "es2020"
+  }
 }

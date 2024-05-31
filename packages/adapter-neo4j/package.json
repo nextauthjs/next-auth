@@ -1,6 +1,6 @@
 {
   "name": "@auth/neo4j-adapter",
-  "version": "1.1.0",
+  "version": "2.1.0",
   "description": "neo4j adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -36,8 +36,7 @@
     "access": "public"
   },
   "scripts": {
-    "test:watch": "./tests/test.sh -w",
-    "test": "./tests/test.sh",
+    "test": "./test/test.sh",
     "build": "tsc"
   },
   "peerDependencies": {
@@ -49,8 +48,5 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

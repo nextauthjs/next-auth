@@ -2,13 +2,8 @@
   "extends": "utils/tsconfig.json",
   "compilerOptions": {
     "outDir": ".",
-    "rootDir": "src",
+    "rootDir": "src"
   },
-  "exclude": [
-    "*.js",
-    "*.d.ts",
-  ],
-  "include": [
-    "src/**/*"
-  ],
+  "exclude": ["*.js", "*.d.ts"],
+  "include": ["src/**/*"]
 }

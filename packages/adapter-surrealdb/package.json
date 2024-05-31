@@ -1,6 +1,6 @@
 {
   "name": "@auth/surrealdb-adapter",
-  "version": "0.2.6",
+  "version": "1.1.0",
   "description": "SurrealDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -37,17 +37,13 @@
     "access": "public"
   },
   "scripts": {
-    "test": "./tests/test.sh",
-    "test:watch": "./tests/test.sh -w",
+    "test": "./test/test.sh",
     "build": "tsc"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "surrealdb.js": "^0.9.1"
-  },
-  "jest": {
-    "preset": "utils/adapter"
+    "surrealdb.js": "^0.11.0"
   }
 }

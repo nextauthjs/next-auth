@@ -16,6 +16,7 @@ firebase-debug.log
 ui-debug.log
 .pnpm-debug.log
 .husky
+tmp
 
 # Dependencies
 node_modules
@@ -26,7 +27,6 @@ build
 dist
 
 # Generated files
-.docusaurus
 .cache-loader
 packages/next-auth/providers
 # copied from @auth/core
@@ -36,6 +36,7 @@ packages/*/*.d.ts
 packages/*/*.d.ts.map
 packages/*/lib
 packages/**/generated
+.xata*
 
 # Development app
 apps/dev/src/css
@@ -69,12 +70,17 @@ coverage
 dynamodblocal-bin
 firestore-debug.log
 test.schema.gql
+test-results
+playwright-report
+blob-report
+playwright/.cache
+
 
 # Turborepo
 .turbo
 
-# docusaurus
-docs/.docusaurus
+# Docs
+docs/.next
 docs/manifest.mjs
 
 # Core
@@ -104,11 +110,12 @@ docs/docs/reference/sveltekit
 docs/docs/reference/solidstart
 
 
+# Express
+docs/docs/reference/express
+
+
 # Adapters
 docs/docs/reference/adapter
 
 ## Drizzle migration folder
 .drizzle
-
-## Test files
-!vitest.config.js

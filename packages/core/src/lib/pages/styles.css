@@ -47,25 +47,31 @@
 
   button,
   a.button {
-    color: var(--provider-dark-color, var(--color-primary));
-    background-color: var(--provider-dark-bg, var(--color-background));
+    color: var(--provider-dark-color, var(--color-primary)) !important;
+    background-color: var(
+      --provider-dark-bg,
+      var(--color-background)
+    ) !important;
+
     &:hover {
-      background-color: var(--provider-dark-bg-hover, var(--color-background-hover)) !important;
+      background-color: var(
+        --provider-dark-bg-hover,
+        var(--color-background-hover)
+      ) !important;
+    }
+
+    span {
+      color: var(--provider-dark-bg) !important;
     }
   }
-  #provider-logo {
-    display: none !important;
-  }
-  #provider-logo-dark {
-    width: 25px;
-    display: block !important;
-  }
 }
+
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 *,
 *:before,
 *:after {
@@ -80,9 +86,21 @@ body {
   background-color: var(--color-background);
   margin: 0;
   padding: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
 }
 
 h1 {
@@ -121,10 +139,6 @@ input[type] {
   font-size: 1rem;
   border-radius: var(--border-radius);
   color: var(--color-text);
-
-  &:focus {
-    box-shadow: none;
-  }
 }
 
 p {
@@ -151,13 +165,13 @@ button,
 a.button {
   padding: 0.75rem 1rem;
   color: var(--provider-color, var(--color-primary));
-  background-color: var(--provider-bg);
-  font-size: 1.1rem;
-  min-height: 62px;
-  border-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--provider-bg, var(--color-background));
+  border: 1px solid #00000031;
+  font-size: 0.9rem;
+  height: 50px;
   border-radius: var(--border-radius);
-  transition: all 0.1s ease-in-out;
-  font-weight: 500;
+  transition: background-color 250ms ease-in-out;
+  font-weight: 300;
   position: relative;
   display: flex;
   align-items: center;
@@ -167,15 +181,18 @@ a.button {
     background-color: var(--provider-bg-hover, var(--color-background-hover));
     cursor: pointer;
   }
+
   &:active {
     cursor: pointer;
   }
+
+  span {
+    color: #fff;
+  }
+
   #provider-logo {
     width: 25px;
     display: block;
-  }
-  #provider-logo-dark {
-    display: none;
   }
 }
 
@@ -185,7 +202,10 @@ a.button {
   width: 100%;
 
   &:hover {
-    background-color: var(--button-hover-bg, var(--color-info-hover)) !important;
+    background-color: var(
+      --button-hover-bg,
+      var(--color-info-hover)
+    ) !important;
   }
 }
 
@@ -293,11 +313,23 @@ a.site {
 
 .card {
   background-color: var(--color-background-card);
-  border-radius: 2rem;
+  border-radius: 1rem;
   padding: 1.25rem 2rem;
 
   .header {
     color: var(--color-primary);
+  }
+
+  input[type]::placeholder {
+    color: color-mix(
+      in srgb,
+      var(--color-text) 20%,
+      var(--color-button-active-background)
+    );
+  }
+
+  input[type] {
+    background: color-mix(in srgb, var(--color-background-card) 95%, black);
   }
 }
 
@@ -311,6 +343,7 @@ a.site {
     width: 368px;
   }
 }
+
 @media screen and (max-width: 450px) {
   .card {
     margin: 1rem 0;

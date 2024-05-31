@@ -12,21 +12,17 @@ export function Header({
   signOut: any
 }) {
   return (
-    <header>
+    <header className={styles.header}>
       <div className={styles.signedInStatus}>
-        {!session?.user && (
+        <img
+          src={
+            session?.user?.image ??
+            "https://source.boringavatars.com/marble/120"
+          }
+          className={styles.avatar}
+        />
+        {session?.user ? (
           <>
-            <span className={styles.notSignedInText}>
-              You are not signed in
-            </span>
-            {signIn}
-          </>
-        )}
-        {session?.user && (
-          <>
-            {session.user?.image && (
-              <img src={session.user.image} className={styles.avatar} />
-            )}
             <span className={styles.signedInText}>
               <small>Signed in as</small>
               <br />
@@ -35,28 +31,35 @@ export function Header({
             </span>
             {signOut}
           </>
+        ) : (
+          <>
+            <span className={styles.notSignedInText}>
+              You are not signed in
+            </span>
+            {signIn}
+          </>
         )}
       </div>
       <nav>
         <ul className={styles.navItems}>
-          <li className={styles.navItem}>
-            <Link href="/">Home (app)</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/dashboard">Dashboard (app)</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/policy">Policy (pages)</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/credentials">Credentials (pages)</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/protected-ssr">getServerSideProps (pages)</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link href="/api/examples/protected">API Route (pages)</Link>
-          </li>
+          <Link href="/" className={styles.navItem}>
+            Home (app)
+          </Link>
+          <Link className={styles.navItem} href="/dashboard">
+            Dashboard (app)
+          </Link>
+          <Link className={styles.navItem} href="/policy">
+            Policy (pages)
+          </Link>
+          <Link className={styles.navItem} href="/credentials">
+            Credentials (pages)
+          </Link>
+          <Link className={styles.navItem} href="/protected-ssr">
+            getServerSideProps (pages)
+          </Link>
+          <Link className={styles.navItem} href="/api/examples/protected">
+            API Route (pages)
+          </Link>
         </ul>
       </nav>
     </header>

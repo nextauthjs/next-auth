@@ -109,7 +109,18 @@ export async function handleOAuth(
     client,
     codeGrantParams,
     redirect_uri,
-    codeVerifier ?? "auth" // TODO: review fallback code verifier
+    codeVerifier ?? "auth", // TODO: review fallback code verifier,
+    {
+      [o.experimental_customFetch]: (...args) => {
+        if (
+          !provider.checks.includes("pkce") &&
+          args[1]?.body instanceof URLSearchParams
+        ) {
+          args[1].body.delete("code_verifier")
+        }
+        return fetch(...args)
+      },
+    }
   )
 
   if (provider.token?.conform) {
@@ -186,8 +197,11 @@ export async function handleOAuth(
   return { ...profileResult, profile, cookies: resCookies }
 }
 
-/** Returns the user and account that is going to be created in the database. */
-async function getUserAndAccount(
+/**
+ * Returns the user and account that is going to be created in the database.
+ * @internal
+ */
+export async function getUserAndAccount(
   OAuthProfile: Profile,
   provider: OAuthConfigInternal<any>,
   tokens: TokenSet,
@@ -197,7 +211,7 @@ async function getUserAndAccount(
     const userFromProfile = await provider.profile(OAuthProfile, tokens)
     const user = {
       ...userFromProfile,
-      id: userFromProfile.id?.toString() ?? crypto.randomUUID(),
+      id: crypto.randomUUID(),
       email: userFromProfile.email?.toLowerCase(),
     } satisfies User
 
@@ -207,7 +221,7 @@ async function getUserAndAccount(
         ...tokens,
         provider: provider.id,
         type: provider.type,
-        providerAccountId: user.id.toString(),
+        providerAccountId: userFromProfile.id ?? crypto.randomUUID(),
       },
     }
   } catch (e) {

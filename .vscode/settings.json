@@ -1,4 +1,5 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "openInGitHub.remote.branch": "main"
+  "openInGitHub.remote.branch": "main",
+  "typescript.preferences.importModuleSpecifierEnding": "js"
 }

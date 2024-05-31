@@ -1,6 +1,11 @@
 import { AuthError } from "../../errors.js"
 
-export type WarningCode = "debug-enabled" | "csrf-disabled"
+export type WarningCode =
+  | "debug-enabled"
+  | "csrf-disabled"
+  | "experimental-webauthn"
+  | "env-url-basepath-redundant"
+  | "env-url-basepath-mismatch"
 
 /**
  * Override any of the methods, and the rest will use the default logger.

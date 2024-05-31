@@ -1,5 +1,5 @@
 import { createHash, randomString, toRequest } from "../../utils/web.js"
-import { AuthorizedCallbackError } from "../../../errors.js"
+import { AccessDenied } from "../../../errors.js"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Account } from "../../../types.js"
@@ -14,7 +14,7 @@ export async function sendToken(
   options: InternalOptions<"email">
 ) {
   const { body } = request
-  const { provider, url, callbacks, adapter } = options
+  const { provider, callbacks, adapter } = options
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const email = normalizer(body?.email)
 
@@ -36,9 +36,17 @@ export async function sendToken(
       email: { verificationRequest: true },
     })
   } catch (e) {
-    throw new AuthorizedCallbackError(e as Error)
+    throw new AccessDenied(e as Error)
   }
-  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (!authorized) throw new AccessDenied("AccessDenied")
+  if (typeof authorized === "string") {
+    return {
+      redirect: await callbacks.redirect({
+        url: authorized,
+        baseUrl: options.url.origin,
+      }),
+    }
+  }
 
   const { callbackUrl, theme } = options
   const token =
@@ -51,11 +59,13 @@ export async function sendToken(
 
   const secret = provider.secret ?? options.secret
 
+  const baseUrl = new URL(options.basePath, options.url.origin)
+
   const sendRequest = provider.sendVerificationRequest({
     identifier: email,
     token,
     expires,
-    url: `${url}/callback/${provider.id}?${new URLSearchParams({
+    url: `${baseUrl}/callback/${provider.id}?${new URLSearchParams({
       callbackUrl,
       token,
       email,
@@ -74,7 +84,7 @@ export async function sendToken(
   await Promise.all([sendRequest, createToken])
 
   return {
-    redirect: `${url}/verify-request?${new URLSearchParams({
+    redirect: `${baseUrl}/verify-request?${new URLSearchParams({
       provider: provider.id,
       type: provider.type,
     })}`,

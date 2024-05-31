@@ -35,7 +35,7 @@ export function client({ adminSecret, endpoint }: HasuraAdapterClient) {
     async run<
       Q extends TypedDocumentString<any, any>,
       T extends Q extends TypedDocumentString<infer T, any> ? T : never,
-      V extends Q extends TypedDocumentString<any, infer V> ? V : never
+      V extends Q extends TypedDocumentString<any, infer V> ? V : never,
     >(query: Q, variables?: V): Promise<T> {
       const response = await fetch(endpoint, {
         method: "POST",

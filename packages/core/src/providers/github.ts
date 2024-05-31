@@ -105,7 +105,7 @@ export interface GitHubProfile {
  * :::tip
  *
  * The GitHub provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -120,19 +120,30 @@ export interface GitHubProfile {
  * :::
  */
 export default function GitHub(
-  config: OAuthUserConfig<GitHubProfile>
+  config: OAuthUserConfig<GitHubProfile> & {
+    /** Configuration for usage with [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started). */
+    enterprise?: {
+      /** The base URL of your GitHub Enterprise Server instance. */
+      baseUrl?: string
+    }
+  }
 ): OAuthConfig<GitHubProfile> {
+  const baseUrl = config?.enterprise?.baseUrl ?? "https://github.com"
+  const apiBaseUrl = config?.enterprise?.baseUrl
+    ? `${config?.enterprise?.baseUrl}/api/v3`
+    : "https://api.github.com"
+
   return {
     id: "github",
     name: "GitHub",
     type: "oauth",
     authorization: {
-      url: "https://github.com/login/oauth/authorize",
+      url: `${baseUrl}/login/oauth/authorize`,
       params: { scope: "read:user user:email" },
     },
-    token: "https://github.com/login/oauth/access_token",
+    token: `${baseUrl}/login/oauth/access_token`,
     userinfo: {
-      url: "https://api.github.com/user",
+      url: `${apiBaseUrl}/user`,
       async request({ tokens, provider }) {
         const profile = await fetch(provider.userinfo?.url as URL, {
           headers: {
@@ -144,7 +155,7 @@ export default function GitHub(
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
-          const res = await fetch("https://api.github.com/user/emails", {
+          const res = await fetch(`${apiBaseUrl}/user/emails`, {
             headers: {
               Authorization: `Bearer ${tokens.access_token}`,
               "User-Agent": "authjs",
@@ -168,7 +179,7 @@ export default function GitHub(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/github.svg", bg: "#24292f", text: "#fff" },
+    style: { bg: "#24292f", text: "#fff" },
     options: config,
   }
 }

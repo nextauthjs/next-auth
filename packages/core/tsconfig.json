@@ -3,21 +3,12 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "outDir": ".",
     "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "*.js",
-    "*.d.ts",
-    "lib",
-    "providers"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
 }

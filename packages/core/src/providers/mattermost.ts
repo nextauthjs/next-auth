@@ -8,7 +8,7 @@
  *
  * @module providers/mattermost
  */
-import type { OAuthConfig, OAuthUserConfig } from "./oauth"
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 /** [Get a user](https://api.mattermost.com/#tag/users/operation/GetUser) */
 export interface MattermostProfile {
@@ -107,7 +107,7 @@ export interface MattermostProfile {
  * :::tip
  *
  * The Mattermost provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/mattermost.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -142,7 +142,7 @@ export default function Mattermost<P extends MattermostProfile>(
         image: null,
       }
     },
-    style: { logo: "/mattermost.svg", bg: "#000", text: "#fff" },
+    style: { bg: "#000", text: "#fff" },
     options: rest,
   }
 }

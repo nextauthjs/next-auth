@@ -1,11 +1,12 @@
-import { Auth, raw, skipCSRFCheck } from "@auth/core"
+import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { detectOrigin } from "./env.js"
-
+import type { AuthAction } from "@auth/core/types"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
+import type { ProviderType } from "@auth/core/providers"
+import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -22,32 +23,46 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = authUrl(detectOrigin(headers), "signin")
+  const signInURL = createActionURL(
+    "signin",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
 
   if (!provider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(url)
-    return url
+    signInURL.searchParams.append("callbackUrl", callbackUrl)
+    if (shouldRedirect) redirect(signInURL.toString())
+    return signInURL.toString()
   }
 
-  let url = `${base}/${provider}?${new URLSearchParams(authorizationParams)}`
-  let foundProvider: SignInParams[0] | undefined = undefined
+  let url = `${signInURL}/${provider}?${new URLSearchParams(
+    authorizationParams
+  )}`
+  let foundProvider: { id?: SignInParams[0]; type?: ProviderType } = {}
 
-  for (const _provider of config.providers) {
-    const { id } = typeof _provider === "function" ? _provider?.() : _provider
+  for (const providerConfig of config.providers) {
+    const { options, ...defaults } =
+      typeof providerConfig === "function" ? providerConfig() : providerConfig
+    const id = (options?.id as string | undefined) ?? defaults.id
     if (id === provider) {
-      foundProvider = id
+      foundProvider = {
+        id,
+        type: (options?.type as ProviderType | undefined) ?? defaults.type,
+      }
       break
     }
   }
 
-  if (!foundProvider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
+  if (!foundProvider.id) {
+    const url = `${signInURL}?${new URLSearchParams({ callbackUrl })}`
     if (shouldRedirect) redirect(url)
     return url
   }
 
-  if (foundProvider === "credentials") {
+  if (foundProvider.type === "credentials") {
     url = url.replace("signin", "callback")
   }
 
@@ -70,7 +85,14 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = authUrl(detectOrigin(headers), "signout")
+  const url = createActionURL(
+    "signout",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -92,7 +114,14 @@ export async function update(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 
-  const url = authUrl(detectOrigin(headers), "session")
+  const url = createActionURL(
+    "session",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
 
@@ -101,12 +130,4 @@ export async function update(
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
   return res.body
-}
-
-/** Determine an action's URL */
-function authUrl(base: URL, action: string) {
-  let pathname
-  if (base.pathname === "/") pathname ??= `/api/auth/${action}`
-  else pathname ??= `${base.pathname}/${action}`
-  return new URL(pathname, base.origin)
 }

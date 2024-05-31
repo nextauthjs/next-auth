@@ -1,7 +1,7 @@
 {
   "name": "@auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "1.0.12",
+  "version": "2.1.0",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",
@@ -18,8 +18,8 @@
     "access": "public"
   },
   "scripts": {
-    "test:default": "jest",
-    "test:custom": "CUSTOM_MODEL=1 jest",
+    "test:default": "vitest -c ../utils/vitest.config.ts",
+    "test:custom": "CUSTOM_MODEL=1 vitest -c ../utils/vitest.config.ts",
     "test": "pnpm test:default && pnpm test:custom",
     "clean": "rm -rf index.*",
     "build": "pnpm clean && tsc"
@@ -48,8 +48,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.36.1",
-    "@aws-sdk/lib-dynamodb": "^3.36.1",
-    "@shelf/jest-dynamodb": "^2.1.0"
+    "@aws-sdk/lib-dynamodb": "^3.36.1"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

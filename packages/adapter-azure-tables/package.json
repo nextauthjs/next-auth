@@ -1,6 +1,6 @@
 {
   "name": "@auth/azure-tables-adapter",
-  "version": "0.1.11",
+  "version": "1.1.0",
   "description": "Azure Tables Storage adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -37,8 +37,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "./tests/test.sh",
-    "test:watch": "./tests/test.sh -w",
+    "test": "./test/test.sh",
     "build": "tsc"
   },
   "dependencies": {
@@ -49,8 +48,5 @@
   },
   "devDependencies": {
     "@azure/data-tables": "^13.2.1"
-  },
-  "jest": {
-    "preset": "utils/adapter"
   }
 }

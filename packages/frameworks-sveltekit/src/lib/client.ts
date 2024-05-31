@@ -1,12 +1,14 @@
+import { base } from "$app/paths"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
-import { base } from "$app/paths"
+import type { LiteralUnion } from "./types.js"
 
-type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
-
-interface SignInOptions extends Record<string, unknown> {
+/*
+ * @internal
+ */
+export interface SignInOptions extends Record<string, unknown> {
   /**
    * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
    *
@@ -39,7 +41,7 @@ export type SignInAuthorizationParams =
  * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
@@ -63,7 +65,7 @@ export async function signIn<
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
+  // TODO: Remove this since SvelteKit offers the CSRF protection via origin check
   const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
 
@@ -103,7 +105,7 @@ export async function signIn<
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
   const basePath = base ?? ""
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
+  // TODO: Remove this since SvelteKit offers the CSRF protection via origin check
   const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
   const { csrfToken } = await csrfTokenResponse.json()
   const res = await fetch(`${basePath}/auth/signout`, {

@@ -1,10 +1,10 @@
 <p align="center">
   <br/>
   <a href="https://authjs.dev" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" />
+    <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
   </a>
   <a href="https://www.postgresql.org/" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/adapters/pg.png"/>
+    <img height="64px" src="https://authjs.dev/img/adapters/pg.svg"/>
   </a>
   <h3 align="center"><b>Postgres Adapter</b> - NextAuth.js / Auth.js</a></h3>
   <p align="center" style="align: center;">
@@ -18,7 +18,7 @@
       <img src="https://img.shields.io/npm/dm/@auth/pg-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
     </a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers">
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
     </a>
   </p>
 </p>

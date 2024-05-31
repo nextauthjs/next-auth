@@ -1,6 +1,6 @@
 {
   "name": "@auth/fauna-adapter",
-  "version": "1.0.10",
+  "version": "3.1.0",
   "description": "Fauna Adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -10,7 +10,8 @@
   "author": "Bhanu Teja P",
   "contributors": [
     "Nico Domino <yo@ndo.dev>",
-    "Balázs Orbán <info@balazsorban.com>"
+    "Balázs Orbán <info@balazsorban.com>",
+    "Aske Hippe Brun <mail@askehippebrun.com>"
   ],
   "type": "module",
   "types": "./index.d.ts",
@@ -37,23 +38,19 @@
     "access": "public"
   },
   "scripts": {
+    "fauna": "fauna",
     "build": "tsc",
     "dev": "tsc -w",
-    "clean": "rm -rf dist",
-    "migrate": "fauna-schema-migrate generate",
-    "test": "./tests/test.sh"
+    "test": "./test/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "faunadb": "^4.3.0"
+    "fauna": "^1.3.1"
   },
   "devDependencies": {
-    "@fauna-labs/fauna-schema-migrate": "^2.1.3",
-    "faunadb": "^4.3.0"
-  },
-  "jest": {
-    "preset": "utils/adapter"
+    "fauna": "^1.3.1",
+    "fauna-shell": "1.2.1"
   }
 }

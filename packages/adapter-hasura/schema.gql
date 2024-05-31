@@ -4,12 +4,18 @@ schema {
   subscription: subscription_root
 }
 
-"""whether this query should be cached (Hasura Cloud only)"""
+"""
+whether this query should be cached (Hasura Cloud only)
+"""
 directive @cached(
-  """measured in seconds"""
+  """
+  measured in seconds
+  """
   ttl: Int! = 60
 
-  """refresh the cache entry"""
+  """
+  refresh the cache entry
+  """
   refresh: Boolean! = false
 ) on QUERY
 
@@ -36,7 +42,9 @@ input String_comparison_exp {
   _gt: String
   _gte: String
 
-  """does the column match the given case-insensitive pattern"""
+  """
+  does the column match the given case-insensitive pattern
+  """
   _ilike: String
   _in: [String!]
 
@@ -46,13 +54,17 @@ input String_comparison_exp {
   _iregex: String
   _is_null: Boolean
 
-  """does the column match the given pattern"""
+  """
+  does the column match the given pattern
+  """
   _like: String
   _lt: String
   _lte: String
   _neq: String
 
-  """does the column NOT match the given case-insensitive pattern"""
+  """
+  does the column NOT match the given case-insensitive pattern
+  """
   _nilike: String
   _nin: [String!]
 
@@ -61,7 +73,9 @@ input String_comparison_exp {
   """
   _niregex: String
 
-  """does the column NOT match the given pattern"""
+  """
+  does the column NOT match the given pattern
+  """
   _nlike: String
 
   """
@@ -69,7 +83,9 @@ input String_comparison_exp {
   """
   _nregex: String
 
-  """does the column NOT match the given SQL regular expression"""
+  """
+  does the column NOT match the given SQL regular expression
+  """
   _nsimilar: String
 
   """
@@ -77,7 +93,9 @@ input String_comparison_exp {
   """
   _regex: String
 
-  """does the column match the given SQL regular expression"""
+  """
+  does the column match the given SQL regular expression
+  """
   _similar: String
 }
 
@@ -97,7 +115,9 @@ type accounts {
   token_type: String
   type: provider_type_enum!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   user: users!
   userId: uuid!
 }
@@ -161,11 +181,15 @@ input type for inserting array relation for remote table "accounts"
 input accounts_arr_rel_insert_input {
   data: [accounts_insert_input!]!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: accounts_on_conflict
 }
 
-"""aggregate avg on columns"""
+"""
+aggregate avg on columns
+"""
 type accounts_avg_fields {
   expires_at: Float
 }
@@ -235,7 +259,9 @@ input accounts_insert_input {
   userId: uuid
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type accounts_max_fields {
   access_token: String
   expires_at: Int
@@ -267,7 +293,9 @@ input accounts_max_order_by {
   userId: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type accounts_min_fields {
   access_token: String
   expires_at: Int
@@ -303,10 +331,14 @@ input accounts_min_order_by {
 response of any mutation on the table "accounts"
 """
 type accounts_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [accounts!]!
 }
 
@@ -319,7 +351,9 @@ input accounts_on_conflict {
   where: accounts_bool_exp
 }
 
-"""Ordering options when selecting data from "accounts"."""
+"""
+Ordering options when selecting data from "accounts".
+"""
 input accounts_order_by {
   access_token: order_by
   expires_at: order_by
@@ -336,7 +370,9 @@ input accounts_order_by {
   userId: order_by
 }
 
-"""primary key columns input for table: accounts"""
+"""
+primary key columns input for table: accounts
+"""
 input accounts_pk_columns_input {
   id: uuid!
 }
@@ -345,40 +381,64 @@ input accounts_pk_columns_input {
 select columns of table "accounts"
 """
 enum accounts_select_column {
-  """column name"""
+  """
+  column name
+  """
   access_token
 
-  """column name"""
+  """
+  column name
+  """
   expires_at
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   id_token
 
-  """column name"""
+  """
+  column name
+  """
   provider
 
-  """column name"""
+  """
+  column name
+  """
   providerAccountId
 
-  """column name"""
+  """
+  column name
+  """
   refresh_token
 
-  """column name"""
+  """
+  column name
+  """
   scope
 
-  """column name"""
+  """
+  column name
+  """
   session_state
 
-  """column name"""
+  """
+  column name
+  """
   token_type
 
-  """column name"""
+  """
+  column name
+  """
   type
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
@@ -400,7 +460,9 @@ input accounts_set_input {
   userId: uuid
 }
 
-"""aggregate stddev on columns"""
+"""
+aggregate stddev on columns
+"""
 type accounts_stddev_fields {
   expires_at: Float
 }
@@ -412,7 +474,9 @@ input accounts_stddev_order_by {
   expires_at: order_by
 }
 
-"""aggregate stddev_pop on columns"""
+"""
+aggregate stddev_pop on columns
+"""
 type accounts_stddev_pop_fields {
   expires_at: Float
 }
@@ -424,7 +488,9 @@ input accounts_stddev_pop_order_by {
   expires_at: order_by
 }
 
-"""aggregate stddev_samp on columns"""
+"""
+aggregate stddev_samp on columns
+"""
 type accounts_stddev_samp_fields {
   expires_at: Float
 }
@@ -440,14 +506,20 @@ input accounts_stddev_samp_order_by {
 Streaming cursor of the table "accounts"
 """
 input accounts_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: accounts_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input accounts_stream_cursor_value_input {
   access_token: String
   expires_at: Int
@@ -463,7 +535,9 @@ input accounts_stream_cursor_value_input {
   userId: uuid
 }
 
-"""aggregate sum on columns"""
+"""
+aggregate sum on columns
+"""
 type accounts_sum_fields {
   expires_at: Int
 }
@@ -479,55 +553,87 @@ input accounts_sum_order_by {
 update columns of table "accounts"
 """
 enum accounts_update_column {
-  """column name"""
+  """
+  column name
+  """
   access_token
 
-  """column name"""
+  """
+  column name
+  """
   expires_at
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   id_token
 
-  """column name"""
+  """
+  column name
+  """
   provider
 
-  """column name"""
+  """
+  column name
+  """
   providerAccountId
 
-  """column name"""
+  """
+  column name
+  """
   refresh_token
 
-  """column name"""
+  """
+  column name
+  """
   scope
 
-  """column name"""
+  """
+  column name
+  """
   session_state
 
-  """column name"""
+  """
+  column name
+  """
   token_type
 
-  """column name"""
+  """
+  column name
+  """
   type
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
 input accounts_updates {
-  """increments the numeric columns with given value of the filtered values"""
+  """
+  increments the numeric columns with given value of the filtered values
+  """
   _inc: accounts_inc_input
 
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: accounts_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: accounts_bool_exp!
 }
 
-"""aggregate var_pop on columns"""
+"""
+aggregate var_pop on columns
+"""
 type accounts_var_pop_fields {
   expires_at: Float
 }
@@ -539,7 +645,9 @@ input accounts_var_pop_order_by {
   expires_at: order_by
 }
 
-"""aggregate var_samp on columns"""
+"""
+aggregate var_samp on columns
+"""
 type accounts_var_samp_fields {
   expires_at: Float
 }
@@ -551,7 +659,9 @@ input accounts_var_samp_order_by {
   expires_at: order_by
 }
 
-"""aggregate variance on columns"""
+"""
+aggregate variance on columns
+"""
 type accounts_variance_fields {
   expires_at: Float
 }
@@ -563,22 +673,32 @@ input accounts_variance_order_by {
   expires_at: order_by
 }
 
-"""ordering argument of a cursor"""
+"""
+ordering argument of a cursor
+"""
 enum cursor_ordering {
-  """ascending ordering of the cursor"""
+  """
+  ascending ordering of the cursor
+  """
   ASC
 
-  """descending ordering of the cursor"""
+  """
+  descending ordering of the cursor
+  """
   DESC
 }
 
-"""mutation root"""
+"""
+mutation root
+"""
 type mutation_root {
   """
   delete data from the table: "accounts"
   """
   delete_accounts(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: accounts_bool_exp!
   ): accounts_mutation_response
 
@@ -591,7 +711,9 @@ type mutation_root {
   delete data from the table: "provider_type"
   """
   delete_provider_type(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: provider_type_bool_exp!
   ): provider_type_mutation_response
 
@@ -604,7 +726,9 @@ type mutation_root {
   delete data from the table: "sessions"
   """
   delete_sessions(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: sessions_bool_exp!
   ): sessions_mutation_response
 
@@ -617,7 +741,9 @@ type mutation_root {
   delete data from the table: "users"
   """
   delete_users(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: users_bool_exp!
   ): users_mutation_response
 
@@ -630,7 +756,9 @@ type mutation_root {
   delete data from the table: "verification_tokens"
   """
   delete_verification_tokens(
-    """filter the rows which have to be deleted"""
+    """
+    filter the rows which have to be deleted
+    """
     where: verification_tokens_bool_exp!
   ): verification_tokens_mutation_response
 
@@ -643,10 +771,14 @@ type mutation_root {
   insert data into the table: "accounts"
   """
   insert_accounts(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [accounts_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: accounts_on_conflict
   ): accounts_mutation_response
 
@@ -654,10 +786,14 @@ type mutation_root {
   insert a single row into the table: "accounts"
   """
   insert_accounts_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: accounts_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: accounts_on_conflict
   ): accounts
 
@@ -665,10 +801,14 @@ type mutation_root {
   insert data into the table: "provider_type"
   """
   insert_provider_type(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [provider_type_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: provider_type_on_conflict
   ): provider_type_mutation_response
 
@@ -676,10 +816,14 @@ type mutation_root {
   insert a single row into the table: "provider_type"
   """
   insert_provider_type_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: provider_type_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: provider_type_on_conflict
   ): provider_type
 
@@ -687,10 +831,14 @@ type mutation_root {
   insert data into the table: "sessions"
   """
   insert_sessions(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [sessions_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: sessions_on_conflict
   ): sessions_mutation_response
 
@@ -698,10 +846,14 @@ type mutation_root {
   insert a single row into the table: "sessions"
   """
   insert_sessions_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: sessions_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: sessions_on_conflict
   ): sessions
 
@@ -709,10 +861,14 @@ type mutation_root {
   insert data into the table: "users"
   """
   insert_users(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [users_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: users_on_conflict
   ): users_mutation_response
 
@@ -720,10 +876,14 @@ type mutation_root {
   insert a single row into the table: "users"
   """
   insert_users_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: users_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: users_on_conflict
   ): users
 
@@ -731,10 +891,14 @@ type mutation_root {
   insert data into the table: "verification_tokens"
   """
   insert_verification_tokens(
-    """the rows to be inserted"""
+    """
+    the rows to be inserted
+    """
     objects: [verification_tokens_insert_input!]!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: verification_tokens_on_conflict
   ): verification_tokens_mutation_response
 
@@ -742,10 +906,14 @@ type mutation_root {
   insert a single row into the table: "verification_tokens"
   """
   insert_verification_tokens_one(
-    """the row to be inserted"""
+    """
+    the row to be inserted
+    """
     object: verification_tokens_insert_input!
 
-    """upsert condition"""
+    """
+    upsert condition
+    """
     on_conflict: verification_tokens_on_conflict
   ): verification_tokens
 
@@ -753,13 +921,19 @@ type mutation_root {
   update data of the table: "accounts"
   """
   update_accounts(
-    """increments the numeric columns with given value of the filtered values"""
+    """
+    increments the numeric columns with given value of the filtered values
+    """
     _inc: accounts_inc_input
 
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: accounts_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: accounts_bool_exp!
   ): accounts_mutation_response
 
@@ -767,10 +941,14 @@ type mutation_root {
   update single row of the table: "accounts"
   """
   update_accounts_by_pk(
-    """increments the numeric columns with given value of the filtered values"""
+    """
+    increments the numeric columns with given value of the filtered values
+    """
     _inc: accounts_inc_input
 
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: accounts_set_input
     pk_columns: accounts_pk_columns_input!
   ): accounts
@@ -779,7 +957,9 @@ type mutation_root {
   update multiples rows of table: "accounts"
   """
   update_accounts_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [accounts_updates!]!
   ): [accounts_mutation_response]
 
@@ -787,10 +967,14 @@ type mutation_root {
   update data of the table: "provider_type"
   """
   update_provider_type(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: provider_type_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: provider_type_bool_exp!
   ): provider_type_mutation_response
 
@@ -798,7 +982,9 @@ type mutation_root {
   update single row of the table: "provider_type"
   """
   update_provider_type_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: provider_type_set_input
     pk_columns: provider_type_pk_columns_input!
   ): provider_type
@@ -807,7 +993,9 @@ type mutation_root {
   update multiples rows of table: "provider_type"
   """
   update_provider_type_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [provider_type_updates!]!
   ): [provider_type_mutation_response]
 
@@ -815,10 +1003,14 @@ type mutation_root {
   update data of the table: "sessions"
   """
   update_sessions(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: sessions_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: sessions_bool_exp!
   ): sessions_mutation_response
 
@@ -826,7 +1018,9 @@ type mutation_root {
   update single row of the table: "sessions"
   """
   update_sessions_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: sessions_set_input
     pk_columns: sessions_pk_columns_input!
   ): sessions
@@ -835,7 +1029,9 @@ type mutation_root {
   update multiples rows of table: "sessions"
   """
   update_sessions_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [sessions_updates!]!
   ): [sessions_mutation_response]
 
@@ -843,10 +1039,14 @@ type mutation_root {
   update data of the table: "users"
   """
   update_users(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: users_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: users_bool_exp!
   ): users_mutation_response
 
@@ -854,7 +1054,9 @@ type mutation_root {
   update single row of the table: "users"
   """
   update_users_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: users_set_input
     pk_columns: users_pk_columns_input!
   ): users
@@ -863,7 +1065,9 @@ type mutation_root {
   update multiples rows of table: "users"
   """
   update_users_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [users_updates!]!
   ): [users_mutation_response]
 
@@ -871,10 +1075,14 @@ type mutation_root {
   update data of the table: "verification_tokens"
   """
   update_verification_tokens(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: verification_tokens_set_input
 
-    """filter the rows which have to be updated"""
+    """
+    filter the rows which have to be updated
+    """
     where: verification_tokens_bool_exp!
   ): verification_tokens_mutation_response
 
@@ -882,7 +1090,9 @@ type mutation_root {
   update single row of the table: "verification_tokens"
   """
   update_verification_tokens_by_pk(
-    """sets the columns of the filtered rows to the given values"""
+    """
+    sets the columns of the filtered rows to the given values
+    """
     _set: verification_tokens_set_input
     pk_columns: verification_tokens_pk_columns_input!
   ): verification_tokens
@@ -891,29 +1101,45 @@ type mutation_root {
   update multiples rows of table: "verification_tokens"
   """
   update_verification_tokens_many(
-    """updates to execute, in order"""
+    """
+    updates to execute, in order
+    """
     updates: [verification_tokens_updates!]!
   ): [verification_tokens_mutation_response]
 }
 
-"""column ordering options"""
+"""
+column ordering options
+"""
 enum order_by {
-  """in ascending order, nulls last"""
+  """
+  in ascending order, nulls last
+  """
   asc
 
-  """in ascending order, nulls first"""
+  """
+  in ascending order, nulls first
+  """
   asc_nulls_first
 
-  """in ascending order, nulls last"""
+  """
+  in ascending order, nulls last
+  """
   asc_nulls_last
 
-  """in descending order, nulls first"""
+  """
+  in descending order, nulls first
+  """
   desc
 
-  """in descending order, nulls first"""
+  """
+  in descending order, nulls first
+  """
   desc_nulls_first
 
-  """in descending order, nulls last"""
+  """
+  in descending order, nulls last
+  """
   desc_nulls_last
 }
 
@@ -966,6 +1192,7 @@ enum provider_type_enum {
   email
   oauth
   oidc
+  webauthn
 }
 
 """
@@ -986,12 +1213,16 @@ input provider_type_insert_input {
   value: String
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type provider_type_max_fields {
   value: String
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type provider_type_min_fields {
   value: String
 }
@@ -1000,10 +1231,14 @@ type provider_type_min_fields {
 response of any mutation on the table "provider_type"
 """
 type provider_type_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [provider_type!]!
 }
 
@@ -1016,12 +1251,16 @@ input provider_type_on_conflict {
   where: provider_type_bool_exp
 }
 
-"""Ordering options when selecting data from "provider_type"."""
+"""
+Ordering options when selecting data from "provider_type".
+"""
 input provider_type_order_by {
   value: order_by
 }
 
-"""primary key columns input for table: provider_type"""
+"""
+primary key columns input for table: provider_type
+"""
 input provider_type_pk_columns_input {
   value: String!
 }
@@ -1030,7 +1269,9 @@ input provider_type_pk_columns_input {
 select columns of table "provider_type"
 """
 enum provider_type_select_column {
-  """column name"""
+  """
+  column name
+  """
   value
 }
 
@@ -1045,14 +1286,20 @@ input provider_type_set_input {
 Streaming cursor of the table "provider_type"
 """
 input provider_type_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: provider_type_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input provider_type_stream_cursor_value_input {
   value: String
 }
@@ -1061,75 +1308,117 @@ input provider_type_stream_cursor_value_input {
 update columns of table "provider_type"
 """
 enum provider_type_update_column {
-  """column name"""
+  """
+  column name
+  """
   value
 }
 
 input provider_type_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: provider_type_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: provider_type_bool_exp!
 }
 
 type query_root {
-  """An array relationship"""
+  """
+  An array relationship
+  """
   accounts(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [accounts_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [accounts_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): [accounts!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   accounts_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [accounts_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [accounts_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): accounts_aggregate!
 
-  """fetch data from the table: "accounts" using primary key columns"""
+  """
+  fetch data from the table: "accounts" using primary key columns
+  """
   accounts_by_pk(id: uuid!): accounts
 
   """
   fetch data from the table: "provider_type"
   """
   provider_type(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [provider_type_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [provider_type_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: provider_type_bool_exp
   ): [provider_type!]!
 
@@ -1137,81 +1426,129 @@ type query_root {
   fetch aggregated fields from the table: "provider_type"
   """
   provider_type_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [provider_type_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [provider_type_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: provider_type_bool_exp
   ): provider_type_aggregate!
 
-  """fetch data from the table: "provider_type" using primary key columns"""
+  """
+  fetch data from the table: "provider_type" using primary key columns
+  """
   provider_type_by_pk(value: String!): provider_type
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   sessions(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [sessions_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [sessions_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): [sessions!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   sessions_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [sessions_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [sessions_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): sessions_aggregate!
 
-  """fetch data from the table: "sessions" using primary key columns"""
+  """
+  fetch data from the table: "sessions" using primary key columns
+  """
   sessions_by_pk(sessionToken: String!): sessions
 
   """
   fetch data from the table: "users"
   """
   users(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [users_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [users_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: users_bool_exp
   ): [users!]!
 
@@ -1219,42 +1556,64 @@ type query_root {
   fetch aggregated fields from the table: "users"
   """
   users_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [users_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [users_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: users_bool_exp
   ): users_aggregate!
 
-  """fetch data from the table: "users" using primary key columns"""
+  """
+  fetch data from the table: "users" using primary key columns
+  """
   users_by_pk(id: uuid!): users
 
   """
   fetch data from the table: "verification_tokens"
   """
   verification_tokens(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [verification_tokens_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [verification_tokens_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: verification_tokens_bool_exp
   ): [verification_tokens!]!
 
@@ -1262,19 +1621,29 @@ type query_root {
   fetch aggregated fields from the table: "verification_tokens"
   """
   verification_tokens_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [verification_tokens_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [verification_tokens_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: verification_tokens_bool_exp
   ): verification_tokens_aggregate!
 
@@ -1292,7 +1661,9 @@ type sessions {
   id: uuid!
   sessionToken: String!
 
-  """An object relationship"""
+  """
+  An object relationship
+  """
   user: users!
   userId: uuid!
 }
@@ -1340,7 +1711,9 @@ input type for inserting array relation for remote table "sessions"
 input sessions_arr_rel_insert_input {
   data: [sessions_insert_input!]!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: sessions_on_conflict
 }
 
@@ -1379,7 +1752,9 @@ input sessions_insert_input {
   userId: uuid
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type sessions_max_fields {
   expires: timestamptz
   id: uuid
@@ -1397,7 +1772,9 @@ input sessions_max_order_by {
   userId: order_by
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type sessions_min_fields {
   expires: timestamptz
   id: uuid
@@ -1419,10 +1796,14 @@ input sessions_min_order_by {
 response of any mutation on the table "sessions"
 """
 type sessions_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [sessions!]!
 }
 
@@ -1435,7 +1816,9 @@ input sessions_on_conflict {
   where: sessions_bool_exp
 }
 
-"""Ordering options when selecting data from "sessions"."""
+"""
+Ordering options when selecting data from "sessions".
+"""
 input sessions_order_by {
   expires: order_by
   id: order_by
@@ -1444,7 +1827,9 @@ input sessions_order_by {
   userId: order_by
 }
 
-"""primary key columns input for table: sessions"""
+"""
+primary key columns input for table: sessions
+"""
 input sessions_pk_columns_input {
   sessionToken: String!
 }
@@ -1453,16 +1838,24 @@ input sessions_pk_columns_input {
 select columns of table "sessions"
 """
 enum sessions_select_column {
-  """column name"""
+  """
+  column name
+  """
   expires
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   sessionToken
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
@@ -1480,14 +1873,20 @@ input sessions_set_input {
 Streaming cursor of the table "sessions"
 """
 input sessions_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: sessions_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input sessions_stream_cursor_value_input {
   expires: timestamptz
   id: uuid
@@ -1499,78 +1898,122 @@ input sessions_stream_cursor_value_input {
 update columns of table "sessions"
 """
 enum sessions_update_column {
-  """column name"""
+  """
+  column name
+  """
   expires
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   sessionToken
 
-  """column name"""
+  """
+  column name
+  """
   userId
 }
 
 input sessions_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: sessions_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: sessions_bool_exp!
 }
 
 type subscription_root {
-  """An array relationship"""
+  """
+  An array relationship
+  """
   accounts(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [accounts_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [accounts_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): [accounts!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   accounts_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [accounts_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [accounts_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): accounts_aggregate!
 
-  """fetch data from the table: "accounts" using primary key columns"""
+  """
+  fetch data from the table: "accounts" using primary key columns
+  """
   accounts_by_pk(id: uuid!): accounts
 
   """
   fetch data from the table in a streaming manner: "accounts"
   """
   accounts_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [accounts_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): [accounts!]!
 
@@ -1578,19 +2021,29 @@ type subscription_root {
   fetch data from the table: "provider_type"
   """
   provider_type(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [provider_type_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [provider_type_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: provider_type_bool_exp
   ): [provider_type!]!
 
@@ -1598,89 +2051,139 @@ type subscription_root {
   fetch aggregated fields from the table: "provider_type"
   """
   provider_type_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [provider_type_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [provider_type_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: provider_type_bool_exp
   ): provider_type_aggregate!
 
-  """fetch data from the table: "provider_type" using primary key columns"""
+  """
+  fetch data from the table: "provider_type" using primary key columns
+  """
   provider_type_by_pk(value: String!): provider_type
 
   """
   fetch data from the table in a streaming manner: "provider_type"
   """
   provider_type_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [provider_type_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: provider_type_bool_exp
   ): [provider_type!]!
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   sessions(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [sessions_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [sessions_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): [sessions!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   sessions_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [sessions_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [sessions_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): sessions_aggregate!
 
-  """fetch data from the table: "sessions" using primary key columns"""
+  """
+  fetch data from the table: "sessions" using primary key columns
+  """
   sessions_by_pk(sessionToken: String!): sessions
 
   """
   fetch data from the table in a streaming manner: "sessions"
   """
   sessions_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [sessions_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): [sessions!]!
 
@@ -1688,19 +2191,29 @@ type subscription_root {
   fetch data from the table: "users"
   """
   users(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [users_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [users_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: users_bool_exp
   ): [users!]!
 
@@ -1708,36 +2221,54 @@ type subscription_root {
   fetch aggregated fields from the table: "users"
   """
   users_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [users_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [users_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: users_bool_exp
   ): users_aggregate!
 
-  """fetch data from the table: "users" using primary key columns"""
+  """
+  fetch data from the table: "users" using primary key columns
+  """
   users_by_pk(id: uuid!): users
 
   """
   fetch data from the table in a streaming manner: "users"
   """
   users_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [users_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: users_bool_exp
   ): [users!]!
 
@@ -1745,19 +2276,29 @@ type subscription_root {
   fetch data from the table: "verification_tokens"
   """
   verification_tokens(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [verification_tokens_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [verification_tokens_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: verification_tokens_bool_exp
   ): [verification_tokens!]!
 
@@ -1765,19 +2306,29 @@ type subscription_root {
   fetch aggregated fields from the table: "verification_tokens"
   """
   verification_tokens_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [verification_tokens_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [verification_tokens_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: verification_tokens_bool_exp
   ): verification_tokens_aggregate!
 
@@ -1790,13 +2341,19 @@ type subscription_root {
   fetch data from the table in a streaming manner: "verification_tokens"
   """
   verification_tokens_stream(
-    """maximum number of rows returned in a single batch"""
+    """
+    maximum number of rows returned in a single batch
+    """
     batch_size: Int!
 
-    """cursor to stream the results returned by the query"""
+    """
+    cursor to stream the results returned by the query
+    """
     cursor: [verification_tokens_stream_cursor_input]!
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: verification_tokens_bool_exp
   ): [verification_tokens!]!
 }
@@ -1822,39 +2379,63 @@ input timestamptz_comparison_exp {
 columns and relationships of "users"
 """
 type users {
-  """An array relationship"""
+  """
+  An array relationship
+  """
   accounts(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [accounts_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [accounts_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): [accounts!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   accounts_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [accounts_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [accounts_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: accounts_bool_exp
   ): accounts_aggregate!
   email: String!
@@ -1863,39 +2444,63 @@ type users {
   image: String
   name: String
 
-  """An array relationship"""
+  """
+  An array relationship
+  """
   sessions(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [sessions_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [sessions_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): [sessions!]!
 
-  """An aggregate relationship"""
+  """
+  An aggregate relationship
+  """
   sessions_aggregate(
-    """distinct select on columns"""
+    """
+    distinct select on columns
+    """
     distinct_on: [sessions_select_column!]
 
-    """limit the number of rows returned"""
+    """
+    limit the number of rows returned
+    """
     limit: Int
 
-    """skip the first n rows. Use only with order_by"""
+    """
+    skip the first n rows. Use only with order_by
+    """
     offset: Int
 
-    """sort the rows by one or more columns"""
+    """
+    sort the rows by one or more columns
+    """
     order_by: [sessions_order_by!]
 
-    """filter the rows returned"""
+    """
+    filter the rows returned
+    """
     where: sessions_bool_exp
   ): sessions_aggregate!
 }
@@ -1963,7 +2568,9 @@ input users_insert_input {
   sessions: sessions_arr_rel_insert_input
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type users_max_fields {
   email: String
   emailVerified: timestamptz
@@ -1972,7 +2579,9 @@ type users_max_fields {
   name: String
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type users_min_fields {
   email: String
   emailVerified: timestamptz
@@ -1985,10 +2594,14 @@ type users_min_fields {
 response of any mutation on the table "users"
 """
 type users_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [users!]!
 }
 
@@ -1998,7 +2611,9 @@ input type for inserting object relation for remote table "users"
 input users_obj_rel_insert_input {
   data: users_insert_input!
 
-  """upsert condition"""
+  """
+  upsert condition
+  """
   on_conflict: users_on_conflict
 }
 
@@ -2011,7 +2626,9 @@ input users_on_conflict {
   where: users_bool_exp
 }
 
-"""Ordering options when selecting data from "users"."""
+"""
+Ordering options when selecting data from "users".
+"""
 input users_order_by {
   accounts_aggregate: accounts_aggregate_order_by
   email: order_by
@@ -2022,7 +2639,9 @@ input users_order_by {
   sessions_aggregate: sessions_aggregate_order_by
 }
 
-"""primary key columns input for table: users"""
+"""
+primary key columns input for table: users
+"""
 input users_pk_columns_input {
   id: uuid!
 }
@@ -2031,19 +2650,29 @@ input users_pk_columns_input {
 select columns of table "users"
 """
 enum users_select_column {
-  """column name"""
+  """
+  column name
+  """
   email
 
-  """column name"""
+  """
+  column name
+  """
   emailVerified
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   image
 
-  """column name"""
+  """
+  column name
+  """
   name
 }
 
@@ -2062,14 +2691,20 @@ input users_set_input {
 Streaming cursor of the table "users"
 """
 input users_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: users_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input users_stream_cursor_value_input {
   email: String
   emailVerified: timestamptz
@@ -2082,27 +2717,41 @@ input users_stream_cursor_value_input {
 update columns of table "users"
 """
 enum users_update_column {
-  """column name"""
+  """
+  column name
+  """
   email
 
-  """column name"""
+  """
+  column name
+  """
   emailVerified
 
-  """column name"""
+  """
+  column name
+  """
   id
 
-  """column name"""
+  """
+  column name
+  """
   image
 
-  """column name"""
+  """
+  column name
+  """
   name
 }
 
 input users_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: users_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: users_bool_exp!
 }
 
@@ -2180,14 +2829,18 @@ input verification_tokens_insert_input {
   token: String
 }
 
-"""aggregate max on columns"""
+"""
+aggregate max on columns
+"""
 type verification_tokens_max_fields {
   expires: timestamptz
   identifier: String
   token: String
 }
 
-"""aggregate min on columns"""
+"""
+aggregate min on columns
+"""
 type verification_tokens_min_fields {
   expires: timestamptz
   identifier: String
@@ -2198,10 +2851,14 @@ type verification_tokens_min_fields {
 response of any mutation on the table "verification_tokens"
 """
 type verification_tokens_mutation_response {
-  """number of rows affected by the mutation"""
+  """
+  number of rows affected by the mutation
+  """
   affected_rows: Int!
 
-  """data from the rows affected by the mutation"""
+  """
+  data from the rows affected by the mutation
+  """
   returning: [verification_tokens!]!
 }
 
@@ -2214,14 +2871,18 @@ input verification_tokens_on_conflict {
   where: verification_tokens_bool_exp
 }
 
-"""Ordering options when selecting data from "verification_tokens"."""
+"""
+Ordering options when selecting data from "verification_tokens".
+"""
 input verification_tokens_order_by {
   expires: order_by
   identifier: order_by
   token: order_by
 }
 
-"""primary key columns input for table: verification_tokens"""
+"""
+primary key columns input for table: verification_tokens
+"""
 input verification_tokens_pk_columns_input {
   token: String!
 }
@@ -2230,13 +2891,19 @@ input verification_tokens_pk_columns_input {
 select columns of table "verification_tokens"
 """
 enum verification_tokens_select_column {
-  """column name"""
+  """
+  column name
+  """
   expires
 
-  """column name"""
+  """
+  column name
+  """
   identifier
 
-  """column name"""
+  """
+  column name
+  """
   token
 }
 
@@ -2253,14 +2920,20 @@ input verification_tokens_set_input {
 Streaming cursor of the table "verification_tokens"
 """
 input verification_tokens_stream_cursor_input {
-  """Stream column input with initial value"""
+  """
+  Stream column input with initial value
+  """
   initial_value: verification_tokens_stream_cursor_value_input!
 
-  """cursor ordering"""
+  """
+  cursor ordering
+  """
   ordering: cursor_ordering
 }
 
-"""Initial value of the column from where the streaming should start"""
+"""
+Initial value of the column from where the streaming should start
+"""
 input verification_tokens_stream_cursor_value_input {
   expires: timestamptz
   identifier: String
@@ -2271,21 +2944,30 @@ input verification_tokens_stream_cursor_value_input {
 update columns of table "verification_tokens"
 """
 enum verification_tokens_update_column {
-  """column name"""
+  """
+  column name
+  """
   expires
 
-  """column name"""
+  """
+  column name
+  """
   identifier
 
-  """column name"""
+  """
+  column name
+  """
   token
 }
 
 input verification_tokens_updates {
-  """sets the columns of the filtered rows to the given values"""
+  """
+  sets the columns of the filtered rows to the given values
+  """
   _set: verification_tokens_set_input
 
-  """filter the rows which have to be updated"""
+  """
+  filter the rows which have to be updated
+  """
   where: verification_tokens_bool_exp!
 }
-
