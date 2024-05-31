@@ -140,6 +140,7 @@ export function MikroOrmAdapter<
       const user = await em.findOne(UserModel, { id: data.userId })
       if (!user) throw new Error("User not found")
       const account = new AccountModel()
+      // @ts-expect-error
       wrap(account).assign(data)
       user.accounts.add(account)
       await em.persistAndFlush(user)
