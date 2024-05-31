@@ -1,5 +1,5 @@
 import { createClient } from "@vercel/kv"
-import type { NextResponse, NextRequest } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 
 export async function GET(req: NextRequest) {
   // Check Authorization
