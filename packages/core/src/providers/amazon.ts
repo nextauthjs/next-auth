@@ -138,7 +138,6 @@ export default function Amazon<P extends AmazonProfile>(
       };
     },
     style: {
-      logo: "/amazon.svg",
       brandColor: "#ff9900",
     },
     options,
