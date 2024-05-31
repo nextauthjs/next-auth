@@ -139,11 +139,7 @@ export default function Amazon<P extends AmazonProfile>(
     },
     style: {
       logo: "/amazon.svg",
-      logoDark: "/amazon-dark.svg",
-      bg: "#fff",
-      text: "#ff9900",
-      bgDark: "#fff",
-      textDark: "#ff9900",
+      brandColor: "#ff9900",
     },
     options,
   };
