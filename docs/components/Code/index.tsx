@@ -1,7 +1,7 @@
 import { useThemeConfig } from "nextra-theme-docs"
 import { useRouter } from "next/router"
 import { Tabs } from "nextra/components"
-import { Children, useEffect, useState } from "react"
+import React, { Children, useEffect, useState } from "react"
 
 interface ChildrenProps {
   children: React.ReactNode
