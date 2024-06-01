@@ -37,7 +37,15 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Google,
     Facebook,
     Discord,
-    Passkey,
+    Passkey({
+      formFields: {
+        email: {
+          label: "Username",
+          required: true,
+          autocomplete: "username webauthn",
+        },
+      },
+    }),
   ],
   theme: {
     logo: "https://authjs.dev/img/logo-sm.png",

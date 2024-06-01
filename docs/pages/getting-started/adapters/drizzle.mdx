@@ -10,7 +10,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 ## Resources
 
-- [Drizzle ORM Documentation](https://orm.drizzle.team/docs/overview)
+- [Drizzle ORM documentation](https://orm.drizzle.team/docs/overview)
 
 ## Setup
 
@@ -46,6 +46,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 
 ```ts filename="schema.ts"
 import {
+  boolean,
   timestamp,
   pgTable,
   text,
@@ -110,8 +111,31 @@ export const verificationTokens = pgTable(
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
+  })
+)
+
+export const authenticators = pgTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
   })
 )
 ```
@@ -122,6 +146,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 
 ```ts filename="schema.ts"
 import {
+  boolean,
   int,
   timestamp,
   mysqlTable,
@@ -195,8 +220,35 @@ export const verificationTokens = mysqlTable(
     token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
+  })
+)
+
+export const authenticators = pgTable(
+  "authenticator",
+  {
+    credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    credentialPublicKey: varchar("credentialPublicKey", {
+      length: 255,
+    }).notNull(),
+    counter: int("counter").notNull(),
+    credentialDeviceType: varchar("credentialDeviceType", {
+      length: 255,
+    }).notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: varchar("transports", { length: 255 }),
+  },
+  (authenticator) => ({
+    compositePk: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
   })
 )
 ```
@@ -266,8 +318,33 @@ export const verificationTokens = sqliteTable(
     token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
+  })
+)
+
+export const authenticators = sqliteTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: integer("credentialBackedUp", {
+      mode: "boolean",
+    }).notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
   })
 )
 ```

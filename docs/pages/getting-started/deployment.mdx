@@ -71,6 +71,30 @@ This environment variable is designed for advanced use-cases only, when using Au
   don't mix your test and production user base.
 </Callout>
 
+## Observability
+
+To pass on your current user's details on to your observability tools, you can use the callbacks provided by Auth.js. For example, in the `session` callback, you could pass the `user.id` on to Sentry.
+
+```ts filename="auth.ts"
+import * as Sentry from "@sentry/browser"
+import NextAuth from "next-auth"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  callbacks: {
+    session({ session, user }) {
+      const scope = Sentry.getCurrentScope()
+
+      scope.setUser({
+        id: user.id,
+        email: user.email,
+      })
+
+      return session
+    },
+  },
+})
+```
+
 ## Self-hosted
 
 Auth.js can also be deployed anywhere you can deploy your framework of choice. Check out the framework's documentation on self-hosting.
@@ -82,6 +106,7 @@ In a Docker environment, make sure to set either `trustHost: true` in your Auth.
 Our example application is also hosted via Docker [here](https://nextjs-docker-example.authjs.dev) (see the [source code](https://github.com/nextauthjs/next-auth-example)). Below is an example `Dockerfile` for a Next.js application using Auth.js.
 
 ```docker filename="Dockerfile"
+# syntax=docker/dockerfile:1
 FROM node:20-alpine AS base
 
 # Install dependencies only when needed
@@ -91,9 +116,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies
-COPY package.json ./
-RUN npm i
-
+COPY package.json pnpm-lock.yaml* ./
+RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -106,9 +130,10 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-# This should be replaced with an actual secret in production.
-# REVIEW: Can we make this not required during build?
-RUN AUTH_SECRET=dummy npm run build
+ARG AUTH_SECRET
+ENV AUTH_SECRET $AUTH_SECRET
+
+RUN corepack enable pnpm && pnpm build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -137,10 +162,11 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD ["node", "server.js"]
 ```
 
 ## Securing a preview deployment

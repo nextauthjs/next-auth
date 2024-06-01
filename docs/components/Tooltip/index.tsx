@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import { useRef } from "react"
 import polyfill from "@oddbird/css-anchor-positioning/fn"
 
 interface Props {

@@ -30,7 +30,7 @@
  */
 
 import type { Adapter } from "@auth/core/adapters"
-import type { XataClient } from "./xata"
+import type { XataClient } from "./xata.js"
 
 export function XataAdapter(client: XataClient): Adapter {
   return {

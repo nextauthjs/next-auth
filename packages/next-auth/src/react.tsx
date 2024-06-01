@@ -120,7 +120,7 @@ export const SessionContext = React.createContext?.<
  * React Hook that gives you access to the logged in user's session data and lets you modify it.
  *
  * :::info
- * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `useSession` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function useSession<R extends boolean>(
@@ -344,7 +344,7 @@ export async function signOut<R extends boolean = true>(
  * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
  *
  * :::info
- * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `SessionProvider` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function SessionProvider(props: SessionProviderProps) {
