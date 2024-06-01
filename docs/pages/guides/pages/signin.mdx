@@ -100,14 +100,18 @@ We can now build our own custom sign in page.
 ```tsx filename="app/signin/page.tsx" /providerMap/
 import { signIn, auth, providerMap } from "@/auth.ts"
 
-export default async function SignInPage() {
+export default async function SignInPage(props: {
+    searchParams: {
+        callbackUrl: string | undefined
+    }
+}) {
   return (
     <div className="flex flex-col gap-2">
       {Object.values(providerMap).map((provider) => (
         <form
           action={async () => {
             "use server"
-            await signIn(provider.id)
+            await signIn(provider.id, , { redirectTo: props.searchParams?.callbackUrl ?? "" })
           }}
         >
           <button type="submit">
