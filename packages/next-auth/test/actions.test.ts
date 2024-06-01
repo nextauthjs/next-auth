@@ -1,14 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
-import { EmailProviderType } from "../providers"
-import { signIn } from "../src/lib/actions"
-import { NextAuthConfig } from "../src"
+import NextAuth, { NextAuthConfig } from "../src"
+// TODO: Move the MemoryAdapter to utils package
 import { MemoryAdapter } from "../../core/test/memory-adapter"
+import Nodemailer from "@auth/core/providers/nodemailer"
 
 let mockedHeaders = vi.hoisted(() => {
   return new globalThis.Headers()
 })
 
 const mockRedirect = vi.hoisted(() => vi.fn())
+
 vi.mock("next/navigation", async (importOriginal) => {
   const originalModule = await importOriginal()
   return {
@@ -38,92 +39,71 @@ vi.mock("next/headers", async (importOriginal) => {
   }
 })
 
-let options = {
-  redirectTo: "http://localhost/dashboard",
+const options = {
   email: "jane@example.com",
-}
-let authorizationParams = {}
+} satisfies Parameters<ReturnType<typeof NextAuth>["signIn"]>[1]
+
+let nextAuth: ReturnType<typeof NextAuth> | null = null
+
 let config: NextAuthConfig = {
-  secret: ["supersecret"],
-  trustHost: true,
-  basePath: "/api/auth",
   adapter: MemoryAdapter(),
   providers: [
-    {
-      id: "nodemailer",
-      type: "email" as EmailProviderType,
-      name: "Email",
-      from: "no-reply@authjs.dev",
-      maxAge: 86400,
-      sendVerificationRequest: async () => {},
-      options: {},
-    },
+    Nodemailer({
+      sendVerificationRequest() {
+        // ignore
+      },
+      server: {
+        host: "smtp.example.com",
+        port: 465,
+        secure: true,
+      },
+    }),
   ],
 }
 
-describe("signIn", () => {
+describe("signIn action", () => {
   beforeEach(() => {
-    process.env.NEXTAUTH_URL = "http://localhost"
+    process.env.AUTH_SECRET = "secret"
+    process.env.AUTH_URL = "http://localhost"
+    nextAuth = NextAuth(config)
   })
-
   afterEach(() => {
-    process.env.NEXTAUTH_URL = undefined
-    vi.resetModules()
+    process.env.AUTH_SECRET = ""
+    process.env.AUTH_URL = ""
+    nextAuth = null
+    vi.resetAllMocks()
   })
-
-  it("redirects to verify URL", async () => {
-    await signIn("nodemailer", options, authorizationParams, config)
-
-    expect(mockRedirect).toHaveBeenCalledWith(
-      "http://localhost/api/auth/verify-request?provider=nodemailer&type=email"
-    )
-  })
-
-  describe("when Auth retunrs a web response", () => {
-    function mockAuthResponse(locationUrl?: string) {
-      vi.doMock("@auth/core", async (importOriginal) => {
-        const original = await importOriginal()
-        return {
-          // @ts-expect-error - not typed
-          ...original,
-          Auth: () =>
-            new Response(null, {
-              headers: {
-                ...(locationUrl && { Location: locationUrl }),
-              },
-            }),
-        }
-      })
-    }
-
-    it("handle web Response and get redirect URL from Location header", async () => {
-      mockAuthResponse("http://localhost/api/auth/error?error=Configuration")
-      const actionModule = await import("../src/lib/actions")
-      const signIn = actionModule.signIn
-      let redirectTo: string | undefined | null
-      redirectTo = await signIn(
-        "nodemailer",
-        { ...options, redirect: false },
-        authorizationParams,
-        config
-      )
-      expect(redirectTo).toEqual(
-        "http://localhost/api/auth/error?error=Configuration"
+  describe("with Nodemailer provider", () => {
+    it("redirects to /verify-request", async () => {
+      await nextAuth?.signIn("nodemailer", options)
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "http://localhost/api/auth/verify-request?provider=nodemailer&type=email"
       )
     })
 
-    it("redirects to signin URL when response is undefined", async () => {
-      mockAuthResponse()
-      const actionModule = await import("../src/lib/actions")
-      const signIn = actionModule.signIn
-      let redirectTo: string | undefined | null
-      redirectTo = await signIn(
-        "nodemailer",
-        { ...options, redirect: false },
-        authorizationParams,
-        config
+    it("redirects to /error page when sendVerificationRequest throws", async () => {
+      nextAuth = NextAuth({
+        ...config,
+        providers: [
+          Nodemailer({
+            sendVerificationRequest() {
+              throw new Error()
+            },
+            server: {
+              host: "smtp.example.com",
+              port: 465,
+              secure: true,
+            },
+          }),
+        ],
+      })
+      const redirectTo = await nextAuth.signIn("nodemailer", {
+        ...options,
+        redirect: false,
+      })
+      expect(redirectTo).toEqual(
+        "http://localhost/api/auth/error?error=Configuration"
       )
-      expect(redirectTo).toEqual("http://localhost/api/auth/signin/nodemailer?")
     })
   })
 })
