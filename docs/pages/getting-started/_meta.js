@@ -28,6 +28,7 @@ export default {
   },
   deployment: "Deployment",
   typescript: "TypeScript",
+  cli: "CLI",
   "-- connect": {
     type: "separator",
     title: "Connections",
