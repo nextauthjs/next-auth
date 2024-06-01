@@ -111,7 +111,7 @@ export default async function SignInPage(props: {
         <form
           action={async () => {
             "use server"
-            await signIn(provider.id, , { redirectTo: props.searchParams?.callbackUrl ?? "" })
+            await signIn(provider.id, { redirectTo: props.searchParams?.callbackUrl ?? "" })
           }}
         >
           <button type="submit">
