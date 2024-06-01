@@ -102,9 +102,10 @@ export interface Theme {
  * Some of them are available with different casing,
  * but they refer to the same value.
  */
-export type TokenSet = Partial<
-  OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
-> & {
+export type TokenSet = (
+  | OAuth2TokenEndpointResponse
+  | OpenIDTokenEndpointResponse
+) & {
   /**
    * Date of when the `access_token` expires in seconds.
    * This value is calculated from the `expires_in` value.

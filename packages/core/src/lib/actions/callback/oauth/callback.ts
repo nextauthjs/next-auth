@@ -6,8 +6,8 @@ import {
 } from "../../../../errors.js"
 
 import type {
-  Account,
   InternalOptions,
+  InternalProvider,
   LoggerInstance,
   Profile,
   RequestInternal,
@@ -104,6 +104,67 @@ export async function handleOAuth(
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
   }
+
+  let tokens: TokenSet
+  if (provider.token?.request) {
+    const result = await provider.token.request({
+      params: {
+        state,
+        redirect_uri,
+        ...query,
+      },
+      checks,
+      provider,
+    })
+    if (!result) {
+      throw new Error("Custom token request did not return a valid tokenset")
+    }
+    tokens = result.tokens
+  } else {
+    tokens = await getTokens(
+      as,
+      client,
+      codeGrantParams,
+      redirect_uri,
+      codeVerifier,
+      provider,
+      cookies,
+      resCookies,
+      options
+    )
+  }
+
+  const profile =
+    provider.type === "oidc"
+      ? o.getValidatedIdTokenClaims(tokens)
+      : await getOauthProfile(provider, as, client, tokens)
+
+  if (tokens.expires_in) {
+    tokens.expires_at =
+      Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
+  }
+
+  const profileResult = await getUserAndAccount(
+    profile,
+    provider,
+    tokens,
+    logger
+  )
+
+  return { ...profileResult, profile, cookies: resCookies }
+}
+
+async function getTokens(
+  as: o.AuthorizationServer,
+  client: o.Client,
+  codeGrantParams: URLSearchParams,
+  redirect_uri: string,
+  codeVerifier: string | undefined,
+  provider: InternalProvider<"oauth" | "oidc">,
+  cookies: Partial<Record<string, string>> | undefined,
+  resCookies: Cookie[],
+  options: InternalOptions<"oauth" | "oidc">
+) {
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
@@ -137,9 +198,6 @@ export async function handleOAuth(
     throw new Error("TODO: Handle www-authenticate challenges as needed")
   }
 
-  let profile: Profile = {}
-  let tokens: TokenSet & Pick<Account, "expires_at">
-
   if (provider.type === "oidc") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
     const result = await o.processAuthorizationCodeOpenIDResponse(
@@ -153,48 +211,40 @@ export async function handleOAuth(
       console.log("error", result)
       throw new Error("TODO: Handle OIDC response body error")
     }
-
-    profile = o.getValidatedIdTokenClaims(result)
-    tokens = result
+    return result
   } else {
-    tokens = await o.processAuthorizationCodeOAuth2Response(
+    const result = await o.processAuthorizationCodeOAuth2Response(
       as,
       client,
       codeGrantResponse
     )
-    if (o.isOAuth2Error(tokens as any)) {
-      console.log("error", tokens)
+    if (o.isOAuth2Error(result)) {
+      console.log("error", result)
       throw new Error("TODO: Handle OAuth 2.0 response body error")
     }
+    return result
+  }
+}
 
-    if (userinfo?.request) {
-      const _profile = await userinfo.request({ tokens, provider })
-      if (_profile instanceof Object) profile = _profile
-    } else if (userinfo?.url) {
-      const userinfoResponse = await o.userInfoRequest(
-        as,
-        client,
-        (tokens as any).access_token
-      )
-      profile = await userinfoResponse.json()
-    } else {
-      throw new TypeError("No userinfo endpoint configured")
-    }
+async function getOauthProfile(
+  provider: InternalProvider<"oauth">,
+  as: o.AuthorizationServer,
+  client: o.Client,
+  tokens: TokenSet
+) {
+  if (provider.userinfo?.request) {
+    const result = await provider.userinfo.request({ tokens, provider })
+    return result instanceof Object ? result : {}
+  } else if (provider.userinfo?.url) {
+    const userinfoResponse = await o.userInfoRequest(
+      as,
+      client,
+      (tokens as any).access_token
+    )
+    return await userinfoResponse.json()
   }
 
-  if (tokens.expires_in) {
-    tokens.expires_at =
-      Math.floor(Date.now() / 1000) + Number(tokens.expires_in)
-  }
-
-  const profileResult = await getUserAndAccount(
-    profile,
-    provider,
-    tokens,
-    logger
-  )
-
-  return { ...profileResult, profile, cookies: resCookies }
+  throw new TypeError("No userinfo endpoint configured")
 }
 
 /**
