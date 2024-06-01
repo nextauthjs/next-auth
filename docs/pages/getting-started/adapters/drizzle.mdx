@@ -46,7 +46,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 
 ```ts filename="schema.ts"
 import {
-  boolean
+  boolean,
   timestamp,
   pgTable,
   text,
@@ -118,7 +118,8 @@ export const verificationTokens = pgTable(
   })
 )
 
-export const authenticators = pgTable("authenticator",
+export const authenticators = pgTable(
+  "authenticator",
   {
     credentialID: text("credentialID").notNull().unique(),
     userId: text("userId")
