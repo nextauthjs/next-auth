@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import "next-auth/jwt"
 
+import Amazon from "next-auth/providers/amazon"
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
@@ -48,6 +49,7 @@ const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
   providers: [
+    Amazon,
     Apple,
     Auth0,
     AzureB2C({
