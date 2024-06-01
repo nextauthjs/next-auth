@@ -83,7 +83,7 @@ import type {
   AppRouteHandlerFn,
   AppRouteHandlerFnContext,
 } from "./lib/types.js"
-import type { NextRequest } from "next/server"
+import type { NextRequest } from "next/server.js"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
