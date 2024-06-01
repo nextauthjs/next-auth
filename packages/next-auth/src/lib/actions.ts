@@ -71,8 +71,16 @@ export async function signIn(
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (shouldRedirect) return redirect(res.redirect!)
-  return res.redirect as any
+  const responseUrl =
+    res instanceof Response ? res.headers.get("Location") : res.redirect
+
+  // NOTE: if for some unexpected reason the responseUrl is not set,
+  // we redirect to the original url
+  const redirectUrl = responseUrl ?? url
+
+  if (shouldRedirect) return redirect(redirectUrl)
+
+  return redirectUrl as any
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>

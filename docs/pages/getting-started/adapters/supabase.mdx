@@ -7,7 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Supabase Docs](https://supabase.com/docs)
+- [Supabase documentation](https://supabase.com/docs)
 
 ## Setup
 
@@ -334,7 +334,7 @@ const supabase = createClient<Database>()
 In order to extend the `session` object with the `supabaseAccessToken` we need to extend the `session` interface in a `types/next-auth.d.ts` file:
 
 ```ts filename="types/next-auth.d.ts"
-import NextAuth, { DefaultSession } from "next-auth"
+import NextAuth, { type DefaultSession } from "next-auth"
 
 declare module "next-auth" {
   // Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context

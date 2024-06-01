@@ -14,6 +14,7 @@ export function Footer({ className = "" }) {
       .then((res) => res.json())
       .then((data) => {
         const githubStat = document.querySelector(".github-counter")!
+        if (!githubStat) return
         githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
       })
 
