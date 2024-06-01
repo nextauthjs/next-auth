@@ -55,6 +55,11 @@
     },
     {
       "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "cli.authjs.dev" }],
+      "destination": "https://authjs.dev/getting-started/cli"
+    },
+    {
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "errors.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
