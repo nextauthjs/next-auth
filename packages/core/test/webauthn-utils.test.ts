@@ -173,7 +173,7 @@ function prepareVerifyTest(
       verified: true,
       registrationInfo: {
         counter: authenticator.counter,
-        credentialID: fromBase64(authenticator.credentialID),
+        credentialID: authenticator.credentialID,
         credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
         credentialBackedUp: authenticator.credentialBackedUp,
         // @ts-expect-error
@@ -547,7 +547,7 @@ describe("getRegistrationResponse", () => {
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -617,7 +617,7 @@ describe("getRegistrationResponse", () => {
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -739,7 +739,7 @@ describe("getAuthenticationResponse", () => {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
       allowCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -801,7 +801,7 @@ describe("getAuthenticationResponse", () => {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
       allowCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
