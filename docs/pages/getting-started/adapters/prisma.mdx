@@ -496,7 +496,7 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  credentialID         String  @unique
+  credentialID         String  @unique @map("_id")
   userId               String  @db.ObjectId
   providerAccountId    String
   credentialPublicKey  String
