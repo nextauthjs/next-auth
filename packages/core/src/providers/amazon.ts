@@ -38,7 +38,7 @@ export interface AmazonProfile extends Record<string, any> {
  * #### Configuration
  *```js
  * import Auth from "@auth/core"
- * import Amazon from "@auth/core/providers/amazon"
+ * import Amazon from "next-auth/providers/amazon"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
