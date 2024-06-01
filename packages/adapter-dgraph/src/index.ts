@@ -18,7 +18,12 @@ import { client as dgraphClient } from "./lib/client.js"
 import { isDate, type Adapter } from "@auth/core/adapters"
 import type { DgraphClientParams } from "./lib/client.js"
 import * as defaultFragments from "./lib/graphql/fragments.js"
-import { AdapterAccount, AdapterSession, AdapterUser, VerificationToken } from "@auth/core/adapters"
+import {
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "@auth/core/adapters"
 
 export type { DgraphClientParams, DgraphClientError } from "./lib/client.js"
 
@@ -93,7 +98,10 @@ export function DgraphAdapter(
       )
       return format.from<any>(user)
     },
-    async getUserByAccount(provider_providerAccountId: { provider: string, providerAccountId: string }) {
+    async getUserByAccount(provider_providerAccountId: {
+      provider: string
+      providerAccountId: string
+    }) {
       const [account] = await c.run<any>(
         /* GraphQL */ `
           query ($providerAccountId: String = "", $provider: String = "") {
@@ -192,7 +200,10 @@ export function DgraphAdapter(
       )
       return data
     },
-    async unlinkAccount(provider_providerAccountId: { provider: string, providerAccountId: string }) {
+    async unlinkAccount(provider_providerAccountId: {
+      provider: string
+      providerAccountId: string
+    }) {
       await c.run<any>(
         /* GraphQL */ `
           mutation ($providerAccountId: String = "", $provider: String = "") {

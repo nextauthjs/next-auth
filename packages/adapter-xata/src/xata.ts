@@ -167,7 +167,7 @@ const schemas: BaseSchema[] = [
       },
     ],
   },
- {
+  {
     name: "nextauth_users_accounts",
     columns: [
       {
