@@ -1,7 +1,5 @@
-import { ReactNode } from "react"
-
 interface Props {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 export function StepTitle({ children }: Props) {
