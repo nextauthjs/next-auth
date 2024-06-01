@@ -12,8 +12,8 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
   return (
     <Code>
       <Code.Next>
-        In Next.js we recommend setting up your configuration in a file in the root of your repository, like at{" "}
-        <code>auth.ts</code>.
+        In Next.js we recommend setting up your configuration in a file in the
+        root of your repository, like at <code>auth.ts</code>.
         <br />
         <Pre
           data-filename="./auth.ts"

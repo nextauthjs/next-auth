@@ -10,7 +10,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 ## Resources
 
-- [Drizzle ORM Documentation](https://orm.drizzle.team/docs/overview)
+- [Drizzle ORM documentation](https://orm.drizzle.team/docs/overview)
 
 ## Setup
 
@@ -118,7 +118,8 @@ export const verificationTokens = pgTable(
   })
 )
 
-export const authenticators = pgTable("authenticator",
+export const authenticators = pgTable(
+  "authenticator",
   {
     credentialID: text("credentialID").notNull().unique(),
     userId: text("userId")
