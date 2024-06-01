@@ -40,9 +40,9 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@xata.io/client": ">=0.13.0"
+    "@xata.io/client": ">=0.28.0"
   },
   "devDependencies": {
-    "@xata.io/client": "^0.13.0"
+    "@xata.io/client": "^0.28.0"
   }
 }
