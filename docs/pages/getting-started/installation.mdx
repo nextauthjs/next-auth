@@ -43,7 +43,11 @@ verification hashes. (See [Deployment](/getting-started/deployment) to learn mor
 npx auth secret
 ```
 
-Alternatively, you can use the `openssl` CLI, `openssl rand -base64 33`.
+Alternatively, you can use the following `openssl` command, which should be available on all Linux / Mac OS X systems.
+
+```bash
+openssl rand -base64 33
+```
 
 Then add it to your `.env.local` file:
 

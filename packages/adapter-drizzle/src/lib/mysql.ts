@@ -1,4 +1,4 @@
-import { InferInsertModel, and, eq, getTableColumns } from "drizzle-orm"
+import { and, eq, getTableColumns } from "drizzle-orm"
 import {
   MySqlColumn,
   MySqlDatabase,
@@ -8,10 +8,8 @@ import {
   primaryKey,
   timestamp,
   varchar,
-  index,
   QueryResultHKT,
   PreparedQueryHKTBase,
-  TableConfig,
   MySqlTableWithColumns,
 } from "drizzle-orm/mysql-core"
 
