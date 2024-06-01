@@ -101,7 +101,7 @@ export default function SimpleLogin<P extends SimpleLoginProfile>(
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/simplelogin.svg", brandColor: "#e3156a" },
+    style: { brandColor: "#e3156a" },
     options,
   }
 }
