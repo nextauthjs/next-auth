@@ -216,19 +216,17 @@ export { handle } from "./auth"
 </Callout>
 
 ## Using the role
-
-If you want to use the role in the client, for both cases above, when using the `useSession` hook, `session.user.role` will have the required role if you exposed it via the `session` callback. You can use this to render a different UI for different users.
-
 <Code>
 <Code.Next>
+To get the data on the server side, you need to use the `auth` function and verify if the user has the expected role. The information exposed by the function is what is set through the `session` and `jwt` callbacks within the configuration file.
 
 ```ts filename="./app/admin/page.tsx"
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 
-export default function Page() {
-  const session = await useSession();
+export default async function Page() {
+  const session = await auth();
 
-  if (session?.user.role === "admin") {
+  if (session?.user?.role === "admin") {
     return <p>You are an admin, welcome!</p>;
   }
 
@@ -237,6 +235,24 @@ export default function Page() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+If you want to use the role in the client, for both cases above, when using the `useSession` hook, `session.user.role` will have the required role if you exposed it via the `session` callback. You can use this to render a different UI for different users.
+
+```ts filename="./app/admin/page.tsx"
+"use client"
+import { useSession } from "next-auth/react";
+
+export default function Page() {
+  const { data: session } = useSession();
+
+  if (session?.user?.role === "admin") {
+    return <p>You are an admin, welcome!</p>;
+  }
+
+  return <p>You are not authorized to view this page!</p>;
+}
+```
+</Code.NextClient>
 <Code.Svelte>
 
 ```ts filename="./routes/+page.server.ts"
