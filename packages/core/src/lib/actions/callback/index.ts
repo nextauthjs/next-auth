@@ -317,7 +317,10 @@ export async function callback(
       )
       const user = userFromAuthorize
 
-      if (!user) throw new CredentialsSignin()
+      if (!user) {
+        console.error("Read more at https://errors.authjs.dev/#credentialssignin")
+        throw new CredentialsSignin()
+      }
       else user.id = user.id?.toString() ?? crypto.randomUUID()
 
       const account = {
