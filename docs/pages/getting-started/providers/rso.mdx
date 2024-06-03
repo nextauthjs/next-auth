@@ -119,23 +119,8 @@ RSO_CLIENT_SECRET=<copy generated client secret value here>
 
 ### Signed-JWT Method
 
-<Callout type="warning">
-  As of 05-05-2024 every new created RSO App will be granted access with
-  `clientId` and `clientSecret` which means this provider is also configured for
-  it. If you have an older RSO App which uses the signed-jwt (for 100 years)
-  method you will need to edit this provider. A good example can be found here
-  https://gist.github.com/Henrik-3/d6b631fb7c61821bc16b17cd347a3811#using-tokens-endpoint-with-a-jwt-token-new-method
-</Callout>
-
-In `pages/api/auth/[...nextauth].js` find or add the `RSO` entries:
-
-```js
-import RSOProvider from "next-auth/providers/rso"
-
-providers: [
-  RSOProvider({
-    clientId: process.env.RSO_CLIENT_ID,
-    clientSecret: process.env.RSO_CLIENT_SECRET,
-  }),
-]
-```
+As of 05-05-2024 every new created RSO App will be granted access with
+`clientId` and `clientSecret` which means this provider is also configured for
+it. If you have an older RSO App which uses the signed-jwt (for 100 years)
+method you will need to edit this provider. A good example can be found here
+https://gist.github.com/Henrik-3/d6b631fb7c61821bc16b17cd347a3811#using-tokens-endpoint-with-a-jwt-token-new-method
