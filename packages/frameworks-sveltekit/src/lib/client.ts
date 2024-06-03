@@ -1,12 +1,14 @@
+import { base } from "$app/paths"
 import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
-import { base } from "$app/paths"
+import type { LiteralUnion } from "./types.js"
 
-type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
-
-interface SignInOptions extends Record<string, unknown> {
+/*
+ * @internal
+ */
+export interface SignInOptions extends Record<string, unknown> {
   /**
    * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
    *
@@ -34,7 +36,6 @@ export type SignInAuthorizationParams =
 /**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.
- * Automatically adds the CSRF token to the request.
  *
  * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
@@ -63,10 +64,6 @@ export async function signIn<
 
   const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
 
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
-  const { csrfToken } = await csrfTokenResponse.json()
-
   const res = await fetch(_signInUrl, {
     method: "post",
     headers: {
@@ -76,7 +73,6 @@ export async function signIn<
     // @ts-ignore
     body: new URLSearchParams({
       ...options,
-      csrfToken,
       callbackUrl,
     }),
   })
@@ -96,16 +92,12 @@ export async function signIn<
 
 /**
  * Signs the user out, by removing the session cookie.
- * Automatically adds the CSRF token to the request.
  *
  * [Documentation](https://authjs.dev/reference/sveltekit/client#signout)
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}
   const basePath = base ?? ""
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
-  const { csrfToken } = await csrfTokenResponse.json()
   const res = await fetch(`${basePath}/auth/signout`, {
     method: "post",
     headers: {
@@ -113,7 +105,6 @@ export async function signOut(options?: SignOutParams) {
       "X-Auth-Return-Redirect": "1",
     },
     body: new URLSearchParams({
-      csrfToken,
       callbackUrl,
     }),
   })

@@ -1,0 +1,142 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/microsoft-entra-id.svg"
+  height="64"
+  width="64"
+/>
+
+# Microsoft Entra ID
+
+<Callout>
+  Microsoft has renamed **Azure AD** to **Microsoft Entra ID**, more information
+  about the new name can be found
+  [here](https://learn.microsoft.com/en-us/entra/fundamentals/new-name).
+</Callout>
+
+## Resources
+
+- [Microsoft Entra OAuth documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
+- [Microsoft Entra OAuth apps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/microsoft-entra-id
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/microsoft-entra-id
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_MICROSOFT_ENTRA_ID_ID
+AUTH_MICROSOFT_ENTRA_ID_SECRET
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
+
+const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Entra({
+      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Entra from "@auth/sveltekit/providers/microsoft-entra-id"
+import { env } from "$env/dynamic/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Entra({
+      clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
+      clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Entra from "@auth/express/providers/microsoft-entra-id"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Entra({
+        clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+        clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+        tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+1. Allow only Specific Active Directory Users
+
+- In https://entra.microsoft.com/ select Identity from the left bar menu.
+- Next, go to "App Registration" in the left menu, and create a new one.
+- Pay close attention to "Who can use this application or access this API?"
+  - This allows you to scope access to specific types of user accounts
+  - Only your tenant, all Microsoft tenants, or all Microsoft tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
+- When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/microsoft-entra-id` or for development `http://localhost:3000/api/auth/callback/microsoft-entra-id`.
+- After your App Registration is created, under "Client Credential" create your Client secret.
+- Now copy your:
+  - Application (client) ID
+  - Directory (tenant) ID
+  - Client secret (value)
+
+In `.env.local` create the following entries:
+
+```
+AUTH_MICROSOFT_ENTRA_ID_ID=<copy Application (client) ID here>
+AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
+AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=<copy the tenant id here>
+```
+
+That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
+
+- Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.

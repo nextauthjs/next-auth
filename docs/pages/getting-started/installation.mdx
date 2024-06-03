@@ -1,0 +1,157 @@
+import { Steps, Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<Steps>
+### Installing Auth.js
+
+Start by installing the appropriate package for your framework.
+
+<Code>
+  <Code.Next>
+    
+    ```bash npm2yarn
+    npm install next-auth@beta
+    ```
+
+  </Code.Next>
+  <Code.Svelte>
+  
+    ```bash npm2yarn
+    npm install @auth/sveltekit
+    ```
+  </Code.Svelte>
+  <Code.Express>
+  
+    ```bash npm2yarn
+    npm install @auth/express
+    ```
+  
+  </Code.Express>
+</Code>
+
+<Callout type="info">
+  Installing `@auth/core` is not necessary, as a user you should never have to
+  interact with `@auth/core`.
+</Callout>
+
+### Setup Environment
+
+The only environment variable that is mandatory is the `AUTH_SECRET`. This is a random value used by the library to encrypt tokens and email
+verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via running:
+
+```bash
+npx auth secret
+```
+
+Alternatively, you can use the following `openssl` command, which should be available on all Linux / Mac OS X systems.
+
+```bash
+openssl rand -base64 33
+```
+
+Then add it to your `.env.local` file:
+
+```bash filename=".env.local"
+AUTH_SECRET=secret
+```
+
+### Configure
+
+Next, create the Auth.js config file and object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. We recommend all frameworks to create an `auth.ts` file in the project. In this file we'll pass in all the options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
+
+<Callout type="info">
+  You can name this file whatever you want and place it wherever you like, these
+  are just conventions we've come up with.
+</Callout>
+
+<Code>
+  <Code.Next>
+
+1. Start by creating a new `auth.ts` file at the root of your app with the following content.
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [],
+})
+```
+
+2. Add an Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
+
+<Callout>
+  This file must be an App Router Route Handler, however, the rest of your app
+  can stay under `page/` if you'd like.
+</Callout>
+
+```ts filename="./app/api/auth/[...nextauth]/route.ts"
+import { handlers } from "@/auth" // Referring to the auth.ts we just created
+export const { GET, POST } = handlers
+```
+
+3. Add optional Middleware to keep the session alive, this will update the session expiry every time its called.
+
+```ts filename="./middleware.ts"
+export { auth as middleware } from "@/auth"
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+1. Start by creating a new `auth.ts` file in your `src/` directory with the following content.
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+
+export const { handle } = SvelteKitAuth({
+  providers: [],
+})
+```
+
+2. Re-export the `handle` method in SvelteKit's `src/hooks.server.ts` file.
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+3. That handle function adds an `auth()` method onto our `event.locals`, which is available in any `+layout.server.ts` or `+page.server.ts` file. Therefore, we can access the session in our `load` function like this.
+
+```ts filename="./src/routes/+layout.server.ts" {4}
+import type { LayoutServerLoad } from "./$types"
+
+export const load: LayoutServerLoad = async (event) => {
+  const session = await event.locals.auth()
+
+  return {
+    session,
+  }
+}
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+1. Start by importing `ExpressAuth` and adding the handler to the auth route.
+
+```ts filename="./src/routes/auth.route.ts" {1, 9}
+import { ExpressAuth } from "@auth/express"
+import express from "express"
+
+const app = express()
+
+// If your app is served through a proxy
+// trust the proxy to allow us to read the `X-Forwarded-*` headers
+app.set("trust proxy", true)
+app.use("/auth/*", ExpressAuth({ providers: [] }))
+```
+
+Note this creates the Auth.js API, but does not yet protect resources. Continue on to [protecting resources](/getting-started/session-management/protecting) for more details.
+
+  </Code.Express>
+</Code>
+
+### Setup Authentication Methods
+
+With that, the basic setup is complete! Next we'll setup the first authentication methods and fill out that `providers` array.
+
+</Steps>

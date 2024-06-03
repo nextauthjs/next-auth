@@ -17,12 +17,12 @@ import {
   WebAuthnVerificationError,
 } from "../../errors.js"
 import { webauthnChallenge } from "../actions/callback/oauth/checks.js"
-import type {
-  AuthenticationResponseJSON,
-  PublicKeyCredentialCreationOptionsJSON,
-  PublicKeyCredentialRequestOptionsJSON,
-  RegistrationResponseJSON,
-} from "@simplewebauthn/server/script/deps"
+import {
+  type AuthenticationResponseJSON,
+  type PublicKeyCredentialCreationOptionsJSON,
+  type PublicKeyCredentialRequestOptionsJSON,
+  type RegistrationResponseJSON,
+} from "@simplewebauthn/types"
 import type {
   Adapter,
   AdapterAccount,
@@ -523,7 +523,7 @@ export function transportsToString(
 }
 
 export function stringToTransports(
-  tstring: string | undefined
+  tstring: string | undefined | null
 ): InternalAuthenticator["transports"] {
   return tstring
     ? (tstring.split(",") as InternalAuthenticator["transports"])

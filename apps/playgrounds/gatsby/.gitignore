@@ -1,7 +1,0 @@
-node_modules
-.env.development
-.cache
-yarn.lock
-.vscode
-public
-.vercel

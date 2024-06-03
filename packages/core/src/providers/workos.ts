@@ -129,7 +129,7 @@ export interface WorkOSProfile extends Record<string, any> {
  * :::tip
  *
  * The WorkOS provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/workos.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -144,15 +144,17 @@ export interface WorkOSProfile extends Record<string, any> {
  * :::
  */
 export default function WorkOS<P extends WorkOSProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & { connection: string }
 ): OAuthConfig<P> {
-  const { issuer = "https://api.workos.com/" } = options
+  const { issuer = "https://api.workos.com/", connection = "" } = options
+
+  const connectionParams = new URLSearchParams({ connection })
 
   return {
     id: "workos",
     name: "WorkOS",
     type: "oauth",
-    authorization: `${issuer}sso/authorize`,
+    authorization: `${issuer}sso/authorize?${connectionParams}`,
     token: `${issuer}sso/token`,
     client: {
       token_endpoint_auth_method: "client_secret_post",
@@ -166,7 +168,7 @@ export default function WorkOS<P extends WorkOSProfile>(
         image: profile.raw_attributes.picture ?? null,
       }
     },
-    style: { logo: "/workos.svg", bg: "#6363f1", text: "#fff" },
+    style: { bg: "#6363f1", text: "#fff" },
     options,
   }
 }

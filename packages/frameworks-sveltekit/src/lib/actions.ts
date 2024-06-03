@@ -3,7 +3,7 @@ import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { env } from "$env/dynamic/private"
 
-import { Auth, createActionURL, raw, skipCSRFCheck } from "@auth/core"
+import { Auth, createActionURL, raw } from "@auth/core"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 
@@ -15,7 +15,10 @@ export async function signIn(
   config: SvelteKitAuthConfig,
   event: RequestEvent
 ) {
-  const { request, url: { protocol } } = event
+  const {
+    request,
+    url: { protocol },
+  } = event
   const headers = new Headers(request.headers)
   const {
     redirect: shouldRedirect = true,
@@ -62,7 +65,7 @@ export async function signIn(
   headers.set("Content-Type", "application/x-www-form-urlencoded")
   const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? []) {
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -82,16 +85,25 @@ export async function signOut(
   config: SvelteKitAuthConfig,
   event: RequestEvent
 ) {
-  const { request, url: { protocol } } = event
+  const {
+    request,
+    url: { protocol },
+  } = event
   const headers = new Headers(request.headers)
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL("signout", protocol, headers, env, config.basePath)
+  const url = createActionURL(
+    "signout",
+    protocol,
+    headers,
+    env,
+    config.basePath
+  )
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
 
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? [])
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -109,9 +121,18 @@ export async function auth(
   setEnvDefaults(env, config)
   config.trustHost ??= true
 
-  const { request: req, url: { protocol } } = event
+  const {
+    request: req,
+    url: { protocol },
+  } = event
 
-  const sessionUrl = createActionURL("session", protocol, req.headers, env, config.basePath)
+  const sessionUrl = createActionURL(
+    "session",
+    protocol,
+    req.headers,
+    env,
+    config.basePath
+  )
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },
   })

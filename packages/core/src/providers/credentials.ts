@@ -137,8 +137,7 @@ export type CredentialsProviderType = "Credentials"
  *   trustHost: true,
  * })
  * ```
- * @see [Username/Password Example](https://authjs.dev/guides/providers/credentials#example---username--password)
- * @see [Web3/Signin With Ethereum Example](https://authjs.dev/guides/providers/credentials#example---web3--signin-with-ethereum)
+ * @see [Username/Password Example](https://authjs.dev/getting-started/authentication/credentials)
  */
 export default function Credentials<
   CredentialsInputs extends Record<string, CredentialInput> = Record<

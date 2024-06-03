@@ -55,7 +55,7 @@ export interface ClickUpProfile {
  * :::tip
  *
  * The ClickUp provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/click-up.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -91,7 +91,6 @@ export default function ClickUp(
       }
     },
     style: {
-      logo: "/click-up.svg",
       bg: "#24292f",
       text: "#fff",
     },

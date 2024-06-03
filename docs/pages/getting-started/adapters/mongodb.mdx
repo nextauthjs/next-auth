@@ -1,0 +1,121 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/mongodb.svg" width="48" height="48" />
+
+# MongoDB Adapter
+
+## Resources
+
+- [MongoDB documentation](https://docs.mongodb.com/)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install @auth/mongodb-adapter mongodb
+```
+
+### Environment Variables
+
+```sh
+MONGODB_URI=
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "./lib/db"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: MongoDBAdapter(clientPromise),
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "./lib/db"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: MongoDBAdapter(clientPromise),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "./lib/db"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: MongoDBAdapter(clientPromise),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+The MongoDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `MongoClient` that is connected already.
+
+### Add the MongoDB client
+
+```ts filename="lib/db.ts"
+// This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
+import { MongoClient, ServerApiVersion } from "mongodb"
+
+if (!process.env.MONGODB_URI) {
+  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
+}
+
+const uri = process.env.MONGODB_URI
+const options = {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+}
+
+let client
+let clientPromise: Promise<MongoClient>
+
+if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>
+  }
+
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri, options)
+    globalWithMongo._mongoClientPromise = client.connect()
+  }
+  clientPromise = globalWithMongo._mongoClientPromise
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options)
+  clientPromise = client.connect()
+}
+
+// Export a module-scoped MongoClient promise. By doing this in a
+// separate module, the client can be shared across functions.
+export default clientPromise
+```

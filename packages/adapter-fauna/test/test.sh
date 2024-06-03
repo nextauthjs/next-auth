@@ -10,8 +10,8 @@ docker run -d --rm \
   -p ${FAUNADB_PORT}:${FAUNADB_PORT} \
   fauna/faunadb
 
-echo "Waiting 10s for db to start..."
-sleep 10
+echo "Waiting 15s for db to start..."
+sleep 15
 
 # Create collections and indexes
 fauna schema push --url=http://localhost:8443 --force --secret=${FAUNA_ADMIN_KEY}

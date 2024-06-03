@@ -26,7 +26,6 @@ body:
         - "42 School"
         - "Apple"
         - "Asgardeo"
-        - "Atlassian"
         - "Auth0"
         - "Authentik"
         - "Azure Active Directory"
@@ -64,6 +63,7 @@ body:
         - "Medium"
         - "Naver"
         - "Netlify"
+        - "NetSuite"
         - "Notion"
         - "Okta"
         - "OneLogin"
@@ -73,6 +73,7 @@ body:
         - "Pipedrive"
         - "Reddit"
         - "Salesforce"
+        - "SimpleLogin"
         - "Slack"
         - "Spotify"
         - "Strava"
@@ -99,6 +100,10 @@ body:
         `npx envinfo --system --binaries --browsers --npmPackages "{next,react,next-auth,@auth/*}"`
 
         Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
+      value: |
+        ```
+        Paste here
+        ```
     validations:
       required: true
   - type: input

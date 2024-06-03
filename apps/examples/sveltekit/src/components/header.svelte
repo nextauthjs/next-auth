@@ -43,14 +43,12 @@
   .signedInStatus {
     display: block;
     min-height: 4rem;
-    width: 100%;
   }
   .loaded {
     position: relative;
     top: 0;
     opacity: 1;
     overflow: hidden;
-    width: 100%;
     display: flex;
     align-items: center;
     border-radius: 0 0 0.6rem 0.6rem;
