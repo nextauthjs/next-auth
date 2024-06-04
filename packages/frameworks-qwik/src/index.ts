@@ -15,13 +15,104 @@
  * ## Usage
  *
  * ### Provider Configuration
+ * 
+ * Create a `plugin@auth.ts` file in the routes folder
+ *
+ * import GitHub from "@auth/core/providers/github"
+ * import { qwikAuth$ } from "@auth/qwik"
+ * import { RequestEvent } from "@builder.io/qwik-city"
+ * 
+ * export const { onRequest, useAuthSession, useAuthSignIn, useAuthSignOut } =
+ *   qwikAuth$(({ env }: RequestEvent) => ({
+ *     secret: env.get("AUTH_SECRET"),
+ *     trustHost: true,
+ *     providers: [
+ *       GitHub({
+ *         clientId: env.get("AUTH_GITHUB_ID"),
+ *         clientSecret: env.get("AUTH_GITHUB_SECRET"),
+ *      }),
+ *    ],
+ *  }))
  *
  * ## Signing in and signing out
+ * 
+ * Sign In via form
+ * 
+ * import { component$ } from '@builder.io/qwik';
+ * import { Form } from '@builder.io/qwik-city';
+ * import { useAuthSignIn } from '~/routes/plugin@auth';
+ *  
+ * export default component$(() => {
+ *   const signIn = useAuthSignIn();
+ *   return (
+ *     <Form action={signIn}>
+ *       <input type="hidden" name="providerId" value="github" />
+ *       <input type="hidden" name="options.callbackUrl" value="http://qwik-auth-example.com/dashboard" />
+ *       <button>Sign In</button>
+ *     </Form>
+ *   );
+ * });
+ * 
+ * Sign In via code
+ * 
+ * import { component$ } from '@builder.io/qwik';
+ * import { useAuthSignIn } from '~/routes/plugin@auth';
+ *  
+ * export default component$(() => {
+ *   const signIn = useAuthSignIn();
+ *   return (
+ *     <button onClick$={() => signIn.submit({ providerId: 'github', options: { callbackUrl: 'http://qwik-auth-example.com/dashboard' } })}>Sign In</button>
+ *   );
+ * });
+ * 
+ * Sign out via form
+ * 
+ * import { component$ } from '@builder.io/qwik';
+ * import { Form } from '@builder.io/qwik-city';
+ * import { useAuthSignOut } from '~/routes/plugin@auth';
+ *  
+ * export default component$(() => {
+ *   const signOut = useAuthSignOut();
+ *   return (
+ *     <Form action={signOut}>
+ *       <input type="hidden" name="callbackUrl" value="/signedout" />
+ *       <button>Sign Out</button>
+ *     </Form>
+ *   );
+ * });
+ * 
+ * Sign out via code
+ * 
+ * import { component$ } from '@builder.io/qwik';
+ * import { useAuthSignOut } from '~/routes/plugin@auth';
+ *  
+ * export default component$(() => {
+ *   const signOut = useAuthSignOut();
+ *   return <button onClick$={() => signOut.submit({ callbackUrl: '/signedout' })}>Sign Out</button>;
+ * });
  *
  * ## Managing the session
+ * 
+ * import { component$ } from '@builder.io/qwik';
+ * import { useAuthSession } from '~/routes/plugin@auth';
+ *  
+ * export default component$(() => {
+ *   const session = useAuthSession();
+ *   return <p>{session.value?.user?.email}</p>;
+ * });
  *
  * ## Authorization
+ * 
+ * Session data can be accessed via the route event.sharedMap. 
+ * So a route can be protected and redirect using something like this located in a layout.tsx or page index.tsx:
  *
+ * export const onRequest: RequestHandler = (event) => {
+ *   const session: Session | null = event.sharedMap.get('session');
+ *   if (!session || new Date(session.expires) < new Date()) {
+ *     throw event.redirect(302, `/api/auth/signin?callbackUrl=${event.url.pathname}`);
+ *   }
+ * };
+ * 
  * ```
  *
  * @module @auth/qwik
@@ -67,9 +158,7 @@ export function qwikAuthQrl(
         body.set(key, String(value))
       })
 
-      const baseSignInUrl = `/api/auth/${
-        isCredentials ? "callback" : "signin"
-      }${providerId ? `/${providerId}` : ""}`
+      const baseSignInUrl = `/api/auth/${isCredentials ? "callback" : "signin"}${providerId ? `/${providerId}` : ""}`
       const signInUrl = `${baseSignInUrl}?${new URLSearchParams(
         authorizationParams
       )}`

@@ -1,9 +1,9 @@
 import type { AuthConfig } from "@auth/core"
-import { AuthAction } from "@auth/core/types.js"
+import { AuthAction } from "@auth/core/types";
 import { Session } from "inspector"
 
 /** Configure the {@link QwikAuthConfig} method. */
-export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> {}
+export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> { }
 
 export type GetSessionResult = Promise<{ data: Session | null; cookie: any }>
 
