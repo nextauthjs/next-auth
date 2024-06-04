@@ -227,7 +227,7 @@ export const verificationTokens = mysqlTable(
   })
 )
 
-export const authenticators = pgTable(
+export const authenticators = mysqlTable(
   "authenticator",
   {
     credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
