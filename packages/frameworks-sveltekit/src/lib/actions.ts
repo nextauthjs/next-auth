@@ -3,7 +3,7 @@ import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { env } from "$env/dynamic/private"
 
-import { Auth, createActionURL, raw, skipCSRFCheck } from "@auth/core"
+import { Auth, createActionURL, raw } from "@auth/core"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 
@@ -65,7 +65,7 @@ export async function signIn(
   headers.set("Content-Type", "application/x-www-form-urlencoded")
   const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? []) {
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -103,7 +103,7 @@ export async function signOut(
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
 
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? [])
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })

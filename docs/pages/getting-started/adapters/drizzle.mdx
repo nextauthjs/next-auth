@@ -111,9 +111,9 @@ export const verificationTokens = pgTable(
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (verficationToken) => ({
+  (verificationToken) => ({
     compositePk: primaryKey({
-      columns: [verficationToken.identifier, verficationToken.token],
+      columns: [verificationToken.identifier, verificationToken.token],
     }),
   })
 )
@@ -220,14 +220,14 @@ export const verificationTokens = mysqlTable(
     token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (verficationToken) => ({
+  (verificationToken) => ({
     compositePk: primaryKey({
-      columns: [verficationToken.identifier, verficationToken.token],
+      columns: [verificationToken.identifier, verificationToken.token],
     }),
   })
 )
 
-export const authenticators = pgTable(
+export const authenticators = mysqlTable(
   "authenticator",
   {
     credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
@@ -318,9 +318,9 @@ export const verificationTokens = sqliteTable(
     token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
-  (verficationToken) => ({
+  (verificationToken) => ({
     compositePk: primaryKey({
-      columns: [verficationToken.identifier, verficationToken.token],
+      columns: [verificationToken.identifier, verificationToken.token],
     }),
   })
 )
