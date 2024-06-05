@@ -103,15 +103,25 @@ export async function provisionDatabase(database: Databases, config: AppwriteAda
 
   try {
     await database.create(config.database_id, "Auth Database");
+    console.log("Initializing collections creation");
     await createCollections(database)
-      .then(async () =>
+      .then(async () => {
+        console.log("Initializing attributes creation");
         await createAttributes(database)
           .then(async () => {
-            await createRelations(database);
-          }))
+            console.log("Initializing relations creation");
+            await createRelations(database).catch((error) => {
+              console.error("Error initializing relations:", error);
+            });
+          }).catch((error) => {
+            console.error("Error initializing attributes:", error);
+          })
+      }).catch((error) => {
+        console.error("Error initializing collections:", error);
+      })
 
     // Make sure the attributes are ready before our tests.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     console.log("Database initialization completed successfully.");
   } catch (error) {
     console.error("Error initializing database:", error);
