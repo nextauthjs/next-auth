@@ -144,11 +144,11 @@ async function awaitAppwriteServer(endpoint: string) {
     for (let i = 0; i < 5; i++) {
         console.log(`Attempting to connect to Appwrite server, attempt ${i + 1}/5`);
         let response = await fetch(endpoint + '/health/version');
-        
-        // Wait 10 seconds, we even do with with success as the DB might not be ready.
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        if (response.status == 200) {   
-            return true;
+
+        // Wait 5 seconds, we even do with success as the DB might not be ready.
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        if (response.status == 200) {
+            return true
         }
     }
 
