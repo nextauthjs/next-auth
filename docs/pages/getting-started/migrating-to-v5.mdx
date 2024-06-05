@@ -285,7 +285,7 @@ const prisma = new PrismaClient()
 
 export const {
   auth,
-  handlers: { GET, POST },
+  handlers,
   signIn,
   signOut,
 } = NextAuth({
@@ -306,10 +306,10 @@ import NextAuth from "next-auth"
 // export const { auth: middleware } = NextAuth(authConfig)
 
 // 2. Wrapped middleware option
-const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig)
 export default auth(async function middleware(req: NextRequest) {
   // Your custom middleware logic goes here
-}
+})
 ```
 
 The above is just an example. **The main idea**, is to separate the part of the configuration that is edge-compatible from the rest, and only import the edge-compatible part in Middleware/Edge pages/routes. You can read more about this workaround in the [Prisma docs](/getting-started/adapters/prisma), for example.
@@ -333,7 +333,7 @@ For more information about environment variables and environment variable infere
 ## TypeScript
 
 - `NextAuthOptions` is renamed to `NextAuthConfig`
-- The following types are now exported from all framework packages like `next-auth` and `@auth/sveltekit`.
+- The following types are now exported from all framework packages like `next-auth` and `@auth/sveltekit`:
 
 ```ts
 export type {

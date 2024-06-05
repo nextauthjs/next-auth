@@ -1,4 +1,4 @@
-import type { D1Database } from "."
+import type { D1Database } from "./index.js"
 
 export const upSQLStatements = [
   `CREATE TABLE IF NOT EXISTS "accounts" (
@@ -45,7 +45,7 @@ export const down = [
   `DROP TABLE IF EXISTS "accounts";`,
   `DROP TABLE IF EXISTS "sessions";`,
   `DROP TABLE IF EXISTS "users";`,
-  `DROP TABLE IF EXISTS "verification_token";`,
+  `DROP TABLE IF EXISTS "verification_tokens";`,
 ]
 
 async function up(db: D1Database) {
