@@ -69,7 +69,9 @@ const config = {
     GitLab,
     Google,
     Hubspot,
-    Keycloak,
+    Keycloak({
+      name: "Keycloak (bob/bob)",
+    }),
     LinkedIn,
     Netlify,
     Okta,
