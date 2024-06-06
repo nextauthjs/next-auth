@@ -114,7 +114,7 @@ import DefaultSignInPage from "../../../public/img/getting-started/default-signi
 
 Once authenticated, the user will be redirected back to the page they started the signin from. If
 you want the user to be redirected somewhere else after sign in (.i.e `/dashboard`), you can do so
-by passing the target URL as `redirectTo` in the sign-in options.
+by passing the target URL as `callbackUrl` in the sign-in options.
 
 <Code>
 <Code.Next>
@@ -127,7 +127,7 @@ export function SignIn() {
     <form
       action={async () => {
         "use server"
-        await signIn("github", { redirectTo: "/dashboard" })
+        await signIn("github", { callbackUrl: "/dashboard" })
       }}
     >
       <button type="submit">Sign in</button>
@@ -144,7 +144,7 @@ import { signIn } from "next-auth/react"
 
 export function SignIn() {
   return (
-    <Button onClick={() => signIn("github", { redirectTo: "/dashboard" })}>
+    <Button onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
       Sign In
     </Button>
   )
