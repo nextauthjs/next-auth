@@ -44,10 +44,10 @@ AUTH_42_SCHOOL_SECRET
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import 42School from "next-auth/providers/42-school"
+import FortyTwo from "next-auth/providers/42-school"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [42School],
+  providers: [FortyTwo],
 })
 ```
 
@@ -56,10 +56,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import 42School from "@auth/sveltekit/providers/42-school"
+import FortyTwo from "@auth/sveltekit/providers/42-school"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [42School],
+  providers: [FortyTwo],
 })
 ```
 
@@ -68,10 +68,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import 42School from "@auth/express/providers/42-school"
+import FortyTwo from "@auth/express/providers/42-school"
 
 app.use("/auth/*",
-  ExpressAuth({ providers: [ 42School ] })
+  ExpressAuth({ providers: [ FortyTwo ] })
 )
 ```
 

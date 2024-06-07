@@ -187,11 +187,11 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  * #### Configuration
  *```js
  * import Auth from "@auth/core"
- * import 42School from "@auth/core/providers/42-school"
+ * import FortyTwo from "@auth/core/providers/42-school"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [42School({ clientId: 42_SCHOOL_CLIENT_ID, clientSecret: 42_SCHOOL_CLIENT_SECRET })],
+ *   providers: [FortyTwo({ clientId: 42_SCHOOL_CLIENT_ID, clientSecret: 42_SCHOOL_CLIENT_SECRET })],
  * })
  * ```
  *
