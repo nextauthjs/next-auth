@@ -98,6 +98,7 @@ We can now build our own custom sign in page.
 <Code.Next>
 
 ```tsx filename="app/signin/page.tsx" /providerMap/
+import { redirect } from "next/navigation"
 import { signIn, auth, providerMap } from "@/auth.ts"
 import { AuthError } from "next-auth"
 
