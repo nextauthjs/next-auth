@@ -1,0 +1,179 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/azure-devops.svg"
+  height="64"
+  width="64"
+/>
+
+# Azure DevOps Provider
+
+<Callout type="warning">
+  Deprecated - While still available, Microsoft is [no longer
+  supporting](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops#available-oauth-models)
+  Azure DevOps OAuth and recommends using [Microsoft Entra
+  ID](/getting-started/providers/microsoft-entra-id) instead.
+</Callout>
+
+## Resources
+
+- [Azure DevOps Apps documentation](https://aex.dev.azure.com)
+- [Microsoft documentation](https://docs.microsoft.com/en-us) · [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/) · [Authorize access to REST APIs with OAuth 2.0](https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops])
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/azure-devops
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/azure-devops
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment variables
+
+In `.env.local` create the following entries:
+
+```
+AZURE_DEVOPS_APP_ID=<copy App ID value here>
+AZURE_DEVOPS_CLIENT_SECRET=<copy generated client secret value here>
+```
+
+### Register application
+
+[`https://app.vsaex.visualstudio.com/app/register`](https://app.vsaex.visualstudio.com/app/register)
+
+Provide the required details:
+
+1. Company name
+2. Application name
+3. Application website
+4. Authorization callback URL
+   - `https://example.com/api/auth/callback/azure-devops` for production
+   - `https://localhost/api/auth/callback/azure-devops` for development
+5. Authorized scopes
+   - Required minimum is `User profile (read)`
+
+Click ‘Create Application’
+
+<Callout type="warning">
+- You are required to use HTTPS even for the localhost
+
+- You will have to delete and create a new application to change the scopes later
+
+</Callout>
+
+The following data is relevant for the next step:
+
+- App ID
+- Client Secret (after clicking the ‘Show’ button, ignore App Secret entry above it)
+- Authorized Scopes
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import AzureDevOps from "next-auth/providers/azure-devops"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    AzureDevOps({
+      clientId: AUTH_AZURE_DEVOPS_APP_ID,
+      clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import AzureDevOps from "@auth/sveltekit/providers/azure-devops"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    AzureDevOps({
+      clientId: AUTH_AZURE_DEVOPS_APP_ID,
+      clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import AzureDevOps from "@auth/express/providers/azure-devops"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      AzureDevOps({
+        clientId: AUTH_AZURE_DEVOPS_APP_ID,
+        clientSecret: AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+### Refresh token rotation
+
+Use the [main guide](/guides/refresh-token-rotation) as your starting point with the following considerations:
+
+```ts filename="./auth.ts"
+export const { signIn, signOut, auth } = NextAuth({
+  callbacks: {
+    async jwt({ token, user, account }) {
+      // The token has an absolute expiration time
+      const accessTokenExpires = account.expires_at * 1000
+    },
+  },
+})
+
+async function refreshAccessToken(token) {
+  const response = await fetch(
+    "https://app.vssps.visualstudio.com/oauth2/token",
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      method: "POST",
+      body: new URLSearchParams({
+        client_assertion_type:
+          "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+        client_assertion: AZURE_DEVOPS_CLIENT_SECRET,
+        grant_type: "refresh_token",
+        assertion: token.refreshToken,
+        redirect_uri:
+          process.env.NEXTAUTH_URL + "/api/auth/callback/azure-devops",
+      }),
+    }
+  )
+
+  // The refreshed token comes with a relative expiration time
+  const accessTokenExpires = Date.now() + newToken.expires_in * 1000
+}
+```

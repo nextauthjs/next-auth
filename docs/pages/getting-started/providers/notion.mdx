@@ -1,0 +1,113 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/notion.svg" height="64" width="64" />
+
+# Notion Provider
+
+## Resources
+
+- [Notion documentation](https://developers.notion.com/docs)
+- [Notion Authorization documentation](https://developers.notion.com/docs/authorization)
+- [Notion Integrations](https://www.notion.so/my-integrations)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/notion
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/notion
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_NOTION_ID
+AUTH_NOTION_SECRET
+AUTH_NOTION_REDIRECT_URI
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Notion from "next-auth/providers/notion"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Notion({
+      clientId: process.env.AUTH_NOTION_ID,
+      clientSecret: process.env.AUTH_NOTION_SECRET,
+      redirectUri: process.env.AUTH_NOTION_REDIRECT_URI,
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Notion from "@auth/sveltekit/providers/notion"
+import {
+  AUTH_NOTION_ID,
+  AUTH_NOTION_SECRET,
+  AUTH_NOTION_REDIRECT_URI,
+} from "$env/static/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Notion({
+      clientId: AUTH_NOTION_ID,
+      clientSecret: AUTH_NOTION_SECRET,
+      redirectUri: AUTH_NOTION_REDIRECT_URI,
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Notion from "@auth/express/providers/notion"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Notion({
+        clientId: process.env.AUTH_NOTION_ID,
+        clientSecret: process.env.AUTH_NOTION_SECRET,
+        redirectUri: process.env.AUTH_NOTION_REDIRECT_URI,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+## Notes
+
+- You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.
+- You must provide a `clientId` and `clientSecret` to use this provider, as-well as a redirect URI (due to this being required by Notion endpoint to fetch tokens).

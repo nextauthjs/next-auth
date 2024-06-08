@@ -1,0 +1,85 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/tiktok.svg" height="64" width="64" />
+
+# TikTok Provider
+
+## Resources
+
+- [TikTok app console](https://developers.tiktok.com/)
+- [TikTok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
+- [Avaliable Scopes](https://developers.tiktok.com/doc/tiktok-api-scopes/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/tiktok
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/tiktok
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_TIKTOK_ID
+AUTH_TIKTOK_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import TikTok from "next-auth/providers/tiktok"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [TikTok],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import TikTok from "@auth/sveltekit/providers/tiktok"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [TikTok],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import TikTok from "@auth/express/providers/tiktok"
+
+app.use("/auth/*", ExpressAuth({ providers: [TikTok] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Production applications cannot use localhost URLs to sign in with TikTok. You need add the domain and Callback/Redirect url's to your TikTok app and have them review and approved by the TikTok Team.
+- Email address is not supported by TikTok.
+- Client_ID will be the Client Key in the TikTok Application

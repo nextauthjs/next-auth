@@ -1,12 +1,10 @@
-import { Auth, raw, skipCSRFCheck } from "@auth/core"
-import { headers as nextHeaders, cookies } from "next/headers"
-import { redirect } from "next/navigation"
+import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core"
+import { headers as nextHeaders, cookies } from "next/headers.js"
+import { redirect } from "next/navigation.js"
 
-import type { AuthAction } from "@auth/core/types"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
-import type { ProviderType } from "../providers/index.js"
-import type { headers } from "next/headers"
+import type { ProviderType } from "@auth/core/providers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -23,7 +21,14 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const signInURL = createActionURL("signin", headers, config.basePath)
+  const signInURL = createActionURL(
+    "signin",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
 
   if (!provider) {
     signInURL.searchParams.append("callbackUrl", callbackUrl)
@@ -66,8 +71,16 @@ export async function signIn(
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (shouldRedirect) return redirect(res.redirect!)
-  return res.redirect as any
+  const responseUrl =
+    res instanceof Response ? res.headers.get("Location") : res.redirect
+
+  // NOTE: if for some unexpected reason the responseUrl is not set,
+  // we redirect to the original url
+  const redirectUrl = responseUrl ?? url
+
+  if (shouldRedirect) return redirect(redirectUrl)
+
+  return redirectUrl as any
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>
@@ -78,7 +91,14 @@ export async function signOut(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL("signout", headers, config.basePath)
+  const url = createActionURL(
+    "signout",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -100,7 +120,14 @@ export async function update(
   const headers = new Headers(nextHeaders())
   headers.set("Content-Type", "application/json")
 
-  const url = createActionURL("session", headers, config.basePath)
+  const url = createActionURL(
+    "session",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
 
@@ -109,27 +136,4 @@ export async function update(
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
   return res.body
-}
-
-/**
- * Extract the origin and base path from either `AUTH_URL` or `NEXTAUTH_URL` environment variables,
- * or the request's headers and the {@link NextAuthConfig.basePath} option.
- */
-export function createActionURL(
-  action: AuthAction,
-  h: Headers | ReturnType<typeof headers>,
-  basePath?: string
-): URL {
-  const envUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
-  if (envUrl) {
-    const { origin, pathname } = new URL(envUrl)
-    const separator = pathname.endsWith("/") ? "" : "/"
-    return new URL(`${origin}${pathname}${separator}${action}`)
-  }
-  const host = h.get("x-forwarded-host") ?? h.get("host")
-  const protocol = h.get("x-forwarded-proto") === "http" ? "http" : "https"
-  // @ts-expect-error `basePath` value is default'ed to "/api/auth" in `setEnvDefaults`
-  const { origin, pathname } = new URL(basePath, `${protocol}://${host}`)
-  const separator = pathname.endsWith("/") ? "" : "/"
-  return new URL(`${origin}${pathname}${separator}${action}`)
 }

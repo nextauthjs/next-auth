@@ -1,0 +1,84 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/keycloak.svg" height="64" width="64" />
+
+# Keycloak Provider
+
+## Resources
+
+- [Keycloak OIDC documentation](https://www.keycloak.org/docs/latest/server_admin/#_oidc_clients)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/keycloak
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/keycloak
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_KEYCLOAK_ID
+AUTH_KEYCLOAK_SECRET
+AUTH_KEYCLOAK_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Keycloak from "next-auth/providers/keycloak"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Keycloak],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Keycloak from "@auth/sveltekit/providers/keycloak"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Keycloak],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Keycloak from "@auth/express/providers/keycloak"
+
+app.use("/auth/*", ExpressAuth({ providers: [Keycloak] }))
+```
+
+  </Code.Express>
+</Code>
+
+Enable the "Client Authentication" option to retrieve your client secret in the Credentials tab.
+
+Prior to v20, create an `openid-connect` client in Keycloak with "confidential" as the "Access Type".
+
+- Issuer should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`

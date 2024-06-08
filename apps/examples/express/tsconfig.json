@@ -9,7 +9,8 @@
     "outDir": "dist",
     "baseUrl": ".",
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "typeRoots": ["types/", "node_modules/@types"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

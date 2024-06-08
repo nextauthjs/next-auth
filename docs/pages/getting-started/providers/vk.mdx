@@ -1,0 +1,97 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/vk.svg" width="64" height="64" />
+
+# VK Provider
+
+## Resources
+
+- [VK API documentation](https://vk.com/dev/first_guide)
+- [VK App configuration](https://vk.com/apps?act=manage)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/vk
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/vk
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_VK_ID
+AUTH_VK_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Vk from "next-auth/providers/vk"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Vk],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Vk from "@auth/sveltekit/providers/vk"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Vk],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Vk from "@auth/express/providers/vk"
+
+app.use("/auth/*", ExpressAuth({ providers: [Vk] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- By default the provider uses 5.126 version of the API. See https://vk.com/dev/versions for more info. If you want to use a different version, you can pass it to provider's options object:
+
+```ts filename="./auth.ts"
+const apiVersion = "5.126"
+
+export const { handlers, auth, signin, signout } = NextAuth({
+  providers: [
+    Vk({
+      accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+      requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+      authorizationUrl: `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
+      profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
+    }),
+  ],
+})
+```

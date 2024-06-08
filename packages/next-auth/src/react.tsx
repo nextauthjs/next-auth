@@ -69,15 +69,22 @@ export const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
+let broadcastChannel: BroadcastChannel | null = null
+
 function broadcast() {
-  if (typeof BroadcastChannel !== "undefined") {
-    return new BroadcastChannel("next-auth")
+  if (typeof BroadcastChannel === "undefined") {
+    return {
+      postMessage: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }
   }
-  return {
-    postMessage: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
+
+  if (broadcastChannel === null) {
+    broadcastChannel = new BroadcastChannel("next-auth")
   }
+
+  return broadcastChannel
 }
 
 // TODO:
@@ -113,7 +120,7 @@ export const SessionContext = React.createContext?.<
  * React Hook that gives you access to the logged in user's session data and lets you modify it.
  *
  * :::info
- * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `useSession` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function useSession<R extends boolean>(
@@ -279,6 +286,7 @@ export async function signIn<
   }
 
   const error = new URL(data.url).searchParams.get("error")
+  const code = new URL(data.url).searchParams.get("code")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -286,6 +294,7 @@ export async function signIn<
 
   return {
     error,
+    code,
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,
@@ -335,7 +344,7 @@ export async function signOut<R extends boolean = true>(
  * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
  *
  * :::info
- * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `SessionProvider` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function SessionProvider(props: SessionProviderProps) {

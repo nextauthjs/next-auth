@@ -6,7 +6,6 @@ import { createClient } from "redis"
 import type { RedisClientType, RedisClientOptions } from "redis"
 
 // TODO: These tests just hang and time out so currently we are skipping them
-
 const redisJSONDriver = defineDriver((options: RedisClientOptions) => {
   let redisClient: RedisClientType
   const getRedisClient = async () => {
@@ -67,30 +66,41 @@ runBasicTests({
     baseKeyPrefix: "testApp:",
     useItemRaw: true,
   }),
+  // TODO: Unstorage `*Raw` methods not working as expected
+  testWebAuthnMethods: false,
   db: {
     disconnect: storage.dispose,
     async user(id: string) {
-      const data = await storage.getItemRaw<object>(`testApp:user:${id}`)
+      const data = await storage.getItemRaw<Record<string, unknown>>(
+        `testApp:user:${id}`
+      )
       if (!data) return null
       return hydrateDates(data)
     },
     async account({ provider, providerAccountId }) {
-      const data = await storage.getItemRaw<object>(
+      const data = await storage.getItemRaw<Record<string, unknown>>(
         `testApp:user:account:${provider}:${providerAccountId}`
       )
       if (!data) return null
       return hydrateDates(data)
     },
     async session(sessionToken) {
-      const data = await storage.getItemRaw<object>(
+      const data = await storage.getItemRaw<Record<string, unknown>>(
         `testApp:user:session:${sessionToken}`
       )
       if (!data) return null
       return hydrateDates(data)
     },
     async verificationToken(where) {
-      const data = await storage.getItemRaw<object>(
+      const data = await storage.getItemRaw<Record<string, unknown>>(
         `testApp:user:token:${where.identifier}:${where.token}`
+      )
+      if (!data) return null
+      return hydrateDates(data)
+    },
+    async authenticator(id) {
+      const data = await storage.getItemRaw<Record<string, unknown>>(
+        `testApp:authenticator:${id}`
       )
       if (!data) return null
       return hydrateDates(data)

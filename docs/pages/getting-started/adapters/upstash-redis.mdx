@@ -1,0 +1,128 @@
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/adapters/upstash-redis.svg"
+  width="64"
+  height="64"
+/>
+
+# Upstash Redis Adapter
+
+## Resources
+
+- [Upstash documentation](https://docs.upstash.com/redis)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install @upstash/redis @auth/upstash-redis-adapter
+```
+
+### Environment Variables
+
+```sh
+UPSTASH_REDIS_URL,
+UPSTASH_REDIS_TOKEN
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import { Redis } from "@upstash/redis"
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: UpstashRedisAdapter(redis),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import { Redis } from "@upstash/redis"
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: UpstashRedisAdapter(redis),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import { Redis } from "@upstash/redis"
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: UpstashRedisAdapter(redis),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Advanced usage
+
+#### Using multiple apps with a single Upstash Redis instance
+
+The Upstash free-tier allows for only one Redis instance. If you have multiple Auth.js connected apps using this instance, you need different key prefixes for every app.
+
+You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
+
+The default values for this object are:
+
+```ts
+const defaultOptions = {
+  baseKeyPrefix: "",
+  accountKeyPrefix: "user:account:",
+  accountByUserIdPrefix: "user:account:by-user-id:",
+  emailKeyPrefix: "user:email:",
+  sessionKeyPrefix: "user:session:",
+  sessionByUserIdKeyPrefix: "user:session:by-user-id:",
+  userKeyPrefix: "user:",
+  verificationTokenKeyPrefix: "user:token:",
+}
+```
+
+Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
+
+```ts
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: UpstashRedisAdapter(redis, { baseKeyPrefix: "app2:" }),
+})
+```

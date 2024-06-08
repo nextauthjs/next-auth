@@ -2,7 +2,7 @@
 
 import {
   AuthError,
-  AuthorizedCallbackError,
+  AccessDenied,
   CallbackRouteError,
   CredentialsSignin,
   InvalidProvider,
@@ -23,7 +23,11 @@ import type {
   User,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
-import { assertInternalOptionsWebAuthn, verifyAuthenticate, verifyRegister } from "../../utils/webauthn-utils.js"
+import {
+  assertInternalOptionsWebAuthn,
+  verifyAuthenticate,
+  verifyRegister,
+} from "../../utils/webauthn-utils.js"
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -312,12 +316,14 @@ export async function callback(
         // prettier-ignore
         new Request(url, { headers, method, body: JSON.stringify(body) })
       )
-      const user = userFromAuthorize && {
-        ...userFromAuthorize,
-        id: userFromAuthorize?.id?.toString() ?? crypto.randomUUID(),
-      }
+      const user = userFromAuthorize
 
-      if (!user) throw new CredentialsSignin()
+      if (!user) {
+        console.error(
+          "Read more at https://errors.authjs.dev/#credentialssignin"
+        )
+        throw new CredentialsSignin()
+      } else user.id = user.id?.toString() ?? crypto.randomUUID()
 
       const account = {
         providerAccountId: user.id,
@@ -371,7 +377,10 @@ export async function callback(
     } else if (provider.type === "webauthn" && method === "POST") {
       // Get callback action from request. It should be either "authenticate" or "register"
       const action = request.body?.action
-      if (typeof action !== "string" || (action !== "authenticate" && action !== "register")) {
+      if (
+        typeof action !== "string" ||
+        (action !== "authenticate" && action !== "register")
+      ) {
         throw new AuthError("Invalid action parameter")
       }
       // Return an error if the adapter is missing or if the provider
@@ -384,7 +393,11 @@ export async function callback(
       let authenticator: Authenticator | undefined
       switch (action) {
         case "authenticate": {
-          const verified = await verifyAuthenticate(localOptions, request, cookies)
+          const verified = await verifyAuthenticate(
+            localOptions,
+            request,
+            cookies
+          )
 
           user = verified.user
           account = verified.account
@@ -403,13 +416,15 @@ export async function callback(
       }
 
       // Check if user is allowed to sign in
-      await handleAuthorized(
-        { user, account },
-        options,
-      )
+      await handleAuthorized({ user, account }, options)
 
       // Sign user in, creating them and their account if needed
-      const { user: loggedInUser, isNewUser, session, account: currentAccount } = await handleLoginOrRegister(
+      const {
+        user: loggedInUser,
+        isNewUser,
+        session,
+        account: currentAccount,
+      } = await handleLoginOrRegister(
         sessionStore.value,
         user,
         account,
@@ -423,7 +438,10 @@ export async function callback(
 
       // Create new authenticator if needed
       if (authenticator && loggedInUser.id) {
-        await localOptions.adapter.createAuthenticator({ ...authenticator, userId: loggedInUser.id })
+        await localOptions.adapter.createAuthenticator({
+          ...authenticator,
+          userId: loggedInUser.id,
+        })
       }
 
       // Do the session registering dance
@@ -471,15 +489,20 @@ export async function callback(
         })
       }
 
-      await events.signIn?.({ user: loggedInUser, account: currentAccount, isNewUser })
+      await events.signIn?.({
+        user: loggedInUser,
+        account: currentAccount,
+        isNewUser,
+      })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
         return {
-          redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
-            }${new URLSearchParams({ callbackUrl })}`,
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -509,9 +532,9 @@ async function handleAuthorized(
     authorized = await signIn(params)
   } catch (e) {
     if (e instanceof AuthError) throw e
-    throw new AuthorizedCallbackError(e as Error)
+    throw new AccessDenied(e as Error)
   }
-  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (!authorized) throw new AccessDenied("AccessDenied")
   if (typeof authorized !== "string") return
   return await redirect({ url: authorized, baseUrl: config.url.origin })
 }

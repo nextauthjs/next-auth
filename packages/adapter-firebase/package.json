@@ -1,6 +1,6 @@
 {
   "name": "@auth/firebase-adapter",
-  "version": "1.4.0",
+  "version": "2.2.0",
   "description": "Firebase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "firebase emulators:exec 'vitest -c ../utils/vitest.config.ts'"
+    "test": "./test/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -47,7 +47,6 @@
     "firebase-admin": "^11.4.1"
   },
   "devDependencies": {
-    "firebase-admin": "^11.4.1",
-    "firebase-tools": "^11.16.1"
+    "firebase-admin": "^11.4.1"
   }
 }
