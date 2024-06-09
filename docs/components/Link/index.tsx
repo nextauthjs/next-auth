@@ -1,4 +1,3 @@
-import React from "react"
 import { ChildrenProps } from "../../utils/types"
 
 export function Link({
