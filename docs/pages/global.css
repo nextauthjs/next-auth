@@ -257,3 +257,10 @@ div.nextra-search kbd {
     opacity: 0;
   }
 }
+
+ul ul, 
+ul ol,
+ol ul,
+ol ol {
+  @apply mb-6;
+}
