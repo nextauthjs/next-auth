@@ -23,7 +23,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Medium from "@auth/core/providers/medium"
  *
  * const request = new Request(origin)

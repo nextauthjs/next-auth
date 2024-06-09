@@ -27,7 +27,7 @@ import WebAuthn, {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Passkey from "@auth/core/providers/passkey"
  *
  * const request = new Request(origin)

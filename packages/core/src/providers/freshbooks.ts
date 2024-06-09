@@ -22,7 +22,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import FreshBooks from "@auth/core/providers/freshbooks"
  *
  * const request = new Request(origin)

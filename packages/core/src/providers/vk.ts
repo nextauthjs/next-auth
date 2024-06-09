@@ -303,7 +303,7 @@ export interface VkProfile {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import VK from "@auth/core/providers/vk"
  *
  * const request = new Request(origin)

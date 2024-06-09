@@ -106,7 +106,7 @@ export interface AppleProfile extends Record<string, any> {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Apple from "@auth/core/providers/apple"
  *
  * const request = new Request(origin)

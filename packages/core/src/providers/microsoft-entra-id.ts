@@ -46,7 +46,7 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * ### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
  *
  * const request = new Request(origin)

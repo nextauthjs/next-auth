@@ -46,7 +46,7 @@ export interface DescopeProfile {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Descope from "@auth/core/providers/descope"
  *
  * const request = new Request(origin)

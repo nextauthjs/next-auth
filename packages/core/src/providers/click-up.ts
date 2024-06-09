@@ -33,7 +33,7 @@ export interface ClickUpProfile {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import ClickUp from "@auth/core/providers/click-up"
  *
  * const request = new Request(origin)

@@ -68,7 +68,7 @@ const NOTION_API_VERSION = "2022-06-28"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Notion from "@auth/core/providers/notion"
  *
  * const request = new Request(origin)

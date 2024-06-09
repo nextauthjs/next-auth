@@ -56,7 +56,7 @@ export interface OktaProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Okta from "@auth/core/providers/okta"
  *
  * const request = new Request(origin)

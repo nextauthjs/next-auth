@@ -29,7 +29,7 @@ export interface TwitchProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Twitch from "@auth/core/providers/twitch"
  *
  * const request = new Request(origin)

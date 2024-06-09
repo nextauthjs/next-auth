@@ -22,7 +22,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import FourSquare from "@auth/core/providers/foursquare"
  *
  * const request = new Request(origin)

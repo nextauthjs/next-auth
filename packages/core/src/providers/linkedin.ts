@@ -34,7 +34,7 @@ export interface LinkedInProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import LinkedIn from "@auth/core/providers/linkedin"
  *
  * const request = new Request(origin)

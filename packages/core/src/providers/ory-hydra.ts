@@ -34,7 +34,7 @@ export interface OryHydraProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import OryHydra from "@auth/core/providers/ory-hydra"
  *
  * const request = new Request(origin)

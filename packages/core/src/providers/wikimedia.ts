@@ -175,7 +175,7 @@ export interface WikimediaProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Wikimedia from "@auth/core/providers/wikimedia"
  *
  * const request = new Request(origin)

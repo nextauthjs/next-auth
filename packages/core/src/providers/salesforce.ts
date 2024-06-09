@@ -29,7 +29,7 @@ export interface SalesforceProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import salesforce from "@auth/core/providers/salesforce"
  *
  * const request = new Request(origin)

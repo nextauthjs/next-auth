@@ -42,7 +42,7 @@ export interface MastodonProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Mastodon from "@auth/core/providers/mastodon"
  *
  * const request = new Request(origin)

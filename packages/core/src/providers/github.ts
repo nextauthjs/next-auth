@@ -80,7 +80,7 @@ export interface GitHubProfile {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import GitHub from "@auth/core/providers/github"
  *
  * const request = new Request(origin)

@@ -115,7 +115,7 @@ export type CredentialsProviderType = "Credentials"
  *
  * @example
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Credentials from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")

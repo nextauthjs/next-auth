@@ -34,7 +34,7 @@ export interface AzureADProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import AzureAd from "@auth/core/providers/azure-ad"
  *
  * const request = new Request(origin)

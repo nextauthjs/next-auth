@@ -67,7 +67,7 @@ export interface GitLabProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import GitLab from "@auth/core/providers/gitlab"
  *
  * const request = new Request(origin)

@@ -25,7 +25,7 @@
  *
  * @example
  * ```ts title=index.ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  *
  * const request = new Request("https://example.com")
  * const response = await Auth(request, {

@@ -41,7 +41,7 @@ export interface NaverProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Naver from "@auth/core/providers/naver"
  *
  * const request = new Request(origin)

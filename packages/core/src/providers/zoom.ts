@@ -55,7 +55,7 @@ export interface ZoomProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Zoom from "@auth/core/providers/zoom"
  *
  * const request = new Request(origin)

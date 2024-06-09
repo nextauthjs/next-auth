@@ -46,7 +46,7 @@ export interface PassageProfile {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Passage from "@auth/core/providers/passage"
  *
  * const request = new Request(origin)

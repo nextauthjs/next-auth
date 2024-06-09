@@ -22,7 +22,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Bungie from "@auth/core/providers/bungie"
  *
  * const request = new Request(origin)

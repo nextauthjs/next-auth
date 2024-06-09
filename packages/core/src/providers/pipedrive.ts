@@ -57,7 +57,7 @@ export interface PipedriveProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Pipedrive from "@auth/core/providers/pipedrive"
  *
  * const request = new Request(origin)

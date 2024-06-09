@@ -95,7 +95,7 @@ export interface YandexProfile {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Yandex from "@auth/core/providers/yandex"
  *
  * const request = new Request(origin)

@@ -35,7 +35,7 @@ export interface BeyondIdentityProfile {
  *
  * #### Configuration
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import BeyondIdentity from "@auth/core/providers/beyondidentity"
  *
  * const request = new Request(origin)

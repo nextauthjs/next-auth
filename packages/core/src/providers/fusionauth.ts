@@ -43,7 +43,7 @@ export interface FusionAuthProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import FusionAuth from "@auth/core/providers/fusionauth"
  *
  * const request = new Request(origin)

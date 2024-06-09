@@ -32,7 +32,7 @@ interface TodoistProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Todoist from "@auth/core/providers/todoist"
  *
  * const request = new Request(origin)

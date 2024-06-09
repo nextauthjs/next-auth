@@ -22,7 +22,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Instagram from "@auth/core/providers/instagram"
  *
  * const request = new Request(origin)

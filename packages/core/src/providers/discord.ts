@@ -98,7 +98,7 @@ export interface DiscordProfile extends Record<string, any> {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Discord from "@auth/core/providers/discord"
  *
  * const request = new Request(origin)

@@ -22,7 +22,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Box from "@auth/core/providers/box"
  *
  * const request = new Request(origin)
