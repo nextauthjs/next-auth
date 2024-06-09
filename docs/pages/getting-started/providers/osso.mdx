@@ -7,9 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Osso OAuth documentation](https://ossoapp.com/)
-- [Osso Admin](https://demo.ossoapp.com/admin/config)
-- [Osso Docs](https://ossoapp.com/docs/configure/overview)
+- [Osso Project](https://github.com/enterprise-oss/osso)
 
 ## Setup
 
@@ -81,7 +79,6 @@ app.use("/auth/*", ExpressAuth({ providers: [Osso] }))
 
 ### Notes
 
-- If you don't yet have an Osso instance, you can use [Osso's Demo App](https://demo.ossoapp.com) for your testing purposes. For documentation on deploying an Osso instance, see https://ossoapp.com/docs/deploy/overview/
-- You can configure your OAuth Clients on your Osso Admin UI, i.e. https://demo.ossoapp.com/admin/config - you'll need to get a Client ID and Secret and allow-list your redirect URIs.
-- [SAML - SSO differs a bit from OAuth](https://ossoapp.com/blog/saml-vs-oauth) for every tenant who wants to sign in to your application using SAML, you and your customer need to perform a multi-step configuration in Osso's Admin UI and the admin dashboard of the tenant's Identity Provider. Osso provides documentation for providers like Okta and Osso, cloud-based IDPs who also offer a developer account that's useful for testing. Osso also provides a [Mock IDP](https://idp.ossoapp.com) that you can use for testing without needing to sign up for an Identity Provider service.
+- You can configure your OAuth Clients on your Osso Admin UI, i.e. https://yourInstance.com/admin/config - you'll need to get a Client ID and Secret and allow-list your redirect URIs.
+- SAML - SSO differs a bit from OAuth, for every tenant who wants to sign in to your application using SAML, you and your customer need to perform a multi-step configuration in Osso's Admin UI and the admin dashboard of the tenant's Identity Provider. Osso provides documentation for providers like Okta and Osso, cloud-based IDPs who also offer a developer account that's useful for testing. Osso also provides a Mock IDP that you can use for testing without needing to sign up for an Identity Provider service.
 - `issuer` should be the fully qualified domain – e.g. `demo.ossoapp.com`

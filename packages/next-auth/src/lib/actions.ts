@@ -1,12 +1,10 @@
 import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core"
-import { headers as nextHeaders, cookies } from "next/headers"
-import { redirect } from "next/navigation"
+import { headers as nextHeaders, cookies } from "next/headers.js"
+import { redirect } from "next/navigation.js"
 
-import type { AuthAction } from "@auth/core/types"
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
 import type { ProviderType } from "@auth/core/providers"
-import type { headers } from "next/headers"
 
 type SignInParams = Parameters<NextAuthResult["signIn"]>
 export async function signIn(
@@ -73,8 +71,16 @@ export async function signIn(
 
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (shouldRedirect) return redirect(res.redirect!)
-  return res.redirect as any
+  const responseUrl =
+    res instanceof Response ? res.headers.get("Location") : res.redirect
+
+  // NOTE: if for some unexpected reason the responseUrl is not set,
+  // we redirect to the original url
+  const redirectUrl = responseUrl ?? url
+
+  if (shouldRedirect) return redirect(redirectUrl)
+
+  return redirectUrl as any
 }
 
 type SignOutParams = Parameters<NextAuthResult["signOut"]>

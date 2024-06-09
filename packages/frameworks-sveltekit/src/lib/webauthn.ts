@@ -43,7 +43,6 @@ async function webAuthnOptions(providerId: string, options?: SignInOptions) {
 /**
  * Client-side method to initiate a webauthn signin flow
  * or send the user to the signin page listing all possible providers.
- * Automatically adds the CSRF token to the request.
  *
  * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
  */
@@ -85,10 +84,6 @@ export async function signIn<
     webAuthnBody.action = action
   }
 
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
-  const { csrfToken } = await csrfTokenResponse.json()
-
   const res = await fetch(_signInUrl, {
     method: "post",
     headers: {
@@ -98,7 +93,6 @@ export async function signIn<
     // @ts-ignore
     body: new URLSearchParams({
       ...options,
-      csrfToken,
       callbackUrl,
       ...webAuthnBody,
     }),

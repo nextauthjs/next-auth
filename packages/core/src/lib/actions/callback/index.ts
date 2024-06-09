@@ -56,8 +56,15 @@ export async function callback(
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
+      // Use body if the response mode is set to form_post. For all other cases, use query
+      const payload =
+        provider.authorization?.url.searchParams.get("response_mode") ===
+        "form_post"
+          ? body
+          : query
+
       const { proxyRedirect, randomState } = handleState(
-        query,
+        payload,
         provider,
         options.isOnRedirectProxy
       )
@@ -68,7 +75,7 @@ export async function callback(
       }
 
       const authorizationResult = await handleOAuth(
-        query,
+        payload,
         request.cookies,
         options,
         randomState
@@ -317,8 +324,12 @@ export async function callback(
       )
       const user = userFromAuthorize
 
-      if (!user) throw new CredentialsSignin()
-      else user.id = user.id?.toString() ?? crypto.randomUUID()
+      if (!user) {
+        console.error(
+          "Read more at https://errors.authjs.dev/#credentialssignin"
+        )
+        throw new CredentialsSignin()
+      } else user.id = user.id?.toString() ?? crypto.randomUUID()
 
       const account = {
         providerAccountId: user.id,
