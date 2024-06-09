@@ -52,8 +52,8 @@ import { SupabaseAdapter } from "@auth/supabase-adapter"
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: SupabaseAdapter({
-    url: process.env.SUPABASE_URL,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    url: process.env.SUPABASE_URL!,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
   }),
 })
 ```
@@ -73,8 +73,8 @@ app.use(
   ExpressAuth({
     providers: [],
     adapter: SupabaseAdapter({
-      url: process.env.SUPABASE_URL,
-      secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      url: process.env.SUPABASE_URL!,
+      secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
     }),
   })
 )
@@ -237,8 +237,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // https://authjs.dev/getting-started/authentication/oauth
   providers: [],
   adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
   }),
   callbacks: {
     async session({ session, user }) {
@@ -302,8 +302,8 @@ The `supabaseAccessToken` is now available on the `session` object and can be pa
 const { supabaseAccessToken } = session
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   {
     global: {
       headers: {
