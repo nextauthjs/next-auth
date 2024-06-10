@@ -1,5 +1,5 @@
 import { Code } from "@/components/Code"
-import { Pre, Code as NXCode } from "nextra/components"
+import { Pre } from "nextra/components"
 import { TSIcon } from "./TSIcon"
 
 interface Props {
@@ -20,7 +20,7 @@ export function SignInCode({ providerId, providerName, highlight }: Props) {
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
-import { signIn } from "@/auth.ts"
+import { signIn } from "@/auth"
  
 export function SignIn() {
   return (
