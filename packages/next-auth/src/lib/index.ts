@@ -183,7 +183,15 @@ export function initAuth(
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
-      return getSession(headers(), config).then((r) => r.json())
+      return getSession(headers(), config)
+        .then((r) => r.json())
+        .then((data) => {
+          // error message from core Auth
+          // e.g. { message: "There was a problem with the server configuration..." }
+          if (data.message) return null
+          return data
+        })
+
     }
     if (args[0] instanceof Request) {
       // middleware.ts inline

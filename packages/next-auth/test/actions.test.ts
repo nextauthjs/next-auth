@@ -107,3 +107,14 @@ describe("signIn action", () => {
     })
   })
 })
+
+describe("auth action", () => {
+  it("should return null on session when throws", async () => {
+    let p = "should not be visible"
+    const session = await NextAuth({ providers: [] }).auth()
+    if (!session) p = "login"
+
+    expect(session).toEqual(null)
+    expect(p).toEqual("login")
+  })
+})
