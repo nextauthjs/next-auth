@@ -4,7 +4,6 @@ import { RequestEvent } from "@builder.io/qwik-city"
 
 export const { onRequest, useAuthSession, useAuthSignIn, useAuthSignOut } =
   qwikAuth$(({ env }: RequestEvent) => ({
-    secret: env.get("AUTH_SECRET"),
     trustHost: true,
     providers: [
       GitHub({
