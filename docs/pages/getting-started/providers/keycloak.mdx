@@ -79,6 +79,6 @@ app.use("/auth/*", ExpressAuth({ providers: [Keycloak] }))
 
 Enable the "Client Authentication" option to retrieve your client secret in the Credentials tab.
 
-Prior to v20, create an `openid-connect` client in Keycloak with "confidential" as the "Access Type". 
+Prior to v20, create an `openid-connect` client in Keycloak with "confidential" as the "Access Type".
 
 - Issuer should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`
