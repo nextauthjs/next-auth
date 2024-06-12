@@ -20,19 +20,8 @@
  *
  * import GitHub from "@auth/core/providers/github"
  * import { qwikAuth$ } from "@auth/qwik"
- * import { RequestEvent } from "@builder.io/qwik-city"
  *
- * export const { onRequest, useAuthSession, useAuthSignIn, useAuthSignOut } =
- *   qwikAuth$(({ env }: RequestEvent) => ({
- *     secret: env.get("AUTH_SECRET"),
- *     trustHost: true,
- *     providers: [
- *       GitHub({
- *         clientId: env.get("AUTH_GITHUB_ID"),
- *         clientSecret: env.get("AUTH_GITHUB_SECRET"),
- *      }),
- *    ],
- *  }))
+ * export const { onRequest, useAuthSession, useAuthSignIn, useAuthSignOut } = qwikAuth$(() => ({ providers: [GitHub] }))
  *
  * ## Signing in and signing out
  *
@@ -130,6 +119,7 @@ import {
   type RequestEvent,
   type RequestEventCommon,
 } from "@builder.io/qwik-city"
+import { EnvGetter } from "@builder.io/qwik-city/middleware/request-handler"
 import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
 import { GetSessionResult, QwikAuthConfig, qwikAuthActions } from "./types.js"
@@ -345,10 +335,54 @@ const patchAuthOptions = async (
   authOptions: QRL<(ev: RequestEventCommon) => QwikAuthConfig>,
   req: RequestEventCommon
 ) => {
-  const options = await authOptions(req)
+  let options = await authOptions(req)
+  fillOptionsWithEnvVariables(req.env, options)
+
   return {
     ...options,
     basePath: "/api/auth",
-    secret: req.env.get("AUTH_SECRET"),
   }
+}
+
+export const fillOptionsWithEnvVariables = (
+  env: EnvGetter,
+  config: AuthConfig
+) => {
+  if (!config.secret?.length) {
+    config.secret = []
+    const secret = env.get("AUTH_SECRET")
+    if (secret) {
+      config.secret.push(secret)
+    }
+    for (const i of [1, 2, 3]) {
+      const secret = env.get(`AUTH_SECRET_${i}`)
+      if (secret) {
+        config.secret.unshift(secret)
+      }
+    }
+  }
+
+  config.redirectProxyUrl ??= env.get("AUTH_REDIRECT_PROXY_URL")
+  config.trustHost ??= !!(
+    env.get("AUTH_URL") ??
+    env.get("AUTH_TRUST_HOST") ??
+    env.get("VERCEL") ??
+    env.get("CF_PAGES") ??
+    env.get("NODE_ENV") !== "production"
+  )
+
+  config.providers = config.providers.map((p) => {
+    const finalProvider = typeof p === "function" ? p({}) : p
+    const ID = finalProvider.id.toUpperCase().replace(/-/g, "_")
+    if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
+      finalProvider.clientId ??= env.get(`AUTH_${ID}_ID`)
+      finalProvider.clientSecret ??= env.get(`AUTH_${ID}_SECRET`)
+      if (finalProvider.type === "oidc") {
+        finalProvider.issuer ??= env.get(`AUTH_${ID}_ISSUER`)
+      }
+    } else if (finalProvider.type === "email") {
+      finalProvider.apiKey ??= env.get(`AUTH_${ID}_KEY`)
+    }
+    return finalProvider
+  })
 }
