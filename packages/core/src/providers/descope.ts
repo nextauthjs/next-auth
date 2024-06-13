@@ -45,20 +45,18 @@ export interface DescopeProfile {
  * ```
  *
  * #### Configuration
+ * ```ts
+ * import { Auth } from "@auth/core"
+ * import Descope from "@auth/core/providers/descope"
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import DescopeProvider from "next-auth/providers/descope";
- *
- * export default NextAuth({
- *  providers: [
- *    DescopeProvider({
- *      clientId: process.env.DESCOPE_ID,
- *      clientSecret: process.env.DESCOPE_SECRET,
- *    }),
- *  ],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [
+ *     Descope({
+ *       clientId: DESCOPE_ID,
+ *       clientSecret: DESCOPE_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
