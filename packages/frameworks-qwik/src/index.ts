@@ -96,7 +96,7 @@
  * So a route can be protected and redirect using something like this located in a layout.tsx or page index.tsx:
  *
  * export const onRequest: RequestHandler = (event) => {
- *   const session: Session | null = event.sharedMap.get('session');
+ *   const session = event.sharedMap.get("session")
  *   if (!session || new Date(session.expires) < new Date()) {
  *     throw event.redirect(302, `/api/auth/signin?callbackUrl=${event.url.pathname}`);
  *   }
@@ -109,7 +109,7 @@
 
 import type { AuthConfig } from "@auth/core"
 import { Auth, skipCSRFCheck } from "@auth/core"
-import type { AuthAction, Session } from "@auth/core/types"
+import { AuthAction, Session } from "@auth/core/types"
 import { implicit$FirstArg, type QRL } from "@builder.io/qwik"
 import {
   globalAction$,

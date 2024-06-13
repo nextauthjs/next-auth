@@ -21,13 +21,9 @@
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
     "fmt.check": "prettier --check .",
-    "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
     "start": "vite --open --mode ssr",
     "qwik": "qwik"
-  },
-  "dependencies": {
-    "@auth/core": "workspace:*"
   },
   "devDependencies": {
     "@auth/qwik": "workspace:*",

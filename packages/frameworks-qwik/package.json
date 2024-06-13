@@ -28,6 +28,13 @@
       "types": "./lib/types/index.d.ts",
       "import": "./lib/index.qwik.mjs",
       "require": "./lib/index.qwik.cjs"
+    },
+    "./providers": {
+      "types": "./lib/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./lib/providers/*.d.ts",
+      "import": "./lib/providers/*.js"
     }
   },
   "types": "./lib/types/index.d.ts",
@@ -38,9 +45,9 @@
   ],
   "scripts": {
     "build": "pnpm clean && pnpm providers && vite build --mode lib",
-    "clean": "rm -rf lib index.* src/lib/providers",
+    "clean": "rm -rf lib index.* src/providers",
     "test": "vitest run",
-    "providers": "node ../utils/scripts/providers"
+    "providers": "node ../utils/scripts/providers --out src"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -50,6 +57,8 @@
     "@builder.io/qwik-city": "1.5.5",
     "@types/set-cookie-parser": "^2.4.7",
     "set-cookie-parser": "^2.6.0",
-    "vite-plugin-dts": "^3.9.1"
+    "typescript": "^5.4.5",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-static-copy": "^1.0.5"
   }
 }

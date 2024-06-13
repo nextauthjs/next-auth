@@ -2,6 +2,7 @@ import { qwikVite } from "@builder.io/qwik/optimizer"
 import { join } from "path"
 import { defineConfig } from "vite"
 import dts from "vite-plugin-dts"
+import { viteStaticCopy } from "vite-plugin-static-copy"
 
 export default defineConfig(() => {
   return {
@@ -27,6 +28,15 @@ export default defineConfig(() => {
       qwikVite(),
       dts({
         tsconfigPath: join(__dirname, "tsconfig.json"),
+      }),
+      viteStaticCopy({
+        targets: [
+          {
+            src: "src/providers/*",
+            dest: "providers/",
+            rename: (fileName: string) => `${fileName}.js`,
+          },
+        ],
       }),
     ],
   }

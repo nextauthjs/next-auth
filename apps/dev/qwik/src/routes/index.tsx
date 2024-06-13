@@ -1,10 +1,9 @@
 import { component$ } from "@builder.io/qwik"
-import { Form, RequestHandler } from "@builder.io/qwik-city"
+import { Form, type RequestHandler } from "@builder.io/qwik-city"
 import { useAuthSession, useAuthSignIn, useAuthSignOut } from "./plugin@auth"
-import { Session } from "@auth/core/types"
 
 export const onRequest: RequestHandler = (event) => {
-  const session: Session | null = event.sharedMap.get("session")
+  const session = event.sharedMap.get("session")
   if (!session || new Date(session.expires) < new Date()) {
     console.log("Not authorize. Redirect or throw error here.")
   }
