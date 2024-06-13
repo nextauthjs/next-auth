@@ -26,25 +26,33 @@ export interface BeyondIdentityProfile {
 /**
  * Add Beyond Identity login to your page.
  *
- * @example
+ * ### Setup
  *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/beyondidentity
+ * ```
+ *
+ * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
  * import BeyondIdentity from "@auth/core/providers/beyondidentity"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BeyondIdentity({ clientId: BEYOND_IDENTITY_CLIENT_ID, clientSecret: BEYOND_IDENTITY_CLIENT_SECRET, issuer: BEYOND_IDENTITY_ISSUER })],
+ *   providers: [
+ *     BeyondIdentity({
+ *       clientId: BEYOND_IDENTITY_CLIENT_ID,
+ *       clientSecret: BEYOND_IDENTITY_CLIENT_SECRET,
+ *       issuer: BEYOND_IDENTITY_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
- *
- * ---
  *
  * ### Resources
  *
  * - [Beyond Identity Developer Docs](https://developer.beyondidentity.com/)
- *
- * ---
  *
  * ### Notes
  *

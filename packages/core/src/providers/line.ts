@@ -33,13 +33,15 @@ export interface LineProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import LINE from "@auth/core/providers/line"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [LINE({ clientId: LINE_CLIENT_ID, clientSecret: LINE_CLIENT_SECRET })],
+ *   providers: [
+ *     LINE({ clientId: LINE_CLIENT_ID, clientSecret: LINE_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
