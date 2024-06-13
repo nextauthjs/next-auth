@@ -219,7 +219,7 @@ export default function NetSuite<P extends NetSuiteProfile>(
         image: null,
       }
     },
-    style: { logo: "/netsuite.svg", bg: "#3a4f5f", text: "#fff" },
+    style: { logo: "/netsuite.svg", bg: "#181a1b", text: "#fbfbfb" },
     options: config,
   }
 }
