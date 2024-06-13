@@ -70,13 +70,15 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Osu from "@auth/core/providers/osu"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Osu({ clientId: OSU_CLIENT_ID, clientSecret: OSU_CLIENT_SECRET })],
+ *   providers: [
+ *     Osu({ clientId: OSU_CLIENT_ID, clientSecret: OSU_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
