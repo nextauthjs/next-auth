@@ -158,7 +158,7 @@ importers:
     devDependencies:
       '@libsql/client':
         specifier: ^0.6.0
-        version: 0.6.0
+        version: 0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@types/react':
         specifier: ^18.2.23
         version: 18.2.48
@@ -338,7 +338,7 @@ importers:
         version: 0.20.17
       drizzle-orm:
         specifier: ^0.30.9
-        version: 0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.4.5))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13)))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6(encoding@0.1.13))
+        version: 0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.4.5))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13)))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6(encoding@0.1.13))
       libsql:
         specifier: ^0.3.18
         version: 0.3.18
@@ -406,7 +406,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.0
-        version: 5.0.0(@parcel/watcher@2.4.1)(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)
+        version: 5.0.0(@parcel/watcher@2.4.1)(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)(utf-8-validate@6.0.4)
       '@graphql-codegen/client-preset':
         specifier: ^4.1.0
         version: 4.1.0(encoding@0.1.13)(graphql@16.8.1)
@@ -541,7 +541,7 @@ importers:
     devDependencies:
       '@supabase/supabase-js':
         specifier: ^2.43.1
-        version: 2.43.1
+        version: 2.43.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       supabase:
         specifier: ^1.165.0
         version: 1.165.0
@@ -552,8 +552,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       surrealdb.js:
-        specifier: ^0.11.0
-        version: 0.11.0
+        specifier: ^1.0.0-beta.9
+        version: 1.0.0-beta.9
 
   packages/adapter-typeorm:
     dependencies:
@@ -1890,6 +1890,12 @@ packages:
     peerDependencies:
       postcss-selector-parser: ^6.0.13
 
+  '@deno/shim-deno-test@0.4.0':
+    resolution: {integrity: sha512-oYWcD7CpERZy/TXMTM9Tgh1HD/POHlbY9WpzmAk+5H8DohcxG415Qws8yLGlim3EaKBT2v3lJv01x4G0BosnaQ==}
+
+  '@deno/shim-deno@0.16.1':
+    resolution: {integrity: sha512-s9v0kzF5bm/o9TgdwvsraHx6QNllYrXXmKzgOG2lh4LFXnVMr2gpjK/c/ve6EflQn1MqImcWmVD8HAv5ahuuZQ==}
+
   '@emnapi/runtime@1.2.0':
     resolution: {integrity: sha512-bV21/9LQmcQeCPEg3BDFtvwL6cwiTMksYNWQQ4KOxCZikEGalWtenoZ0wCiukJINlGCIi2KXx01g4FoH/LxpzQ==}
 
@@ -2793,6 +2799,9 @@ packages:
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
+
+  '@icholy/duration@5.1.0':
+    resolution: {integrity: sha512-I/zdjC6qYdwWJ2H1/PZbI3g58pPIiI/eOe5XDTtQ/v36d0ogcvAylqwOIWj/teY1rBnIMzUyWfX7PMm9I67WWg==}
 
   '@img/sharp-darwin-arm64@0.33.4':
     resolution: {integrity: sha512-p0suNqXufJs9t3RqLBO6vvrgr5OhgbWp76s5gTRvdmxmuv9E1rcaqGUsl3l4mKVmXPkTkTErXediAui4x+8PSA==}
@@ -5883,6 +5892,10 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
+  bufferutil@4.0.8:
+    resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
+    engines: {node: '>=6.14.2'}
+
   builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
 
@@ -5969,6 +5982,9 @@ packages:
   cbor-extract@2.2.0:
     resolution: {integrity: sha512-Ig1zM66BjLfTXpNgKpvBePq271BPOvu8MR0Jl080yG7Jsl+wAZunfrwiwA+9ruzm/WEdIV5QF/bjDZTqyAIVHA==}
     hasBin: true
+
+  cbor-redux@1.0.0:
+    resolution: {integrity: sha512-nqCD/Yu2FON0XgZYdUNsMx1Tc08MOY3noh9bO2MvkjlyLZyqIVWjuz6A0mDrPJncdOfacokFUtF7zlzzP5oK5A==}
 
   cbor-x@1.5.8:
     resolution: {integrity: sha512-gc3bHBsvG6GClCY6c0/iip+ghlqizkVp+TtaL927lwvP4VP9xBdi1HmqPR5uj/Mj/0TOlngMkIYa25wKg+VNrQ==}
@@ -6628,6 +6644,9 @@ packages:
   decamelize@1.2.0:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
     engines: {node: '>=0.10.0'}
+
+  decimal.js@10.4.3:
+    resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
 
   decode-named-character-reference@1.0.2:
     resolution: {integrity: sha512-O8x12RzrUF8xyVcY0KJowWsmaJxQbmy0/EtnNtHRpsOcT7dFk5W598coHqBVpmWo1oQQfsCqfCmkZN5DJrZVdg==}
@@ -8482,6 +8501,11 @@ packages:
     peerDependencies:
       ws: '*'
 
+  isows@1.0.4:
+    resolution: {integrity: sha512-hEzjY+x9u9hPmBom9IIAqdJCwNLax+xrPb51vEPpERoFlIxgmZcHzsT5jKG06nvInKOBGvReAVz80Umed5CczQ==}
+    peerDependencies:
+      ws: '*'
+
   istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
@@ -9788,6 +9812,10 @@ packages:
 
   node-gyp-build@4.1.1:
     resolution: {integrity: sha512-dSq1xmcPDKPZ2EED2S6zw/b9NKsqzXRE6dVr8TVQnI3FJOTteUMuqF3Qqs6LZg+mLGYJWqQzMbIjMtJqTv87nQ==}
+    hasBin: true
+
+  node-gyp-build@4.8.1:
+    resolution: {integrity: sha512-OSs33Z9yWr148JZcbZd5WiAXhh/n9z8TxQcdMhIOlpN9AhWpLfvVFO73+m77bBABQMaY9XSvIa+qk0jlI7Gcaw==}
     hasBin: true
 
   node-gyp@8.4.1:
@@ -11785,8 +11813,9 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  surrealdb.js@0.11.0:
-    resolution: {integrity: sha512-x/Qd0UYyNilwY27JZlWgP8NsCdBzDtextRzP9oIm7xO27qsZvE5Rh4wnYN0xD68zgRAE4W8Jsufbm+hKbaGsTg==}
+  surrealdb.js@1.0.0-beta.9:
+    resolution: {integrity: sha512-EPodlWRWwfK91qtKHJ246Rljpvl7eB0egHwhthRa/wsxMoEVqUyIqmMSjmweKOGGKxm35NhivYbJh+5LnqI/nA==}
+    engines: {node: '>=18.0.0'}
 
   svelte-check@2.10.2:
     resolution: {integrity: sha512-h1Tuiir0m8J5yqN+Vx6qgKKk1L871e6a9o7rMwVWfu8Qs6Wg7x2R+wcxS3SO3VpW5JCxCat90rxPsZMYgz+HaQ==}
@@ -12641,12 +12670,6 @@ packages:
     resolution: {integrity: sha512-4luGP9LMYszMRZwsvyUd9MrxgEGZdZuZgpVQHEEX0lCYFESasVRvZd0EYpCkOIbJKHMuv0LskpXc/8Un+MJzEQ==}
     hasBin: true
 
-  unws@0.2.4:
-    resolution: {integrity: sha512-/N1ajiqrSp0A/26/LBg7r10fOcPtGXCqJRJ61sijUFoGZMr6ESWGYn7i0cwr7fR7eEECY5HsitqtjGHDZLAu2w==}
-    engines: {node: '>=16.14.0'}
-    peerDependencies:
-      ws: '*'
-
   update-browserslist-db@1.0.13:
     resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
     hasBin: true
@@ -12705,6 +12728,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
+  utf-8-validate@6.0.4:
+    resolution: {integrity: sha512-xu9GQDeFp+eZ6LnCywXN/zBancWvOpUMzgjLPSjy4BRHSmTelvn2E0DG0o1sTiw5hkCKBHo8rwSKncfRfv2EEQ==}
+    engines: {node: '>=6.14.2'}
+
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -12723,6 +12750,10 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+
+  uuidv7@0.6.3:
+    resolution: {integrity: sha512-zV3eW2NlXTsun/aJ7AixxZjH/byQcH/r3J99MI0dDEkU2cJIBJxhEWUHDTpOaLPRNhebPZoeHuykYREkI9HafA==}
     hasBin: true
 
   uvu@0.5.6:
@@ -14912,6 +14943,13 @@ snapshots:
     dependencies:
       postcss-selector-parser: 6.0.15
 
+  '@deno/shim-deno-test@0.4.0': {}
+
+  '@deno/shim-deno@0.16.1':
+    dependencies:
+      '@deno/shim-deno-test': 0.4.0
+      which: 2.0.2
+
   '@emnapi/runtime@1.2.0':
     dependencies:
       tslib: 2.6.2
@@ -15358,7 +15396,7 @@ snapshots:
       graphql: 16.8.1
       tslib: 2.5.3
 
-  '@graphql-codegen/cli@5.0.0(@parcel/watcher@2.4.1)(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)':
+  '@graphql-codegen/cli@5.0.0(@parcel/watcher@2.4.1)(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)(utf-8-validate@6.0.4)':
     dependencies:
       '@babel/generator': 7.23.6
       '@babel/template': 7.23.9
@@ -15372,8 +15410,8 @@ snapshots:
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/load': 8.0.1(graphql@16.8.1)
-      '@graphql-tools/prisma-loader': 8.0.2(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)
-      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)
+      '@graphql-tools/prisma-loader': 8.0.2(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(utf-8-validate@6.0.4)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(utf-8-validate@6.0.4)
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
@@ -15381,7 +15419,7 @@ snapshots:
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.8.1
-      graphql-config: 5.0.3(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)
+      graphql-config: 5.0.3(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)(utf-8-validate@6.0.4)
       inquirer: 8.2.6
       is-glob: 4.0.3
       jiti: 1.21.0
@@ -15562,15 +15600,15 @@ snapshots:
       lodash.sortby: 4.7.0
       tslib: 2.6.2
 
-  '@graphql-tools/executor-graphql-ws@1.1.0(graphql@16.8.1)':
+  '@graphql-tools/executor-graphql-ws@1.1.0(bufferutil@4.0.8)(graphql@16.8.1)(utf-8-validate@6.0.4)':
     dependencies:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@types/ws': 8.5.10
       graphql: 16.8.1
       graphql-ws: 5.14.3(graphql@16.8.1)
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -15588,14 +15626,14 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@graphql-tools/executor-legacy-ws@1.0.5(graphql@16.8.1)':
+  '@graphql-tools/executor-legacy-ws@1.0.5(bufferutil@4.0.8)(graphql@16.8.1)(utf-8-validate@6.0.4)':
     dependencies:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@types/ws': 8.5.10
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -15692,9 +15730,9 @@ snapshots:
       graphql: 16.8.1
       tslib: 2.6.2
 
-  '@graphql-tools/prisma-loader@8.0.2(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)':
+  '@graphql-tools/prisma-loader@8.0.2(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(utf-8-validate@6.0.4)':
     dependencies:
-      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(utf-8-validate@6.0.4)
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@types/js-yaml': 4.0.9
       '@types/json-stable-stringify': 1.0.36
@@ -15738,22 +15776,22 @@ snapshots:
       tslib: 2.6.2
       value-or-promise: 1.0.12
 
-  '@graphql-tools/url-loader@8.0.1(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)':
+  '@graphql-tools/url-loader@8.0.1(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(utf-8-validate@6.0.4)':
     dependencies:
       '@ardatan/sync-fetch': 0.0.1(encoding@0.1.13)
       '@graphql-tools/delegate': 10.0.3(graphql@16.8.1)
-      '@graphql-tools/executor-graphql-ws': 1.1.0(graphql@16.8.1)
+      '@graphql-tools/executor-graphql-ws': 1.1.0(bufferutil@4.0.8)(graphql@16.8.1)(utf-8-validate@6.0.4)
       '@graphql-tools/executor-http': 1.0.7(@types/node@20.12.7)(graphql@16.8.1)
-      '@graphql-tools/executor-legacy-ws': 1.0.5(graphql@16.8.1)
+      '@graphql-tools/executor-legacy-ws': 1.0.5(bufferutil@4.0.8)(graphql@16.8.1)(utf-8-validate@6.0.4)
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@graphql-tools/wrap': 10.0.1(graphql@16.8.1)
       '@types/ws': 8.5.10
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.16.0
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -15830,6 +15868,8 @@ snapshots:
   '@humanwhocodes/object-schema@2.0.2': {}
 
   '@iarna/toml@2.2.5': {}
+
+  '@icholy/duration@5.1.0': {}
 
   '@img/sharp-darwin-arm64@0.33.4':
     optionalDependencies:
@@ -16142,10 +16182,10 @@ snapshots:
 
   '@levischuck/tiny-cbor@0.2.2': {}
 
-  '@libsql/client@0.6.0':
+  '@libsql/client@0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@libsql/core': 0.6.0
-      '@libsql/hrana-client': 0.6.0
+      '@libsql/hrana-client': 0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       js-base64: 3.7.7
       libsql: 0.3.18
     transitivePeerDependencies:
@@ -16162,10 +16202,10 @@ snapshots:
   '@libsql/darwin-x64@0.3.18':
     optional: true
 
-  '@libsql/hrana-client@0.6.0':
+  '@libsql/hrana-client@0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@libsql/isomorphic-fetch': 0.2.1
-      '@libsql/isomorphic-ws': 0.1.5
+      '@libsql/isomorphic-ws': 0.1.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       js-base64: 3.7.7
       node-fetch: 3.3.2
     transitivePeerDependencies:
@@ -16174,10 +16214,10 @@ snapshots:
 
   '@libsql/isomorphic-fetch@0.2.1': {}
 
-  '@libsql/isomorphic-ws@0.1.5':
+  '@libsql/isomorphic-ws@0.1.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@types/ws': 8.5.10
-      ws: 8.16.0
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -17682,12 +17722,12 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  '@supabase/realtime-js@2.9.5':
+  '@supabase/realtime-js@2.9.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@supabase/node-fetch': 2.6.15
       '@types/phoenix': 1.6.4
       '@types/ws': 8.5.10
-      ws: 8.16.0
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -17696,13 +17736,13 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  '@supabase/supabase-js@2.43.1':
+  '@supabase/supabase-js@2.43.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@supabase/auth-js': 2.64.2
       '@supabase/functions-js': 2.3.1
       '@supabase/node-fetch': 2.6.15
       '@supabase/postgrest-js': 1.15.2
-      '@supabase/realtime-js': 2.9.5
+      '@supabase/realtime-js': 2.9.5(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@supabase/storage-js': 2.5.5
     transitivePeerDependencies:
       - bufferutil
@@ -20009,6 +20049,11 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
+  bufferutil@4.0.8:
+    dependencies:
+      node-gyp-build: 4.8.1
+    optional: true
+
   builtins@5.0.1:
     dependencies:
       semver: 7.6.0
@@ -20123,6 +20168,10 @@ snapshots:
       '@cbor-extract/cbor-extract-linux-x64': 2.2.0
       '@cbor-extract/cbor-extract-win32-x64': 2.2.0
     optional: true
+
+  cbor-redux@1.0.0:
+    dependencies:
+      '@deno/shim-deno': 0.16.1
 
   cbor-x@1.5.8:
     optionalDependencies:
@@ -20840,6 +20889,8 @@ snapshots:
 
   decamelize@1.2.0: {}
 
+  decimal.js@10.4.3: {}
+
   decode-named-character-reference@1.0.2:
     dependencies:
       character-entities: 2.0.2
@@ -21036,10 +21087,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.4.5))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13)))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6(encoding@0.1.13)):
+  drizzle-orm@0.30.9(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(@opentelemetry/api@1.7.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.4.5))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6(encoding@0.1.13)))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6(encoding@0.1.13)):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240117.0
-      '@libsql/client': 0.6.0
+      '@libsql/client': 0.6.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@opentelemetry/api': 1.7.0
       '@types/better-sqlite3': 7.6.9
       '@types/pg': 8.11.0
@@ -22400,13 +22451,13 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-config@5.0.3(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5):
+  graphql-config@5.0.3(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.4.5)(utf-8-validate@6.0.4):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/load': 8.0.1(graphql@16.8.1)
       '@graphql-tools/merge': 9.0.1(graphql@16.8.1)
-      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.7)(encoding@0.1.13)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.7)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.8.1)(utf-8-validate@6.0.4)
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       cosmiconfig: 8.3.6(typescript@5.4.5)
       graphql: 16.8.1
@@ -23192,9 +23243,13 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-ws@5.0.0(ws@8.16.0):
+  isomorphic-ws@5.0.0(ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
     dependencies:
-      ws: 8.16.0
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+
+  isows@1.0.4(ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
+    dependencies:
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   istanbul-lib-coverage@3.2.2: {}
 
@@ -25120,6 +25175,9 @@ snapshots:
     optional: true
 
   node-gyp-build@4.1.1: {}
+
+  node-gyp-build@4.8.1:
+    optional: true
 
   node-gyp@8.4.1:
     dependencies:
@@ -27464,14 +27522,19 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  surrealdb.js@0.11.0:
+  surrealdb.js@1.0.0-beta.9:
     dependencies:
-      unws: 0.2.4(ws@8.16.0)
-      ws: 8.16.0
+      '@icholy/duration': 5.1.0
+      cbor-redux: 1.0.0
+      decimal.js: 10.4.3
+      isows: 1.0.4(ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+      semver: 7.6.0
+      uuidv7: 0.6.3
+      ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       zod: 3.22.4
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
+    optionalDependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 6.0.4
 
   svelte-check@2.10.2(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.106(@swc/helpers@0.5.11))(@types/node@20.12.7)(typescript@5.2.2)))(postcss@8.4.38)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.9):
     dependencies:
@@ -28372,10 +28435,6 @@ snapshots:
       consola: 3.2.3
       pathe: 1.1.2
 
-  unws@0.2.4(ws@8.16.0):
-    dependencies:
-      ws: 8.16.0
-
   update-browserslist-db@1.0.13(browserslist@4.22.2):
     dependencies:
       browserslist: 4.22.2
@@ -28434,6 +28493,11 @@ snapshots:
     dependencies:
       react: 18.3.1
 
+  utf-8-validate@6.0.4:
+    dependencies:
+      node-gyp-build: 4.8.1
+    optional: true
+
   util-deprecate@1.0.2: {}
 
   utils-merge@1.0.1: {}
@@ -28443,6 +28507,8 @@ snapshots:
   uuid@8.3.2: {}
 
   uuid@9.0.1: {}
+
+  uuidv7@0.6.3: {}
 
   uvu@0.5.6:
     dependencies:
@@ -28809,7 +28875,10 @@ snapshots:
     dependencies:
       readable-stream: 0.0.4
 
-  ws@8.16.0: {}
+  ws@8.16.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+    optionalDependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 6.0.4
 
   xml2js@0.5.0:
     dependencies:

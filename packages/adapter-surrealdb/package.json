@@ -44,6 +44,6 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "surrealdb.js": "^0.11.0"
+    "surrealdb.js": "^1.0.0-beta.9"
   }
 }
