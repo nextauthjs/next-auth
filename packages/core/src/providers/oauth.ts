@@ -240,6 +240,11 @@ export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
   checks?: Array<NonNullable<OAuth2Config<Profile>["checks"]>[number] | "nonce">
+  /**
+   * If set to `false`, the `userinfo_endpoint` will be fetched for the user data.
+   * @note An `id_token` is still required to be returned during the authorization flow.
+   */
+  idToken?: boolean
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
@@ -283,6 +288,7 @@ export type OAuthConfigInternal<Profile> = Omit<
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
+  idToken: OIDCConfig<Profile>["idToken"]
 }
 
 export type OAuthUserConfig<Profile> = Omit<
