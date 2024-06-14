@@ -142,28 +142,47 @@ export async function handleOAuth(
 
   if (provider.type === "oidc") {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
-    const result = await o.processAuthorizationCodeOpenIDResponse(
-      as,
-      client,
-      codeGrantResponse,
-      nonce ?? o.expectNoNonce
-    )
+    const processedCodeResponse =
+      await o.processAuthorizationCodeOpenIDResponse(
+        as,
+        client,
+        codeGrantResponse,
+        nonce ?? o.expectNoNonce
+      )
 
-    if (o.isOAuth2Error(result)) {
-      console.log("error", result)
+    if (o.isOAuth2Error(processedCodeResponse)) {
+      console.log("error", processedCodeResponse)
       throw new Error("TODO: Handle OIDC response body error")
     }
 
-    profile = o.getValidatedIdTokenClaims(result)
-    tokens = result
+    const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)
+    profile = idTokenClaims
+
+    if (client.userinfo_signed_response_alg) {
+      const userinfoResponse = await o.userInfoRequest(
+        as,
+        client,
+        processedCodeResponse.access_token
+      )
+
+      profile = await o.processUserInfoResponse(
+        as,
+        client,
+        idTokenClaims.sub,
+        userinfoResponse
+      )
+    }
+    tokens = processedCodeResponse
   } else {
-    tokens = await o.processAuthorizationCodeOAuth2Response(
-      as,
-      client,
-      codeGrantResponse
-    )
-    if (o.isOAuth2Error(tokens as any)) {
-      console.log("error", tokens)
+    const processedCodeResponse =
+      await o.processAuthorizationCodeOAuth2Response(
+        as,
+        client,
+        codeGrantResponse
+      )
+    tokens = processedCodeResponse
+    if (o.isOAuth2Error(processedCodeResponse)) {
+      console.log("error", processedCodeResponse)
       throw new Error("TODO: Handle OAuth 2.0 response body error")
     }
 
@@ -174,7 +193,7 @@ export async function handleOAuth(
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
-        (tokens as any).access_token
+        processedCodeResponse.access_token
       )
       profile = await userinfoResponse.json()
     } else {
