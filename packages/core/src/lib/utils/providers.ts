@@ -155,7 +155,7 @@ function normalizeEndpoint(
     url,
     request: e?.request,
     conform: e?.conform,
-    clientPrivateKey: e?.clientPrivateKey,
+    ...(e?.clientPrivateKey ? { clientPrivateKey: e?.clientPrivateKey } : null),
   }
 }
 
