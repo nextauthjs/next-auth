@@ -45,6 +45,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   request?: EndpointRequest<C, R, P>
   /** @internal */
   conform?: (response: Response) => Awaitable<Response | undefined>
+  clientPrivateKey?: CryptoKey
 }
 
 /**
@@ -204,14 +205,6 @@ export interface OAuth2Config<Profile>
    * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
    */
   client?: Partial<Client>
-
-  /*
-   * Additional options for the underlying OAuth library
-   * `clientPrivateKey` is required if client.token_endpoint_auth_method === "private_key_jwt"
-   */
-  clientOptions?: {
-    clientPrivateKey?: string
-  }
   style?: OAuthProviderButtonStyles
   /**
    * Normally, when you sign in with an OAuth provider and another account
@@ -266,6 +259,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
+    clientPrivateKey?: CryptoKey
     /** @internal */
     conform?: TokenEndpointHandler["conform"]
   }

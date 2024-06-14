@@ -105,9 +105,6 @@ export async function handleOAuth(
     redirect_uri = provider.redirectProxyUrl
   }
 
-  // If the provider is configured to use private_key_jwt, we need to get the private key and pass into the request
-  const clientPrivateKey = await getCryptoPrivateKeyFromOptions(options)
-
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
@@ -124,7 +121,7 @@ export async function handleOAuth(
         }
         return fetch(...args)
       },
-      ...(clientPrivateKey ? { clientPrivateKey } : null),
+      clientPrivateKey: provider.token?.clientPrivateKey,
     }
   )
 
@@ -242,44 +239,4 @@ export async function getUserAndAccount(
       new OAuthProfileParseError(e as Error, { provider: provider.id })
     )
   }
-}
-
-async function getCryptoPrivateKeyFromOptions(
-  options: InternalOptions<"oauth" | "oidc">
-) {
-  return await getCryptoKeyFromPrivateKey(
-    getPrivateKeyValueFromOptions(options)
-  )
-}
-
-function getPrivateKeyValueFromOptions(
-  options: InternalOptions<"oauth" | "oidc">
-) {
-  if (
-    options.provider.client?.token_endpoint_auth_method === "private_key_jwt" &&
-    !options.provider.clientOptions?.clientPrivateKey
-  ) {
-    throw new TypeError("No private key found for private_key_jwt auth method.")
-  }
-
-  return options.provider.clientOptions!.clientPrivateKey!
-}
-
-async function getCryptoKeyFromPrivateKey(pem: string) {
-  const encodedKey = pem
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
-    .replace(/\n/g, "")
-  const encodedKeyBuffer = Buffer.from(encodedKey, "base64")
-
-  return await crypto.subtle.importKey(
-    "pkcs8",
-    encodedKeyBuffer,
-    {
-      name: "RSASSA-PKCS1-v1_5", // algorithm
-      hash: "SHA-256", // hash algorithm
-    },
-    true,
-    ["sign"]
-  )
 }
