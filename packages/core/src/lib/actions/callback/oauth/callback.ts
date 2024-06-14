@@ -14,7 +14,10 @@ import type {
   TokenSet,
   User,
 } from "../../../../types.js"
-import type { OAuthConfigInternal } from "../../../../providers/index.js"
+import {
+  isOIDCProvider,
+  type OAuthConfigInternal,
+} from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 
 /**
@@ -140,7 +143,7 @@ export async function handleOAuth(
   let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
-  if (provider.type === "oidc") {
+  if (isOIDCProvider(provider)) {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
     const processedCodeResponse =
       await o.processAuthorizationCodeOpenIDResponse(
@@ -158,7 +161,7 @@ export async function handleOAuth(
     const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)
     profile = idTokenClaims
 
-    if (client.userinfo_signed_response_alg) {
+    if (provider.idToken === false) {
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
