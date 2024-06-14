@@ -14,11 +14,9 @@ import type {
   TokenSet,
   User,
 } from "../../../../types.js"
-import {
-  isOIDCProvider,
-  type OAuthConfigInternal,
-} from "../../../../providers/index.js"
+import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
+import { isOIDCProvider } from "../../../utils/providers.js"
 
 /**
  * Handles the following OAuth steps.
