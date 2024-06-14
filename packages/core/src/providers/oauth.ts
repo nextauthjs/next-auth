@@ -1,4 +1,4 @@
-import type { Client } from "oauth4webapi"
+import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
@@ -45,7 +45,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   request?: EndpointRequest<C, R, P>
   /** @internal */
   conform?: (response: Response) => Awaitable<Response | undefined>
-  clientPrivateKey?: CryptoKey
+  clientPrivateKey?: CryptoKey | PrivateKey
 }
 
 /**
@@ -259,7 +259,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
-    clientPrivateKey?: CryptoKey
+    clientPrivateKey?: CryptoKey | PrivateKey
     /** @internal */
     conform?: TokenEndpointHandler["conform"]
   }
