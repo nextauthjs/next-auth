@@ -5,13 +5,13 @@ import {
   VerificationToken,
 } from "@auth/core/adapters"
 import { RecordId } from "surrealdb.js"
+import { extractId } from "./index.js"
 import {
   UserDoc,
-  extractId,
   AccountDoc,
   SessionDoc,
   VerificationTokenDoc,
-} from "./index.js"
+} from "./types.js"
 
 /** @internal */
 // Convert DB object to AdapterUser
