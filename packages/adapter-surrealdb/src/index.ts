@@ -39,10 +39,6 @@ import {
   VerificationTokenDoc,
 } from "./types.js"
 
-export function extractId(surrealId: RecordId) {
-  return surrealId.id.toString()
-}
-
 export function SurrealDBAdapter(client: Promise<Surreal>): Adapter {
   return {
     async createUser(user: AdapterUser) {
