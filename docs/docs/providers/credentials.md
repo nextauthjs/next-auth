@@ -2,17 +2,16 @@
 id: credentials
 title: Credentials
 ---
-
 ## Overview
 
-The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, domain, or two factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
+The Credentials provider allows you to handle signing in with arbitrary credentials, such as a username and password, domain, or two-factor authentication or hardware device (e.g. YubiKey U2F / FIDO).
 
 It is intended to support use cases where you have an existing system you need to authenticate users against.
 
 It comes with the constraint that users authenticated in this manner are not persisted in the database, and consequently that the Credentials provider can only be used if JSON Web Tokens are enabled for sessions.
 
 :::warning
-The functionality provided for credentials based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
+The functionality provided for credentials-based authentication is intentionally limited to discourage use of passwords due to the inherent security risks associated with them and the additional complexity associated with supporting usernames and passwords.
 :::
 
 ## Options
@@ -29,51 +28,81 @@ The Credentials provider is specified like other providers, except that you need
 
 1. A `user` object, which indicates the credentials are valid.
 
-If you return an object it will be persisted to the JSON Web Token and the user will be signed in, unless a custom `signIn()` callback is configured that subsequently rejects it.
+If you return an object it will be persisted to the JSON Web Token and the user will be signed in unless a custom `signIn()` callback is configured that subsequently rejects it.
 
-2. If you return `null` then an error will be displayed advising the user to check their details.
+2. If you return `null`, then an error will be displayed advising the user to check their details.
 
 3. If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
 
 The Credentials provider's `authorize()` method also provides the request object as the second parameter (see example below).
 
-```js title="pages/api/auth/[...nextauth].js"
+### Creating the `auth/[...nextauth]/options.ts` File
+
+First, create an `options.ts` file to define the authentication options.
+
+```typescript
+// auth/[...nextauth]/options.ts
 import CredentialsProvider from "next-auth/providers/credentials";
-...
-providers: [
-  CredentialsProvider({
-    // The name to display on the sign in form (e.g. "Sign in with...")
-    name: "Credentials",
-    // `credentials` is used to generate a form on the sign in page.
-    // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-    // e.g. domain, username, password, 2FA token, etc.
-    // You can pass any HTML attribute to the <input> tag through the object.
-    credentials: {
-      username: { label: "Username", type: "text", placeholder: "jsmith" },
-      password: { label: "Password", type: "password" }
-    },
-    async authorize(credentials, req) {
-      // Add logic here to look up the user from the credentials supplied
-      const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
 
-      if (user) {
-        // Any object returned will be saved in `user` property of the JWT
-        return user
-      } else {
-        // If you return null then an error will be displayed advising the user to check their details.
-        return null
+export const authOptions = {
+  providers: [
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        // Add logic here to look up the user from the credentials supplied
+        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
 
-        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        if (user) {
+          // Any object returned will be saved in `user` property of the JWT
+          return user
+        } else {
+          // If you return null then an error will be displayed advising the user to check their details.
+          return null
+
+          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        }
       }
-    }
-  })
-]
-...
+    })
+  ]
+};
+```
+
+### Creating the `auth/[...nextauth]/route.ts` File
+
+Next, create a `route.ts` file to handle authentication routes.
+
+```typescript
+// auth/[...nextauth]/route.ts
+import NextAuth from 'next-auth/next';
+import { authOptions } from './options';
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
+```
+
+### Usage in Pages
+
+In your pages, you can now utilize these configurations for handling authentication.
+
+```js title="pages/api/auth/[...nextauth].js"
+import { authOptions } from 'auth/[...nextauth]/options';
+
+export default NextAuth(authOptions);
 ```
 
 See the [callbacks documentation](/configuration/callbacks) for more information on how to interact with the token.
 
-## Example - Web3 / Signin With Ethereum
+## Example - Web3 / Sign-in With Ethereum
 
 The credentials provider can also be used to integrate with a service like [Sign-in With Ethereum](https://login.xyz).
 
@@ -83,7 +112,7 @@ For more information, check out the links below:
 - [Example App Repo](https://github.com/spruceid/siwe-next-auth-example).
 - [Example App Demo](https://siwe-next-auth-example2.vercel.app/).
 
-## Multiple providers
+## Multiple Providers
 
 ### Example
 
@@ -91,7 +120,7 @@ You can specify more than one credentials provider by specifying a unique `id` f
 
 You can also use them in conjunction with other provider options.
 
-As with all providers, the order you specify them is the order they are displayed on the sign in page.
+As with all providers, the order you specify them is the order they are displayed on the sign-in page.
 
 ```js
 providers: [
@@ -134,3 +163,4 @@ providers: [
 ```
 
 ![](/img/signin-complex.png)
+
