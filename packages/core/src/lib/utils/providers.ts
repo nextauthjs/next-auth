@@ -50,8 +50,6 @@ export default async function parseProviders(params: {
     })
   )
 
-  console.log({ providers })
-
   return {
     providers,
     provider: providers.find(({ id }) => id === providerId),
