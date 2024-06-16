@@ -120,7 +120,7 @@ export default function GitLab<P extends GitLabProfile>(
     userinfo: "https://gitlab.com/api/v4/user",
     profile(profile) {
       return {
-        id: profile.id.toString(),
+        id: profile.sub.toString(),
         name: profile.name ?? profile.username,
         email: profile.email,
         image: profile.avatar_url,
