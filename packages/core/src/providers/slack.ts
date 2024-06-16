@@ -53,13 +53,15 @@ export interface SlackProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Slack from "@auth/core/providers/slack"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Slack({ clientId: SLACK_CLIENT_ID, clientSecret: SLACK_CLIENT_SECRET })],
+ *   providers: [
+ *     Slack({ clientId: SLACK_CLIENT_ID, clientSecret: SLACK_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
