@@ -2,6 +2,7 @@ import type { Client } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
+import type { AuthorizationServer } from "oauth4webapi"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -259,7 +260,12 @@ export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
   OAuthEndpointType | "redirectProxyUrl"
 > & {
-  authorization?: { url: URL }
+  /**
+   * The authorize URL should never be undefined after processing in `providers.ts`.
+   * if the OAuth provider is OIDC, also returns the Authorization Server
+   */
+  authorization: { url: URL; as?: AuthorizationServer }
+
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
