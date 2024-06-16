@@ -287,7 +287,7 @@ export async function handleLoginOrRegister(
       ? await getUserByEmail(profile.email)
       : null
     if (userByEmail) {
-      const provider = options.provider as OAuthConfig<any>
+      const provider = options.provider as unknown as OAuthConfig<any>
       if (provider?.allowDangerousEmailAccountLinking) {
         // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
         // account linking even when the user is not signed-in.
