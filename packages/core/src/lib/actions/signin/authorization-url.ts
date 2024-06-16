@@ -1,6 +1,5 @@
 import * as checks from "../callback/oauth/checks.js"
 
-import type { AuthorizationServer } from "oauth4webapi"
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
 
@@ -14,12 +13,8 @@ export async function getAuthorizationUrl(
   options: InternalOptions<"oauth" | "oidc">
 ) {
   const { logger, provider } = options
-  let as: AuthorizationServer | undefined
-  let url: URL
 
-  const { url: u, as: a } = provider.authorization
-  url = u
-  as = a
+  const { url, as } = provider.authorization
 
   const authParams = url.searchParams
 
