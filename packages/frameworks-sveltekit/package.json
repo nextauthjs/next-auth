@@ -14,11 +14,11 @@
   ],
   "license": "ISC",
   "homepage": "https://sveltekit.authjs.dev",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/nextauthjs/next-auth",
-		"directory": "packages/frameworks-sveltekit"
-	},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextauthjs/next-auth",
+    "directory": "packages/frameworks-sveltekit"
+  },
   "author": "Thang Huu Vu <hi@thvu.dev>",
   "contributors": [
     "Thang Huu Vu <hi@thvu.dev>",
