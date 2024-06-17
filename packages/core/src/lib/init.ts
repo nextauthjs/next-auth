@@ -65,34 +65,15 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const { providers, provider } = await parseProviders({
-    providers: authOptions.providers,
-    url,
-    providerId,
-    options: authOptions,
-  })
-
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
-
-  let isOnRedirectProxy = false
-  if (
-    (provider?.type === "oauth" || provider?.type === "oidc") &&
-    provider.redirectProxyUrl
-  ) {
-    try {
-      isOnRedirectProxy =
-        new URL(provider.redirectProxyUrl).origin === url.origin
-    } catch {
-      throw new TypeError(
-        `redirectProxyUrl must be a valid URL. Received: ${provider.redirectProxyUrl}`
-      )
-    }
-  }
 
   // User provided options are overridden by other options,
   // except for the options with special handling above
   const options: InternalOptions = {
     debug: false,
+    isOnRedirectProxy: false,
+    // @ts-expect-error
+    provider: undefined,
     pages: {},
     theme: {
       colorScheme: "auto",
@@ -106,15 +87,12 @@ export async function init({
     // and are request-specific.
     url,
     action,
-    // @ts-expect-errors
-    provider,
     cookies: merge(
       cookie.defaultCookies(
         authOptions.useSecureCookies ?? url.protocol === "https:"
       ),
       authOptions.cookies
     ),
-    providers,
     // Session options
     session: {
       // If no adapter specified, force use of JSON Web Tokens (stateless)
@@ -139,7 +117,6 @@ export async function init({
     callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
     logger,
     callbackUrl: url.origin,
-    isOnRedirectProxy,
     experimental: {
       ...authOptions.experimental,
     },
@@ -188,6 +165,40 @@ export async function init({
       options: options.cookies.callbackUrl.options,
     })
   }
+
+  const { providers, provider, asCookie } = await parseProviders({
+    providers: authOptions.providers,
+    url,
+    providerId,
+    options: authOptions,
+    cachedAsCookie: reqCookies?.[options.cookies.authorizationServers.name],
+  })
+
+  if (asCookie) {
+    cookies.push({
+      name: options.cookies.authorizationServers.name,
+      value: asCookie,
+      options: options.cookies.authorizationServers.options,
+    })
+  }
+
+  if (
+    (provider?.type === "oauth" || provider?.type === "oidc") &&
+    provider.redirectProxyUrl
+  ) {
+    try {
+      options.isOnRedirectProxy =
+        new URL(provider.redirectProxyUrl).origin === url.origin
+    } catch {
+      throw new TypeError(
+        `redirectProxyUrl must be a valid URL. Received: ${provider.redirectProxyUrl}`
+      )
+    }
+  }
+
+  options.providers = providers
+  // @ts-expect-error
+  options.provider = provider
 
   return { options, cookies }
 }

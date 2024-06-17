@@ -13,6 +13,15 @@ import type {
 import type { Awaitable, InternalProvider, Profile } from "../../types.js"
 import type { AuthConfig } from "../../index.js"
 
+type AuthorizationServersCache = Record<
+  string,
+  Pick<
+    o.AuthorizationServer,
+    // These are the only properties we need from the Authorization Server for now
+    "authorization_endpoint" | "code_challenge_methods_supported"
+  >
+>
+
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
  * and deep merge user-defined options.
@@ -22,12 +31,17 @@ export default async function parseProviders(params: {
   url: URL
   providerId?: string
   options: AuthConfig
+  cachedAsCookie?: string
 }): Promise<{
   providers: InternalProvider[]
   provider?: InternalProvider
+  asCookie?: string
 }> {
   const { providerId, options } = params
   const url = new URL(options.basePath ?? "/auth", params.url.origin)
+  const cachedAsCookie = params.cachedAsCookie
+    ? (JSON.parse(params.cachedAsCookie) as AuthorizationServersCache)
+    : {}
 
   const providers = await Promise.all(
     params.providers.map<Awaitable<InternalProvider>>(async (p) => {
@@ -43,7 +57,7 @@ export default async function parseProviders(params: {
 
       if (provider.type === "oauth" || provider.type === "oidc") {
         merged.redirectProxyUrl ??= options.redirectProxyUrl
-        return normalizeOAuth(merged)
+        return normalizeOAuth(merged, cachedAsCookie)
       }
 
       return merged
@@ -53,29 +67,49 @@ export default async function parseProviders(params: {
   return {
     providers,
     provider: providers.find(({ id }) => id === providerId),
+    asCookie: JSON.stringify(cachedAsCookie),
   }
 }
 
-async function normalizeOAuth(c: OAuthConfig<any> | OAuthUserConfig<any>) {
+async function normalizeOAuth(
+  c: OAuthConfig<any> | OAuthUserConfig<any>,
+  cachedAsCookie: AuthorizationServersCache
+) {
   let authorization: OAuthConfigInternal<any>["authorization"] | undefined
-  if (c.issuer) {
-    const issuer = new URL(c.issuer)
-    try {
-      const discoveryResponse = await o.discoveryRequest(issuer)
-      const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
+  let authorizationServer = c.id ? cachedAsCookie[c.id] : undefined
 
-      if (!as.authorization_endpoint) {
-        throw new TypeError(
-          "Authorization server did not provide an authorization endpoint."
+  if (c.issuer) {
+    // only call discovery if the issuer is provided and we don't have the cached AS in the cookie
+    const issuer = new URL(c.issuer)
+    if (!authorizationServer) {
+      try {
+        const discoveryResponse = await o.discoveryRequest(issuer)
+        authorizationServer = await o.processDiscoveryResponse(
+          issuer,
+          discoveryResponse
         )
+
+        if (c.id)
+          cachedAsCookie[c.id] = {
+            authorization_endpoint: authorizationServer.authorization_endpoint,
+            code_challenge_methods_supported:
+              authorizationServer.code_challenge_methods_supported,
+          }
+      } catch (e) {
+        console.error(e)
+        throw new Error(`Failed to discover the OAuth provider: ${e}`)
       }
-      const authorizationUrl = new URL(as.authorization_endpoint)
-      authorizationUrl.searchParams.set("scope", "openid profile email")
-      authorization = { url: authorizationUrl, as }
-    } catch (e) {
-      console.error(e)
-      throw new Error(`Failed to discover the OAuth provider: ${e}`)
     }
+
+    if (!authorizationServer.authorization_endpoint) {
+      throw new TypeError(
+        "Authorization server did not provide an authorization endpoint."
+      )
+    }
+
+    const authorizationUrl = new URL(authorizationServer.authorization_endpoint)
+    authorizationUrl.searchParams.set("scope", "openid profile email")
+    authorization = { url: authorizationUrl }
   } else {
     authorization = normalizeEndpoint(c.authorization)
 
@@ -104,6 +138,7 @@ async function normalizeOAuth(c: OAuthConfig<any> | OAuthUserConfig<any>) {
     userinfo,
     profile: c.profile ?? defaultProfile,
     account: c.account ?? defaultAccount,
+    authorizationServer,
   }
 }
 

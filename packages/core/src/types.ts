@@ -200,6 +200,8 @@ export interface CookiesOptions {
   state: Partial<CookieOption>
   nonce: Partial<CookieOption>
   webauthnChallenge: Partial<CookieOption>
+  /** @internal */
+  authorizationServers: Partial<CookieOption>
 }
 
 /** TODO: Check if all these are used/correct */

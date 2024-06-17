@@ -2,6 +2,7 @@ import * as checks from "../callback/oauth/checks.js"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
+import { isOIDCProvider } from "../../utils/providers.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -14,7 +15,7 @@ export async function getAuthorizationUrl(
 ) {
   const { logger, provider } = options
 
-  const { url, as } = provider.authorization
+  const { url } = provider.authorization
 
   const authParams = url.searchParams
 
@@ -50,10 +51,14 @@ export async function getAuthorizationUrl(
   }
 
   if (provider.checks?.includes("pkce")) {
-    if (as && !as.code_challenge_methods_supported?.includes("S256")) {
+    if (
+      isOIDCProvider(provider) &&
       // We assume S256 PKCE support, if the server does not advertise that,
       // a random `nonce` must be used for CSRF protection.
-      if (provider.type === "oidc") provider.checks = ["nonce"] as any
+      provider.as &&
+      !provider.as.code_challenge_methods_supported?.includes("S256")
+    ) {
+      provider.checks = ["nonce"] as any
     } else {
       const { value, cookie } = await checks.pkce.create(options)
       authParams.set("code_challenge", value)

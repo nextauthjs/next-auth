@@ -264,7 +264,7 @@ export type OAuthConfigInternal<Profile> = Omit<
    * The authorize URL should never be undefined after processing in `providers.ts`.
    * if the OAuth provider is OIDC, also returns the Authorization Server
    */
-  authorization: { url: URL; as?: AuthorizationServer }
+  authorization: { url: URL }
 
   token?: {
     url: URL
@@ -293,6 +293,7 @@ export type OAuthConfigInternal<Profile> = Omit<
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
   idToken: OIDCConfig<Profile>["idToken"]
+  as?: AuthorizationServer
 }
 
 export type OAuthUserConfig<Profile> = Omit<
