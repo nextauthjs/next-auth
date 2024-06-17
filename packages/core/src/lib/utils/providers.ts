@@ -115,7 +115,7 @@ async function normalizeOAuth(
 
     if (!authorization) {
       throw new TypeError(
-        "The `authorization` options must be provided for this OAuth provider."
+        "The `authorization` option must be provided for this OAuth provider."
       )
     }
   }
