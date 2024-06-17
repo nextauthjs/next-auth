@@ -43,6 +43,7 @@ npm install next-auth@beta
 - The minimum required Next.js version is now [14.0](https://nextjs.org/14).
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- When the `idToken: boolean` option is set to `false`, it won't entirely disable the ID token. Instead, it signals `next-auth` to also visit the `userinfo_endpoint` for the final user data. Previously, `idToken: false` opted out to check the `id_token` validity at all.
 
 ## Migration
 
@@ -283,12 +284,7 @@ import authConfig from "./auth.config"
 
 const prisma = new PrismaClient()
 
-export const {
-  auth,
-  handlers: { GET, POST },
-  signIn,
-  signOut,
-} = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,
@@ -306,10 +302,10 @@ import NextAuth from "next-auth"
 // export const { auth: middleware } = NextAuth(authConfig)
 
 // 2. Wrapped middleware option
-const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig)
 export default auth(async function middleware(req: NextRequest) {
   // Your custom middleware logic goes here
-}
+})
 ```
 
 The above is just an example. **The main idea**, is to separate the part of the configuration that is edge-compatible from the rest, and only import the edge-compatible part in Middleware/Edge pages/routes. You can read more about this workaround in the [Prisma docs](/getting-started/adapters/prisma), for example.
