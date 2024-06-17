@@ -42,13 +42,19 @@ export interface WorkOSProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import WorkOS from "@auth/core/providers/workos"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [WorkOS({ clientId: WORKOS_CLIENT_ID, clientSecret: WORKOS_CLIENT_SECRET, issuer: WORKOS_ISSUER })],
+ *   providers: [
+ *     WorkOS({
+ *       clientId: WORKOS_CLIENT_ID,
+ *       clientSecret: WORKOS_CLIENT_SECRET,
+ *       issuer: WORKOS_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -67,7 +73,7 @@ export interface WorkOSProfile extends Record<string, any> {
  * In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use.
  * A common way to do this is to collect the user's email address and extract the domain. This can be done using a custom login page.
  * To add a custom login page, you can use the `pages` option:
- * ```js title="pages/api/auth/[...nextauth].js"
+ * ```ts
  * pages: {
  *   signIn: "/auth/signin",
  * }

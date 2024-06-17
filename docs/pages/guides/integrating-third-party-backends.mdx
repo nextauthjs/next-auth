@@ -6,7 +6,7 @@ These tokens can be used to authorize requests to backends that are supporting t
 For example:
 
 - GitHub's `access_token` will give you access to GitHub's APIs.
-- Self-managed providers (like Keycloak) can be used to authorize against custom third-party backends.
+- Self-managed providers (like [Keycloak](https://www.keycloak.org), [`oidc-provider`](https://github.com/panva/node-oidc-provider), etc.) can be used to authorize against custom third-party backends.
 
 ## Storing the token in the session
 
@@ -75,3 +75,5 @@ app.get("*", jwtCheck, (req, res) => {
 
 - Further examples for different backend frameworks can be found [here](https://github.com/nextauthjs/authjs-third-party-backend/tree/main).
 - A full example of how to integrate a client app with a third-party API can be found in the [next-auth-example](https://github.com/nextauthjs/next-auth-example).
+- [Keycloak](https://www.keycloak.org) - Open Source Identity and Access Management For Modern Applications and Services
+- [`oidc-provider`](https://github.com/panva/node-oidc-provider) - OpenID Certified™ OAuth 2.0 Authorization Server implementation for Node.js
