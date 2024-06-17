@@ -26,7 +26,7 @@ To have access to the user id, add the following to your Auth.js configuration:
       return token
     },
     session({ session, token }) {
-      session.user.id = token.id
+      session.user.id = token.sub
       return session
     },
   },
