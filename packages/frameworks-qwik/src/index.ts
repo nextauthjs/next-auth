@@ -224,12 +224,7 @@ export function qwikAuthQrl(
     }
   }
 
-  return {
-    useSignIn,
-    useSignOut,
-    useSession,
-    onRequest,
-  }
+  return { useSignIn, useSignOut, useSession, onRequest }
 }
 
 export const qwikAuth$ = /*#__PURE__*/ implicit$FirstArg(qwikAuthQrl)
@@ -246,10 +241,7 @@ async function authAction(
     body: body,
   })
   request.headers.set("content-type", "application/x-www-form-urlencoded")
-  const res = (await Auth(request, {
-    ...authOptions,
-    skipCSRFCheck,
-  })) as Response
+  const res = (await Auth(request, authOptions)) as Response
 
   const cookies: string[] = []
   res.headers.forEach((value, key) => {
@@ -342,6 +334,7 @@ export const setEnvDefaults = (env: EnvGetter, config: AuthConfig) => {
     env.get("CF_PAGES") ??
     env.get("NODE_ENV") !== "production"
   )
+  config.skipCSRFCheck = skipCSRFCheck
 
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
