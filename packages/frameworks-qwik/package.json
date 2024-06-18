@@ -26,8 +26,7 @@
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
-      "import": "./lib/index.qwik.mjs",
-      "require": "./lib/index.qwik.cjs"
+      "import": "./lib/index.qwik.mjs"
     },
     "./providers": {
       "types": "./lib/providers/index.d.ts"
@@ -38,7 +37,6 @@
     }
   },
   "types": "./lib/types/index.d.ts",
-  "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "files": [
     "lib"

@@ -21,7 +21,7 @@
  * import GitHub from "@auth/core/providers/github"
  * import { qwikAuth$ } from "@auth/qwik"
  *
- * export const { onRequest, useAuthSession, useAuthSignIn, useAuthSignOut } = qwikAuth$(() => ({ providers: [GitHub] }))
+ * export const { onRequest, useSession, useSignIn, useSignOut } = qwikAuth$(() => ({ providers: [GitHub] }))
  *
  * ## Signing in and signing out
  *
@@ -29,10 +29,10 @@
  *
  * import { component$ } from '@builder.io/qwik';
  * import { Form } from '@builder.io/qwik-city';
- * import { useAuthSignIn } from '~/routes/plugin@auth';
+ * import { useSignIn } from '~/routes/plugin@auth';
  *
  * export default component$(() => {
- *   const signIn = useAuthSignIn();
+ *   const signIn = useSignIn();
  *   return (
  *     <Form action={signIn}>
  *       <input type="hidden" name="providerId" value="github" />
@@ -45,10 +45,10 @@
  * Sign In via code
  *
  * import { component$ } from '@builder.io/qwik';
- * import { useAuthSignIn } from '~/routes/plugin@auth';
+ * import { useSignIn } from '~/routes/plugin@auth';
  *
  * export default component$(() => {
- *   const signIn = useAuthSignIn();
+ *   const signIn = useSignIn();
  *   return (
  *     <button onClick$={() => signIn.submit({ providerId: 'github', options: { callbackUrl: 'http://qwik-auth-example.com/dashboard' } })}>Sign In</button>
  *   );
@@ -58,10 +58,10 @@
  *
  * import { component$ } from '@builder.io/qwik';
  * import { Form } from '@builder.io/qwik-city';
- * import { useAuthSignOut } from '~/routes/plugin@auth';
+ * import { useSignOut } from '~/routes/plugin@auth';
  *
  * export default component$(() => {
- *   const signOut = useAuthSignOut();
+ *   const signOut = useSignOut();
  *   return (
  *     <Form action={signOut}>
  *       <input type="hidden" name="callbackUrl" value="/signedout" />
@@ -73,20 +73,20 @@
  * Sign out via code
  *
  * import { component$ } from '@builder.io/qwik';
- * import { useAuthSignOut } from '~/routes/plugin@auth';
+ * import { useSignOut } from '~/routes/plugin@auth';
  *
  * export default component$(() => {
- *   const signOut = useAuthSignOut();
+ *   const signOut = useSignOut();
  *   return <button onClick$={() => signOut.submit({ callbackUrl: '/signedout' })}>Sign Out</button>;
  * });
  *
  * ## Managing the session
  *
  * import { component$ } from '@builder.io/qwik';
- * import { useAuthSession } from '~/routes/plugin@auth';
+ * import { useSession } from '~/routes/plugin@auth';
  *
  * export default component$(() => {
- *   const session = useAuthSession();
+ *   const session = useSession();
  *   return <p>{session.value?.user?.email}</p>;
  * });
  *
@@ -108,7 +108,7 @@
  */
 
 import type { AuthConfig } from "@auth/core"
-import { Auth, skipCSRFCheck } from "@auth/core"
+import { Auth, isAuthAction, skipCSRFCheck } from "@auth/core"
 import { AuthAction, Session } from "@auth/core/types"
 import { implicit$FirstArg, type QRL } from "@builder.io/qwik"
 import {
@@ -116,33 +116,28 @@ import {
   routeLoader$,
   z,
   zod$,
-  type RequestEvent,
   type RequestEventCommon,
 } from "@builder.io/qwik-city"
 import { EnvGetter } from "@builder.io/qwik-city/middleware/request-handler"
 import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
-import { GetSessionResult, QwikAuthConfig, qwikAuthActions } from "./types.js"
+import { GetSessionResult, QwikAuthConfig } from "./types.js"
 
 export function qwikAuthQrl(
   authOptions: QRL<(ev: RequestEventCommon) => QwikAuthConfig>
 ) {
-  const useAuthSignIn = globalAction$(
+  const useSignIn = globalAction$(
     async (
-      { providerId, callbackUrl: deprecated, options, authorizationParams },
+      { providerId, callbackUrl: _callbackUrl, options, authorizationParams },
       req
     ) => {
-      if (deprecated) {
-        console.warn(
-          "\x1b[33mWARNING: callbackUrl is deprecated - use options.callbackUrl instead\x1b[0m"
-        )
-      }
-      const { callbackUrl = deprecated ?? defaultCallbackURL(req), ...rest } =
+      const { callbackUrl = _callbackUrl ?? defaultCallbackURL(req), ...rest } =
         options ?? {}
 
       const isCredentials = providerId === "credentials"
 
-      const auth = await patchAuthOptions(authOptions, req)
+      const authOpts = await authOptions(req)
+      setEnvDefaults(req.env, authOpts)
       const body = new URLSearchParams({ callbackUrl: callbackUrl as string })
       Object.entries(rest).forEach(([key, value]) => {
         body.set(key, String(value))
@@ -155,7 +150,7 @@ export function qwikAuthQrl(
         authorizationParams
       )}`
 
-      const data = await authAction(body, req, signInUrl, auth)
+      const data = await authAction(body, req, signInUrl, authOpts)
 
       // set authjs.callback-url cookie. Fix for https://github.com/QwikDev/qwik/issues/5227
       req.cookie.set("authjs.callback-url", callbackUrl, {
@@ -182,23 +177,24 @@ export function qwikAuthQrl(
     })
   )
 
-  const useAuthSignOut = globalAction$(
+  const useSignOut = globalAction$(
     async ({ callbackUrl }, req) => {
       callbackUrl ??= defaultCallbackURL(req)
-      const auth = await patchAuthOptions(authOptions, req)
+      const authOpts = await authOptions(req)
+      setEnvDefaults(req.env, authOpts)
       const body = new URLSearchParams({ callbackUrl })
-      await authAction(body, req, `/api/auth/signout`, auth)
+      await authAction(body, req, `/api/auth/signout`, authOpts)
     },
     zod$({
       callbackUrl: z.string().optional(),
     })
   )
 
-  const useAuthSession = routeLoader$((req) => {
+  const useSession = routeLoader$((req) => {
     return req.sharedMap.get("session") as Session | null
   })
 
-  const onRequest = async (req: RequestEvent) => {
+  const onRequest = async (req: RequestEventCommon) => {
     if (isServer) {
       const prefix: string = "/api/auth"
 
@@ -206,12 +202,10 @@ export function qwikAuthQrl(
         .slice(prefix.length + 1)
         .split("/")[0] as AuthAction
 
-      const auth = await patchAuthOptions(authOptions, req)
-      if (
-        qwikAuthActions.includes(action) &&
-        req.url.pathname.startsWith(prefix + "/")
-      ) {
-        const res = (await Auth(req.request, auth)) as Response
+      const authOpts = await authOptions(req)
+      setEnvDefaults(req.env, authOpts)
+      if (isAuthAction(action) && req.url.pathname.startsWith(prefix + "/")) {
+        const res = (await Auth(req.request, authOpts)) as Response
         const cookie = res.headers.get("set-cookie")
         if (cookie) {
           req.headers.set("set-cookie", cookie)
@@ -220,7 +214,7 @@ export function qwikAuthQrl(
         }
         throw req.send(res)
       } else {
-        const { data, cookie } = await getSessionData(req.request, auth)
+        const { data, cookie } = await getSessionData(req.request, authOpts)
         req.sharedMap.set("session", data)
         if (cookie) {
           req.headers.set("set-cookie", cookie)
@@ -231,9 +225,9 @@ export function qwikAuthQrl(
   }
 
   return {
-    useAuthSignIn,
-    useAuthSignOut,
-    useAuthSession,
+    useSignIn,
+    useSignOut,
+    useSession,
     onRequest,
   }
 }
@@ -292,13 +286,6 @@ const fixCookies = (req: RequestEventCommon) => {
   }
 }
 
-export const ensureAuthMiddleware = (req: RequestEvent) => {
-  const isLoggedIn = req.sharedMap.has("session")
-  if (!isLoggedIn) {
-    throw req.error(403, "sfs")
-  }
-}
-
 const defaultCallbackURL = (req: RequestEventCommon) => {
   req.url.searchParams.delete("qaction")
   return req.url.href
@@ -331,23 +318,8 @@ async function getSessionData(
   throw new Error(data.message)
 }
 
-const patchAuthOptions = async (
-  authOptions: QRL<(ev: RequestEventCommon) => QwikAuthConfig>,
-  req: RequestEventCommon
-) => {
-  let options = await authOptions(req)
-  fillOptionsWithEnvVariables(req.env, options)
-
-  return {
-    ...options,
-    basePath: "/api/auth",
-  }
-}
-
-export const fillOptionsWithEnvVariables = (
-  env: EnvGetter,
-  config: AuthConfig
-) => {
+export const setEnvDefaults = (env: EnvGetter, config: AuthConfig) => {
+  config.basePath = "/api/auth"
   if (!config.secret?.length) {
     config.secret = []
     const secret = env.get("AUTH_SECRET")

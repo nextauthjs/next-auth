@@ -1,5 +1,6 @@
 import { qwikAuth$ } from "@auth/qwik"
 import Github from "@auth/qwik/providers/github"
 
-export const { onRequest, useAuthSession, useAuthSignIn, useAuthSignOut } =
-  qwikAuth$(() => ({ providers: [Github] }))
+export const { onRequest, useSession, useSignIn, useSignOut } = qwikAuth$(
+  () => ({ providers: [Github] })
+)

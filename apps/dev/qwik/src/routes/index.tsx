@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik"
 import { Form, type RequestHandler } from "@builder.io/qwik-city"
-import { useAuthSession, useAuthSignIn, useAuthSignOut } from "./plugin@auth"
+import { useSession, useSignIn, useSignOut } from "./plugin@auth"
 
 export const onRequest: RequestHandler = (event) => {
   const session = event.sharedMap.get("session")
@@ -10,9 +10,9 @@ export const onRequest: RequestHandler = (event) => {
 }
 
 export default component$(() => {
-  const signIn = useAuthSignIn()
-  const signOut = useAuthSignOut()
-  const session = useAuthSession()
+  const signIn = useSignIn()
+  const signOut = useSignOut()
+  const session = useSession()
   return (
     <>
       <Form action={signIn}>
