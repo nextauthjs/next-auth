@@ -13,7 +13,7 @@ export default defineConfig(() => {
       lib: {
         entry: ["./src/index.ts"],
         formats: ["es"],
-        fileName: () => "index.qwik.mjs",
+        fileName: (_, entryName) => `${entryName}.qwik.mjs`,
       },
       rollupOptions: {
         external: [
