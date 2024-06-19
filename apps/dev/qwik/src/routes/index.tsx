@@ -5,7 +5,7 @@ import { useSession, useSignIn, useSignOut } from "./plugin@auth"
 export const onRequest: RequestHandler = (event) => {
   const session = event.sharedMap.get("session")
   if (!session || new Date(session.expires) < new Date()) {
-    console.log("Not authorize. Redirect or throw error here.")
+    console.log("Not authorized. Redirect or throw error here.")
   }
 }
 
