@@ -22,7 +22,9 @@ export const { handlers, auth } = NextAuth({
   providers: [
     {
       id: "http-email",
+      name: "Email",
       type: "email",
+      maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
       sendVerificationRequest,
     },
   ],
@@ -41,7 +43,9 @@ export const { handle, auth } = SvelteKitAuth({
   providers: [
     {
       id: "http-email",
+      name: "Email",
       type: "email",
+      maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
       sendVerificationRequest,
     },
   ],
@@ -66,7 +70,9 @@ app.use(
     providers: [
       {
         id: "http-email",
+        name: "Email",
         type: "email",
+        maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
         sendVerificationRequest,
       },
     ],

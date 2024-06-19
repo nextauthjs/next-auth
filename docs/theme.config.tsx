@@ -2,7 +2,7 @@ import { DocsThemeConfig, ThemeSwitch } from "nextra-theme-docs"
 import { Link } from "@/components/Link"
 import { ChildrenProps } from "@/utils/types"
 import Footer from "@/components/Footer"
-import Docsearch from "@/components/Docsearch"
+import Docsearch from "@/components/DocSearch"
 import dynamic from "next/dynamic"
 import { usePathname } from "next/navigation"
 import { useConfig } from "nextra-theme-docs"
@@ -114,8 +114,8 @@ const config: DocsThemeConfig = {
     const { frontMatter } = useConfig()
     const url = `https://authjs.dev${pathname}`
 
-    const lastPathParam = pathname.split("/").at(-1).replaceAll("-", " ")
-    const capitalizedPathTitle = lastPathParam.replace(/\b\w/g, (l) =>
+    const lastPathParam = pathname?.split("/").at(-1)?.replaceAll("-", " ")
+    const capitalizedPathTitle = lastPathParam?.replace(/\b\w/g, (l) =>
       l.toUpperCase()
     )
     const title = frontMatter.title
@@ -144,6 +144,12 @@ const config: DocsThemeConfig = {
         <meta
           property="og:description"
           content={frontMatter.description || "Authentication for the Web"}
+        />
+        <meta
+          property="og:image"
+          content={`https://authjs.dev/api/og?title=${encodeURIComponent(
+            title
+          )}`}
         />
       </>
     )

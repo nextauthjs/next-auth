@@ -8,7 +8,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 ## Resources
 
-- [Prisma Docs](https://www.prisma.io/docs)
+- [Prisma documentation](https://www.prisma.io/docs)
 
 ## Setup
 
@@ -27,9 +27,10 @@ DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
 
 ### Configuration
 
-<Callout>
-  We recommend using version `@prisma/client@5.9.1` or above if using middleware
-  or any other edge runtime(s).
+<Callout type="warning">
+  We recommend using version `@prisma/client@5.12.0` or above if using
+  middleware or any other edge runtime(s). See [edge
+  compatibility](#edge-compatibility) below for more information.
 </Callout>
 
 <Code>
@@ -93,60 +94,20 @@ app.use(
 
 Prisma has shipped edge runtime support for their client in version `5.12.0`. You can read more about it on their [edge documentation](https://www.prisma.io/docs/orm/prisma-client/deployment/edge/overview). This requires specific database drivers and therefore is only compatible with certain database types / hosting providers. Check their [list of supported drivers](https://www.prisma.io/docs/orm/prisma-client/deployment/edge/overview#which-database-drivers-are-edge-compatible) before getting started. You can check out an example Auth.js application with `next-auth` and Prisma on the edge [here](https://github.com/ndom91/authjs-prisma-edge-example).
 
-For posterities sake, the original workaround to split your `auth.ts` configuration into two files will be kept below for the time being.
+For more about edge compatibility in general, check out our [edge compatibility guide](/guides/edge-compatibility).
+
+The original database edge-runtime workaround, to split your `auth.ts` configuration into two, will be kept below.
 
 #### Old Edge Workaround
 
 At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about early edge support in the `5.9.1` [changelog](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
 
 - Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
-- Switch to the `jwt` session strategy
+- Follow our [Edge Compatibility](/guides/edge-compatibility) page as the workaround. This uses the `jwt` session strategy and separates the `auth.ts` configuration into two files.
 
 Using Prisma with the `jwt` session strategy and `@prisma/client@5.9.1` or above doesn't require any additional modifications, other than ensuring you don't do any database queries in your middleware.
 
 Since `@prisma/client@5.9.1`, Prisma no longer throws about being incompatible with the edge runtime at instantiation, but at query time. Therefore, it is possible to import it in files being used in your middleware as long as you do not execute any queries in your middleware.
-
-<Accordions>
-<Accordion title="Using '@prisma/client' before 'v5.9.1' requires some additional workarounds">
-
-You will need to separate your Auth.js configuration into two files and use the [lazy initialization](/reference/next-auth#lazy-initialization) feature to instantiate a second copy of Auth.js in the middleware without the adapter.
-
-Define the `auth.config.ts` file:
-
-```ts filename="auth.config.ts"
-export default {
-  providers: [GitHub, Google, Facebook, Twitter],
-} satisfies NextAuthConfig
-```
-
-Import and use the `PrismaAdapter` in the `auth.ts` file. This is your main Auth.js configuration file that you'll use around the rest of your application.
-
-```ts filename="auth.ts"
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-globalThis.prisma ??= new PrismaClient()
-
-export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-  adapter: PrismaAdapter(globalThis.prisma),
-  session: { strategy: "jwt" },
-  ...authConfig,
-})
-```
-
-In the middleware file, however, import the first `auth.config` and instantiate a second instance of `NextAuth` using it as the configuration (note that the `adapter` is not used here to avoid the error).
-
-```ts filename="middleware.ts"
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
-
-export const middleware = NextAuth(authConfig).auth
-```
-
-</Accordion>
-</Accordions>
 
 ### Schema
 
@@ -221,7 +182,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -232,6 +192,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
@@ -310,7 +272,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -321,6 +282,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
@@ -404,7 +367,6 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(cuid())
   credentialID         String  @unique
   userId               String
   providerAccountId    String
@@ -415,6 +377,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
 }
 ```
 
@@ -490,8 +454,7 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
-  credentialID         String  @unique
+  credentialID         String  @id @map("_id")
   userId               String  @db.ObjectId
   providerAccountId    String
   credentialPublicKey  String
@@ -501,6 +464,8 @@ model Authenticator {
   transports           String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, credentialID])
 }
 ```
 

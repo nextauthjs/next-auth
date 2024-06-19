@@ -1,7 +1,7 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Twitter</b> integration.</span>
- * <a href="https://www.twitter.com/">
+ * <a href="https://www.x.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/twitter.svg" height="48" />
  * </a>
  * </div>
@@ -11,7 +11,7 @@
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
- * [Users lookup](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me)
+ * [Users lookup](https://developer.x.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me)
  */
 export interface TwitterProfile {
   data: {
@@ -113,24 +113,29 @@ export interface TwitterProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Twitter from "@auth/core/providers/twitter"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Twitter({ clientId: TWITTER_CLIENT_ID, clientSecret: TWITTER_CLIENT_SECRET })],
+ *   providers: [
+ *     Twitter({
+ *       clientId: TWITTER_CLIENT_ID,
+ *       clientSecret: TWITTER_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
  *
- * - [Twitter App documentation](https://developer.twitter.com/en/apps)
+ * - [Twitter App documentation](https://developer.x.com/en/apps)
  *
  * ## OAuth 2
  * Twitter supports OAuth 2, which is currently opt-in. To enable it, simply add version: "2.0" to your Provider configuration:
- * ```js title="pages/api/auth/[...nextauth].js"
- * TwitterProvider({
+ * ```ts
+ * Twitter({
  *   clientId: process.env.TWITTER_ID,
  *   clientSecret: process.env.TWITTER_SECRET,
  *   version: "2.0", // opt-in to Twitter OAuth 2.0
@@ -185,10 +190,9 @@ export default function Twitter(
     type: "oauth",
     checks: ["pkce", "state"],
     authorization:
-      "https://twitter.com/i/oauth2/authorize?scope=users.read tweet.read offline.access",
-    token: "https://api.twitter.com/2/oauth2/token",
-    userinfo:
-      "https://api.twitter.com/2/users/me?user.fields=profile_image_url",
+      "https://x.com/i/oauth2/authorize?scope=users.read tweet.read offline.access",
+    token: "https://api.x.com/2/oauth2/token",
+    userinfo: "https://api.x.com/2/users/me?user.fields=profile_image_url",
     profile({ data }) {
       return {
         id: data.id,

@@ -46,15 +46,16 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * ### Configuration
  * ```ts
- * import NextAuth from "next-auth"
- * import Entra from "next-auth/providers/microsoft-entra-id"
+ * import { Auth } from "@auth/core"
+ * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
  *
- * const { handlers, auth, signin, signout } = NextAuth({
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
  *   providers: [
- *     Entra({
- *       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
- *       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET
- *     })
+ *     MicrosoftEntraID({
+ *       clientId: AUTH_MICROSOFT_ENTRA_ID_ID,
+ *       clientSecret: AUTH_MICROSOFT_ENTRA_ID_SECRET,
+ *     }),
  *   ],
  * })
  * ```
@@ -94,19 +95,18 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  * Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
  * :::
  *
- * In `app/api/auth/[...nextauth]/route.js` find or add the `Entra` entries:
+ * In `auth.ts` find or add the `Entra` entries:
  *
- * ```js
- * import Entra from "next-auth/providers/microsoft-entra-id";
+ * ```ts
+ * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
  *
  * providers: [
- *   Entra({
+ *   MicrosoftEntraID({
  *     clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
  *     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
  *     tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
  *   }),
  * ]
- *
  * ```
  *
  * ### Notes

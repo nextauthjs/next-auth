@@ -1,6 +1,6 @@
 import { AdapterAccountType } from "@auth/core/adapters"
-import Database from "better-sqlite3"
 import { drizzle } from "drizzle-orm/better-sqlite3"
+import Database from "libsql"
 import {
   integer,
   primaryKey,
@@ -67,3 +67,19 @@ export const verificationTokens = sqliteTable(
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 )
+
+export const authenticators = sqliteTable("authenticator", {
+  id: text("id").notNull().primaryKey(),
+  credentialID: text("credentialID").notNull().unique(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("providerAccountId").notNull(),
+  credentialPublicKey: text("credentialPublicKey").notNull(),
+  counter: integer("counter").notNull(),
+  credentialDeviceType: text("credentialDeviceType").notNull(),
+  credentialBackedUp: integer("credentialBackedUp", {
+    mode: "boolean",
+  }).notNull(),
+  transports: text("transports"),
+})

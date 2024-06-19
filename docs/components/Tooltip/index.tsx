@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import { useRef } from "react"
 import polyfill from "@oddbird/css-anchor-positioning/fn"
 
 interface Props {
@@ -30,8 +30,8 @@ export function Tooltip({ label, framework, children }: Props) {
         {children}
       </button>
       <div
-        // @ts-expect-error
         popover="auto"
+        // @ts-expect-error
         ref={popoverTargetRef}
         className="py-2 px-4 max-w-xs text-sm text-center text-fuchsia-900 bg-purple-100 rounded-lg border shadow-md"
         anchor={`anchor-${framework}-${slug}`}

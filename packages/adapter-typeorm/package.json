@@ -1,6 +1,6 @@
 {
   "name": "@auth/typeorm-adapter",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "TypeORM adapter for Auth.js.",
   "homepage": "https://authjs.dev/reference/adapter/typeorm",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -39,32 +39,33 @@
     "build": "tsc",
     "dev": "tsc -w",
     "clean": "rm -rf dist",
-    "init:db": "test/init.sh",
-    "mysql": "pnpm init:db && test/mysql/test.sh",
-    "postgres": "pnpm init:db && test/postgresql/test.sh",
-    "sqlite": "test/sqlite/test.sh",
-    "test:containers": "test/test.sh",
-    "test": "test/test.sh"
+    "test": "pnpm test:mysql && pnpm test:sqlite && pnpm test:pg",
+    "test:mysql": "pnpm clean && ./test/mysql/test.sh",
+    "test:pg": "pnpm clean && ./test/postgresql/test.sh",
+    "test:sqlite": "pnpm clean && ./test/sqlite/test.sh"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
+    "libsql": "^0.3.18",
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.3",
-    "sqlite3": "^5.0.8",
     "typeorm": "0.3.17",
     "typeorm-naming-strategies": "^4.1.0"
   },
   "peerDependencies": {
+    "libsql": "^0.3.18",
     "mssql": "^6.2.1 || ^7 || ^8 || ^9",
     "mysql": "^2.18.1 || ^3",
     "pg": "^8.2.1",
-    "sqlite3": "^5.0.2",
     "typeorm": "^0.3.7"
   },
   "peerDependenciesMeta": {
+    "libsql": {
+      "optional": true
+    },
     "mysql": {
       "optional": true
     },
@@ -72,9 +73,6 @@
       "optional": true
     },
     "pg": {
-      "optional": true
-    },
-    "sqlite3": {
       "optional": true
     }
   }

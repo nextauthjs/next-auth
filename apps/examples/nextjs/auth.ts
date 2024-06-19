@@ -4,6 +4,7 @@ import "next-auth/jwt"
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
+import BankIDNorway from "next-auth/providers/bankid-no"
 import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 import Cognito from "next-auth/providers/cognito"
 import Coinbase from "next-auth/providers/coinbase"
@@ -19,6 +20,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Netlify from "next-auth/providers/netlify"
 import Okta from "next-auth/providers/okta"
 import Passage from "next-auth/providers/passage"
+import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
@@ -27,11 +29,25 @@ import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
-
+import { createStorage } from "unstorage"
+import memoryDriver from "unstorage/drivers/memory"
+import vercelKVDriver from "unstorage/drivers/vercel-kv"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import type { NextAuthConfig } from "next-auth"
 
-export const config = {
+const storage = createStorage({
+  driver: process.env.VERCEL
+    ? vercelKVDriver({
+        url: process.env.AUTH_KV_REST_API_URL,
+        token: process.env.AUTH_KV_REST_API_TOKEN,
+        env: false,
+      })
+    : memoryDriver(),
+})
+
+const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
+  adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
     Auth0,
@@ -40,6 +56,7 @@ export const config = {
       clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
       issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
     }),
+    BankIDNorway,
     BoxyHQSAML({
       clientId: "dummy",
       clientSecret: "dummy",
@@ -54,10 +71,19 @@ export const config = {
     GitLab,
     Google,
     Hubspot,
-    Keycloak,
+    Keycloak({ name: "Keycloak (bob/bob)" }),
     LinkedIn,
     Netlify,
     Okta,
+    Passkey({
+      formFields: {
+        email: {
+          label: "Username",
+          required: true,
+          autocomplete: "username webauthn",
+        },
+      },
+    }),
     Passage,
     Pinterest,
     Reddit,
@@ -85,10 +111,16 @@ export const config = {
       return token
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken
+      if (token?.accessToken) {
+        session.accessToken = token.accessToken
+      }
       return session
     },
   },
+  experimental: {
+    enableWebAuthn: true,
+  },
+  debug: process.env.NODE_ENV !== "production" ? true : false,
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

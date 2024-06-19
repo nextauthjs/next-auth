@@ -1,6 +1,6 @@
 {
   "name": "@auth/xata-adapter",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Xata adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -40,9 +40,9 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@xata.io/client": ">=0.13.0"
+    "@xata.io/client": ">=0.28.0"
   },
   "devDependencies": {
-    "@xata.io/client": "^0.13.0"
+    "@xata.io/client": "^0.28.0"
   }
 }

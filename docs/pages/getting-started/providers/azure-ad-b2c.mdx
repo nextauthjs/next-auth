@@ -18,9 +18,9 @@ import { Code } from "@/components/Code"
 ### Environment Variables
 
 ```
-AUTH_AZURE_AD_ID
-AUTH_AZURE_AD_SECRET
-AUTH_AZURE_AD_ISSUER
+AUTH_AZURE_AD_B2C_ID
+AUTH_AZURE_AD_B2C_SECRET
+AUTH_AZURE_AD_B2C_ISSUER
 ```
 
 ### Configuration
@@ -34,9 +34,9 @@ import AzureADB2C from "next-auth/providers/azure-ad-b2c";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [AzureADB2C({
-    clientId: AUTH_AZURE_AD_CLIENT_ID
-    clientSecret: AUTH_AZURE_AD_CLIENT_SECRET
-    issuer: AUTH_AZURE_AD_ISSUER
+    clientId: AUTH_AZURE_AD_B2C_CLIENT_ID
+    clientSecret: AUTH_AZURE_AD_B2C_CLIENT_SECRET
+    issuer: AUTH_AZURE_AD_B2C_ISSUER
   })]
 });
 ```
