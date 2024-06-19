@@ -9,7 +9,7 @@ export default defineConfig(() => {
     build: {
       minify: false,
       target: "es2020",
-      outDir: "lib",
+      outDir: ".",
       lib: {
         entry: ["./src/index.ts"],
         formats: ["es"],
