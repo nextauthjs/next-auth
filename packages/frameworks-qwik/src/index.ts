@@ -38,7 +38,7 @@
  *   return (
  *     <Form action={signIn}>
  *       <input type="hidden" name="providerId" value="github" />
- *       <input type="hidden" name="options.callbackUrl" value="http://qwik-auth-example.com/dashboard" />
+ *       <input type="hidden" name="options.redirectTo" value="http://qwik-auth-example.com/dashboard" />
  *       <button>Sign In</button>
  *     </Form>
  *   );
@@ -52,7 +52,7 @@
  * export default component$(() => {
  *   const signIn = useSignIn();
  *   return (
- *     <button onClick$={() => signIn.submit({ providerId: 'github', options: { callbackUrl: 'http://qwik-auth-example.com/dashboard' } })}>Sign In</button>
+ *     <button onClick$={() => signIn.submit({ providerId: 'github', options: { redirectTo: 'http://qwik-auth-example.com/dashboard' } })}>Sign In</button>
  *   );
  * });
  *
@@ -66,7 +66,7 @@
  *   const signOut = useSignOut();
  *   return (
  *     <Form action={signOut}>
- *       <input type="hidden" name="callbackUrl" value="/signedout" />
+ *       <input type="hidden" name="redirectTo" value="/signedout" />
  *       <button>Sign Out</button>
  *     </Form>
  *   );
@@ -79,7 +79,7 @@
  *
  * export default component$(() => {
  *   const signOut = useSignOut();
- *   return <button onClick$={() => signOut.submit({ callbackUrl: '/signedout' })}>Sign Out</button>;
+ *   return <button onClick$={() => signOut.submit({ redirectTo: '/signedout' })}>Sign Out</button>;
  * });
  *
  * ## Managing the session
@@ -100,7 +100,7 @@
  * export const onRequest: RequestHandler = (event) => {
  *   const session = event.sharedMap.get("session")
  *   if (!session || new Date(session.expires) < new Date()) {
- *     throw event.redirect(302, `/auth/signin?callbackUrl=${event.url.pathname}`);
+ *     throw event.redirect(302, `/auth/signin?redirectTo=${event.url.pathname}`);
  *   }
  * };
  *
@@ -134,17 +134,17 @@ function qwikAuthQrl(
 ) {
   const useSignIn = globalAction$(
     async (
-      { providerId, callbackUrl: _callbackUrl, options, authorizationParams },
+      { providerId, redirectTo: _redirectTo, options, authorizationParams },
       req
     ) => {
-      const { callbackUrl = _callbackUrl ?? defaultCallbackURL(req), ...rest } =
+      const { redirectTo = _redirectTo ?? defaultRedirectTo(req), ...rest } =
         options ?? {}
 
       const isCredentials = providerId === "credentials"
 
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
-      const body = new URLSearchParams({ callbackUrl: callbackUrl as string })
+      const body = new URLSearchParams({ redirectTo })
       Object.entries(rest).forEach(([key, value]) => {
         body.set(key, String(value))
       })
@@ -159,7 +159,7 @@ function qwikAuthQrl(
       const data = await authAction(body, req, signInUrl, authOpts)
 
       // set authjs.callback-url cookie. Fix for https://github.com/QwikDev/qwik/issues/5227
-      req.cookie.set("authjs.callback-url", callbackUrl, {
+      req.cookie.set("authjs.callback-url", redirectTo, {
         path: "/",
       })
 
@@ -169,10 +169,11 @@ function qwikAuthQrl(
     },
     zod$({
       providerId: z.string().optional(),
-      callbackUrl: z.string().optional(),
+      /** Yoooo */
+      redirectTo: z.string().optional(),
       options: z
         .object({
-          callbackUrl: z.string(),
+          redirectTo: z.string(),
         })
         .passthrough()
         .partial()
@@ -184,15 +185,15 @@ function qwikAuthQrl(
   )
 
   const useSignOut = globalAction$(
-    async ({ callbackUrl }, req) => {
-      callbackUrl ??= defaultCallbackURL(req)
+    async ({ redirectTo }, req) => {
+      redirectTo ??= defaultRedirectTo(req)
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
-      const body = new URLSearchParams({ callbackUrl })
+      const body = new URLSearchParams({ redirectTo })
       await authAction(body, req, `/auth/signout`, authOpts)
     },
     zod$({
-      callbackUrl: z.string().optional(),
+      redirectTo: z.string().optional(),
     })
   )
 
@@ -297,7 +298,7 @@ const fixCookies = (req: RequestEventCommon) => {
   }
 }
 
-const defaultCallbackURL = (req: RequestEventCommon) => {
+const defaultRedirectTo = (req: RequestEventCommon) => {
   req.url.searchParams.delete("qaction")
   return req.url.href
 }
