@@ -19,9 +19,11 @@
  * Create a `plugin@auth.ts` file in the routes folder
  *
  * import GitHub from "@auth/qwik/providers/github"
- * import { qwikAuth$ } from "@auth/qwik"
+ * import { QwikAuth$ } from "@auth/qwik"
  *
- * export const { onRequest, useSession, useSignIn, useSignOut } = qwikAuth$(() => ({ providers: [GitHub] }))
+ * export const {
+ *   onRequest, useSession, useSignIn, useSignOut
+ * } = QwikAuth$(() => ({ providers: [GitHub] }))
  *
  * ## Signing in and signing out
  *
@@ -98,7 +100,7 @@
  * export const onRequest: RequestHandler = (event) => {
  *   const session = event.sharedMap.get("session")
  *   if (!session || new Date(session.expires) < new Date()) {
- *     throw event.redirect(302, `/api/auth/signin?callbackUrl=${event.url.pathname}`);
+ *     throw event.redirect(302, `/auth/signin?callbackUrl=${event.url.pathname}`);
  *   }
  * };
  *
@@ -121,9 +123,13 @@ import {
 import { EnvGetter } from "@builder.io/qwik-city/middleware/request-handler"
 import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
-import { GetSessionResult, QwikAuthConfig } from "./types.js"
 
-export function qwikAuthQrl(
+/** Configure the {@link QwikAuth$} method. */
+export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> {}
+
+export type GetSessionResult = Promise<{ data: Session | null; cookie: any }>
+
+function qwikAuthQrl(
   authOptions: QRL<(ev: RequestEventCommon) => QwikAuthConfig>
 ) {
   const useSignIn = globalAction$(
@@ -143,9 +149,9 @@ export function qwikAuthQrl(
         body.set(key, String(value))
       })
 
-      const baseSignInUrl = `/api/auth/${
-        isCredentials ? "callback" : "signin"
-      }${providerId ? `/${providerId}` : ""}`
+      const baseSignInUrl = `/auth/${isCredentials ? "callback" : "signin"}${
+        providerId ? `/${providerId}` : ""
+      }`
       const signInUrl = `${baseSignInUrl}?${new URLSearchParams(
         authorizationParams
       )}`
@@ -183,7 +189,7 @@ export function qwikAuthQrl(
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
       const body = new URLSearchParams({ callbackUrl })
-      await authAction(body, req, `/api/auth/signout`, authOpts)
+      await authAction(body, req, `/auth/signout`, authOpts)
     },
     zod$({
       callbackUrl: z.string().optional(),
@@ -196,7 +202,7 @@ export function qwikAuthQrl(
 
   const onRequest = async (req: RequestEventCommon) => {
     if (isServer) {
-      const prefix: string = "/api/auth"
+      const prefix: string = "/auth"
 
       const action = req.url.pathname
         .slice(prefix.length + 1)
@@ -227,7 +233,20 @@ export function qwikAuthQrl(
   return { useSignIn, useSignOut, useSession, onRequest }
 }
 
-export const qwikAuth$ = /*#__PURE__*/ implicit$FirstArg(qwikAuthQrl)
+/**
+ *  Initialize Qwik Auth.
+ *
+ *  @example
+ * ```ts title="plugin@auth.ts"
+ * import { QwikAuth } from "@auth/qwik"
+ * import GitHub from "@auth/qwik/providers/github"
+ *
+ * export const {
+ *   onRequest, useSession, useSignIn, useSignOut
+ * } = QwikAuth$(() => ({ providers: [GitHub] }))
+ * ```
+ */
+export const QwikAuth$ = /*#__PURE__*/ implicit$FirstArg(qwikAuthQrl)
 
 async function authAction(
   body: URLSearchParams | undefined,
@@ -290,7 +309,7 @@ async function getSessionData(
   options.secret ??= process.env.AUTH_SECRET
   options.trustHost ??= true
 
-  const url = new URL("/api/auth/session", req.url)
+  const url = new URL("/auth/session", req.url)
   const response = (await Auth(
     new Request(url, { headers: req.headers }),
     options
@@ -311,7 +330,7 @@ async function getSessionData(
 }
 
 export const setEnvDefaults = (env: EnvGetter, config: AuthConfig) => {
-  config.basePath = "/api/auth"
+  config.basePath = "/auth"
   if (!config.secret?.length) {
     config.secret = []
     const secret = env.get("AUTH_SECRET")

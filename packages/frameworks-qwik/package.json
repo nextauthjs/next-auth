@@ -1,6 +1,6 @@
 {
   "name": "@auth/qwik",
-  "version": "0.0.4",
+  "version": "0.0.0",
   "description": "Authentication for Qwik.",
   "license": "MIT",
   "author": "gioboa <giorgiob.boa@gmail.com>",
@@ -21,11 +21,11 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=18.11"
+    "node": ">=18.17"
   },
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
+      "types": "./lib/index.d.ts",
       "import": "./lib/index.qwik.mjs"
     },
     "./providers": {
@@ -36,7 +36,6 @@
       "import": "./lib/providers/*.js"
     }
   },
-  "types": "./lib/types/index.d.ts",
   "qwik": "./lib/index.qwik.mjs",
   "files": [
     "lib"
