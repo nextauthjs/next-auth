@@ -4,7 +4,7 @@
   "description": "Authentication for Qwik.",
   "license": "MIT",
   "author": "gioboa <giorgiob.boa@gmail.com>",
-  "homepage": "https://qwik.dev/",
+  "homepage": "https://qwik.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "keywords": [
     "Qwik",
@@ -21,7 +21,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=16.8.0 <18.0.0 || >=18.11"
+    "node": ">=18.11"
   },
   "exports": {
     ".": {

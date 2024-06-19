@@ -18,7 +18,7 @@
  *
  * Create a `plugin@auth.ts` file in the routes folder
  *
- * import GitHub from "@auth/core/providers/github"
+ * import GitHub from "@auth/qwik/providers/github"
  * import { qwikAuth$ } from "@auth/qwik"
  *
  * export const { onRequest, useSession, useSignIn, useSignOut } = qwikAuth$(() => ({ providers: [GitHub] }))
