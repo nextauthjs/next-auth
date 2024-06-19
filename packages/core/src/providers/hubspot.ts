@@ -29,13 +29,18 @@ interface HubSpotProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import HubSpot from "@auth/core/providers/hubspot"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [HubSpot({ clientId: HUBSPOT_CLIENT_ID, clientSecret: HUBSPOT_CLIENT_SECRET })],
+ *   providers: [
+ *     HubSpot({
+ *       clientId: HUBSPOT_CLIENT_ID,
+ *       clientSecret: HUBSPOT_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

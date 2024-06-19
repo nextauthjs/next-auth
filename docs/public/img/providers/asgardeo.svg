@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 99.881 86.449">
-  <g id="asgardeo-trifactor-logo-dark-16x40" transform="translate(-553.024 -388.98)">
-    <path id="Path_264" data-name="Path 264" d="M743.533,388.98l9.161,15.892-10.153,17.6h20.306l9.209,15.892H714.97Z" transform="translate(-119.151 0)" fill="#ff7300"/>
-    <path id="Path_265" data-name="Path 265" d="M705.95,438.364l9.209-15.892h20.306l-10.153-17.6,9.162-15.892,28.6,49.393Z" transform="translate(-152.926 0.009)" fill="#ff7300"/>
-    <path id="Path_266" data-name="Path 266" d="M749.175,446.183l-10.153-17.6-10.2,17.6H710.46l28.6-49.393,28.515,49.393Z" transform="translate(-136.043 29.246)"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99.9 86.4"><g transform="translate(-553 -389)"><path fill="#ff7300" d="m624.4 389 9.1 15.9-10.1 17.6h20.3l9.2 15.9h-57Z" data-name="Path 264"/><path fill="#ff7300" d="m553 438.4 9.2-16h20.3L572.4 405l9.1-16 28.6 49.5Z" data-name="Path 265"/><path d="M613.1 475.4 603 457.8l-10.2 17.6h-18.4L603 426l28.5 49.4Z" data-name="Path 266"/></g></svg>

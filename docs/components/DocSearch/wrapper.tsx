@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import algoliasearch from "algoliasearch/lite"
-import { Hits, useInstantSearch } from "react-instantsearch"
-import { InstantSearchNext } from "react-instantsearch-nextjs"
+import { InstantSearch, Hits, useInstantSearch } from "react-instantsearch"
+//import { InstantSearchNext } from "react-instantsearch-nextjs"
 import { CustomSearchBox } from "./searchInput"
 import Hit from "./hit"
 
@@ -49,7 +49,7 @@ export default function () {
 
   return (
     <div className="relative">
-      <InstantSearchNext
+      <InstantSearch
         indexName="next-auth"
         // @ts-expect-error
         searchClient={searchClient}
@@ -61,7 +61,7 @@ export default function () {
             className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-lg bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
           />
         </NoResultsBoundary>
-      </InstantSearchNext>
+      </InstantSearch>
     </div>
   )
 }

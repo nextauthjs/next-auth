@@ -11,6 +11,7 @@ permissions:
 jobs:
   broken-link-checker:
     runs-on: ubuntu-latest
+    if: github.actor == 'vercel[bot]'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
