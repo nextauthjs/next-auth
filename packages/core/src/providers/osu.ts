@@ -14,7 +14,7 @@ export interface OsuUserCompact {
   avatar_url: string
   country_code: string
   default_group: string
-  id: string
+  id: number
   is_active: boolean
   is_bot: boolean
   is_deleted: boolean
@@ -127,7 +127,7 @@ export default function Osu<P extends OsuProfile>(
     userinfo: "https://osu.ppy.sh/api/v2/me",
     profile(profile) {
       return {
-        id: profile.id,
+        id: profile.id.toString(),
         email: null,
         name: profile.username,
         image: profile.avatar_url,

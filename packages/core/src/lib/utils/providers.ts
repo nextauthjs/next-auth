@@ -151,5 +151,29 @@ function normalizeEndpoint(
       url.searchParams.set(key, String(value))
     }
   }
-  return { url, request: e?.request, conform: e?.conform }
+  return {
+    url,
+    request: e?.request,
+    conform: e?.conform,
+    ...(e?.clientPrivateKey ? { clientPrivateKey: e?.clientPrivateKey } : null),
+  }
+}
+
+export function isOIDCProvider(
+  provider: InternalProvider<"oidc" | "oauth">
+): provider is InternalProvider<"oidc"> {
+  return provider.type === "oidc"
+}
+
+export function isOAuth2Provider(
+  provider: InternalProvider<"oidc" | "oauth">
+): provider is InternalProvider<"oauth"> {
+  return provider.type === "oauth"
+}
+
+/** Either OAuth 2 or OIDC */
+export function isOAuthProvider(
+  provider: InternalProvider<any>
+): provider is InternalProvider<"oauth" | "oidc"> {
+  return provider.type === "oauth" || provider.type === "oidc"
 }
