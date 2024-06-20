@@ -155,7 +155,9 @@ export function initAuth(
         return async (
           ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
         ) => {
-          return handleAuth(args, config(args[0]), userMiddlewareOrRoute)
+          const _config = config(args[0])
+          onLazyLoad?.(_config)
+          return handleAuth(args, _config, userMiddlewareOrRoute)
         }
       }
       // API Routes, getServerSideProps
