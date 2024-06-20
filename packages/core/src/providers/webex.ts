@@ -35,13 +35,15 @@ export interface WebexProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Webex from "@auth/core/providers/webex"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Webex({ clientId: WEBEX_CLIENT_ID, clientSecret: WEBEX_CLIENT_SECRET })],
+ *   providers: [
+ *     Webex({ clientId: WEBEX_CLIENT_ID, clientSecret: WEBEX_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

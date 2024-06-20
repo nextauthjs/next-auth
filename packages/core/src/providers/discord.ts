@@ -97,13 +97,18 @@ export interface DiscordProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Discord from "@auth/core/providers/discord"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Discord({ clientId: DISCORD_CLIENT_ID, clientSecret: DISCORD_CLIENT_SECRET })],
+ *   providers: [
+ *     Discord({
+ *       clientId: DISCORD_CLIENT_ID,
+ *       clientSecret: DISCORD_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

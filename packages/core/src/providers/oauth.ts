@@ -1,4 +1,4 @@
-import type { Client } from "oauth4webapi"
+import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
@@ -45,6 +45,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   request?: EndpointRequest<C, R, P>
   /** @internal */
   conform?: (response: Response) => Awaitable<Response | undefined>
+  clientPrivateKey?: CryptoKey | PrivateKey
 }
 
 /**
@@ -239,6 +240,11 @@ export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
   checks?: Array<NonNullable<OAuth2Config<Profile>["checks"]>[number] | "nonce">
+  /**
+   * If set to `false`, the `userinfo_endpoint` will be fetched for the user data.
+   * @note An `id_token` is still required to be returned during the authorization flow.
+   */
+  idToken?: boolean
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
@@ -258,6 +264,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
+    clientPrivateKey?: CryptoKey | PrivateKey
     /** @internal */
     conform?: TokenEndpointHandler["conform"]
   }
@@ -281,6 +288,7 @@ export type OAuthConfigInternal<Profile> = Omit<
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
+  idToken: OIDCConfig<Profile>["idToken"]
 }
 
 export type OAuthUserConfig<Profile> = Omit<

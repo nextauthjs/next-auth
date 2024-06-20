@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import OneLogin from "@auth/core/providers/onelogin"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [OneLogin({ clientId: ONELOGIN_CLIENT_ID, clientSecret: ONELOGIN_CLIENT_SECRET })],
+ *   providers: [
+ *     OneLogin({
+ *       clientId: ONELOGIN_CLIENT_ID,
+ *       clientSecret: ONELOGIN_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

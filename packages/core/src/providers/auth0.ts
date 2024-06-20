@@ -83,18 +83,16 @@ export interface Auth0Profile extends Record<string, any> {
  * ```
  *
  * #### Configuration
+ * ```ts
+ * import { Auth } from "@auth/core"
+ * import Auth0 from "@auth/core/providers/auth0"
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import Auth0Provider from "next-auth/providers/auth0"
- *
- * export default NextAuth({
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
  *   providers: [
- *     Auth0Provider({
- *       clientId: process.env.AUTH0_ID,
- *       clientSecret: process.env.AUTH0_SECRET,
+ *     Auth0({
+ *       clientId: AUTH0_ID,
+ *       clientSecret: AUTH0_SECRET,
  *     }),
  *   ],
  * })

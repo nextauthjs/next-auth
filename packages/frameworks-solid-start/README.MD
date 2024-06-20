@@ -1,80 +1,18 @@
-# Getting started
+<p align="center">
+  <a href="https://start.solidjs.com" target="_blank"><img height="96px" src="https://authjs.dev/img/etc/solidstart.svg" /></a>
+  <a href="https://solid-start.authjs.dev" target="_blank"><img height="96px" src="https://authjs.dev/img/logo-sm.png" /></a>
+  <h1 align="center">SolidStart Auth</h1>
+</p>
+<p align="center">
+  Authentication for SolidStart.
+</p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/@auth/solid-start"><img src="https://img.shields.io/npm/v/@auth/solid-start?style=flat-square&label=latest&color=purple" alt="npm latest release" /></a>
+  <a href="https://www.npmtrends.com/@auth/solid-start"><img src="https://img.shields.io/npm/dm/@auth/solid-start?style=flat-square&color=cyan" alt="Downloads" /></a>
+  <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
+  <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=fff&style=flat-square" alt="TypeScript" />
+</p>
 
-Recommended to use [create-jd-app](https://github.com/OrJDev/create-jd-app)
+---
 
-```bash
-npm install @auth/solid-start@latest @auth/core@latest
-```
-
-## Setting It Up
-
-[Generate auth secret](https://generate-secret.vercel.app/32), then set it as an environment variable:
-
-```
-AUTH_SECRET=your_auth_secret
-```
-
-### On Production
-
-Don't forget to trust the host.
-
-```
-AUTH_TRUST_HOST=true
-```
-
-## Creating the api handler
-
-in this example we are using github so make sure to set the following environment variables:
-
-```
-GITHUB_ID=your_github_oauth_id
-GITHUB_SECRET=your_github_oauth_secret
-```
-
-```ts
-// routes/api/auth/[...solidauth].ts
-import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start"
-import GitHub from "@auth/core/providers/github"
-
-export const authOpts: SolidAuthConfig = {
-  providers: [
-    GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-  ],
-  debug: false,
-}
-
-export const { GET, POST } = SolidAuth(authOpts)
-```
-
-## Signing in and out
-
-```ts
-import { signIn, signOut } from "@auth/solid-start/client"
-const login = () => signIn("github")
-const logout = () => signOut()
-```
-
-## Getting the current session
-
-```ts
-import { getSession } from "@auth/solid-start"
-import { createServerData$ } from "solid-start/server"
-import { authOpts } from "~/routes/api/auth/[...solidauth]"
-
-export const useSession = () => {
-  return createServerData$(
-    async (_, { request }) => {
-      return await getSession(request, authOpts)
-    },
-    { key: () => ["auth_user"] }
-  )
-}
-
-// useSession returns a resource:
-const session = useSession()
-const loading = session.loading
-const user = () => session()?.user
-```
+Check out the documentation at [solid-start.authjs.dev](https://solid-start.authjs.dev).

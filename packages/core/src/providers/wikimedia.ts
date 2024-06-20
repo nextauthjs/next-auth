@@ -174,13 +174,18 @@ export interface WikimediaProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Wikimedia from "@auth/core/providers/wikimedia"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Wikimedia({ clientId: WIKIMEDIA_CLIENT_ID, clientSecret: WIKIMEDIA_CLIENT_SECRET })],
+ *   providers: [
+ *     Wikimedia({
+ *       clientId: WIKIMEDIA_CLIENT_ID,
+ *       clientSecret: WIKIMEDIA_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

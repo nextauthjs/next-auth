@@ -21,13 +21,19 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Bungie from "@auth/core/providers/bungie"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Bungie({ clientId: BUNGIE_CLIENT_ID, clientSecret: BUNGIE_CLIENT_SECRET, headers: { "X-API-Key": BUNGIE_API_KEY } })],
+ *   providers: [
+ *     Bungie({
+ *       clientId: BUNGIE_CLIENT_ID,
+ *       clientSecret: BUNGIE_CLIENT_SECRET,
+ *       headers: { "X-API-Key": BUNGIE_API_KEY },
+ *     }),
+ *   ],
  * })
  * ```
  *

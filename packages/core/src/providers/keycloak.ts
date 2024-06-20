@@ -45,13 +45,19 @@ export interface KeycloakProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Keycloak from "@auth/core/providers/keycloak"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Keycloak({ clientId: KEYCLOAK_CLIENT_ID, clientSecret: KEYCLOAK_CLIENT_SECRET, issuer: KEYCLOAK_ISSUER, })],
+ *   providers: [
+ *     Keycloak({
+ *       clientId: KEYCLOAK_CLIENT_ID,
+ *       clientSecret: KEYCLOAK_CLIENT_SECRET,
+ *       issuer: KEYCLOAK_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

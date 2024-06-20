@@ -1,4 +1,4 @@
-import { Profile } from "../types.js"
+import type { Profile } from "../types.js"
 import CredentialsProvider from "./credentials.js"
 import type {
   CredentialsConfig,
@@ -12,7 +12,7 @@ import type {
   OAuthProviderType,
   OIDCConfig,
 } from "./oauth.js"
-import { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
+import type { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
 
 export * from "./credentials.js"
 export * from "./email.js"

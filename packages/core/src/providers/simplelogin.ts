@@ -32,7 +32,7 @@ export interface SimpleLoginProfile {
  *
  * #### Configuration
  *```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import SimpleLogin from "@auth/core/providers/simplelogin"
  *
  * const request = new Request(origin)

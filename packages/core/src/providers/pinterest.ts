@@ -28,13 +28,18 @@ export interface PinterestProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Pinterest from "@auth/core/providers/pinterest"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Pinterest({ clientId: PINTEREST_CLIENT_ID, clientSecret: PINTEREST_CLIENT_SECRET })],
+ *   providers: [
+ *     Pinterest({
+ *       clientId: PINTEREST_CLIENT_ID,
+ *       clientSecret: PINTEREST_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

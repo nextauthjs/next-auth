@@ -38,7 +38,12 @@ export interface ClickUpProfile {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [ClickUp({ clientId: CLICKUP_CLIENT_ID, clientSecret: CLICKUP_CLIENT_SECRET })],
+ *   providers: [
+ *     ClickUp({
+ *       clientId: CLICKUP_CLIENT_ID,
+ *       clientSecret: CLICKUP_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

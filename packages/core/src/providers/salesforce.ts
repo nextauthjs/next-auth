@@ -28,13 +28,18 @@ export interface SalesforceProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import salesforce from "@auth/core/providers/salesforce"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [salesforce({ clientId: salesforce_CLIENT_ID, clientSecret: salesforce_CLIENT_SECRET })],
+ *   providers: [
+ *     salesforce({
+ *       clientId: salesforce_CLIENT_ID,
+ *       clientSecret: salesforce_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

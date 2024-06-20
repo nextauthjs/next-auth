@@ -31,13 +31,18 @@ interface TodoistProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Todoist from "@auth/core/providers/todoist"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Todoist({ clientId: TODOIST_CLIENT_ID, clientSecret: TODOIST_CLIENT_SECRET })],
+ *   providers: [
+ *     Todoist({
+ *       clientId: TODOIST_CLIENT_ID,
+ *       clientSecret: TODOIST_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

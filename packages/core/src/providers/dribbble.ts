@@ -29,13 +29,18 @@ export interface DribbbleProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Dribbble from "@auth/core/providers/dribbble"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Dribbble({ clientId: DRIBBBLE_CLIENT_ID, clientSecret: DRIBBBLE_CLIENT_SECRET })],
+ *   providers: [
+ *     Dribbble({
+ *       clientId: DRIBBBLE_CLIENT_ID,
+ *       clientSecret: DRIBBBLE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

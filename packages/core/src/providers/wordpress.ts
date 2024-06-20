@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import WordPress from "@auth/core/providers/wordpress"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [WordPress({ clientId: WORKPRESS_CLIENT_ID, clientSecret: WORKPRESS_CLIENT_SECRET })],
+ *   providers: [
+ *     WordPress({
+ *       clientId: WORKPRESS_CLIENT_ID,
+ *       clientSecret: WORKPRESS_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
