@@ -2,7 +2,9 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         ".next",
         "dist/**",
@@ -25,8 +27,13 @@
       "cache": false
     },
     "test": {
-      "outputs": ["coverage/**"],
-      "inputs": ["src/**/", "test/**/"],
+      "outputs": [
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/**/",
+        "test/**/"
+      ],
       "outputMode": "new-only"
     },
     "test:e2e": {
@@ -38,10 +45,15 @@
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+      "env": [
+        "XATA_API_KEY",
+        "XATA_DATABASE_URL"
+      ]
     },
     "@auth/hasura-adapter#build": {
-      "dependsOn": ["@auth/core#build"],
+      "dependsOn": [
+        "@auth/core#build"
+      ],
       "outputs": [
         "lib/**",
         "*.js",
@@ -56,7 +68,8 @@
         "@auth/core#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
-        "@auth/solid-start#build"
+        "@auth/solid-start#build",
+        "@auth/qwik#build"
       ],
       "cache": false
     },
@@ -99,6 +112,7 @@
         "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "@auth/qwik#build",
         "next-auth#build",
         "^build"
       ],
