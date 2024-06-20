@@ -69,14 +69,21 @@ export interface ThreadsProfile {
  *
  * ### Resources
  *
- * - [Threads App documentation](https://developers.facebook.com/docs/threads)
- *
+ * - [Threads OAuth documentation](https://developers.facebook.com/docs/threads)
+ * - [Threads OAuth apps](https://developers.facebook.com/apps/)
+ * 
  * ### Notes
  *
+ * :::warning
+ * 
+ * Email address is not returned by the Threads API.
+ * 
+ * :::
+ * 
  * :::tip
- *
- * Email address is not supported by Threads.
- *
+ * 
+ * Threads required callback URL to be configured in your Facebook app and Facebook required you to use **https** even for localhost! In order to do that, you either need to [add an SSL to your localhost](https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/) or use a proxy such as [ngrok](https://ngrok.com/docs).
+ * 
  * :::
  *
  * By default, Auth.js assumes that the Threads provider is
