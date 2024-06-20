@@ -1,0 +1,64 @@
+{
+  "name": "@auth/qwik",
+  "version": "0.1.0",
+  "description": "Authentication for Qwik.",
+  "license": "ISC",
+  "author": "gioboa <giorgiob.boa@gmail.com>",
+  "homepage": "https://qwik.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "keywords": [
+    "Qwik",
+    "oauth",
+    "jwt",
+    "oauth2",
+    "authentication",
+    "csrf",
+    "oidc",
+    "Auth.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18.17"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.qwik.mjs"
+    },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    }
+  },
+  "qwik": "./index.qwik.mjs",
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "*.mjs",
+    "providers",
+    "src"
+  ],
+  "scripts": {
+    "build": "pnpm clean && pnpm providers && vite build --mode lib",
+    "clean": "rm -rf *.mjs *.js *.d.ts* providers src/providers",
+    "providers": "node ../utils/scripts/providers --out src"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "set-cookie-parser": "^2.6.0"
+  },
+  "devDependencies": {
+    "@builder.io/qwik": "1.5.5",
+    "@builder.io/qwik-city": "1.5.5",
+    "@types/set-cookie-parser": "^2.4.7",
+    "typescript": "^5.4.5",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-static-copy": "^1.0.5"
+  }
+}
