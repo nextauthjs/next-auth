@@ -44,6 +44,7 @@ export const authOpts: SolidAuthConfig = {
     }),
   ],
   debug: false,
+  basePath: "/api/auth",
 }
 
 export const { GET, POST } = SolidAuth(authOpts)
