@@ -18,7 +18,7 @@ export default async function UserAvatar() {
 
   return (
     <div>
-      <img src={session.user.img} alt="User Avatar" />
+      <img src={session.user.image} alt="User Avatar" />
     </div>
   )
 }
@@ -97,7 +97,7 @@ export function UserAvatar({ session }) {
   return (
     <div>
       <img
-        src={session?.user.img ?? "https://source.boringavatars.com/marble/120"}
+        src={session?.user.image ?? "https://source.boringavatars.com/marble/120"}
         alt="User Avatar"
       />
     </div>
