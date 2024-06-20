@@ -18,8 +18,8 @@
  *
  * Create a `plugin@auth.ts` file in the routes folder
  *
- * import GitHub from "@auth/qwik/providers/github"
  * import { QwikAuth$ } from "@auth/qwik"
+ * import GitHub from "@auth/qwik/providers/github"
  *
  * export const {
  *   onRequest, useSession, useSignIn, useSignOut
