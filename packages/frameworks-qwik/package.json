@@ -36,7 +36,7 @@
       "import": "./providers/*.js"
     }
   },
-  "qwik": "./index.qwik.mjs",
+  "qwik": "./index.qwik.js",
   "files": [
     "*.d.ts*",
     "*.js",
