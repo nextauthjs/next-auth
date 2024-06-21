@@ -41,6 +41,7 @@
     "*.d.ts*",
     "*.js",
     "*.mjs",
+    "*.qwik.mjs",
     "providers",
     "src"
   ],
