@@ -40,8 +40,7 @@
   "files": [
     "*.d.ts*",
     "*.js",
-    "*.mjs",
-    "*.qwik.mjs",
+    "*.qwik.js",
     "providers",
     "src"
   ],
