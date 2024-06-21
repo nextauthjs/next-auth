@@ -58,7 +58,12 @@ export interface ThreadsProfile {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Threads],
+ *   providers: [
+ *     Threads({
+ *       clientId: THREADS_CLIENT_ID,
+ *       clientSecret: THREADS_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
