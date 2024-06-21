@@ -1,7 +1,6 @@
 import type { AuthAction } from "../../types.js"
-import { MissingSecret } from "../../errors.js"
-import { logger } from "./logger.js"
 import type { AuthConfig } from "../../index.js"
+import { makeLogger } from "./logger.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
@@ -52,14 +51,16 @@ export function createActionURL(
   protocol: string,
   headers: Headers,
   envObject: any,
-  basePath?: string
+  config?: Pick<AuthConfig, "basePath" | "logger" | "debug">
 ): URL {
+  const basePath = config?.basePath
   let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
   let url: URL
   if (envUrl) {
     url = new URL(envUrl)
     if (basePath && basePath !== "/" && url.pathname !== "/") {
+      const logger = makeLogger(config)
       logger.warn(
         url.pathname === basePath
           ? "env-url-basepath-redundant"

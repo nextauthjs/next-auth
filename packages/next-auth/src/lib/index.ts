@@ -67,7 +67,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
     headers.get("x-forwarded-proto"),
     headers,
     process.env,
-    config.basePath
+    config
   )
   const request = new Request(url, {
     headers: { cookie: headers.get("cookie") ?? "" },

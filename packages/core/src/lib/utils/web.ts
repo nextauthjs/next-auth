@@ -1,6 +1,5 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
-import { logger } from "./logger.js"
 
 import type {
   AuthAction,
@@ -9,6 +8,7 @@ import type {
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
 import type { AuthConfig } from "../../index.js"
+import { makeLogger } from "./logger.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -52,6 +52,7 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
+    const logger = makeLogger(config)
     logger.error(e as Error)
     logger.debug("request", req)
   }
