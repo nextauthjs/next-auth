@@ -21,15 +21,13 @@ import type { Provider } from "next-auth/providers";
 
 const providers: Provider[] = [
   Google({
-    clientId: process.env.AUTH_GOOGLE_ID,
-    clientSecret: process.env.AUTH_GOOGLE_SECRET,
     async profile(profile) {
-      return { ...profile }
+      return profile
     },            
   }),
   Credentials({
-    async authorize(credentials) {    
-      return { ...credentials }
+    async authorize(credentials) {
+      return credentials
     }
   })
 ]
