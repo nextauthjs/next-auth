@@ -129,7 +129,8 @@ export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> {}
 
 export type GetSessionResult = Promise<{ data: Session | null; cookie: any }>
 
-function qwikAuthQrl(
+/** @internal */
+export function QwikAuthQrl(
   authOptions: QRL<(ev: RequestEventCommon) => QwikAuthConfig>
 ) {
   const useSignIn = globalAction$(
@@ -247,7 +248,7 @@ function qwikAuthQrl(
  * } = QwikAuth$(() => ({ providers: [GitHub] }))
  * ```
  */
-export const QwikAuth$ = /*#__PURE__*/ implicit$FirstArg(qwikAuthQrl)
+export const QwikAuth$ = /*#__PURE__*/ implicit$FirstArg(QwikAuthQrl)
 
 async function authAction(
   body: URLSearchParams | undefined,

@@ -1,6 +1,6 @@
 {
   "name": "@auth/qwik",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "description": "Authentication for Qwik.",
   "license": "ISC",
   "author": "gioboa <giorgiob.boa@gmail.com>",
@@ -26,7 +26,7 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.qwik.mjs"
+      "import": "./index.qwik.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
@@ -36,11 +36,11 @@
       "import": "./providers/*.js"
     }
   },
-  "qwik": "./index.qwik.mjs",
+  "qwik": "./index.qwik.js",
   "files": [
     "*.d.ts*",
     "*.js",
-    "*.mjs",
+    "*.qwik.js",
     "providers",
     "src"
   ],

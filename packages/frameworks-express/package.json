@@ -1,7 +1,7 @@
 {
   "name": "@auth/express",
   "description": "Authentication for Express.",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "type": "module",
   "files": [
     "*.js",
@@ -13,7 +13,8 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./index.js",
+      "default": "./index.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
@@ -23,7 +24,8 @@
     },
     "./providers/*": {
       "types": "./providers/*.d.ts",
-      "import": "./providers/*.js"
+      "import": "./providers/*.js",
+      "default": "./providers/*.js"
     },
     "./package.json": "./package.json"
   },
