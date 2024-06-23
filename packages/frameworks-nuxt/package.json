@@ -1,0 +1,69 @@
+{
+  "name": "@auth/nuxt",
+  "description": "Authentication for Nuxt.",
+  "version": "0.3.0",
+  "keywords": [
+    "Nuxt",
+    "oauth",
+    "jwt",
+    "oauth2",
+    "authentication",
+    "csrf",
+    "oidc",
+    "Auth.js"
+  ],
+  "author": "",
+  "contributors": [],
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "license": "ISC",
+  "scripts": {
+    "clean": "rimraf dist src/providers",
+    "providers": "node ../utils/scripts/providers",
+    "build": "pnpm clean && pnpm providers && nuxt-module-build build",
+    "prepack": "nuxi prepare && nuxt-module-build build",
+    "test:watch": "vitest watch",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^0.5.5",
+    "@nuxt/schema": "^3.11.2",
+    "eslint-plugin-vue": "^9.25.0",
+    "h3": "^1.11.1",
+    "nuxt": "^3.11.2",
+    "ofetch": "^1.3.4",
+    "rimraf": "^5.0.5",
+    "unbuild": "^2.0.0",
+    "vue-eslint-parser": "^9.4.2"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "@nuxt/kit": "^3.11.2",
+    "defu": "^6.1.4",
+    "vue": "^3.4.21"
+  },
+  "type": "module",
+  "types": "./dist/types.d.ts",
+  "module": "./dist/module.mjs",
+  "files": [
+    "dist",
+    "*.d.ts",
+    "*.mjs"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/module.d.ts",
+      "default": "./dist/module.mjs",
+      "import": {
+        "types": "./dist/module.d.mts",
+        "default": "./dist/module.mjs"
+      }
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
+    }
+  }
+}
