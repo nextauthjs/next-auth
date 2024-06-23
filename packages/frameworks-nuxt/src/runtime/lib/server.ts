@@ -63,16 +63,14 @@ async function getServerSession(
   return data
 }
 
-export function generateServerUtils(config: AuthConfig) {
+export function auth(config: AuthConfig) {
   return {
     /**
      * Gets and returns the session to be used in server side, like in API routes.
      *
      * @example
      * ```ts title="server/api/protected.get.ts"
-     * import { generateServerUtils } from "#auth"
-     *
-     * const { getServerSession } = generateServerUtils(config)
+     * const { getServerSession } = auth()
      *
      * export default defineEventHandler(async (event) => {
      *  const session = await getServerSession(event)

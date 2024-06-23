@@ -1,6 +1,4 @@
-import { generateServerUtils } from "#auth"
-
-const { getServerSession } = generateServerUtils(authConfig)
+const { getServerSession } = auth()
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
