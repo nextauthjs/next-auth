@@ -15,6 +15,7 @@ pnpm-lock.yaml
 .svelte-kit
 .next
 .nuxt
+.output
 
 # --------------- Docs ---------------
 
