@@ -74,8 +74,8 @@ export default function Coinbase(
     name: "Coinbase",
     type: "oauth",
     authorization:
-      "https://www.coinbase.com/oauth/authorize?scope=wallet:user:email+wallet:user:read",
-    token: "https://api.coinbase.com/oauth/token",
+      "https://login.coinbase.com/oauth2/auth?scope=wallet:user:email+wallet:user:read",
+    token: "https://login.coinbase.com/oauth2/token",
     userinfo: "https://api.coinbase.com/v2/user",
     profile(profile) {
       return {
