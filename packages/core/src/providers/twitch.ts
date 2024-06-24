@@ -28,13 +28,15 @@ export interface TwitchProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Twitch from "@auth/core/providers/twitch"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Twitch({ clientId: TWITCH_CLIENT_ID, clientSecret: TWITCH_CLIENT_SECRET })],
+ *   providers: [
+ *     Twitch({ clientId: TWITCH_CLIENT_ID, clientSecret: TWITCH_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

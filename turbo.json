@@ -56,7 +56,8 @@
         "@auth/core#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
-        "@auth/solid-start#build"
+        "@auth/solid-start#build",
+        "@auth/qwik#build"
       ],
       "cache": false
     },
@@ -99,6 +100,7 @@
         "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "@auth/qwik#build",
         "next-auth#build",
         "^build"
       ],
