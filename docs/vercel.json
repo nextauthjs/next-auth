@@ -55,6 +55,11 @@
     },
     {
       "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "qwik.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/qwik"
+    },
+    {
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "errors.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/errors/:path*"
     },

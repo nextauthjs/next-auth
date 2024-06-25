@@ -151,7 +151,12 @@ function normalizeEndpoint(
       url.searchParams.set(key, String(value))
     }
   }
-  return { url, request: e?.request, conform: e?.conform }
+  return {
+    url,
+    request: e?.request,
+    conform: e?.conform,
+    ...(e?.clientPrivateKey ? { clientPrivateKey: e?.clientPrivateKey } : null),
+  }
 }
 
 export function isOIDCProvider(

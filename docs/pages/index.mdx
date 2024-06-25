@@ -1,10 +1,15 @@
 import Link from "next/link"
+import { Pre, Code } from "nextra/components"
 import Footer from "@/components/Footer"
-import { HeroCode } from "@/components/HeroCode"
+import { RichTabs } from "@/components/RichTabs"
 import { LogosMarquee } from "@/components/LogosMarquee"
 import { Blur } from "@/components/Blur"
 import { Guides } from "@/components/Guides"
-import { Pre, Code } from "nextra/components"
+import SvelteKit from "../public/img/etc/sveltekit.svg"
+import Express from "../public/img/etc/express.svg"
+import Next from "../public/img/etc/nextjs.svg"
+import Qwik from "../public/img/etc/qwik.svg"
+
 import { CaretRight } from "@/icons"
 
 <div className="relative overflow-hidden w-full h-full flex flex-col">
@@ -74,67 +79,110 @@ import { CaretRight } from "@/icons"
         <span className="text-xs text-neutral-400">Sponsored</span>
       </div>
     </div>
-    <HeroCode>
-      <HeroCode.Next>
-        <Pre data-language="tsx" data-copy="">
-          <Code>
+    <RichTabs
+      orientation="horizontal"
+      tabKey="hero"
+      defaultValue="nextjs"
+      className="w-full flex flex-col !py-8 md:!py-16 !m-0 max-w-xl xl:max-w-2xl lg:self-start"
+    >
+      <RichTabs.List className="justify-between p-2 rounded-t-lg bg-white/40 backdrop-blur dark:bg-neutral-950/25">
+        <div className="flex gap-2">
+          {[
+            { value: "express", src: Express,  name: "Express" },
+            { value: "nextjs", src: Next, name: "Next.js" },
+            { value: "qwik", src: Qwik,  name: "Qwik" },
+            { value: "sveltekit", src: SvelteKit,  name: "SvelteKit" },
+          ].map((trigger) => (
+            <RichTabs.Trigger
+              key={trigger.value}
+              title={trigger.name}
+              value={trigger.value}
+              orientation="vertical"
+              className=" !border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            >
+              <img
+                width="24"
+                src={trigger.src}
+                alt={`${trigger.name} Logo`}
+                className="dark:invert"
+              />
+            </RichTabs.Trigger>
+          ))}
+          <Link
+            href="/getting-started/integrations"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex items-center hover:bg-violet-200 hover:dark:bg-violet-900/20"
+          >
+            <span className="hidden text-sm md:block">More</span>
+            <CaretRight className="size-4" />
+          </Link>
+        </div>
+        <div className="inline-flex gap-2 items-center self-end pr-4 h-12">
+          <div className="bg-green-300 rounded-full size-4"></div>
+          <div className="bg-amber-300 rounded-full size-4"></div>
+          <div className="bg-red-300 rounded-full size-4"></div>
+        </div>
+      </RichTabs.List>
+      <div className="p-2 pt-0 w-full rounded-b-lg shadow-md bg-white/40 backdrop-blur dark:bg-neutral-950/25 [&_div]:border-0 [&_div]:shadow-none [&>div.h-full>div>div>pre]:dark:!bg-neutral-950/60 [&>div.h-full>div>div>pre]:!bg-white/60">
+      {Object.entries({
+        nextjs: `\
+// auth.ts
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+export const { auth, handlers } = NextAuth({ providers: [GitHub] })
 
-          ```tsx
-          // auth.ts
-          import NextAuth from "next-auth"
-          import GitHub from "next-auth/providers/github"
-          export const { auth, handlers } = NextAuth({ providers: [GitHub] })
+// middleware.ts
+export { auth as middleware } from "@/auth"
 
-          // middleware.ts
-          export { auth as middleware } from "@/auth"
+// app/api/auth/[...nextauth]/route.ts
+import { handlers } from "@/auth"
+export const { GET, POST } = handlers
+`,
+          sveltekit: `\
+// src/auth.ts
+import { SvelteKitAuth } from "@auth/sveltekit"
+import GitHub from '@auth/sveltekit/providers/github'
 
-          // app/api/auth/[...nextauth]/route.ts
-          import { handlers } from "@/auth"
-          export const { GET, POST } = handlers
-          ```
+export const { handle } = SvelteKitAuth({
+  providers: [GitHub],
+})
 
-          </Code>
-        </Pre>
-      </HeroCode.Next>
-      <HeroCode.Svelte>
-        <Pre data-language="tsx" data-copy="">
-          <Code>
+// src/hooks.server.ts
+export { handle } from "./auth"
+`,
+          express: `\
+// server.ts
+import { express } from "express"
+import { ExpressAuth } from "@auth/express"
+import GitHub from "@auth/express/providers/github"
 
-          ```tsx
-          // src/auth.ts
-          import { SvelteKitAuth } from "@auth/sveltekit"
-          import GitHub from '@auth/sveltekit/providers/github'
+const app = express()
 
-          export const { handle } = SvelteKitAuth({
-            providers: [GitHub],
-          })
+app.use("/auth/\*", ExpressAuth({ providers: [GitHub] }))
+`,
+          qwik: `\
+// src/routes/plugin@auth.ts
+import { QwikAuth } from "@auth/qwik"
+import GitHub from "@auth/qwik/providers/github"
+export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] }))
+`
+}).map(([key, code]) =>
 
-          // src/hooks.server.ts
-          export { handle } from "./auth"
-          ```
-
-          </Code>
-        </Pre>
-      </HeroCode.Svelte>
-      <HeroCode.Express>
-        <Pre data-language="tsx" data-copy="">
-          <Code>
-
-          ```tsx
-          // server.ts
-          import { express } from "express"
-          import { ExpressAuth } from "@auth/express"
-          import GitHub from "@auth/express/providers/github"
-
-          const app = express()
-
-          app.use("/auth/*", ExpressAuth({ providers: [GitHub] }))
-          ```
-
-          </Code>
-        </Pre>
-      </HeroCode.Express>
-    </HeroCode>
+  <RichTabs.Content
+    key={key}
+    orientation="vertical"
+    value={key}
+    className="h-full"
+    tabIndex={-1}
+  >
+    <Pre data-language="tsx" data-copy="">
+      <Code data-language="tsx">
+        {code}
+      </Code>
+    </Pre>
+  </RichTabs.Content>
+)}
+</div>
+</RichTabs>
 
   </section>
   <Guides />
