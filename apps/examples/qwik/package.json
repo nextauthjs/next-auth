@@ -1,6 +1,6 @@
 {
-  "name": "my-qwik-empty-starter",
-  "description": "App with Routing built-in ready to create your app",
+  "name": "qwik-example-app",
+  "description": "An example project for Auth.js with Qwik",
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -27,15 +27,20 @@
     "qwik": "qwik"
   },
   "devDependencies": {
+    "@auth/qwik": "workspace:*",
     "@builder.io/qwik": "^1.5.7",
     "@builder.io/qwik-city": "^1.5.7",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
+    "autoprefixer": "^10.4.14",
     "eslint": "^8.57.0",
     "eslint-plugin-qwik": "^1.5.7",
+    "postcss": "^8.4.31",
     "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.4",
+    "tailwindcss": "3.3.3",
     "typescript": "5.4.5",
     "undici": "*",
     "vite": "^5.2.10",

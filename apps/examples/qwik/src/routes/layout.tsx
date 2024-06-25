@@ -1,5 +1,6 @@
 import { component$, Slot } from "@builder.io/qwik";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+import { Header } from "~/components/header/header.js";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -13,5 +14,20 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  return <Slot />;
+  return (
+    <div>
+      <Header />
+      <Slot />
+    </div>
+  );
 });
+
+export const head: DocumentHead = {
+  title: "Auth.js with Qwik",
+  meta: [
+    {
+      name: "description",
+      content: "An example project for Auth.js with Qwik",
+    },
+  ],
+};
