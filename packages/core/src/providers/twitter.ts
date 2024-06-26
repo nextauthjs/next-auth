@@ -113,13 +113,18 @@ export interface TwitterProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Twitter from "@auth/core/providers/twitter"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Twitter({ clientId: TWITTER_CLIENT_ID, clientSecret: TWITTER_CLIENT_SECRET })],
+ *   providers: [
+ *     Twitter({
+ *       clientId: TWITTER_CLIENT_ID,
+ *       clientSecret: TWITTER_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -129,8 +134,8 @@ export interface TwitterProfile {
  *
  * ## OAuth 2
  * Twitter supports OAuth 2, which is currently opt-in. To enable it, simply add version: "2.0" to your Provider configuration:
- * ```js title="pages/api/auth/[...nextauth].js"
- * TwitterProvider({
+ * ```ts
+ * Twitter({
  *   clientId: process.env.TWITTER_ID,
  *   clientSecret: process.env.TWITTER_SECRET,
  *   version: "2.0", // opt-in to Twitter OAuth 2.0
@@ -187,8 +192,7 @@ export default function Twitter(
     authorization:
       "https://x.com/i/oauth2/authorize?scope=users.read tweet.read offline.access",
     token: "https://api.x.com/2/oauth2/token",
-    userinfo:
-      "https://api.x.com/2/users/me?user.fields=profile_image_url",
+    userinfo: "https://api.x.com/2/users/me?user.fields=profile_image_url",
     profile({ data }) {
       return {
         id: data.id,
