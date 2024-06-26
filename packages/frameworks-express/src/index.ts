@@ -143,7 +143,9 @@ export type {
   User,
 } from "@auth/core/types"
 
-export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
+export type ExpressAuthConfig = Omit<AuthConfig, "raw">
+
+export function ExpressAuth(config: ExpressAuthConfig) {
   return async (req: e.Request, res: e.Response, next: e.NextFunction) => {
     e.json()(req, res, async (err) => {
       if (err) return next(err)
@@ -166,7 +168,7 @@ export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
   req: e.Request,
-  config: Omit<AuthConfig, "raw">
+  config: ExpressAuthConfig
 ): GetSessionResult {
   setEnvDefaults(process.env, config)
   const url = createActionURL(
