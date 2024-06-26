@@ -1,7 +1,5 @@
-const { getServerSession } = auth()
-
 export default defineEventHandler(async (event) => {
-  const session = await getServerSession(event)
+  const session = await auth(event)
 
   if (!session) return null
 

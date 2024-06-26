@@ -47,7 +47,7 @@ export function NuxtAuthHandler(config: AuthConfig) {
   })
 }
 
-async function getServerSession(
+async function getServerSessionInner(
   event: H3Event,
   config: AuthConfig
 ): Promise<Session | null> {
@@ -63,29 +63,26 @@ async function getServerSession(
   return data
 }
 
-export function auth(config: AuthConfig) {
-  return {
-    /**
-     * Gets and returns the session to be used in server side, like in API routes.
-     *
-     * @example
-     * ```ts title="server/api/protected.get.ts"
-     * const { getServerSession } = auth()
-     *
-     * export default defineEventHandler(async (event) => {
-     *  const session = await getServerSession(event)
-     *  if (!session) return null
-     *
-     *  return {
-     *    message: "Protected data",
-     *  }
-     * })
-     * ```
-     *
-     * @param event H3Event
-     * @returns Session
-     */
-    getServerSession: async (event: H3Event) =>
-      await getServerSession(event, config),
-  }
+export function getServerSession(config: AuthConfig) {
+  /**
+   * Gets and returns the session to be used in server side, like in API routes.
+   *
+   * @example
+   * ```ts title="server/api/protected.get.ts"
+   * const { getServerSession } = auth()
+   *
+   * export default defineEventHandler(async (event) => {
+   *  const session = await getServerSession(event)
+   *  if (!session) return null
+   *
+   *  return {
+   *    message: "Protected data",
+   *  }
+   * })
+   * ```
+   *
+   * @param event H3Event
+   * @returns Session
+   */
+  return async (event: H3Event) => await getServerSessionInner(event, config)
 }
