@@ -26,25 +26,4 @@ export default defineNuxtConfig({
       },
     },
   },
-
-  hooks: {
-    "pages:extend"(pages) {
-      function setMiddleware(pages: NuxtPage[]) {
-        for (const page of pages) {
-          // Add middleware to all pages except the root and guest pages
-          if (!["/", "/guest"].includes(page.path)) {
-            page.meta ||= {}
-            page.meta.middleware = page.meta.middleware ?? []
-            page.meta?.middleware.push("auth-logged-in")
-          }
-
-          if (page.children) {
-            setMiddleware(page.children)
-          }
-        }
-      }
-
-      setMiddleware(pages)
-    },
-  },
 })

@@ -1,11 +1,4 @@
-<script setup lang="ts">
-definePageMeta({
-  middleware: ["auth-logged-out"],
-  auth: {
-    authenticatedRedirectTo: "/protected",
-  },
-})
-</script>
+<script setup lang="ts"></script>
 <template>
   <h1>Guest page</h1>
   <p>
