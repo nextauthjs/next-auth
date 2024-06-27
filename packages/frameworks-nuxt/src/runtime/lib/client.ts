@@ -57,11 +57,9 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ): Promise<void | SignInResponse> {
-  const { status } = useAuth()
+  const { auth } = useAuth()
 
   try {
-    status.value = "loading"
-
     const { callbackUrl = window.location.href, redirect = true } =
       options ?? {}
     const { basePath } = useRuntimeConfig().public.authJs
@@ -115,7 +113,7 @@ export async function signIn<
 
     return response
   } catch (error) {
-    status.value = "error"
+    auth.value = { loggedIn: false, user: null }
     throw error
   }
 }
@@ -137,9 +135,9 @@ export interface SignOutParams<R extends boolean = true> {
  * ```
  */
 export async function signOut(options?: SignOutParams) {
-  const { status } = useAuth()
+  const { auth } = useAuth()
   try {
-    status.value = "unauthenticated"
+    auth.value = { loggedIn: false, user: null }
     const { callbackUrl = window.location.href } = options ?? {}
     const { basePath } = useRuntimeConfig().public.authJs
 
@@ -171,7 +169,7 @@ export async function signOut(options?: SignOutParams) {
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) reloadNuxtApp({ persistState: true })
   } catch (error) {
-    status.value = "error"
+    auth.value = { loggedIn: false, user: null }
     throw error
   }
 }

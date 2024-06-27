@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { signIn, signOut, session, user, status } = useAuth()
+const { signIn, signOut, session, auth } = useAuth()
 
 const password = ref("")
 async function callAPI() {
@@ -25,12 +25,21 @@ async function callAPI() {
         <template v-if="session">
           <span class="header-text">
             <small>Signed in as</small><br />
-            <strong> {{ user?.email ?? user?.name }} </strong>
+            <strong>
+              {{
+                auth.loggedIn
+                  ? auth.user.email ?? auth.user.name
+                  : "unauthenticated"
+              }}
+            </strong>
           </span>
           <div class="buttonPrimary" @click="signOut()">Sign out</div>
         </template>
         <template v-else>
-          <span class="header-text">Status: {{ status }}</span>
+          <span class="header-text"
+            >Status:
+            {{ auth.loggedIn ? "authenticated" : "unauthenticated" }}</span
+          >
           <span class="header-text">You are not signed in</span>
           <div class="buttonPrimary">Sign in</div>
         </template>
@@ -70,7 +79,7 @@ async function callAPI() {
       </div>
       <div class="session-code-body">
         <pre>
-            {{ user ?? "null" }}
+            {{ auth.user }}
       </pre
         >
       </div>

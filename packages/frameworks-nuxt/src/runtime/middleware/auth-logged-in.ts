@@ -6,8 +6,9 @@ import {
 import { useAuth } from "../composables/useAuth"
 
 export default defineNuxtRouteMiddleware((to) => {
-  const { status } = useAuth()
-  if (status.value !== "authenticated") {
+  const { auth } = useAuth()
+
+  if (!auth.value.loggedIn) {
     if (import.meta.server) {
       return createError({
         statusCode: 401,

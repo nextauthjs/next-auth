@@ -1,21 +1,20 @@
 import type { Session, User } from "@auth/core/types"
 import { signIn, signOut } from "../lib/client"
 
+export type AuthState =
+  | { loggedIn: true; user: User }
+  | { loggedIn: false; user: null }
+
 export function useAuth() {
-  const status = useState(
-    "auth:session:status",
-    () => "unauthenticated"
-  ) as Ref<"loading" | "authenticated" | "unauthenticated" | "error">
+  const auth = useState<AuthState>("auth", shallowRef)
 
   const session = useState("auth:session", () => null) as Ref<Session | null>
 
-  const user = computed(
-    () => session.value?.user ?? null
-  ) as ComputedRef<User | null>
-
   watch(session, (newSession: Session | null) => {
-    if (newSession === null) return (status.value = "unauthenticated")
-    if (Object.keys(newSession).length) return (status.value = "authenticated")
+    if (newSession === null)
+      return (auth.value = { loggedIn: false, user: null })
+    if (Object.keys(newSession).length)
+      return (auth.value = { loggedIn: true, user: newSession.user! })
   })
 
   const updateSession = (u: Session | null | (() => Session)) => {
@@ -29,8 +28,7 @@ export function useAuth() {
 
   return {
     session: readonly(session) as Readonly<Ref<Session | null>>,
-    status: status,
-    user,
+    auth: auth as Ref<AuthState>,
 
     updateSession,
 

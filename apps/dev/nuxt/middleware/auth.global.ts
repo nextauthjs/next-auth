@@ -5,9 +5,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   // All other pages require authentication
-  const { status } = useAuth()
+  const { auth } = useAuth()
 
-  if (status.value !== "authenticated") {
+  if (!auth.value.loggedIn) {
     if (import.meta.server) {
       return createError({
         statusCode: 401,
