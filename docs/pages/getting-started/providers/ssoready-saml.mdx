@@ -1,0 +1,136 @@
+---
+title: SSOReady SAML
+---
+
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/ssoready-saml.svg"
+  height="64"
+  width="64"
+/>
+
+# SSOReady SAML Provider
+
+## Resources
+
+- [SSOReady SAML over OAuth documentation](https://ssoready.com/docs/saml-over-oauth-saml-nextauth-integration)
+
+## Setup
+
+Add SSOReady SAML login to your page.
+
+SSOReady SAML is a set of open-source dev tools for enterprise SSO. You can use SSOReady to add [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language) support to your product this afternoon, for free, forever.
+
+This provider integrates with the SSOReady [SAML over OAuth](https://ssoready.com/docs/saml-over-oauth-saml-nextauth-integration#creating-organizations) integration, which abstracts away enterprise single sign-on / SAML into an OAuth flow. There are conceptual differences between ordinary OAuth and SAML. See ["SAML"](#saml) for details.
+
+SSOReady is MIT-licensed and available at [github.com/ssoready/ssoready](https://github.com/ssoready/ssoready).
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/ssoready-saml
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/ssoready-saml
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_SSOREADY_SAML_ID
+AUTH_SSOREADY_SAML_SECRET
+```
+
+`AUTH_SSOREADY_SAML_ID` should start with `oauth_saml_client_...`. `AUTH_SSOREADY_SAML_SECRET` should start with `ssoready_oauth_client_secret_...`. They correspond to the ID and secret value of a SSOReady SAML OAuth Client. Creating such a client is documented under ["Creating SAML OAuth clients"](https://ssoready.com/docs/saml-over-oauth-saml-nextauth-integration#creating-saml-oauth-clients) in the SSOReady docs.
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import SSOReadySAML from "next-auth/providers/ssoready-saml"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [SSOReadySAML],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import SSOReadySAML from "@auth/sveltekit/providers/ssoready-saml"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [SSOReadySAML],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import SSOReadySAML from "@auth/express/providers/ssoready-saml"
+
+app.use("/auth/*", ExpressAuth({ providers: [SSOReadySAML] }))
+```
+
+  </Code.Express>
+</Code>
+
+### SAML
+
+SAML logins require configuration ahead of time. The process for setting these up is documented in ["Onboarding customers"](https://ssoready.com/docs/saml-over-oauth-saml-nextauth-integration#onboarding-customers) in the SSOReady docs.
+
+Once a customer is configured for SAML, your code needs to determine which configuration to use at runtime. You'll do this by passing an `organizationExternalId`:
+
+```ts
+import { signIn } from "next-auth/react"
+
+// ...
+
+signIn("ssoready-saml", {}, { organizationExternalId: "..." })
+```
+
+An `organizationExternalId` is an ID you configure in SSOReady (see ["Creating organizations"](https://ssoready.com/docs/saml-over-oauth-saml-nextauth-integration#creating-organizations) in the SSOReady docs). A common pattern for Auth.js-based apps is to use a company's domain as the external ID of their SSOReady organizations. In that case, your "log in with SAML" code will look like this:
+
+```ts
+import { signIn } from "next-auth/react";
+
+// ...
+
+const [email, setEmail] = useState("")
+
+// Map email to organizationExternalId. This will work only if you configure
+// your SSOReady organizations to have domains (e.g. "example.com") as their
+// external ID.
+//
+// See: https://ssoready.com/docs/saml-over-oauth-saml-nextauth-integration#creating-organizations
+const organizationExternalId = email.split("@")[1];
+
+// ...
+
+<Button
+  onClick={async (event) => {
+    event.preventDefault();
+    signIn("ssoready-saml", {}, { organizationExternalId });
+  }}
+>
+```
