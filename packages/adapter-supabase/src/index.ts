@@ -411,7 +411,6 @@ interface Database {
           credentialDeviceType: string | null
           credentialID: string
           credentialPublicKey: string
-          id: string
           provider: string | null
           providerAccountId: string | null
           transports: string | null
@@ -423,7 +422,6 @@ interface Database {
           credentialDeviceType?: string | null
           credentialID: string
           credentialPublicKey: string
-          id?: string
           provider?: string | null
           providerAccountId?: string | null
           transports?: string | null
@@ -435,7 +433,6 @@ interface Database {
           credentialDeviceType?: string | null
           credentialID?: string
           credentialPublicKey?: string
-          id?: string
           provider?: string | null
           providerAccountId?: string | null
           transports?: string | null

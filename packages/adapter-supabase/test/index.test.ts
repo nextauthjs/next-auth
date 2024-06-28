@@ -21,13 +21,6 @@ const supabase = createClient(url, secret, {
 runBasicTests({
   adapter: SupabaseAdapter({ url, secret }),
   db: {
-    connect: async () => {
-      await supabase.from("users").delete().neq("id", "00000000-0000-0000-0000-000000000000")
-      await supabase.from("accounts").delete().neq("id", "00000000-0000-0000-0000-000000000000")
-      await supabase.from("sessions").delete().neq("id", "00000000-0000-0000-0000-000000000000")
-      await supabase.from("identifier").delete().neq("identifier", "00000000-0000-0000-0000-000000000000")
-      await supabase.from("authenticators").delete().neq("id", "00000000-0000-0000-0000-000000000000")
-    },
     async session(sessionToken) {
       const { data, error } = await supabase
         .from("sessions")
@@ -89,7 +82,6 @@ runBasicTests({
 
       return format<AdapterAuthenticator>(data, ["counter"])
     },
-
   },
   testWebAuthnMethods: true,
 })
