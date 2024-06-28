@@ -25,13 +25,13 @@ import {
   isDate,
 } from "@auth/core/adapters"
 
-export function format<T>(obj: Record<string, any>): T {
+export function format<T>(obj: Record<string, any>, nonDateCols: (keyof T)[] = []): T {
   for (const [key, value] of Object.entries(obj)) {
     if (value === null) {
       delete obj[key]
     }
 
-    if (isDate(value)) {
+    if (!nonDateCols.includes(key as keyof T) && isDate(value)) {
       obj[key] = new Date(value)
     }
   }
