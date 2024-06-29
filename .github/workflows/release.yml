@@ -98,7 +98,16 @@ jobs:
       - name: Lint
         run: pnpm lint
         timeout-minutes: 15
+      - name: Check for changes under /packages
+        id: check-packages
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^packages/'; then
+            echo "PACKAGES_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
+          fi
       - name: Run unit tests
+        if: ${{ env.PACKAGES_CHANGES == 'true' }}
         run: pnpm test
       - name: Get installed Playwright version
         id: playwright-version
