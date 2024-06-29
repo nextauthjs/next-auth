@@ -96,6 +96,7 @@ export async function Auth(
  * })
  *```
  * @see [Documentation](https://authjs.dev)
+ *
  */
 export async function Auth(
   request: Request,
