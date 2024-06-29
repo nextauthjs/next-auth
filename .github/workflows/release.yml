@@ -93,11 +93,6 @@ jobs:
       - name: Peek
         run: pnpm peek
         if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      - name: Build
-        run: pnpm build
-      - name: Lint
-        run: pnpm lint
-        timeout-minutes: 15
       - name: Check for changes under /packages
         id: check-packages
         run: |
@@ -106,6 +101,12 @@ jobs:
           else
             echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
           fi
+      - name: Build
+        if: ${{ env.PACKAGES_CHANGES == 'true' }}
+        run: pnpm build
+      - name: Lint
+        run: pnpm lint
+        timeout-minutes: 15
       - name: Run unit tests
         if: ${{ env.PACKAGES_CHANGES == 'true' }}
         run: pnpm test
