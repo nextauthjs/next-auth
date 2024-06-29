@@ -96,7 +96,7 @@ jobs:
       - name: Check for changes under /packages
         id: check-packages
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^packages/'; then
+          if git diff --name-only ${{ github.event.before }}...${{ github.sha }} | grep '^packages/'; then
             echo "PACKAGES_CHANGES=true" >> $GITHUB_ENV
           else
             echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
