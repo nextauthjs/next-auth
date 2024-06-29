@@ -21,8 +21,7 @@
     "providers": "node ../utils/scripts/providers",
     "build": "pnpm clean && pnpm providers && nuxi prepare && nuxt-module-build build",
     "prepack": "nuxi prepare && nuxt-module-build build",
-    "test:watch": "vitest watch",
-    "test": "vitest run"
+    "test": "vitest run -c ../utils/vitest.config.ts"
   },
   "devDependencies": {
     "@nuxt/module-builder": "^0.8.0",
