@@ -16,7 +16,7 @@
   </div>
   <div>
     <img src="https://authjs.dev/img/logo-sm.png" alt="Auth.js Logo" />
-    <a href="https://npmjs.org/package/next-auth">
+    <a href="https://www.npmjs.com/package/@auth/sveltekit">
       @auth/sveltekit@{packageJSON.version}
       <ExternalIcon />
     </a>

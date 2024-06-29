@@ -86,19 +86,29 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Peek
         run: pnpm peek
         if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      - name: Check for changes under /packages
+        id: check-packages
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^packages/'; then
+            echo "PACKAGES_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
+          fi
       - name: Build
+        if: ${{ env.PACKAGES_CHANGES == 'true' }}
         run: pnpm build
       - name: Lint
         run: pnpm lint
         timeout-minutes: 15
       - name: Run unit tests
+        if: ${{ env.PACKAGES_CHANGES == 'true' }}
         run: pnpm test
       - name: Get installed Playwright version
         id: playwright-version
@@ -173,6 +183,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
+          node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -197,7 +208,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
@@ -236,7 +247,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install

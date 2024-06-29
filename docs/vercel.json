@@ -55,6 +55,11 @@
     },
     {
       "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "qwik.authjs.dev" }],
+      "destination": "https://authjs.dev/reference/qwik"
+    },
+    {
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "errors.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
@@ -91,7 +96,7 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "discord.authjs.dev" }],
-      "destination": "https://discord.gg/nwgKuTPJmj"
+      "destination": "https://discord.gg/kuv7wXkHY4"
     },
     {
       "source": "/reference/next-auth:path(.*)",
