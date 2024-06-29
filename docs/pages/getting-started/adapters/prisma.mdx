@@ -217,8 +217,8 @@ model User {
   email         String?         @unique
   emailVerified DateTime?
   image         String?
-  Session       Session[]
-  Account       Account?
+  accounts      Account[]
+  sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
