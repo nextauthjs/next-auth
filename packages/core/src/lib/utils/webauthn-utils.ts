@@ -262,7 +262,7 @@ export async function verifyAuthenticate(
   // Make sure the response was verified
   if (!verified) {
     throw new WebAuthnVerificationError(
-      "WebAuthn authentication response could not be verified."
+      "WebAuthn authentication response could not be verified"
     )
   }
 
