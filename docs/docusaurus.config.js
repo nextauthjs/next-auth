@@ -130,7 +130,7 @@ module.exports = {
                 alt="Powered by Vercel"
                 style="margin-top: 8px"
                 height="32"
-                src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/static/img/powered-by-vercel.svg"
+                src="img/powered-by-vercel.svg"
               />
             </a>`,
             },
