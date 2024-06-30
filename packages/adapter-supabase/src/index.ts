@@ -17,19 +17,21 @@
 import { createClient } from "@supabase/supabase-js"
 import {
   type Adapter,
+  type AdapterAccount,
+  type AdapterAuthenticator,
   type AdapterSession,
   type AdapterUser,
   type VerificationToken,
   isDate,
 } from "@auth/core/adapters"
 
-export function format<T>(obj: Record<string, any>): T {
+export function format<T>(obj: Record<string, any>, nonDateCols: (keyof T)[] = []): T {
   for (const [key, value] of Object.entries(obj)) {
     if (value === null) {
       delete obj[key]
     }
 
-    if (isDate(value)) {
+    if (!nonDateCols.includes(key as keyof T) && isDate(value)) {
       obj[key] = new Date(value)
     }
   }
@@ -226,6 +228,63 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       return format<VerificationToken>(verificationToken)
     },
+    async getAccount(providerAccountId, provider) {
+      const { data, error } = await supabase
+        .from("accounts")
+        .select()
+        .match({ provider, providerAccountId })
+        .maybeSingle()
+
+      if (error) throw error
+      if (!data) return null
+
+      return format<AdapterAccount>(data)
+    },
+    async createAuthenticator(authenticator) {
+      const { data, error } = await supabase
+        .from("authenticators")
+        .insert(authenticator)
+        .select()
+        .single()
+
+      if (error) throw error
+
+      return format<AdapterAuthenticator>(data, ["counter"])
+    },
+    async getAuthenticator(credentialID) {
+      const { data, error } = await supabase
+        .from("authenticators")
+        .select()
+        .eq("credentialID", credentialID)
+        .maybeSingle()
+
+      if (error) throw error
+      if (!data) return null
+
+      return format<AdapterAuthenticator>(data, ["counter"])
+    },
+    async listAuthenticatorsByUserId(userId) {
+      const { data, error } = await supabase
+        .from("authenticators")
+        .select()
+        .eq("userId", userId)
+
+      if (error) throw error
+
+      return data.map((entry) => format<AdapterAuthenticator>(entry, ["counter"]))
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      const { data, error } = await supabase
+        .from("authenticators")
+        .update({ counter: newCounter })
+        .eq("credentialID", credentialID)
+        .select()
+        .single()
+
+      if (error) throw error
+
+      return format<AdapterAuthenticator>(data, ["counter"])
+    },
   }
 }
 
@@ -343,6 +402,41 @@ interface Database {
           identifier?: string | null
           token?: string | null
           expires?: string | null
+        }
+      }
+      authenticators: {
+        Row: {
+          counter: number | null
+          credentialBackedUp: boolean | null
+          credentialDeviceType: string | null
+          credentialID: string
+          credentialPublicKey: string
+          provider: string | null
+          providerAccountId: string | null
+          transports: string | null
+          userId: string | null
+        }
+        Insert: {
+          counter?: number | null
+          credentialBackedUp?: boolean | null
+          credentialDeviceType?: string | null
+          credentialID: string
+          credentialPublicKey: string
+          provider?: string | null
+          providerAccountId?: string | null
+          transports?: string | null
+          userId?: string | null
+        }
+        Update: {
+          counter?: number | null
+          credentialBackedUp?: boolean | null
+          credentialDeviceType?: string | null
+          credentialID?: string
+          credentialPublicKey?: string
+          provider?: string | null
+          providerAccountId?: string | null
+          transports?: string | null
+          userId?: string | null
         }
       }
     }
