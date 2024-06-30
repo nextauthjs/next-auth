@@ -31,7 +31,7 @@
  * ## Resources
  *
  * - [Getting started](https://authjs.dev/getting-started)
- * - [Guides](https://authjs.dev/guides/debugging)
+ * - [Guides](https://authjs.dev/guides)
  *
  * @module @auth/core
  */
