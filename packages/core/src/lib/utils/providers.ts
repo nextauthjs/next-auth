@@ -1,3 +1,4 @@
+import * as o from "oauth4webapi"
 import { merge } from "./merge.js"
 
 import type {
@@ -9,65 +10,119 @@ import type {
   ProfileCallback,
   Provider,
 } from "../../providers/index.js"
-import type { InternalProvider, Profile } from "../../types.js"
+import type { Awaitable, InternalProvider, Profile } from "../../types.js"
 import type { AuthConfig } from "../../index.js"
+
+type AuthorizationServersCache = Record<
+  string,
+  Pick<
+    o.AuthorizationServer,
+    // These are the only properties we need from the Authorization Server for now
+    "authorization_endpoint" | "code_challenge_methods_supported"
+  >
+>
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
  * and deep merge user-defined options.
  */
-export default function parseProviders(params: {
+export default async function parseProviders(params: {
   providers: Provider[]
   url: URL
   providerId?: string
   options: AuthConfig
-}): {
+  cachedAsCookie?: string
+}): Promise<{
   providers: InternalProvider[]
   provider?: InternalProvider
-} {
+  asCookie?: string
+}> {
   const { providerId, options } = params
   const url = new URL(options.basePath ?? "/auth", params.url.origin)
+  const cachedAsCookie = params.cachedAsCookie
+    ? (JSON.parse(params.cachedAsCookie) as AuthorizationServersCache)
+    : {}
 
-  const providers = params.providers.map((p) => {
-    const provider = typeof p === "function" ? p() : p
-    const { options: userOptions, ...defaults } = provider
+  const providers = await Promise.all(
+    params.providers.map<Awaitable<InternalProvider>>(async (p) => {
+      const provider = typeof p === "function" ? p() : p
+      const { options: userOptions, ...defaults } = provider
 
-    const id = (userOptions?.id ?? defaults.id) as string
-    // TODO: Support if properties have different types, e.g. authorization: string or object
-    const merged = merge(defaults, userOptions, {
-      signinUrl: `${url}/signin/${id}`,
-      callbackUrl: `${url}/callback/${id}`,
+      const id = (userOptions?.id ?? defaults.id) as string
+      // TODO: Support if properties have different types, e.g. authorization: string or object
+      const merged = merge(defaults, userOptions, {
+        signinUrl: `${url}/signin/${id}`,
+        callbackUrl: `${url}/callback/${id}`,
+      })
+
+      if (provider.type === "oauth" || provider.type === "oidc") {
+        merged.redirectProxyUrl ??= options.redirectProxyUrl
+        return normalizeOAuth(merged, cachedAsCookie)
+      }
+
+      return merged
     })
-
-    if (provider.type === "oauth" || provider.type === "oidc") {
-      merged.redirectProxyUrl ??= options.redirectProxyUrl
-      return normalizeOAuth(merged)
-    }
-
-    return merged
-  })
+  )
 
   return {
     providers,
     provider: providers.find(({ id }) => id === providerId),
+    asCookie: JSON.stringify(cachedAsCookie),
   }
 }
 
-// TODO: Also add discovery here, if some endpoints/config are missing.
-// We should return both a client and authorization server config.
-function normalizeOAuth(
-  c: OAuthConfig<any> | OAuthUserConfig<any>
-): OAuthConfigInternal<any> | {} {
-  if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
+async function normalizeOAuth(
+  c: OAuthConfig<any> | OAuthUserConfig<any>,
+  cachedAsCookie: AuthorizationServersCache
+) {
+  let authorization: OAuthConfigInternal<any>["authorization"] | undefined
+  let authorizationServer = c.id ? cachedAsCookie[c.id] : undefined
 
-  const authorization = normalizeEndpoint(c.authorization, c.issuer)
-  if (authorization && !authorization.url?.searchParams.has("scope")) {
-    authorization.url.searchParams.set("scope", "openid profile email")
+  if (c.issuer) {
+    // only call discovery if the issuer is provided and we don't have the cached AS in the cookie
+    const issuer = new URL(c.issuer)
+    if (!authorizationServer) {
+      try {
+        const discoveryResponse = await o.discoveryRequest(issuer)
+        authorizationServer = await o.processDiscoveryResponse(
+          issuer,
+          discoveryResponse
+        )
+
+        if (c.id)
+          cachedAsCookie[c.id] = {
+            authorization_endpoint: authorizationServer.authorization_endpoint,
+            code_challenge_methods_supported:
+              authorizationServer.code_challenge_methods_supported,
+          }
+      } catch (e) {
+        console.error(e)
+        throw new Error(`Failed to discover the OAuth provider: ${e}`)
+      }
+    }
+
+    if (!authorizationServer.authorization_endpoint) {
+      throw new TypeError(
+        "Authorization server did not provide an authorization endpoint."
+      )
+    }
+
+    const authorizationUrl = new URL(authorizationServer.authorization_endpoint)
+    authorizationUrl.searchParams.set("scope", "openid profile email")
+    authorization = { url: authorizationUrl }
+  } else {
+    authorization = normalizeEndpoint(c.authorization)
+
+    if (!authorization) {
+      throw new TypeError(
+        "The `authorization` option must be provided for this OAuth provider."
+      )
+    }
   }
 
-  const token = normalizeEndpoint(c.token, c.issuer)
+  const token = normalizeEndpoint(c.token)
 
-  const userinfo = normalizeEndpoint(c.userinfo, c.issuer)
+  const userinfo = normalizeEndpoint(c.userinfo)
 
   const checks = c.checks ?? ["pkce"]
   if (c.redirectProxyUrl) {
@@ -83,6 +138,7 @@ function normalizeOAuth(
     userinfo,
     profile: c.profile ?? defaultProfile,
     account: c.account ?? defaultAccount,
+    authorizationServer,
   }
 }
 
@@ -129,11 +185,8 @@ function stripUndefined<T extends object>(o: T): T {
   return result as T
 }
 
-function normalizeEndpoint(
-  e?: OAuthConfig<any>[OAuthEndpointType],
-  issuer?: string
-): OAuthConfigInternal<any>[OAuthEndpointType] {
-  if (!e && issuer) return
+function normalizeEndpoint(e?: OAuthConfig<any>[OAuthEndpointType]) {
+  if (!e) return
   if (typeof e === "string") {
     return { url: new URL(e) }
   }
@@ -143,7 +196,7 @@ function normalizeEndpoint(
   // assert.ts. We fallback to "https://authjs.dev" to be able to pass around
   // a valid URL even if the user only provided params.
   // NOTE: This need to be checked when constructing the URL
-  // for the authorization, token and userinfo endpoints.
+  // for the token and userinfo endpoints.
   const url = new URL(e?.url ?? "https://authjs.dev")
   if (e?.params != null) {
     for (let [key, value] of Object.entries(e.params)) {

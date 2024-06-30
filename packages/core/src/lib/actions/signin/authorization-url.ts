@@ -1,8 +1,8 @@
 import * as checks from "../callback/oauth/checks.js"
-import * as o from "oauth4webapi"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
+import { isOIDCProvider } from "../../utils/providers.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -15,26 +15,7 @@ export async function getAuthorizationUrl(
 ) {
   const { logger, provider } = options
 
-  let url = provider.authorization?.url
-  let as: o.AuthorizationServer | undefined
-
-  // Falls back to authjs.dev if the user only passed params
-  if (!url || url.host === "authjs.dev") {
-    // If url is undefined, we assume that issuer is always defined
-    // We check this in assert.ts
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
-    const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
-
-    if (!as.authorization_endpoint) {
-      throw new TypeError(
-        "Authorization server did not provide an authorization endpoint."
-      )
-    }
-
-    url = new URL(as.authorization_endpoint)
-  }
+  const { url } = provider.authorization
 
   const authParams = url.searchParams
 
@@ -55,7 +36,7 @@ export async function getAuthorizationUrl(
       // @ts-expect-error TODO:
       ...provider.authorization?.params,
     },
-    Object.fromEntries(provider.authorization?.url.searchParams ?? []),
+    Object.fromEntries(url.searchParams ?? []),
     query
   )
 
@@ -70,10 +51,14 @@ export async function getAuthorizationUrl(
   }
 
   if (provider.checks?.includes("pkce")) {
-    if (as && !as.code_challenge_methods_supported?.includes("S256")) {
+    if (
+      isOIDCProvider(provider) &&
       // We assume S256 PKCE support, if the server does not advertise that,
       // a random `nonce` must be used for CSRF protection.
-      if (provider.type === "oidc") provider.checks = ["nonce"] as any
+      provider.as &&
+      !provider.as.code_challenge_methods_supported?.includes("S256")
+    ) {
+      provider.checks = ["nonce"] as any
     } else {
       const { value, cookie } = await checks.pkce.create(options)
       authParams.set("code_challenge", value)
@@ -86,12 +71,6 @@ export async function getAuthorizationUrl(
   if (nonce) {
     authParams.set("nonce", nonce.value)
     cookies.push(nonce.cookie)
-  }
-
-  // TODO: This does not work in normalizeOAuth because authorization endpoint can come from discovery
-  // Need to make normalizeOAuth async
-  if (provider.type === "oidc" && !url.searchParams.has("scope")) {
-    url.searchParams.set("scope", "openid profile email")
   }
 
   logger.debug("authorization url is ready", { url, cookies, provider })

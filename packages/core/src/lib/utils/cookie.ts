@@ -127,6 +127,16 @@ export function defaultCookies(useSecureCookies: boolean) {
         maxAge: 60 * 15, // 15 minutes in seconds
       },
     },
+    authorizationServers: {
+      name: `${cookiePrefix}authjs.authorization-servers`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        maxAge: 60 * 60 * 24 * 365, // 1 year in seconds
+      },
+    },
   } as const satisfies CookiesOptions
 }
 
