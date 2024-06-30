@@ -171,6 +171,8 @@ export default function Apple<P extends AppleProfile>(
       text: "#fff",
       bg: "#000",
     },
+    // https://developer.apple.com/documentation/sign_in_with_apple/request_an_authorization_to_the_sign_in_with_apple_server
+    checks: ["nonce", "state"],
     options,
   }
 }
