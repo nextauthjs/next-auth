@@ -1,0 +1,126 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/riot-games.svg" height="64" width="64" />
+
+# Riot Sign On Provider
+
+## Resources
+
+- [App Registration](https://developer.riotgames.com/)
+- [Riot Sign On Registration (after your app registration is approved)](https://beta.developer.riotgames.com/)
+- [Riot Sign On FAQ](https://beta.developer.riotgames.com/RSO-Riot-Sign-On)
+- [Riot Sign On Google Docs Client Secret Example](https://docs.google.com/document/d/1_8i2PvPA3edFHIh1IwfO5vs5rcl04O62Xfj0o7zCP3c/edit?pli=1#heading=h.pwmsw8poieso)
+- [Riot Sign On Google Docs JWT Example (Old)](https://docs.google.com/document/d/e/2PACX-1vTSthxkWOIqPFe8Xqqjv4Ona5pRa5W3X6bLg4I47X15gJjG9ae-HU5a0by7VIVLWdPMgB9fTr5gvQcY/pub)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/rso
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/rso
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_RSO_ID
+AUTH_RSO_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import RSO from "next-auth/providers/rso"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [RSO],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import RSO from "@auth/sveltekit/providers/rso"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [RSO],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import RSO from "@auth/express/providers/rso"
+
+app.use("/auth/*", ExpressAuth({ providers: [RSO] }))
+```
+
+  </Code.Express>
+</Code>
+
+#### How to get RSO Access
+
+- The be granted RSO access, the first step is to register an **Production** App in the
+  developer portal `https://developer.riotgames.com/`. Before requesting a production app
+  make sure you read `General Policies` and `Tournament Policies` carefully
+  (it's a popup when trying to create an app) and prepare yourself with it. Another note
+  - requesting RSO access with the intent of "testing" it out will result in a deny.
+- After the Application has been created and reviewed/approved by one of the developers
+  you will need to create another app in the beta developer portal.
+  Prepare yourself with the following information in order to complete the creation:
+  - Contact Emails
+  - Name of the company/service (Client Name)
+    - Will also appear on the RSO Login Page
+  - Logo of the company/service
+    - Should scale between **275x275** and **60x60**
+    - For best results, they recommend using a PNG file
+    - The logo will be displayed on both light and dark backgrounds
+  - Privacy policy URL
+  - Terms of service URL
+  - Redirect URLs (can be changed after creation (but not to localhost as explained below))
+    - A list of URLs you would like the RSO Client to redirect the players after login
+    - Typically the base callback url for AuthJS - NextJS: https://example.com/api/auth/callback/rso
+  - Post Logout Redirect URLs
+    - https://example.com/api/auth/signout
+
+In `.env` create the following entries:
+
+```
+RSO_CLIENT_ID=<copy Application (client) ID here>
+RSO_CLIENT_SECRET=<copy generated client secret value here>
+```
+
+<Callout type="warning">
+  Riot Sign On currently does not allow local development so you need to have a
+  public domain to test it or create a proxy in your environment.
+</Callout>
+
+### Signed-JWT Method
+
+As of 05-05-2024 every new created RSO App will be granted access with
+`clientId` and `clientSecret` which means this provider is also configured for
+it. If you have an older RSO App which uses the signed-jwt (for 100 years)
+method you will need to edit this provider. A good example can be found here
+https://gist.github.com/Henrik-3/d6b631fb7c61821bc16b17cd347a3811#using-tokens-endpoint-with-a-jwt-token-new-method
