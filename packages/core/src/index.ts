@@ -56,6 +56,7 @@ import type {
   Awaitable,
   CookiesOptions,
   DefaultSession,
+  InternalProvider,
   PagesOptions,
   Profile,
   ResponseInternal,
@@ -416,6 +417,7 @@ export interface AuthConfig {
          */
         newSession: any
         trigger?: "update"
+        providers: InternalProvider[]
       }
     ) => Awaitable<Session | DefaultSession>
     /**
@@ -474,6 +476,7 @@ export interface AuthConfig {
        * ⚠ Note, you should validate this data before using it.
        */
       session?: any
+      providers: InternalProvider[]
     }) => Awaitable<JWT | null>
   }
   /**

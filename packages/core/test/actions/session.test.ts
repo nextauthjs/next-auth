@@ -89,10 +89,12 @@ describe("assert GET session action", () => {
       expect(callbacks.jwt).toHaveBeenCalledWith({
         token: expectedToken,
         session: undefined,
+        providers: [],
       })
       expect(callbacks.session).toHaveBeenCalledWith({
         session: expectedSession,
         token: expectedToken,
+        providers: [],
       })
     })
 
@@ -199,6 +201,7 @@ describe("assert GET session action", () => {
           userId: expectedUserId,
         },
         user: expectedUser,
+        providers: [],
       })
       expect(callbacks.jwt).not.toHaveBeenCalled()
 

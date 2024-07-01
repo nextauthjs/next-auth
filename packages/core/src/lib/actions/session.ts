@@ -20,6 +20,7 @@ export async function session(
     callbacks,
     logger,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+    providers,
   } = options
 
   const response: ResponseInternal<Session | null> = {
@@ -44,6 +45,7 @@ export async function session(
         token: payload,
         ...(isUpdate && { trigger: "update" }),
         session: newSession,
+        providers,
       })
 
       const newExpires = fromDate(sessionMaxAge)
@@ -55,8 +57,12 @@ export async function session(
           user: { name: token.name, email: token.email, image: token.picture },
           expires: newExpires.toISOString(),
         }
-        // @ts-expect-error
-        const newSession = await callbacks.session({ session, token })
+        const newSession = await callbacks.session({
+          // @ts-expect-error
+          session,
+          token,
+          providers,
+        })
 
         // Return session payload as response
         response.body = newSession
@@ -130,6 +136,7 @@ export async function session(
         user,
         newSession,
         ...(isUpdate ? { trigger: "update" } : {}),
+        providers,
       })
 
       // Return session payload as response
