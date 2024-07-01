@@ -12,40 +12,44 @@ import type {
 import type { InternalProvider, Profile } from "../../types.js"
 import type { AuthConfig } from "../../index.js"
 
+import * as o from "oauth4webapi"
+
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
  * and deep merge user-defined options.
  */
-export default function parseProviders(params: {
+export default async function parseProviders(params: {
   providers: Provider[]
   url: URL
   providerId?: string
   options: AuthConfig
-}): {
+}): Promise<{
   providers: InternalProvider[]
   provider?: InternalProvider
-} {
+}> {
   const { providerId, options } = params
   const url = new URL(options.basePath ?? "/auth", params.url.origin)
 
-  const providers = params.providers.map((p) => {
-    const provider = typeof p === "function" ? p() : p
-    const { options: userOptions, ...defaults } = provider
+  const providers = await Promise.all(
+    params.providers.map(async (p) => {
+      const provider = typeof p === "function" ? p() : p
+      const { options: userOptions, ...defaults } = provider
 
-    const id = (userOptions?.id ?? defaults.id) as string
-    // TODO: Support if properties have different types, e.g. authorization: string or object
-    const merged = merge(defaults, userOptions, {
-      signinUrl: `${url}/signin/${id}`,
-      callbackUrl: `${url}/callback/${id}`,
+      const id = (userOptions?.id ?? defaults.id) as string
+      // TODO: Support if properties have different types, e.g. authorization: string or object
+      const merged = merge(defaults, userOptions, {
+        signinUrl: `${url}/signin/${id}`,
+        callbackUrl: `${url}/callback/${id}`,
+      })
+
+      if (provider.type === "oauth" || provider.type === "oidc") {
+        merged.redirectProxyUrl ??= options.redirectProxyUrl
+        return await normalizeOAuth(merged)
+      }
+
+      return merged
     })
-
-    if (provider.type === "oauth" || provider.type === "oidc") {
-      merged.redirectProxyUrl ??= options.redirectProxyUrl
-      return normalizeOAuth(merged)
-    }
-
-    return merged
-  })
+  )
 
   return {
     providers,
@@ -53,11 +57,9 @@ export default function parseProviders(params: {
   }
 }
 
-// TODO: Also add discovery here, if some endpoints/config are missing.
-// We should return both a client and authorization server config.
-function normalizeOAuth(
+async function normalizeOAuth(
   c: OAuthConfig<any> | OAuthUserConfig<any>
-): OAuthConfigInternal<any> | {} {
+): Promise<OAuthConfigInternal<any> | {}> {
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
@@ -75,12 +77,20 @@ function normalizeOAuth(
     c.redirectProxyUrl = `${c.redirectProxyUrl}/callback/${c.id}`
   }
 
+  let discoveredAs: o.AuthorizationServer | undefined
+  if (c.issuer) {
+    const issuer = new URL(c.issuer)
+    const discoveryResponse = await o.discoveryRequest(issuer)
+    discoveredAs = await o.processDiscoveryResponse(issuer, discoveryResponse)
+  }
+
   return {
     ...c,
     authorization,
     token,
     checks,
     userinfo,
+    discoveredAs,
     profile: c.profile ?? defaultProfile,
     account: c.account ?? defaultAccount,
   }

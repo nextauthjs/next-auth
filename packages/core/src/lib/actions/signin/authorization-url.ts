@@ -20,14 +20,9 @@ export async function getAuthorizationUrl(
 
   // Falls back to authjs.dev if the user only passed params
   if (!url || url.host === "authjs.dev") {
-    // If url is undefined, we assume that issuer is always defined
-    // We check this in assert.ts
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
-    const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
+    const as = provider.discoveredAs
 
-    if (!as.authorization_endpoint) {
+    if (!as?.authorization_endpoint) {
       throw new TypeError(
         "Authorization server did not provide an authorization endpoint."
       )

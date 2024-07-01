@@ -1,4 +1,4 @@
-import type { Client, PrivateKey } from "oauth4webapi"
+import type { AuthorizationServer, Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
@@ -281,6 +281,7 @@ export type OAuthConfigInternal<Profile> = Omit<
    *
    */
   redirectProxyUrl?: OAuth2Config<Profile>["redirectProxyUrl"]
+  discoveredAs?: AuthorizationServer
 } & Pick<
     Required<OAuthConfig<Profile>>,
     "clientId" | "checks" | "profile" | "account"

@@ -65,7 +65,7 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const { providers, provider } = parseProviders({
+  const { providers, provider } = await parseProviders({
     providers: authOptions.providers,
     url,
     providerId,

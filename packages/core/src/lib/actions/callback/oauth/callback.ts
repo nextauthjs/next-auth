@@ -40,16 +40,10 @@ export async function handleOAuth(
   // Falls back to authjs.dev if the user only passed params
   if (
     (!token?.url || token.url.host === "authjs.dev") &&
-    (!userinfo?.url || userinfo.url.host === "authjs.dev")
+    (!userinfo?.url || userinfo.url.host === "authjs.dev") &&
+    provider.discoveredAs
   ) {
-    // We assume that issuer is always defined as this has been asserted earlier
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
-    const discoveredAs = await o.processDiscoveryResponse(
-      issuer,
-      discoveryResponse
-    )
+    const discoveredAs = provider.discoveredAs
 
     if (!discoveredAs.token_endpoint)
       throw new TypeError(
