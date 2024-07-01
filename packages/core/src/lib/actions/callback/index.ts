@@ -50,6 +50,7 @@ export async function callback(
     callbacks,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
+    providers,
   } = options
 
   const useJwtSession = sessionStrategy === "jwt"
@@ -146,6 +147,7 @@ export async function callback(
           profile: OAuthProfile,
           isNewUser,
           trigger: isNewUser ? "signUp" : "signIn",
+          providers,
         })
 
         // Clear cookies if token is null
@@ -263,6 +265,7 @@ export async function callback(
           account,
           isNewUser,
           trigger: isNewUser ? "signUp" : "signIn",
+          providers,
         })
 
         // Clear cookies if token is null
@@ -356,6 +359,7 @@ export async function callback(
         account,
         isNewUser: false,
         trigger: "signIn",
+        providers,
       })
 
       // Clear cookies if token is null
@@ -464,6 +468,7 @@ export async function callback(
           account: currentAccount,
           isNewUser,
           trigger: isNewUser ? "signUp" : "signIn",
+          providers,
         })
 
         // Clear cookies if token is null
