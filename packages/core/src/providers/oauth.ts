@@ -281,6 +281,10 @@ export type OAuthConfigInternal<Profile> = Omit<
    *
    */
   redirectProxyUrl?: OAuth2Config<Profile>["redirectProxyUrl"]
+  /**
+   * Discovered authorization server.
+   * This will be set only if `issuer` is defined.
+   */
   discoveredAs?: AuthorizationServer
 } & Pick<
     Required<OAuthConfig<Profile>>,
