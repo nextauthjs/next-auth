@@ -145,6 +145,10 @@
     {
       "source": "/guides/upgrade-to-v5",
       "destination": "/getting-started/migrating-to-v5"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides/debugging"
     }
   ]
 }
