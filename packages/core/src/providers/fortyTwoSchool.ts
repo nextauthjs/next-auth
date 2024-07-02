@@ -2,11 +2,11 @@
  * <div style={{backgroundColor: "#fff", display: "flex", justifyContent: "space-between", color: "#000", padding: 16}}>
  * <span>Built-in <b>42School</b> integration.</span>
  * <a href="https://api.intra.42.fr//">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/42-school.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/FortyTwoSchool.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * @module providers/42-school
+ * @module providers/FortyTwoSchool
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
@@ -181,13 +181,13 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  *
  * #### Callback URL
  * ```
- * https://example.com/api/auth/callback/42-school
+ * https://example.com/api/auth/callback/FortyTwoSchool
  * ```
  *
  * #### Configuration
  *```ts
  * import Auth from "@auth/core"
- * import FortyTwo from "@auth/core/providers/42-school"
+ * import FortyTwo from "@auth/core/providers/FortyTwoSchool"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
@@ -215,7 +215,7 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  *
  * :::tip
  *
- * The 42School provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/42-school.ts).
+ * The 42School provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/FortyTwoSchool.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
@@ -234,7 +234,7 @@ export default function FortyTwo<P extends FortyTwoProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
-    id: "42-school",
+    id: "FortyTwoSchool",
     name: "42 School",
     type: "oauth",
     authorization: {

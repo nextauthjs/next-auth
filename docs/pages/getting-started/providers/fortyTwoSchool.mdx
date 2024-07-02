@@ -1,13 +1,13 @@
 import { Callout } from "nextra/components"
 import { Code } from "@/components/Code"
 
-<img align="right" src="/img/providers/42-school.svg" height="64" width="64" />
+<img align="right" src="/img/providers/fortyTwoSchool.svg" height="64" width="64" />
 
-# 42School Provider
+# FortyTwoSchool Provider
 
 ## Resources
 
-- [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
+- [FortyTwoSchool OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
 
 ## Setup
 
@@ -17,14 +17,14 @@ import { Code } from "@/components/Code"
   <Code.Next>
 
 ```bash
-https://example.com/api/auth/callback/42-school
+https://example.com/api/auth/callback/FortyTwoSchool
 ```
 
   </Code.Next>
   <Code.Svelte>
 
 ```bash
-https://example.com/auth/callback/42-school
+https://example.com/auth/callback/FortyTwoSchool
 ```
 
   </Code.Svelte>
@@ -33,8 +33,8 @@ https://example.com/auth/callback/42-school
 ### Environment Variables
 
 ```
-AUTH_42_SCHOOL_ID
-AUTH_42_SCHOOL_SECRET
+AUTH_FORTYTWOSCHOOL_ID
+AUTH_FORTYTWOSCHOOL_SECRET
 ```
 
 ### Configuration
@@ -44,10 +44,10 @@ AUTH_42_SCHOOL_SECRET
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import FortyTwo from "next-auth/providers/42-school"
+import FortyTwoSchool from "next-auth/providers/fortyTwoSchool"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [FortyTwo],
+  providers: [FortyTwoSchool],
 })
 ```
 
@@ -56,10 +56,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import FortyTwo from "@auth/sveltekit/providers/42-school"
+import FortyTwoSchool from "@auth/sveltekit/providers/fortyTwoSchool"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [FortyTwo],
+  providers: [FortyTwoSchool],
 })
 ```
 
@@ -68,10 +68,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import FortyTwo from "@auth/express/providers/42-school"
+import FortyTwoSchool from "@auth/express/providers/fortyTwoSchool"
 
 app.use("/auth/*",
-  ExpressAuth({ providers: [ FortyTwo ] })
+  ExpressAuth({ providers: [ FortyTwoSchool ] })
 )
 ```
 
