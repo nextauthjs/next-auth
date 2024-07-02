@@ -245,7 +245,7 @@ export class JWTSessionError extends AuthError {
 }
 
 /**
- * Thrown if Auth.js is misonfigured. This could happen if you configured an Email provider but did not set up a database adapter,
+ * Thrown if Auth.js is misconfigured. This could happen if you configured an Email provider but did not set up a database adapter,
  * or tried using a `strategy: "database"` session without a database adapter.
  * In both cases, make sure you either remove the configuration or add the missing adapter.
  *
