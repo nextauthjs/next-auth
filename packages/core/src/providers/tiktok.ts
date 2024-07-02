@@ -200,7 +200,7 @@ export default function TikTok<P extends TiktokProfile>(
 ): OAuthConfig<P> {
   return {
     id: "tiktok",
-    issuer: 'authjs.dev',
+    issuer: "authjs.dev",
     name: "TikTok",
     type: "oauth",
     authorization: {
@@ -213,7 +213,7 @@ export default function TikTok<P extends TiktokProfile>(
     },
 
     token: {
-     url: 'https://open.tiktokapis.com/v2/oauth/token/',
+      url: "https://open.tiktokapis.com/v2/oauth/token/",
       async request({ params, provider }) {
         const res = await fetch(provider.token?.url as URL, {
           method: "POST",
@@ -257,7 +257,7 @@ export default function TikTok<P extends TiktokProfile>(
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,
         image: profile.data.user.avatar_url,
-        email: profile.data.user.email || profile.data.user.username || null
+        email: profile.data.user.email || profile.data.user.username || null,
       }
     },
     style: {
