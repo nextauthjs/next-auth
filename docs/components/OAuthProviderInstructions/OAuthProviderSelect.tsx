@@ -74,7 +74,8 @@ export function OAuthProviderSelect() {
                   handleSelectOption({ id: "github", name: "GitHub" })
                 }
               >
-                <img src={`/img/providers/github.svg`} className="mt-2 w-11" />
+                <img src={`/img/providers/github.svg`} className="mt-2 w-11 dark:hidden block" />
+                <img src={`/img/providers/github-dark.svg`} className="mt-2 w-11 dark:block hidden" />
                 <div className="text-sm text-center">GitHub</div>
               </div>
               <div
@@ -105,7 +106,8 @@ export function OAuthProviderSelect() {
                 onClick={() => handleSelectOption({ id: "okta", name: "okta" })}
                 className="flex flex-col justify-between items-center p-4 w-32 h-32 rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50"
               >
-                <img src={`/img/providers/okta.svg`} className="mt-2 w-11" />
+                <img src={`/img/providers/okta.svg`} className="mt-2 w-11 dark:hidden block" />
+                <img src={`/img/providers/okta-dark.svg`} className="mt-2 w-11 dark:block hidden" />
                 <div className="text-sm text-center">Okta</div>
               </div>
             </div>
