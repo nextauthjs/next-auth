@@ -1,4 +1,5 @@
 import { AuthError } from "../../errors.js"
+import type { AuthConfig } from "../../index.js"
 
 export type WarningCode =
   | "debug-enabled"
@@ -23,7 +24,7 @@ const yellow = "\x1b[33m"
 const grey = "\x1b[90m"
 const reset = "\x1b[0m"
 
-export const logger: LoggerInstance = {
+const defaultLogger: LoggerInstance = {
   error(error) {
     const name = error instanceof AuthError ? error.type : error.name
     console.error(`${red}[auth][error]${reset} ${name}: ${error.message}`)
@@ -60,14 +61,19 @@ export const logger: LoggerInstance = {
  * Override the built-in logger with user's implementation.
  * Any `undefined` level will use the default logger.
  */
-export function setLogger(
-  newLogger: Partial<LoggerInstance> = {},
-  debug?: boolean
-) {
-  // Turn off debug logging if `debug` isn't set to `true`
-  if (!debug) logger.debug = () => {}
+export function makeLogger(
+  config?: Pick<AuthConfig, "logger" | "debug">
+): LoggerInstance {
+  const newLogger: LoggerInstance = {
+    ...defaultLogger
+  }
 
-  if (newLogger.error) logger.error = newLogger.error
-  if (newLogger.warn) logger.warn = newLogger.warn
-  if (newLogger.debug) logger.debug = newLogger.debug
+  // Turn off debug logging if `debug` isn't set to `true`
+  if (!config?.debug) newLogger.debug = () => { }
+
+  if (config?.logger?.error) newLogger.error = config.logger.error
+  if (config?.logger?.warn) newLogger.warn = config.logger.warn
+  if (config?.logger?.debug) newLogger.debug = config.logger.debug
+
+  return newLogger
 }

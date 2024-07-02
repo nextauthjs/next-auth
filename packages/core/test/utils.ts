@@ -84,7 +84,7 @@ export async function makeAuthRequest(params: {
     "https",
     headers,
     {},
-    config.basePath
+    config
   )
   if (params.path) url = `${url}${params.path}`
   if (params.query) url = `${url}?${new URLSearchParams(params.query)}`

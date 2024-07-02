@@ -175,7 +175,7 @@ export async function getSession(
     // @ts-expect-error
     new Headers(req.headers),
     process.env,
-    config.basePath
+    config
   )
 
   const response = await Auth(
