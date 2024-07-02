@@ -2,11 +2,11 @@
  * <div style={{backgroundColor: "#fff", display: "flex", justifyContent: "space-between", color: "#000", padding: 16}}>
  * <span>Built-in <b>42School</b> integration.</span>
  * <a href="https://api.intra.42.fr//">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/42-school.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/fortyTwoSchool.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * @module providers/42-school
+ * @module providers/fortyTwoSchool
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
@@ -181,28 +181,28 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  *
  * #### Callback URL
  * ```
- * https://example.com/api/auth/callback/42-school
+ * https://example.com/api/auth/callback/FortyTwoSchool
  * ```
  *
  * #### Configuration
  *```ts
  * import { Auth } from "@auth/core"
- * import FortyTwoSchool from "@auth/core/providers/42-school"
+ * import FortyTwoSchool from "@auth/core/providers/fortyTwoSchool"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
  *   providers: [
- *     FortyTwoSchool({
- *       clientId: FORTY_TWO_SCHOOL_CLIENT_ID,
- *       clientSecret: FORTY_TWO_SCHOOL_CLIENT_SECRET,
- *     }),
- *   ],
+       FortyTwoSchool({
+         clientId: AUTH_FORTYTWOSCHOOL_ID,
+         clientSecret: AUTH_FORTYTWOSCHOOL_SECRET
+       })
+     ],
  * })
  * ```
  *
  * ### Resources
  *
- *  - [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
+ *  - [FortyTwoSchool OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
  *
  * ### Notes
  *
@@ -210,12 +210,12 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  * :::note
  * 42 returns a field on `Account` called `created_at` which is a number. See the [docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests). Make sure to add this field to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/core/adapters).
  * :::
- * By default, Auth.js assumes that the 42School provider is
+ * By default, Auth.js assumes that the FortyTwoSchool provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
  *
- * The 42School provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/42-school.ts).
+ * The FortyTwoSchool provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/fortyTwoSchool.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
@@ -230,12 +230,12 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  *
  * :::
  */
-export default function FortyTwo<P extends FortyTwoProfile>(
+export default function FortyTwoSchool<P extends FortyTwoProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
-    id: "42-school",
-    name: "42 School",
+    id: "FortyTwoSchool",
+    name: "Forty Two School",
     type: "oauth",
     authorization: {
       url: "https://api.intra.42.fr/oauth/authorize",
