@@ -33,6 +33,7 @@ export default {
   "mongodb-adapter": "@auth/mongodb-adapter",
   "neo4j-adapter": "@auth/neo4j-adapter",
   "pg-adapter": "@auth/pg-adapter",
+  "postgresjs-adapter": "@auth/postgresjs-adapter",
   "pouchdb-adapter": "@auth/pouchdb-adapter",
   "sequelize-adapter": "@auth/sequelize-adapter",
   "supabase-adapter": "@auth/supabase-adapter",
