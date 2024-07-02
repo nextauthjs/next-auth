@@ -58,7 +58,7 @@
   "engines": {
     "node": "^18.18.0 || ^20.8.0"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771",
   "funding": [
     {
       "type": "github",
