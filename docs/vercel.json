@@ -96,7 +96,7 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "discord.authjs.dev" }],
-      "destination": "https://discord.gg/nwgKuTPJmj"
+      "destination": "https://discord.gg/kuv7wXkHY4"
     },
     {
       "source": "/reference/next-auth:path(.*)",
