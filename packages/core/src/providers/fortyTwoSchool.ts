@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/FortyTwoSchool
+ * @module providers/fortyTwoSchool
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
@@ -215,7 +215,7 @@ export interface FortyTwoProfile extends UserData, Record<string, any> {
  *
  * :::tip
  *
- * The FortyTwoSchool provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/FortyTwoSchool.ts).
+ * The FortyTwoSchool provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/fortyTwoSchool.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
