@@ -134,7 +134,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  // Optional for WebAuthn support
+  // Optional for WebAuth support
   Authenticator Authenticator[]
 
   createdAt DateTime @default(now())
