@@ -45,7 +45,7 @@ const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://providers.authjs.dev
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
