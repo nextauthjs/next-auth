@@ -36,7 +36,7 @@ export interface AuthOptions {
    * * **Default value**: `[]`
    * * **Required**: *Yes*
    *
-   * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://next-auth.js.org/configuration/providers)
+   * [Documentation](https://next-auth.js.org/configuration/options#providers) | [Providers documentation](https://providers.authjs.dev)
    */
   providers: Provider[]
   /**
@@ -543,7 +543,7 @@ export interface DefaultUser {
  * [`signIn` callback](https://next-auth.js.org/configuration/callbacks#sign-in-callback) |
  * [`session` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) |
- * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
+ * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers/oauth#using-a-custom-provider)
  */
 export interface User extends DefaultUser {}
 

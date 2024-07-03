@@ -41,7 +41,7 @@ const driver = neo4j.driver(
 const neo4jSession = driver.session()
 
 export default NextAuth({
-  // https://next-auth.js.org/configuration/providers
+  // https://providers.authjs.dev
   providers: [],
   adapter: Neo4jAdapter(neo4jSession),
   ...
