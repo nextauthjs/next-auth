@@ -27,6 +27,10 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
     profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
     /** @default "common" */
     tenantId?: string
+    /** Additional scopes to request
+     * @default []
+     */
+    additionalScopes?: string[]
   }
 
 /**
@@ -134,8 +138,20 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
 export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
   options: MicrosoftEntraIDOptions<P>
 ): OAuthConfig<P> {
-  const { tenantId = "common", profilePhotoSize = 48, ...rest } = options
+  const {
+    tenantId = "common",
+    profilePhotoSize = 48,
+    additionalScopes = [],
+    ...rest
+  } = options
   rest.issuer ??= `https://login.microsoftonline.com/${tenantId}/v2.0`
+
+  let scope = "openid profile email User.Read"
+
+  if (additionalScopes.length) {
+    scope += ` ${additionalScopes.join(" ")}`
+  }
+
   return {
     id: "microsoft-entra-id",
     name: "Microsoft Entra ID",
@@ -143,7 +159,7 @@ export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
     wellKnown: `${rest.issuer}/.well-known/openid-configuration?appid=${options.clientId}`,
     authorization: {
       params: {
-        scope: "openid profile email User.Read",
+        scope,
       },
     },
     async profile(profile, tokens) {
