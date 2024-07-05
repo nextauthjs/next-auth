@@ -135,9 +135,7 @@ export function DgraphAdapter(
       return result?.[0]?.user || null
     },
 
-    async updateUser(
-      user: Partial<AdapterUser> & { id: string }
-    ) {
+    async updateUser(user: Partial<AdapterUser> & { id: string }) {
       const { id, ...update } = user
       const result = await c.run<{ user: AdapterUser[] }>(
         /* GraphQL */ `
@@ -284,9 +282,7 @@ export function DgraphAdapter(
       return result?.account?.[0]
     },
 
-    async getSessionAndUser(
-      sessionToken: string
-    ) {
+    async getSessionAndUser(sessionToken: string) {
       const result = await c.run<{
         getSessionAndUser: {
           session: AdapterSession
@@ -318,11 +314,7 @@ export function DgraphAdapter(
       return sessionAndUser
     },
 
-    async createSession({
-      sessionToken,
-      userId,
-      expires,
-    }: AdapterSession) {
+    async createSession({ sessionToken, userId, expires }: AdapterSession) {
       if (userId === undefined) {
         throw new Error("userId is undefined in createSession")
       }
@@ -348,9 +340,7 @@ export function DgraphAdapter(
       return result.session[0]
     },
 
-    async deleteSession(
-      sessionToken: string
-    ) {
+    async deleteSession(sessionToken: string) {
       const result = await c.run<{ session: AdapterSession[] }>(
         /* GraphQL */ `
           mutation DeleteSession($sessionToken: String!) {
@@ -368,9 +358,7 @@ export function DgraphAdapter(
       return result?.session?.[0] || null
     },
 
-    async createVerificationToken(
-      input: VerificationToken
-    ) {
+    async createVerificationToken(input: VerificationToken) {
       const result = await c.run<{
         verificationToken: VerificationToken[]
       }>(
@@ -398,10 +386,7 @@ export function DgraphAdapter(
       return createdToken
     },
 
-    async useVerificationToken(params: {
-      identifier: string
-      token: string
-    }) {
+    async useVerificationToken(params: { identifier: string; token: string }) {
       const result = await c.run<{
         verificationToken: VerificationToken[]
       }>(
