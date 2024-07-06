@@ -27,7 +27,7 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@auth/qwik": "workspace:*",
+    "@auth/qwik": "latest",
     "@builder.io/qwik": "^1.5.7",
     "@builder.io/qwik-city": "^1.5.7",
     "@types/eslint": "^8.56.10",

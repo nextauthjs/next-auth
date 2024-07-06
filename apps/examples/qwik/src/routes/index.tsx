@@ -1,6 +1,5 @@
 import { component$ } from "@builder.io/qwik";
 import { useSession } from "./plugin@auth";
-import { Link } from "@builder.io/qwik-city";
 
 export default component$(() => {
   const session = useSession();
@@ -18,7 +17,7 @@ export default component$(() => {
           Qwik
         </a>
       </div>
-      {session.value?.user ? (
+      {session.value?.user && (
         <>
           <div class="pt-6 text-2xl font-bold text-slate-800">
             You are logged. Now you can visit
@@ -27,10 +26,6 @@ export default component$(() => {
             this protected route.
           </a>
         </>
-      ) : (
-        <div class="pt-6 text-2xl font-bold text-slate-800">
-          You can SignIn with GitHub in the header
-        </div>
       )}
     </div>
   );
