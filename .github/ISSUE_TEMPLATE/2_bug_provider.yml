@@ -54,6 +54,7 @@ body:
         - "Identity Server 4"
         - "Instagram"
         - "Kakao"
+        - "Frontegg"
         - "Keycloak"
         - "Line"
         - "LinkedIn"
