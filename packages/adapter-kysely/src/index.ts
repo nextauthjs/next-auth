@@ -33,6 +33,10 @@ export interface Database {
   VerificationToken: VerificationToken
 }
 
+interface Options {
+  schemaName?: string
+}
+
 export const format = {
   from<T>(object?: Record<string, any>): T {
     const newObject: Record<string, unknown> = {}
@@ -51,14 +55,26 @@ export const format = {
   },
 }
 
-export function KyselyAdapter(db: Kysely<Database>): Adapter {
-  const { adapter } = db.getExecutor()
-  const { supportsReturning } = adapter
+export function KyselyAdapter(
+  kyselyDb: Kysely<Database>,
+  options?: Options
+): Adapter {
+  const { adapter } = kyselyDb.getExecutor()
   const isSqlite = adapter instanceof SqliteAdapter
+  if (options?.schemaName && isSqlite) {
+    console.warn(
+      'SQLite does not support schemas. Ignoring "schemaName" option.'
+    )
+  }
+  const { supportsReturning } = adapter
   /** If the database is SQLite, turn dates into an ISO string  */
   const to = isSqlite ? format.to : <T>(x: T) => x as T
   /** If the database is SQLite, turn ISO strings into dates */
   const from = isSqlite ? format.from : <T>(x: T) => x as T
+  const db =
+    options?.schemaName && !isSqlite
+      ? kyselyDb.withSchema(options.schemaName)
+      : kyselyDb
   return {
     async createUser(data) {
       const user = { ...data, id: crypto.randomUUID() }
