@@ -70,6 +70,7 @@ export interface FronteggProfile {
  * Get the following from the Frontegg's portal:
  * ```
  * AUTH_FRONTEGG_ID="<Client ID>" # Environments > Your environment > Env settings
+ * AUTH_FRONTEGG_SECRET="<API KEY>" # Environments > Your environment > Env settings
  * AUTH_FRONTEGG_ISSUER="<https://[YOUR_SUBDOMAIN].frontegg.com>" # Environments > Your environment > Env settings > Domains > Domain name
  * ```
  *
