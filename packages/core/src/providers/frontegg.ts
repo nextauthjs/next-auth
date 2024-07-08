@@ -61,7 +61,7 @@ export interface FronteggProfile {
  *
  * Follow these steps:
  *
- * Log into the [Frontegg](https://portal.frontegg.com)
+ * Log into the [Frontegg portal](https://portal.frontegg.com)
  *
  * Authentication > Login method > Hosted login > Add your callback url here <{{APP_URL}}/api/auth/callback/frontegg>
  *
