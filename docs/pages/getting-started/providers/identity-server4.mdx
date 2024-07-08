@@ -31,6 +31,13 @@ https://example.com/api/auth/callback/identity-server4
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/identity-server4
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -63,6 +70,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import IdentityServer4 from "@auth/qwik/providers/identity-server4"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [IdentityServer4],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
