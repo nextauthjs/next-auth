@@ -1,0 +1,77 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/clerk.svg" width="64" height="64" />
+
+# Clerk Provider
+
+## Resources
+
+- [Clerk documentation](https://clerk.com/docs/advanced-usage/clerk-idp)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/clerk
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/clerk
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_CLERK_ID
+AUTH_CLERK_SECRET
+AUTH_CLERK_URL
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Clerk from "next-auth/providers/clerk"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Clerk],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Clerk from "@auth/sveltekit/providers/clerk"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Clerk],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Clerk from "@auth/express/providers/clerk"
+
+app.use("/auth/*", ExpressAuth({ providers: [Clerk] }))
+```
+
+  </Code.Express>
+</Code>

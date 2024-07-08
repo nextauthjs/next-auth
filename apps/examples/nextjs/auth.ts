@@ -6,6 +6,7 @@ import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BankIDNorway from "next-auth/providers/bankid-no"
 import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
+import Clerk from "next-auth/providers/clerk"
 import Cognito from "next-auth/providers/cognito"
 import Coinbase from "next-auth/providers/coinbase"
 import Discord from "next-auth/providers/discord"
@@ -62,6 +63,7 @@ const config = {
       clientSecret: "dummy",
       issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
     }),
+    Clerk,
     Cognito,
     Coinbase,
     Discord,
