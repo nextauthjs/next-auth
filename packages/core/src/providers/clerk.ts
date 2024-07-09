@@ -14,18 +14,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /** @see [Get the authenticated user](https://clerk.com/docs/reference/frontend-api/tag/OAuth2-Identify-Provider#operation/getOAuthUserInfo). */
 export interface ClerkProfile {
-  object: "string",
-  instance_id: "string",
-  email: "string",
-  email_verified: boolean,
-  family_name: "string",
-  given_name: "string",
-  name: "string",
-  username: "string",
-  picture: "string",
-  user_id: "string",
-  public_metadata?: any,
-  private_metadata?: any,
+  object: "string"
+  instance_id: "string"
+  email: "string"
+  email_verified: boolean
+  family_name: "string"
+  given_name: "string"
+  name: "string"
+  username: "string"
+  picture: "string"
+  user_id: "string"
+  public_metadata?: any
+  private_metadata?: any
   unsafe_metadata?: any
 }
 
@@ -47,7 +47,11 @@ export interface ClerkProfile {
  * const request = new Request(origin)
  * const response = await Auth(request, {
  *   providers: [
- *     Clerk({ clientId: CLERK_CLIENT_ID, clientSecret: CLERK_CLIENT_SECRET, baseUrl: CLERK_BASE_URL }),
+ *     Clerk({
+ *       clientId: CLERK_CLIENT_ID,
+ *       clientSecret: CLERK_CLIENT_SECRET,
+ *       baseUrl: CLERK_BASE_URL
+ *     }),
  *   ],
  * })
  * ```
@@ -79,39 +83,39 @@ export interface ClerkProfile {
  * :::
  */
 export default function Clerk(
-    config: OAuthUserConfig<ClerkProfile> & {
-        baseUrl: string,
-    }
+  config: OAuthUserConfig<ClerkProfile> & {
+    baseUrl: string
+  }
 ): OAuthConfig<ClerkProfile> {
-    const baseUrl = config.baseUrl
+  const baseUrl = config.baseUrl
 
-    return {
-        id: "clerk",
-        name: "Clerk",
-        type: "oauth",
-        wellKnown: `${baseUrl}/.well-known/openid-configuration`,
-        authorization: {
-          url: `${baseUrl}/oauth/authorize`,
-          params: { scope: "email profile" },
-        },
-        token: `${baseUrl}/oauth/token`,
-        userinfo: {
-          url: `${baseUrl}/oauth/userinfo`,
-          async request({ tokens, provider }) {
-            const profile = await fetch(provider.userinfo?.url as URL, {
-              headers: {
-                Authorization: `Bearer ${tokens.access_token}`,
-                "User-Agent": "authjs",
-              },
-            }).then(async (res) => await res.json())
-
-            return profile
+  return {
+    id: "clerk",
+    name: "Clerk",
+    type: "oauth",
+    wellKnown: `${baseUrl}/.well-known/openid-configuration`,
+    authorization: {
+      url: `${baseUrl}/oauth/authorize`,
+      params: { scope: "email profile" },
+    },
+    token: `${baseUrl}/oauth/token`,
+    userinfo: {
+      url: `${baseUrl}/oauth/userinfo`,
+      async request({ tokens, provider }) {
+        const profile = await fetch(provider.userinfo?.url as URL, {
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            "User-Agent": "authjs",
           },
-        },
-        profile(profile) {
-          return profile
-        },
-        style: { bg: "#6C47FF", text: "#fff" },
-        options: config,
-      }
+        }).then(async (res) => await res.json())
+
+        return profile
+      },
+    },
+    profile(profile) {
+      return profile
+    },
+    style: { bg: "#6C47FF", text: "#fff" },
+    options: config,
+  }
 }
