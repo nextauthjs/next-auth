@@ -37,6 +37,49 @@ export function SignIn() {
           }}
         />
       </Code.Next>
+      <Code.Qwik>
+        With Qwik we can do a server-side login with Form action, or a more
+        simple client-side login via submit method.
+        <Pre
+          data-filename="./components/sign-in.tsx"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+import { component$ } from "@builder.io/qwik"
+import { Form } from "@builder.io/qwik-city"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signIn = useSignIn()
+
+  return (
+    <>
+      {/* server-side login with Form action */}
+      <Form action={signIn}>
+        <input type="hidden" name="providerId" value="${providerId}" />
+        <input
+          type="hidden"
+          name="options.redirectTo"
+          value="/"
+        />
+        <button>Sign In</button>
+      </Form>
+
+      {/* submit method */}
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+}) `),
+          }}
+        />
+      </Code.Qwik>
       <Code.Svelte>
         With SvelteKit we can do a server-side login with Form Actions, or a
         more simple client-side login via links and redirects.
