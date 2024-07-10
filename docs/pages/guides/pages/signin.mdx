@@ -49,6 +49,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Credentials from "@auth/qwik/providers/credentials"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Credentials({
+        credentials: {
+          username: { label: "Username" },
+          password: { label: "Password", type: "password" },
+        },
+        async authorize({ request }) {
+          if (c.password !== "password") return null
+          return {
+            id: "test",
+            name: "Test User",
+            email: "test@example.com",
+          }
+        },
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```tsx filename="./src/auth.ts" {6, 21-28, 32-34}
@@ -138,6 +167,44 @@ export default async function SignInPage() {
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+With Qwik we can do a server-side sign in with Form action, or a more
+simple client-side sign in via submit method.
+
+```ts filename="./components/sign-out.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form } from "@builder.io/qwik-city"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <>
+      {/* server-side login with Form action */}
+      <Form action={signInSig}>
+        <input type="hidden" name="providerId" value="<providerId>" />
+        <input
+          type="hidden"
+          name="options.redirectTo"
+          value="/"
+        />
+        <button>Sign In</button>
+      </Form>
+
+      {/* submit method */}
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```svelte filename="src/routes/signin/+page.svelte" /submitButton/ /providerMap/
