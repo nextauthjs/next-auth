@@ -53,12 +53,12 @@ import { Form } from "@builder.io/qwik-city"
 import { useSignIn } from "./plugin@auth"
 
 export default component$(() => {
-  const signIn = useSignIn()
+  const signInSig = useSignIn()
 
   return (
     <>
       {/* server-side login with Form action */}
-      <Form action={signIn}>
+      <Form action={signInSig}>
         <input type="hidden" name="providerId" value="${providerId}" />
         <input
           type="hidden"
