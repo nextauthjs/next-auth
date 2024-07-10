@@ -121,15 +121,15 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
 export function initAuth(
   config:
     | NextAuthConfig
-    | ((request: NextRequest | undefined) => NextAuthConfig),
+    | ((request: NextRequest | undefined) => Awaitable<NextAuthConfig>),
   onLazyLoad?: (config: NextAuthConfig) => void // To set the default env vars
 ) {
   if (typeof config === "function") {
-    return (...args: WithAuthArgs) => {
+    return async (...args: WithAuthArgs) => {
       if (!args.length) {
         // React Server Components
         const _headers = headers()
-        const _config = config(undefined) // Review: Should we pass headers() here instead?
+        const _config = await config(undefined) // Review: Should we pass headers() here instead?
         onLazyLoad?.(_config)
 
         return getSession(_headers, _config).then((r) => r.json())
@@ -140,7 +140,7 @@ export function initAuth(
         // export { auth as default } from "auth"
         const req = args[0]
         const ev = args[1]
-        const _config = config(req)
+        const _config = await config(req)
         onLazyLoad?.(_config)
 
         // args[0] is supposed to be NextRequest but the instanceof check is failing.
@@ -155,7 +155,7 @@ export function initAuth(
         return async (
           ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
         ) => {
-          const _config = config(args[0])
+          const _config = await config(args[0])
           onLazyLoad?.(_config)
           return handleAuth(args, _config, userMiddlewareOrRoute)
         }
@@ -164,7 +164,7 @@ export function initAuth(
       const request = "req" in args[0] ? args[0].req : args[0]
       const response: any = "res" in args[0] ? args[0].res : args[1]
       // @ts-expect-error -- request is NextRequest
-      const _config = config(request)
+      const _config = await config(request)
       onLazyLoad?.(_config)
 
       // @ts-expect-error -- request is NextRequest
