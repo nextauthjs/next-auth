@@ -38,7 +38,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * ### Resources
  *
- *  - [FourSquare OAuth documentation](https://developer.foursquare.com/docs/places-api/authentication/#web-applications)
+ *  - [FourSquare OAuth documentation](https://docs.foursquare.com/developer/reference/authentication)
  *
  * ### Notes
  *

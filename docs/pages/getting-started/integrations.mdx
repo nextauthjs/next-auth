@@ -17,19 +17,24 @@ Here are the state of planned and released integrations under the `@auth/*` and 
   the years has evolved](/contributors#history) to be framework agnostic.
 </Callout>
 
-| Feature                | Status                                                                           |
-| ---------------------- | -------------------------------------------------------------------------------- |
-| `next-auth`            | Released (stable) - [docs](https://nextjs.authjs.dev)                            |
-| `@auth/*-adapter`      | Released (stable). Fully compatible with `next-auth` and all `@auth/*` libraries |
-| `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`                             |
-| `@auth/core`           | Released (experimental)                                                          |
-| `@auth/sveltekit`      | Released (experimental) - [docs](https://sveltekit.authjs.dev)                   |
-| `@auth/express`        | Released (experimental) - [docs](https://express.authjs.dev)                     |
-| `@auth/solid-start`    | Released (experimental)                                                          |
-| `@auth/fastify`        | Released (experimental) - [docs](https://fastify.authjs.dev)                     |
-| `@auth/remix`          | Planned                                                                          |
-| `@auth/astro`          | Planned                                                                          |
-| `@auth/nuxt`           | Planned                                                                          |
+Framework and database integrations are all based on the [Auth.js Core library](/reference/core). In most cases, you will not interact with this package directly, as it is intended for library authors.
+
+| Frameworks                            | Status                                                                                    |
+| ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| NextAuth.js (`next-auth`)             | [v5 (beta)](https://nextjs.authjs.dev), [v4 (maintenance mode)](https://next-auth.js.org) |
+| Astro Auth (`@auth/astro`)            | [Open PR](https://github.com/nextauthjs/next-auth/pull/9856)                              |
+| Express Auth (`@auth/express`)        | [Experimental Release](https://express.authjs.dev)                                        |
+| Fastify Auth (`@auth/fastify`)        | [Open PR](https://github.com/nextauthjs/next-auth/pull/9587)                              |
+| Nuxt Auth (`@auth/nuxt`)              | [Open PR](https://github.com/nextauthjs/next-auth/pull/10684)                             |
+| Qwik Auth (`@auth/qwik`)              | [Released](https://qwik.authjs.dev)                                                       |
+| Remix Auth (`@auth/remix`)            | [Open PR](https://github.com/nextauthjs/next-auth/pull/6767)                              |
+| SolidStart Auth (`@auth/solid-start`) | Experimental Release                                                                      |
+| SvelteKit Auth (`@auth/sveltekit`)    | [Experimental Release](https://sveltekit.authjs.dev)                                      |
+
+| Databases              | Status                                                                  |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `@auth/*-adapter`      | Released. Fully compatible with `next-auth` and all `@auth/*` libraries |
+| `@next-auth/*-adapter` | Maintenance has stopped. Update to `@auth/*-adapter`                    |
 
 ## Community Integrations
 
@@ -41,7 +46,6 @@ them and are interested in collaborating, please do not hesitate to reach out!
 | ---------- | ------------------------------------------------------------------------------------------- |
 | Hono.js    | [Auth.js middleware](https://github.com/honojs/middleware/tree/main/packages/auth-js)       |
 | Rakkas     | [Auth.js Integration Example](https://github.com/rakkasjs/rakkasjs/tree/main/examples/auth) |
-| Qwik       | [Auth.js Integration](https://qwik.builder.io/docs/integrations/authjs/)                    |
 | SolidStart | [`@solid-mediakit/auth`](https://www.npmjs.com/package/@solid-mediakit/auth)                |
 | Astro      | [`auth-astro`](https://github.com/nowaythatworked/auth-astro)                               |
 | Nuxt       | [`@sidebase/nuxt-auth`](https://sidebase.io/nuxt-auth/)                                     |

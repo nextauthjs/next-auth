@@ -5,21 +5,12 @@
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
   <p align="center" style="align: center;">
-    <a href="https://npm.im/@auth/core">
-      <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
-    </a>
-    <a href="https://www.npmtrends.com/next-auth">
-      <img src="https://img.shields.io/npm/dm/next-auth?style=flat-square" alt="Downloads" />
-    </a>
-    <a href="https://github.com/nextauthjs/next-auth/stargazers">
-      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
-    </a>
-    <a href="https://www.npmjs.com/package/next-auth">
-      <img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?label=latest&style=flat-square" alt="GitHub Stable Release" />
-    </a>
-    <a href="https://codecov.io/gh/nextauthjs/next-auth" > 
-      <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov">
-    </a>
+    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?style=flat-square&label=latest%20release&color=purple" alt="GitHub Stable Release" /></a>
+    <!-- TODO: Should count `@auth/core` when NextAuth.js v5 is released as stable. -->
+    <a href="https://www.npmtrends.com/next-auth"><img src="https://img.shields.io/npm/dm/next-auth?style=flat-square&color=cyan" alt="Downloads" /></a>
+    <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
+    <a href="https://codecov.io/gh/nextauthjs/next-auth" ><img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov"></a>
+    <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=fff&style=flat-square" alt="TypeScript" />
   </p>
   <p align="center">
     Auth.js is a set of open-source packages that are built on standard Web APIs for authentication in modern applications with any framework on any platform in any JS runtime.
@@ -43,15 +34,16 @@
 - Designed to work with any OAuth service, it supports 2.0+, OIDC
 - Built-in support for [many popular sign-in services](https://github.com/nextauthjs/next-auth/tree/main/packages/core/src/providers)
 - Email/Passwordless authentication
+- Passkeys/WebAuthn support
 - Bring Your Database - or none! - stateless authentication with any backend (Active Directory, LDAP, etc.)
-- Runtime-agnostic, runs anywhere! (Vercel Edge Functions, Node.js, Serverless, etc.)
+- Runtime-agnostic, runs anywhere! (Docker, Node.js, Serverless, etc.)
 
 ### Own your data
 
 Auth.js can be used with or without a database.
 
 - An open-source solution that allows you to keep control of your data
-- Built-in support for [MySQL, MariaDB, Postgres, Microsoft SQL Server, MongoDB, SQLite, etc.](https://adapters.authjs.dev)
+- Built-in support for [MySQL, MariaDB, Postgres, Microsoft SQL Server, MongoDB, SQLite, GraphQL, etc.](https://adapters.authjs.dev)
 - Works great with databases from popular hosting providers
 
 ### Secure by default
@@ -95,95 +87,102 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
     <tr>
       <td align="center" valign="top">
         <a href="https://clerk.com?utm_source=sponsorship&utm_medium=github&utm_campaign=authjs&utm_content=sponsor" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/49538330?s=200&v=4" alt="Clerk Logo" />
         </a><br />
         <div>Clerk</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
         </a><br />
         <div>FusionAuth</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://www.beyondidentity.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
         </a><br />
         <div>Beyond Identity</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://stytch.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/69983493?s=200&v=4" alt="Stytch Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/69983493?s=200&v=4" alt="Stytch Logo" />
         </a><br />
         <div>Stytch</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://prisma.io" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4" alt="Prisma Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4" alt="Prisma Logo" />
         </a><br />
         <div>Prisma</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
         </a><br />
         <div>Lowdefy</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://vercel.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
-        </a><br />
-        <div>Vercel</div>
-        <sub>💵☁️</sub>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
         <a href="https://www.descope.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/97479186?s=200&v=4" alt="Descope Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/97479186?s=200&v=4" alt="Descope Logo" />
         </a><br />
         <div>Descope</div>
         <sub>💵</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://badass.dev" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/136839242?v=4" alt="Badass Courses Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/136839242?v=4" alt="Badass Courses Logo" />
         </a><br />
         <div>Badass Courses</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://github.com/encoredev/encore" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/50438175?v=4" alt="Encore Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/50438175?v=4" alt="Encore Logo" />
         </a><br />
         <div>Encore</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://arcjet.com/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/24397786?s=200&v=4" alt="Arcjet Logo" />
+        </a><br />
+        <div>Arcjet</div>
+        <sub>💵</sub>
+      </td>      
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
         </a><br />
         <div>Checkly</div>
         <sub>☁️</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://superblog.ai/" target="_blank">
-          <img width="108" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
+          <img height="96" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
         </a><br />
         <div>superblog</div>
         <sub>☁️</sub>
       </td>
       <td align="center" valign="top">
         <a href="https://www.netlight.com/" target="_blank">
-          <img width="108" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
+          <img height="96" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
         </a><br />
         <div>Netlight</div>
+        <sub>☁️</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://vercel.com" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/14985020?s=200&v=4" alt="Vercel Logo" />
+        </a><br />
+        <div>Vercel</div>
         <sub>☁️</sub>
       </td>
     </tr>

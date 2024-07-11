@@ -39,3 +39,10 @@ nextauthjs/next-auth-pages-example:
     deleteOrphaned: true
   - .github/FUNDING.yml
   - LICENSE
+
+nextauthjs/qwik-auth-example:
+  - source: apps/examples/qwik
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE

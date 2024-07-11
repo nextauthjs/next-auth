@@ -282,6 +282,21 @@ With Next.js 12+, the easiest way to protect a set of pages is using the middlew
 export { auth as middleware } from "@/auth"
 ```
 
+Then define `authorized` callback in your `auth.ts` file. For more details check out the [reference docs](/reference/nextjs#authorized).
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+
+export const { auth, handlers } = NextAuth({
+  callbacks: {
+    authorized: async ({ auth }) => {
+      // Logged in users are authenticated, otherwise redirect to login page
+      return !!auth
+    },
+  },
+})
+```
+
 You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the middleware.
 
 ```ts filename="middleware.ts"
