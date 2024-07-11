@@ -88,10 +88,10 @@ import { CaretRight } from "@/icons"
       <RichTabs.List className="justify-between p-2 rounded-t-lg bg-white/40 backdrop-blur dark:bg-neutral-950/25">
         <div className="flex gap-2">
           {[
-            { value: "express", src: Express,  name: "Express" },
-            { value: "nextjs", src: Next, name: "Next.js" },
-            { value: "qwik", src: Qwik,  name: "Qwik" },
-            { value: "sveltekit", src: SvelteKit,  name: "SvelteKit" },
+            { value: "express", src: Express,  name: "Express", darkInvert: true },
+            { value: "nextjs", src: Next, name: "Next.js", darkInvert: true },
+            { value: "qwik", src: Qwik,  name: "Qwik", darkInvert: false },
+            { value: "sveltekit", src: SvelteKit,  name: "SvelteKit", darkInvert: false },
           ].map((trigger) => (
             <RichTabs.Trigger
               key={trigger.value}
@@ -104,7 +104,7 @@ import { CaretRight } from "@/icons"
                 width="24"
                 src={trigger.src}
                 alt={`${trigger.name} Logo`}
-                className="dark:invert"
+                className={trigger.darkInvert ? 'dark:invert': '' }
               />
             </RichTabs.Trigger>
           ))}

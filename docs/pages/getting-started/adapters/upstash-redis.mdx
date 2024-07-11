@@ -50,6 +50,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import { Redis } from "@upstash/redis"
+
+const redis = new Redis({
+  url: import.meta.env.UPSTASH_REDIS_URL!,
+  token: import.meta.env.UPSTASH_REDIS_TOKEN!,
+})
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: UpstashRedisAdapter(redis),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

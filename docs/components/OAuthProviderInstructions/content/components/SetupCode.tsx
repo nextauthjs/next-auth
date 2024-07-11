@@ -49,6 +49,26 @@ export const { GET, POST } = handlers
           }}
         />
       </Code.Next>
+      <Code.Qwik>
+        We recommend setting up your configuration in{" "}
+        <code>/src/routes/plugin@auth.ts</code> file.
+        <Pre
+          data-filename="/src/routes/plugin@auth.ts"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+import { SvelteKitAuth } from "@auth/sveltekit"
+import ${providerName} from "@auth/sveltekit/providers/${providerId}"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [${providerName}],
+}) `),
+          }}
+        />
+      </Code.Qwik>
       <Code.Svelte>
         In SvelteKit you should also setup your Auth.js configuration in a file
         at <code>/src/auth.ts</code>.
