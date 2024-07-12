@@ -28,6 +28,13 @@ https://example.com/api/auth/callback/bankid-no
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/bankid-no
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -59,6 +66,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import BankIDNorway from "@auth/qwik/providers/bankid-no"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [BankIDNorway],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
