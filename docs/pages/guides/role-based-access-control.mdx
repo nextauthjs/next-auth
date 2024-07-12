@@ -28,6 +28,26 @@ export const { handlers, auth } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Google from "@auth/qwik/providers/google"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Google({
+        profile(profile) {
+          return { role: profile.role ?? "user", ... }
+        },
+      })
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -92,6 +112,36 @@ export const { handlers, auth } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts" {9}
+import { QwikAuth$ } from "@auth/qwik"
+import Google from "@auth/qwik/providers/google"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Google({
+        profile(profile) {
+          return { role: profile.role ?? "user", ... }
+        },
+      })
+    ],
+    callbacks: {
+      jwt({ token, user }) {
+        if(user) token.role = user.role
+        return token
+      },
+      session({ session, token }) {
+        session.user.role = token.role
+        return session
+      }
+    }
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts" {8}
@@ -177,6 +227,30 @@ export const { handlers, auth } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: PrismaAdapter(prisma),
+    callbacks: {
+      session({ session, user }) {
+        session.user.role = user.role
+        return session
+      },
+    },
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -237,6 +311,20 @@ export default function Page() {
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+export const onRequest: RequestHandler = (event) => {
+  const session = event.sharedMap.get("session")
+  if (!session || new Date(session.expires) < new Date()) {
+    throw event.redirect(302, `/auth/signin?redirectTo=${event.url.pathname}`)
+  }
+
+  return session
+}
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./routes/+page.server.ts"
