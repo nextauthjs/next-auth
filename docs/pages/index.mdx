@@ -65,18 +65,20 @@ import { CaretRight } from "@/icons"
         </Link>
       </div>
       <div className="text-lg flex-col flex gap-2 items-center">
-        <div className="flex flex-col md:flex-row w-full items-center md:justify-between text-sm dark:bg-neutral-900/50 text-neutral-600 dark:text-neutral-500 bg-neutral-50/60 backdrop-blur p-3 border border-neutral-300 dark:border-neutral-800 rounded-md">
+        <a
+          href="https://go.clerk.com/ew92wBC"
+          target="_blank"
+          className="group flex flex-col md:flex-row w-full items-center md:justify-between text-sm dark:bg-neutral-900/50 font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-50/60 backdrop-blur px-4 py-3 border border-neutral-300 dark:border-neutral-800 rounded-md ring-[6px] ring-black/[0.02] dark:ring-black/10"
+        >
           <span>Looking for a hosted alternative?</span>
-          <a
-            href="https://go.clerk.com/ew92wBC"
-            target="_blank"
-            className="flex gap-1 items-center text-violet-600"
+          <span  
+            className="flex gap-0.5 items-center font-semibold text-violet-600 dark:text-violet-400 group"
           >
             Use Clerk
-            <CaretRight className="size-4" />
-          </a>
-        </div>
-        <span className="text-xs text-neutral-400">Sponsored</span>
+            <CaretRight className="size-3 [&_polyline]:stroke-[28px] transition group-hover:translate-x-0.5" />
+          </span>
+        </a>
+        <span className="text-xs text-neutral-400 dark:text-neutral-600">Sponsored</span>
       </div>
     </div>
     <RichTabs
