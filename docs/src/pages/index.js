@@ -137,7 +137,7 @@ function Home() {
               <div>
                 Looking for a hosted alternative?
                 <a
-                  href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=cta"
+                  href="https://go.clerk.com/ew92wBC"
                   target="_blank"
                 >
                   Try Clerk →
