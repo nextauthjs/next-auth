@@ -1,0 +1,50 @@
+{
+  "name": "@auth/sqlserver-adapter",
+  "version": "0.0.1",
+  "description": "SQL Server adapter for next-auth.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Peter Budai",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "sqlserver"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "./test/test.sh",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "mssql": "^11.0.1"
+  },
+  "devDependencies": {
+    "@types/mssql": "^9.1.5",
+    "mssql": "^11.0.1"
+  }
+}

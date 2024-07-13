@@ -93,6 +93,7 @@
         "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
         "@auth/solid-start#build",
+        "@auth/sqlserver-adapter#build",
         "@auth/supabase-adapter#build",
         "@auth/surrealdb-adapter#build",
         "@auth/sveltekit#build",
