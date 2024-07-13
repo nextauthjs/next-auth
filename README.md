@@ -151,6 +151,13 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://arcjet.com/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/24397786?s=200&v=4" alt="Arcjet Logo" />
+        </a><br />
+        <div>Arcjet</div>
+        <sub>💵</sub>
+      </td>      
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
         </a><br />

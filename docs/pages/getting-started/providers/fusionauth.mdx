@@ -22,6 +22,13 @@ https://example.com/api/auth/callback/fusionauth
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/fusionauth
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -62,6 +69,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import FusionAuth from "@auth/qwik/providers/fusionauth"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      FusionAuth({
+        clientId: import.meta.env.AUTH_FUSIONAUTH_ID,
+        clientSecret: import.meta.env.AUTH_FUSIONAUTH_SECRET,
+        tenantId: import.meta.env.AUTH_FUSIONAUTH_TENANT_ID,
+        issuer: import.meta.env.AUTH_FUSIONAUTH_ISSUER,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
