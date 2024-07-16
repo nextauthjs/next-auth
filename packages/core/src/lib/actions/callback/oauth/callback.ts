@@ -106,25 +106,45 @@ export async function handleOAuth(
     redirect_uri = provider.redirectProxyUrl
   }
 
-  let codeGrantResponse = await o.authorizationCodeGrantRequest(
-    as,
-    client,
-    codeGrantParams,
-    redirect_uri,
-    codeVerifier ?? "auth", // TODO: review fallback code verifier,
-    {
-      [o.customFetch]: (...args) => {
-        if (
-          !provider.checks.includes("pkce") &&
-          args[1]?.body instanceof URLSearchParams
-        ) {
-          args[1].body.delete("code_verifier")
-        }
-        return fetch(...args)
-      },
-      clientPrivateKey: provider.token?.clientPrivateKey,
-    }
-  )
+  let codeGrantResponse: any
+
+  if (provider.token?.request) {
+    const result = await provider.token.request({
+      params: codeGrantParams,
+      checks: codeVerifier,
+      provider,
+    })
+    if (result) {
+      if (result instanceof Response) {
+        codeGrantResponse = result
+      } else if (result.tokens) {
+        codeGrantResponse = new Response(JSON.stringify(result.tokens))
+      }
+    } else
+      throw new OAuthCallbackError(
+        "provider has set token.request but returns void"
+      )
+  } else {
+    codeGrantResponse = await o.authorizationCodeGrantRequest(
+      as,
+      client,
+      codeGrantParams,
+      redirect_uri,
+      codeVerifier ?? "auth", // TODO: review fallback code verifier,
+      {
+        [o.customFetch]: (...args) => {
+          if (
+            !provider.checks.includes("pkce") &&
+            args[1]?.body instanceof URLSearchParams
+          ) {
+            args[1].body.delete("code_verifier")
+          }
+          return fetch(...args)
+        },
+        clientPrivateKey: provider.token?.clientPrivateKey,
+      }
+    )
+  }
 
   if (provider.token?.conform) {
     codeGrantResponse =
