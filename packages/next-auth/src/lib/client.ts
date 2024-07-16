@@ -147,6 +147,12 @@ export async function fetchData<T = any>(
       options.method = "POST"
     }
 
+    // Same-Origin Requests: Cookies are sent by default; no need for `options.credentials = 'include'`.
+    // Cross-Origin Requests: Explicitly set `options.credentials = 'include'` to ensure cookies are sent.
+    // When the client and server are on different origins (e.g., different domains, subdomains, or ports),
+    // `options.credentials = 'include'` is necessary to include cookies in the request.
+    options.credentials = 'include'
+    
     const res = await fetch(url, options)
     const data = await res.json()
     if (!res.ok) throw data
