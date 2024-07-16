@@ -48,6 +48,43 @@ export function SignIn() {
 ```
 
   </Code.NextClient>
+  <Code.Qwik>
+
+With Qwik we can do a server-side sign in with Form action, or a more simple client-side login via submit method.
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form } from "@builder.io/qwik-city"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <>
+      {/* server-side login with Form action */}
+      <Form action={signInSig}>
+        <input type="hidden" name="providerId" value="${providerId}" />
+        <input
+          type="hidden"
+          name="options.redirectTo"
+          value="/"
+        />
+        <button>Sign In</button>
+      </Form>
+
+      {/* submit method */}
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 The SvelteKit client supports two signin and signout methods, one server-side using Form Actions, and one client-side using requests and redirects.
@@ -152,6 +189,28 @@ export function SignIn() {
 ```
 
 </Code.NextClient>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <>
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/dashboard" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```svelte filename="src/routes/+page.svelte" {9-13}
@@ -227,6 +286,36 @@ export function SignOut() {
 ```
 
 </Code.NextClient>
+<Code.Qwik>
+
+With Qwik we can do a server-side sign out with Form action, or a more simple client-side sign out via submit method.
+
+```ts filename="./components/sign-out.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form, Link } from "@builder.io/qwik-city"
+import { useSignOut } from "./plugin@auth"
+
+export default component$(() => {
+  const signOutSig = useSignOut()
+
+  return (
+    <>
+      {/* server-side with Form action */}
+      <Form action={signOutSig}>
+        <input type="hidden" name="redirectTo" value="/signedout" />
+        <button>Sign Out</button>
+      </Form>
+
+      {/* submit method */}
+      <Link onClick$={() => signOutSig.submit({ redirectTo: "/" })}>
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 SvelteKit supports both server and client-side methods for signing out as well.
@@ -244,7 +333,7 @@ To use the SvelteKit form action for signing out, we can use the `SignOut` compo
   <nav>
     <SignOut>
       <span slot="submitButton">Signout</span>
-    </SignIn>
+    </SignOut>
   </nav>
 </header>
 ```

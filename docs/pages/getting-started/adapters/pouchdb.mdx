@@ -40,6 +40,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { PouchDBAdapter } from "@auth/pouchdb-adapter"
+import PouchDB from "pouchdb"
+
+// Setup your PouchDB instance and database
+PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+
+const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: PouchDBAdapter(pouchdb),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./auth.ts"

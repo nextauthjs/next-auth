@@ -42,6 +42,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import AzureADB2C from "@auth/qwik/providers/azure-ad-b2c";
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      AzureADB2C({
+        clientId: import.meta.env.AUTH_AZURE_AD_CLIENT_ID
+        clientSecret: import.meta.env.AUTH_AZURE_AD_CLIENT_SECRET
+        issuer: import.meta.env.AUTH_AZURE_AD_ISSUER
+      })
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
