@@ -322,6 +322,11 @@ export async function signOut<R extends boolean = true>(
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
+    // Same-Origin Requests: Cookies are sent by default; no need for `credentials: 'include'`.
+    // Cross-Origin Requests: Explicitly set `credentials: 'include'` to ensure cookies are sent.
+    // When the client and server are on different origins (e.g., different domains, subdomains, or ports),
+    // `credentials: 'include'` is necessary to include cookies in the request.
+    credentials: 'include',
     body: new URLSearchParams({ csrfToken, callbackUrl }),
   })
   const data = await res.json()
