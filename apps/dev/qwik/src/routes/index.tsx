@@ -19,14 +19,14 @@ export default component$(() => {
         <input type="hidden" name="providerId" value="github" />
         <input
           type="hidden"
-          name="options.callbackUrl"
+          name="options.redirectTo"
           value="http://qwik-auth-example.com/dashboard"
         />
         <button>Sign In</button>
       </Form>
       Session: {JSON.stringify(session.value)}
       <br />
-      <button onClick$={() => signOut.submit({ callbackUrl: "/" })}>
+      <button onClick$={() => signOut.submit({ redirectTo: "/" })}>
         Sign Out
       </button>
     </>
