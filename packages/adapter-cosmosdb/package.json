@@ -1,0 +1,56 @@
+{
+  "name": "@auth/cosmosdb-adapter",
+  "version": "2.4.1",
+  "description": "CosmosDb adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/cosmosdb",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Ruben Mamo",
+  "contributors": [],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "cosmosdb"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test:no-partitionkey": "TESTMODE=NOPK vitest run -c ../utils/vitest.config.ts",
+    "test:partitionkey-id": "TESTMODE=ID vitest run -c ../utils/vitest.config.ts",
+    "test:partitionkey-dataType": "TESTMODE=DT vitest run -c ../utils/vitest.config.ts",
+    "test:partitionkey-hardcoded": "TESTMODE=HC vitest run -c ../utils/vitest.config.ts",
+    "test:all": "pnpm test:no-partitionkey && pnpm test:partitionkey-id && pnpm test:partitionkey-dataType && pnpm test:partitionkey-hardcoded",
+    "test": "./test/test.sh",
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@azure/cosmos": "^4.0.0"
+  },
+  "devDependencies": {
+    "@azure/cosmos": "^4.0.0"
+  }
+}

@@ -76,6 +76,7 @@
       "dependsOn": [
         "@auth/core#build",
         "@auth/azure-tables-adapter#build",
+        "@auth/cosmosdb-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
         "@auth/drizzle-adapter#build",
