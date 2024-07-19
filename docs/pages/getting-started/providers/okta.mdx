@@ -21,6 +21,13 @@ https://example.com/api/auth/callback/okta
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/okta
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -53,6 +60,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Okta from "@auth/qwik/providers/okta"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Okta],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

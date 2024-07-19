@@ -241,7 +241,7 @@ const getUserInfo: GetUserInfo = async (options, request) => {
   const { adapter } = options
   if (!adapter)
     throw new MissingAdapter(
-      "WebAuthn provider requires a database adapter to be configured."
+      "WebAuthn provider requires a database adapter to be configured"
     )
 
   // Get email address from the query.
