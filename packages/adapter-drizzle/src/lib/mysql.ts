@@ -156,7 +156,7 @@ export function MySqlDrizzleAdapter(
   return {
     async createUser(data: AdapterUser) {
       const { id, ...insertData } = data
-      const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
+      const hasDefaultId = getTableColumns(usersTable)["id"]["defaultFn"]
 
       const [insertedUser] = (await client
         .insert(usersTable)
