@@ -2,6 +2,7 @@
 adapters: ["packages/core/src/adapters.ts", "packages/adapter-*/**/*"]
 core: ["packages/core/src/**/*"]
 azure-tables: ["packages/adapter-azure-tables/**/*"]
+cosmosdb: ["packages/adapter-cosmosdb/**/*"]
 edgedb: ["packages/adapter-edgedb/**/*"]
 d1: ["packages/adapter-d1/**/*"]
 dgraph: ["packages/adapter-dgraph/**/*"]
