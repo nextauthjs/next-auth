@@ -2,7 +2,7 @@
  * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Loops</b> integration.</span>
  * <a href="https://loops.so">
- *  <img style={{display: "block"}} src="https://authjs.dev/img/providers/loops.svg" height="48" width="48"/>
+ *  <img style={{display: "block"}} src="https://authjs.dev/img/providers/loops.svg" width="48"/>
  * </a>
  * </div>
  *
