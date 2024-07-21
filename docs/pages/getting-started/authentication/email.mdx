@@ -456,7 +456,6 @@ import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
 import { env } from "$env/dynamic/prviate"
 
-
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Nodemailer({
