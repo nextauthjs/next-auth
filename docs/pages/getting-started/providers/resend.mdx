@@ -88,13 +88,14 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Resend from "@auth/sveltekit/providers/resend"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Resend({
       // If your environment variable is named differently than default
-      apiKey: AUTH_RESEND_KEY,
+      apiKey: env.AUTH_RESEND_KEY,
       from: "no-reply@company.com",
     }),
   ],
