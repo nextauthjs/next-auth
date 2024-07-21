@@ -60,6 +60,11 @@
     },
     {
       "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "cli.authjs.dev" }],
+      "destination": "https://github.com/nextauthjs/cli"
+    },
+    {
+      "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "errors.authjs.dev" }],
       "destination": "https://authjs.dev/reference/core/errors/:path*"
     },
@@ -145,6 +150,10 @@
     {
       "source": "/guides/upgrade-to-v5",
       "destination": "/getting-started/migrating-to-v5"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides/debugging"
     }
   ]
 }

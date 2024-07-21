@@ -26,6 +26,13 @@ https://example.com/api/auth/callback/netsuite
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/netsuite
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -160,6 +167,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import NetSuite from "@auth/qwik/providers/netsuite"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      NetSuite({
+        clientId: import.meta.env.AUTH_NETSUITE_ID,
+        clientSecret: import.meta.env.AUTH_NETSUITE_SECRET,
+        issuer: import.meta.env.AUTH_NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
+        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
+        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
+        userinfo:
+          "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
+        // Optional
+        prompt: "login", // Required if you want to force the user to login every time.
+        scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
