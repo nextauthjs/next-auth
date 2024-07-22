@@ -19,7 +19,7 @@ See below for more detailed provider settings.
 1. Make sure to expose the Vercel [System Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables#system-environment-variables) in your project settings.
 2. Create a `NEXTAUTH_SECRET` environment variable for all environments.
     - You can use `openssl rand -base64 32` or https://generate-secret.vercel.app/32 to generate a random value.
-    - You **do not** need the `NEXTAUTH_URL` environment variable in Vercel.
+    - You **do not** need the `NEXTAUTH_URL` environment variable in Vercel (unless you are using a custom domain).
 3. Add your provider's client ID and client secret to environment variables. _(Skip this step if not using an [OAuth Provider](/configuration/providers/oauth))_
 4. Deploy!
 
