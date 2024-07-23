@@ -81,13 +81,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Loops from "@auth/sveltekit/providers/loops"
+import { AUTH_LOOPS_KEY, AUTH_LOOPS_TRANSACTIONAL_ID } from "@env/static/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ..., // database adapter of your choosing
   providers: [
     Loops({
-      apiKey: process.env.AUTH_LOOPS_KEY,
-      transactionalId: process.env.AUTH_LOOPS_TRANSACTIONAL_ID,
+      apiKey: AUTH_LOOPS_KEY,
+      transactionalId: AUTH_LOOPS_TRANSACTIONAL_ID,
     }),
   ],
 })
