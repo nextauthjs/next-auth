@@ -108,6 +108,12 @@ export function UserAvatar({ session }) {
 ```
 
 </Code.NextClient>
+<Code.Qwik>
+
+Under the hood Qwik is preparing automatically the session for you so you don't have to implement custom logic for that.
+You can read the sesion on the server with `event.sharedMap.get("session")` and on the client with the `useSession()` action.
+
+</Code.Qwik>
 <Code.Svelte>
 
 With SvelteKit, you have to return the `session` object from the load function in your `+page.server.ts` or `+layout.server.ts` files.

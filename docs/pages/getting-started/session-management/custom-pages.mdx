@@ -25,6 +25,23 @@ export const { signIn, signOut, handle } = NextAuth(config)
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import GitHub from "@auth/qwik/providers/github"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [GitHub],
+    pages: {
+      signIn: "/login",
+    },
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="src/auth.ts" {14-16}

@@ -23,6 +23,13 @@ https://example.com/api/auth/callback/notion
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/notion
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -61,6 +68,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Notion from "@auth/qwik/providers/notion"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Notion({
+        clientId: import.meta.env.AUTH_NOTION_ID,
+        clientSecret: import.meta.env.AUTH_NOTION_SECRET,
+        redirectUri: import.meta.env.AUTH_NOTION_REDIRECT_URI,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

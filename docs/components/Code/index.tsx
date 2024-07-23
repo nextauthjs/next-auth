@@ -1,5 +1,5 @@
-import { useThemeConfig } from "nextra-theme-docs"
 import { useRouter } from "next/router"
+import { useThemeConfig } from "nextra-theme-docs"
 import { Tabs } from "nextra/components"
 import React, { Children, useEffect, useState } from "react"
 
@@ -15,9 +15,11 @@ Code.Svelte = SvelteCode
 // Code.Solid = SolidCode;
 Code.Express = ExpressCode
 Code.Fastify = FastifyCode
+Code.Qwik = QwikCode
 
 const baseFrameworks = {
   [NextCode.name]: "Next.js",
+  [QwikCode.name]: "Qwik",
   [SvelteCode.name]: "SvelteKit",
   [ExpressCode.name]: "Express",
   // [SolidCode.name]: "SolidStart",
@@ -27,6 +29,7 @@ const baseFrameworks = {
 const allFrameworks = {
   [NextCode.name]: "Next.js",
   [NextClientCode.name]: "Next.js (Client)",
+  [QwikCode.name]: "Qwik",
   [SvelteCode.name]: "SvelteKit",
   // [SolidCode.name]: "SolidStart",
   [ExpressCode.name]: "Express",
@@ -128,6 +131,10 @@ function ExpressCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }
 
-function FastifyCode({ children }: ChildrenProps) {
+function QwikCode({ children }: ChildrenProps) {
+  return <Tabs.Tab>{children}</Tabs.Tab>
+}
+
+function QwikCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }

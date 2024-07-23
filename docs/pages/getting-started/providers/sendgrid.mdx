@@ -57,18 +57,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Sendgrid from "@auth/qwik/providers/sendgrid"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Sendgrid({
+        // If your environment variable is named differently than default
+        apiKey: import.meta.env.COMPANY_AUTH_SENDGRID_API_KEY,
+        from: "no-reply@company.com",
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Sendgrid from "@auth/sveltekit/providers/sendgrid"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Sendgrid({
       // If your environment variable is named differently than default
-      apiKey: COMPANY_AUTH_SENDGRID_API_KEY,
+      apiKey: env.COMPANY_AUTH_SENDGRID_API_KEY,
       from: "no-reply@company.com",
     }),
   ],

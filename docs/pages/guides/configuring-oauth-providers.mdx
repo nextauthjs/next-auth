@@ -26,6 +26,22 @@ export const { handlers, auth } = NextAuth({
 });
 ```
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Auth0 from "@auth/qwik/providers/auth0";
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Auth0({ authorization: { params: { scope: "openid custom_scope" } } }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 ```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
@@ -65,6 +81,27 @@ export const { handlers, auth } = NextAuth({
 });
 ```
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Auth0 from "@auth/qwik/providers/auth0";
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Auth0({
+        // You can also make calls to external resources if necessary.
+        async profile(profile) {
+          return {};
+        },
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 ```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
@@ -116,6 +153,26 @@ export const { handlers, auth } = NextAuth({
 });
 ```
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [{
+      id: "my-provider", // signIn("my-provider") and will be part of the callback URL
+      name: "My Provider", // optional, used on the default login page as the button text.
+      type: "oidc", // or "oauth" for OAuth 2 providers
+      issuer: "https://my.oidc-provider.com", // to infer the .well-known/openid-configuration URL
+      clientId: import.meta.env.AUTH_CLIENT_ID, // from the provider's dashboard
+      clientSecret: import.meta.env.AUTH_CLIENT_SECRET, // from the provider's dashboard
+    }],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 ```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
