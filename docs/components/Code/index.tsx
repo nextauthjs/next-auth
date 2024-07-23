@@ -135,6 +135,6 @@ function QwikCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }
 
-function QwikCode({ children }: ChildrenProps) {
+function FastifyCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }
