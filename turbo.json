@@ -102,6 +102,7 @@
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
         "@auth/qwik#build",
+        "@auth/fastify#build",
         "next-auth#build",
         "^build"
       ],
