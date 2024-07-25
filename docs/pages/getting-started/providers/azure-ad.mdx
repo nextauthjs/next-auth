@@ -112,7 +112,7 @@ app.use("/auth/*", ExpressAuth({ providers: [AzureAd] }))
 - Next, go to "App Registration" in the left menu, and create a new one.
 - Pay close attention to "Who can use this application or access this API?"
   - This allows you to scope access to specific types of user accounts
-  - Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
+  - Only your tenant, all azure tenants, or all azure tenants and personal Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
 - When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
 - After your App Registration is created, under "Client Credential" create your Client secret.
 - Click on "API Permissions" and click "Grant admin consent for..." to allow User.Read access to your tenant.
