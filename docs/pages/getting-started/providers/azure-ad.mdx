@@ -131,6 +131,12 @@ AUTH_AZURE_AD_TENANT_ID=<copy the tenant id here>
 
 That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints).
 
+If you want your application to receive authorization requests from not only the tenants but also all Microsoft users just add "common" in AUTH_AZURE_AD_TENANT_ID, this will "skip" tenants authorization.
+
+```
+AUTH_AZURE_AD_TENANT_ID=common
+```
+
 <Callout type="info">
   Azure AD returns the profile picture in an ArrayBuffer, instead of just a URL
   to the image, so our provider converts it to a base64 encoded image string and
