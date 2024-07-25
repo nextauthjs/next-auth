@@ -339,7 +339,7 @@ type DefaultSQLiteColumn<
     data: string | boolean | number | Date
     dataType: "string" | "boolean" | "number" | "date"
     notNull: boolean
-    isPrimaryKey: boolean
+    isPrimaryKey?: boolean
     columnType:
       | "SQLiteText"
       | "SQLiteBoolean"
@@ -349,7 +349,7 @@ type DefaultSQLiteColumn<
 > = SQLiteColumn<{
   name: string
   isAutoincrement: boolean
-  isPrimaryKey: boolean
+  isPrimaryKey: T["isPrimaryKey"] extends true ? true : false
   hasRuntimeDefault: boolean
   generated: GeneratedColumnConfig<T["data"]> | undefined
   columnType: T["columnType"]
@@ -376,28 +376,24 @@ export type DefaultSQLiteUsersTable = SQLiteTableWithColumns<{
       columnType: "SQLiteText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
       dataType: "string"
     }>
     email: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
       dataType: "string"
     }>
     emailVerified: DefaultSQLiteColumn<{
       dataType: "date"
       columnType: "SQLiteTimestamp"
       data: Date
-      isPrimaryKey: false
       notNull: boolean
     }>
     image: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
   }
@@ -412,20 +408,17 @@ export type DefaultSQLiteAccountsTable = SQLiteTableWithColumns<{
       columnType: "SQLiteText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     type: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     provider: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -433,56 +426,48 @@ export type DefaultSQLiteAccountsTable = SQLiteTableWithColumns<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
     }>
     refresh_token: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     access_token: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     expires_at: DefaultSQLiteColumn<{
       dataType: "number"
       columnType: "SQLiteInteger"
       data: number
-      isPrimaryKey: false
       notNull: boolean
     }>
     token_type: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     scope: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     id_token: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     session_state: DefaultSQLiteColumn<{
       dataType: "string"
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
   }
@@ -503,7 +488,6 @@ export type DefaultSQLiteSessionsTable = SQLiteTableWithColumns<{
     userId: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -511,7 +495,6 @@ export type DefaultSQLiteSessionsTable = SQLiteTableWithColumns<{
       dataType: "date"
       columnType: "SQLiteTimestamp"
       data: Date
-      isPrimaryKey: false
       notNull: true
     }>
   }
@@ -525,14 +508,12 @@ export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
     identifier: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     token: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -540,7 +521,6 @@ export type DefaultSQLiteVerificationTokenTable = SQLiteTableWithColumns<{
       dataType: "date"
       columnType: "SQLiteTimestamp"
       data: Date
-      isPrimaryKey: false
       notNull: true
     }>
   }
@@ -555,27 +535,23 @@ export type DefaultSQLiteAuthenticatorTable = SQLiteTableWithColumns<{
       columnType: "SQLiteText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     userId: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     providerAccountId: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     credentialPublicKey: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -583,27 +559,23 @@ export type DefaultSQLiteAuthenticatorTable = SQLiteTableWithColumns<{
       columnType: "SQLiteInteger"
       data: number
       notNull: true
-      isPrimaryKey: false
       dataType: "number"
     }>
     credentialDeviceType: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     credentialBackedUp: DefaultSQLiteColumn<{
       columnType: "SQLiteBoolean"
       data: boolean
       notNull: true
-      isPrimaryKey: false
       dataType: "boolean"
     }>
     transports: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      isPrimaryKey: false
       notNull: false
       dataType: "string"
     }>

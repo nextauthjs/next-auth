@@ -331,7 +331,7 @@ type DefaultPostgresColumn<
     data: string | number | boolean | Date
     dataType: "string" | "number" | "boolean" | "date"
     notNull: boolean
-    isPrimaryKey: boolean
+    isPrimaryKey?: boolean
     columnType:
       | "PgVarchar"
       | "PgText"
@@ -343,7 +343,7 @@ type DefaultPostgresColumn<
 > = PgColumn<{
   name: string
   isAutoincrement: boolean
-  isPrimaryKey: boolean
+  isPrimaryKey: T["isPrimaryKey"] extends true ? true : false
   hasRuntimeDefault: boolean
   generated: GeneratedColumnConfig<T["data"]> | undefined
   columnType: T["columnType"]
@@ -369,7 +369,6 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
     name: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
       dataType: "string"
     }>
@@ -377,21 +376,18 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
       dataType: "string"
     }>
     emailVerified: DefaultPostgresColumn<{
       dataType: "date"
       columnType: "PgTimestamp"
       data: Date
-      isPrimaryKey: false
       notNull: boolean
     }>
     image: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
   }
@@ -406,21 +402,18 @@ export type DefaultPostgresAccountsTable = PgTableWithColumns<{
       columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     type: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     provider: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     providerAccountId: DefaultPostgresColumn<{
@@ -428,56 +421,48 @@ export type DefaultPostgresAccountsTable = PgTableWithColumns<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
     }>
     refresh_token: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
     }>
     access_token: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
     }>
     expires_at: DefaultPostgresColumn<{
       dataType: "number"
       columnType: "PgInteger"
       data: number
       notNull: boolean
-      isPrimaryKey: false
     }>
     token_type: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
     }>
     scope: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
     }>
     id_token: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
     }>
     session_state: DefaultPostgresColumn<{
       dataType: "string"
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: boolean
-      isPrimaryKey: false
     }>
   }
   dialect: "pg"
@@ -497,13 +482,11 @@ export type DefaultPostgresSessionsTable = PgTableWithColumns<{
     userId: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     expires: DefaultPostgresColumn<{
       dataType: "date"
-      isPrimaryKey: false
       columnType: "PgTimestamp"
       data: Date
       notNull: true
@@ -519,14 +502,12 @@ export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
     identifier: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     token: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -534,7 +515,6 @@ export type DefaultPostgresVerificationTokenTable = PgTableWithColumns<{
       dataType: "date"
       columnType: "PgTimestamp"
       data: Date
-      isPrimaryKey: false
       notNull: true
     }>
   }
@@ -548,7 +528,6 @@ export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
     credentialID: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -556,49 +535,42 @@ export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     providerAccountId: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     credentialPublicKey: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     counter: DefaultPostgresColumn<{
       columnType: "PgInteger"
       data: number
       notNull: true
-      isPrimaryKey: false
       dataType: "number"
     }>
     credentialDeviceType: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     credentialBackedUp: DefaultPostgresColumn<{
       columnType: "PgBoolean"
       data: boolean
       notNull: true
-      isPrimaryKey: false
       dataType: "boolean"
     }>
     transports: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
       notNull: false
-      isPrimaryKey: false
       dataType: "string"
     }>
   }
