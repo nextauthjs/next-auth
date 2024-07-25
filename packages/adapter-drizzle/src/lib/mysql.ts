@@ -389,7 +389,7 @@ type DefaultMyqlColumn<
     data: string | number | boolean | Date
     dataType: "string" | "number" | "boolean" | "date"
     notNull: boolean
-    isPrimaryKey: boolean
+    isPrimaryKey?: boolean
     columnType:
       | "MySqlVarChar"
       | "MySqlText"
@@ -399,7 +399,7 @@ type DefaultMyqlColumn<
   },
 > = MySqlColumn<{
   isAutoincrement: boolean
-  isPrimaryKey: T["isPrimaryKey"]
+  isPrimaryKey: T["isPrimaryKey"] extends true ? true : false
   hasRuntimeDefault: boolean
   generated: GeneratedColumnConfig<T["data"]> | undefined
   name: string
@@ -424,7 +424,6 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
       columnType: "MySqlVarChar" | "MySqlText"
     }>
     name: DefaultMyqlColumn<{
-      isPrimaryKey: false
       data: string
       dataType: "string"
       notNull: boolean
@@ -432,7 +431,6 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
     }>
     email: DefaultMyqlColumn<{
       data: string
-      isPrimaryKey: false
       dataType: "string"
       notNull: boolean
       columnType: "MySqlVarChar" | "MySqlText"
@@ -440,13 +438,11 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
     emailVerified: DefaultMyqlColumn<{
       data: Date
       dataType: "date"
-      isPrimaryKey: false
       notNull: boolean
       columnType: "MySqlTimestamp"
     }>
     image: DefaultMyqlColumn<{
       data: string
-      isPrimaryKey: false
       dataType: "string"
       notNull: boolean
       columnType: "MySqlVarChar" | "MySqlText"
@@ -460,7 +456,6 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
   name: string
   columns: {
     userId: DefaultMyqlColumn<{
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
@@ -469,7 +464,6 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     type: DefaultMyqlColumn<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
@@ -477,26 +471,22 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
-      isPrimaryKey: false
       dataType: "string"
     }>
     providerAccountId: DefaultMyqlColumn<{
       dataType: "string"
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: true
     }>
     refresh_token: DefaultMyqlColumn<{
       dataType: "string"
       columnType: "MySqlVarChar" | "MySqlText"
-      isPrimaryKey: false
       data: string
       notNull: boolean
     }>
     access_token: DefaultMyqlColumn<{
       dataType: "string"
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       driverParam: string | number
@@ -505,14 +495,12 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
     expires_at: DefaultMyqlColumn<{
       dataType: "number"
       columnType: "MySqlInt"
-      isPrimaryKey: false
       data: number
       notNull: boolean
     }>
     token_type: DefaultMyqlColumn<{
       dataType: "string"
       columnType: "MySqlVarChar" | "MySqlText"
-      isPrimaryKey: false
       data: string
       notNull: boolean
     }>
@@ -520,21 +508,18 @@ export type DefaultMySqlAccountsTable = MySqlTableWithColumns<{
       dataType: "string"
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     id_token: DefaultMyqlColumn<{
       dataType: "string"
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
     session_state: DefaultMyqlColumn<{
       dataType: "string"
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: boolean
     }>
   }
@@ -553,7 +538,6 @@ export type DefaultMySqlSessionsTable = MySqlTableWithColumns<{
       dataType: "string"
     }>
     userId: DefaultMyqlColumn<{
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
@@ -561,7 +545,6 @@ export type DefaultMySqlSessionsTable = MySqlTableWithColumns<{
     }>
     expires: DefaultMyqlColumn<{
       dataType: "date"
-      isPrimaryKey: false
       columnType: "MySqlTimestamp"
       data: Date
       notNull: true
@@ -575,14 +558,12 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
   name: string
   columns: {
     identifier: DefaultMyqlColumn<{
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
       dataType: "string"
     }>
     token: DefaultMyqlColumn<{
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
@@ -590,7 +571,6 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
     }>
     expires: DefaultMyqlColumn<{
       dataType: "date"
-      isPrimaryKey: false
       columnType: "MySqlTimestamp"
       data: Date
       notNull: true
@@ -604,14 +584,12 @@ export type DefaultMySqlAuthenticatorTable = MySqlTableWithColumns<{
   name: string
   columns: {
     credentialID: DefaultMyqlColumn<{
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
       dataType: "string"
     }>
     userId: DefaultMyqlColumn<{
-      isPrimaryKey: false
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
@@ -620,42 +598,36 @@ export type DefaultMySqlAuthenticatorTable = MySqlTableWithColumns<{
     providerAccountId: DefaultMyqlColumn<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     credentialPublicKey: DefaultMyqlColumn<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     counter: DefaultMyqlColumn<{
       columnType: "MySqlInt"
       data: number
-      isPrimaryKey: false
       notNull: true
       dataType: "number"
     }>
     credentialDeviceType: DefaultMyqlColumn<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: true
       dataType: "string"
     }>
     credentialBackedUp: DefaultMyqlColumn<{
       columnType: "MySqlBoolean"
       data: boolean
-      isPrimaryKey: false
       notNull: true
       dataType: "boolean"
     }>
     transports: DefaultMyqlColumn<{
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
-      isPrimaryKey: false
       notNull: false
       dataType: "string"
     }>
