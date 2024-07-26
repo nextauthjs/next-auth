@@ -360,7 +360,7 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
     email: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      notNull: true
+      notNull: boolean
       dataType: "string"
     }>
     emailVerified: DefaultPostgresColumn<{
