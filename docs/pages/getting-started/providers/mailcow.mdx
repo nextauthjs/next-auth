@@ -1,0 +1,77 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/mailcow.svg" width="64" height="64" />
+
+# Mailcow Provider
+
+## Resources
+
+- [Mailcow documentation](https://docs.mailcow.email)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/mailcow
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/mailcow
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_MAILCOW_ID
+AUTH_MAILCOW_SECRET
+AUTH_MAILCOW_URL
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Mailcow from "next-auth/providers/mailcow"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Mailcow],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Mailcow from "@auth/sveltekit/providers/mailcow"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Mailcow],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Mailcow from "@auth/express/providers/mailcow"
+
+app.use("/auth/*", ExpressAuth({ providers: [Mailcow] }))
+```
+
+  </Code.Express>
+</Code>

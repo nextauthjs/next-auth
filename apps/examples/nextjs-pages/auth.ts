@@ -31,6 +31,7 @@ import GitHub from "next-auth/providers/github"
 // import Line from "next-auth/providers/line"
 // import LinkedIn from "next-auth/providers/linkedin"
 // import Mailchimp from "next-auth/providers/mailchimp"
+// import Mailcow from "next-auth/providers/mailcow"
 // import Mailru from "next-auth/providers/mailru"
 // import Medium from "next-auth/providers/medium"
 // import Naver from "next-auth/providers/naver"
@@ -100,6 +101,7 @@ export const config = {
     // Line,
     // LinkedIn,
     // Mailchimp,
+    // Mailcow,
     // Mailru,
     // Medium,
     // Naver,
