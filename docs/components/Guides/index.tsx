@@ -99,6 +99,12 @@ export function Guides() {
                 demo: "https://express-auth-example.vercel.app",
                 repo: "express-auth-example",
               },
+              {
+                id: "qwik",
+                name: "Qwik",
+                demo: "https://qwik-auth-example.vercel.app",
+                repo: "qwik-auth-example",
+              },
             ].map((f) => (
               <li
                 key={f.id}
