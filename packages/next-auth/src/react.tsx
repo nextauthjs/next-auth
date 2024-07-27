@@ -479,7 +479,7 @@ export function SessionProvider(props: SessionProviderProps) {
           ? "authenticated"
           : "unauthenticated",
       async update(data: any) {
-        if (loading || !session) return
+        if (loading || !!session) return
         setLoading(true)
         const newSession = await fetchData<Session>(
           "session",
