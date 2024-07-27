@@ -193,7 +193,7 @@ export class InvalidCallbackUrl extends AuthError {
  * 1. The user is redirected to the signin page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable.
  * 2. If you throw this error in a framework that handles form actions server-side, this error is thrown, instead of redirecting the user, so you'll need to handle.
  */
-export class CredentialsSignin extends Error {
+export class CredentialsSignin extends SignInError {
   static type = "CredentialsSignin"
   /**
    * The error code that is set in the `code` query parameter of the redirect URL.
