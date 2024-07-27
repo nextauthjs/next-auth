@@ -6,6 +6,7 @@ import GitHub from "../../src/providers/github.js"
 import Credentials from "../../src/providers/credentials.js"
 
 import { makeAuthRequest } from "../utils.js"
+import { skipCSRFCheck } from "../../src/index.js"
 
 describe("assert GET callback action", () => {
   beforeEach(() => {
@@ -83,5 +84,31 @@ it("should redirect to the custom error page is custom error page is defined", a
   expect(response.status).toEqual(302)
   expect(response.headers.get("location")).toEqual(
     `https://authjs.test/custom/error?error=Configuration`
+  )
+})
+
+it("should stay on signin page if the provider is credentials and authorize returns null", async () => {
+  const { response } = await makeAuthRequest({
+    action: "callback",
+    path: "/credentials",
+    body: {
+      username: "foo",
+      password: "bar",
+    },
+    config: {
+      skipCSRFCheck,
+      providers: [
+        Credentials({
+          authorize() {
+            return null
+          },
+        }),
+      ],
+    },
+  })
+
+  expect(response.status).toEqual(302)
+  expect(response.headers.get("location")).toEqual(
+    `https://authjs.test/auth/signin?error=CredentialsSignin&code=credentials`
   )
 })
