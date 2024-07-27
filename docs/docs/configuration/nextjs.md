@@ -18,7 +18,7 @@ import { getServerSession } from "next-auth"
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const config = {
   providers: [], // rest of your config
-} satisfies NextAuthOptions
+} // satisfies NextAuthOptions
 
 // Use it in server contexts
 export function auth(
