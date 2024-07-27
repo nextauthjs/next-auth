@@ -105,18 +105,16 @@ export interface AppleProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
+ * ```ts
+ * import { Auth } from "@auth/core"
+ * import Apple from "@auth/core/providers/apple"
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import AppleProvider from "next-auth/providers/apple"
- *
- * export default NextAuth({
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
  *   providers: [
- *     AppleProvider({
- *       clientId: process.env.APPLE_ID,
- *       clientSecret: process.env.APPLE_SECRET,
+ *     Apple({
+ *       clientId: APPLE_CLIENT_ID,
+ *       clientSecret: APPLE_CLIENT_SECRET,
  *     }),
  *   ],
  * })
@@ -173,6 +171,8 @@ export default function Apple<P extends AppleProfile>(
       text: "#fff",
       bg: "#000",
     },
+    // https://developer.apple.com/documentation/sign_in_with_apple/request_an_authorization_to_the_sign_in_with_apple_server
+    checks: ["nonce", "state"],
     options,
   }
 }

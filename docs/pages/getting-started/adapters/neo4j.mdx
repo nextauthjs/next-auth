@@ -48,6 +48,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import neo4j from "neo4j-driver"
+import { Neo4jAdapter } from "@auth/neo4j-adapter"
+
+const driver = neo4j.driver(
+  import.meta.env.NEO4J_URI,
+  neo4j.auth.basic(
+    import.meta.env.NEO4J_USERNAME,
+    import.meta.env.NEO4J_PASSWORD
+  )
+)
+
+const neo4jSession = driver.session()
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: Neo4jAdapter(neo4jSession),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

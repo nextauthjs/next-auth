@@ -245,7 +245,7 @@ export class JWTSessionError extends AuthError {
 }
 
 /**
- * Thrown if Auth.js is misonfigured. This could happen if you configured an Email provider but did not set up a database adapter,
+ * Thrown if Auth.js is misconfigured. This could happen if you configured an Email provider but did not set up a database adapter,
  * or tried using a `strategy: "database"` session without a database adapter.
  * In both cases, make sure you either remove the configuration or add the missing adapter.
  *
@@ -441,7 +441,7 @@ export class Verification extends AuthError {
  * is an attack leveraging authenticated user credentials for unauthorized actions.
  *
  * Double submit cookie pattern, a CSRF defense, requires matching values in a cookie
- * and request parameter. More on this at [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/Security/CSRF).
+ * and request parameter. More on this at [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Glossary/CSRF).
  */
 export class MissingCSRF extends SignInError {
   static type = "MissingCSRF"

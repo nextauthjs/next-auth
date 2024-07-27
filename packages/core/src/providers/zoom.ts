@@ -54,13 +54,15 @@ export interface ZoomProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Zoom from "@auth/core/providers/zoom"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Zoom({ clientId: ZOOM_CLIENT_ID, clientSecret: ZOOM_CLIENT_SECRET })],
+ *   providers: [
+ *     Zoom({ clientId: ZOOM_CLIENT_ID, clientSecret: ZOOM_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
