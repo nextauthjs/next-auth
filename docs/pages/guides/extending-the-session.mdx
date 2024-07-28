@@ -72,9 +72,9 @@ Calls to `auth()` or `useSession()` will now have access to the user's id.
 We can extend the default session data in a few ways, one of which is by using the `authorize` and `profile` functions. These functions let us return a user object with the properties we need. We can then create logic based on this information to search in a database or an external API.
 
 ```ts
-import Github from "next-auth/providers/github";
-import Credentials from "next-auth/providers/credentials";
-import type { Provider } from "next-auth/providers";
+import Github from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+import type { Provider } from "next-auth/providers"
 
 const providers: Provider[] = [
   Google({
@@ -82,13 +82,13 @@ const providers: Provider[] = [
     clientSecret: process.env.AUTH_GOOGLE_SECRET,
     async profile(profile) {
       return { ...profile }
-    },            
+    },
   }),
   Credentials({
-    async authorize(credentials) {    
+    async authorize(credentials) {
       return { ...credentials }
-    }
-  })
+    },
+  }),
 ]
 ```
 
