@@ -1,4 +1,5 @@
 import type { AdapterAccountType } from "@auth/core/adapters"
+import { sql } from "drizzle-orm"
 import {
   boolean,
   int,
@@ -11,7 +12,7 @@ import { drizzle } from "drizzle-orm/mysql2"
 import { createPool } from "mysql2"
 
 const poolConnection = createPool({
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   password: "password",
   database: "next-auth",
@@ -26,7 +27,7 @@ export const users = mysqlTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).unique(),
   emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
   image: varchar("image", { length: 255 }),
 })
@@ -77,20 +78,27 @@ export const verificationTokens = mysqlTable(
   })
 )
 
-export const authenticators = mysqlTable("authenticator", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-  credentialPublicKey: varchar("credentialPublicKey", {
-    length: 255,
-  }).notNull(),
-  counter: int("counter").notNull(),
-  credentialDeviceType: varchar("credentialDeviceType", {
-    length: 255,
-  }).notNull(),
-  credentialBackedUp: boolean("credentialBackedUp").notNull(),
-  transports: varchar("transports", { length: 255 }),
-})
+export const authenticators = mysqlTable(
+  "authenticator",
+  {
+    credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    credentialPublicKey: varchar("credentialPublicKey", {
+      length: 255,
+    }).notNull(),
+    counter: int("counter").notNull(),
+    credentialDeviceType: varchar("credentialDeviceType", {
+      length: 255,
+    }).notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: varchar("transports", { length: 255 }),
+  },
+  (authenticator) => ({
+    compositePk: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)

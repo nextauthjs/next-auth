@@ -107,13 +107,13 @@ jobs:
             echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
           fi
       - name: Build
-        if: ${{ env.PACKAGES_CHANGES == 'true' }}
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm build
       - name: Lint
         run: pnpm lint
         timeout-minutes: 15
       - name: Run unit tests
-        if: ${{ env.PACKAGES_CHANGES == 'true' }}
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm test
       - name: Get installed Playwright version
         id: playwright-version
