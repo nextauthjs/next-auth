@@ -82,13 +82,14 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Postmark from "@auth/sveltekit/providers/postmark"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Postmark({
       // If your environment variable is named differently than default
-      apiKey: AUTH_POSTMARK_KEY,
+      apiKey: env.AUTH_POSTMARK_KEY,
       from: "no-reply@company.com",
     }),
   ],
