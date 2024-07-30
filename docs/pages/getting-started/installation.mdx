@@ -64,6 +64,8 @@ Then add it to your `.env.local` file:
 AUTH_SECRET=secret
 ```
 
+If you used `npx auth secret` then it will add and populate this value for you.
+
 ### Configure
 
 Next, create the Auth.js config file and object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. We recommend all frameworks to create an `auth.ts` file in the project. In this file we'll pass in all the options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
