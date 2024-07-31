@@ -33,7 +33,7 @@ If someone provides the email address of an _existing account_ when signing in, 
 npm install nodemailer
 ```
 
-2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/). Nodemailer also works with [other transports](https://nodemailer.com/transports/), however if you want to use an HTTP based email service, we recommend using one of the other Auth.js providers designed for those, like [Resend](/getting-started/providers/resend) or [Sendgrid](/getting-started/providers/sendgrid).
+2. You will need an SMTP account; ideally for one of the [services known to work with `nodemailer`](https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/). Nodemailer also works with [other transports](https://nodemailer.com/transports/), however if you want to use an HTTP based email service, we recommend using one of the other Auth.js providers designed for those, like [Forward Email](/getting-started/providers/forwardemail), [Resend](/getting-started/providers/resend), or [Sendgrid](/getting-started/providers/sendgrid).
 
 3. There are two ways to configure the SMTP server connection.
 
@@ -67,7 +67,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 </Code.Next>
 <Code.Qwik>
-  
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Nodemailer from "@auth/qwik/providers/nodemailer"

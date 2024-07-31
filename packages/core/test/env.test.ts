@@ -12,9 +12,10 @@ import { AuthConfig } from "../src/index.js"
 import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
 import Auth0 from "../src/providers/auth0.js"
 import Resend from "../src/providers/resend.js"
+import ForwardEmail from "../src/providers/forwardemail.js"
 
 const testConfig: AuthConfig = {
-  providers: [Auth0, Resend({})],
+  providers: [Auth0, Resend({}), ForwardEmail({})],
 }
 
 let authConfig: AuthConfig
@@ -30,9 +31,10 @@ describe("config is inferred from environment variables", () => {
       AUTH_AUTH0_SECRET: "fdsa",
       AUTH_AUTH0_ISSUER: "https://example.com",
       AUTH_RESEND_KEY: "resend",
+      AUTH_FORWARDEMAIL_KEY: "forwardemail"
     }
     setEnvDefaults(env, authConfig)
-    const [p1, p2] = authConfig.providers
+    const [p1, p2, p3] = authConfig.providers
     // @ts-expect-error
     expect(p1.clientId).toBe(env.AUTH_AUTH0_ID)
     // @ts-expect-error
@@ -41,6 +43,8 @@ describe("config is inferred from environment variables", () => {
     expect(p1.issuer).toBe(env.AUTH_AUTH0_ISSUER)
     // @ts-expect-error
     expect(p2.apiKey).toBe(env.AUTH_RESEND_KEY)
+    // @ts-expect-error
+    expect(p3.apiKey).toBe(env.AUTH_FORWARDEMAIL_KEY)
   })
 
   it("AUTH_SECRET", () => {
