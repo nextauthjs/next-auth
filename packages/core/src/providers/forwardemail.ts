@@ -15,7 +15,7 @@ export default function ForwardEmail(config: EmailUserConfig): EmailConfig {
       const res = await fetch("https://api.forwardemail.net/v1/emails", {
         method: "POST",
         headers: {
-          Authorization: `Basic ${btoa(provider.apiKey + ':')}`,
+          Authorization: `Basic ${btoa(provider.apiKey + ":")}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -28,7 +28,9 @@ export default function ForwardEmail(config: EmailUserConfig): EmailConfig {
       })
 
       if (!res.ok)
-        throw new Error("Forward Email error: " + JSON.stringify(await res.json()))
+        throw new Error(
+          "Forward Email error: " + JSON.stringify(await res.json())
+        )
     },
     options: config,
   }

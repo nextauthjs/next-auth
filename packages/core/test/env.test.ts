@@ -31,7 +31,7 @@ describe("config is inferred from environment variables", () => {
       AUTH_AUTH0_SECRET: "fdsa",
       AUTH_AUTH0_ISSUER: "https://example.com",
       AUTH_RESEND_KEY: "resend",
-      AUTH_FORWARDEMAIL_KEY: "forwardemail"
+      AUTH_FORWARDEMAIL_KEY: "forwardemail",
     }
     setEnvDefaults(env, authConfig)
     const [p1, p2, p3] = authConfig.providers
