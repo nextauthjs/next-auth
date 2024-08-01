@@ -3,7 +3,7 @@ import type { Config } from "drizzle-kit"
 export default {
   schema: "./test/mysql-multi-project-schema/schema.ts",
   out: "./test/mysql-multi-project-schema/.drizzle",
-  driver: "mysql2",
+  dialect: "mysql",
   dbCredentials: {
     host: "localhost",
     user: "root",

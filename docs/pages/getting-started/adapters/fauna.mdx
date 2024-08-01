@@ -46,6 +46,27 @@ export { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { Client } from "fauna"
+import { FaunaAdapter } from "@auth/fauna-adapter"
+
+const client = new Client({
+  secret: import.meta.env.AUTH_FAUNA_SECRET,
+  endpoint: new URL(import.meta.env.AUTH_FAUNA_CLIENT),
+})
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: FaunaAdapter(client),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

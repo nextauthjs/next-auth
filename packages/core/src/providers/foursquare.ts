@@ -21,19 +21,24 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import FourSquare from "@auth/core/providers/foursquare"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FourSquare({ clientId: FOURSQUARE_CLIENT_ID, clientSecret: FOURSQUARE_CLIENT_SECRET })],
+ *   providers: [
+ *     FourSquare({
+ *       clientId: FOURSQUARE_CLIENT_ID,
+ *       clientSecret: FOURSQUARE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
  *
- *  - [FourSquare OAuth documentation](https://developer.foursquare.com/docs/places-api/authentication/#web-applications)
+ *  - [FourSquare OAuth documentation](https://docs.foursquare.com/developer/reference/authentication)
  *
  * ### Notes
  *

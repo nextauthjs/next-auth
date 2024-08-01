@@ -72,7 +72,7 @@ import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
-import type { Session } from "@auth/core/types"
+import type { Awaitable, Session } from "@auth/core/types"
 import type { BuiltInProviderType } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
@@ -358,7 +358,7 @@ export interface NextAuthResult {
  * import NextAuth from "next-auth"
  * import GitHub from "@auth/core/providers/github"
  *
- * export const { handlers, auth } = NextAuth((req) => {
+ * export const { handlers, auth } = NextAuth(async (req) => {
  *   console.log(req) // do something with the request
  *   return {
  *     providers: [GitHub],
@@ -369,11 +369,11 @@ export interface NextAuthResult {
 export default function NextAuth(
   config:
     | NextAuthConfig
-    | ((request: NextRequest | undefined) => NextAuthConfig)
+    | ((request: NextRequest | undefined) => Awaitable<NextAuthConfig>)
 ): NextAuthResult {
   if (typeof config === "function") {
-    const httpHandler = (req: NextRequest) => {
-      const _config = config(req)
+    const httpHandler = async (req: NextRequest) => {
+      const _config = await config(req)
       setEnvDefaults(_config)
       return Auth(reqWithEnvURL(req), _config)
     }
@@ -383,18 +383,18 @@ export default function NextAuth(
       // @ts-expect-error
       auth: initAuth(config, (c) => setEnvDefaults(c)),
 
-      signIn: (provider, options, authorizationParams) => {
-        const _config = config(undefined)
+      signIn: async (provider, options, authorizationParams) => {
+        const _config = await config(undefined)
         setEnvDefaults(_config)
         return signIn(provider, options, authorizationParams, _config)
       },
-      signOut: (options) => {
-        const _config = config(undefined)
+      signOut: async (options) => {
+        const _config = await config(undefined)
         setEnvDefaults(_config)
         return signOut(options, _config)
       },
-      unstable_update: (data) => {
-        const _config = config(undefined)
+      unstable_update: async (data) => {
+        const _config = await config(undefined)
         setEnvDefaults(_config)
         return update(data, _config)
       },

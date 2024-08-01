@@ -35,6 +35,13 @@ https://example.com/api/auth/callback/sailpoint
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/sailpoint
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -108,6 +115,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      {
+        id: "sailpoint",
+        name: "SailPoint",
+        type: "oauth",
+        clientId: import.meta.env.AUTH_SAILPOINT_ID!,
+        clientSecret: import.meta.env.AUTH_SAILPOINT_SECRET!,
+        authorization: {
+          url: `${import.meta.env.AUTH_SAILPOINT_BASE_URL!}/oauth/authorize`,
+          params: { scope: "sp:scopes:all" },
+        },
+        token: `${import.meta.env.AUTH_SAILPOINT_BASE_API_URL!}/oauth/token`,
+        userinfo: `${import.meta.env.AUTH_SAILPOINT_BASE_API_URL!}/oauth/userinfo`,
+        profile(profile) {
+          return {
+            id: profile.id,
+            email: profile.email,
+            name: profile.uid,
+            image: null,
+          }
+        },
+        style: { brandColor: "#011E69", logo: "sailpoint.svg" },
+      },
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
