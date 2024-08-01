@@ -21,6 +21,7 @@ export const fixtures = {
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
     emailVerified,
+    id: randomUUID(),
   },
   session: {
     sessionToken: randomUUID(),
