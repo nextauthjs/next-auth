@@ -75,6 +75,13 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
             </NXCode>
           </Pre>
         </Code.Next>
+        <Code.Qwik>
+          <Pre data-copy="">
+            <NXCode>
+              <span>{`[origin]/auth/callback/${providerId}`}</span>
+            </NXCode>
+          </Pre>
+        </Code.Qwik>
         <Code.Svelte>
           <Pre data-copy="">
             <NXCode>
@@ -119,6 +126,20 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
             }}
           />
         </Code.Next>
+        <Code.Qwik>
+          <Pre
+            data-copy=""
+            data-filename=".env.local"
+            dangerouslySetInnerHTML={{
+              __html: highlight(
+                `
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
+AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
+`
+              ),
+            }}
+          />
+        </Code.Qwik>
         <Code.Svelte>
           <Pre
             data-copy=""

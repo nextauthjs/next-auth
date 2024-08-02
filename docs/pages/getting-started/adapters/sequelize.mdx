@@ -48,6 +48,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import SequelizeAdapter from "@auth/sequelize-adapter"
+import { Sequelize } from "sequelize"
+
+const sequelize = new Sequelize(import.meta.env.DATABASE_URL)
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: SequelizeAdapter(sequelize),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

@@ -103,6 +103,7 @@ export default function EVEOnline<P extends EVEOnlineProfile>(
       "https://login.eveonline.com/v2/oauth/authorize?scope=publicData",
     token: "https://login.eveonline.com/v2/oauth/token",
     userinfo: "https://login.eveonline.com/oauth/verify",
+    checks: ["state"],
     profile(profile) {
       return {
         id: String(profile.CharacterID),

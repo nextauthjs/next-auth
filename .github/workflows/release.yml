@@ -95,12 +95,25 @@ jobs:
       - name: Peek
         run: pnpm peek
         if: ${{ github.repository == 'nextauthjs/next-auth' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      - name: Get base commit SHA from main
+        id: get_base_sha
+        run: echo "BASE_SHA=$(git merge-base origin/main HEAD)" >> $GITHUB_ENV
+      - name: Check for changes under /packages
+        id: check-packages
+        run: |
+          if git diff --name-only ${{ env.BASE_SHA }}...HEAD | grep '^packages/'; then
+            echo "PACKAGES_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
+          fi
       - name: Build
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm build
       - name: Lint
         run: pnpm lint
         timeout-minutes: 15
       - name: Run unit tests
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm test
       - name: Get installed Playwright version
         id: playwright-version

@@ -7,7 +7,11 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        }
       ]
     }
   ],
@@ -57,6 +61,11 @@
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "qwik.authjs.dev" }],
       "destination": "https://authjs.dev/reference/qwik"
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "cli.authjs.dev" }],
+      "destination": "https://github.com/nextauthjs/cli"
     },
     {
       "source": "/:path(.*)",
@@ -145,6 +154,10 @@
     {
       "source": "/guides/upgrade-to-v5",
       "destination": "/getting-started/migrating-to-v5"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides/debugging"
     }
   ]
 }
