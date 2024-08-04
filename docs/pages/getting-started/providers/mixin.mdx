@@ -8,7 +8,6 @@ import { Code } from "@/components/Code"
 
 - [Mixin documentation](https://developers.mixin.one/docs/api/oauth)
 
-
 ## Setup
 
 ### Callback URL
@@ -47,7 +46,12 @@ import NextAuth from "next-auth"
 import MixinProvider from "next-auth/providers/mixin"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [MixinProvider({ clientId: process.env.MIXIN_CLIENT_ID, clientSecret: process.env.MIXIN_CLIENT_SECRET })],
+  providers: [
+    MixinProvider({
+      clientId: process.env.MIXIN_CLIENT_ID,
+      clientSecret: process.env.MIXIN_CLIENT_SECRET,
+    }),
+  ],
 })
 ```
 
@@ -59,7 +63,12 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import MixinProvider from "@auth/sveltekit/providers/mixin"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [MixinProvider({ clientId: process.env.MIXIN_CLIENT_ID, clientSecret: process.env.MIXIN_CLIENT_SECRET })],
+  providers: [
+    MixinProvider({
+      clientId: process.env.MIXIN_CLIENT_ID,
+      clientSecret: process.env.MIXIN_CLIENT_SECRET,
+    }),
+  ],
 })
 ```
 
@@ -70,7 +79,17 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import MixinProvider from "@auth/express/providers/mixin"
 
-app.use("/auth/*", ExpressAuth({ providers: [MixinProvider({ clientId: process.env.MIXIN_CLIENT_ID, clientSecret: process.env.MIXIN_CLIENT_SECRET })] }))
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      MixinProvider({
+        clientId: process.env.MIXIN_CLIENT_ID,
+        clientSecret: process.env.MIXIN_CLIENT_SECRET,
+      }),
+    ],
+  })
+)
 ```
 
   </Code.Express>

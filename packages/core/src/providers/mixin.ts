@@ -12,45 +12,42 @@
  */
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
-
 /** @see [Get the authenticated user](https://developers.mixin.one/docs/api/users/profile). */
 export interface MixinProfile {
-    type: string
-    user_id: string
-    identity_number: string
-    phone: string
-    full_name: string
-    biography: string
-    avatar_url: string
-    relationship: string
-    mute_until: string
-    created_at: string
-    is_verified: boolean
-    is_scam: boolean
-    is_deactivated: boolean
-    code_id: string
-    code_url: string
-    features: any
-    has_safe: boolean
-    session_id: string
-    device_status: string
-    has_pin: boolean
-    receive_message_source: string
-    accept_conversation_source: string
-    accept_search_source: string
-    fiat_currency: string
-    transfer_notification_threshold: number
-    transfer_confirmation_threshold: number
-    pin_token_base64: string
-    pin_token: string
-    salt_base64: string
-    tip_key_base64: string
-    tip_counter: number
-    spend_public_key: string
-    has_emergency_contact: boolean
+  type: string
+  user_id: string
+  identity_number: string
+  phone: string
+  full_name: string
+  biography: string
+  avatar_url: string
+  relationship: string
+  mute_until: string
+  created_at: string
+  is_verified: boolean
+  is_scam: boolean
+  is_deactivated: boolean
+  code_id: string
+  code_url: string
+  features: any
+  has_safe: boolean
+  session_id: string
+  device_status: string
+  has_pin: boolean
+  receive_message_source: string
+  accept_conversation_source: string
+  accept_search_source: string
+  fiat_currency: string
+  transfer_notification_threshold: number
+  transfer_confirmation_threshold: number
+  pin_token_base64: string
+  pin_token: string
+  salt_base64: string
+  tip_key_base64: string
+  tip_counter: number
+  spend_public_key: string
+  has_emergency_contact: boolean
 }
-
-
 
 /**
  * Add Mixin login to your page.
@@ -121,28 +118,28 @@ export default function Mixin(
       },
     },
     token: {
-        url: "https://api.mixin.one/oauth/token",
-        async request(context) {
-          const response = await fetch("https://api.mixin.one/oauth/token", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              client_id: config.clientId,
-              client_secret: config.clientSecret,
-              code: context.params.code,
-            }),
-          }).then((resp) => resp.json());
+      url: "https://api.mixin.one/oauth/token",
+      async request(context) {
+        const response = await fetch("https://api.mixin.one/oauth/token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            client_id: config.clientId,
+            client_secret: config.clientSecret,
+            code: context.params.code,
+          }),
+        }).then((resp) => resp.json())
 
-          return {
-            tokens: {
-              access_token: response.data.access_token,
-              scope: response.data.scope,
-            },
-          };
-        },
+        return {
+          tokens: {
+            access_token: response.data.access_token,
+            scope: response.data.scope,
+          },
+        }
       },
+    },
     userinfo: "https://api.mixin.one/me",
     profile(profile) {
       return {
