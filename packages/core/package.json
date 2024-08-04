@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.32.0",
+  "version": "0.34.2",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -35,26 +35,31 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./index.js",
+      "default": "./index.js"
     },
     "./adapters": {
       "types": "./adapters.d.ts",
-      "import": "./adapters.js"
+      "import": "./adapters.js",
+      "default": "./adapters.js"
     },
     "./errors": {
       "types": "./errors.d.ts",
-      "import": "./errors.js"
+      "import": "./errors.js",
+      "default": "./errors.js"
     },
     "./jwt": {
       "types": "./jwt.d.ts",
-      "import": "./jwt.js"
+      "import": "./jwt.js",
+      "default": "./jwt.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
     },
     "./providers/*": {
       "types": "./providers/*.d.ts",
-      "import": "./providers/*.js"
+      "import": "./providers/*.js",
+      "default": "./providers/*.js"
     },
     "./types": {
       "types": "./types.d.ts"
@@ -93,6 +98,7 @@
     "dev": "pnpm css && pnpm providers && tsc -w",
     "test:e2e": "playwright test -c ../utils/playwright.config.ts",
     "test": "vitest run -c ../utils/vitest.config.ts",
+    "test:watch": "vitest -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {

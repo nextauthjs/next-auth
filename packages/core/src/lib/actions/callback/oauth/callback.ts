@@ -105,6 +105,7 @@ export async function handleOAuth(
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
   }
+
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
@@ -121,6 +122,7 @@ export async function handleOAuth(
         }
         return fetch(...args)
       },
+      clientPrivateKey: provider.token?.clientPrivateKey,
     }
   )
 

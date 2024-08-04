@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.19",
+  "version": "5.0.0-beta.20",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -15,19 +15,23 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./index.js",
+      "default": "./index.js"
     },
     "./jwt": {
       "types": "./jwt.d.ts",
-      "import": "./jwt.js"
+      "import": "./jwt.js",
+      "default": "./jwt.js"
     },
     "./middleware": {
       "types": "./middleware.d.ts",
-      "import": "./middleware.js"
+      "import": "./middleware.js",
+      "default": "./middleware.js"
     },
     "./next": {
       "types": "./next.d.ts",
-      "import": "./next.js"
+      "import": "./next.js",
+      "default": "./next.js"
     },
     "./providers": {
       "types": "./providers/index.d.ts"
@@ -37,15 +41,18 @@
     },
     "./providers/*": {
       "types": "./providers/*.d.ts",
-      "import": "./providers/*.js"
+      "import": "./providers/*.js",
+      "default": "./providers/*.js"
     },
     "./react": {
       "types": "./react.d.ts",
-      "import": "./react.js"
+      "import": "./react.js",
+      "default": "./react.js"
     },
     "./webauthn": {
       "types": "./webauthn.d.ts",
-      "import": "./webauthn.js"
+      "import": "./webauthn.js",
+      "default": "./webauthn.js"
     },
     "./package.json": "./package.json"
   },
