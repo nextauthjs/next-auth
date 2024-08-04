@@ -1,0 +1,77 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/mixin.svg" width="64" height="64" />
+
+# Mixin Provider
+
+## Resources
+
+- [Mixin documentation](https://developers.mixin.one/docs/api/oauth)
+
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/mixin
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/mixin
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+MIXIN_CLIENT_ID
+MIXIN_CLIENT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import MixinProvider from "next-auth/providers/mixin"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [MixinProvider({ clientId: process.env.MIXIN_CLIENT_ID, clientSecret: process.env.MIXIN_CLIENT_SECRET })],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import MixinProvider from "@auth/sveltekit/providers/mixin"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [MixinProvider({ clientId: process.env.MIXIN_CLIENT_ID, clientSecret: process.env.MIXIN_CLIENT_SECRET })],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import MixinProvider from "@auth/express/providers/mixin"
+
+app.use("/auth/*", ExpressAuth({ providers: [MixinProvider({ clientId: process.env.MIXIN_CLIENT_ID, clientSecret: process.env.MIXIN_CLIENT_SECRET })] }))
+```
+
+  </Code.Express>
+</Code>
