@@ -1,4 +1,3 @@
-import * as jose from "jose"
 import * as o from "oauth4webapi"
 import { InvalidCheck } from "../../../../errors.js"
 import { decode, encode } from "../../../../jwt.js"
@@ -13,46 +12,48 @@ import type { Cookie } from "../../../utils/cookie.js"
 import type { OAuthConfigInternal } from "../../../../providers/oauth.js"
 import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
 
-interface CheckPayload {
-  value: string
-}
-
 /** Returns a signed cookie. */
-export async function signCookie(
+export async function signCookie<P extends string | Record<string, any>>(
   type: keyof CookiesOptions,
-  value: string,
+  payload: P,
   maxAge: number,
-  options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>,
-  data?: any
+  options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>
 ): Promise<Cookie> {
   const { cookies, logger } = options
-
-  logger.debug(`CREATE_${type.toUpperCase()}`, { value, maxAge })
-
   const expires = new Date()
   expires.setTime(expires.getTime() + maxAge * 1000)
-  const token: any = { value }
-  if (type === "state" && data) token.data = data
-  const name = cookies[type].name
-  return {
+  const name = options.cookies[type].name
+
+  logger.debug(`CREATE_${type.toUpperCase()}`, {
     name,
-    value: await encode({ ...options.jwt, maxAge, token, salt: name }),
-    options: { ...cookies[type].options, expires },
-  }
+    payload,
+    maxAge,
+    expires,
+  })
+
+  const encoded = await encode({
+    ...options.jwt,
+    maxAge,
+    token: payload,
+    salt: name,
+  })
+  const cookieOptions = { ...cookies[type].options, expires }
+  return { name, value: encoded, options: cookieOptions }
 }
+
+type PKCEPayload = string
 
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export const pkce = {
   async create(options: InternalOptions<"oauth">) {
     const code_verifier = o.generateRandomCodeVerifier()
-    const value = await o.calculatePKCECodeChallenge(code_verifier)
-    const maxAge = PKCE_MAX_AGE
-    const cookie = await signCookie(
+    const cookie = await signCookie<PKCEPayload>(
       "pkceCodeVerifier",
       code_verifier,
-      maxAge,
+      PKCE_MAX_AGE,
       options
     )
+    const value = await o.calculatePKCECodeChallenge(code_verifier)
     return { cookie, value }
   },
   /**
@@ -76,13 +77,13 @@ export const pkce = {
     if (!codeVerifier)
       throw new InvalidCheck("PKCE code_verifier cookie was missing")
 
-    const value = await decode<CheckPayload>({
+    const payload = await decode<PKCEPayload>({
       ...options.jwt,
       token: codeVerifier,
       salt: options.cookies.pkceCodeVerifier.name,
     })
 
-    if (!value?.value)
+    if (!payload)
       throw new InvalidCheck("PKCE code_verifier value could not be parsed")
 
     // Clear the pkce code verifier cookie after use
@@ -92,30 +93,21 @@ export const pkce = {
       options: { ...options.cookies.pkceCodeVerifier.options, maxAge: 0 },
     })
 
-    return value.value
+    return payload
   },
 }
 
-const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-export function decodeState(value: string):
-  | {
-      /** If defined, a redirect proxy is being used to support multiple OAuth apps with a single callback URL */
-      origin?: string
-      /** Random value for CSRF protection */
-      random: string
-    }
-  | undefined {
-  try {
-    const decoder = new TextDecoder()
-    return JSON.parse(decoder.decode(jose.base64url.decode(value)))
-  } catch {}
+interface StatePayload {
+  random: string
+  origin?: string
 }
 
+const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export const state = {
-  async create(options: InternalOptions<"oauth">, data?: object) {
+  async create(options: InternalOptions<"oauth">, origin?: string) {
     const { provider } = options
     if (!provider.checks.includes("state")) {
-      if (data) {
+      if (origin) {
         throw new InvalidCheck(
           "State data was provided but the provider is not configured to use state"
         )
@@ -123,19 +115,13 @@ export const state = {
       return
     }
 
-    const encodedState = jose.base64url.encode(
-      JSON.stringify({ ...data, random: o.generateRandomState() })
-    )
-
-    const maxAge = STATE_MAX_AGE
-    const cookie = await signCookie(
+    const cookie = await signCookie<StatePayload>(
       "state",
-      encodedState,
-      maxAge,
-      options,
-      data
+      { origin, random: o.generateRandomState() },
+      STATE_MAX_AGE,
+      options
     )
-    return { cookie, value: encodedState }
+    return { cookie, value: cookie.value }
   },
   /**
    * Returns state if the provider is configured to use state,
@@ -147,35 +133,24 @@ export const state = {
   async use(
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalOptions<"oauth">,
-    paramRandom?: string
+    options: InternalOptions<"oauth">
   ): Promise<string | undefined> {
     const { provider } = options
     if (!provider.checks.includes("state")) return
 
-    const state = cookies?.[options.cookies.state.name]
+    const token = cookies?.[options.cookies.state.name]
 
-    if (!state) throw new InvalidCheck("State cookie was missing")
+    if (!token) throw new InvalidCheck("State cookie was missing")
 
     // IDEA: Let the user do something with the returned state
-    const encodedState = await decode<CheckPayload>({
+    const payload = await decode<StatePayload>({
       ...options.jwt,
-      token: state,
+      token,
       salt: options.cookies.state.name,
     })
 
-    if (!encodedState?.value)
+    if (!payload)
       throw new InvalidCheck("State (cookie) value could not be parsed")
-
-    const decodedState = decodeState(encodedState.value)
-
-    if (!decodedState)
-      throw new InvalidCheck("State (encoded) value could not be parsed")
-
-    if (decodedState.random !== paramRandom)
-      throw new InvalidCheck(
-        `Random state values did not match. Expected: ${decodedState.random}. Got: ${paramRandom}`
-      )
 
     // Clear the state cookie after use
     resCookies.push({
@@ -184,17 +159,59 @@ export const state = {
       options: { ...options.cookies.state.options, maxAge: 0 },
     })
 
-    return encodedState.value
+    return payload.random
+  },
+  /**
+   * When the authorization flow contains a state, we check if it's a redirect proxy
+   * and if so, we return the random state and the original redirect URL.
+   */
+  async handleRedirectProxy(
+    token: string | undefined,
+    options: InternalOptions<"oauth">
+  ) {
+    const { cookies, logger, isOnRedirectProxy, provider } = options
+    let proxyRedirect: string | undefined
+
+    if (provider.redirectProxyUrl && !token) {
+      throw new InvalidCheck(
+        "Missing state in request query or body, but required for redirect proxy"
+      )
+    }
+
+    const payload = await decode<StatePayload>({
+      ...options.jwt,
+      token,
+      salt: cookies.state.name,
+    })
+
+    if (!payload) {
+      throw new InvalidCheck("State param could not be parsed")
+    }
+
+    if (isOnRedirectProxy) {
+      if (!payload.origin) return // Regular signin on redirect proxy
+      proxyRedirect = `${payload.origin}?${new URLSearchParams(token)}`
+    }
+
+    if (proxyRedirect) logger.debug("proxy redirect", proxyRedirect)
+
+    return proxyRedirect
   },
 }
 
 const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+type NoncePayload = string
 export const nonce = {
   async create(options: InternalOptions<"oidc">) {
     if (!options.provider.checks.includes("nonce")) return
-    const value = o.generateRandomNonce()
     const maxAge = NONCE_MAX_AGE
-    const cookie = await signCookie("nonce", value, maxAge, options)
+    const value = o.generateRandomNonce()
+    const cookie = await signCookie<NoncePayload>(
+      "nonce",
+      value,
+      maxAge,
+      options
+    )
     return { cookie, value }
   },
   /**
@@ -216,13 +233,13 @@ export const nonce = {
     const nonce = cookies?.[options.cookies.nonce.name]
     if (!nonce) throw new InvalidCheck("Nonce cookie was missing")
 
-    const value = await decode<CheckPayload>({
+    const value = await decode<NoncePayload>({
       ...options.jwt,
       token: nonce,
       salt: options.cookies.nonce.name,
     })
 
-    if (!value?.value) throw new InvalidCheck("Nonce value could not be parsed")
+    if (!value) throw new InvalidCheck("Nonce value could not be parsed")
 
     // Clear the nonce cookie after use
     resCookies.push({
@@ -231,87 +248,58 @@ export const nonce = {
       options: { ...options.cookies.nonce.options, maxAge: 0 },
     })
 
-    return value.value
+    return value
   },
 }
 
-/**
- * When the authorization flow contains a state, we check if it's a redirect proxy
- * and if so, we return the random state and the original redirect URL.
- */
-export function handleState(
-  query: RequestInternal["query"],
-  provider: OAuthConfigInternal<any>,
-  isOnRedirectProxy: InternalOptions["isOnRedirectProxy"]
-) {
-  let randomState: string | undefined
-  let proxyRedirect: string | undefined
+const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 
-  if (provider.redirectProxyUrl && !query?.state) {
-    throw new InvalidCheck(
-      "Missing state in query, but required for redirect proxy"
-    )
-  }
-
-  const state = decodeState(query?.state)
-  randomState = state?.random
-
-  if (isOnRedirectProxy) {
-    if (!state?.origin) return { randomState }
-    proxyRedirect = `${state.origin}?${new URLSearchParams(query)}`
-  }
-
-  return { randomState, proxyRedirect }
+interface WebAuthnChallengePayload {
+  challenge: string
+  registerData?: User
 }
 
-const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-type WebAuthnChallengeCookie = { challenge: string; registerData?: User }
 export const webauthnChallenge = {
   async create(
     options: InternalOptions<WebAuthnProviderType>,
     challenge: string,
     registerData?: User
   ) {
-    const maxAge = WEBAUTHN_CHALLENGE_MAX_AGE
-    const data: WebAuthnChallengeCookie = { challenge, registerData }
-    const cookie = await signCookie(
-      "webauthnChallenge",
-      JSON.stringify(data),
-      maxAge,
-      options
-    )
-    return { cookie }
+    return {
+      cookie: await signCookie<WebAuthnChallengePayload>(
+        "webauthnChallenge",
+        { challenge, registerData },
+        WEBAUTHN_CHALLENGE_MAX_AGE,
+        options
+      ),
+    }
   },
-
-  /**
-   * Returns challenge if present,
-   */
+  /** Returns WebAuthn challenge if present. */
   async use(
     options: InternalOptions<WebAuthnProviderType>,
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[]
-  ): Promise<WebAuthnChallengeCookie> {
-    const challenge = cookies?.[options.cookies.webauthnChallenge.name]
+  ): Promise<WebAuthnChallengePayload> {
+    const token = cookies?.[options.cookies.webauthnChallenge.name]
 
-    if (!challenge) throw new InvalidCheck("Challenge cookie missing")
+    if (!token) throw new InvalidCheck("WebAuthn challenge cookie missing")
 
-    const value = await decode<CheckPayload>({
+    const payload = await decode<WebAuthnChallengePayload>({
       ...options.jwt,
-      token: challenge,
+      token,
       salt: options.cookies.webauthnChallenge.name,
     })
 
-    if (!value?.value)
-      throw new InvalidCheck("Challenge value could not be parsed")
+    if (!payload)
+      throw new InvalidCheck("WebAuthn challenge could not be parsed")
 
-    // Clear the pkce code verifier cookie after use
-    const cookie = {
+    // Clear the WebAuthn challenge cookie after use
+    resCookies.push({
       name: options.cookies.webauthnChallenge.name,
       value: "",
       options: { ...options.cookies.webauthnChallenge.options, maxAge: 0 },
-    }
-    resCookies.push(cookie)
+    })
 
-    return JSON.parse(value.value) as WebAuthnChallengeCookie
+    return payload
   },
 }

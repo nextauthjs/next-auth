@@ -10,7 +10,7 @@ import {
 } from "../../../errors.js"
 import { handleLoginOrRegister } from "./handle-login.js"
 import { handleOAuth } from "./oauth/callback.js"
-import { handleState } from "./oauth/checks.js"
+import { state } from "./oauth/checks.js"
 import { createHash } from "../../utils/web.js"
 
 import type { AdapterSession } from "../../../adapters.js"
@@ -57,28 +57,23 @@ export async function callback(
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
       // Use body if the response mode is set to form_post. For all other cases, use query
-      const payload =
+      const params =
         provider.authorization?.url.searchParams.get("response_mode") ===
         "form_post"
           ? body
           : query
 
-      const { proxyRedirect, randomState } = handleState(
-        payload,
-        provider,
-        options.isOnRedirectProxy
+      const proxyRedirect = await state.handleRedirectProxy(
+        params?.state,
+        options
       )
 
-      if (proxyRedirect) {
-        logger.debug("proxy redirect", { proxyRedirect, randomState })
-        return { redirect: proxyRedirect }
-      }
+      if (proxyRedirect) return { redirect: proxyRedirect }
 
       const authorizationResult = await handleOAuth(
-        payload,
+        params,
         request.cookies,
-        options,
-        randomState
+        options
       )
 
       if (authorizationResult.cookies.length) {
