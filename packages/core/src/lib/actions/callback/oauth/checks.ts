@@ -163,7 +163,7 @@ export const state = {
   },
   /**
    * When the authorization flow contains a state, we check if it's a redirect proxy
-   * and if so, we return the random state and the original redirect URL.
+   * and if so, we return original redirect URL.
    */
   async handleProxyRedirect(
     token: string | undefined,
