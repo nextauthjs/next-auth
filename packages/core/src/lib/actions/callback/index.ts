@@ -63,7 +63,7 @@ export async function callback(
           ? body
           : query
 
-      const proxyRedirect = await state.handleRedirectProxy(
+      const proxyRedirect = await state.handleProxyRedirect(
         params?.state,
         options
       )
