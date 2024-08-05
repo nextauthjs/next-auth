@@ -164,6 +164,6 @@ AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
 AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=<copy the tenant id here>
 ```
 
-That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
+Note that this will enforce a single-tenant deployment; where only members of your organization will be able to sign in. For details on how to correctly set up a multi-tenant configuration, [see this Github issue](https://github.com/nextauthjs/next-auth/issues/8374)
 
 - Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
