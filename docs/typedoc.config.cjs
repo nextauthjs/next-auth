@@ -32,6 +32,7 @@ module.exports = {
   plugin: [
     "typedoc-plugin-markdown",
     require.resolve("./typedoc-nextauth.cjs"),
+    "typedoc-plugin-mdn-links",
   ],
   disableSources: true,
   excludeNotDocumented: true,
