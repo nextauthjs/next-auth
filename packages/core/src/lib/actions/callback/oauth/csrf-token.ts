@@ -31,7 +31,7 @@ export async function createCSRFToken({
 }: CreateCSRFTokenParams) {
   if (cookieValue) {
     const [csrfToken, csrfTokenHash] = cookieValue.split("|")
-    const [bodyValueToken] = bodyValue?.split("|") || [];
+    const [bodyValueToken] = bodyValue?.split("|") || []
 
     const expectedCsrfTokenHash = await createHash(
       `${csrfToken}${options.secret}`
