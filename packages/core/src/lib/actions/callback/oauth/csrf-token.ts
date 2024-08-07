@@ -31,6 +31,7 @@ export async function createCSRFToken({
 }: CreateCSRFTokenParams) {
   if (cookieValue) {
     const [csrfToken, csrfTokenHash] = cookieValue.split("|")
+    const [bodyValueToken] = bodyValue.split("|")
 
     const expectedCsrfTokenHash = await createHash(
       `${csrfToken}${options.secret}`
@@ -40,7 +41,7 @@ export async function createCSRFToken({
       // If hash matches then we trust the CSRF token value
       // If this is a POST request and the CSRF Token in the POST request matches
       // the cookie we have already verified is the one we have set, then the token is verified!
-      const csrfTokenVerified = isPost && csrfToken === bodyValue
+      const csrfTokenVerified = isPost && csrfToken === bodyValueToken
 
       return { csrfTokenVerified, csrfToken }
     }
