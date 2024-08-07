@@ -121,6 +121,15 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://auth0.com" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/2824157?v=4" alt="Auth0 Logo" />
+        </a><br />
+        <div>Auth0</div>
+        <sub>💵</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
         </a><br />
@@ -134,8 +143,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Descope</div>
         <sub>💵</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://badass.dev" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/136839242?v=4" alt="Badass Courses Logo" />
@@ -157,6 +164,8 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Arcjet</div>
         <sub>💵</sub>
       </td>      
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
