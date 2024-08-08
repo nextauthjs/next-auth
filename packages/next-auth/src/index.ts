@@ -83,7 +83,8 @@ import type {
   AppRouteHandlerFn,
   AppRouteHandlerFnContext,
 } from "./lib/types.js"
-import type { NextRequest } from "next/server.js"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
