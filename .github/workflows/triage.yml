@@ -20,7 +20,7 @@ jobs:
         with:
           label-area-prefix: ""
           label-area-section: "[Provider|Adapter] type(.*)### Environment"
-          label-comments: '{ "incomplete": ".github/invalid-reproduction.md", "good first issue": ".github/good-first-issue.md" }'
+          label-comments: '{ "incomplete": ".github/invalid-reproduction.md", "good first issue": ".github/good-first-issue.md", "help needed": ".github/help-needed.md" }'
           reproduction-link-section: "### Reproduction URL(.*)### Describe the issue"
           reproduction-invalid-label: "invalid reproduction"
           reproduction-issue-labels: "bug,"

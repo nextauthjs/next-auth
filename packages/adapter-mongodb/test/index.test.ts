@@ -4,10 +4,9 @@ import { MongoClient } from "mongodb"
 
 const name = "test"
 const client = new MongoClient(`mongodb://localhost:27017/${name}`)
-const clientPromise = client.connect()
 
 runBasicTests({
-  adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(client),
   db: {
     async disconnect() {
       await client.db().dropDatabase()
