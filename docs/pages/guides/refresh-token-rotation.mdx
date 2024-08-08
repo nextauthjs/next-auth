@@ -62,8 +62,8 @@ export const { handlers, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (profile && account) {
+    async jwt({ token, account }) {
+      if (account) {
         // First-time login, save the `access_token`, its expiry and the `refresh_token`
         return {
           ...token,
