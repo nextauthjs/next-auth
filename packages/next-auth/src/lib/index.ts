@@ -176,7 +176,7 @@ export function initAuth(
           const auth = await authResponse.json()
 
           for (const cookie of authResponse.headers.getSetCookie())
-            if ("headers" in response)
+            if ("headers" in response && typeof response.headers.append === "function")
               response.headers.append("set-cookie", cookie)
             else response.appendHeader("set-cookie", cookie)
 
