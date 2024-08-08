@@ -283,7 +283,7 @@ export function EdgeDBAdapter(client: Client): Adapter {
           set {
             sessionToken := sessionToken ?? .sessionToken,
             expires := <datetime>expires ?? .expires,
-            user := user ?? .user
+            user := assert_exists(user ?? .user)
           }
         ) {
           sessionToken,
