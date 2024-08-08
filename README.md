@@ -93,6 +93,13 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://auth0.com" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/2824157?v=4" alt="Auth0 Logo" />
+        </a><br />
+        <div>Auth0</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
         </a><br />
@@ -120,6 +127,8 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Prisma</div>
         <sub>💵</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -134,8 +143,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Descope</div>
         <sub>💵</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://badass.dev" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/136839242?v=4" alt="Badass Courses Logo" />
@@ -156,7 +163,16 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         </a><br />
         <div>Arcjet</div>
         <sub>💵</sub>
-      </td>      
+      </td>
+      <td align="center" valign="top">
+        <a href="https://www.netlight.com/" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
+        </a><br />
+        <div>Netlight</div>
+        <sub>☁️</sub>
+      </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
@@ -169,13 +185,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
           <img height="96" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
         </a><br />
         <div>superblog</div>
-        <sub>☁️</sub>
-      </td>
-      <td align="center" valign="top">
-        <a href="https://www.netlight.com/" target="_blank">
-          <img height="96" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
-        </a><br />
-        <div>Netlight</div>
         <sub>☁️</sub>
       </td>
       <td align="center" valign="top">
