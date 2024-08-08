@@ -161,8 +161,11 @@ export function initAuth(
         }
       }
       // API Routes, getServerSideProps
-      const request = "req" in args[0] ? args[0].req : args[0]
-      const response: any = "res" in args[0] ? args[0].res : args[1]
+      // API Routes, getServerSideProps
+      const isReqResObject = "req" in args[0] && "res" in args[0] && "method" in args[0];
+      const request = isReqResObject ? args[0].req : args[0];
+      const response: any = isReqResObject ? args[0].res : args[1];
+      
       // @ts-expect-error -- request is NextRequest
       const _config = await config(request)
       onLazyLoad?.(_config)
