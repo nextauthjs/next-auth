@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
-import { Logo } from "./logo"
+import dynamic from "next/dynamic"
 import manifest from "@/data/manifest.json"
+
+const Logo = dynamic(() => import("./logo").then((mod) => mod.Logo), {
+  ssr: false,
+})
 
 const clamp = (min: number, num: number, max: number) =>
   Math.min(Math.max(num, min), max)
