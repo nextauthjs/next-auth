@@ -44,4 +44,4 @@ More information can be found at: https://opencollective.com/nextauth
 
 ## Notes
 
-The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
+The Auth.js/NextAuth.js project is not provided by or otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
