@@ -1,5 +1,4 @@
 import type { AuthAction } from "../../types.js"
-import { MissingSecret } from "../../errors.js"
 import { logger } from "./logger.js"
 import type { AuthConfig } from "../../index.js"
 

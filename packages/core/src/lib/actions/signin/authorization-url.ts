@@ -39,10 +39,10 @@ export async function getAuthorizationUrl(
   const authParams = url.searchParams
 
   let redirect_uri: string = provider.callbackUrl
-  let data: object | undefined
+  let data: string | undefined
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
-    data = { origin: provider.callbackUrl }
+    data = provider.callbackUrl
     logger.debug("using redirect proxy", { redirect_uri, data })
   }
 

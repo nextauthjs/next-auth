@@ -71,7 +71,7 @@ export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
     .encrypt(encryptionSecret)
 }
 
-/** Decodes a Auth.js issued JWT. */
+/** Decodes an Auth.js issued JWT. */
 export async function decode<Payload = JWT>(
   params: JWTDecodeParams
 ): Promise<Payload | null> {
