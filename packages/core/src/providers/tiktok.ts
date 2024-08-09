@@ -200,7 +200,6 @@ export default function TikTok<P extends TiktokProfile>(
 ): OAuthConfig<P> {
   return {
     id: "tiktok",
-    issuer: "authjs.dev",
     name: "TikTok",
     type: "oauth",
     authorization: {
