@@ -62,11 +62,7 @@ import NextAuth from "next-auth"
 import Descope from "next-auth/providers/descope"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [ Descope({
-      clientId: process.env.AUTH_DESCOPE_ID,
-      clientSecret: process.env.AUTH_DESCOPE_SECRET,
-      checks: ["pkce", "state"],
-    })]
+  providers: [ Descope ]
 })
 ```
 
@@ -79,11 +75,7 @@ import Descope from "@auth/qwik/providers/descope"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   () => ({
-    providers: [ Descope({
-      clientId: process.env.AUTH_DESCOPE_ID,
-      clientSecret: process.env.AUTH_DESCOPE_SECRET,
-      checks: ["pkce", "state"],
-    })]
+    providers: [ Descope ]
   })
 )
 ```
@@ -96,11 +88,7 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import Descope from "@auth/sveltekit/providers/descope"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [ Descope({
-      clientId: process.env.AUTH_DESCOPE_ID,
-      clientSecret: process.env.AUTH_DESCOPE_SECRET,
-      checks: ["pkce", "state"],
-    })]
+  providers: [ Descope ]
 })
 ```
 
@@ -111,11 +99,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import Descope from "@auth/express/providers/descope"
 
-app.use("/auth/*", ExpressAuth({ providers: [ Descope({
-      clientId: process.env.AUTH_DESCOPE_ID,
-      clientSecret: process.env.AUTH_DESCOPE_SECRET,
-      checks: ["pkce", "state"],
-    })]}))
+app.use("/auth/*", ExpressAuth({ providers: [ Descope ]}))
 ```
 
   </Code.Express>
