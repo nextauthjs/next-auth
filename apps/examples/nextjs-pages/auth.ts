@@ -30,6 +30,7 @@ import GitHub from "next-auth/providers/github"
 // import Keycloak from "next-auth/providers/keycloak"
 // import Line from "next-auth/providers/line"
 // import LinkedIn from "next-auth/providers/linkedin"
+// import Mixin from "next-auth/providers/mixin"
 // import Mailchimp from "next-auth/providers/mailchimp"
 // import Mailru from "next-auth/providers/mailru"
 // import Medium from "next-auth/providers/medium"
@@ -99,6 +100,7 @@ export const config = {
     // Keycloak,
     // Line,
     // LinkedIn,
+    // Mixin,
     // Mailchimp,
     // Mailru,
     // Medium,
