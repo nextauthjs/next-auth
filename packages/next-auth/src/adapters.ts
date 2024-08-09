@@ -1,5 +1,4 @@
 import { Account, User, Awaitable } from "."
-// @ts-expect-error Used for backwards compatibility
 import type { Adapter as FutureAdapter } from "@auth/core/adapters"
 export interface AdapterUser extends User {
   id: string
@@ -68,14 +67,14 @@ export interface Adapter {
   getUserByEmail?: (email: string) => Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
   getUserByAccount?: (
-    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
+    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">,
   ) => Awaitable<AdapterUser | null>
   updateUser?: (
-    user: Partial<AdapterUser> & Pick<AdapterUser, "id">
+    user: Partial<AdapterUser> & Pick<AdapterUser, "id">,
   ) => Awaitable<AdapterUser>
   /** @todo Implement */
   deleteUser?: (
-    userId: string
+    userId: string,
   ) => Promise<void> | Awaitable<AdapterUser | null | undefined>
   linkAccount?:
     | FutureAdapter["linkAccount"]
@@ -98,10 +97,10 @@ export interface Adapter {
     expires: Date
   }) => Awaitable<AdapterSession>
   getSessionAndUser?: (
-    sessionToken: string
+    sessionToken: string,
   ) => Awaitable<{ session: AdapterSession; user: AdapterUser } | null>
   updateSession?: (
-    session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+    session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">,
   ) => Awaitable<AdapterSession | null | undefined>
   /**
    * Deletes a session from the database.
@@ -109,10 +108,10 @@ export interface Adapter {
    * that is being deleted for logging purposes.
    */
   deleteSession?: (
-    sessionToken: string
+    sessionToken: string,
   ) => Promise<void> | Awaitable<AdapterSession | null | undefined>
   createVerificationToken?: (
-    verificationToken: VerificationToken
+    verificationToken: VerificationToken,
   ) => Awaitable<VerificationToken | null | undefined>
   /**
    * Return verification token from the database
