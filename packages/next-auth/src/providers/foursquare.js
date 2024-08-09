@@ -4,7 +4,7 @@ import { once } from "events"
 /** @type {import("src/providers").OAuthProvider} */
 /** @type {import(".").OAuthProvider} */
 export default function Foursquare(options) {
-  const { apiVersion = "20210801" } = options
+  const { apiVersion = "20230131" } = options
   return {
     id: "foursquare",
     name: "Foursquare",
@@ -40,7 +40,7 @@ export default function Foursquare(options) {
         return JSON.parse(Buffer.concat(parts))
       },
     },
-    profile({ response: { profile } }) {
+    profile({ response: { user: profile } }) {
       return {
         id: profile.id,
         name: `${profile.firstName} ${profile.lastName}`,
