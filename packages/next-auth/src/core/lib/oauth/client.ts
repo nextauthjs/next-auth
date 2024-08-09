@@ -36,7 +36,8 @@ export async function openidClient(
       redirect_uris: [provider.callbackUrl],
       ...provider.client,
     },
-    provider.jwks
+    provider.jwks,
+    provider.clientOptions
   )
 
   // allow a 10 second skew
