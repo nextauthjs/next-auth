@@ -99,7 +99,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import Descope from "@auth/express/providers/descope"
 
-app.use("/auth/*", ExpressAuth({ providers: [Descope]}))
+app.use("/auth/*", ExpressAuth({ providers: [Descope] }))
 ```
 
   </Code.Express>
