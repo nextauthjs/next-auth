@@ -5,7 +5,7 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
-import { type LoggerInstance } from "./utils/logger.js"
+import { makeLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 
 import type { InternalOptions, RequestInternal } from "../types.js"
@@ -13,7 +13,7 @@ import type { AuthConfig } from "../index.js"
 
 interface InitParams {
   url: URL
-  authOptions: AuthConfig & { logger: LoggerInstance }
+  authOptions: AuthConfig
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -65,7 +65,7 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const logger = authOptions.logger;
+  const logger = makeLogger(authOptions)
   const { providers, provider } = parseProviders({
     providers: authOptions.providers,
     url,

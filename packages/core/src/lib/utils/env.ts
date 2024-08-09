@@ -51,7 +51,7 @@ export function createActionURL(
   protocol: string,
   headers: Headers,
   envObject: any,
-  config?: Pick<AuthConfig, "basePath" | "logger" | "debug">
+  config?: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
   const basePath = config?.basePath
   let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL

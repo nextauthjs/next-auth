@@ -65,11 +65,11 @@ export function makeLogger(
   config?: Pick<AuthConfig, "logger" | "debug">
 ): LoggerInstance {
   const newLogger: LoggerInstance = {
-    ...defaultLogger
+    ...defaultLogger,
   }
 
   // Turn off debug logging if `debug` isn't set to `true`
-  if (!config?.debug) newLogger.debug = () => { }
+  if (!config?.debug) newLogger.debug = () => {}
 
   if (config?.logger?.error) newLogger.error = config.logger.error
   if (config?.logger?.warn) newLogger.warn = config.logger.warn

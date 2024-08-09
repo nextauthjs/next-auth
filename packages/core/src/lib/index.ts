@@ -5,13 +5,13 @@ import renderPage from "./pages/index.js"
 import * as actions from "./actions/index.js"
 import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
 
-import type { LoggerInstance, RequestInternal, ResponseInternal } from "../types.js"
+import type { RequestInternal, ResponseInternal } from "../types.js"
 import type { AuthConfig } from "../index.js"
 
 /** @internal */
 export async function AuthInternal(
   request: RequestInternal,
-  authOptions: AuthConfig & { logger: LoggerInstance },
+  authOptions: AuthConfig
 ): Promise<ResponseInternal> {
   const { action, providerId, error, method } = request
 

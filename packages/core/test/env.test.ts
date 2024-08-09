@@ -101,7 +101,7 @@ describe("config is inferred from environment variables", () => {
 })
 
 describe("createActionURL", () => {
-  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => { })
+  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
 
   afterEach(() => {
     consoleWarnSpy.mockClear()
