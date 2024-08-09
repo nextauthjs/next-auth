@@ -1,0 +1,50 @@
+{
+  "name": "appwrite-adapter",
+  "version": "0.1.0",
+  "description": "Appwrite adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextauthjs/next-auth.git"
+  },
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "appwrite"
+  ],
+  "author": "Sourab Pramanik <shubpramanik241@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "./test/test.sh"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "node-appwrite": "^11.1.0"
+  },
+  "devDependencies": {
+    "node-appwrite": "^11.1.0"
+  }
+}

@@ -75,6 +75,7 @@
       ],
       "dependsOn": [
         "@auth/core#build",
+        "@auth/appwrite-adapter#build",
         "@auth/azure-tables-adapter#build",
         "@auth/d1-adapter#build",
         "@auth/dgraph-adapter#build",
