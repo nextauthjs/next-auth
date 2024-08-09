@@ -46,7 +46,7 @@ import {
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
-import { makeLogger, type LoggerInstance } from "./lib/utils/logger.js"
+import { setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
@@ -101,8 +101,7 @@ export async function Auth(
   request: Request,
   config: AuthConfig
 ): Promise<Response | ResponseInternal> {
-  const logger = makeLogger(config)
-  config.logger ??= logger
+  const logger = setLogger(config)
 
   const internalRequest = await toInternalRequest(request, config)
   // There was an error parsing the request

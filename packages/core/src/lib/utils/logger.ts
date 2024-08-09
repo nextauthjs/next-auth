@@ -61,7 +61,7 @@ const defaultLogger: LoggerInstance = {
  * Override the built-in logger with user's implementation.
  * Any `undefined` level will use the default logger.
  */
-export function makeLogger(
+export function setLogger(
   config: Pick<AuthConfig, "logger" | "debug">
 ): LoggerInstance {
   const newLogger: LoggerInstance = {
@@ -75,5 +75,6 @@ export function makeLogger(
   if (config?.logger?.warn) newLogger.warn = config.logger.warn
   if (config?.logger?.debug) newLogger.debug = config.logger.debug
 
+  config.logger ??= newLogger
   return newLogger
 }

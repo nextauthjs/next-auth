@@ -1,6 +1,6 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
-import { makeLogger } from "./logger.js"
+import { setLogger } from "./logger.js"
 
 import type {
   AuthAction,
@@ -52,7 +52,7 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
-    const logger = makeLogger(config)
+    const logger = setLogger(config)
     logger.error(e as Error)
     logger.debug("request", req)
   }

@@ -1,6 +1,6 @@
 import type { AuthAction } from "../../types.js"
 import type { AuthConfig } from "../../index.js"
-import { makeLogger } from "./logger.js"
+import { setLogger } from "./logger.js"
 
 /** Set default env variables on the config object */
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
@@ -53,7 +53,7 @@ export function createActionURL(
   envObject: any,
   config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
-  const logger = makeLogger(config)
+  const logger = setLogger(config)
   const basePath = config?.basePath
   let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
