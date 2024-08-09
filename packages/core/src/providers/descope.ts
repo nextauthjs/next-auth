@@ -101,6 +101,7 @@ export default function Descope(
       bg: "#1C1C23",
       text: "#ffffff",
     },
+    checks: ["pkce", "state"],
     options: config,
   }
 }
