@@ -32,7 +32,7 @@ export async function signIn(
     protocol,
     headers,
     env,
-    config.basePath
+    config
   )
 
   if (!provider) {
@@ -97,7 +97,7 @@ export async function signOut(
     protocol,
     headers,
     env,
-    config.basePath
+    config
   )
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
@@ -131,7 +131,7 @@ export async function auth(
     protocol,
     req.headers,
     env,
-    config.basePath
+    config
   )
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },

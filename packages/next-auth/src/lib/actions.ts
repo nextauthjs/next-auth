@@ -29,7 +29,7 @@ export async function signIn(
     headers.get("x-forwarded-proto"),
     headers,
     process.env,
-    config.basePath
+    config
   )
 
   if (!provider) {
@@ -99,7 +99,7 @@ export async function signOut(
     headers.get("x-forwarded-proto"),
     headers,
     process.env,
-    config.basePath
+    config
   )
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
@@ -128,7 +128,7 @@ export async function update(
     headers.get("x-forwarded-proto"),
     headers,
     process.env,
-    config.basePath
+    config
   )
   const body = JSON.stringify({ data })
   const req = new Request(url, { method: "POST", headers, body })
