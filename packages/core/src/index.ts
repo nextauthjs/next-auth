@@ -153,7 +153,8 @@ export async function Auth(
       return toResponse(page)
     }
 
-    return Response.redirect(`${pages.error}?error=Configuration`)
+    const url = `${internalRequest.url.origin}${pages.error}?error=Configuration`
+    return Response.redirect(url)
   }
 
   const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
