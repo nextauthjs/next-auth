@@ -99,17 +99,22 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
+    "@auth/core": "0.34.2",
     "next": "^12.2.5 || ^13 || ^14",
     "nodemailer": "^6.6.5",
     "react": "^17.0.2 || ^18",
     "react-dom": "^17.0.2 || ^18"
   },
   "peerDependenciesMeta": {
+    "@auth/core": {
+      "optional": true
+    },
     "nodemailer": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@auth/core": "0.34.2",
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.2",
     "@babel/plugin-proposal-optional-catch-binding": "^7.16.7",

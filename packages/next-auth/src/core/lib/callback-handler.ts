@@ -104,6 +104,7 @@ export default async function callbackHandler(params: {
     } else {
       const { id: _, ...newUser } = { ...profile, emailVerified: new Date() }
       // Create user account if there isn't one for the email address already
+      // @ts-expect-error see adapters.ts' FutureAdapter["createUser"]
       user = await createUser(newUser)
       await events.createUser?.({ user })
       isNewUser = true
@@ -153,6 +154,7 @@ export default async function callbackHandler(params: {
       if (user) {
         // If the user is already signed in and the OAuth account isn't already associated
         // with another user account then we can go ahead and link the accounts safely.
+        // @ts-expect-error see adapters.ts' FutureAdapter["linkAccount"]
         await linkAccount({ ...account, userId: user.id })
         await events.linkAccount?.({ user, account, profile })
 
@@ -206,10 +208,12 @@ export default async function callbackHandler(params: {
         // create a new account for the user, link it to the OAuth acccount and
         // create a new session for them so they are signed in with it.
         const { id: _, ...newUser } = { ...profile, emailVerified: null }
+        // @ts-expect-error see adapters.ts' FutureAdapter["createUser"]
         user = await createUser(newUser)
       }
       await events.createUser?.({ user })
 
+      // @ts-expect-error see adapters.ts' FutureAdapter["linkAccount"]
       await linkAccount({ ...account, userId: user.id })
       await events.linkAccount?.({ user, account, profile })
 
