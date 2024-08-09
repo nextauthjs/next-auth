@@ -33,6 +33,7 @@ export default function Client() {
             </>
           ) : (
             <>
+              <button onClick={() => signIn("mailcow")}>Sign in Mailcow</button>
               <button onClick={() => signIn("github")}>Sign in GitHub</button>
               <button onClick={() => signIn("credentials", {})}>
                 Sign in Credentials

@@ -6,6 +6,7 @@ import Facebook from "next-auth/providers/facebook"
 import Twitter from "next-auth/providers/twitter"
 import Keycloak from "next-auth/providers/keycloak"
 import LinkedIn from "next-auth/providers/linkedin"
+import Mailcow from "next-auth/providers/mailcow"
 
 declare module "next-auth" {
   /**
@@ -43,6 +44,11 @@ export default {
     Facebook,
     Twitter,
     LinkedIn,
+    Mailcow({
+      clientId: process.env.AUTH_MAILCOW_ID,
+      clientSecret: process.env.AUTH_MAILCOW_SECRET,
+      baseUrl: process.env.AUTH_MAILCOW_URL,
+    }),
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
