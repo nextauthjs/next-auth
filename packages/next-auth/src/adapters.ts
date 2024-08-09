@@ -1,5 +1,6 @@
 import { Account, User, Awaitable } from "."
 import type { Adapter as FutureAdapter } from "@auth/core/adapters"
+
 export interface AdapterUser extends User {
   id: string
   email: string
