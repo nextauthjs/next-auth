@@ -119,7 +119,7 @@ export type TokenSet = Partial<
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface Account extends Partial<OpenIDTokenEndpointResponse> {
-  /** Provider's id for this account. Eg.: "google" */
+  /** Provider's id for this account. E.g. "google". See the full list at https://authjs.dev/reference/core/providers */
   provider: string
   /**
    * This value depends on the type of the provider being used to create the account.
