@@ -3,6 +3,7 @@ import Apple from "@auth/sveltekit/providers/apple"
 import Auth0 from "@auth/sveltekit/providers/auth0"
 import AzureB2C from "@auth/sveltekit/providers/azure-ad-b2c"
 import BoxyHQSAML from "@auth/sveltekit/providers/boxyhq-saml"
+import Clerk from "@auth/sveltekit/providers/clerk"
 import Cognito from "@auth/sveltekit/providers/cognito"
 import Coinbase from "@auth/sveltekit/providers/coinbase"
 import Discord from "@auth/sveltekit/providers/discord"
@@ -42,6 +43,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       clientSecret: "dummy",
       issuer: env.AUTH_BOXYHQ_SAML_ISSUER,
     }),
+    Clerk,
     Cognito,
     Coinbase,
     Discord,

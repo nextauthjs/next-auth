@@ -9,6 +9,7 @@ import NextAuth from "next-auth"
 // import Box from "next-auth/providers/box"
 // import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 // import Bungie from "next-auth/providers/bungie"
+// import Clerk from "next-auth/providers/clerk"
 // import Cognito from "next-auth/providers/cognito"
 // import Coinbase from "next-auth/providers/coinbase"
 // import Discord from "next-auth/providers/discord"
@@ -78,6 +79,7 @@ export const config = {
     // Box,
     // BoxyHQSAML,
     // Bungie,
+    // Clerk
     // Cognito,
     // Coinbase,
     // Discord,

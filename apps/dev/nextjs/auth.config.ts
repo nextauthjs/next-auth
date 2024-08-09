@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
+import Clerk from "next-auth/providers/clerk"
 import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
@@ -26,6 +27,11 @@ declare module "next-auth" {
 export default {
   debug: true,
   providers: [
+    Clerk({
+      clientId: process.env.AUTH_CLERK_ID,
+      clientSecret: process.env.AUTH_CLERK_SECRET,
+      baseUrl: process.env.AUTH_CLERK_URL,
+    }),
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       authorize(c) {
@@ -39,7 +45,7 @@ export default {
     }),
     GitHub,
     Google,
-    Keycloak,
+    // Keycloak,
     Facebook,
     Twitter,
     LinkedIn,

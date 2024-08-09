@@ -2,6 +2,7 @@ import Apple from "@auth/express/providers/apple"
 import Auth0 from "@auth/express/providers/auth0"
 import AzureB2C from "@auth/express/providers/azure-ad-b2c"
 import BoxyHQSAML from "@auth/express/providers/boxyhq-saml"
+import Clerk from "@auth/express/providers/clerk"
 import Cognito from "@auth/express/providers/cognito"
 import Coinbase from "@auth/express/providers/coinbase"
 import Discord from "@auth/express/providers/discord"
@@ -40,6 +41,7 @@ export const authConfig = {
       clientSecret: "dummy",
       issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
     }),
+    Clerk,
     Cognito,
     Coinbase,
     Discord,
