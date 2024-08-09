@@ -224,7 +224,7 @@ importers:
         version: link:../../../packages/adapter-unstorage
       unstorage:
         specifier: ^1.10.2
-        version: 1.10.2(@azure/data-tables@13.2.2)(@vercel/kv@1.0.1)(ioredis@5.4.1)
+        version: 1.10.2(@azure/cosmos@4.0.0)(@azure/data-tables@13.2.2)(@vercel/kv@1.0.1)(ioredis@5.4.1)
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: next
@@ -342,6 +342,16 @@ importers:
       '@azure/data-tables':
         specifier: ^13.2.1
         version: 13.2.2
+
+  packages/adapter-cosmosdb:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@azure/cosmos':
+        specifier: ^4.0.0
+        version: 4.0.0
 
   packages/adapter-d1:
     dependencies:
@@ -639,7 +649,7 @@ importers:
         version: 4.6.12
       unstorage:
         specifier: ^1.10.1
-        version: 1.10.1(@azure/data-tables@13.2.2)(@upstash/redis@1.28.2)
+        version: 1.10.1(@azure/cosmos@4.0.0)(@azure/data-tables@13.2.2)(@upstash/redis@1.28.2)
 
   packages/adapter-upstash-redis:
     dependencies:
@@ -1204,6 +1214,10 @@ packages:
 
   '@azure/core-xml@1.3.4':
     resolution: {integrity: sha512-B1xI79Ur/u+KR69fGTcsMNj8KDjBSqAy0Ys6Byy4Qm1CqoUy7gCT5A7Pej0EBWRskuH6bpCwrAnosfmQEalkcg==}
+    engines: {node: '>=14.0.0'}
+
+  '@azure/cosmos@4.0.0':
+    resolution: {integrity: sha512-/Z27p1+FTkmjmm8jk90zi/HrczPHw2t8WecFnsnTe4xGocWl0Z4clP0YlLUTJPhRLWYa5upwD9rMvKJkS1f1kg==}
     engines: {node: '>=14.0.0'}
 
   '@azure/data-tables@13.2.2':
@@ -11007,6 +11021,9 @@ packages:
   pretty-format@3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
 
+  priorityqueuejs@1.0.0:
+    resolution: {integrity: sha512-lg++21mreCEOuGWTbO5DnJKAdxfjrdN0S9ysoW9SzdSJvbkWpkaDdpG/cdsPCsEnoLUwmd9m3WcZhngW7yKA2g==}
+
   prism-react-renderer@2.1.0:
     resolution: {integrity: sha512-I5cvXHjA1PVGbGm1MsWCpvBCRrYyxEri0MC7/JbfIfYfcXAxHyO5PaUjs3A8H5GW6kJcLhTHxxMaOZZpRZD2iQ==}
     peerDependencies:
@@ -11669,6 +11686,10 @@ packages:
 
   selderee@0.11.0:
     resolution: {integrity: sha512-5TF+l7p4+OsnP8BCCvSyZiSPc4x4//p5uPwK8TCnVPJYRmU2aYKMpOXvw8zM5a5JvuuCGN1jmsMwuU2W02ukfA==}
+
+  semaphore@1.1.0:
+    resolution: {integrity: sha512-O4OZEaNtkMd/K0i6js9SL+gqy0ZCBMgUvlSqHKi4IBdjhe7wB8pwztUk1BbZ1fmrvpwFrPbHzqd2w5pTcJH6LA==}
+    engines: {node: '>=0.8.0'}
 
   semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
@@ -12995,6 +13016,9 @@ packages:
 
   unist-util-visit@5.0.0:
     resolution: {integrity: sha512-MR04uvD+07cwl/yhVuVWAtw+3GOR/knlL55Nd/wAdblk27GCVt3lqpTivy/tkJcZoNPzTwS1Y+KMojlLDhoTzg==}
+
+  universal-user-agent@6.0.1:
+    resolution: {integrity: sha512-yCzhz6FN2wU1NiiQRogkTQszlQSlpWaw8SvVegAc+bDxbzHgh1vX8uIe8OYyMH6DwH+sdTJsgMl36+mSMdRJIQ==}
 
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -14500,6 +14524,24 @@ snapshots:
     dependencies:
       fast-xml-parser: 4.3.3
       tslib: 2.6.2
+
+  '@azure/cosmos@4.0.0':
+    dependencies:
+      '@azure/abort-controller': 1.1.0
+      '@azure/core-auth': 1.5.0
+      '@azure/core-rest-pipeline': 1.13.0
+      '@azure/core-tracing': 1.0.1
+      debug: 4.3.4(supports-color@8.1.1)
+      fast-json-stable-stringify: 2.1.0
+      jsbi: 3.2.5
+      node-abort-controller: 3.1.1
+      priorityqueuejs: 1.0.0
+      semaphore: 1.1.0
+      tslib: 2.6.2
+      universal-user-agent: 6.0.1
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@azure/data-tables@13.2.2':
     dependencies:
@@ -26913,6 +26955,8 @@ snapshots:
 
   pretty-format@3.8.0: {}
 
+  priorityqueuejs@1.0.0: {}
+
   prism-react-renderer@2.1.0(react@18.3.1):
     dependencies:
       '@types/prismjs': 1.26.3
@@ -27791,6 +27835,8 @@ snapshots:
   selderee@0.11.0:
     dependencies:
       parseley: 0.12.1
+
+  semaphore@1.1.0: {}
 
   semver@5.7.2: {}
 
@@ -29232,6 +29278,8 @@ snapshots:
       unist-util-is: 6.0.0
       unist-util-visit-parents: 6.0.1
 
+  universal-user-agent@6.0.1: {}
+
   universalify@0.1.2: {}
 
   universalify@0.2.0: {}
@@ -29260,7 +29308,7 @@ snapshots:
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.6.1
 
-  unstorage@1.10.1(@azure/data-tables@13.2.2)(@upstash/redis@1.28.2):
+  unstorage@1.10.1(@azure/cosmos@4.0.0)(@azure/data-tables@13.2.2)(@upstash/redis@1.28.2):
     dependencies:
       anymatch: 3.1.3
       chokidar: 3.5.3
@@ -29274,12 +29322,13 @@ snapshots:
       ofetch: 1.3.3
       ufo: 1.3.2
     optionalDependencies:
+      '@azure/cosmos': 4.0.0
       '@azure/data-tables': 13.2.2
       '@upstash/redis': 1.28.2
     transitivePeerDependencies:
       - supports-color
 
-  unstorage@1.10.2(@azure/data-tables@13.2.2)(@vercel/kv@1.0.1)(ioredis@5.4.1):
+  unstorage@1.10.2(@azure/cosmos@4.0.0)(@azure/data-tables@13.2.2)(@vercel/kv@1.0.1)(ioredis@5.4.1):
     dependencies:
       anymatch: 3.1.3
       chokidar: 3.6.0
@@ -29292,6 +29341,7 @@ snapshots:
       ofetch: 1.3.3
       ufo: 1.5.3
     optionalDependencies:
+      '@azure/cosmos': 4.0.0
       '@azure/data-tables': 13.2.2
       '@vercel/kv': 1.0.1
       ioredis: 5.4.1
