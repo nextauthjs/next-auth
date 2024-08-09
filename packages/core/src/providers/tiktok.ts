@@ -196,7 +196,7 @@ export interface TiktokProfile extends Record<string, any> {
  * :::
  */
 export default function TikTok<P extends TiktokProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P>,
 ): OAuthConfig<P> {
   return {
     id: "tiktok",
@@ -212,8 +212,9 @@ export default function TikTok<P extends TiktokProfile>(
     },
 
     token: {
+      url: "https://open.tiktokapis.com/v2/oauth/token/",
       async request({ params, provider }) {
-        const res = await fetch(`https://open.tiktokapis.com/v2/oauth/token/`, {
+        const res = await fetch(provider.token?.url!, {
           method: "POST",
           headers: {
             "Cache-Control": "no-cache",
