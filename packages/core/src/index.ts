@@ -102,6 +102,7 @@ export async function Auth(
   config: AuthConfig
 ): Promise<Response | ResponseInternal> {
   const logger = makeLogger(config)
+  config.logger ??= logger
 
   const internalRequest = await toInternalRequest(request, config)
   // There was an error parsing the request
@@ -159,7 +160,6 @@ export async function Auth(
   const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
   const isRaw = config.raw === raw
   try {
-    config.logger ??= logger
     const internalResponse = await AuthInternal(internalRequest, config)
     if (isRaw) return internalResponse
 
