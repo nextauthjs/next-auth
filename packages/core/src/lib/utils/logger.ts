@@ -62,7 +62,7 @@ const defaultLogger: LoggerInstance = {
  * Any `undefined` level will use the default logger.
  */
 export function makeLogger(
-  config?: Pick<AuthConfig, "logger" | "debug">
+  config: Pick<AuthConfig, "logger" | "debug">
 ): LoggerInstance {
   const newLogger: LoggerInstance = {
     ...defaultLogger,

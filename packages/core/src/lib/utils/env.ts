@@ -51,8 +51,9 @@ export function createActionURL(
   protocol: string,
   headers: Headers,
   envObject: any,
-  config?: Pick<AuthConfig, "basePath" | "logger">
+  config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
+  const logger = makeLogger(config)
   const basePath = config?.basePath
   let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
@@ -60,7 +61,6 @@ export function createActionURL(
   if (envUrl) {
     url = new URL(envUrl)
     if (basePath && basePath !== "/" && url.pathname !== "/") {
-      const logger = makeLogger(config)
       logger.warn(
         url.pathname === basePath
           ? "env-url-basepath-redundant"

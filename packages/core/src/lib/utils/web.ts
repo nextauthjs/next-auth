@@ -1,5 +1,6 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
+import { makeLogger } from "./logger.js"
 
 import type {
   AuthAction,
@@ -8,7 +9,6 @@ import type {
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
 import type { AuthConfig } from "../../index.js"
-import { makeLogger } from "./logger.js"
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
