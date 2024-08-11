@@ -59,10 +59,10 @@ export const __NEXTAUTH: AuthClientConfig = {
   baseUrlServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ??
       process.env.NEXTAUTH_URL ??
-      process.env.VERCEL_URL
+      process.env.VERCEL_URL,
   ).origin,
   basePathServer: parseUrl(
-    process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
+    process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL,
   ).path,
   _lastSync: 0,
   _session: undefined,
@@ -70,6 +70,10 @@ export const __NEXTAUTH: AuthClientConfig = {
 }
 
 let broadcastChannel: BroadcastChannel | null = null
+
+function getNewBroadcastChannel() {
+  return new BroadcastChannel("next-auth")
+}
 
 function broadcast() {
   if (typeof BroadcastChannel === "undefined") {
@@ -81,7 +85,7 @@ function broadcast() {
   }
 
   if (broadcastChannel === null) {
-    broadcastChannel = new BroadcastChannel("next-auth")
+    broadcastChannel = getNewBroadcastChannel()
   }
 
   return broadcastChannel
@@ -124,7 +128,7 @@ export const SessionContext = React.createContext?.<
  * :::
  */
 export function useSession<R extends boolean>(
-  options?: UseSessionOptions<R>
+  options?: UseSessionOptions<R>,
 ): SessionContextValue<R> {
   if (!SessionContext) {
     throw new Error("React Context is unavailable in Server Components")
@@ -134,7 +138,7 @@ export function useSession<R extends boolean>(
   const value: SessionContextValue<R> = React.useContext(SessionContext)
   if (!value && process.env.NODE_ENV !== "production") {
     throw new Error(
-      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />",
     )
   }
 
@@ -175,10 +179,11 @@ export async function getSession(params?: GetSessionParams) {
     "session",
     __NEXTAUTH,
     logger,
-    params
+    params,
   )
   if (params?.broadcast ?? true) {
-    broadcast().postMessage({
+    const broadcastChannel = getNewBroadcastChannel()
+    broadcastChannel.postMessage({
       event: "session",
       data: { trigger: "getSession" },
     })
@@ -196,7 +201,7 @@ export async function getCsrfToken() {
   const response = await fetchData<{ csrfToken: string }>(
     "csrf",
     __NEXTAUTH,
-    logger
+    logger,
   )
   return response?.csrfToken ?? ""
 }
@@ -227,7 +232,7 @@ export async function signIn<
       : BuiltInProviderType
   >,
   options?: SignInOptions,
-  authorizationParams?: SignInAuthorizationParams
+  authorizationParams?: SignInAuthorizationParams,
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
@@ -271,7 +276,7 @@ export async function signIn<
         csrfToken,
         callbackUrl,
       }),
-    }
+    },
   )
 
   const data = await res.json()
@@ -306,7 +311,7 @@ export async function signIn<
  * Handles CSRF protection.
  */
 export async function signOut<R extends boolean = true>(
-  options?: SignOutParams<R>
+  options?: SignOutParams<R>,
 ): Promise<R extends true ? undefined : SignOutResponse> {
   const { callbackUrl = window.location.href } = options ?? {}
   const baseUrl = apiBaseUrl(__NEXTAUTH)
@@ -410,7 +415,7 @@ export function SessionProvider(props: SessionProviderProps) {
         setSession(__NEXTAUTH._session)
       } catch (error) {
         logger.error(
-          new ClientSessionError((error as Error).message, error as any)
+          new ClientSessionError((error as Error).message, error as any),
         )
       } finally {
         setLoading(false)
@@ -487,7 +492,7 @@ export function SessionProvider(props: SessionProviderProps) {
           logger,
           typeof data === "undefined"
             ? undefined
-            : { body: { csrfToken: await getCsrfToken(), data } }
+            : { body: { csrfToken: await getCsrfToken(), data } },
         )
         setLoading(false)
         if (newSession) {
@@ -500,7 +505,7 @@ export function SessionProvider(props: SessionProviderProps) {
         return newSession
       },
     }),
-    [session, loading]
+    [session, loading],
   )
 
   return (
