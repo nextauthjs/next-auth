@@ -98,6 +98,8 @@ export default function LaravelPassport<P extends LaravelPassportProfile>(
                     },
                     body: new URLSearchParams({
                         grant_type: "authorization_code",
+                        client_id: provider.clientId!,
+                        client_secret: provider.clientSecret!,
                         redirect_uri: provider.callbackUrl!,
                         code: params.code!,
                     }),
