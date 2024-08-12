@@ -147,7 +147,7 @@ export interface AppleProfile extends Record<string, any> {
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
 export default function Apple<P extends AppleProfile>(
-  options: OAuthUserConfig<P>,
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "apple",
