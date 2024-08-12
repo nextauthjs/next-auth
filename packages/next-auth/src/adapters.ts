@@ -1,4 +1,5 @@
 import { Account, User, Awaitable } from "."
+import type { Adapter as FutureAdapter } from "@auth/core/adapters"
 
 export interface AdapterUser extends User {
   id: string
@@ -60,7 +61,9 @@ export interface VerificationToken {
  * [Create a custom adapter](https://next-auth.js.org/tutorials/creating-a-database-adapter)
  */
 export interface Adapter {
-  createUser?: (user: Omit<AdapterUser, "id">) => Awaitable<AdapterUser>
+  createUser?:
+    | FutureAdapter["createUser"]
+    | ((user: Omit<AdapterUser, "id">) => Awaitable<AdapterUser>)
   getUser?: (id: string) => Awaitable<AdapterUser | null>
   getUserByEmail?: (email: string) => Awaitable<AdapterUser | null>
   /** Using the provider id and the id of the user for a specific account, get the user. */
@@ -74,13 +77,20 @@ export interface Adapter {
   deleteUser?: (
     userId: string
   ) => Promise<void> | Awaitable<AdapterUser | null | undefined>
-  linkAccount?: (
-    account: AdapterAccount
-  ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>
+  linkAccount?:
+    | FutureAdapter["linkAccount"]
+    | ((
+        account: AdapterAccount,
+      ) => Promise<void> | Awaitable<AdapterAccount | null | undefined>)
   /** @todo Implement */
-  unlinkAccount?: (
-    providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
-  ) => Promise<void> | Awaitable<AdapterAccount | undefined>
+  unlinkAccount?:
+    | FutureAdapter["unlinkAccount"]
+    | ((
+        providerAccountId: Pick<
+          AdapterAccount,
+          "provider" | "providerAccountId"
+        >,
+      ) => Promise<void> | Awaitable<AdapterAccount | undefined>)
   /** Creates a session for the user and returns it. */
   createSession?: (session: {
     sessionToken: string
