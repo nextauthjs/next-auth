@@ -53,7 +53,7 @@ If you only want to secure certain pages, export a `config` object with a `match
 ```js
 export { default } from "next-auth/middleware"
 
-export const config = { matcher: ["/dashboard"] }
+export const config = { matcher: ["/dashboard(.*)"] }
 ```
 
 For the time being, the `withAuth` middleware only supports `"jwt"` as [session strategy](https://next-auth.js.org/configuration/options#session).
