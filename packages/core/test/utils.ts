@@ -79,13 +79,7 @@ export async function makeAuthRequest(params: {
   for (const [name, value] of Object.entries(cookies))
     headers.append("cookie", `${name}=${value}`)
 
-  let url: string | URL = createActionURL(
-    action,
-    "https",
-    headers,
-    {},
-    config
-  )
+  let url: string | URL = createActionURL(action, "https", headers, {}, config)
   if (params.path) url = `${url}${params.path}`
   if (params.query) url = `${url}?${new URLSearchParams(params.query)}`
   const request = new Request(url, {
