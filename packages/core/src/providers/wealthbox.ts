@@ -21,14 +21,12 @@ export interface WealthboxProfile {
 }
 
 interface TokenResponse {
-  access_token: string
-  created_at: number
-  expires_in: number
-  refresh_token: string
-  scope: string
-  token_type: 'Bearer'
-}
-
+    access_token: string
+    created_at: number
+    expires_in: number
+    refresh_token: string
+    scope: string
+  }
 interface AdditionalConfig {
   redirectUri: string
 }
@@ -104,12 +102,12 @@ export default function WealthboxProvider<P extends WealthboxProfile>(
 
         const data: TokenResponse = await response.json()
 
-        const { expires_in, ...tokens } = data
+        const { expires_in, ...rest } = data
 
         //bind expires_in to expires_at
         return {
           tokens: {
-            ...tokens,
+            ...rest,
             expires_at: Date.now() + expires_in * 1000
           }
         }
