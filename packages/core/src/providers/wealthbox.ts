@@ -79,7 +79,7 @@ export default function WealthboxProvider<P extends WealthboxProfile>(
         scope: 'login data',
         response_type: 'code',
         client_id: config.clientId,
-        redirect_uri: config.clientSecret
+        redirect_uri: config.redirectUri
       }
     },
     token: {
