@@ -126,18 +126,32 @@ export default async function Page() {
 
 Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions. Don't forget, client components that attempt to access the session via context will need to be wrapped in a `<SessionProvider />`.
 
+<Callout type="warning">
+The useSession hook should be used within a `SessionProvider`. If used outside of it, it will return an error with the following message: `useSession` must be wrapped in a `<SessionProvider />`.
+
+It is recommended to place the `<SessionProvider />` at the top level of your project.
+</Callout>
+
 ```ts filename="components/clientComponent.tsx"
 'use client';
 
 import { useSession, SessionProvider } from 'next-auth/react';
 
+const SessionContext = () => {
+  return (
+    <SessionProvider>
+      <ClientComponent />
+    </SessionProvider>
+  )
+}
+
 const ClientComponent = () => {
   const session = useSession();
 
   return (
-    <SessionProvider>
+    <div>
       <p>Welcome {session?.user?.name}</p>
-    </SessionProvider>
+    </div>
   )
 }
 ```
