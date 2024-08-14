@@ -72,9 +72,9 @@ export default function Dropbox(
     authorization: {
       url: "https://www.dropbox.com/oauth2/authorize",
       params: {
-          access_type: "offline",
-          scope: "account_info.read",
-      }
+        access_type: "offline",
+        scope: "account_info.read",
+      },
     },
     token: "https://api.dropboxapi.com/oauth2/token",
     userinfo: {
@@ -83,10 +83,10 @@ export default function Dropbox(
         return await fetch(provider.userinfo?.url as URL, {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${tokens.access_token}`
+            Authorization: `Bearer ${tokens.access_token}`,
           },
         }).then(async (res) => await res.json())
-      }
+      },
     },
     profile(profile) {
       return {
