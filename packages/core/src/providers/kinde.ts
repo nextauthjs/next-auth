@@ -35,7 +35,7 @@ export interface KindeProfile extends Record<string, any> {
  *
  * #### Callback URL
  * ```
- * https://example.com/api/auth/kinde_callback
+ * https://example.com/api/auth/callback/kinde
  * ```
  *
  * #### Configuration
