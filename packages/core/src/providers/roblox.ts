@@ -8,33 +8,33 @@
  *
  * @module providers/roblox
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCUserConfig, OIDCConfig } from "./index.js"
 
 /**
  * Corresponds to the user structure documented here:
  * https://create.roblox.com/docs/cloud/reference/oauth2 (Example User with Profile Scope)
  */
 export interface RobloxProfile extends Record<string, any> {
-    /* Roblox user id */
-    sub: string;
+  /* Roblox user id */
+  sub: string
 
-    /* Roblox display name */
-    name: string;
+  /* Roblox display name */
+  name: string
 
-    /* Roblox display name */
-    nickname: string;
+  /* Roblox display name */
+  nickname: string
 
-    /* Roblox username */
-    preferred_username: string;
+  /* Roblox username */
+  preferred_username: string
 
-    /* Creation time of the Roblox account as a Unix timestamp. */
-    created_at: number;
+  /* Creation time of the Roblox account as a Unix timestamp. */
+  created_at: number
 
-    /* Roblox account profile URL */
-    profile: string;
+  /* Roblox account profile URL */
+  profile: string
 
-    /* Roblox avatar headshot image. Can be null if the avatar headshot image hasn't yet been generated or has been moderated */
-    picture: string | null;
+  /* Roblox avatar headshot image. Can be null if the avatar headshot image hasn't yet been generated or has been moderated */
+  picture: string | null
 }
 
 /**
@@ -50,14 +50,14 @@ export interface RobloxProfile extends Record<string, any> {
  * #### Configuration
  *```ts
  * import { Auth } from "@auth/core"
- * import Roblox from "@auth/core/providers/roblox"
+ * import Roblox from "@auth/providers/roblox"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
  *   providers: [
  *     Roblox({
- *       clientId: ROBLOX_CLIENT_ID,
- *       clientSecret: ROBLOX_CLIENT_SECRET,
+ *       clientId: AUTH_ROBLOX_ID,
+ *       clientSecret: AUTH_ROBLOX_SECRET,
  *     }),
  *   ],
  * })
@@ -78,27 +78,16 @@ export interface RobloxProfile extends Record<string, any> {
  *
  * :::
  */
-export default function Roblox<P extends RobloxProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function Roblox(
+  options: OIDCUserConfig<RobloxProfile>
+): OIDCConfig<RobloxProfile> {
   return {
     id: "roblox",
     name: "Roblox",
-    type: "oauth",
-    authorization:
-      "https://apis.roblox.com/oauth/v1/authorize",
-    token: "https://apis.roblox.com/oauth/v1/token",
-    userinfo: "https://apis.roblox.com/oauth/v1/userinfo",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        displayName: profile.nickname || profile.name,
-        name: profile.name,
-        created: profile.created_at,
-        profile: profile.profile,
-        picture: profile.picture,
-      }
-    },
+    type: "oidc",
+    authorization: { params: { scope: "openid profile" } },
+    issuer: "https://apis.roblox.com/oauth/",
+    checks: ["pkce", "state"],
     style: { bg: "#5865F2", text: "#fff" },
     options,
   }
