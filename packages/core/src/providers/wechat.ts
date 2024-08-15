@@ -8,13 +8,7 @@
  *
  * @module providers/wechat
  */
-import type {
-  AuthorizationEndpointHandler,
-  OAuthConfig,
-  OAuthUserConfig,
-  TokenEndpointHandler,
-  UserinfoEndpointHandler,
-} from "./"
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /** @see [Get the authenticated user](https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Authorized_Interface_Calling_UnionID.html) */
 export interface WeChatProfile {
@@ -81,11 +75,11 @@ export interface WeChatProfile {
  * :::
  */
 
-export default function WeChat<P extends WeChatProfile>(
-  options: OAuthUserConfig<P> & {
+export default function WeChat(
+  options: OAuthUserConfig<WeChatProfile> & {
     platformType?: "OfficialAccount" | "WebsiteApp"
   }
-): OAuthConfig<P> {
+): OAuthConfig<WeChatProfile> {
   const { clientId, clientSecret, platformType = "OfficialAccount" } = options
   console.log(options)
   return {
@@ -110,7 +104,7 @@ export default function WeChat<P extends WeChatProfile>(
     token: {
       url: "https://api.weixin.qq.com/sns/oauth2/access_token",
       params: { appid: clientId, secret: clientSecret },
-      conform: async (response) => {
+      async conform(response) {
         const data = await response.json()
         if (data.token_type === "bearer") {
           console.warn(
@@ -123,7 +117,7 @@ export default function WeChat<P extends WeChatProfile>(
     },
     userinfo: {
       url: "https://api.weixin.qq.com/sns/userinfo",
-      request: async ({ tokens, provider }) => {
+      async request({ tokens, provider }) {
         const url = new URL(provider.userinfo?.url!)
         url.searchParams.set("access_token", tokens.access_token!)
         url.searchParams.set("openid", String(tokens.openid))
@@ -132,7 +126,7 @@ export default function WeChat<P extends WeChatProfile>(
         return response.json()
       },
     },
-    profile: (profile: WeChatProfile) => {
+    profile(profile) {
       return {
         id: profile.unionid,
         name: profile.nickname,
