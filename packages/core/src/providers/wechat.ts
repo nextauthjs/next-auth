@@ -94,8 +94,6 @@ export default function WeChat<P extends WeChatProfile>(
     type: "oauth",
     style: { logo: "/wechat.svg", bg: "#fff", text: "#000" },
     checks: ["state"],
-    clientId,
-    clientSecret,
     authorization: {
       url:
         platformType === "OfficialAccount"
@@ -111,10 +109,7 @@ export default function WeChat<P extends WeChatProfile>(
     },
     token: {
       url: "https://api.weixin.qq.com/sns/oauth2/access_token",
-      params: {
-        appid: clientId,
-        secret: clientSecret,
-      },
+      params: { appid: clientId, secret: clientSecret },
       conform: async (response) => {
         const data = await response.json()
         if (data.token_type === "bearer") {
