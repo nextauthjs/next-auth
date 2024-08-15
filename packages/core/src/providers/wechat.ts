@@ -83,91 +83,68 @@ export interface WeChatProfile {
 
 export default function WeChat<P extends WeChatProfile>(
   options: OAuthUserConfig<P> & {
-    platformType: "OfficialAccount" | "WebsiteApp"
+    platformType?: "OfficialAccount" | "WebsiteApp"
   }
 ): OAuthConfig<P> {
-  const {
-    clientId = process.env.AUTH_WECHAT_APP_ID!,
-    clientSecret = process.env.AUTH_WECHAT_APP_SECRET!,
-    platformType,
-  } = options
-
-  if (platformType !== "OfficialAccount" && platformType !== "WebsiteApp") {
-    throw new Error("Invalid plaformType")
-  }
-
-  const authorizationEndpointUrl =
-    platformType === "OfficialAccount"
-      ? "https://open.weixin.qq.com/connect/oauth2/authorize"
-      : "https://open.weixin.qq.com/connect/qrconnect"
-  const authorizationScope =
-    platformType === "OfficialAccount" ? "snsapi_userinfo" : "snsapi_login"
-  const authorization: AuthorizationEndpointHandler = {
-    url: authorizationEndpointUrl,
-    params: {
-      appid: clientId,
-      response_type: "code",
-      scope: authorizationScope,
-      state: Math.random(),
-    },
-  }
-
-  const tokenEndpointUrl = "https://api.weixin.qq.com/sns/oauth2/access_token"
-  const token: TokenEndpointHandler = {
-    url: tokenEndpointUrl,
-    params: {
-      appid: clientId,
-      secret: clientSecret,
-      code: "CODE",
-      grant_type: "authorization_code",
-    },
-    conform: async (response: Response) => {
-      const data = await response.json()
-      response = new Response(
-        JSON.stringify({
-          ...data,
-          // token_type is required by @auth/core
-          token_type: "bearer",
-        }),
-        response
-      )
-      return response
-    },
-  }
-
-  const userinfo: UserinfoEndpointHandler = {
-    url: "https://api.weixin.qq.com/sns/userinfo",
-    request: async ({ tokens, provider }) => {
-      const url = new URL(provider.userinfo?.url!)
-      url.searchParams.set("access_token", tokens.access_token!)
-      url.searchParams.set("openid", String(tokens.openid))
-      url.searchParams.set("lang", "zh_CN")
-      const response = await fetch(url)
-      return response.json()
-    },
-  }
-
-  const profile = (profile: WeChatProfile) => {
-    return {
-      id: profile.unionid,
-      name: profile.nickname,
-      email: null,
-      image: profile.headimgurl,
-    }
-  }
-
+  const { clientId, clientSecret, platformType = "WebsiteApp" } = options
+  console.log(options)
   return {
     id: "wechat",
     name: "WeChat",
     type: "oauth",
     style: { logo: "/wechat.svg", bg: "#fff", text: "#000" },
-    checks: ["pkce", "state"],
+    checks: ["state"],
     clientId,
     clientSecret,
-    authorization,
-    token,
-    userinfo,
-    profile,
+    authorization: {
+      url:
+        platformType === "OfficialAccount"
+          ? "https://open.weixin.qq.com/connect/oauth2/authorize"
+          : "https://open.weixin.qq.com/connect/qrconnect",
+      params: {
+        appid: clientId,
+        scope:
+          platformType === "OfficialAccount"
+            ? "snsapi_userinfo"
+            : "snsapi_login",
+      },
+    },
+    token: {
+      url: "https://api.weixin.qq.com/sns/oauth2/access_token",
+      params: {
+        appid: clientId,
+        secret: clientSecret,
+      },
+      conform: async (response) => {
+        const data = await response.json()
+        if (data.token_type === "bearer") {
+          console.warn(
+            "token_type is 'bearer'. Redundant workaround, please open an issue."
+          )
+          return response
+        }
+        return Response.json({ ...data, token_type: "bearer" }, response)
+      },
+    },
+    userinfo: {
+      url: "https://api.weixin.qq.com/sns/userinfo",
+      request: async ({ tokens, provider }) => {
+        const url = new URL(provider.userinfo?.url!)
+        url.searchParams.set("access_token", tokens.access_token!)
+        url.searchParams.set("openid", String(tokens.openid))
+        url.searchParams.set("lang", "zh_CN")
+        const response = await fetch(url)
+        return response.json()
+      },
+    },
+    profile: (profile: WeChatProfile) => {
+      return {
+        id: profile.unionid,
+        name: profile.nickname,
+        email: null,
+        image: profile.headimgurl,
+      }
+    },
     options,
   }
 }
