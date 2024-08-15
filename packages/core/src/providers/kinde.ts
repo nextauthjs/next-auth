@@ -80,6 +80,6 @@ export default function Kinde(
     type: "oidc",
     style: { text: "#0F0F0F", bg: "#fff" },
     options: config,
-    checks: ["state", "pkce"]
+    checks: ["state", "pkce"],
   }
 }
