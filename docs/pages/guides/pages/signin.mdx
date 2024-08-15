@@ -151,11 +151,11 @@ export default async function SignInPage() {
           Email
           <input name="email" id="email" />
         </label>
-        <label className="mt-2 block" htmlFor="password">
+        <label htmlFor="password">
           Password
           <input name="password" id="password" />
         </label>
-        <input type="submit value="Sign In" />
+        <input type="submit" value="Sign In" />
       </form>
       {Object.values(providerMap).map((provider) => (
         <form
