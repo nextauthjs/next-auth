@@ -131,7 +131,7 @@ export const config = {
     // Yandex,
     // Zitadel,
     // Zoho,
-    // Zoom
+    // Zoom,
   ],
   basePath: "/auth",
   callbacks: {
