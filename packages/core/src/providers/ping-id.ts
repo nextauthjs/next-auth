@@ -41,7 +41,7 @@ export interface PingProfile extends Record<string, any> {
  *  PingId({
  *    clientId: AUTH_PING_ID_ID,
  *    clientSecret: AUTH_PING_ID_SECRET,
- *     issuer: PING_ID_ISSUER
+ *    issuer: PING_ID_ISSUER
  *  })
  * ]
  * ...
