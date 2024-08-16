@@ -1,26 +1,26 @@
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface PingProfile extends Record<string, any> {
-  iss: string,
-  sub: string,
-  aud: string,
-  iat: number,
-  exp: number,
-  acr: string,
-  amr: [string],
-  auth_time: number,
-  at_hash: string,
-  sid: string,
-  preferred_username: string,
-  given_name: string,
-  picture: string,
-  updated_at: number,
-  name: string,
-  family_name: string,
-  email: string,
-  env: string,
-  org: string,
-  'p1.region': string
+  iss: string
+  sub: string
+  aud: string
+  iat: number
+  exp: number
+  acr: string
+  amr: [string]
+  auth_time: number
+  at_hash: string
+  sid: string
+  preferred_username: string
+  given_name: string
+  picture: string
+  updated_at: number
+  name: string
+  family_name: string
+  email: string
+  env: string
+  org: string
+  "p1.region": string
 }
 
 /**
@@ -28,42 +28,41 @@ export interface PingProfile extends Record<string, any> {
  *
  * ## Documentation
  *
- * - [Create App in Ping Identity](https://docs.pingidentity.com/r/en-us/pingone/p1_add_app_worker
-)
- * 
+ * - [Create App in Ping Identity](https://docs.pingidentity.com/r/en-us/pingone/p1_add_app_worker)
+ *
  *  ---
  * ## Example
  *
  * ```ts
- * import PingIdProvider from "next-auth/providers/ping-id";
+ * import PingId from "@auth/core/providers/ping-id"
  *
  * ...
  * providers: [
- *  PingIdProvider({
- *    clientId: process.env.PING_CLIENT_ID,
- *    clientSecret: process.env.PING_CLIENT_SECRET,
- *     issuer: process.env.PING_ISSUER
+ *  PingId({
+ *    clientId: process.env.AUTH_PING_ID_ID,
+ *    clientSecret: process.env.AUTH_PING_ID_SECRET,
+ *     issuer: PING_ID_ISSUER
  *  })
  * ]
  * ...
  * ```
+ *
+ * ## Help
+ *
+ * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+ *
+ * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+ * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+ * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
 
-export default function PingId<P extends PingProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function PingId<PingProfile>(
+  options: OIDCUserConfig<PingProfile>
+): OIDCConfig<PingProfile> {
   return {
     id: "ping-id",
     name: "Ping Identity",
     type: "oidc",
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name ?? profile.given_name + " " + profile.family_name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
     options,
   }
 }
