@@ -1,210 +1,224 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://fauna.com/features">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" width="64" />
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @auth/fauna-adapter fauna
+ * ```
+ *
+ * @module @auth/fauna-adapter
+ */
 import {
-  Client as FaunaClient,
-  ExprArg,
-  Collection,
-  Create,
-  Delete,
-  Exists,
-  Get,
-  If,
-  Index,
-  Let,
-  Match,
-  Ref,
-  Select,
-  Time,
-  Update,
-  Var,
-  Paginate,
-  Lambda,
-  Do,
-  Foreach,
-  errors,
-} from "faunadb"
+  Client,
+  TimeStub,
+  fql,
+  NullDocument,
+  QueryValue,
+  QueryValueObject,
+  Module,
+} from "fauna"
 
-import {
+import type {
   Adapter,
-  AdapterSession,
   AdapterUser,
+  AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+  AdapterAccount,
+} from "@auth/core/adapters"
 
-export const collections = {
-  Users: Collection("users"),
-  Accounts: Collection("accounts"),
-  Sessions: Collection("sessions"),
-  VerificationTokens: Collection("verification_tokens"),
-} as const
-
-export const indexes = {
-  AccountByProviderAndProviderAccountId: Index(
-    "account_by_provider_and_provider_account_id"
-  ),
-  UserByEmail: Index("user_by_email"),
-  SessionByToken: Index("session_by_session_token"),
-  VerificationTokenByIdentifierAndToken: Index(
-    "verification_token_by_identifier_and_token"
-  ),
-  SessionsByUser: Index("sessions_by_user_id"),
-  AccountsByUser: Index("accounts_by_user_id"),
-} as const
-
-export const format = {
-  /** Takes a plain old JavaScript object and turns it into a Fauna object */
-  to(object: Record<string, any>) {
-    const newObject: Record<string, unknown> = {}
-    for (const key in object) {
-      const value = object[key]
-      if (value instanceof Date) {
-        newObject[key] = Time(value.toISOString())
-      } else {
-        newObject[key] = value
-      }
-    }
-    return newObject
-  },
-  /** Takes a Fauna object and returns a plain old JavaScript object */
-  from<T = Record<string, unknown>>(object: Record<string, any>): T {
-    const newObject: Record<string, unknown> = {}
-    for (const key in object) {
-      const value = object[key]
-      if (value?.value && typeof value.value === "string") {
-        newObject[key] = new Date(value.value)
-      } else {
-        newObject[key] = value
-      }
-    }
-    return newObject as T
-  },
+type ToFauna<T> = {
+  [P in keyof T]: T[P] extends Date | null
+    ? TimeStub | null
+    : T[P] extends undefined
+      ? null
+      : T[P] extends QueryValue
+        ? T[P]
+        : QueryValueObject
 }
 
-/**
- * Fauna throws an error when something is not found in the db,
- * `next-auth` expects `null` to be returned
- */
-export function query(f: FaunaClient, format: (...args: any) => any) {
-  return async function <T>(expr: ExprArg): Promise<T | null> {
-    try {
-      const result = await f.query<{
-        data: T
-        ref: { id: string }
-      } | null>(expr)
-      if (!result) return null
-      return format({ ...result.data, id: result.ref.id })
-    } catch (error) {
-      if ((error as errors.FaunaError).name === "NotFound") return null
-      if (
-        (error as errors.FaunaError).description?.includes(
-          "Number or numeric String expected"
-        )
-      )
-        return null
+export type FaunaUser = ToFauna<AdapterUser>
+export type FaunaSession = ToFauna<AdapterSession>
+export type FaunaVerificationToken = ToFauna<VerificationToken> & { id: string }
+export type FaunaAccount = ToFauna<AdapterAccount>
 
-      if (process.env.NODE_ENV === "test") console.error(error)
-
-      throw error
-    }
+type AdapterConfig = {
+  collectionNames: {
+    user: string
+    session: string
+    account: string
+    verificationToken: string
   }
 }
 
-export function FaunaAdapter(f: FaunaClient): Adapter {
-  const { Users, Accounts, Sessions, VerificationTokens } = collections
-  const {
-    AccountByProviderAndProviderAccountId,
-    AccountsByUser,
-    SessionByToken,
-    SessionsByUser,
-    UserByEmail,
-    VerificationTokenByIdentifierAndToken,
-  } = indexes
-  const { to, from } = format
-  const q = query(f, from)
+const defaultCollectionNames = {
+  user: "User",
+  session: "Session",
+  account: "Account",
+  verificationToken: "VerificationToken",
+}
+
+export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
+  const { collectionNames = defaultCollectionNames } = config || {}
+
   return {
-    createUser: async (data) => (await q(Create(Users, { data: to(data) })))!,
-    getUser: async (id) => await q(Get(Ref(Users, id))),
-    getUserByEmail: async (email) => await q(Get(Match(UserByEmail, email))),
+    async createUser(user) {
+      const response = await client.query<FaunaUser>(
+        fql`Collection(${collectionNames.user}).create(${format.to(user)})`
+      )
+      return format.from(response.data)
+    },
+    async getUser(id) {
+      const response = await client.query<FaunaUser | NullDocument>(
+        fql`Collection(${collectionNames.user}).byId(${id})`
+      )
+      if (response.data instanceof NullDocument) return null
+      return format.from(response.data)
+    },
+    async getUserByEmail(email) {
+      const response = await client.query<FaunaUser>(
+        fql`Collection(${collectionNames.user}).byEmail(${email}).first()`
+      )
+      if (response.data === null) return null
+      return format.from(response.data)
+    },
     async getUserByAccount({ provider, providerAccountId }) {
-      const key = [provider, providerAccountId]
-      const ref = Match(AccountByProviderAndProviderAccountId, key)
-      const user = await q<AdapterUser>(
-        Let(
-          { ref },
-          If(
-            Exists(Var("ref")),
-            Get(Ref(Users, Select(["data", "userId"], Get(Var("ref"))))),
-            null
-          )
-        )
-      )
-      return user
+      const response = await client.query<FaunaUser>(fql`
+        let account = Collection(${collectionNames.account}).byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first()
+        if (account != null) {
+          Collection(${collectionNames.user}).byId(account.userId)
+        } else {
+          null
+        }
+      `)
+      return format.from(response.data)
     },
-    updateUser: async (data) =>
-      (await q(Update(Ref(Users, data.id), { data: to(data) })))!,
+    async updateUser(user) {
+      const _user: Partial<AdapterUser> = { ...user }
+      delete _user.id
+      const response = await client.query<FaunaUser>(
+        fql`Collection(${collectionNames.user}).byId(${
+          user.id
+        }).update(${format.to(_user)})`
+      )
+      return format.from(response.data)
+    },
     async deleteUser(userId) {
-      await f.query(
-        Do(
-          Foreach(
-            Paginate(Match(SessionsByUser, userId)),
-            Lambda("ref", Delete(Var("ref")))
-          ),
-          Foreach(
-            Paginate(Match(AccountsByUser, userId)),
-            Lambda("ref", Delete(Var("ref")))
-          ),
-          Delete(Ref(Users, userId))
-        )
-      )
+      await client.query(fql`
+        // Delete the user's sessions
+        Collection(${collectionNames.session}).byUserId(${userId}).forEach(session => session.delete())
+        
+        // Delete the user's accounts
+        Collection(${collectionNames.account}).byUserId(${userId}).forEach(account => account.delete())
+        
+        // Delete the user
+        Collection(${collectionNames.user}).byId(${userId}).delete()
+      `)
     },
-    linkAccount: async (data) =>
-      (await q(Create(Accounts, { data: to(data) })))!,
+    async linkAccount(account) {
+      await client.query<FaunaAccount>(
+        fql`Collection(${collectionNames.account}).create(${format.to(
+          account
+        )})`
+      )
+      return account
+    },
     async unlinkAccount({ provider, providerAccountId }) {
-      const id = [provider, providerAccountId]
-      await q(
-        Delete(
-          Select("ref", Get(Match(AccountByProviderAndProviderAccountId, id)))
-        )
+      const response = await client.query<FaunaAccount>(
+        fql`Collection(${collectionNames.account}).byProviderAndProviderAccountId(${provider}, ${providerAccountId}).first().delete()`
       )
+      return format.from<AdapterAccount>(response.data)
     },
-    createSession: async (data) =>
-      (await q<AdapterSession>(Create(Sessions, { data: to(data) })))!,
     async getSessionAndUser(sessionToken) {
-      const session = await q<AdapterSession>(
-        Get(Match(SessionByToken, sessionToken))
-      )
-      if (!session) return null
-
-      const user = await q<AdapterUser>(Get(Ref(Users, session.userId)))
-
-      return { session, user: user! }
+      const response = await client.query<[FaunaUser, FaunaSession]>(fql`
+        let session = Collection(${collectionNames.session}).bySessionToken(${sessionToken}).first()
+        if (session != null) {
+          let user = Collection(${collectionNames.user}).byId(session.userId)
+          if (user != null) {
+            [user, session]
+          } else {
+            null
+          }
+        } else {
+          null
+        }
+      `)
+      if (response.data === null) return null
+      const [user, session] = response.data ?? []
+      return { session: format.from(session), user: format.from(user) }
     },
-    async updateSession(data) {
-      const ref = Select("ref", Get(Match(SessionByToken, data.sessionToken)))
-      return await q(Update(ref, { data: to(data) }))
+    async createSession(session) {
+      await client.query<FaunaSession>(
+        fql`Collection(${collectionNames.session}).create(${format.to(
+          session
+        )})`
+      )
+      return session
+    },
+    async updateSession(session) {
+      const response = await client.query<FaunaSession>(
+        fql`Collection(${collectionNames.session}).bySessionToken(${
+          session.sessionToken
+        }).first().update(${format.to(session)})`
+      )
+      return format.from(response.data)
     },
     async deleteSession(sessionToken) {
-      await q(Delete(Select("ref", Get(Match(SessionByToken, sessionToken)))))
+      await client.query(
+        fql`Collection(${collectionNames.session}).bySessionToken(${sessionToken}).first().delete()`
+      )
     },
-    async createVerificationToken(data) {
-      // @ts-expect-error
-      const { id: _id, ...verificationToken } = await q<VerificationToken>(
-        Create(VerificationTokens, { data: to(data) })
+    async createVerificationToken(verificationToken) {
+      await client.query<FaunaVerificationToken>(
+        fql`Collection(${collectionNames.verificationToken}).create(${format.to(
+          verificationToken
+        )})`
       )
       return verificationToken
     },
     async useVerificationToken({ identifier, token }) {
-      const key = [identifier, token]
-      const object = Get(Match(VerificationTokenByIdentifierAndToken, key))
-
-      const verificationToken = await q<VerificationToken>(object)
-      if (!verificationToken) return null
-
-      // Verification tokens can be used only once
-      await q(Delete(Select("ref", object)))
-
-      // @ts-expect-error
-      delete verificationToken.id
-      return verificationToken
+      const response = await client.query<FaunaVerificationToken>(
+        fql`Collection(${collectionNames.verificationToken}).byIdentifierAndToken(${identifier}, ${token}).first()`
+      )
+      if (response.data === null) return null
+      // Delete the verification token so it can only be used once
+      await client.query(
+        fql`Collection(${collectionNames.verificationToken}).byId(${response.data.id}).delete()`
+      )
+      const _verificationToken: Partial<FaunaVerificationToken> = {
+        ...response.data,
+      }
+      delete _verificationToken.id
+      return format.from(_verificationToken)
     },
   }
+}
+
+export const format = {
+  /** Takes an object that's coming from the database and converts it to plain JavaScript. */
+  from<T>(object: Record<string, any> = {}): T {
+    if (!object) return null as unknown as T
+    const newObject: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(object))
+      if (key === "coll" || key === "ts") continue
+      else if (value instanceof TimeStub) newObject[key] = value.toDate()
+      else newObject[key] = value
+    return newObject as T
+  },
+  /** Takes an object that's coming from Auth.js and prepares it to be written to the database. */
+  to<T>(object: Record<string, any>): T {
+    const newObject: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(object))
+      if (value instanceof Date) newObject[key] = TimeStub.fromDate(value)
+      else if (typeof value === "string" && !isNaN(Date.parse(value)))
+        newObject[key] = TimeStub.from(value)
+      else newObject[key] = value ?? null
+
+    return newObject as T
+  },
 }

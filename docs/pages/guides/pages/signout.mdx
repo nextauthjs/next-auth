@@ -1,0 +1,114 @@
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+
+# Custom sign out page
+
+Is easy to configure Auth.js to display a custom sign out page in case you need it.
+
+Here's the code for a simple sign out page built on top of the [example app](https://github.com/nextauthjs/next-auth-example):
+
+<Code>
+<Code.Next>
+
+```tsx filename="app/signout/page.tsx" {10}
+import { signOut } from "@/auth"
+
+export default function SignOutPage() {
+  return (
+    <div>
+      <h5>Are you sure you want to sign out?</h5>
+      <form
+        action={async (formData) => {
+          "use server"
+          await signOut()
+        }}
+      >
+        <button type="submit">Sign out</button>
+      </form>
+    </div>
+  )
+}
+```
+
+</Code.Next>
+<Code.Qwik>
+
+With Qwik we can do a server-side sign out with Form action, or a more
+simple client-side sign out via submit method.
+
+```ts filename="./components/sign-out.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form, Link } from "@builder.io/qwik-city"
+import { useSignOut } from "./plugin@auth"
+
+export default component$(() => {
+  const signOutSig = useSignOut()
+
+  return (
+    <>
+      {/* server-side with Form action */}
+      <Form action={signOutSig}>
+        <input type="hidden" name="redirectTo" value="/signedout" />
+        <button>Sign Out</button>
+      </Form>
+
+      {/* submit method */}
+      <Link onClick$={() => signOutSig.submit({ redirectTo: "/" })}>
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```svelte filename="src/routes/signout/+page.svelte" {13} /submitButton/
+<script lang="ts">
+  import { SignOut } from "@auth/sveltekit/components"
+</script>
+
+<div class="flex overflow-hidden relative w-full h-full">
+  <div class="h-dvh z-20 flex w-full items-center justify-center md:ml-[15%] md:w-[22rem]">
+    <div class="flex flex-col justify-center items-center w-80 text-xl">
+      <h2 class="flex items-center mb-4 space-x-2 text-3xl font-light text-slate-600">
+        <img src="/img/logo.png" alt="Company Logo" class="size-5" />
+        <span class="text-4xl font-medium text-white">Company</span>
+      </h2>
+      <div class="flex flex-col gap-2 p-6 m-8 w-full bg-white rounded shadow-lg">
+        <SignOut signOutPage="signout" className="w-full">
+          <div
+            slot="submitButton"
+            class="mt-2 flex h-12 w-full items-center space-x-2 rounded px-4 text-base font-light transition focus:outline-none focus:ring-2 focus:ring-slate-800 focus:ring-offset-2"
+          >
+            <span class="flex justify-center w-full">
+              Signout
+            </span>
+          </div>
+        </SignOut>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+You'll also need to create this server page in SvelteKit to handle the action at `/signout`. That's the default path, but this can be changed with the `signOutPage` prop on the `SignOut` component above.
+
+```ts filename="src/routes/signout/+page.server.ts"
+import { signOut } from "../../auth"
+import type { Actions } from "./$types"
+
+export const actions = { default: signOut } satisfies Actions
+```
+
+</Code.Svelte>
+</Code>
+
+Now if the user navigates to `/signout` they'll see the following page:
+
+import CustomSignOut from "../../../public/img/tutorials/custom-sign-out.webp"
+
+<Screenshot src={CustomSignOut} alt="Custom Sign-out" />
+
+If they click "Sign out", the session will be deleted and they will be redirected to the homepage.

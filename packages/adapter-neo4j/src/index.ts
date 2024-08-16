@@ -1,16 +1,33 @@
-import type { Session } from "neo4j-driver"
-import type { Adapter } from "next-auth/adapters"
-import { v4 as uuid } from "uuid"
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official <a href="https://neo4j.com/docs/">Neo4j</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://neo4j.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/neo4j.svg" width="128" />
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @auth/neo4j-adapter neo4j-driver
+ * ```
+ *
+ * @module @auth/neo4j-adapter
+ */
+import { type Session, isInt, integer } from "neo4j-driver"
+import { isDate, type Adapter } from "@auth/core/adapters"
 
-import { client, format } from "./utils"
-export { format }
+/**
+ * This is the interface of the Neo4j adapter options. The Neo4j adapter takes a {@link https://neo4j.com/docs/bolt/current/driver-api/#driver-session Neo4j session} as its only argument.
+ **/
+export interface Neo4jOptions extends Session {}
 
 export function Neo4jAdapter(session: Session): Adapter {
   const { read, write } = client(session)
 
   return {
     async createUser(data) {
-      const user: any = { id: uuid(), ...data }
+      const user = { ...data, id: crypto.randomUUID() }
       await write(`CREATE (u:User $data)`, user)
       return user
     },
@@ -161,6 +178,64 @@ export function Neo4jAdapter(session: Session): Adapter {
         data
       )
       return format.from<any>(result?.properties)
+    },
+  }
+}
+
+export const format = {
+  /** Takes a plain old JavaScript object and turns it into a Neo4j compatible object */
+  to(object: Record<string, any>) {
+    const newObject: Record<string, unknown> = {}
+    for (const key in object) {
+      const value = object[key]
+      if (value instanceof Date) newObject[key] = value.toISOString()
+      else newObject[key] = value
+    }
+    return newObject
+  },
+  /** Takes a Neo4j object and returns a plain old JavaScript object */
+  from<T = Record<string, unknown>>(object?: Record<string, any>): T | null {
+    const newObject: Record<string, unknown> = {}
+    if (!object) return null
+    for (const key in object) {
+      const value = object[key]
+      if (isDate(value)) {
+        newObject[key] = new Date(value)
+      } else if (isInt(value)) {
+        if (integer.inSafeRange(value)) newObject[key] = value.toNumber()
+        else newObject[key] = value.toString()
+      } else {
+        newObject[key] = value
+      }
+    }
+
+    return newObject as T
+  },
+}
+
+function client(session: Session) {
+  return {
+    /** Reads values from the database */
+    async read<T>(statement: string, values?: any): Promise<T | null> {
+      const result = await session.readTransaction((tx) =>
+        tx.run(statement, values)
+      )
+
+      return format.from<T>(result?.records[0]?.get(0)) ?? null
+    },
+    /**
+     * Reads/writes values from/to the database.
+     * Properties are available under `$data`
+     */
+    async write<T extends Record<string, any>>(
+      statement: string,
+      values: T
+    ): Promise<any> {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(statement, { data: format.to(values) })
+      )
+
+      return format.from<T>(result?.records[0]?.toObject())
     },
   }
 }

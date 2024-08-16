@@ -3,62 +3,116 @@
   --border-radius: 0.5rem;
   --color-error: #c94b4b;
   --color-info: #157efb;
+  --color-info-hover: #0f6ddb;
   --color-info-text: #fff;
 }
 
 .__next-auth-theme-auto,
 .__next-auth-theme-light {
   --color-background: #ececec;
+  --color-background-hover: rgba(236, 236, 236, 0.8);
   --color-background-card: #fff;
   --color-text: #000;
   --color-primary: #444;
   --color-control-border: #bbb;
   --color-button-active-background: #f9f9f9;
   --color-button-active-border: #aaa;
-  --color-seperator: #ccc;
+  --color-separator: #ccc;
 }
 
 .__next-auth-theme-dark {
   --color-background: #161b22;
+  --color-background-hover: rgba(22, 27, 34, 0.8);
   --color-background-card: #0d1117;
   --color-text: #fff;
   --color-primary: #ccc;
   --color-control-border: #555;
   --color-button-active-background: #060606;
   --color-button-active-border: #666;
-  --color-seperator: #444;
+  --color-separator: #444;
 }
 
 @media (prefers-color-scheme: dark) {
   .__next-auth-theme-auto {
     --color-background: #161b22;
+    --color-background-hover: rgba(22, 27, 34, 0.8);
     --color-background-card: #0d1117;
     --color-text: #fff;
     --color-primary: #ccc;
     --color-control-border: #555;
     --color-button-active-background: #060606;
     --color-button-active-border: #666;
-    --color-seperator: #444;
+    --color-separator: #444;
   }
+
+  button,
+  a.button {
+    color: var(--provider-dark-color, var(--color-primary)) !important;
+    background-color: var(
+      --provider-dark-bg,
+      var(--color-background)
+    ) !important;
+
+    &:hover {
+      background-color: var(
+        --provider-dark-bg-hover,
+        var(--color-background-hover)
+      ) !important;
+    }
+
+    span {
+      color: var(--provider-dark-bg) !important;
+    }
+  }
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background-color: var(--color-background);
   margin: 0;
   padding: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
 }
 
 h1 {
-  font-weight: 400;
   margin-bottom: 1.5rem;
   padding: 0 1rem;
+  font-weight: 400;
   color: var(--color-text);
 }
 
 p {
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
   color: var(--color-text);
 }
 
@@ -85,15 +139,9 @@ input[type] {
   font-size: 1rem;
   border-radius: var(--border-radius);
   color: var(--color-text);
-
-  &:focus {
-    box-shadow: none;
-  }
 }
 
 p {
-  margin: 0 0 1.5rem 0;
-  padding: 0 1rem;
   font-size: 1.1rem;
   line-height: 2rem;
 }
@@ -115,37 +163,36 @@ button span {
 
 button,
 a.button {
-  margin: 0 0 0.75rem 0;
   padding: 0.75rem 1rem;
   color: var(--provider-color, var(--color-primary));
-  background-color: var(--provider-bg, var(--color-background-card));
-  font-size: 1.1rem;
-  min-height: 62px;
-  border-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--provider-bg, var(--color-background));
+  border: 1px solid #00000031;
+  font-size: 0.9rem;
+  height: 50px;
   border-radius: var(--border-radius);
-  transition: all 0.1s ease-in-out;
-  font-weight: 500;
+  transition: background-color 250ms ease-in-out;
+  font-weight: 300;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 450px) {
-    font-size: 0.9rem;
-  }
-
   &:hover {
+    background-color: var(--provider-bg-hover, var(--color-background-hover));
     cursor: pointer;
   }
+
   &:active {
     cursor: pointer;
   }
+
+  span {
+    color: #fff;
+  }
+
   #provider-logo {
     width: 25px;
     display: block;
-  }
-  #provider-logo-dark {
-    display: none;
   }
 }
 
@@ -153,20 +200,12 @@ a.button {
   color: var(--button-text-color, var(--color-info-text));
   background-color: var(--brand-color, var(--color-info));
   width: 100%;
-}
 
-@media (prefers-color-scheme: dark) {
-  button,
-  a.button {
-    color: var(--provider-dark-color, var(--color-primary));
-    background-color: var(--provider-dark-bg, var(--color-background));
-  }
-  #provider-logo {
-    display: none !important;
-  }
-  #provider-logo-dark {
-    width: 25px;
-    display: block !important;
+  &:hover {
+    background-color: var(
+      --button-hover-bg,
+      var(--color-info-hover)
+    ) !important;
   }
 }
 
@@ -189,6 +228,7 @@ a.site {
   place-items: center;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 
   > div {
     text-align: center;
@@ -197,7 +237,6 @@ a.site {
 
 .error {
   a.button {
-    display: inline-block;
     padding-left: 2rem;
     padding-right: 2rem;
     margin-top: 0.5rem;
@@ -218,7 +257,7 @@ a.site {
   hr {
     display: block;
     border: 0;
-    border-top: 1px solid var(--color-seperator);
+    border-top: 1px solid var(--color-separator);
     margin: 2rem auto 1rem auto;
     overflow: visible;
 
@@ -258,36 +297,56 @@ a.site {
     button {
       width: 100%;
     }
+  }
 
-    max-width: 300px;
+  .provider + .provider {
+    margin-top: 1rem;
   }
 }
 
 .logo {
   display: inline-block;
   max-width: 150px;
-  margin-top: 20px;
-  margin-bottom: 25px;
+  margin: 1.25rem 0;
   max-height: 70px;
 }
 
 .card {
-  @media screen and (min-width: 450px) {
-    width: 350px;
-  }
-  @media screen and (max-width: 450px) {
-    width: 200px;
-  }
-  margin: 20px 0 20px 0;
   background-color: var(--color-background-card);
-  border-radius: 30px;
-  padding: 20px 50px;
+  border-radius: 1rem;
+  padding: 1.25rem 2rem;
 
   .header {
     color: var(--color-primary);
+  }
+
+  input[type]::placeholder {
+    color: color-mix(
+      in srgb,
+      var(--color-text) 20%,
+      var(--color-button-active-background)
+    );
+  }
+
+  input[type] {
+    background: color-mix(in srgb, var(--color-background-card) 95%, black);
   }
 }
 
 .section-header {
   color: var(--color-text);
+}
+
+@media screen and (min-width: 450px) {
+  .card {
+    margin: 2rem 0;
+    width: 368px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .card {
+    margin: 1rem 0;
+    width: 343px;
+  }
 }

@@ -1,6 +1,6 @@
 name: Bug report
 description: Report an issue so we can improve
-labels: [triage]
+labels: [triage, bug]
 body:
   - type: markdown
     attributes:
@@ -11,7 +11,7 @@ body:
 
         ### Important :exclamation:
 
-        _Providing incorrect/insufficient information or skipping steps to reproduce the issue may result in closing the issue or converting to a discussion without further explanation._
+        _Providing incorrect/insufficient information or skipping steps to reproduce the issue *will* result in closing the issue or converting to a discussion without further explanation._
 
         If you have a generic question specific to your project, it is best asked in Discussions under the [Questions category](https://github.com/nextauthjs/next-auth/discussions/new?category=Questions)
   # Let's wait with this until adoption in other frameworks.
@@ -29,16 +29,19 @@ body:
       description: |
         Run this command in your project's root folder and paste the result:
 
-        ```sh
-        npx envinfo --system --binaries --browsers --npmPackages "next,react,next-auth,@auth/*"
-        ```
+        `npx envinfo --system --binaries --browsers --npmPackages "{next,react,next-auth,@auth/*}"`
+
         Alternatively, you can manually gather the version information from your package.json for these packages: "next", "react" and "next-auth". Please also mention your OS and Node.js version, as well as the browser you are using.
+      value: |
+        ```
+        Paste here
+        ```
     validations:
       required: true
   - type: input
     attributes:
       label: Reproduction URL
-      description: A URL to a repository/code that clearly reproduces your issue. You can use our [`next-auth-example`](https://github.com/nextauthjs/next-auth-example) template repository to get started more easily, or link to your project if it's public
+      description: A URL to a public github.com repository outside the next-auth org that clearly reproduces your issue. You can use our [`next-auth-example`](https://github.com/nextauthjs/next-auth-example) template repository to get started more easily
     validations:
       required: true
   - type: textarea

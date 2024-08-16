@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1(class="text-3xl font-bold")= title
+  p
+    | This is an example site to demonstrate how to use #{ ' ' }
+    a(href="https://expressjs.com/", class="mb-2 font-medium underline") Express
+    | #{ ' ' } with #{ ' ' }
+    a(href="https://authjs.dev/reference/express", class="underline") Express Auth
+    |
+    | for authentication.

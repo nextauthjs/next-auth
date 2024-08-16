@@ -1,25 +1,35 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official <a href="https://mikro-orm.io/docs/installation">MikroORM</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://mikro-orm.io/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/mikro-orm.svg" width="64"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @mikro-orm/core @auth/mikro-orm-adapter
+ * ```
+ *
+ * @module @auth/mikro-orm-adapter
+ */
 import type {
   Connection,
   IDatabaseDriver,
   Options as ORMOptions,
 } from "@mikro-orm/core"
 
-import type { Adapter } from "next-auth/adapters"
+import type { Adapter } from "@auth/core/adapters"
 
 import { MikroORM, wrap } from "@mikro-orm/core"
 
-import * as defaultEntities from "./entities"
+import * as defaultEntities from "./lib/entities.js"
 
 export { defaultEntities }
 
-/**
- * The MikroORM adapter accepts a MikroORM configuration and returns a NextAuth adapter.
- * @param ormConnection a MikroORM connection configuration (https://mikro-orm.io/docs/next/configuration#driver)
- * @param options entities in the options object will be passed to the MikroORM init function as entities. Has to be provided if overridden!
- * @returns
- */
 export function MikroOrmAdapter<
-  D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>
+  D extends IDatabaseDriver<Connection> = IDatabaseDriver<Connection>,
 >(
   ormOptions: ORMOptions<D>,
   options?: {
@@ -70,7 +80,6 @@ export function MikroOrmAdapter<
      * Method used in testing. You won't need to call this in your app.
      * @internal
      */
-    // @ts-expect-error
     async __disconnect() {
       const em = await getEM()
       await em.getConnection().close()
@@ -124,6 +133,7 @@ export function MikroOrmAdapter<
 
       return wrap(user).toObject()
     },
+    // @ts-expect-error
     async linkAccount(data) {
       const em = await getEM()
       const user = await em.findOne(UserModel, { id: data.userId })
@@ -135,6 +145,7 @@ export function MikroOrmAdapter<
 
       return wrap(account).toObject()
     },
+    // @ts-expect-error
     async unlinkAccount(provider_providerAccountId) {
       const em = await getEM()
       const account = await em.findOne(AccountModel, {

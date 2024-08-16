@@ -1,0 +1,52 @@
+{
+  "name": "@auth/d1-adapter",
+  "version": "1.4.2",
+  "description": "A Cloudflare D1 adapter for Auth.js",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Josh Schlesser <josh@schlesser.dev>",
+  "contributors": [
+    "Thang Huu Vu <hi@thvu.dev>"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "d1"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest -c ../utils/vitest.config.ts"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230321.0",
+    "@miniflare/d1": "^2.12.2",
+    "better-sqlite3": "^9.6.0"
+  }
+}

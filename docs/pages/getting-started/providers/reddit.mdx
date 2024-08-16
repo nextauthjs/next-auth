@@ -1,0 +1,121 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/reddit.svg" height="64" width="64" />
+
+# Reddit Provider
+
+## Resources
+
+- [Reddit API documentation](https://www.reddit.com/dev/api/)
+- [Reddit app console](https://www.reddit.com/prefs/apps/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/reddit
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/reddit
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/reddit
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_REDDIT_ID
+AUTH_REDDIT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Reddit from "next-auth/providers/reddit"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Reddit],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Reddit from "@auth/qwik/providers/reddit"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Reddit],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Reddit from "@auth/sveltekit/providers/reddit"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Reddit],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Reddit from "@auth/express/providers/reddit"
+
+app.use("/auth/*", ExpressAuth({ providers: [Reddit] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Reddit requires authorization every time you go through their page.
+- Allows one callback URL per Client ID / Client Secret.
+- This Provider template only has a one hour access token to it and only has the "identity" scope. If you want to get a refresh token as well you must set these authorization params:
+
+```ts filename="./auth.ts"
+export const { handlers, auth, signin, signout } = NextAuth({
+  providers: [
+    RedditProvider({
+      clientId: process.env.REDDIT_CLIENT_ID,
+      clientSecret: process.env.REDDIT_CLIENT_SECRET,
+      authorization: {
+        params: {
+          duration: "permanent",
+        },
+      },
+    }),
+  ],
+})
+```

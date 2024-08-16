@@ -1,0 +1,106 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/descope.svg" width="64" height="64" />
+
+# Descope Provider
+
+## Resources
+
+- [Descope OIDC](https://docs.descope.com/manage/idpapplications/oidc/)
+- [Descope Flows](https://docs.descope.com/customize/flows)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/descope
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/descope
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/descope
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_DESCOPE_ID
+AUTH_DESCOPE_SECRET
+```
+
+### Configuration
+
+Follow these steps:
+
+1. Log into the [Descope console](https://app.descope.com)
+2. Follow the [OIDC instructions](https://docs.descope.com/manage/idpapplications/oidc/)
+
+Add the required environment variables from above to your `.env.local` file.
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Descope from "next-auth/providers/descope"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Descope],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Descope from "@auth/qwik/providers/descope"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Descope],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Descope from "@auth/sveltekit/providers/descope"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Descope],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Descope from "@auth/express/providers/descope"
+
+app.use("/auth/*", ExpressAuth({ providers: [Descope] }))
+```
+
+  </Code.Express>
+</Code>

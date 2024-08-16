@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    title= title
+    link(rel="stylesheet", href="/css/output.css")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+  body(class="flex flex-col items-center")
+    div(class="flex w-[90%] max-w-2xl flex-col justify-start gap-2")
+      div(
+        class="mb-2 flex items-center justify-between gap-2 rounded-b-md bg-gray-100 p-2 pl-4"
+      )
+        if session
+          div(class="flex flex-row items-center gap-2")
+            if session.user.image
+              img(src=`${session.user.image}`, class="h-8 w-8 rounded-full")
+            span
+              | Signed in as #{ ' ' }
+              strong= session.user.email || session.user.name
+          a(
+            class="rounded-md bg-blue-600 px-5 py-2.5 font-medium text-white",
+            href="/api/auth/signout"
+          ) Sign out
+        else
+          span(class="") You are not signed in
+          a#sign-indiv(
+            ,
+            class="rounded-md bg-blue-600 px-5 py-2.5 font-medium text-white",
+            href="/api/auth/signin"
+          ) Sign in
+
+      nav(class="mb-4")
+        ul(class="flex flex-row gap-4 underline")
+          li
+            a(href="/") Home
+          li
+            a(href="/protected") Protected
+          li
+            a(href="/api/protected") Protected (API)
+
+      block content

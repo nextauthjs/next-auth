@@ -1,0 +1,123 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/duende-identityserver6.svg"
+  height="64"
+  width="64"
+/>
+
+# Duende Identity Server Provider
+
+## Resources
+
+- [DuendeIdentityServer6 documentation](https://docs.duendesoftware.com/identityserver/v6)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/duende-identity-service
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/duende-identity-service
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/duende-identity-service
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_DUENDE_IDENTITY_SERVER6_ID
+AUTH_DUENDE_IDENTITY_SERVER6_SECRET
+AUTH_DUENDE_IDENTITY_SERVER6_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import DuendeIdentityServer6 from "next-auth/providers/duende-identity-server6"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [DuendeIdentityServer6],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import DuendeIdentityServer6 from "@auth/qwik/providers/duende-identity-server6"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [DuendeIdentityServer6],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import DuendeIdentityServer6 from "@auth/sveltekit/providers/duende-identity-server6"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [DuendeIdentityServer6],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import DuendeIdentityServer6 from "@auth/express/providers/duende-identity-server6"
+
+app.use("/auth/*", ExpressAuth({ providers: [DuendeIdentityServer6] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Demo IdentityServer
+
+The configuration below is for the demo server at https://demo.duendesoftware.com/
+
+If you want to try it out, you can copy and paste the configuration below.
+
+You can sign in to the demo service with either `bob`/`bob` or `alice`/`alice`.
+
+```js filename=pages/api/auth/[...nextauth].js
+import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
+providers: [
+  DuendeIDS6Provider({
+    clientId: "interactive.confidential",
+    clientSecret: "secret",
+    issuer: "https://demo.duendesoftware.com",
+  }),
+]
+```

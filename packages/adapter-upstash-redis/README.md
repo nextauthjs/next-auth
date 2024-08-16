@@ -1,87 +1,28 @@
 <p align="center">
-   <br/>
-   <a href="https://authjs.dev" target="_blank"><img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;<img height="64px" src="logo.svg" />
-   <h3 align="center"><b>Upstash Redis Adapter</b> - NextAuth.js</h3>
-   <p align="center">
-   Open Source. Full Stack. Own Your Data.
-   </p>
-   <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="CI Test" />
-      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/upstash-adapter" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/v/@next-auth/upstash-adapter" alt="@next-auth/upstash-adapter Version" />
-   </p>
+  <br/>
+  <a href="https://authjs.dev" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
+  </a>
+  <a href="https://docs.upstash.com/redis" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/adapters/upstash-redis.svg"/>
+  </a>
+  <h3 align="center"><b>Upstash Redis Adapter</b> - NextAuth.js / Auth.js</a></h3>
+  <p align="center" style="align: center;">
+    <a href="https://npm.im/@auth/upstash-redis-adapter">
+      <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
+    </a>
+    <a href="https://npm.im/@auth/upstash-redis-adapter">
+      <img alt="npm" src="https://img.shields.io/npm/v/@auth/upstash-redis-adapter?color=green&label=@auth/upstash-redis-adapter&style=flat-square">
+    </a>
+    <a href="https://www.npmtrends.com/@auth/upstash-redis-adapter">
+      <img src="https://img.shields.io/npm/dm/@auth/upstash-redis-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
+    </a>
+    <a href="https://github.com/nextauthjs/next-auth/stargazers">
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
+    </a>
+  </p>
 </p>
 
-## Overview
+---
 
-This is the Upstash Redis adapter for [`next-auth`](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` and `@upstash/redis` packages. It is not a standalone package.
-
-## Getting Started
-
-1. Install `next-auth` and `@next-auth/upstash-redis-adapter` as well as `@upstash/redis` via NPM.
-
-```js
-npm install next-auth @next-auth/upstash-redis-adapter @upstash/redis
-```
-
-2. Add the follwing code to your `pages/api/[...nextauth].js` next-auth configuration object.
-
-```js
-import NextAuth from "next-auth"
-import { UpstashRedisAdapter } from "@next-auth/upstash-adapter"
-import { Redis } from "@upstash/redis"
-
-const redis = new Redis({
-  url:"UPSTASH_REDIS_REST_URL",
-  token:"UPSTASH_REDIS_REST_TOKEN",
-})
-
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/configuration/auth-options
-export default NextAuth({
-  ...
-  adapter: UpstashRedisAdapter(redis)
-  ...
-})
-```
-
-## Using Multiple Apps with a Single Upstash Redis Instance
-
-The Upstash free-tier allows for only one Redis instance. If you have multiple Next-Auth connected apps using this instance, you need different key prefixes for every app.
-
-You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
-
-The default values for this object are:
-
-```js
-const defaultOptions = {
-  baseKeyPrefix: "",
-  accountKeyPrefix: "user:account:",
-  accountByUserIdPrefix: "user:account:by-user-id:",
-  emailKeyPrefix: "user:email:",
-  sessionKeyPrefix: "user:session:",
-  sessionByUserIdKeyPrefix: "user:session:by-user-id:",
-  userKeyPrefix: "user:",
-  verificationTokenKeyPrefix: "user:token:",
-}
-```
-
-Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
-
-Example:
-
-```js
-export default NextAuth({
-  ...
-  adapter: UpstashRedisAdapter(redis, {baseKeyPrefix: "app2:"})
-  ...
-})
-```
-
-## Contributing
-
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
-
-## License
-
-ISC
+Check out the documentation at [authjs.dev](https://authjs.dev/reference/adapter/upstash-redis).

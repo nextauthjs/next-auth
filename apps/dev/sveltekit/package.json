@@ -12,15 +12,16 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
-    "@sveltejs/kit": "next",
-    "svelte": "3.55.0",
+    "@sveltejs/kit": "^2.5.7",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "svelte": "^4",
     "svelte-check": "2.10.2",
-    "typescript": "4.9.4",
-    "vite": "4.0.1"
+    "typescript": "5.2.2"
   },
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "@auth/sveltekit": "workspace:*"
+    "@auth/sveltekit": "workspace:*",
+    "@auth/unstorage-adapter": "workspace:*",
+    "unstorage": "^1.10.2"
   },
   "type": "module"
 }

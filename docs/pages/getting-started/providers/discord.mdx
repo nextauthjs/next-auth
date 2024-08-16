@@ -1,0 +1,99 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/discord.svg" height="64" width="64" />
+
+# Discord Provider
+
+## Resources
+
+- [Discord OAuth documentation](https://discord.com/developers/docs/topics/oauth2)
+- [Discord OAuth apps](https://discord.com/developers/applications)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/discord
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/discord
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/discord
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_DISCORD_ID
+AUTH_DISCORD_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Discord from "next-auth/providers/discord"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Discord],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Discord from "@auth/qwik/providers/discord"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Discord],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Discord from "@auth/sveltekit/providers/discord"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Discord],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Discord from "@auth/express/providers/discord"
+
+app.use("/auth/*", ExpressAuth({ providers: [Discord] }))
+```
+
+  </Code.Express>
+</Code>

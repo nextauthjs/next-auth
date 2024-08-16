@@ -1,15 +1,21 @@
 import { AuthError } from "../../errors.js"
+import type { AuthConfig } from "../../index.js"
 
-export type WarningCode = "debug-enabled" | "csrf-disabled"
+export type WarningCode =
+  | "debug-enabled"
+  | "csrf-disabled"
+  | "experimental-webauthn"
+  | "env-url-basepath-redundant"
+  | "env-url-basepath-mismatch"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
  *
- * [Documentation](https://authjs.dev/reference/configuration/auth-config#logger)
+ * [Documentation](https://authjs.dev/reference/core#authconfig#logger)
  */
 export interface LoggerInstance extends Record<string, Function> {
   warn: (code: WarningCode) => void
-  error: (error: AuthError) => void
+  error: (error: Error) => void
   debug: (message: string, metadata?: unknown) => void
 }
 
@@ -18,21 +24,23 @@ const yellow = "\x1b[33m"
 const grey = "\x1b[90m"
 const reset = "\x1b[0m"
 
-export const logger: LoggerInstance = {
-  error(error: AuthError) {
-    const url = `https://errors.authjs.dev#${error.name.toLowerCase()}`
-    console.error(
-      `${red}[auth][error][${error.name}]${reset}:${
-        error.message ? ` ${error.message}.` : ""
-      } Read more at ${url}`
-    )
-    if (error.cause) {
-      const { err, ...data } = error.cause as any
-      console.error(`${red}[auth][cause]${reset}:`, (err as Error).stack)
-      console.error(
-        `${red}[auth][details]${reset}:`,
-        JSON.stringify(data, null, 2)
-      )
+const defaultLogger: LoggerInstance = {
+  error(error) {
+    const name = error instanceof AuthError ? error.type : error.name
+    console.error(`${red}[auth][error]${reset} ${name}: ${error.message}`)
+    if (
+      error.cause &&
+      typeof error.cause === "object" &&
+      "err" in error.cause &&
+      error.cause.err instanceof Error
+    ) {
+      const { err, ...data } = error.cause
+      console.error(`${red}[auth][cause]${reset}:`, err.stack)
+      if (data)
+        console.error(
+          `${red}[auth][details]${reset}:`,
+          JSON.stringify(data, null, 2)
+        )
     } else if (error.stack) {
       console.error(error.stack.replace(/.*/, "").substring(1))
     }
@@ -54,13 +62,19 @@ export const logger: LoggerInstance = {
  * Any `undefined` level will use the default logger.
  */
 export function setLogger(
-  newLogger: Partial<LoggerInstance> = {},
-  debug?: boolean
-) {
-  // Turn off debug logging if `debug` isn't set to `true`
-  if (!debug) logger.debug = () => {}
+  config: Pick<AuthConfig, "logger" | "debug">
+): LoggerInstance {
+  const newLogger: LoggerInstance = {
+    ...defaultLogger,
+  }
 
-  if (newLogger.error) logger.error = newLogger.error
-  if (newLogger.warn) logger.warn = newLogger.warn
-  if (newLogger.debug) logger.debug = newLogger.debug
+  // Turn off debug logging if `debug` isn't set to `true`
+  if (!config.debug) newLogger.debug = () => {}
+
+  if (config.logger?.error) newLogger.error = config.logger.error
+  if (config.logger?.warn) newLogger.warn = config.logger.warn
+  if (config.logger?.debug) newLogger.debug = config.logger.debug
+
+  config.logger ??= newLogger
+  return newLogger
 }

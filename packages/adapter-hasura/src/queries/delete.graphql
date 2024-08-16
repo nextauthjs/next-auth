@@ -1,0 +1,14 @@
+mutation DeleteAll {
+  delete_accounts(where: {}) {
+    affected_rows
+  }
+  delete_sessions(where: {}) {
+    affected_rows
+  }
+  delete_users(where: {}) {
+    affected_rows
+  }
+  delete_verification_tokens(where: {}) {
+    affected_rows
+  }
+}

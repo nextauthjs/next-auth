@@ -1,16 +1,33 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official <a href="https://sequelize.org/docs/v6/getting-started/">Sequilize</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://sequelize.org/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/sequelize.svg" height="30"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install next-auth @auth/sequelize-adapter sequelize
+ * ```
+ *
+ * @module @auth/sequelize-adapter
+ */
 import type {
   Adapter,
   AdapterUser,
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 import { Sequelize, Model, ModelCtor } from "sequelize"
-import * as defaultModels from "./models"
+import * as defaultModels from "./models.js"
 
 export { defaultModels as models }
 
 // @see https://sequelize.org/master/manual/typescript.html
+//@ts-expect-error
 interface AccountInstance
   extends Model<AdapterAccount, Partial<AdapterAccount>>,
     AdapterAccount {}
@@ -24,8 +41,15 @@ interface VerificationTokenInstance
   extends Model<VerificationToken, Partial<VerificationToken>>,
     VerificationToken {}
 
-interface SequelizeAdapterOptions {
+/** This is the interface of the Sequelize adapter options. */
+export interface SequelizeAdapterOptions {
+  /**
+   * Whether to {@link https://sequelize.org/docs/v6/core-concepts/model-basics/#model-synchronization synchronize} the models or not.
+   */
   synchronize?: boolean
+  /**
+   * The {@link https://sequelize.org/docs/v6/core-concepts/model-basics/ Sequelize Models} related to Auth.js that will be created in your database.
+   */
   models?: Partial<{
     User: ModelCtor<UserInstance>
     Account: ModelCtor<AccountInstance>
@@ -116,6 +140,7 @@ export default function SequelizeAdapter(
       await sync()
 
       const accountInstance = await Account.findOne({
+        // @ts-expect-error
         where: { provider, providerAccountId },
       })
 
@@ -197,7 +222,9 @@ export default function SequelizeAdapter(
     async deleteSession(sessionToken) {
       await sync()
 
+      const session = await Session.findOne({ where: { sessionToken } })
       await Session.destroy({ where: { sessionToken } })
+      return session?.get({ plain: true })
     },
     async createVerificationToken(token) {
       await sync()

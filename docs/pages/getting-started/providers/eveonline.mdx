@@ -1,0 +1,121 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/eveonline.svg" height="64" width="128" />
+
+# EVEOnline Provider
+
+## Resources
+
+- [EveOnline OAuth documentation](https://developers.eveonline.com/blog/article/sso-to-authenticated-calls)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/eveonline
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/eveonline
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/eveonline
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_EVEONLINE_ID
+AUTH_EVEONLINE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import EveOnline from "next-auth/providers/eve-online"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [EveOnline],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import EveOnline from "@auth/qwik/providers/eve-online"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [EveOnline],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import EveOnline from "@auth/sveltekit/providers/eve-online"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [EveOnline],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import EveOnline from "@auth/express/providers/eve-online"
+
+app.use("/auth/*", ExpressAuth({ providers: [EveOnline] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- When creating your application, make sure to select `Authentication Only` as the connection type.
+
+- If using JWT for the session, you can add the `CharacterID` to the JWT and session. For example:
+
+```ts
+const AuthConfig = {
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.characterId = user.CharacterID
+      }
+      return token
+    },
+    session({ session, token }) {
+      session.user.characterId = token.characterId
+      return session
+    },
+  },
+}
+```

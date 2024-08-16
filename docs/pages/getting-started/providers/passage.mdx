@@ -1,0 +1,99 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/passage.svg" height="64" width="64" />
+
+# Passage Provider
+
+## Resources
+
+- [Passage OIDC documentation](https://docs.passage.id/hosted-login/oidc-client-configuration)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/passage
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/passage
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/passage
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_PASSAGE_ID
+AUTH_PASSAGE_SECRET
+AUTH_PASSAGE_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Passage from "next-auth/providers/passage"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Passage],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Passage from "@auth/qwik/providers/passage"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Passage],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Passage from "@auth/sveltekit/providers/passage"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Passage],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Passage from "@auth/express/providers/passage"
+
+app.use("/auth/*", ExpressAuth({ providers: [Passage] }))
+```
+
+  </Code.Express>
+</Code>

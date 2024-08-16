@@ -1,0 +1,71 @@
+---
+title: Auth.js | OAuth
+---
+
+import { Callout } from "nextra/components"
+import { Screenshot } from "@/components/Screenshot"
+
+# OAuth
+
+<Callout>
+  Auth.js is designed to work with any OAuth service, it supports **OAuth 2.0**
+  and **OpenID Connect** and has built-in support for most popular sign-in
+  services.
+</Callout>
+
+Authentication Providers in **Auth.js** are predefined [OAuth](https://oauth.net/2/) configurations that allow your users to sign in with pre-existing logins at their favorite services. You can use any of our predefined providers, or write your own custom OAuth configuration. For customizing or writing your own OAuth provider, see our [configuring OAuth providers](/guides/configuring-oauth-providers) guide.
+
+At a high level, the OAuth **Authorization Code** flow we support generally has 6 parts:
+
+1. The application requests authorization to access service resources from the user
+2. If the user authorized the request, the application receives an authorization grant
+3. The application requests an access token from the authorization server (API) by presenting authentication of its own identity, and the authorization grant
+4. If the application identity is authenticated and the authorization grant is valid, the authorization server (API) issues an access token to the application. Authorization is complete.
+5. The application requests the resource from the resource server (API) and presents the access token for authentication
+6. If the access token is valid, the resource server (API) serves the resource to the application
+
+## Diagrams
+
+Below are two diagrams visually illustrating the same basic flow as described above, the OAuth Authorization Code flow. First is a sequence diagram.
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant App Server
+    participant Auth Server (GitHub)
+    Note left of Browser: User clicks on "Sign in"
+    Browser->>App Server: GET<br/>"api/auth/signin"
+    App Server->>App Server: Computes the available<br/>sign in providers<br/>from the "providers" option
+    App Server->>Browser: Redirects to Sign in page
+    Note left of Browser: Sign in options<br/>are shown the user<br/>(GitHub, Twitter, etc...)
+    Note left of Browser: User clicks on<br/>"Sign in with GitHub"
+    Browser->>App Server: POST<br/>"api/auth/signin/github"
+    App Server->>App Server: Computes sign in<br/>options for GitHub<br/>(scopes, callback URL, etc...)
+    App Server->>Auth Server (GitHub): GET<br/>"github.com/login/oauth/authorize"
+    Note left of Auth Server (GitHub): Sign in options<br> are supplied as<br/>query params<br/>(clientId, <br/>scope, etc...)
+    Auth Server (GitHub)->>Browser: Shows sign in page<br/>in GitHub.com<br/>to the user
+    Note left of Browser: User inserts their<br/>credentials in GitHub
+    Browser->>Auth Server (GitHub): GitHub validates the inserted credentials
+    Auth Server (GitHub)->>Auth Server (GitHub): Generates one time access code<br/>and calls callback<br>URL defined in<br/>App settings
+    Auth Server (GitHub)->>App Server: GET<br/>"api/auth/github/callback?code=123"
+    App Server->>App Server: Grabs code<br/>to exchange it for<br/>access token
+    App Server->>Auth Server (GitHub): POST<br/>"github.com/login/oauth/access_token"<br/>{code: 123}
+    Auth Server (GitHub)->>Auth Server (GitHub): Verifies code is<br/>valid and generates<br/>access token
+    Auth Server (GitHub)->>App Server: { access_token: 16C7x... }
+    App Server->>App Server: Generates session token<br/>and stores session
+    App Server->>Browser: You're now logged in!
+```
+
+Next is a swim lane diagram which comes from a great article, [Setting up OAuth with Auth.js and SvelteKit](https://mainmatter.com/blog/2023/11/23/setting-up-oauth-with-auth-js-and-sveltekit/) by [Andrey Mikhaylov](https://lolma.us) of [mainmatter.com](https://mainmatter.com).
+
+import OAuthDiagram from "../../public/img/concepts/oauth-diagram.webp"
+
+<Screenshot src={OAuthDiagram} alt="OAuth Flow Diagram" />
+
+## Further Reading
+
+To learn more, check out the following blog posts:
+
+- Aaron Parecki's blog post [OAuth2 Simplified](https://aaronparecki.com/oauth-2-simplified/)
+- Postman's blog post [OAuth 2.0: Implicit Flow is Dead, Try PKCE Instead](https://blog.postman.com/pkce-oauth-how-to/)
+- Setting up OAuth with Auth.js and SvelteKit [blog post](https://mainmatter.com/blog/2023/11/23/setting-up-oauth-with-auth-js-and-sveltekit/)

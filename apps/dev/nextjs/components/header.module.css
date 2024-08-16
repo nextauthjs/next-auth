@@ -1,8 +1,10 @@
 /* Set min-height to avoid page reflow while session loading */
 .signedInStatus {
-  display: block;
+  display: flex;
+  align-items: center;
   min-height: 4rem;
-  width: 100%;
+  padding: 1rem;
+  background-color: #f3f3f3;
 }
 
 .loading,
@@ -25,16 +27,12 @@
 
 .signedInText,
 .notSignedInText {
-  position: absolute;
-  padding-top: 0.8rem;
-  left: 1rem;
-  right: 6.5rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: inherit;
   z-index: 1;
   line-height: 1.3rem;
+  flex: 1;
 }
 
 .signedInText {
@@ -47,6 +45,7 @@
   float: left;
   height: 2.8rem;
   width: 2.8rem;
+  margin-right: 1rem;
   background-color: white;
   background-size: cover;
   background-repeat: no-repeat;
@@ -54,10 +53,11 @@
 
 .button,
 .buttonPrimary {
-  float: right;
-  margin-right: -0.4rem;
+  justify-self: end;
   font-weight: 500;
   border-radius: 0.3rem;
+  border: none;
+  font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1.4rem;
@@ -81,12 +81,41 @@
 }
 
 .navItems {
-  margin-bottom: 2rem;
   padding: 0;
+  margin: 0;
   list-style: none;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .navItem {
+  flex-grow: 1;
   display: inline-block;
+  text-align: center;
+  background-color: #d5d5d5;
+  border-radius: 0 0 0.5rem 0.5rem;
+  padding: 1rem 0 1rem 0;
+  text-decoration: none;
+  color: black;
+}
+
+.navItem:hover {
+  background-color: #ccc;
+}
+
+.header {
+  border-radius: 0 0 0.6rem 0.6rem;
+  margin-bottom: 2rem;
+
+  @media screen and (max-width: 960px) {
+    padding: 0 1rem;
+  }
+}
+
+.passwordInput {
+  padding: 0.75rem;
+  border-radius: 0.3rem;
+  border: #ccc solid 2px;
   margin-right: 1rem;
 }

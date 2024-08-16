@@ -1,0 +1,102 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/coinbase.svg" height="64" width="128" />
+
+# Coinbase Provider
+
+## Resources
+
+- [Coinbase OAuth documentation](https://developers.coinbase.com/api/v2)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/coinbase
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/coinbase
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/coinbase
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_COINBASE_ID
+AUTH_COINBASE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Coinbase from "next-auth/providers/coinbase"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Coinbase],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Coinbase from "@auth/qwik/providers/coinbase"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Coinbase],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Coinbase from "@auth/sveltekit/providers/coinbase"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Coinbase],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Coinbase from "@auth/express/providers/coinbase"
+
+app.use("/auth/*", ExpressAuth({ providers: [Coinbase] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- This Provider template has a 2 hour access token to it. A refresh token is also returned.

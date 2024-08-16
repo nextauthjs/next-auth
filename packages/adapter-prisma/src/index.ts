@@ -1,9 +1,37 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  Official <a href="https://www.prisma.io/docs">Prisma</a> adapter for Auth.js / NextAuth.js.
+ *  <a href="https://www.prisma.io/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/prisma.svg" width="38" />
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @prisma/client @auth/prisma-adapter
+ * npm install prisma --save-dev
+ * ```
+ *
+ * @module @auth/prisma-adapter
+ */
 import type { PrismaClient, Prisma } from "@prisma/client"
-import type { Adapter, AdapterAccount } from "next-auth/adapters"
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+} from "@auth/core/adapters"
 
-export function PrismaAdapter(p: PrismaClient): Adapter {
+export function PrismaAdapter(
+  prisma: PrismaClient | ReturnType<PrismaClient["$extends"]>
+): Adapter {
+  const p = prisma as PrismaClient
   return {
-    createUser: (data) => p.user.create({ data }),
+    // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
+    createUser: ({ id: _id, ...data }) => {
+      return p.user.create({ data })
+    },
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
@@ -11,10 +39,12 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
         where: { provider_providerAccountId },
         select: { user: true },
       })
-      return account?.user ?? null
+      return (account?.user as AdapterUser) ?? null
     },
-    updateUser: ({ id, ...data }) => p.user.update({ where: { id }, data }),
-    deleteUser: (id) => p.user.delete({ where: { id } }),
+    updateUser: ({ id, ...data }) =>
+      p.user.update({ where: { id }, data }) as Promise<AdapterUser>,
+    deleteUser: (id) =>
+      p.user.delete({ where: { id } }) as Promise<AdapterUser>,
     linkAccount: (data) =>
       p.account.create({ data }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
@@ -28,7 +58,7 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
       })
       if (!userAndSession) return null
       const { user, ...session } = userAndSession
-      return { user, session }
+      return { user, session } as { user: AdapterUser; session: AdapterSession }
     },
     createSession: (data) => p.session.create({ data }),
     updateSession: (data) =>
@@ -56,6 +86,32 @@ export function PrismaAdapter(p: PrismaClient): Adapter {
           return null
         throw error
       }
+    },
+    async getAccount(providerAccountId, provider) {
+      return p.account.findFirst({
+        where: { providerAccountId, provider },
+      }) as Promise<AdapterAccount | null>
+    },
+    async createAuthenticator(authenticator) {
+      return p.authenticator.create({
+        data: authenticator,
+      })
+    },
+    async getAuthenticator(credentialID) {
+      return p.authenticator.findUnique({
+        where: { credentialID },
+      })
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return p.authenticator.findMany({
+        where: { userId },
+      })
+    },
+    async updateAuthenticatorCounter(credentialID, counter) {
+      return p.authenticator.update({
+        where: { credentialID },
+        data: { counter },
+      })
     },
   }
 }

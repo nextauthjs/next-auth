@@ -1,8 +1,7 @@
 {
-  "files.exclude": {
-    "packages/core/{lib,providers,*.js,*.d.ts,*.d.ts.map}": true,
-    "packages/next-auth/{client,core,css,jwt,next,providers,react,utils,*.js,*.d.ts}": true
-  },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "openInGitHub.remote.branch": "main"
+  "openInGitHub.remote.branch": "main",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

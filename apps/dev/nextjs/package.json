@@ -8,36 +8,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "email": "fake-smtp-server",
-    "start:email": "pnpm email",
     "e2e": "pnpm dlx playwright test"
   },
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "@next-auth/fauna-adapter": "workspace:*",
-    "@next-auth/prisma-adapter": "workspace:*",
-    "@next-auth/supabase-adapter": "workspace:*",
-    "@next-auth/typeorm-legacy-adapter": "workspace:*",
-    "@prisma/client": "^3",
-    "@supabase/supabase-js": "^2.0.5",
-    "faunadb": "^4",
-    "next": "13.1.1",
+    "@auth/prisma-adapter": "workspace:*",
+    "@prisma/client": "^5",
+    "next": "15.0.0-rc.0",
     "next-auth": "workspace:*",
-    "nodemailer": "^6",
-    "react": "^18",
-    "react-dom": "^18"
+    "nodemailer": "^6.9.3",
+    "react": "19.0.0-rc-4c2e457c7c-20240522",
+    "react-dom": "19.0.0-rc-4c2e457c7c-20240522"
   },
   "devDependencies": {
-    "@playwright/test": "1.29.2",
-    "@types/jsonwebtoken": "^8.5.5",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
-    "dotenv": "^16.0.3",
-    "fake-smtp-server": "^0.8.0",
-    "pg": "^8.7.3",
-    "prisma": "^3",
-    "sqlite3": "^5.0.8",
-    "typeorm": "0.3.7"
+    "@libsql/client": "^0.6.0",
+    "@types/react": "^18.2.23",
+    "@types/react-dom": "^18.2.8",
+    "prisma": "^5"
   }
 }

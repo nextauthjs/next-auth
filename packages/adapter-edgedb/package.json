@@ -1,0 +1,52 @@
+{
+  "name": "@auth/edgedb-adapter",
+  "version": "1.4.2",
+  "description": "EdgeDB adapter for next-auth.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Bruno Crosier",
+  "contributors": [
+    "Thang Huu Vu <hi@thvu.dev>"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "edgedb"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest -c ../utils/vitest.config.ts"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "edgedb": "^1.0.1"
+  },
+  "devDependencies": {
+    "edgedb": "^1.0.1"
+  }
+}

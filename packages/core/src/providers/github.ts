@@ -2,11 +2,10 @@
  * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>GitHub</b> integration.</span>
  * <a href="https://github.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/github-dark.svg" height="48" width="48"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/github.svg" height="48" width="48"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/github
  */
 
@@ -66,32 +65,41 @@ export interface GitHubProfile {
     space: number
     private_repos: number
   }
+  [claim: string]: unknown
 }
 
 /**
  * Add GitHub login to your page and make requests to [GitHub APIs](https://docs.github.com/en/rest).
  *
- * ## Example
+ * ### Setup
  *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/github
+ * ```
+ *
+ * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
  * import GitHub from "@auth/core/providers/github"
  *
- * const request = new Request("https://example.com")
- * const resposne = await Auth(request, {
- *   providers: [GitHub({ clientId: "", clientSecret: "" })],
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [
+ *     GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
- * ## Resources
+ * ### Resources
  *
- * @see [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
- * @see [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
- * @see [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
- * @see [Learn more about OAuth](https://authjs.dev/concepts/oauth)
- * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
+ * - [GitHub - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
+ * - [GitHub - Authorizing OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
+ * - [GitHub - Configure your GitHub OAuth Apps](https://github.com/settings/developers)
+ * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+ * - [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts)
  *
- * ## Notes
+ * ### Notes
  *
  * By default, Auth.js assumes that the GitHub provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
@@ -99,7 +107,7 @@ export interface GitHubProfile {
  * :::tip
  *
  * The GitHub provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/github.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -114,29 +122,46 @@ export interface GitHubProfile {
  * :::
  */
 export default function GitHub(
-  config: OAuthUserConfig<GitHubProfile>
+  config: OAuthUserConfig<GitHubProfile> & {
+    /** Configuration for usage with [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started). */
+    enterprise?: {
+      /** The base URL of your GitHub Enterprise Server instance. */
+      baseUrl?: string
+    }
+  }
 ): OAuthConfig<GitHubProfile> {
+  const baseUrl = config?.enterprise?.baseUrl ?? "https://github.com"
+  const apiBaseUrl = config?.enterprise?.baseUrl
+    ? `${config?.enterprise?.baseUrl}/api/v3`
+    : "https://api.github.com"
+
   return {
     id: "github",
     name: "GitHub",
     type: "oauth",
     authorization: {
-      url: "https://github.com/login/oauth/authorize",
+      url: `${baseUrl}/login/oauth/authorize`,
       params: { scope: "read:user user:email" },
     },
-    token: "https://github.com/login/oauth/access_token",
+    token: `${baseUrl}/login/oauth/access_token`,
     userinfo: {
-      url: "https://api.github.com/user",
+      url: `${apiBaseUrl}/user`,
       async request({ tokens, provider }) {
         const profile = await fetch(provider.userinfo?.url as URL, {
-          headers: { Authorization: `Bearer ${tokens.access_token}` },
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            "User-Agent": "authjs",
+          },
         }).then(async (res) => await res.json())
 
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
-          const res = await fetch("https://api.github.com/user/emails", {
-            headers: { Authorization: `Bearer ${tokens.access_token}` },
+          const res = await fetch(`${apiBaseUrl}/user/emails`, {
+            headers: {
+              Authorization: `Bearer ${tokens.access_token}`,
+              "User-Agent": "authjs",
+            },
           })
 
           if (res.ok) {
@@ -156,14 +181,7 @@ export default function GitHub(
         image: profile.avatar_url,
       }
     },
-    style: {
-      logo: "/github.svg",
-      logoDark: "/github-dark.svg",
-      bg: "#fff",
-      bgDark: "#24292f",
-      text: "#000",
-      textDark: "#fff",
-    },
+    style: { bg: "#24292f", text: "#fff" },
     options: config,
   }
 }

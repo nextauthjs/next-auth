@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/mattermost.svg" height="64" width="64" />
+
+# Mattermost Provider
+
+## Resources
+
+- [Mattermost OAuth documentation](https://example.com)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/mattermost
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/mattermost
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/mattermost
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_MATTERMOST_ID
+AUTH_MATTERMOST_SECRET
+AUTH_MATTERMOST_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Mattermost from "next-auth/providers/mattermost"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Mattermost],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Mattermost from "@auth/qwik/providers/mattermost"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Mattermost],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Mattermost from "@auth/sveltekit/providers/mattermost"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Mattermost],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Mattermost from "@auth/express/providers/mattermost"
+
+app.use("/auth/*", ExpressAuth({ providers: [Mattermost] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- To create your Mattermost OAuth2 app visit `http://<your Mattermost instance url>/<your team>/integrations/oauth2-apps`
+- The Mattermost provider requires the `issuer` option to be set. This is the base url of your Mattermost instance. e.g `https://my-cool-server.cloud.mattermost.com`

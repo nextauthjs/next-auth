@@ -1,22 +1,62 @@
-import type {
-  Adapter,
-  AdapterUser,
-  AdapterAccount,
-  AdapterSession,
-  VerificationToken,
-} from "next-auth/adapters"
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official <a href="https://docs.upstash.com/redis">Upstash Redis</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://docs.upstash.com/redis">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/upstash-redis.svg" width="60"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @upstash/redis @auth/upstash-redis-adapter
+ * ```
+ *
+ * @module @auth/upstash-redis-adapter
+ */
+import {
+  type Adapter,
+  type AdapterUser,
+  type AdapterAccount,
+  type AdapterSession,
+  type VerificationToken,
+  isDate,
+} from "@auth/core/adapters"
 import type { Redis } from "@upstash/redis"
 
-import { v4 as uuid } from "uuid"
-
+/** This is the interface of the Upstash Redis adapter options. */
 export interface UpstashRedisAdapterOptions {
+  /**
+   * The base prefix for your keys
+   */
   baseKeyPrefix?: string
+  /**
+   * The prefix for the `account` key
+   */
   accountKeyPrefix?: string
+  /**
+   * The prefix for the `accountByUserId` key
+   */
   accountByUserIdPrefix?: string
+  /**
+   * The prefix for the `emailKey` key
+   */
   emailKeyPrefix?: string
+  /**
+   * The prefix for the `sessionKey` key
+   */
   sessionKeyPrefix?: string
+  /**
+   * The prefix for the `sessionByUserId` key
+   */
   sessionByUserIdKeyPrefix?: string
+  /**
+   * The prefix for the `user` key
+   */
   userKeyPrefix?: string
+  /**
+   * The prefix for the `verificationToken` key
+   */
   verificationTokenKeyPrefix?: string
 }
 
@@ -29,12 +69,6 @@ export const defaultOptions = {
   sessionByUserIdKeyPrefix: "user:session:by-user-id:",
   userKeyPrefix: "user:",
   verificationTokenKeyPrefix: "user:token:",
-}
-
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 export function hydrateDates(json: object) {
@@ -114,7 +148,7 @@ export function UpstashRedisAdapter(
 
   return {
     async createUser(user) {
-      const id = uuid()
+      const id = crypto.randomUUID()
       // TypeScript thinks the emailVerified field is missing
       // but all fields are copied directly from user, so it's there
       return await setUser(id, { ...user, id })

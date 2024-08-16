@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/pinterest.svg" height="64" width="64" />
+
+# Pinterest Provider
+
+## Resources
+
+- [Pinterest OAuth documentation](https://developers.pinterest.com/docs/getting-started/authentication/)
+- [Pinterest app console](https://developers.pinterest.com/apps/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/pinterest
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/pinterest
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/pinterest
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_PINTEREST_ID
+AUTH_PINTEREST_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Pinterest from "next-auth/providers/pinterest"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Pinterest],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Pinterest from "@auth/qwik/providers/pinterest"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Pinterest],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Pinterest from "@auth/sveltekit/providers/pinterest"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Pinterest],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Pinterest from "@auth/express/providers/pinterest"
+
+app.use("/auth/*", ExpressAuth({ providers: [Pinterest] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- To use in production, make sure the app has standard API access and not trial access

@@ -1,23 +1,48 @@
 import type {
-  LiteralUnion,
-  SignInOptions,
-  SignInAuthorizationParams,
-  SignOutParams,
-} from "next-auth/react"
-import type {
   BuiltInProviderType,
   RedirectableProviderType,
 } from "@auth/core/providers"
+
+type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
+
+interface SignInOptions extends Record<string, unknown> {
+  /**
+   * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
+   *
+   * [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl)
+   */
+  callbackUrl?: string
+  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
+  redirect?: boolean
+}
+
+interface SignOutParams<R extends boolean = true> {
+  /** [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1) */
+  callbackUrl?: string
+  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+  redirect?: R
+}
+
+/** Match `inputType` of `new URLSearchParams(inputType)` */
+export type SignInAuthorizationParams =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams
 
 /**
  * Client-side method to initiate a signin flow
  * or send the user to the signin page listing all possible providers.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#signin)
+ * ```ts
+ * import { signIn } from "@auth/solid-start/client"
+ * signIn()
+ * signIn("provider") // example: signIn("github")
+ * ```
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType | undefined = undefined,
 >(
   providerId?: LiteralUnion<
     P extends RedirectableProviderType
@@ -51,7 +76,7 @@ export async function signIn<
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-expect-error -- ignore
+    // @ts-ignore
     body: new URLSearchParams({
       ...options,
       csrfToken,
@@ -75,7 +100,10 @@ export async function signIn<
  * Signs the user out, by removing the session cookie.
  * Automatically adds the CSRF token to the request.
  *
- * [Documentation](https://next-auth.js.org/getting-started/client#signout)
+ * ```ts
+ * import { signOut } from "@auth/solid-start/client"
+ * signOut()
+ * ```
  */
 export async function signOut(options?: SignOutParams) {
   const { callbackUrl = window.location.href } = options ?? {}

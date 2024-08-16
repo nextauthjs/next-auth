@@ -1,14 +1,30 @@
 {
-  "name": "@next-auth/prisma-adapter",
-  "version": "1.0.5",
-  "description": "Prisma adapter for next-auth.",
-  "homepage": "https://authjs.dev",
+  "name": "@auth/prisma-adapter",
+  "version": "2.4.2",
+  "description": "Prisma adapter for Auth.js",
+  "homepage": "https://authjs.dev/reference/adapter/prisma",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "William Luke",
-  "main": "dist/index.js",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -24,32 +40,25 @@
     "clean": "rm ./prisma/dev.db* || echo 'File deleted'",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
-    "test:default": "pnpm init:default && jest",
-    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 jest",
-    "test:mongodb": "./tests/mongodb.test.sh",
-    "test": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
+    "test:default": "pnpm init:default && vitest run -c ../utils/vitest.config.ts",
+    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 vitest run -c ../utils/vitest.config.ts",
+    "test:mongodb": "./test/mongodb.test.sh",
+    "test": "pnpm test:default && pnpm test:custom",
+    "test:og": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
     "build": "prisma generate && tsc",
     "dev": "prisma generate && tsc -w",
     "studio": "prisma studio"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "@prisma/client": ">=2.26.0 || >=3",
-    "next-auth": "^4"
+    "@prisma/client": ">=2.26.0 || >=3 || >=4 || >=5"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
-    "@prisma/client": "^3.10.0",
-    "jest": "^27.4.3",
-    "mongodb": "^4.4.0",
-    "next-auth": "workspace:*",
-    "prisma": "^3.10.0"
-  },
-  "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "@prisma/client": "^5.9.1",
+    "@prisma/extension-accelerate": "^0.6.3",
+    "mongodb": "^4.17.0",
+    "prisma": "^5.9.1"
   }
 }

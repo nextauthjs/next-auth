@@ -1,17 +1,27 @@
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official <a href="https://supabase.com/docs">Supabase</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://supabase.com/">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/supabase.svg" width="50"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @supabase/supabase-js @auth/supabase-adapter
+ * ```
+ *
+ * @module @auth/supabase-adapter
+ */
 import { createClient } from "@supabase/supabase-js"
-import { Database } from "./database.types"
 import {
-  Adapter,
-  AdapterSession,
-  AdapterUser,
-  VerificationToken,
-} from "next-auth/adapters"
-
-function isDate(date: any) {
-  return (
-    new Date(date).toString() !== "Invalid Date" && !isNaN(Date.parse(date))
-  )
-}
+  type Adapter,
+  type AdapterSession,
+  type AdapterUser,
+  type VerificationToken,
+  isDate,
+} from "@auth/core/adapters"
 
 export function format<T>(obj: Record<string, any>): T {
   for (const [key, value] of Object.entries(obj)) {
@@ -27,18 +37,26 @@ export function format<T>(obj: Record<string, any>): T {
   return obj as T
 }
 
-export const SupabaseAdapter = ({
-  url,
-  secret,
-}: {
+/**
+ * This is the interface of the Supabase adapter options.
+ **/
+export interface SupabaseAdapterOptions {
+  /**
+   * The URL of your Supabase database
+   **/
   url: string
+  /**
+   * The secret to grant access to the database
+   **/
   secret: string
-}): Adapter => {
+}
+
+export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
+  const { url, secret } = options
   const supabase = createClient<Database, "next_auth">(url, secret, {
     db: { schema: "next_auth" },
-    global: {
-      headers: { "X-Client-Info": "@next-auth/supabase-adapter@0.1.0" },
-    },
+    global: { headers: { "X-Client-Info": "@auth/supabase-adapter" } },
+    auth: { persistSession: false },
   })
   return {
     async createUser(user) {
@@ -149,7 +167,7 @@ export const SupabaseAdapter = ({
 
       return {
         user: format<AdapterUser>(
-          user as Database["next_auth"]["Tables"]["users"]["Row"]
+          user as Database["next_auth"]["Tables"]["users"]["Row"][]
         ),
         session: format<AdapterSession>(session),
       }
@@ -208,5 +226,137 @@ export const SupabaseAdapter = ({
 
       return format<VerificationToken>(verificationToken)
     },
+  }
+}
+
+interface Database {
+  next_auth: {
+    Tables: {
+      accounts: {
+        Row: {
+          id: string
+          type: string | null
+          provider: string | null
+          providerAccountId: string | null
+          refresh_token: string | null
+          access_token: string | null
+          expires_at: number | null
+          token_type: string | null
+          scope: string | null
+          id_token: string | null
+          session_state: string | null
+          oauth_token_secret: string | null
+          oauth_token: string | null
+          userId: string | null
+        }
+        Insert: {
+          id?: string
+          type?: string | null
+          provider?: string | null
+          providerAccountId?: string | null
+          refresh_token?: string | null
+          access_token?: string | null
+          expires_at?: number | null
+          token_type?: string | null
+          scope?: string | null
+          id_token?: string | null
+          session_state?: string | null
+          oauth_token_secret?: string | null
+          oauth_token?: string | null
+          userId?: string | null
+        }
+        Update: {
+          id?: string
+          type?: string | null
+          provider?: string | null
+          providerAccountId?: string | null
+          refresh_token?: string | null
+          access_token?: string | null
+          expires_at?: number | null
+          token_type?: string | null
+          scope?: string | null
+          id_token?: string | null
+          session_state?: string | null
+          oauth_token_secret?: string | null
+          oauth_token?: string | null
+          userId?: string | null
+        }
+      }
+      sessions: {
+        Row: {
+          expires: string | null
+          sessionToken: string | null
+          userId: string | null
+          id: string
+        }
+        Insert: {
+          expires?: string | null
+          sessionToken?: string | null
+          userId?: string | null
+          id?: string
+        }
+        Update: {
+          expires?: string | null
+          sessionToken?: string | null
+          userId?: string | null
+          id?: string
+        }
+      }
+      users: {
+        Row: {
+          name: string | null
+          email: string | null
+          emailVerified: string | null
+          image: string | null
+          id: string
+        }
+        Insert: {
+          name?: string | null
+          email?: string | null
+          emailVerified?: string | null
+          image?: string | null
+          id?: string
+        }
+        Update: {
+          name?: string | null
+          email?: string | null
+          emailVerified?: string | null
+          image?: string | null
+          id?: string
+        }
+      }
+      verification_tokens: {
+        Row: {
+          id: number
+          identifier: string | null
+          token: string | null
+          expires: string | null
+        }
+        Insert: {
+          id?: number
+          identifier?: string | null
+          token?: string | null
+          expires?: string | null
+        }
+        Update: {
+          id?: number
+          identifier?: string | null
+          token?: string | null
+          expires?: string | null
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      uid: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
   }
 }

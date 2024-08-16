@@ -1,33 +1,22 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
+  "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
-    },
-    "next-auth#build": {
       "dependsOn": ["^build"],
       "outputs": [
-        "client/**",
-        "core/**",
-        "css/**",
-        "jwt/**",
-        "next/**",
+        ".next",
+        "dist/**",
+        "lib/**",
         "providers/**",
-        "react/**",
-        "index.d.ts",
-        "index.js",
-        "adapters.d.ts",
-        "middleware.d.ts",
-        "middleware.js"
-      ]
-    },
-    "@auth/core#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["lib/**", "providers/**", "*.js", "*.d.ts", "*.d.ts.map"]
-    },
-    "@auth/sveltekit#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["client.*", "index.*"]
+        "generated/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/pages/styles.ts",
+        "src/providers/oauth-types.ts",
+        ".svelte-kit/**"
+      ],
+      "outputMode": "new-only"
     },
     "clean": {
       "cache": false
@@ -36,13 +25,91 @@
       "cache": false
     },
     "test": {
-      "outputs": []
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**/", "test/**/"],
+      "outputMode": "new-only"
     },
-    "e2e": {
-      "outputs": ["playwright-report/**"]
+    "test:e2e": {
+      "outputs": [
+        "blob-report/**",
+        "playwright-report/**",
+        "playwright/.cache/**",
+        "test-results/**"
+      ]
     },
-    "@next-auth/upstash-redis-adapter#test": {
-      "env": ["UPSTASH_REDIS_KEY", "UPSTASH_REDIS_URL"]
+    "@auth/xata-adapter#test": {
+      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+    },
+    "@auth/hasura-adapter#build": {
+      "dependsOn": ["@auth/core#build"],
+      "outputs": [
+        "lib/**",
+        "*.js",
+        "*.d.ts",
+        "*.d.ts.map",
+        "src/lib/generated/**"
+      ]
+    },
+    "docs#dev": {
+      "dependsOn": [
+        "next-auth#build",
+        "@auth/core#build",
+        "@auth/sveltekit#build",
+        "@auth/express#build",
+        "@auth/solid-start#build",
+        "@auth/qwik#build"
+      ],
+      "cache": false
+    },
+    "docs#build": {
+      "inputs": [
+        "pages/**",
+        "utils/**",
+        "public/**",
+        "components/**",
+        "theme.config.tsx",
+        "typedoc*",
+        "vercel.json",
+        "next-sitemap.config.cjs",
+        "next.config.js"
+      ],
+      "dependsOn": [
+        "@auth/core#build",
+        "@auth/azure-tables-adapter#build",
+        "@auth/d1-adapter#build",
+        "@auth/dgraph-adapter#build",
+        "@auth/drizzle-adapter#build",
+        "@auth/dynamodb-adapter#build",
+        "@auth/edgedb-adapter#build",
+        "@auth/fauna-adapter#build",
+        "@auth/firebase-adapter#build",
+        "@auth/hasura-adapter#build",
+        "@auth/kysely-adapter#build",
+        "@auth/mikro-orm-adapter#build",
+        "@auth/mongodb-adapter#build",
+        "@auth/neo4j-adapter#build",
+        "@auth/pg-adapter#build",
+        "@auth/pouchdb-adapter#build",
+        "@auth/prisma-adapter#build",
+        "@auth/sequelize-adapter#build",
+        "@auth/solid-start#build",
+        "@auth/supabase-adapter#build",
+        "@auth/surrealdb-adapter#build",
+        "@auth/sveltekit#build",
+        "@auth/typeorm-adapter#build",
+        "@auth/unstorage-adapter#build",
+        "@auth/upstash-redis-adapter#build",
+        "@auth/xata-adapter#build",
+        "@auth/qwik#build",
+        "next-auth#build",
+        "^build"
+      ],
+      "outputs": [
+        ".next/**/*",
+        "!.next/cache/**",
+        "docs/reference/**",
+        "!docs/reference/_meta.js"
+      ]
     }
   }
 }

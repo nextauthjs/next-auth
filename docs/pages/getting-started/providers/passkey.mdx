@@ -1,0 +1,216 @@
+import { Callout, Steps } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Accordion, Accordions } from "@/components/Accordion"
+
+<img align="right" src="/img/providers/passkey.svg" width="128" height="128" />
+
+# Passkey
+
+## Setup
+
+<Callout type="warning">
+  The WebAuthn / Passkeys provider is experimental and not yet recommended for
+  production use.
+</Callout>
+
+The Passkeys provider **requires a database adapter** as well as a new table in that database. Please see the docs page for your adapter for the respective migration details.
+
+Passkeys are currently supported in the following adapters / framework packages.
+
+| Package                   | Minmum Version  | Link                                        |
+| ------------------------- | --------------- | ------------------------------------------- |
+| `next-auth`               | `5.0.0-beta.17` |                                             |
+| `@auth/sveltekit`         | `1.0.2`         |                                             |
+| `@auth/prisma-adapter`    | `1.3.3`         | [Docs](/getting-started/adapters/prisma)    |
+| `@auth/unstorage-adapter` | `2.1.0`         | [Docs](/getting-started/adapters/unstorage) |
+| `@auth/drizzle-adapter`   | `1.1.1`         | [Docs](/getting-started/adapters/drizzle)   |
+
+<Steps>
+### Install peer dependencies
+
+```bash npm2yarn
+npm install @simplewebauthn/browser@9.0.1 @simplewebauthn/server@9.0.3
+```
+
+The `@simplewebauthn/browser` peer dependency is only required for custom signin pages. If you're using the Auth.js default pages, you can skip installing that peer dependency.
+
+### Database Setup
+
+The Passkeys provider requires an additional table called `Authenticator`. Passkeys are now supported in multiple adapters, please see their respective docs pages for more detailed migration steps. We'll use Prisma as an example going forward here, but there is also a raw SQL migration included below.
+
+<Accordions>
+<Accordion title="Prisma Schema">
+
+```prisma {18, 54-66}
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+  </Accordion>
+  <Accordion title="SQL Migration">
+
+This migration works for **PostgreSQL** and **SQLite**.
+
+```sql filename="./migration/add-webauthn-authenticator-table-postgres.sql"
+-- CreateTable
+CREATE TABLE "Authenticator" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "credentialID" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "credentialPublicKey" TEXT NOT NULL,
+    "counter" INTEGER NOT NULL,
+    "credentialDeviceType" TEXT NOT NULL,
+    "credentialBackedUp" BOOLEAN NOT NULL,
+    "transports" TEXT,
+    CONSTRAINT "Authenticator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Authenticator_credentialID_key" ON "Authenticator"("credentialID");
+```
+
+This migration works for **MySQL** / **MariaDB**.
+
+```sql filename="./migration/add-webauthn-authenticator-table-mysql.sql"
+-- CreateTable
+CREATE TABLE Authenticator (
+    id varchar(255) NOT NULL PRIMARY KEY,
+    credentialID TEXT NOT NULL,
+    userId varchar(255) NOT NULL,
+    providerAccountId TEXT NOT NULL,
+    credentialPublicKey TEXT NOT NULL,
+    counter INTEGER NOT NULL,
+    credentialDeviceType TEXT NOT NULL,
+    credentialBackedUp BOOLEAN NOT NULL,
+    transports TEXT,
+    CONSTRAINT Authenticator_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX Authenticator_credentialID_key ON Authenticator(credentialID);
+```
+
+  </Accordion>
+  </Accordions>
+
+#### Edge Compatibility
+
+If you're using `next-auth` with Next.js and middleware, you should ensure that your database client of choice is "edge compatible". If you're using an older version of Prisma or another adapter that is not edge compatible, you'll need to make some adjustments. Check out our [edge compatibility](/guides/edge-compatibility) guide for more details. There is also Prisma specific information in the [Prisma adapter docs](/getting-started/adapters/prisma#edge-compatibility).
+
+### Update Auth.js Configuration
+
+Add the `Passkey` provider to your configuration and make sure you're using a compatible database adapter. You'll also need to explicitly enable the experimental WebAuthn feature.
+
+```ts filename="./auth.ts" {10}
+import Passkey from "next-auth/providers/passkey"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
+
+export default {
+  adapter: PrismaAdapter(prisma),
+  providers: [Passkey],
+  experimental: { enableWebAuthn: true },
+}
+```
+
+If you're using the built-in Auth.js pages, then you are good to go now! Navigating to your `/signin` route should include a "Signin with Passkeys" button now.
+
+### Custom Pages
+
+If you're building a custom signin page, you can leverage the `next-auth/webauthn` `signIn` function to initiate both WebAuthn registration and authentication. Remember, when using the WebAuthn `signIn` function, you'll also need the `@simplewebauth/browser` peer dependency installed.
+
+```ts filename="app/login/page.tsx" {4} /webauthn/
+"use client"
+
+import { useSession } from "next-auth/react"
+import { signIn } from "next-auth/webauthn"
+
+export default function Login() {
+  const { data: session, update, status } = useSession()
+
+  return (
+    <div>
+      {status === "authenticated" ? (
+        <button onClick={() => signIn("passkey", { action: "register" })}>
+          Register new Passkey
+        </button>
+      ) : status === "unauthenticated" ? (
+        <button onClick={() => signIn("passkey")}>Sign in with Passkey</button>
+      ) : null}
+    </div>
+  )
+}
+```
+
+</Steps>
+
+## Options
+
+You can find all of the Passkeys provider options under the [API reference](/reference/core/providers/webauthn#webauthnconfig).

@@ -24,7 +24,7 @@ export default function ErrorPage(props: ErrorProps) {
   const { url, error = "default", theme } = props
   const signinPageUrl = `${url}/signin`
 
-  const errors: Record<Lowercase<ErrorPageParam | "default">, ErrorView> = {
+  const errors: Record<ErrorPageParam | "default", ErrorView> = {
     default: {
       status: 200,
       heading: "Error",
@@ -36,7 +36,7 @@ export default function ErrorPage(props: ErrorProps) {
         </p>
       ),
     },
-    configuration: {
+    Configuration: {
       status: 500,
       heading: "Server error",
       message: (
@@ -46,7 +46,7 @@ export default function ErrorPage(props: ErrorProps) {
         </div>
       ),
     },
-    accessdenied: {
+    AccessDenied: {
       status: 403,
       heading: "Access Denied",
       message: (
@@ -60,7 +60,7 @@ export default function ErrorPage(props: ErrorProps) {
         </div>
       ),
     },
-    verification: {
+    Verification: {
       status: 403,
       heading: "Unable to sign in",
       message: (
@@ -70,17 +70,14 @@ export default function ErrorPage(props: ErrorProps) {
         </div>
       ),
       signin: (
-        <p>
-          <a className="button" href={signinPageUrl}>
-            Sign in
-          </a>
-        </p>
+        <a className="button" href={signinPageUrl}>
+          Sign in
+        </a>
       ),
     },
   }
 
-  const { status, heading, message, signin } =
-    errors[error.toLowerCase() as Lowercase<ErrorPageParam>] ?? errors.default
+  const { status, heading, message, signin } = errors[error] ?? errors.default
 
   return {
     status,

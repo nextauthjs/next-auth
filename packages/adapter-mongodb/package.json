@@ -1,14 +1,26 @@
 {
-  "name": "@next-auth/mongodb-adapter",
-  "version": "1.1.1",
-  "description": "mongoDB adapter for next-auth.",
+  "name": "@auth/mongodb-adapter",
+  "version": "3.4.2",
+  "description": "MongoDB adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Balázs Orbán <info@balazsorban.com>",
-  "main": "dist/index.js",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -22,26 +34,16 @@
     "access": "public"
   },
   "scripts": {
-    "test": "./tests/test.sh",
-    "test:watch": "./tests/test.sh -w",
+    "test": "./test/test.sh",
     "build": "tsc"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "mongodb": "^4.1.1",
-    "next-auth": "^4"
+    "mongodb": "^6"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3",
-    "mongodb": "^4.4.0",
-    "next-auth": "workspace:*"
-  },
-  "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "mongodb": "^6.0.0"
   }
 }

@@ -1,95 +1,105 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Asgardeo</b> integration.</span>
- * <a href="https://wso2.com/asgardeo/">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/asgardeo-dark.svg" height="48" width="48"/>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+ * <span style={{fontSize: "1.35rem" }}>
+ *  Built-in sign in with <b>Asgardeo</b> integration.
+ * </span>
+ * <a href="https://wso2.com/asgardeo/" style={{backgroundColor: "#ECEFF1", padding: "12px", borderRadius: "100%" }}>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/asgardeo.svg" width="24"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/asgardeo
  */
 
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
-export interface AsgardeoProfile {
+/** The returned user profile from Asgardeo when using the profile callback. */
+export interface AsgardeoProfile extends Record<string, any> {
+  /**
+   * The user Asgardeo account ID
+   */
   sub: string
+  /**
+   * The user name
+   */
   given_name: string
+  /**
+   * The user email
+   */
   email: string
+  /**
+   * The user profile picture
+   */
   picture: string
 }
 
 /**
- * Add Asgardeo login to your page.
- * ## Documentation
  *
- * https://wso2.com/asgardeo/docs/guides/authentication
+ * ### Setup
  *
- *
- * ## Instructions
- *
- * - Log into https://console.asgardeo.io.
- * - Next, go to "Application" tab (More info: https://wso2.com/asgardeo/docs/guides/applications/register-oidc-web-app/).
- * - Register standard based - Open id connect, application.
- * - Add callback URL: http://localhost:3000/api/auth/callback/asgardeo and https://your-domain.com/api/auth/callback/asgardeo
- * - After registering the application, go to protocol tab.
- * - Check `code` grant type.
- * - Add Authorized redirect URLs & Allowed origins fields.
- * - Make Email, First Name, Photo URL user attributes mandatory from the console.
- *
- * Create a `.env` file in the project root add the following entries:
- *
- * These values can be collected from the application created.
- *
+ * #### Callback URL
  * ```
- * ASGARDEO_CLIENT_ID=<Copy client ID from protocol tab here>
- * ASGARDEO_CLIENT_SECRET=<Copy client from protocol tab here>
- * ASGARDEO_ISSUER=<Copy the issuer url from the info tab here>
+ * https://example.com/api/auth/callback/asgardeo
  * ```
  *
- * In `pages/api/auth/[...nextauth].js` find or add the `Asgardeo` entries:
+ * #### Configuration
+ *```ts
+ * import { Auth } from "@auth/core"
+ * import Asgarde from "@auth/core/providers/asgardeo";
  *
- * ```js
- * import Asgardeo from "next-auth/providers/asgardeo";
- * ...
- * providers: [
- *   Asgardeo({
- *     clientId: process.env.ASGARDEO_CLIENT_ID,
- *     clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
- *     issuer: process.env.ASGARDEO_ISSUER
- *   }),
- * ],
- *
- * ...
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
+ *   providers: [
+ *     Asgardeo({
+ *       clientId: ASGARDEO_CLIENT_ID,
+ *       clientSecret: ASGARDEO_CLIENT_SECRET,
+ *       issuer: ASGARDEO_ISSUER,
+ *     }),
+ *   ],
+ * })
  * ```
  *
- * ## Resources
+ * ### Configuring Asgardeo
  *
- * @see [Asgardeo - Authentication Guide](https://wso2.com/asgardeo/docs/guides/authentication)
- * @see [Learn more about OAuth](https://authjs.dev/concepts/oauth)
- * @see [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/asgardeo.ts)
+ * Follow these steps:
  *
- * ## Notes
+ * 1. Log into the [Asgardeo console](https://console.asgardeo.io)
+ * 2. Next, go to "Application" tab (more info [here](https://wso2.com/asgardeo/docs/guides/applications/register-oidc-web-app/))
+ * 3. Register a standard based, Open ID connect, application
+ * 4. Add the **callback URLs**: `http://localhost:3000/api/auth/callback/asgardeo` (development) and `https://{YOUR_DOMAIN}.com/api/auth/callback/asgardeo` (production)
+ * 5. After registering the application, go to "Protocol" tab.
+ * 6. Check `code` as the grant type.
+ * 7. Add "Authorized redirect URLs" & "Allowed origins fields"
+ * 8. Make Email, First Name, Photo URL user attributes mandatory from the console.
  *
- * By default, Auth.js assumes that the Asgardeo provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ * Then, create a `.env` file in the project root add the following entries:
  *
- * :::tip
+ * ```
+ * ASGARDEO_CLIENT_ID="Copy client ID from protocol tab here"
+ * ASGARDEO_CLIENT_SECRET="Copy client from protocol tab here"
+ * ASGARDEO_ISSUER="Copy the issuer url from the info tab here"
+ * ```
  *
- * The Asgardeo provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/asgardeo.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * ### Resources
  *
+ * - [Asgardeo - Authentication Guide](https://wso2.com/asgardeo/docs/guides/authentication)
+ * - [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+ *
+ * ### Notes
+ *
+ * The Asgardeo provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/asgardeo.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
+ *
+ * :::info
+ * By default, Auth.js assumes that the Asgardeo provider is based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) spec
  * :::
  *
- * :::info **Disclaimer**
+ * ## Help
  *
  * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
  *
  * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
- *
- * :::
  */
 export default function Asgardeo(
   config: OIDCUserConfig<AsgardeoProfile>
@@ -100,12 +110,8 @@ export default function Asgardeo(
     type: "oidc",
     wellKnown: `${config?.issuer}/oauth2/token/.well-known/openid-configuration`,
     style: {
-      logo: "/asgardeo.svg",
-      logoDark: "/asgardeo-dark.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff",
+      bg: "#000",
+      text: "#fff",
     },
     options: config,
   }

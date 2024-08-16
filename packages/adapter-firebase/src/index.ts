@@ -1,20 +1,25 @@
-import { initializeApp } from "firebase/app"
-import type { FirebaseOptions } from "firebase/app"
+/**
+ * Official **Firebase** adapter for Auth.js / NextAuth.js, using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
+ * and [Firestore](https://firebase.google.com/docs/firestore).
+ * [![Firestore logo](https://authjs.dev/img/adapters/firebase.svg)](https://firebase.google.com)
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @auth/firebase-adapter firebase-admin
+ * ```
+ *
+ * @module @auth/firebase-adapter
+ */
+
+import { type AppOptions, getApps, initializeApp } from "firebase-admin/app"
+
 import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
+  Firestore,
   getFirestore,
-  limit,
-  query,
-  runTransaction,
-  setDoc,
-  where,
-  connectFirestoreEmulator,
-} from "firebase/firestore"
+  initializeFirestore,
+  Timestamp,
+} from "firebase-admin/firestore"
 
 import type {
   Adapter,
@@ -22,262 +27,349 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
-} from "next-auth/adapters"
+} from "@auth/core/adapters"
 
-import { getConverter } from "./converter"
-import getFirebase from "./getFirebase"
-
-export type IndexableObject = Record<string, unknown>
-
-export interface FirestoreAdapterOptions {
-  emulator?: {
-    host?: string
-    port?: number
-  }
+/** Configure the Firebase Adapter. */
+export interface FirebaseAdapterConfig extends AppOptions {
+  /**
+   * The name of the app passed to {@link https://firebase.google.com/docs/reference/admin/node/firebase-admin.md#initializeapp `initializeApp()`}.
+   */
+  name?: string
+  firestore?: Firestore
+  /**
+   * Use this option if mixed `snake_case` and `camelCase` field names in the database is an issue for you.
+   * Passing `snake_case` will convert all field and collection names to `snake_case`.
+   * E.g. the collection `verificationTokens` will be `verification_tokens`,
+   * and fields like `emailVerified` will be `email_verified` instead.
+   *
+   *
+   * @example
+   * ```ts title="pages/api/auth/[...nextauth].ts"
+   * import NextAuth from "next-auth"
+   * import { FirestoreAdapter } from "@auth/firebase-adapter"
+   *
+   * export default NextAuth({
+   *  adapter: FirestoreAdapter({ namingStrategy: "snake_case" })
+   *  // ...
+   * })
+   * ```
+   */
+  namingStrategy?: "snake_case" | "default"
 }
 
-export function FirestoreAdapter({
-  emulator,
-  ...firebaseOptions
-}: FirebaseOptions & FirestoreAdapterOptions): Adapter {
-  const firebaseApp = getFirebase(firebaseOptions)
-  const db = getFirestore(firebaseApp)
+export function FirestoreAdapter(
+  config?: FirebaseAdapterConfig | Firestore
+): Adapter {
+  const { db, namingStrategy = "default" } =
+    config instanceof Firestore
+      ? { db: config }
+      : { ...config, db: config?.firestore ?? initFirestore(config) }
 
-  if (emulator) {
-    connectFirestoreEmulator(
-      db,
-      emulator?.host ?? "localhost",
-      emulator?.port ?? 3001
-    )
-  }
-
-  const Users = collection(db, "users").withConverter(
-    getConverter<AdapterUser & IndexableObject>()
-  )
-  const Sessions = collection(db, "sessions").withConverter(
-    getConverter<AdapterSession & IndexableObject>()
-  )
-  const Accounts = collection(db, "accounts").withConverter(
-    getConverter<AdapterAccount>()
-  )
-  const VerificationTokens = collection(db, "verificationTokens").withConverter(
-    getConverter<VerificationToken & IndexableObject>({ excludeId: true })
-  )
+  const preferSnakeCase = namingStrategy === "snake_case"
+  const C = collectionsFactory(db, preferSnakeCase)
+  const mapper = mapFieldsFactory(preferSnakeCase)
 
   return {
-    async createUser(newUser) {
-      const userRef = await addDoc(Users, newUser)
-      const userSnapshot = await getDoc(userRef)
+    async createUser(userInit) {
+      const { id: userId } = await C.users.add(userInit as AdapterUser)
 
-      if (userSnapshot.exists() && Users.converter) {
-        return Users.converter.fromFirestore(userSnapshot)
-      }
+      const user = await getDoc(C.users.doc(userId))
+      if (!user) throw new Error("[createUser] Failed to fetch created user")
 
-      throw new Error("[createUser] Failed to create user")
+      return user
     },
+
     async getUser(id) {
-      const userSnapshot = await getDoc(doc(Users, id))
-
-      if (userSnapshot.exists() && Users.converter) {
-        return Users.converter.fromFirestore(userSnapshot)
-      }
-
-      return null
+      return await getDoc(C.users.doc(id))
     },
+
     async getUserByEmail(email) {
-      const userQuery = query(Users, where("email", "==", email), limit(1))
-      const userSnapshots = await getDocs(userQuery)
-      const userSnapshot = userSnapshots.docs[0]
-
-      if (userSnapshot?.exists() && Users.converter) {
-        return Users.converter.fromFirestore(userSnapshot)
-      }
-
-      return null
+      return await getOneDoc(C.users.where("email", "==", email))
     },
+
     async getUserByAccount({ provider, providerAccountId }) {
-      const accountQuery = query(
-        Accounts,
-        where("provider", "==", provider),
-        where("providerAccountId", "==", providerAccountId),
-        limit(1)
+      const account = await getOneDoc(
+        C.accounts
+          .where("provider", "==", provider)
+          .where(mapper.toDb("providerAccountId"), "==", providerAccountId)
       )
-      const accountSnapshots = await getDocs(accountQuery)
-      const accountSnapshot = accountSnapshots.docs[0]
+      if (!account) return null
 
-      if (accountSnapshot?.exists()) {
-        const { userId } = accountSnapshot.data()
-        const userDoc = await getDoc(doc(Users, userId))
-
-        if (userDoc.exists() && Users.converter) {
-          return Users.converter.fromFirestore(userDoc)
-        }
-      }
-
-      return null
+      return await getDoc(C.users.doc(account.userId))
     },
 
     async updateUser(partialUser) {
-      const userRef = doc(Users, partialUser.id)
+      if (!partialUser.id) throw new Error("[updateUser] Missing id")
 
-      await setDoc(userRef, partialUser, { merge: true })
+      const userRef = C.users.doc(partialUser.id)
 
-      const userSnapshot = await getDoc(userRef)
+      await userRef.set(partialUser, { merge: true })
 
-      if (userSnapshot.exists() && Users.converter) {
-        return Users.converter.fromFirestore(userSnapshot)
-      }
+      const user = await getDoc(userRef)
+      if (!user) throw new Error("[updateUser] Failed to fetch updated user")
 
-      throw new Error("[updateUser] Failed to update user")
+      return user
     },
 
     async deleteUser(userId) {
-      const userRef = doc(Users, userId)
-      const accountsQuery = query(Accounts, where("userId", "==", userId))
-      const sessionsQuery = query(Sessions, where("userId", "==", userId))
+      await db.runTransaction(async (transaction) => {
+        const accounts = await C.accounts
+          .where(mapper.toDb("userId"), "==", userId)
+          .get()
+        const sessions = await C.sessions
+          .where(mapper.toDb("userId"), "==", userId)
+          .get()
 
-      // TODO: May be better to use events instead of transactions?
-      await runTransaction(db, async (transaction) => {
-        const accounts = await getDocs(accountsQuery)
-        const sessions = await getDocs(sessionsQuery)
+        transaction.delete(C.users.doc(userId))
 
-        transaction.delete(userRef)
         accounts.forEach((account) => transaction.delete(account.ref))
         sessions.forEach((session) => transaction.delete(session.ref))
       })
     },
 
-    async linkAccount(account) {
-      const accountRef = await addDoc(Accounts, account)
-      const accountSnapshot = await getDoc(accountRef)
-
-      if (accountSnapshot.exists() && Accounts.converter) {
-        return Accounts.converter.fromFirestore(accountSnapshot)
-      }
+    async linkAccount(accountInit) {
+      const ref = await C.accounts.add(accountInit)
+      const account = await ref.get().then((doc) => doc.data())
+      return account ?? null
     },
 
     async unlinkAccount({ provider, providerAccountId }) {
-      const accountQuery = query(
-        Accounts,
-        where("provider", "==", provider),
-        where("providerAccountId", "==", providerAccountId),
-        limit(1)
+      await deleteDocs(
+        C.accounts
+          .where("provider", "==", provider)
+          .where(mapper.toDb("providerAccountId"), "==", providerAccountId)
+          .limit(1)
       )
-      const accountSnapshots = await getDocs(accountQuery)
-      const accountSnapshot = accountSnapshots.docs[0]
-
-      if (accountSnapshot?.exists()) {
-        await deleteDoc(accountSnapshot.ref)
-      }
     },
 
-    async createSession(session) {
-      const sessionRef = await addDoc(Sessions, session)
-      const sessionSnapshot = await getDoc(sessionRef)
+    async createSession(sessionInit) {
+      const ref = await C.sessions.add(sessionInit)
+      const session = await ref.get().then((doc) => doc.data())
 
-      if (sessionSnapshot.exists() && Sessions.converter) {
-        return Sessions.converter.fromFirestore(sessionSnapshot)
-      }
+      if (session) return session ?? null
 
-      throw new Error("[createSession] Failed to create session")
+      throw new Error("[createSession] Failed to fetch created session")
     },
 
     async getSessionAndUser(sessionToken) {
-      const sessionQuery = query(
-        Sessions,
-        where("sessionToken", "==", sessionToken),
-        limit(1)
+      const session = await getOneDoc(
+        C.sessions.where(mapper.toDb("sessionToken"), "==", sessionToken)
       )
-      const sessionSnapshots = await getDocs(sessionQuery)
-      const sessionSnapshot = sessionSnapshots.docs[0]
+      if (!session) return null
 
-      if (sessionSnapshot?.exists() && Sessions.converter) {
-        const session = Sessions.converter.fromFirestore(sessionSnapshot)
-        const userDoc = await getDoc(doc(Users, session.userId))
+      const user = await getDoc(C.users.doc(session.userId))
+      if (!user) return null
 
-        if (userDoc.exists() && Users.converter) {
-          const user = Users.converter.fromFirestore(userDoc)
-
-          return { session, user }
-        }
-      }
-
-      return null
+      return { session, user }
     },
 
     async updateSession(partialSession) {
-      const sessionQuery = query(
-        Sessions,
-        where("sessionToken", "==", partialSession.sessionToken),
-        limit(1)
-      )
-      const sessionSnapshots = await getDocs(sessionQuery)
-      const sessionSnapshot = sessionSnapshots.docs[0]
+      const sessionId = await db.runTransaction(async (transaction) => {
+        const sessionSnapshot = (
+          await transaction.get(
+            C.sessions
+              .where(
+                mapper.toDb("sessionToken"),
+                "==",
+                partialSession.sessionToken
+              )
+              .limit(1)
+          )
+        ).docs[0]
+        if (!sessionSnapshot?.exists) return null
 
-      if (sessionSnapshot?.exists()) {
-        await setDoc(sessionSnapshot.ref, partialSession, { merge: true })
+        transaction.set(sessionSnapshot.ref, partialSession, { merge: true })
 
-        const sessionDoc = await getDoc(sessionSnapshot.ref)
+        return sessionSnapshot.id
+      })
 
-        if (sessionDoc?.exists() && Sessions.converter) {
-          const session = Sessions.converter.fromFirestore(sessionDoc)
+      if (!sessionId) return null
 
-          return session
-        }
-      }
-
-      return null
+      const session = await getDoc(C.sessions.doc(sessionId))
+      if (session) return session
+      throw new Error("[updateSession] Failed to fetch updated session")
     },
 
     async deleteSession(sessionToken) {
-      const sessionQuery = query(
-        Sessions,
-        where("sessionToken", "==", sessionToken),
-        limit(1)
+      await deleteDocs(
+        C.sessions
+          .where(mapper.toDb("sessionToken"), "==", sessionToken)
+          .limit(1)
       )
-      const sessionSnapshots = await getDocs(sessionQuery)
-      const sessionSnapshot = sessionSnapshots.docs[0]
-
-      if (sessionSnapshot?.exists()) {
-        await deleteDoc(sessionSnapshot.ref)
-      }
     },
 
     async createVerificationToken(verificationToken) {
-      const verificationTokenRef = await addDoc(
-        VerificationTokens,
-        verificationToken
-      )
-      const verificationTokenSnapshot = await getDoc(verificationTokenRef)
-
-      if (verificationTokenSnapshot.exists() && VerificationTokens.converter) {
-        const { id, ...verificationToken } =
-          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
-
-        return verificationToken
-      }
+      await C.verification_tokens.add(verificationToken)
+      return verificationToken
     },
 
     async useVerificationToken({ identifier, token }) {
-      const verificationTokensQuery = query(
-        VerificationTokens,
-        where("identifier", "==", identifier),
-        where("token", "==", token),
-        limit(1)
-      )
-      const verificationTokenSnapshots = await getDocs(verificationTokensQuery)
-      const verificationTokenSnapshot = verificationTokenSnapshots.docs[0]
+      const verificationTokenSnapshot = (
+        await C.verification_tokens
+          .where("identifier", "==", identifier)
+          .where("token", "==", token)
+          .limit(1)
+          .get()
+      ).docs[0]
 
-      if (verificationTokenSnapshot?.exists() && VerificationTokens.converter) {
-        await deleteDoc(verificationTokenSnapshot.ref)
+      if (!verificationTokenSnapshot) return null
 
-        const { id, ...verificationToken } =
-          VerificationTokens.converter.fromFirestore(verificationTokenSnapshot)
-
-        return verificationToken
-      }
-
-      return null
+      const data = verificationTokenSnapshot.data()
+      await verificationTokenSnapshot.ref.delete()
+      return data
     },
   }
+}
+
+// for consistency, store all fields as snake_case in the database
+const MAP_TO_FIRESTORE: Record<string, string | undefined> = {
+  userId: "user_id",
+  sessionToken: "session_token",
+  providerAccountId: "provider_account_id",
+  emailVerified: "email_verified",
+}
+const MAP_FROM_FIRESTORE: Record<string, string | undefined> = {}
+
+for (const key in MAP_TO_FIRESTORE) {
+  MAP_FROM_FIRESTORE[MAP_TO_FIRESTORE[key]!] = key
+}
+
+const identity = <T>(x: T) => x
+
+/** @internal */
+export function mapFieldsFactory(preferSnakeCase?: boolean) {
+  if (preferSnakeCase) {
+    return {
+      toDb: (field: string) => MAP_TO_FIRESTORE[field] ?? field,
+      fromDb: (field: string) => MAP_FROM_FIRESTORE[field] ?? field,
+    }
+  }
+  return { toDb: identity, fromDb: identity }
+}
+
+/** @internal */
+function getConverter<Document extends Record<string, any>>(options: {
+  excludeId?: boolean
+  preferSnakeCase?: boolean
+}): FirebaseFirestore.FirestoreDataConverter<Document> {
+  const mapper = mapFieldsFactory(options?.preferSnakeCase ?? false)
+
+  return {
+    toFirestore(object) {
+      const document: Record<string, unknown> = {}
+
+      for (const key in object) {
+        if (key === "id") continue
+        const value = object[key]
+        if (value !== undefined) {
+          document[mapper.toDb(key)] = value
+        } else {
+          console.warn(`FirebaseAdapter: value for key "${key}" is undefined`)
+        }
+      }
+
+      return document
+    },
+
+    fromFirestore(
+      snapshot: FirebaseFirestore.QueryDocumentSnapshot<Document>
+    ): Document {
+      const document = snapshot.data()! // we can guarantee it exists
+
+      const object: Record<string, unknown> = {}
+
+      if (!options?.excludeId) {
+        object.id = snapshot.id
+      }
+
+      for (const key in document) {
+        let value: any = document[key]
+        if (value instanceof Timestamp) value = value.toDate()
+
+        object[mapper.fromDb(key)] = value
+      }
+
+      return object as Document
+    },
+  }
+}
+
+/** @internal */
+export async function getOneDoc<T>(
+  querySnapshot: FirebaseFirestore.Query<T>
+): Promise<T | null> {
+  const querySnap = await querySnapshot.limit(1).get()
+  return querySnap.docs[0]?.data() ?? null
+}
+
+/** @internal */
+async function deleteDocs<T>(
+  querySnapshot: FirebaseFirestore.Query<T>
+): Promise<void> {
+  const querySnap = await querySnapshot.get()
+  for (const doc of querySnap.docs) {
+    await doc.ref.delete()
+  }
+}
+
+/** @internal */
+export async function getDoc<T>(
+  docRef: FirebaseFirestore.DocumentReference<T>
+): Promise<T | null> {
+  const docSnap = await docRef.get()
+  return docSnap.data() ?? null
+}
+
+/** @internal */
+export function collectionsFactory(
+  db: FirebaseFirestore.Firestore,
+  preferSnakeCase = false
+) {
+  return {
+    users: db
+      .collection("users")
+      .withConverter(getConverter<AdapterUser>({ preferSnakeCase })),
+    sessions: db
+      .collection("sessions")
+      .withConverter(getConverter<AdapterSession>({ preferSnakeCase })),
+    accounts: db
+      .collection("accounts")
+      .withConverter(getConverter<AdapterAccount>({ preferSnakeCase })),
+    verification_tokens: db
+      .collection(
+        preferSnakeCase ? "verification_tokens" : "verificationTokens"
+      )
+      .withConverter(
+        getConverter<VerificationToken>({ preferSnakeCase, excludeId: true })
+      ),
+  }
+}
+
+/**
+ * Utility function that helps making sure that there is no duplicate app initialization issues in serverless environments.
+ * If no parameter is passed, it will use the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to initialize a Firestore instance.
+ *
+ * @example
+ * ```ts title="lib/firestore.ts"
+ * import { initFirestore } from "@auth/firebase-adapter"
+ * import { cert } from "firebase-admin/app"
+ *
+ * export const firestore = initFirestore({
+ *  credential: cert({
+ *    projectId: process.env.FIREBASE_PROJECT_ID,
+ *    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+ *    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+ *  })
+ * })
+ * ```
+ */
+export function initFirestore(
+  options: AppOptions & { name?: FirebaseAdapterConfig["name"] } = {}
+) {
+  const apps = getApps()
+  const app = options.name ? apps.find((a) => a.name === options.name) : apps[0]
+
+  if (app) return getFirestore(app)
+
+  return initializeFirestore(initializeApp(options, options.name))
 }
