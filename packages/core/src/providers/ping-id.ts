@@ -39,8 +39,8 @@ export interface PingProfile extends Record<string, any> {
  * ...
  * providers: [
  *  PingId({
- *    clientId: process.env.AUTH_PING_ID_ID,
- *    clientSecret: process.env.AUTH_PING_ID_SECRET,
+ *    clientId: AUTH_PING_ID_ID,
+ *    clientSecret: AUTH_PING_ID_SECRET,
  *     issuer: PING_ID_ISSUER
  *  })
  * ]
@@ -56,7 +56,7 @@ export interface PingProfile extends Record<string, any> {
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
 
-export default function PingId<PingProfile>(
+export default function PingId(
   options: OIDCUserConfig<PingProfile>
 ): OIDCConfig<PingProfile> {
   return {
