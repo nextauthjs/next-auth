@@ -209,11 +209,6 @@ CREATE OR ALTER PROCEDURE dbo.create_user
 AS
 BEGIN
 
-    DECLARE @new_id TABLE
-    (
-        id UNIQUEIDENTIFIER
-    );
-
     INSERT INTO [users]
     (
         [name],
@@ -221,21 +216,14 @@ BEGIN
         [emailVerified],
         [image]
     )
-    OUTPUT INSERTED.id
-    INTO @new_id
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[name],
+        INSERTED.[email],
+        INSERTED.[emailVerified],
+        INSERTED.[image]
     VALUES
     (@name, @email, @emailVerified, @image);
-
-    -- only return IUser fields
-    SELECT
-        [id],
-        [name],
-        [email],
-        [emailVerified],
-        [image]
-    FROM [users]
-    WHERE [id] =
-        (SELECT TOP 1 id FROM @new_id);
 
 END
 GO
@@ -296,15 +284,12 @@ BEGIN
         [email] = COALESCE(@email, [email]),
         [emailVerified] = COALESCE(@emailVerified, [emailVerified]),
         [image] = COALESCE(@image, [image])
-    WHERE [id] = @id;
-
-    SELECT
-        [id],
-        [name],
-        [email],
-        [emailVerified],
-        [image]
-    FROM [users]
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[name],
+        INSERTED.[email],
+        INSERTED.[emailVerified],
+        INSERTED.[image]
     WHERE [id] = @id;
 
 END
@@ -325,11 +310,6 @@ CREATE OR ALTER PROCEDURE dbo.link_account_to_user
 AS
 BEGIN
 
-    DECLARE @new_id TABLE
-    (
-        id UNIQUEIDENTIFIER
-    );
-
     INSERT INTO [accounts]
     (
         [provider],
@@ -344,28 +324,22 @@ BEGIN
         [session_state],
         [userId]
     )
-    OUTPUT INSERTED.id
-    INTO @new_id
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[userId],
+        INSERTED.[type],
+        INSERTED.[provider],
+        INSERTED.[providerAccountId],
+        INSERTED.[refresh_token],
+        INSERTED.[access_token],
+        INSERTED.[expires_at],
+        INSERTED.[token_type],
+        INSERTED.[scope],
+        INSERTED.[id_token],
+        INSERTED.[session_state]
     VALUES
     (@provider, @type, @providerAccountId, @refresh_token, @token_type, @scope,
       @expires_at, @access_token, @id_token, @session_state, @userId);
-
-    SELECT
-        [id],
-        [userId],
-        [type],
-        [provider],
-        [providerAccountId],
-        [refresh_token],
-        [access_token],
-        [expires_at],
-        [token_type],
-        [scope],
-        [id_token],
-        [session_state]
-    FROM [accounts]
-    WHERE [id] =
-        (SELECT TOP 1 id FROM @new_id);
 
 END
 GO
@@ -377,30 +351,19 @@ CREATE OR ALTER PROCEDURE dbo.create_session_for_user
 AS
 BEGIN
 
-    DECLARE @new_id TABLE
-    (
-        id UNIQUEIDENTIFIER
-    );
-
     INSERT INTO [sessions]
     (
         [sessionToken],
         [userId],
         [expires]
     )
-    OUTPUT INSERTED.id
-    INTO @new_id
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[sessionToken],
+        INSERTED.[userId],
+        INSERTED.[expires]
     VALUES
     (@sessionToken, @userId, @expires);
-
-
-    SELECT
-        [sessionToken],
-        [userId],
-        [expires]
-    FROM [sessions]
-    WHERE [id] =
-        (SELECT TOP 1 id FROM @new_id);
 
 END
 GO
@@ -473,15 +436,12 @@ BEGIN
         [token],
         [expires]
     )
+    OUTPUT
+        INSERTED.[identifier],
+        INSERTED.[token],
+        INSERTED.[expires]
     VALUES
     (@identifier, @token, @expires);
-
-    SELECT
-        [identifier],
-        [token],
-        [expires]
-    FROM [verification_tokens]
-    WHERE [identifier] = @identifier AND [token] = @token;
 
 END
 GO
@@ -493,7 +453,10 @@ AS
 BEGIN
 
     DELETE FROM [verification_tokens]
-    OUTPUT DELETED.identifier, DELETED.token, DELETED.expires
+    OUTPUT
+        DELETED.[identifier],
+        DELETED.[token],
+        DELETED.[expires]
     WHERE [identifier] = @identifier AND [token] = @token;
 
 END
