@@ -76,29 +76,14 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [users]
     (
-        [id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [df_users_id] DEFAULT NEWSEQUENTIALID(),
+        [id] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [df_users_id] DEFAULT NEWSEQUENTIALID()
+            CONSTRAINT [pk_users] PRIMARY KEY CLUSTERED ([id]),
         [name] NVARCHAR(100) NULL,
         [email] NVARCHAR(100) NOT NULL,
         [emailVerified] DATETIME2 NULL,
         [image] VARCHAR(8000) NULL
     );
-END
-GO
-
--- PK constraint and index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[users]')
-         AND name = N'pk_users'
-)
-BEGIN
-    ALTER TABLE [users]
-    ADD CONSTRAINT [pk_users]
-        PRIMARY KEY CLUSTERED (
-            [id] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
 END
 GO
 
@@ -112,8 +97,12 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [accounts]
     (
-        [id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [df_accounts_id] DEFAULT NEWSEQUENTIALID(),
-        [userId] UNIQUEIDENTIFIER NOT NULL,
+        [id] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [df_accounts_id] DEFAULT NEWSEQUENTIALID()
+            CONSTRAINT [pk_accounts] PRIMARY KEY CLUSTERED ([id]),
+        [userId] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [fk_accounts_users] FOREIGN KEY ([userId])
+            REFERENCES [users] ([id]) ON DELETE CASCADE,
         [type] NVARCHAR(100) NOT NULL,
         [provider] NVARCHAR(100) NOT NULL,
         [providerAccountId] NVARCHAR(100) NOT NULL,
@@ -123,52 +112,10 @@ BEGIN
         [token_type] NVARCHAR(100) NULL,
         [scope] NVARCHAR(100) NULL,
         [id_token] VARCHAR(8000) NULL,
-        [session_state] NVARCHAR(100) NULL
+        [session_state] NVARCHAR(100) NULL,
+
+        INDEX [ix_accounts_users] (userId)
     );
-END
-GO
-
--- PK constraint and index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[accounts]')
-         AND name = N'pk_accounts'
-)
-BEGIN
-    ALTER TABLE [accounts]
-    ADD CONSTRAINT [pk_accounts]
-        PRIMARY KEY CLUSTERED (
-            [id] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
-END
-GO
-
--- FK index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[accounts]')
-         AND name = N'ix_accounts_users'
-)
-BEGIN
-    CREATE INDEX [ix_accounts_users] ON [accounts] (userId);
-END
-GO
-
--- FK constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.foreign_keys
-     WHERE parent_object_id = OBJECT_ID(N'[accounts]')
-         AND name = N'fk_accounts_users'
-)
-BEGIN
-    ALTER TABLE [accounts] WITH CHECK
-    ADD CONSTRAINT [fk_accounts_users]
-        FOREIGN KEY ([userId])
-        REFERENCES [users] ([id]) ON DELETE CASCADE;
 END
 GO
 
@@ -182,55 +129,17 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [sessions]
     (
-        [id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [df_sessions_id] DEFAULT NEWSEQUENTIALID(),
+        [id] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [df_sessions_id] DEFAULT NEWSEQUENTIALID()
+            CONSTRAINT [pk_sessions] PRIMARY KEY CLUSTERED ([id]),
         [expires] DATETIME2 NOT NULL,
-        [userId] UNIQUEIDENTIFIER NOT NULL,
-        [sessionToken] VARCHAR(8000) NULL
+        [userId] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [fk_sessions_users] FOREIGN KEY ([userId])
+            REFERENCES [users] ([id]) ON DELETE CASCADE,
+        [sessionToken] VARCHAR(8000) NULL,
+
+        INDEX [ix_sessions_users] (userId)
     );
-END
-GO
-
--- PK index and constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[sessions]')
-         AND name = N'pk_sessions'
-)
-BEGIN
-    ALTER TABLE [sessions]
-    ADD CONSTRAINT [pk_sessions]
-        PRIMARY KEY CLUSTERED (
-            [id] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
-END
-GO
-
--- FK index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[sessions]')
-         AND name = N'ix_sessions_users'
-)
-BEGIN
-    CREATE INDEX [ix_sessions_users] ON [sessions] (userId)
-END
-GO
-
--- FK constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.foreign_keys
-     WHERE parent_object_id = OBJECT_ID(N'[sessions]')
-         AND name = N'fk_sessions_users'
-)
-BEGIN
-    ALTER TABLE [sessions] WITH CHECK
-    ADD CONSTRAINT [fk_sessions_users]
-        FOREIGN KEY ([userId])
-        REFERENCES [users] ([id]) ON DELETE CASCADE;
 END
 GO
 
@@ -244,28 +153,37 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [verification_tokens]
     (
-        [identifier] NVARCHAR(100) NOT NULL,
+        [identifier] NVARCHAR(100) NOT NULL
+            CONSTRAINT [pk_verification_tokens] PRIMARY KEY CLUSTERED ([identifier], [token]),
         [token] VARCHAR(700) NOT NULL,
         [expires] DATETIME2 NOT NULL
     );
 END
 GO
 
--- PK index and constraint
+-- AUTHENTICATOR table
 IF NOT EXISTS
     (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[verification_tokens]')
-         AND name = N'pk_verification_tokens'
-)
+     FROM sys.objects
+     WHERE object_id = OBJECT_ID(N'[authenticators]')
+         AND type IN ( N'U' )
+    )
 BEGIN
-    ALTER TABLE [verification_tokens]
-    ADD CONSTRAINT [pk_verification_tokens]
-        PRIMARY KEY CLUSTERED (
-            [identifier] ASC,
-            [token] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
+    CREATE TABLE [authenticators]
+    (
+        [credentialID] NVARCHAR(100) NOT NULL
+            CONSTRAINT [pk_authenticators] PRIMARY KEY CLUSTERED ([userId], [credentialID]),
+        [userId] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [fk_authenticators_user_id] FOREIGN KEY REFERENCES [dbo].[users]([id]),
+        [providerAccountId] NVARCHAR(100) NOT NULL,
+        [credentialPublicKey] VARCHAR(1000) NOT NULL,
+        [counter] INT NOT NULL,
+        [credentialDeviceType] NVARCHAR(100) NOT NULL,
+        [credentialBackedUp] BIT NOT NULL,
+        [transports] NVARCHAR(1000) NOT NULL,
+
+        INDEX [ix_authenticators_credentialId] ([credentialId]),
+    );
 END
 GO
 
@@ -277,11 +195,6 @@ CREATE OR ALTER PROCEDURE dbo.create_user
 AS
 BEGIN
 
-    DECLARE @new_id TABLE
-    (
-        id UNIQUEIDENTIFIER
-    );
-
     INSERT INTO [users]
     (
         [name],
@@ -289,21 +202,14 @@ BEGIN
         [emailVerified],
         [image]
     )
-    OUTPUT INSERTED.id
-    INTO @new_id
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[name],
+        INSERTED.[email],
+        INSERTED.[emailVerified],
+        INSERTED.[image]
     VALUES
     (@name, @email, @emailVerified, @image);
-
-    -- only return IUser fields
-    SELECT
-        [id],
-        [name],
-        [email],
-        [emailVerified],
-        [image]
-    FROM [users]
-    WHERE [id] =
-        (SELECT TOP 1 id FROM @new_id);
 
 END
 GO
@@ -364,15 +270,12 @@ BEGIN
         [email] = COALESCE(@email, [email]),
         [emailVerified] = COALESCE(@emailVerified, [emailVerified]),
         [image] = COALESCE(@image, [image])
-    WHERE [id] = @id;
-
-    SELECT
-        [id],
-        [name],
-        [email],
-        [emailVerified],
-        [image]
-    FROM [users]
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[name],
+        INSERTED.[email],
+        INSERTED.[emailVerified],
+        INSERTED.[image]
     WHERE [id] = @id;
 
 END
@@ -393,11 +296,6 @@ CREATE OR ALTER PROCEDURE dbo.link_account_to_user
 AS
 BEGIN
 
-    DECLARE @new_id TABLE
-    (
-        id UNIQUEIDENTIFIER
-    );
-
     INSERT INTO [accounts]
     (
         [provider],
@@ -412,28 +310,22 @@ BEGIN
         [session_state],
         [userId]
     )
-    OUTPUT INSERTED.id
-    INTO @new_id
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[userId],
+        INSERTED.[type],
+        INSERTED.[provider],
+        INSERTED.[providerAccountId],
+        INSERTED.[refresh_token],
+        INSERTED.[access_token],
+        INSERTED.[expires_at],
+        INSERTED.[token_type],
+        INSERTED.[scope],
+        INSERTED.[id_token],
+        INSERTED.[session_state]
     VALUES
     (@provider, @type, @providerAccountId, @refresh_token, @token_type, @scope,
       @expires_at, @access_token, @id_token, @session_state, @userId);
-
-    SELECT
-        [id],
-        [userId],
-        [type],
-        [provider],
-        [providerAccountId],
-        [refresh_token],
-        [access_token],
-        [expires_at],
-        [token_type],
-        [scope],
-        [id_token],
-        [session_state]
-    FROM [accounts]
-    WHERE [id] =
-        (SELECT TOP 1 id FROM @new_id);
 
 END
 GO
@@ -445,30 +337,19 @@ CREATE OR ALTER PROCEDURE dbo.create_session_for_user
 AS
 BEGIN
 
-    DECLARE @new_id TABLE
-    (
-        id UNIQUEIDENTIFIER
-    );
-
     INSERT INTO [sessions]
     (
         [sessionToken],
         [userId],
         [expires]
     )
-    OUTPUT INSERTED.id
-    INTO @new_id
+    OUTPUT
+        INSERTED.[id],
+        INSERTED.[sessionToken],
+        INSERTED.[userId],
+        INSERTED.[expires]
     VALUES
     (@sessionToken, @userId, @expires);
-
-
-    SELECT
-        [sessionToken],
-        [userId],
-        [expires]
-    FROM [sessions]
-    WHERE [id] =
-        (SELECT TOP 1 id FROM @new_id);
 
 END
 GO
@@ -541,15 +422,12 @@ BEGIN
         [token],
         [expires]
     )
+    OUTPUT
+        INSERTED.[identifier],
+        INSERTED.[token],
+        INSERTED.[expires]
     VALUES
     (@identifier, @token, @expires);
-
-    SELECT
-        [identifier],
-        [token],
-        [expires]
-    FROM [verification_tokens]
-    WHERE [identifier] = @identifier AND [token] = @token;
 
 END
 GO
@@ -561,7 +439,10 @@ AS
 BEGIN
 
     DELETE FROM [verification_tokens]
-    OUTPUT DELETED.identifier, DELETED.token, DELETED.expires
+    OUTPUT
+        DELETED.[identifier],
+        DELETED.[token],
+        DELETED.[expires]
     WHERE [identifier] = @identifier AND [token] = @token;
 
 END
@@ -578,4 +459,105 @@ BEGIN
 
 END
 GO
+
+CREATE OR ALTER PROCEDURE dbo.get_accounts_by_provider
+    @providerAccountId NVARCHAR(100),
+    @provider NVARCHAR(100)
+AS
+BEGIN
+
+    SELECT
+        *
+    FROM [accounts]
+    WHERE [providerAccountId] = @providerAccountId AND [provider] = @provider;
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.create_authenticator
+    @credentialID NVARCHAR(100),
+    @userId UNIQUEIDENTIFIER,
+    @providerAccountId NVARCHAR(100),
+    @credentialPublicKey VARCHAR(1000),
+    @counter INT,
+    @credentialDeviceType NVARCHAR(100),
+    @credentialBackedUp BIT,
+    @transports NVARCHAR(1000)
+AS
+BEGIN
+
+    INSERT INTO [authenticators]
+    (
+        [credentialID],
+        [userId],
+        [providerAccountId],
+        [credentialPublicKey],
+        [counter],
+        [credentialDeviceType],
+        [credentialBackedUp],
+        [transports]
+    )
+    OUTPUT
+        INSERTED.[credentialID],
+        INSERTED.[userId],
+        INSERTED.[providerAccountId],
+        INSERTED.[credentialPublicKey],
+        INSERTED.[counter],
+        INSERTED.[credentialDeviceType],
+        INSERTED.[credentialBackedUp],
+        INSERTED.[transports]
+    VALUES
+    (@credentialID, @userId, @providerAccountId, @credentialPublicKey, @counter,
+      @credentialDeviceType, @credentialBackedUp, @transports);
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.get_authenticator
+    @credentialID NVARCHAR(100)
+AS
+BEGIN
+
+    SELECT
+        *
+    FROM [authenticators]
+    WHERE [credentialID] = @credentialID;
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.list_authenticators_by_user_id
+    @userId UNIQUEIDENTIFIER
+AS
+BEGIN
+
+    SELECT
+        *
+    FROM [authenticators]
+    WHERE [userId] = @userId;
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.update_authenticator_counter
+    @credentialID NVARCHAR(100),
+    @counter INT
+AS
+BEGIN
+
+    UPDATE [authenticators]
+    SET
+        [counter] = @counter
+    OUTPUT
+        INSERTED.[credentialID],
+        INSERTED.[userId],
+        INSERTED.[providerAccountId],
+        INSERTED.[credentialPublicKey],
+        INSERTED.[counter],
+        INSERTED.[credentialDeviceType],
+        INSERTED.[credentialBackedUp],
+        INSERTED.[transports]
+    WHERE [credentialID] = @credentialID;
+
+END
 ```

@@ -8,29 +8,14 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [users]
     (
-        [id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [df_users_id] DEFAULT NEWSEQUENTIALID(),
+        [id] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [df_users_id] DEFAULT NEWSEQUENTIALID()
+            CONSTRAINT [pk_users] PRIMARY KEY CLUSTERED ([id]),
         [name] NVARCHAR(100) NULL,
         [email] NVARCHAR(100) NOT NULL,
         [emailVerified] DATETIME2 NULL,
         [image] VARCHAR(8000) NULL
     );
-END
-GO
-
--- PK constraint and index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[users]')
-         AND name = N'pk_users'
-)
-BEGIN
-    ALTER TABLE [users]
-    ADD CONSTRAINT [pk_users]
-        PRIMARY KEY CLUSTERED (
-            [id] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
 END
 GO
 
@@ -44,8 +29,12 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [accounts]
     (
-        [id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [df_accounts_id] DEFAULT NEWSEQUENTIALID(),
-        [userId] UNIQUEIDENTIFIER NOT NULL,
+        [id] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [df_accounts_id] DEFAULT NEWSEQUENTIALID()
+            CONSTRAINT [pk_accounts] PRIMARY KEY CLUSTERED ([id]),
+        [userId] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [fk_accounts_users] FOREIGN KEY ([userId])
+            REFERENCES [users] ([id]) ON DELETE CASCADE,
         [type] NVARCHAR(100) NOT NULL,
         [provider] NVARCHAR(100) NOT NULL,
         [providerAccountId] NVARCHAR(100) NOT NULL,
@@ -55,52 +44,10 @@ BEGIN
         [token_type] NVARCHAR(100) NULL,
         [scope] NVARCHAR(100) NULL,
         [id_token] VARCHAR(8000) NULL,
-        [session_state] NVARCHAR(100) NULL
+        [session_state] NVARCHAR(100) NULL,
+
+        INDEX [ix_accounts_users] (userId)
     );
-END
-GO
-
--- PK constraint and index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[accounts]')
-         AND name = N'pk_accounts'
-)
-BEGIN
-    ALTER TABLE [accounts]
-    ADD CONSTRAINT [pk_accounts]
-        PRIMARY KEY CLUSTERED (
-            [id] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
-END
-GO
-
--- FK index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[accounts]')
-         AND name = N'ix_accounts_users'
-)
-BEGIN
-    CREATE INDEX [ix_accounts_users] ON [accounts] (userId);
-END
-GO
-
--- FK constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.foreign_keys
-     WHERE parent_object_id = OBJECT_ID(N'[accounts]')
-         AND name = N'fk_accounts_users'
-)
-BEGIN
-    ALTER TABLE [accounts] WITH CHECK
-    ADD CONSTRAINT [fk_accounts_users]
-        FOREIGN KEY ([userId])
-        REFERENCES [users] ([id]) ON DELETE CASCADE;
 END
 GO
 
@@ -114,55 +61,17 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [sessions]
     (
-        [id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT [df_sessions_id] DEFAULT NEWSEQUENTIALID(),
+        [id] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [df_sessions_id] DEFAULT NEWSEQUENTIALID()
+            CONSTRAINT [pk_sessions] PRIMARY KEY CLUSTERED ([id]),
         [expires] DATETIME2 NOT NULL,
-        [userId] UNIQUEIDENTIFIER NOT NULL,
-        [sessionToken] VARCHAR(8000) NULL
+        [userId] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [fk_sessions_users] FOREIGN KEY ([userId])
+            REFERENCES [users] ([id]) ON DELETE CASCADE,
+        [sessionToken] VARCHAR(8000) NULL,
+
+        INDEX [ix_sessions_users] (userId)
     );
-END
-GO
-
--- PK index and constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[sessions]')
-         AND name = N'pk_sessions'
-)
-BEGIN
-    ALTER TABLE [sessions]
-    ADD CONSTRAINT [pk_sessions]
-        PRIMARY KEY CLUSTERED (
-            [id] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
-END
-GO
-
--- FK index
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[sessions]')
-         AND name = N'ix_sessions_users'
-)
-BEGIN
-    CREATE INDEX [ix_sessions_users] ON [sessions] (userId)
-END
-GO
-
--- FK constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.foreign_keys
-     WHERE parent_object_id = OBJECT_ID(N'[sessions]')
-         AND name = N'fk_sessions_users'
-)
-BEGIN
-    ALTER TABLE [sessions] WITH CHECK
-    ADD CONSTRAINT [fk_sessions_users]
-        FOREIGN KEY ([userId])
-        REFERENCES [users] ([id]) ON DELETE CASCADE;
 END
 GO
 
@@ -176,28 +85,11 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [verification_tokens]
     (
-        [identifier] NVARCHAR(100) NOT NULL,
+        [identifier] NVARCHAR(100) NOT NULL
+            CONSTRAINT [pk_verification_tokens] PRIMARY KEY CLUSTERED ([identifier], [token]),
         [token] VARCHAR(700) NOT NULL,
         [expires] DATETIME2 NOT NULL
     );
-END
-GO
-
--- PK index and constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[verification_tokens]')
-         AND name = N'pk_verification_tokens'
-)
-BEGIN
-    ALTER TABLE [verification_tokens]
-    ADD CONSTRAINT [pk_verification_tokens]
-        PRIMARY KEY CLUSTERED (
-            [identifier] ASC,
-            [token] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
 END
 GO
 
@@ -211,8 +103,8 @@ IF NOT EXISTS
 BEGIN
     CREATE TABLE [authenticators]
     (
-        [credentialID] NVARCHAR(100) NOT NULL,
-            INDEX [ix_authenticators_credentialId] ([credentialId]),
+        [credentialID] NVARCHAR(100) NOT NULL
+            CONSTRAINT [pk_authenticators] PRIMARY KEY CLUSTERED ([userId], [credentialID]),
         [userId] UNIQUEIDENTIFIER NOT NULL
             CONSTRAINT [fk_authenticators_user_id] FOREIGN KEY REFERENCES [dbo].[users]([id]),
         [providerAccountId] NVARCHAR(100) NOT NULL,
@@ -220,26 +112,10 @@ BEGIN
         [counter] INT NOT NULL,
         [credentialDeviceType] NVARCHAR(100) NOT NULL,
         [credentialBackedUp] BIT NOT NULL,
-        [transports] NVARCHAR(1000) NOT NULL
-    );
-END
-GO
+        [transports] NVARCHAR(1000) NOT NULL,
 
--- PK index and constraint
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.indexes
-     WHERE object_id = OBJECT_ID(N'[authenticators]')
-         AND name = N'pk_authenticators'
-)
-BEGIN
-    ALTER TABLE [authenticators]
-    ADD CONSTRAINT [pk_authenticators]
-        PRIMARY KEY CLUSTERED (
-            [userId] ASC,
-            [credentialID] ASC
-        )
-    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
+        INDEX [ix_authenticators_credentialId] ([credentialId]),
+    );
 END
 GO
 
