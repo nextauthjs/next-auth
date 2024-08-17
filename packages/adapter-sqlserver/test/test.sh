@@ -14,8 +14,8 @@ docker run -d --rm \
 echo "waiting 5s for db to start..."
 sleep 10
 
-docker exec ${CONTAINER_NAME} /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Authjs!password -d master -Q "CREATE DATABASE [${DATABASE_NAME}]"
-docker exec ${CONTAINER_NAME} /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Authjs!password -d ${DATABASE_NAME} -i /home/schema.sql
+docker exec ${CONTAINER_NAME} /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Authjs!password -d master -Q "CREATE DATABASE [${DATABASE_NAME}]"
+docker exec ${CONTAINER_NAME} /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Authjs!password -d ${DATABASE_NAME} -i /home/schema.sql
 
 # Always stop container, but exit with 1 when tests are failing
 if vitest run -c ../utils/vitest.config.ts; then
