@@ -22,6 +22,7 @@ const client = new sql.ConnectionPool({
 
 runBasicTests({
   adapter: SqlServerAdapter(client),
+  testWebAuthnMethods: true,
   db: {
     connect: async () => {
       await client.connect()
@@ -59,6 +60,15 @@ runBasicTests({
         .input("token", token)
         .query(
           "select * from verification_tokens where identifier = @identifier and token = @token"
+        )
+      return result.recordset[0] ?? null
+    },
+    authenticator: async (credentialId) => {
+      const result = await client
+        .request()
+        .input("credentialId", credentialId)
+        .query(
+          "select * from authenticators where credentialID = @credentialId "
         )
       return result.recordset[0] ?? null
     },

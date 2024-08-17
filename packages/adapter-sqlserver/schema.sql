@@ -201,6 +201,48 @@ BEGIN
 END
 GO
 
+-- AUTHENTICATOR table
+IF NOT EXISTS
+    (SELECT 1
+     FROM sys.objects
+     WHERE object_id = OBJECT_ID(N'[authenticators]')
+         AND type IN ( N'U' )
+    )
+BEGIN
+    CREATE TABLE [authenticators]
+    (
+        [credentialID] NVARCHAR(100) NOT NULL,
+            INDEX [ix_authenticators_credentialId] ([credentialId]),
+        [userId] UNIQUEIDENTIFIER NOT NULL
+            CONSTRAINT [fk_authenticators_user_id] FOREIGN KEY REFERENCES [dbo].[users]([id]),
+        [providerAccountId] NVARCHAR(100) NOT NULL,
+        [credentialPublicKey] VARCHAR(1000) NOT NULL,
+        [counter] INT NOT NULL,
+        [credentialDeviceType] NVARCHAR(100) NOT NULL,
+        [credentialBackedUp] BIT NOT NULL,
+        [transports] NVARCHAR(1000) NOT NULL
+    );
+END
+GO
+
+-- PK index and constraint
+IF NOT EXISTS
+    (SELECT 1
+     FROM sys.indexes
+     WHERE object_id = OBJECT_ID(N'[authenticators]')
+         AND name = N'pk_authenticators'
+)
+BEGIN
+    ALTER TABLE [authenticators]
+    ADD CONSTRAINT [pk_authenticators]
+        PRIMARY KEY CLUSTERED (
+            [userId] ASC,
+            [credentialID] ASC
+        )
+    WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY];
+END
+GO
+
 CREATE OR ALTER PROCEDURE dbo.create_user
     @name NVARCHAR(100),
     @email NVARCHAR(100),
@@ -473,3 +515,104 @@ BEGIN
 
 END
 GO
+
+CREATE OR ALTER PROCEDURE dbo.get_accounts_by_provider
+    @providerAccountId NVARCHAR(100),
+    @provider NVARCHAR(100)
+AS
+BEGIN
+
+    SELECT
+        *
+    FROM [accounts]
+    WHERE [providerAccountId] = @providerAccountId AND [provider] = @provider;
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.create_authenticator
+    @credentialID NVARCHAR(100),
+    @userId UNIQUEIDENTIFIER,
+    @providerAccountId NVARCHAR(100),
+    @credentialPublicKey VARCHAR(1000),
+    @counter INT,
+    @credentialDeviceType NVARCHAR(100),
+    @credentialBackedUp BIT,
+    @transports NVARCHAR(1000)
+AS
+BEGIN
+
+    INSERT INTO [authenticators]
+    (
+        [credentialID],
+        [userId],
+        [providerAccountId],
+        [credentialPublicKey],
+        [counter],
+        [credentialDeviceType],
+        [credentialBackedUp],
+        [transports]
+    )
+    OUTPUT
+        INSERTED.[credentialID],
+        INSERTED.[userId],
+        INSERTED.[providerAccountId],
+        INSERTED.[credentialPublicKey],
+        INSERTED.[counter],
+        INSERTED.[credentialDeviceType],
+        INSERTED.[credentialBackedUp],
+        INSERTED.[transports]
+    VALUES
+    (@credentialID, @userId, @providerAccountId, @credentialPublicKey, @counter,
+      @credentialDeviceType, @credentialBackedUp, @transports);
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.get_authenticator
+    @credentialID NVARCHAR(100)
+AS
+BEGIN
+
+    SELECT
+        *
+    FROM [authenticators]
+    WHERE [credentialID] = @credentialID;
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.list_authenticators_by_user_id
+    @userId UNIQUEIDENTIFIER
+AS
+BEGIN
+
+    SELECT
+        *
+    FROM [authenticators]
+    WHERE [userId] = @userId;
+
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.update_authenticator_counter
+    @credentialID NVARCHAR(100),
+    @counter INT
+AS
+BEGIN
+
+    UPDATE [authenticators]
+    SET
+        [counter] = @counter
+    OUTPUT
+        INSERTED.[credentialID],
+        INSERTED.[userId],
+        INSERTED.[providerAccountId],
+        INSERTED.[credentialPublicKey],
+        INSERTED.[counter],
+        INSERTED.[credentialDeviceType],
+        INSERTED.[credentialBackedUp],
+        INSERTED.[transports]
+    WHERE [credentialID] = @credentialID;
+
+END 

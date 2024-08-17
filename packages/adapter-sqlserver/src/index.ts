@@ -21,6 +21,7 @@ import type {
   AdapterAccount,
   AdapterSession,
   VerificationToken,
+  AdapterAuthenticator,
 } from "@auth/core/adapters"
 import sql from "mssql"
 
@@ -194,6 +195,87 @@ export default function TSqlAdapter(connection: sql.ConnectionPool): Adapter {
       const result = await request.execute<VerificationToken>(
         "dbo.use_verification_token"
       )
+
+      return result.recordset[0] ?? null
+    },
+    async getAccount(providerAccountId, provider) {
+      const request = conn.request()
+      request.input("providerAccountId", sql.VarChar, providerAccountId)
+      request.input("provider", sql.VarChar, provider)
+      const result = await request.execute<AdapterAccount>(
+        "dbo.get_accounts_by_provider"
+      )
+
+      return result.recordset[0] ? mapExpiresAt(result.recordset[0]) : null
+    },
+
+    async createAuthenticator(authenticator) {
+      const request = conn.request()
+      request.input("credentialID", sql.VarChar, authenticator.credentialID)
+      request.input("userId", sql.VarChar, authenticator.userId)
+      request.input(
+        "providerAccountId",
+        sql.VarChar,
+        authenticator.providerAccountId
+      )
+      request.input(
+        "credentialPublicKey",
+        sql.VarChar,
+        authenticator.credentialPublicKey
+      )
+      request.input("counter", sql.Int, authenticator.counter)
+      request.input(
+        "credentialDeviceType",
+        sql.VarChar,
+        authenticator.credentialDeviceType
+      )
+      request.input(
+        "credentialBackedUp",
+        sql.Bit,
+        authenticator.credentialBackedUp
+      )
+      request.input("transports", sql.VarChar, authenticator.transports)
+
+      const result = await request.execute<AdapterAuthenticator>(
+        "dbo.create_authenticator"
+      )
+
+      return { ...result.recordset[0] }
+    },
+
+    async getAuthenticator(credentialId) {
+      const request = conn.request()
+      request.input("credentialId", sql.VarChar, credentialId)
+      const result = await request.execute<AdapterAuthenticator>(
+        "dbo.get_authenticator"
+      )
+
+      return result.recordset[0] ?? null
+    },
+
+    async listAuthenticatorsByUserId(userId) {
+      const request = conn.request()
+      request.input("userId", sql.UniqueIdentifier, userId)
+      try {
+        const result = await request.execute<AdapterAuthenticator>(
+          "dbo.list_authenticators_by_user_id"
+        )
+        return result.recordset ?? []
+      } catch (_) {
+        // if incoming userId is not a valid GUID, return empty array
+        return []
+      }
+    },
+
+    async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
+      const request = conn.request()
+      request.input("credentialID", sql.VarChar, credentialID)
+      request.input("counter", sql.Int, newCounter)
+      const result = await request.execute<AdapterAuthenticator>(
+        "dbo.update_authenticator_counter"
+      )
+
+      if (!result.recordset[0]) throw new Error("Authenticator not found.")
 
       return result.recordset[0] ?? null
     },

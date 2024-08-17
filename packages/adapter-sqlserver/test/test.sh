@@ -11,7 +11,7 @@ docker run -d --rm \
   -v "$(pwd)"/schema.sql:/home/schema.sql \
   mcr.microsoft.com/mssql/server:2022-latest
 
-echo "waiting 5s for db to start..."
+echo "waiting 10s for db to start..."
 sleep 10
 
 docker exec ${CONTAINER_NAME} /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Authjs!password -d master -Q "CREATE DATABASE [${DATABASE_NAME}]"
