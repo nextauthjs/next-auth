@@ -49,6 +49,17 @@ export function Footer({ className = "" }) {
             </li>
             <li>
               <a
+                href="https://discord.authjs.dev/?utm_source=docs"
+                title="Join our Discord"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1"
+                target="_blank"
+              >
+                Discord Community
+              </a>
+            </li>
+            <li>
+              <a
                 className="flex gap-1 items-center text-current"
                 target="_blank"
                 rel="noopener noreferrer"

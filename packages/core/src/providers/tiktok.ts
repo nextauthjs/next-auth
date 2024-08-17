@@ -196,7 +196,7 @@ export interface TiktokProfile extends Record<string, any> {
  * :::
  */
 export default function TikTok<P extends TiktokProfile>(
-  options: OAuthUserConfig<P>,
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "tiktok",
