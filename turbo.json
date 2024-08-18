@@ -1,8 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         ".next",
         "dist/**",
@@ -16,7 +18,7 @@
         "src/providers/oauth-types.ts",
         ".svelte-kit/**"
       ],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "clean": {
       "cache": false
@@ -25,9 +27,14 @@
       "cache": false
     },
     "test": {
-      "outputs": ["coverage/**"],
-      "inputs": ["src/**/", "test/**/"],
-      "outputMode": "new-only"
+      "outputs": [
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/**/",
+        "test/**/"
+      ],
+      "outputLogs": "new-only"
     },
     "test:e2e": {
       "outputs": [
@@ -38,10 +45,15 @@
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+      "env": [
+        "XATA_API_KEY",
+        "XATA_DATABASE_URL"
+      ]
     },
     "@auth/hasura-adapter#build": {
-      "dependsOn": ["@auth/core#build"],
+      "dependsOn": [
+        "@auth/core#build"
+      ],
       "outputs": [
         "lib/**",
         "*.js",
