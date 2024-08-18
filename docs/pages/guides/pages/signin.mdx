@@ -173,8 +173,8 @@ export default async function SignInPage() {
                 return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
               }
 
-              // Otherwise if a redirects happens NextJS can handle it
-              // so you can just re-thrown the error and let NextJS handle it.
+              // Otherwise if a redirects happens Next.js can handle it
+              // so you can just re-thrown the error and let Next.js handle it.
               // Docs:
               // https://nextjs.org/docs/app/api-reference/functions/redirect#server-component
               throw error
