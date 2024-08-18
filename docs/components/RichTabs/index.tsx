@@ -27,10 +27,10 @@ RichTabs.Trigger = function TabsTrigger({
     <Trigger
       {...rest}
       className={cx(
-        "relative font-semibold dark:bg-neutral-900 bg-slate-50 text-sm border-solid dark:border-neutral-800 border-slate-200  flex flex-col items-center justify-between w-48 h-24 dark:aria-selected:bg-neutral-700 transition-all duration-300 aria-selected:bg-white aria-selected:top-px",
+        "relative flex h-24 w-48 flex-col items-center justify-between border-solid  border-slate-200 bg-slate-50 text-sm font-semibold transition-all duration-300 aria-selected:top-px aria-selected:bg-white dark:border-neutral-800 dark:bg-neutral-900 dark:aria-selected:bg-neutral-700",
         className,
         orientation === "horizontal"
-          ? "aria-selected:border-b-white rounded-tl-lg rounded-tr-lg border-l border-t border-r "
+          ? "rounded-tl-lg rounded-tr-lg border-l border-r border-t aria-selected:border-b-white "
           : "rounded-md"
       )}
     />
@@ -47,7 +47,7 @@ RichTabs.Content = function TabsContent({
       forceMount
       {...rest}
       className={cx(
-        'data-[state="inactive"]:hidden border border-solid dark:border-neutral-800 border-slate-200 shadow-sm',
+        'border border-solid border-slate-200 shadow-sm data-[state="inactive"]:hidden dark:border-neutral-800',
         className,
         orientation === "horizontal"
           ? "rounded-bl-lg rounded-br-lg rounded-tr-lg"
@@ -81,7 +81,7 @@ export function RichTabs({
 
   return (
     <Root
-      className={cx("px-0 pt-4 m-0 rounded-lg mt-2", className)}
+      className={cx("m-0 mt-2 rounded-lg px-0 pt-4", className)}
       orientation={orientation}
       onValueChange={handleValueChanged}
       value={value}
