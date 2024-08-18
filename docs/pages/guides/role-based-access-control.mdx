@@ -291,18 +291,37 @@ export { handle } from "./auth"
 
 ## Using the role
 
-If you want to use the role in the client, for both cases above, when using the `useSession` hook, `session.user.role` will have the required role if you exposed it via the `session` callback. You can use this to render a different UI for different users.
+The user can access the information stored in the current session through the authorization function exported from the configuration file of the respective framework. This function retrieves information exposed via the `session` and `jwt` callbacks in the configuration file. With this information, you can implement different strategies and logic to display the UI based on your needs.
 
 <Code>
 <Code.Next>
+To get the data on the server side, you should import the `auth` function from the configuration file and verify if the user has the expected role.
 
 ```ts filename="./app/admin/page.tsx"
+import { auth } from "@/auth";
+
+export default async function Page() {
+  const session = await auth();
+
+  if (session?.user?.role === "admin") {
+    return <p>You are an admin, welcome!</p>;
+  }
+
+  return <p>You are not authorized to view this page!</p>;
+}
+```
+</Code.Next>
+<Code.NextClient>
+If you want to use the role on the client side, use the `useSession` hook. The `session.user.role` will contain the required role if you exposed it via the `session` callback.
+
+```ts filename="./app/admin/page.tsx"
+"use client"
 import { useSession } from "next-auth/react";
 
 export default function Page() {
-  const session = await useSession();
+  const session = useSession();
 
-  if (session?.user.role === "admin") {
+  if (session?.user?.role === "admin") {
     return <p>You are an admin, welcome!</p>;
   }
 
@@ -310,7 +329,7 @@ export default function Page() {
 }
 ```
 
-</Code.Next>
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="/src/routes/plugin@auth.ts"
