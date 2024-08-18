@@ -11,7 +11,7 @@ const NavBar: Component<INavBarProps> = () => {
   const session = useSession()
   return (
     <header class="fixed left-2/4 right-2/4 flex w-full -translate-x-2/4 flex-col items-center gap-2">
-      <nav class="flex w-[70vw] items-center  justify-between rounded-lg bg-[#0000000d] p-5 sm:w-2/4 lg:w-[40%]">
+      <nav class="flex w-[70vw] items-center justify-between rounded-lg bg-[#0000000d] p-5 sm:w-2/4 lg:w-[40%]">
         <Show
           when={session()?.user}
           keyed

@@ -27,10 +27,10 @@ RichTabs.Trigger = function TabsTrigger({
     <Trigger
       {...rest}
       className={cx(
-        "relative flex h-24 w-48 flex-col items-center justify-between border-solid  border-slate-200 bg-slate-50 text-sm font-semibold transition-all duration-300 aria-selected:top-px aria-selected:bg-white dark:border-neutral-800 dark:bg-neutral-900 dark:aria-selected:bg-neutral-700",
+        "relative flex h-24 w-48 flex-col items-center justify-between border-solid border-slate-200 bg-slate-50 text-sm font-semibold transition-all duration-300 aria-selected:top-px aria-selected:bg-white dark:border-neutral-800 dark:bg-neutral-900 dark:aria-selected:bg-neutral-700",
         className,
         orientation === "horizontal"
-          ? "rounded-tl-lg rounded-tr-lg border-l border-r border-t aria-selected:border-b-white "
+          ? "rounded-tl-lg rounded-tr-lg border-l border-r border-t aria-selected:border-b-white"
           : "rounded-md"
       )}
     />
