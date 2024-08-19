@@ -13,17 +13,17 @@ import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
 import Auth0 from "../src/providers/auth0.js"
 import Resend from "../src/providers/resend.js"
 
-const testConfig: AuthConfig = {
-  providers: [Auth0, Resend({})],
-}
-
-let authConfig: AuthConfig
-
-beforeEach(() => {
-  authConfig = { ...testConfig } // clone
-})
-
 describe("config is inferred from environment variables", () => {
+  const testConfig: AuthConfig = {
+    providers: [Auth0, Resend({})],
+  }
+
+  let authConfig: AuthConfig
+
+  beforeEach(() => {
+    authConfig = { ...testConfig } // clone
+  })
+
   it("providers (client id, client secret, issuer, api key)", () => {
     const env = {
       AUTH_AUTH0_ID: "asdf",
