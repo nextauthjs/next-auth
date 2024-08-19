@@ -6,8 +6,13 @@ import { setLogger } from "./logger.js"
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
   try {
     const url = envObject.AUTH_URL
-    if (url && !config.basePath) {
-      config.basePath = new URL(url).pathname
+    if (url) {
+      if (config.basePath) {
+        const logger = setLogger(config)
+        logger.warn("env-url-basepath-redundant")
+      } else {
+        config.basePath = new URL(url).pathname
+      }
     }
   } catch {
   } finally {
