@@ -3,13 +3,19 @@ import type { AuthConfig } from "../../index.js"
 import { setLogger } from "./logger.js"
 
 /** Set default env variables on the config object */
-export function setEnvDefaults(envObject: any, config: AuthConfig) {
+export function setEnvDefaults(
+  envObject: any,
+  config: AuthConfig,
+  suppressBasePathWarning = false
+) {
   try {
     const url = envObject.AUTH_URL
     if (url) {
       if (config.basePath) {
-        const logger = setLogger(config)
-        logger.warn("env-url-basepath-redundant")
+        if (!suppressBasePathWarning) {
+          const logger = setLogger(config)
+          logger.warn("env-url-basepath-redundant")
+        }
       } else {
         config.basePath = new URL(url).pathname
       }
