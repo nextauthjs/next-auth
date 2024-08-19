@@ -1,17 +1,11 @@
-import {
-  afterAll,
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { AuthConfig } from "../src/index.js"
 import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
 import Auth0 from "../src/providers/auth0.js"
 import Resend from "../src/providers/resend.js"
+
+const logger = { warn: vi.fn() }
 
 describe("config is inferred from environment variables", () => {
   const testConfig: AuthConfig = {
@@ -101,10 +95,8 @@ describe("config is inferred from environment variables", () => {
 })
 
 describe("createActionURL", () => {
-  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
-
-  afterEach(() => {
-    consoleWarnSpy.mockClear()
+  beforeEach(() => {
+    vi.resetAllMocks()
   })
 
   it.each([
@@ -235,9 +227,12 @@ describe("createActionURL", () => {
       expected: "https://sub.domain.env.com/api/auth/signout",
     },
   ])("%j", ({ args, expected }) => {
+    const argsWithLogger = { ...args, config: { ...args.config, logger } }
     // @ts-expect-error
-    expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
-    expect(consoleWarnSpy).not.toHaveBeenCalled()
+    expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
+      expected
+    )
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it.each([
@@ -262,12 +257,11 @@ describe("createActionURL", () => {
       expected: "https://sub.domain.env.com/api/auth/signout",
     },
   ])("Duplicate path configurations: %j", ({ args, expected }) => {
+    const argsWithLogger = { ...args, config: { ...args.config, logger } }
     // @ts-expect-error
-    expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
-    expect(consoleWarnSpy).toHaveBeenCalled()
-  })
-
-  afterAll(() => {
-    consoleWarnSpy.mockRestore()
+    expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
+      expected
+    )
+    expect(logger.warn).toHaveBeenCalled()
   })
 })
