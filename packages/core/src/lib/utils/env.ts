@@ -66,7 +66,6 @@ export function createActionURL(
   envObject: any,
   config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
-  const logger = setLogger(config)
   const basePath = config?.basePath
   let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
@@ -75,6 +74,7 @@ export function createActionURL(
     url = new URL(envUrl)
     if (basePath && basePath !== "/" && url.pathname !== "/") {
       if (url.pathname !== basePath) {
+        const logger = setLogger(config)
         logger.warn("env-url-basepath-mismatch")
       }
       url.pathname = "/"
