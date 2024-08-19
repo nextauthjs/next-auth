@@ -254,14 +254,17 @@ describe("createActionURL", () => {
         env: { AUTH_URL: "https://sub.domain.env.com/my-app" },
         config: { basePath: "/api/auth" },
       },
-      expected: "https://sub.domain.env.com/api/auth/signout",
+      expected: {
+        url: "https://sub.domain.env.com/api/auth/signout",
+        warningMessage: "env-url-basepath-mismatch",
+      },
     },
   ])("Duplicate path configurations: %j", ({ args, expected }) => {
     const argsWithLogger = { ...args, config: { ...args.config, logger } }
     // @ts-expect-error
     expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
-      expected
+      expected.url
     )
-    expect(logger.warn).toHaveBeenCalled()
+    expect(logger.warn).toHaveBeenCalledWith(expected.warningMessage)
   })
 })
