@@ -6,7 +6,9 @@ import { setLogger } from "./logger.js"
 export function setEnvDefaults(envObject: any, config: AuthConfig) {
   try {
     const url = envObject.AUTH_URL
-    if (url && !config.basePath) config.basePath = new URL(url).pathname
+    if (url && !config.basePath) {
+      config.basePath = new URL(url).pathname
+    }
   } catch {
   } finally {
     config.basePath ??= `/auth`
