@@ -226,16 +226,6 @@ describe("createActionURL", () => {
       },
       expected: "https://sub.domain.env.com/api/auth/signout",
     },
-  ])("%j", ({ args, expected }) => {
-    const argsWithLogger = { ...args, config: { ...args.config, logger } }
-    // @ts-expect-error
-    expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
-      expected
-    )
-    expect(logger.warn).not.toHaveBeenCalled()
-  })
-
-  it.each([
     {
       args: {
         action: "signout",
@@ -246,6 +236,16 @@ describe("createActionURL", () => {
       },
       expected: "http://localhost:3000/my-app/api/auth/signout",
     },
+  ])("%j", ({ args, expected }) => {
+    const argsWithLogger = { ...args, config: { ...args.config, logger } }
+    // @ts-expect-error
+    expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
+      expected
+    )
+    expect(logger.warn).not.toHaveBeenCalled()
+  })
+
+  it.each([
     {
       args: {
         action: "signout",
