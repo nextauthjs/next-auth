@@ -30,6 +30,6 @@ export function setEnvDefaults(config: NextAuthConfig) {
   } catch {
   } finally {
     config.basePath ||= "/api/auth"
-    coreSetEnvDefaults(process.env, config)
+    coreSetEnvDefaults(process.env, config, true)
   }
 }
