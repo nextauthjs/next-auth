@@ -251,6 +251,19 @@ describe("createActionURL", () => {
         action: "signout",
         protocol: undefined,
         headers: new Headers({}),
+        env: { AUTH_URL: "http://localhost:3000/my-app/api/auth/" },
+        config: { basePath: "/my-app/api/auth" },
+      },
+      expected: {
+        url: "http://localhost:3000/my-app/api/auth/signout",
+        warningMessage: "env-url-basepath-mismatch",
+      },
+    },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
         env: { AUTH_URL: "https://sub.domain.env.com/my-app" },
         config: { basePath: "/api/auth" },
       },
