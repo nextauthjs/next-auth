@@ -50,7 +50,7 @@
     "prettier-plugin-svelte": "^3.1.2",
     "prettier-plugin-tailwindcss": "^0.5.13",
     "svelte-eslint-parser": "^0.35.0",
-    "turbo": "^1.11.3",
+    "turbo": "^2.0.14",
     "typescript": "5.3.3",
     "utils": "workspace:*",
     "vite": "^5.0.13",
