@@ -241,7 +241,7 @@ describe("createActionURL", () => {
         action: "signout",
         protocol: undefined,
         headers: new Headers({}),
-        env: { AUTH_URL: "http://localhost:3000/my-app/api/auth/" },
+        env: { AUTH_URL: "http://localhost:3000/my-app/api/auth" },
         config: { basePath: "/my-app/api/auth" },
       },
       expected: "http://localhost:3000/my-app/api/auth/signout",
