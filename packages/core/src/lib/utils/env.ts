@@ -2,7 +2,10 @@ import type { AuthAction } from "../../types.js"
 import type { AuthConfig } from "../../index.js"
 import { setLogger } from "./logger.js"
 
-/** Set default env variables on the config object */
+/**
+ *  Set default env variables on the config object
+ * @param suppressWarnings intended for framework authors.
+ */
 export function setEnvDefaults(
   envObject: any,
   config: AuthConfig,
