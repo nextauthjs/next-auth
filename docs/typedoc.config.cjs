@@ -27,7 +27,7 @@ module.exports = {
   // typedoc options
   entryPoints: [...frameworks, ...adapters],
   entryPointStrategy: "packages",
-  out: "pages/reference",
+  out: "pages/en/reference",
   tsconfig: "./tsconfig.json",
   plugin: [
     "typedoc-plugin-markdown",
