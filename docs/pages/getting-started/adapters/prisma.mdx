@@ -26,6 +26,17 @@ DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
 ```
 
 ### Configuration
+To improve performance using `Prisma ORM`, we can set up the Prisma instance to ensure only one instance is created throughout the project and then import it from any file as needed. This approach avoids recreating instances of PrismaClient every time it is used. Finally, we can import the Prisma instance from the `auth.ts` file configuration.
+
+```ts filename="prisma.ts"
+import { PrismaClient } from "@prisma/client"
+
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+
+export const prisma = globalForPrisma.prisma || new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+```
 
 <Callout type="warning">
   We recommend using version `@prisma/client@5.12.0` or above if using
@@ -39,9 +50,7 @@ DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -55,9 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   () => ({
@@ -73,9 +80,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: PrismaAdapter(prisma),
@@ -89,9 +94,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 const app = express()
 
