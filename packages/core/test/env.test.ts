@@ -85,6 +85,15 @@ describe("config is inferred from environment variables", () => {
     expect(logger.warn).toHaveBeenCalledWith("env-url-basepath-redundant")
   })
 
+  it("AUTH_URL + prefer config but suppress base path waring", () => {
+    const env = { AUTH_URL: "http://n/api/auth" }
+    const fromConfig = "/basepath-from-config"
+    authConfig.basePath = fromConfig
+    setEnvDefaults(env, authConfig, true)
+    expect(authConfig.basePath).toBe(fromConfig)
+    expect(logger.warn).not.toHaveBeenCalled()
+  })
+
   it("AUTH_URL, but invalid value", () => {
     const env = { AUTH_URL: "secret" }
     setEnvDefaults(env, authConfig)
