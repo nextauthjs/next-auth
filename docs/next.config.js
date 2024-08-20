@@ -175,6 +175,11 @@ export default withNextra({
         source: "/guides",
         destination: "/guides/debugging",
       },
+      {
+        source: "/",
+        destination: "/en",
+        permanent: true,
+      },
     ]
   },
   i18n: {
