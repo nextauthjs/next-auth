@@ -184,6 +184,10 @@ const config: DocsThemeConfig = {
   footer: {
     component: <Footer />,
   },
+  i18n: [
+    { locale: "en", name: "English" },
+    { locale: "ja", name: "日本語（ベータ）" },
+  ],
 }
 
 export default config
