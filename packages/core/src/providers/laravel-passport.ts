@@ -80,7 +80,9 @@ export default function LaravelPassport<P extends LaravelPassportProfile>(
         id: "laravel-passport",
         name: "Laravel Passport",
         type: "oauth",
-
+    client: {
+      token_endpoint_auth_method : "client_secret_post",
+    },
         authorization: {
             url: `${options.baseUrl}/oauth/authorize`,
             params: {
