@@ -92,11 +92,6 @@ export default function LaravelPassport<P extends LaravelPassportProfile>(
         },
         userinfo: {
             url: `${options.baseUrl}/api/user`,
-            async request({ tokens, provider }) {
-                return await fetch(provider.userinfo?.url!, {
-                    headers: { Authorization: `Bearer ${tokens.access_token}` },
-                }).then(async (res) => await res.json());
-            },
         },
         profile(profile) {
             return {
