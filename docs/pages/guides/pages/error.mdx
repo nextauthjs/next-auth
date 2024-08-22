@@ -5,7 +5,25 @@ import { Screenshot } from "@/components/Screenshot"
 
 Auth.js can be configured to display a custom error page when something goes wrong during the user authentication flow (sign in, sign out, etc..).
 
-Using the [example app](https://github.com/nextauthjs/next-auth-example), let's build a simple custom error page by creating `app/error/page.tsx` (Note: we can define custom pages to override Auth.js in `AuthConfig.pages`. By default, it will look for the route `/error`. If it doesn't exist, Auth.js will use `/api/auth/error`):
+In order to override Auth.js's `/api/auth/error` page we have to define our custom page in `AuthConfig.pages`:
+
+<Code>
+<Code.Next>
+
+```tsx filename="src/auth.ts"
+const authConfig: NextAuthConfig = {
+...
+  pages: {
+    error: "/error",
+  }
+...
+};
+```
+
+</Code.Next>
+</Code>
+
+Using the [example app](https://github.com/nextauthjs/next-auth-example), let's build a simple custom error page by creating `app/error/page.tsx` 
 
 <Code>
 <Code.Next>
