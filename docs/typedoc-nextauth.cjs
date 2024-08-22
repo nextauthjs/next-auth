@@ -91,22 +91,18 @@ function writeMetaJsFiles(app) {
         }
       })
 
-      // Rename generated 'next-auth' dir to 'nextjs'
-      if (
-        new RegExp(".*docs/pages/en/reference/nextjs$").test(outputDirectory)
-      ) {
-        const nextjsPath = "./pages/en/reference/nextjs"
-        if (fs.existsSync(nextjsPath)) {
-          fs.rmdirSync(nextjsPath, { recursive: true })
-        }
-        fs.renameSync("./pages/en/reference/next-auth", nextjsPath)
-      }
-
       const metaJString = `
 export default ${JSON.stringify(pages, null, 2)}`
       if (new RegExp(".*docs/pages/en/reference$").test(outputDirectory)) return
       fs.writeFileSync(path.join(outputDirectory, "_meta.js"), metaJString)
     }
+
+    // Rename generated 'next-auth' dir to 'nextjs'
+    const nextjsPath = "./pages/en/reference/nextjs"
+    if (fs.existsSync(nextjsPath)) {
+      fs.rmdirSync(nextjsPath, { recursive: true })
+    }
+    fs.renameSync("./pages/en/reference/next-auth", nextjsPath)
 
     /**
      * Recursively write _meta.js files for each page based on output.navigation
