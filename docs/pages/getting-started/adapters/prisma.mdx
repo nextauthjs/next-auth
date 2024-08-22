@@ -19,10 +19,24 @@ npm install @prisma/client @auth/prisma-adapter
 npm install prisma --save-dev
 ```
 
+### Initialization
+This command is used to set up your Prisma ORM project, creating the `prisma` folder with your Prisma schema and the `.env` environment file, which will be used to connect to your database.
+```bash npm2yarn
+npm exec prisma init
+```
+
 ### Environment Variables
+To connect your database, you need to set the `url` in the `datasource` block of your Prisma schema. For more information, read the [docs](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql).
 
 ```sh
-DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
+```
+
+```prisma filename="prisma/schema.prisma"
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 ```
 
 ### Configuration
