@@ -215,6 +215,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session
     },
   },
+  session: ({ session, token }) => {
+      session.error = token.error;
+      return session;
+  }
 })
 
 declare module "next-auth" {
