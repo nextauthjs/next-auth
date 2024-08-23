@@ -3,22 +3,66 @@ import { Screenshot } from "@/components/Screenshot"
 
 # Built-in Pages
 
-Auth.js comes by default with a set of pages that are presented to the user as they go through their authentication journey (sign up, sign in, sign out, error, etc...). This is helpful so that you don't need to write those from scratch when using the library first time.
+Auth.js comes by default with a set of pages that are presented to the user as they go through their authentication journey (sign up, sign in, sign out, error, etc...). This is helpful so that you don't need to write those from scratch when using the library first time. The UI created is based on the providers specified in your configuration file.
+
+```ts filename="lib/providers.ts"
+import Github from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+import type { Provider } from "next-auth/providers"
+
+export const providers: Provider[] = [
+  Github,
+  Credentials({
+    credentials: {
+      username: { label: "Username" },
+      password: { label: "Password", type: "password" }
+    },
+    async authorize(credentials) {
+      // mplement some logic to check if the user exists.
+      return credentials
+    }
+  })
+]
+```
 
 <Code>
 <Code.Next>
 
-```tsx filename="components/sign-in.tsx"
-"use client"
+```tsx filename="./auth.ts"
+import NextAuth from "next-auth"
+import { providers } from "@/lib/providers"
 
-import { signIn } from "next-auth/react"
-
-export function SignInButton() {
-  return <button onClick={() => signIn()}>Sign in</button>
-}
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers,
+})
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { providers } from "lib/providers"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(() => ({
+    providers,
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```tsx filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { providers } from "./lib/providers"
+
+export const { handle } = SvelteKitAuth({
+  providers,
+})
+```
+
+</Code.Svelte>
 </Code>
 
 If you do not pass a `providerId`, the `signIn` function will redirect the user to the signin page.
