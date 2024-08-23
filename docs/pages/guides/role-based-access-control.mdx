@@ -310,6 +310,7 @@ export default async function Page() {
   return <p>You are not authorized to view this page!</p>;
 }
 ```
+
 </Code.Next>
 <Code.NextClient>
 If you want to use the role on the client side, use the `useSession` hook. The `session.user.role` will contain the required role if you exposed it via the `session` callback.
