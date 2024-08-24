@@ -9,7 +9,7 @@
  * @module providers/eventbrite
  */
 
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
  * @see https://www.eventbrite.com/platform/api#/reference/user/retrieve-your-user/retrieve-your-user
