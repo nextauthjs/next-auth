@@ -41,7 +41,7 @@ export async function signIn(
 
   for (const providerConfig of config.providers) {
     const { options, ...defaults } = typeof providerConfig === "function" ? providerConfig() : providerConfig
-    const id =  (options?.id as string | undefined) ?? defaults.id
+    const id = (options?.id as string | undefined) ?? defaults.id
     if (id === provider) {
       foundProvider = {
         id,
