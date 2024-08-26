@@ -21,8 +21,10 @@ npm install prisma --save-dev
 
 ### Environment Variables
 
+Prisma needs to set up the environment variable to establish a connection with your database and retrieve data. Prisma requires the `DATABASE_URL` environment variable to create the connection. For more information, read the [docs](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql).
+
 ```sh
-DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
 ```
 
 ### Configuration
