@@ -14,7 +14,7 @@ import type { Awaitable, Theme } from "../types.js"
 
 export interface LoopsConfig extends EmailConfig {
   apiKey?: string
-  transactionalId?: string
+  transactionalId: string
   sendVerificationRequest: (params: {
     identifier: string
     url: string
