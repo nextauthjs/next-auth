@@ -1,4 +1,5 @@
-import { NextRequest } from "next/server.js"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
@@ -29,6 +30,6 @@ export function setEnvDefaults(config: NextAuthConfig) {
   } catch {
   } finally {
     config.basePath ||= "/api/auth"
-    coreSetEnvDefaults(process.env, config)
+    coreSetEnvDefaults(process.env, config, true)
   }
 }

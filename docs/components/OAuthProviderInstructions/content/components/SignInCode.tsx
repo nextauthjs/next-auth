@@ -22,7 +22,7 @@ export function SignInCode({ providerId, providerName, highlight }: Props) {
             __html: highlight(`
 import { signIn } from "@/auth"
  
-export function SignIn() {
+export default function SignIn() {
   return (
     <form
       action={async () => {

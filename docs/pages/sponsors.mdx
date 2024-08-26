@@ -14,7 +14,7 @@ Therefore, it is easy to forget that Auth.js is created and maintained by [actua
 It would not be possible without the generous support of our sponsors.
 
 <a
-  className="flex items-center justify-start gap-4 mt-8"
+  className="flex items-center gap-6 mt-8"
   style={{
     color: "#6c47ff",
   }}
@@ -24,17 +24,26 @@ It would not be possible without the generous support of our sponsors.
   <img
     src="/img/etc/clerk-logo.svg"
     alt="Clerk Logo"
-    className="rounded-xl w-24 dark:bg-[#f0f4f9] px-6 py-4"
+    className="rounded-xl w-24 bg-white p-4 pl-5"
   />
-  <span className="text-xl md:text-3xl text-sky-600">
-    Clerk - More than authentication.
-  </span>
+  <div className="text-xl md:text-3xl text-sky-600 leading-snug font-semibold">
+    Clerk <br />
+    <span className="text-xl font-medium">
+      The most comprehensive User Management Platform
+    </span>
+  </div>
 </a>
 
 ## 🥇 Gold sponsors
 
 <div className="flex flex-wrap gap-2">
-  {[].map(([href, src, name]) => (
+  {[
+    [
+      "https://a0.to/signup/nextauthjs",
+      "https://avatars.githubusercontent.com/u/2824157?v=4",
+      "Auth0 by Okta",
+    ],
+  ].map(([href, src, name]) => (
     <a
       key={name}
       href={href}

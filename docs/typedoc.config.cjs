@@ -7,8 +7,6 @@ const frameworks = fs
   .readdirSync(path.resolve(__dirname, "../packages"))
   .filter((dir) => dir.startsWith("frameworks-"))
   .filter((dir) => dir !== "frameworks-template")
-  // TODO: Fix Qwik Auth API Reference generation
-  .filter((dir) => dir !== "frameworks-qwik")
   .map((dir) => `../packages/${dir}`)
 
 frameworks.push("../packages/next-auth", "../packages/core")
@@ -32,7 +30,7 @@ module.exports = {
   plugin: [
     "typedoc-plugin-markdown",
     require.resolve("./typedoc-nextauth.cjs"),
-    require.resolve("./typedoc-mdn-links.cjs"),
+    "typedoc-plugin-mdn-links",
   ],
   disableSources: true,
   excludeNotDocumented: true,

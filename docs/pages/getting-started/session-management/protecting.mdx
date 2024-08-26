@@ -159,7 +159,7 @@ Protecting API routes in the various frameworks can also be done with the `auth`
 <Code>
 <Code.Next>
 
-In Next.js, you can use the `auth` function to wrap and API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
+In Next.js, you can use the `auth` function to wrap an API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
 
 ```ts filename="./app/api/admin/route.ts" {4}
 import { auth } from "@/auth"
