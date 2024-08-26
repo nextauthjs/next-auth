@@ -341,5 +341,35 @@ const adapter = DynamoDBAdapter(client, {
   indexName: "custom-index-name",
   indexPartitionKey: "custom-index-pk",
   indexSortKey: "custom-index-sk",
+  entityTagName: "_et,
+  entityTags: {
+    user: "AUTHUSR",
+    account: "ACT",
+    session: "SES",
+    vt: "V"
+  },
+  entitySlugs: {
+    user: "USR#",
+    account: "ACT#",
+    session: "SES#",
+    vt: "VT#"
+  }
 })
 ```
+
+#### entityTagName, entityTags and entitySlugs
+
+These options are intended for integrating AuthJS' schema with an existing entity structure.
+
+_entityTagName_ is the name of the attribute used to determine what type an entity is. This can be omitted unless you need to interact with AuthJS entities from another tool _and_ said tool requires an entity type attribute. For instance, by default [DynamoDBToolbox](https://www.dynamodbtoolbox.com/) uses the `_et` attribute to determine entity type.
+_entityTags_ are the type names to use in the `entityTagName` attribute. You may wish to to customise these to:
+
+- Disambiguate between AuthJS entities and existing entities (eg, if you already have an `Account` entity and don't want it confused with AuthJS accounts)
+- Ensure your existing model can read these entities (eg, if you're extending an existing `User` model but its type name is `Usr`)
+- Save a few bytes (eg, by shortening `SESSION` to `SES`, if you're _really_ trying to tighten your AWS budget)
+
+_entitySlugs_ are the strings prepended onto the partitionKey and sortKey values. These values are appended as-is: there is no default separator (such as `#`). If you want a separator included, add it to the end of each slug value. You may wish to customise these to:
+
+- Ensure your data typing scheme is consistent (eg, you use an underscore as a separator (the default value uses a `#`))
+- To disambiguate partition/sort keys for indexes (eg, you already have an entity which prepends `USER#` onto its keys and you don't want queries to retrieve it)
+- Again, to save a few bytes (eg, by shortening `SESSION` to `SES`, because Jeffy B already owns enough Yachts)

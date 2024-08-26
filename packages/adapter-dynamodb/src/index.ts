@@ -28,6 +28,13 @@ import {
   isDate,
 } from "@auth/core/adapters"
 
+export interface DynamoDBEntityTypeOptions {
+  user?: string
+  account?: string
+  session?: string
+  vt?: string
+}
+
 export interface DynamoDBAdapterOptions {
   tableName?: string
   partitionKey?: string
@@ -35,6 +42,15 @@ export interface DynamoDBAdapterOptions {
   indexName?: string
   indexPartitionKey?: string
   indexSortKey?: string
+  entityTagName?: string
+  entityTags?: DynamoDBEntityTypeOptions
+  entitySlugs?: DynamoDBEntityTypeOptions
+}
+
+type DynamoDBAdapterFormatOptions = {
+  dynamoKeys: Array<string>
+  EntityTagName: string
+  EntityTags: Required<DynamoDBEntityTypeOptions>
 }
 
 export function DynamoDBAdapter(
@@ -47,6 +63,30 @@ export function DynamoDBAdapter(
   const IndexName = options?.indexName ?? "GSI1"
   const GSI1PK = options?.indexPartitionKey ?? "GSI1PK"
   const GSI1SK = options?.indexSortKey ?? "GSI1SK"
+  const EntityTagName = options?.entityTagName ?? "type"
+  const defaultEntityTags = {
+    user: "USER",
+    account: "ACCOUNT",
+    session: "SESSION",
+    vt: "VT",
+  }
+  const EntityTags = { ...defaultEntityTags, ...options?.entityTags }
+
+  const defaultEntitySlugs = {
+    user: "USER#",
+    account: "ACCOUNT#",
+    session: "SESSION#",
+    vt: "VT#",
+  }
+  const EntitySlugs = { ...defaultEntitySlugs, ...options?.entitySlugs }
+
+  const formatOptions = {
+    dynamoKeys: [pk, sk, GSI1PK, GSI1SK],
+    EntityTagName,
+    EntityTags,
+  }
+
+  const from = format.from(formatOptions)
 
   return {
     async createUser(data) {
@@ -59,11 +99,11 @@ export function DynamoDBAdapter(
         TableName,
         Item: format.to({
           ...user,
-          [pk]: `USER#${user.id}`,
-          [sk]: `USER#${user.id}`,
-          type: "USER",
-          [GSI1PK]: `USER#${user.email}`,
-          [GSI1SK]: `USER#${user.email}`,
+          [pk]: `${EntitySlugs.user}${user.id}`,
+          [sk]: `${EntitySlugs.user}${user.id}`,
+          [EntityTagName]: EntityTags.user,
+          [GSI1PK]: `${EntitySlugs.user}${user.email}`,
+          [GSI1SK]: `${EntitySlugs.user}${user.email}`,
         }),
       })
 
@@ -73,11 +113,11 @@ export function DynamoDBAdapter(
       const data = await client.get({
         TableName,
         Key: {
-          [pk]: `USER#${userId}`,
-          [sk]: `USER#${userId}`,
+          [pk]: `${EntitySlugs.user}${userId}`,
+          [sk]: `${EntitySlugs.user}${userId}`,
         },
       })
-      return format.from<AdapterUser>(data.Item)
+      return from<AdapterUser>(data.Item)
     },
     async getUserByEmail(email) {
       const data = await client.query({
@@ -89,12 +129,12 @@ export function DynamoDBAdapter(
           "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `USER#${email}`,
-          ":gsi1sk": `USER#${email}`,
+          ":gsi1pk": `${EntitySlugs.user}${email}`,
+          ":gsi1sk": `${EntitySlugs.user}${email}`,
         },
       })
 
-      return format.from<AdapterUser>(data.Items?.[0])
+      return from<AdapterUser>(data.Items?.[0])
     },
     async getUserByAccount({ provider, providerAccountId }) {
       const data = await client.query({
@@ -106,8 +146,8 @@ export function DynamoDBAdapter(
           "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `ACCOUNT#${provider}`,
-          ":gsi1sk": `ACCOUNT#${providerAccountId}`,
+          ":gsi1pk": `${EntitySlugs.account}${provider}`,
+          ":gsi1sk": `${EntitySlugs.account}${providerAccountId}`,
         },
       })
       if (!data.Items?.length) return null
@@ -116,11 +156,11 @@ export function DynamoDBAdapter(
       const res = await client.get({
         TableName,
         Key: {
-          [pk]: `USER#${accounts.userId}`,
-          [sk]: `USER#${accounts.userId}`,
+          [pk]: `${EntitySlugs.user}${accounts.userId}`,
+          [sk]: `${EntitySlugs.user}${accounts.userId}`,
         },
       })
-      return format.from<AdapterUser>(res.Item)
+      return from<AdapterUser>(res.Item)
     },
     async updateUser(user) {
       const {
@@ -131,8 +171,8 @@ export function DynamoDBAdapter(
       const data = await client.update({
         TableName,
         Key: {
-          [pk]: `USER#${user.id}`,
-          [sk]: `USER#${user.id}`,
+          [pk]: `${EntitySlugs.user}${user.id}`,
+          [sk]: `${EntitySlugs.user}${user.id}`,
         },
         UpdateExpression,
         ExpressionAttributeNames,
@@ -141,7 +181,7 @@ export function DynamoDBAdapter(
       })
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return format.from<AdapterUser>(data.Attributes)!
+      return from<AdapterUser>(data.Attributes)!
     },
     async deleteUser(userId) {
       // query all the items related to the user to delete
@@ -149,18 +189,18 @@ export function DynamoDBAdapter(
         TableName,
         KeyConditionExpression: "#pk = :pk",
         ExpressionAttributeNames: { "#pk": pk },
-        ExpressionAttributeValues: { ":pk": `USER#${userId}` },
+        ExpressionAttributeValues: { ":pk": `${EntitySlugs.user}${userId}` },
       })
       if (!res.Items) return null
       const items = res.Items
       // find the user we want to delete to return at the end of the function call
-      const user = items.find((item) => item.type === "USER")
+      const user = items.find((item) => item[EntityTagName] === EntityTags.user)
       const itemsToDelete = items.map((item) => {
         return {
           DeleteRequest: {
             Key: {
-              [sk]: item.sk,
-              [pk]: item.pk,
+              [sk]: item[sk],
+              [pk]: item[pk],
             },
           },
         }
@@ -171,16 +211,16 @@ export function DynamoDBAdapter(
         RequestItems: { [TableName]: itemsToDeleteMax },
       }
       await client.batchWrite(param)
-      return format.from<AdapterUser>(user)
+      return from<AdapterUser>(user)
     },
     async linkAccount(data) {
       const item = {
         ...data,
         id: crypto.randomUUID(),
-        [pk]: `USER#${data.userId}`,
-        [sk]: `ACCOUNT#${data.provider}#${data.providerAccountId}`,
-        [GSI1PK]: `ACCOUNT#${data.provider}`,
-        [GSI1SK]: `ACCOUNT#${data.providerAccountId}`,
+        [pk]: `${EntitySlugs.user}${data.userId}`,
+        [sk]: `${EntitySlugs.account}${data.provider}#${data.providerAccountId}`,
+        [GSI1PK]: `${EntitySlugs.account}${data.provider}`,
+        [GSI1SK]: `${EntitySlugs.account}${data.providerAccountId}`,
       }
       await client.put({ TableName, Item: format.to(item) })
       return data
@@ -195,17 +235,17 @@ export function DynamoDBAdapter(
           "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `ACCOUNT#${provider}`,
-          ":gsi1sk": `ACCOUNT#${providerAccountId}`,
+          ":gsi1pk": `${EntitySlugs.account}${provider}`,
+          ":gsi1sk": `${EntitySlugs.account}${providerAccountId}`,
         },
       })
-      const account = format.from<AdapterAccount>(data.Items?.[0])
+      const account = from<AdapterAccount>(data.Items?.[0])
       if (!account) return
       await client.delete({
         TableName,
         Key: {
-          [pk]: `USER#${account.userId}`,
-          [sk]: `ACCOUNT#${provider}#${providerAccountId}`,
+          [pk]: `${EntitySlugs.user}${account.userId}`,
+          [sk]: `${EntitySlugs.account}${provider}#${providerAccountId}`,
         },
         ReturnValues: "ALL_OLD",
       })
@@ -221,20 +261,20 @@ export function DynamoDBAdapter(
           "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `SESSION#${sessionToken}`,
-          ":gsi1sk": `SESSION#${sessionToken}`,
+          ":gsi1pk": `${EntitySlugs.session}${sessionToken}`,
+          ":gsi1sk": `${EntitySlugs.session}${sessionToken}`,
         },
       })
-      const session = format.from<AdapterSession>(data.Items?.[0])
+      const session = from<AdapterSession>(data.Items?.[0])
       if (!session) return null
       const res = await client.get({
         TableName,
         Key: {
-          [pk]: `USER#${session.userId}`,
-          [sk]: `USER#${session.userId}`,
+          [pk]: `${EntitySlugs.user}${session.userId}`,
+          [sk]: `${EntitySlugs.user}${session.userId}`,
         },
       })
-      const user = format.from<AdapterUser>(res.Item)
+      const user = from<AdapterUser>(res.Item)
       if (!user) return null
       return { user, session }
     },
@@ -246,11 +286,11 @@ export function DynamoDBAdapter(
       await client.put({
         TableName,
         Item: format.to({
-          [pk]: `USER#${data.userId}`,
-          [sk]: `SESSION#${data.sessionToken}`,
-          [GSI1SK]: `SESSION#${data.sessionToken}`,
-          [GSI1PK]: `SESSION#${data.sessionToken}`,
-          type: "SESSION",
+          [pk]: `${EntitySlugs.user}${data.userId}`,
+          [sk]: `${EntitySlugs.session}${data.sessionToken}`,
+          [GSI1SK]: `${EntitySlugs.session}${data.sessionToken}`,
+          [GSI1PK]: `${EntitySlugs.session}${data.sessionToken}`,
+          [EntityTagName]: EntityTags.session,
           ...data,
         }),
       })
@@ -267,8 +307,8 @@ export function DynamoDBAdapter(
           "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `SESSION#${sessionToken}`,
-          ":gsi1sk": `SESSION#${sessionToken}`,
+          ":gsi1pk": `${EntitySlugs.session}${sessionToken}`,
+          ":gsi1sk": `${EntitySlugs.session}${sessionToken}`,
         },
       })
       if (!data.Items?.length) return null
@@ -289,7 +329,7 @@ export function DynamoDBAdapter(
         ExpressionAttributeValues,
         ReturnValues: "ALL_NEW",
       })
-      return format.from<AdapterSession>(res.Attributes)
+      return from<AdapterSession>(res.Attributes)
     },
     async deleteSession(sessionToken) {
       const data = await client.query({
@@ -301,8 +341,8 @@ export function DynamoDBAdapter(
           "#gsi1sk": GSI1SK,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `SESSION#${sessionToken}`,
-          ":gsi1sk": `SESSION#${sessionToken}`,
+          ":gsi1pk": `${EntitySlugs.session}${sessionToken}`,
+          ":gsi1sk": `${EntitySlugs.session}${sessionToken}`,
         },
       })
       if (!data?.Items?.length) return null
@@ -317,15 +357,15 @@ export function DynamoDBAdapter(
         },
         ReturnValues: "ALL_OLD",
       })
-      return format.from<AdapterSession>(res.Attributes)
+      return from<AdapterSession>(res.Attributes)
     },
     async createVerificationToken(data) {
       await client.put({
         TableName,
         Item: format.to({
-          [pk]: `VT#${data.identifier}`,
-          [sk]: `VT#${data.token}`,
-          type: "VT",
+          [pk]: `${EntitySlugs.vt}${data.identifier}`,
+          [sk]: `${EntitySlugs.vt}${data.token}`,
+          [EntityTagName]: EntityTags.vt,
           ...data,
         }),
       })
@@ -335,12 +375,12 @@ export function DynamoDBAdapter(
       const data = await client.delete({
         TableName,
         Key: {
-          [pk]: `VT#${identifier}`,
-          [sk]: `VT#${token}`,
+          [pk]: `${EntitySlugs.vt}${identifier}`,
+          [sk]: `${EntitySlugs.vt}${token}`,
         },
         ReturnValues: "ALL_OLD",
       })
-      return format.from<VerificationToken>(data.Attributes)
+      return from<VerificationToken>(data.Attributes)
     },
   }
 }
@@ -359,28 +399,42 @@ const format = {
     }
     return newObject
   },
-  /** Takes a Dynamo object and returns a plain old JavaScript object */
-  from<T = Record<string, unknown>>(object?: Record<string, any>): T | null {
-    if (!object) return null
-    const newObject: Record<string, unknown> = {}
-    for (const key in object) {
-      // Filter DynamoDB specific attributes so it doesn't get passed to core,
-      // to avoid revealing the type of database
-      if (["pk", "sk", "GSI1PK", "GSI1SK"].includes(key)) continue
+  /** Takes a set of options; Returns a function that takes a Dynamo object and returns a plain old JavaScript object */
+  from(formatOptions: DynamoDBAdapterFormatOptions) {
+    const entities = Object.entries(formatOptions.EntityTags).map((e) => e[1])
+    function innerFrom<T = Record<string, unknown>>(
+      object?: Record<string, any>
+    ): T | null {
+      if (!object) return null
+      const newObject: Record<string, unknown> = {}
+      for (const key in object) {
+        // Filter DynamoDB specific attributes so it doesn't get passed to core,
+        // to avoid revealing the type of database
+        if (formatOptions.dynamoKeys.includes(key)) continue
 
-      const value = object[key]
+        const value = object[key]
 
-      if (isDate(value)) newObject[key] = new Date(value)
-      // hack to keep type property in account
-      else if (key === "type" && ["SESSION", "VT", "USER"].includes(value))
-        continue
-      // The expires property is stored as a UNIX timestamp in seconds, but
-      // JavaScript needs it in milliseconds, so multiply by 1000.
-      else if (key === "expires" && typeof value === "number")
-        newObject[key] = new Date(value * 1000)
-      else newObject[key] = value
+        if (isDate(value)) newObject[key] = new Date(value)
+        // hack to keep type property in account
+        else if (
+          key === formatOptions.EntityTagName &&
+          entities.includes(value)
+        ) {
+          if (value === formatOptions.EntityTags.account) {
+            newObject["type"] = "ACCOUNT"
+          } else {
+            continue
+          }
+        }
+        // The expires property is stored as a UNIX timestamp in seconds, but
+        // JavaScript needs it in milliseconds, so multiply by 1000.
+        else if (key === "expires" && typeof value === "number")
+          newObject[key] = new Date(value * 1000)
+        else newObject[key] = value
+      }
+      return newObject as T
     }
-    return newObject as T
+    return innerFrom
   },
 }
 
