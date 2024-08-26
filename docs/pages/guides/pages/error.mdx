@@ -5,21 +5,13 @@ import { Screenshot } from "@/components/Screenshot"
 
 Auth.js can be configured to display a custom error page when something goes wrong during the user authentication flow (sign in, sign out, etc..).
 
-Using the [example app](https://github.com/nextauthjs/next-auth-example), let's build a simple custom error page:
+You can refer to the following examples for implementation:
 
-<Code>
-<Code.Next>
-
-```tsx filename="app/error/page.tsx"
-import { signIn } from "../auth.ts"
-
-export default function AuthErrorPage() {
-  return <>Oops</>
-}
-```
-
-</Code.Next>
-</Code>
+- [Next.js](https://github.com/nextauthjs/next-auth-example)
+- [Sveltekit](https://github.com/nextauthjs/sveltekit-auth-example)
+- [Solid](https://github.com/nextauthjs/solid-start-auth-example)
+- [Express](https://github.com/nextauthjs/express-auth-example)
+- [Qwik](https://github.com/nextauthjs/qwik-auth-example)
 
 Auth.js forwards the following errors as error query parameters in the URL to our custom error page:
 
