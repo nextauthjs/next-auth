@@ -32,7 +32,7 @@ const CustomLink = ({
       {...rest}
     >
       {children}
-      <ExternalLink className="inline-block ml-0.5 w-4 h-4" />
+      <ExternalLink className="ml-0.5 inline-block h-4 w-4" />
     </Link>
   )
 }
