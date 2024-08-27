@@ -129,7 +129,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         <Code.Qwik>
           <Pre
             data-copy=""
-            data-filename=".env.local"
+            data-filename=".env"
             dangerouslySetInnerHTML={{
               __html: highlight(
                 `
@@ -143,7 +143,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         <Code.Svelte>
           <Pre
             data-copy=""
-            data-filename=".env.local"
+            data-filename=".env"
             dangerouslySetInnerHTML={{
               __html: highlight(
                 `
@@ -157,7 +157,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
         <Code.Express>
           <Pre
             data-copy=""
-            data-filename=".env.local"
+            data-filename=".env"
             dangerouslySetInnerHTML={{
               __html: highlight(
                 `
