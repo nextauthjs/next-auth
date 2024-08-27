@@ -10,8 +10,8 @@ interface INavBarProps {}
 const NavBar: Component<INavBarProps> = () => {
   const session = useSession()
   return (
-    <header class="flex flex-col w-full gap-2 fixed left-2/4 right-2/4 -translate-x-2/4 items-center">
-      <nav class="w-[70vw] sm:w-2/4 lg:w-[40%]  p-5 bg-[#0000000d] flex items-center justify-between rounded-lg">
+    <header class="fixed left-2/4 right-2/4 flex w-full -translate-x-2/4 flex-col items-center gap-2">
+      <nav class="flex w-[70vw] items-center justify-between rounded-lg bg-[#0000000d] p-5 sm:w-2/4 lg:w-[40%]">
         <Show
           when={session()?.user}
           keyed
@@ -19,7 +19,7 @@ const NavBar: Component<INavBarProps> = () => {
             <>
               <p class="text-lg font-semibold">You are not signed in</p>
               <button
-                class="p-2.5 rounded-lg bg-[#346df1] text-white text-lg font-bold flex items-center justify-center"
+                class="flex items-center justify-center rounded-lg bg-[#346df1] p-2.5 text-lg font-bold text-white"
                 onClick={() => signIn("github")}
               >
                 Sign in
@@ -29,18 +29,18 @@ const NavBar: Component<INavBarProps> = () => {
         >
           {(us) => (
             <>
-              <div class="flex gap-2 items-center">
+              <div class="flex items-center gap-2">
                 <Show when={us.image} keyed>
-                  {(im) => <img src={im} class="w-12 h-12 rounded-full" />}
+                  {(im) => <img src={im} class="h-12 w-12 rounded-full" />}
                 </Show>
                 <div class="flex flex-col">
-                  <h3 class="font-bold text-lg">Signed in as</h3>
+                  <h3 class="text-lg font-bold">Signed in as</h3>
                   <p class="text-lg font-semibold">{us.name}</p>
                 </div>
               </div>
               <button
                 onClick={() => signOut()}
-                class="text-[#555] font-semibold underline"
+                class="font-semibold text-[#555] underline"
               >
                 Sign out
               </button>
@@ -48,11 +48,11 @@ const NavBar: Component<INavBarProps> = () => {
           )}
         </Show>
       </nav>
-      <div class="flex gap-2 items-center">
-        <A class="text-blue-500 font-bold underline" href="/">
+      <div class="flex items-center gap-2">
+        <A class="font-bold text-blue-500 underline" href="/">
           Home
         </A>
-        <A class="text-blue-500 font-bold underline" href="/protected">
+        <A class="font-bold text-blue-500 underline" href="/protected">
           Protected
         </A>
       </div>
