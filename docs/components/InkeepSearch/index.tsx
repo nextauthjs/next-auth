@@ -23,7 +23,7 @@ export function InkeepTrigger() {
   return (
     <div>
       <button
-        className="flex gap-2 items-center py-1.5 px-3 text-base leading-tight text-gray-800 rounded-lg transition-colors md:text-sm dark:text-gray-200 bg-black/[.05] dark:bg-gray-50/10"
+        className="flex items-center gap-2 rounded-lg bg-black/[.05] px-3 py-1.5 text-base leading-tight text-gray-800 transition-colors md:text-sm dark:bg-gray-50/10 dark:text-gray-200"
         onClick={() => setIsOpen(!isOpen)}
       >
         <Sparkle className="size-4" />

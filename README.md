@@ -93,7 +93,7 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://auth0.com" target="_blank">
+        <a href="https://a0.to/signup/nextauthjs" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/2824157?v=4" alt="Auth0 Logo" />
         </a><br />
         <div>Auth0</div>
