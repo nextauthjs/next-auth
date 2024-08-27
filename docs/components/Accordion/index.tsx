@@ -84,7 +84,7 @@ export const SingleAccordions = forwardRef<
       collapsible
       className={cx(
         className,
-        "mt-4 border border-neutral-200 dark:border-neutral-800 rounded-lg"
+        "mt-4 rounded-lg border border-neutral-200 dark:border-neutral-800"
       )}
       {...props}
     />
@@ -105,22 +105,22 @@ export const Accordion = forwardRef<
       // Use `id` instead if presents
       value={props.id ?? title}
       className={cx(
-        "group/accordion scroll-m-20 border-b border-neutral-200 dark:border-neutral-800 last-of-type:border-b-0 first:rounded-t-lg first:overflow-hidden last:overflow-hidden last:rounded-b-lg",
+        "group/accordion scroll-m-20 border-b border-neutral-200 first:overflow-hidden first:rounded-t-lg last:overflow-hidden last:rounded-b-lg last-of-type:border-b-0 dark:border-neutral-800",
         className
       )}
       {...props}
     >
       <>
-        <AccordionPrimitive.Trigger className="flex gap-1 items-center py-[1.125rem] px-2 w-full text-left focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-ring data-[state=open]:bg-neutral-100 data-[state=open]:dark:bg-neutral-950 transition-colors duration-300">
+        <AccordionPrimitive.Trigger className="focus-visible:ring-ring flex w-full items-center gap-1 px-2 py-[1.125rem] text-left transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 data-[state=open]:bg-neutral-100 data-[state=open]:dark:bg-neutral-950">
           <CaretRight className="size-4 transition-transform duration-200 group-data-[state=open]/accordion:rotate-90" />
-          <span className="font-medium text-medium text-foreground">
+          <span className="text-medium text-foreground font-medium">
             {title}
           </span>
         </AccordionPrimitive.Trigger>
         {props.id ? <CopyButton id={props.id} /> : null}
       </>
-      <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-        <div className="py-4 pl-6 text-sm prose-no-margin">{children}</div>
+      <AccordionPrimitive.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden">
+        <div className="prose-no-margin py-4 pl-6 text-sm">{children}</div>
       </AccordionPrimitive.Content>
     </AccordionPrimitive.Item>
   )
