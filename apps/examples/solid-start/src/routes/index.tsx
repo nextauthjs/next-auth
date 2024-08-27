@@ -17,20 +17,20 @@ const Home: ParentComponent = () => {
   return (
     <>
       <Title>Create JD App</Title>
-      <div class="flex flex-col gap-2 items-center">
+      <div class="flex flex-col items-center gap-2">
         <h1 class="text-4xl font-bold">SolidStart Auth Example</h1>
-        <p class="font-semibold text-md max-w-[40rem]">
+        <p class="text-md max-w-[40rem] font-semibold">
           This is an example site to demonstrate how to use{" "}
           <A
             href="https://start.solidjs.com/getting-started/what-is-solidstart"
-            class="text-blue-500 underline font-bold"
+            class="font-bold text-blue-500 underline"
           >
             SolidStart
           </A>{" "}
           with{" "}
           <A
             href="https://authjs.dev/reference/solidstart"
-            class="text-blue-500 underline font-bold"
+            class="font-bold text-blue-500 underline"
           >
             SolidStart Auth
           </A>{" "}
