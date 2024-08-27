@@ -6,8 +6,8 @@
     "body": [
       "export const ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}} = component$(() => {",
       "  return <${2:div}>$4</$2>",
-      "});"
-    ]
+      "});",
+    ],
   },
   "Qwik component (props)": {
     "scope": "typescriptreact",
@@ -25,32 +25,32 @@
       "      $6",
       "    </${3}>",
       "  );",
-      "});"
-    ]
+      "});",
+    ],
   },
   "Qwik signal": {
     "scope": "javascriptreact,typescriptreact",
     "prefix": "quseSignal",
     "description": "useSignal() declaration",
-    "body": ["const ${1:foo} = useSignal($2);", "$0"]
+    "body": ["const ${1:foo} = useSignal($2);", "$0"],
   },
   "Qwik store": {
     "scope": "javascriptreact,typescriptreact",
     "prefix": "quseStore",
     "description": "useStore() declaration",
-    "body": ["const ${1:state} = useStore({", "  $2", "});", "$0"]
+    "body": ["const ${1:state} = useStore({", "  $2", "});", "$0"],
   },
   "$ hook": {
     "scope": "javascriptreact,typescriptreact",
     "prefix": "q$",
     "description": "$() function hook",
-    "body": ["$(() => {", "  $0", "});", ""]
+    "body": ["$(() => {", "  $0", "});", ""],
   },
   "useVisibleTask": {
     "scope": "javascriptreact,typescriptreact",
     "prefix": "quseVisibleTask",
     "description": "useVisibleTask$() function hook",
-    "body": ["useVisibleTask$(({ track }) => {", "  $0", "});", ""]
+    "body": ["useVisibleTask$(({ track }) => {", "  $0", "});", ""],
   },
   "useTask": {
     "scope": "javascriptreact,typescriptreact",
@@ -61,8 +61,8 @@
       "  track(() => $1);",
       "  $0",
       "});",
-      ""
-    ]
+      "",
+    ],
   },
   "useResource": {
     "scope": "javascriptreact,typescriptreact",
@@ -72,7 +72,7 @@
       "const $1 = useResource$(({ track, cleanup }) => {",
       "  $0",
       "});",
-      ""
-    ]
-  }
+      "",
+    ],
+  },
 }

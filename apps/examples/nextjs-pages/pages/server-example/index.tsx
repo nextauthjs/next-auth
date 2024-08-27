@@ -10,7 +10,7 @@ export default function Page({
   serverSession: session,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
+    <div className="mx-auto mt-10 max-w-screen-md space-y-4">
       <h1 className="text-3xl font-bold">
         <code>getServerSideProps</code> Usage
       </h1>
