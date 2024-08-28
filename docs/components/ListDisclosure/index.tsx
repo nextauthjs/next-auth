@@ -18,14 +18,14 @@ export function ListDisclosure({ children, limit, className = "" }: Props) {
     <>
       <div
         className={cx(
-          "grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-full my-4",
+          "my-4 grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4",
           className
         )}
       >
         {rendered}
       </div>
       <button
-        className="p-2 px-4 text-sm font-semibold text-white rounded-full bg-neutral-400 dark:bg-neutral-950"
+        className="rounded-full bg-neutral-400 p-2 px-4 text-sm font-semibold text-white dark:bg-neutral-950"
         onClick={isAllDisplayed ? handleCollapseAll : handleDisplayMore}
       >
         {isAllDisplayed ? "Collapse all" : "Show more"}

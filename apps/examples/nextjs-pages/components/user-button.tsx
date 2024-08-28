@@ -16,8 +16,8 @@ export default function UserButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative w-8 h-8 rounded-full">
-          <Avatar className="w-8 h-8">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
             {session.user.image && (
               <AvatarImage
                 src={session.user.image}
@@ -34,7 +34,7 @@ export default function UserButton() {
             <p className="text-sm font-medium leading-none">
               {session.user.name}
             </p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="text-muted-foreground text-xs leading-none">
               {session.user.email}
             </p>
           </div>
