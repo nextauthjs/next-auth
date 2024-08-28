@@ -1,6 +1,6 @@
 export default function PolicyPage() {
   return (
-    <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
+    <div className="mx-auto mt-10 max-w-screen-md space-y-4">
       <section>
         <h2 className="text-xl font-bold">Terms of Service</h2>
         <p>
