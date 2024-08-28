@@ -33,11 +33,11 @@ export function Footer({ className = "" }) {
   return (
     <div
       className={cx(
-        "flex flex-col sm:gap-12 gap-4 px-12 items-center pb-20 pt-24 mx-auto w-full text-gray-600 dark:text-gray-100",
+        "mx-auto flex w-full flex-col items-center gap-4 px-12 pb-20 pt-24 text-gray-600 sm:gap-12 dark:text-gray-100",
         className
       )}
     >
-      <div className="flex flex-col gap-6 justify-between w-full sm:flex-row sm:gap-0 max-w-[90rem]">
+      <div className="flex w-full max-w-[90rem] flex-col justify-between gap-6 sm:flex-row sm:gap-0">
         <div className="flex flex-col">
           <h3 className="mb-4 text-lg font-black">About Auth.js</h3>
           <ul className="flex flex-col gap-2">
@@ -60,7 +60,7 @@ export function Footer({ className = "" }) {
             </li>
             <li>
               <a
-                className="flex gap-1 items-center text-current"
+                className="flex items-center gap-1 text-current"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="vercel.com homepage"
@@ -105,7 +105,7 @@ export function Footer({ className = "" }) {
           </ul>
         </div>
       </div>
-      <div className="flex-grow mx-auto mt-4 text-gray-400 sm:mt-0 dark:text-gray-500">
+      <div className="mx-auto mt-4 flex-grow text-gray-400 sm:mt-0 dark:text-gray-500">
         Auth.js &copy; Balázs Orbán and Team - {new Date().getFullYear()}
       </div>
     </div>
