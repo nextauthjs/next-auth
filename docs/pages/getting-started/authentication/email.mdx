@@ -181,6 +181,7 @@ export function SignIn() {
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     signIn("resend", { email })
   }
 
@@ -366,6 +367,7 @@ export function SignIn() {
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     signIn("sendgrid", { email })
   }
 
@@ -778,6 +780,7 @@ export function SignIn() {
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     signIn("postmark", { email })
   }
 
