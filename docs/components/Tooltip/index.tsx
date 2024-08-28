@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import { useRef } from "react"
 import polyfill from "@oddbird/css-anchor-positioning/fn"
 
 interface Props {
@@ -21,7 +21,7 @@ export function Tooltip({ label, framework, children }: Props) {
         id={`anchor-${framework}-${slug}`}
         // @ts-expect-error
         popovertarget={`popover-${framework}-${slug}`}
-        className="w-full tooltip-anchor"
+        className="tooltip-anchor w-full"
         // @ts-expect-error
         onMouseEnter={() => popoverTargetRef.current?.showPopover?.()}
         // @ts-expect-error
@@ -30,10 +30,10 @@ export function Tooltip({ label, framework, children }: Props) {
         {children}
       </button>
       <div
-        // @ts-expect-error
         popover="auto"
+        // @ts-expect-error
         ref={popoverTargetRef}
-        className="py-2 px-4 max-w-xs text-sm text-center text-fuchsia-900 bg-purple-100 rounded-lg border shadow-md"
+        className="max-w-xs rounded-lg border bg-purple-100 px-4 py-2 text-center text-sm text-fuchsia-900 shadow-md"
         anchor={`anchor-${framework}-${slug}`}
         id={`popover-${framework}-${slug}`}
       >

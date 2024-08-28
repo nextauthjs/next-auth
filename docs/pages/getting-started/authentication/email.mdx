@@ -38,7 +38,7 @@ This login mechanism starts by the user providing their email address at the log
         orientation="vertical"
         className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
       >
-        <img className="size-16" src={`/img/providers/resend.svg`} />
+        <img className="size-16 dark:bg-[currentColor]" src={`/img/providers/resend.svg`} />
         <div className="text-sm text-center">Resend</div>
       </RichTabs.Trigger>
       <RichTabs.Trigger
@@ -108,6 +108,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Resend from "@auth/qwik/providers/resend"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Resend],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -152,6 +166,26 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```html filename="src/routes/+page.svelte"
@@ -228,6 +262,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Sendgrid from "@auth/qwik/providers/sendgrid"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Sendgrid],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -272,6 +320,26 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```html filename="src/routes/+page.svelte"
@@ -362,17 +430,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Nodemailer from "@auth/qwik/providers/nodemailer"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Nodemailer({
+        server: import.meta.env.EMAIL_SERVER,
+        from: import.meta.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Nodemailer({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+      server: env.EMAIL_SERVER,
+      from: env.EMAIL_FROM,
     }),
   ],
 })
@@ -421,24 +509,51 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Nodemailer from "@auth/qwik/providers/nodemailer"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Nodemailer({
+        server: {
+          host: import.meta.env.EMAIL_SERVER_HOST,
+          port: import.meta.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: import.meta.env.EMAIL_SERVER_USER,
+            pass: import.meta.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: import.meta.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Nodemailer({
       server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        host: env.EMAIL_SERVER_HOST,
+        port: env.EMAIL_SERVER_PORT,
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+          user: env.EMAIL_SERVER_USER,
+          pass: env.EMAIL_SERVER_PASSWORD,
         },
       },
-      from: process.env.EMAIL_FROM,
+      from: env.EMAIL_FROM,
     }),
   ],
 })
@@ -479,6 +594,26 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="src/routes/+page.svelte"
@@ -552,6 +687,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Postmark from "@auth/qwik/providers/postmark"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Postmark],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -596,6 +745,26 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```html filename="src/routes/+page.svelte"

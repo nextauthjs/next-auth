@@ -1,15 +1,22 @@
-import { and, eq, getTableColumns } from "drizzle-orm"
+import {
+  GeneratedColumnConfig,
+  and,
+  eq,
+  getTableColumns,
+  is,
+} from "drizzle-orm"
 import {
   MySqlColumn,
   MySqlDatabase,
-  MySqlTableWithColumns,
-  PreparedQueryHKTBase,
-  QueryResultHKT,
+  boolean,
   int,
   mysqlTable,
   primaryKey,
   timestamp,
   varchar,
+  PreparedQueryHKTBase,
+  MySqlTableWithColumns,
+  MySqlQueryResultHKT,
 } from "drizzle-orm/mysql-core"
 
 import type {
@@ -19,7 +26,9 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
+  AdapterAuthenticator,
 } from "@auth/core/adapters"
+import { Awaitable } from "@auth/core/types"
 
 export function defineTables(
   schema: Partial<DefaultMySqlSchema> = {}
@@ -31,7 +40,7 @@ export function defineTables(
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
       name: varchar("name", { length: 255 }),
-      email: varchar("email", { length: 255 }).notNull(),
+      email: varchar("email", { length: 255 }).unique(),
       emailVerified: timestamp("emailVerified", { mode: "date", fsp: 3 }),
       image: varchar("image", { length: 255 }),
     }) satisfies DefaultMySqlUsersTable)
@@ -85,54 +94,98 @@ export function defineTables(
         token: varchar("token", { length: 255 }).notNull(),
         expires: timestamp("expires", { mode: "date" }).notNull(),
       },
-      (vt) => ({
-        compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+      (verficationToken) => ({
+        compositePk: primaryKey({
+          columns: [verficationToken.identifier, verficationToken.token],
+        }),
       })
     ) satisfies DefaultMySqlVerificationTokenTable)
+
+  const authenticatorsTable =
+    schema.authenticatorsTable ??
+    (mysqlTable(
+      "authenticator",
+      {
+        credentialID: varchar("credentialID", { length: 255 })
+          .notNull()
+          .unique(),
+        userId: varchar("userId", { length: 255 })
+          .notNull()
+          .references(() => usersTable.id, { onDelete: "cascade" }),
+        providerAccountId: varchar("providerAccountId", {
+          length: 255,
+        }).notNull(),
+        credentialPublicKey: varchar("credentialPublicKey", {
+          length: 255,
+        }).notNull(),
+        counter: int("counter").notNull(),
+        credentialDeviceType: varchar("credentialDeviceType", {
+          length: 255,
+        }).notNull(),
+        credentialBackedUp: boolean("credentialBackedUp").notNull(),
+        transports: varchar("transports", { length: 255 }),
+      },
+      (authenticator) => ({
+        compositePk: primaryKey({
+          columns: [authenticator.userId, authenticator.credentialID],
+        }),
+      })
+    ) satisfies DefaultMySqlAuthenticatorTable)
 
   return {
     usersTable,
     accountsTable,
     sessionsTable,
     verificationTokensTable,
+    authenticatorsTable,
   }
 }
 
 export function MySqlDrizzleAdapter(
-  client: MySqlDatabase<QueryResultHKT, PreparedQueryHKTBase, any>,
+  client: MySqlDatabase<MySqlQueryResultHKT, PreparedQueryHKTBase, any>,
   schema?: DefaultMySqlSchema
 ): Adapter {
-  const { usersTable, accountsTable, sessionsTable, verificationTokensTable } =
-    defineTables(schema)
+  const {
+    usersTable,
+    accountsTable,
+    sessionsTable,
+    verificationTokensTable,
+    authenticatorsTable,
+  } = defineTables(schema)
 
   return {
     async createUser(data: AdapterUser) {
       const { id, ...insertData } = data
-      const hasDefaultId = getTableColumns(usersTable)["id"]["hasDefault"]
+      const hasDefaultId = getTableColumns(usersTable)["id"]["defaultFn"]
 
-      await client
+      const [insertedUser] = (await client
         .insert(usersTable)
         .values(hasDefaultId ? insertData : { ...insertData, id })
+        .$returningId()) as [{ id: string }] | []
 
       return client
         .select()
         .from(usersTable)
-        .where(eq(usersTable.email, data.email))
-        .then((res) => res[0])
+        .where(eq(usersTable.id, insertedUser ? insertedUser.id : id))
+        .then((res) => res[0]) as Awaitable<AdapterUser>
     },
     async getUser(userId: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => (res.length > 0 ? res[0] : null))
+        .then((res) =>
+          res.length > 0 ? res[0] : null
+        ) as Awaitable<AdapterUser | null>
     },
     async getUserByEmail(email: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => (res.length > 0 ? res[0] : null))
+        .then((res) =>
+          res.length > 0 ? res[0] : null
+        ) as Awaitable<AdapterUser | null>
     },
     async createSession(data: {
       sessionToken: string
@@ -156,7 +209,10 @@ export function MySqlDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => (res.length > 0 ? res[0] : null))
+        .then((res) => (res.length > 0 ? res[0] : null)) as Awaitable<{
+        session: AdapterSession
+        user: AdapterUser
+      } | null>
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -177,7 +233,7 @@ export function MySqlDrizzleAdapter(
         throw new Error("No user found.")
       }
 
-      return result
+      return result as Awaitable<AdapterUser>
     },
     async updateSession(
       data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
@@ -214,7 +270,9 @@ export function MySqlDrizzleAdapter(
         )
         .then((res) => res[0])
 
-      return result?.user ?? null
+      const user = result?.user ?? null
+
+      return user as Awaitable<AdapterUser | null>
     },
     async deleteSession(sessionToken: string) {
       await client
@@ -270,21 +328,84 @@ export function MySqlDrizzleAdapter(
           )
         )
     },
+    async getAccount(providerAccountId: string, provider: string) {
+      return client
+        .select()
+        .from(accountsTable)
+        .where(
+          and(
+            eq(accountsTable.provider, provider),
+            eq(accountsTable.providerAccountId, providerAccountId)
+          )
+        )
+        .then((res) => res[0] ?? null) as Promise<AdapterAccount | null>
+    },
+    async createAuthenticator(data: AdapterAuthenticator) {
+      await client.insert(authenticatorsTable).values(data)
+
+      return (await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, data.credentialID))
+        .then((res) => res[0] ?? null)) as Awaitable<AdapterAuthenticator>
+    },
+    async getAuthenticator(credentialID: string) {
+      return (await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then(
+          (res) => res[0] ?? null
+        )) as Awaitable<AdapterAuthenticator | null>
+    },
+    async listAuthenticatorsByUserId(userId: string) {
+      return (await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.userId, userId))
+        .then((res) => res)) as Awaitable<AdapterAuthenticator[]>
+    },
+    async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
+      await client
+        .update(authenticatorsTable)
+        .set({ counter: newCounter })
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+
+      const authenticator = await client
+        .select()
+        .from(authenticatorsTable)
+        .where(eq(authenticatorsTable.credentialID, credentialID))
+        .then((res) => res[0])
+
+      if (!authenticator) throw new Error("Authenticator not found.")
+
+      return authenticator as Awaitable<AdapterAuthenticator>
+    },
   }
 }
 
 type DefaultMyqlColumn<
   T extends {
-    data: string | number | Date
-    dataType: "string" | "number" | "date"
+    data: string | number | boolean | Date
+    dataType: "string" | "number" | "boolean" | "date"
     notNull: boolean
-    columnType: "MySqlVarChar" | "MySqlText" | "MySqlTimestamp" | "MySqlInt"
+    isPrimaryKey?: boolean
+    columnType:
+      | "MySqlVarChar"
+      | "MySqlText"
+      | "MySqlBoolean"
+      | "MySqlTimestamp"
+      | "MySqlInt"
   },
 > = MySqlColumn<{
+  isAutoincrement: boolean
+  isPrimaryKey: T["isPrimaryKey"] extends true ? true : false
+  hasRuntimeDefault: boolean
+  generated: GeneratedColumnConfig<T["data"]> | undefined
   name: string
   columnType: T["columnType"]
   data: T["data"]
-  driverParam: string | number
+  driverParam: string | number | boolean
   notNull: T["notNull"]
   hasDefault: boolean
   enumValues: any
@@ -296,6 +417,7 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
   name: string
   columns: {
     id: DefaultMyqlColumn<{
+      isPrimaryKey: true
       data: string
       dataType: "string"
       notNull: true
@@ -310,7 +432,7 @@ export type DefaultMySqlUsersTable = MySqlTableWithColumns<{
     email: DefaultMyqlColumn<{
       data: string
       dataType: "string"
-      notNull: true
+      notNull: boolean
       columnType: "MySqlVarChar" | "MySqlText"
     }>
     emailVerified: DefaultMyqlColumn<{
@@ -409,6 +531,7 @@ export type DefaultMySqlSessionsTable = MySqlTableWithColumns<{
   name: string
   columns: {
     sessionToken: DefaultMyqlColumn<{
+      isPrimaryKey: true
       columnType: "MySqlVarChar" | "MySqlText"
       data: string
       notNull: true
@@ -457,9 +580,66 @@ export type DefaultMySqlVerificationTokenTable = MySqlTableWithColumns<{
   schema: string | undefined
 }>
 
+export type DefaultMySqlAuthenticatorTable = MySqlTableWithColumns<{
+  name: string
+  columns: {
+    credentialID: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    userId: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    providerAccountId: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialPublicKey: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    counter: DefaultMyqlColumn<{
+      columnType: "MySqlInt"
+      data: number
+      notNull: true
+      dataType: "number"
+    }>
+    credentialDeviceType: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: true
+      dataType: "string"
+    }>
+    credentialBackedUp: DefaultMyqlColumn<{
+      columnType: "MySqlBoolean"
+      data: boolean
+      notNull: true
+      dataType: "boolean"
+    }>
+    transports: DefaultMyqlColumn<{
+      columnType: "MySqlVarChar" | "MySqlText"
+      data: string
+      notNull: false
+      dataType: "string"
+    }>
+  }
+  dialect: "mysql"
+  schema: string | undefined
+}>
+
 export type DefaultMySqlSchema = {
   usersTable: DefaultMySqlUsersTable
   accountsTable: DefaultMySqlAccountsTable
   sessionsTable?: DefaultMySqlSessionsTable
   verificationTokensTable?: DefaultMySqlVerificationTokenTable
+  authenticatorsTable?: DefaultMySqlAuthenticatorTable
 }

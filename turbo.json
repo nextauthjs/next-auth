@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [
@@ -16,7 +16,7 @@
         "src/providers/oauth-types.ts",
         ".svelte-kit/**"
       ],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "clean": {
       "cache": false
@@ -27,7 +27,7 @@
     "test": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**/", "test/**/"],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "test:e2e": {
       "outputs": [
@@ -56,7 +56,8 @@
         "@auth/core#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
-        "@auth/solid-start#build"
+        "@auth/solid-start#build",
+        "@auth/qwik#build"
       ],
       "cache": false
     },
@@ -99,6 +100,7 @@
         "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "@auth/qwik#build",
         "next-auth#build",
         "^build"
       ],

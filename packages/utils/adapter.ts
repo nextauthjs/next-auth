@@ -1,4 +1,4 @@
-import { test, expect, beforeAll, afterAll } from "vitest"
+import { afterAll, beforeAll, expect, test } from "vitest"
 
 import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomInt, randomUUID } from "crypto"
@@ -554,7 +554,9 @@ export async function runBasicTests(options: TestOptions) {
 
     const authenticators2 = await adapter.listAuthenticatorsByUserId(user2.id)
     expect(authenticators2).not.toBeNull()
-    expect([authenticator3]).toMatchObject(authenticators2 || [])
+    expect([authenticator3]).toMatchObject(
+      expect.arrayContaining(authenticators2 || [])
+    )
   })
   maybeTest("updateAuthenticatorCounter", async () => {
     // Setup
@@ -607,6 +609,9 @@ export function hashToken(token: string) {
 export { randomUUID }
 
 export const ONE_WEEK_FROM_NOW = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+ONE_WEEK_FROM_NOW.setMilliseconds(0)
 export const FIFTEEN_MINUTES_FROM_NOW = new Date(Date.now() + 15 * 60 * 1000)
+FIFTEEN_MINUTES_FROM_NOW.setMilliseconds(0)
 export const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 export const ONE_MONTH_FROM_NOW = new Date(Date.now() + ONE_MONTH)
+ONE_MONTH_FROM_NOW.setMilliseconds(0)

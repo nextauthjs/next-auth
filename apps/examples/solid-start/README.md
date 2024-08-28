@@ -6,7 +6,7 @@
    <img height="64" src="https://authjs.dev/img/logo-sm.png" />
    </a>
    <a href="https://start.solidjs.com" target="_blank">
-   <img height="64" src="https://www.solidjs.com/assets/logo-123b04bc.svg" />
+   <img height="64" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/public/img/etc/solidstart.svg" />
    </a>
    <h3 align="center"><b>SolidStart Auth</b> - Example App</h3>
    <p align="center">
@@ -80,6 +80,6 @@ Create a GitHub repo and push the code to it, then deploy it to Vercel.
 ## Acknowledgements
 
 <a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
-<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
+<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/public/img/etc/powered-by-vercel.svg" alt="Powered By Vercel" />
 </a>
 <p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire Auth.js Team</p>

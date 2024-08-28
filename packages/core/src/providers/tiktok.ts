@@ -137,13 +137,15 @@ export interface TiktokProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import TikTok from "@auth/core/providers/tiktok"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [TikTok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET })],
+ *   providers: [
+ *     TikTok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
@@ -210,8 +212,9 @@ export default function TikTok<P extends TiktokProfile>(
     },
 
     token: {
+      url: "https://open.tiktokapis.com/v2/oauth/token/",
       async request({ params, provider }) {
-        const res = await fetch(`https://open.tiktokapis.com/v2/oauth/token/`, {
+        const res = await fetch(provider.token?.url!, {
           method: "POST",
           headers: {
             "Cache-Control": "no-cache",
@@ -253,7 +256,7 @@ export default function TikTok<P extends TiktokProfile>(
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,
         image: profile.data.user.avatar_url,
-        email: profile.data.user.email || null,
+        email: profile.data.user.email || profile.data.user.username || null,
       }
     },
     style: {

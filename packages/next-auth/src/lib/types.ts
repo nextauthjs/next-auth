@@ -1,3 +1,4 @@
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import type { NextRequest } from "next/server"
 
 /**

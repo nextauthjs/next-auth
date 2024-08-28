@@ -73,6 +73,8 @@ import type {
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
 
+export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
+export type { AuthConfig } from "./index.js"
 export type { LoggerInstance }
 export type Awaitable<T> = T | PromiseLike<T>
 export type Awaited<T> = T extends Promise<infer U> ? U : T
@@ -117,7 +119,7 @@ export type TokenSet = Partial<
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
 export interface Account extends Partial<OpenIDTokenEndpointResponse> {
-  /** Provider's id for this account. Eg.: "google" */
+  /** Provider's id for this account. E.g. "google". See the full list at https://authjs.dev/reference/core/providers */
   provider: string
   /**
    * This value depends on the type of the provider being used to create the account.
@@ -307,8 +309,8 @@ export interface PublicProvider {
  * - **`"error"`**: Renders the built-in error page.
  * - **`"providers"`**: Returns a client-safe list of all configured providers.
  * - **`"session"`**:
- *   - **`GET**`: Returns the user's session if it exists, otherwise `null`.
- *   - **`POST**`: Updates the user's session and returns the updated session.
+ *   - **`GET`**: Returns the user's session if it exists, otherwise `null`.
+ *   - **`POST`**: Updates the user's session and returns the updated session.
  * - **`"signin"`**:
  *   - **`GET`**: Renders the built-in sign-in page.
  *   - **`POST`**: Initiates the sign-in flow.

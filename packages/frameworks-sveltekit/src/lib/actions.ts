@@ -3,7 +3,7 @@ import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { env } from "$env/dynamic/private"
 
-import { Auth, createActionURL, raw, skipCSRFCheck } from "@auth/core"
+import { Auth, createActionURL, raw } from "@auth/core"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 
@@ -27,13 +27,7 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = createActionURL(
-    "signin",
-    protocol,
-    headers,
-    env,
-    config.basePath
-  )
+  const base = createActionURL("signin", protocol, headers, env, config)
 
   if (!provider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
@@ -65,7 +59,7 @@ export async function signIn(
   headers.set("Content-Type", "application/x-www-form-urlencoded")
   const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? []) {
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -92,18 +86,12 @@ export async function signOut(
   const headers = new Headers(request.headers)
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL(
-    "signout",
-    protocol,
-    headers,
-    env,
-    config.basePath
-  )
+  const url = createActionURL("signout", protocol, headers, env, config)
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
 
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? [])
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -131,7 +119,7 @@ export async function auth(
     protocol,
     req.headers,
     env,
-    config.basePath
+    config
   )
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },

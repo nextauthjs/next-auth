@@ -1,5 +1,6 @@
 import type { AdapterAccountType } from "@auth/core/adapters"
 import {
+  boolean,
   integer,
   pgTableCreator,
   primaryKey,
@@ -8,7 +9,6 @@ import {
 } from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
-
 const connectionString = "postgres://nextauth:nextauth@localhost:5432/nextauth"
 const sql = postgres(connectionString)
 
@@ -21,7 +21,7 @@ export const users = pgTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
@@ -72,4 +72,25 @@ export const verificationTokens = pgTable(
       compositePk: primaryKey({ columns: [table.identifier, table.token] }),
     }
   }
+)
+
+export const authenticators = pgTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePk: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
 )

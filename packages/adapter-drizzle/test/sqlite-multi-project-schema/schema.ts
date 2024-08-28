@@ -19,7 +19,7 @@ export const users = sqliteTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
 })
@@ -65,5 +65,28 @@ export const verificationTokens = sqliteTable(
   },
   (vt) => ({
     compositePk: primaryKey({ columns: [vt.identifier, vt.token] }),
+  })
+)
+
+export const authenticators = sqliteTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: integer("credentialBackedUp", {
+      mode: "boolean",
+    }).notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePk: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
   })
 )

@@ -8,12 +8,14 @@ import type {
 } from "@auth/core/adapters"
 import type { Account } from "@auth/core/types"
 
-const url = process.env.SUPABASE_URL ?? "http://localhost:54321"
+const url = process.env.SUPABASE_URL ?? "http://127.0.0.1:54321"
 const secret =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSJ9.vI9obAHOGyVVKa3pD--kJlyxp-Z2zV9UUMAhKpNLAcU"
 
-const supabase = createClient(url, secret, { db: { schema: "next_auth" } })
+const supabase = createClient(url, secret, {
+  db: { schema: "next_auth" },
+})
 
 runBasicTests({
   adapter: SupabaseAdapter({ url, secret }),

@@ -15,9 +15,9 @@ type InkeepSharedSettings = {
 const useInkeepSettings = (): InkeepSharedSettings => {
   const { resolvedTheme } = useTheme()
   const baseSettings: InkeepWidgetBaseSettings = {
-    apiKey: process.env.NEXT_PUBLIC_INKEEP_API_KEY,
-    integrationId: process.env.NEXT_PUBLIC_INKEEP_INTEGRATION_ID,
-    organizationId: process.env.NEXT_PUBLIC_INKEEP_ORGANIZATION_ID,
+    apiKey: process.env.NEXT_PUBLIC_INKEEP_API_KEY!,
+    integrationId: process.env.NEXT_PUBLIC_INKEEP_INTEGRATION_ID!,
+    organizationId: process.env.NEXT_PUBLIC_INKEEP_ORGANIZATION_ID!,
     primaryBrandColor: "#efe0ff", // your brand color, widget color scheme is derived from this
     organizationDisplayName: "Auth.js",
     theme: {

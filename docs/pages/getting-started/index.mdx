@@ -13,11 +13,11 @@ This documentation covers `next-auth@5.0.0-beta` and later and all other framewo
 
 Select your framework of choice to get started, or view the example application deployment or repository with the buttons below.
 
-<div className="flex flex-wrap gap-2 justify-around items-start mt-8 mb-12 w-full">
-  <div className="flex flex-col gap-2 group">
+<div className="mb-12 mt-8 flex w-full flex-wrap items-start justify-around gap-2">
+  <div className="group flex flex-col gap-2">
     <Link
       href="/getting-started/installation?framework=next.js"
-      className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 !no-underline rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 bg-white hover:bg-neutral-100 dark:bg-neutral-900"
+      className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-neutral-200 bg-white p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-950"
     >
       <img
         alt="Next.js Logo"
@@ -33,7 +33,7 @@ Select your framework of choice to get started, or view the example application 
         href="https://next-auth-example.vercel.app/"
         rel="noreferrer"
         target="_blank"
-        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
       >
         <ArrowSquareOut className="size-5" />
       </a>
@@ -42,21 +42,56 @@ Select your framework of choice to get started, or view the example application 
         href="https://github.com/nextauthjs/next-auth-example"
         rel="noreferrer"
         target="_blank"
-        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
       >
         <GithubLogo className="size-5" />
       </a>
     </div>
   </div>
-  <div className="flex flex-col gap-2 group">
+  <div className="group flex flex-col gap-2">
+    <Link
+      href="/getting-started/installation?framework=qwik"
+      className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-neutral-200 bg-white p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-950"
+    >
+      <img alt="Qwik Logo" src="/img/etc/qwik.svg" width="40" />
+      <div className="mt-3 text-sm">Qwik</div>
+      <div
+        className="absolute z-10 rounded-full bg-amber-300 p-2 text-sm font-semibold text-black shadow-sm"
+        style={{ right: "-20px", top: "-15px" }}
+      >
+        <Flask className="size-6" />
+      </div>
+    </Link>
+    <div className="flex justify-stretch gap-2">
+      <a
+        title="Live Example"
+        href="https://qwik-auth-example.vercel.app/"
+        rel="noreferrer"
+        target="_blank"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
+      >
+        <ArrowSquareOut className="size-5" />
+      </a>
+      <a
+        title="GitHub Repository"
+        href="https://github.com/nextauthjs/qwik-auth-example"
+        rel="noreferrer"
+        target="_blank"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
+      >
+        <GithubLogo className="size-5" />
+      </a>
+    </div>
+  </div>
+  <div className="group flex flex-col gap-2">
     <Link
       href="/getting-started/installation?framework=sveltekit"
-      className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 !no-underline rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 bg-white hover:bg-neutral-100 dark:bg-neutral-900"
+      className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-neutral-200 bg-white p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-950"
     >
       <img alt="SvelteKit Logo" src="/img/etc/sveltekit.svg" width="35" />
       <div className="mt-3 text-sm">SvelteKit</div>
       <div
-        className="absolute z-10 p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
+        className="absolute z-10 rounded-full bg-amber-300 p-2 text-sm font-semibold text-black shadow-sm"
         style={{ right: "-20px", top: "-15px" }}
       >
         <Flask className="size-6" />
@@ -68,7 +103,7 @@ Select your framework of choice to get started, or view the example application 
         href="https://sveltekit-auth-example.vercel.app/"
         rel="noreferrer"
         target="_blank"
-        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
       >
         <ArrowSquareOut className="size-5" />
       </a>
@@ -77,16 +112,16 @@ Select your framework of choice to get started, or view the example application 
         href="https://github.com/nextauthjs/sveltekit-auth-example"
         rel="noreferrer"
         target="_blank"
-        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
       >
         <GithubLogo className="size-5" />
       </a>
     </div>
   </div>
-  <div className="flex flex-col gap-2 group">
+  <div className="group flex flex-col gap-2">
     <Link
       href="/getting-started/installation?framework=express"
-      className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 !no-underline rounded-lg border border-solid shadow-sm transition-colors duration-300 border-neutral-200 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 bg-white hover:bg-neutral-100 dark:bg-neutral-900"
+      className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-neutral-200 bg-white p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-950"
     >
       <img
         alt="Express Logo"
@@ -96,7 +131,7 @@ Select your framework of choice to get started, or view the example application 
       />
       <div className="mt-3 text-sm">Express</div>
       <div
-        className="absolute z-10 p-2 text-sm font-semibold text-black bg-amber-300 rounded-full shadow-sm"
+        className="absolute z-10 rounded-full bg-amber-300 p-2 text-sm font-semibold text-black shadow-sm"
         style={{ right: "-20px", top: "-15px" }}
       >
         <Flask className="size-6" />
@@ -108,7 +143,7 @@ Select your framework of choice to get started, or view the example application 
         href="https://express-auth-example.vercel.app/"
         rel="noreferrer"
         target="_blank"
-        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
       >
         <ArrowSquareOut className="size-5" />
       </a>
@@ -117,7 +152,7 @@ Select your framework of choice to get started, or view the example application 
         href="https://github.com/nextauthjs/express-auth-example"
         rel="noreferrer"
         target="_blank"
-        className="flex justify-center p-2 w-full text-sm rounded-md bg-neutral-100 dark:border-neutral-800/30 border-neutral-200/50 border dark:bg-neutral-900"
+        className="flex w-full justify-center rounded-md border border-neutral-200/50 bg-neutral-100 p-2 text-sm dark:border-neutral-800/30 dark:bg-neutral-900"
       >
         <GithubLogo className="size-5" />
       </a>
@@ -125,7 +160,7 @@ Select your framework of choice to get started, or view the example application 
   </div>
   <Link
     href="/guides/creating-a-framework-integration"
-    className="flex relative flex-col flex-wrap justify-between items-center p-4 w-28 h-28 bg-white rounded-lg border border-solid shadow-sm border-slate-200 dark:border-neutral-800 dark:bg-neutral-900 hover:bg-neutral-100 hover:dark:bg-neutral-950 transition !no-underline duration-300"
+    className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-slate-200 bg-white p-4 !no-underline shadow-sm transition duration-300 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 hover:dark:bg-neutral-950"
   >
     <Plus className="size-9" />
     <div className="mt-3 text-sm">Add New</div>
@@ -162,10 +197,10 @@ There are 4 ways to authenticate users with Auth.js:
     <Link
       href={`/getting-started/providers/${id}`}
       key={name}
-      className="p-4 border border-solid dark:border-neutral-800 border-neutral-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-sm h-32 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300 !no-underline"
+      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
     >
-      <img src={`/img/providers/${id}.svg`} className="w-11 mt-2" />
-      <div className="text-sm text-center">{name}</div>
+      <img src={`/img/providers/${id}.svg`} className="mt-2 w-11" />
+      <div className="text-center text-sm">{name}</div>
     </Link>
   ))}
 </ListDisclosure>
@@ -179,10 +214,10 @@ Optionally, Auth.js can be integrated with an external database via Database ada
     <Link
       href={`/getting-started/adapters/${value}`}
       key={value}
-      className="p-4 border border-solid dark:border-neutral-800 border-neutral-200 rounded-lg flex flex-col items-center justify-between w-36 shadow-sm h-32 dark:border-neutral-800 dark:hover:bg-neutral-950 hover:bg-neutral-50 transition-colors duration-300 !no-underline"
+      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
     >
-      <img src={`/img/adapters/${value}.svg`} className="h-12 mt-2" />
-      <div className="text-sm text-center">{label}</div>
+      <img src={`/img/adapters/${value}.svg`} className="mt-2 h-12" />
+      <div className="text-center text-sm">{label}</div>
     </Link>
   ))}
 </ListDisclosure>

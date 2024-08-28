@@ -14,6 +14,15 @@ Start by installing the appropriate package for your framework.
     ```
 
   </Code.Next>
+  <Code.Qwik>
+    
+    You can use the Qwik starter script:
+
+    ```bash npm2yarn
+    npm run qwik add auth
+    ```
+
+  </Code.Qwik>
   <Code.Svelte>
   
     ```bash npm2yarn
@@ -37,19 +46,13 @@ Start by installing the appropriate package for your framework.
 ### Setup Environment
 
 The only environment variable that is mandatory is the `AUTH_SECRET`. This is a random value used by the library to encrypt tokens and email
-verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via running:
+verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via the official [Auth.js CLI](https://cli.authjs.dev) running:
 
 ```bash
 npx auth secret
 ```
 
-Alternatively, you can use the `openssl` CLI, `openssl rand -base64 33`.
-
-Then add it to your `.env.local` file:
-
-```bash filename=".env.local"
-AUTH_SECRET=secret
-```
+This will also add it to your `.env` file, respecting the framework conventions (eg.: Next.js' `.env.local`).
 
 ### Configure
 
@@ -73,7 +76,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 })
 ```
 
-2. Add an Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
+2. Add a Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
 
 <Callout>
   This file must be an App Router Route Handler, however, the rest of your app
@@ -92,6 +95,21 @@ export { auth as middleware } from "@/auth"
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+1. Start by creating a new `plugin@auth.ts` file in your `src/routes` directory with the following content.
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [...],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 1. Start by creating a new `auth.ts` file in your `src/` directory with the following content.
@@ -127,7 +145,7 @@ export const load: LayoutServerLoad = async (event) => {
   </Code.Svelte>
   <Code.Express>
 
-1. Start by importing `ExpressAuth` and adding it to any routes you want to protect.
+1. Start by importing `ExpressAuth` and adding the handler to the auth route.
 
 ```ts filename="./src/routes/auth.route.ts" {1, 9}
 import { ExpressAuth } from "@auth/express"
@@ -140,6 +158,8 @@ const app = express()
 app.set("trust proxy", true)
 app.use("/auth/*", ExpressAuth({ providers: [] }))
 ```
+
+Note this creates the Auth.js API, but does not yet protect resources. Continue on to [protecting resources](/getting-started/session-management/protecting) for more details.
 
   </Code.Express>
 </Code>
