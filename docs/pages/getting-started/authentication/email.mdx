@@ -763,6 +763,37 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```
 
 </Code.Qwik>
+<Code.NextClient>
+
+```ts filename="./components/sign-in.tsx"
+"use client"
+import { useState, ChangeEvent, FormEvent } from "react"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  const [email, setEmail] = useState("")
+
+  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+  }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    signIn("postmark", { email })
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="email-postmark">
+        Email
+        <input type="email" name="email-postmark" onChange={handleChangeEmail} />
+      </label>
+      <input type="submit" value="Signin with Postmark" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
