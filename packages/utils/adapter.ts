@@ -1,4 +1,4 @@
-import { test, expect, beforeAll, afterAll } from "vitest"
+import { afterAll, beforeAll, expect, test } from "vitest"
 
 import type { Adapter } from "@auth/core/adapters"
 import { createHash, randomInt, randomUUID } from "crypto"
@@ -44,7 +44,7 @@ export interface TestOptions {
      */
     authenticator?: (credentialID: string) => any
   }
-  skipTests?: string[],
+  skipTests?: string[]
   /**
    * Enables testing of WebAuthn methods.
    */
@@ -63,24 +63,33 @@ export async function runBasicTests(options: TestOptions) {
     await options.db.connect?.()
   })
 
-  const { adapter: _adapter, db, skipTests: skipTests = [], testWebAuthnMethods } = options
+  const {
+    adapter: _adapter,
+    db,
+    skipTests: skipTests = [],
+    testWebAuthnMethods,
+  } = options
   const adapter = _adapter as Required<Adapter>
 
   if (!testWebAuthnMethods) {
-    skipTests.push(...[
-      "getAccount",
-      "getAuthenticator",
-      "createAuthenticator",
-      "listAuthenticatorsByUserId",
-      "updateAuthenticatorCounter"
-    ])
+    skipTests.push(
+      ...[
+        "getAccount",
+        "getAuthenticator",
+        "createAuthenticator",
+        "listAuthenticatorsByUserId",
+        "updateAuthenticatorCounter",
+      ]
+    )
   }
 
   const maybeTest = (
     method: keyof Adapter,
     ...args: Parameters<typeof test> extends [any, ...infer U] ? U : never
   ) =>
-    skipTests.includes(method) ? test.skip(method, ...args) : test(method, ...args)
+    skipTests.includes(method)
+      ? test.skip(method, ...args)
+      : test(method, ...args)
 
   afterAll(async () => {
     // @ts-expect-error This is only used for the TypeORM adapter
@@ -89,7 +98,7 @@ export async function runBasicTests(options: TestOptions) {
   })
 
   let user = options.fixtures?.user ?? {
-    id: randomUUID(),
+    id: id(),
     email: "fill@murray.com",
     image: "https://www.fillmurray.com/460/300",
     name: "Fill Murray",
@@ -102,21 +111,21 @@ export async function runBasicTests(options: TestOptions) {
   }
 
   const session: any = options.fixtures?.session ?? {
-    sessionToken: randomUUID(),
+    sessionToken: id(),
     expires: ONE_WEEK_FROM_NOW,
   }
 
   const account: any = options.fixtures?.account ?? {
     provider: "github",
-    providerAccountId: randomUUID(),
+    providerAccountId: id(),
     type: "oauth",
-    access_token: randomUUID(),
+    access_token: id(),
     expires_at: ONE_MONTH / 1000,
-    id_token: randomUUID(),
-    refresh_token: randomUUID(),
+    id_token: id(),
+    refresh_token: id(),
     token_type: "bearer",
     scope: "user",
-    session_state: randomUUID(),
+    session_state: id(),
   }
 
   // All adapters must define these methods
@@ -250,7 +259,7 @@ export async function runBasicTests(options: TestOptions) {
 
   test("createVerificationToken", async () => {
     const identifier = "info@example.com"
-    const token = randomUUID()
+    const token = id()
     const hashedToken = hashToken(token)
 
     const verificationToken = {
@@ -271,7 +280,7 @@ export async function runBasicTests(options: TestOptions) {
 
   test("useVerificationToken", async () => {
     const identifier = "info@example.com"
-    const token = randomUUID()
+    const token = id()
     const hashedToken = hashToken(token)
     const verificationToken = {
       token: hashedToken,
@@ -370,11 +379,20 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const invalidBoth = await adapter.getAccount("invalid-provider-account-id", "invalid-provider")
+    const invalidBoth = await adapter.getAccount(
+      "invalid-provider-account-id",
+      "invalid-provider"
+    )
     expect(invalidBoth).toBeNull()
-    const invalidProvider = await adapter.getAccount(providerAccountId, "invalid-provider")
+    const invalidProvider = await adapter.getAccount(
+      providerAccountId,
+      "invalid-provider"
+    )
     expect(invalidProvider).toBeNull()
-    const invalidProviderAccountId = await adapter.getAccount("invalid-provider-account-id", provider)
+    const invalidProviderAccountId = await adapter.getAccount(
+      "invalid-provider-account-id",
+      provider
+    )
     expect(invalidProviderAccountId).toBeNull()
     const validAccount = await adapter.getAccount(providerAccountId, provider)
     expect(validAccount).not.toBeNull()
@@ -411,13 +429,14 @@ export async function runBasicTests(options: TestOptions) {
       credentialPublicKey: randomUUID(),
       transports: "usb,ble,nfc",
     }
-    const newAuthenticator = await adapter.createAuthenticator(authenticatorData)
+    const newAuthenticator =
+      await adapter.createAuthenticator(authenticatorData)
     expect(newAuthenticator).not.toBeNull()
     expect(newAuthenticator).toMatchObject(authenticatorData)
 
-    const dbAuthenticator = db.authenticator ? await db.authenticator(
-      credentialID,
-    ) : undefined
+    const dbAuthenticator = db.authenticator
+      ? await db.authenticator(credentialID)
+      : undefined
     expect(dbAuthenticator).toMatchObject(newAuthenticator)
   })
   maybeTest("getAuthenticator", async () => {
@@ -446,14 +465,16 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const invalidAuthenticator = await adapter.getAuthenticator("invalid-credential-id")
+    const invalidAuthenticator = await adapter.getAuthenticator(
+      "invalid-credential-id"
+    )
     expect(invalidAuthenticator).toBeNull()
 
     const validAuthenticator = await adapter.getAuthenticator(credentialID)
     expect(validAuthenticator).not.toBeNull()
-    const dbAuthenticator = db.authenticator ? await db.authenticator(
-      credentialID
-    ) : undefined
+    const dbAuthenticator = db.authenticator
+      ? await db.authenticator(credentialID)
+      : undefined
     expect(dbAuthenticator).toMatchObject(validAuthenticator || {})
   })
   maybeTest("listAuthenticatorsByUserId", async () => {
@@ -521,16 +542,21 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    const authenticators0 = await adapter.listAuthenticatorsByUserId("invalid-user-id")
+    const authenticators0 =
+      await adapter.listAuthenticatorsByUserId("invalid-user-id")
     expect(authenticators0).toEqual([])
 
     const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
     expect(authenticators1).not.toBeNull()
-    expect([authenticator1, authenticator2]).toMatchObject(authenticators1 || [])
+    expect([authenticator2, authenticator1]).toEqual(
+      expect.arrayContaining(authenticators1 || [])
+    )
 
     const authenticators2 = await adapter.listAuthenticatorsByUserId(user2.id)
     expect(authenticators2).not.toBeNull()
-    expect([authenticator3]).toMatchObject(authenticators2 || [])
+    expect([authenticator3]).toMatchObject(
+      expect.arrayContaining(authenticators2 || [])
+    )
   })
   maybeTest("updateAuthenticatorCounter", async () => {
     // Setup
@@ -558,12 +584,18 @@ export async function runBasicTests(options: TestOptions) {
     })
 
     // Test
-    await expect(
-      () => adapter.updateAuthenticatorCounter("invalid-credential-id", randomInt(100))
+    await expect(() =>
+      adapter.updateAuthenticatorCounter(
+        "invalid-credential-id",
+        randomInt(100)
+      )
     ).rejects.toThrow()
 
     const newCounter = newAuthenticator.counter + randomInt(100)
-    const updatedAuthenticator = await adapter.updateAuthenticatorCounter(credentialID, newCounter)
+    const updatedAuthenticator = await adapter.updateAuthenticatorCounter(
+      credentialID,
+      newCounter
+    )
     expect(updatedAuthenticator).not.toBeNull()
     expect(updatedAuthenticator.counter).toBe(newCounter)
   })
@@ -577,6 +609,9 @@ export function hashToken(token: string) {
 export { randomUUID }
 
 export const ONE_WEEK_FROM_NOW = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+ONE_WEEK_FROM_NOW.setMilliseconds(0)
 export const FIFTEEN_MINUTES_FROM_NOW = new Date(Date.now() + 15 * 60 * 1000)
+FIFTEEN_MINUTES_FROM_NOW.setMilliseconds(0)
 export const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 export const ONE_MONTH_FROM_NOW = new Date(Date.now() + ONE_MONTH)
+ONE_MONTH_FROM_NOW.setMilliseconds(0)

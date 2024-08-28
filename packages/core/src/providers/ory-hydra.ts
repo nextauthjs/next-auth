@@ -33,13 +33,19 @@ export interface OryHydraProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import OryHydra from "@auth/core/providers/ory-hydra"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [OryHydra({ clientId: ORY_HYDRA_CLIENT_ID, clientSecret: ORY_HYDRA_CLIENT_SECRET, issuer: ORY_HYDRA_ISSUER })],
+ *   providers: [
+ *     OryHydra({
+ *       clientId: ORY_HYDRA_CLIENT_ID,
+ *       clientSecret: ORY_HYDRA_CLIENT_SECRET,
+ *       issuer: ORY_HYDRA_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -57,7 +63,7 @@ export interface OryHydraProfile extends Record<string, any> {
  * :::tip
  *
  * The Ory Hydra provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/ory-hydra.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -79,12 +85,8 @@ export default function OryHydra<P extends OryHydraProfile>(
     name: "Hydra",
     type: "oidc",
     style: {
-      logo: "/ory.svg",
-      logoDark: "/ory-dark.svg",
       bg: "#fff",
       text: "#0F172A",
-      bgDark: "#4F46E5",
-      textDark: "#fff",
     },
     options,
   }

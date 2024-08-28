@@ -14,9 +14,10 @@ import {
   UntrustedHost,
 } from "../../errors.js"
 
-import type { AuthConfig, RequestInternal, SemverString } from "../../types.js"
+import type { RequestInternal, SemverString } from "../../types.js"
 import type { WarningCode } from "./logger.js"
 import { Adapter } from "../../adapters.js"
+import type { AuthConfig } from "../../index.js"
 
 type ConfigError =
   | InvalidCallbackUrl
@@ -96,8 +97,8 @@ export function assertConfig(
     return new UntrustedHost(`Host must be trusted. URL was: ${request.url}`)
   }
 
-  if (!options.secret) {
-    return new MissingSecret("Please define a `secret`.")
+  if (!options.secret?.length) {
+    return new MissingSecret("Please define a `secret`")
   }
 
   const callbackUrlParam = request.query?.callbackUrl as string | undefined
@@ -140,7 +141,7 @@ export function assertConfig(
 
       if (key) {
         return new InvalidEndpoints(
-          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint config. At least one of them is required.`
+          `Provider "${provider.id}" is missing both \`issuer\` and \`${key}\` endpoint config. At least one of them is required`
         )
       }
     }
@@ -151,7 +152,10 @@ export function assertConfig(
       hasWebAuthn = true
 
       // Validate simpleWebAuthnBrowserVersion
-      if (provider.simpleWebAuthnBrowserVersion && !isSemverString(provider.simpleWebAuthnBrowserVersion)) {
+      if (
+        provider.simpleWebAuthnBrowserVersion &&
+        !isSemverString(provider.simpleWebAuthnBrowserVersion)
+      ) {
         return new AuthError(
           `Invalid provider config for "${provider.id}": simpleWebAuthnBrowserVersion "${provider.simpleWebAuthnBrowserVersion}" must be a valid semver string.`
         )
@@ -161,18 +165,19 @@ export function assertConfig(
         // Make sure only one webauthn provider has "enableConditionalUI" set to true
         if (hasConditionalUIProvider) {
           return new DuplicateConditionalUI(
-            `Multiple webauthn providers have 'enableConditionalUI' set to True. Only one provider can have this option enabled at a time.`
+            `Multiple webauthn providers have 'enableConditionalUI' set to True. Only one provider can have this option enabled at a time`
           )
         }
         hasConditionalUIProvider = true
 
         // Make sure at least one formField has "webauthn" in its autocomplete param
-        const hasWebauthnFormField = Object.values(
-          provider.formFields
-        ).some((f) => f.autocomplete && f.autocomplete.toString().indexOf("webauthn") > -1)
+        const hasWebauthnFormField = Object.values(provider.formFields).some(
+          (f) =>
+            f.autocomplete && f.autocomplete.toString().indexOf("webauthn") > -1
+        )
         if (!hasWebauthnFormField) {
           return new MissingWebAuthnAutocomplete(
-            `Provider "${provider.id}" has 'enableConditionalUI' set to True, but none of its formFields have 'webauthn' in their autocomplete param.`
+            `Provider "${provider.id}" has 'enableConditionalUI' set to True, but none of its formFields have 'webauthn' in their autocomplete param`
           )
         }
       }
@@ -205,12 +210,17 @@ export function assertConfig(
 
   let requiredMethods: (keyof Adapter)[] = []
 
-  if (hasEmail || session?.strategy === "database" || (!session?.strategy && adapter)) {
+  if (
+    hasEmail ||
+    session?.strategy === "database" ||
+    (!session?.strategy && adapter)
+  ) {
     if (hasEmail) {
-      if (!adapter) return new MissingAdapter("Email login requires an adapter.")
+      if (!adapter) return new MissingAdapter("Email login requires an adapter")
       requiredMethods.push(...emailMethods)
     } else {
-      if (!adapter) return new MissingAdapter("Database session requires an adapter.")
+      if (!adapter)
+        return new MissingAdapter("Database session requires an adapter")
       requiredMethods.push(...sessionMethods)
     }
   }
@@ -220,10 +230,12 @@ export function assertConfig(
     if (options.experimental?.enableWebAuthn) {
       warnings.push("experimental-webauthn")
     } else {
-      return new ExperimentalFeatureNotEnabled("WebAuthn is an experimental feature. To enable it, set `experimental.enableWebAuthn` to `true` in your config.")
+      return new ExperimentalFeatureNotEnabled(
+        "WebAuthn is an experimental feature. To enable it, set `experimental.enableWebAuthn` to `true` in your config"
+      )
     }
 
-    if (!adapter) return new MissingAdapter("WebAuthn requires an adapter.")
+    if (!adapter) return new MissingAdapter("WebAuthn requires an adapter")
     requiredMethods.push(...webauthnMethods)
   }
 

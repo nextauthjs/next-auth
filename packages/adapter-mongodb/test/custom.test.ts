@@ -3,12 +3,11 @@ import { defaultCollections, format, MongoDBAdapter, _id } from "../src"
 import { MongoClient } from "mongodb"
 const name = "custom-test"
 const client = new MongoClient(`mongodb://localhost:27017/${name}`)
-const clientPromise = client.connect()
 
 const collections = { ...defaultCollections, Users: "some_userz" }
 
 runBasicTests({
-  adapter: MongoDBAdapter(clientPromise, {
+  adapter: MongoDBAdapter(client, {
     collections,
   }),
   db: {

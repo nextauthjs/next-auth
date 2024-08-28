@@ -77,13 +77,19 @@ export interface MattermostProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Mattermost from "@auth/core/providers/mattermost"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Mattermost({ clientId: MATTERMOST_CLIENT_ID, clientSecret: MATTERMOST_CLIENT_SECRET, issuer: MATTERMOST_ISSUER // The base url of your Mattermost instance. e.g `https://my-cool-server.cloud.mattermost.com` })],
+ *   providers: [
+ *     Mattermost({
+ *       clientId: MATTERMOST_CLIENT_ID,
+ *       clientSecret: MATTERMOST_CLIENT_SECRET,
+ *       issuer: MATTERMOST_ISSUER, // The base url of your Mattermost instance. e.g `https://my-cool-server.cloud.mattermost.com`
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -107,7 +113,7 @@ export interface MattermostProfile {
  * :::tip
  *
  * The Mattermost provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/mattermost.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -142,7 +148,7 @@ export default function Mattermost<P extends MattermostProfile>(
         image: null,
       }
     },
-    style: { logo: "/mattermost.svg", bg: "#000", text: "#fff" },
+    style: { bg: "#000", text: "#fff" },
     options: rest,
   }
 }

@@ -1,0 +1,259 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("./animated-stars.css");
+
+details > *:not(summary) {
+  @apply p-4;
+}
+
+:is(html[class~="dark"]) ::selection {
+  @apply bg-purple-500/40;
+}
+
+::selection {
+  @apply bg-purple-200/80;
+}
+
+/* Here because we can't safelist Nextra's tailwind classes
+* and this is used on the index.mdx page */
+._bg-primary-500 {
+  background-color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation) 50%
+  );
+}
+
+.underline-highlight {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -0.5rem;
+    left: -0.5rem;
+    right: -0.5rem;
+    height: 0.9rem;
+    z-index: -1;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/664131/underline.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+.gradient-bg {
+  background: url(/img/etc/rainbow.png);
+  background-size: cover;
+}
+
+.blur-shadow {
+  box-shadow: 6px -8px 10px rgb(250 245 255);
+}
+
+.button-primary {
+  background-color: rgb(147 51 234);
+  transition: background-color 0.2s ease-in-out;
+  box-shadow:
+    inset 0 0 0 2px #f3e5f529,
+    inset 0 -2px 1px #ce93d824,
+    inset 0 0 0 1px #6a1b9a36;
+}
+
+.button-primary:hover {
+  background-color: rgb(126 34 206);
+}
+
+div.nextra-code > pre {
+  @apply overflow-y-visible !bg-transparent dark:!bg-neutral-950;
+}
+div.nextra-code * pre {
+  --shiki-dark-bg: "transparent" !important;
+  @apply !bg-transparent;
+}
+
+pre code.nextra-code:not(:has(span)) {
+  padding-inline: 1rem;
+}
+
+:is(html[class~="dark"] .nextra-code span) {
+  color: var(--shiki-dark) !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+@layer components {
+  .break-word-legacy {
+    word-break: break-word;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 0.5rem !important;
+  height: 0.4rem !important;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  @apply !bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply !bg-neutral-300 transition-colors duration-300 dark:!bg-neutral-700;
+  border-radius: 100vh;
+  transition: all 250ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply !bg-neutral-300 dark:!bg-neutral-700;
+  background-clip: unset !important;
+  cursor: pointer;
+}
+
+/* Navbar GitHub Star Counter */
+.github-counter {
+  position: absolute;
+  color: #000;
+  top: -5px;
+  right: -16px;
+  font-size: 9px;
+  background-color: #ccc;
+  padding: 2px 4px;
+  border-radius: 10px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+div.nextra-search + a {
+  display: none;
+}
+
+html[data-theme="dark"] .github-counter {
+  background-color: #222;
+  color: #fff;
+}
+
+/* Tooltip transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+[data-scope="tooltip"][data-part="content"][data-state="open"] {
+  animation: fadeIn 250ms ease-out;
+}
+
+[data-scope="tooltip"][data-part="content"][data-state="closed"] {
+  animation: fadeOut 250ms ease-in;
+}
+
+/* Nextra Tabs buttons - fix ring cutoff from overflow-hidden */
+button[id^="headlessui-tabs-tab"] {
+  margin: 0 3px 0 3px;
+}
+
+#carbonads_bak {
+  @apply flex flex-col gap-1 rounded-md bg-neutral-100 p-3 text-xs text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
+
+  .carbon-text {
+    @apply dark:text-neutral-300;
+  }
+
+  .carbon-poweredby {
+    @apply dark:text-neutral-400;
+  }
+
+  #carbon-responsive .carbon-img {
+    flex: unset !important;
+  }
+  img {
+    @apply w-full !max-w-full rounded-[0.25rem];
+  }
+
+  #carbon-responsive .carbon-responsive-wrap {
+    border: none !important;
+    background-color: unset !important;
+    padding: 0 !important;
+  }
+}
+
+/* Sidebar hack for padding for focus ring */
+aside.nextra-sidebar-container .nextra-scrollbar > div {
+  padding: 4px;
+}
+
+.sponsoredBadge {
+  display: inline-block;
+  width: max-content;
+  font-size: 0.6rem;
+  border-radius: 2rem;
+  padding-inline: 0.5rem;
+  color: #696969;
+  @apply bg-neutral-200 dark:bg-neutral-950;
+}
+
+article.nextra-content table {
+  overflow-x: auto;
+}
+
+/* Hide Nextra Search 'kbd' on small screen sizes */
+div.nextra-search kbd {
+  @apply !hidden lg:!flex;
+}
+
+/* Native popover */
+[popover] {
+  position: absolute;
+  top: calc(3rem + anchor(top));
+  left: anchor(implicit center);
+  translate: -50% 0;
+  position-try-options: flip-block, flip-inline;
+
+  /* Final state of the exit animation */
+  opacity: 0;
+  transition:
+    opacity 300ms,
+    transform 300ms,
+    overlay 300ms allow-discrete,
+    display 300ms allow-discrete;
+}
+
+[popover]:popover-open {
+  opacity: 1;
+}
+
+@starting-style {
+  [popover]:popover-open {
+    opacity: 0;
+  }
+}

@@ -27,7 +27,6 @@ build
 dist
 
 # Generated files
-.docusaurus
 .cache-loader
 packages/next-auth/providers
 # copied from @auth/core
@@ -38,6 +37,9 @@ packages/*/*.d.ts.map
 packages/*/lib
 packages/**/generated
 .xata*
+
+# Qwik needs to use .mjs. REVIEW: Check back, can we just use .js?
+packages/*/*.mjs
 
 # Development app
 apps/dev/src/css
@@ -80,8 +82,8 @@ playwright/.cache
 # Turborepo
 .turbo
 
-# docusaurus
-docs/.docusaurus
+# Docs
+docs/.next
 docs/manifest.mjs
 
 # Core

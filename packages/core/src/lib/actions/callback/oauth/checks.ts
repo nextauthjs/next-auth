@@ -74,7 +74,7 @@ export const pkce = {
     const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
 
     if (!codeVerifier)
-      throw new InvalidCheck("PKCE code_verifier cookie was missing.")
+      throw new InvalidCheck("PKCE code_verifier cookie was missing")
 
     const value = await decode<CheckPayload>({
       ...options.jwt,
@@ -83,7 +83,7 @@ export const pkce = {
     })
 
     if (!value?.value)
-      throw new InvalidCheck("PKCE code_verifier value could not be parsed.")
+      throw new InvalidCheck("PKCE code_verifier value could not be parsed")
 
     // Clear the pkce code verifier cookie after use
     resCookies.push({
@@ -117,7 +117,7 @@ export const state = {
     if (!provider.checks.includes("state")) {
       if (data) {
         throw new InvalidCheck(
-          "State data was provided but the provider is not configured to use state."
+          "State data was provided but the provider is not configured to use state"
         )
       }
       return
@@ -155,7 +155,7 @@ export const state = {
 
     const state = cookies?.[options.cookies.state.name]
 
-    if (!state) throw new InvalidCheck("State cookie was missing.")
+    if (!state) throw new InvalidCheck("State cookie was missing")
 
     // IDEA: Let the user do something with the returned state
     const encodedState = await decode<CheckPayload>({
@@ -165,12 +165,12 @@ export const state = {
     })
 
     if (!encodedState?.value)
-      throw new InvalidCheck("State (cookie) value could not be parsed.")
+      throw new InvalidCheck("State (cookie) value could not be parsed")
 
     const decodedState = decodeState(encodedState.value)
 
     if (!decodedState)
-      throw new InvalidCheck("State (encoded) value could not be parsed.")
+      throw new InvalidCheck("State (encoded) value could not be parsed")
 
     if (decodedState.random !== paramRandom)
       throw new InvalidCheck(
@@ -214,7 +214,7 @@ export const nonce = {
     if (!provider?.checks?.includes("nonce")) return
 
     const nonce = cookies?.[options.cookies.nonce.name]
-    if (!nonce) throw new InvalidCheck("Nonce cookie was missing.")
+    if (!nonce) throw new InvalidCheck("Nonce cookie was missing")
 
     const value = await decode<CheckPayload>({
       ...options.jwt,
@@ -222,8 +222,7 @@ export const nonce = {
       salt: options.cookies.nonce.name,
     })
 
-    if (!value?.value)
-      throw new InvalidCheck("Nonce value could not be parsed.")
+    if (!value?.value) throw new InvalidCheck("Nonce value could not be parsed")
 
     // Clear the nonce cookie after use
     resCookies.push({
@@ -268,7 +267,11 @@ export function handleState(
 const WEBAUTHN_CHALLENGE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 type WebAuthnChallengeCookie = { challenge: string; registerData?: User }
 export const webauthnChallenge = {
-  async create(options: InternalOptions<WebAuthnProviderType>, challenge: string, registerData?: User) {
+  async create(
+    options: InternalOptions<WebAuthnProviderType>,
+    challenge: string,
+    registerData?: User
+  ) {
     const maxAge = WEBAUTHN_CHALLENGE_MAX_AGE
     const data: WebAuthnChallengeCookie = { challenge, registerData }
     const cookie = await signCookie(
@@ -286,12 +289,11 @@ export const webauthnChallenge = {
   async use(
     options: InternalOptions<WebAuthnProviderType>,
     cookies: RequestInternal["cookies"],
-    resCookies: Cookie[],
+    resCookies: Cookie[]
   ): Promise<WebAuthnChallengeCookie> {
     const challenge = cookies?.[options.cookies.webauthnChallenge.name]
 
-    if (!challenge)
-      throw new InvalidCheck("Challenge cookie missing.")
+    if (!challenge) throw new InvalidCheck("Challenge cookie missing")
 
     const value = await decode<CheckPayload>({
       ...options.jwt,
@@ -300,7 +302,7 @@ export const webauthnChallenge = {
     })
 
     if (!value?.value)
-      throw new InvalidCheck("Challenge value could not be parsed.")
+      throw new InvalidCheck("Challenge value could not be parsed")
 
     // Clear the pkce code verifier cookie after use
     const cookie = {

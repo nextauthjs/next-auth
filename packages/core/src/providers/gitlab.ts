@@ -66,13 +66,15 @@ export interface GitLabProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import GitLab from "@auth/core/providers/gitlab"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [GitLab({ clientId: GITLAB_CLIENT_ID, clientSecret: GITLAB_CLIENT_SECRET })],
+ *   providers: [
+ *     GitLab({ clientId: GITLAB_CLIENT_ID, clientSecret: GITLAB_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
@@ -92,7 +94,7 @@ export interface GitLabProfile extends Record<string, any> {
  * :::tip
  *
  * The GitLab provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/gitlab.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -118,13 +120,13 @@ export default function GitLab<P extends GitLabProfile>(
     userinfo: "https://gitlab.com/api/v4/user",
     profile(profile) {
       return {
-        id: profile.id.toString(),
+        id: profile.sub?.toString(),
         name: profile.name ?? profile.username,
         email: profile.email,
         image: profile.avatar_url,
       }
     },
-    style: { logo: "/gitlab.svg", bg: "#FC6D26", text: "#fff" },
+    style: { bg: "#FC6D26", text: "#fff" },
     options,
   }
 }

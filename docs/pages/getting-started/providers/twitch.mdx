@@ -1,0 +1,102 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/twitch.svg" height="64" width="64" />
+
+# Twitch Provider
+
+## Resources
+
+- [Twitch App Console](https://dev.twitch.tv/console/apps)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/twitch
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/twitch
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/twitch
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_TWITCH_ID
+AUTH_TWITCH_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Twitch from "next-auth/providers/twitch"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Twitch],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Twitch from "@auth/qwik/providers/twitch"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Twitch],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Twitch from "@auth/sveltekit/providers/twitch"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Twitch],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Twitch from "@auth/express/providers/twitch"
+
+app.use("/auth/*", ExpressAuth({ providers: [Twitch] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Twitch will redirect to the first redirect URI if multiple are added.

@@ -1,11 +1,9 @@
 import { redirect } from "@sveltejs/kit"
 import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
-import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
 
-import { Auth, raw, skipCSRFCheck } from "@auth/core"
-import type { AuthAction } from "@auth/core/types"
+import { Auth, createActionURL, raw } from "@auth/core"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 
@@ -17,7 +15,10 @@ export async function signIn(
   config: SvelteKitAuthConfig,
   event: RequestEvent
 ) {
-  const { request } = event
+  const {
+    request,
+    url: { protocol },
+  } = event
   const headers = new Headers(request.headers)
   const {
     redirect: shouldRedirect = true,
@@ -26,7 +27,7 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = createActionURL("signin", headers, config.basePath)
+  const base = createActionURL("signin", protocol, headers, env, config)
 
   if (!provider) {
     const url = `${base}?${new URLSearchParams({ callbackUrl })}`
@@ -58,7 +59,7 @@ export async function signIn(
   headers.set("Content-Type", "application/x-www-form-urlencoded")
   const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? []) {
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -78,16 +79,19 @@ export async function signOut(
   config: SvelteKitAuthConfig,
   event: RequestEvent
 ) {
-  const { request } = event
+  const {
+    request,
+    url: { protocol },
+  } = event
   const headers = new Headers(request.headers)
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL("signout", headers, config.basePath)
+  const url = createActionURL("signout", protocol, headers, env, config)
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
 
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? [])
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -105,9 +109,18 @@ export async function auth(
   setEnvDefaults(env, config)
   config.trustHost ??= true
 
-  const { request: req } = event
+  const {
+    request: req,
+    url: { protocol },
+  } = event
 
-  const sessionUrl = createActionURL("session", req.headers, config.basePath)
+  const sessionUrl = createActionURL(
+    "session",
+    protocol,
+    req.headers,
+    env,
+    config
+  )
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },
   })
@@ -126,22 +139,4 @@ export async function auth(
   if (!data || !Object.keys(data).length) return null
   if (status === 200) return data
   throw new Error(data.message)
-}
-
-/**
- * Extract the origin and base path from either `AUTH_URL` or `NEXTAUTH_URL` environment variables,
- * or the request's headers and the {@link NextAuthConfig.basePath} option.
- */
-export function createActionURL(
-  action: AuthAction,
-  headers: Headers,
-  basePath?: string
-) {
-  let url = env.AUTH_URL
-  if (!url) {
-    const host = headers.get("x-forwarded-host") ?? headers.get("host")
-    const proto = headers.get("x-forwarded-proto")
-    url = `${proto === "http" || dev ? "http" : "https"}://${host}${basePath}`
-  }
-  return new URL(`${url.replace(/\/$/, "")}/${action}`)
 }

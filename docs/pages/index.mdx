@@ -1,0 +1,213 @@
+import Link from "next/link"
+import { Pre, Code } from "nextra/components"
+import Footer from "@/components/Footer"
+import { RichTabs } from "@/components/RichTabs"
+import { LogosMarquee } from "@/components/LogosMarquee"
+import { Blur } from "@/components/Blur"
+import { Guides } from "@/components/Guides"
+import SvelteKit from "../public/img/etc/sveltekit.svg"
+import Express from "../public/img/etc/express.svg"
+import Next from "../public/img/etc/nextjs.svg"
+import Qwik from "../public/img/etc/qwik.svg"
+
+import { CaretRight } from "@/icons"
+
+<div className="relative overflow-hidden w-full h-full flex flex-col">
+  <section className="flex justify-center w-full px-8 xl:px-0 flex-col lg:flex-row self-center items-center lg:items-start gap-6 max-w-7xl pt-12 pb-24 sm:py-32 lg:py-56">
+    <div className="flex-col flex justify-start gap-10 lg:py-8 mx-8">
+      <div className="flex flex-col gap-8 justify-center py-2 items-center w-full">
+        <span className="text-6xl font-black lg:text-8xl">Auth.js</span>
+        <div className="flex flex-col gap-4 justify-center text-2xl font-bold text-center lg:text-3xl">
+          <div>Authentication for the Web.</div>
+          <div className="underline-highlight">Free and open source.</div>
+        </div>
+      </div>
+      <div className="text-lg justify-center items-center flex gap-4">
+        <Link
+          href="/getting-started"
+          className="p-3 w-1/2 text-center bg-violet-600 dark:bg-violet-800 text-white hover:dark:bg-violet-900 transition hover:bg-violet-700 duration-300"
+        >
+          Get Started
+        </Link>
+        <Link
+          href="https://github.com/nextauthjs/next-auth"
+          target="_blank"
+          className="p-3 w-1/2 justify-center flex gap-2 items-center dark:bg-gray-300 bg-violet-200 text-black transition duration-300 hover:dark:bg-gray-400 hover:bg-violet-300"
+        >
+          <svg className="size-5" viewBox="0 0 256 256">
+            <rect width="256" height="256" fill="none" />
+            <path
+              d="M119.83,56A52,52,0,0,0,76,32a51.92,51.92,0,0,0-3.49,44.7A49.28,49.28,0,0,0,64,104v8a48,48,0,0,0,48,48h48a48,48,0,0,0,48-48v-8a49.28,49.28,0,0,0-8.51-27.3A51.92,51.92,0,0,0,196,32a52,52,0,0,0-43.83,24Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+            <path
+              d="M104,232V192a32,32,0,0,1,32-32h0a32,32,0,0,1,32,32v40"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+            <path
+              d="M104,208H72a32,32,0,0,1-32-32A32,32,0,0,0,8,144"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+          Source
+        </Link>
+      </div>
+      <div className="text-lg flex-col flex gap-2 items-center">
+        <a
+          href="https://go.clerk.com/ew92wBC"
+          target="_blank"
+          className="group flex flex-col md:flex-row w-full items-center md:justify-between text-sm dark:bg-neutral-900/50 font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-50/60 backdrop-blur px-4 py-3 border border-neutral-300 dark:border-neutral-800 rounded-md ring-[6px] ring-black/[0.02] dark:ring-black/10"
+        >
+          <span>Looking for a hosted alternative?</span>
+          <span  
+            className="flex gap-0.5 items-center font-semibold text-violet-600 dark:text-violet-400 group"
+          >
+            Use Clerk
+            <CaretRight className="size-3 [&_polyline]:stroke-[px] transition group-hover:translate-x-0.5" />
+          </span>
+        </a>
+        <span className="text-xs text-neutral-400 dark:text-neutral-600">Sponsored</span>
+      </div>
+    </div>
+    <RichTabs
+      orientation="horizontal"
+      tabKey="hero"
+      defaultValue="nextjs"
+      className="w-full flex flex-col !py-8 md:!py-16 !m-0 max-w-xl xl:max-w-2xl lg:self-start"
+    >
+      <RichTabs.List className="justify-between p-2 rounded-t-lg bg-white/40 backdrop-blur dark:bg-neutral-950/25">
+        <div className="flex gap-2">
+          {[
+            { value: "express", src: Express,  name: "Express", darkInvert: true },
+            { value: "nextjs", src: Next, name: "Next.js", darkInvert: true },
+            { value: "qwik", src: Qwik,  name: "Qwik", darkInvert: false },
+            { value: "sveltekit", src: SvelteKit,  name: "SvelteKit", darkInvert: false },
+          ].map((trigger) => (
+            <RichTabs.Trigger
+              key={trigger.value}
+              title={trigger.name}
+              value={trigger.value}
+              orientation="vertical"
+              className=" !border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 aria-selected:!text-white dark:bg-neutral-800 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 hover:bg-violet-200 hover:dark:bg-violet-900/20 !font-normal"
+            >
+              <img
+                width="24"
+                src={trigger.src}
+                alt={`${trigger.name} Logo`}
+                className={trigger.darkInvert ? 'dark:invert': '' }
+              />
+            </RichTabs.Trigger>
+          ))}
+          <Link
+            href="/getting-started/integrations"
+            className="!border-0 aria-selected:!bg-violet-600 aria-selected:dark:!bg-violet-900 dark:bg-neutral-900 bg-white !h-auto !w-auto !flex-row !gap-2 !justify-start p-2 px-3 rounded-md outline-none transition-all duration-300 flex items-center hover:bg-violet-200 hover:dark:bg-violet-900/20"
+          >
+            <span className="hidden text-sm md:block">More</span>
+            <CaretRight className="size-4" />
+          </Link>
+        </div>
+        <div className="inline-flex gap-2 items-center self-end pr-4 h-12">
+          <div className="bg-green-300 rounded-full size-4"></div>
+          <div className="bg-amber-300 rounded-full size-4"></div>
+          <div className="bg-red-300 rounded-full size-4"></div>
+        </div>
+      </RichTabs.List>
+      <div className="p-2 pt-0 w-full rounded-b-lg shadow-md bg-white/40 backdrop-blur dark:bg-neutral-950/25 [&_div]:border-0 [&_div]:shadow-none [&>div.h-full>div>div>pre]:dark:!bg-neutral-950/60 [&>div.h-full>div>div>pre]:!bg-white/60">
+      {Object.entries({
+        nextjs: `\
+// auth.ts
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+export const { auth, handlers } = NextAuth({ providers: [GitHub] })
+
+// middleware.ts
+export { auth as middleware } from "@/auth"
+
+// app/api/auth/[...nextauth]/route.ts
+import { handlers } from "@/auth"
+export const { GET, POST } = handlers
+`,
+          sveltekit: `\
+// src/auth.ts
+import { SvelteKitAuth } from "@auth/sveltekit"
+import GitHub from '@auth/sveltekit/providers/github'
+
+export const { handle } = SvelteKitAuth({
+  providers: [GitHub],
+})
+
+// src/hooks.server.ts
+export { handle } from "./auth"
+`,
+          express: `\
+// server.ts
+import { express } from "express"
+import { ExpressAuth } from "@auth/express"
+import GitHub from "@auth/express/providers/github"
+
+const app = express()
+
+app.use("/auth/\*", ExpressAuth({ providers: [GitHub] }))
+`,
+          qwik: `\
+// src/routes/plugin@auth.ts
+import { QwikAuth } from "@auth/qwik"
+import GitHub from "@auth/qwik/providers/github"
+export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] }))
+`
+}).map(([key, code]) =>
+
+  <RichTabs.Content
+    key={key}
+    orientation="vertical"
+    value={key}
+    className="h-full"
+    tabIndex={-1}
+  >
+    <Pre data-language="tsx" data-copy="">
+      <Code data-language="tsx">
+        {code}
+      </Code>
+    </Pre>
+  </RichTabs.Content>
+)}
+</div>
+</RichTabs>
+
+  </section>
+  <Guides />
+  <section
+    className="flex relative h-[40rem] flex-col justify-between items-center pt-24 pb-12
+    bg-neutral-200 dark:bg-neutral-900 overflow-hidden"
+  >
+    <div
+      className="z-10 flex gap-4 justify-start items-center text-2xl md:text-3xl font-bold
+      text-center text-white lg:text-4xl h-full"
+    >
+      <div className="leading-normal text-slate-800 px-12 dark:text-slate-200 pb-12 dark:drop-shadow-none">
+        Supports all these providers and more!
+      </div>
+    </div>
+    <LogosMarquee />
+  </section>
+  <Footer className="bg-white dark:bg-neutral-950 py-8 !m-0" />
+  <Blur />
+  <div className="overflow-hidden bg-animation -z-10">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    <div id="stars4"></div>
+  </div>
+</div>

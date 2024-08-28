@@ -1,26 +1,39 @@
+import { join } from "node:path"
 import { defineConfig, devices } from "@playwright/test"
+import * as dotenv from "dotenv"
 
-/** See https://playwright.dev/docs/test-configuration. */
+if (!process.env.CI) {
+  const path = process.env.TEST_DOCKER
+    ? join(process.cwd(), "..", "..", "..", "packages", "core", ".env")
+    : join(process.cwd(), "..", "core", ".env")
+
+  dotenv.config({ path })
+}
+
+/** See https://playwright.dev/docs/api/class-testconfig. */
 export default defineConfig({
-  testDir: `../core/test/e2e`, // TODO: `core` should not be hardcoded here
+  testDir: "../",
+  testMatch: "**/test/e2e/*.spec.ts",
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
-  use: { trace: "on-first-retry" },
+  reporter: process.env.CI
+    ? "dot"
+    : [["line"], ["html", { open: "on-failure" }]],
+  use: { trace: "on" },
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], channel: "chrome" },
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
   webServer: {
-    // TODO: Create test app instead of using the `dev` app.
-    command:
-      "turbo run build --filter=next-auth-app && cd ../../apps/dev/nextjs && pnpm start",
+    cwd: "../../",
+    command: "turbo run dev --filter=next-auth-app",
     url: "http://localhost:3000",
-    timeout: 10_000,
-    reuseExistingServer: !process.env.CI,
+    timeout: 20_000,
+    stdout: process.env.CI ? "ignore" : "pipe",
+    stderr: "pipe",
+    reuseExistingServer: true,
   },
 })

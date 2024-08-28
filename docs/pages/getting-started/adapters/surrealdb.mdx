@@ -1,0 +1,164 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/surrealdb.svg" height="64" width="64" />
+
+# SurrealDB Adapter
+
+## Resources
+
+- [SurrealDB documentation](https://www.surrealdb.com/docs)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install @auth/surrealdb-adapter surrealdb.js
+```
+
+### Environment Variables
+
+```sh
+AUTH_SURREALDB_CONNECTION
+AUTH_SURREALDB_USERNAME
+AUTH_SURREALDB_PASSWORD
+AUTH_SURREALDB_NS
+AUTH_SURREALDB_DB
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
+import clientPromise from "./lib/surrealdb"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: SurrealDBAdapter(clientPromise),
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
+import clientPromise from "./lib/surrealdb"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: SurrealDBAdapter(clientPromise),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
+import clientPromise from "./lib/surrealdb"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: SurrealDBAdapter(clientPromise),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
+import clientPromise from "./lib/surrealdb"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: SurrealDBAdapter(clientPromise),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+The SurrealDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `SurrealDBClient` that is connected already. Below you can see an example how to do this.
+
+### Authorization
+
+#### Option 1 – Using RPC:
+
+```ts filename="./lib/surrealdb.ts"
+import { Surreal } from "surrealdb.js"
+
+const connectionString = process.env.AUTH_SURREALDB_CONNECTION
+const user = process.env.AUTH_SURREALDB_USERNAME
+const pass = process.env.AUTH_SURREALDB_PASSWORD
+const ns = process.env.AUTH_SURREALDB_NS
+const db = process.env.AUTH_SURREALDB_DB
+
+const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
+  const db = new Surreal()
+  try {
+    await db.connect(`${connectionString}/rpc`, {
+      ns,
+      db,
+      auth: { user, pass },
+    })
+    resolve(db)
+  } catch (e) {
+    reject(e)
+  }
+})
+
+// Export a module-scoped MongoClient promise. By doing this in a
+// separate module, the client can be shared across functions.
+export default clientPromise
+```
+
+#### Option 2 – Using HTTP:
+
+Useful in serverless environments like Vercel.
+
+```ts filename="./lib/surrealdb.ts"
+import { ExperimentalSurrealHTTP } from "surrealdb.js"
+
+const connectionString = process.env.AUTH_SURREALDB_CONNECTION
+const user = process.env.AUTH_SURREALDB_USERNAME
+const pass = process.env.AUTH_SURREALDB_PASSWORD
+const ns = process.env.AUTH_SURREALDB_NS
+const db = process.env.AUTH_SURREALDB_DB
+
+const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(
+  async (resolve, reject) => {
+    try {
+      const db = new ExperimentalSurrealHTTP(connectionString, {
+        fetch,
+        ns,
+        db,
+        auth: { user, pass },
+      })
+      resolve(db)
+    } catch (e) {
+      reject(e)
+    }
+  }
+)
+
+// Export a module-scoped MongoClient promise. By doing this in a
+// separate module, the client can be shared across functions.
+export default clientPromise
+```

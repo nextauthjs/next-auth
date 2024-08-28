@@ -1,14 +1,12 @@
-import { test, beforeAll, expect } from "vitest"
+import { beforeAll } from "vitest"
 
+import { D1Adapter, up, getRecord } from "../src/"
 import {
-  D1Adapter,
-  up,
-  getRecord,
   GET_USER_BY_ID_SQL,
   GET_SESSION_BY_TOKEN_SQL,
   GET_ACCOUNT_BY_PROVIDER_AND_PROVIDER_ACCOUNT_ID_SQL,
   GET_VERIFICATION_TOKEN_BY_IDENTIFIER_AND_TOKEN_SQL,
-} from "../src"
+} from "../src/queries"
 import {
   AdapterSession,
   AdapterUser,
@@ -22,7 +20,6 @@ const sqliteDB = new Database(":memory:")
 let db = new D1Database(new D1DatabaseAPI(sqliteDB as any))
 let adapter = D1Adapter(db)
 
-// put stuff here if we need some async init
 beforeAll(async () => await up(db))
 runBasicTests({
   adapter,

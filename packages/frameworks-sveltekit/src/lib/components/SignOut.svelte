@@ -5,7 +5,6 @@
   export let className = ""
   export let options: Parameters<typeof signOut>[0] = undefined
   export let signOutPage = "signout"
-  
 </script>
 
 <form
@@ -23,5 +22,7 @@
       <input type="hidden" name="redirectTo" value={options.redirectTo} />
     {/if}
   {/if}
-  <button type="submit"><slot /></button>
+  <button type="submit">
+    <slot name="submitButton">Sign Out</slot>
+  </button>
 </form>

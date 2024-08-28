@@ -1,0 +1,100 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/patreon.svg" height="64" width="64" />
+
+# Patreon Provider
+
+## Resources
+
+- [Patreon OAuth documentation](https://docs.patreon.com/#apiv2-oauth)
+- [Patreon Platform](https://www.patreon.com/portal/registration/register-clients)
+- [ApiV2 Scopes](https://docs.patreon.com/#scopes)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/patreon
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/patreon
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/patreon
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_PATREON_ID
+AUTH_PATREON_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Patreon from "next-auth/providers/patreon"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Patreon],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Patreon from "@auth/qwik/providers/patreon"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Patreon],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Patreon from "@auth/sveltekit/providers/patreon"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Patreon],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Patreon from "@auth/express/providers/patreon"
+
+app.use("/auth/*", ExpressAuth({ providers: [Patreon] }))
+```
+
+  </Code.Express>
+</Code>

@@ -1,10 +1,28 @@
-import type { AuthAction, AuthConfig } from "../../types.js"
+import type { AuthAction } from "../../types.js"
+import type { AuthConfig } from "../../index.js"
+import { setLogger } from "./logger.js"
 
-/** Set default env variables on the config object */
-export function setEnvDefaults(envObject: any, config: AuthConfig) {
+/**
+ *  Set default env variables on the config object
+ * @param suppressWarnings intended for framework authors.
+ */
+export function setEnvDefaults(
+  envObject: any,
+  config: AuthConfig,
+  suppressBasePathWarning = false
+) {
   try {
     const url = envObject.AUTH_URL
-    if (url && !config.basePath) config.basePath = new URL(url).pathname
+    if (url) {
+      if (config.basePath) {
+        if (!suppressBasePathWarning) {
+          const logger = setLogger(config)
+          logger.warn("env-url-basepath-redundant")
+        }
+      } else {
+        config.basePath = new URL(url).pathname
+      }
+    }
   } catch {
   } finally {
     config.basePath ??= `/auth`
@@ -25,11 +43,12 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     envObject.AUTH_URL ??
     envObject.AUTH_TRUST_HOST ??
     envObject.VERCEL ??
+    envObject.CF_PAGES ??
     envObject.NODE_ENV !== "production"
   )
   config.providers = config.providers.map((p) => {
     const finalProvider = typeof p === "function" ? p({}) : p
-    const ID = finalProvider.id.toUpperCase()
+    const ID = finalProvider.id.toUpperCase().replace(/-/g, "_")
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
       finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
       finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
@@ -48,15 +67,39 @@ export function createActionURL(
   protocol: string,
   headers: Headers,
   envObject: any,
-  basePath?: string
+  config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
-  let url = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
-  if (!url) {
-    const host = headers.get("x-forwarded-host") ?? headers.get("host")
-    if (!host) throw new TypeError("Missing host")
-    const proto = headers.get("x-forwarded-proto") ?? protocol
-    url = `${proto === "http" ? "http" : "https"}://${host}${basePath}`
+  const basePath = config?.basePath
+  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+
+  let url: URL
+  if (envUrl) {
+    url = new URL(envUrl)
+    if (basePath && basePath !== "/" && url.pathname !== "/") {
+      if (url.pathname !== basePath) {
+        const logger = setLogger(config)
+        logger.warn("env-url-basepath-mismatch")
+      }
+      url.pathname = "/"
+    }
+  } else {
+    const detectedHost = headers.get("x-forwarded-host") ?? headers.get("host")
+    const detectedProtocol =
+      headers.get("x-forwarded-proto") ?? protocol ?? "https"
+    const _protocol = detectedProtocol.endsWith(":")
+      ? detectedProtocol
+      : detectedProtocol + ":"
+
+    url = new URL(`${_protocol}//${detectedHost}`)
   }
 
-  return new URL(`${url.replace(/\/$/, "")}/${action}`)
+  // remove trailing slash
+  const sanitizedUrl = url.toString().replace(/\/$/, "")
+
+  if (basePath) {
+    // remove leading and trailing slash
+    const sanitizedBasePath = basePath?.replace(/(^\/|\/$)/g, "") ?? ""
+    return new URL(`${sanitizedUrl}/${sanitizedBasePath}/${action}`)
+  }
+  return new URL(`${sanitizedUrl}/${action}`)
 }

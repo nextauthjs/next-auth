@@ -21,19 +21,24 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import FourSquare from "@auth/core/providers/foursquare"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FourSquare({ clientId: FOURSQUARE_CLIENT_ID, clientSecret: FOURSQUARE_CLIENT_SECRET })],
+ *   providers: [
+ *     FourSquare({
+ *       clientId: FOURSQUARE_CLIENT_ID,
+ *       clientSecret: FOURSQUARE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
  *
- *  - [FourSquare OAuth documentation](https://developer.foursquare.com/docs/places-api/authentication/#web-applications)
+ *  - [FourSquare OAuth documentation](https://docs.foursquare.com/developer/reference/authentication)
  *
  * ### Notes
  *
@@ -47,7 +52,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * :::tip
  *
  * The FourSquare provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/foursquare.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -90,7 +95,6 @@ export default function Foursquare(
       }
     },
     style: {
-      logo: "/foursquare.svg",
       bg: "#000",
       text: "#fff",
     },

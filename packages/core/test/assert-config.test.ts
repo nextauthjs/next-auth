@@ -29,7 +29,7 @@ describe("Assert user config correctness", () => {
         "There was a problem with the server configuration. Check the server logs for more information.",
     })
     expect(logger?.error).toHaveBeenCalledWith(
-      new MissingSecret("Please define a `secret`.")
+      new MissingSecret("Please define a `secret`")
     )
   })
 
@@ -46,7 +46,7 @@ describe("Assert user config correctness", () => {
     })
     expect(logger?.error).toHaveBeenCalledWith(
       new UntrustedHost(
-        "Host must be trusted. URL was: http://authjs.test/auth/session"
+        "Host must be trusted. URL was: https://authjs.test/auth/session"
       )
     )
   })
@@ -58,7 +58,7 @@ describe("Assert user config correctness", () => {
         "from %s",
         async (type) => {
           const cookieName =
-            type === "cookie" ? "authjs.callback-url" : "custom-name"
+            type === "cookie" ? "__Secure-authjs.callback-url" : "custom-name"
 
           const { response, logger } = await makeAuthRequest({
             action: "session",
@@ -92,11 +92,11 @@ describe("Assert user config correctness", () => {
     it.each<[Provider, string]>([
       [
         () => ({ type: "oidc", id: "provider-id", name: "" }),
-        'Provider "provider-id" is missing both `issuer` and `authorization` endpoint config. At least one of them is required.',
+        'Provider "provider-id" is missing both `issuer` and `authorization` endpoint config. At least one of them is required',
       ],
       [
         { type: "oidc", id: "provider-id", name: "" },
-        'Provider "provider-id" is missing both `issuer` and `authorization` endpoint config. At least one of them is required.',
+        'Provider "provider-id" is missing both `issuer` and `authorization` endpoint config. At least one of them is required',
       ],
       [
         {
@@ -105,7 +105,7 @@ describe("Assert user config correctness", () => {
           id: "provider-id",
           name: "",
         },
-        'Provider "provider-id" is missing both `issuer` and `token` endpoint config. At least one of them is required.',
+        'Provider "provider-id" is missing both `issuer` and `token` endpoint config. At least one of them is required',
       ],
       [
         {
@@ -115,7 +115,7 @@ describe("Assert user config correctness", () => {
           id: "provider-id",
           name: "",
         },
-        'Provider "provider-id" is missing both `issuer` and `userinfo` endpoint config. At least one of them is required.',
+        'Provider "provider-id" is missing both `issuer` and `userinfo` endpoint config. At least one of them is required',
       ],
       [
         {
@@ -127,7 +127,7 @@ describe("Assert user config correctness", () => {
           id: "oauth-provider",
           name: "",
         },
-        'Provider "oauth-provider" is missing both `issuer` and `userinfo` endpoint config. At least one of them is required.',
+        'Provider "oauth-provider" is missing both `issuer` and `userinfo` endpoint config. At least one of them is required',
       ],
     ])("OAuth/OIDC: invalid endpoints %j", async (provider, error) => {
       const { response, logger } = await makeAuthRequest({

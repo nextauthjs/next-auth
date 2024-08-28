@@ -1,12 +1,7 @@
-import type { Client } from "oauth4webapi"
+import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
-import type {
-  AuthConfig,
-  Awaitable,
-  Profile,
-  TokenSet,
-  User,
-} from "../types.js"
+import type { Awaitable, Profile, TokenSet, User } from "../types.js"
+import type { AuthConfig } from "../index.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -50,6 +45,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   request?: EndpointRequest<C, R, P>
   /** @internal */
   conform?: (response: Response) => Awaitable<Response | undefined>
+  clientPrivateKey?: CryptoKey | PrivateKey
 }
 
 /**
@@ -98,12 +94,16 @@ export type ProfileCallback<Profile> = (
 export type AccountCallback = (tokens: TokenSet) => TokenSet | undefined | void
 
 export interface OAuthProviderButtonStyles {
-  logo: string
-  logoDark?: string
-  bg: string
-  bgDark?: string
-  text: string
-  textDark?: string
+  logo?: string
+  /**
+   * @deprecated
+   */
+  text?: string
+  /**
+   * @deprecated Please use 'brandColor' instead
+   */
+  bg?: string
+  brandColor?: string
 }
 
 /** TODO: Document */
@@ -213,7 +213,7 @@ export interface OAuth2Config<Profile>
    *
    * Automatic account linking on sign in is not secure
    * between arbitrary providers and is disabled by default.
-   * Learn more in our [Security FAQ](https://authjs.dev/reference/faq#security).
+   * Learn more in our [Security FAQ](https://authjs.dev/concepts#security).
    *
    * However, it may be desirable to allow automatic account linking if you trust that the provider involved has securely verified the email address
    * associated with the account. Set `allowDangerousEmailAccountLinking: true`
@@ -240,6 +240,11 @@ export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
   checks?: Array<NonNullable<OAuth2Config<Profile>["checks"]>[number] | "nonce">
+  /**
+   * If set to `false`, the `userinfo_endpoint` will be fetched for the user data.
+   * @note An `id_token` is still required to be returned during the authorization flow.
+   */
+  idToken?: boolean
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
@@ -259,6 +264,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
+    clientPrivateKey?: CryptoKey | PrivateKey
     /** @internal */
     conform?: TokenEndpointHandler["conform"]
   }
@@ -282,6 +288,7 @@ export type OAuthConfigInternal<Profile> = Omit<
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
+  idToken: OIDCConfig<Profile>["idToken"]
 }
 
 export type OAuthUserConfig<Profile> = Omit<

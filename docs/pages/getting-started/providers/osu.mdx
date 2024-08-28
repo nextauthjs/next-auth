@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/osu.svg" height="64" width="64" />
+
+# Osu Provider
+
+## Resources
+
+- [osu! OAuth documentation](https://osu.ppy.sh/docs/index.html#authentication)
+- [osu! app console](https://osu.ppy.sh/home/account/edit#new-oauth-application)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/osu
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/osu
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/osu
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_OSU_ID
+AUTH_OSU_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Osu from "next-auth/providers/osu"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Osu],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Osu from "@auth/qwik/providers/osu"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Osu],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Osu from "@auth/sveltekit/providers/osu"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Osu],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Osu from "@auth/express/providers/osu"
+
+app.use("/auth/*", ExpressAuth({ providers: [Osu] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- osu! does not provide a user email.

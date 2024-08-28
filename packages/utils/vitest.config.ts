@@ -2,6 +2,7 @@
 
 import { defineConfig } from "vite"
 import swc from "unplugin-swc"
+import preact from "@preact/preset-vite"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,5 +17,5 @@ export default defineConfig({
     },
     setupFiles: ["../utils/vitest-setup.ts"],
   },
-  plugins: [swc.vite()],
+  plugins: [swc.vite(), preact({ include: ["**/*[jt]sx"] })],
 })

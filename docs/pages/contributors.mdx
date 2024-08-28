@@ -1,0 +1,99 @@
+import { Steps } from "nextra/components"
+
+# Contributors
+
+Maintaining Auth.js as an open source project is very hard work. All the core team members have regular jobs and the library is maintained and developed out of good will in our free time. Donations can enable the core team to eventually work full time on Auth.js to provide more features and an even better developer experience!
+
+<div className="my-4 flex gap-2">
+  <img src="/img/etc/opencollective-logomark.svg" width="64" />
+  <img src="/img/etc/opencollective-wordmark.svg" width="250" />
+</div>
+
+You can find us on [Open Collective](https://opencollective.com/nextauth). We are very thankful for all of our existing contributors and would be delighted if you or your company would decide to join them.
+
+## Core team
+
+Without these people, the project could not have become one of the most used authentication libraries in its category.
+
+- [Balázs Orbán](https://github.com/balazsorban44) - Lead Maintainer
+- [Thang Vu](https://github.com/ThangHuuVu) - Maintainer
+- [Nico Domino](https://github.com/ndom91) - Maintainer
+- [Lluis Agusti](https://github.com/lluia) - Maintainer
+
+## Special thanks
+
+Special thanks to Filip Skokan for their feedback and high-quality OAuth libraries that we build on, Lori Karikari for creating most of the original provider configurations, Fredrik Pettersen for creating the original Prisma Adapter, Gerald Nolan for adding support for Sign in with Apple, Jefferson Bledsoe for working on original testing automation, and Tom Grey for their work/guidance on the API Reference documentation.
+
+- [Filip Skokan](https://github.com/panva)
+- [Lori Karikari](https://github.com/LoriKarikari)
+- [Fredrik Pettersen](https://github.com/Fumler)
+- [Gerald Nolan](https://github.com/geraldnolan)
+- [Jefferson Bledsoe](https://github.com/JeffersonBledsoe)
+- [Tom Grey](https://github.com/tgreyuk)
+
+## Other contributors
+
+Auth.js as it exists today has been possible thanks to the work of many individual contributors.
+
+Thank you to the [dozens of individual contributors](https://github.com/nextauthjs/next-auth/graphs/contributors) who have helped shape Auth.js.
+
+## History
+
+<Steps>
+
+### 2016 – Initial release
+
+NextAuth.js was originally developed by [Iain Collins](https://github.com/iaincollins) in 2016 as an authentication framework specific to [Next.js](https://nextjs.org/).
+
+### 2020 – Refactor and clean up
+
+NextAuth.js was rebuilt from the ground up to support serverless, MySQL, Postgres, MongoDB, JSON Web Tokens and built-in support for over a dozen authentication providers.
+
+[Balázs Orbán](https://github.com/balazsorban44) joined as a co-maintainer, helping to offload some of the work from Iain.
+
+### 2021 – Multi-framework effort
+
+Iain and Balázs defined future goals for the project. Their vision aligned perfectly, discussing that NextAuth.js could one day become useful for other frameworks.
+
+Iain left the project to focus on other things, knowing that Balázs will work on their shared vision.
+
+Balázs became the lead maintainer of the project.
+
+Efforts started to move NextAuth.js to other frameworks and to support as many databases and providers as possible.
+
+It was shown that a single package could not support all of these use cases.
+
+Database Adapters were moved to their packages under the name `@next-auth/*-adapter`.
+
+### 2022 – Birth of Auth.js
+
+Based on NextAuth.js, Balázs released [Auth.js (`@auth/core`)](https://twitter.com/balazsorban44/status/1603082914362986496), a runtime/framework independent core library that is the base of
+all Auth.js libraries. A complete rewrite that still shared most of the public API with NextAuth.js but internally was very different.
+
+### 2023 – Auth.js silent releases
+
+Due to personal reasons, Balázs had to step down as the lead maintainer, but was still contributing. The project was taken over by [Thang Huu Vu](https://github.com/thanghuuvu) for a while.
+
+Balázs returned and continued the work on Auth.js. As a pilot project, `next-auth@experimental` (later `next-auth@beta`) releases were published
+to work out what was needed in the core library to support other frameworks and what was framework specific from the old NextAuth.js implementation.
+
+The new default documentation page became [authjs.dev](https://authjs.dev) (the one you are reading right now), and the old NextAuth.js documentation at [next-auth.js.org](https://next-auth.js.org) was kept around
+to document NextAuth.js v4 and is kept only as a back reference.
+
+Database Adapters were moved from the `@next-auth/*-adapter` namespace to `@auth/*-adapter`, indicating that they are not NextAuth.js specific anymore.
+
+Community integrations started showing up, making it clear that the initial vision of Auth.js was shared by many.
+
+### 2024 – Growing the Auth.js ecosystem
+
+With the release of [NextAuth.js v5](/getting-started/migrating-to-v5), now all Auth.js libraries are based on the same core library.
+**The name "NextAuth.js" designates only the Next.js integration**, while Auth.js refers to the core library and our ecosystem as a whole.
+Other integrations will generally be refered to with their framework name + Auth, e.g. "SvelteKit Auth" or "Express Auth".
+
+All official integrations are distributed under the `@auth` scope except for NextAuth.js, which is distributed under `next-auth` to reduce migration overhead.
+
+</Steps>
+
+## Notes
+
+The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.

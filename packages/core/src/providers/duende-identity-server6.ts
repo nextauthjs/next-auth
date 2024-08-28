@@ -28,13 +28,19 @@ export interface DuendeISUser extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import DuendeIdentityServer6 from "@auth/core/providers/duende-identity-server6"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [DuendeIdentityServer6({ clientId: DIS6_CLIENT_ID, clientSecret: DIS6_CLIENT_SECRET, issuer: DIS6_ISSUER })],
+ *   providers: [
+ *     DuendeIdentityServer6({
+ *       clientId: DIS6_CLIENT_ID,
+ *       clientSecret: DIS6_CLIENT_SECRET,
+ *       issuer: DIS6_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -53,10 +59,10 @@ export interface DuendeISUser extends Record<string, any> {
  *
  * You can sign in to the demo service with either <b>bob/bob</b> or <b>alice/alice</b>.
  *
- * ```js title=pages/api/auth/[...nextauth].js
- * import DuendeIDS6Provider from "next-auth/providers/duende-identity-server6"
+ * ```ts
+ * import DuendeIdentityServer6 from "@auth/core/providers/duende-identity-server6"
  * providers: [
- *   DuendeIDS6Provider({
+ *   DuendeIdentityServer6({
  *     clientId: "interactive.confidential",
  *     clientSecret: "secret",
  *     issuer: "https://demo.duendesoftware.com",
@@ -69,7 +75,7 @@ export interface DuendeISUser extends Record<string, any> {
  * :::tip
  *
  * The DuendeIdentityServer6 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/duende-identity-server6.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *

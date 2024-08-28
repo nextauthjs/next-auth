@@ -1,0 +1,99 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/okta.svg" height="64" width="64" />
+
+# Okta Provider
+
+## Resources
+
+- [Okta OAuth documentation](https://developer.okta.com/docs/reference/api/oidc)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/okta
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/okta
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/okta
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_OKTA_ID
+AUTH_OKTA_SECRET
+AUTH_OKTA_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Okta from "next-auth/providers/okta"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Okta],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Okta from "@auth/qwik/providers/okta"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Okta],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Okta from "@auth/sveltekit/providers/okta"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Okta],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Okta from "@auth/express/providers/okta"
+
+app.use("/auth/*", ExpressAuth({ providers: [Okta] }))
+```
+
+  </Code.Express>
+</Code>

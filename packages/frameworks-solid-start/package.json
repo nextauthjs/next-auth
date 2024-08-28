@@ -1,11 +1,11 @@
 {
   "name": "@auth/solid-start",
   "description": "Authentication for SolidStart.",
-  "version": "0.5.2",
+  "version": "0.12.2",
   "type": "module",
   "files": [
-    "client.*",
-    "index.*",
+    "*.js",
+    "*.d.ts*",
     "src"
   ],
   "exports": {
@@ -23,10 +23,10 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
+    "build": "tsc",
     "patch": "npm version patch --no-git-tag-version",
-    "test": "vitest -c ../utils/vitest.config.ts",
-    "clean": "rm -rf client.* index.*"
+    "test": "vitest run -c ../utils/vitest.config.ts",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "publishConfig": {
     "access": "public"
@@ -38,8 +38,7 @@
     "@solidjs/meta": "^0.28.0",
     "@types/node": "^18.7.14",
     "solid-js": "^1.5.7",
-    "solid-start": "^0.2.14",
-    "tsup": "^6.5.0"
+    "solid-start": "^0.2.14"
   },
   "peerDependencies": {
     "solid-js": "^1.5.7",

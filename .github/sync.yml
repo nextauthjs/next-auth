@@ -19,15 +19,22 @@ nextauthjs/solid-start-auth-example:
   - .github/FUNDING.yml
   - LICENSE
 
-nextauthjs/next-auth-gatsby-example:
-  - source: apps/playgrounds/gatsby
+nextauthjs/next-auth-example:
+  - source: apps/examples/nextjs
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml
   - LICENSE
 
-nextauthjs/next-auth-example:
-  - source: apps/examples/nextjs
+nextauthjs/next-auth-pages-example:
+  - source: apps/examples/nextjs-pages
+    dest: .
+    deleteOrphaned: true
+  - .github/FUNDING.yml
+  - LICENSE
+
+nextauthjs/qwik-auth-example:
+  - source: apps/examples/qwik
     dest: .
     deleteOrphaned: true
   - .github/FUNDING.yml

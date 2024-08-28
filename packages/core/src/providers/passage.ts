@@ -45,13 +45,19 @@ export interface PassageProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Passage from "@auth/core/providers/passage"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Passage({ clientId: PASSAGE_ID, clientSecret: PASSAGE_SECRET, issuer: PASSAGE_ISSUER })],
+ *   providers: [
+ *     Passage({
+ *       clientId: PASSAGE_ID,
+ *       clientSecret: PASSAGE_SECRET,
+ *       issuer: PASSAGE_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -67,7 +73,7 @@ export interface PassageProfile {
  * :::tip
  *
  * The Passage provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/passage.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -90,9 +96,7 @@ export default function Passage(
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_basic" },
     style: {
-      logo: "/passage.svg",
-      bg: "#fff",
-      text: "#000",
+      brandColor: "#3d53f6",
     },
     options: config,
   }

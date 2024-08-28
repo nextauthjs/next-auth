@@ -1,5 +1,5 @@
 import { createTransport } from "nodemailer"
-import { EmailConfig, html, text } from "./email.js"
+import { html, text } from "../lib/utils/email.js"
 import { AuthError } from "../errors.js"
 
 import type { Transport, TransportOptions } from "nodemailer"
@@ -10,6 +10,7 @@ import * as SMTPTransport from "nodemailer/lib/smtp-transport/index.js"
 import * as SMTPPool from "nodemailer/lib/smtp-pool/index.js"
 import * as StreamTransport from "nodemailer/lib/stream-transport/index.js"
 import type { Awaitable, Theme } from "../types.js"
+import type { EmailConfig } from "./email.js"
 
 type AllTransportOptions =
   | string

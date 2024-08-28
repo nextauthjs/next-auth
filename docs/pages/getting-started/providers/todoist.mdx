@@ -1,0 +1,99 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/todoist.svg" height="64" width="64" />
+
+# Todoist Provider
+
+## Resources
+
+- [Todoist OAuth documentation](https://developer.todoist.com/guides/#oauth)
+- [Todoist configuration](https://developer.todoist.com/appconsole.html)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/todoist
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/todoist
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/todoist
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_TODOIST_ID
+AUTH_TODOIST_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Todoist from "next-auth/providers/todoist"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Todoist],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Todoist from "@auth/qwik/providers/todoist"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Todoist],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Todoist from "@auth/sveltekit/providers/todoist"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Todoist],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Todoist from "@auth/express/providers/todoist"
+
+app.use("/auth/*", ExpressAuth({ providers: [Todoist] }))
+```
+
+  </Code.Express>
+</Code>

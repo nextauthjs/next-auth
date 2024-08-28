@@ -28,13 +28,19 @@ export interface CognitoProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Cognito from "@auth/core/providers/cognito"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Cognito({ clientId: COGNITO_CLIENT_ID, clientSecret: COGNITO_CLIENT_SECRET, issuer: COGNITO_ISSUER })],
+ *   providers: [
+ *     Cognito({
+ *       clientId: COGNITO_CLIENT_ID,
+ *       clientSecret: COGNITO_CLIENT_SECRET,
+ *       issuer: COGNITO_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -59,7 +65,7 @@ export interface CognitoProfile extends Record<string, any> {
  * :::tip
  *
  * The Cognito provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/cognito.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -80,7 +86,9 @@ export default function Cognito<P extends CognitoProfile>(
     id: "cognito",
     name: "Cognito",
     type: "oidc",
-    style: { logo: "/cognito.svg", bg: "#fff", text: "#C17B9E" },
+    style: {
+      brandColor: "#C17B9E",
+    },
     options,
   }
 }

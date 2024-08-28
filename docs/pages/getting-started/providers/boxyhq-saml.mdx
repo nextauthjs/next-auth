@@ -1,0 +1,167 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/boxyhq-saml.svg"
+  height="64"
+  width="64"
+/>
+
+# BoxyHQ SAML Provider
+
+## Resources
+
+- [BoxyHQ OAuth documentation](https://boxyhq.com/docs/jackson/overview)
+
+## Setup
+
+Add BoxyHQ SAML login to your page.
+
+BoxyHQ SAML is an open source service that handles the SAML SSO login flow as an OAuth 2.0 flow, abstracting away all the complexities of the SAML protocol. Enable Enterprise single-sign-on in your app with ease.
+
+You can deploy BoxyHQ SAML as a separate service or embed it into your app using our NPM library. [Check out the documentation for more details](https://boxyhq.com/docs/jackson/deploy)
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/boxyhq-saml
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/boxhq-saml
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/boxhq-saml
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_BOXYHQ_SAML_ID
+AUTH_BOXYHQ_SAML_SECRET
+AUTH_BOXYHQ_SAML_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import BoxyHQ from "next-auth/providers/boxyhq-saml"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    BoxyHQ({
+      authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+      clientId: AUTH_BOXYHQ_SAML_ID,
+      clientSecret: AUTH_BOXYHQ_SAML_SECRET,
+      issuer: AUTH_BOXYHQ_SAML_ISSUER,
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import BoxyHQ from "@auth/qwik/providers/boxyhq-saml"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      BoxyHQ({
+        authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+        clientId: import.meta.env.AUTH_BOXYHQ_SAML_ID,
+        clientSecret: import.meta.env.AUTH_BOXYHQ_SAML_SECRET,
+        issuer: import.meta.env.AUTH_BOXYHQ_SAML_ISSUER,
+      }),  
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import BoxyHQ from "@auth/sveltekit/providers/boxyhq-saml"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    BoxyHQ({
+      authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+      clientId: AUTH_BOXYHQ_SAML_ID,
+      clientSecret: AUTH_BOXYHQ_SAML_SECRET,
+      issuer: AUTH_BOXYHQ_SAML_ISSUER,
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import BoxyHQ from "@auth/express/providers/boxyhq-saml"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      BoxyHQ({
+        authorization: { params: { scope: "" } }, // This is needed for OAuth 2.0 flow, otherwise default to openid
+        clientId: AUTH_BOXYHQ_SAML_ID,
+        clientSecret: AUTH_BOXYHQ_SAML_SECRET,
+        issuer: AUTH_BOXYHQ_SAML_ISSUER,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+### SAML
+
+SAML login requires a configuration for every tenant of yours. One common method is to use the domain for an email address to figure out which tenant they belong to. You can also use a unique tenant ID (string) from your backend for this, typically some kind of account or organization ID.
+
+Check out the [documentation](https://boxyhq.com/docs/jackson/saml-flow#2-saml-config-api) for more details.
+
+On the client side you'll need to pass additional parameters `tenant` and `product` to the `signIn` function. This will allow BoxyHQL SAML to figure out the right SAML configuration and take your user to the right SAML Identity Provider to sign them in.
+
+```ts
+import { signIn } from "next-auth/react";
+
+// Map your users's email to a tenant and product
+const tenant = email.split("@")[1];
+const product = 'my_awesome_product';
+
+<Button
+  onClick={async (event) => {
+    event.preventDefault();
+
+    signIn("boxyhq-saml", {}, { tenant, product });
+  }}
+>
+```

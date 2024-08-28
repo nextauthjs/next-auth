@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/42-school.svg" height="64" width="64" />
+
+# 42School Provider
+
+## Resources
+
+- [42School OAuth documentation](https://api.intra.42.fr/apidoc/guides/web_application_flow)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/42-school
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/42-school
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/42-school
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_42_SCHOOL_ID
+AUTH_42_SCHOOL_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import 42School from "next-auth/providers/42-school"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [42School],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import 42School from "@auth/qwik/providers/42-school"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [42School],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import 42School from "@auth/sveltekit/providers/42-school"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [42School],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import 42School from "@auth/express/providers/42-school"
+
+app.use("/auth/*",
+  ExpressAuth({ providers: [ 42School ] })
+)
+```
+
+  </Code.Express>
+</Code>
+
+## Notes
+
+- 42 returns a field on `Account` called `created_at` which is a number, this is different from the default schema's datatype for this field. Check out the [42 School docs](https://api.intra.42.fr/apidoc/guides/getting_started#make-basic-requests) for more info. Make sure to add or edit this field in your database schema in case if you are using an [database adapter](/getting-started/database).

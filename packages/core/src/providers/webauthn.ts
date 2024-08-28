@@ -181,7 +181,7 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  * :::tip
  *
  * The WebAuthn provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/webauthn.ts).
- * To override the defaults for your use case, check out [customizing the built-in WebAuthn provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing the built-in WebAuthn provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -241,7 +241,7 @@ const getUserInfo: GetUserInfo = async (options, request) => {
   const { adapter } = options
   if (!adapter)
     throw new MissingAdapter(
-      "WebAuthn provider requires a database adapter to be configured."
+      "WebAuthn provider requires a database adapter to be configured"
     )
 
   // Get email address from the query.

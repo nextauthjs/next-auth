@@ -1,11 +1,13 @@
 import CustomLink from "@/components/custom-link"
-import packageJSON from "../package.json"
+import { auth } from "auth"
 
-export default function Index() {
+export default async function Index() {
+  const session = await auth()
+
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-6">
       <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
-      <p>
+      <div>
         This is an example site to demonstrate how to use{" "}
         <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
         for authentication. Check out the{" "}
@@ -17,12 +19,20 @@ export default function Index() {
           Client
         </CustomLink>{" "}
         examples to see how to secure pages and get session data.
-      </p>
-      <p>
-        Current{" "}
-        <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
-        version: <em>next-auth@{packageJSON.dependencies["next-auth"]}</em>
-      </p>
+      </div>
+      <div>
+        WebAuthn users are reset on every deploy, don't expect your test user(s)
+        to still be available after a few days. It is designed to only
+        demonstrate registration, login, and logout briefly.
+      </div>
+      <div className="flex flex-col rounded-md bg-gray-100">
+        <div className="rounded-t-md bg-gray-200 p-4 font-bold">
+          Current Session
+        </div>
+        <pre className="whitespace-pre-wrap break-all px-4 py-6">
+          {JSON.stringify(session, null, 2)}
+        </pre>
+      </div>
     </div>
   )
 }

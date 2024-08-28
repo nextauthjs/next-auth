@@ -9,7 +9,8 @@ import type {
   ProfileCallback,
   Provider,
 } from "../../providers/index.js"
-import type { AuthConfig, InternalProvider, Profile } from "../../types.js"
+import type { InternalProvider, Profile } from "../../types.js"
+import type { AuthConfig } from "../../index.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -32,6 +33,7 @@ export default function parseProviders(params: {
     const { options: userOptions, ...defaults } = provider
 
     const id = (userOptions?.id ?? defaults.id) as string
+    // TODO: Support if properties have different types, e.g. authorization: string or object
     const merged = merge(defaults, userOptions, {
       signinUrl: `${url}/signin/${id}`,
       callbackUrl: `${url}/callback/${id}`,
@@ -86,14 +88,17 @@ function normalizeOAuth(
 
 /**
  * Returns basic user profile from the userinfo response/`id_token` claims.
- * An `id` is generated internally (using `crypto.randomUUID()`) and will override `id` if provided.
- * The result if this function is user to create the `User` in the database.
+ * The returned `id` will become the `account.providerAccountId`. `user.id`
+ * and `account.id` are auto-generated UUID's.
+ *
+ * The result if this function is used to create the `User` in the database.
  * @see https://authjs.dev/reference/core/adapters#user
  * @see https://openid.net/specs/openid-connect-core-1_0.html#IDToken
  * @see https://openid.net/specs/openid-connect-core-1_0.html#
  */
 const defaultProfile: ProfileCallback<Profile> = (profile) => {
   return stripUndefined({
+    id: profile.sub ?? profile.id ?? crypto.randomUUID(),
     name: profile.name ?? profile.nickname ?? profile.preferred_username,
     email: profile.email,
     image: profile.picture,
@@ -146,5 +151,29 @@ function normalizeEndpoint(
       url.searchParams.set(key, String(value))
     }
   }
-  return { url, request: e?.request, conform: e?.conform }
+  return {
+    url,
+    request: e?.request,
+    conform: e?.conform,
+    ...(e?.clientPrivateKey ? { clientPrivateKey: e?.clientPrivateKey } : null),
+  }
+}
+
+export function isOIDCProvider(
+  provider: InternalProvider<"oidc" | "oauth">
+): provider is InternalProvider<"oidc"> {
+  return provider.type === "oidc"
+}
+
+export function isOAuth2Provider(
+  provider: InternalProvider<"oidc" | "oauth">
+): provider is InternalProvider<"oauth"> {
+  return provider.type === "oauth"
+}
+
+/** Either OAuth 2 or OIDC */
+export function isOAuthProvider(
+  provider: InternalProvider<any>
+): provider is InternalProvider<"oauth" | "oidc"> {
+  return provider.type === "oauth" || provider.type === "oidc"
 }

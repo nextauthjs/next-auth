@@ -1,0 +1,111 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/asgardeo.svg" width="64" height="64" />
+
+# Asgardeo Provider
+
+## Resources
+
+- [Asgardeo - Authentication Guide](https://wso2.com/asgardeo/docs/guides/authentication)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/asgardeo
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/asgardeo
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/asgardeo
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ASGARDEO_ID
+AUTH_ASGARDEO_SECRET
+```
+
+### Configuration
+
+Follow these steps:
+
+1. Log into the [Asgardeo console](https://console.asgardeo.io)
+2. Next, go to "Application" tab (more info [here](https://wso2.com/asgardeo/docs/guides/applications/register-oidc-web-app/))
+3. Register a standard based, Open ID connect, application
+4. Add the **callback URLs**: `http://localhost:3000/api/auth/callback/asgardeo` (development) and `https://{YOUR_DOMAIN}.com/api/auth/callback/asgardeo` (production)
+5. After registering the application, go to "Protocol" tab.
+6. Check `code` as the grant type.
+7. Add "Authorized redirect URLs" & "Allowed origins fields"
+8. Make Email, First Name, Photo URL user attributes mandatory from the console.
+
+Then, add the ClientID, ClientSecret, and Issuer values to your environment variables.
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Asgardeo from "next-auth/providers/asgardeo"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Asgardeo],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Asgardeo from "@auth/qwik/providers/asgardeo"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Asgardeo],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Asgardeo from "@auth/sveltekit/providers/asgardeo"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Asgardeo],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Asgardeo from "@auth/express/providers/asgardeo"
+
+app.use("/auth/*", ExpressAuth({ providers: [Asgardeo] }))
+```
+
+  </Code.Express>
+</Code>

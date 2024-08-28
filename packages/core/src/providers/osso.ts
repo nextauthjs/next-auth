@@ -21,13 +21,19 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Osso from "@auth/core/providers/osso"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Osso({ clientId: OSSO_CLIENT_ID, clientSecret: OSSO_CLIENT_SECRET, issuer: OSSO_ISSUER })],
+ *   providers: [
+ *     Osso({
+ *       clientId: OSSO_CLIENT_ID,
+ *       clientSecret: OSSO_CLIENT_SECRET,
+ *       issuer: OSSO_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -56,7 +62,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * :::tip
  *
  * The Osso provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/osso.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *

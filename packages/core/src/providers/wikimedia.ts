@@ -174,13 +174,18 @@ export interface WikimediaProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Wikimedia from "@auth/core/providers/wikimedia"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Wikimedia({ clientId: WIKIMEDIA_CLIENT_ID, clientSecret: WIKIMEDIA_CLIENT_SECRET })],
+ *   providers: [
+ *     Wikimedia({
+ *       clientId: WIKIMEDIA_CLIENT_ID,
+ *       clientSecret: WIKIMEDIA_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -214,7 +219,7 @@ export interface WikimediaProfile extends Record<string, any> {
  * :::tip
  *
  * The Wikimedia provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/wikimedia.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -247,7 +252,7 @@ export default function Wikimedia<P extends WikimediaProfile>(
         image: null,
       }
     },
-    style: { logo: "/wikimedia.svg", bg: "#000", text: "#fff" },
+    style: { bg: "#000", text: "#fff" },
     options,
   }
 }

@@ -37,7 +37,7 @@ export default function SignoutPage(props: SignoutProps) {
         {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <h1>Signout</h1>
         <p>Are you sure you want to sign out?</p>
-        <form action={`${url}/signout`} method="POST">
+        <form action={url?.toString()} method="POST">
           <input type="hidden" name="csrfToken" value={csrfToken} />
           <button id="submitButton" type="submit">
             Sign out

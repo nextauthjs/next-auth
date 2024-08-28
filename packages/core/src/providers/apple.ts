@@ -105,22 +105,27 @@ export interface AppleProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
+ * ```ts
+ * import { Auth } from "@auth/core"
+ * import Apple from "@auth/core/providers/apple"
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import AppleProvider from "next-auth/providers/apple"
- *
- * export default NextAuth({
+ * const request = new Request(origin)
+ * const response = await Auth(request, {
  *   providers: [
- *     AppleProvider({
- *       clientId: process.env.APPLE_ID,
- *       clientSecret: process.env.APPLE_SECRET,
+ *     Apple({
+ *       clientId: APPLE_CLIENT_ID,
+ *       clientSecret: APPLE_CLIENT_SECRET,
  *     }),
  *   ],
  * })
  * ```
+ * 
+ * 
+ * Apple requires the client secret to be a JWT. You can generate one using the following script:
+ * https://bal.so/apple-gen-secret
+ * 
+ * Read more: [Creating the Client Secret
+](https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens#3262048)
  * 
  * ### Resources
  * 
@@ -131,7 +136,7 @@ export interface AppleProfile extends Record<string, any> {
 
  * ### Notes
  * 
- * The Apple provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/apple.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * The Apple provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/apple.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * ## Help
  *
@@ -142,16 +147,7 @@ export interface AppleProfile extends Record<string, any> {
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
 export default function Apple<P extends AppleProfile>(
-  options: Omit<OAuthUserConfig<P>, "clientSecret"> & {
-    /**
-     * Apple requires the client secret to be a JWT. You can generate one using the following script:
-     * https://bal.so/apple-gen-secret
-     * 
-     * Read more: [Creating the Client Secret
-](https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens#3262048)
-     */
-    clientSecret: string
-  }
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "apple",
@@ -161,19 +157,15 @@ export default function Apple<P extends AppleProfile>(
     authorization: {
       params: { scope: "name email", response_mode: "form_post" },
     },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: null,
-      }
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
     style: {
-      logo: "/apple.svg",
       text: "#fff",
       bg: "#000",
     },
+    // https://developer.apple.com/documentation/sign_in_with_apple/request_an_authorization_to_the_sign_in_with_apple_server
+    checks: ["nonce", "state"],
     options,
   }
 }

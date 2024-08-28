@@ -3,7 +3,8 @@
   display: flex;
   align-items: center;
   min-height: 4rem;
-  width: 100%;
+  padding: 1rem;
+  background-color: #f3f3f3;
 }
 
 .loading,
@@ -26,7 +27,6 @@
 
 .signedInText,
 .notSignedInText {
-  padding-top: 0.8rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -81,12 +81,41 @@
 }
 
 .navItems {
-  margin-bottom: 2rem;
   padding: 0;
+  margin: 0;
   list-style: none;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .navItem {
+  flex-grow: 1;
   display: inline-block;
+  text-align: center;
+  background-color: #d5d5d5;
+  border-radius: 0 0 0.5rem 0.5rem;
+  padding: 1rem 0 1rem 0;
+  text-decoration: none;
+  color: black;
+}
+
+.navItem:hover {
+  background-color: #ccc;
+}
+
+.header {
+  border-radius: 0 0 0.6rem 0.6rem;
+  margin-bottom: 2rem;
+
+  @media screen and (max-width: 960px) {
+    padding: 0 1rem;
+  }
+}
+
+.passwordInput {
+  padding: 0.75rem;
+  border-radius: 0.3rem;
+  border: #ccc solid 2px;
   margin-right: 1rem;
 }

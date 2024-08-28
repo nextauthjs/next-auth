@@ -22,7 +22,8 @@
  * const app = express()
  *
  * // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
- * app.use('trust proxy')
+ * // https://expressjs.com/en/guide/behind-proxies.html
+ * app.set('trust proxy', true)
  * app.use("/auth/*", ExpressAuth({ providers: [ GitHub ] }))
  * ```
  *
@@ -31,7 +32,7 @@
  * You will also need to load the environment variables into your runtime environment. For example in Node.js with a package like [`dotenv`](https://www.npmjs.com/package/dotenv) or `Deno.env` in Deno.
  *
  * ### Provider Configuration
- * The callback URL used by the [providers](https://authjs.dev/reference/core/modules/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
+ * The callback URL used by the [providers](https://authjs.dev/reference/core/providers) must be set to the following, unless you mount the `ExpressAuth` handler on a different path:
  *
  * ```
  * [origin]/auth/callback/[provider]
@@ -66,7 +67,7 @@
  * This can either be done per route, or for a group of routes using a middleware such as the following:
  *
  * ```ts
- * export function authenticatedUser(
+ * export async function authenticatedUser(
  *   req: Request,
  *   res: Response,
  *   next: NextFunction
@@ -120,14 +121,29 @@
  * app.use("/protected", protected)
  * ```
  *
+ * ## Notes on ESM
+ * @auth/express is ESM only. This means your package.json must contain `"type": "module"` and tsconfig.json should contain `"module": "NodeNext"` or `ESNext`.
+ * File imports must use the `.js` extension, e.g. `import { MyRouter } from "./my-router.js"`.
+ *
+ * Your dev server should either be run with [tsx](https://www.npmjs.com/package/tsx) with `tsx index.ts` (fast startup, with no type checking), or ts-node with 'node --loader ts-node/esm index.ts' (slower startup, but has type checking).
+ *
+ * While it is NOT recommended, if you wish to use @auth/express within a CommonJS project without migrating and making the above changes, you can run the dev server with tsx and may be able to compile with [pkgroll](https://tsx.is/compilation).
+ * Add '"name": "./dist/index.js"' or '"name": "./dist/index.mjs"' to your package.json and run 'pkgroll' to compile with both ESM and CommonJS support. For new projects it is recommended to just use ESM.
+ *
  * @module @auth/express
  */
 
-import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
-import type { AuthConfig, Session } from "@auth/core/types"
+import {
+  Auth,
+  type AuthConfig,
+  setEnvDefaults,
+  createActionURL,
+} from "@auth/core"
+import type { Session } from "@auth/core/types"
 import * as e from "express"
 import { toWebRequest, toExpressResponse } from "./lib/index.js"
 
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
 export type {
   Account,
   DefaultSession,
@@ -136,16 +152,22 @@ export type {
   User,
 } from "@auth/core/types"
 
-export function ExpressAuth(config: Omit<AuthConfig, "raw">) {
+export type ExpressAuthConfig = Omit<AuthConfig, "raw">
+
+export function ExpressAuth(config: ExpressAuthConfig) {
   return async (req: e.Request, res: e.Response, next: e.NextFunction) => {
     e.json()(req, res, async (err) => {
       if (err) return next(err)
       e.urlencoded({ extended: true })(req, res, async (err) => {
         if (err) return next(err)
-        config.basePath = getBasePath(req)
-        setEnvDefaults(process.env, config)
-        await toExpressResponse(await Auth(toWebRequest(req), config), res)
-        next()
+        try {
+          config.basePath = getBasePath(req)
+          setEnvDefaults(process.env, config)
+          await toExpressResponse(await Auth(toWebRequest(req), config), res)
+          if (!res.headersSent) next()
+        } catch (error) {
+          next(error)
+        }
       })
     })
   }
@@ -155,7 +177,7 @@ export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
   req: e.Request,
-  config: Omit<AuthConfig, "raw">
+  config: ExpressAuthConfig
 ): GetSessionResult {
   setEnvDefaults(process.env, config)
   const url = createActionURL(
@@ -164,7 +186,7 @@ export async function getSession(
     // @ts-expect-error
     new Headers(req.headers),
     process.env,
-    config.basePath
+    config
   )
 
   const response = await Auth(

@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/dribbble.svg" height="64" width="64" />
+
+# Dribbble Provider
+
+## Resources
+
+- [Dribbble API](https://developer.dribbble.com)
+- [Dribbble OAuth](https://developer.dribbble.com/v2/oauth/)
+- [Dribbble Applications](https://dribbble.com/account/applications/new)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/dribbble
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/dribbble
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/dribbble
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_DRIBBBLE_ID
+AUTH_DRIBBBLE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Dribbble from "next-auth/providers/dribbble"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Dribbble],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Dribbble from "@auth/qwik/providers/dribbble"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Dribbble],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Dribbble from "@auth/sveltekit/providers/dribbble"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Dribbble],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Dribbble from "@auth/express/providers/dribbble"
+
+app.use("/auth/*", ExpressAuth({ providers: [Dribbble] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- You can optionally set the scope to `public upload` for more advanced scenarios. If omitted, the default `public` scope will be used for authentication purposes.
