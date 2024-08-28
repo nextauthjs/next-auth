@@ -6,7 +6,7 @@
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
-    "build": "turbo run build --filter=next-auth --filter=@auth/* --no-deps",
+    "build": "turbo run build --filter=next-auth --filter=@auth/*",
     "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*dgraph* --filter=!*xata* --filter=!*typeorm*",
     "test:e2e": "turbo run test:e2e",
     "test:e2e:watch": "turbo run test:e2e -- --ui",
@@ -46,9 +46,9 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-svelte": "^2.38.0",
     "fake-smtp-server": "^0.8.0",
-    "prettier": "3.1.1",
-    "prettier-plugin-svelte": "^3.1.2",
-    "prettier-plugin-tailwindcss": "^0.5.13",
+    "prettier": "3.3.3",
+    "prettier-plugin-svelte": "^3.2.6",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "svelte-eslint-parser": "^0.35.0",
     "turbo": "^2.0.14",
     "typescript": "5.3.3",
@@ -228,7 +228,11 @@
   "prettier": {
     "semi": false,
     "singleQuote": false,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "plugins": [
+      "prettier-plugin-svelte",
+      "prettier-plugin-tailwindcss"
+    ]
   },
   "pnpm": {
     "overrides": {

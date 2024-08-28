@@ -86,7 +86,7 @@ export function toResponse(res: ResponseInternal): Response {
   else if (headers.get("content-type") === "application/x-www-form-urlencoded")
     body = new URLSearchParams(res.body).toString()
 
-  const status = res.redirect ? 302 : res.status ?? 200
+  const status = res.redirect ? 302 : (res.status ?? 200)
   const response = new Response(body, { headers, status })
 
   if (res.redirect) response.headers.set("Location", res.redirect)
