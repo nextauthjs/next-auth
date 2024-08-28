@@ -351,6 +351,37 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```ts filename="./components/sign-in.tsx"
+"use client"
+import { useState, ChangeEvent, FormEvent } from "react"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  const [email, setEmail] = useState("")
+
+  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+  }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    signIn("sendgrid", { email })
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="email-sendgrid">
+        Email
+        <input type="email" name="email-sendgrid" onChange={handleChangeEmail} />
+      </label>
+      <input type="submit" value="Signin with Sendgrid" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
