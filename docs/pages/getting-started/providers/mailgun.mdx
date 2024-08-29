@@ -1,0 +1,81 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/mailgun.svg" height="64" width="64" />
+
+# Mailgun Provider
+
+## Resources
+
+- [Mailgun documentation](https://documentation.mailgun.com/docs/mailgun)
+
+## Setup
+
+### Environment Variables
+
+```
+AUTH_MAILGUN_KEY
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Mailgun from "next-auth/providers/mailgun"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Mailgun({ from: "you@your-domain.com" }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Mailgun from "@auth/qwik/providers/mailgun"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Mailgun({ from: "you@your-domain.com" }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Mailgun from "@auth/sveltekit/providers/mailgun"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Mailgun({ from: "you@your-domain.com" }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Mailgun from "@auth/express/providers/mailgun"
+
+app.use("/auth/*", ExpressAuth({
+  providers: [
+    Mailgun({ from: "you@your-domain.com" }),
+  ],
+}))
+```
+
+  </Code.Express>
+</Code>
