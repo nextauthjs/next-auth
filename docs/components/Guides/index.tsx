@@ -107,7 +107,7 @@ export function Guides() {
               },
               {
                 id: "solidstart",
-                name: "Solid",
+                name: "SolidStart",
                 demo: "https://solid-start-auth-example.vercel.app",
                 repo: "solid-start-auth-example",
               },
