@@ -246,11 +246,7 @@ export default component$(() => {
     </h2>
     <div>
       {#each providerMap as provider}
-        <SignIn
-          provider={provider.id}
-          signInPage="signin"
-          className="w-full"
-        >
+        <SignIn provider={provider.id} signInPage="signin" className="w-full">
           <div slot="submitButton">
             <span>
               Signin with {provider.name}
