@@ -168,8 +168,10 @@ import { NextResponse } from "next/server"
 export const GET = auth(function GET(req) {
   if (req.auth) return NextResponse.json(req.auth)
   return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-})
+}) as any
 ```
+
+There must be explicit return type casting such as, `as any` or return type of your own implementation to avoid next.js type error build failure.
 
 </Code.Next>
 <Code.NextClient>
