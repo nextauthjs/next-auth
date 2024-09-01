@@ -33,9 +33,8 @@ export default tsEslint.config(
     name: "TypeScript",
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
-      parser: tsParser,
-      ecmaVersion: 5,
-      sourceType: "script",
+      parser: tsEslint.parser,
+      // parser: tsParser,
       parserOptions: {
         // project: ["./packages/**/tsconfig.json", "./apps/**/tsconfig.json"],
         project: ["./packages/utils/tsconfig.eslint.json"],
@@ -63,23 +62,25 @@ export default tsEslint.config(
   {
     name: "JSDoc",
     files: ["packages/{core,sveltekit}/*.ts"],
+    ignores: ["**/*.d.ts"],
+    languageOptions: {
+      parser: tsEslint.parser,
+      // parser: tsParser,
+    },
     plugins: {
       jsdoc,
     },
     rules: {
+      "jsdoc/tag-lines": "off",
       "jsdoc/require-param": "off",
       "jsdoc/require-returns": "off",
-
       "jsdoc/require-jsdoc": ["warn", {
         publicOnly: true,
         enableFixer: false,
       }],
-
       "jsdoc/no-multi-asterisks": ["warn", {
         allowWhitespace: true,
       }],
-
-      "jsdoc/tag-lines": "off",
     },
   },
   {
