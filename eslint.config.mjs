@@ -168,7 +168,8 @@ export default tsEslint.config(
       "migrations",
       "test.schema.gql",
       "apps",
-      "packages/**/*test*"
+      "packages/**/*test*",
+      "docs/**"
     ]
   },
 )

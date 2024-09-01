@@ -125,7 +125,7 @@ import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
 
 /** Configure the {@link QwikAuth$} method. */
-export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> {}
+export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> { }
 
 export type GetSessionResult = Promise<{ data: Session | null; cookie: any }>
 
@@ -150,9 +150,8 @@ export function QwikAuthQrl(
         body.set(key, String(value))
       })
 
-      const baseSignInUrl = `/auth/${isCredentials ? "callback" : "signin"}${
-        providerId ? `/${providerId}` : ""
-      }`
+      const baseSignInUrl = `/auth/${isCredentials ? "callback" : "signin"}${providerId ? `/${providerId}` : ""
+        }`
       const signInUrl = `${baseSignInUrl}?${new URLSearchParams(
         authorizationParams
       )}`
@@ -282,7 +281,7 @@ async function authAction(
 
   try {
     return await res.json()
-  } catch (error) {
+  } catch {
     return await res.text()
   }
 }
