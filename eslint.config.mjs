@@ -11,15 +11,13 @@ import svelteParser from 'svelte-eslint-parser';
 import pluginImportX from 'eslint-plugin-import-x';
 import pluginPromise from 'eslint-plugin-promise'
 
-
 export default tsEslint.config(
   js.configs.recommended,
   ...tsEslint.configs.recommended,
-  ...eslintPluginSvelte.configs['flat/recommended'],
   eslintConfigPrettier,
-  ...eslintPluginSvelte.configs['flat/prettier'],
-  pluginPromise.configs['flat/recommended'],
+  // pluginPromise.configs['flat/recommended'],
   {
+    name: "React",
     files: ["**/*.{ts,tsx,jsx}"],
     ...reactRecommended,
     ...reactJsxRuntime,
@@ -32,13 +30,15 @@ export default tsEslint.config(
     },
   },
   {
+    name: "TypeScript",
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 5,
       sourceType: "script",
       parserOptions: {
-        project: ["./packages/**/tsconfig.json", "./apps/**/tsconfig.json"],
+        // project: ["./packages/**/tsconfig.json", "./apps/**/tsconfig.json"],
+        project: ["./packages/utils/tsconfig.eslint.json"],
       },
     },
     settings: {
@@ -61,6 +61,7 @@ export default tsEslint.config(
     }
   },
   {
+    name: "JSDoc",
     files: ["packages/{core,sveltekit}/*.ts"],
     plugins: {
       jsdoc,
@@ -82,8 +83,10 @@ export default tsEslint.config(
     },
   },
   {
+    name: "SvelteKit",
     // files: ["packages/frameworks-sveltekit"],
     files: ["**/*.svelte"],
+    ...eslintPluginSvelte.configs['flat/recommended'].rules,
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -99,6 +102,7 @@ export default tsEslint.config(
     },
   },
   {
+    name: "Global Ignores",
     ignores: [
       '**/.*', // dotfiles aren't ignored by default in FlatConfig
       '.*', // dotfiles aren't ignored by default in FlatConfig
