@@ -9,13 +9,18 @@ import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import reactJsxRuntime from 'eslint-plugin-react/configs/jsx-runtime.js';
 import svelteParser from 'svelte-eslint-parser';
 import pluginImportX from 'eslint-plugin-import-x';
-import pluginPromise from 'eslint-plugin-promise'
+import { includeIgnoreFile } from "@eslint/compat";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const gitignorePath = path.resolve(__dirname, ".gitignore");
 
 export default tsEslint.config(
   js.configs.recommended,
   ...tsEslint.configs.recommended,
   eslintConfigPrettier,
-  // pluginPromise.configs['flat/recommended'],
   {
     name: "React",
     files: ["**/*.{ts,tsx,jsx}"],
@@ -34,11 +39,13 @@ export default tsEslint.config(
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parser: tsEslint.parser,
-      // parser: tsParser,
       parserOptions: {
-        // project: ["./packages/**/tsconfig.json", "./apps/**/tsconfig.json"],
         project: ["./packages/utils/tsconfig.eslint.json"],
       },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      }
     },
     settings: {
       react: {
@@ -46,6 +53,11 @@ export default tsEslint.config(
       },
     },
     rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-empty-object-type": ["error", {
+        allowInterfaces: 'with-single-extends'
+      }],
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/method-signature-style": "off",
       "@typescript-eslint/naming-convention": "off",
@@ -105,6 +117,7 @@ export default tsEslint.config(
   {
     name: "Global Ignores",
     ignores: [
+      ...includeIgnoreFile(gitignorePath).ignores,
       '**/.*', // dotfiles aren't ignored by default in FlatConfig
       '.*', // dotfiles aren't ignored by default in FlatConfig
       ".eslintrc.js",
@@ -119,10 +132,10 @@ export default tsEslint.config(
       "patches",
       "pnpm-lock.yaml",
       ".github/actions/issue-validator/index.mjs",
-      "*.cjs",
-      "*.js",
-      "*.d.ts",
-      "*.d.ts.map",
+      "**/*.cjs",
+      "**/*.js",
+      "**/*.d.ts",
+      "**/*.d.ts.map",
       ".svelte-kit",
       ".next",
       ".nuxt",
@@ -147,98 +160,3 @@ export default tsEslint.config(
     ]
   },
 )
-
-// export default [...compat.extends("eslint:recommended", "prettier"), {
-//   languageOptions: {
-//     globals: {
-//       ...globals.browser,
-//       ...globals.node,
-//     },
-//
-//     ecmaVersion: "latest",
-//     sourceType: "module",
-//
-//     parserOptions: {
-//       ecmaFeatures: {
-//         jsx: true,
-//       },
-//     },
-//   },
-// }, ...compat.extends("plugin:react/recommended", "plugin:react/jsx-runtime", "prettier").map(config => ({
-//   ...config,
-//   files: ["**/*.ts", "**/*.tsx"],
-// })), {
-//   files: ["**/*.ts", "**/*.tsx"],
-//
-//   languageOptions: {
-//     parser: tsParser,
-//     ecmaVersion: 5,
-//     sourceType: "script",
-//
-//     parserOptions: {
-//       project: ["./packages/**/tsconfig.json", "./apps/**/tsconfig.json"],
-//     },
-//   },
-//
-//   settings: {
-//     react: {
-//       version: "18",
-//     },
-//   },
-//
-//   rules: {
-//     "@typescript-eslint/explicit-function-return-type": "off",
-//     "@typescript-eslint/method-signature-style": "off",
-//     "@typescript-eslint/naming-convention": "off",
-//     "@typescript-eslint/no-non-null-assertion": "off",
-//     "@typescript-eslint/restrict-template-expressions": "off",
-//     "@typescript-eslint/strict-boolean-expressions": "off",
-//     "react/prop-types": "off",
-//     "react/no-unescaped-entities": "off",
-//   },
-// }, ...compat.extends("plugin:jsdoc/recommended").map(config => ({
-//   ...config,
-//   files: ["packages/{core,sveltekit}/*.ts"],
-// })), {
-//   files: ["packages/{core,sveltekit}/*.ts"],
-//
-//   plugins: {
-//     jsdoc,
-//   },
-//
-//   rules: {
-//     "jsdoc/require-param": "off",
-//     "jsdoc/require-returns": "off",
-//
-//     "jsdoc/require-jsdoc": ["warn", {
-//       publicOnly: true,
-//       enableFixer: false,
-//     }],
-//
-//     "jsdoc/no-multi-asterisks": ["warn", {
-//       allowWhitespace: true,
-//     }],
-//
-//     "jsdoc/tag-lines": "off",
-//   },
-// }, ...compat.extends("plugin:svelte/recommended").map(config => ({
-//   ...config,
-//   files: ["packages/frameworks-sveltekit"],
-// })), {
-//   files: ["packages/frameworks-sveltekit"],
-//
-//   languageOptions: {
-//     globals: {
-//       ...globals.browser,
-//       ...globals.node,
-//     },
-//
-//     parser: tsParser,
-//     ecmaVersion: 2020,
-//     sourceType: "module",
-//
-//     parserOptions: {
-//       extraFileExtensions: [".svelte"],
-//     },
-//   },
-// }];
