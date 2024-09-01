@@ -13,6 +13,7 @@ export type WarningCode =
  *
  * [Documentation](https://authjs.dev/reference/core#authconfig#logger)
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface LoggerInstance extends Record<string, Function> {
   warn: (code: WarningCode) => void
   error: (error: Error) => void
@@ -69,7 +70,7 @@ export function setLogger(
   }
 
   // Turn off debug logging if `debug` isn't set to `true`
-  if (!config.debug) newLogger.debug = () => {}
+  if (!config.debug) newLogger.debug = () => { }
 
   if (config.logger?.error) newLogger.error = config.logger.error
   if (config.logger?.warn) newLogger.warn = config.logger.warn

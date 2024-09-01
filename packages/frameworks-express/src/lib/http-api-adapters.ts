@@ -51,13 +51,13 @@ export function toWebRequest(req: ExpressRequest) {
 
   Object.entries(req.headers).forEach(([key, value]) => {
     if (Array.isArray(value)) {
-      value.forEach((v) => {
-        v && headers.append(key, v)
-      })
+      value.forEach((v) => v && headers.append(key, v))
       return
     }
 
-    value && headers.append(key, value)
+    if (value) {
+      headers.append(key, value)
+    }
   })
 
   // GET and HEAD not allowed to receive body

@@ -276,7 +276,7 @@
  * @module @auth/sveltekit
  */
 
-/// <reference types="@sveltejs/kit" />
+import "@sveltejs/kit"
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 

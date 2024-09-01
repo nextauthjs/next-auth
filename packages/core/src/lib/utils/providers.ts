@@ -57,7 +57,7 @@ export default function parseProviders(params: {
 // We should return both a client and authorization server config.
 function normalizeOAuth(
   c: OAuthConfig<any> | OAuthUserConfig<any>
-): OAuthConfigInternal<any> | {} {
+): OAuthConfigInternal<any> | object {
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
@@ -125,7 +125,9 @@ const defaultAccount: AccountCallback = (account) => {
 
 function stripUndefined<T extends object>(o: T): T {
   const result = {} as any
-  for (const [k, v] of Object.entries(o)) v !== undefined && (result[k] = v)
+  for (const [k, v] of Object.entries(o)) {
+    if (v !== undefined) result[k] = v
+  }
   return result as T
 }
 
@@ -147,7 +149,9 @@ function normalizeEndpoint(
   const url = new URL(e?.url ?? "https://authjs.dev")
   if (e?.params != null) {
     for (let [key, value] of Object.entries(e.params)) {
-      if (key === "claims") value = JSON.stringify(value)
+      if (key === "claims") {
+        value = JSON.stringify(value)
+      }
       url.searchParams.set(key, String(value))
     }
   }

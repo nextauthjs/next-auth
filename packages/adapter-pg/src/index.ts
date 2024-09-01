@@ -77,7 +77,7 @@ export default function PostgresAdapter(client: Pool): Adapter {
       try {
         const result = await client.query(sql, [id])
         return result.rowCount === 0 ? null : result.rows[0]
-      } catch (e) {
+      } catch {
         return null
       }
     },

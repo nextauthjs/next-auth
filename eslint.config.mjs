@@ -53,6 +53,8 @@ export default tsEslint.config(
       },
     },
     rules: {
+      "prefer-const": ["error", { "destructuring": "all" }],
+      "no-empty": ["error", { "allowEmptyCatch": true }],
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/ban-ts-comment": "warn",
       "@typescript-eslint/no-empty-object-type": ["error", {
@@ -64,6 +66,18 @@ export default tsEslint.config(
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "args": "all",
+          "argsIgnorePattern": "^_",
+          "caughtErrors": "all",
+          "caughtErrorsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "ignoreRestSiblings": true
+        }
+      ],
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
     },

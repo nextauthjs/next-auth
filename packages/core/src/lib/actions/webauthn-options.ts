@@ -54,9 +54,9 @@ export async function webAuthnOptions(
   // If session user exists, we don't need to call getUserInfo
   const getUserInfoResponse = sessionUser
     ? {
-        user: sessionUser,
-        exists: true,
-      }
+      user: sessionUser,
+      exists: true,
+    }
     : await provider.getUserInfo(options, request)
 
   const userInfo = getUserInfoResponse?.user
@@ -85,6 +85,7 @@ export async function webAuthnOptions(
           cookies
         )
       }
+      break;
     default:
       return {
         status: 400,
