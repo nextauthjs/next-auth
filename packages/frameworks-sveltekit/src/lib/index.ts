@@ -276,7 +276,7 @@
  * @module @auth/sveltekit
  */
 
-import "@sveltejs/kit"
+/// <reference types="@sveltejs/kit" />
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
@@ -323,8 +323,8 @@ export function SvelteKitAuth(
       const formData = await request.formData()
       const { providerId: provider, ...options } = Object.fromEntries(formData)
       // get the authorization params from the options prefixed with `authorizationParams-`
-      const authorizationParams: Parameters<typeof signIn>[2] = {}
-      const _options: Parameters<typeof signIn>[1] = {}
+      let authorizationParams: Parameters<typeof signIn>[2] = {}
+      let _options: Parameters<typeof signIn>[1] = {}
       for (const key in options) {
         if (key.startsWith(authorizationParamsPrefix)) {
           authorizationParams[key.slice(authorizationParamsPrefix.length)] =

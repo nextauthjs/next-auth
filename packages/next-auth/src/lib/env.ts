@@ -27,6 +27,7 @@ export function setEnvDefaults(config: NextAuthConfig) {
     const { pathname } = new URL(url)
     if (pathname === "/") return
     config.basePath ||= pathname
+  } catch {
   } finally {
     config.basePath ||= "/api/auth"
     coreSetEnvDefaults(process.env, config, true)

@@ -77,7 +77,6 @@ export default tsEslint.config(
     ignores: ["**/*.d.ts"],
     languageOptions: {
       parser: tsEslint.parser,
-      // parser: tsParser,
     },
     plugins: {
       jsdoc,
@@ -97,7 +96,6 @@ export default tsEslint.config(
   },
   {
     name: "SvelteKit",
-    // files: ["packages/frameworks-sveltekit"],
     files: ["**/*.svelte"],
     ...eslintPluginSvelte.configs['flat/recommended'].rules,
     languageOptions: {
