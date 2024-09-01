@@ -70,7 +70,7 @@ export function createActionURL(
   config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
   const basePath = config?.basePath
-  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+  const envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
   let url: URL
   if (envUrl) {

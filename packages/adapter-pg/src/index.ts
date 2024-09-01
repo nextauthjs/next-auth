@@ -201,7 +201,7 @@ export default function PostgresAdapter(client: Pool): Adapter {
       if (result1.rowCount === 0) {
         return null
       }
-      let session: AdapterSession = result1.rows[0]
+      const session: AdapterSession = result1.rows[0]
 
       const result2 = await client.query("select * from users where id = $1", [
         session.userId,

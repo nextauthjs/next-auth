@@ -125,7 +125,7 @@ const defaultAccount: AccountCallback = (account) => {
 
 function stripUndefined<T extends object>(o: T): T {
   const result = {} as any
-  for (let [k, v] of Object.entries(o)) v !== undefined && (result[k] = v)
+  for (const [k, v] of Object.entries(o)) v !== undefined && (result[k] = v)
   return result as T
 }
 

@@ -43,7 +43,7 @@ export async function handleOAuth(
     (!userinfo?.url || userinfo.url.host === "authjs.dev")
   ) {
     // We assume that issuer is always defined as this has been asserted earlier
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const issuer = new URL(provider.issuer!)
     const discoveryResponse = await o.discoveryRequest(issuer)
     const discoveredAs = await o.processDiscoveryResponse(

@@ -6,7 +6,7 @@ import { Request as ExpressRequest, Response as ExpressResponse } from "express"
 export function encodeUrlEncoded(object: Record<string, any> = {}) {
   const params = new URLSearchParams()
 
-  for (let [key, value] of Object.entries(object)) {
+  for (const [key, value] of Object.entries(object)) {
     if (Array.isArray(value)) {
       value.forEach((v) => params.append(key, v))
     } else {

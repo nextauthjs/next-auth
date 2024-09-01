@@ -192,7 +192,7 @@ export function SurrealDBAdapter<T>(
         emailVerified: user.emailVerified?.toISOString(),
         id: undefined,
       }
-      let updatedUser = await surreal.merge<UserDoc, Omit<UserDoc, "id">>(
+      const updatedUser = await surreal.merge<UserDoc, Omit<UserDoc, "id">>(
         `user:${toSurrealId(user.id)}`,
         doc
       )
@@ -324,7 +324,7 @@ export function SurrealDBAdapter<T>(
         const sessionDoc = sessions[0]?.[0]
         if (sessionDoc && session.expires) {
           const sessionId = extractId(sessionDoc.id)
-          let updatedSession = await surreal.merge<
+          const updatedSession = await surreal.merge<
             SessionDoc,
             Omit<SessionDoc, "id">
           >(
