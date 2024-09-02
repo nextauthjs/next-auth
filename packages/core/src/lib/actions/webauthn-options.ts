@@ -22,6 +22,7 @@ export async function webAuthnOptions(
   options: InternalOptions,
   sessionStore: SessionStore,
   cookies: Cookie[]
+  // @ts-expect-error issue with returning from a switch case
 ): Promise<ResponseInternal> {
   // Return an error if the adapter is missing or if the provider
   // is not a webauthn provider.
