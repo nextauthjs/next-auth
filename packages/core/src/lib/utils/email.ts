@@ -13,9 +13,8 @@ export function html(params: { url: string; host: string; theme: Theme }) {
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
-   
   const brandColor = theme.brandColor || "#346df1"
-   
+
   const buttonText = theme.buttonText || "#fff"
 
   const color = {

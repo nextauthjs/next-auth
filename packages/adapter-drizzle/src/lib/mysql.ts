@@ -1,9 +1,4 @@
-import {
-  GeneratedColumnConfig,
-  and,
-  eq,
-  getTableColumns,
-} from "drizzle-orm"
+import { GeneratedColumnConfig, and, eq, getTableColumns } from "drizzle-orm"
 import {
   MySqlColumn,
   MySqlDatabase,
@@ -209,9 +204,9 @@ export function MySqlDrizzleAdapter(
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
         .then((res) => (res.length > 0 ? res[0] : null)) as Awaitable<{
-          session: AdapterSession
-          user: AdapterUser
-        } | null>
+        session: AdapterSession
+        user: AdapterUser
+      } | null>
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -390,11 +385,11 @@ type DefaultMyqlColumn<
     notNull: boolean
     isPrimaryKey?: boolean
     columnType:
-    | "MySqlVarChar"
-    | "MySqlText"
-    | "MySqlBoolean"
-    | "MySqlTimestamp"
-    | "MySqlInt"
+      | "MySqlVarChar"
+      | "MySqlText"
+      | "MySqlBoolean"
+      | "MySqlTimestamp"
+      | "MySqlInt"
   },
 > = MySqlColumn<{
   isAutoincrement: boolean

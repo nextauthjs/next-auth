@@ -158,7 +158,6 @@ export default function SequelizeAdapter(
       await User.update(user, { where: { id: user.id } })
       const userInstance = await User.findByPk(user.id)
 
-       
       return userInstance!
     },
     async deleteUser(userId) {

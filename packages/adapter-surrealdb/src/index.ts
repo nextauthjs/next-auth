@@ -149,7 +149,7 @@ export function SurrealDBAdapter<T>(
         if (doc) {
           return docToUser(doc)
         }
-      } catch { }
+      } catch {}
       return null
     },
     async getUserByEmail(email: string) {
@@ -161,7 +161,7 @@ export function SurrealDBAdapter<T>(
         )
         const doc = users[0]?.[0]
         if (doc) return docToUser(doc)
-      } catch { }
+      } catch {}
       return null
     },
     async getUserByAccount({
@@ -181,7 +181,7 @@ export function SurrealDBAdapter<T>(
 
         const user = users[0]?.[0]?.userId
         if (user) return docToUser(user)
-      } catch { }
+      } catch {}
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
@@ -220,7 +220,7 @@ export function SurrealDBAdapter<T>(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch { }
+      } catch {}
 
       // delete session
       try {
@@ -236,7 +236,7 @@ export function SurrealDBAdapter<T>(
           const sessionId = extractId(session.id)
           await surreal.delete(`session:${sessionId}`)
         }
-      } catch { }
+      } catch {}
 
       // delete user
       await surreal.delete(`user:${surrealId}`)
@@ -267,7 +267,7 @@ export function SurrealDBAdapter<T>(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch { }
+      } catch {}
     },
     async createSession({ sessionToken, userId, expires }) {
       const surreal = await client
@@ -306,7 +306,7 @@ export function SurrealDBAdapter<T>(
             }),
           }
         }
-      } catch { }
+      } catch {}
       return null
     },
     async updateSession(
@@ -342,7 +342,7 @@ export function SurrealDBAdapter<T>(
             return null
           }
         }
-      } catch { }
+      } catch {}
       return null
     },
     async deleteSession(sessionToken: string) {
@@ -361,7 +361,7 @@ export function SurrealDBAdapter<T>(
           await surreal.delete(`session:${sessionId}`)
           return
         }
-      } catch { }
+      } catch {}
     },
     async createVerificationToken({
       identifier,
@@ -409,7 +409,7 @@ export function SurrealDBAdapter<T>(
         } else {
           return null
         }
-      } catch { }
+      } catch {}
       return null
     },
   }

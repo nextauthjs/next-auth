@@ -140,7 +140,6 @@ export function DynamoDBAdapter(
         ReturnValues: "ALL_NEW",
       })
 
-       
       return format.from<AdapterUser>(data.Attributes)!
     },
     async deleteUser(userId) {
