@@ -1,0 +1,96 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/authgear.svg" height="64" width="64" />
+
+# Authgear Provider
+
+## Resources
+
+- [Authgear Getting Started guide](https://docs.authgear.com/get-started/start-building)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/authgear
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/authgear
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_AUTHGEAR_CLIENT_ID
+AUTH_AUTHGEAR_CLIENT_SECRET
+AUTH_AUTHGEAR_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth";
+import Authgear from "next-auth/providers/authgear";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Authgear({
+      clientId: AUTH_AUTHGEAR_CLIENT_ID,
+      clientSecret: AUTH_AUTHGEAR_CLIENT_SECRET,
+      issuer: AUTH_AUTHGEAR_ISSUER,
+    })]
+});
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit";
+import Authgear from "@auth/sveltekit/providers/authgear";
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Authgear({
+      clientId: AUTH_AUTHGEAR_CLIENT_ID,
+      clientSecret: AUTH_AUTHGEAR_CLIENT_SECRET,
+      issuer: AUTH_AUTHGEAR_ISSUER,
+    })]
+});
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express";
+import Authgear from "@auth/express/providers/authgear";
+
+app.use("/auth/*", ExpressAuth({
+  providers: [Authgear({
+      clientId: AUTH_AUTHGEAR_CLIENT_ID,
+      clientSecret: AUTH_AUTHGEAR_CLIENT_SECRET,
+      issuer: AUTH_AUTHGEAR_ISSUER,
+    })]
+}));
+```
+
+  </Code.Express>
+</Code>
+
+<Callout>
+  issuer is your Authgear project domain. For example: `https://your-project.authgear.cloud` You can find out your project's domain in the Authgear Portal
+</Callout>
