@@ -23,6 +23,9 @@ export function setEnvDefaults(
         config.basePath = new URL(url).pathname
       }
     }
+  } catch {
+    // Catching and swallowing potential URL parsing errors, we'll fall
+    // back to `/auth` below.
   } finally {
     config.basePath ??= `/auth`
   }
