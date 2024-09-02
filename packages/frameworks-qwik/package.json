@@ -19,6 +19,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>",
+    "Nico Domino <yo@ndo.dev>",
+    "Lluis Agusti <hi@llu.lu>",
+    "Thang Huu Vu <hi@thvu.dev>"
+  ],
   "type": "module",
   "engines": {
     "node": ">=18.17"
