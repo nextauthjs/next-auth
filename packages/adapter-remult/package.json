@@ -1,0 +1,51 @@
+{
+  "name": "@auth/remult-adapter",
+  "version": "1.4.2",
+  "description": "Remult adapter for Auth.js.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Anthony Shew",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "remult"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "tsc -w",
+    "test": "./test/test.sh",
+    "build2": "tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "devDependencies": {
+    "pg": "^8.12.0",
+    "remult": "^0.27.7"
+  }
+}
