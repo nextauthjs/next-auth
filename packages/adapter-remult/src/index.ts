@@ -4,19 +4,100 @@ import type {
   AdapterUser,
   VerificationToken as VerificationTokenT,
   AdapterSession,
+  AdapterAuthenticator,
 } from "@auth/core/adapters"
-import { repo } from "remult"
+import { ClassType, repo } from "remult"
 import {
-  Account,
-  Session,
-  Authenticator,
-  User,
-  VerificationToken,
+  Account as local_Account,
+  Authenticator as local_Authenticator,
+  Session as local_Session,
+  User as local_User,
+  VerificationToken as local_VerificationToken,
 } from "./entities.js"
 
-export const RemultAdapter: (customEntities?: {}) => Adapter = (
-  customEntities
-) => {
+import type {
+  Account as TAccount,
+  Authenticator as TAuthenticator,
+  Session as TSession,
+  User as TUser,
+  VerificationToken as TVerificationToken,
+} from "./entities.js"
+
+const toAdapterUser: (u?: TUser) => AdapterUser | null = (u) => {
+  if (u) {
+    return {
+      email: u.email,
+      id: u.id,
+      name: u.name,
+      image: u.image,
+      emailVerified: u.emailVerified,
+    }
+  }
+  return null
+}
+
+const toAdapterAccount: (a?: TAccount) => AdapterAccount | null = (a) => {
+  if (a) {
+    return {
+      id: a.id,
+      userId: a.userId,
+      type: a.type,
+      provider: a.provider,
+      providerAccountId: a.providerAccountId,
+    }
+  }
+  return null
+}
+
+const toAdapaterSession: (s?: TSession) => AdapterSession | null = (s) => {
+  if (s) {
+    return {
+      id: s.id,
+      userId: s.userId,
+      sessionToken: s.sessionToken,
+      expires: s.expires,
+    }
+  }
+  return null
+}
+
+const toAdaptAuthenticator: (
+  a?: TAuthenticator
+) => AdapterAuthenticator | null = (a) => {
+  if (a) {
+    return {
+      counter: a.counter,
+      credentialID: a.credentialID,
+      credentialBackedUp: a.credentialBackedUp,
+      credentialDeviceType: a.credentialDeviceType,
+      credentialPublicKey: a.credentialPublicKey,
+      providerAccountId: a.providerAccountId,
+      transports: a.transports,
+      userId: a.userId,
+    }
+  }
+  return null
+}
+
+export const RemultAdapter: (args?: {
+  customEntities?: {
+    Account?: ClassType<TAccount>
+    Authenticator?: ClassType<TAuthenticator>
+    Session?: ClassType<TSession>
+    User?: ClassType<TUser>
+    // VerificationToken?: ClassType<TVerificationToken>
+  }
+}) => Adapter = (args) => {
+  // Init stuff
+  const Account = args?.customEntities?.Account ?? local_Account
+  const Authenticator =
+    args?.customEntities?.Authenticator ?? local_Authenticator
+  const Session = args?.customEntities?.Session ?? local_Session
+  const User = args?.customEntities?.User ?? local_User
+  // const VerificationToken =
+  //   args?.customEntities?.VerificationToken ?? local_VerificationToken
+  const VerificationToken = local_VerificationToken
+
   return {
     async createVerificationToken(
       verificationToken: VerificationTokenT
@@ -43,22 +124,10 @@ export const RemultAdapter: (customEntities?: {}) => Adapter = (
       return await repo(User).insert(user)
     },
     async getUser(id) {
-      if (id) {
-        const u = await repo(User).findFirst({ id })
-        if (u) {
-          return u
-        }
-      }
-      return null
+      return toAdapterUser(await repo(User).findFirst({ id }))
     },
     async getUserByEmail(email) {
-      if (email) {
-        const u = await repo(User).findFirst({ email })
-        if (u) {
-          return u
-        }
-      }
-      return null
+      return toAdapterUser(await repo(User).findFirst({ email }))
     },
     async getUserByAccount({
       providerAccountId,
@@ -69,19 +138,18 @@ export const RemultAdapter: (customEntities?: {}) => Adapter = (
         // { include: { user: true } }
       )
       if (a) {
-        return (await repo(User).findFirst({ id: a?.userId })) ?? null
+        return toAdapterUser(await repo(User).findFirst({ id: a?.userId }))
       }
       return null
     },
     async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
       if (user.id) {
-        return await repo(User).update(user.id, user)
+        return toAdapterUser(await repo(User).update(user.id, user))!
       }
       return user as Promise<AdapterUser>
     },
     async linkAccount(account) {
-      const t = await repo(Account).insert(account)
-      return t as unknown as AdapterAccount
+      return toAdapterAccount(await repo(Account).insert(account))
     },
     async createSession({ sessionToken, userId, expires }) {
       if (userId === undefined) {
@@ -97,18 +165,20 @@ export const RemultAdapter: (customEntities?: {}) => Adapter = (
       if (sessionToken === undefined) {
         return null
       }
-      const result1 = await repo(Session).findFirst({ sessionToken })
-
-      if (!result1) {
+      const session = toAdapaterSession(
+        await repo(Session).findFirst({ sessionToken })
+      )
+      if (!session) {
         return null
       }
-      const session: AdapterSession = result1
 
-      const result2 = await repo(User).findFirst({ id: session.userId })
-      if (!result2) {
+      const user = toAdapterUser(
+        await repo(User).findFirst({ id: session.userId })
+      )
+      if (!user) {
         return null
       }
-      const user = result2
+
       return {
         session,
         user,
@@ -147,20 +217,24 @@ export const RemultAdapter: (customEntities?: {}) => Adapter = (
       await repo(Account).deleteMany({ where: { userId } })
     },
     async createAuthenticator(authenticator) {
-      return await repo(Authenticator).insert(authenticator)
+      return toAdaptAuthenticator(
+        await repo(Authenticator).insert(authenticator)
+      )
     },
     async getAccount(providerAccountId, provider) {
-      const a = await repo(Account).findFirst({ providerAccountId, provider })
-      if (a) {
-        return a as unknown as AdapterAccount
-      }
-      return null
+      return toAdapterAccount(
+        await repo(Account).findFirst({ providerAccountId, provider })
+      )
     },
     async getAuthenticator(credentialID) {
-      return (await repo(Authenticator).findFirst({ credentialID })) ?? null
+      return toAdaptAuthenticator(
+        await repo(Authenticator).findFirst({ credentialID })
+      )
     },
     async listAuthenticatorsByUserId(userId) {
-      return await repo(Authenticator).find({ where: { userId } })
+      return (await repo(Authenticator).find({ where: { userId } })).map((a) =>
+        toAdaptAuthenticator(a)
+      )
     },
     async updateAuthenticatorCounter(credentialID, newCounter) {
       return await repo(Authenticator).update(credentialID, {

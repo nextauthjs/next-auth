@@ -8,7 +8,7 @@ import {
   Authenticator,
 } from "../src/entities"
 
-import { InMemoryDataProvider, remult, repo } from "remult"
+import { Fields, InMemoryDataProvider, remult, repo } from "remult"
 
 // const db = await createPostgresConnection({
 //   connectionString: "postgres://postgres:MASTERKEY@127.0.0.1/postgres",
@@ -25,6 +25,25 @@ import { InMemoryDataProvider, remult, repo } from "remult"
 
 remult.dataProvider = new InMemoryDataProvider()
 
+export class AppUser extends User {
+  @Fields.boolean()
+  isDisable!: boolean
+}
+export class AppAccount extends Account {
+  @Fields.string()
+  infoAccount!: string
+}
+
+export class AppSession extends Session {
+  @Fields.string()
+  infoSession!: string
+}
+
+export class AppAuthenticator extends Authenticator {
+  @Fields.string()
+  infoAuthenticator!: string
+}
+
 const resetDb = async () => {
   await repo(User).deleteMany({ where: { id: { $ne: "-1" } } })
   await repo(Account).deleteMany({ where: { id: { $ne: "-1" } } })
@@ -35,7 +54,14 @@ const resetDb = async () => {
 
 runBasicTests({
   testWebAuthnMethods: true,
-  adapter: RemultAdapter(),
+  adapter: RemultAdapter({
+    customEntities: {
+      User: AppUser,
+      Account: AppAccount,
+      Session: AppSession,
+      Authenticator: AppAuthenticator,
+    },
+  }),
   db: {
     async connect() {
       await resetDb()
