@@ -6,10 +6,17 @@ import type {
   AdapterSession,
 } from "@auth/core/adapters"
 import { repo } from "remult"
-import { Account, User, VerificationToken } from "./entities.js"
-import { Session } from "./entities.js"
+import {
+  Account,
+  Session,
+  Authenticator,
+  User,
+  VerificationToken,
+} from "./entities.js"
 
-export const RemultAdapter: () => Adapter = () => {
+export const RemultAdapter: (customEntities?: {}) => Adapter = (
+  customEntities
+) => {
   return {
     async createVerificationToken(
       verificationToken: VerificationTokenT
@@ -138,6 +145,27 @@ export const RemultAdapter: () => Adapter = () => {
       await repo(User).delete({ id: userId })
       await repo(Session).deleteMany({ where: { userId } })
       await repo(Account).deleteMany({ where: { userId } })
+    },
+    async createAuthenticator(authenticator) {
+      return await repo(Authenticator).insert(authenticator)
+    },
+    async getAccount(providerAccountId, provider) {
+      const a = await repo(Account).findFirst({ providerAccountId, provider })
+      if (a) {
+        return a as unknown as AdapterAccount
+      }
+      return null
+    },
+    async getAuthenticator(credentialID) {
+      return (await repo(Authenticator).findFirst({ credentialID })) ?? null
+    },
+    async listAuthenticatorsByUserId(userId) {
+      return await repo(Authenticator).find({ where: { userId } })
+    },
+    async updateAuthenticatorCounter(credentialID, newCounter) {
+      return await repo(Authenticator).update(credentialID, {
+        counter: newCounter,
+      })
     },
   }
 }

@@ -32,6 +32,7 @@ export class User implements AdapterUser {
   sessions!: Session[]
 }
 
+// FIXME
 @Entity<Account>("accounts", {
   // id: {
   //   provider: true,
@@ -114,4 +115,39 @@ export class VerificationToken {
 
   @Fields.date()
   expires!: Date
+}
+
+@Entity<Authenticator>("authenticators", {
+  id: {
+    credentialID: true,
+    userId: true,
+  },
+})
+export class Authenticator {
+  @Fields.string({ validate: [Validators.unique()] })
+  credentialID!: string
+
+  @Fields.string()
+  userId!: string
+
+  @Fields.string()
+  providerAccountId!: string
+
+  @Fields.string()
+  credentialPublicKey!: string
+
+  @Fields.integer()
+  counter!: number
+
+  @Fields.string()
+  credentialDeviceType!: string
+
+  @Fields.boolean()
+  credentialBackedUp!: boolean
+
+  @Fields.string({ allowNull: true })
+  transports?: string | null | undefined
+
+  // @Relations.toOne<Authenticator, User>(() => User, "userId")
+  // user!: User
 }
