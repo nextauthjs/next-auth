@@ -30,7 +30,7 @@ export default defineConfig({
   webServer: {
     cwd: "../../",
     command: "turbo run dev --filter=next-auth-app",
-    port: process.env.CI ? 4173 : 3000,
+    port: 3000,
     timeout: 20_000,
     stdout: process.env.CI ? "ignore" : "pipe",
     stderr: "pipe",
