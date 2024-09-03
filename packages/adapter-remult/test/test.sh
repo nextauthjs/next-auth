@@ -3,9 +3,8 @@
 CONTAINER_NAME=authjs-remult-test
 
 docker run -d --rm \
-  --name ${CONTAINER_NAME} \
-  -e DATABASE_URL=postgresql://postgres:example@127.0.0.1:5433/adapter-remult-test \
-  postgres:latest
+  --name ${CONTAINER_NAME} 
+  
 
 # echo "waiting 5s for db to start..."
 # sleep 5

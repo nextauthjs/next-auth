@@ -25,6 +25,7 @@ export const RemultAdapter: () => Adapter = () => {
       token: string
     }) {
       const v = await repo(VerificationToken).findFirst({ identifier, token })
+      if (!v) return null
       if (v && v.identifier !== identifier) {
         return null
       }

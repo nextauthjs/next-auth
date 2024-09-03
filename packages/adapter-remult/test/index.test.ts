@@ -2,22 +2,20 @@ import { runBasicTests } from "utils/adapter"
 import { RemultAdapter } from "../src"
 import { User, Account, Session, VerificationToken } from "../src/entities"
 
-import { createPostgresConnection } from "remult/postgres"
-import { remult, repo } from "remult"
+import { InMemoryDataProvider, remult, repo } from "remult"
 
-const db = await createPostgresConnection({
-  connectionString:
-    "postgresql://postgres:example@127.0.0.1:5433/adapter-remult-test",
-  orderByNullsFirst: true,
-})
-await db.ensureSchema([
-  repo(User).metadata,
-  repo(Account).metadata,
-  repo(Session).metadata,
-  repo(VerificationToken).metadata,
-])
+// const db = await createPostgresConnection({
+//   connectionString: "postgres://postgres:MASTERKEY@127.0.0.1/postgres",
+//   orderByNullsFirst: true,
+// })
+// await db.ensureSchema([
+//   repo(User).metadata,
+//   repo(Account).metadata,
+//   repo(Session).metadata,
+//   repo(VerificationToken).metadata,
+// ])
 
-remult.dataProvider = db
+remult.dataProvider = new InMemoryDataProvider()
 
 await repo(User).deleteMany({ where: { id: { $ne: "-1" } } })
 await repo(Account).deleteMany({ where: { id: { $ne: "-1" } } })

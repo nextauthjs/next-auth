@@ -106,7 +106,7 @@ export class Session implements AdapterSession {
   },
 })
 export class VerificationToken {
-  @Fields.string({ validate: [Validators.unique()] })
+  @Fields.string({})
   identifier!: string
 
   @Fields.string()
