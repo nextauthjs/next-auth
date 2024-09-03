@@ -36,12 +36,7 @@
         "playwright/.cache/**",
         "test-results/**"
       ],
-      "dependsOn": ["^build"],
-      "env": [
-        "TEST_KEYCLOAK_PASSWORD",
-        "TEST_KEYCLOAK_USERNAME",
-        "PLAYWRIGHT_BROWSERS_PATH"
-      ]
+      "env": ["TEST_KEYCLOAK_PASSWORD", "TEST_KEYCLOAK_USERNAME"]
     },
     "@auth/xata-adapter#test": {
       "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
