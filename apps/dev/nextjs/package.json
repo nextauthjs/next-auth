@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "e2e": "pnpm dlx playwright test"
+    "test:e2e": "playwright test -c ../../../packages/utils/playwright.config.ts"
   },
   "license": "ISC",
   "dependencies": {
