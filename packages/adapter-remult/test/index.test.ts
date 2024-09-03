@@ -52,16 +52,18 @@ const resetDb = async () => {
   await repo(Authenticator).deleteMany({ where: { userId: { $ne: "-1" } } })
 }
 
+const { adapter } = RemultAdapter({
+  customEntities: {
+    User: AppUser,
+    Account: AppAccount,
+    Session: AppSession,
+    Authenticator: AppAuthenticator,
+  },
+})
+
 runBasicTests({
   testWebAuthnMethods: true,
-  adapter: RemultAdapter({
-    customEntities: {
-      User: AppUser,
-      Account: AppAccount,
-      Session: AppSession,
-      Authenticator: AppAuthenticator,
-    },
-  }),
+  adapter,
   db: {
     async connect() {
       await resetDb()

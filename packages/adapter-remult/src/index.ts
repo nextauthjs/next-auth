@@ -20,7 +20,7 @@ import type {
   Authenticator as TAuthenticator,
   Session as TSession,
   User as TUser,
-  VerificationToken as TVerificationToken,
+  VerificationToken,
 } from "./entities.js"
 
 const toAdapterUser: (u?: TUser) => AdapterUser | null = (u) => {
@@ -79,6 +79,19 @@ const toAdaptAuthenticator: (
   return null
 }
 
+const toVerificationToken: (
+  c?: VerificationToken
+) => VerificationTokenT | null = (c) => {
+  if (c) {
+    return {
+      expires: c.expires,
+      identifier: c.identifier,
+      token: c.token,
+    }
+  }
+  return null
+}
+
 export const RemultAdapter: (args?: {
   customEntities?: {
     Account?: ClassType<TAccount>
@@ -87,7 +100,7 @@ export const RemultAdapter: (args?: {
     User?: ClassType<TUser>
     // VerificationToken?: ClassType<TVerificationToken>
   }
-}) => Adapter = (args) => {
+}) => { adapter: Adapter } = (args) => {
   // Init stuff
   const Account = args?.customEntities?.Account ?? local_Account
   const Authenticator =
@@ -99,147 +112,161 @@ export const RemultAdapter: (args?: {
   const VerificationToken = local_VerificationToken
 
   return {
-    async createVerificationToken(
-      verificationToken: VerificationTokenT
-    ): Promise<VerificationTokenT> {
-      await repo(VerificationToken).insert(verificationToken)
-      return verificationToken
+    entities: {
+      Account,
+      Authenticator,
+      Session,
+      User,
+      VerificationToken,
     },
-    async useVerificationToken({
-      identifier,
-      token,
-    }: {
-      identifier: string
-      token: string
-    }) {
-      const v = await repo(VerificationToken).findFirst({ identifier, token })
-      if (!v) return null
-      if (v && v.identifier !== identifier) {
+    adapter: {
+      async createVerificationToken(verificationToken) {
+        return toVerificationToken(
+          await repo(VerificationToken).insert(verificationToken)
+        )
+      },
+      async useVerificationToken({
+        identifier,
+        token,
+      }: {
+        identifier: string
+        token: string
+      }) {
+        const v = await repo(VerificationToken).findFirst({ identifier, token })
+        if (!v) return null
+        if (v && v.identifier !== identifier) {
+          return null
+        }
+        await repo(VerificationToken).delete({ identifier, token })
+        return v!
+      },
+      async createUser(user) {
+        return await repo(User).insert(user)
+      },
+      async getUser(id) {
+        return toAdapterUser(await repo(User).findFirst({ id }))
+      },
+      async getUserByEmail(email) {
+        return toAdapterUser(await repo(User).findFirst({ email }))
+      },
+      async getUserByAccount({
+        providerAccountId,
+        provider,
+      }): Promise<AdapterUser | null> {
+        const a = await repo(Account).findFirst(
+          { provider, providerAccountId }
+          // { include: { user: true } }
+        )
+        if (a) {
+          return toAdapterUser(await repo(User).findFirst({ id: a?.userId }))
+        }
         return null
-      }
-      await repo(VerificationToken).delete({ identifier, token })
-      return v!
-    },
-    async createUser(user) {
-      return await repo(User).insert(user)
-    },
-    async getUser(id) {
-      return toAdapterUser(await repo(User).findFirst({ id }))
-    },
-    async getUserByEmail(email) {
-      return toAdapterUser(await repo(User).findFirst({ email }))
-    },
-    async getUserByAccount({
-      providerAccountId,
-      provider,
-    }): Promise<AdapterUser | null> {
-      const a = await repo(Account).findFirst(
-        { provider, providerAccountId }
-        // { include: { user: true } }
-      )
-      if (a) {
-        return toAdapterUser(await repo(User).findFirst({ id: a?.userId }))
-      }
-      return null
-    },
-    async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
-      if (user.id) {
-        return toAdapterUser(await repo(User).update(user.id, user))!
-      }
-      return user as Promise<AdapterUser>
-    },
-    async linkAccount(account) {
-      return toAdapterAccount(await repo(Account).insert(account))
-    },
-    async createSession({ sessionToken, userId, expires }) {
-      if (userId === undefined) {
-        throw Error(`userId is undef in createSession`)
-      }
-      return await repo(Session).insert({ sessionToken, userId, expires })
-    },
+      },
+      async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
+        if (user.id) {
+          return toAdapterUser(await repo(User).update(user.id, user))!
+        }
+        return user as Promise<AdapterUser>
+      },
+      async linkAccount(account) {
+        return toAdapterAccount(await repo(Account).insert(account))
+      },
+      async createSession({ sessionToken, userId, expires }) {
+        if (userId === undefined) {
+          throw Error(`userId is undef in createSession`)
+        }
+        return await repo(Session).insert({ sessionToken, userId, expires })
+      },
 
-    async getSessionAndUser(sessionToken: string | undefined): Promise<{
-      session: AdapterSession
-      user: AdapterUser
-    } | null> {
-      if (sessionToken === undefined) {
-        return null
-      }
-      const session = toAdapaterSession(
-        await repo(Session).findFirst({ sessionToken })
-      )
-      if (!session) {
-        return null
-      }
+      async getSessionAndUser(sessionToken: string | undefined): Promise<{
+        session: AdapterSession
+        user: AdapterUser
+      } | null> {
+        if (sessionToken === undefined) {
+          return null
+        }
+        const session = toAdapaterSession(
+          await repo(Session).findFirst({ sessionToken })
+        )
+        if (!session) {
+          return null
+        }
 
-      const user = toAdapterUser(
-        await repo(User).findFirst({ id: session.userId })
-      )
-      if (!user) {
-        return null
-      }
+        const user = toAdapterUser(
+          await repo(User).findFirst({ id: session.userId })
+        )
+        if (!user) {
+          return null
+        }
 
-      return {
-        session,
-        user,
-      }
-    },
-    async updateSession(
-      session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
-    ): Promise<AdapterSession | null | undefined> {
-      const { sessionToken } = session
-      const result1 = await repo(Session).findFirst({ sessionToken })
-      if (!result1) {
-        return null
-      }
-      const originalSession: AdapterSession = result1
+        return {
+          session,
+          user,
+        }
+      },
+      async updateSession(
+        session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
+      ): Promise<AdapterSession | null | undefined> {
+        const { sessionToken } = session
+        const result1 = await repo(Session).findFirst({ sessionToken })
+        if (!result1) {
+          return null
+        }
+        const originalSession: AdapterSession = result1
 
-      const newSession: AdapterSession = {
-        ...originalSession,
-        ...session,
-      }
-      await repo(Session).updateMany({
-        where: { sessionToken: newSession.sessionToken },
-        set: { expires: newSession.expires },
-      })
-      return newSession
-    },
-    async deleteSession(sessionToken) {
-      await repo(Session).delete({ sessionToken })
-    },
-    async unlinkAccount(partialAccount) {
-      const { provider, providerAccountId } = partialAccount
-      await repo(Account).deleteMany({ where: { provider, providerAccountId } })
-    },
-    async deleteUser(userId: string) {
-      await repo(User).delete({ id: userId })
-      await repo(Session).deleteMany({ where: { userId } })
-      await repo(Account).deleteMany({ where: { userId } })
-    },
-    async createAuthenticator(authenticator) {
-      return toAdaptAuthenticator(
-        await repo(Authenticator).insert(authenticator)
-      )
-    },
-    async getAccount(providerAccountId, provider) {
-      return toAdapterAccount(
-        await repo(Account).findFirst({ providerAccountId, provider })
-      )
-    },
-    async getAuthenticator(credentialID) {
-      return toAdaptAuthenticator(
-        await repo(Authenticator).findFirst({ credentialID })
-      )
-    },
-    async listAuthenticatorsByUserId(userId) {
-      return (await repo(Authenticator).find({ where: { userId } })).map((a) =>
-        toAdaptAuthenticator(a)
-      )
-    },
-    async updateAuthenticatorCounter(credentialID, newCounter) {
-      return await repo(Authenticator).update(credentialID, {
-        counter: newCounter,
-      })
+        const newSession: AdapterSession = {
+          ...originalSession,
+          ...session,
+        }
+        await repo(Session).updateMany({
+          where: { sessionToken: newSession.sessionToken },
+          set: { expires: newSession.expires },
+        })
+        return newSession
+      },
+      async deleteSession(sessionToken) {
+        await repo(Session).delete({ sessionToken })
+      },
+      async unlinkAccount(partialAccount) {
+        const { provider, providerAccountId } = partialAccount
+        await repo(Account).deleteMany({
+          where: { provider, providerAccountId },
+        })
+      },
+      async deleteUser(userId: string) {
+        await repo(User).delete({ id: userId })
+        await repo(Session).deleteMany({ where: { userId } })
+        await repo(Account).deleteMany({ where: { userId } })
+      },
+      async createAuthenticator(authenticator) {
+        return toAdaptAuthenticator(
+          await repo(Authenticator).insert(authenticator)!
+        )!
+      },
+      async getAccount(providerAccountId, provider) {
+        return toAdapterAccount(
+          await repo(Account).findFirst({ providerAccountId, provider })
+        )
+      },
+      async getAuthenticator(credentialID) {
+        return toAdaptAuthenticator(
+          await repo(Authenticator).findFirst({ credentialID })
+        )
+      },
+      async listAuthenticatorsByUserId(userId) {
+        return (
+          (await repo(Authenticator).find({ where: { userId } })).map(
+            (a) => toAdaptAuthenticator(a)!
+          ) ?? []
+        )
+      },
+      async updateAuthenticatorCounter(credentialID, newCounter) {
+        return toAdaptAuthenticator(
+          await repo(Authenticator).update(credentialID, {
+            counter: newCounter,
+          })
+        )!
+      },
     },
   }
 }

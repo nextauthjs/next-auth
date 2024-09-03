@@ -20,21 +20,146 @@ import { Accordion, Accordions } from "@/components/Accordion"
 npm install remult @auth/remult-adapter
 ```
 
-### Environment Variables
+### Adapter Setup
 
-```sh
-DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { RemultAdapter } from "@auth/remult-adapter"
+
+const { adapter, entities } = RemultAdapter()
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter,
+  providers: [],
+})
 ```
 
-### Configuration
+</Code.Next>
+<Code.Qwik>
 
-To use this adapter, you must have setup Remult in your project.
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { RemultAdapter } from "@auth/remult-adapter"
 
-1. ...
-2. ...
+const { adapter, entities } = RemultAdapter()
 
-#### Entities
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    adapter,
+    providers: [],
+  })
+)
+```
 
-...
+</Code.Qwik>
+<Code.Svelte>
 
-#### Passing your own Entities
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { RemultAdapter } from "@auth/remult-adapter"
+
+const { adapter, entities } = RemultAdapter()
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter,
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { RemultAdapter } from "@auth/remult-adapter"
+
+const { adapter, entities } = RemultAdapter()
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    adapter,
+    providers: [],
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+#### Using your own Entities
+
+If you want to add some fields in some entities, you can override default ones.
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { RemultAdapter } from "@auth/remult-adapter"
+import { User } from "../src/entities"
+
+export class AppUser extends User {
+  @Fields.string()
+  jobTitle = ""
+}
+
+const { adapter, entities } = RemultAdapter({
+  customEntities: {
+    User: AppUser,
+    // Account: ...
+    // Session: ...
+    // Authenticator: ...
+  },
+})
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter,
+  providers: [],
+})
+```
+
+### Entities Setup
+
+Import your auth `entities` exported from `RemultAdapter` in your remult server.
+
+This will then allow you to use each remult DataProvider `Postgres`, `MySQL`, `MongoDB`,
+`SQLite`, `Microsoft SQL Server`, `Oracle`, `JSON Files`,
+and even `InMemory` _(really nice for testing)_.
+
+_(You are missing something, join [remult](remult.dev) and add yours.)_
+
+```ts filename="src/routes/api/[...remult]/+server.ts"
+import { remultSveltekit } from "remult/remult-sveltekit"
+import { Task } from "../../../shared/Task"
+import { entities } from "../../../src/auth"
+
+export const _api = remultSveltekit({
+  entities: [Task, ...entities],
+})
+```
+
+Nothing about migrations ? No, it will be done the remult way, automatically 🎉. _[read more here](https://remult.dev/docs/migrations)_
+
+### Init remult before Auth
+
+Don't import the `handleAuth` directly and add a remult hook before.
+
+```ts filename="src/hooks.server.ts"
+import { sequence } from "@sveltejs/kit/hooks"
+
+import { handle as handleAuth } from "./auth"
+import type { Handle } from "@sveltejs/kit"
+import { _api } from "./routes/api/[...remult]/+server"
+
+const handleRemult: Handle = async ({ event, resolve }) => {
+  return await _api.withRemult(event, async () => {
+    return resolve(event)
+  })
+}
+
+export const handle = sequence(handleRemult, handleAuth)
+```
