@@ -5,7 +5,7 @@ import { signIn, signOut } from "@auth/solid-start/client"
 import { getSession } from "@auth/solid-start"
 import { A } from "solid-start"
 
-interface INavBarProps { }
+interface INavBarProps {}
 
 const NavBar: Component<INavBarProps> = () => {
   const session = useSession()
