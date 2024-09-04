@@ -75,12 +75,12 @@ export default function MyApp({
 }
 ```
 
-```tsx filename="pages/dashboard.tsx
+```tsx filename="pages/dashboard.tsx"
 import { useSession } from "next-auth/react"
 import { UserAvatar } from "@/components/UserAvatar"
 
 export default function Dashboard() {
-  const session = useSession()
+  const { data: session } = useSession()
 
   return (
     <nav>
@@ -93,13 +93,13 @@ export default function Dashboard() {
 Finally, we can use it in the component.
 
 ```tsx filename="./components/UserAvatar" /session/
-export function UserAvatar({ session }) {
+import { Session } from "next-auth"
+
+export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={
-          session?.user.image ?? "https://source.boringavatars.com/marble/120"
-        }
+        src={session!.user!.image ?? "https://source.boringavatars.com/marble/120"}
         alt="User Avatar"
       />
     </div>
