@@ -55,7 +55,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * :::note
  * 
- * `issuer` should be the fully qualified domain – e.g. `demo.ossoapp.com`
+ * `issuer` should be the fully qualified domain e.g. `demo.ossoapp.com`
  * 
  * :::
  * 

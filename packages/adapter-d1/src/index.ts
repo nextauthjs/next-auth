@@ -61,7 +61,6 @@ export type D1Database = WorkerDatabase | MiniflareD1Database
 function format<T>(obj: Record<string, any>): T {
   for (const [key, value] of Object.entries(obj)) {
     if (value === null) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete obj[key]
     }
 
@@ -142,7 +141,6 @@ export async function deleteRecord(
   SQL: string,
   bindings: any[]
 ) {
-  // eslint-disable-next-line no-useless-catch
   try {
     bindings = cleanBindings(bindings)
     await db
