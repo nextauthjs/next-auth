@@ -170,26 +170,19 @@ export function SignIn() {
 
 ```tsx filename="./components/sign-in.tsx"
 "use client"
-import { useState, ChangeEvent, FormEvent } from "react"
 import { signIn } from "next-auth/react"
 
 export function SignIn() {
-  const [email, setEmail] = useState("")
 
-  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    signIn("resend", { email })
+  const resendAction = (formData: formData) => {
+    signIn("resend", Object.fromEntries(formData))
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form action={resendAction}>
       <label htmlFor="email-resend">
         Email
-        <input type="email" name="email-resend" onChange={handleChangeEmail} />
+        <input type="email" id="email-resend" name="email" />
       </label>
       <input type="submit" value="Signin with Resend" />
     </form>
@@ -356,26 +349,19 @@ export function SignIn() {
 
 ```tsx filename="./components/sign-in.tsx"
 "use client"
-import { useState, ChangeEvent, FormEvent } from "react"
 import { signIn } from "next-auth/react"
 
 export function SignIn() {
-  const [email, setEmail] = useState("")
 
-  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    signIn("sendgrid", { email })
+  const sendgridAction = (formData: formData) => {
+    signIn("sendgrid", Object.fromEntries(formData))
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form action={sendgridAction}>
       <label htmlFor="email-sendgrid">
         Email
-        <input type="email" name="email-sendgrid" onChange={handleChangeEmail} />
+        <input type="email" id="email-sendgrid" name="email" />
       </label>
       <input type="submit" value="Signin with Sendgrid" />
     </form>
@@ -765,38 +751,6 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```
 
 </Code.Qwik>
-<Code.NextClient>
-
-```tsx filename="./components/sign-in.tsx"
-"use client"
-import { useState, ChangeEvent, FormEvent } from "react"
-import { signIn } from "next-auth/react"
-
-export function SignIn() {
-  const [email, setEmail] = useState("")
-
-  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    signIn("postmark", { email })
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="email-postmark">
-        Email
-        <input type="email" name="email-postmark" onChange={handleChangeEmail} />
-      </label>
-      <input type="submit" value="Signin with Postmark" />
-    </form>
-  )
-}
-```
-
-</Code.NextClient>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -841,6 +795,31 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+
+  const postmarkAction = (formData: formData) => {
+    signIn("postmark", Object.fromEntries(formData))
+  }
+
+  return (
+    <form action={postmarkAction}>
+      <label htmlFor="email-postmark">
+        Email
+        <input type="email" id="email-postmark" name="email" />
+      </label>
+      <input type="submit" value="Signin with Postmark" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
