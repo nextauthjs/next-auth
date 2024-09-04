@@ -8,7 +8,7 @@ Once a user is logged in, you often want to get the session object in order to u
 <Code>
 <Code.Next>
 
-```tsx filename="./components/UserAvatar" {4} /async/
+```tsx filename="./components/UserAvatar.tsx" {4} /async/
 import { auth } from "../auth"
 
 export default async function UserAvatar() {
@@ -92,7 +92,7 @@ export default function Dashboard() {
 
 Finally, we can use it in the component.
 
-```tsx filename="./components/UserAvatar" /session/
+```tsx filename="./components/UserAvatar.tsx" /session/
 import { Session } from "next-auth"
 
 export function UserAvatar({ session }: { session: Session | null }) {
