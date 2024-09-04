@@ -15,7 +15,7 @@ const UpdateForm = () => {
   return (
     <>
       <h2 className="text-xl font-bold">Updating the session client-side</h2>
-      <div className="flex items-center space-x-2 w-full max-w-sm">
+      <div className="flex w-full max-w-sm items-center space-x-2">
         <Input
           type="text"
           placeholder="New name"
@@ -73,7 +73,7 @@ export default function ClientExample() {
         to provide the session data.
       </p>
 
-      <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-md">
+      <div className="flex flex-col gap-4 rounded-md bg-gray-100 p-4">
         <h2 className="text-xl font-bold">Third-party backend integration</h2>
         <p>
           Press the button to send a request to our{" "}
