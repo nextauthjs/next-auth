@@ -93,13 +93,13 @@ export default function Dashboard() {
 Finally, we can use it in the component.
 
 ```tsx filename="./components/UserAvatar.tsx" /session/
-import { Session } from "next-auth"
+import type { Session } from "next-auth"
 
 export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={session!.user!.image ?? "https://source.boringavatars.com/marble/120"}
+        src={session?.user?.image ?? "https://source.boringavatars.com/marble/120"}
         alt="User Avatar"
       />
     </div>
