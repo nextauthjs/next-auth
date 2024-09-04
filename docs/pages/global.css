@@ -257,3 +257,7 @@ div.nextra-search kbd {
     opacity: 0;
   }
 }
+
+div#__next div:has(nav > div.searchbar) + div > aside div:has(div.searchbar) {
+  display: none;
+}
