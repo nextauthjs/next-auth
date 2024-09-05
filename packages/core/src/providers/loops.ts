@@ -9,41 +9,36 @@
  * @module providers/loops
  */
 
-import type { EmailConfig } from "./email.js"
+import type { EmailConfig, EmailProviderSendVerificationRequestParams, EmailProviderType } from "./email.js"
 import type { Awaitable, Theme } from "../types.js"
 
-export interface LoopsConfig extends EmailConfig {
-  apiKey?: string
-  transactionalId: string
-  sendVerificationRequest: (params: {
-    identifier: string
-    url: string
-    expires: Date
-    provider: LoopsConfig
-    token: string
-    theme: Theme
-    request: Request
-  }) => Awaitable<void>
-  options: LoopsUserConfig
+
+interface VerificationParams extends EmailProviderSendVerificationRequestParams {
+  transactionalId: string;
 }
 
-export type LoopsUserConfig = Omit<Partial<LoopsConfig>, "options" | "type">
+export type LoopsUserConfig = Omit<Partial<LoopsConfig>, "options" | "type" >;
+
+export interface LoopsConfig extends Omit<EmailConfig, 'sendVerificationRequest'>{
+  id: string;
+  apiKey: string;
+  transactionalId: string;
+  options: LoopsUserConfig;
+}
+
+
 
 export default function Loops(config: LoopsUserConfig): LoopsConfig {
-  if (!config.transactionalId)
-    throw new Error("Loops requires a `transactionalId` configuration")
-  return {
+  const defaultConfig = {
+    apiKey: "", 
     id: "loops",
-    type: "email",
+    type: "email" as EmailProviderType,
     name: "Loops",
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
-    transactionalId: "", // Add the missing property
-    async sendVerificationRequest(params) {
-      console.log("sendVerificationRequest", params)
-      const { identifier: to, provider, url } = params
-      if (!provider.apiKey)
-        throw new Error("Loops requires an `apiKey` configuration")
+    transactionalId: config.transactionalId || "", 
+    async sendVerificationRequest(params: VerificationParams) {
+      const { identifier: to, provider, url, transactionalId } = params
       const res = await fetch("https://app.loops.so/api/v1/transactional", {
         method: "POST",
         headers: {
@@ -51,7 +46,7 @@ export default function Loops(config: LoopsUserConfig): LoopsConfig {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          transactionalId: provider.transactionalId,
+          transactionalId: transactionalId,
           email: to,
           dataVariables: {
             url: url,
@@ -59,14 +54,17 @@ export default function Loops(config: LoopsUserConfig): LoopsConfig {
         }),
       })
 
-      console.log(res)
-
       if (!res.ok) {
         throw new Error("Loops Error: " + JSON.stringify(await res.json()))
       }
     },
     options: config,
   }
+
+  return {
+    ...defaultConfig,
+    ...config,
+  } as LoopsConfig
 }
 
 /**
