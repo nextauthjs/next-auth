@@ -1,6 +1,8 @@
 # Sponsors
 
-Auth.js is completely free and fully open-source. It is used in some of the biggest sites on the Internet [like ChatGPT](https://twitter.com/balazsorban44/status/1721632174279897132) with **more than 100 million users a week**!
+<blockquote>
+  Auth.js is completely free and fully open-source. It is used in some of the biggest sites on the Internet [like ChatGPT](https://twitter.com/balazsorban44/status/1721632174279897132) with **more than 100 million users a week**!
+</blockquote>
 
 Therefore, it is easy to forget that Auth.js is created and maintained by [actual humans](/contributors#core-team)! None of the individuals work on the project full-time, and they often dedicate their free time to support anyone from individuals to medium-size to billion-dollar companies.
 
