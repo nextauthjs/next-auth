@@ -9,33 +9,60 @@ import { Code } from "@/components/Code"
 
 - [Mailgun documentation](https://documentation.mailgun.com/docs/mailgun)
 
-## Setup
+## Overview
 
-### Environment Variables
+The Mailgun provider uses email to send "magic links" that contain URLs with verification tokens can be used to sign in.
 
+Adding support for signing in via email in addition to one or more OAuth services provides a way for users to sign in if they lose access to their OAuth account (e.g. if it is locked or deleted).
+
+The Mailgun provider can be used in conjunction with (or instead of) one or more OAuth providers.
+
+### How it works
+
+On initial sign in, a **Verification Token** is sent to the email address provided. By default this token is valid for 24 hours. If the Verification Token is used within that time (i.e. by clicking on the link in the email) an account is created for the user and they are signed in.
+
+If someone provides the email address of an _existing account_ when signing in, an email is sent and they are signed into the account associated with that email address when they follow the link in the email.
+
+<Callout type="warning">
+  The Mailgun provider can be used with both JSON Web Token and database managed
+  sessions, however **you must configure a database** to use it. It is not
+  possible to enable email sign in without using a database.
+</Callout>
+
+## Configuration
+
+1. First, you'll need to [add your domain](https://app.mailgun.com/mg/sending/domains) to your Mailgun account. This is required by Mailgun and this domain of the address you use in the `from` provider option.
+
+2. Next, you will have to generate an API key in the [Mailgun Settings](https://app.mailgun.com/settings/api_security/api_keys). You can save this API key as the `AUTH_MAILGUN_KEY` environment variable.
+
+```sh
+AUTH_MAILGUN_KEY=abc
 ```
-AUTH_MAILGUN_KEY
-```
 
-### Configuration
+If you name your environment variable `AUTH_MAILGUN_KEY`, the provider will pick it up automatically and your Auth.js configuration object can be simpler. If you'd like to rename it to something else, however, you'll have to manually pass it into the provider in your Auth.js configuration.
 
 <Code>
-  <Code.Next>
+<Code.Next>
 
-```ts filename="/auth.ts"
+```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import Mailgun from "next-auth/providers/mailgun"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: ...,
   providers: [
-    Mailgun({ from: "you@your-domain.com" }),
+    Mailgun({
+      // If your environment variable is named differently than default
+      apiKey: import.meta.env.AUTH_MAILGUN_KEY,
+      from: "no-reply@company.com"
+    }),
   ],
 })
 ```
 
-  </Code.Next>
-  <Code.Qwik>
-  
+</Code.Next>
+<Code.Qwik>
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Mailgun from "@auth/qwik/providers/mailgun"
@@ -43,39 +70,213 @@ import Mailgun from "@auth/qwik/providers/mailgun"
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   () => ({
     providers: [
-      Mailgun({ from: "you@your-domain.com" }),
+      Mailgun({
+        // If your environment variable is named differently than default
+        apiKey: import.meta.env.AUTH_MAILGUN_KEY,
+        from: "no-reply@company.com",
+      }),
     ],
   })
 )
 ```
 
-  </Code.Qwik>
-  <Code.Svelte>
+</Code.Qwik>
+<Code.Svelte>
 
-```ts filename="/src/auth.ts"
+```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Mailgun from "@auth/sveltekit/providers/mailgun"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: ...,
   providers: [
-    Mailgun({ from: "you@your-domain.com" }),
+    Mailgun({
+      // If your environment variable is named differently than default
+      apiKey: env.AUTH_MAILGUN_KEY,
+      from: "no-reply@company.com",
+    }),
   ],
 })
 ```
 
-  </Code.Svelte>
-  <Code.Express>
+</Code.Svelte>
+</Code>
 
-```ts filename="/src/app.ts"
-import { ExpressAuth } from "@auth/express"
-import Mailgun from "@auth/express/providers/mailgun"
+4. Do not forget to setup one of the [database adapters](https://authjs.dev/getting-started/database) for storing the Email verification token.
 
-app.use("/auth/*", ExpressAuth({
+5. You can now start the sign-in process with an email address at `/api/auth/signin`.
+
+A user account (i.e. an entry in the `Users` table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they click the link in magic link email and use up the verification token.
+
+## Customization
+
+### Email Body
+
+You can fully customize the sign in email that is sent by passing a custom function as the `sendVerificationRequest` option to `Mailgun()`.
+
+```js {7} filename="./auth.ts"
+import NextAuth from "next-auth"
+import Mailgun from "next-auth/providers/mailgun"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    Mailgun({ from: "you@your-domain.com" }),
+    Mailgun({
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
+      sendVerificationRequest({
+        identifier: email,
+        url,
+        provider: { server, from },
+      }) {
+        // your function
+      },
+    }),
   ],
-}))
+})
 ```
 
-  </Code.Express>
-</Code>
+As an example, the following shows the source for our built-in `sendVerificationRequest()` method. Notice that we're rendering the HTML (`html()`) and making the network call (`fetch()`) to Mailgun to actually do the sending here in this method.
+
+```ts filename="./lib/authSendRequest.ts" {13, 16}
+export async function sendVerificationRequest(params) {
+  const { identifier: to, provider, url, theme } = params
+  const { host } = new URL(url)
+  const domain = provider.from.split("@").at(1)
+
+  if (!domain)
+    throw new Error("malformed Mailgun domain")
+
+  const form = new FormData();
+  form.append("from", `${provider.name} <${provider.from}>`);
+  form.append("to", to);
+  form.append("subject", `Sign in to ${host}`);
+  form.append("html", html({ host, url, theme }));
+  form.append("text", text({ host, url }));
+
+  const res = await fetch(`https://api.mailgun.net/v3/${domain}/messages`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${btoa(`api:${provider.apiKey}`)}`,
+    },
+    body: form,
+  })
+
+  if (!res.ok)
+    throw new Error("Mailgun error: " + await res.text())
+}
+
+function html(params: { url: string; host: string; theme: Theme }) {
+  const { url, host, theme } = params
+
+  const escapedHost = host.replace(/\./g, "&#8203;.")
+
+  const brandColor = theme.brandColor || "#346df1"
+  const color = {
+    background: "#f9f9f9",
+    text: "#444",
+    mainBackground: "#fff",
+    buttonBackground: brandColor,
+    buttonBorder: brandColor,
+    buttonText: theme.buttonText || "#fff",
+  }
+
+  return `
+<body style="background: ${color.background};">
+  <table width="100%" border="0" cellspacing="20" cellpadding="0"
+    style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
+    <tr>
+      <td align="center"
+        style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
+        Sign in to <strong>${escapedHost}</strong>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${url}"
+                target="_blank"
+                style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.buttonText}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${color.buttonBorder}; display: inline-block; font-weight: bold;">Sign
+                in</a></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"
+        style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
+        If you did not request this email you can safely ignore it.
+      </td>
+    </tr>
+  </table>
+</body>
+`
+}
+
+// Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
+function text({ url, host }: { url: string; host: string }) {
+  return `Sign in to ${host}\n${url}\n\n`
+}
+```
+
+<Callout type="info">
+  If you want to generate great looking emails with React that are compatible
+  with many email clients, check out [mjml](https://mjml.io) or
+  [react-email](https://react.email)
+</Callout>
+
+### Verification Tokens
+
+By default, we are generating a random verification token. You can define a `generateVerificationToken` method in your provider options if you want to override it:
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Mailgun from "next-auth/providers/mailgun"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Mailgun({
+      async generateVerificationToken() {
+        return crypto.randomUUID()
+      },
+    }),
+  ],
+})
+```
+
+### Normalizing Email Addresses
+
+By default, Auth.js will normalize the email address. It treats the address as case-insensitive (which is technically not compliant to the [RFC 2821 spec](https://datatracker.ietf.org/doc/html/rfc2821), but in practice this causes more problems than it solves, i.e. when looking up users by e-mail from databases.) and also removes any secondary email address that may have been passed in as a comma-separated list. You can apply your own normalization via the `normalizeIdentifier` method on the `Mailgun` provider. The following example shows the default behavior:
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Mailgun from "next-auth/providers/mailgun"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Mailgun({
+      normalizeIdentifier(identifier: string): string {
+        // Get the first two elements only,
+        // separated by `@` from user input.
+        let [local, domain] = identifier.toLowerCase().trim().split("@")
+        // The part before "@" can contain a ","
+        // but we remove it on the domain part
+        domain = domain.split(",")[0]
+        return `${local}@${domain}`
+
+        // You can also throw an error, which will redirect the user
+        // to the sign-in page with error=EmailSignin in the URL
+        // if (identifier.split("@").length > 2) {
+        //   throw new Error("Only one email allowed")
+        // }
+      },
+    }),
+  ],
+})
+```
+
+<Callout type="warning">
+  Always make sure this returns a single e-mail address, even if multiple ones
+  were passed in.
+</Callout>
