@@ -19,10 +19,11 @@ interface VerificationParams extends EmailProviderSendVerificationRequestParams 
 
 export type LoopsUserConfig = Omit<Partial<LoopsConfig>, "options" | "type" >;
 
-export interface LoopsConfig extends Omit<EmailConfig, 'sendVerificationRequest'>{
+export interface LoopsConfig extends Omit<EmailConfig, 'sendVerificationRequest' | 'options'>{
   id: string;
   apiKey: string;
   transactionalId: string;
+  sendVerificationRequest: (params: VerificationParams) => Awaitable<void>;
   options: LoopsUserConfig;
 }
 
