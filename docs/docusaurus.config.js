@@ -158,7 +158,7 @@ module.exports = {
             },
             {
               label: "Sponsors",
-              to: "https://opencollective.com/nextauth",
+              to: "/sponsors",
             },
             {
               label: "Images by unDraw",
@@ -174,10 +174,10 @@ module.exports = {
     },
   },
   scripts: [
-   {
-    src: 'js/clerk.js',
-    async: true,
-   }
+    {
+      src: 'js/clerk.js',
+      async: true,
+    }
   ],
   presets: [
     [
