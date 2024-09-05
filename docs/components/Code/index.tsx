@@ -87,7 +87,7 @@ export function Code({ children }: ChildrenProps) {
             child
           ) : (
             <Tabs.Tab key={f}>
-              <p className="p-6 font-semibold rounded-lg bg-slate-100 dark:bg-neutral-950">
+              <p className="rounded-lg bg-slate-100 p-6 font-semibold dark:bg-neutral-950">
                 {renderedFrameworks[f]} not documented yet. Help us by
                 contributing{" "}
                 <a

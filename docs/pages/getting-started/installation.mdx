@@ -46,23 +46,13 @@ Start by installing the appropriate package for your framework.
 ### Setup Environment
 
 The only environment variable that is mandatory is the `AUTH_SECRET`. This is a random value used by the library to encrypt tokens and email
-verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via running:
+verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via the official [Auth.js CLI](https://cli.authjs.dev) running:
 
 ```bash
 npx auth secret
 ```
 
-Alternatively, you can use the following `openssl` command, which should be available on all Linux / Mac OS X systems.
-
-```bash
-openssl rand -base64 33
-```
-
-Then add it to your `.env.local` file:
-
-```bash filename=".env.local"
-AUTH_SECRET=secret
-```
+This will also add it to your `.env` file, respecting the framework conventions (eg.: Next.js' `.env.local`).
 
 ### Configure
 
@@ -107,17 +97,7 @@ export { auth as middleware } from "@/auth"
   </Code.Next>
   <Code.Qwik>
 
-You can add Auth.js easily by using the following Qwik starter script:
-
-```bash npm2yarn
-npm run qwik add auth
-```
-
-This command will add a new package:
-
-`@auth/qwik`
-
-and create a new file named `plugin@auth.ts` with an example configuration.
+1. Start by creating a new `plugin@auth.ts` file in your `src/routes` directory with the following content.
 
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"

@@ -58,7 +58,7 @@ export default function () {
         <NoResultsBoundary>
           <Hits
             hitComponent={Hit}
-            className="fixed top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-lg bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
+            className="fixed left-2 top-28 z-50 mt-[50px] max-h-[calc(100dvh_-_120px)] w-[calc(100vw_-_16px)] overflow-y-auto rounded-md bg-neutral-100 p-2 shadow-lg md:absolute md:left-auto md:right-0 md:top-12 md:mt-auto md:w-96 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
           />
         </NoResultsBoundary>
       </InstantSearch>
@@ -75,7 +75,7 @@ function NoResultsBoundary({ children }) {
     results.nbHits === 0
   ) {
     return (
-      <div className="fixed text-center top-28 left-2 md:left-auto md:absolute md:right-0 w-[calc(100vw_-_16px)] md:top-12 p-2 md:w-96 rounded-md shadow-md bg-neutral-100 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col max-h-[calc(100dvh_-_120px)] overflow-y-auto [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50">
+      <div className="fixed left-2 top-28 z-50 mt-[50px] max-h-[calc(100dvh_-_120px)] w-[calc(100vw_-_16px)] overflow-y-auto rounded-md bg-neutral-100 p-2 text-center shadow-md md:absolute md:left-auto md:right-0 md:top-12 md:mt-auto md:w-96 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50">
         No Results
       </div>
     )

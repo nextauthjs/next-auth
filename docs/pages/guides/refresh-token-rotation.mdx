@@ -62,8 +62,8 @@ export const { handlers, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (profile && account) {
+    async jwt({ token, account }) {
+      if (account) {
         // First-time login, save the `access_token`, its expiry and the `refresh_token`
         return {
           ...token,
@@ -118,6 +118,10 @@ export const { handlers, auth } = NextAuth({
         }
       }
     },
+  },
+  session: ({ session, token }) => {
+    session.error = token.error
+    return session
   },
 })
 
@@ -214,6 +218,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
+  },
+  session: ({ session, token }) => {
+    session.error = token.error
+    return session
   },
 })
 
