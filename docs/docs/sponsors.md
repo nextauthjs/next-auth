@@ -7,21 +7,41 @@ Therefore, it is easy to forget that Auth.js is created and maintained by [actua
 Maintaining NextAuth.js would not be possible without the generous support of our sponsors.
 
 <a
-  className="mt-8 flex items-center gap-6"
   style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1.5rem',
     color: "#6c47ff",
   }}
   href="https://go.clerk.com/ew92wBC"
   target="_blank"
 >
   <img
-    src="/img/etc/clerk-logo.svg"
+    src="https://authjs.dev/img/etc/clerk-logo.svg"
     alt="Clerk Logo"
-    className="w-24 rounded-xl bg-white p-4 pl-5"
+    style={{
+      width: '6rem',
+      borderRadius: '0.75rem',
+      padding: '1rem',
+      backgroundColor: '#fff'
+    }}
   />
-  <div className="text-xl font-semibold leading-snug text-sky-600 md:text-3xl">
+  <div
+    style={{
+      fontSize: '1.25rem',
+      lineHeight: '1.375',
+      fontWeight: '600',
+      color: '#0284c7',
+    }}
+  >
     Clerk <br />
-    <span className="text-xl font-medium">
+    <span
+      style={{
+        fontSize: '1.25rem',
+        lineHeight: '1.75rem',
+        fontWeight: '500',
+      }}
+    >
       The most comprehensive User Management Platform
     </span>
   </div>
@@ -29,7 +49,13 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
 
 ## 🥇 Gold sponsors
 
-<div className="flex flex-wrap gap-2">
+<div
+  style={{
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem'
+  }}
+>
   {[
     [
       "https://a0.to/signup/nextauthjs",
@@ -41,10 +67,24 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
       key={name}
       href={href}
       target="_blank"
-      className="mt-8 flex flex-col items-center gap-3 text-center font-semibold text-sky-600"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.75rem',
+        textAlign: 'center',
+        fontWeight: '600',
+        color: '#0284c7',
+        marginTop: '2rem'
+      }}
     >
       <img
-        className="w-20 rounded-md bg-slate-100 p-2"
+        style={{
+          width: '5rem',
+          borderRadius: '0.375rem',
+          padding: '0.5rem',
+          backgroundColor: '#fff'
+        }}
         src={src}
         alt={`${name} Logo`}
       />
@@ -55,7 +95,14 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
 
 ## 🥈 Silver sponsors
 
-<div className="flex flex-row flex-wrap gap-8 pt-8 md:gap-16">
+<div
+  style={{
+    display: 'flex',
+    flexWrap: 'wrap',
+    paddingTop: '2rem',
+    gap: '3rem'
+  }}
+>
   {[
     [
       "https://fusionauth.io",
@@ -77,10 +124,24 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
       key={name}
       href={href}
       target="_blank"
-      className="flex flex-col items-center gap-3 text-center font-semibold text-sky-600"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.75rem',
+        textAlign: 'center',
+        fontWeight: '600',
+        color: '#0284c7',
+        marginTop: '2rem'
+      }}
     >
       <img
-        className="w-20 rounded-md bg-slate-100 p-2"
+        style={{
+          width: '5rem',
+          borderRadius: '0.375rem',
+          padding: '0.5rem',
+          backgroundColor: '#fff'
+        }}
         src={src}
         alt={`${name} Logo`}
       />
@@ -91,7 +152,14 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
 
 ## 🥉 Bronze sponsors
 
-<div className="flex flex-row flex-wrap gap-8 pt-8 md:gap-16">
+<div
+  style={{
+    display: 'flex',
+    flexWrap: 'wrap',
+    paddingTop: '2rem',
+    gap: '3rem'
+  }}
+>
   {[
     [
       "https://arcjet.com/?ref=auth.js",
@@ -133,10 +201,24 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
       key={name}
       href={href}
       target="_blank"
-      className="flex flex-col items-center gap-3 text-center font-semibold text-sky-600"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.75rem',
+        textAlign: 'center',
+        fontWeight: '600',
+        color: '#0284c7',
+        marginTop: '2rem'
+      }}
     >
       <img
-        className="w-20 rounded-md bg-slate-100 p-2"
+        style={{
+          width: '5rem',
+          borderRadius: '0.375rem',
+          padding: '0.5rem',
+          backgroundColor: '#fff'
+        }}
         src={src}
         alt={`${name} Logo`}
       />
@@ -147,7 +229,7 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
 
 ## 🙇🏽‍♂️ Become a sponsor
 
-<div className="mt-8">
+<div style={{ marginTop: '2rem' }}>
 <details>
   <summary>
     Why are auth providers sponsoring Auth.js?
