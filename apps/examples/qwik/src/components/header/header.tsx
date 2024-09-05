@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import { useSession, useSignIn, useSignOut } from "~/routes/plugin@auth.js";
+import { useSession, useSignIn, useSignOut } from "~/routes/plugin@auth";
 import { QwikIcon } from "../icones/qwik";
 import { Avatar } from "../avatar/avatar";
 

@@ -214,7 +214,7 @@ export default function TikTok<P extends TiktokProfile>(
     token: {
       url: "https://open.tiktokapis.com/v2/oauth/token/",
       async request({ params, provider }) {
-        const res = await fetch(provider.token?.url!, {
+        const res = await fetch(provider.token?.url as unknown as string, {
           method: "POST",
           headers: {
             "Cache-Control": "no-cache",
