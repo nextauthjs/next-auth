@@ -140,7 +140,6 @@ export function DynamoDBAdapter(
         ReturnValues: "ALL_NEW",
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return format.from<AdapterUser>(data.Attributes)!
     },
     async deleteUser(userId) {
