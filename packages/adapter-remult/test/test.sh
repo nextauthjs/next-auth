@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 CONTAINER_NAME=authjs-remult-test
-
 docker run -d --rm --name ${CONTAINER_NAME} 
   
 # Always stop container, but exit with 1 when tests are failing

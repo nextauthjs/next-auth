@@ -27,9 +27,13 @@ npm install remult @auth/remult-adapter
 
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
+import { JsonFileDataProvider } from "remult/server"
 import { RemultAdapter } from "@auth/remult-adapter"
 
-const { adapter, entities } = RemultAdapter()
+// any remult data provider
+// postgres, mysql, mongodb, sqlite, mssql, oracle, json files, in memory...
+const dataProvider = new JsonFileDataProvider("db")
+const { adapter } = RemultAdapter({ dataProvider })
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
@@ -38,30 +42,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
-<Code.Qwik>
-
-```ts filename="/src/routes/plugin@auth.ts"
-import { QwikAuth$ } from "@auth/qwik"
-import { RemultAdapter } from "@auth/remult-adapter"
-
-const { adapter, entities } = RemultAdapter()
-
-export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
-  () => ({
-    adapter,
-    providers: [],
-  })
-)
-```
-
-</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
+import { JsonFileDataProvider } from "remult/server"
 import { RemultAdapter } from "@auth/remult-adapter"
 
-const { adapter, entities } = RemultAdapter()
+// any remult data provider
+// postgres, mysql, mongodb, sqlite, mssql, oracle, json files, in memory...
+const dataProvider = new JsonFileDataProvider("db")
+const { adapter } = RemultAdapter({ dataProvider })
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter,
@@ -74,9 +65,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
+import { JsonFileDataProvider } from "remult/server"
 import { RemultAdapter } from "@auth/remult-adapter"
 
-const { adapter, entities } = RemultAdapter()
+// any remult data provider
+// postgres, mysql, mongodb, sqlite, mssql, oracle, json files, in memory...
+const dataProvider = new JsonFileDataProvider("db")
+const { adapter } = RemultAdapter({ dataProvider })
 
 const app = express()
 
@@ -99,6 +94,7 @@ If you want to add some fields in some entities, you can override default ones.
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
+import { JsonFileDataProvider } from "remult/server"
 import { RemultAdapter } from "@auth/remult-adapter"
 import { User } from "../src/entities"
 
@@ -107,7 +103,9 @@ export class AppUser extends User {
   jobTitle = ""
 }
 
-const { adapter, entities } = RemultAdapter({
+const dataProvider = new JsonFileDataProvider("db")
+const { adapter } = RemultAdapter({
+  dataProvider,
   customEntities: {
     User: AppUser,
     // Account: ...
@@ -122,44 +120,79 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 })
 ```
 
-### Entities Setup
+### Using `remult.user` in your app
 
-Import your auth `entities` exported from `RemultAdapter` in your remult server.
+<Code>
+<Code.Next>
+You can see a full example [here](https://github.com/noam-honig/dev-next-auth/blob/main/next).
+</Code.Next>
+<Code.Svelte>
 
-This will then allow you to use each remult DataProvider `Postgres`, `MySQL`, `MongoDB`,
-`SQLite`, `Microsoft SQL Server`, `Oracle`, `JSON Files`,
-and even `InMemory` _(really nice for testing)_.
+First, fill the `getUser` function in your remult api.
 
-_(You are missing something, join [remult](https://remult.dev) and add yours.)_
-
-```ts filename="src/routes/api/[...remult]/+server.ts"
+```ts filename="./src/routes/api/[...remult]/+server.ts" {6-9}
 import { remultSveltekit } from "remult/remult-sveltekit"
-import { Task } from "../../../shared/Task"
-import { entities } from "../../../src/auth"
+import { AuthController } from "../../../shared/AuthController"
+import type { UserInfo } from "remult"
 
 export const _api = remultSveltekit({
-  entities: [Task, ...entities],
+  getUser: async (events) => {
+    const session = await events.locals.auth()
+    return session?.user as UserInfo
+  },
+  entities: [],
+  controllers: [AuthController],
 })
+
+export const { GET, POST, PUT, DELETE } = _api
 ```
 
-Nothing about migrations ? No, it will be done the remult way, automatically 🎉. _[read more here](https://remult.dev/docs/migrations)_
+Second, tweak your `hooks.server.ts` to use `withRemult` after `Auth.js`
 
-### Init remult before Auth
-
-Don't import the `handleAuth` directly and add a remult hook before.
-
-```ts filename="src/hooks.server.ts"
+```ts filename="./src/hooks.server.ts"
 import { sequence } from "@sveltejs/kit/hooks"
 
 import { handle as handleAuth } from "./auth"
 import type { Handle } from "@sveltejs/kit"
 import { _api } from "./routes/api/[...remult]/+server"
 
-const handleRemult: Handle = async ({ event, resolve }) => {
+export const handleRemult: Handle = async ({ event, resolve }) => {
   return await _api.withRemult(event, async () => {
     return resolve(event)
   })
 }
 
-export const handle = sequence(handleRemult, handleAuth)
+export const handle = sequence(handleAuth, handleRemult)
 ```
+
+Third, make `remult.user` available everywhere
+
+```ts filename="./src/routes/+layout.server.ts"
+import type { LayoutServerLoad } from "./$types"
+
+export const load = (async (event) => {
+  const session = await event.locals.auth()
+  return {
+    remultUser: session?.user,
+  }
+}) satisfies LayoutServerLoad
+```
+
+```svelte filename="sveltekit/src/routes/+page.svelte"
+<script lang="ts">
+  import { remult } from "remult"
+
+  export let data
+  $: remult.user = data.remultUser
+</script>
+
+<pre>{JSON.stringify(remult.user, null, 2)}</pre>
+```
+
+You can see a full example [here](https://github.com/noam-honig/dev-next-auth/blob/main/sveltekit).
+
+</Code.Svelte>
+<Code.Express>
+You can see a full example [here](https://github.com/noam-honig/dev-next-auth/blob/main/express).
+</Code.Express>
+</Code>
