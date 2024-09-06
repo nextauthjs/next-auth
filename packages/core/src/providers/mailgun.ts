@@ -55,15 +55,14 @@ export default function MailGun(config: EmailUserConfig): EmailConfig {
       const { host } = new URL(url)
       const domain = provider.from.split("@").at(1)
 
-      if (!domain)
-        throw new Error("malformed Mailgun domain")
+      if (!domain) throw new Error("malformed Mailgun domain")
 
-      const form = new FormData();
-      form.append("from", `${provider.name} <${provider.from}>`);
-      form.append("to", to);
-      form.append("subject", `Sign in to ${host}`);
-      form.append("html", html({ host, url, theme }));
-      form.append("text", text({ host, url }));
+      const form = new FormData()
+      form.append("from", `${provider.name} <${provider.from}>`)
+      form.append("to", to)
+      form.append("subject", `Sign in to ${host}`)
+      form.append("html", html({ host, url, theme }))
+      form.append("text", text({ host, url }))
 
       const res = await fetch(`https://api.mailgun.net/v3/${domain}/messages`, {
         method: "POST",
@@ -73,8 +72,7 @@ export default function MailGun(config: EmailUserConfig): EmailConfig {
         body: form,
       })
 
-      if (!res.ok)
-        throw new Error("Mailgun error: " + await res.text())
+      if (!res.ok) throw new Error("Mailgun error: " + (await res.text()))
     },
     options: config,
   }
