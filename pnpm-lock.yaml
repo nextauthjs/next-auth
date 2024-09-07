@@ -870,6 +870,9 @@ importers:
       '@types/react':
         specifier: 18.0.37
         version: 18.0.37
+      dotenv:
+        specifier: ^10.0.0
+        version: 10.0.0
       next:
         specifier: 14.2.3
         version: 14.2.3(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@19.0.0-rc-935180c7e0-20240524(react@18.2.0))(react@18.2.0)(sass@1.70.0)

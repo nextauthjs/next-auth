@@ -7,8 +7,7 @@
     "clean": "rm -rf .next",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "test:e2e": "playwright test -c ../../../packages/utils/playwright.config.ts"
+    "start": "next start"
   },
   "license": "ISC",
   "dependencies": {

@@ -1,6 +1,6 @@
-import { join } from "node:path"
+// import { join } from "node:path"
 import { defineConfig, devices } from "@playwright/test"
-import * as dotenv from "dotenv"
+// import * as dotenv from "dotenv"
 
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000
@@ -8,13 +8,13 @@ const PORT = process.env.PORT || 3000
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = `http://localhost:${PORT}`
 
-if (!process.env.CI) {
-  const path = process.env.TEST_DOCKER
-    ? join(process.cwd(), "..", "..", "..", "packages", "core", ".env")
-    : join(process.cwd(), "..", "core", ".env")
+// if (!process.env.CI) {
+//   const path = process.env.TEST_DOCKER
+//     ? join(process.cwd(), "..", "..", "..", "packages", "core", ".env")
+//     : join(process.cwd(), "..", "core", ".env")
 
-  dotenv.config({ path })
-}
+//   dotenv.config({ path })
+// }
 
 /** See https://playwright.dev/docs/api/class-testconfig. */
 export default defineConfig({
@@ -44,7 +44,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    cwd: "../../",
+    cwd: "../../apps/dev/nextjs",
     command: "pnpm dev",
     url: baseURL,
     timeout: 120 * 1000,
