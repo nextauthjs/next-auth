@@ -22,7 +22,8 @@
       "cache": false
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "test": {
       "outputs": ["coverage/**"],
@@ -47,7 +48,7 @@
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+      "passThroughEnv": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "@auth/hasura-adapter#build": {
       "dependsOn": ["@auth/core#build"],
@@ -68,6 +69,7 @@
         "@auth/solid-start#build",
         "@auth/qwik#build"
       ],
+      "persistent": true,
       "cache": false
     },
     "docs#build": {
