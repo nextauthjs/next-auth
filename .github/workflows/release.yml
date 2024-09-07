@@ -113,18 +113,18 @@ jobs:
       - name: Run unit tests
         if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm test
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
-      - name: Cache playwright binaries
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      # - name: Get installed Playwright version
+      #   id: playwright-version
+      #   run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
+      # - name: Cache playwright binaries
+      #   uses: actions/cache@v4
+      #   id: playwright-cache
+      #   with:
+      #     path: |
+      #       ~/.cache/ms-playwright
+      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright
-        if: steps.playwright-cache.outputs.cache-hit != 'true' && github.repository == 'nextauthjs/next-auth'
+        if: github.repository == 'nextauthjs/next-auth'
         run: |
           pnpm dlx playwright install --with-deps
       - name: Run E2E tests (Nextjs-Docker)
