@@ -192,6 +192,62 @@ export default async function SignInPage() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="app/signin/page.tsx"
+"use client"
+import { AuthError } from "next-auth"
+import { signIn } from "next-auth/react"
+import { providerMap } from "@/auth"
+
+export function SignIn() {
+
+  const credentialsAction = (formData: FormData) => {
+    try {
+      signIn("credentials", Object.fromEntries(formData))
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+      }
+    }
+  }
+
+  const handleProvider = (provider: string) => {
+    try {
+      signIn(provider)
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+      }
+    }
+  }
+
+  return (
+    <div>
+      <form action={credentialsAction}>
+        <label htmlFor="credentials-email">
+          Email
+          <input type="email" id="credentials-email" name="email" />
+        </label>
+        <label htmlFor="credentials-password">
+          Password
+          <input type="password" id="credentials-password" name="password" />
+        </label>
+        <input type="submit" value="Sign In" />
+      </form>
+      <section>
+        {Object.values(providerMap).map(provider => (
+          <button key={provider.id} onClick={() => handleProvider(provider.id)}>
+            Sign in with {provider.name}
+          </button>
+        ))}
+      </section>
+    </div>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 With Qwik we can do a server-side sign in with Form action, or a more
