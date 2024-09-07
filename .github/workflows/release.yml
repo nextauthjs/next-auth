@@ -111,22 +111,20 @@ jobs:
         run: pnpm format
         timeout-minutes: 15
       - name: Run unit tests
-        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
-        run: pnpm test
-      # - name: Get installed Playwright version
-      #   id: playwright-version
-      #   run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
-      # - name: Cache playwright binaries
-      #   uses: actions/cache@v4
-      #   id: playwright-cache
-      #   with:
-      #     path: |
-      #       ~/.cache/ms-playwright
-      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright
         if: github.repository == 'nextauthjs/next-auth'
         run: |
           pnpm exec playwright install --with-deps chromium
+      - name: Pass environment variables to Playwright
+        if: github.repository == 'nextauthjs/next-auth'
+        run: |
+          echo "AUTH_SECRET=$AUTH_SECRET" >> $GITHUB_ENV
+          echo "TEST_KEYCLOAK_USERNAME=$TEST_KEYCLOAK_USERNAME" >> $GITHUB_ENV
+          echo "TEST_KEYCLOAK_PASSWORD=$TEST_KEYCLOAK_PASSWORD" >> $GITHUB_ENV
+          echo "AUTH_KEYCLOAK_ID=$AUTH_KEYCLOAK_ID" >> $GITHUB_ENV
+          echo "AUTH_KEYCLOAK_SECRET=$AUTH_KEYCLOAK_SECRET" >> $GITHUB_ENV
+          echo "AUTH_KEYCLOAK_ISSUER=$AUTH_KEYCLOAK_ISSUER" >> $GITHUB_ENV
+          echo "AUTH_TRUST_HOST=1" >> $GITHUB_ENV
       - name: Run E2E tests (Nextjs-Docker)
         continue-on-error: true
         if: false
