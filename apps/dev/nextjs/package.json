@@ -1,7 +1,7 @@
 {
   "name": "next-auth-app",
   "version": "1.0.0",
-  "description": "Next.js + Auth.js Developer app",
+  "description": "Next.js + Auth.js Developer App",
   "private": true,
   "scripts": {
     "clean": "rm -rf .next",
@@ -11,17 +11,13 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@auth/prisma-adapter": "workspace:*",
-    "@prisma/client": "^5",
     "next": "15.0.0-canary.144",
     "next-auth": "workspace:*",
     "react": "19.0.0-rc-4c58fce7-20240904",
     "react-dom": "19.0.0-rc-4c58fce7-20240904"
   },
   "devDependencies": {
-    "@libsql/client": "^0.6.0",
     "@types/react": "^18.2.23",
-    "@types/react-dom": "^18.2.8",
-    "prisma": "^5"
+    "@types/react-dom": "^18.2.8"
   }
 }
