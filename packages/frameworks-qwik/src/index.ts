@@ -282,7 +282,7 @@ async function authAction(
 
   try {
     return await res.json()
-  } catch (error) {
+  } catch {
     return await res.text()
   }
 }

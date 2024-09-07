@@ -1,10 +1,4 @@
-import {
-  GeneratedColumnConfig,
-  and,
-  eq,
-  getTableColumns,
-  is,
-} from "drizzle-orm"
+import { GeneratedColumnConfig, and, eq, getTableColumns } from "drizzle-orm"
 import {
   MySqlColumn,
   MySqlDatabase,
