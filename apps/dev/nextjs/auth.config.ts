@@ -1,11 +1,11 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import GitHub from "next-auth/providers/github"
-import Google from "next-auth/providers/google"
-import Facebook from "next-auth/providers/facebook"
-import Twitter from "next-auth/providers/twitter"
-import Keycloak from "next-auth/providers/keycloak"
-import LinkedIn from "next-auth/providers/linkedin"
+// import GitHub from "next-auth/providers/github"
+// import Google from "next-auth/providers/google"
+// import Facebook from "next-auth/providers/facebook"
+// import Twitter from "next-auth/providers/twitter"
+// import Keycloak from "next-auth/providers/keycloak"
+// import LinkedIn from "next-auth/providers/linkedin"
 
 declare module "next-auth" {
   /**
@@ -37,12 +37,12 @@ export default {
         }
       },
     }),
-    GitHub,
-    Google,
-    Keycloak,
-    Facebook,
-    Twitter,
-    LinkedIn,
+    // GitHub,
+    // Google,
+    // Keycloak,
+    // Facebook,
+    // Twitter,
+    // LinkedIn,
   ].filter(Boolean) as NextAuthConfig["providers"],
   callbacks: {
     jwt({ token, trigger, session }) {
@@ -51,4 +51,5 @@ export default {
     },
   },
   basePath: "/auth",
+  secret: "secret",
 } satisfies NextAuthConfig
