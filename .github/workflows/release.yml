@@ -126,7 +126,7 @@ jobs:
       - name: Install Playwright
         if: github.repository == 'nextauthjs/next-auth'
         run: |
-          pnpm dlx playwright install --with-deps
+          pnpm exec playwright install --with-deps chromium
       - name: Run E2E tests (Nextjs-Docker)
         continue-on-error: true
         if: false
