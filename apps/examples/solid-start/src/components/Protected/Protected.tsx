@@ -1,5 +1,4 @@
-import { type Session } from "@auth/core"
-import { getSession } from "@solid-auth/next"
+import { getSession, type Session } from "@auth/solid-start"
 import { Component, Show } from "solid-js"
 import { useRouteData } from "solid-start"
 import { createServerData$, redirect } from "solid-start/server"
