@@ -99,7 +99,9 @@ export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={session?.user?.image ?? "https://source.boringavatars.com/marble/120"}
+        src={
+          session?.user?.image ?? "https://source.boringavatars.com/marble/120"
+        }
         alt="User Avatar"
       />
     </div>
