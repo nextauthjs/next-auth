@@ -152,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
       url: `${NOTION_HOST}/v1/oauth/authorize`,
     },
 
-    async profile(profile, tokens) {
+    async profile(profile) {
       return {
         id: profile.id,
         name: profile.name,

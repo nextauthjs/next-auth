@@ -118,7 +118,9 @@ export default function WeChat(
     userinfo: {
       url: "https://api.weixin.qq.com/sns/userinfo",
       async request({ tokens, provider }) {
-        const url = new URL(provider.userinfo?.url!)
+        if (!provider.userinfo) return
+
+        const url = new URL(provider.userinfo.url)
         url.searchParams.set("access_token", tokens.access_token!)
         url.searchParams.set("openid", String(tokens.openid))
         url.searchParams.set("lang", "zh_CN")

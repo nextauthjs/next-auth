@@ -8,7 +8,7 @@ Once a user is logged in, you often want to get the session object in order to u
 <Code>
 <Code.Next>
 
-```tsx filename="./components/UserAvatar" {4} /async/
+```tsx filename="./components/UserAvatar.tsx" {4} /async/
 import { auth } from "../auth"
 
 export default async function UserAvatar() {
@@ -75,12 +75,12 @@ export default function MyApp({
 }
 ```
 
-```tsx filename="pages/dashboard.tsx
+```tsx filename="pages/dashboard.tsx"
 import { useSession } from "next-auth/react"
 import { UserAvatar } from "@/components/UserAvatar"
 
 export default function Dashboard() {
-  const session = useSession()
+  const { data: session } = useSession()
 
   return (
     <nav>
@@ -92,14 +92,14 @@ export default function Dashboard() {
 
 Finally, we can use it in the component.
 
-```tsx filename="./components/UserAvatar" /session/
-export function UserAvatar({ session }) {
+```tsx filename="./components/UserAvatar.tsx" /session/
+import type { Session } from "next-auth"
+
+export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={
-          session?.user.image ?? "https://source.boringavatars.com/marble/120"
-        }
+        src={session?.user?.image ?? "https://i.pravatar.cc/300"}
         alt="User Avatar"
       />
     </div>
@@ -143,8 +143,7 @@ Then you can access the `session` on the `$page.data` object in your page.
 
 <nav>
   <img
-    src={$page.data.session?.user?.image ??
-      "https://source.boringavatars.com/marble/120/"}
+    src={$page.data.session?.user?.image ?? "https://i.pravatar.cc/300"}
     alt="User Avatar"
   />
 </nav>
