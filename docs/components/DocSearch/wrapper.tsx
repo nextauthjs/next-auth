@@ -48,7 +48,7 @@ export default function () {
   }, [])
 
   return (
-    <div className="relative searchbar">
+    <div className="relative max-sm:hidden">
       <InstantSearch
         indexName="next-auth"
         // @ts-expect-error
