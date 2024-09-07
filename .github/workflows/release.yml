@@ -111,6 +111,8 @@ jobs:
         run: pnpm format
         timeout-minutes: 15
       - name: Run unit tests
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
+        run: pnpm test
       - name: Install Playwright
         if: github.repository == 'nextauthjs/next-auth'
         run: |
