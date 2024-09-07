@@ -36,7 +36,15 @@
         "playwright/.cache/**",
         "test-results/**"
       ],
-      "env": ["TEST_KEYCLOAK_PASSWORD", "TEST_KEYCLOAK_USERNAME"]
+      "env": [
+        "TEST_KEYCLOAK_PASSWORD",
+        "TEST_KEYCLOAK_USERNAME",
+        "AUTH_SECRET",
+        "AUTH_KEYCLOAK_ID",
+        "AUTH_KEYCLOAK_SECRET",
+        "AUTH_KEYCLOAK_ISSUER",
+        "AUTH_TRUST_HOST"
+      ]
     },
     "@auth/xata-adapter#test": {
       "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
