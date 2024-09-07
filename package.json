@@ -13,6 +13,7 @@
     "clean": "turbo run clean --no-cache",
     "dev": "pnpm dev:next",
     "dev:next": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=@auth/core --filter=!./packages/adapter-*",
+    "dev:e2e:next": "turbo run dev --filter=next-auth-app",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev:sveltekit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
     "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
