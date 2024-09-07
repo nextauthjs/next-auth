@@ -47,9 +47,7 @@ export default defineConfig({
     cwd: "../../",
     command: "pnpm dev:e2e:next",
     url: baseURL,
-    timeout: 120 * 1000,
-    stdout: process.env.CI ? "ignore" : "pipe",
-    stderr: "pipe",
+    stdout: "pipe",
     reuseExistingServer: !process.env.CI,
   },
 })
