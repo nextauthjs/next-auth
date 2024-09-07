@@ -96,11 +96,10 @@ export default function Eventbrite<P extends EventbriteProfile>(
           : null,
       }
     },
-    style: {
-      logo: "/eventbrite.svg",
-      bg: "#f05537",
-      text: "#fff",
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
+    style: { bg: "#f05537", text: "#fff" },
     options: config,
   }
 }
