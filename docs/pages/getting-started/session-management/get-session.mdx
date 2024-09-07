@@ -99,9 +99,7 @@ export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={
-          session?.user?.image ?? "https://source.boringavatars.com/marble/120"
-        }
+        src={session?.user?.image ?? "https://i.pravatar.cc/300"}
         alt="User Avatar"
       />
     </div>
@@ -145,8 +143,7 @@ Then you can access the `session` on the `$page.data` object in your page.
 
 <nav>
   <img
-    src={$page.data.session?.user?.image ??
-      "https://source.boringavatars.com/marble/120/"}
+    src={$page.data.session?.user?.image ?? "https://i.pravatar.cc/300"}
     alt="User Avatar"
   />
 </nav>
