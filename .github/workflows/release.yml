@@ -78,6 +78,7 @@ env:
   AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
   AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
   AUTH_TRUST_HOST: 1
+  DEBUG: "pw:webserver"
 
 jobs:
   test:
