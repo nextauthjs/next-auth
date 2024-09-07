@@ -48,7 +48,7 @@ export default function () {
   }, [])
 
   return (
-    <div className="relative max-md:hidden">
+    <div className="relative md:hidden">
       <InstantSearch
         indexName="next-auth"
         // @ts-expect-error
