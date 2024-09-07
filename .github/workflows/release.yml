@@ -159,7 +159,7 @@ jobs:
         name: Upload Playwright artifacts
         with:
           name: playwright-traces
-          path: "**/packages/utils/test-results/*/trace.zip"
+          path: "**/packages/next-auth/test-results/*/trace.zip"
           retention-days: 7
       - uses: codecov/codecov-action@v4
         if: always()
