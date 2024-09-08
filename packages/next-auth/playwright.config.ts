@@ -21,7 +21,7 @@ export default defineConfig({
   testDir: "../",
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: "test-results/",
-  testMatch: "**/test/e2e/*.spec.ts",
+  testMatch: "**/test/e2e/**/*.spec.ts",
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
