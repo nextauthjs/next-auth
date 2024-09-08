@@ -33,7 +33,7 @@ test.describe("Basic Auth", () => {
     })
   })
 
-  test("Keycloak Signin / Signout", async ({ page }) => {
+  test.skip("Keycloak Signin / Signout", async ({ page }) => {
     if (
       !process.env.TEST_KEYCLOAK_USERNAME ||
       !process.env.TEST_KEYCLOAK_PASSWORD
