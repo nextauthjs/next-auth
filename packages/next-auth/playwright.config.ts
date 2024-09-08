@@ -45,7 +45,7 @@ export default defineConfig({
   ],
   webServer: {
     cwd: "../../apps/dev/nextjs",
-    command: `AUTH_SECRET=${process.env.AUTH_SECRET} pnpm dev`,
+    command: "pnpm dev",
     url: baseURL,
     stdout: "pipe",
     reuseExistingServer: !process.env.CI,
