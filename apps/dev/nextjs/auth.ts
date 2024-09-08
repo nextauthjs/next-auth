@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
-// import type { NextAuthConfig } from "next-auth"
+import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-// import Keycloak from "next-auth/providers/keycloak"
+import Keycloak from "next-auth/providers/keycloak"
 
 // import { PrismaClient } from "@prisma/client"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -66,7 +66,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         }
       },
     }),
-    // Keycloak,
+    Keycloak,
   ],
   callbacks: {
     jwt({ token, trigger, session }) {
@@ -75,6 +75,5 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     },
   },
   basePath: "/auth",
-  secret: "secret",
   session: { strategy: "jwt" },
 })
