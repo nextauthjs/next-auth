@@ -43,6 +43,7 @@ https://example.com/auth/callback/descope
 ```
 AUTH_DESCOPE_ID
 AUTH_DESCOPE_SECRET
+AUTH_DESCOPE_ISSUER
 ```
 
 ### Configuration
@@ -104,3 +105,9 @@ app.use("/auth/*", ExpressAuth({ providers: [Descope] }))
 
   </Code.Express>
 </Code>
+
+### Using Descope Widgets
+
+If you wish to use Descope [Widgets](https://docs.descope.com/widgets) with NextAuth, you will have to wrap your NextAuth components with our Next.js SDK and `<AuthProvider>`. 
+
+For more information on this, please look at our documentation [here](https://docs.descope.com/getting-started/nextauth/app-router#nextauth-and-widgets).

@@ -66,6 +66,7 @@ export interface DescopeProfile {
  * ```
  * AUTH_DESCOPE_ID="<Descope Issuer's last url segment>" # Descope's Issuer can be found in "Authentication Methods > SSO > Identity Provider" (Can also be taken from "Project > Project ID")
  * AUTH_DESCOPE_SECRET="<Descope Access Key>" # Manage > Access Keys
+ * AUTH_DESCOPE_ISSUER="<Descope Issuer URL>" # Applications -> OIDC Application -> Issuer
  * ```
  *
  * ### Resources
@@ -96,7 +97,8 @@ export default function Descope(
     id: "descope",
     name: "Descope",
     type: "oidc",
-    issuer: `https://api.descope.com/${config.clientId}`,
+    clientId: config.clientId,
+    wellKnown: `${config.issuer}/.well-known/openid-configuration`,
     style: {
       bg: "#1C1C23",
       text: "#ffffff",
