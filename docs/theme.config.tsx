@@ -13,7 +13,7 @@ const InkeepChatButton = dynamic(
     ssr: false,
     loading: () => (
       <div className="hidden lg:block">
-        <button className="flex items-center gap-2 rounded-lg bg-black/[.05] px-3 py-1.5 text-base leading-tight text-gray-800 transition-colors dark:bg-gray-50/10 dark:text-gray-200 md:text-sm">
+        <button className="flex items-center gap-2 rounded-lg bg-black/[.05] px-3 py-1.5 text-base leading-tight text-gray-800 transition-colors md:text-sm dark:bg-gray-50/10 dark:text-gray-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -100,7 +100,7 @@ const config: DocsThemeConfig = {
         </a>
         <ThemeSwitch
           lite
-          className="*:justify-center *:gap-0 [&_svg]:size-4 !bg-transparent p-0 [&_span]:hidden"
+          className="!bg-transparent p-0 *:justify-center *:gap-0 [&_span]:hidden [&_svg]:size-4"
         />
       </div>
     ),
