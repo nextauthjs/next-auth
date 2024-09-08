@@ -48,7 +48,7 @@ export default function () {
   }, [])
 
   return (
-    <div className="relative">
+    <div className="relative [aside_&]:w-full max-md:[nav_&]:hidden">
       <InstantSearch
         indexName="next-auth"
         // @ts-expect-error
@@ -58,7 +58,7 @@ export default function () {
         <NoResultsBoundary>
           <Hits
             hitComponent={Hit}
-            className="fixed left-2 top-28 z-50 mt-[50px] max-h-[calc(100dvh_-_120px)] w-[calc(100vw_-_16px)] overflow-y-auto rounded-md bg-neutral-100 p-2 shadow-lg md:absolute md:left-auto md:right-0 md:top-12 md:mt-auto md:w-96 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
+            className="fixed left-2 top-28 z-50 mt-[50px] max-h-[calc(100dvh_-_120px)] w-[calc(100vw_-_16px)] overflow-y-auto rounded-md bg-neutral-100 shadow-lg dark:bg-neutral-800 md:absolute md:left-auto md:right-0 md:top-12 md:mt-auto md:w-96 [&>ol]:flex [&>ol]:flex-col [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
           />
         </NoResultsBoundary>
       </InstantSearch>
