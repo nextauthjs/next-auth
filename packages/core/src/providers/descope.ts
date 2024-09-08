@@ -50,7 +50,7 @@ export interface DescopeProfile {
  * import Descope from "@auth/core/providers/descope"
  *
  * const request = new Request(origin)
- * const response = await Auth(request, { providers: [Descope] })
+ * const response = await Auth(request, { providers: [Descope({ clientId: process.env.AUTH_DESCOPE_ID, clientSecret: process.env.AUTH_DESCOPE_SECRET, issuer: process.env.AUTH_DESCOPE_ISSUER })] })
  * ```
  *
  * ### Configuring Descope
