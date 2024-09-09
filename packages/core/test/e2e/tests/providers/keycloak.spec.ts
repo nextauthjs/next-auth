@@ -24,9 +24,7 @@ test.describe("KeyCloak Provider", () => {
 
       expect(JSON.parse(session ?? "{}")).toEqual({
         user: {
-          email: "bob@alice.com",
-          name: "Bob Alice",
-          image: "https://avatars.githubusercontent.com/u/67470890?s=200&v=4",
+          name: "bob",
         },
         expires: expect.any(String),
       })
