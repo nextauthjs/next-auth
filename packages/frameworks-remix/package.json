@@ -1,7 +1,7 @@
 {
   "name": "@auth/remix",
   "description": "Authentication for Remix.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "files": [
     "client.*",
@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "@auth/core": "workspace:*",
-    "@remix-run/react": "^1.10.1",
-    "@remix-run/server-runtime": "^1.10.1",
+    "@remix-run/react": "^2.11.2",
+    "@remix-run/serve": "^2.11.2",
     "@types/node": "^18.7.14",
     "next-auth": "workspace:*",
     "react": "^18",
@@ -45,8 +45,8 @@
   },
   "peerDependencies": {
     "@auth/core": "~0.2.2 || ^0.2.2",
-    "@remix-run/react": "^1.10.0",
-    "@remix-run/server-runtime": "^1.10.0"
+    "@remix-run/react": "^2.11.2",
+    "@remix-run/serve": "^2.11.2"
   },
   "keywords": [
     "Remix",
