@@ -1,359 +1,394 @@
-import type { Adapter } from "next-auth/adapters"
-import { createHash, randomBytes } from "crypto"
-import { Profile } from "next-auth"
-import { ulid } from "ulid"
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official <a href="https://pouchdb.com/api.html">PouchDB</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://pouchdb.com">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/pouchdb.svg" width="38" />
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install pouchdb pouchdb-find @auth/pouchdb-adapter
+ * ```
+ *
+ * @module @auth/pouchdb-adapter
+ */
 
-type PouchdbDocument<T> = PouchDB.Core.ExistingDocument<{ data: T }>
-type PouchdbFindResponse = PouchDB.Find.FindResponse<any>
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "@auth/core/adapters"
 
-interface PouchdbUser {
-  id: string
-  name?: string
-  email?: string
-  emailVerified?: Date | string
-  image?: string
+type PrefixConfig = Record<
+  "user" | "account" | "session" | "verificationToken",
+  string
+>
+type IndexConfig = Record<
+  | "userByEmail"
+  | "accountByProviderId"
+  | "sessionByToken"
+  | "verificationTokenByToken",
+  string
+>
+
+/**
+ * Configure the adapter
+ */
+export interface PouchDBAdapterOptions {
+  /**
+   * Your PouchDB instance, with the `pouchdb-find` plugin installed.
+   * @example
+   * ```javascript
+   * import PouchDB from "pouchdb"
+   *
+   * PouchDB
+   *   .plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
+   *   .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+   *
+   * const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
+   */
+  pouchdb: PouchDB.Database
+  /**
+   * Override the default prefix names.
+   *
+   * @default
+   * ```js
+   * {
+   *   user: "USER",
+   *   account: "ACCOUNT",
+   *   session: "SESSION",
+   *   verificationToken: "VERIFICATION-TOKEN"
+   * }
+   * ```
+   */
+  prefixes?: PrefixConfig
+  /**
+   * Override the default index names.
+   *
+   * @default
+   * ```js
+   * {
+   *   userByEmail: "nextAuthUserByEmail",
+   *   accountByProviderId: "nextAuthAccountByProviderId",
+   *   sessionByToken: "nextAuthSessionByToken",
+   *   verificationTokenByToken: "nextAuthVerificationRequestByToken"
+   * }
+   * ```
+   */
+  indexes?: IndexConfig
 }
 
-interface PouchdbSession {
-  userId: string
-  expires: Date | string
-  sessionToken: string
-  accessToken: string
-}
+export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
+  const { pouchdb } = options
+  const {
+    userByEmail = "nextAuthUserByEmail",
+    accountByProviderId = "nextAuthAccountByProviderId",
+    sessionByToken = "nextAuthSessionByToken",
+    verificationTokenByToken = "nextAuthVerificationRequestByToken",
+  } = options?.indexes ?? {}
+  const {
+    user: userPrefix = "USER",
+    account: accountPrefix = "ACCOUNT",
+    session: sessionPrefix = "SESSION",
+    verificationToken: verificationTokenPrefix = "VERIFICATION-TOKEN",
+  } = options?.prefixes ?? {}
 
-interface PouchdbAccount {
-  id: string
-  userId: string
-  providerType: string
-  providerId: string
-  providerAccountId: string
-  refreshToken: string | null
-  accessToken: string | null
-  accessTokenExpires: Date | null
-}
-
-export const PouchDBAdapter: Adapter<
-  PouchDB.Database,
-  never,
-  PouchdbUser,
-  Profile & { emailVerified?: Date },
-  PouchdbSession
-> = (pouchdb) => {
   return {
-    async getAdapter({ session, secret, ...appOptions }) {
-      // create PouchDB indexes if they don't exist
-      const res = await pouchdb.getIndexes()
-      const indexes = res.indexes.map((index) => index.name, [])
-      if (!indexes.includes("nextAuthUserByEmail")) {
-        await pouchdb.createIndex({
-          index: {
-            name: "nextAuthUserByEmail",
-            ddoc: "nextAuthUserByEmail",
-            fields: ["data.email"],
-          },
-        })
-      }
-      if (!indexes.includes("nextAuthAccountByProviderId")) {
-        await pouchdb.createIndex({
-          index: {
-            name: "nextAuthAccountByProviderId",
-            ddoc: "nextAuthAccountByProviderId",
-            fields: ["data.providerId", "data.providerAccountId"],
-          },
-        })
-      }
-      if (!indexes.includes("nextAuthSessionByToken")) {
-        await pouchdb.createIndex({
-          index: {
-            name: "nextAuthSessionByToken",
-            ddoc: "nextAuthSessionByToken",
-            fields: ["data.sessionToken"],
-          },
-        })
-      }
-      if (!indexes.includes("nextAuthVerificationRequestByToken")) {
-        await pouchdb.createIndex({
-          index: {
-            name: "nextAuthVerificationRequestByToken",
-            ddoc: "nextAuthVerificationRequestByToken",
-            fields: ["data.identifier", "data.token"],
-          },
-        })
-      }
+    async createUser(user) {
+      const doc = { ...user, _id: [userPrefix, crypto.randomUUID()].join("_") }
+      await pouchdb.put(doc)
+      return { ...user, id: doc._id }
+    },
 
-      const sessionMaxAge = session.maxAge * 1000 // default is 30 days
-      const sessionUpdateAge = session.updateAge * 1000 // default is 1 day
-
-      const hashToken = (token: string) =>
-        createHash("sha256").update(`${token}${secret}`).digest("hex")
-
-      return {
-        displayName: "POUCHDB",
-
-        async createUser(profile) {
-          const data = {
-            ...profile,
-            id: ["USER", ulid()].join("_"),
-          }
-
-          await pouchdb.put({
-            _id: data.id,
-            data,
-          })
-          return data
-        },
-
-        async getUser(id) {
-          const res: PouchdbDocument<PouchdbUser> = await pouchdb.get(id)
-          if (typeof res.data?.emailVerified === "string") {
-            res.data.emailVerified = new Date(res.data.emailVerified)
-          }
-
-          return res?.data ?? null
-        },
-
-        async getUserByEmail(email) {
-          const res: PouchdbFindResponse = await pouchdb.find({
-            use_index: "nextAuthUserByEmail",
-            selector: { "data.email": { $eq: email } },
-            limit: 1,
-          })
-          const userDoc: PouchdbDocument<PouchdbUser> = res.docs[0]
-          if (userDoc?.data) {
-            const user = userDoc.data
-            if (typeof user.emailVerified === "string")
-              user.emailVerified = new Date(user.emailVerified)
-            return user
-          }
-          return null
-        },
-
-        async getUserByProviderAccountId(providerId, providerAccountId) {
-          const res: PouchdbFindResponse = await pouchdb.find({
-            use_index: "nextAuthAccountByProviderId",
-            selector: {
-              "data.providerId": { $eq: providerId },
-              "data.providerAccountId": { $eq: providerAccountId },
-            },
-            limit: 1,
-          })
-          const accountDoc: PouchdbDocument<PouchdbAccount> = res.docs[0]
-          if (accountDoc?.data) {
-            const userDoc: PouchdbDocument<PouchdbUser> = await pouchdb.get(
-              accountDoc.data.userId
-            )
-            return userDoc?.data ?? null
-          }
-          return null
-        },
-
-        async updateUser(user: PouchdbUser & { id: string }) {
-          const update = { ...user }
-          const doc: PouchdbDocument<PouchdbUser> = await pouchdb.get(user.id)
-          doc.data = {
-            ...doc.data,
-            ...update,
-          }
-          await pouchdb.put(doc)
-          return doc.data
-        },
-
-        async deleteUser(id) {
-          const doc: PouchdbDocument<PouchdbUser> = await pouchdb.get(id)
-          await pouchdb.put({
-            ...doc,
-            _deleted: true,
-          })
-        },
-
-        async linkAccount(
-          userId,
-          providerId,
-          providerType,
-          providerAccountId,
-          refreshToken,
-          accessToken,
-          accessTokenExpires
-        ) {
-          await pouchdb.put({
-            _id: ["ACCOUNT", ulid()].join("_"),
-            data: {
-              userId,
-              providerId,
-              providerType,
-              providerAccountId,
-              refreshToken,
-              accessToken,
-              accessTokenExpires:
-                accessTokenExpires != null
-                  ? new Date(accessTokenExpires)
-                  : null,
-            },
-          })
-        },
-
-        async unlinkAccount(_, providerId, providerAccountId) {
-          const account = await pouchdb.find({
-            use_index: "nextAuthAccountByProviderId",
-            selector: {
-              "data.providerId": { $eq: providerId },
-              "data.providerAccountId": { $eq: providerAccountId },
-            },
-            limit: 1,
-          })
-          await pouchdb.put({
-            ...account.docs[0],
-            _deleted: true,
-          })
-        },
-
-        async createSession(user: PouchdbUser & { id: string }) {
-          const data = {
-            userId: user.id,
-            sessionToken: randomBytes(32).toString("hex"),
-            accessToken: randomBytes(32).toString("hex"),
-            expires: new Date(Date.now() + sessionMaxAge),
-          }
-          await pouchdb.put({
-            _id: ["SESSION", ulid()].join("_"),
-            data,
-          })
-          return data
-        },
-
-        async getSession(sessionToken) {
-          const res: PouchdbFindResponse = await pouchdb.find({
-            use_index: "nextAuthSessionByToken",
-            selector: {
-              "data.sessionToken": { $eq: sessionToken },
-            },
-            limit: 1,
-          })
-          const sessionDoc: PouchdbDocument<PouchdbSession> = res.docs[0]
-          if (sessionDoc.data) {
-            const session = sessionDoc.data
-            if (new Date(session?.expires ?? Infinity) < new Date()) {
-              await pouchdb.put({ ...sessionDoc, _deleted: true })
-              return null
-            }
-            return { ...session, expires: new Date(session?.expires ?? "") }
-          }
-          return null
-        },
-
-        async updateSession(session, force) {
-          if (
-            !force &&
-            Number(session.expires) - sessionMaxAge + sessionUpdateAge >
-              Date.now()
-          ) {
-            return null
-          }
-          const res: PouchdbFindResponse = await pouchdb.find({
-            use_index: "nextAuthSessionByToken",
-            selector: {
-              "data.sessionToken": { $eq: session.sessionToken },
-            },
-            limit: 1,
-          })
-          const previousSessionDoc: PouchdbDocument<PouchdbSession> =
-            res.docs[0]
-          if (previousSessionDoc?.data) {
-            const currentSessionDoc: PouchdbDocument<PouchdbSession> = {
-              ...previousSessionDoc,
-              data: {
-                ...previousSessionDoc.data,
-                expires: new Date(Date.now() + sessionMaxAge),
-              },
-            }
-            await pouchdb.put(currentSessionDoc)
-            return currentSessionDoc.data
-          }
-          return null
-        },
-
-        async deleteSession(sessionToken) {
-          const res = await pouchdb.find({
-            use_index: "nextAuthSessionByToken",
-            selector: {
-              "data.sessionToken": { $eq: sessionToken },
-            },
-            limit: 1,
-          })
-          const sessionDoc = res.docs[0]
-          await pouchdb.put({
-            ...sessionDoc,
-            _deleted: true,
-          })
-        },
-
-        async createVerificationRequest(identifier, url, token, _, provider) {
-          const hashedToken = hashToken(token)
-          const data = {
-            identifier,
-            token: hashedToken,
-            expires: new Date(Date.now() + provider.maxAge * 1000),
-          }
-          await pouchdb.put({
-            _id: ["VERIFICATION-REQUEST", ulid()].join("_"),
-            data,
-          })
-          await provider.sendVerificationRequest({
-            identifier,
-            url,
-            token,
-            baseUrl: appOptions.baseUrl,
-            provider,
-          })
-        },
-
-        async getVerificationRequest(identifier, token) {
-          const hashedToken = hashToken(token)
-          const res: PouchdbFindResponse = await pouchdb.find({
-            use_index: "nextAuthVerificationRequestByToken",
-            selector: {
-              "data.identifier": { $eq: identifier },
-              "data.token": { $eq: hashedToken },
-            },
-            limit: 1,
-          })
-          const verificationRequestDoc = res.docs[0]
-          if (verificationRequestDoc?.data) {
-            const verificationRequest = verificationRequestDoc.data
-            if (
-              new Date(verificationRequest?.expires ?? Infinity) < new Date()
-            ) {
-              await pouchdb.put({
-                ...verificationRequestDoc,
-                _deleted: true,
-              })
-              return null
-            }
-            return {
-              ...verificationRequest,
-              expires: new Date(verificationRequest?.expires ?? ""),
-            }
-          }
-          return null
-        },
-
-        async deleteVerificationRequest(identifier, token) {
-          const hashedToken = hashToken(token)
-          const res = await pouchdb.find({
-            use_index: "nextAuthVerificationRequestByToken",
-            selector: {
-              "data.identifier": { $eq: identifier },
-              "data.token": { $eq: hashedToken },
-            },
-            limit: 1,
-          })
-          const verificationRequestDoc = res.docs[0]
-          await pouchdb.put({
-            ...verificationRequestDoc,
-            _deleted: true,
-          })
-        },
+    async getUser(id) {
+      try {
+        const res = await pouchdb.get<AdapterUser>(id)
+        return toAdapterUser(res)
+      } catch {
+        return null
       }
     },
+
+    async getUserByEmail(email) {
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<AdapterUser>
+      ).find({
+        use_index: userByEmail,
+        selector: { email: { $eq: email } },
+        limit: 1,
+      })
+      const userDoc = res.docs[0]
+      if (userDoc) {
+        return toAdapterUser(userDoc)
+      }
+      return null
+    },
+
+    async getUserByAccount({ provider, providerAccountId }) {
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<AdapterAccount>
+      ).find({
+        use_index: accountByProviderId,
+        selector: {
+          provider: { $eq: provider },
+          providerAccountId: { $eq: providerAccountId },
+        },
+        limit: 1,
+      })
+      const account = res.docs[0]
+      if (account) {
+        const user = await (
+          pouchdb as unknown as PouchDB.Database<AdapterUser>
+        ).get(account.userId)
+        return toAdapterUser(user) ?? null
+      }
+      return null
+    },
+
+    async updateUser(user) {
+      const doc = await (
+        pouchdb as unknown as PouchDB.Database<AdapterUser>
+      ).get(user.id!)
+      const newUser = {
+        ...doc,
+        ...user,
+      }
+      await pouchdb.put(newUser)
+      return toAdapterUser(newUser)
+    },
+
+    /** @todo Implement */
+    async deleteUser() {},
+
+    async linkAccount(account) {
+      const doc = {
+        ...account,
+        _id: [accountPrefix, crypto.randomUUID()].join("_"),
+      }
+      await (pouchdb as unknown as PouchDB.Database<AdapterAccount>).put(doc)
+
+      return { ...account, id: doc._id }
+    },
+
+    async unlinkAccount({ provider, providerAccountId }) {
+      const _account = await (
+        pouchdb as unknown as PouchDB.Database<AdapterAccount>
+      ).find({
+        use_index: accountByProviderId,
+        selector: {
+          provider: { $eq: provider },
+          providerAccountId: { $eq: providerAccountId },
+        },
+        limit: 1,
+      })
+      await pouchdb.put({
+        ..._account.docs[0],
+        _deleted: true,
+      })
+    },
+
+    async createSession(data) {
+      const doc = {
+        _id: [sessionPrefix, crypto.randomUUID()].join("_"),
+        ...data,
+      }
+      await (pouchdb as unknown as PouchDB.Database<AdapterSession>).put(doc)
+      return { ...data, id: doc._id }
+    },
+
+    async getSessionAndUser(sessionToken) {
+      const session = (
+        await (
+          pouchdb as unknown as PouchDB.Database<
+            AdapterSession & { user: AdapterUser }
+          >
+        ).find({
+          use_index: sessionByToken,
+          selector: {
+            sessionToken: { $eq: sessionToken },
+          },
+          limit: 1,
+        })
+      ).docs[0]
+
+      if (session) {
+        const user = await (
+          pouchdb as unknown as PouchDB.Database<AdapterUser>
+        ).get(session.userId)
+        return {
+          session: toAdapterSession(session),
+          user: toAdapterUser(user),
+        }
+      }
+      return null
+    },
+
+    async updateSession(data) {
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<AdapterSession>
+      ).find({
+        use_index: sessionByToken,
+        selector: {
+          sessionToken: { $eq: data.sessionToken },
+        },
+        limit: 1,
+      })
+      const previousSessionDoc = res.docs[0]
+      if (previousSessionDoc) {
+        const currentSessionDoc = {
+          ...previousSessionDoc,
+          ...data,
+        }
+        await pouchdb.put(currentSessionDoc)
+        return toAdapterSession(currentSessionDoc)
+      }
+      return null
+    },
+
+    async deleteSession(sessionToken) {
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<AdapterSession>
+      ).find({
+        use_index: sessionByToken,
+        selector: {
+          sessionToken: { $eq: sessionToken },
+        },
+        limit: 1,
+      })
+      const sessionDoc = res.docs[0]
+      await pouchdb.put({
+        ...sessionDoc,
+        _deleted: true,
+      })
+    },
+
+    async createVerificationToken(data) {
+      await (pouchdb as unknown as PouchDB.Database<VerificationToken>).put({
+        _id: [verificationTokenPrefix, crypto.randomUUID()].join("_"),
+        ...data,
+      })
+
+      return data
+    },
+
+    async useVerificationToken({ identifier, token }) {
+      const res = await (
+        pouchdb as unknown as PouchDB.Database<VerificationToken>
+      ).find({
+        use_index: verificationTokenByToken,
+        selector: {
+          identifier: { $eq: identifier },
+          token: { $eq: token },
+        },
+        limit: 1,
+      })
+      const verificationRequestDoc = res.docs[0]
+      if (verificationRequestDoc) {
+        await pouchdb.put({
+          ...verificationRequestDoc,
+          _deleted: true,
+        })
+        return toVerificationToken(verificationRequestDoc)
+      }
+      return null
+    },
   }
+}
+
+export async function createIndexes(
+  pouchdb: PouchDB.Database,
+  indexes?: IndexConfig
+) {
+  const {
+    userByEmail = "nextAuthUserByEmail",
+    accountByProviderId = "nextAuthAccountByProviderId",
+    sessionByToken = "nextAuthSessionByToken",
+    verificationTokenByToken = "nextAuthVerificationRequestByToken",
+  } = indexes ?? {}
+  await Promise.allSettled([
+    await pouchdb.createIndex({
+      index: {
+        name: userByEmail,
+        ddoc: userByEmail,
+        fields: ["email"],
+      },
+    }),
+    await pouchdb.createIndex({
+      index: {
+        name: accountByProviderId,
+        ddoc: accountByProviderId,
+        fields: ["provider", "providerAccountId"],
+      },
+    }),
+    await pouchdb.createIndex({
+      index: {
+        name: sessionByToken,
+        ddoc: sessionByToken,
+        fields: ["sessionToken"],
+      },
+    }),
+    await pouchdb.createIndex({
+      index: {
+        name: verificationTokenByToken,
+        ddoc: verificationTokenByToken,
+        fields: ["identifier", "token"],
+      },
+    }),
+  ])
+}
+
+/** @internal */
+function toAdapter<T>(
+  dbObject: T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) {
+  const {
+    _id,
+    _rev,
+    _conflicts,
+    _attachments,
+    _revisions,
+    _revs_info,
+    ...rest
+  } = dbObject
+  return { ...rest }
+}
+
+/** @internal */
+export function toAdapterUser(
+  user: AdapterUser & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) {
+  if (typeof user?.emailVerified === "string")
+    user.emailVerified = new Date(user.emailVerified)
+  return { ...toAdapter(user), id: user._id }
+}
+
+/** @internal */
+export function toAdapterSession(
+  session: AdapterSession & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) {
+  if (typeof session?.expires === "string")
+    session.expires = new Date(session.expires)
+  return { ...toAdapter(session), id: session._id }
+}
+
+/** @internal */
+export function toAdapterAccount(
+  account: AdapterAccount & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+) {
+  return { ...toAdapter(account), id: account._id }
+}
+
+/** @internal */
+export function toVerificationToken(
+  verificationToken: VerificationToken &
+    PouchDB.Core.IdMeta &
+    PouchDB.Core.GetMeta
+) {
+  if (typeof verificationToken?.expires === "string")
+    verificationToken.expires = new Date(verificationToken.expires)
+  return { ...toAdapter(verificationToken) }
 }

@@ -1,0 +1,34 @@
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+
+# Built-in Pages
+
+Auth.js comes by default with a set of pages that are presented to the user as they go through their authentication journey (sign up, sign in, sign out, error, etc...). This is helpful so that you don't need to write those from scratch when using the library first time.
+
+<Code>
+<Code.Next>
+
+```tsx filename="components/sign-in.tsx"
+"use client"
+
+import { signIn } from "next-auth/react"
+
+export function SignInButton() {
+  return <button onClick={() => signIn()}>Sign in</button>
+}
+```
+
+</Code.Next>
+</Code>
+
+If you do not pass a `providerId`, the `signIn` function will redirect the user to the signin page.
+
+import SignInPage from "../../../public/img/tutorials/sign-in-page.webp"
+
+<Screenshot src={SignInPage} alt="Sign-in Page" />
+
+In this case the app has been configured with [GitHub](/getting-started/providers/github) and [Credentials](/getting-started/providers/credentials) providers.
+
+If we added the [Google](/getting-started/providers/google) provider to our Auth.js config file (`./auth.ts`), then a 3rd option to sign in with Google would be available.
+
+If you'd like to build your own sign in page, checkout our guide on custom sign-in pages.

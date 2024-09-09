@@ -1,6 +1,6 @@
 {
-  "name": "@next-auth/pouchdb-adapter",
-  "version": "0.1.5",
+  "name": "@auth/pouchdb-adapter",
+  "version": "2.4.2",
   "description": "PouchDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -8,7 +8,6 @@
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "jpbourgeon <jeanphilippe.bourgeon@gmail.com> (https://github.com/jpbourgeon)",
-  "main": "dist/index.js",
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -16,39 +15,38 @@
     "oauth",
     "pouchdb"
   ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build:wip": "tsc",
-    "tdd": "jest --watch",
-    "test:wip": "jest"
+    "build": "pnpm clean && tsc",
+    "clean": "rm -rf index.*",
+    "test": "vitest run -c ../utils/vitest.config.ts"
   },
   "files": [
-    "README.md",
-    "dist"
+    "*.js",
+    "*.d.ts*",
+    "src"
   ],
   "peerDependencies": {
-    "next-auth": "^3",
-    "pouchdb": "^7.2.2",
-    "pouchdb-find": "^7.2.2"
+    "pouchdb": "^8.0.1",
+    "pouchdb-find": "^8.0.1"
   },
   "dependencies": {
-    "crypto": "^1.0.1",
-    "ulid": "^2.3.0"
+    "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
     "@types/pouchdb": "^6.4.0",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*",
-    "pouchdb": "^7.2.2",
-    "pouchdb-adapter-memory": "^7.2.2",
-    "pouchdb-find": "^7.2.2"
-  },
-  "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "pouchdb": "^8.0.1",
+    "pouchdb-adapter-memory": "^8.0.1",
+    "pouchdb-find": "^8.0.1"
   }
 }

@@ -1,14 +1,26 @@
 {
-  "name": "@next-auth/supabase-adapter",
-  "version": "0.2.1",
-  "description": "Supabase adapter for next-auth.",
+  "name": "@auth/supabase-adapter",
+  "version": "1.4.2",
+  "description": "Supabase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "Martin Sonnberger <martin.sonnberger@icloud.com>",
-  "main": "dist/index.js",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "keywords": [
     "next-auth",
     "next.js",
@@ -21,20 +33,17 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./tests/test.sh"
+    "clean": "rm -rf *.d.ts* *.js dist/ coverage/ supabase/{.branches,.temp}",
+    "test": "./test/test.sh"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^2.0.5",
-    "next-auth": "^4.18.7"
+    "@supabase/supabase-js": "^2.43.1"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:^0.0.0",
-    "@next-auth/tsconfig": "workspace:^0.0.0",
-    "@supabase/supabase-js": "^2.0.5",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*"
-  },
-  "jest": {
-    "preset": "@next-auth/adapter-test/jest"
+    "@supabase/supabase-js": "^2.43.1",
+    "supabase": "^1.165.0"
   }
 }

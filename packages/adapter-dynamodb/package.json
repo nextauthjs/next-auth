@@ -1,7 +1,7 @@
 {
-  "name": "@next-auth/dynamodb-adapter",
+  "name": "@auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "3.0.0",
+  "version": "2.4.2",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",
@@ -9,53 +9,48 @@
     "oauth",
     "dynamodb"
   ],
-  "type": "module",
-  "types": "./index.d.ts",
   "homepage": "https://authjs.dev",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
-  },
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js"
-    }
   },
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test:default": "jest",
-    "test:custom": "CUSTOM_MODEL=1 jest",
+    "test:default": "vitest -c ../utils/vitest.config.ts",
+    "test:custom": "CUSTOM_MODEL=1 vitest -c ../utils/vitest.config.ts",
     "test": "pnpm test:default && pnpm test:custom",
-    "build": "tsc"
+    "clean": "rm -rf index.*",
+    "build": "pnpm clean && tsc"
   },
+  "author": "Pol Marnette",
+  "contributors": [
+    "Balázs Orbán <info@balazsorban.com>"
+  ],
+  "license": "ISC",
+  "type": "module",
+  "types": "./index.d.ts",
   "files": [
-    "README.md",
-    "index.js",
-    "index.d.ts",
-    "index.d.ts.map",
+    "*.js",
+    "*.d.ts*",
     "src"
   ],
-  "author": "Pol Marnette",
-  "license": "ISC",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "peerDependencies": {
     "@aws-sdk/client-dynamodb": "^3.36.1",
-    "@aws-sdk/lib-dynamodb": "^3.36.1",
-    "next-auth": "^4"
+    "@aws-sdk/lib-dynamodb": "^3.36.1"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.36.1",
-    "@aws-sdk/lib-dynamodb": "^3.36.1",
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
-    "@shelf/jest-dynamodb": "^2.1.0",
-    "@types/uuid": "^9.0.0",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*"
+    "@aws-sdk/lib-dynamodb": "^3.36.1"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "@auth/core": "workspace:*"
   }
 }

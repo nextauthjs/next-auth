@@ -1,16 +1,32 @@
-import { v4 as uuid } from "uuid"
+/**
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
+ *  <p>Official <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html">DynamoDB</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <a href="https://docs.aws.amazon.com/dynamodb/index.html">
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/dynamodb.png" width="48"/>
+ *  </a>
+ * </div>
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install next-auth @auth/dynamodb-adapter
+ * ```
+ *
+ * @module @auth/dynamodb-adapter
+ */
 
 import type {
   BatchWriteCommandInput,
   DynamoDBDocument,
 } from "@aws-sdk/lib-dynamodb"
-import type {
-  Adapter,
-  AdapterSession,
-  AdapterAccount,
-  AdapterUser,
-  VerificationToken,
-} from "next-auth/adapters"
+import {
+  type Adapter,
+  type AdapterSession,
+  type AdapterAccount,
+  type AdapterUser,
+  type VerificationToken,
+  isDate,
+} from "@auth/core/adapters"
 
 export interface DynamoDBAdapterOptions {
   tableName?: string
@@ -36,7 +52,7 @@ export function DynamoDBAdapter(
     async createUser(data) {
       const user: AdapterUser = {
         ...(data as any),
-        id: uuid(),
+        id: crypto.randomUUID(),
       }
 
       await client.put({
@@ -115,9 +131,8 @@ export function DynamoDBAdapter(
       const data = await client.update({
         TableName,
         Key: {
-          // next-auth type is incorrect it should be Partial<AdapterUser> & {id: string} instead of just Partial<AdapterUser>
-          [pk]: `USER#${user.id as string}`,
-          [sk]: `USER#${user.id as string}`,
+          [pk]: `USER#${user.id}`,
+          [sk]: `USER#${user.id}`,
         },
         UpdateExpression,
         ExpressionAttributeNames,
@@ -125,7 +140,6 @@ export function DynamoDBAdapter(
         ReturnValues: "ALL_NEW",
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return format.from<AdapterUser>(data.Attributes)!
     },
     async deleteUser(userId) {
@@ -161,7 +175,7 @@ export function DynamoDBAdapter(
     async linkAccount(data) {
       const item = {
         ...data,
-        id: uuid(),
+        id: crypto.randomUUID(),
         [pk]: `USER#${data.userId}`,
         [sk]: `ACCOUNT#${data.provider}#${data.providerAccountId}`,
         [GSI1PK]: `ACCOUNT#${data.provider}`,
@@ -225,7 +239,7 @@ export function DynamoDBAdapter(
     },
     async createSession(data) {
       const session = {
-        id: uuid(),
+        id: crypto.randomUUID(),
         ...data,
       }
       await client.put({
@@ -257,7 +271,7 @@ export function DynamoDBAdapter(
         },
       })
       if (!data.Items?.length) return null
-      const { pk, sk } = data.Items[0] as any
+      const sessionRecord = data.Items[0]
       const {
         UpdateExpression,
         ExpressionAttributeNames,
@@ -265,7 +279,10 @@ export function DynamoDBAdapter(
       } = generateUpdateExpression(session)
       const res = await client.update({
         TableName,
-        Key: { pk, sk },
+        Key: {
+          [pk]: sessionRecord[pk],
+          [sk]: sessionRecord[sk],
+        },
         UpdateExpression,
         ExpressionAttributeNames,
         ExpressionAttributeValues,
@@ -289,11 +306,14 @@ export function DynamoDBAdapter(
       })
       if (!data?.Items?.length) return null
 
-      const { pk, sk } = data.Items[0]
+      const sessionRecord = data.Items[0]
 
       const res = await client.delete({
         TableName,
-        Key: { pk, sk },
+        Key: {
+          [pk]: sessionRecord[pk],
+          [sk]: sessionRecord[sk],
+        },
         ReturnValues: "ALL_OLD",
       })
       return format.from<AdapterSession>(res.Attributes)
@@ -324,15 +344,8 @@ export function DynamoDBAdapter(
   }
 }
 
-// https://github.com/honeinc/is-iso-date/blob/master/index.js
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
-}
-
 const format = {
-  /** Takes a plain old JavaScript object and turns it into a Dynamodb object */
+  /** Takes a plain old JavaScript object and turns it into a DynamoDB object */
   to(object: Record<string, any>) {
     const newObject: Record<string, unknown> = {}
     for (const key in object) {

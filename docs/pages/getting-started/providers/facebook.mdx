@@ -1,0 +1,105 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/facebook.svg" height="64" width="64" />
+
+# Facebook Provider
+
+## Resources
+
+- [Facebook OAuth documentation](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/)
+- [Facebook Developer Apps](https://developers.facebook.com/apps/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/facebook
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/facebook
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/facebook
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_FACEBOOK_ID
+AUTH_FACEBOOK_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Facebook from "next-auth/providers/facebook"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Facebook],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Facebook from "@auth/qwik/providers/facebook"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Facebook],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Facebook from "@auth/sveltekit/providers/facebook"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Facebook],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Facebook from "@auth/express/providers/facebook"
+
+app.use("/auth/*", ExpressAuth({ providers: [Facebook] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Production applications cannot use localhost URLs to sign in with Facebook. You need to use a dedicated development application in Facebook to use localhost callback URLs.
+- Email address may not be returned for accounts created on mobile.
+- `clientId` is your Facebook App ID, `clientSecret` is your Facebook App Secret.

@@ -1,0 +1,361 @@
+import { Callout } from "nextra/components"
+import { Screenshot } from "@/components/Screenshot"
+import { Code } from "@/components/Code"
+
+# Handling Signin and Signout
+
+To signin your users, make sure you have at least one [authentication method](/getting-started/authentication) setup. You then need to build a button which will call the sign in function from your Auth.js framework package.
+
+<Code>
+  <Code.Next>
+
+```tsx filename="./components/auth/signin-button.tsx"
+import { signIn } from "@/auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signIn()
+      }}
+    >
+      <button type="submit">Sign in</button>
+    </form>
+  )
+}
+```
+
+  </Code.Next>
+  <Code.NextClient>
+
+```tsx filename="./components/auth/signin-button.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  return <button onClick={() => signIn()}>Sign In</button>
+}
+```
+
+  </Code.NextClient>
+  <Code.Qwik>
+
+With Qwik we can do a server-side sign in with Form action, or a more simple client-side login via submit method.
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form } from "@builder.io/qwik-city"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <>
+      {/* server-side login with Form action */}
+      <Form action={signInSig}>
+        <input type="hidden" name="providerId" value="${providerId}" />
+        <input
+          type="hidden"
+          name="options.redirectTo"
+          value="/"
+        />
+        <button>Sign In</button>
+      </Form>
+
+      {/* submit method */}
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+The SvelteKit client supports two signin and signout methods, one server-side using Form Actions, and one client-side using requests and redirects.
+
+#### Form Action (Server-Side)
+
+To signin your users using a SvelteKit form action, we can use the `SignIn` component exported from `@auth/sveltekit/components`.
+
+```svelte filename="src/routes/+page.svelte" {7-9}
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<header>
+  <nav>
+    <SignIn>
+      <span slot="submitButton">Sign In with GitHub</span>
+    </SignIn>
+  </nav>
+</header>
+```
+
+This requires a server action at `/signin`, this path can be customized with the `signInPage` prop on the `SignIn` component.
+
+```ts filename="src/routes/signin/+page.server.ts"
+import { signIn } from "../../auth"
+import type { Actions } from "./$types"
+
+export const actions: Actions = { default: signIn }
+```
+
+#### Client Side
+
+Client-side is a bit simpler as we just need to import a button `on:click` handler from `@auth/sveltekit/client`.
+
+```svelte filename="src/routes/+page.svelte" {2, 8}
+<script lang="ts">
+  import { signIn } from "@auth/sveltekit/client"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <button on:click={signIn}>Signin</button>
+  </nav>
+</div>
+```
+
+Just like in other frameworks, you can also pass a provider to the `signIn` function which will attempt to login directly with that provider.
+
+  </Code.Svelte>
+  <Code.Express>
+
+The Express package runs server-side and therefore it doesn't make sense to create a "SignIn button component". However, to signin or signout with Express, send a request to the appropriate [REST API Endpoints](/reference/core/types#authaction) from your client (i.e. `/auth/signin`, `/auth/signout`, etc.).
+
+  </Code.Express>
+</Code>
+
+You can also pass a provider to the `signIn` function which will attempt to login directly with that provider. Otherwise, when clicking this button in your application, the user will be redirected to the configured sign in page. If you did not setup a [custom sign in page](/guides/pages/signin), the user will be redirected to the default signin page at `/[basePath]/signin`.
+
+import DefaultSignInPage from "../../../public/img/getting-started/default-signin-page.webp"
+
+<Screenshot src={DefaultSignInPage} alt="Default Sign-in Page" />
+
+Once authenticated, the user will be redirected back to the page they started the signin from. If
+you want the user to be redirected somewhere else after sign in (.i.e `/dashboard`), you can do so
+by passing the target URL as `redirectTo` in the sign-in options.
+
+<Code>
+<Code.Next>
+
+```tsx filename="app/components/signin-button.tsx" {8}
+import { signIn } from "@/auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signIn("github", { redirectTo: "/dashboard" })
+      }}
+    >
+      <button type="submit">Sign in</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.NextClient>
+
+```tsx filename="src/components/signin-button.tsx" {5}
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  return (
+    <button onClick={() => signIn("github", { redirectTo: "/dashboard" })}>
+      Sign In
+    </button>
+  )
+}
+```
+
+</Code.NextClient>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <>
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/dashboard" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```svelte filename="src/routes/+page.svelte" {9-13}
+<script lang="ts">
+  import { page } from "$app/stores"
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<header>
+  <nav>
+    <SignIn
+      options={{
+        redirectTo: $page.data.redirectTo
+          ? `/${decodeURIComponent($page.data.redirectTo).slice(1)}`
+          : `/dashboard`,
+      }}
+      className="w-full"
+    >
+      <span slot="submitButton">Sign in</span>
+    </SignIn>
+  </nav>
+</header>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signout
+
+Signing out can be done similarly to signing in. Most frameworks offer both a client-side and server-side method for signing out as well.
+
+<Code>
+<Code.Next>
+
+To sign out users with a form action, you can build a button that calls the exported signout function from your Auth.js config.
+
+```tsx filename="app/components/signout-button.tsx" {8}
+import { signOut } from "@/auth.ts"
+
+export function SignOut() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signOut()
+      }}
+    >
+      <button type="submit">Sign Out</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.NextClient>
+
+```tsx filename="src/components/signout-button.tsx" {5}
+"use client"
+import { signOut } from "next-auth/react"
+
+export function SignOut() {
+  return <button onClick={() => signOut()}>Sign Out</button>
+}
+```
+
+</Code.NextClient>
+<Code.Qwik>
+
+With Qwik we can do a server-side sign out with Form action, or a more simple client-side sign out via submit method.
+
+```ts filename="./components/sign-out.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form, Link } from "@builder.io/qwik-city"
+import { useSignOut } from "./plugin@auth"
+
+export default component$(() => {
+  const signOutSig = useSignOut()
+
+  return (
+    <>
+      {/* server-side with Form action */}
+      <Form action={signOutSig}>
+        <input type="hidden" name="redirectTo" value="/signedout" />
+        <button>Sign Out</button>
+      </Form>
+
+      {/* submit method */}
+      <Link onClick$={() => signOutSig.submit({ redirectTo: "/" })}>
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+SvelteKit supports both server and client-side methods for signing out as well.
+
+#### Server-side
+
+To use the SvelteKit form action for signing out, we can use the `SignOut` component exported from `@auth/sveltekit/components`.
+
+```svelte filename="src/routes/+page.svelte" {2, 7-9}
+<script lang="ts">
+  import { SignOut } from "@auth/sveltekit/components"
+</script>
+
+<header>
+  <nav>
+    <SignOut>
+      <span slot="submitButton">Signout</span>
+    </SignOut>
+  </nav>
+</header>
+```
+
+This requires a server action at `/signout`, this path can be customized with the `signOutPage` prop on the `<SignOut>` component.
+
+```ts filename="src/routes/signout/+page.server.ts"
+import { signOut } from "../../auth"
+import type { Actions } from "./$types"
+
+export const actions: Actions = { default: signOut }
+```
+
+#### Client Side
+
+Client-side is a bit simpler as we just need to import a button `on:click` handler from `@auth/sveltekit/client`.
+
+```svelte filename="src/routes/+page.svelte" {8}
+<script lang="ts">
+  import { signOut } from "@auth/sveltekit/client"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <button on:click={signOut}>Signout</button>
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+<Code.Express>
+
+The Express package runs server-side and therefore it doesn't make sense to create a "SignIn button component". However, to signin or signout with Express, send a request to the appropriate [REST API Endpoints](/reference/core/types#authaction) from your client (i.e. `/auth/signin`, `/auth/signout`, etc.).
+
+</Code.Express>
+</Code>
+
+<Callout>
+  Note that when signing out of an OAuth provider like GitHub in an Auth.js
+  application, the user will not be signed out of GitHub elsewhere.
+</Callout>

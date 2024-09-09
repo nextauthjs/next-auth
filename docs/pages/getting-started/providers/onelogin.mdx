@@ -1,0 +1,98 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/onelogin.svg" height="64" width="64" />
+
+# OneLogin Provider
+
+## Resources
+
+- [OneLogin OAuth documentation](https://example.com)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/onelogin
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/onelogin
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/onelogin
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ONELOGIN_ID
+AUTH_ONELOGIN_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import OneLogin from "next-auth/providers/onelogin"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [OneLogin],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import OneLogin from "@auth/qwik/providers/onelogin"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [OneLogin],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import OneLogin from "@auth/sveltekit/providers/onelogin"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [OneLogin],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import OneLogin from "@auth/express/providers/onelogin"
+
+app.use("/auth/*", ExpressAuth({ providers: [OneLogin] }))
+```
+
+  </Code.Express>
+</Code>

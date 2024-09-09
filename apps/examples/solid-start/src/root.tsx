@@ -1,6 +1,6 @@
 // @refresh reload
-import "./root.css";
-import { Suspense } from "solid-js";
+import "./root.css"
+import { Suspense } from "solid-js"
 import {
   Body,
   ErrorBoundary,
@@ -11,8 +11,8 @@ import {
   Routes,
   Scripts,
   Title,
-} from "solid-start";
-import { NavBar } from "./components";
+} from "solid-start"
+import { NavBar } from "./components"
 
 export default function Root() {
   return (
@@ -25,7 +25,7 @@ export default function Root() {
       <Body>
         <Suspense>
           <NavBar />
-          <div class="py-44 px-8">
+          <div class="px-8 py-44">
             <ErrorBoundary>
               <Routes>
                 <FileRoutes />
@@ -36,5 +36,5 @@ export default function Root() {
         <Scripts />
       </Body>
     </Html>
-  );
+  )
 }

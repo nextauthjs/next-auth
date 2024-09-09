@@ -1,0 +1,31 @@
+name: "Broken Link Checker"
+
+on:
+  issue_comment:
+    types: [edited]
+
+permissions:
+  pull-requests: write
+  checks: write
+
+jobs:
+  broken-link-checker:
+    runs-on: ubuntu-latest
+    if: github.actor == 'vercel[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: corepack enable
+      - uses: aaimio/vercel-preview-url-action@v2.2.0
+        id: vercel_preview_url
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          preview_url_regexp: https.*\/(.*-authjs.vercel.app)
+      - name: Install dependencies
+        run: cd ./.github/broken-link-checker && pnpm install --ignore-workspace && pnpm build
+      - name: Run link checker
+        uses: ./.github/broken-link-checker
+        id: broken-links
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_PREVIEW_URL: https://${{ steps.vercel_preview_url.outputs.vercel_preview_url }}

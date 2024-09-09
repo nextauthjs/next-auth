@@ -1,9 +1,9 @@
 import type { Theme } from "../../types.js"
 
 export interface SignoutProps {
-  url: URL
-  csrfToken: string
-  theme: Theme
+  url?: URL
+  csrfToken?: string
+  theme?: Theme
 }
 
 export default function SignoutPage(props: SignoutProps) {
@@ -11,7 +11,7 @@ export default function SignoutPage(props: SignoutProps) {
 
   return (
     <div className="signout">
-      {theme.brandColor && (
+      {theme?.brandColor && (
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -22,7 +22,7 @@ export default function SignoutPage(props: SignoutProps) {
           }}
         />
       )}
-      {theme.buttonText && (
+      {theme?.buttonText && (
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -34,10 +34,10 @@ export default function SignoutPage(props: SignoutProps) {
         />
       )}
       <div className="card">
-        {theme.logo && <img src={theme.logo} alt="Logo" className="logo" />}
+        {theme?.logo && <img src={theme.logo} alt="Logo" className="logo" />}
         <h1>Signout</h1>
         <p>Are you sure you want to sign out?</p>
-        <form action={`${url}/signout`} method="POST">
+        <form action={url?.toString()} method="POST">
           <input type="hidden" name="csrfToken" value={csrfToken} />
           <button id="submitButton" type="submit">
             Sign out

@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/trakt.svg" height="64" width="64" />
+
+# Trakt Provider
+
+## Resources
+
+- [Trakt OAuth documentation](https://trakt.docs.apiary.io/#reference/authentication-oauth)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/trakt
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/trakt
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/trakt
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_TRAKT_ID
+AUTH_TRAKT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Trakt from "next-auth/providers/trakt"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Trakt],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Trakt from "@auth/qwik/providers/trakt"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Trakt],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Trakt from "@auth/sveltekit/providers/trakt"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Trakt],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Trakt from "@auth/express/providers/trakt"
+
+app.use("/auth/*", ExpressAuth({ providers: [Trakt] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- If you're using the api in production by calling `api.trakt.tv`. Follow the example. If you wish to develop on Trakt's sandbox environment by calling `api-staging.trakt.tv`, change the URLs.
+- Trakt does not allow hotlinking images. Even the authenticated user's profie picture.
+- Trakt does not supply the authenticated user's email.

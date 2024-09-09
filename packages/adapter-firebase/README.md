@@ -1,29 +1,28 @@
 <p align="center">
-   <br/>
-   <a href="https://authjs.dev" target="_blank">
-    <img height="64px" src="https://authjs.dev/img/logo/logo-sm.png" /></a><img height="64px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/packages/adapter-firebase/logo.svg" />
-   <h3 align="center"><b>Firebase Adapter</b> - Auth.js</h3>
-   <p align="center">
-   Open Source. Full Stack. Own Your Data.
-   </p>
-   <p align="center" style="align: center;">
-      <img src="https://github.com/nextauthjs/next-auth/actions/workflows/release.yml/badge.svg?branch=main" alt="Build Test" />
-      <img src="https://img.shields.io/bundlephobia/minzip/@next-auth/firebase-adapter/latest" alt="Bundle Size"/>
-      <img src="https://img.shields.io/npm/v/@next-auth/firebase-adapter" alt="@next-auth/firebase-adapter Version" />
-   </p>
+  <br/>
+  <a href="https://authjs.dev" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/logo-sm.png" />
+  </a>
+  <a href="https://firebase.google.com" target="_blank">
+    <img height="64px" src="https://authjs.dev/img/adapters/firebase.svg"/>
+  </a>
+  <h3 align="center"><b>Firebase Adapter</b> - NextAuth.js / Auth.js</a></h3>
+  <p align="center" style="align: center;">
+    <a href="https://npm.im/@auth/firebase-adapter">
+      <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
+    </a>
+    <a href="https://npm.im/@auth/firebase-adapter">
+      <img alt="npm" src="https://img.shields.io/npm/v/@auth/firebase-adapter?color=green&label=@auth/firebase-adapter&style=flat-square">
+    </a>
+    <a href="https://www.npmtrends.com/@auth/firebase-adapter">
+      <img src="https://img.shields.io/npm/dm/@auth/firebase-adapter?label=%20downloads&style=flat-square" alt="Downloads" />
+    </a>
+    <a href="https://github.com/nextauthjs/next-auth/stargazers">
+      <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="GitHub Stars" />
+    </a>
+  </p>
 </p>
 
+---
 
-This is the official Firebase Adapter for [Auth.js](https://authjs.dev) / [NextAuth.js](https://next-auth.js.org/), using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) and [Firestore](https://firebase.google.com/docs/firestore).
-
-## Documentation
-
-Check out the [documentation](https://authjs.dev/reference/adapter/firebase) to learn how to use this adapter in your project.
-
-## Contributing
-
-We're open to all community contributions! If you'd like to contribute in any way, please read our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
-
-## License
-
-ISC
+Check out the documentation at [authjs.dev](https://authjs.dev/reference/adapter/firebase).

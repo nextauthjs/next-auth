@@ -1,22 +1,18 @@
 import { UnknownAction } from "../errors.js"
-import { SessionStore } from "./cookie.js"
+import { SessionStore } from "./utils/cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
-import * as routes from "./routes/index.js"
+import * as actions from "./actions/index.js"
+import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
 
-import type {
-  AuthConfig,
-  ErrorPageParam,
-  RequestInternal,
-  ResponseInternal,
-} from "../types.js"
+import type { RequestInternal, ResponseInternal } from "../types.js"
+import type { AuthConfig } from "../index.js"
 
-export async function AuthInternal<
-  Body extends string | Record<string, any> | any[]
->(
+/** @internal */
+export async function AuthInternal(
   request: RequestInternal,
   authOptions: AuthConfig
-): Promise<ResponseInternal<Body>> {
+): Promise<ResponseInternal> {
   const { action, providerId, error, method } = request
 
   const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
@@ -35,151 +31,62 @@ export async function AuthInternal<
 
   const sessionStore = new SessionStore(
     options.cookies.sessionToken,
-    request,
+    request.cookies,
     options.logger
   )
 
   if (method === "GET") {
     const render = renderPage({ ...options, query: request.query, cookies })
-    const { pages } = options
     switch (action) {
-      case "providers":
-        return (await routes.providers(options.providers)) as any
-      case "session": {
-        const session = await routes.session(sessionStore, options)
-        if (session.cookies) cookies.push(...session.cookies)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        return { ...session, cookies } as any
-      }
-      case "csrf": {
-        if (csrfDisabled) {
-          options.logger.warn("csrf-disabled")
-          cookies.push({
-            name: options.cookies.csrfToken.name,
-            value: "",
-            options: { ...options.cookies.csrfToken.options, maxAge: 0 },
-          })
-          return { status: 404, cookies }
-        }
-        return {
-          headers: { "Content-Type": "application/json" },
-          body: { csrfToken: options.csrfToken } as any,
-          cookies,
-        }
-      }
-      case "signin":
-        if (pages.signIn) {
-          let signinUrl = `${pages.signIn}${
-            pages.signIn.includes("?") ? "&" : "?"
-          }${new URLSearchParams({ callbackUrl: options.callbackUrl })}`
-          if (error)
-            signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
-          return { redirect: signinUrl, cookies }
-        }
-
-        return render.signin()
-      case "signout":
-        if (pages.signOut) return { redirect: pages.signOut, cookies }
-
-        return render.signout()
       case "callback":
-        if (options.provider) {
-          const callback = await routes.callback({
-            body: request.body,
-            query: request.query,
-            headers: request.headers,
-            cookies: request.cookies,
-            method,
-            options,
-            sessionStore,
-          })
-          if (callback.cookies) cookies.push(...callback.cookies)
-          return { ...callback, cookies }
-        }
-        break
-      case "verify-request":
-        if (pages.verifyRequest) {
-          return { redirect: pages.verifyRequest, cookies }
-        }
-        return render.verifyRequest()
+        return await actions.callback(request, options, sessionStore, cookies)
+      case "csrf":
+        return render.csrf(csrfDisabled, options, cookies)
       case "error":
-        // These error messages are displayed in line on the sign in page
-        // TODO: verify these. We should redirect these to signin directly, instead of
-        // first to error and then to signin.
-        if (
-          [
-            "Signin",
-            "OAuthSignin",
-            "OAuthCallback",
-            "OAuthCreateAccount",
-            "EmailCreateAccount",
-            "Callback",
-            "OAuthAccountNotLinked",
-            "EmailSignin",
-            "CredentialsSignin",
-            "SessionRequired",
-          ].includes(error as string)
-        ) {
-          return { redirect: `${options.url}/signin?error=${error}`, cookies }
-        }
-
-        if (pages.error) {
-          return {
-            redirect: `${pages.error}${
-              pages.error.includes("?") ? "&" : "?"
-            }error=${error}`,
-            cookies,
-          }
-        }
-
-        return render.error({ error: error as ErrorPageParam })
+        return render.error(error)
+      case "providers":
+        return render.providers(options.providers)
+      case "session":
+        return await actions.session(options, sessionStore, cookies)
+      case "signin":
+        return render.signin(providerId, error)
+      case "signout":
+        return render.signout()
+      case "verify-request":
+        return render.verifyRequest()
+      case "webauthn-options":
+        return await actions.webAuthnOptions(
+          request,
+          options,
+          sessionStore,
+          cookies
+        )
       default:
     }
   } else {
+    const { csrfTokenVerified } = options
     switch (action) {
-      case "signin":
-        if ((csrfDisabled || options.csrfTokenVerified) && options.provider) {
-          const signin = await routes.signin(
-            request.query,
-            request.body,
-            options
-          )
-          if (signin.cookies) cookies.push(...signin.cookies)
-          return { ...signin, cookies }
-        }
-
-        return { redirect: `${options.url}/signin?csrf=true`, cookies }
-      case "signout":
-        if (csrfDisabled || options.csrfTokenVerified) {
-          const signout = await routes.signout(sessionStore, options)
-          if (signout.cookies) cookies.push(...signout.cookies)
-          return { ...signout, cookies }
-        }
-        return { redirect: `${options.url}/signout?csrf=true`, cookies }
       case "callback":
-        if (options.provider) {
+        if (options.provider.type === "credentials")
           // Verified CSRF Token required for credentials providers only
-          if (
-            options.provider.type === "credentials" &&
-            !csrfDisabled &&
-            !options.csrfTokenVerified
-          ) {
-            return { redirect: `${options.url}/signin?csrf=true`, cookies }
-          }
+          validateCSRF(action, csrfTokenVerified)
+        return await actions.callback(request, options, sessionStore, cookies)
+      case "session":
+        validateCSRF(action, csrfTokenVerified)
+        return await actions.session(
+          options,
+          sessionStore,
+          cookies,
+          true,
+          request.body?.data
+        )
+      case "signin":
+        validateCSRF(action, csrfTokenVerified)
+        return await actions.signIn(request, cookies, options)
 
-          const callback = await routes.callback({
-            body: request.body,
-            query: request.query,
-            headers: request.headers,
-            cookies: request.cookies,
-            method,
-            options,
-            sessionStore,
-          })
-          if (callback.cookies) cookies.push(...callback.cookies)
-          return { ...callback, cookies }
-        }
-        break
+      case "signout":
+        validateCSRF(action, csrfTokenVerified)
+        return await actions.signOut(cookies, sessionStore, options)
       default:
     }
   }
@@ -191,8 +98,19 @@ export async function AuthInternal<
  * This option is intended for framework authors.
  * :::
  *
- * Auth.js comes with built-in {@link https://authjs.dev/concepts/security#csrf CSRF} protection, but
+ * Auth.js comes with built-in CSRF protection, but
  * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
  * passing this value to {@link AuthConfig.skipCSRFCheck}.
  */
 export const skipCSRFCheck = Symbol("skip-csrf-check")
+
+/**
+ * :::danger
+ * This option is intended for framework authors.
+ * :::
+ *
+ * Auth.js returns a web standard {@link Response} by default, but
+ * if you are implementing a framework you might want to get access to the raw internal response
+ * by passing this value to {@link AuthConfig.raw}.
+ */
+export const raw = Symbol("return-type-raw")

@@ -1,0 +1,98 @@
+import { Callout } from "nextra/components"
+
+# Extending the Session
+
+Auth.js libraries only expose a subset of the user's information by default in a session to not accidentally expose sensitive user information.
+This is `name`, `email`, and `image`.
+
+<Callout type="info">
+  All callbacks are async functions, so you can also get extra information from
+  a database or external APIs.
+</Callout>
+
+A common use case is to add the user's id to the session. Below it is shown how to do this based on the session strategy you are using.
+
+## With JWT
+
+To have access to the user id, add the following to your Auth.js configuration:
+
+```ts filename="auth.ts"
+  providers,
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) { // User is available during sign-in
+        token.id = user.id
+      }
+      return token
+    },
+    session({ session, token }) {
+      session.user.id = token.id
+      return session
+    },
+  },
+}
+```
+
+During sign-in, the `jwt` callback exposes the user's profile information coming from the provider.
+You can leverage this to add the user's id to the JWT token. Then, on subsequent calls of this API will have access to the user's id via `token.id`.
+Then, to expose the user's id in the actual session, you can access `token.id` in the `session` callback and save it on `session.user.id`.
+
+Calls to `auth()` or `useSession()` will now have access to the user's id.
+
+## With Database
+
+If you are using a database session strategy, you can add the user's id to the session by modifying the `session` callback:
+
+```ts filename="auth.ts"
+  providers,
+  callbacks: {
+    session({ session, user }) {
+      session.user.id = user.id
+      return session
+    },
+  }
+}
+```
+
+This will add the user's id to the session object. Notice that in this case, we are getting the id from the `user` object, not the `token`.
+With the database session strategy, the `user` object is the user from the database, and there is no `token`.
+
+Calls to `auth()` or `useSession()` will now have access to the user's id.
+
+<Callout type="warning">
+  The session object is not persisted server-side, even when using database
+  sessions - only data such as the session token (id), the user, and the expiry
+  time is stored in the session table. If you need to persist session data
+  server-side, you must save it elsewhere. You can connect to the database in
+  the `session()` callback to retrieve this information.
+</Callout>
+
+## With provider functions
+
+We can extend the default session data in a few ways, one of which is by using the `authorize` and `profile` functions. These functions let us return a user object with the properties we need. We can then create logic based on this information to search in a database or an external API.
+
+```ts
+import Github from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+import type { Provider } from "next-auth/providers"
+
+const providers: Provider[] = [
+  Google({
+    clientId: process.env.AUTH_GOOGLE_ID,
+    clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    async profile(profile) {
+      return { ...profile }
+    },
+  }),
+  Credentials({
+    async authorize(credentials) {
+      return { ...credentials }
+    },
+  }),
+]
+```
+
+## Resources
+
+- [Concepts. Session strategies](/concepts/session-strategies)
+- [TypeScript](/getting-started/typescript)

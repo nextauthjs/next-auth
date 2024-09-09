@@ -1,7 +1,6 @@
-import { SolidAuth, type SolidAuthConfig } from "@solid-auth/next";
-import GitHub from "@auth/core/providers/github";
-import { serverEnv } from "~/env/server";
-import { type APIEvent } from "solid-start";
+import { SolidAuth, type SolidAuthConfig } from "@auth/solid-start"
+import GitHub from "@auth/solid-start/providers/github"
+import { serverEnv } from "~/env/server"
 
 export const authOpts: SolidAuthConfig = {
   providers: [
@@ -11,6 +10,6 @@ export const authOpts: SolidAuthConfig = {
     }),
   ],
   debug: false,
-};
+}
 
-export const { GET, POST } = SolidAuth(authOpts);
+export const { GET, POST } = SolidAuth(authOpts)

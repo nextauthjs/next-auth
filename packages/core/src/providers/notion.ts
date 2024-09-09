@@ -6,11 +6,10 @@
  * </a>
  * </div>
  *
- * ---
  * @module providers/notion
  */
 
-import type { OAuthConfig, OAuthUserConfig } from "."
+import type { OAuthConfig, OAuthUserConfig } from "./oauth.js"
 
 export interface Person extends Record<string, any> {
   email: string
@@ -60,35 +59,43 @@ const NOTION_API_VERSION = "2022-06-28"
 /**
  * Add Notion login to your page.
  *
- * ## Example
+ * ### Setup
  *
- * ```ts
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/notion
+ * ```
+ *
+ * #### Configuration
+ *```ts
  * import { Auth } from "@auth/core"
  * import Notion from "@auth/core/providers/notion"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Notion({ clientId: "", clientSecret: "", redirectUri: "" })],
+ *   providers: [
+ *     Notion({
+ *       clientId: NOTION_CLIENT_ID,
+ *       clientSecret: NOTION_CLIENT_SECRET,
+ *       redirectUri: NOTION_CLIENT_REDIRECT_URI,
+ *     }),
+ *   ],
  * })
  * ```
  *
- * ---
- *
- * ## Resources
+ * ### Resources
  * - [Notion Docs](https://developers.notion.com/docs)
  * - [Notion Authorization Docs](https://developers.notion.com/docs/authorization)
  * - [Notion Integrations](https://www.notion.so/my-integrations)
  *
- * ---
- *
- * ## Notes
- * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details. 
+ * ### Notes
+ * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.
  * You must provide a `clientId` and `clientSecret` to use this provider, as-well as a redirect URI (due to this being required by Notion endpoint to fetch tokens).
  *
  * :::tip
  *
  * The Notion provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/notion.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -117,7 +124,7 @@ export default function NotionProvider<P extends NotionProfile>(
 
       // The result of this method will be the input to the `profile` callback.
       // We use a custom request handler, since we need to do things such as pass the "Notion-Version" header
-      // More info: https://next-auth.js.org/configuration/providers/oauth
+      // More info: https://authjs.dev/getting-started/providers/notion
       async request(context) {
         const profile = await fetch(`${NOTION_HOST}/v1/users/me`, {
           headers: {
@@ -145,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
       url: `${NOTION_HOST}/v1/oauth/authorize`,
     },
 
-    async profile(profile, tokens) {
+    async profile(profile) {
       return {
         id: profile.id,
         name: profile.name,
@@ -153,14 +160,7 @@ export default function NotionProvider<P extends NotionProfile>(
         image: profile.avatar_url,
       }
     },
-    style: {
-      logo: "/notion.svg",
-      logoDark: "/notion.svg",
-      bg: "#fff",
-      text: "#000",
-      bgDark: "#fff",
-      textDark: "#000",
-    },
+    style: { bg: "#fff", text: "#000" },
     options,
   }
 }

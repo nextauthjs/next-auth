@@ -1,0 +1,126 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/cognito.svg" height="64" width="64" />
+
+# Cognito Provider
+
+## Resources
+
+- [Cognito Portal](https://console.aws.amazon.com/cognito/v2/home)
+- [Cognito OAuth documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
+- [Cognito Hosted Domain](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain.html)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/cognito
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/cognito
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/cognito
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_COGNITO_ID
+AUTH_COGNITO_SECRET
+AUTH_COGNITO_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Cognito from "next-auth/providers/cognito"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Cognito],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Cognito from "@auth/qwik/providers/cognito"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Cognito],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Cognito from "@auth/sveltekit/providers/cognito"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Cognito],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Cognito from "@auth/express/providers/cognito"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [Cognito],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+You need to select your AWS region to go the the Cognito dashboard.
+
+<Callout type="info">
+  The issuer is a URL, that looks like this: `https://cognito-idp.{region}
+  .amazonaws.com/{PoolId}`, where `PoolId` is from General Settings in Cognito,
+  not to be confused with the App Client ID.
+</Callout>
+
+<Callout type="info">
+  Before you can set these settings, you must set up an Amazon Cognito hosted
+  domain. The setting can be found in `App Client/Edit Hosted UI`.
+</Callout>
+
+<Callout type="warning">
+  Make sure you select all the appropriate client settings or the OAuth flow
+  will not work.
+</Callout>

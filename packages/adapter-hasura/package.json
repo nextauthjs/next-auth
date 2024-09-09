@@ -1,0 +1,55 @@
+{
+  "name": "@auth/hasura-adapter",
+  "version": "1.4.2",
+  "description": "Hasura adapter for Auth.js.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "contributors": [
+    "Hasura Team",
+    "Amruth Pillai <im.amruth@gmail.com>",
+    "Arjun Yelamanchili"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "@auth",
+    "authjs",
+    "Auth.js",
+    "next-auth",
+    "next.js",
+    "oauth",
+    "hasura"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "./test/test.sh",
+    "build": "graphql-codegen-esm --config codegen.ts && tsc"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0"
+  }
+}

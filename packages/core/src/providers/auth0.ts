@@ -1,19 +1,19 @@
 /**
- * <div style={{backgroundColor: "#EB5424", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Auth0</b> integration.</span>
- * <a href="https://auth0.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/auth0-dark.svg" height="48" width="48"/>
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+ * <span style={{fontSize: "1.35rem" }}>
+ *  Built-in sign in with <b>Auth0</b> integration.
+ * </span>
+ * <a href="https://auth0.com" style={{backgroundColor: "black", padding: "12px", borderRadius: "100%" }}>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/auth0.svg" width="24"/>
  * </a>
  * </div>
  *
- * ---
  * @module providers/auth0
  */
-
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
-/** @see [User Profile Structure](https://auth0.com/docs/manage-users/user-accounts/user-profiles/user-profile-structure) */
-export interface Auth0Profile {
+/** The returned user profile from Auth0 when using the profile callback. [Reference](https://auth0.com/docs/manage-users/user-accounts/user-profiles/user-profile-structure). */
+export interface Auth0Profile extends Record<string, any> {
   /** The user's unique identifier. */
   sub: string
   /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles (if not using the Authorization Core feature set), or access control groups. To learn more, read Metadata Overview. */
@@ -75,51 +75,45 @@ export interface Auth0Profile {
 }
 
 /**
- * Add Auth0 login to your page.
+ * ### Setup
  *
- * ## Example
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/auth0
+ * ```
  *
+ * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
  * import Auth0 from "@auth/core/providers/auth0"
  *
- * const request = new Request("https://example.com")
+ * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Auth0({ clientId: "", clientSecret: "", issuer: "" })],
+ *   providers: [
+ *     Auth0({
+ *       clientId: AUTH0_ID,
+ *       clientSecret: AUTH0_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
- * ---
+ * ### Resources
  *
- * ## Resources
+ * - [Auth0 docs](https://auth0.com/docs/authenticate)
  *
- * - [Authenticate - Auth0 docs](https://auth0.com/docs/authenticate)
+ * ### Notes
  *
- * ---
+ * The Auth0 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
- * ## Notes
- *
- * By default, Auth.js assumes that the Auth0 provider is
- * based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
- *
- * :::tip
- *
- * The Auth0 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/auth0.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
- *
- * :::
- *
- * :::info **Disclaimer**
+ * ## Help
  *
  * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
  *
  * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
- *
- * :::
  */
-
 export default function Auth0(
   config: OIDCUserConfig<Auth0Profile>
 ): OIDCConfig<Auth0Profile> {
@@ -127,14 +121,7 @@ export default function Auth0(
     id: "auth0",
     name: "Auth0",
     type: "oidc",
-    style: {
-      logo: "/auth0.svg",
-      logoDark: "/auth0-dark.svg",
-      bg: "#fff",
-      text: "#EB5424",
-      bgDark: "#EB5424",
-      textDark: "#fff",
-    },
+    style: { text: "#fff", bg: "#EB5424" },
     options: config,
   }
 }

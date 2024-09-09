@@ -1,0 +1,464 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+import { Accordion, Accordions } from "@/components/Accordion"
+
+<a href="https://orm.drizzle.team">
+  <img align="right" src="/img/adapters/drizzle.svg" width="64" height="64" />
+</a>
+
+# Drizzle ORM Adapter
+
+## Resources
+
+- [Drizzle ORM documentation](https://orm.drizzle.team/docs/overview)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install drizzle-orm @auth/drizzle-adapter
+npm install drizzle-kit --save-dev
+```
+
+### Environment Variables
+
+```sh
+AUTH_DRIZZLE_URL=postgres://postgres:postgres@127.0.0.1:5432/db
+```
+
+### Configuration
+
+To use this adapter, you must have setup Drizzle ORM and Drizzle Kit in your project. Drizzle provides a simple [quick start guide](https://orm.drizzle.team/kit-docs/quick). For more details, follow the Drizzle documentation for your respective database ([PostgreSQL](https://orm.drizzle.team/docs/get-started-postgresql), [MySQL](https://orm.drizzle.team/docs/get-started-mysql) or [SQLite](https://orm.drizzle.team/docs/get-started-sqlite)). In summary, that setup should look something like this.
+
+1. Create your schema file, based off of one of the ones below.
+2. Install a supported database driver to your project, like `@libsql/client`, `mysql2` or `postgres`.
+3. Create a `drizzle.config.ts` [file](https://orm.drizzle.team/kit-docs/conf).
+4. Generate the initial migration from your schema file with a command like, `drizzle-kit generate:pg`.
+5. Apply migrations by using `migrate()` function or push changes directly to your database with a command like, `drizzle-kit push:pg`.
+6. If your schemas differ from the default ones, pass them as the second parameter to the adapter.
+
+#### Schemas
+
+<Accordions>
+<Accordion title="PostgreSQL">
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
+
+```ts filename="schema.ts"
+import {
+  boolean,
+  timestamp,
+  pgTable,
+  text,
+  primaryKey,
+  integer,
+} from "drizzle-orm/pg-core"
+import postgres from "postgres"
+import { drizzle } from "drizzle-orm/postgres-js"
+import type { AdapterAccountType } from "next-auth/adapters"
+
+const connectionString = "postgres://postgres:postgres@localhost:5432/drizzle"
+const pool = postgres(connectionString, { max: 1 })
+
+export const db = drizzle(pool)
+
+export const users = pgTable("user", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  email: text("email").unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+})
+
+export const accounts = pgTable(
+  "account",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  })
+)
+
+export const sessions = pgTable("session", {
+  sessionToken: text("sessionToken").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+})
+
+export const verificationTokens = pgTable(
+  "verificationToken",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (verificationToken) => ({
+    compositePk: primaryKey({
+      columns: [verificationToken.identifier, verificationToken.token],
+    }),
+  })
+)
+
+export const authenticators = pgTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)
+```
+
+</Accordion>
+<Accordion title="MySQL">
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
+
+```ts filename="schema.ts"
+import {
+  boolean,
+  int,
+  timestamp,
+  mysqlTable,
+  primaryKey,
+  varchar,
+} from "drizzle-orm/mysql-core"
+import mysql from "mysql2/promise"
+import { drizzle } from "drizzle-orm/mysql2"
+import type { AdapterAccountType } from "next-auth/adapters"
+
+export const connection = await mysql.createConnection({
+  host: "host",
+  user: "user",
+  password: "password",
+  database: "database",
+})
+
+export const db = drizzle(connection)
+
+export const users = mysqlTable("user", {
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: varchar("name", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
+  emailVerified: timestamp("emailVerified", {
+    mode: "date",
+    fsp: 3,
+  }),
+  image: varchar("image", { length: 255 }),
+})
+
+export const accounts = mysqlTable(
+  "account",
+  {
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: 255 })
+      .$type<AdapterAccountType>()
+      .notNull(),
+    provider: varchar("provider", { length: 255 }).notNull(),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    refresh_token: varchar("refresh_token", { length: 255 }),
+    access_token: varchar("access_token", { length: 255 }),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type", { length: 255 }),
+    scope: varchar("scope", { length: 255 }),
+    id_token: varchar("id_token", { length: 2048 }),
+    session_state: varchar("session_state", { length: 255 }),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  })
+)
+
+export const sessions = mysqlTable("session", {
+  sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+})
+
+export const verificationTokens = mysqlTable(
+  "verificationToken",
+  {
+    identifier: varchar("identifier", { length: 255 }).notNull(),
+    token: varchar("token", { length: 255 }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (verificationToken) => ({
+    compositePk: primaryKey({
+      columns: [verificationToken.identifier, verificationToken.token],
+    }),
+  })
+)
+
+export const authenticators = mysqlTable(
+  "authenticator",
+  {
+    credentialID: varchar("credentialID", { length: 255 }).notNull().unique(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    credentialPublicKey: varchar("credentialPublicKey", {
+      length: 255,
+    }).notNull(),
+    counter: int("counter").notNull(),
+    credentialDeviceType: varchar("credentialDeviceType", {
+      length: 255,
+    }).notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: varchar("transports", { length: 255 }),
+  },
+  (authenticator) => ({
+    compositePk: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)
+```
+
+</Accordion>
+<Accordion title="SQLite">
+If you want to modify the schema or add additional fields, you can use the following schema as a starting point:
+
+```ts filename="schema.ts"
+import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
+import { createClient } from "@libsql/client"
+import { drizzle } from "drizzle-orm/libsql"
+import type { AdapterAccountType } from "next-auth/adapters"
+
+const client = createClient({
+  url: "DATABASE_URL",
+  authToken: "DATABASE_AUTH_TOKEN",
+})
+export const db = drizzle(client)
+
+export const users = sqliteTable("user", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  email: text("email").unique(),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image"),
+})
+
+export const accounts = sqliteTable(
+  "account",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  })
+)
+
+export const sessions = sqliteTable("session", {
+  sessionToken: text("sessionToken").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+})
+
+export const verificationTokens = sqliteTable(
+  "verificationToken",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  },
+  (verificationToken) => ({
+    compositePk: primaryKey({
+      columns: [verificationToken.identifier, verificationToken.token],
+    }),
+  })
+)
+
+export const authenticators = sqliteTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: integer("credentialBackedUp", {
+      mode: "boolean",
+    }).notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  })
+)
+```
+
+</Accordion>
+</Accordions>
+
+### Adapter Setup
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: DrizzleAdapter(db),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: DrizzleAdapter(db),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: DrizzleAdapter(db),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: DrizzleAdapter(db),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+#### Passing your own Schemas
+
+If you want to use your own tables, you can pass them as a second argument to `DrizzleAdapter`.
+
+- The `sessionsTable` is optional and only required if you're using the database session strategy.
+- The `verificationTokensTable` is optional and only required if you're using a Magic Link provider.
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db, accounts, sessions, users, verificationTokens } from "./schema"
+
+export const { handlers, auth } = NextAuth({
+  adapter: DrizzleAdapter(db, {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }),
+  providers: [Google],
+})
+```
+
+### Migrating your database
+
+With your schema now described in your code, you'll need to migrate your database to your schema. An example `migrate.ts` file looks like this. For more information, check out Drizzle's migration [quick start guide](https://orm.drizzle.team/docs/migrations).
+
+```ts filename="migrate.ts"
+import "dotenv/config"
+import { migrate } from "drizzle-orm/mysql2/migrator"
+import { db, connection } from "./db"
+
+// This will run migrations on the database, skipping the ones already applied
+await migrate(db, { migrationsFolder: "./drizzle" })
+
+// Don't forget to close the connection, otherwise the script will hang
+await connection.end()
+```
+
+Full documentation on how to manage migrations with Drizzle can be found at the Drizzle Kit [Migrations page](https://orm.drizzle.team/kit-docs/overview#running-migrations).

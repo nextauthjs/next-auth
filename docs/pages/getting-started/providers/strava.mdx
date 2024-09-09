@@ -1,0 +1,98 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/strava.svg" height="64" width="64" />
+
+# Strava Provider
+
+## Resources
+
+- [Strava API documentation](http://developers.strava.com/docs/reference/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/strava
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/strava
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/strava
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_STRAVA_ID
+AUTH_STRAVA_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Strava from "next-auth/providers/strava"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Strava],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Strava from "@auth/qwik/providers/strava"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Strava],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Strava from "@auth/sveltekit/providers/strava"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Strava],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Strava from "@auth/express/providers/strava"
+
+app.use("/auth/*", ExpressAuth({ providers: [Strava] }))
+```
+
+  </Code.Express>
+</Code>

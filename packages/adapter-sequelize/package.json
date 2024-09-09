@@ -1,14 +1,26 @@
 {
-  "name": "@next-auth/sequelize-adapter",
-  "version": "1.0.7",
-  "description": "Sequelize adapter for next-auth.",
+  "name": "@auth/sequelize-adapter",
+  "version": "2.4.2",
+  "description": "Sequelize adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
   "author": "github.com/luke-j",
-  "main": "dist/index.js",
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
   "license": "ISC",
   "keywords": [
     "next-auth",
@@ -21,25 +33,16 @@
     "access": "public"
   },
   "scripts": {
-    "test:wip": "jest",
+    "test": "vitest -c ../utils/vitest.config.ts",
     "build": "tsc"
   },
-  "files": [
-    "README.md",
-    "dist"
-  ],
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
   "peerDependencies": {
-    "next-auth": "^4",
     "sequelize": "^6.6.5"
   },
   "devDependencies": {
-    "@next-auth/adapter-test": "workspace:*",
-    "@next-auth/tsconfig": "workspace:*",
-    "jest": "^27.4.3",
-    "next-auth": "workspace:*",
     "sequelize": "^6.6.5"
-  },
-  "jest": {
-    "preset": "@next-auth/adapter-test/jest"
   }
 }

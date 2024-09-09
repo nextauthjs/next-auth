@@ -3,10 +3,10 @@
 <p align="center">
    <br/>
    <a href="https://authjs.dev" target="_blank">
-   <img height="64" src="https://authjs.dev/img/logo/logo-sm.png" />
+   <img height="64" src="https://authjs.dev/img/logo-sm.png" />
    </a>
    <a href="https://start.solidjs.com" target="_blank">
-   <img height="64" src="https://www.solidjs.com/assets/logo-123b04bc.svg" />
+   <img height="64" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/public/img/etc/solidstart.svg" />
    </a>
    <h3 align="center"><b>SolidStart Auth</b> - Example App</h3>
    <p align="center">
@@ -32,7 +32,6 @@
 
 This is the official SolidStart Auth example for [Auth.js](https://authjs.dev).
 
-
 ## Getting started
 
 You can follow the guide below, or click the following button to deploy this example to [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=solid-start-auth-example).
@@ -44,9 +43,11 @@ You can follow the guide below, or click the following button to deploy this exa
 ```sh
 pnpm add -D solid-start-vercel
 ```
+
 ```sh
 npm i -D solid-start-vercel
 ```
+
 ```sh
 yarn add -D solid-start-vercel
 ```
@@ -54,19 +55,18 @@ yarn add -D solid-start-vercel
 ### Adding to Vite config
 
 ```ts
-import solid from "solid-start/vite";
-import dotenv from "dotenv";
-import { defineConfig } from "vite";
+import solid from "solid-start/vite"
+import dotenv from "dotenv"
+import { defineConfig } from "vite"
 // @ts-expect-error no typing
-import vercel from "solid-start-vercel";
-  
+import vercel from "solid-start-vercel"
+
 export default defineConfig(() => {
-  dotenv.config();
+  dotenv.config()
   return {
     plugins: [solid({ ssr: true, adapter: vercel({ edge: false }) })],
-  };
-});
-  
+  }
+})
 ```
 
 ### Environment Variables
@@ -80,6 +80,6 @@ Create a GitHub repo and push the code to it, then deploy it to Vercel.
 ## Acknowledgements
 
 <a href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
-<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/static/img/powered-by-vercel.svg" alt="Powered By Vercel" />
+<img width="170px" src="https://raw.githubusercontent.com/nextauthjs/next-auth/main/docs/public/img/etc/powered-by-vercel.svg" alt="Powered By Vercel" />
 </a>
 <p align="left">Thanks to Vercel sponsoring this project by allowing it to be deployed for free for the entire Auth.js Team</p>

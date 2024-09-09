@@ -1,0 +1,35 @@
+fragment User on users {
+  id
+  name
+  email
+  image
+  emailVerified
+}
+
+fragment Session on sessions {
+  id
+  userId
+  expires
+  sessionToken
+}
+
+fragment Account on accounts {
+  id
+  type
+  scope
+  userId
+  id_token
+  provider
+  expires_at
+  token_type
+  access_token
+  refresh_token
+  session_state
+  providerAccountId
+}
+
+fragment VerificationToken on verification_tokens {
+  token
+  expires
+  identifier
+}
