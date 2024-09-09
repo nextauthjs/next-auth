@@ -37,7 +37,7 @@
         "playwright/.cache/**",
         "test-results/**"
       ],
-      "passThroughEnv": [
+      "env": [
         "TEST_KEYCLOAK_PASSWORD",
         "TEST_KEYCLOAK_USERNAME",
         "AUTH_SECRET",
