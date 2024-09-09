@@ -43,8 +43,10 @@ export const authOptions = {
   ],
 }
 
-export default NextAuth(authOptions)
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
 ```
+* For app router, the method has to be exported from `/app/api/auth/[...nextauth]/route.tsx` and the export has to be with get and post since app router treats `route.tsx` as the endpoint of that specific route.
 
 All requests to `/api/auth/*` (`signIn`, `callback`, `signOut`, etc.) will automatically be handled by NextAuth.js.
 
