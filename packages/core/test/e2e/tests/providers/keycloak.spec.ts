@@ -30,9 +30,12 @@ test.describe("KeyCloak Provider", () => {
       })
     })
 
-    // TODO: Enable the test
-    // The session isn't cleared after signout, until the next page load
-    await test.skip("should logout", async () => {
+    await test.step("should logout", async () => {
+      // TODO: Enable the test
+      test.skip(
+        true,
+        "The session isn't cleared after signout, until the next page load"
+      )
       await page
         .getByRole("banner")
         .getByRole("button", { name: "Sign out" })
