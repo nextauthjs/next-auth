@@ -44,8 +44,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    cwd: "../../",
-    command: "pnpm dev:e2e:next",
+    cwd: "../../apps/dev/nextjs",
+    command: "pnpm dev",
     url: baseURL,
     stdout: "pipe",
     reuseExistingServer: !process.env.CI,
