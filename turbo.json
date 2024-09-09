@@ -35,10 +35,19 @@
         "playwright-report/**",
         "playwright/.cache/**",
         "test-results/**"
+      ],
+      "env": [
+        "TEST_KEYCLOAK_PASSWORD",
+        "TEST_KEYCLOAK_USERNAME",
+        "AUTH_SECRET",
+        "AUTH_KEYCLOAK_ID",
+        "AUTH_KEYCLOAK_SECRET",
+        "AUTH_KEYCLOAK_ISSUER",
+        "AUTH_TRUST_HOST"
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+      "passThroughEnv": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "@auth/hasura-adapter#build": {
       "dependsOn": ["@auth/core#build"],
@@ -59,6 +68,7 @@
         "@auth/solid-start#build",
         "@auth/qwik#build"
       ],
+      "persistent": true,
       "cache": false
     },
     "docs#build": {
