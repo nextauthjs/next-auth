@@ -27,9 +27,41 @@ export default async function UserAvatar() {
 </Code.Next>
 <Code.NextClient>
 
-In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
+Although `next-auth` supports client-side data retrieval using `useSession` and `SessionProvider` for both the App Router and Pages Router, in real-world scenarios, these are used less frequently. Typically, you'll want to take full advantage of server-side rendering to optimize performance and security.
+
+### App Router
+
+```tsx filename="app/admin/dashboard.tsx"
+"use client"
+import { useSession } from "next-auth/react";
+
+export default function Dashboard() {
+  const { data: session } = useSession();
+
+  if (session?.user?.role === "admin") {
+    return <p>You are an admin, welcome!</p>;
+  }
+
+  return <p>You are not authorized to view this page!</p>;
+}
+```
+
+```tsx filename="app/admin/page.tsx"
+import { SessionProvider } from "next-auth/react"
+import { Dashboard } from "./Dashboard"
+
+export default function Administrator() {
+  return (
+    <SessionProvider>
+      <Dashboard />
+    </SessionProvider>
+  )
+}
+```
 
 ### Page Server Side
+
+In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
 
 ```tsx filename="./pages/dashboard.tsx"
 import { auth } from "@/auth.ts"
