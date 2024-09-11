@@ -74,6 +74,7 @@
     "dev": "pnpm providers && tsc -w",
     "test": "vitest run -c ../utils/vitest.config.ts",
     "test:watch": "vitest -c ../utils/vitest.config.ts",
+    "test:e2e": "playwright test",
     "providers": "node ../utils/scripts/providers"
   },
   "files": [
@@ -107,6 +108,7 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
+    "dotenv": "^10.0.0",
     "next": "14.2.3",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0"
