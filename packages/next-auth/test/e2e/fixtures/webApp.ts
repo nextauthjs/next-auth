@@ -72,7 +72,7 @@ export class WebApp {
     // Ensure we've landed back at the dev app logged in
     const session = await this.page.locator("pre").textContent()
 
-    expect(JSON.parse(session ?? "{}").user.email).toEqual("bob@alice.com")
+    expect(JSON.parse(session ?? "{}").user.name).toEqual("bob")
 
     this.isLoggedIn = true
   }
