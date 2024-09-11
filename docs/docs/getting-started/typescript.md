@@ -149,7 +149,7 @@ declare module "next-auth/jwt" {
 }
 ```
 
-### Useful links
+### Useful link
 
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
 2. [Digital Ocean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
