@@ -28,7 +28,7 @@ export default function LinkedIn<P extends LinkedInProfile>(
     type: "oauth",
     authorization: {
       url: "https://www.linkedin.com/oauth/v2/authorization",
-      params: { scope: "r_liteprofile r_emailaddress" },
+      params: { scope: "openid profile email" },
     },
     token: "https://www.linkedin.com/oauth/v2/accessToken",
     client: {
