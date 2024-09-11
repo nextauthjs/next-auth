@@ -19,46 +19,46 @@ export function CustomSearchBox(props: UseSearchBoxProps) {
   }
 
   return (
-    <div>
-      <form
-        action=""
-        role="search"
-        noValidate
-        onSubmit={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
+    <form
+      action=""
+      role="search"
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
 
-          if (inputRef.current) {
-            inputRef.current.blur()
-          }
+        if (inputRef.current) {
+          inputRef.current.blur()
+        }
+      }}
+      onReset={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+
+        setQuery("")
+
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }}
+      className="relative"
+    >
+      <input
+        ref={inputRef}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        placeholder="Search..."
+        spellCheck={false}
+        maxLength={512}
+        type="search"
+        value={inputValue}
+        onChange={(event) => {
+          setQuery(event.currentTarget.value)
         }}
-        onReset={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-
-          setQuery("")
-
-          if (inputRef.current) {
-            inputRef.current.focus()
-          }
-        }}
-        className="relative max-md:ml-6"
-      >
-        <input
-          ref={inputRef}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          placeholder="Search..."
-          spellCheck={false}
-          maxLength={512}
-          type="search"
-          value={inputValue}
-          onChange={(event) => {
-            setQuery(event.currentTarget.value)
-          }}
-          className="w-full max-w-48 appearance-none rounded-lg bg-black/[.05] px-3 py-1.5 pr-2 text-base leading-tight transition-colors placeholder:text-gray-500 focus:!bg-transparent md:text-sm dark:bg-gray-50/10 dark:placeholder:text-gray-400"
-        />
+        className="w-48 appearance-none rounded-lg bg-black/[.05] px-3 py-1.5 pr-2 text-base leading-tight transition-colors placeholder:text-gray-500 focus:!bg-transparent md:text-sm dark:bg-gray-50/10 dark:placeholder:text-gray-400 [aside_&]:w-full"
+      />
+      <div>
         {inputValue.length ? (
           <button
             type="reset"
@@ -98,8 +98,8 @@ export function CustomSearchBox(props: UseSearchBoxProps) {
             CTRL K
           </kbd>
         )}
-        <span hidden={!isSearchStalled}>Searching…</span>
-      </form>
-    </div>
+      </div>
+      <span hidden={!isSearchStalled}>Searching…</span>
+    </form>
   )
 }
