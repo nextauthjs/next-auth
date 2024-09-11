@@ -11,6 +11,8 @@
 
 import type { EmailConfig, EmailUserConfig } from "./email.js"
 
+type Params = Parameters<EmailConfig["sendVerificationRequest"]>[0] & { provider: EmailConfig & { transactionalId?: string } }
+
 /**
  * 
  * @param config 
@@ -35,9 +37,9 @@ export default function Loops(config: EmailUserConfig): EmailConfig {
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
     transactionalId: config.transactionalId || "", 
-    async sendVerificationRequest(params) {
+    async sendVerificationRequest(params: Params) {
       const { identifier: to, provider, url } = params
-      if (!provider.apiKey) throw new TypeError("Missing Loops API Key")
+      if (!provider.apiKey || !provider.transactionalId) throw new TypeError("Missing Loops API Key or TransactionalId")
 
       const res = await fetch("https://app.loops.so/api/v1/transactional", {
         method: "POST",
