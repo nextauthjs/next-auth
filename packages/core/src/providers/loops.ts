@@ -9,24 +9,7 @@
  * @module providers/loops
  */
 
-import type { EmailConfig, EmailProviderSendVerificationRequestParams, EmailProviderType } from "./email.js"
-import type { Awaitable, Theme } from "../types.js"
-
-
-interface VerificationParams extends Omit<EmailProviderSendVerificationRequestParams, 'provider'> {
-  provider: LoopsConfig;
-  transactionalId: string;
-}
-
-export type LoopsUserConfig = Omit<Partial<LoopsConfig>, "options" | "type" >;
-
-export interface LoopsConfig extends Omit<EmailConfig, 'sendVerificationRequest' | 'options'>{
-  id: string;
-  apiKey: string;
-  transactionalId: string;
-  sendVerificationRequest: (params: VerificationParams) => Awaitable<void>;
-  options: LoopsUserConfig;
-}
+import type { EmailConfig, EmailUserConfig } from "./email.js"
 
 /**
  * 
@@ -36,25 +19,26 @@ export interface LoopsConfig extends Omit<EmailConfig, 'sendVerificationRequest'
  * @example
  * ```ts
  * Loops({
- *  apiKey: process.env.LOOPS_API_KEY,
- * transactionalId: process.env.LOOPS_TRANSACTIONAL_ID,
+ *   apiKey: process.env.AUTH_LOOPS_KEY,
+ *   transactionalId: process.env.AUTH_LOOPS_TRANSACTIONAL_ID,
  * })
  * ```
  * 
  * @typedef LoopsUserConfig 
  */
 
-export default function Loops(config: LoopsUserConfig): LoopsConfig {
+export default function Loops(config: EmailUserConfig): EmailConfig {
   return {
-    apiKey: "", 
     id: "loops",
-    type: "email" as EmailProviderType,
+    type: "email",
     name: "Loops",
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
     transactionalId: config.transactionalId || "", 
-    async sendVerificationRequest(params: VerificationParams): Promise<void> {
+    async sendVerificationRequest(params) {
       const { identifier: to, provider, url } = params
+      if (!provider.apiKey) throw new TypeError("Missing Loops API Key")
+
       const res = await fetch("https://app.loops.so/api/v1/transactional", {
         method: "POST",
         headers: {
@@ -70,7 +54,7 @@ export default function Loops(config: LoopsUserConfig): LoopsConfig {
         }),
       })
       if (!res.ok) {
-        throw new Error("Loops Error: " + JSON.stringify(await res.json()))
+        throw new Error("Loops Send Error: " + JSON.stringify(await res.json()))
       }
     },
     options: config,
