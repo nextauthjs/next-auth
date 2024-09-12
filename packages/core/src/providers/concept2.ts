@@ -12,19 +12,21 @@
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface Concept2Profile extends Record<string, any> {
-    id: number;
-    username: string;
-    first_name: string;
-    last_name: string;
-    gender: string;
-    dob: string;
-    email: string;
-    country: string;
-    profile_image: string;
-    age_restricted: boolean;
-    email_permission: boolean;
-    max_heart_rate: number | null;
-};
+  id: number
+  username: string
+  first_name: string
+  last_name: string
+  gender: string
+  dob: string
+  email: string
+  country: string
+  profile_image: string
+  age_restricted: boolean
+  email_permission: boolean | null
+  max_heart_rate: number | null
+  weight: number | null
+  logbook_privacy: string | null
+}
 
 /**
  * Add Concept2 login to your page.
@@ -38,12 +40,17 @@ export interface Concept2Profile extends Record<string, any> {
  *
  * #### Configuration
  *```js
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  * import Concept2 from "@auth/core/providers/concept2"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Concept2({ clientId: CONCEPT2_CLIENT_ID, clientSecret: CONCEPT2_CLIENT_SECRET })],
+ *   providers: [
+ *     Concept2({
+ *       clientId: CONCEPT2_CLIENT_ID,
+ *       clientSecret: CONCEPT2_CLIENT_SECRET
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -73,28 +80,29 @@ export interface Concept2Profile extends Record<string, any> {
  *
  * :::
  */
-export default function Concept2<P extends Concept2Profile>(options: OAuthUserConfig<P>): OAuthConfig<P> {
-    return {
-        id: 'concept2',
-        name: 'Concept2',
-        type: 'oauth',
-        checks: [],
-        authorization: {
-            url: 'https://log.concept2.com/oauth/authorize',
-            params: {
-                scope: 'user:read,results:write',
-            },
-        },
-        token: 'https://log.concept2.com/oauth/access_token',
-        userinfo: 'https://log.concept2.com/api/users/me',
-        profile(profile) {
-            return {
-                id: profile.data.id,
-                name: profile.data.username,
-                email: profile.data.email,
-                image: profile.data.profile_image,
-            };
-        },
-        options,
-    };
+export default function Concept2(
+  options: OAuthUserConfig<Concept2Profile>
+): OAuthConfig<Concept2Profile> {
+  return {
+    id: "concept2",
+    name: "Concept2",
+    type: "oauth",
+    authorization: {
+      url: "https://log.concept2.com/oauth/authorize",
+      params: {
+        scope: "user:read,results:write",
+      },
+    },
+    token: "https://log.concept2.com/oauth/access_token",
+    userinfo: "https://log.concept2.com/api/users/me",
+    profile(profile) {
+      return {
+        id: profile.data.id,
+        name: profile.data.username,
+        email: profile.data.email,
+        image: profile.data.profile_image,
+      }
+    },
+    options,
+  }
 }
