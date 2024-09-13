@@ -52,6 +52,7 @@ Below is a sample implementation of refreshing the `access_token` with Google. P
 
 ```ts filename="./auth.ts"
 import NextAuth, { type User } from "next-auth"
+import { JWT } from "next-auth/jwt";
 import Google from "next-auth/providers/google"
 
 export const { handlers, auth } = NextAuth({
@@ -70,7 +71,7 @@ export const { handlers, auth } = NextAuth({
           access_token: account.access_token,
           expires_at: account.expires_at,
           refresh_token: account.refresh_token,
-        }
+        } as JWT;
       } else if (Date.now() < token.expires_at * 1000) {
         // Subsequent logins, but the `access_token` is still valid
         return token
@@ -118,10 +119,10 @@ export const { handlers, auth } = NextAuth({
         }
       }
     },
-  },
-  session: ({ session, token }) => {
-    session.error = token.error
-    return session
+    async session ({ session, token }) {
+      session.error = token.error
+      return session
+    },
   },
 })
 
@@ -218,10 +219,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
-  },
-  session: ({ session, token }) => {
-    session.error = token.error
-    return session
   },
 })
 
