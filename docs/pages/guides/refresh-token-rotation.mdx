@@ -70,7 +70,7 @@ export const { handlers, auth } = NextAuth({
           access_token: account.access_token,
           expires_at: account.expires_at,
           refresh_token: account.refresh_token,
-        };
+        }
       } else if (Date.now() < token.expires_at * 1000) {
         // Subsequent logins, but the `access_token` is still valid
         return token
