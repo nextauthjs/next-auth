@@ -59,6 +59,33 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   }
 }
 
+function mergeCookiesAndSetCookiesHeaders(headers: Headers): string {
+  const setCookies = headers.get("set-cookie")
+  const cookies = headers.get("cookie");
+
+  if(!setCookies || (!cookies && !setCookies)) {
+    return cookies ?? "";
+  }
+
+  // We need to reparse the headers because the headers from Next returns [] on getSetCookie().
+  const headersToParse = new Headers(headers);
+  const setCookiesHeaders = headersToParse.getSetCookie();
+  const cookiesArray = cookies?.split(";") ?? [];
+  const cookiesObject = cookiesArray.reduce((acc, cookie) => {
+    const [key, value] = cookie.split("=");
+    acc[key.trim()] = value;
+    return acc;
+  }, {} as Record<string, string>);
+
+  for(const setCookie of setCookiesHeaders) {
+    const [keyValue, ..._parts] = setCookie.split(";");
+    const [key, value] = keyValue.split("=");
+    cookiesObject[key.trim()] = value;
+  }
+
+  return Object.entries(cookiesObject).map(([key, value]) => `${key}=${value}`).join("; ");
+}
+
 async function getSession(headers: Headers, config: NextAuthConfig) {
   const url = createActionURL(
     "session",
@@ -69,7 +96,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
     config
   )
   const request = new Request(url, {
-    headers: { cookie: headers.get("cookie") ?? "" },
+    headers: { cookie: mergeCookiesAndSetCookiesHeaders(headers) ?? "" },
   })
 
   return Auth(request, {
