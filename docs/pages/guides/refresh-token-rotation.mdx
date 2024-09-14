@@ -26,7 +26,7 @@ Auth.js libraries can be configured to use this `refresh_token` to obtain a new 
   at the same time. The Auth.js team is aware of this and would like to provide
   a solution in the future. This might include some "lock" mechanism to prevent
   multiple requests from trying to refresh the token at the same time, but that
-  comes with the drawback of potentically creating a bottleneck in the
+  comes with the drawback of potentially creating a bottleneck in the
   application. Another possible solution is background token refresh, to prevent
   the token from expiring during an authenticated request.
 </Callout>
@@ -118,10 +118,10 @@ export const { handlers, auth } = NextAuth({
         }
       }
     },
-  },
-  session: ({ session, token }) => {
-    session.error = token.error
-    return session
+    async session ({ session, token }) {
+      session.error = token.error
+      return session
+    },
   },
 })
 
@@ -218,10 +218,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
-  },
-  session: ({ session, token }) => {
-    session.error = token.error
-    return session
   },
 })
 
