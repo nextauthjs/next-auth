@@ -108,14 +108,9 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       <StepTitle>Setup Environment Variables</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
         Once registered, you should get a <strong>Client ID</strong> and{" "}
-        <strong>Client Secret</strong>.{" "}
-        {providerId === "keycloak" && (
-          <>
-            For {providerName}, you need to configre <strong>Issuer</strong> URL
-            as well.{" "}
-          </>
-        )}{" "}
-        Add those in your application environment file:
+        <strong>Client Secret</strong>. You may also have to configure the{" "}
+        <strong>Issuer URL</strong>. Add those in your application environment
+        file:
       </p>
       <Code>
         <Code.Next>
@@ -141,7 +136,6 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
                 `
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
 AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-${providerId === "keycloak" ? `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ISSUER={ISSUER_URL}` : ""}
 `
               ),
             }}
