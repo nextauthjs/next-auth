@@ -46,7 +46,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-svelte": "^2.38.0",
     "fake-smtp-server": "^0.8.0",
-    "lefthook": "^1.7.14",
+    "lefthook": "1.7.15",
     "prettier": "3.3.3",
     "prettier-plugin-svelte": "^3.2.6",
     "prettier-plugin-tailwindcss": "^0.6.6",
