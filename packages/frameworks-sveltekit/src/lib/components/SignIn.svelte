@@ -47,7 +47,7 @@
     <slot name="credentials" />
   {/if}
   <!-- TODO: Filter by provider type only -->
-  {#if provider === "email" || provider === "sendgrid" || provider === "resend" || provider === "forwardemail"}
+  {#if provider === "email" || provider === "sendgrid" || provider === "resend"}
     <slot name="email">
       <label
         class="section-header"
