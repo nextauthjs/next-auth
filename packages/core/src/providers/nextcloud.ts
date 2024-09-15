@@ -217,10 +217,9 @@ export default function Nextcloud(
           headers: {
             "OCS-APIRequest": "true",
             Authorization: `Bearer ${tokens.access_token}`,
-            Accept: "application/json", // This makes API return JSON instead of XML
+            Accept: "application/json",
           },
-        }).then(async (res) => await res.json())
-
+        }).then((res) => res.json())
         return res.ocs.data
       },
     },
