@@ -11,16 +11,10 @@ import { Accordion, Accordions } from "@/components/Accordion"
   distinguished from other environment variables more easily.
 </Callout>
 
-Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a random string of at least 32 characters. On UNIX based systems you can use this command:
+Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a cryptographically secure random string of at least 32 characters:
 
 ```bash npm2yarn
 npm exec auth secret
-```
-
-Alternatively, you can use the following `openssl` command, which should be available on all Linux / Mac OS X systems.
-
-```bash
-openssl rand -base64 33
 ```
 
 If you are using an [OAuth Provider](/concepts/oauth), your provider will provide you with a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's specific documentation).
