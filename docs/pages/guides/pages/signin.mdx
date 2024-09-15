@@ -134,9 +134,7 @@ import { signIn, auth, providerMap } from "@/auth.ts"
 import { AuthError } from "next-auth"
 
 export default async function SignInPage(props: {
-  searchParams: {
-    callbackUrl: string | undefined
-  }
+  searchParams: { callbackUrl: string | undefined }
 }) {
   return (
     <div className="flex flex-col gap-2">
