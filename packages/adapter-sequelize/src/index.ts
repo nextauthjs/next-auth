@@ -158,7 +158,6 @@ export default function SequelizeAdapter(
       await User.update(user, { where: { id: user.id } })
       const userInstance = await User.findByPk(user.id)
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return userInstance!
     },
     async deleteUser(userId) {
