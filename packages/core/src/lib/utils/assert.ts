@@ -208,7 +208,7 @@ export function assertConfig(
 
   const { adapter, session } = options
 
-  let requiredMethods: (keyof Adapter)[] = []
+  const requiredMethods: (keyof Adapter)[] = []
 
   if (
     hasEmail ||

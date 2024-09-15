@@ -14,18 +14,18 @@ export default async function UserButton() {
   const session = await auth()
   if (!session?.user) return <SignIn />
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <span className="hidden text-sm sm:inline-flex">
         {session.user.email}
       </span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative w-8 h-8 rounded-full">
-            <Avatar className="w-8 h-8">
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar className="h-8 w-8">
               <AvatarImage
                 src={
                   session.user.image ??
-                  "https://source.boringavatars.com/marble/120"
+                  `https://api.dicebear.com/9.x/thumbs/svg?seed=${Math.floor(Math.random() * 100000) + 1}&randomizeIds=true`
                 }
                 alt={session.user.name ?? ""}
               />
@@ -38,7 +38,7 @@ export default async function UserButton() {
               <p className="text-sm font-medium leading-none">
                 {session.user.name}
               </p>
-              <p className="text-xs leading-none text-muted-foreground">
+              <p className="text-muted-foreground text-xs leading-none">
                 {session.user.email}
               </p>
             </div>

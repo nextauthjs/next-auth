@@ -21,7 +21,6 @@ import {
   NullDocument,
   QueryValue,
   QueryValueObject,
-  Module,
 } from "fauna"
 
 import type {

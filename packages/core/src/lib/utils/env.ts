@@ -1,14 +1,31 @@
 import type { AuthAction } from "../../types.js"
-import { MissingSecret } from "../../errors.js"
-import { logger } from "./logger.js"
 import type { AuthConfig } from "../../index.js"
+import { setLogger } from "./logger.js"
 
-/** Set default env variables on the config object */
-export function setEnvDefaults(envObject: any, config: AuthConfig) {
+/**
+ *  Set default env variables on the config object
+ * @param suppressWarnings intended for framework authors.
+ */
+export function setEnvDefaults(
+  envObject: any,
+  config: AuthConfig,
+  suppressBasePathWarning = false
+) {
   try {
     const url = envObject.AUTH_URL
-    if (url && !config.basePath) config.basePath = new URL(url).pathname
+    if (url) {
+      if (config.basePath) {
+        if (!suppressBasePathWarning) {
+          const logger = setLogger(config)
+          logger.warn("env-url-basepath-redundant")
+        }
+      } else {
+        config.basePath = new URL(url).pathname
+      }
+    }
   } catch {
+    // Catching and swallowing potential URL parsing errors, we'll fall
+    // back to `/auth` below.
   } finally {
     config.basePath ??= `/auth`
   }
@@ -52,19 +69,19 @@ export function createActionURL(
   protocol: string,
   headers: Headers,
   envObject: any,
-  basePath?: string
+  config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
-  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+  const basePath = config?.basePath
+  const envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
   let url: URL
   if (envUrl) {
     url = new URL(envUrl)
     if (basePath && basePath !== "/" && url.pathname !== "/") {
-      logger.warn(
-        url.pathname === basePath
-          ? "env-url-basepath-redundant"
-          : "env-url-basepath-mismatch"
-      )
+      if (url.pathname !== basePath) {
+        const logger = setLogger(config)
+        logger.warn("env-url-basepath-mismatch")
+      }
       url.pathname = "/"
     }
   } else {

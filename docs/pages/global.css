@@ -63,7 +63,7 @@ details > *:not(summary) {
 }
 
 div.nextra-code > pre {
-  @apply dark:!bg-neutral-950 !bg-transparent overflow-y-visible;
+  @apply overflow-y-visible !bg-transparent dark:!bg-neutral-950;
 }
 div.nextra-code * pre {
   --shiki-dark-bg: "transparent" !important;
@@ -116,13 +116,13 @@ pre code.nextra-code:not(:has(span)) {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply dark:!bg-neutral-700 !bg-neutral-300 transition-colors duration-300;
+  @apply !bg-neutral-300 transition-colors duration-300 dark:!bg-neutral-700;
   border-radius: 100vh;
   transition: all 250ms ease-in-out;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply dark:!bg-neutral-700 !bg-neutral-300;
+  @apply !bg-neutral-300 dark:!bg-neutral-700;
   background-clip: unset !important;
   cursor: pointer;
 }
@@ -177,13 +177,8 @@ html[data-theme="dark"] .github-counter {
   animation: fadeOut 250ms ease-in;
 }
 
-/* Nextra Tabs buttons - fix ring cutoff from overflow-hidden */
-button[id^="headlessui-tabs-tab"] {
-  margin: 0 3px 0 3px;
-}
-
 #carbonads_bak {
-  @apply flex flex-col gap-1 p-3 text-xs rounded-md bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
+  @apply flex flex-col gap-1 rounded-md bg-neutral-100 p-3 text-xs text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
 
   .carbon-text {
     @apply dark:text-neutral-300;
@@ -197,7 +192,7 @@ button[id^="headlessui-tabs-tab"] {
     flex: unset !important;
   }
   img {
-    @apply rounded-[0.25rem] w-full !max-w-full;
+    @apply w-full !max-w-full rounded-[0.25rem];
   }
 
   #carbon-responsive .carbon-responsive-wrap {
@@ -205,11 +200,6 @@ button[id^="headlessui-tabs-tab"] {
     background-color: unset !important;
     padding: 0 !important;
   }
-}
-
-/* Sidebar hack for padding for focus ring */
-aside.nextra-sidebar-container .nextra-scrollbar > div {
-  padding: 4px;
 }
 
 .sponsoredBadge {

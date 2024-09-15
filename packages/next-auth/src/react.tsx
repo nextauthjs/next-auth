@@ -71,6 +71,10 @@ export const __NEXTAUTH: AuthClientConfig = {
 
 let broadcastChannel: BroadcastChannel | null = null
 
+function getNewBroadcastChannel() {
+  return new BroadcastChannel("next-auth")
+}
+
 function broadcast() {
   if (typeof BroadcastChannel === "undefined") {
     return {
@@ -81,7 +85,7 @@ function broadcast() {
   }
 
   if (broadcastChannel === null) {
-    broadcastChannel = new BroadcastChannel("next-auth")
+    broadcastChannel = getNewBroadcastChannel()
   }
 
   return broadcastChannel
@@ -178,7 +182,8 @@ export async function getSession(params?: GetSessionParams) {
     params
   )
   if (params?.broadcast ?? true) {
-    broadcast().postMessage({
+    const broadcastChannel = getNewBroadcastChannel()
+    broadcastChannel.postMessage({
       event: "session",
       data: { trigger: "getSession" },
     })
@@ -231,7 +236,9 @@ export async function signIn<
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+  const { redirect = true } = options ?? {}
+  const redirectTo =
+    options?.redirectTo ?? options?.callbackUrl ?? window.location.href
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
@@ -243,7 +250,7 @@ export async function signIn<
 
   if (!provider || !(provider in providers)) {
     window.location.href = `${baseUrl}/signin?${new URLSearchParams({
-      callbackUrl,
+      callbackUrl: redirectTo,
     })}`
     return
   }
@@ -269,7 +276,7 @@ export async function signIn<
       body: new URLSearchParams({
         ...options,
         csrfToken,
-        callbackUrl,
+        callbackUrl: redirectTo,
       }),
     }
   )
@@ -278,7 +285,7 @@ export async function signIn<
 
   // TODO: Do not redirect for Credentials and Email providers by default in next major
   if (redirect || !isSupportingReturn) {
-    const url = data.url ?? callbackUrl
+    const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
@@ -308,7 +315,8 @@ export async function signIn<
 export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse> {
-  const { callbackUrl = window.location.href } = options ?? {}
+  const redirectTo =
+    options?.redirectTo ?? options?.callbackUrl ?? window.location.href
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
@@ -317,14 +325,14 @@ export async function signOut<R extends boolean = true>(
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    body: new URLSearchParams({ csrfToken, callbackUrl }),
+    body: new URLSearchParams({ csrfToken, callbackUrl: redirectTo }),
   })
   const data = await res.json()
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
 
   if (options?.redirect ?? true) {
-    const url = data.url ?? callbackUrl
+    const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
