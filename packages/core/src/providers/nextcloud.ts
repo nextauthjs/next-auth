@@ -120,39 +120,20 @@ export interface NextcloudProfile extends Record<string, any> {
  *
  * #### Callback URL
  * ```
- * https://example.com/api/auth/callback/nextcloud
+ * https://example.com/auth/callback/nextcloud
  * ```
  *
  * #### Configuration
- *
  * ```ts
  * import { Auth } from "@auth/core"
  * import Nextcloud from "@auth/core/providers/nextcloud"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Nextcloud({ clientId: process.env.NEXTCLOUD_CLIENT_ID, clientSecret: process.env.NEXTCLOUD_CLIENT_SECRET, issuer: process.env.NEXTCLOUD_ISSUER })],
+ *   providers: [
+ *     Nextcloud({ clientId: AUTH_NEXTCLOUD_ID, clientSecret: AUTH_NEXTCLOUD_SECRET, issuer: AUTH_NEXTCLOUD_ISSUER }),
+ *   ],
  * })
- * ```
- *
- * ### Configuring Nextcloud
- *
- * Follow these steps:
- *
- * - Login to your Nextcloud instance as an administrator.
- * - Head over to your Administrator Security Settings.
- *   - Click on your profile picture in the top right corner and select **Administration settings** from the dropdown menu.
- *   - On left sidebar, scroll down and click on **Security**.
- * - Under **OAuth 2.0 clients**, enter the name of your application and provide a redirection URL.
- *   - For the redirection URL, use `https://yourapplication.com/api/auth/callback/nextcloud` or `http://localhost:3000/api/auth/callback/nextcloud` for development.
- * - Click on **Add**. You should now have a Client Identifier and Secret.
- *
- * In `.env.local` create the following entries:
- *
- * ```
- * NEXTCLOUD_CLIENT_ID="Your client identifier"
- * NEXTCLOUD_CLIENT_SECRET="Your client secret"
- * NEXTCLOUD_ISSUER=https://your-nextcloud-instance.com
  * ```
  *
  * ### Resources
@@ -167,25 +148,10 @@ export interface NextcloudProfile extends Record<string, any> {
  * By default, Auth.js assumes that the Nextcloud provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
- * :::danger
- *
- * Nextcloud OAuth 2 implementation currently does not support scoped access.
- * This means that every token has full access to the complete account including read and write permission to the stored files.
- * It is essential to store the OAuth 2 tokens in a safe way!
- *
- * :::
- *
- * :::tip
- *
- * Some Nextcloud API endpoints return XML instead of JSON. To make the API return JSON, add the `Accept: application/json` header to the request.
- * Some endpoints also require the `OCS-APIRequest: true` header.
- *
- * :::
- *
  * :::tip
  *
  * The Nextcloud provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/nextcloud.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
