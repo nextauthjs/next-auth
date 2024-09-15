@@ -38,7 +38,7 @@
 
 import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, base64url, calculateJwkThumbprint, jwtDecrypt } from "jose"
-import { SessionStore } from "./lib/utils/cookie.js"
+import { defaultCookies, SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"
@@ -107,8 +107,13 @@ export async function decode<Payload = JWT>(
   return payload as Payload
 }
 
+type GetTokenParamsBase = {
+  secret: JWTDecodeParams["secret"]
+  salt?: JWTDecodeParams["salt"]
+}
+
 export interface GetTokenParams<R extends boolean = false>
-  extends Pick<JWTDecodeParams, "salt" | "secret"> {
+  extends GetTokenParamsBase {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
   req: Request | { headers: Headers | Record<string, string> }
   /**
@@ -140,9 +145,7 @@ export async function getToken(
 ): Promise<string | JWT | null> {
   const {
     secureCookie,
-    cookieName = secureCookie
-      ? "__Secure-authjs.session-token"
-      : "authjs.session-token",
+    cookieName = defaultCookies(secureCookie ?? false).sessionToken.name,
     decode: _decode = decode,
     salt = cookieName,
     secret,

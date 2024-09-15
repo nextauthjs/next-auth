@@ -17,12 +17,12 @@ import {
   WebAuthnVerificationError,
 } from "../../errors.js"
 import { webauthnChallenge } from "../actions/callback/oauth/checks.js"
-import type {
-  AuthenticationResponseJSON,
-  PublicKeyCredentialCreationOptionsJSON,
-  PublicKeyCredentialRequestOptionsJSON,
-  RegistrationResponseJSON,
-} from "@simplewebauthn/server/script/deps"
+import {
+  type AuthenticationResponseJSON,
+  type PublicKeyCredentialCreationOptionsJSON,
+  type PublicKeyCredentialRequestOptionsJSON,
+  type RegistrationResponseJSON,
+} from "@simplewebauthn/types"
 import type {
   Adapter,
   AdapterAccount,
@@ -262,7 +262,7 @@ export async function verifyAuthenticate(
   // Make sure the response was verified
   if (!verified) {
     throw new WebAuthnVerificationError(
-      "WebAuthn authentication response could not be verified."
+      "WebAuthn authentication response could not be verified"
     )
   }
 

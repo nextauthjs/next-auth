@@ -7,7 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Supabase Docs](https://supabase.com/docs)
+- [Supabase documentation](https://supabase.com/docs)
 
 ## Setup
 
@@ -43,6 +43,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { SupabaseAdapter } from "@auth/supabase-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: SupabaseAdapter({
+      url: import.meta.env.SUPABASE_URL,
+      secret: import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
+    }),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -334,7 +352,7 @@ const supabase = createClient<Database>()
 In order to extend the `session` object with the `supabaseAccessToken` we need to extend the `session` interface in a `types/next-auth.d.ts` file:
 
 ```ts filename="types/next-auth.d.ts"
-import NextAuth, { DefaultSession } from "next-auth"
+import NextAuth, { type DefaultSession } from "next-auth"
 
 declare module "next-auth" {
   // Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context

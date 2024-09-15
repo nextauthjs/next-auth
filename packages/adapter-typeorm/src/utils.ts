@@ -69,7 +69,7 @@ export function parseDataSourceConfig(
     }
 
     return config
-  } catch (error) {
+  } catch {
     // If URL parsing fails for any reason, try letting TypeORM handle it
     return { url: configOrString } as any
   }

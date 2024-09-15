@@ -26,6 +26,13 @@ https://example.com/api/auth/callback/duende-identity-service
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/duende-identity-service
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -58,6 +65,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import DuendeIdentityServer6 from "@auth/qwik/providers/duende-identity-server6"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [DuendeIdentityServer6],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

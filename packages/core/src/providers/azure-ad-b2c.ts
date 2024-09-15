@@ -112,7 +112,7 @@ export default function AzureADB2C(
   options.issuer ??= `https://${tenantId}.b2clogin.com/${tenantId}.onmicrosoft.com/${primaryUserFlow}/v2.0`
   return {
     id: "azure-ad-b2c",
-    name: "Azure Active Directory B2C",
+    name: "Azure AD B2C",
     type: "oidc",
     profile(profile) {
       return {

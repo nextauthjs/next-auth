@@ -21,6 +21,13 @@ https://example.com/api/auth/callback/keycloak
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/keycloak
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -53,6 +60,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Keycloak from "@auth/qwik/providers/keycloak"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Keycloak],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
@@ -77,6 +98,8 @@ app.use("/auth/*", ExpressAuth({ providers: [Keycloak] }))
   </Code.Express>
 </Code>
 
-Create an `openid-connect` client in Keycloak with "confidential" as the "Access Type".
+Enable the "Client Authentication" option to retrieve your client secret in the Credentials tab.
+
+Prior to v20, create an `openid-connect` client in Keycloak with "confidential" as the "Access Type".
 
 - Issuer should include the realm – e.g. `https://my-keycloak-domain.com/realms/My_Realm`

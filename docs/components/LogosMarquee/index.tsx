@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
-import { Logo } from "./logo"
+import dynamic from "next/dynamic"
 import manifest from "@/data/manifest.json"
+
+const Logo = dynamic(() => import("./logo").then((mod) => mod.Logo), {
+  ssr: false,
+})
 
 const clamp = (min: number, num: number, max: number) =>
   Math.min(Math.max(num, min), max)
@@ -35,7 +39,7 @@ export const LogosMarquee = () => {
   }, [])
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+    <div className="pointer-events-none absolute left-0 top-0 h-full w-full opacity-30">
       {Object.entries(manifest.providersOAuth)
         .sort(() => Math.random() - 0.5)
         .filter((_, i) => i < logoCount!)

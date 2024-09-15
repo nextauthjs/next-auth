@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [SurrealDB Docs](https://www.surrealdb.com/docs)
+- [SurrealDB documentation](https://www.surrealdb.com/docs)
 
 ## Setup
 
@@ -43,6 +43,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
+import clientPromise from "./lib/surrealdb"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: SurrealDBAdapter(clientPromise),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

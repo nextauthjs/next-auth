@@ -13,6 +13,13 @@ AUTH_SECRET="This is an example"
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```bash filename=".env"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```bash filename=".env"
@@ -85,6 +92,22 @@ export const { handlers, auth } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Google from "@auth/qwik/providers/google"
+import Twitter from "@auth/qwik/providers/twitter"
+import GitHub from "@auth/qwik/providers/github"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Google, Twitter, GitHub],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./auth.ts" {7}
@@ -129,6 +152,25 @@ export const { handlers, auth } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Google from "@auth/qwik/providers/google"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Google({
+        clientId: import.meta.env.AUTH_WEBAPP_GOOGLE_CLIENT_ID,
+        clientSecret: import.meta.env.AUTH_WEBAPP_GOOGLE_CLIENT_SECRET,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts" {8-9}

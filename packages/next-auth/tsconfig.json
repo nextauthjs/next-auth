@@ -1,5 +1,5 @@
 {
-  "extends": "utils/tsconfig.json",
+  "extends": "../utils/tsconfig.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "react-jsx",

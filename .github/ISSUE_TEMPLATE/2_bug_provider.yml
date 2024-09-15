@@ -11,7 +11,7 @@ body:
 
         ### Important :exclamation:
 
-        _Providing incorrect/insufficient information or skipping steps to reproduce the issue may result in closing the issue or converting to a discussion without further explanation._
+        _Providing incorrect/insufficient information or skipping steps to reproduce the issue *will* result in closing the issue or converting to a discussion without further explanation._
 
         If you have a generic question specific to your project, it is best asked in Discussions under the [Questions category](https://github.com/nextauthjs/next-auth/discussions/new?category=Questions)
   - type: dropdown
@@ -37,11 +37,13 @@ body:
         - "Bungie"
         - "ClickUp"
         - "Cognito"
+        - "Concept2"
         - "Coinbase"
         - "Descope"
         - "Discord"
         - "Dribbble"
         - "Dropbox"
+        - "Eventbrite"
         - "EVE Online"
         - "Facebook"
         - "FACEIT"
@@ -55,6 +57,7 @@ body:
         - "Instagram"
         - "Kakao"
         - "Keycloak"
+        - "Kinde"
         - "Line"
         - "LinkedIn"
         - "Mailchimp"
@@ -64,18 +67,23 @@ body:
         - "Naver"
         - "Netlify"
         - "NetSuite"
+        - "Nextcloud"
         - "Notion"
         - "Okta"
         - "OneLogin"
         - "Osso"
         - "Osu"
         - "Patreon"
+        - "Ping Identity"
         - "Pipedrive"
         - "Reddit"
+        - "Roblox"
         - "Salesforce"
+        - "SimpleLogin"
         - "Slack"
         - "Spotify"
         - "Strava"
+        - "Threads"
         - "Tiktok"
         - "Todoist"
         - "Trakt"
@@ -108,7 +116,7 @@ body:
   - type: input
     attributes:
       label: Reproduction URL
-      description: A URL to a repository/code that clearly reproduces your issue. You can use our [`next-auth-example`](https://github.com/nextauthjs/next-auth-example) template repository to get started more easily, or link to your project if it's public
+      description: A URL to a public github.com repository outside the next-auth org that clearly reproduces your issue. You can use our [`next-auth-example`](https://github.com/nextauthjs/next-auth-example) template repository to get started more easily
     validations:
       required: true
   - type: textarea

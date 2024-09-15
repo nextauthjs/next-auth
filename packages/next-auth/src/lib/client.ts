@@ -45,21 +45,31 @@ export interface ClientSafeProvider {
   type: ProviderType
   signinUrl: string
   callbackUrl: string
+  redirectTo: string
 }
 
 export interface SignInOptions extends Record<string, unknown> {
   /**
-   * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
-   *
-   * [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl)
+   * @deprecated Use `redirectTo` instead.
    */
   callbackUrl?: string
-  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
+  /**
+   * Specify where the user should be redirected to after a successful signin.
+   * Defaults to the page URL the sign-in is initiated from.
+   */
+  redirectTo?: string
+  /**
+   * You might want to deal with the signin response on the same page, instead of redirecting to another page.
+   * For example, if an error occurs (like wrong credentials given by the user), you might want to show an inline error message on the input field.
+   *
+   * For this purpose, you can set this to option `redirect: false`.
+   */
   redirect?: boolean
 }
 
 export interface SignInResponse {
   error: string | undefined
+  code: string | undefined
   status: number
   ok: boolean
   url: string | null
@@ -81,8 +91,16 @@ export interface SignOutResponse {
 }
 
 export interface SignOutParams<R extends boolean = true> {
-  /** [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1) */
+  /** @deprecated Use `redirectTo` instead.
+   */
   callbackUrl?: string
+
+  /**
+   * If you pass `redirect: false`, the page will not reload.
+   * The session will be deleted, and `useSession` is notified, so any indication about the user will be shown as logged out automatically.
+   * It can give a very nice experience for the user.
+   */
+  redirectTo?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
   redirect?: R
 }

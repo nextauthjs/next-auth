@@ -7,7 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Cloudflare D1](https://developers.cloudflare.com/d1/)
+- [Cloudflare D1 documentation](https://developers.cloudflare.com/d1/)
 
 ## Setup
 
@@ -19,7 +19,7 @@ npm install next-auth @auth/d1-adapter
 
 ### Environment Variables
 
-Environment variables in Cloudflare's platform are set either via a `wrangler.toml` configuration file, or in the [admin dashboard](https://dash.cloudflare.com).
+Environment variables in Cloudflare's platform are set either via a [`wrangler.toml`](https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables) configuration file, or in the [admin dashboard](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/environment-variables).
 
 ### Configuration
 
@@ -37,6 +37,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { D1Adapter } from "@auth/d1-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: D1Adapter(env.db),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

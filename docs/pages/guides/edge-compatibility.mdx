@@ -67,11 +67,11 @@ export default {
 } satisfies NextAuthConfig
 ```
 
-2. Next, a separate **instantiated** Auth.js instance which imports that configuration, but also adds the adapter.
+2. Next, a separate **instantiated** Auth.js instance which imports that configuration, but also adds the adapter and using `jwt` for the Session strategy:
 
-```ts filename="auth.ts" {2, 10}
+```ts filename="auth.ts" {2, 10, 11}
 import NextAuth from "next-auth"
-import authConfig from "auth.config"
+import authConfig from "./auth.config"
 
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -80,6 +80,7 @@ const prisma = new PrismaClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
   ...authConfig,
 })
 ```
