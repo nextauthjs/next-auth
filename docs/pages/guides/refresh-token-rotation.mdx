@@ -118,7 +118,7 @@ export const { handlers, auth } = NextAuth({
         }
       }
     },
-    async session ({ session, token }) {
+    async session({ session, token }) {
       session.error = token.error
       return session
     },
