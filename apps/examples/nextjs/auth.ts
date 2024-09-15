@@ -57,7 +57,7 @@ const config = {
       clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
       issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
     }),
-    BankIDNorway,
+    BankIDNorway({ redirectProxyUrl: undefined }),
     BoxyHQSAML({
       clientId: "dummy",
       clientSecret: "dummy",
