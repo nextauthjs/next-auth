@@ -33,16 +33,16 @@ Although `next-auth` supports client-side data retrieval using `useSession` and 
 
 ```tsx filename="app/admin/dashboard.tsx"
 "use client"
-import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react"
 
 export default function Dashboard() {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
 
   if (session?.user?.role === "admin") {
-    return <p>You are an admin, welcome!</p>;
+    return <p>You are an admin, welcome!</p>
   }
 
-  return <p>You are not authorized to view this page!</p>;
+  return <p>You are not authorized to view this page!</p>
 }
 ```
 
