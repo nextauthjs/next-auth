@@ -52,7 +52,7 @@ import { signIn } from "next-auth/react"
 export default function SignIn() {
   return <button onClick={() => signIn("${providerId}")}></button>
 }
-`)
+`),
           }}
         />
       </Code.NextClient>
