@@ -1,0 +1,114 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/nextcloud.svg" height="64" width="64" />
+
+# Nextcloud Provider
+
+## Resources
+
+- [Nextcloud Documentation](https://docs.nextcloud.com/)
+- [Nextcloud OAuth 2](https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/oauth2.html)
+- [Nextcloud Clients and Client APIs](https://docs.nextcloud.com/server/latest/developer_manual/client_apis/index.html)
+- [Nextcloud User provisioning API](https://docs.nextcloud.com/server/latest/admin_manual/configuration_user/user_provisioning_api.html)
+
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/nextcloud
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/nextcloud
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/nextcloud
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_NEXTCLOUD_ID
+AUTH_NEXTCLOUD_SECRET
+AUTH_NEXTCLOUD_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts
+import NextAuth from "next-auth"
+import Nextcloud from "next-auth/providers/nextcloud"
+
+const response = await NextAuth({
+  providers: [
+    Nextcloud({ clientId: process.env.AUTH_NEXTCLOUD_ID, clientSecret: process.env.AUTH_NEXTCLOUD_SECRET, issuer: process.env.AUTH_NEXTCLOUD_ISSUER }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Nextcloud from "@auth/qwik/providers/nextcloud"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Nextcloud({ clientId: process.env.AUTH_NEXTCLOUD_ID, clientSecret: process.env.AUTH_NEXTCLOUD_SECRET, issuer: process.env.AUTH_NEXTCLOUD_ISSUER })
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Nextcloud from "@auth/sveltekit/providers/nextcloud"
+import { AUTH_NEXTCLOUD_ID, AUTH_NEXTCLOUD_SECRET, AUTH_NEXTCLOUD_ISSUER } from "$env/static/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+    providers: [
+      Nextcloud({ clientId: AUTH_NEXTCLOUD_ID, clientSecret: AUTH_NEXTCLOUD_SECRET, issuer: AUTH_NEXTCLOUD_ISSUER })
+    ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Nextcloud from "@auth/express/providers/nextcloud"
+
+app.use("/auth/*", ExpressAuth({
+  providers: [
+    Nextcloud({ clientId: AUTH_NEXTCLOUD_ID, clientSecret: AUTH_NEXTCLOUD_SECRET, issuer: AUTH_NEXTCLOUD_ISSUER })
+  ]
+}))
+```
+
+  </Code.Express>
+</Code>
