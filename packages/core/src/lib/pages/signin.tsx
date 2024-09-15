@@ -133,15 +133,6 @@ export default function SigninPage(props: {
                     }}
                     tabIndex={0}
                   >
-                    {logo && (
-                      <img
-                        loading="lazy"
-                        height={24}
-                        width={24}
-                        id="provider-logo"
-                        src={logo}
-                      />
-                    )}
                     <span
                       style={{
                         filter:
@@ -152,6 +143,7 @@ export default function SigninPage(props: {
                     >
                       Sign in with {provider.name}
                     </span>
+                    {logo && <img loading="lazy" height={24} src={logo} />}
                   </button>
                 </form>
               ) : null}
