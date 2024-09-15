@@ -174,6 +174,31 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+
+  const resendAction = (formData: FormData) => {
+    signIn("resend", formData)
+  }
+
+  return (
+    <form action={resendAction}>
+      <label htmlFor="email-resend">
+        Email
+        <input type="email" id="email-resend" name="email" />
+      </label>
+      <input type="submit" value="Signin with Resend" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
@@ -328,6 +353,31 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+
+  const sendgridAction = (formData: FormData) => {
+    signIn("sendgrid", formData)
+  }
+
+  return (
+    <form action={sendgridAction}>
+      <label htmlFor="email-sendgrid">
+        Email
+        <input type="email" id="email-sendgrid" name="email" />
+      </label>
+      <input type="submit" value="Signin with Sendgrid" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
@@ -753,6 +803,31 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+
+  const postmarkAction = (formData: FormData) => {
+    signIn("postmark", formData)
+  }
+
+  return (
+    <form action={postmarkAction}>
+      <label htmlFor="email-postmark">
+        Email
+        <input type="email" id="email-postmark" name="email" />
+      </label>
+      <input type="submit" value="Signin with Postmark" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
