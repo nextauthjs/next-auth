@@ -41,10 +41,10 @@ export default function parseProviders(params: {
 
     if (provider.type === "oauth" || provider.type === "oidc") {
       merged.redirectProxyUrl ??= options.redirectProxyUrl
-      return normalizeOAuth(merged)
+      return normalizeOAuth(merged) as InternalProvider
     }
 
-    return merged
+    return merged as InternalProvider
   })
 
   return {
