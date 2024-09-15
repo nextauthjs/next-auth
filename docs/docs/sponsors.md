@@ -198,6 +198,11 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
       "https://avatars.githubusercontent.com/u/50438175?v=4",
       "Encore",
     ],
+    [
+      "https://route4me.com/?ref=authjs",
+      "https://avatars.githubusercontent.com/u/7936820?v=4",
+      "Route4Me",
+    ],
   ].map(([href, src, name]) => (
     <a
       key={name}
