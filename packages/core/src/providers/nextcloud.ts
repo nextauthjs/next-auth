@@ -234,11 +234,8 @@ export default function Nextcloud(
     },
     style: {
       logo: "/nextcloud.svg",
-      logoDark: "/nextcloud-dark.svg",
       bg: "#fff",
-      bgDark: "#0082C9",
       text: "#0082C9",
-      textDark: "#fff",
     },
     options,
   }
