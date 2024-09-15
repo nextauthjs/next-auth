@@ -244,7 +244,6 @@ export function handleState(
   provider: OAuthConfigInternal<any>,
   isOnRedirectProxy: InternalOptions["isOnRedirectProxy"]
 ) {
-  let randomState: string | undefined
   let proxyRedirect: string | undefined
 
   if (provider.redirectProxyUrl && !query?.state) {
@@ -254,7 +253,7 @@ export function handleState(
   }
 
   const state = decodeState(query?.state)
-  randomState = state?.random
+  const randomState = state?.random
 
   if (isOnRedirectProxy) {
     if (!state?.origin) return { randomState }
