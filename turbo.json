@@ -30,6 +30,7 @@
       "outputLogs": "new-only"
     },
     "test:e2e": {
+      "dependsOn": ["next-auth#build"],
       "outputs": [
         "blob-report/**",
         "playwright-report/**",

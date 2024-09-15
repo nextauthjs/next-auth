@@ -118,10 +118,10 @@ export const { handlers, auth } = NextAuth({
         }
       }
     },
-  },
-  session: ({ session, token }) => {
-    session.error = token.error
-    return session
+    async session({ session, token }) {
+      session.error = token.error
+      return session
+    },
   },
 })
 
@@ -218,10 +218,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
-  },
-  session: ({ session, token }) => {
-    session.error = token.error
-    return session
   },
 })
 
