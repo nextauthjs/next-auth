@@ -37,10 +37,11 @@ export async function signIn(
   }
 
   let url = `${signInURL}/${provider}?${new URLSearchParams(authorizationParams)}`
-  let foundProvider: { id?: SignInParams[0], type?: ProviderType } = {}
+  let foundProvider: { id?: SignInParams[0]; type?: ProviderType } = {}
 
   for (const providerConfig of config.providers) {
-    const { options, ...defaults } = typeof providerConfig === "function" ? providerConfig() : providerConfig
+    const { options, ...defaults } =
+      typeof providerConfig === "function" ? providerConfig() : providerConfig
     const id = (options?.id as string | undefined) ?? defaults.id
     if (id === provider) {
       foundProvider = {
