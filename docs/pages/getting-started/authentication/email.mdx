@@ -182,8 +182,8 @@ import { signIn } from "next-auth/react"
 
 export function SignIn() {
 
-  const resendAction = (formData: formData) => {
-    signIn("resend", Object.fromEntries(formData))
+  const resendAction = (formData: FormData) => {
+    signIn("resend", formData)
   }
 
   return (
@@ -361,8 +361,8 @@ import { signIn } from "next-auth/react"
 
 export function SignIn() {
 
-  const sendgridAction = (formData: formData) => {
-    signIn("sendgrid", Object.fromEntries(formData))
+  const sendgridAction = (formData: FormData) => {
+    signIn("sendgrid", formData)
   }
 
   return (
@@ -811,8 +811,8 @@ import { signIn } from "next-auth/react"
 
 export function SignIn() {
 
-  const postmarkAction = (formData: formData) => {
-    signIn("postmark", Object.fromEntries(formData))
+  const postmarkAction = (formData: FormData) => {
+    signIn("postmark", formData)
   }
 
   return (
