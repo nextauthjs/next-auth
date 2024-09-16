@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "solid-start-example-app",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
@@ -25,6 +25,6 @@
     "zod": "^3.19.1"
   },
   "engines": {
-    "node": ">=16"
+    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   }
 }
