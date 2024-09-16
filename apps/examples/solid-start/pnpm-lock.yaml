@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@auth/solid-start':
-        specifier: ^0.12.2
-        version: 0.12.2(solid-js@1.8.22)(solid-start@0.2.32(@solidjs/meta@0.28.7(solid-js@1.8.22))(@solidjs/router@0.6.0(solid-js@1.8.22))(solid-js@1.8.22)(solid-start-node@0.2.32)(solid-start-vercel@0.2.32)(vite@3.2.10(terser@5.31.6)))
+        specifier: latest
+        version: 0.13.0(solid-js@1.8.22)(solid-start@0.2.32(@solidjs/meta@0.28.7(solid-js@1.8.22))(@solidjs/router@0.6.0(solid-js@1.8.22))(solid-js@1.8.22)(solid-start-node@0.2.32)(solid-start-vercel@0.2.32)(vite@3.2.10(terser@5.31.6)))
       '@solidjs/meta':
         specifier: ^0.28.0
         version: 0.28.7(solid-js@1.8.22)
@@ -62,8 +62,8 @@ packages:
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
 
-  '@auth/core@0.34.2':
-    resolution: {integrity: sha512-KywHKRgLiF3l7PLyL73fjLSIBe1YNcA6sMeew4yMP6cfCWGXZrkkXd32AjRi1hlJ9nvovUBGZHvbn+LijO6ZeQ==}
+  '@auth/core@0.35.0':
+    resolution: {integrity: sha512-XvMALiYn5ZQd1hVeG1t+jCU89jRrc7ortl/05wkBrPHnRWZScxAK5jKuzBz+AOBQXewDjYcMpzeF5tTqg6rDhQ==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -76,8 +76,8 @@ packages:
       nodemailer:
         optional: true
 
-  '@auth/solid-start@0.12.2':
-    resolution: {integrity: sha512-V7ZrwBHna95CTH19aBhez/RU8dos1gtYC6vpePxv+P3ZFKVtV/4F/b9p1ED9XIlll8v6/z0HvPYEvkpdvXbL+A==}
+  '@auth/solid-start@0.13.0':
+    resolution: {integrity: sha512-Y1/EBwTgfjcw3MMrB6wyBwY7jNc96PZ8dYO6MYfO3JNHCHO3njPCWplgffw5L/sGkI/Bks94ZOAh+TVnczJcUQ==}
     peerDependencies:
       solid-js: ^1.5.7
       solid-start: ^0.2.14
@@ -2501,7 +2501,7 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@auth/core@0.34.2':
+  '@auth/core@0.35.0':
     dependencies:
       '@panva/hkdf': 1.2.1
       '@types/cookie': 0.6.0
@@ -2511,9 +2511,9 @@ snapshots:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
-  '@auth/solid-start@0.12.2(solid-js@1.8.22)(solid-start@0.2.32(@solidjs/meta@0.28.7(solid-js@1.8.22))(@solidjs/router@0.6.0(solid-js@1.8.22))(solid-js@1.8.22)(solid-start-node@0.2.32)(solid-start-vercel@0.2.32)(vite@3.2.10(terser@5.31.6)))':
+  '@auth/solid-start@0.13.0(solid-js@1.8.22)(solid-start@0.2.32(@solidjs/meta@0.28.7(solid-js@1.8.22))(@solidjs/router@0.6.0(solid-js@1.8.22))(solid-js@1.8.22)(solid-start-node@0.2.32)(solid-start-vercel@0.2.32)(vite@3.2.10(terser@5.31.6)))':
     dependencies:
-      '@auth/core': 0.34.2
+      '@auth/core': 0.35.0
       solid-js: 1.8.22
       solid-start: 0.2.32(@solidjs/meta@0.28.7(solid-js@1.8.22))(@solidjs/router@0.6.0(solid-js@1.8.22))(solid-js@1.8.22)(solid-start-node@0.2.32)(solid-start-vercel@0.2.32)(vite@3.2.10(terser@5.31.6))
     transitivePeerDependencies:
