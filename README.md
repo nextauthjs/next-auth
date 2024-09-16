@@ -5,7 +5,8 @@
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
   <p align="center" style="align: center;">
-    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?style=flat-square&label=latest%20release&color=purple" alt="GitHub Stable Release" /></a>
+    <img alt="NPM Version v4" src="https://img.shields.io/npm/v/next-auth/latest?style=flat-square&label=latest%20stable"></a>
+    <img alt="NPM Version v5" src="https://img.shields.io/npm/v/next-auth/beta?style=flat-square&label=latest%20v5"></a>
     <!-- TODO: Should count `@auth/core` when NextAuth.js v5 is released as stable. -->
     <a href="https://www.npmtrends.com/next-auth"><img src="https://img.shields.io/npm/dm/next-auth?style=flat-square&color=cyan" alt="Downloads" /></a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
