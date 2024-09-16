@@ -86,7 +86,9 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "@types/set-cookie-parser": "^2.4.10",
+    "set-cookie-parser": "^2.7.0"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",

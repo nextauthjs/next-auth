@@ -1,4 +1,5 @@
 import { Auth, createActionURL, type AuthConfig } from "@auth/core"
+import { parse } from "set-cookie-parser"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { headers } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
@@ -242,7 +243,15 @@ async function handleAuth(
     authorized = await config.callbacks.authorized({ request, auth })
   }
 
-  let response: any = NextResponse.next?.()
+  const augmentedRequestHeaders = new Headers()
+  for (const cookie of parse(sessionResponse.headers.getSetCookie()))
+    augmentedRequestHeaders.append("cookie", `${cookie.name}=${cookie.value}`)
+
+  let response: any = NextResponse.next?.({
+    request: {
+      headers: augmentedRequestHeaders,
+    },
+  })
 
   if (authorized instanceof Response) {
     // User returned a custom response, like redirecting to a page or 401, respect it
@@ -264,7 +273,11 @@ async function handleAuth(
     augmentedReq.auth = auth
     response =
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
-      NextResponse.next()
+      NextResponse.next({
+        request: {
+          headers: augmentedRequestHeaders,
+        },
+      })
   } else if (!authorized) {
     const signInPage = config.pages?.signIn ?? `${config.basePath}/signin`
     if (request.nextUrl.pathname !== signInPage) {
