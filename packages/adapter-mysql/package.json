@@ -1,0 +1,46 @@
+{
+  "name": "mysql-adapter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "./test/test.sh",
+    "build": "tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MAHB98/mysql-adapter.git"
+  },
+  "keywords": [
+     
+    "next-auth",
+    "@auth",
+    "Auth.js",
+    "next.js",
+    "oauth",
+    "mysql"
+  ],
+  "author": "MAHB98",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MAHB98/mysql-adapter/issues"
+  },
+  "homepage": "https://github.com/MAHB98/mysql-adapter#readme",
+  "dependencies": {
+    "@auth/core": "^0.34.1",
+    "tsc": "^2.0.4",
+    "tslib": "^2.6.3"
+  },
+  "devDependencies": {
+    
+    "@types/node": "^20.16.5",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "mysql2": "3.11.2"
+  }
+}
