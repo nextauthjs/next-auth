@@ -25,8 +25,8 @@ https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-regis
 
 ### To allow specific Active Directory users access:
 
-- In https://portal.azure.com/ search for "Azure Active Directory", and select your organization.
-- Next, go to "App Registration" in the left menu, and create a new one.
+- In https://portal.azure.com/ search for "Microsoft Entra ID", and select your organization.
+- Next, in the left menu expand the "Manage" accordion and then go to "App Registration" , and create a new one.
 - Pay close attention to "Who can use this application or access this API?"
   - This allows you to scope access to specific types of user accounts
   - Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
