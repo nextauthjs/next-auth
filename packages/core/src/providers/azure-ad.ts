@@ -149,15 +149,19 @@ export default function AzureAD<P extends AzureADProfile>(
     },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-      const response = await fetch(
-        `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
-        { headers: { Authorization: `Bearer ${tokens.access_token}` } }
-      )
+      let response = null
+
+      try {
+        response = await fetch(
+          `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
+          { headers: { Authorization: `Bearer ${tokens.access_token}` } }
+        )
+      } catch {}
 
       // Confirm that profile photo was returned
-      let image
+      let image = null
       // TODO: Do this without Buffer
-      if (response.ok && typeof Buffer !== "undefined") {
+      if (response && response.ok && typeof Buffer !== "undefined") {
         try {
           const pictureBuffer = await response.arrayBuffer()
           const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")

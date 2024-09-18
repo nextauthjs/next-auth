@@ -27,6 +27,7 @@ import Slack from "next-auth/providers/slack"
 import Spotify from "next-auth/providers/spotify"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
+import Vipps from "next-auth/providers/vipps"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
@@ -91,6 +92,7 @@ const config = {
     Spotify,
     Twitch,
     Twitter,
+    Vipps,
     WorkOS({
       connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),

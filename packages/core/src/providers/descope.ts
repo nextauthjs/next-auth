@@ -50,7 +50,7 @@ export interface DescopeProfile {
  * import Descope from "@auth/core/providers/descope"
  *
  * const request = new Request(origin)
- * const response = await Auth(request, { providers: [Descope] })
+ * const response = await Auth(request, { providers: [Descope({ clientId: AUTH_DESCOPE_ID, clientSecret: AUTH_DESCOPE_SECRET, issuer: AUTH_DESCOPE_ISSUER })] })
  * ```
  *
  * ### Configuring Descope
@@ -66,6 +66,7 @@ export interface DescopeProfile {
  * ```
  * AUTH_DESCOPE_ID="<Descope Issuer's last url segment>" # Descope's Issuer can be found in "Authentication Methods > SSO > Identity Provider" (Can also be taken from "Project > Project ID")
  * AUTH_DESCOPE_SECRET="<Descope Access Key>" # Manage > Access Keys
+ * AUTH_DESCOPE_ISSUER="<Descope Issuer URL>" # Applications -> OIDC Application -> Issuer
  * ```
  *
  * ### Resources
@@ -92,15 +93,12 @@ export interface DescopeProfile {
 export default function Descope(
   config: OIDCUserConfig<DescopeProfile>
 ): OIDCConfig<DescopeProfile> {
+  config.issuer ??= `https://api.descope.com/${config.clientId}`
   return {
     id: "descope",
     name: "Descope",
     type: "oidc",
-    issuer: `https://api.descope.com/${config.clientId}`,
-    style: {
-      bg: "#1C1C23",
-      text: "#ffffff",
-    },
+    style: { bg: "#1C1C23", text: "#ffffff" },
     checks: ["pkce", "state"],
     options: config,
   }

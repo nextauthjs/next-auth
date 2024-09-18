@@ -53,7 +53,7 @@ export default function MailGun(config: EmailUserConfig): EmailConfig {
     async sendVerificationRequest(params) {
       const { identifier: to, provider, url, theme } = params
       const { host } = new URL(url)
-      const domain = provider.from.split("@").at(1)
+      const domain = provider.from?.split("@").at(1)
 
       if (!domain) throw new Error("malformed Mailgun domain")
 

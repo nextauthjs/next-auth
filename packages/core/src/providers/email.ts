@@ -30,8 +30,8 @@ export interface EmailConfig extends CommonProviderOptions {
   id: string
   type: EmailProviderType
   name: string
-  from: string
-  maxAge: number
+  from?: string
+  maxAge?: number
   sendVerificationRequest: (params: {
     identifier: string
     url: string
@@ -49,7 +49,7 @@ export interface EmailConfig extends CommonProviderOptions {
   server?: NodemailerConfig["server"]
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
-  options: EmailUserConfig
+  options?: EmailUserConfig
 }
 
 export type EmailUserConfig = Omit<Partial<EmailConfig>, "options" | "type">
