@@ -101,6 +101,7 @@
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
+    "@octokit/types": "^13.5.0",
     "@simplewebauthn/browser": "9.0.1",
     "@simplewebauthn/server": "9.0.3",
     "@simplewebauthn/types": "^9.0.1",
