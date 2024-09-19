@@ -6,7 +6,7 @@
  * issued and used by Auth.js.
  *
  * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
- * It uses the `AUTH_SECRET` environment variable or the passed `secret` propery to derive a suitable encryption key.
+ * It uses the `AUTH_SECRET` environment variable or the passed `secret` property to derive a suitable encryption key.
  *
  * :::info Note
  * Auth.js JWTs are meant to be used by the same app that issued them.
