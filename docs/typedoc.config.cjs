@@ -5,7 +5,7 @@ const path = require("node:path")
 
 const isSkipAdapters = process.env.TYPEDOC_SKIP_ADAPTERS ? "skip" : "adapter-"
 const excludePackages = new RegExp(
-  `(core|lib|next-auth|frameworks-(?!template)|${isSkipAdapters})`
+  `(core|next-auth|frameworks-(?!template)|${isSkipAdapters})`
 )
 
 const entryPoints = fs
