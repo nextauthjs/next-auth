@@ -119,6 +119,7 @@
     "zoom": "Zoom"
   },
   "providersEmail": {
+    "forwardemail": "Forward Email",
     "resend": "Resend",
     "sendgrid": "Sendgrid",
     "nodemailer": "Nodemailer"

@@ -52,7 +52,7 @@ export interface EmailConfig extends CommonProviderOptions {
   server?: NodemailerConfig["server"]
   generateVerificationToken?: () => Awaitable<string>
   normalizeIdentifier?: (identifier: string) => string
-  options: EmailUserConfig
+  options?: EmailUserConfig
 }
 
 export type EmailUserConfig = Omit<Partial<EmailConfig>, "options" | "type">
