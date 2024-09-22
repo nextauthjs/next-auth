@@ -34,7 +34,7 @@ The main thing required is to [set up your domain records](https://loops.so/docs
 
 ### Generate an API Key
 
- Next, you will have to generate an API key in the [Loops Dashboard](https://loops.so/api-keys). You can save this API key as the `AUTH_LOOPS_KEY` environment variable.
+Next, you will have to generate an API key in the [Loops Dashboard](https://loops.so/api-keys). You can save this API key as the `AUTH_LOOPS_KEY` environment variable.
 
 ```sh
 AUTH_LOOPS_KEY=abc
@@ -44,9 +44,12 @@ AUTH_LOOPS_KEY=abc
 
 The easiest way to achieve this is using the [Loops email editor](https://loops.so/docs/creating-emails/editor) to create a transactional email template.
 If you're new to Loops, you can find rich documentation [here](https://loops.so/docs/transactional/guide).
-<br/>
-Copy the Transactional ID value from the last page of the template creation process, and save this as the `AUTH_LOOPS_TRANSACTIONAL_ID` environment variable.
-If you're following these steps, you should now have two environment variables set up for Loops.
+
+<br />
+Copy the Transactional ID value from the last page of the template creation
+process, and save this as the `AUTH_LOOPS_TRANSACTIONAL_ID` environment
+variable. If you're following these steps, you should now have two environment
+variables set up for Loops.
 
 ```sh
 AUTH_LOOPS_KEY=abc
@@ -54,7 +57,9 @@ AUTH_LOOPS_TRANSACTIONAL_ID=def
 ```
 
 <Callout type="warning">
-  When creating your email template, make sure to include the `url` variable in the template. This is the URL that will sent to the user, allowing them to signin.
+  When creating your email template, make sure to include the `url` variable in
+  the template. This is the URL that will sent to the user, allowing them to
+  signin.
 </Callout>
 
 <Code>
@@ -96,4 +101,3 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 </Code.Svelte>
 </Code>
-

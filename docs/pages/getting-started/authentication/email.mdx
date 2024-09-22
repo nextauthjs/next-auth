@@ -1054,7 +1054,6 @@ value="loops"
 className="h-full !border-0 !w-full"
 tabIndex={-1}>
 
-
 ### Loops Setup
 
 <Steps>
@@ -1073,13 +1072,13 @@ On the last page of Template creation, you'll need to copy the `TRANSACTIONAL ID
 ### Create an API Key on Loops
 
 You'll need to create an API key to authenticate with Loops. This key should be kept secret and not shared with anyone.
-You can Generate a key by going to the [API Settings Page](https://app.loops.so/settings?page=api) and clicking Generate. 
+You can Generate a key by going to the [API Settings Page](https://app.loops.so/settings?page=api) and clicking Generate.
 You should name the key something that makes sense to you, like "Auth.js".
-
 
 ### Setup Environment Variables
 
 To implement Loops, you need to set up the following environment variables. You should have these from the previous steps.
+
 ```bash filename=".env"
 AUTH_LOOPS_KEY=abc123
 AUTH_LOOPS_TRANSACTIONAL_ID=def456
@@ -1097,10 +1096,12 @@ import NextAuth from "next-auth"
 import Loops from "next-auth/providers/loops"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [Loops({
-    apiKey: process.env.AUTH_LOOPS_KEY,
-    transactionalId: process.env.AUTH_LOOPS_TRANSACTIONAL_ID,
-  })]
+  providers: [
+    Loops({
+      apiKey: process.env.AUTH_LOOPS_KEY,
+      transactionalId: process.env.AUTH_LOOPS_TRANSACTIONAL_ID,
+    }),
+  ],
 })
 ```
 
@@ -1108,25 +1109,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
-
 import SvelteKitAuth from "@auth/sveltekit"
 import Loops from "@auth/sveltekit/providers/loops"
-import { AUTH_LOOPS_KEY, AUTH_LOOPS_TRANSACTIONAL_ID} from "$env/static/private"
+import {
+  AUTH_LOOPS_KEY,
+  AUTH_LOOPS_TRANSACTIONAL_ID,
+} from "$env/static/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
-      Loops({
+    Loops({
       apiKey: AUTH_LOOPS_KEY,
       transactionalId: AUTH_LOOPS_TRANSACTIONAL_ID,
-    })
-  ]
+    }),
+  ],
 })
 ```
 
 ```ts filename="./src/hooks.server.ts"
-
 export { handle } from "./auth"
-
 ```
 
 </Code.Svelte>
@@ -1144,7 +1145,7 @@ import { signIn } from "../../auth.ts"
 
 export function SignIn() {
   return (
-    <form 
+    <form
       action={async (formData) => {
         "use server"
         await signIn("loops", formData)
@@ -1181,7 +1182,7 @@ export function SignIn() {
 ### Signin
 
 Start your application, click on the signin button we just added, and you should see Auth.js built-in sign in page with the option to sign in with your email.
-A user can enter their email, click "Sign in with Loops", and receive their beautifully formatted signin email. 
+A user can enter their email, click "Sign in with Loops", and receive their beautifully formatted signin email.
 Clicking on the link in the email will redirect the user to your application, landing already authenticated!
 
 </Steps>
