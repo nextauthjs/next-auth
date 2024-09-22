@@ -42,7 +42,6 @@ export interface EmailConfig extends CommonProviderOptions {
   name: string
   from?: string
   maxAge?: number
-  /** updated by Whats-A-MattR to allow extension for mail vendors that require more than only an API key */
   sendVerificationRequest: (params: EmailProviderSendVerificationRequestParams) => Awaitable<void>
   /** Used to hash the verification token. */
   secret?: string
