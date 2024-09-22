@@ -11,11 +11,13 @@
 
 import type { EmailConfig, EmailUserConfig } from "./email.js"
 
-type Params = Parameters<EmailConfig["sendVerificationRequest"]>[0] & { provider: EmailConfig & { transactionalId?: string } }
+type Params = Parameters<EmailConfig["sendVerificationRequest"]>[0] & {
+  provider: EmailConfig & { transactionalId?: string }
+}
 
 /**
- * 
- * @param config 
+ *
+ * @param config
  * @returns LoopsConfig
  * @requires LoopsUserConfig
  * @example
@@ -25,8 +27,8 @@ type Params = Parameters<EmailConfig["sendVerificationRequest"]>[0] & { provider
  *   transactionalId: process.env.AUTH_LOOPS_TRANSACTIONAL_ID,
  * })
  * ```
- * 
- * @typedef LoopsUserConfig 
+ *
+ * @typedef LoopsUserConfig
  */
 
 export default function Loops(config: EmailUserConfig): EmailConfig {
@@ -36,10 +38,11 @@ export default function Loops(config: EmailUserConfig): EmailConfig {
     name: "Loops",
     from: "Auth.js <no-reply@authjs.dev>",
     maxAge: 24 * 60 * 60,
-    transactionalId: config.transactionalId || "", 
+    transactionalId: config.transactionalId || "",
     async sendVerificationRequest(params: Params) {
       const { identifier: to, provider, url } = params
-      if (!provider.apiKey || !provider.transactionalId) throw new TypeError("Missing Loops API Key or TransactionalId")
+      if (!provider.apiKey || !provider.transactionalId)
+        throw new TypeError("Missing Loops API Key or TransactionalId")
 
       const res = await fetch("https://app.loops.so/api/v1/transactional", {
         method: "POST",
