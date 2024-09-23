@@ -1,0 +1,186 @@
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/adapters/azure-cosmosdb.svg"
+  width="64"
+  height="64"
+/>
+
+# CosmosDb Adapter
+
+## Resources
+
+- [Azure Tables documentation](https://azure.microsoft.com/en-us/products/cosmos-db)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install @auth/cosmosdb-adapter
+```
+
+### Environment Variables
+
+```
+AUTH_COSMOSDB_COSMOSACCOUNT=SomeAccount
+AUTH_COSMOSDB_ENDPOINT=https://$AUTH_COSMOSDB_COSMOSACCOUNT.documents.azure.com
+AUTH_COSMOSDB_DATABASE=SomeDatabase
+AUTH_COSMOSDB_CONTAINER=SomeContainer
+AUTH_COSMOSDB_KEY=longRandomKey
+```
+
+### Partition Key Strategies
+
+The adapter supports 4 different approaches to partiion keys:
+
+1. Default Strategy - Assumes that the partition key is one of the columns included in the data. For e.g. you can use this if you have the partition key set to the Id column.
+2. Same As Id Strategy - Populates a separate column with the same value of the Id of the record.
+3. Same As Data Type Strategy - Populates a separate column with the same value of the Data Type of the record.
+4. Hardcoded Partition Key - Populates a separate column with a hardcoded value. You can use this if for e.g. you have a multi tenant container with data partitioned on a tenant column.
+
+The strategies are configured as follows:
+
+#### Default Strategy
+
+```
+const adapter = CosmosDbAdapter(container)
+```
+
+#### Same As Id Strategy
+
+```
+const pc = {
+  partitionKey: "partitionKeyColumnName",
+  partitionKeyStrategy: CosmosDbPartitionStrategy.SameAsId,
+} as CosmosDbPartitionConfiguration
+const adapter = CosmosDbAdapter(container, pc)
+```
+
+#### Same As Data Type Strategy
+
+```
+const pc = {
+  partitionKey: "partitionKeyColumnName",
+  partitionKeyStrategy: CosmosDbPartitionStrategy.SameAsDataType,
+} as CosmosDbPartitionConfiguration
+const adapter = CosmosDbAdapter(container, pc)
+```
+
+#### Hardcoded Value Strategy
+
+```
+const pc = {
+  partitionKey: "partitionKeyColumnName",
+  partitionKeyStrategy: CosmosDbPartitionStrategy.HardCodedValue,
+  hardCodedValue: "HardcodedPartitionKeyValue",
+} as CosmosDbPartitionConfiguration
+const adapter = CosmosDbAdapter(container, pc)
+```
+
+### Configuration
+
+1. Setup `auth` as in the example below.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth, { type AuthConfig } from "next-auth"
+import { CosmosDbAdapter } from "@auth/cosmosdb-adapter"
+import { CosmosClient } from "@azure/cosmos"
+
+const endpoint = process.env.AUTH_COSMOSDB_ENDPOINT
+const key = process.env.AUTH_COSMOSDB_KEY
+
+const client = new CosmosClient({ endpoint, key })
+
+const database = client.database(process.env.AUTH_COSMOSDB_DATABASE)
+const container = database.container(process.env.AUTH_COSMOSDB_CONTAINER)
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: CosmosDbAdapter(container),
+} satisfies AuthConfig)
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { CosmosDbAdapter } from "@auth/cosmosdb-adapter"
+import { CosmosClient } from "@azure/cosmos"
+
+const endpoint = import.meta.env.AUTH_COSMOSDB_ENDPOINT
+const key = import.meta.env.AUTH_COSMOSDB_KEY
+
+const client = new CosmosClient({ endpoint, key })
+
+const database = client.database(import.meta.env.AUTH_COSMOSDB_DATABASE)
+const container = database.container(import.meta.env.AUTH_COSMOSDB_CONTAINER)
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: CosmosDbAdapter(container),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth, { type AuthConfig } from "@auth/sveltekit"
+import { CosmosDbAdapter } from "@auth/cosmosdb-adapter"
+import { CosmosClient } from "@azure/cosmos"
+
+const endpoint = process.env.AUTH_COSMOSDB_ENDPOINT
+const key = process.env.AUTH_COSMOSDB_KEY
+
+const client = new CosmosClient({ endpoint, key })
+
+const database = client.database(process.env.AUTH_COSMOSDB_DATABASE)
+const container = database.container(process.env.AUTH_COSMOSDB_CONTAINER)
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: CosmosDbAdapter(container),
+} satisfies AuthConfig)
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import express from "express"
+import Google from "@auth/express/providers/google"
+import ExpressAuth, { type AuthConfig } from "@auth/express"
+import { CosmosDbAdapter } from "@auth/cosmosdb-adapter"
+import { CosmosClient } from "@azure/cosmos"
+
+const app = express()
+
+const endpoint = process.env.AUTH_COSMOSDB_ENDPOINT
+const key = process.env.AUTH_COSMOSDB_KEY
+
+const client = new CosmosClient({ endpoint, key })
+
+const database = client.database(process.env.AUTH_COSMOSDB_DATABASE)
+const container = database.container(process.env.AUTH_COSMOSDB_CONTAINER)
+
+// If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [Google],
+    adapter: CosmosDbAdapter(container),
+  })
+)
+```
+
+</Code.Express>
+</Code>
