@@ -11,8 +11,19 @@
 
 import type { EmailConfig, EmailUserConfig } from "./email.js"
 
+export type LoopsUserConfig = Omit<Partial<LoopsConfig>, "options" | "type">
+
+export interface LoopsConfig
+  extends Omit<EmailConfig, "sendVerificationRequest" | "options"> {
+  id: string
+  apiKey: string
+  transactionalId: string
+  sendVerificationRequest: (params: Params) => Promise<void>
+  options: LoopsUserConfig
+}
+
 type Params = Parameters<EmailConfig["sendVerificationRequest"]>[0] & {
-  provider: EmailConfig & { transactionalId?: string }
+  provider: LoopsConfig
 }
 
 /**
@@ -31,9 +42,10 @@ type Params = Parameters<EmailConfig["sendVerificationRequest"]>[0] & {
  * @typedef LoopsUserConfig
  */
 
-export default function Loops(config: EmailUserConfig): EmailConfig {
+export default function Loops(config: LoopsUserConfig): LoopsConfig {
   return {
     id: "loops",
+    apiKey: "",
     type: "email",
     name: "Loops",
     from: "Auth.js <no-reply@authjs.dev>",
