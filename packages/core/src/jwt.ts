@@ -6,7 +6,7 @@
  * issued and used by Auth.js.
  *
  * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
- * It uses the `AUTH_SECRET` environment variable or the passed `secret` propery to derive a suitable encryption key.
+ * It uses the `AUTH_SECRET` environment variable or the passed `secret` property to derive a suitable encryption key.
  *
  * :::info Note
  * Auth.js JWTs are meant to be used by the same app that issued them.
@@ -108,7 +108,7 @@ export async function decode<Payload = JWT>(
 }
 
 type GetTokenParamsBase = {
-  secret: JWTDecodeParams["secret"]
+  secret?: JWTDecodeParams["secret"]
   salt?: JWTDecodeParams["salt"]
 }
 
@@ -155,8 +155,6 @@ export async function getToken(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
-  if (!secret)
-    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   const headers =
     req.headers instanceof Headers ? req.headers : new Headers(req.headers)
@@ -179,6 +177,9 @@ export async function getToken(
   if (!token) return null
 
   if (raw) return token
+
+  if (!secret)
+    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   try {
     return await _decode({ token, secret, salt })

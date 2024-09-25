@@ -76,7 +76,7 @@ export default function Vipps(
     id: "vipps",
     name: "Vipps",
     type: "oidc",
-    issuer: "https://apitest.vipps.no/access-management-1.0/access/",
+    issuer: "https://api.vipps.no/access-management-1.0/access/",
     authorization: { params: { scope: "openid name email" } },
     idToken: false,
     style: { brandColor: "#f05c18" },

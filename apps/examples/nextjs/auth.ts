@@ -92,7 +92,9 @@ const config = {
     Spotify,
     Twitch,
     Twitter,
-    Vipps,
+    Vipps({
+      issuer: "https://apitest.vipps.no/access-management-1.0/access/",
+    }),
     WorkOS({
       connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
