@@ -186,6 +186,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
             .selectFrom("VerificationToken")
             .selectAll()
             .where("token", "=", token)
+            .where("identifier", "=", identifier)
             .executeTakeFirst()
             .then(async (res) => {
               await query.executeTakeFirst()
