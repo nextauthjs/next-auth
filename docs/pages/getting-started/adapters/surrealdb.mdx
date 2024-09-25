@@ -104,19 +104,28 @@ The SurrealDB adapter does not handle connections automatically, so you will hav
 ```ts filename="./lib/surrealdb.ts"
 import { Surreal } from "surrealdb.js"
 
-const connectionString = process.env.AUTH_SURREALDB_CONNECTION
-const user = process.env.AUTH_SURREALDB_USERNAME
-const pass = process.env.AUTH_SURREALDB_PASSWORD
-const ns = process.env.AUTH_SURREALDB_NS
-const db = process.env.AUTH_SURREALDB_DB
+const connectionString = process.env.AUTH_SURREALDB_CONNECTION;
+const username = process.env.AUTH_SURREALDB_USERNAME;
+const password = process.env.AUTH_SURREALDB_PASSWORD;
+const namespace = process.env.AUTH_SURREALDB_NAMESPACE;
+const database = process.env.AUTH_SURREALDB_DATABASE;
+if (!connectionString || !username || !password || !namespace || !database) {
+  throw new Error(
+    'SurrealDB connection string, username, password, namespace, and database are required'
+  );
+}
+
 
 const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
   const db = new Surreal()
   try {
     await db.connect(`${connectionString}/rpc`, {
-      ns,
-      db,
-      auth: { user, pass },
+      namespace,
+      database,
+      auth: {
+        username,
+        password
+      }
     })
     resolve(db)
   } catch (e) {
@@ -124,7 +133,7 @@ const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
   }
 })
 
-// Export a module-scoped MongoClient promise. By doing this in a
+// Export a module-scoped Promise<Surreal>. By doing this in a
 // separate module, the client can be shared across functions.
 export default clientPromise
 ```
@@ -136,20 +145,29 @@ Useful in serverless environments like Vercel.
 ```ts filename="./lib/surrealdb.ts"
 import { ExperimentalSurrealHTTP } from "surrealdb.js"
 
-const connectionString = process.env.AUTH_SURREALDB_CONNECTION
-const user = process.env.AUTH_SURREALDB_USERNAME
-const pass = process.env.AUTH_SURREALDB_PASSWORD
-const ns = process.env.AUTH_SURREALDB_NS
-const db = process.env.AUTH_SURREALDB_DB
+const connectionString = process.env.AUTH_SURREALDB_CONNECTION;
+const username = process.env.AUTH_SURREALDB_USERNAME;
+const password = process.env.AUTH_SURREALDB_PASSWORD;
+const namespace = process.env.AUTH_SURREALDB_NAMESPACE;
+const database = process.env.AUTH_SURREALDB_DATABASE;
+if (!connectionString || !username || !password || !namespace || !database) {
+  throw new Error(
+    'SurrealDB connection string, username, password, namespace, and database are required'
+  );
+}
+
 
 const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(
   async (resolve, reject) => {
     try {
       const db = new ExperimentalSurrealHTTP(connectionString, {
         fetch,
-        ns,
-        db,
-        auth: { user, pass },
+        namespace,
+        database,
+        auth: {
+          username,
+          password
+        }
       })
       resolve(db)
     } catch (e) {
