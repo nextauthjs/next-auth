@@ -202,13 +202,14 @@ export default async function callback(params: {
       const paramToken = query?.token as string | undefined
       const paramIdentifier = query?.email as string | undefined
 
-      // If these are missing, the sign-in URL was manually opened without these params or the `sendVerificationRequest` method did not send the link correctly in the email.
-      if (!paramToken || !paramIdentifier) {
+      // If token is missing, the sign-in URL was manually opened without this param or the `sendVerificationRequest` method did not send the link correctly in the email.
+      if (!paramToken) {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
       // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       const invite = await adapter.useVerificationToken({
+        // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
         identifier: paramIdentifier,
         token: hashToken(paramToken, options),
       })
