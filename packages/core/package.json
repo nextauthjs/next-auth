@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.35.1",
+  "version": "0.35.2",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
