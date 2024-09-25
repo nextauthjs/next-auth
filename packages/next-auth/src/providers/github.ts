@@ -76,8 +76,8 @@ export default function Github<P extends GithubProfile>(
 
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
-          // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
-          const res = await fetch("https://api.github.com/user/public_emails", {
+          // See https://docs.github.com/en/rest/users/emails#list-email-addresses-for-the-authenticated-user
+          const res = await fetch("https://api.github.com/user/emails", {
             headers: { Authorization: `token ${tokens.access_token}` },
           })
 
