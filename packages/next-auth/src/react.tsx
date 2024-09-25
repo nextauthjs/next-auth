@@ -1,25 +1,11 @@
 /**
  *
- * NextAuth.js is the official integration of Auth.js for React.js and Next.js applications. It supports both
- * [client-side components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the
+ * NextAuth.js is the official integration of Auth.js for Next.js applications. It supports both
+ * [Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the
  * [Pages Router](https://nextjs.org/docs/pages). It includes methods for signing in, signing out, hooks, and a React
  * Context provider to wrap your application and make session data available anywhere.
  *
  * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://authjs.dev/guides/upgrade-to-v5#methods)
- *
- * ## Installation
- *
- * ```bash npm2yarn
- * npm install next-auth@beta
- * ```
- *
- * ## Usage
- *
- * ```tsx title="app/signin.tsx"
- * "use client"
- * import { signIn, signOut, SessionProvider, useSession } from "next-auth/react"
- * "use client";
- * ```
  *
  * @module react
  */
