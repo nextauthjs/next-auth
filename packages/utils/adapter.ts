@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, test } from "vitest"
 
-import type { Adapter } from "@auth/core/adapters"
+import type { Adapter, VerificationToken } from "@auth/core/adapters"
 import { createHash, randomInt, randomUUID } from "crypto"
 
 export interface TestOptions {
@@ -287,7 +287,7 @@ export async function runBasicTests(options: TestOptions) {
       identifier,
       expires:
         options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
-    }
+    } satisfies VerificationToken
     await adapter.createVerificationToken?.(verificationToken)
 
     const dbVerificationToken1 = await adapter.useVerificationToken?.({
@@ -301,8 +301,26 @@ export async function runBasicTests(options: TestOptions) {
 
     expect(dbVerificationToken1).toEqual(verificationToken)
 
-    const dbVerificationToken2 = await adapter.useVerificationToken?.({
+    const dbVerificationTokenSecondTry = await adapter.useVerificationToken?.({
       identifier,
+      token: hashedToken,
+    })
+
+    expect(dbVerificationTokenSecondTry).toBeNull()
+
+    // Should only return if the identifier matches
+
+    const verificationToken2 = {
+      token: hashedToken,
+      identifier,
+      expires:
+        options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
+    } satisfies VerificationToken
+
+    await adapter.createVerificationToken?.(verificationToken2)
+
+    const dbVerificationToken2 = await adapter.useVerificationToken?.({
+      identifier: "invalid@identifier.com",
       token: hashedToken,
     })
 
