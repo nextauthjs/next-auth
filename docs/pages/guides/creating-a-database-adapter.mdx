@@ -8,6 +8,8 @@ Auth.js adapters are very flexible, and you can implement only the methods you n
 
 An Auth.js adapter is a function that receives an ORM/database client and returns an object with methods (based on the [`Adapter` interface](/reference/core/adapters#adapter)) that interact with the database. The same database Adapter will be compatible with any Auth.js library.
 
+Optionally, you can run our [Adapter tests](https://github.com/nextauthjs/next-auth/blob/main/packages/utils/adapter.ts) on your adapter to ensure it is compliant with the Auth.js.
+
 ## User management
 
 Auth.js differentiates between users and accounts. A user can have multiple accounts. An account is created for each provider type the user signs in with for the first time. For example, if a user signs in with Google and then with Facebook, they will have two accounts, one for each provider. The first provider the user signs in with will also be used to create the user object. See the [`profile()` provider method](/reference/core/providers#profile).
@@ -146,7 +148,7 @@ See also: [Verification Token](/concepts/database-models#verification-token) mod
 If you created an adapter and want us to distribute it as an official package, please make sure it meets the following requirements. Check out this [existing adapter](https://github.com/nextauthjs/next-auth/tree/main/packages/adapter-prisma) to learn about the package structure, required files, test setup, config, etc.
 
 1. The Adapter _must_ implement all methods of the [`Adapter` interface](/reference/core/adapters#adapter)
-1. [Adapter tests](https://github.com/nextauthjs/next-auth/tree/main/packages/utils/adapter/index.ts) _must_ be included and _must_ pass. Docker is favored over services, to make CI resilient to network errors and to reduce the number of GitHub Action Secrets (which also lets us run these tests in fork PRs)
+1. [Adapter tests](https://github.com/nextauthjs/next-auth/blob/main/packages/utils/adapter.ts) _must_ be included and _must_ pass. Docker is favored over services, to make CI resilient to network errors and to reduce the number of GitHub Action Secrets (which also lets us run these tests in fork PRs)
 1. The Adapter _must_ follow these coding styles
 
    - Written in TypeScript
