@@ -198,13 +198,13 @@ export async function callback(
 
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "email") {
-      const token = query?.token as string | undefined
-      const identifier = query?.email as string | undefined
+      const paramToken = query?.token as string | undefined
+      const paramIdentifier = query?.email as string | undefined
 
-      if (!token || !identifier) {
+      if (!paramToken || !paramIdentifier) {
         const e = new TypeError(
           "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
-          { cause: { hasToken: !!token, hasEmail: !!identifier } }
+          { cause: { hasToken: !!paramToken, hasEmail: !!paramIdentifier } }
         )
         e.name = "Configuration"
         throw e
@@ -213,16 +213,18 @@ export async function callback(
       const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
-        identifier,
-        token: await createHash(`${token}${secret}`),
+        identifier: paramIdentifier, // TODO: Drop this requirement for lookup
+        token: await createHash(`${paramToken}${secret}`),
       })
 
       const hasInvite = !!invite
-      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
-      const invalidInvite = !hasInvite || expired
+      const expired = hasInvite && invite.expires.valueOf() < Date.now()
+      const invalidInvite =
+        !hasInvite || expired || invite.identifier !== paramIdentifier
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
-      const user = (await adapter!.getUserByEmail(identifier)) ?? {
+      const { identifier } = invite
+      const user = (await adapter!.getUserByEmail(paramIdentifier)) ?? {
         id: crypto.randomUUID(),
         email: identifier,
         emailVerified: null,
