@@ -2,7 +2,7 @@
   "name": "next-auth",
   "version": "4.24.7",
   "description": "Authentication for Next.js",
-  "homepage": "https://next-auth.js.org",
+  "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
   "author": "Iain Collins <me@iaincollins.com>",
   "contributors": [

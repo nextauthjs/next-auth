@@ -199,27 +199,30 @@ export default async function callback(params: {
     }
   } else if (provider.type === "email") {
     try {
-      const token = query?.token as string | undefined
-      const identifier = query?.email as string | undefined
+      const paramToken = query?.token as string | undefined
+      const paramIdentifier = query?.email as string | undefined
 
       // If these are missing, the sign-in URL was manually opened without these params or the `sendVerificationRequest` method did not send the link correctly in the email.
-      if (!token || !identifier) {
+      if (!paramToken || !paramIdentifier) {
         return { redirect: `${url}/error?error=configuration`, cookies }
       }
 
       // @ts-expect-error -- Verified in `assertConfig`. adapter: Adapter<true>
       const invite = await adapter.useVerificationToken({
-        identifier,
-        token: hashToken(token, options),
+        identifier: paramIdentifier,
+        token: hashToken(paramToken, options),
       })
 
-      const invalidInvite = !invite || invite.expires.valueOf() < Date.now()
+      const invalidInvite =
+        !invite ||
+        invite.identifier !== paramIdentifier ||
+        invite.expires.valueOf() < Date.now()
       if (invalidInvite) {
         return { redirect: `${url}/error?error=Verification`, cookies }
       }
 
       const profile = await getAdapterUserFromEmail({
-        email: identifier,
+        email: invite.identifier,
         adapter,
       })
 
