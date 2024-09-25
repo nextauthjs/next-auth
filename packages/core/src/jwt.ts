@@ -155,7 +155,6 @@ export async function getToken(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
-  
 
   const headers =
     req.headers instanceof Headers ? req.headers : new Headers(req.headers)
