@@ -103,7 +103,7 @@ export default async function callback(params: {
         } catch (error) {
           return {
             redirect: `${url}/error?error=${encodeURIComponent(
-              (error as Error).message
+              (error as Error).message,
             )}`,
             cookies,
           }
@@ -215,8 +215,10 @@ export default async function callback(params: {
 
       const invalidInvite =
         !invite ||
-        invite.identifier !== paramIdentifier ||
-        invite.expires.valueOf() < Date.now()
+        invite.expires.valueOf() < Date.now() ||
+        // The user might have configured the link to not contain the identifier
+        // so we only compare if it exists
+        (paramIdentifier && invite.identifier !== paramIdentifier)
       if (invalidInvite) {
         return { redirect: `${url}/error?error=Verification`, cookies }
       }
@@ -246,7 +248,7 @@ export default async function callback(params: {
       } catch (error) {
         return {
           redirect: `${url}/error?error=${encodeURIComponent(
-            (error as Error).message
+            (error as Error).message,
           )}`,
           cookies,
         }
@@ -346,7 +348,7 @@ export default async function callback(params: {
       return {
         status: 401,
         redirect: `${url}/error?error=${encodeURIComponent(
-          (error as Error).message
+          (error as Error).message,
         )}`,
         cookies,
       }
@@ -378,7 +380,7 @@ export default async function callback(params: {
     } catch (error) {
       return {
         redirect: `${url}/error?error=${encodeURIComponent(
-          (error as Error).message
+          (error as Error).message,
         )}`,
         cookies,
       }
