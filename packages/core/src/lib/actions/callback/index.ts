@@ -218,8 +218,9 @@ export async function callback(
       })
 
       const hasInvite = !!invite
-      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
-      const invalidInvite = !hasInvite || expired
+      const expired = hasInvite && invite.expires.valueOf() < Date.now()
+      const invalidInvite =
+        !hasInvite || expired || invite.identifier !== identifier
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
       const user = (await adapter!.getUserByEmail(identifier)) ?? {
