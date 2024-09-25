@@ -220,11 +220,15 @@ export async function callback(
       const hasInvite = !!invite
       const expired = hasInvite && invite.expires.valueOf() < Date.now()
       const invalidInvite =
-        !hasInvite || expired || invite.identifier !== paramIdentifier
+        !hasInvite ||
+        expired ||
+        // The user might have configured the link to not contain the identifier
+        // so we only compare if it exists
+        (paramIdentifier && invite.identifier !== paramIdentifier)
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
       const { identifier } = invite
-      const user = (await adapter!.getUserByEmail(paramIdentifier)) ?? {
+      const user = (await adapter!.getUserByEmail(identifier)) ?? {
         id: crypto.randomUUID(),
         email: identifier,
         emailVerified: null,
