@@ -201,10 +201,10 @@ export async function callback(
       const paramToken = query?.token as string | undefined
       const paramIdentifier = query?.email as string | undefined
 
-      if (!paramToken || !paramIdentifier) {
+      if (!paramToken) {
         const e = new TypeError(
-          "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
-          { cause: { hasToken: !!paramToken, hasEmail: !!paramIdentifier } }
+          "Missing token. The sign-in URL was manually opened without token or the link was not sent correctly in the email.",
+          { cause: { hasToken: !!paramToken } }
         )
         e.name = "Configuration"
         throw e
@@ -213,7 +213,8 @@ export async function callback(
       const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
-        identifier: paramIdentifier, // TODO: Drop this requirement for lookup
+        // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
+        identifier: paramIdentifier, // TODO: Drop this requirement for lookup in official adapters too
         token: await createHash(`${paramToken}${secret}`),
       })
 
