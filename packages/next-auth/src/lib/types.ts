@@ -1,4 +1,5 @@
-import type { NextRequest } from "next/server.js"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import type { NextRequest } from "next/server"
 
 /**
  * AppRouteHandlerFnContext is the context that is passed to the handler as the

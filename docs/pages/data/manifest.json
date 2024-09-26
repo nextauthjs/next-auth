@@ -68,7 +68,7 @@
     "descope": "Descope",
     "dribbble": "Dribbble",
     "dropbox": "Dropbox",
-    "duende-identityserver6": "DuendeIdentityServer6",
+    "duende-identityserver-6": "DuendeIdentityServer6",
     "eveonline": "EVE Online",
     "faceit": "FACEIT",
     "foursquare": "Foursquare",
@@ -79,6 +79,7 @@
     "identity-server4": "IdentityServer4",
     "instagram": "Instagram",
     "kakao": "Kakao",
+    "kinde": "Kinde",
     "line": "LINE",
     "linkedin": "LinkedIn",
     "mailchimp": "Mailchimp",
@@ -118,6 +119,7 @@
     "zoom": "Zoom"
   },
   "providersEmail": {
+    "forwardemail": "Forward Email",
     "resend": "Resend",
     "sendgrid": "Sendgrid",
     "nodemailer": "Nodemailer"

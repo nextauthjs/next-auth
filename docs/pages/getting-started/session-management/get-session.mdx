@@ -8,7 +8,7 @@ Once a user is logged in, you often want to get the session object in order to u
 <Code>
 <Code.Next>
 
-```tsx filename="./components/UserAvatar" {4} /async/
+```tsx filename="./components/UserAvatar.tsx" {4} /async/
 import { auth } from "../auth"
 
 export default async function UserAvatar() {
@@ -27,9 +27,41 @@ export default async function UserAvatar() {
 </Code.Next>
 <Code.NextClient>
 
-In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
+Although `next-auth` supports client-side data retrieval using `useSession` and `SessionProvider` for both the App Router and Pages Router, in real-world scenarios, these are used less frequently. Typically, you'll want to take full advantage of server-side rendering to optimize performance and security.
+
+### App Router
+
+```tsx filename="app/admin/dashboard.tsx"
+"use client"
+import { useSession } from "next-auth/react"
+
+export default function Dashboard() {
+  const { data: session } = useSession()
+
+  if (session?.user?.role === "admin") {
+    return <p>You are an admin, welcome!</p>
+  }
+
+  return <p>You are not authorized to view this page!</p>
+}
+```
+
+```tsx filename="app/admin/page.tsx"
+import { SessionProvider } from "next-auth/react"
+import { Dashboard } from "./Dashboard"
+
+export default function Administrator() {
+  return (
+    <SessionProvider>
+      <Dashboard />
+    </SessionProvider>
+  )
+}
+```
 
 ### Page Server Side
+
+In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
 
 ```tsx filename="./pages/dashboard.tsx"
 import { auth } from "@/auth.ts"
@@ -75,12 +107,12 @@ export default function MyApp({
 }
 ```
 
-```tsx filename="pages/dashboard.tsx
+```tsx filename="pages/dashboard.tsx"
 import { useSession } from "next-auth/react"
 import { UserAvatar } from "@/components/UserAvatar"
 
 export default function Dashboard() {
-  const session = useSession()
+  const { data: session } = useSession()
 
   return (
     <nav>
@@ -92,14 +124,14 @@ export default function Dashboard() {
 
 Finally, we can use it in the component.
 
-```tsx filename="./components/UserAvatar" /session/
-export function UserAvatar({ session }) {
+```tsx filename="./components/UserAvatar.tsx" /session/
+import type { Session } from "next-auth"
+
+export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={
-          session?.user.image ?? "https://source.boringavatars.com/marble/120"
-        }
+        src={session?.user?.image ?? "https://i.pravatar.cc/300"}
         alt="User Avatar"
       />
     </div>
@@ -143,7 +175,7 @@ Then you can access the `session` on the `$page.data` object in your page.
 
 <nav>
   <img
-    src={$page.data.session?.user?.image ?? 'https://source.boringavatars.com/marble/120/'}
+    src={$page.data.session?.user?.image ?? "https://i.pravatar.cc/300"}
     alt="User Avatar"
   />
 </nav>

@@ -14,7 +14,7 @@ Therefore, it is easy to forget that Auth.js is created and maintained by [actua
 It would not be possible without the generous support of our sponsors.
 
 <a
-  className="flex items-center gap-6 mt-8"
+  className="mt-8 flex items-center gap-6"
   style={{
     color: "#6c47ff",
   }}
@@ -24,9 +24,9 @@ It would not be possible without the generous support of our sponsors.
   <img
     src="/img/etc/clerk-logo.svg"
     alt="Clerk Logo"
-    className="rounded-xl w-24 bg-white p-4 pl-5"
+    className="w-24 rounded-xl bg-white p-4 pl-5"
   />
-  <div className="text-xl md:text-3xl text-sky-600 leading-snug font-semibold">
+  <div className="text-xl font-semibold leading-snug text-sky-600 md:text-3xl">
     Clerk <br />
     <span className="text-xl font-medium">
       The most comprehensive User Management Platform
@@ -37,15 +37,21 @@ It would not be possible without the generous support of our sponsors.
 ## 🥇 Gold sponsors
 
 <div className="flex flex-wrap gap-2">
-  {[].map(([href, src, name]) => (
+  {[
+    [
+      "https://a0.to/signup/nextauthjs",
+      "https://avatars.githubusercontent.com/u/2824157?v=4",
+      "Auth0 by Okta",
+    ],
+  ].map(([href, src, name]) => (
     <a
       key={name}
       href={href}
       target="_blank"
-      className="text-center flex flex-col items-center gap-3 text-sky-600 font-semibold mt-8"
+      className="mt-8 flex flex-col items-center gap-3 text-center font-semibold text-sky-600"
     >
       <img
-        className="w-20 bg-slate-100 rounded-md p-2"
+        className="w-20 rounded-md bg-slate-100 p-2"
         src={src}
         alt={`${name} Logo`}
       />
@@ -56,7 +62,7 @@ It would not be possible without the generous support of our sponsors.
 
 ## 🥈 Silver sponsors
 
-<div className="flex flex-wrap flex-row gap-8 md:gap-16 pt-8">
+<div className="flex flex-row flex-wrap gap-8 pt-8 md:gap-16">
   {[
     [
       "https://fusionauth.io",
@@ -78,10 +84,10 @@ It would not be possible without the generous support of our sponsors.
       key={name}
       href={href}
       target="_blank"
-      className="text-center flex flex-col items-center gap-3 text-sky-600 font-semibold"
+      className="flex flex-col items-center gap-3 text-center font-semibold text-sky-600"
     >
       <img
-        className="w-20 bg-slate-100 rounded-md p-2"
+        className="w-20 rounded-md bg-slate-100 p-2"
         src={src}
         alt={`${name} Logo`}
       />
@@ -92,7 +98,7 @@ It would not be possible without the generous support of our sponsors.
 
 ## 🥉 Bronze sponsors
 
-<div className="flex flex-wrap flex-row gap-8 md:gap-16 pt-8">
+<div className="flex flex-row flex-wrap gap-8 pt-8 md:gap-16">
   {[
     [
       "https://arcjet.com/?ref=auth.js",
@@ -120,6 +126,11 @@ It would not be possible without the generous support of our sponsors.
       "Vercel",
     ],
     [
+      "https://route4me.com",
+      "https://avatars.githubusercontent.com/u/7936820?v=4",
+      "Route4Me",
+    ],
+    [
       "https://badass.dev",
       "https://avatars.githubusercontent.com/u/136839242?v=4",
       "Badass Courses",
@@ -134,10 +145,10 @@ It would not be possible without the generous support of our sponsors.
       key={name}
       href={href}
       target="_blank"
-      className="text-center flex flex-col items-center gap-3 text-sky-600 font-semibold"
+      className="flex flex-col items-center gap-3 text-center font-semibold text-sky-600"
     >
       <img
-        className="w-20 bg-slate-100 rounded-md p-2"
+        className="w-20 rounded-md bg-slate-100 p-2"
         src={src}
         alt={`${name} Logo`}
       />

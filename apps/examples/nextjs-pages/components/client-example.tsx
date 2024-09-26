@@ -13,7 +13,7 @@ const UpdateForm = () => {
   return (
     <>
       <h2 className="text-xl font-bold">Updating the session</h2>
-      <div className="flex items-center space-x-2 w-full max-w-sm">
+      <div className="flex w-full max-w-sm items-center space-x-2">
         <Input
           type="text"
           placeholder={session.user.name ?? ""}
@@ -43,7 +43,7 @@ const UpdateForm = () => {
 export default function ClientExample() {
   const { data: session, status } = useSession()
   return (
-    <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
+    <div className="mx-auto mt-10 max-w-screen-md space-y-4">
       <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
       <p className="leading-loose">
         This page fetches session data client side using the{" "}

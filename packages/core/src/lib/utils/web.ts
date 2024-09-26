@@ -1,6 +1,6 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
-import { logger } from "./logger.js"
+import { setLogger } from "./logger.js"
 
 import type {
   AuthAction,
@@ -52,6 +52,7 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
+    const logger = setLogger(config)
     logger.error(e as Error)
     logger.debug("request", req)
   }
@@ -85,7 +86,7 @@ export function toResponse(res: ResponseInternal): Response {
   else if (headers.get("content-type") === "application/x-www-form-urlencoded")
     body = new URLSearchParams(res.body).toString()
 
-  const status = res.redirect ? 302 : res.status ?? 200
+  const status = res.redirect ? 302 : (res.status ?? 200)
   const response = new Response(body, { headers, status })
 
   if (res.redirect) response.headers.set("Location", res.redirect)

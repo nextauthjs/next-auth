@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "solid-start-example-app",
   "scripts": {
     "dev": "solid-start dev",
     "build": "solid-start build",
@@ -17,8 +17,7 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
-    "@auth/core": "latest",
-    "@solid-auth/next": "^0.0.19",
+    "@auth/solid-start": "latest",
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.6.0",
     "solid-js": "^1.5.7",
@@ -26,6 +25,6 @@
     "zod": "^3.19.1"
   },
   "engines": {
-    "node": ">=16"
+    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   }
 }

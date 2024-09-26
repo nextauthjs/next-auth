@@ -1,13 +1,31 @@
 import type { AuthAction } from "../../types.js"
-import { logger } from "./logger.js"
 import type { AuthConfig } from "../../index.js"
+import { setLogger } from "./logger.js"
 
-/** Set default env variables on the config object */
-export function setEnvDefaults(envObject: any, config: AuthConfig) {
+/**
+ *  Set default env variables on the config object
+ * @param suppressWarnings intended for framework authors.
+ */
+export function setEnvDefaults(
+  envObject: any,
+  config: AuthConfig,
+  suppressBasePathWarning = false
+) {
   try {
     const url = envObject.AUTH_URL
-    if (url && !config.basePath) config.basePath = new URL(url).pathname
+    if (url) {
+      if (config.basePath) {
+        if (!suppressBasePathWarning) {
+          const logger = setLogger(config)
+          logger.warn("env-url-basepath-redundant")
+        }
+      } else {
+        config.basePath = new URL(url).pathname
+      }
+    }
   } catch {
+    // Catching and swallowing potential URL parsing errors, we'll fall
+    // back to `/auth` below.
   } finally {
     config.basePath ??= `/auth`
   }
@@ -30,17 +48,23 @@ export function setEnvDefaults(envObject: any, config: AuthConfig) {
     envObject.CF_PAGES ??
     envObject.NODE_ENV !== "production"
   )
-  config.providers = config.providers.map((p) => {
-    const finalProvider = typeof p === "function" ? p({}) : p
-    const ID = finalProvider.id.toUpperCase().replace(/-/g, "_")
+  config.providers = config.providers.map((provider) => {
+    const { id } = typeof provider === "function" ? provider({}) : provider
+    const ID = id.toUpperCase().replace(/-/g, "_")
+    const clientId = envObject[`AUTH_${ID}_ID`]
+    const clientSecret = envObject[`AUTH_${ID}_SECRET`]
+    const issuer = envObject[`AUTH_${ID}_ISSUER`]
+    const apiKey = envObject[`AUTH_${ID}_KEY`]
+    const finalProvider =
+      typeof provider === "function"
+        ? provider({ clientId, clientSecret, issuer, apiKey })
+        : provider
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
-      finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
-      if (finalProvider.type === "oidc") {
-        finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
-      }
+      finalProvider.clientId ??= clientId
+      finalProvider.clientSecret ??= clientSecret
+      finalProvider.issuer ??= issuer
     } else if (finalProvider.type === "email") {
-      finalProvider.apiKey ??= envObject[`AUTH_${ID}_KEY`]
+      finalProvider.apiKey ??= apiKey
     }
     return finalProvider
   })
@@ -51,19 +75,19 @@ export function createActionURL(
   protocol: string,
   headers: Headers,
   envObject: any,
-  basePath?: string
+  config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
-  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+  const basePath = config?.basePath
+  const envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
   let url: URL
   if (envUrl) {
     url = new URL(envUrl)
     if (basePath && basePath !== "/" && url.pathname !== "/") {
-      logger.warn(
-        url.pathname === basePath
-          ? "env-url-basepath-redundant"
-          : "env-url-basepath-mismatch"
-      )
+      if (url.pathname !== basePath) {
+        const logger = setLogger(config)
+        logger.warn("env-url-basepath-mismatch")
+      }
       url.pathname = "/"
     }
   } else {

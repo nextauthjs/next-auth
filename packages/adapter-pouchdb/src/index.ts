@@ -162,7 +162,7 @@ export function PouchDBAdapter(options: PouchDBAdapterOptions): Adapter {
     },
 
     /** @todo Implement */
-    async deleteUser(id) {},
+    async deleteUser() {},
 
     async linkAccount(account) {
       const doc = {

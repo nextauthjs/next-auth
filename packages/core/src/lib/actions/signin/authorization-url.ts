@@ -22,7 +22,7 @@ export async function getAuthorizationUrl(
   if (!url || url.host === "authjs.dev") {
     // If url is undefined, we assume that issuer is always defined
     // We check this in assert.ts
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const issuer = new URL(provider.issuer!)
     const discoveryResponse = await o.discoveryRequest(issuer)
     const as = await o.processDiscoveryResponse(issuer, discoveryResponse)

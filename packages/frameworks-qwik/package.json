@@ -1,6 +1,6 @@
 {
   "name": "@auth/qwik",
-  "version": "0.2.3",
+  "version": "0.3.2",
   "description": "Authentication for Qwik.",
   "license": "ISC",
   "author": "gioboa <giorgiob.boa@gmail.com>",
@@ -28,6 +28,9 @@
       "types": "./index.d.ts",
       "import": "./index.qwik.js"
     },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
     "./providers": {
       "types": "./providers/index.d.ts"
     },
@@ -54,7 +57,7 @@
     "set-cookie-parser": "^2.6.0"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.5.5",
+    "@builder.io/qwik": "1.7.3",
     "@builder.io/qwik-city": "1.5.5",
     "@types/set-cookie-parser": "^2.4.7",
     "typescript": "^5.4.5",

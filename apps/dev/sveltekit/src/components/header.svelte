@@ -9,7 +9,7 @@
       <img
         alt="Avatar"
         src={$page.data.session?.user?.image ??
-          "https://source.boringavatars.com/marble/120"}
+          `https://api.dicebear.com/9.x/thumbs/svg?seed=${Math.floor(Math.random() * 100000) + 1}&randomizeIds=true`}
         class="avatar"
       />
     </div>

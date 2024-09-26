@@ -5,7 +5,6 @@
   export let className = ""
   export let options: Parameters<typeof signOut>[0] = undefined
   export let signOutPage = "signout"
-  
 </script>
 
 <form
