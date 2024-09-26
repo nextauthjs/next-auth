@@ -23,24 +23,23 @@ const COOKIE_TTL = 60 * 15 // 15 minutes
 async function sealCookie(
   type: keyof CookiesOptions,
   payload: string,
-  options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>,
-  maxAge: number = COOKIE_TTL
+  options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>
 ): Promise<Cookie> {
   const { cookies, logger } = options
   const expires = new Date()
-  expires.setTime(expires.getTime() + maxAge * 1000)
+  expires.setTime(expires.getTime() + COOKIE_TTL * 1000)
   const name = options.cookies[type].name
 
   logger.debug(`CREATE_${type.toUpperCase()}`, {
     name,
     payload,
-    maxAge,
+    COOKIE_TTL,
     expires,
   })
 
   const encoded = await encode({
     ...options.jwt,
-    maxAge,
+    maxAge: COOKIE_TTL,
     token: { value: payload } satisfies CookiePayload,
     salt: name,
   })
