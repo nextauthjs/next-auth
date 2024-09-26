@@ -72,7 +72,7 @@ export async function callback(
           parsedState?.origin &&
           new URL(parsedState.origin).origin !== options.url.origin
         if (shouldRedirect) {
-          const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params.state)}`
+          const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params)}`
           logger.debug("Proxy redirecting to", proxyRedirect)
           return { redirect: proxyRedirect, cookies }
         }
