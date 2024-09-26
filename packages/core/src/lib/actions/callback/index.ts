@@ -67,6 +67,8 @@ export async function callback(
       // and see if it contains a valid origin to redirect to. If it does, we
       // redirect the user to that origin with the original state.
       if (options.isOnRedirectProxy && params?.state) {
+        // NOTE: We rely on the state being encrypted using a shared secret
+        // between the proxy and the original server.
         const parsedState = await state.decode(params.state, options)
         const shouldRedirect =
           parsedState?.origin &&
