@@ -67,8 +67,11 @@ export async function callback(
       // and see if it contains a valid origin to redirect to. If it does, we
       // redirect the user to that origin with the original state.
       if (options.isOnRedirectProxy && params?.state) {
-        const parsedState = await state.parse(params.state, options)
-        if (parsedState?.origin) {
+        const parsedState = await state.decode(params.state, options)
+        const shouldRedirect =
+          parsedState?.origin &&
+          new URL(parsedState.origin).origin !== options.url.origin
+        if (shouldRedirect) {
           const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params.state)}`
           logger.debug("Proxy redirecting to", proxyRedirect)
           return { redirect: proxyRedirect, cookies }

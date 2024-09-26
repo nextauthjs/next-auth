@@ -13,10 +13,14 @@ import type {
 import type { Cookie } from "../../../utils/cookie.js"
 import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
 
+interface CookiePayload {
+  value: string
+}
+
 /** Returns a cookie with a JWT encrypted payload. */
-export async function createCookie<P extends string | Record<string, any>>(
+async function sealCookie(
   type: keyof CookiesOptions,
-  payload: P,
+  payload: string,
   maxAge: number,
   options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>
 ): Promise<Cookie> {
@@ -35,20 +39,54 @@ export async function createCookie<P extends string | Record<string, any>>(
   const encoded = await encryptedJWT.encode({
     ...options.jwt,
     maxAge,
-    token: payload,
+    token: { value: payload } satisfies CookiePayload,
     salt: name,
   })
   const cookieOptions = { ...cookies[type].options, expires }
   return { name, value: encoded, options: cookieOptions }
 }
 
-type PKCEPayload = string
+async function parseCookie(
+  name: keyof CookiesOptions,
+  cookie: string | undefined,
+  options: InternalOptions
+): Promise<string> {
+  try {
+    options.logger.debug(`PARSE_${name.toUpperCase()}`, { cookie })
+
+    if (!cookie) throw new InvalidCheck(`${name} cookie was missing`)
+    const parsed = await encryptedJWT.decode<CookiePayload>({
+      ...options.jwt,
+      token: cookie,
+      salt: options.cookies[name].name,
+    })
+    if (parsed?.value) return parsed.value
+    throw new InvalidCheck(`${name} value could not be parsed`)
+  } catch (error) {
+    throw new InvalidCheck(`${name} value could not be parsed`, {
+      cause: error,
+    })
+  }
+}
+
+function clearCookie(
+  name: keyof CookiesOptions,
+  options: InternalOptions,
+  resCookies: Cookie[]
+) {
+  resCookies.push({
+    name: options.cookies[name].name,
+    value: "",
+    options: { ...options.cookies[name].options, maxAge: 0 },
+  })
+}
 
 const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+
 export const pkce = {
   async create(options: InternalOptions<"oauth">) {
     const code_verifier = o.generateRandomCodeVerifier()
-    const cookie = await createCookie<PKCEPayload>(
+    const cookie = await sealCookie(
       "pkceCodeVerifier",
       code_verifier,
       PKCE_MAX_AGE,
@@ -73,37 +111,22 @@ export const pkce = {
 
     if (!provider?.checks?.includes("pkce")) return
 
-    const codeVerifier = cookies?.[options.cookies.pkceCodeVerifier.name]
+    const cookieValue = cookies?.[options.cookies.pkceCodeVerifier.name]
+    const parsed = await parseCookie("pkceCodeVerifier", cookieValue, options)
 
-    if (!codeVerifier)
-      throw new InvalidCheck("PKCE code_verifier cookie was missing")
+    clearCookie("pkceCodeVerifier", options, resCookies)
 
-    const payload = await encryptedJWT.decode<PKCEPayload>({
-      ...options.jwt,
-      token: codeVerifier,
-      salt: options.cookies.pkceCodeVerifier.name,
-    })
-
-    if (!payload)
-      throw new InvalidCheck("PKCE code_verifier value could not be parsed")
-
-    // Clear the pkce code verifier cookie after use
-    resCookies.push({
-      name: options.cookies.pkceCodeVerifier.name,
-      value: "",
-      options: { ...options.cookies.pkceCodeVerifier.options, maxAge: 0 },
-    })
-
-    return payload
+    return parsed
   },
 }
 
-interface StatePayload {
+interface EncodedState {
+  origin?: string
   random: string
-  origin: string
 }
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
+const encodedStateSalt = "encodedState"
 export const state = {
   async create(options: InternalOptions<"oauth">, origin?: string) {
     const { provider } = options
@@ -116,14 +139,21 @@ export const state = {
       return
     }
 
-    const random = o.generateRandomState()
-    const cookie = await createCookie<StatePayload | string>(
-      "state",
-      origin ? { origin, random } : random,
-      STATE_MAX_AGE,
-      options
-    )
-    return { cookie, value: cookie.value }
+    // IDEA: Allow the user to pass data to be stored in the state
+    const payload = {
+      origin,
+      random: o.generateRandomState(),
+    } satisfies EncodedState
+
+    const value = await encryptedJWT.encode({
+      secret: options.jwt.secret,
+      token: payload,
+      salt: encodedStateSalt,
+      maxAge: STATE_MAX_AGE,
+    })
+
+    const cookie = await sealCookie("state", value, STATE_MAX_AGE, options)
+    return { cookie, value }
   },
   /**
    * Returns state if the provider is configured to use state,
@@ -140,49 +170,36 @@ export const state = {
     const { provider } = options
     if (!provider.checks.includes("state")) return
 
-    const state = cookies?.[options.cookies.state.name]
+    const cookieValue = cookies?.[options.cookies.state.name]
+    const parsed = await parseCookie("state", cookieValue, options)
 
-    if (!state) throw new InvalidCheck("State cookie was missing")
+    clearCookie("state", options, resCookies)
 
-    // Clear the state cookie after use
-    resCookies.push({
-      name: options.cookies.state.name,
-      value: "",
-      options: { ...options.cookies.state.options, maxAge: 0 },
-    })
-
-    return state
+    return parsed
   },
-  /** Parses the state. If it could not be parsed, it returns `null`. */
-  async parse(state: string, options: InternalOptions) {
-    const { logger, cookies } = options
+  /** Decodes the state. If it could not be decoded, it returns `null`. */
+  async decode(state: string, options: InternalOptions) {
     try {
-      // IDEA: Let the user pass their own payload?
-      return encryptedJWT.decode<StatePayload>({
-        ...options.jwt,
+      options.logger.debug("DECODE_STATE", { state })
+      return await encryptedJWT.decode<EncodedState>({
+        secret: options.jwt.secret,
         token: state,
-        salt: cookies.state.name,
+        salt: encodedStateSalt,
       })
     } catch (error) {
-      logger.error(new TypeError("State could not be parsed", { cause: error }))
-      return null
+      throw new InvalidCheck("State could not be decoded", { cause: error })
     }
   },
 }
 
 const NONCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
-type NoncePayload = string
+
 export const nonce = {
   async create(options: InternalOptions<"oidc">) {
     if (!options.provider.checks.includes("nonce")) return
     const maxAge = NONCE_MAX_AGE
     const value = o.generateRandomNonce()
-    const cookie = await createCookie<NoncePayload>(
-      "nonce",
-      value,
-      maxAge,
-      options
-    )
+    const cookie = await sealCookie("nonce", value, maxAge, options)
     return { cookie, value }
   },
   /**
@@ -201,25 +218,12 @@ export const nonce = {
 
     if (!provider?.checks?.includes("nonce")) return
 
-    const nonce = cookies?.[options.cookies.nonce.name]
-    if (!nonce) throw new InvalidCheck("Nonce cookie was missing")
+    const cookieValue = cookies?.[options.cookies.nonce.name]
+    const parsed = await parseCookie("nonce", cookieValue, options)
 
-    const value = await encryptedJWT.decode<NoncePayload>({
-      ...options.jwt,
-      token: nonce,
-      salt: options.cookies.nonce.name,
-    })
+    clearCookie("nonce", options, resCookies)
 
-    if (!value) throw new InvalidCheck("Nonce value could not be parsed")
-
-    // Clear the nonce cookie after use
-    resCookies.push({
-      name: options.cookies.nonce.name,
-      value: "",
-      options: { ...options.cookies.nonce.options, maxAge: 0 },
-    })
-
-    return value
+    return parsed
   },
 }
 
@@ -230,6 +234,7 @@ interface WebAuthnChallengePayload {
   registerData?: User
 }
 
+const webauthnChallengeSalt = "encodedWebauthnChallenge"
 export const webauthnChallenge = {
   async create(
     options: InternalOptions<WebAuthnProviderType>,
@@ -237,9 +242,14 @@ export const webauthnChallenge = {
     registerData?: User
   ) {
     return {
-      cookie: await createCookie<WebAuthnChallengePayload>(
+      cookie: await sealCookie(
         "webauthnChallenge",
-        { challenge, registerData },
+        await encryptedJWT.encode({
+          secret: options.jwt.secret,
+          token: { challenge, registerData } satisfies WebAuthnChallengePayload,
+          salt: webauthnChallengeSalt,
+          maxAge: WEBAUTHN_CHALLENGE_MAX_AGE,
+        }),
         WEBAUTHN_CHALLENGE_MAX_AGE,
         options
       ),
@@ -251,25 +261,20 @@ export const webauthnChallenge = {
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[]
   ): Promise<WebAuthnChallengePayload> {
-    const token = cookies?.[options.cookies.webauthnChallenge.name]
+    const cookieValue = cookies?.[options.cookies.webauthnChallenge.name]
 
-    if (!token) throw new InvalidCheck("WebAuthn challenge cookie missing")
+    const parsed = await parseCookie("webauthnChallenge", cookieValue, options)
 
     const payload = await encryptedJWT.decode<WebAuthnChallengePayload>({
-      ...options.jwt,
-      token,
-      salt: options.cookies.webauthnChallenge.name,
+      secret: options.jwt.secret,
+      token: parsed,
+      salt: webauthnChallengeSalt,
     })
-
-    if (!payload)
-      throw new InvalidCheck("WebAuthn challenge could not be parsed")
 
     // Clear the WebAuthn challenge cookie after use
-    resCookies.push({
-      name: options.cookies.webauthnChallenge.name,
-      value: "",
-      options: { ...options.cookies.webauthnChallenge.options, maxAge: 0 },
-    })
+    clearCookie("webauthnChallenge", options, resCookies)
+
+    if (!payload) throw new InvalidCheck("WebAuthn challenge was missing")
 
     return payload
   },
