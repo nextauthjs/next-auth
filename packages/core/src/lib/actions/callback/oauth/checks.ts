@@ -17,12 +17,14 @@ interface CookiePayload {
   value: string
 }
 
+const COOKIE_TTL = 60 * 15 // 15 minutes
+
 /** Returns a cookie with a JWT encrypted payload. */
 async function sealCookie(
   type: keyof CookiesOptions,
   payload: string,
   options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>,
-  maxAge: number = 60 * 15
+  maxAge: number = COOKIE_TTL
 ): Promise<Cookie> {
   const { cookies, logger } = options
   const expires = new Date()
