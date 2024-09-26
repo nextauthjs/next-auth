@@ -171,7 +171,7 @@ export const state = {
    * An error is thrown if the state is missing or invalid.
    */
   use: useCookie("state", "state"),
-  /** Decodes the state. If it could not be decoded, it returns `null`. */
+  /** Decodes the state. If it could not be decoded, it throws an error. */
   async decode(state: string, options: InternalOptions) {
     try {
       options.logger.debug("DECODE_STATE", { state })
