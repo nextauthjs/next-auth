@@ -21,17 +21,17 @@ const COOKIE_TTL = 60 * 15 // 15 minutes
 
 /** Returns a cookie with a JWT encrypted payload. */
 async function sealCookie(
-  type: keyof CookiesOptions,
+  name: keyof CookiesOptions,
   payload: string,
   options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>
 ): Promise<Cookie> {
   const { cookies, logger } = options
+  const cookie = cookies[name]
   const expires = new Date()
   expires.setTime(expires.getTime() + COOKIE_TTL * 1000)
-  const name = options.cookies[type].name
 
-  logger.debug(`CREATE_${type.toUpperCase()}`, {
-    name,
+  logger.debug(`CREATE_${name.toUpperCase()}`, {
+    name: cookie.name,
     payload,
     COOKIE_TTL,
     expires,
@@ -41,25 +41,26 @@ async function sealCookie(
     ...options.jwt,
     maxAge: COOKIE_TTL,
     token: { value: payload } satisfies CookiePayload,
-    salt: name,
+    salt: cookie.name,
   })
-  const cookieOptions = { ...cookies[type].options, expires }
-  return { name, value: encoded, options: cookieOptions }
+  const cookieOptions = { ...cookie.options, expires }
+  return { name: cookie.name, value: encoded, options: cookieOptions }
 }
 
 async function parseCookie(
   name: keyof CookiesOptions,
-  cookie: string | undefined,
+  value: string | undefined,
   options: InternalOptions
 ): Promise<string> {
   try {
-    options.logger.debug(`PARSE_${name.toUpperCase()}`, { cookie })
+    const { logger, cookies, jwt } = options
+    logger.debug(`PARSE_${name.toUpperCase()}`, { cookie: value })
 
-    if (!cookie) throw new InvalidCheck(`${name} cookie was missing`)
+    if (!value) throw new InvalidCheck(`${name} cookie was missing`)
     const parsed = await decode<CookiePayload>({
-      ...options.jwt,
-      token: cookie,
-      salt: options.cookies[name].name,
+      ...jwt,
+      token: value,
+      salt: cookies[name].name,
     })
     if (parsed?.value) return parsed.value
     throw new Error("Invalid cookie")
@@ -75,10 +76,13 @@ function clearCookie(
   options: InternalOptions,
   resCookies: Cookie[]
 ) {
+  const { logger, cookies } = options
+  const cookie = cookies[name]
+  logger.debug(`CLEAR_${name.toUpperCase()}`, { cookie })
   resCookies.push({
-    name: options.cookies[name].name,
+    name: cookie.name,
     value: "",
-    options: { ...options.cookies[name].options, maxAge: 0 },
+    options: { ...cookies[name].options, maxAge: 0 },
   })
 }
 
@@ -91,9 +95,10 @@ function useCookie(
     resCookies: Cookie[],
     options: InternalOptions<"oidc">
   ) {
-    const { provider } = options
+    const { provider, logger } = options
     if (!provider?.checks?.includes(check)) return
     const cookieValue = cookies?.[options.cookies[name].name]
+    logger.debug(`USE_${name.toUpperCase()}`, { value: cookieValue })
     const parsed = await parseCookie(name, cookieValue, options)
     clearCookie(name, options, resCookies)
     return parsed
