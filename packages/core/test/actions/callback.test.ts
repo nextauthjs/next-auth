@@ -29,7 +29,7 @@ describe("assert GET callback action", () => {
     )
   })
 
-  describe.only("Redirect Proxy", () => {
+  describe("Redirect Proxy", () => {
     it("should throw Configuration error if missing query state and isOnRedirectProxy is true", async () => {
       const { response } = await makeAuthRequest({
         action: "callback",
