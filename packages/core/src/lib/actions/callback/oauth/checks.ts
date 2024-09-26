@@ -1,8 +1,8 @@
 import * as o from "oauth4webapi"
 import { InvalidCheck } from "../../../../errors.js"
 
-// NOTE: We use the default JWT methods here because they encrypt the payload by default.
-import * as encryptedJWT from "../../../../jwt.js"
+// NOTE: We use the default JWT methods here because they encrypt/decrypt the payload, not just sign it.
+import { decode, encode } from "../../../../jwt.js"
 
 import type {
   CookiesOptions,
@@ -36,7 +36,7 @@ async function sealCookie(
     expires,
   })
 
-  const encoded = await encryptedJWT.encode({
+  const encoded = await encode({
     ...options.jwt,
     maxAge,
     token: { value: payload } satisfies CookiePayload,
@@ -55,7 +55,7 @@ async function parseCookie(
     options.logger.debug(`PARSE_${name.toUpperCase()}`, { cookie })
 
     if (!cookie) throw new InvalidCheck(`${name} cookie was missing`)
-    const parsed = await encryptedJWT.decode<CookiePayload>({
+    const parsed = await decode<CookiePayload>({
       ...options.jwt,
       token: cookie,
       salt: options.cookies[name].name,
@@ -149,7 +149,7 @@ export const state = {
       origin,
       random: o.generateRandomState(),
     } satisfies EncodedState
-    const value = await encryptedJWT.encode({
+    const value = await encode({
       secret: options.jwt.secret,
       token: payload,
       salt: encodedStateSalt,
@@ -169,7 +169,7 @@ export const state = {
   async decode(state: string, options: InternalOptions) {
     try {
       options.logger.debug("DECODE_STATE", { state })
-      const payload = await encryptedJWT.decode<EncodedState>({
+      const payload = await decode<EncodedState>({
         secret: options.jwt.secret,
         token: state,
         salt: encodedStateSalt,
@@ -216,7 +216,7 @@ export const webauthnChallenge = {
     return {
       cookie: await sealCookie(
         "webauthnChallenge",
-        await encryptedJWT.encode({
+        await encode({
           secret: options.jwt.secret,
           token: { challenge, registerData } satisfies WebAuthnChallengePayload,
           salt: webauthnChallengeSalt,
@@ -236,7 +236,7 @@ export const webauthnChallenge = {
 
     const parsed = await parseCookie("webauthnChallenge", cookieValue, options)
 
-    const payload = await encryptedJWT.decode<WebAuthnChallengePayload>({
+    const payload = await decode<WebAuthnChallengePayload>({
       secret: options.jwt.secret,
       token: parsed,
       salt: webauthnChallengeSalt,
