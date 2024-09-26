@@ -62,7 +62,7 @@ export const docToUser = (doc: UserDoc): AdapterUser => ({
   emailVerified:
     typeof doc?.emailVerified === "string"
       ? new Date(Date.parse(doc.emailVerified))
-      : doc?.emailVerified,
+      : (doc?.emailVerified ?? null),
 })
 
 /** @internal */
