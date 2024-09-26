@@ -13,17 +13,17 @@ import { Code } from "@/components/Code"
 ### Installation
 
 ```bash npm2yarn
-npm install @auth/surrealdb-adapter surrealdb.js
+npm install @auth/surrealdb-adapter surrealdb
 ```
 
 ### Environment Variables
 
 ```sh
-AUTH_SURREALDB_CONNECTION
-AUTH_SURREALDB_USERNAME
-AUTH_SURREALDB_PASSWORD
-AUTH_SURREALDB_NS
-AUTH_SURREALDB_DB
+AUTH_SURREAL_URL,
+AUTH_SURREAL_NS,
+AUTH_SURREAL_DB,
+AUTH_SURREAL_USER,
+AUTH_SURREAL_PW,
 ```
 
 ### Configuration
@@ -99,66 +99,35 @@ The SurrealDB adapter does not handle connections automatically, so you will hav
 
 ### Authorization
 
-#### Option 1 – Using RPC:
+#### Using WS:
+
+With this configuration, we can use the websocket endpoint. Thus, the `AUTH_SURREAL_URL` should begin with `ws` or `wss`.
 
 ```ts filename="./lib/surrealdb.ts"
-import { Surreal } from "surrealdb.js"
-
-const connectionString = process.env.AUTH_SURREALDB_CONNECTION
-const user = process.env.AUTH_SURREALDB_USERNAME
-const pass = process.env.AUTH_SURREALDB_PASSWORD
-const ns = process.env.AUTH_SURREALDB_NS
-const db = process.env.AUTH_SURREALDB_DB
+import { Surreal } from "surrealdb"
 
 const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
-  const db = new Surreal()
   try {
-    await db.connect(`${connectionString}/rpc`, {
-      ns,
-      db,
-      auth: { user, pass },
-    })
+    const db = new Surreal()
+    const {
+      AUTH_SURREAL_URL: url,
+      AUTH_SURREAL_NS: namespace,
+      AUTH_SURREAL_DB: database,
+      AUTH_SURREAL_USER: username,
+      AUTH_SURREAL_PW: password,
+    } = process.env
+    if (url && namespace && database && username && password) {
+      await db.connect(url)
+      await db.signin({
+        namespace,
+        database,
+        username,
+        password,
+      })
+    }
     resolve(db)
   } catch (e) {
     reject(e)
   }
 })
-
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export default clientPromise
-```
-
-#### Option 2 – Using HTTP:
-
-Useful in serverless environments like Vercel.
-
-```ts filename="./lib/surrealdb.ts"
-import { ExperimentalSurrealHTTP } from "surrealdb.js"
-
-const connectionString = process.env.AUTH_SURREALDB_CONNECTION
-const user = process.env.AUTH_SURREALDB_USERNAME
-const pass = process.env.AUTH_SURREALDB_PASSWORD
-const ns = process.env.AUTH_SURREALDB_NS
-const db = process.env.AUTH_SURREALDB_DB
-
-const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(
-  async (resolve, reject) => {
-    try {
-      const db = new ExperimentalSurrealHTTP(connectionString, {
-        fetch,
-        ns,
-        db,
-        auth: { user, pass },
-      })
-      resolve(db)
-    } catch (e) {
-      reject(e)
-    }
-  }
-)
-
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export default clientPromise
 ```
