@@ -9,7 +9,6 @@ import type {
   User,
 } from "../../../../types.js"
 import type { Cookie } from "../../../utils/cookie.js"
-import type { OAuthConfigInternal } from "../../../../providers/oauth.js"
 import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
 
 /** Returns a signed cookie. */
