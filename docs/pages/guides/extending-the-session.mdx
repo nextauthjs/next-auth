@@ -39,6 +39,10 @@ Then, to expose the user's id in the actual session, you can access `token.id` i
 
 Calls to `auth()` or `useSession()` will now have access to the user's id.
 
+<Callout type="warning">
+  By default `id` property does not exists in `jwt`, see the [Typescript Docs](https://authjs.dev/getting-started/typescript) for more info.
+</Callout>
+
 ## With Database
 
 If you are using a database session strategy, you can add the user's id to the session by modifying the `session` callback:
