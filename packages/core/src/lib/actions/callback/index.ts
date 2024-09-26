@@ -63,12 +63,17 @@ export async function callback(
           ? body
           : query
 
-      const proxyRedirect = await state.handleProxyRedirect(
-        params?.state,
-        options
-      )
-
-      if (proxyRedirect) return { redirect: proxyRedirect }
+      // If we have a state and we are on a redirect proxy, we try to parse it
+      // and see if it contains a valid origin to redirect to. If it does, we
+      // redirect the user to that origin with the original state.
+      if (options.isOnRedirectProxy && params?.state) {
+        const parsedState = await state.parse(params.state, options)
+        if (parsedState?.origin) {
+          const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params.state)}`
+          logger.debug("Proxy redirecting to", proxyRedirect)
+          return { redirect: proxyRedirect, cookies }
+        }
+      }
 
       const authorizationResult = await handleOAuth(
         params,

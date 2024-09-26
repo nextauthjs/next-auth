@@ -1,6 +1,8 @@
 import * as o from "oauth4webapi"
 import { InvalidCheck } from "../../../../errors.js"
-import { decode, encode } from "../../../../jwt.js"
+
+// NOTE: We use the default JWT methods here because they encrypt the payload by default.
+import * as encryptedJWT from "../../../../jwt.js"
 
 import type {
   CookiesOptions,
@@ -11,8 +13,8 @@ import type {
 import type { Cookie } from "../../../utils/cookie.js"
 import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
 
-/** Returns a signed cookie. */
-export async function signCookie<P extends string | Record<string, any>>(
+/** Returns a cookie with a JWT encrypted payload. */
+export async function createCookie<P extends string | Record<string, any>>(
   type: keyof CookiesOptions,
   payload: P,
   maxAge: number,
@@ -30,7 +32,7 @@ export async function signCookie<P extends string | Record<string, any>>(
     expires,
   })
 
-  const encoded = await encode({
+  const encoded = await encryptedJWT.encode({
     ...options.jwt,
     maxAge,
     token: payload,
@@ -46,7 +48,7 @@ const PKCE_MAX_AGE = 60 * 15 // 15 minutes in seconds
 export const pkce = {
   async create(options: InternalOptions<"oauth">) {
     const code_verifier = o.generateRandomCodeVerifier()
-    const cookie = await signCookie<PKCEPayload>(
+    const cookie = await createCookie<PKCEPayload>(
       "pkceCodeVerifier",
       code_verifier,
       PKCE_MAX_AGE,
@@ -76,7 +78,7 @@ export const pkce = {
     if (!codeVerifier)
       throw new InvalidCheck("PKCE code_verifier cookie was missing")
 
-    const payload = await decode<PKCEPayload>({
+    const payload = await encryptedJWT.decode<PKCEPayload>({
       ...options.jwt,
       token: codeVerifier,
       salt: options.cookies.pkceCodeVerifier.name,
@@ -98,7 +100,7 @@ export const pkce = {
 
 interface StatePayload {
   random: string
-  origin?: string
+  origin: string
 }
 
 const STATE_MAX_AGE = 60 * 15 // 15 minutes in seconds
@@ -114,9 +116,10 @@ export const state = {
       return
     }
 
-    const cookie = await signCookie<StatePayload>(
+    const random = o.generateRandomState()
+    const cookie = await createCookie<StatePayload | string>(
       "state",
-      { origin, random: o.generateRandomState() },
+      origin ? { origin, random } : random,
       STATE_MAX_AGE,
       options
     )
@@ -137,19 +140,9 @@ export const state = {
     const { provider } = options
     if (!provider.checks.includes("state")) return
 
-    const token = cookies?.[options.cookies.state.name]
+    const state = cookies?.[options.cookies.state.name]
 
-    if (!token) throw new InvalidCheck("State cookie was missing")
-
-    // IDEA: Let the user do something with the returned state
-    const payload = await decode<StatePayload>({
-      ...options.jwt,
-      token,
-      salt: options.cookies.state.name,
-    })
-
-    if (!payload)
-      throw new InvalidCheck("State (cookie) value could not be parsed")
+    if (!state) throw new InvalidCheck("State cookie was missing")
 
     // Clear the state cookie after use
     resCookies.push({
@@ -158,43 +151,22 @@ export const state = {
       options: { ...options.cookies.state.options, maxAge: 0 },
     })
 
-    return payload.random
+    return state
   },
-  /**
-   * When the authorization flow contains a state, we check if it's a redirect proxy
-   * and if so, we return original redirect URL.
-   */
-  async handleProxyRedirect(
-    token: string | undefined,
-    options: InternalOptions<"oauth">
-  ) {
-    const { cookies, logger, isOnRedirectProxy, provider } = options
-    let proxyRedirect: string | undefined
-
-    if (provider.redirectProxyUrl && !token) {
-      throw new InvalidCheck(
-        "Missing state in request query or body, but required for redirect proxy"
-      )
+  /** Parses the state. If it could not be parsed, it returns `null`. */
+  async parse(state: string, options: InternalOptions) {
+    const { logger, cookies } = options
+    try {
+      // IDEA: Let the user pass their own payload?
+      return encryptedJWT.decode<StatePayload>({
+        ...options.jwt,
+        token: state,
+        salt: cookies.state.name,
+      })
+    } catch (error) {
+      logger.error(new TypeError("State could not be parsed", { cause: error }))
+      return null
     }
-
-    const payload = await decode<StatePayload>({
-      ...options.jwt,
-      token,
-      salt: cookies.state.name,
-    })
-
-    if (!payload) {
-      throw new InvalidCheck("State param could not be parsed")
-    }
-
-    if (isOnRedirectProxy) {
-      if (!payload.origin) return // Regular signin on redirect proxy
-      proxyRedirect = `${payload.origin}?${new URLSearchParams(token)}`
-    }
-
-    if (proxyRedirect) logger.debug("proxy redirect", proxyRedirect)
-
-    return proxyRedirect
   },
 }
 
@@ -205,7 +177,7 @@ export const nonce = {
     if (!options.provider.checks.includes("nonce")) return
     const maxAge = NONCE_MAX_AGE
     const value = o.generateRandomNonce()
-    const cookie = await signCookie<NoncePayload>(
+    const cookie = await createCookie<NoncePayload>(
       "nonce",
       value,
       maxAge,
@@ -232,7 +204,7 @@ export const nonce = {
     const nonce = cookies?.[options.cookies.nonce.name]
     if (!nonce) throw new InvalidCheck("Nonce cookie was missing")
 
-    const value = await decode<NoncePayload>({
+    const value = await encryptedJWT.decode<NoncePayload>({
       ...options.jwt,
       token: nonce,
       salt: options.cookies.nonce.name,
@@ -265,7 +237,7 @@ export const webauthnChallenge = {
     registerData?: User
   ) {
     return {
-      cookie: await signCookie<WebAuthnChallengePayload>(
+      cookie: await createCookie<WebAuthnChallengePayload>(
         "webauthnChallenge",
         { challenge, registerData },
         WEBAUTHN_CHALLENGE_MAX_AGE,
@@ -283,7 +255,7 @@ export const webauthnChallenge = {
 
     if (!token) throw new InvalidCheck("WebAuthn challenge cookie missing")
 
-    const payload = await decode<WebAuthnChallengePayload>({
+    const payload = await encryptedJWT.decode<WebAuthnChallengePayload>({
       ...options.jwt,
       token,
       salt: options.cookies.webauthnChallenge.name,
