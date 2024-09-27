@@ -24,6 +24,7 @@ import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
+import Salesforce from "next-auth/providers/salesforce"
 import Spotify from "next-auth/providers/spotify"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
@@ -88,6 +89,7 @@ const config = {
     Passage,
     Pinterest,
     Reddit,
+    Salesforce,
     Slack,
     Spotify,
     Twitch,
