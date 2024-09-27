@@ -1,6 +1,6 @@
 {
   "name": "@auth/xata-adapter",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Xata adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
