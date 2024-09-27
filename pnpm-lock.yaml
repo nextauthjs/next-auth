@@ -327,6 +327,16 @@ importers:
         specifier: ^3.2.7
         version: 3.2.7(typedoc@0.25.13(typescript@5.4.5))
 
+  packages/adapter-appwrite:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      node-appwrite:
+        specifier: ^11.1.0
+        version: 11.1.1
+
   packages/adapter-azure-tables:
     dependencies:
       '@auth/core':
@@ -6332,6 +6342,9 @@ packages:
   axios@0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
 
+  axios@1.7.1:
+    resolution: {integrity: sha512-+LV37nQcd1EpFalkXksWNBiA17NZ5m5/WspmHGmZmdx1qBOg/VNq/c4eRJiA9VQQHBOs+N0ZhhdU10h2TyNK7Q==}
+
   axobject-query@4.0.0:
     resolution: {integrity: sha512-+60uv1hiVFhHZeO+Lz0RYzsVHy5Wr1ayX0mwda9KPDVLNJgZ1T9Ny7VmFbLDzxsH0D87I86vgj3gFrjTJUYznw==}
 
@@ -8105,6 +8118,15 @@ packages:
 
   follow-redirects@1.15.5:
     resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+
+  follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -10354,6 +10376,9 @@ packages:
     resolution: {integrity: sha512-mNcltoe1R8o7STTegSOHdnJNN7s5EUvhoS7ShnTHDyOSd+8H+UdWODq6qSv67PjC8Zc5JRT8+oLAMCr0SIXw7g==}
     engines: {node: ^16 || ^18 || >= 20}
 
+  node-appwrite@11.1.1:
+    resolution: {integrity: sha512-j9QTHfsDx/RoLq9shVtpDWofCG8u/izy6uQrlzet7+UV14OMikaPUNZpQhtZGi5KjLy5R+JvJfx6HHXrfdcIvQ==}
+
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
@@ -11258,6 +11283,9 @@ packages:
 
   proxy-compare@2.5.1:
     resolution: {integrity: sha512-oyfc0Tx87Cpwva5ZXezSp5V9vht1c7dZBhvuV/y3ctkgMVUmiAGDVeeB0dKhGSyT0v1ZTEQYpe/RXlBVBNuCLA==}
+
+  proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
   prr@1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
@@ -21075,6 +21103,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
+  axios@1.7.1:
+    dependencies:
+      follow-redirects: 1.15.6
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
   axobject-query@4.0.0:
     dependencies:
       dequal: 2.0.3
@@ -23351,6 +23387,8 @@ snapshots:
   follow-redirects@1.15.5(debug@4.3.4):
     optionalDependencies:
       debug: 4.3.4(supports-color@8.1.1)
+
+  follow-redirects@1.15.6: {}
 
   for-each@0.3.3:
     dependencies:
@@ -26365,6 +26403,13 @@ snapshots:
 
   node-addon-api@7.1.0: {}
 
+  node-appwrite@11.1.1:
+    dependencies:
+      axios: 1.7.1
+      form-data: 4.0.0
+    transitivePeerDependencies:
+      - debug
+
   node-domexception@1.0.0: {}
 
   node-eval@2.0.0:
@@ -27352,6 +27397,8 @@ snapshots:
       ipaddr.js: 1.9.1
 
   proxy-compare@2.5.1: {}
+
+  proxy-from-env@1.1.0: {}
 
   prr@1.0.1: {}
 
