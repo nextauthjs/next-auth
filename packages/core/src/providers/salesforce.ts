@@ -34,8 +34,8 @@ export interface SalesforceProfile extends Record<string, any> {
  * const response = await Auth(request, {
  *   providers: [
  *     Salesforce({
- *       clientId: SALESFORCE_ID,
- *       clientSecret: SALESFORCE_SECRET,
+ *       clientId: AUTH_SALESFORCE_ID,
+ *       clientSecret: AUTH_SALESFORCE_SECRET,
  *     }),
  *   ],
  * })
