@@ -14,6 +14,7 @@ import Google from "@auth/sveltekit/providers/google"
 import Hubspot from "@auth/sveltekit/providers/hubspot"
 import Keycloak from "@auth/sveltekit/providers/keycloak"
 import LinkedIn from "@auth/sveltekit/providers/linkedin"
+import Mixin from "@auth/sveltekit/providers/mixin"
 import Netlify from "@auth/sveltekit/providers/netlify"
 import Okta from "@auth/sveltekit/providers/okta"
 import Passage from "@auth/sveltekit/providers/passage"
@@ -53,6 +54,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Hubspot,
     Keycloak,
     LinkedIn,
+    Mixin,
     Netlify,
     Okta,
     Passage,

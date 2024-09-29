@@ -13,6 +13,7 @@ import Google from "@auth/express/providers/google"
 import Hubspot from "@auth/express/providers/hubspot"
 import Keycloak from "@auth/express/providers/keycloak"
 import LinkedIn from "@auth/express/providers/linkedin"
+import Mixin from "@auth/express/providers/mixin"
 import Netlify from "@auth/express/providers/netlify"
 import Okta from "@auth/express/providers/okta"
 import Passage from "@auth/express/providers/passage"
@@ -52,6 +53,7 @@ export const authConfig = {
     Hubspot,
     Keycloak,
     LinkedIn,
+    Mixin,
     Netlify,
     Okta,
     Passage,
