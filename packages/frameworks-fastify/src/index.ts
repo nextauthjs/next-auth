@@ -174,10 +174,10 @@ export async function getSession(
   const url = createActionURL(
     "session",
     req.protocol,
-    // @ts-expect-error
+    // @ts-expect-error headers type is not compatible
     new Headers(req.headers),
     process.env,
-    config.basePath
+    config
   )
 
   const response = await Auth(

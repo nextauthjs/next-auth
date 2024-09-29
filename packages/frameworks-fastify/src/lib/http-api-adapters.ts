@@ -6,7 +6,7 @@ import type { FastifyRequest, FastifyReply } from "fastify"
 export function encodeUrlEncoded(object: Record<string, any> = {}) {
   const params = new URLSearchParams()
 
-  for (let [key, value] of Object.entries(object)) {
+  for (const [key, value] of Object.entries(object)) {
     if (Array.isArray(value)) {
       value.forEach((v) => params.append(key, v))
     } else {
@@ -57,12 +57,16 @@ export function toWebRequest(req: FastifyRequest) {
   Object.entries(req.headers).forEach(([key, value]) => {
     if (Array.isArray(value)) {
       value.forEach((v) => {
-        v && headers.append(key, v)
+        if (v) {
+          headers.append(key, v)
+        }
       })
       return
     }
 
-    value && headers.append(key, value)
+    if (value) {
+      headers.append(key, value)
+    }
   })
 
   // GET and HEAD not allowed to receive body
