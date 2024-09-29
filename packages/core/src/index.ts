@@ -46,7 +46,7 @@ import {
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
-import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
+import { setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
@@ -101,7 +101,7 @@ export async function Auth(
   request: Request,
   config: AuthConfig
 ): Promise<Response | ResponseInternal> {
-  setLogger(config.logger, config.debug)
+  const logger = setLogger(config)
 
   const internalRequest = await toInternalRequest(request, config)
   // There was an error parsing the request
@@ -153,7 +153,8 @@ export async function Auth(
       return toResponse(page)
     }
 
-    return Response.redirect(`${pages.error}?error=Configuration`)
+    const url = `${internalRequest.url.origin}${pages.error}?error=Configuration`
+    return Response.redirect(url)
   }
 
   const isRedirect = request.headers?.has("X-Auth-Return-Redirect")

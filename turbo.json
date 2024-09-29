@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [
@@ -16,7 +16,7 @@
         "src/providers/oauth-types.ts",
         ".svelte-kit/**"
       ],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "clean": {
       "cache": false
@@ -27,18 +27,28 @@
     "test": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**/", "test/**/"],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "test:e2e": {
+      "dependsOn": ["next-auth#build"],
       "outputs": [
         "blob-report/**",
         "playwright-report/**",
         "playwright/.cache/**",
         "test-results/**"
+      ],
+      "env": [
+        "TEST_KEYCLOAK_PASSWORD",
+        "TEST_KEYCLOAK_USERNAME",
+        "AUTH_SECRET",
+        "AUTH_KEYCLOAK_ID",
+        "AUTH_KEYCLOAK_SECRET",
+        "AUTH_KEYCLOAK_ISSUER",
+        "AUTH_TRUST_HOST"
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+      "passThroughEnv": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "@auth/hasura-adapter#build": {
       "dependsOn": ["@auth/core#build"],
@@ -60,6 +70,7 @@
         "@auth/qwik#build",
         "@auth/fastify#build"
       ],
+      "persistent": true,
       "cache": false
     },
     "docs#build": {

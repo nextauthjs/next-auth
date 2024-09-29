@@ -6,20 +6,20 @@
     "body": [
       "export const onRequest: RequestHandler = (request) => {",
       "  $0",
-      "};"
-    ]
+      "};",
+    ],
   },
   "loader$": {
     "scope": "javascriptreact,typescriptreact",
     "prefix": "qloader$",
     "description": "loader$()",
-    "body": ["export const $1 = routeLoader$(() => {", "  $0", "});"]
+    "body": ["export const $1 = routeLoader$(() => {", "  $0", "});"],
   },
   "action$": {
     "scope": "javascriptreact,typescriptreact",
     "prefix": "qaction$",
     "description": "action$()",
-    "body": ["export const $1 = routeAction$((data) => {", "  $0", "});"]
+    "body": ["export const $1 = routeAction$((data) => {", "  $0", "});"],
   },
   "Full Page": {
     "scope": "javascriptreact,typescriptreact",
@@ -30,7 +30,7 @@
       "",
       "export default component$(() => {",
       "  $0",
-      "});"
-    ]
-  }
+      "});",
+    ],
+  },
 }

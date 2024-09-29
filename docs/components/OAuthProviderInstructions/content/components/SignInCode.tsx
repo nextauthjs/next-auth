@@ -22,7 +22,7 @@ export function SignInCode({ providerId, providerName, highlight }: Props) {
             __html: highlight(`
 import { signIn } from "@/auth"
  
-export function SignIn() {
+export default function SignIn() {
   return (
     <form
       action={async () => {
@@ -37,6 +37,25 @@ export function SignIn() {
           }}
         />
       </Code.Next>
+      <Code.NextClient>
+        <Pre
+          data-filename="./components/sign-in.tsx"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+"use client"
+import { signIn } from "next-auth/react"
+ 
+export default function SignIn() {
+  return <button onClick={() => signIn("${providerId}")}></button>
+}
+`),
+          }}
+        />
+      </Code.NextClient>
       <Code.Qwik>
         With Qwik we can do a server-side login with Form action, or a more
         simple client-side login via submit method.

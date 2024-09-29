@@ -36,16 +36,10 @@ AUTH_SECRET="This is an example"
 </Code.Express>
 </Code>
 
-`AUTH_SECRET` is a random token used by the library to encrypt tokens and email verification hashes, and it's mandatory to keep things secure (See [Deployment](/getting-started/deployment) to learn more). You can use the CLI to generate an auth secret.
+`AUTH_SECRET` is a random token used by the library to encrypt tokens and email verification hashes, and it's mandatory to keep things secure (See [Deployment](/getting-started/deployment) to learn more). You can use the CLI to generate an auth secret:
 
 ```bash npm2yarn
 npm exec auth secret
-```
-
-Alternatively, on Linux and Mac OS X based systems you can use the `openssl` CLI.
-
-```bash
-openssl rand -base64 33
 ```
 
 ## Environment Variable Inference

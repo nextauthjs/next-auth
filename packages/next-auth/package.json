@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.19",
+  "version": "5.0.0-beta.22",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -74,6 +74,7 @@
     "dev": "pnpm providers && tsc -w",
     "test": "vitest run -c ../utils/vitest.config.ts",
     "test:watch": "vitest -c ../utils/vitest.config.ts",
+    "test:e2e": "playwright test",
     "providers": "node ../utils/scripts/providers"
   },
   "files": [
@@ -107,7 +108,8 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
-    "next": "14.2.3",
+    "dotenv": "^10.0.0",
+    "next": "14.2.10",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0"
   }

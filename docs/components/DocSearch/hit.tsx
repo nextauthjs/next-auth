@@ -18,9 +18,9 @@ export default function Hit({ hit }) {
       key={hit.objectID}
       href={hit.url}
       onClick={onClick}
-      className="flex flex-col gap-2 p-4 px-2 rounded-md text-neutral-800 group dark:text-neutral-100 hover:dark:bg-neutral-900 hover:bg-neutral-200"
+      className="group flex flex-col gap-2 rounded-md p-4 px-2 text-neutral-800 hover:bg-neutral-200 dark:text-neutral-100 hover:dark:bg-neutral-900"
     >
-      <h3 className="flex items-center text-sm font-semibold after:content-[''] whitespace-nowrap after:absolute after:bg-gradient-to-r after:h-6 after:right-0 after:w-12 after:from-transparent after:to-neutral-100 after:dark:to-neutral-800 relative overflow-hidden group-hover:dark:after:to-neutral-900 group-hover:after:to-neutral-200">
+      <h3 className="relative flex items-center overflow-hidden whitespace-nowrap text-sm font-semibold after:absolute after:right-0 after:h-6 after:w-12 after:bg-gradient-to-r after:from-transparent after:to-neutral-100 after:content-[''] group-hover:after:to-neutral-200 after:dark:to-neutral-800 group-hover:dark:after:to-neutral-900">
         {hierarchy.map((label: string, idx: number) => (
           <>
             <span className="">{label}</span>
@@ -33,7 +33,7 @@ export default function Hit({ hit }) {
           highlighted: "dark:text-white dark:bg-violet-800 bg-violet-300",
         }}
         attribute="content"
-        className="text-sm line-clamp-4"
+        className="line-clamp-4 text-sm"
         hit={hit}
       />
       <p className="text-xs text-neutral-400 dark:text-neutral-600">{path}</p>

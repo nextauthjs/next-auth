@@ -1,4 +1,4 @@
-import { expect, test } from "./helpers/authTest"
+import { expect, test } from "../../helpers/authTest"
 
 test.describe("user profile", () => {
   test("profile values", async ({ webapp }) => {

@@ -15,54 +15,38 @@ on:
         type: choice
         description: Package name (npm)
         options:
+          - "next-auth"
           - "@auth/core"
+          - "@auth/express"
+          - "@auth/nuxt"
+          - "@auth/qwik"
+          - "@auth/solid-start"
+          - "@auth/sveltekit"
+          - "@auth/azure-tables-adapter"
+          - "@auth/d1-adapter"
           - "@auth/dgraph-adapter"
           - "@auth/drizzle-adapter"
           - "@auth/dynamodb-adapter"
+          - "@auth/edgedb-adapter"
           - "@auth/fauna-adapter"
           - "@auth/firebase-adapter"
           - "@auth/hasura-adapter"
+          - "@auth/kysely-adapter"
           - "@auth/mikro-orm-adapter"
           - "@auth/mongodb-adapter"
           - "@auth/neo4j-adapter"
+          - "@auth/pg-adapter"
           - "@auth/pouchdb-adapter"
           - "@auth/prisma-adapter"
           - "@auth/sequelize-adapter"
           - "@auth/supabase-adapter"
           - "@auth/surrealdb-adapter"
+          - "@auth/test-adapter"
           - "@auth/typeorm-adapter"
+          - "@auth/typeorm-legacy-adapter"
           - "@auth/unstorage-adapter"
           - "@auth/upstash-redis-adapter"
           - "@auth/xata-adapter"
-          - "next-auth"
-      # TODO: Infer from package name
-      path:
-        type: choice
-        description: Directory name (packages/*)
-        options:
-          - "core"
-          - "frameworks-nextjs"
-          - "adapter-edgedb"
-          - "adapter-dgraph"
-          - "adapter-drizzle"
-          - "adapter-dynamodb"
-          - "adapter-fauna"
-          - "adapter-firebase"
-          - "adapter-hasura"
-          - "adapter-mikro-orm"
-          - "adapter-mongodb"
-          - "adapter-neo4j"
-          - "adapter-pouchdb"
-          - "adapter-prisma"
-          - "adapter-sequelize"
-          - "adapter-supabase"
-          - "adapter-surrealdb"
-          - "adapter-typeorm"
-          - "adapter-unstorage"
-          - "adapter-upstash-redis"
-          - "adapter-xata"
-          - "next-auth"
-
 permissions:
   id-token: write
 
@@ -105,48 +89,26 @@ jobs:
             echo "PACKAGES_CHANGES=false" >> $GITHUB_ENV
           fi
       - name: Build
-        if: ${{ env.PACKAGES_CHANGES == 'true' }}
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm build
-      - name: Lint
-        run: pnpm lint
+      - name: Check formatting
+        run: pnpm format
         timeout-minutes: 15
       - name: Run unit tests
-        if: ${{ env.PACKAGES_CHANGES == 'true' }}
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         run: pnpm test
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(pnpx playwright -V | awk '{ print $2 }')" >> $GITHUB_ENV
-      - name: Cache playwright binaries
-        uses: actions/cache@v4
-        id: playwright-cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - name: Install Playwright
-        if: steps.playwright-cache.outputs.cache-hit != 'true' && github.repository == 'nextauthjs/next-auth'
-        run: |
-          pnpm exec playwright install --with-deps chromium
+        if: github.repository == 'nextauthjs/next-auth'
+        run: pnpm exec playwright install --with-deps chromium
       - name: Run E2E tests (Nextjs-Docker)
         continue-on-error: true
         if: false
         timeout-minutes: 15
-        run: |
-          cd apps/examples/nextjs-docker && pnpm test:docker
-        env:
-          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
-          TEST_KEYCLOAK_PASSWORD: ${{ secrets.TEST_KEYCLOAK_PASSWORD }}
-          AUTH_KEYCLOAK_ID: ${{ secrets.AUTH_KEYCLOAK_ID }}
-          AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
-          AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
-          AUTH_TRUST_HOST: 1
+        run: cd apps/examples/nextjs-docker && pnpm test:docker
       - name: Run E2E tests
         continue-on-error: true # TODO: Make this less flakey
         if: github.repository == 'nextauthjs/next-auth'
         timeout-minutes: 15
-        run: |
-          pnpm test:e2e
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           TEST_KEYCLOAK_USERNAME: ${{ secrets.TEST_KEYCLOAK_USERNAME }}
@@ -155,11 +117,13 @@ jobs:
           AUTH_KEYCLOAK_SECRET: ${{ secrets.AUTH_KEYCLOAK_SECRET }}
           AUTH_KEYCLOAK_ISSUER: ${{ secrets.AUTH_KEYCLOAK_ISSUER }}
           AUTH_TRUST_HOST: 1
+          DEBUG: "pw:webserver"
+        run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         name: Upload Playwright artifacts
         with:
           name: playwright-traces
-          path: "**/packages/utils/test-results/*/trace.zip"
+          path: "**/packages/next-auth/test-results/*/trace.zip"
           retention-days: 7
       - uses: codecov/codecov-action@v4
         if: always()
@@ -254,11 +218,29 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Map package name to path
+        run: |
+          case "${{ github.event.inputs.name }}" in
+            *"-adapter")
+              adapter_name=$(echo "${{ github.event.inputs.name }}" | sed 's/@auth\///' | sed 's/-adapter//')
+              echo "PACKAGE_PATH=adapter-${adapter_name}" >> $GITHUB_ENV
+              ;;
+            "next-auth")
+              echo "PACKAGE_PATH=next-auth" >> $GITHUB_ENV
+              ;;
+            "@auth/core")
+              echo "PACKAGE_PATH=core" >> $GITHUB_ENV
+              ;;
+            *)
+              framework_name=$(echo "${{ github.event.inputs.name }}" | sed 's/@auth\///')
+              echo "PACKAGE_PATH=frameworks-${framework_name}" >> $GITHUB_ENV
+              ;;
+          esac
       - name: Determine version
         uses: ./.github/version-pr
         id: determine-version
         env:
-          PACKAGE_PATH: ${{ github.event.inputs.path }}
+          PACKAGE_PATH: ${{ env.PACKAGE_PATH }}
       - name: Publish to npm
         run: |
           pnpm build
@@ -269,5 +251,5 @@ jobs:
           echo "Install via: pnpm add ${{ github.event.inputs.name }}@${{ env.VERSION }}"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PACKAGE_PATH: ${{ github.event.inputs.path }}
+          PACKAGE_PATH: ${{ env.PACKAGE_PATH }}
           VERSION: ${{ steps.determine-version.outputs.version }}

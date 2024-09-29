@@ -8,6 +8,7 @@ export default {
   "nextjs": "next-auth",
   sveltekit: "@auth/sveltekit",
   express: "@auth/express",
+  qwik: "@auth/qwik",
   "solid-start": "@auth/solid-start",
   fastify: "@auth/fastify",
   warnings: "Warnings",

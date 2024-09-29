@@ -1,18 +1,17 @@
 import type {
-  QueryResultHKT as MySQLQueryResultHKT,
+  MySqlQueryResultHKT,
   PreparedQueryHKTBase,
 } from "drizzle-orm/mysql-core"
 import { MySqlDatabase } from "drizzle-orm/mysql-core"
-import type { QueryResultHKT as PostgresQueryResultHKT } from "drizzle-orm/pg-core"
-import { PgDatabase } from "drizzle-orm/pg-core"
+import { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core"
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
 import { DefaultMySqlSchema } from "./mysql.js"
 import { DefaultPostgresSchema } from "./pg.js"
 import { DefaultSQLiteSchema } from "./sqlite.js"
 
-type AnyPostgresDatabase = PgDatabase<PostgresQueryResultHKT, any>
+type AnyPostgresDatabase = PgDatabase<PgQueryResultHKT, any>
 type AnyMySqlDatabase = MySqlDatabase<
-  MySQLQueryResultHKT,
+  MySqlQueryResultHKT,
   PreparedQueryHKTBase,
   any
 >

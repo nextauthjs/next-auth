@@ -28,10 +28,9 @@ import { isOIDCProvider } from "../../../utils/providers.js"
  * we fetch it anyway. This is because we always want a user profile.
  */
 export async function handleOAuth(
-  query: RequestInternal["query"],
+  params: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth" | "oidc">,
-  randomState?: string
+  options: InternalOptions<"oauth" | "oidc">
 ) {
   const { logger, provider } = options
   let as: o.AuthorizationServer
@@ -43,7 +42,7 @@ export async function handleOAuth(
     (!userinfo?.url || userinfo.url.host === "authjs.dev")
   ) {
     // We assume that issuer is always defined as this has been asserted earlier
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const issuer = new URL(provider.issuer!)
     const discoveryResponse = await o.discoveryRequest(issuer)
     const discoveredAs = await o.processDiscoveryResponse(
@@ -78,17 +77,12 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await checks.state.use(
-    cookies,
-    resCookies,
-    options,
-    randomState
-  )
+  const state = await checks.state.use(cookies, resCookies, options)
 
   const codeGrantParams = o.validateAuthResponse(
     as,
     client,
-    new URLSearchParams(query),
+    new URLSearchParams(params),
     provider.checks.includes("state") ? state : o.skipStateCheck
   )
 
