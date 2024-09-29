@@ -14,10 +14,10 @@
   "dependencies": {
     "@auth/core": "workspace:^",
     "@auth/nuxt": "workspace:^",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue": "^3.5.10",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
-    "nuxt": "^3.12.2"
+    "nuxt": "^3.13.2"
   }
 }
