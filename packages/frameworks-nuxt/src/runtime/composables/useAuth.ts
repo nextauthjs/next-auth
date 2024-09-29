@@ -6,7 +6,12 @@ export type AuthState =
   | { loggedIn: false; user: null }
 
 export function useAuth() {
-  const auth = useState<AuthState>("auth", shallowRef)
+  const auth = useState<AuthState>("auth", () => {
+    return {
+      loggedIn: false,
+      user: null,
+    } as AuthState
+  })
 
   const session = useState("auth:session", () => null) as Ref<Session | null>
 

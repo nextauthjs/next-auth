@@ -16,7 +16,8 @@ async function callAPI() {
         <img
           alt="Avatar"
           :src="
-            session?.user?.image ?? 'https://source.boringavatars.com/beam/120'
+            session?.user?.image ??
+            'https://api.dicebear.com/9.x/thumbs/svg?seed=234173&randomizeIds=true'
           "
           class="avatar"
         />
@@ -28,7 +29,7 @@ async function callAPI() {
             <strong>
               {{
                 auth.loggedIn
-                  ? auth.user.email ?? auth.user.name
+                  ? (auth.user.email ?? auth.user.name)
                   : "unauthenticated"
               }}
             </strong>
