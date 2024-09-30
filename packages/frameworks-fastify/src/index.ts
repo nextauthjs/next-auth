@@ -45,7 +45,7 @@
  *
  * ```ts title="app.ts"
  * import { getSession } from "@auth/fastify"
- * 
+ *
  * // Decorating the reply is not required but will optimise performance
  * // Only decorate the reply with a value type like null, as reference types like objects are shared among all requests, creating a security risk.
  * fastify.decorateReply('session', null)
@@ -62,18 +62,7 @@
  *   reply.view("index.pug", { user: session?.user })
  * })
  * ```
- * 
- * Note for TypeScript, you may want to augment the Fastify types to include the `session` property on the reply object. This can be done by creating a @types/fastify/index.d.ts file:
- * 
- * ```ts title="@types/fastify/index.d.ts"
- * import { Session } from "@auth/core/types";
- * declare module "fastify" {
- *   interface FastifyReply {
- *     session: Session | null;
- *   }
- * }
- * ```
- * 
+ *
  * You may need to add `"typeRoots": ["@types"]` to `compilerOptions` in your tsconfig.json.
  *
  * ## Authorization
@@ -99,13 +88,13 @@
  *   const session = reply.session;
  *   reply.view("profile.pug", { user: session?.user })
  * });
- * 
+ *
  * // This route is not protected
  * fastify.get("/", (req, reply) => {
  *   reply.view("index");
  * });
  * ```
- * 
+ *
  * ### Per Group of Routes
  * To protect a group of routes, create a plugin and register the authenication hook and routes to the instance as follows:
  *
@@ -114,11 +103,11 @@
  *   async (instance) => {
  *     // All routes on this instance will be protected because of the preHandler hook
  *     instance.addHook("preHandler", authenticatedUser)
- * 
+ *
  *     instance.get("/", (req, reply) => {
  *       reply.view("protected.pug")
  *     })
- *     
+ *
  *     instance.get("/me", (req, reply) => {
  *       reply.send(reply.session?.user)
  *     })
@@ -140,6 +129,12 @@ import type { Session } from "@auth/core/types"
 import type { FastifyRequest, FastifyPluginAsync } from "fastify"
 import formbody from "@fastify/formbody"
 import { toWebRequest, toFastifyReply } from "./lib/index.js"
+
+declare module "fastify" {
+  interface FastifyReply {
+    session: Session | null
+  }
+}
 
 export type FastifyAuthConfig = Omit<AuthConfig, "raw">
 

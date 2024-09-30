@@ -1,8 +1,6 @@
 {
-  "description": "Fastify Auth example app",
-  "engines": {
-    "node": ">=20.11.0"
-  },
+  "name": "fastify-auth-app",
+  "description": "Fastify + Auth.js Developer app",
   "type": "module",
   "private": true,
   "scripts": {
@@ -16,20 +14,21 @@
     "lint": "eslint src/*.ts --fix",
     "prettier": "prettier src/*.ts --write"
   },
-  "author": "Lachie Hill <lachiehill46@gmail.com>",
-  "license": "ISC",
+  "author": "Songkeys (https://github.com/songkeys)",
+  "license": "MIT",
   "dependencies": {
     "@auth/fastify": "workspace:*",
+    "fastify": "^5.0.0",
     "@fastify/view": "^10.0.1",
     "@fastify/static": "^8.0.1",
-    "fastify": "^5.0.0",
     "pug": "^3.0.2",
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
+    "@prettier/plugin-pug": "^3.0.0",
+    "@types/morgan": "^1.9.9",
     "@types/pug": "^2.0.10",
-    "tsx": "^4.7.0",
-    "typescript": "5.3.3"
+    "tsx": "^4.7.3",
+    "typescript": "5.4.5"
   }
 }
