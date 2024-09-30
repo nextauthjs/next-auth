@@ -130,11 +130,18 @@
  * @module @auth/fastify
  */
 
-import { Auth, setEnvDefaults, createActionURL } from "@auth/core"
-import type { AuthConfig, Session } from "@auth/core/types"
+import {
+  Auth,
+  type AuthConfig,
+  setEnvDefaults,
+  createActionURL,
+} from "@auth/core"
+import type { Session } from "@auth/core/types"
 import type { FastifyRequest, FastifyPluginAsync } from "fastify"
 import formbody from "@fastify/formbody"
 import { toWebRequest, toFastifyReply } from "./lib/index.js"
+
+export type FastifyAuthConfig = Omit<AuthConfig, "raw">
 
 export type {
   Account,
@@ -144,9 +151,7 @@ export type {
   User,
 } from "@auth/core/types"
 
-export function FastifyAuth(
-  config: Omit<AuthConfig, "raw">
-): FastifyPluginAsync {
+export function FastifyAuth(config: FastifyAuthConfig): FastifyPluginAsync {
   setEnvDefaults(process.env, config)
   return async (fastify) => {
     if (!fastify.hasContentTypeParser("application/x-www-form-urlencoded")) {
@@ -168,7 +173,7 @@ export type GetSessionResult = Promise<Session | null>
 
 export async function getSession(
   req: FastifyRequest,
-  config: Omit<AuthConfig, "raw">
+  config: FastifyAuthConfig
 ): GetSessionResult {
   setEnvDefaults(process.env, config)
   const url = createActionURL(

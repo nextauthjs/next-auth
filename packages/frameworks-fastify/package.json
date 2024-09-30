@@ -39,14 +39,14 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@fastify/formbody": "^7.4.0"
+    "@fastify/formbody": "^8.0.1"
   },
   "devDependencies": {
     "@auth/core": "workspace:experimental",
-    "fastify": "^4.25.2"
+    "fastify": "^5.0.0"
   },
   "peerDependencies": {
-    "fastify": "^4.25.2"
+    "fastify": "^5.0.0"
   },
   "keywords": [
     "Fastify",
