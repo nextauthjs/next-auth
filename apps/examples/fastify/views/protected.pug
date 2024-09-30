@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1(class="mb-2 text-3xl font-medium") Protected page
+  p
+    | This is a protected content. You can access this content because you are
+    | signed in.
+  p Session expiry: #{ session.expires ? session.expires : '' }

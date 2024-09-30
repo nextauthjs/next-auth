@@ -1,0 +1,35 @@
+{
+  "description": "Fastify Auth example app",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist",
+    "build": "pnpm build:ts && pnpm build:css",
+    "build:ts": "tsc",
+    "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
+    "dev": "tsx watch --env-file=.env src/server.ts & pnpm build:css -w",
+    "debug": "tsx watch --inspect --env-file=.env src/server.ts & pnpm build:css -w",
+    "lint": "eslint src/*.ts --fix",
+    "prettier": "prettier src/*.ts --write"
+  },
+  "author": "Lachie Hill <lachiehill46@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@auth/fastify": "workspace:*",
+    "@fastify/view": "^10.0.1",
+    "@fastify/static": "^8.0.1",
+    "fastify": "^5.0.0",
+    "pug": "^3.0.2",
+    "tailwindcss": "^3.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/pug": "^2.0.10",
+    "tsx": "^4.7.0",
+    "typescript": "5.3.3"
+  }
+}
