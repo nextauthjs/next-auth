@@ -50,7 +50,7 @@ function encodeRequestBody(req: FastifyRequest): string | undefined {
  * Adapts an Fastify Request to a Web Request, returning the Web Request.
  */
 export function toWebRequest(req: FastifyRequest) {
-  const url = req.protocol + "://" + req.hostname + req.originalUrl
+  const url = req.protocol + "://" + req.host + req.originalUrl
 
   const headers = new Headers()
 
