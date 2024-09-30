@@ -24,7 +24,7 @@ export const fastify = Fastify({ trustProxy: true, logger: true })
 
 // Decorating the reply is not required but will optimise performance
 // Only decorate the reply with a value type like null, as reference types like objects are shared among all requests, creating a security risk.
-fastify.decorateReply("session")
+fastify.decorateReply("session", null)
 
 fastify.register(fastifyView, {
   engine: {
