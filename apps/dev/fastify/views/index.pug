@@ -1,11 +1,11 @@
 extends layout
 
 block content
-  h1=title
+  h1(class="text-3xl font-bold")= title
   p
     | This is an example site to demonstrate how to use #{ ' ' }
-    a(href="https://expressjs.com/") Express
+    a(href="https://fastify.dev/", class="mb-2 font-medium underline") Fastify
     | #{ ' ' } with #{ ' ' }
-    a(href="https://authjs.dev/reference/express") Express Auth
+    a(href="https://authjs.dev/reference/fastify", class="underline") Fastify Auth
     |
     | for authentication.

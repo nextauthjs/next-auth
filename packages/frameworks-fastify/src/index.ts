@@ -63,6 +63,17 @@
  * })
  * ```
  *
+ * Note for TypeScript, you may want to augment the Fastify types to include the `session` property on the reply object. This can be done by creating a @types/fastify/index.d.ts file:
+ *
+ * ```ts title="@types/fastify/index.d.ts"
+ * import { Session } from "@auth/core/types";
+ * declare module "fastify" {
+ *   interface FastifyReply {
+ *     session: Session | null;
+ *   }
+ * }
+ * ```
+ *
  * You may need to add `"typeRoots": ["@types"]` to `compilerOptions` in your tsconfig.json.
  *
  * ## Authorization
@@ -129,12 +140,6 @@ import type { Session } from "@auth/core/types"
 import type { FastifyRequest, FastifyPluginAsync } from "fastify"
 import formbody from "@fastify/formbody"
 import { toWebRequest, toFastifyReply } from "./lib/index.js"
-
-declare module "fastify" {
-  interface FastifyReply {
-    session: Session | null
-  }
-}
 
 export type FastifyAuthConfig = Omit<AuthConfig, "raw">
 
