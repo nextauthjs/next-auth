@@ -23,6 +23,12 @@ import type {
   AdapterUser,
 } from "@auth/core/adapters"
 
+function stripUndefined(data: Record<string, any>): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== undefined)
+  );
+}
+
 export function PrismaAdapter(
   prisma: PrismaClient | ReturnType<PrismaClient["$extends"]>
 ): Adapter {
@@ -31,10 +37,7 @@ export function PrismaAdapter(
     // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     createUser: ({ id, ...data }) => {
-      const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined)
-      );
-      return p.user.create({ data: filteredData });
+      return p.user.create({ data: stripUndefined(data) });
     },
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
@@ -46,11 +49,8 @@ export function PrismaAdapter(
       return (account?.user as AdapterUser) ?? null
     },
     updateUser: ({ id, ...data }) => {
-      const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined)
-      );
       return p.user.update({
-        where: { id }, data: filteredData
+        where: { id }, data: stripUndefined(data)
       }) as Promise<AdapterUser>
     },
     deleteUser: (id) =>
@@ -71,27 +71,19 @@ export function PrismaAdapter(
       return { user, session } as { user: AdapterUser; session: AdapterSession }
     },
     createSession: (data) => {
-      const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined)
-      );
-      return p.session.create({ data: filteredData })
+      return p.session.create({ data: stripUndefined(data) })
     },
     updateSession: (data) => {
-      const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined)
-      );
       return p.session.update({
-        where: { sessionToken: data.sessionToken }, data: filteredData
+        where: { sessionToken: data.sessionToken },
+        data: stripUndefined(data),
       })
     },
     deleteSession: (sessionToken) =>
       p.session.delete({ where: { sessionToken } }),
     async createVerificationToken(data) {
-      const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, v]) => v !== undefined)
-      );
       const verificationToken = await p.verificationToken.create({
-        data: filteredData
+        data: stripUndefined(data),
       })
       // @ts-expect-errors // MongoDB needs an ID, but we don't
       if (verificationToken.id) delete verificationToken.id
@@ -119,11 +111,8 @@ export function PrismaAdapter(
       }) as Promise<AdapterAccount | null>
     },
     async createAuthenticator(authenticator) {
-      const filteredData = Object.fromEntries(
-        Object.entries(authenticator).filter(([_, v]) => v !== undefined)
-      );
       return p.authenticator.create({
-        data: filteredData,
+        data: stripUndefined(data),
       })
     },
     async getAuthenticator(credentialID) {
