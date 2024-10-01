@@ -1,0 +1,23 @@
+{
+  "name": "nuxt-auth-app",
+  "version": "1.0.0",
+  "description": "Nuxt + Auth.js Developer app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:^",
+    "@auth/nuxt": "workspace:^",
+    "vue": "^3.5.10",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "nuxt": "^3.13.2"
+  }
+}
