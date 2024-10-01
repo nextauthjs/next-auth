@@ -1,4 +1,3 @@
-//// @ts-nocheck
 import Fastify from "fastify"
 
 import * as path from "node:path"
@@ -59,7 +58,7 @@ fastify.get(
   { preHandler: [authenticatedPage] },
   async (req, reply) => {
     return reply.view("protected", { session: reply.session })
-  },
+  }
 )
 
 fastify.get(
@@ -67,10 +66,17 @@ fastify.get(
   { preHandler: [authenticatedApi] },
   async (req, reply) => {
     return reply.send(reply.session)
-  },
+  }
 )
 
 fastify.get("/", async (_req, reply) => {
+  return reply.view("index", {
+    title: "Fastify Auth Example",
+    user: reply.session?.user,
+  })
+})
+
+fastify.get("/2", async (_req, reply) => {
   return reply.view("index", {
     title: "Fastify Auth Example",
     user: reply.session?.user,
