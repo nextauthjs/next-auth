@@ -7,7 +7,7 @@ export async function authenticatedApi(
   req: FastifyRequest,
   reply: FastifyReply,
 ) {
-  reply.session ??= (await getSession(req, authConfig)) ?? undefined
+  reply.session ??= await getSession(req, authConfig)
   if (!reply.session) {
     reply.status(401).send({ message: "Not Authenticated" })
   }
@@ -17,12 +17,12 @@ export async function authenticatedPage(
   req: FastifyRequest,
   reply: FastifyReply,
 ) {
-  reply.session ??= (await getSession(req, authConfig)) ?? undefined
+  reply.session ??= await getSession(req, authConfig)
   if (!reply.session) {
     return reply.view("unauthenticated")
   }
 }
 
 export async function currentSession(req: FastifyRequest, reply: FastifyReply) {
-  reply.session = (await getSession(req, authConfig)) ?? undefined
+  reply.session = await getSession(req, authConfig)
 }

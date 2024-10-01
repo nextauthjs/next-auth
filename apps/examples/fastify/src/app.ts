@@ -12,18 +12,12 @@ import {
   currentSession,
 } from "./middleware/auth.middleware.js"
 
-import { FastifyAuth, type Session } from "@auth/fastify"
+import { FastifyAuth } from "@auth/fastify"
 import { authConfig } from "./config/auth.config.js"
 
 import * as pug from "pug"
 import fastifyView from "@fastify/view"
 import fastifyStatic from "@fastify/static"
-
-declare module "fastify" {
-  interface FastifyReply {
-    session: Session | null
-  }
-}
 
 // Trust Proxy for Proxies (Heroku, Render.com, Docker behind Nginx, etc)
 export const fastify = Fastify({ trustProxy: true, logger: true })
