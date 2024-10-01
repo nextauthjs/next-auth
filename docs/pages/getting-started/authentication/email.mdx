@@ -32,14 +32,14 @@ This login mechanism starts by the user providing their email address at the log
     defaultValue="resend"
     className="w-full flex flex-col"
   >
-    <RichTabs.List className="flex gap-4 flex-wrap">
+    <RichTabs.List className="grid grid-cols-[repeat(auto-fit,140px)] justify-center gap-4">
       <RichTabs.Trigger
         value="forwardemail"
         orientation="vertical"
         className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
       >
         <img className="size-16 dark:bg-[currentColor]" src={`/img/providers/forwardemail.svg`} />
-        <div className="text-sm text-center">Forward Email</div>
+        <div className="text-sm text-center line-clamp-1">Forward Email</div>
       </RichTabs.Trigger>
       <RichTabs.Trigger
         value="resend"
