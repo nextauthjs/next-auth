@@ -103,6 +103,7 @@ const config = {
     Zoom,
   ],
   basePath: "/auth",
+  session: { strategy: "jwt" },
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
