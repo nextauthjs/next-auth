@@ -32,7 +32,7 @@ const searchClient = {
   },
 }
 
-export default function () {
+export default function Wrapper() {
   const docSearchRef = useRef<HTMLDivElement>(null)
   const [isSearchHitsVisible, setIsSearchHitsVisible] = useState(false)
 
@@ -46,6 +46,7 @@ export default function () {
           ?.focus()
       }
     }
+
     function clickSearchBoxOutsideHandler(event: MouseEvent) {
       setIsSearchHitsVisible(
         Boolean(
