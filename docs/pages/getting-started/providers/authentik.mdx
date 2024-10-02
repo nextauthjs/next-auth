@@ -21,6 +21,13 @@ https://example.com/api/auth/callback/authentik
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/authentik
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -57,6 +64,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Authentik from "@auth/qwik/providers/authentik";
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Authentik({
+        clientId: import.meta.env.AUTH_AUTHENTIK_CLIENT_ID
+        clientSecret: import.meta.env.AUTH_AUTHENTIK_CLIENT_SECRET
+        issuer: import.meta.env.AUTH_AUTHENTIK_ISSUER
+      })
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

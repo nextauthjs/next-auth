@@ -3,34 +3,29 @@
 const fs = require("node:fs")
 const path = require("node:path")
 
-const frameworks = fs
+const isSkipAdapters = process.env.TYPEDOC_SKIP_ADAPTERS ? "skip" : "adapter-"
+const excludePackages = new RegExp(
+  `(core|next-auth|frameworks-(?!template)|${isSkipAdapters})`
+)
+
+const entryPoints = fs
   .readdirSync(path.resolve(__dirname, "../packages"))
-  .filter((dir) => dir.startsWith("frameworks-"))
-  .filter((dir) => dir !== "frameworks-template")
+  .filter((dir) => excludePackages.test(dir))
   .map((dir) => `../packages/${dir}`)
-
-frameworks.push("../packages/next-auth", "../packages/core")
-
-const adapters = process.env.TYPEDOC_SKIP_ADAPTERS
-  ? []
-  : fs
-      .readdirSync(path.resolve(__dirname, "../packages"))
-      .filter((dir) => dir.startsWith("adapter-"))
-      .map((dir) => `../packages/${dir}`)
 
 /**
  * @type {import('typedoc').TypeDocOptions & import('typedoc-plugin-markdown').PluginOptions}
  */
 module.exports = {
   // typedoc options
-  entryPoints: [...frameworks, ...adapters],
+  entryPoints,
   entryPointStrategy: "packages",
   out: "pages/reference",
   tsconfig: "./tsconfig.json",
   plugin: [
     "typedoc-plugin-markdown",
     require.resolve("./typedoc-nextauth.cjs"),
-    require.resolve("./typedoc-mdn-links.cjs"),
+    "typedoc-plugin-mdn-links",
   ],
   disableSources: true,
   excludeNotDocumented: true,

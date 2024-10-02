@@ -45,6 +45,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: MikroOrmAdapter({
+      // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
+      dbName: import.meta.env.DATABASE_CONNECTION_STRING,
+      type: "sqlite",
+      debug: true,
+    }),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

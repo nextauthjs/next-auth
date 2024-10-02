@@ -72,6 +72,21 @@ export default function MyApp({
 ```
 
 </Code.NextClient>
+<Code.Qwik>
+
+Inside component$ you can use `useSession` loader to retrieve the current sessionStorage.
+
+```ts
+import { component$ } from '@builder.io/qwik';
+import { useSession } from '~/routes/plugin@auth';
+
+export default component$(() => {
+  const session = useSession();
+  return <p>{session.value?.user?.email}</p>;
+});
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 In SvelteKit, you can leverage the `event.locals.auth()` function that is put there by the Auth.js `handle` function we're importing and using in `hooks.server.ts`.
@@ -144,7 +159,7 @@ Protecting API routes in the various frameworks can also be done with the `auth`
 <Code>
 <Code.Next>
 
-In Next.js, you can use the `auth` function to wrap and API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
+In Next.js, you can use the `auth` function to wrap an API route handler. The request parameter will then have an `auth` key on it which you can check for a valid session.
 
 ```ts filename="./app/api/admin/route.ts" {4}
 import { auth } from "@/auth"
@@ -186,6 +201,21 @@ export default async function handler(
 ```
 
 </Code.NextClient>
+<Code.Qwik>
+
+Session data can be accessed via the route event.sharedMap.
+So a route can be protected and redirect using something like this located in a layout.tsx or page index.tsx:
+
+```ts
+export const onRequest: RequestHandler = (event) => {
+  const session = event.sharedMap.get("session")
+  if (!session || new Date(session.expires) < new Date()) {
+    throw event.redirect(302, `/`)
+  }
+}
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 API Routes in SvelteKit work like any other server-side file in Auth.js in SvelteKit, you can access the session by calling `event.locals.auth()` in the `+server.ts` files as well.
@@ -216,6 +246,21 @@ With Next.js 12+, the easiest way to protect a set of pages is using the middlew
 
 ```ts filename="middleware.ts"
 export { auth as middleware } from "@/auth"
+```
+
+Then define `authorized` callback in your `auth.ts` file. For more details check out the [reference docs](/reference/nextjs#authorized).
+
+```ts filename="auth.ts"
+import NextAuth from "next-auth"
+
+export const { auth, handlers } = NextAuth({
+  callbacks: {
+    authorized: async ({ auth }) => {
+      // Logged in users are authenticated, otherwise redirect to login page
+      return !!auth
+    },
+  },
+})
 ```
 
 You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the middleware.

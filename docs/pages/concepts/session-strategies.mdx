@@ -13,7 +13,7 @@ You can configure the session strategy using the [`session.strategy`](/reference
 
 ## JWT Session
 
-Auth.js can create sessions using [JSON Web Tokens (JWT)](https://datatracker.ietf.org/doc/html/rfc7519). This is the default session strategy for Auth.js. When a user signs in, a JWT is created [in a `HttpOnly` cookie](https://developer.mozilla.org/en-US/getting-started/Web/HTTP/Cookies#restrict_access_to_cookies). Making the cookie `HttpOnly` prevents JavaScript from accessing it client-side (via `document.cookie`, for example), which makes it harder for attackers to steal the value. In addition, the JWT is encrypted with a secret key only known to the server. So, even if an attacker were to steal the JWT from the cookie, they could not decrypt it. Combined with a short expiration time, this makes JWTs a secure way to create sessions.
+Auth.js can create sessions using [JSON Web Tokens (JWT)](https://datatracker.ietf.org/doc/html/rfc7519). This is the default session strategy for Auth.js unless a database provider is configured. When a user signs in, a JWT is created [in a `HttpOnly` cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#block_access_to_your_cookies). Making the cookie `HttpOnly` prevents JavaScript from accessing it client-side (via `document.cookie`, for example), which makes it harder for attackers to steal the value. In addition, the JWT is encrypted with a secret key only known to the server. So, even if an attacker were to steal the JWT from the cookie, they could not decrypt it. Combined with a short expiration time, this makes JWTs a secure way to create sessions.
 
 When a user signs out, Auth.js deletes the JWT from the cookies, destroying the session.
 

@@ -51,7 +51,75 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
+If you are using [Neon](https://neon.tech)'s PostgreSQL like [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), you can use `@neondatabase/serverless` to work with edge runtime.
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import PostgresAdapter from "@auth/pg-adapter"
+import { Pool } from "@neondatabase/serverless"
+
+// *DO NOT* create a `Pool` here, outside the request handler.
+// Neon's Postgres cannot keep a pool alive between requests.
+
+export const { handlers, auth, signIn, signOut } = NextAuth(() => {
+  // Create a `Pool` inside the request handler.
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  return {
+    adapter: PostgresAdapter(pool),
+    providers: [],
+  }
+})
+```
+
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import PostgresAdapter from "@auth/pg-adapter"
+import { Pool } from "pg"
+
+const pool = new Pool({
+  host: import.meta.env.DATABASE_HOST,
+  user: import.meta.env.DATABASE_USER,
+  password: import.meta.env.DATABASE_PASSWORD,
+  database: import.meta.env.DATABASE_NAME,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+})
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: PostgresAdapter(pool),
+  })
+)
+```
+
+If you are using [Neon](https://neon.tech)'s PostgreSQL like [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), you can use `@neondatabase/serverless` to work with edge runtime.
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import PostgresAdapter from "@auth/pg-adapter"
+import { Pool } from "@neondatabase/serverless"
+
+// *DO NOT* create a `Pool` here, outside the request handler.
+// Neon's Postgres cannot keep a pool alive between requests.
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => {
+    // Create a `Pool` inside the request handler.
+    const pool = new Pool({ connectionString: import.meta.env.DATABASE_URL })
+    return {
+      providers: [],
+      adapter: PostgresAdapter(pool),
+    }
+  }
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -72,6 +140,26 @@ const pool = new Pool({
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: PostgresAdapter(pool),
   providers: [],
+})
+```
+
+If you are using [Neon](https://neon.tech)'s PostgreSQL like [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), you can use `@neondatabase/serverless` to work with edge runtime.
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import PostgresAdapter from "@auth/pg-adapter"
+import { Pool } from "@neondatabase/serverless"
+
+// *DO NOT* create a `Pool` here, outside the request handler.
+// Neon's Postgres cannot keep a pool alive between requests.
+
+export const { handle, signIn, signOut } = SvelteKitAuth(() => {
+  // Create a `Pool` inside the request handler.
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  return {
+    adapter: PostgresAdapter(pool),
+    providers: [],
+  }
 })
 ```
 

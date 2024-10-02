@@ -1,6 +1,6 @@
 {
   "name": "@auth/firebase-adapter",
-  "version": "2.2.0",
+  "version": "2.5.3",
   "description": "Firebase adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -44,9 +44,9 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "firebase-admin": "^11.4.1"
+    "firebase-admin": "^12.0.0"
   },
   "devDependencies": {
-    "firebase-admin": "^11.4.1"
+    "firebase-admin": "^12.0.0"
   }
 }

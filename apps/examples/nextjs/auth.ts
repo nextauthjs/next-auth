@@ -4,6 +4,7 @@ import "next-auth/jwt"
 import Apple from "next-auth/providers/apple"
 import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
+import BankIDNorway from "next-auth/providers/bankid-no"
 import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
 import Cognito from "next-auth/providers/cognito"
 import Coinbase from "next-auth/providers/coinbase"
@@ -23,9 +24,11 @@ import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
+import Salesforce from "next-auth/providers/salesforce"
 import Spotify from "next-auth/providers/spotify"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
+import Vipps from "next-auth/providers/vipps"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
@@ -55,6 +58,7 @@ const config = {
       clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
       issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
     }),
+    BankIDNorway,
     BoxyHQSAML({
       clientId: "dummy",
       clientSecret: "dummy",
@@ -85,16 +89,21 @@ const config = {
     Passage,
     Pinterest,
     Reddit,
+    Salesforce,
     Slack,
     Spotify,
     Twitch,
     Twitter,
+    Vipps({
+      issuer: "https://apitest.vipps.no/access-management-1.0/access/",
+    }),
     WorkOS({
       connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
   ],
   basePath: "/auth",
+  session: { strategy: "jwt" },
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl

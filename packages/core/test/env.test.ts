@@ -1,29 +1,25 @@
-import {
-  afterAll,
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { AuthConfig } from "../src/index.js"
 import { setEnvDefaults, createActionURL } from "../src/lib/utils/env.js"
 import Auth0 from "../src/providers/auth0.js"
 import Resend from "../src/providers/resend.js"
 
-const testConfig: AuthConfig = {
-  providers: [Auth0, Resend({})],
-}
-
-let authConfig: AuthConfig
-
-beforeEach(() => {
-  authConfig = { ...testConfig } // clone
-})
+const logger = { warn: vi.fn() }
 
 describe("config is inferred from environment variables", () => {
+  const testConfig: AuthConfig = {
+    providers: [Auth0, Resend({})],
+    logger,
+  }
+
+  let authConfig: AuthConfig
+
+  beforeEach(() => {
+    authConfig = { ...testConfig } // clone
+    vi.resetAllMocks()
+  })
+
   it("providers (client id, client secret, issuer, api key)", () => {
     const env = {
       AUTH_AUTH0_ID: "asdf",
@@ -41,18 +37,21 @@ describe("config is inferred from environment variables", () => {
     expect(p1.issuer).toBe(env.AUTH_AUTH0_ISSUER)
     // @ts-expect-error
     expect(p2.apiKey).toBe(env.AUTH_RESEND_KEY)
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_SECRET", () => {
     const env = { AUTH_SECRET: "secret" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.secret?.[0]).toBe(env.AUTH_SECRET)
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_SECRET, prefer config", () => {
     const env = { AUTH_SECRET: "0", AUTH_SECRET_1: "1" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.secret).toEqual(["1", "0"])
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_SECRET, prefer config", () => {
@@ -60,18 +59,21 @@ describe("config is inferred from environment variables", () => {
     authConfig.secret = ["old"]
     setEnvDefaults(env, authConfig)
     expect(authConfig.secret).toEqual(["old"])
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_REDIRECT_PROXY_URL", () => {
     const env = { AUTH_REDIRECT_PROXY_URL: "http://example.com" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.redirectProxyUrl).toBe(env.AUTH_REDIRECT_PROXY_URL)
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_URL", () => {
     const env = { AUTH_URL: "http://n/api/auth" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.basePath).toBe("/api/auth")
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_URL + prefer config", () => {
@@ -80,12 +82,23 @@ describe("config is inferred from environment variables", () => {
     authConfig.basePath = fromConfig
     setEnvDefaults(env, authConfig)
     expect(authConfig.basePath).toBe(fromConfig)
+    expect(logger.warn).toHaveBeenCalledWith("env-url-basepath-redundant")
+  })
+
+  it("AUTH_URL + prefer config but suppress base path waring", () => {
+    const env = { AUTH_URL: "http://n/api/auth" }
+    const fromConfig = "/basepath-from-config"
+    authConfig.basePath = fromConfig
+    setEnvDefaults(env, authConfig, true)
+    expect(authConfig.basePath).toBe(fromConfig)
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it("AUTH_URL, but invalid value", () => {
     const env = { AUTH_URL: "secret" }
     setEnvDefaults(env, authConfig)
     expect(authConfig.basePath).toBe("/auth")
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it.each([
@@ -97,14 +110,13 @@ describe("config is inferred from environment variables", () => {
   ])(`%j`, (env, expected) => {
     setEnvDefaults(env, authConfig)
     expect(authConfig).toMatchObject(expected)
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 })
 
 describe("createActionURL", () => {
-  const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
-
-  afterEach(() => {
-    consoleWarnSpy.mockClear()
+  beforeEach(() => {
+    vi.resetAllMocks()
   })
 
   it.each([
@@ -114,7 +126,7 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({ host: "example.com" }),
         env: {},
-        basePath: "/basepath",
+        config: { basePath: "/basepath" },
       },
       expected: "https://example.com/basepath/callback",
     },
@@ -124,7 +136,7 @@ describe("createActionURL", () => {
         protocol: "http",
         headers: new Headers({ host: "example.com" }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "http://example.com/auth/session",
     },
@@ -137,7 +149,7 @@ describe("createActionURL", () => {
           "x-forwarded-host": "example.com",
         }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "http://example.com/auth/session",
     },
@@ -150,7 +162,7 @@ describe("createActionURL", () => {
           "x-forwarded-proto": "https",
         }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "https://example.com/auth/signin",
     },
@@ -162,7 +174,7 @@ describe("createActionURL", () => {
           "x-forwarded-host": "example.com",
         }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "http://example.com/auth/signin",
     },
@@ -174,7 +186,7 @@ describe("createActionURL", () => {
           "x-forwarded-host": "example.com",
         }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "https://example.com/auth/signin",
     },
@@ -187,7 +199,7 @@ describe("createActionURL", () => {
           "x-forwarded-proto": "https",
         }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "https://example.com/auth/signin",
     },
@@ -200,7 +212,7 @@ describe("createActionURL", () => {
           "x-forwarded-proto": "http",
         }),
         env: {},
-        basePath: "/auth",
+        config: { basePath: "/auth" },
       },
       expected: "http://example.com/auth/signin",
     },
@@ -210,7 +222,7 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({}),
         env: { AUTH_URL: "http://localhost:3000" },
-        basePath: "/api/auth",
+        config: { basePath: "/api/auth" },
       },
       expected: "http://localhost:3000/api/auth/signout",
     },
@@ -220,7 +232,7 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({}),
         env: { AUTH_URL: "https://sub.domain.env.com" },
-        basePath: "/api/auth",
+        config: { basePath: "/api/auth" },
       },
       expected: "https://sub.domain.env.com/api/auth/signout",
     },
@@ -230,14 +242,27 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({}),
         env: { AUTH_URL: "https://sub.domain.env.com/api/auth" },
-        basePath: undefined,
+        config: { basePath: undefined },
       },
       expected: "https://sub.domain.env.com/api/auth/signout",
     },
+    {
+      args: {
+        action: "signout",
+        protocol: undefined,
+        headers: new Headers({}),
+        env: { AUTH_URL: "http://localhost:3000/my-app/api/auth" },
+        config: { basePath: "/my-app/api/auth" },
+      },
+      expected: "http://localhost:3000/my-app/api/auth/signout",
+    },
   ])("%j", ({ args, expected }) => {
+    const argsWithLogger = { ...args, config: { ...args.config, logger } }
     // @ts-expect-error
-    expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
-    expect(consoleWarnSpy).not.toHaveBeenCalled()
+    expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
+      expected
+    )
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 
   it.each([
@@ -247,9 +272,12 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({}),
         env: { AUTH_URL: "http://localhost:3000/my-app/api/auth/" },
-        basePath: "/my-app/api/auth",
+        config: { basePath: "/my-app/api/auth" },
       },
-      expected: "http://localhost:3000/my-app/api/auth/signout",
+      expected: {
+        url: "http://localhost:3000/my-app/api/auth/signout",
+        warningMessage: "env-url-basepath-mismatch",
+      },
     },
     {
       args: {
@@ -257,17 +285,19 @@ describe("createActionURL", () => {
         protocol: undefined,
         headers: new Headers({}),
         env: { AUTH_URL: "https://sub.domain.env.com/my-app" },
-        basePath: "/api/auth",
+        config: { basePath: "/api/auth" },
       },
-      expected: "https://sub.domain.env.com/api/auth/signout",
+      expected: {
+        url: "https://sub.domain.env.com/api/auth/signout",
+        warningMessage: "env-url-basepath-mismatch",
+      },
     },
   ])("Duplicate path configurations: %j", ({ args, expected }) => {
+    const argsWithLogger = { ...args, config: { ...args.config, logger } }
     // @ts-expect-error
-    expect(createActionURL(...Object.values(args)).toString()).toBe(expected)
-    expect(consoleWarnSpy).toHaveBeenCalled()
-  })
-
-  afterAll(() => {
-    consoleWarnSpy.mockRestore()
+    expect(createActionURL(...Object.values(argsWithLogger)).toString()).toBe(
+      expected.url
+    )
+    expect(logger.warn).toHaveBeenCalledWith(expected.warningMessage)
   })
 })

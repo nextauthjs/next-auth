@@ -2,6 +2,7 @@ import { Auth, setEnvDefaults, type AuthConfig } from "@auth/core"
 import Apple from "@auth/core/providers/apple"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
+import BankId from "@auth/core/providers/bankid-no"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
 import Cognito from "@auth/core/providers/cognito"
 import Coinbase from "@auth/core/providers/coinbase"
@@ -19,10 +20,12 @@ import Okta from "@auth/core/providers/okta"
 import Passage from "@auth/core/providers/passage"
 import Pinterest from "@auth/core/providers/pinterest"
 import Reddit from "@auth/core/providers/reddit"
+import Salesforce from "@auth/core/providers/salesforce"
 import Slack from "@auth/core/providers/slack"
 import Spotify from "@auth/core/providers/spotify"
 import Twitch from "@auth/core/providers/twitch"
 import Twitter from "@auth/core/providers/twitter"
+import Vipps from "@auth/core/providers/vipps"
 import WorkOS from "@auth/core/providers/workos"
 import Zoom from "@auth/core/providers/zoom"
 
@@ -35,6 +38,7 @@ const authConfig: AuthConfig = {
       clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
       issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
     }),
+    BankId,
     BoxyHQSAML({
       clientId: "dummy",
       clientSecret: "dummy",
@@ -56,10 +60,12 @@ const authConfig: AuthConfig = {
     Passage,
     Pinterest,
     Reddit,
+    Salesforce,
     Slack,
     Spotify,
     Twitch,
     Twitter,
+    Vipps,
     WorkOS,
     Zoom,
     {

@@ -43,6 +43,7 @@ npm install next-auth@beta
 - The minimum required Next.js version is now [14.0](https://nextjs.org/14).
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
 - The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- When the `idToken: boolean` option is set to `false`, it won't entirely disable the ID token. Instead, it signals `next-auth` to also visit the `userinfo_endpoint` for the final user data. Previously, `idToken: false` opted out to check the `id_token` validity at all.
 
 ## Migration
 
@@ -343,6 +344,10 @@ export type {
 - All `Adapter` types are re-exported from `/adapters` in the framework packages as well, i.e. from `next-auth/adapters`, `@auth/sveltekit/adapters`, etc.
 
 </Steps>
+
+## Cookies
+
+- The `next-auth` prefix is renamed to `authjs`.
 
 ## Summary
 

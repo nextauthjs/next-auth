@@ -66,18 +66,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Nodemailer from "@auth/qwik/providers/nodemailer"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Nodemailer({
+        server: import.meta.env.EMAIL_SERVER,
+        from: import.meta.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Nodemailer({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+      server: env.EMAIL_SERVER,
+      from: env.EMAIL_FROM,
     }),
   ],
 })
@@ -132,20 +152,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Nodemailer({
       server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        host: env.EMAIL_SERVER_HOST,
+        port: env.EMAIL_SERVER_PORT,
         auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+          user: env.EMAIL_SERVER_USER,
+          pass: env.EMAIL_SERVER_PASSWORD,
         },
       },
-      from: process.env.EMAIL_FROM,
+      from: env.EMAIL_FROM,
     }),
   ],
 })

@@ -12,7 +12,7 @@ export default function Page() {
     })()
   }, [])
   return (
-    <div className="mx-auto mt-10 space-y-4 max-w-screen-md">
+    <div className="mx-auto mt-10 max-w-screen-md space-y-4">
       <h1 className="text-3xl font-bold">Route Handler Usage</h1>
       <p className="leading-loose">
         This page fetches data from an API{" "}
@@ -27,11 +27,11 @@ export default function Page() {
       </p>
       <h2 className="text-xl font-bold">Data from API Route:</h2>
       {data ? (
-        <pre className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
+        <pre className="w-full space-y-2 overflow-auto rounded-md bg-gray-100 p-4">
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ) : (
-        <p className="overflow-auto p-4 space-y-2 w-full bg-gray-100 rounded-md">
+        <p className="w-full space-y-2 overflow-auto rounded-md bg-gray-100 p-4">
           No data from API Route, please <b>Sign In</b> first.
         </p>
       )}

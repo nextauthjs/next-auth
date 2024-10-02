@@ -41,13 +41,19 @@ export interface MastodonProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Mastodon from "@auth/core/providers/mastodon"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Mastodon({ clientId: MASTODON_CLIENT_ID, clientSecret: MASTODON_CLIENT_SECRET, issuer: MASTODON_ISSUER })],
+ *   providers: [
+ *     Mastodon({
+ *       clientId: MASTODON_CLIENT_ID,
+ *       clientSecret: MASTODON_CLIENT_SECRET,
+ *       issuer: MASTODON_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

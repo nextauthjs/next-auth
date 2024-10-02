@@ -14,8 +14,9 @@ import type {
   TokenSet,
   User,
 } from "../../../../types.js"
-import type { OAuthConfigInternal } from "../../../../providers/index.js"
+import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
+import { isOIDCProvider } from "../../../utils/providers.js"
 
 /**
  * Handles the following OAuth steps.
@@ -27,10 +28,9 @@ import type { Cookie } from "../../../utils/cookie.js"
  * we fetch it anyway. This is because we always want a user profile.
  */
 export async function handleOAuth(
-  query: RequestInternal["query"],
+  params: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth" | "oidc">,
-  randomState?: string
+  options: InternalOptions<"oauth" | "oidc">
 ) {
   const { logger, provider } = options
   let as: o.AuthorizationServer
@@ -42,7 +42,7 @@ export async function handleOAuth(
     (!userinfo?.url || userinfo.url.host === "authjs.dev")
   ) {
     // We assume that issuer is always defined as this has been asserted earlier
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const issuer = new URL(provider.issuer!)
     const discoveryResponse = await o.discoveryRequest(issuer)
     const discoveredAs = await o.processDiscoveryResponse(
@@ -77,17 +77,12 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await checks.state.use(
-    cookies,
-    resCookies,
-    options,
-    randomState
-  )
+  const state = await checks.state.use(cookies, resCookies, options)
 
   const codeGrantParams = o.validateAuthResponse(
     as,
     client,
-    new URLSearchParams(query),
+    new URLSearchParams(params),
     provider.checks.includes("state") ? state : o.skipStateCheck
   )
 
@@ -104,6 +99,7 @@ export async function handleOAuth(
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
   }
+
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
@@ -120,6 +116,7 @@ export async function handleOAuth(
         }
         return fetch(...args)
       },
+      clientPrivateKey: provider.token?.clientPrivateKey,
     }
   )
 
@@ -140,30 +137,49 @@ export async function handleOAuth(
   let profile: Profile = {}
   let tokens: TokenSet & Pick<Account, "expires_at">
 
-  if (provider.type === "oidc") {
+  if (isOIDCProvider(provider)) {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
-    const result = await o.processAuthorizationCodeOpenIDResponse(
-      as,
-      client,
-      codeGrantResponse,
-      nonce ?? o.expectNoNonce
-    )
+    const processedCodeResponse =
+      await o.processAuthorizationCodeOpenIDResponse(
+        as,
+        client,
+        codeGrantResponse,
+        nonce ?? o.expectNoNonce
+      )
 
-    if (o.isOAuth2Error(result)) {
-      console.log("error", result)
+    if (o.isOAuth2Error(processedCodeResponse)) {
+      console.log("error", processedCodeResponse)
       throw new Error("TODO: Handle OIDC response body error")
     }
 
-    profile = o.getValidatedIdTokenClaims(result)
-    tokens = result
+    const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)
+    profile = idTokenClaims
+
+    if (provider.idToken === false) {
+      const userinfoResponse = await o.userInfoRequest(
+        as,
+        client,
+        processedCodeResponse.access_token
+      )
+
+      profile = await o.processUserInfoResponse(
+        as,
+        client,
+        idTokenClaims.sub,
+        userinfoResponse
+      )
+    }
+    tokens = processedCodeResponse
   } else {
-    tokens = await o.processAuthorizationCodeOAuth2Response(
-      as,
-      client,
-      codeGrantResponse
-    )
-    if (o.isOAuth2Error(tokens as any)) {
-      console.log("error", tokens)
+    const processedCodeResponse =
+      await o.processAuthorizationCodeOAuth2Response(
+        as,
+        client,
+        codeGrantResponse
+      )
+    tokens = processedCodeResponse
+    if (o.isOAuth2Error(processedCodeResponse)) {
+      console.log("error", processedCodeResponse)
       throw new Error("TODO: Handle OAuth 2.0 response body error")
     }
 
@@ -174,7 +190,7 @@ export async function handleOAuth(
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
-        (tokens as any).access_token
+        processedCodeResponse.access_token
       )
       profile = await userinfoResponse.json()
     } else {

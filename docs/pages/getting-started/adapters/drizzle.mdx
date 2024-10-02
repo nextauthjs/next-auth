@@ -67,7 +67,7 @@ export const users = pgTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 })
@@ -171,7 +171,7 @@ export const users = mysqlTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).unique(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
     fsp: 3,
@@ -274,7 +274,7 @@ export const users = sqliteTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
 })
@@ -369,6 +369,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./schema.ts"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: DrizzleAdapter(db),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

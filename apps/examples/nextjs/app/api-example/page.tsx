@@ -25,11 +25,11 @@ export default function Page() {
         </CustomLink>{" "}
         method.
       </p>
-      <div className="flex flex-col bg-gray-100 rounded-md">
-        <div className="p-4 font-bold bg-gray-200 rounded-t-md">
+      <div className="flex flex-col rounded-md bg-gray-100">
+        <div className="rounded-t-md bg-gray-200 p-4 font-bold">
           Data from API Route
         </div>
-        <pre className="py-6 px-4 whitespace-pre-wrap break-all">
+        <pre className="whitespace-pre-wrap break-all px-4 py-6">
           {JSON.stringify(data, null, 2)}
         </pre>
       </div>
