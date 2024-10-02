@@ -441,6 +441,7 @@ export interface Adapter {
 const isoDateRE =
   /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
 
+/** Determines if a given value can be parsed into `Date` */
 export function isDate(value: unknown): value is string {
   return (
     typeof value === "string" &&
