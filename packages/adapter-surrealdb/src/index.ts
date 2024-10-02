@@ -127,7 +127,7 @@ export const sessionToDoc = (
 })
 
 /** @internal */
-// Convert AdapterAccount to DB object
+// Convert VerificationToken to DB object
 const verificationTokenToDoc = (
   account: VerificationToken
 ): Omit<VerificationTokenDoc, "id"> => ({

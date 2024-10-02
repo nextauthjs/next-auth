@@ -97,37 +97,186 @@ app.use(
 
 The SurrealDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `SurrealDBClient` that is connected already. Below you can see an example how to do this.
 
+### Utils File
+
+```ts filename="./lib/surrealdb_utils.ts"
+import { Surreal, ConnectionStatus, type AnyAuth } from "surrealdb"
+
+/**
+ * Maintains a single instance of surrealdb
+ */
+export class MySurreal {
+  // A single instantiation of a surreal connection
+  private _surrealdb: Surreal | undefined
+
+  async surrealdb(url: string | URL, auth: AnyAuth | string): Promise<Surreal> {
+    // Init Surreal
+    if (!this._surrealdb) {
+      this._surrealdb = new Surreal()
+    }
+
+    if (this._surrealdb.status == ConnectionStatus.Connected) {
+      return this._surrealdb
+    } else if (this._surrealdb.status == ConnectionStatus.Disconnected) {
+      try {
+        // Connect as a database user
+        await this._surrealdb.connect(url, {
+          auth,
+        })
+        if (process.env.NODE_ENV === "development") {
+          let str = `${this._surrealdb.status}`
+          if (typeof auth !== "string") {
+            if ("username" in auth) str += ` as ${auth.username}`
+            if ("database" in auth && "namespace" in auth)
+              str += ` for ${auth.namespace} ${auth.database}`
+            else if ("namespace" in auth) str += ` for ${auth.namespace}`
+            else if ("database" in auth) str += ` for ${auth.database}`
+          }
+          console.info(str)
+        }
+      } catch (error) {
+        if (error instanceof Error) throw error
+        throw new Error(error as unknown as string)
+      }
+    }
+    return this._surrealdb
+  }
+}
+
+export const surrealdb = new MySurreal()
+
+/**
+ * Converts environment variables to an AnyAuth type
+ * to connect with the database
+ * @param param0 - environment variables
+ * @returns {RootAuth | NamespaceAuth | DatabaseAuth | ScopeAuth}
+ */
+export function toAnyAuth({
+  username,
+  password,
+  namespace,
+  database,
+  scope,
+}: Record<string, string | undefined>) {
+  let auth: AnyAuth
+  if (username && password && namespace && database) {
+    auth = {
+      database,
+      namespace,
+      username,
+      password,
+    }
+  } else if (username && password && namespace) {
+    auth = {
+      namespace,
+      username,
+      password,
+    }
+  } else if (username && password) {
+    auth = {
+      username,
+      password,
+    }
+  } else if (scope) {
+    auth = {
+      namespace,
+      database,
+      username,
+      password,
+      scope,
+    }
+  } else {
+    throw new Error("unsupported any auth configuration")
+  }
+  return auth
+}
+
+/**
+ * Handles a disconnection with the database with exponential backoff
+ * @param surreal - the single instance of surreal
+ * @param url - the database url
+ * @param auth - auth credentials
+ * @param {number} [reconnectDelay = 1000] - initial delay amount
+ * @param {number} [max_retries = 5] - maximum number of retries
+ * @param {number} [retry = 0]  - current retry
+ */
+export async function handleDisconnect(
+  surreal: MySurreal,
+  url: string | URL,
+  auth: AnyAuth,
+  reconnectDelay: number = 1000,
+  max_retries: number = 5,
+  retry: number = 0
+) {
+  if (retry >= max_retries) {
+    console.error("Shutting down.")
+    process.exit(1) // Graceful exit or handle gracefully in a production environment.
+  }
+
+  retry++
+  console.log(`Reconnect in ${reconnectDelay}ms...`)
+  setTimeout(async () => {
+    try {
+      await surreal.surrealdb(url, auth)
+      console.log("reconnected")
+    } catch (err) {
+      console.error("Reconnection attempt failed")
+      handleDisconnect(
+        surreal,
+        url,
+        auth,
+        retry,
+        max_retries,
+        reconnectDelay * 2
+      ) // Recursively try to reconnect.
+    }
+  }, reconnectDelay)
+}
+```
+
 ### Authorization
 
-#### Websocket Method:
-
-With this configuration, we can use the websocket endpoint. Thus, the `AUTH_SURREAL_URL` should begin with `ws` or `wss`.
+The clientPromise provides a connection to the database.
 
 ```ts filename="./lib/surrealdb.ts"
-import { Surreal } from "surrealdb"
+import { type Surreal } from "surrealdb"
+import { surrealdb, toAnyAuth } from "../lib/surrealdb"
+import { handleDisconnect, MySurreal, toAnyAuth } from "./lib/surrealdb_utils"
 
 const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
   try {
-    const db = new Surreal()
     const {
       AUTH_SURREAL_URL: url,
       AUTH_SURREAL_NS: namespace,
       AUTH_SURREAL_DB: database,
       AUTH_SURREAL_USER: username,
       AUTH_SURREAL_PW: password,
+      AUTH_SURREAL_SCOPE: scope,
     } = process.env
-    if (url && namespace && database && username && password) {
-      await db.connect(url)
-      await db.signin({
-        namespace,
-        database,
-        username,
-        password,
-      })
-    }
+    if (!url) throw "required auth url"
+    const auth = toAnyAuth({
+      namespace,
+      database,
+      username,
+      password,
+      scope,
+    })
+    const surreal = new MySurreal()
+    const db = await surreal.surrealdb(url, auth)
+    db.emitter.subscribe("disconnected", async () => {
+      handleDisconnect(surreal, url, auth)
+    })
     resolve(db)
   } catch (e) {
     reject(e)
   }
 })
 ```
+
+#### HTTP ENGINE
+
+With this configuration, we can use the database's http endpoint. Thus, the `AUTH_SURREAL_URL` should begin with `http` or `https`.
+
+#### Websocket ENGINE
+
+With this configuration, we can use the database's websocket endpoint. Thus, the `AUTH_SURREAL_URL` should begin with `ws` or `wss`.
