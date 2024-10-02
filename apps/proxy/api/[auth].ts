@@ -20,6 +20,7 @@ import Okta from "@auth/core/providers/okta"
 import Passage from "@auth/core/providers/passage"
 import Pinterest from "@auth/core/providers/pinterest"
 import Reddit from "@auth/core/providers/reddit"
+import Salesforce from "@auth/core/providers/salesforce"
 import Slack from "@auth/core/providers/slack"
 import Spotify from "@auth/core/providers/spotify"
 import Twitch from "@auth/core/providers/twitch"
@@ -59,6 +60,7 @@ const authConfig: AuthConfig = {
     Passage,
     Pinterest,
     Reddit,
+    Salesforce,
     Slack,
     Spotify,
     Twitch,

@@ -10,7 +10,7 @@ import {
 } from "../../../errors.js"
 import { handleLoginOrRegister } from "./handle-login.js"
 import { handleOAuth } from "./oauth/callback.js"
-import { handleState } from "./oauth/checks.js"
+import { state } from "./oauth/checks.js"
 import { createHash } from "../../utils/web.js"
 
 import type { AdapterSession } from "../../../adapters.js"
@@ -57,28 +57,33 @@ export async function callback(
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
       // Use body if the response mode is set to form_post. For all other cases, use query
-      const payload =
+      const params =
         provider.authorization?.url.searchParams.get("response_mode") ===
         "form_post"
           ? body
           : query
 
-      const { proxyRedirect, randomState } = handleState(
-        payload,
-        provider,
-        options.isOnRedirectProxy
-      )
-
-      if (proxyRedirect) {
-        logger.debug("proxy redirect", { proxyRedirect, randomState })
-        return { redirect: proxyRedirect }
+      // If we have a state and we are on a redirect proxy, we try to parse it
+      // and see if it contains a valid origin to redirect to. If it does, we
+      // redirect the user to that origin with the original state.
+      if (options.isOnRedirectProxy && params?.state) {
+        // NOTE: We rely on the state being encrypted using a shared secret
+        // between the proxy and the original server.
+        const parsedState = await state.decode(params.state, options)
+        const shouldRedirect =
+          parsedState?.origin &&
+          new URL(parsedState.origin).origin !== options.url.origin
+        if (shouldRedirect) {
+          const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params)}`
+          logger.debug("Proxy redirecting to", proxyRedirect)
+          return { redirect: proxyRedirect, cookies }
+        }
       }
 
       const authorizationResult = await handleOAuth(
-        payload,
+        params,
         request.cookies,
-        options,
-        randomState
+        options
       )
 
       if (authorizationResult.cookies.length) {
