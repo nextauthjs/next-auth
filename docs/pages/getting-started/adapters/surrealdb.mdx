@@ -261,7 +261,7 @@ const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
       AUTH_SURREAL_PW: password,
       AUTH_SURREAL_SCOPE: scope,
     } = process.env
-    if (!url) throw "required auth url"
+    if (!url) throw new Error('required auth url')
     const auth = toAnyAuth({
       namespace,
       database,
