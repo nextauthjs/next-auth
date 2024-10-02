@@ -29,9 +29,7 @@ export function PrismaAdapter(
   const p = prisma as PrismaClient
   return {
     // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
-    createUser: ({ id, ...data }) => {
-      return p.user.create(stripUndefined(data))
-    },
+    createUser: ({ id, ...data }) => p.user.create(stripUndefined(data)),
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
@@ -64,15 +62,12 @@ export function PrismaAdapter(
       const { user, ...session } = userAndSession
       return { user, session } as { user: AdapterUser; session: AdapterSession }
     },
-    createSession: (data) => {
-      return p.session.create(stripUndefined(data))
-    },
-    updateSession: (data) => {
-      return p.session.update({
+    createSession: (data) => p.session.create(stripUndefined(data)),
+    updateSession: (data) =>
+      p.session.update({
         where: { sessionToken: data.sessionToken },
         ...stripUndefined(data),
-      })
-    },
+      }),
     deleteSession: (sessionToken) =>
       p.session.delete({ where: { sessionToken } }),
     async createVerificationToken(data) {
