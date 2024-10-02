@@ -9,6 +9,10 @@ export interface AzureDevOpsProfile extends Record<string, any> {
 }
 
 /**
+ *
+ * @deprecated
+ * While still available, Microsoft is [no longer supporting](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops#available-oauth-models) Azure DevOps OAuth and recommends using [Microsoft Entra ID](/getting-started/providers/microsoft-entra-id) instead.
+ *
  * ## Documentation
  *
  * [Microsoft Docs](https://docs.microsoft.com/en-us) · [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/) · [Authorize access to REST APIs with OAuth 2.0](https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops])
@@ -60,11 +64,11 @@ export interface AzureDevOpsProfile extends Record<string, any> {
  *
  * ## Example
  *
- * ```js title="pages/api/auth/[...nextauth].js"
- * import AzureDevOpsProvider from "next-auth/providers/azure-devops"
+ * ```ts
+ * import AzureDevOps from "@auth/core/providers/azure-devops"
  * ...
  * providers: [
- *   AzureDevOpsProvider({
+ *   AzureDevOps({
  *     clientId: process.env.AZURE_DEVOPS_APP_ID,
  *     clientSecret: process.env.AZURE_DEVOPS_CLIENT_SECRET,
  *     scope: process.env.AZURE_DEVOPS_SCOPE,
@@ -77,7 +81,7 @@ export interface AzureDevOpsProfile extends Record<string, any> {
  *
  * Use the [main guide](/guides/basics/refresh-token-rotation) as your starting point with the following considerations:
  *
- * ```js title="pages/api/auth/[...nextauth].js"
+ * ```ts
  * async jwt({ token, user, account }) {
  *   ...
  *   // The token has an absolute expiration time
@@ -95,7 +99,7 @@ export interface AzureDevOpsProfile extends Record<string, any> {
  *       body: new URLSearchParams({
  *         client_assertion_type:
  *           "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
- *         client_assertion: AZURE_DEVOPS_CLIENT_SECRET,
+ *         client_assertion: process.env.AZURE_DEVOPS_CLIENT_SECRET,
  *         grant_type: "refresh_token",
  *         assertion: token.refreshToken,
  *         redirect_uri:

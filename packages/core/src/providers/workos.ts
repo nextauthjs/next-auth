@@ -42,13 +42,19 @@ export interface WorkOSProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import WorkOS from "@auth/core/providers/workos"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [WorkOS({ clientId: WORKOS_CLIENT_ID, clientSecret: WORKOS_CLIENT_SECRET, issuer: WORKOS_ISSUER })],
+ *   providers: [
+ *     WorkOS({
+ *       clientId: WORKOS_CLIENT_ID,
+ *       clientSecret: WORKOS_CLIENT_SECRET,
+ *       issuer: WORKOS_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -67,7 +73,7 @@ export interface WorkOSProfile extends Record<string, any> {
  * In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use.
  * A common way to do this is to collect the user's email address and extract the domain. This can be done using a custom login page.
  * To add a custom login page, you can use the `pages` option:
- * ```js title="pages/api/auth/[...nextauth].js"
+ * ```ts
  * pages: {
  *   signIn: "/auth/signin",
  * }
@@ -129,7 +135,7 @@ export interface WorkOSProfile extends Record<string, any> {
  * :::tip
  *
  * The WorkOS provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/workos.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -144,15 +150,17 @@ export interface WorkOSProfile extends Record<string, any> {
  * :::
  */
 export default function WorkOS<P extends WorkOSProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & { connection?: string }
 ): OAuthConfig<P> {
-  const { issuer = "https://api.workos.com/" } = options
+  const { issuer = "https://api.workos.com/", connection = "" } = options
+
+  const connectionParams = new URLSearchParams({ connection })
 
   return {
     id: "workos",
     name: "WorkOS",
     type: "oauth",
-    authorization: `${issuer}sso/authorize`,
+    authorization: `${issuer}sso/authorize?${connectionParams}`,
     token: `${issuer}sso/token`,
     client: {
       token_endpoint_auth_method: "client_secret_post",
@@ -166,7 +174,7 @@ export default function WorkOS<P extends WorkOSProfile>(
         image: profile.raw_attributes.picture ?? null,
       }
     },
-    style: { logo: "/workos.svg", bg: "#6363f1", text: "#fff" },
+    style: { bg: "#6363f1", text: "#fff" },
     options,
   }
 }

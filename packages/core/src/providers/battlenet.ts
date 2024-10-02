@@ -33,13 +33,19 @@ export type BattleNetIssuer =
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import BattleNet from "@auth/core/providers/battlenet"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BattleNet({ clientId: BATTLENET_CLIENT_ID, clientSecret: BATTLENET_CLIENT_SECRET. issuer: BATTLENET_ISSUER })],
+ *   providers: [
+ *     BattleNet({
+ *       clientId: BATTLENET_CLIENT_ID,
+ *       clientSecret: BATTLENET_CLIENT_SECRET,
+ *       issuer: BATTLENET_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  * issuer must be one of these values, based on the available regions:
@@ -66,7 +72,7 @@ export type BattleNetIssuer =
  * :::tip
  *
  * The BattleNet provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/battlenet.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -95,7 +101,7 @@ export default function BattleNet<P extends BattleNetProfile>(
         image: null,
       }
     },
-    style: { logo: "/battlenet.svg", bg: "#148eff", text: "#fff" },
+    style: { bg: "#148eff", text: "#fff" },
     options,
   }
 }

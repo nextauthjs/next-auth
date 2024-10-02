@@ -26,25 +26,33 @@ export interface BeyondIdentityProfile {
 /**
  * Add Beyond Identity login to your page.
  *
- * @example
+ * ### Setup
  *
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/beyondidentity
+ * ```
+ *
+ * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
  * import BeyondIdentity from "@auth/core/providers/beyondidentity"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BeyondIdentity({ clientId: BEYOND_IDENTITY_CLIENT_ID, clientSecret: BEYOND_IDENTITY_CLIENT_SECRET, issuer: BEYOND_IDENTITY_ISSUER })],
+ *   providers: [
+ *     BeyondIdentity({
+ *       clientId: BEYOND_IDENTITY_CLIENT_ID,
+ *       clientSecret: BEYOND_IDENTITY_CLIENT_SECRET,
+ *       issuer: BEYOND_IDENTITY_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
- *
- * ---
  *
  * ### Resources
  *
  * - [Beyond Identity Developer Docs](https://developer.beyondidentity.com/)
- *
- * ---
  *
  * ### Notes
  *
@@ -54,7 +62,7 @@ export interface BeyondIdentityProfile {
  * :::tip
  *
  * The BeyondIdentity provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/beyondidentity.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -86,7 +94,6 @@ export default function BeyondIdentity(
       }
     },
     style: {
-      logo: "/beyondidentity.svg",
       bg: "#5077c5",
       text: "#fff",
     },

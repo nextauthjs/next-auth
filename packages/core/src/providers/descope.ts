@@ -45,21 +45,12 @@ export interface DescopeProfile {
  * ```
  *
  * #### Configuration
+ * ```ts
+ * import { Auth } from "@auth/core"
+ * import Descope from "@auth/core/providers/descope"
  *
- * Import the provider and configure it in your **Auth.js** initialization file:
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import DescopeProvider from "next-auth/providers/descope";
- *
- * export default NextAuth({
- *  providers: [
- *    DescopeProvider({
- *      clientId: process.env.DESCOPE_ID,
- *      clientSecret: process.env.DESCOPE_SECRET,
- *    }),
- *  ],
- * })
+ * const request = new Request(origin)
+ * const response = await Auth(request, { providers: [Descope({ clientId: AUTH_DESCOPE_ID, clientSecret: AUTH_DESCOPE_SECRET, issuer: AUTH_DESCOPE_ISSUER })] })
  * ```
  *
  * ### Configuring Descope
@@ -73,8 +64,9 @@ export interface DescopeProfile {
  *
  * Get the following from the Descope's console:
  * ```
- * DESCOPE_ID="<Descope Issuer's last url segment>" # Descope's Issuer can be found in "Authentication Methods > SSO > Identity Provider" (Can also be taken from "Project > Project ID")
- * DESCOPE_SECRET="<Descope Access Key>" # Manage > Access Keys
+ * AUTH_DESCOPE_ID="<Descope Issuer's last url segment>" # Descope's Issuer can be found in "Authentication Methods > SSO > Identity Provider" (Can also be taken from "Project > Project ID")
+ * AUTH_DESCOPE_SECRET="<Descope Access Key>" # Manage > Access Keys
+ * AUTH_DESCOPE_ISSUER="<Descope Issuer URL>" # Applications -> OIDC Application -> Issuer
  * ```
  *
  * ### Resources
@@ -84,7 +76,7 @@ export interface DescopeProfile {
  *
  * ### Notes
  *
- * The Descope provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/descope.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * The Descope provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/descope.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::info
  * By default, Auth.js assumes that the Descope provider is based on the [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) spec
@@ -101,16 +93,13 @@ export interface DescopeProfile {
 export default function Descope(
   config: OIDCUserConfig<DescopeProfile>
 ): OIDCConfig<DescopeProfile> {
+  config.issuer ??= `https://api.descope.com/${config.clientId}`
   return {
     id: "descope",
     name: "Descope",
     type: "oidc",
-    issuer: `https://api.descope.com/${config.clientId}`,
-    style: {
-      logo: "/descope.svg",
-      bg: "#1C1C23",
-      text: "#ffffff",
-    },
+    style: { bg: "#1C1C23", text: "#ffffff" },
+    checks: ["pkce", "state"],
     options: config,
   }
 }

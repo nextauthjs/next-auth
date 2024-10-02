@@ -1,0 +1,286 @@
+import { Code } from "@/components/Code"
+import { Screenshot } from "@/components/Screenshot"
+
+# Custom Sign-in Page
+
+To add a custom sign-in page, you'll need to define the path to your page in the [`pages`](/reference/core/types#pagesoptions) object in your Auth.js configuration. Make sure a route / page actually exists at the path you're defining here!
+
+In additionally, we'll have to export a map of `provider.id` and `provider.name` to easily consume in our custom page if we want to dynamically render the correct buttons, based on what we've defined in our `auth.ts` configuration. Because you can pass your providers to the `providers` array as both a function, or the result of calling that function, this example `providerMap` handles both cases.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./auth.ts" {6, 21-28, 32-34}
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+import type { Provider } from "next-auth/providers"
+
+const providers: Provider[] = [
+  Credentials({
+    credentials: { password: { label: "Password", type: "password" } },
+    authorize(c) {
+      if (c.password !== "password") return null
+      return {
+        id: "test",
+        name: "Test User",
+        email: "test@example.com",
+      }
+    },
+  }),
+  GitHub,
+]
+
+export const providerMap = providers
+  .map((provider) => {
+    if (typeof provider === "function") {
+      const providerData = provider()
+      return { id: providerData.id, name: providerData.name }
+    } else {
+      return { id: provider.id, name: provider.name }
+    }
+  })
+  .filter((provider) => provider.id !== "credentials")
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers,
+  pages: {
+    signIn: "/signin",
+  },
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Credentials from "@auth/qwik/providers/credentials"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Credentials({
+        credentials: {
+          username: { label: "Username" },
+          password: { label: "Password", type: "password" },
+        },
+        async authorize({ request }) {
+          if (c.password !== "password") return null
+          return {
+            id: "test",
+            name: "Test User",
+            email: "test@example.com",
+          }
+        },
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```tsx filename="./src/auth.ts" {6, 21-28, 32-34}
+import SvelteKitAuth from "@auth/sveltekit"
+import GitHub from "@auth/sveltekit/providers/github"
+import Credentials from "@auth/sveltekit/providers/credentials"
+import type { Provider } from "@auth/sveltekit/providers"
+
+const providers: Provider[] = [
+  GitHub,
+  Credentials({
+    credentials: { password: { label: "Password", type: "password" } },
+    authorize(c) {
+      if (c.password !== "password") return null
+      return {
+        id: "test",
+        name: "Test User",
+        email: "test@example.com",
+      }
+    },
+  }),
+]
+
+export const providerMap = providers.map((provider) => {
+  if (typeof provider === "function") {
+    const providerData = provider()
+    return { id: providerData.id, name: providerData.name }
+  } else {
+    return { id: provider.id, name: provider.name }
+  }
+})
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers,
+  pages: {
+    signIn: "/signin",
+  },
+})
+```
+
+</Code.Svelte>
+</Code>
+
+We can now build our own custom sign in page.
+
+<Code>
+<Code.Next>
+
+```tsx filename="app/signin/page.tsx" /providerMap/
+import { redirect } from "next/navigation"
+import { signIn, auth, providerMap } from "@/auth.ts"
+import { AuthError } from "next-auth"
+
+export default async function SignInPage(props: {
+  searchParams: { callbackUrl: string | undefined }
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <form
+        action={async (formData) => {
+          "use server"
+          try {
+            await signIn("credentials", formData)
+          } catch (error) {
+            if (error instanceof AuthError) {
+              return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+            }
+            throw error
+          }
+        }}
+      >
+        <label htmlFor="email">
+          Email
+          <input name="email" id="email" />
+        </label>
+        <label htmlFor="password">
+          Password
+          <input name="password" id="password" />
+        </label>
+        <input type="submit" value="Sign In" />
+      </form>
+      {Object.values(providerMap).map((provider) => (
+        <form
+          action={async () => {
+            "use server"
+            try {
+              await signIn(provider.id, {
+                redirectTo: props.searchParams?.callbackUrl ?? "",
+              })
+            } catch (error) {
+              // Signin can fail for a number of reasons, such as the user
+              // not existing, or the user not having the correct role.
+              // In some cases, you may want to redirect to a custom error
+              if (error instanceof AuthError) {
+                return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+              }
+
+              // Otherwise if a redirects happens Next.js can handle it
+              // so you can just re-thrown the error and let Next.js handle it.
+              // Docs:
+              // https://nextjs.org/docs/app/api-reference/functions/redirect#server-component
+              throw error
+            }
+          }}
+        >
+          <button type="submit">
+            <span>Sign in with {provider.name}</span>
+          </button>
+        </form>
+      ))}
+    </div>
+  )
+}
+```
+
+</Code.Next>
+<Code.Qwik>
+
+With Qwik we can do a server-side sign in with Form action, or a more
+simple client-side sign in via submit method.
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { Form } from "@builder.io/qwik-city"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <>
+      {/* server-side login with Form action */}
+      <Form action={signInSig}>
+        <input type="hidden" name="providerId" value="<providerId>" />
+        <input
+          type="hidden"
+          name="options.redirectTo"
+          value="/"
+        />
+        <button>Sign In</button>
+      </Form>
+
+      {/* submit method */}
+      <Link
+        onClick$={() => signInSig.submit({ redirectTo: "/" })}
+      >
+        SignIn
+      </Link>
+    </>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```svelte filename="src/routes/signin/+page.svelte" /submitButton/ /providerMap/
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+  import { providerMap } from "../../auth.ts"
+</script>
+
+<div>
+  <div>
+    <h2>
+      <img src="/img/logo.png" alt="Company Logo" />
+      <span>Company</span>
+    </h2>
+    <div>
+      {#each providerMap as provider}
+        <SignIn provider={provider.id} signInPage="signin" className="w-full">
+          <div slot="submitButton">
+            <span>
+              Signin with {provider.name}
+            </span>
+          </div>
+        </SignIn>
+      {/each}
+    </div>
+  </div>
+</div>
+```
+
+You'll also need to create this server action in SvelteKit to handle the action at `/signin`. That's the default path, but this can be changed with the `signInPage` prop on the `SignIn` component above.
+
+```ts filename="src/routes/signin/+page.server.ts"
+import { signIn } from "../../auth"
+import type { Actions } from "./$types"
+
+export const actions = { default: signIn } satisfies Actions
+```
+
+</Code.Svelte>
+</Code>
+
+Then when calling `signIn` without any arguments anywhere in your application, the custom signin page will appear.
+
+import CustomSignInPage from "../../../public/img/tutorials/custom-sign-in-page.webp"
+
+<Screenshot
+  src={CustomSignInPage}
+  alt="Custom Sign-in Page"
+  className="w-full max-w-3xl"
+/>

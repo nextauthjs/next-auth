@@ -18,7 +18,7 @@ import type { OIDCConfig, OAuthUserConfig } from "./index.js"
 export interface ZitadelProfile extends Record<string, any> {
   amr: string // Authentication Method References as defined in RFC8176
   aud: string // The audience of the token, by default all client id's and the project id are included
-  auth_time: number // Unix time of the authentication
+  auth_time: number // UNIX time of the authentication
   azp: string // Client id of the client who requested the token
   email: string // Email Address of the subject
   email_verified: boolean // if the email was verified by ZITADEL
@@ -50,19 +50,24 @@ export interface ZitadelProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import ZITADEL from "@auth/core/providers/zitadel"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [ZITADEL({ clientId: ZITADEL_CLIENT_ID, clientSecret: ZITADEL_CLIENT_SECRET })],
+ *   providers: [
+ *     ZITADEL({
+ *       clientId: ZITADEL_CLIENT_ID,
+ *       clientSecret: ZITADEL_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
  * - [ZITADEL OpenID Endpoints](https://zitadel.com/docs/apis/openidoauth/endpoints)
- * - [ZITADEL recommended OAuth Flows](https://docs.zitadel.com/docs/guides/integrate/oauth-recommended-flows)
+ * - [ZITADEL recommended OAuth Flows](https://zitadel.com/docs/guides/integrate/oauth-recommended-flows)
  *
  * ### Notes
  *
@@ -78,13 +83,13 @@ export interface ZitadelProfile extends Record<string, any> {
  * :::tip
  *
  * The ZITADEL provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/zitadel.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  * :::tip
  *
  * ZITADEL also returns a email_verified boolean property in the profile. You can use this property to restrict access to people with verified accounts.
- * ```ts title=pages/api/auth/[...nextauth].js
+ * ```ts
  * const options = {
  *   ...
  *   callbacks: {

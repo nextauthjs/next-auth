@@ -1,0 +1,134 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/pouchdb.svg" width="64" height="64" />
+
+# PouchDB Adapter
+
+## Resources
+
+- [PouchDB documentation](https://pouchdb.com/api.html)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install pouchdb pouchdb-find @auth/pouchdb-adapter
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { PouchDBAdapter } from "@auth/pouchdb-adapter"
+import PouchDB from "pouchdb"
+
+// Setup your PouchDB instance and database
+PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+
+const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
+  adapter: PouchDBAdapter(pouchdb),
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { PouchDBAdapter } from "@auth/pouchdb-adapter"
+import PouchDB from "pouchdb"
+
+// Setup your PouchDB instance and database
+PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+
+const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: PouchDBAdapter(pouchdb),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { PouchDBAdapter } from "@auth/pouchdb-adapter"
+import PouchDB from "pouchdb"
+
+// Setup your PouchDB instance and database
+PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+
+const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [],
+  adapter: PouchDBAdapter(pouchdb),
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { PouchDBAdapter } from "@auth/pouchdb-adapter"
+import PouchDB from "pouchdb"
+
+// Setup your PouchDB instance and database
+PouchDB.plugin(require("pouchdb-adapter-leveldb")) // Or any other adapter
+  .plugin(require("pouchdb-find")) // Don't forget the `pouchdb-find` plugin
+
+const pouchdb = new PouchDB("auth_db", { adapter: "leveldb" })
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: PouchDBAdapter(pouchdb),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+<Callout>
+  Depending on your architecture you can use PouchDB's http adapter to reach any
+  database compliant with the CouchDB protocol (CouchDB, Cloudant, etc.) or use
+  any other PouchDB compatible adapter (leveldb, in-memory, etc.)
+</Callout>
+
+<Callout type="info">
+  Your PouchDB instance MUST provide the `pouchdb-find` plugin since it is used
+  internally by the adapter to build and manage indexes
+</Callout>
+
+### Advanced usage
+
+#### Memory-First Caching Strategy
+
+If you need to boost your authentication layer performance, you may use PouchDB's powerful sync features and various adapters, to build a memory-first caching strategy.
+
+Use an in-memory PouchDB as your main authentication database, and synchronize it with any other persisted PouchDB. You may do a one way, one-off replication at startup from the persisted PouchDB into the in-memory PouchDB, then two-way, continuous sync.
+
+This will most likely not increase performance much in a serverless environment due to various reasons such as concurrency, function startup time increases, etc.
+
+For more details, please see https://pouchdb.com/api.html#sync

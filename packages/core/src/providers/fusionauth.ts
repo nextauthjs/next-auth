@@ -42,13 +42,20 @@ export interface FusionAuthProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import FusionAuth from "@auth/core/providers/fusionauth"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FusionAuth({ clientId: FUSIONAUTH_CLIENT_ID, clientSecret: FUSIONAUTH_CLIENT_SECRET, tenantId: FUSIONAUTH_TENANT_ID, issuer: FUSIONAUTH_ISSUER })],
+ *   providers: [
+ *     FusionAuth({
+ *       clientId: FUSIONAUTH_CLIENT_ID,
+ *       clientSecret: FUSIONAUTH_CLIENT_SECRET,
+ *       tenantId: FUSIONAUTH_TENANT_ID,
+ *       issuer: FUSIONAUTH_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  * :::warning
@@ -84,7 +91,7 @@ export interface FusionAuthProfile extends Record<string, any> {
  * :::tip
  *
  * The FusionAuth provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/fusionauth.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *

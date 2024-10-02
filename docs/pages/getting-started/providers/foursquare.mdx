@@ -1,0 +1,102 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/foursquare.svg" height="64" width="64" />
+
+# Foursquare Provider
+
+## Resources
+
+- [Foursquare OAuth documentation](https://docs.foursquare.com/developer/reference/personalization-apis-authentication#web-app-authentication)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/foursquare
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/foursquare
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/foursquare
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_FOURSQUARE__ID
+AUTH_FOURSQUARE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import FourSquare from "next-auth/providers/foursquare"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [FourSquare],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import FourSquare from "@auth/qwik/providers/foursquare"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [FourSquare],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import FourSquare from "@auth/sveltekit/providers/foursquare"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [FourSquare],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import FourSquare from "@auth/express/providers/foursquare"
+
+app.use("/auth/*", ExpressAuth({ providers: [FourSquare] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Foursquare requires an additional apiVersion parameter in YYYYMMDD format, which essentially states "I'm prepared for API changes up to this date".

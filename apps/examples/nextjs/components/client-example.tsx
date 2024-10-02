@@ -9,43 +9,46 @@ import CustomLink from "./custom-link"
 
 const UpdateForm = () => {
   const { data: session, update } = useSession()
-  const [name, setName] = useState(session?.user?.name ?? "")
+  const [name, setName] = useState(`New ${session?.user?.name}`)
 
   if (!session?.user) return null
   return (
     <>
-      <h2 className="text-xl font-bold">Updating the session</h2>
-      <form
-        onSubmit={async () => {
-          if (session) {
-            const newSession = await update({
-              ...session,
-              user: { ...session.user, name },
-            })
-            console.log({ newSession })
-          }
-        }}
-        className="flex items-center w-full max-w-sm space-x-2"
-      >
+      <h2 className="text-xl font-bold">Updating the session client-side</h2>
+      <div className="flex w-full max-w-sm items-center space-x-2">
         <Input
           type="text"
-          placeholder={session.user.name ?? ""}
+          placeholder="New name"
           value={name}
           onChange={(e) => {
             setName(e.target.value)
           }}
         />
-        <Button type="submit">Update</Button>
-      </form>
+        <Button onClick={() => update({ user: { name } })} type="submit">
+          Update
+        </Button>
+      </div>
     </>
   )
 }
 
 export default function ClientExample() {
   const { data: session, status } = useSession()
+  const [apiResponse, setApiResponse] = useState("")
+
+  const makeRequestWithToken = async () => {
+    try {
+      const response = await fetch("/api/authenticated/greeting")
+      const data = await response.json()
+      setApiResponse(JSON.stringify(data, null, 2))
+    } catch (error) {
+      setApiResponse("Failed to fetch data: " + error)
+    }
+  }
+
   return (
-    <div className="space-y-2">
-      <h1 className="text-3xl font-bold">Client Side Rendering Usage</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-3xl font-bold">Client Side Rendering</h1>
       <p>
         This page fetches session data client side using the{" "}
         <CustomLink href="https://nextjs.authjs.dev/react#usesession">
@@ -55,7 +58,7 @@ export default function ClientExample() {
       </p>
       <p>
         It needs the{" "}
-        <CustomLink href="https://react.devreference/nextjs/react/use-client">
+        <CustomLink href="https://react.dev/reference/rsc/use-client">
           <code>'use client'</code>
         </CustomLink>{" "}
         directive at the top of the file to enable client side rendering, and
@@ -69,6 +72,32 @@ export default function ClientExample() {
         </strong>{" "}
         to provide the session data.
       </p>
+
+      <div className="flex flex-col gap-4 rounded-md bg-gray-100 p-4">
+        <h2 className="text-xl font-bold">Third-party backend integration</h2>
+        <p>
+          Press the button to send a request to our{" "}
+          <CustomLink href="https://github.com/nextauthjs/authjs-third-party-backend">
+            <code>example backend</code>
+          </CustomLink>
+          . Read more{" "}
+          <CustomLink href="https://authjs.dev/guides/integrating-third-party-backends">
+            <code>here</code>
+          </CustomLink>
+        </p>
+        <div className="flex flex-col">
+          <Button
+            disabled={!session?.accessToken}
+            onClick={makeRequestWithToken}
+          >
+            Make API Request
+          </Button>
+        </div>
+        <pre>{apiResponse}</pre>
+        <p className="italic">
+          Note: This example only works when using the Keycloak provider.
+        </p>
+      </div>
 
       {status === "loading" ? (
         <div>Loading...</div>

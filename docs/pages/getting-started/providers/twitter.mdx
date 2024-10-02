@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/twitter.svg" height="64" width="64" />
+
+# Twitter/X Provider
+
+## Resources
+
+- [Twitter App documentation](https://developer.twitter.com/en/apps)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/twitter
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/twitter
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/twitter
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_TWITTER_ID
+AUTH_TWITTER_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Twitter from "next-auth/providers/twitter"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Twitter],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Twitter from "@auth/qwik/providers/twitter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Twitter],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Twitter from "@auth/sveltekit/providers/twitter"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Twitter],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Twitter from "@auth/express/providers/twitter"
+
+app.use("/auth/*", ExpressAuth({ providers: [Twitter] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Auth.js now uses Twitter/X OAuth 2.0 by default. There's no need to set `version` anymore.
+- Email is currently not supported by Twitter/X OAuth 2.0.

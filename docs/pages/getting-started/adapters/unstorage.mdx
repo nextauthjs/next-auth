@@ -1,0 +1,145 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/unstorage.svg" width="64" height="64" />
+
+# Unstorage Adapter
+
+## Resources
+
+- [Unstorage documentation](https://unstorage.unjs.io/)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install unstorage @auth/unstorage-adapter
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: UnstorageAdapter(storage),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: UnstorageAdapter(storage),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: UnstorageAdapter(storage),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: UnstorageAdapter(storage),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Advanced usage
+
+#### Using multiple apps with a single storage
+
+If you have multiple Auth.js connected apps using the same storage, you need different key prefixes for every app.
+
+You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
+
+The default values for this object are:
+
+```ts
+const defaultOptions = {
+  baseKeyPrefix: "",
+  accountKeyPrefix: "user:account:",
+  accountByUserIdPrefix: "user:account:by-user-id:",
+  emailKeyPrefix: "user:email:",
+  sessionKeyPrefix: "user:session:",
+  sessionByUserIdKeyPrefix: "user:session:by-user-id:",
+  userKeyPrefix: "user:",
+  verificationTokenKeyPrefix: "user:token:",
+}
+```
+
+Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
+
+```ts
+import NextAuth from "next-auth"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: UnstorageAdapter(storage, { baseKeyPrefix: "app2:" }),
+})
+```
+
+#### Using `getItemRaw`/`setItemRaw` instead of `getItem`/`setItem`
+
+If you are using storage that supports JSON, you can make it use `getItemRaw/setItemRaw` instead of `getItem/setItem`.
+
+This is an experimental feature. Please check [unjs/unstorage#142](https://github.com/unjs/unstorage/issues/142) for more information.
+
+You can enable this functionality by passing `useItemRaw: true` (default: false) in the `options` object as the second argument to the adapter factory function.
+
+```ts
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: UnstorageAdapter(storage, { useItemRaw: true }),
+})
+```

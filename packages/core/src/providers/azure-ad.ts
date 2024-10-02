@@ -18,7 +18,12 @@ export interface AzureADProfile extends Record<string, any> {
 }
 
 /**
- * Add AzureAd login to your page.
+ *
+ * @deprecated
+ * Azure Active Directory is now known as [Microsoft Entra ID](/getting-started/providers/microsoft-entra-id).
+ * Import this provider from the `providers/microsoft-entra-id` submodule instead of `providers/azure-ad`.
+ *
+ * Add Azure AD login to your page.
  *
  * ### Setup
  *
@@ -28,13 +33,18 @@ export interface AzureADProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import AzureAd from "@auth/core/providers/azure-ad"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [AzureAd({ clientId: AZURE_AD_CLIENT_ID, clientSecret: AZURE_AD_CLIENT_SECRET })],
+ *   providers: [
+ *     AzureAd({
+ *       clientId: AZURE_AD_CLIENT_ID,
+ *       clientSecret: AZURE_AD_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -54,6 +64,7 @@ export interface AzureADProfile extends Record<string, any> {
  *   - Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
  * - When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
  * - After your App Registration is created, under "Client Credential" create your Client secret.
+ * - Click on "API Permissions" and click "Grant admin consent for..." to allow User.Read access to your tenant.
  * - Now copy your:
  *   - Application (client) ID
  *   - Directory (tenant) ID
@@ -73,14 +84,14 @@ export interface AzureADProfile extends Record<string, any> {
  * Azure AD returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
  * :::
  *
- * In `pages/api/auth/[...nextauth].js` find or add the `AzureAD` entries:
+ * In `auth.ts` find or add the `AzureAD` entries:
  *
- * ```js
- * import AzureADProvider from "next-auth/providers/azure-ad";
+ * ```ts
+ * import AzureAd from "@auth/core/providers/azure-ad"
  *
  * ...
  * providers: [
- *   AzureADProvider({
+ *   AzureAD({
  *     clientId: process.env.AZURE_AD_CLIENT_ID,
  *     clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
  *     tenantId: process.env.AZURE_AD_TENANT_ID,
@@ -98,7 +109,7 @@ export interface AzureADProfile extends Record<string, any> {
  * :::tip
  *
  * The AzureAd provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/azure-ad.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -138,15 +149,19 @@ export default function AzureAD<P extends AzureADProfile>(
     },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-      const response = await fetch(
-        `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
-        { headers: { Authorization: `Bearer ${tokens.access_token}` } }
-      )
+      let response = null
+
+      try {
+        response = await fetch(
+          `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
+          { headers: { Authorization: `Bearer ${tokens.access_token}` } }
+        )
+      } catch {}
 
       // Confirm that profile photo was returned
-      let image
+      let image = null
       // TODO: Do this without Buffer
-      if (response.ok && typeof Buffer !== "undefined") {
+      if (response && response.ok && typeof Buffer !== "undefined") {
         try {
           const pictureBuffer = await response.arrayBuffer()
           const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")
@@ -161,7 +176,7 @@ export default function AzureAD<P extends AzureADProfile>(
         image: image ?? null,
       }
     },
-    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
+    style: { text: "#fff", bg: "#0072c6" },
     options: rest,
   }
 }

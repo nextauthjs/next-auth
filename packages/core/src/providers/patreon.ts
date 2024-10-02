@@ -28,13 +28,18 @@ export interface PatreonProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Patreon from "@auth/core/providers/patreon"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Patreon({ clientId: PATREON_CLIENT_ID, clientSecret: PATREON_CLIENT_SECRET })],
+ *   providers: [
+ *     Patreon({
+ *       clientId: PATREON_CLIENT_ID,
+ *       clientSecret: PATREON_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -52,7 +57,7 @@ export interface PatreonProfile extends Record<string, any> {
  * :::tip
  *
  * The Patreon provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/patreon.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -87,7 +92,7 @@ export default function Patreon<P extends PatreonProfile>(
         image: profile.data.attributes.image_url,
       }
     },
-    style: { logo: "/patreon.svg", bg: "#e85b46", text: "#fff" },
+    style: { bg: "#e85b46", text: "#fff" },
     options,
   }
 }

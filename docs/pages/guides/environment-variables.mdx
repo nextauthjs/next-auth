@@ -1,0 +1,190 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+# Environment variables
+
+## Auth secret
+
+<Code>
+<Code.Next>
+
+```bash filename=".env.local"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```bash filename=".env"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```bash filename=".env"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```bash filename=".env"
+AUTH_SECRET="This is an example"
+```
+
+</Code.Express>
+</Code>
+
+`AUTH_SECRET` is a random token used by the library to encrypt tokens and email verification hashes, and it's mandatory to keep things secure (See [Deployment](/getting-started/deployment) to learn more). You can use the CLI to generate an auth secret:
+
+```bash npm2yarn
+npm exec auth secret
+```
+
+## Environment Variable Inference
+
+Auth.js is automatically configured to pick the right environment variables for `clientId` and `clientSecret` when using an [official OAuth provider](/getting-started/authentication/oauth).
+
+The shape of these variables in your `.env` files should always follow the same pattern:
+
+```
+AUTH_[PROVIDER]_ID=
+AUTH_[PROVIDER]_SECRET=
+```
+
+For example if we're using the Google, Twitter and GitHub providers, your `.env` file would look something like this.
+
+```bash
+# Google
+AUTH_GOOGLE_ID=123
+AUTH_GOOGLE_SECRET=123
+
+# Twitter
+AUTH_TWITTER_ID=123
+AUTH_TWITTER_SECRET=123
+
+# GitHub
+AUTH_GITHUB_ID=123
+AUTH_GITHUB_SECRET=123
+```
+
+Then in your Auth.js configuration file, the `provider` array is simplified to this.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts" {7}
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import Twitter from "next-auth/providers/twitter"
+import GitHub from "next-auth/providers/github"
+
+export const { handlers, auth } = NextAuth({
+  providers: [Google, Twitter, GitHub],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Google from "@auth/qwik/providers/google"
+import Twitter from "@auth/qwik/providers/twitter"
+import GitHub from "@auth/qwik/providers/github"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Google, Twitter, GitHub],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./auth.ts" {7}
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+import Twitter from "@auth/sveltekit/providers/twitter"
+import GitHub from "@auth/sveltekit/providers/github"
+
+export const { handle } = SvelteKitAuth({
+  providers: [Google, Twitter, GitHub],
+})
+```
+
+</Code.Svelte>
+</Code>
+
+If for some reason you want to name the variables differently:
+
+```bash
+# Google
+AUTH_WEBAPP_GOOGLE_CLIENT_ID=123
+AUTH_WEBAPP_GOOGLE_CLIENT_SECRET=123
+```
+
+Then you will need to manually reference them in the config:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts" {7-8}
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+
+export const { handlers, auth } = NextAuth({
+  providers: [
+    Google({
+      clientId: process.env.AUTH_WEBAPP_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.AUTH_WEBAPP_GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Google from "@auth/qwik/providers/google"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Google({
+        clientId: import.meta.env.AUTH_WEBAPP_GOOGLE_CLIENT_ID,
+        clientSecret: import.meta.env.AUTH_WEBAPP_GOOGLE_CLIENT_SECRET,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts" {8-9}
+import SvelteKitAuth from "@auth/sveltekit"
+import Google from "@auth/sveltekit/providers/google"
+import { env } from "$env/dynamic/private"
+
+export const { handle } = SvelteKitAuth({
+  providers: [
+    Google({
+      clientId: env.AUTH_WEBAPP_GOOGLE_CLIENT_ID,
+      clientSecret: env.AUTH_WEBAPP_GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+})
+```
+
+```ts filename="src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>

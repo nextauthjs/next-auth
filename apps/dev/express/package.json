@@ -1,0 +1,32 @@
+{
+  "name": "express-auth-app",
+  "description": "Express + Auth.js Developer app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node --env-file=.env dist/server.js",
+    "clean": "rm -rf dist",
+    "build": "pnpm build:ts && pnpm build:css",
+    "build:ts": "tsc",
+    "build:css": "tailwindcss -i ./public/css/style.css -o ./public/css/output.css",
+    "dev": "tsx watch --env-file=.env src/server.ts & pnpm build:css -w",
+    "lint": "eslint src/*.ts --fix",
+    "prettier": "prettier src/*.ts --write"
+  },
+  "author": "Auth.js Team (https://authjs.dev/contributors)",
+  "license": "MIT",
+  "dependencies": {
+    "@auth/express": "workspace:*",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@prettier/plugin-pug": "^3.0.0",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/pug": "^2.0.10",
+    "tsx": "^4.7.3",
+    "typescript": "5.4.5"
+  }
+}

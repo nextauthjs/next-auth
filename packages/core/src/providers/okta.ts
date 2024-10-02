@@ -55,13 +55,19 @@ export interface OktaProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Okta from "@auth/core/providers/okta"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Okta({ clientId: OKTA_CLIENT_ID, clientSecret: OKTA_CLIENT_SECRET, issuer: OKTA_ISSUER })],
+ *   providers: [
+ *     Okta({
+ *       clientId: OKTA_CLIENT_ID,
+ *       clientSecret: OKTA_CLIENT_SECRET,
+ *       issuer: OKTA_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -77,7 +83,7 @@ export interface OktaProfile extends Record<string, any> {
  * :::tip
  *
  * The Okta provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/okta.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -98,8 +104,8 @@ export default function Okta<P extends OktaProfile>(
     id: "okta",
     name: "Okta",
     type: "oidc",
-    style: { logo: "/okta.svg", bg: "#000", text: "#fff" },
-    checks: ['pkce', 'state'],
+    style: { bg: "#000", text: "#fff" },
+    checks: ["pkce", "state"],
     options,
   }
 }

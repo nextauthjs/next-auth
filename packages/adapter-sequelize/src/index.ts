@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://sequelize.org/docs/v6/getting-started/">Sequilize</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>Official <a href="https://sequelize.org/docs/v6/getting-started/">Sequilize</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://sequelize.org/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/sequelize.svg" height="30"/>
  *  </a>
@@ -58,85 +58,6 @@ export interface SequelizeAdapterOptions {
   }>
 }
 
-/**
- * :::warning
- * You'll also have to manually install [the driver for your database](https://sequelize.org/master/manual/getting-started.html) of choice.
- * :::
- *
- * ## Setup
- *
- * ### Configuring Auth.js
- *
- *  Add this adapter to your `pages/api/[...nextauth].js` next-auth configuration object.
- *
- * ```javascript title="pages/api/auth/[...nextauth].js"
- * import NextAuth from "next-auth"
- * import SequelizeAdapter from "@auth/sequelize-adapter"
- * import { Sequelize } from "sequelize"
- *
- * // https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database
- * const sequelize = new Sequelize("yourconnectionstring")
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/core#authconfig
- * export default NextAuth({
- *   // https://authjs.dev/reference/providers/
- *   providers: [],
- *   adapter: SequelizeAdapter(sequelize),
- * })
- * ```
- *
- * ### Updating the database schema
- *
- * By default, the sequelize adapter will not create tables in your database. In production, best practice is to create the [required tables](https://authjs.dev/reference/core/adapters/models) in your database via [migrations](https://sequelize.org/master/manual/migrations.html). In development, you are able to call [`sequelize.sync()`](https://sequelize.org/master/manual/model-basics.html#model-synchronization) to have sequelize create the necessary tables, foreign keys and indexes:
- *
- * > This schema is adapted for use in Sequelize and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
- *
- * ```js
- * import NextAuth from "next-auth"
- * import SequelizeAdapter from "@auth/sequelize-adapter"
- * import Sequelize from 'sequelize'
- *
- * const sequelize = new Sequelize("sqlite::memory:")
- * const adapter = SequelizeAdapter(sequelize)
- *
- * // Calling sync() is not recommended in production
- * sequelize.sync()
- *
- * export default NextAuth({
- *   ...
- *   adapter
- *   ...
- * })
- * ```
- *
- * ## Advanced usage
- *
- * ### Using custom models
- *
- * Sequelize models are option to customization like so:
- *
- * ```js
- * import NextAuth from "next-auth"
- * import SequelizeAdapter, { models } from "@auth/sequelize-adapter"
- * import Sequelize, { DataTypes } from "sequelize"
- *
- * const sequelize = new Sequelize("sqlite::memory:")
- *
- * export default NextAuth({
- *   // https://authjs.dev/reference/providers/
- *   providers: [],
- *   adapter: SequelizeAdapter(sequelize, {
- *     models: {
- *       User: sequelize.define("user", {
- *         ...models.User,
- *         phoneNumber: DataTypes.STRING,
- *       }),
- *     },
- *   }),
- * })
- * ```
- */
 export default function SequelizeAdapter(
   client: Sequelize,
   options?: SequelizeAdapterOptions
@@ -237,7 +158,6 @@ export default function SequelizeAdapter(
       await User.update(user, { where: { id: user.id } })
       const userInstance = await User.findByPk(user.id)
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return userInstance!
     },
     async deleteUser(userId) {

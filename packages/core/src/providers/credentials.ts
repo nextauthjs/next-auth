@@ -29,16 +29,33 @@ export interface CredentialsConfig<
    * by a popular library like [Zod](https://zod.dev)
    * :::
    *
+   * This method expects a `User` object to be returned for a successful login.
+   *
+   * If an `CredentialsSignin` is thrown or `null` is returned, two things can happen:
+   * 1. The user is redirected to the login page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable, see below.
+   * 2. If you throw this error in a framework that handles form actions server-side, this error is thrown by the login form action, so you'll need to handle it there.
+   *
+   * In case of 1., generally, we recommend not hinting if the user for example gave a wrong username or password specifically,
+   * try rather something like "invalid-credentials". Try to be as generic with client-side errors as possible.
+   *
+   * To customize the error code, you can create a custom error that extends {@link CredentialsSignin} and throw it in `authorize`.
+   *
    * @example
    * ```ts
-   * //...
-   * async authorize(credentials, request) {
-   *   if(!isValidCredentials(credentials)) return null
-   *   const response = await fetch(request)
-   *   if(!response.ok) return null
-   *   return await response.json() ?? null
+   * class CustomError extends CredentialsSignin {
+   *  code = "custom_error"
    * }
-   * //...
+   * // URL will contain `error=CredentialsSignin&code=custom_error`
+   * ```
+   *
+   * @example
+   * ```ts
+   * async authorize(credentials, request) { // you have access to the original request as well
+   *   if(!isValidCredentials(credentials)) {
+   *      throw new CustomError()
+   *   }
+   *   return await getUser(credentials) // assuming it returns a User or null
+   * }
    * ```
    */
   authorize: (
@@ -52,7 +69,7 @@ export interface CredentialsConfig<
      * or you can use a popular library like [Zod](https://zod.dev) for example.
      */
     credentials: Partial<Record<keyof CredentialsInputs, unknown>>,
-    /** The original request is forward for convenience */
+    /** The original request. */
     request: Request
   ) => Awaitable<User | null>
 }
@@ -85,7 +102,7 @@ export type CredentialsProviderType = "Credentials"
  *
  * See the [callbacks documentation](/reference/core#authconfig#callbacks) for more information on how to interact with the token. For example, you can add additional information to the token by returning an object from the `jwt()` callback:
  *
- * ```js
+ * ```ts
  * callbacks: {
  *   async jwt({ token, user, account, profile, isNewUser }) {
  *     if (user) {
@@ -97,8 +114,8 @@ export type CredentialsProviderType = "Credentials"
  * ```
  *
  * @example
- * ```js
- * import Auth from "@auth/core"
+ * ```ts
+ * import { Auth } from "@auth/core"
  * import Credentials from "@auth/core/providers/credentials"
  *
  * const request = new Request("https://example.com")
@@ -120,8 +137,7 @@ export type CredentialsProviderType = "Credentials"
  *   trustHost: true,
  * })
  * ```
- * @see [Username/Password Example](https://authjs.dev/guides/providers/credentials#example---username--password)
- * @see [Web3/Signin With Ethereum Example](https://authjs.dev/guides/providers/credentials#example---web3--signin-with-ethereum)
+ * @see [Username/Password Example](https://authjs.dev/getting-started/authentication/credentials)
  */
 export default function Credentials<
   CredentialsInputs extends Record<string, CredentialInput> = Record<

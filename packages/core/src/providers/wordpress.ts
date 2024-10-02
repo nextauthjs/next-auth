@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import WordPress from "@auth/core/providers/wordpress"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [WordPress({ clientId: WORKPRESS_CLIENT_ID, clientSecret: WORKPRESS_CLIENT_SECRET })],
+ *   providers: [
+ *     WordPress({
+ *       clientId: WORKPRESS_CLIENT_ID,
+ *       clientSecret: WORKPRESS_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -43,7 +48,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * :::tip
  *
  * The WordPress provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/wordpress.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *

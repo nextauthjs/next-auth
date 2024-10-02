@@ -88,7 +88,7 @@ export interface AzureADB2CProfile {
  * :::tip
  *
  * The Azure AD B2C provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/azure-ad-b2c.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -112,7 +112,7 @@ export default function AzureADB2C(
   options.issuer ??= `https://${tenantId}.b2clogin.com/${tenantId}.onmicrosoft.com/${primaryUserFlow}/v2.0`
   return {
     id: "azure-ad-b2c",
-    name: "Azure Active Directory B2C",
+    name: "Azure AD B2C",
     type: "oidc",
     profile(profile) {
       return {
@@ -122,7 +122,7 @@ export default function AzureADB2C(
         image: null,
       }
     },
-    style: { logo: "/azure.svg", text: "#fff", bg: "#0072c6" },
+    style: { text: "#fff", bg: "#0072c6" },
     options,
   }
 }

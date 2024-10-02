@@ -9,7 +9,8 @@ import type {
   ProfileCallback,
   Provider,
 } from "../../providers/index.js"
-import type { AuthConfig, InternalProvider, Profile } from "../../types.js"
+import type { InternalProvider, Profile } from "../../types.js"
+import type { AuthConfig } from "../../index.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -32,6 +33,7 @@ export default function parseProviders(params: {
     const { options: userOptions, ...defaults } = provider
 
     const id = (userOptions?.id ?? defaults.id) as string
+    // TODO: Support if properties have different types, e.g. authorization: string or object
     const merged = merge(defaults, userOptions, {
       signinUrl: `${url}/signin/${id}`,
       callbackUrl: `${url}/callback/${id}`,
@@ -39,10 +41,10 @@ export default function parseProviders(params: {
 
     if (provider.type === "oauth" || provider.type === "oidc") {
       merged.redirectProxyUrl ??= options.redirectProxyUrl
-      return normalizeOAuth(merged)
+      return normalizeOAuth(merged) as InternalProvider
     }
 
-    return merged
+    return merged as InternalProvider
   })
 
   return {
@@ -55,7 +57,7 @@ export default function parseProviders(params: {
 // We should return both a client and authorization server config.
 function normalizeOAuth(
   c: OAuthConfig<any> | OAuthUserConfig<any>
-): OAuthConfigInternal<any> | {} {
+): OAuthConfigInternal<any> | object {
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
@@ -123,7 +125,9 @@ const defaultAccount: AccountCallback = (account) => {
 
 function stripUndefined<T extends object>(o: T): T {
   const result = {} as any
-  for (let [k, v] of Object.entries(o)) v !== undefined && (result[k] = v)
+  for (const [k, v] of Object.entries(o)) {
+    if (v !== undefined) result[k] = v
+  }
   return result as T
 }
 
@@ -145,9 +149,35 @@ function normalizeEndpoint(
   const url = new URL(e?.url ?? "https://authjs.dev")
   if (e?.params != null) {
     for (let [key, value] of Object.entries(e.params)) {
-      if (key === "claims") value = JSON.stringify(value)
+      if (key === "claims") {
+        value = JSON.stringify(value)
+      }
       url.searchParams.set(key, String(value))
     }
   }
-  return { url, request: e?.request, conform: e?.conform }
+  return {
+    url,
+    request: e?.request,
+    conform: e?.conform,
+    ...(e?.clientPrivateKey ? { clientPrivateKey: e?.clientPrivateKey } : null),
+  }
+}
+
+export function isOIDCProvider(
+  provider: InternalProvider<"oidc" | "oauth">
+): provider is InternalProvider<"oidc"> {
+  return provider.type === "oidc"
+}
+
+export function isOAuth2Provider(
+  provider: InternalProvider<"oidc" | "oauth">
+): provider is InternalProvider<"oauth"> {
+  return provider.type === "oauth"
+}
+
+/** Either OAuth 2 or OIDC */
+export function isOAuthProvider(
+  provider: InternalProvider<any>
+): provider is InternalProvider<"oauth" | "oidc"> {
+  return provider.type === "oauth" || provider.type === "oidc"
 }

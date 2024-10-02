@@ -1,0 +1,251 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/netsuite.svg" height="64" width="64" />
+
+# NetSuite
+
+<Callout type="warning">To be released in `next-auth@5.0.0-beta.18`</Callout>
+
+## Resources
+
+- [NetSuite - Creating an Integration Record (OAuth 2.0)](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771733782.html#Related-Topics)
+- [NetSuite - Authorizing OAuth Requests](https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps)
+- [NetSuite - Configure OAuth Roles](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771510070.html#Set-Up-OAuth-2.0-Roles)
+- [Learn more about NetSuite OAuth 2.0](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_157769826287.html#OAuth-2.0)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/netsuite
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/netsuite
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/netsuite
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```bash
+https://example.com/auth/callback/netsuite
+```
+
+  </Code.Express>
+</Code>
+
+> NetSuite does not support `http://` callback URLs. When testing locally, you can use a service like [ngrok](https://ngrok.com) to get a local `https` URL.
+
+### Environment Variables
+
+```
+AUTH_NETSUITE_ID
+AUTH_NETSUITE_SECRET
+AUTH_NETSUITE_ACCOUNT_ID
+```
+
+### Configuration
+
+Before setting up the provider, you will need to ensure the following is setup.
+
+- [Create an Integration Record](https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_157771733782.html#procedure_157838925981)
+  - Uncheck the TBA Auth Flow checkbox.
+  - Check OAuth 2.0 Auth Flow checkbox.
+  - Copy and paste the `Callback URL` below into the `Redirect URI` field.
+  - Then select the scope(s) you want to use.
+    - **REST Web Services** (`rest_webservices`) - Access to REST Web Services.
+    - **RESTlets**(`restlets`) - Access to RESTLets.
+    - **SuiteAnalytics Connect** (`suiteanalytics_connect`) - Access to SuiteAnalytics Connect.
+  - Add any policies you want to use.
+    - Application Logo (_Optional_) (Shown to users when they are asked to grant access to your application). - Consent Screen
+    - Application Terms of Use (_Optional_) - A PDF file that contains the terms of use for your application. - Consent Screen
+    - Application Privacy Policy (_Optional_) - A PDF file that contains the privacy policy for your application. - Consent Screen
+  - OAuth 2.0 Consent Policy Preference - This setting determines whether the user is asked to grant access to your application **every time** they sign in or only the **first time** they sign in or **never**.
+  - **Save** the Integration record.
+  - The Integration record will be used to generate the `clientId` and `clientSecret` for the provider. **Save the generated values for later**
+
+### Userinfo RESTLet Handler
+
+To use this provider, you'll need to create a userinfo RESTlet in your NetSuite instance.
+Our `userinfo` URL needs to be a suitelet or RESTLet URL that gives us the
+information about the user. The best bet is to use the `N/runtime` module to
+get the basics first. - Here is an example of a RESTlet below. Be sure to
+deploy and enable access to "All Roles".
+
+Be sure to deploy and use the **external** RESTLet url of any usage of the URIs.
+
+```js
+/**
+ * @NApiVersion 2.1
+ * @NScriptType Restlet
+ */
+define(["N/runtime"],
+ (runtime) => {
+/**
+ * Defines the function that is executed when a GET request is sent to a RESTlet.
+ * @param {Object} requestParams - Parameters from HTTP request URL; parameters passed as an Object (for all supported
+ *     content types)
+ * @returns {string | Object} HTTP response body; returns a string when request Content-Type is 'text/plain'; returns an
+ *     Object when request Content-Type is 'application/json' or 'application/xml'
+ * @since 2015.2
+ */
+  const get = (requestParams) => {
+    let userObject = runtime.getCurrentUser();
+
+    try {
+      log.debug({ title: "Payload received:", details: requestParams });
+
+      const { id, name, role, location, email, contact } = userObject;
+
+      log.audit({ title: "Current User Ran", details: name });
+
+      let user = {
+        id,
+        name,
+        role,
+        location,
+        email,
+        contact,
+      };
+
+      log.debug({ title: "Returning user", details: user });
+
+      return JSON.stringify(user);
+    } catch (e) {
+      log.error({ title: "Error grabbing current user:", details: e });
+    }
+  };
+
+  return {
+    get,
+  };
+);
+```
+
+Above is an example of returning the basic runtime information. Be sure to create a new script record and deployment record. When you save the deployment record, you will get the URLs for your RESTlet, which we will use as the `userinfo` URL.
+
+### Example Usage
+
+<Code>
+  <Code.Next>
+
+```ts filename="@auth.ts"
+import NextAuth from "next-auth"
+import NetSuite from "next-auth/providers/netsuite"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    NetSuite({
+      clientId: process.env.AUTH_NETSUITE_ID,
+      clientSecret: process.env.AUTH_NETSUITE_SECRET,
+      issuer: process.env.AUTH_NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
+      // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
+      // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
+      userinfo:
+        "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
+      // Optional
+      prompt: "login", // Required if you want to force the user to login every time.
+      scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import NetSuite from "@auth/qwik/providers/netsuite"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      NetSuite({
+        clientId: import.meta.env.AUTH_NETSUITE_ID,
+        clientSecret: import.meta.env.AUTH_NETSUITE_SECRET,
+        issuer: import.meta.env.AUTH_NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
+        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
+        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
+        userinfo:
+          "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
+        // Optional
+        prompt: "login", // Required if you want to force the user to login every time.
+        scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import NetSuite from "@auth/sveltekit/providers/netsuite"
+import { env } from "$env/dynamic/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    NetSuite({
+      clientId: env.AUTH_NETSUITE_ID,
+      clientSecret: env.AUTH_NETSUITE_SECRET,
+      issuer: env.AUTH_NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
+      // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
+      // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
+      userinfo:
+        "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
+      // Optional
+      prompt: "login", // Required if you want to force the user to login every time.
+      scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import NetSuite from "@auth/express/providers/netsuite"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      NetSuite({
+        clientId: process.env.AUTH_NETSUITE_ID,
+        clientSecret: process.env.AUTH_NETSUITE_SECRET,
+        issuer: process.env.AUTH_NETSUITE_ACCOUNT_ID, // EX: TSTDRV1234567 or 81555 for prod, and 1234567-SB1 for Sandbox accounts not "_" use "-".
+        // Returns the current user using the N/runtime module. This url can be a suitelet or RESTlet (Recommended)
+        // Using getCurrentUser(); So we match this schema returned from this RESTlet in the profile callback. (Required)
+        userinfo:
+          "https://1234567.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=123&deploy=1",
+        // Optional
+        prompt: "login", // Required if you want to force the user to login every time.
+        scope: "restlets", // Optional defaults to "restlets rest_webservices". Enter the scope(s) you want to use followed by spaces.
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>

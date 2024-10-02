@@ -1,11 +1,31 @@
 {
   "name": "@auth/solid-start",
+  "version": "0.13.3",
   "description": "Authentication for SolidStart.",
-  "version": "0.6.0",
+  "license": "ISC",
+  "author": "OrJDev <orjdeveloper@gmail.com>",
+  "homepage": "https://solid-start.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "keywords": [
+    "SolidJS",
+    "SolidStart",
+    "oauth",
+    "jwt",
+    "oauth2",
+    "authentication",
+    "nextjs",
+    "csrf",
+    "oidc",
+    "Auth.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "files": [
-    "client.*",
-    "index.*",
+    "*.js",
+    "*.d.ts*",
+    "providers",
     "src"
   ],
   "exports": {
@@ -20,16 +40,19 @@
       "types": "./client.d.ts",
       "import": "./client.js"
     },
-    "./package.json": "./package.json"
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    }
   },
   "scripts": {
-    "build": "tsup --config ./tsup.config.js && node scripts/postbuild",
-    "patch": "npm version patch --no-git-tag-version",
-    "test": "vitest -c ../utils/vitest.config.ts",
-    "clean": "rm -rf client.* index.*"
-  },
-  "publishConfig": {
-    "access": "public"
+    "build": "pnpm clean && pnpm providers && tsc",
+    "test": "vitest run -c ../utils/vitest.config.ts",
+    "providers": "node ../utils/scripts/providers --out src",
+    "clean": "rm -rf *.js *.d.ts* providers src/providers"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
@@ -38,19 +61,10 @@
     "@solidjs/meta": "^0.28.0",
     "@types/node": "^18.7.14",
     "solid-js": "^1.5.7",
-    "solid-start": "^0.2.14",
-    "tsup": "^6.5.0"
+    "solid-start": "^0.2.14"
   },
   "peerDependencies": {
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.14"
-  },
-  "keywords": [
-    "SolidJS",
-    "SolidStart",
-    "Auth"
-  ],
-  "author": "OrJDev <orjdeveloper@gmail.com>",
-  "repository": "https://github.com/nextauthjs/next-auth",
-  "license": "ISC"
+  }
 }

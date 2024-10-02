@@ -1,0 +1,98 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/salesforce.svg" height="64" width="64" />
+
+# Salesforce Provider
+
+## Resources
+
+- [Salesforce OAuth documentation](https://help.salesforce.com/articleView?id=remoteaccess_authenticate.htm&type=5)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/salesforce
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/salesforce
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/salesforce
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_SALESFORCE_ID
+AUTH_SALESFORCE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Salesforce from "next-auth/providers/salesforce"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Salesforce],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Salesforce from "@auth/qwik/providers/salesforce"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Salesforce],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Salesforce from "@auth/sveltekit/providers/salesforce"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Salesforce],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Salesforce from "@auth/express/providers/salesforce"
+
+app.use("/auth/*", ExpressAuth({ providers: [Salesforce] }))
+```
+
+  </Code.Express>
+</Code>

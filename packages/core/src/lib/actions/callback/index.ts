@@ -2,7 +2,7 @@
 
 import {
   AuthError,
-  AuthorizedCallbackError,
+  AccessDenied,
   CallbackRouteError,
   CredentialsSignin,
   InvalidProvider,
@@ -10,7 +10,7 @@ import {
 } from "../../../errors.js"
 import { handleLoginOrRegister } from "./handle-login.js"
 import { handleOAuth } from "./oauth/callback.js"
-import { handleState } from "./oauth/checks.js"
+import { state } from "./oauth/checks.js"
 import { createHash } from "../../utils/web.js"
 
 import type { AdapterSession } from "../../../adapters.js"
@@ -23,7 +23,11 @@ import type {
   User,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
-import { assertInternalOptionsWebAuthn, verifyAuthenticate, verifyRegister } from "../../utils/webauthn-utils.js"
+import {
+  assertInternalOptionsWebAuthn,
+  verifyAuthenticate,
+  verifyRegister,
+} from "../../utils/webauthn-utils.js"
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -52,22 +56,34 @@ export async function callback(
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
-      const { proxyRedirect, randomState } = handleState(
-        query,
-        provider,
-        options.isOnRedirectProxy
-      )
+      // Use body if the response mode is set to form_post. For all other cases, use query
+      const params =
+        provider.authorization?.url.searchParams.get("response_mode") ===
+        "form_post"
+          ? body
+          : query
 
-      if (proxyRedirect) {
-        logger.debug("proxy redirect", { proxyRedirect, randomState })
-        return { redirect: proxyRedirect }
+      // If we have a state and we are on a redirect proxy, we try to parse it
+      // and see if it contains a valid origin to redirect to. If it does, we
+      // redirect the user to that origin with the original state.
+      if (options.isOnRedirectProxy && params?.state) {
+        // NOTE: We rely on the state being encrypted using a shared secret
+        // between the proxy and the original server.
+        const parsedState = await state.decode(params.state, options)
+        const shouldRedirect =
+          parsedState?.origin &&
+          new URL(parsedState.origin).origin !== options.url.origin
+        if (shouldRedirect) {
+          const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params)}`
+          logger.debug("Proxy redirecting to", proxyRedirect)
+          return { redirect: proxyRedirect, cookies }
+        }
       }
 
       const authorizationResult = await handleOAuth(
-        query,
+        params,
         request.cookies,
-        options,
-        randomState
+        options
       )
 
       if (authorizationResult.cookies.length) {
@@ -187,13 +203,13 @@ export async function callback(
 
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "email") {
-      const token = query?.token as string | undefined
-      const identifier = query?.email as string | undefined
+      const paramToken = query?.token as string | undefined
+      const paramIdentifier = query?.email as string | undefined
 
-      if (!token || !identifier) {
+      if (!paramToken) {
         const e = new TypeError(
-          "Missing token or email. The sign-in URL was manually opened without token/identifier or the link was not sent correctly in the email.",
-          { cause: { hasToken: !!token, hasEmail: !!identifier } }
+          "Missing token. The sign-in URL was manually opened without token or the link was not sent correctly in the email.",
+          { cause: { hasToken: !!paramToken } }
         )
         e.name = "Configuration"
         throw e
@@ -202,15 +218,22 @@ export async function callback(
       const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
-        identifier,
-        token: await createHash(`${token}${secret}`),
+        // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
+        identifier: paramIdentifier, // TODO: Drop this requirement for lookup in official adapters too
+        token: await createHash(`${paramToken}${secret}`),
       })
 
       const hasInvite = !!invite
-      const expired = invite ? invite.expires.valueOf() < Date.now() : undefined
-      const invalidInvite = !hasInvite || expired
+      const expired = hasInvite && invite.expires.valueOf() < Date.now()
+      const invalidInvite =
+        !hasInvite ||
+        expired ||
+        // The user might have configured the link to not contain the identifier
+        // so we only compare if it exists
+        (paramIdentifier && invite.identifier !== paramIdentifier)
       if (invalidInvite) throw new Verification({ hasInvite, expired })
 
+      const { identifier } = invite
       const user = (await adapter!.getUserByEmail(identifier)) ?? {
         id: crypto.randomUUID(),
         email: identifier,
@@ -311,12 +334,10 @@ export async function callback(
         // prettier-ignore
         new Request(url, { headers, method, body: JSON.stringify(body) })
       )
-      const user = userFromAuthorize && {
-        ...userFromAuthorize,
-        id: userFromAuthorize?.id?.toString() ?? crypto.randomUUID(),
-      }
+      const user = userFromAuthorize
 
       if (!user) throw new CredentialsSignin()
+      else user.id = user.id?.toString() ?? crypto.randomUUID()
 
       const account = {
         providerAccountId: user.id,
@@ -370,7 +391,10 @@ export async function callback(
     } else if (provider.type === "webauthn" && method === "POST") {
       // Get callback action from request. It should be either "authenticate" or "register"
       const action = request.body?.action
-      if (typeof action !== "string" || (action !== "authenticate" && action !== "register")) {
+      if (
+        typeof action !== "string" ||
+        (action !== "authenticate" && action !== "register")
+      ) {
         throw new AuthError("Invalid action parameter")
       }
       // Return an error if the adapter is missing or if the provider
@@ -383,7 +407,11 @@ export async function callback(
       let authenticator: Authenticator | undefined
       switch (action) {
         case "authenticate": {
-          const verified = await verifyAuthenticate(localOptions, request, cookies)
+          const verified = await verifyAuthenticate(
+            localOptions,
+            request,
+            cookies
+          )
 
           user = verified.user
           account = verified.account
@@ -402,13 +430,15 @@ export async function callback(
       }
 
       // Check if user is allowed to sign in
-      await handleAuthorized(
-        { user, account },
-        options,
-      )
+      await handleAuthorized({ user, account }, options)
 
       // Sign user in, creating them and their account if needed
-      const { user: loggedInUser, isNewUser, session, account: currentAccount } = await handleLoginOrRegister(
+      const {
+        user: loggedInUser,
+        isNewUser,
+        session,
+        account: currentAccount,
+      } = await handleLoginOrRegister(
         sessionStore.value,
         user,
         account,
@@ -422,7 +452,10 @@ export async function callback(
 
       // Create new authenticator if needed
       if (authenticator && loggedInUser.id) {
-        await localOptions.adapter.createAuthenticator({ ...authenticator, userId: loggedInUser.id })
+        await localOptions.adapter.createAuthenticator({
+          ...authenticator,
+          userId: loggedInUser.id,
+        })
       }
 
       // Do the session registering dance
@@ -470,15 +503,20 @@ export async function callback(
         })
       }
 
-      await events.signIn?.({ user: loggedInUser, account: currentAccount, isNewUser })
+      await events.signIn?.({
+        user: loggedInUser,
+        account: currentAccount,
+        isNewUser,
+      })
 
       // Handle first logins on new accounts
       // e.g. option to send users to a new account landing page on initial login
       // Note that the callback URL is preserved, so the journey can still be resumed
       if (isNewUser && pages.newUser) {
         return {
-          redirect: `${pages.newUser}${pages.newUser.includes("?") ? "&" : "?"
-            }${new URLSearchParams({ callbackUrl })}`,
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }${new URLSearchParams({ callbackUrl })}`,
           cookies,
         }
       }
@@ -508,9 +546,9 @@ async function handleAuthorized(
     authorized = await signIn(params)
   } catch (e) {
     if (e instanceof AuthError) throw e
-    throw new AuthorizedCallbackError(e as Error)
+    throw new AccessDenied(e as Error)
   }
-  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (!authorized) throw new AccessDenied("AccessDenied")
   if (typeof authorized !== "string") return
   return await redirect({ url: authorized, baseUrl: config.url.origin })
 }

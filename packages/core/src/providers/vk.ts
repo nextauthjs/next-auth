@@ -302,8 +302,8 @@ export interface VkProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import VK from "@auth/core/providers/vk"
  *
  * const request = new Request(origin)
@@ -325,7 +325,7 @@ export interface VkProfile {
  * :::tip
  *
  * The VK provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/vk.ts).
- * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *
@@ -333,10 +333,10 @@ export interface VkProfile {
  *
  * By default the provider uses 5.126 version of the API. See https://vk.com/dev/versions for more info.
  * If you want to use a different version, you can pass it to provider's options object:
- * ```js title="pages/api/auth/[...nextauth].js"
+ * ```ts
  * const apiVersion = "5.126"
  * providers: [
- *   VkProvider({
+ *   Vk({
  *     accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
  *     requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
  *     authorizationUrl:
@@ -382,9 +382,9 @@ export default function VK<P extends Record<string, any> = VkProfile>(
           },
         }).then(async (res) => await res.json())
 
-        profile.response[0].email = tokens.email ? tokens.email : null;
+        profile.response[0].email = tokens.email ? tokens.email : null
 
-        return profile.response[0];
+        return profile.response[0]
       },
     },
     profile(profile: P) {
@@ -395,7 +395,7 @@ export default function VK<P extends Record<string, any> = VkProfile>(
         image: profile.photo_100,
       }
     },
-    style: { logo: "/vk.svg", bg: "#07F", text: "#fff" },
+    style: { bg: "#07F", text: "#fff" },
     options,
   }
 }

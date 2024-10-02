@@ -21,8 +21,8 @@ import WebAuthn, {
  *
  * Install the required peer dependency.
  *
- * ```npm2yarn
- * npm install @simplewebauthn/browser
+ * ```bash npm2yarn
+ * npm install @simplewebauthn/browser@9.0.1
  * ```
  *
  * #### Configuration
@@ -52,7 +52,7 @@ import WebAuthn, {
  * :::tip
  *
  * The Passkey provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/passkey.ts).
- * To override the defaults for your use case, check out [customizing a built-in WebAuthn provider](https://authjs.dev/guides/providers/custom-provider#override-default-options).
+ * To override the defaults for your use case, check out [customizing a built-in WebAuthn provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
  *

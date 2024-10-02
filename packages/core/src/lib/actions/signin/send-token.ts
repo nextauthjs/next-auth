@@ -1,5 +1,5 @@
 import { createHash, randomString, toRequest } from "../../utils/web.js"
-import { AuthorizedCallbackError } from "../../../errors.js"
+import { AccessDenied } from "../../../errors.js"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Account } from "../../../types.js"
@@ -36,9 +36,9 @@ export async function sendToken(
       email: { verificationRequest: true },
     })
   } catch (e) {
-    throw new AuthorizedCallbackError(e as Error)
+    throw new AccessDenied(e as Error)
   }
-  if (!authorized) throw new AuthorizedCallbackError("AccessDenied")
+  if (!authorized) throw new AccessDenied("AccessDenied")
   if (typeof authorized === "string") {
     return {
       redirect: await callbacks.redirect({

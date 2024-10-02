@@ -1,0 +1,104 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/slack.svg" height="64" width="64" />
+
+# Slack Provider
+
+## Resources
+
+- [Slack Authentication documentation](https://api.slack.com/authentication)
+- [Sign-in with Slack](https://api.slack.com/docs/sign-in-with-slack)
+- [Slack app console](https://api.slack.com/apps)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/slack
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/slack
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/slack
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_SLACK_ID
+AUTH_SLACK_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Slack from "next-auth/providers/slack"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Slack],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Slack from "@auth/qwik/providers/slack"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Slack],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Slack from "@auth/sveltekit/providers/slack"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Slack],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Slack from "@auth/express/providers/slack"
+
+app.use("/auth/*", ExpressAuth({ providers: [Slack] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Slack requires that the redirect URL of your app uses https, even for local development. An easy workaround for this is using a service like [ngrok](https://ngrok.com/) that creates a secure tunnel to your app, using https. Remember to set the url as `AUTH_URL` as well.

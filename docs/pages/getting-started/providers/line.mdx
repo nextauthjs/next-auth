@@ -1,0 +1,105 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/line.svg" height="64" width="64" />
+
+# Line Provider
+
+## Resources
+
+- [LINE Login documentation](https://developers.line.biz/en/docs/line-login/integrate-line-login/)
+- [LINE app console](https://developers.line.biz/console/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/line
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/line
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/line
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_LINE_ID
+AUTH_LINE_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Line from "next-auth/providers/line"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Line],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Line from "@auth/qwik/providers/line"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Line],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Line from "@auth/sveltekit/providers/line"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Line],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Line from "@auth/express/providers/line"
+
+app.use("/auth/*", ExpressAuth({ providers: [Line] }))
+```
+
+  </Code.Express>
+</Code>
+
+Create a provider and a LINE login channel at https://developers.line.biz/console/. In the settings of the channel under LINE Login, activate web app and configure your callback URL as defined above.
+
+### Notes
+
+- To retrieve email address, you need to apply for Email address permission. Open [Line Developer Console](https://developers.line.biz/console/), go to your Login Channel. Scroll down bottom to find **OpenID Connect** -> **Email address permission**. Click **Apply** and follow the instruction.

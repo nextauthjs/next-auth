@@ -1,0 +1,107 @@
+import { Callout } from "nextra/components"
+import { ListDisclosure } from "@/components/ListDisclosure"
+import { Link } from "@/components/Link"
+import { Screenshot } from "@/components/Screenshot"
+import { Plus, ArrowSquareOut, GithubLogo, Flask } from "@/icons"
+import manifest from "@/data/manifest.json"
+import { FrameworkLink } from "@/components/FrameworkLink"
+
+# What is Auth.js?
+
+Auth.js is a <abbr title="Designed to work seamlessly across different JavaScript runtime environments without relying on specific features or behaviors of any particular runtime">runtime agnostic</abbr> library based on standard Web APIs that integrates deeply with multiple modern JavaScript frameworks to provide an authentication experience that's simple to get started with, easy to extend, and always private and secure!
+
+This documentation covers `next-auth@5.0.0-beta` and later and all other frameworks under the `@auth/*` namespace. Documentation for `next-auth@4.x.y` can still be found at [next-auth.js.org](https://next-auth.js.org).
+
+Select your framework of choice to get started, or view the example application deployment or repository with the buttons below.
+
+<div className="mb-12 mt-8 flex w-full flex-wrap items-start justify-around gap-2">
+  <FrameworkLink
+    id="nextjs"
+    name="Next.js"
+    demo="https://next-auth-example.vercel.app/"
+    repo="https://github.com/nextauthjs/next-auth-example"
+    isExperimental={false}
+    isInvert={true}
+  />
+  <FrameworkLink
+    id="qwik"
+    name="Qwik"
+    demo="https://qwik-auth-example.vercel.app/"
+    repo="https://github.com/nextauthjs/qwik-auth-example"
+  />
+  <FrameworkLink
+    id="sveltekit"
+    name="SvelteKit"
+    demo="https://sveltekit-auth-example.vercel.app/"
+    repo="https://github.com/nextauthjs/sveltekit-auth-example"
+  />
+  <FrameworkLink
+    id="express"
+    name="Express"
+    demo="https://express-auth-example.vercel.app/"
+    repo="https://github.com/nextauthjs/express-auth-example"
+    isInvert={true}
+  />
+  <Link
+    href="/guides/creating-a-framework-integration"
+    className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-slate-200 bg-white p-4 !no-underline shadow-sm transition duration-300 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 hover:dark:bg-neutral-950"
+  >
+    <Plus className="size-9" />
+    <div className="mt-3 text-sm">Add New</div>
+  </Link>
+</div>
+
+Check the [integrations page](/getting-started/integrations) for all supported packages. We are working on supporting more frameworks, but you can create own or
+help us create one for your favorite framework.
+
+<Callout type="info">
+  To reduce migration overhead, NextAuth.js for Next.js will continue to be
+  released under the `next-auth` package name, instead of the `@auth/*`
+  convention. Auth.js was born out of `next-auth` but [over the years has
+  evolved](/contributors#history) to be framework agnostic.
+
+Confused about Auth.js and NextAuth.js? Have a look at [our
+history](/contributors#history).
+
+</Callout>
+
+## Authentication methods
+
+There are 4 ways to authenticate users with Auth.js:
+
+- [OAuth authentication](/getting-started/authentication/oauth) (_Sign in with Google, GitHub, LinkedIn, etc..._)
+- [Magic Links](/getting-started/authentication/email) (_Email Provider like Forward Email, Resend, Sendgrid, Nodemailer etc..._)
+- [Credentials](/getting-started/authentication/credentials) (_Username and Password, Integrating with external APIs, etc..._)
+- [WebAuthn](/getting-started/authentication/webauthn) (_Passkeys, etc..._)
+
+### Official Providers
+
+<ListDisclosure limit={8}>
+  {Object.entries(manifest.providersOAuth).map(([id, name]) => (
+    <Link
+      href={`/getting-started/providers/${id}`}
+      key={name}
+      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+    >
+      <img src={`/img/providers/${id}.svg`} className="mt-2 w-11" />
+      <div className="text-center text-sm">{name}</div>
+    </Link>
+  ))}
+</ListDisclosure>
+
+### Supported Databases
+
+Optionally, Auth.js can be integrated with an external database via Database adapters, in case you need or want to store user data.
+
+<ListDisclosure limit={8}>
+  {Object.entries(manifest.adapters).map(([value, label]) => (
+    <Link
+      href={`/getting-started/adapters/${value}`}
+      key={value}
+      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+    >
+      <img src={`/img/adapters/${value}.svg`} className="mt-2 h-12" />
+      <div className="text-center text-sm">{label}</div>
+    </Link>
+  ))}
+</ListDisclosure>
