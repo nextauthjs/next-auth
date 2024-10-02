@@ -334,7 +334,7 @@ async function deleteDocs<T>(
   }
 }
 
-/* @internal */
+/** @internal */
 export async function getDoc<T>(
   docRef: FirebaseFirestore.DocumentReference<T>
 ): Promise<T | null> {
