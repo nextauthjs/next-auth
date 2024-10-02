@@ -39,12 +39,11 @@ export function PrismaAdapter(
       })
       return (account?.user as AdapterUser) ?? null
     },
-    updateUser: ({ id, ...data }) => {
-      return p.user.update({
+    updateUser: ({ id, ...data }) =>
+      p.user.update({
         where: { id },
         ...stripUndefined(data),
-      }) as Promise<AdapterUser>
-    },
+      }) as Promise<AdapterUser>,
     deleteUser: (id) =>
       p.user.delete({ where: { id } }) as Promise<AdapterUser>,
     linkAccount: (data) =>
