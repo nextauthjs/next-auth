@@ -18,12 +18,20 @@ npm install @auth/surrealdb-adapter surrealdb
 
 ### Environment Variables
 
+A valid authentication combination must be provided. The following authentication combinations are supported:
+
+- RootAuth
+- NamespaceAuth
+- DatabaseAuth
+- ScopeAuth
+
 ```sh
-AUTH_SURREAL_URL,
-AUTH_SURREAL_NS,
-AUTH_SURREAL_DB,
-AUTH_SURREAL_USER,
-AUTH_SURREAL_PW,
+AUTH_SURREAL_URL (required)
+AUTH_SURREAL_NS
+AUTH_SURREAL_DB
+AUTH_SURREAL_USER
+AUTH_SURREAL_PW
+AUTH_SURREAL_SCOPE
 ```
 
 ### Configuration
