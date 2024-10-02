@@ -52,9 +52,8 @@ export interface MongoDBAdapterOptions {
   databaseName?: string
   /**
    * Callback function for managing the closing of the MongoDB client.
-   * This could be useful in serverless environments, especially when `client`
-   * is provided as a function returning Promise<MongoClient>, not just a simple promise.
-   * It allows for more sophisticated management of database connections,
+   * This could be useful when `client` is provided as a function returning MongoClient | Promise<MongoClient>.
+   * It allows for more customized management of database connections,
    * addressing persistence, container reuse, and connection closure issues.
    */
   onClose?: (client: MongoClient) => Promise<void>
@@ -108,18 +107,29 @@ export function _id(hex?: string) {
 
 export function MongoDBAdapter(
   /**
-   * The MongoDB client. You can either pass a promise that resolves to a `MongoClient` or a function that returns a promise that resolves to a `MongoClient`.
-   * Using a function that returns a `Promise<MongoClient>` could be useful in serverless environments, particularly when combined with `options.onClose`, to efficiently handle database connections and address challenges with persistence, container reuse, and connection closure.
-   * These functions enable either straightforward open-close database connections or more complex caching and connection reuse strategies.
+   * The MongoDB client.
+   *
+   * The MongoDB team recommends providing a non-connected `MongoClient` instance to avoid unhandled promise rejections if the client fails to connect.
+   *
+   * Alternatively, you can also pass:
+   * - A promise that resolves to a connected `MongoClient` (not recommended).
+   * - A function, to handle more complex and custom connection strategies.
+   *
+   * Using a function that returns `MongoClient | Promise<MongoClient>`, combined with `options.onClose`, can be useful when you want a more advanced and customized connection strategy to address challenges related to persistence, container reuse, and connection closure.
    */
-  client: Promise<MongoClient> | (() => Promise<MongoClient>),
+  client:
+    | MongoClient
+    | Promise<MongoClient>
+    | (() => MongoClient | Promise<MongoClient>),
   options: MongoDBAdapterOptions = {}
 ): Adapter {
   const { collections } = options
   const { from, to } = format
 
   const getDb = async () => {
-    const _client = await (typeof client === "function" ? client() : client)
+    const _client: MongoClient = await (typeof client === "function"
+      ? client()
+      : client)
     const _db = _client.db(options.databaseName)
     const c = { ...defaultCollections, ...collections }
     return {

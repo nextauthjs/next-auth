@@ -1,7 +1,7 @@
 {
   "name": "@auth/express",
   "description": "Authentication for Express.",
-  "version": "0.5.6",
+  "version": "0.6.1",
   "type": "module",
   "files": [
     "*.js",
@@ -42,7 +42,7 @@
     "@auth/core": "workspace:*"
   },
   "devDependencies": {
-    "@auth/core": "workspace:experimental",
+    "@auth/core": "workspace:*",
     "@types/express": "^4.17.17",
     "@types/supertest": "^2.0.12",
     "supertest": "^6.3.3"

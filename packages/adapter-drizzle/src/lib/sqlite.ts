@@ -1,4 +1,4 @@
-import { and, eq, getTableColumns } from "drizzle-orm"
+import { GeneratedColumnConfig, and, eq, getTableColumns } from "drizzle-orm"
 import {
   BaseSQLiteDatabase,
   SQLiteColumn,
@@ -18,6 +18,7 @@ import type {
   AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
+import { Awaitable } from "@auth/core/types"
 
 export function defineTables(
   schema: Partial<DefaultSQLiteSchema> = {}
@@ -29,7 +30,7 @@ export function defineTables(
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
       name: text("name"),
-      email: text("email").notNull(),
+      email: text("email").unique(),
       emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
       image: text("image"),
     }) satisfies DefaultSQLiteUsersTable)
@@ -141,25 +142,27 @@ export function SQLiteDrizzleAdapter(
         .insert(usersTable)
         .values(hasDefaultId ? insertData : { ...insertData, id })
         .returning()
-        .get()
+        .get() as Awaitable<AdapterUser>
     },
     async getUser(userId: string) {
-      const result = await client
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.id, userId))
-        .get()
+      const result =
+        (await client
+          .select()
+          .from(usersTable)
+          .where(eq(usersTable.id, userId))
+          .get()) ?? null
 
-      return result ?? null
+      return result as Awaitable<AdapterUser | null>
     },
     async getUserByEmail(email: string) {
-      const result = await client
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, email))
-        .get()
+      const result =
+        (await client
+          .select()
+          .from(usersTable)
+          .where(eq(usersTable.email, email))
+          .get()) ?? null
 
-      return result ?? null
+      return result as Awaitable<AdapterUser | null>
     },
     async createSession(data: {
       sessionToken: string
@@ -169,17 +172,21 @@ export function SQLiteDrizzleAdapter(
       return client.insert(sessionsTable).values(data).returning().get()
     },
     async getSessionAndUser(sessionToken: string) {
-      const result = await client
-        .select({
-          session: sessionsTable,
-          user: usersTable,
-        })
-        .from(sessionsTable)
-        .where(eq(sessionsTable.sessionToken, sessionToken))
-        .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .get()
+      const result =
+        (await client
+          .select({
+            session: sessionsTable,
+            user: usersTable,
+          })
+          .from(sessionsTable)
+          .where(eq(sessionsTable.sessionToken, sessionToken))
+          .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
+          .get()) ?? null
 
-      return result ?? null
+      return result as Awaitable<{
+        session: AdapterSession
+        user: AdapterUser
+      } | null>
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -197,7 +204,7 @@ export function SQLiteDrizzleAdapter(
         throw new Error("User not found.")
       }
 
-      return result
+      return result as Awaitable<AdapterUser>
     },
     async updateSession(
       data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
@@ -232,7 +239,9 @@ export function SQLiteDrizzleAdapter(
         )
         .get()
 
-      return result?.user ?? null
+      const user = result?.user ?? null
+
+      return user as Awaitable<AdapterUser | null>
     },
     async deleteSession(sessionToken: string) {
       await client
@@ -294,21 +303,21 @@ export function SQLiteDrizzleAdapter(
         .insert(authenticatorsTable)
         .values(data)
         .returning()
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0] ?? null) as Awaitable<AdapterAuthenticator>
     },
     async getAuthenticator(credentialID: string) {
       return client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0] ?? null) as Awaitable<AdapterAuthenticator | null>
     },
     async listAuthenticatorsByUserId(userId: string) {
       return client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res)
+        .then((res) => res) as Awaitable<AdapterAuthenticator[]>
     },
     async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
       const authenticator = await client
@@ -320,7 +329,7 @@ export function SQLiteDrizzleAdapter(
 
       if (!authenticator) throw new Error("Authenticator not found.")
 
-      return authenticator
+      return authenticator as Awaitable<AdapterAuthenticator>
     },
   }
 }
@@ -330,6 +339,7 @@ type DefaultSQLiteColumn<
     data: string | boolean | number | Date
     dataType: "string" | "boolean" | "number" | "date"
     notNull: boolean
+    isPrimaryKey?: boolean
     columnType:
       | "SQLiteText"
       | "SQLiteBoolean"
@@ -338,6 +348,10 @@ type DefaultSQLiteColumn<
   },
 > = SQLiteColumn<{
   name: string
+  isAutoincrement: boolean
+  isPrimaryKey: T["isPrimaryKey"] extends true ? true : false
+  hasRuntimeDefault: boolean
+  generated: GeneratedColumnConfig<T["data"]> | undefined
   columnType: T["columnType"]
   data: T["data"]
   driverParam: string | number | boolean
@@ -354,6 +368,7 @@ export type DefaultSQLiteUsersTable = SQLiteTableWithColumns<{
     id: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
+      isPrimaryKey: true
       notNull: true
       dataType: "string"
     }>
@@ -366,7 +381,7 @@ export type DefaultSQLiteUsersTable = SQLiteTableWithColumns<{
     email: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
-      notNull: true
+      notNull: boolean
       dataType: "string"
     }>
     emailVerified: DefaultSQLiteColumn<{
@@ -466,6 +481,7 @@ export type DefaultSQLiteSessionsTable = SQLiteTableWithColumns<{
     sessionToken: DefaultSQLiteColumn<{
       columnType: "SQLiteText"
       data: string
+      isPrimaryKey: true
       notNull: true
       dataType: "string"
     }>

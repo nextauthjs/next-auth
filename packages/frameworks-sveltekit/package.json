@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "1.4.1",
+  "version": "1.5.3",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -14,7 +14,11 @@
   ],
   "license": "ISC",
   "homepage": "https://sveltekit.authjs.dev",
-  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextauthjs/next-auth",
+    "directory": "packages/frameworks-sveltekit"
+  },
   "author": "Thang Huu Vu <hi@thvu.dev>",
   "contributors": [
     "Thang Huu Vu <hi@thvu.dev>",

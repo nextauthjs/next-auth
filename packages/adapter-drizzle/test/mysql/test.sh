@@ -15,11 +15,8 @@ docker run -d --rm \
 
 echo "Waiting 15s for db to start..." && sleep 15
 
-# Generate Migration from Schema
-drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
-
-# Push Schema to DB
-tsx ./test/mysql/migrator.ts
+drizzle-kit generate --config=./test/mysql/drizzle.config.ts
+drizzle-kit migrate --config=./test/mysql/drizzle.config.ts
 
 # Run Tests
 if vitest run -c ../utils/vitest.config.ts ./test/mysql/index.test.ts; then

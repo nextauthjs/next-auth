@@ -1,23 +1,28 @@
-// Source: https://stackoverflow.com/a/34749873/5364135
-
-/** Simple object check */
-function isObject(item: any): boolean {
-  return item && typeof item === "object" && !Array.isArray(item)
+function isObject(item: unknown): item is object {
+  return item !== null && typeof item === "object"
 }
 
-/** Deep merge two objects */
-export function merge(target: any, ...sources: any[]): any {
+/** Deep merge two or more objects */
+export function merge<T extends Record<string, unknown>>(
+  target: T,
+  ...sources: Array<Record<string, unknown> | undefined>
+): T & Record<string, unknown> {
   if (!sources.length) return target
   const source = sources.shift()
 
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
       if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, { [key]: {} })
-        merge(target[key], source[key])
-      } else {
-        Object.assign(target, { [key]: source[key] })
-      }
+        if (!isObject(target[key]))
+          (target as Record<string, unknown>)[key] = Array.isArray(source[key])
+            ? []
+            : {}
+        merge(
+          (target as Record<string, unknown>)[key] as T,
+          source[key] as Record<string, unknown>
+        )
+      } else if (source[key] !== undefined)
+        (target as Record<string, unknown>)[key] = source[key]
     }
   }
 

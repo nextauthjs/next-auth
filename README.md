@@ -5,7 +5,8 @@
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
   <p align="center" style="align: center;">
-    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?style=flat-square&label=latest%20release&color=purple" alt="GitHub Stable Release" /></a>
+    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/latest?style=flat-square&label=latest%20stable" alt="NPM next-auth@latest release" /></a>
+    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/beta?style=flat-square&label=latest%20v5" alt="NPM next-auth@beta release" /></a>
     <!-- TODO: Should count `@auth/core` when NextAuth.js v5 is released as stable. -->
     <a href="https://www.npmtrends.com/next-auth"><img src="https://img.shields.io/npm/dm/next-auth?style=flat-square&color=cyan" alt="Downloads" /></a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
@@ -93,6 +94,13 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://a0.to/signup/nextauthjs" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/2824157?v=4" alt="Auth0 Logo" />
+        </a><br />
+        <div>Auth0</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://fusionauth.io" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
         </a><br />
@@ -120,6 +128,8 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Prisma</div>
         <sub>💵</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -134,8 +144,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Descope</div>
         <sub>💵</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://badass.dev" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/136839242?v=4" alt="Badass Courses Logo" />
@@ -151,6 +159,29 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://arcjet.com/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/24397786?s=200&v=4" alt="Arcjet Logo" />
+        </a><br />
+        <div>Arcjet</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://route4me.com/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/7936820?v=4" alt="Route4Me Logo" />
+        </a><br />
+        <div>Route4Me</div>
+        <sub>💵</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        <a href="https://www.netlight.com/" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
+        </a><br />
+        <div>Netlight</div>
+        <sub>☁️</sub>
+      </td>
+      <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />
         </a><br />
@@ -162,13 +193,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
           <img height="96" src="https://d33wubrfki0l68.cloudfront.net/cdc4a3833bd878933fcc131655878dbf226ac1c5/10cd6/images/logo_bolt_small.png" alt="superblog Logo" />
         </a><br />
         <div>superblog</div>
-        <sub>☁️</sub>
-      </td>
-      <td align="center" valign="top">
-        <a href="https://www.netlight.com/" target="_blank">
-          <img height="96" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
-        </a><br />
-        <div>Netlight</div>
         <sub>☁️</sub>
       </td>
       <td align="center" valign="top">

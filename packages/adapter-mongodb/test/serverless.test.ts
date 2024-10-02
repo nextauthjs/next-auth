@@ -4,9 +4,7 @@ import { MongoClient } from "mongodb"
 import { expect, test, vi } from "vitest"
 
 const name = "serverless-test"
-const clientPromise = new MongoClient(
-  `mongodb://localhost:27017/${name}`
-).connect()
+const client = new MongoClient(`mongodb://localhost:27017/${name}`)
 
 const onClose = vi.fn(async (client: MongoClient) => {
   await client.close()
@@ -29,12 +27,10 @@ runBasicTests({
   ),
   db: {
     async disconnect() {
-      const client = await clientPromise
       await client.db().dropDatabase()
       await client.close()
     },
     async user(id) {
-      const client = await clientPromise
       const user = await client
         .db()
         .collection(defaultCollections.Users)
@@ -44,7 +40,6 @@ runBasicTests({
       return format.from(user)
     },
     async account(provider_providerAccountId) {
-      const client = await clientPromise
       const account = await client
         .db()
         .collection(defaultCollections.Accounts)
@@ -53,7 +48,6 @@ runBasicTests({
       return format.from(account)
     },
     async session(sessionToken) {
-      const client = await clientPromise
       const session = await client
         .db()
         .collection(defaultCollections.Sessions)
@@ -62,7 +56,6 @@ runBasicTests({
       return format.from(session)
     },
     async verificationToken(identifier_token) {
-      const client = await clientPromise
       const token = await client
         .db()
         .collection(defaultCollections.VerificationTokens)

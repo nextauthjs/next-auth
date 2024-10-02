@@ -3,7 +3,7 @@ import type { Config } from "drizzle-kit"
 export default {
   schema: "./test/mysql/schema.ts",
   out: "./test/mysql/.drizzle",
-  driver: "mysql2",
+  dialect: "mysql",
   dbCredentials: {
     host: "localhost",
     user: "root",

@@ -13,9 +13,8 @@ export function html(params: { url: string; host: string; theme: Theme }) {
 
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const brandColor = theme.brandColor || "#346df1"
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+
   const buttonText = theme.buttonText || "#fff"
 
   const color = {

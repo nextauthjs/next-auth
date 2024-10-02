@@ -120,6 +120,13 @@ export interface AppleProfile extends Record<string, any> {
  * })
  * ```
  * 
+ * 
+ * Apple requires the client secret to be a JWT. You can generate one using the following script:
+ * https://bal.so/apple-gen-secret
+ * 
+ * Read more: [Creating the Client Secret
+](https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens#3262048)
+ * 
  * ### Resources
  * 
  * - Sign in with Apple [Overview](https://developer.apple.com/sign-in-with-apple/get-started/)
@@ -140,16 +147,7 @@ export interface AppleProfile extends Record<string, any> {
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
 export default function Apple<P extends AppleProfile>(
-  options: Omit<OAuthUserConfig<P>, "clientSecret"> & {
-    /**
-     * Apple requires the client secret to be a JWT. You can generate one using the following script:
-     * https://bal.so/apple-gen-secret
-     * 
-     * Read more: [Creating the Client Secret
-](https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens#3262048)
-     */
-    clientSecret: string
-  }
+  options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
     id: "apple",
@@ -159,18 +157,15 @@ export default function Apple<P extends AppleProfile>(
     authorization: {
       params: { scope: "name email", response_mode: "form_post" },
     },
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: null,
-      }
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
     },
     style: {
       text: "#fff",
       bg: "#000",
     },
+    // https://developer.apple.com/documentation/sign_in_with_apple/request_an_authorization_to_the_sign_in_with_apple_server
+    checks: ["nonce", "state"],
     options,
   }
 }

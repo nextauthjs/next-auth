@@ -1,6 +1,8 @@
 import { Auth, createActionURL, type AuthConfig } from "@auth/core"
-import { headers } from "next/headers.js"
-import { NextResponse } from "next/server.js"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import { headers } from "next/headers"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import { NextResponse } from "next/server"
 import { reqWithEnvURL } from "./env.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -10,11 +12,8 @@ import type {
   NextApiResponse,
 } from "next"
 import type { AppRouteHandlerFn } from "./types.js"
-import type {
-  NextFetchEvent,
-  NextMiddleware,
-  NextRequest,
-} from "next/server.js"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
@@ -67,7 +66,7 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
     headers.get("x-forwarded-proto"),
     headers,
     process.env,
-    config.basePath
+    config
   )
   const request = new Request(url, {
     headers: { cookie: headers.get("cookie") ?? "" },
@@ -121,15 +120,15 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
 export function initAuth(
   config:
     | NextAuthConfig
-    | ((request: NextRequest | undefined) => NextAuthConfig),
+    | ((request: NextRequest | undefined) => Awaitable<NextAuthConfig>),
   onLazyLoad?: (config: NextAuthConfig) => void // To set the default env vars
 ) {
   if (typeof config === "function") {
-    return (...args: WithAuthArgs) => {
+    return async (...args: WithAuthArgs) => {
       if (!args.length) {
         // React Server Components
         const _headers = headers()
-        const _config = config(undefined) // Review: Should we pass headers() here instead?
+        const _config = await config(undefined) // Review: Should we pass headers() here instead?
         onLazyLoad?.(_config)
 
         return getSession(_headers, _config).then((r) => r.json())
@@ -140,7 +139,7 @@ export function initAuth(
         // export { auth as default } from "auth"
         const req = args[0]
         const ev = args[1]
-        const _config = config(req)
+        const _config = await config(req)
         onLazyLoad?.(_config)
 
         // args[0] is supposed to be NextRequest but the instanceof check is failing.
@@ -155,14 +154,15 @@ export function initAuth(
         return async (
           ...args: Parameters<NextAuthMiddleware | AppRouteHandlerFn>
         ) => {
-          return handleAuth(args, config(args[0]), userMiddlewareOrRoute)
+          const _config = await config(args[0])
+          onLazyLoad?.(_config)
+          return handleAuth(args, _config, userMiddlewareOrRoute)
         }
       }
       // API Routes, getServerSideProps
       const request = "req" in args[0] ? args[0].req : args[0]
       const response: any = "res" in args[0] ? args[0].res : args[1]
-      // @ts-expect-error -- request is NextRequest
-      const _config = config(request)
+      const _config = await config(request)
       onLazyLoad?.(_config)
 
       // @ts-expect-error -- request is NextRequest
@@ -263,7 +263,6 @@ async function handleAuth(
     const augmentedReq = request as NextAuthRequest
     augmentedReq.auth = auth
     response =
-      // @ts-expect-error
       (await userMiddlewareOrRoute(augmentedReq, args[1])) ??
       NextResponse.next()
   } else if (!authorized) {

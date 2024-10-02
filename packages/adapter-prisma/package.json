@@ -1,6 +1,6 @@
 {
   "name": "@auth/prisma-adapter",
-  "version": "2.4.1",
+  "version": "2.5.3",
   "description": "Prisma adapter for Auth.js",
   "homepage": "https://authjs.dev/reference/adapter/prisma",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -21,7 +21,8 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./index.js",
+      "default": "./index.js"
     }
   },
   "license": "ISC",
@@ -55,9 +56,9 @@
     "@prisma/client": ">=2.26.0 || >=3 || >=4 || >=5"
   },
   "devDependencies": {
-    "@prisma/client": "^5.9.1",
-    "@prisma/extension-accelerate": "^0.6.3",
-    "mongodb": "^4.17.0",
-    "prisma": "^5.9.1"
+    "@prisma/client": "^5.20.0",
+    "@prisma/extension-accelerate": "1.1.0",
+    "mongodb": "^6.9.0",
+    "prisma": "^5.20.0"
   }
 }

@@ -40,19 +40,36 @@ AUTH_FIREBASE_PRIVATE_KEY
 import NextAuth from "next-auth"
 import { FirestoreAdapter } from "@auth/firebase-adapter"
 
-export { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [],
   adapter: FirestoreAdapter(),
 })
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { FirestoreAdapter } from "@auth/firebase-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: FirestoreAdapter(),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { FirestoreAdapter } from "@auth/firebase-adapter"
 
-export { handle, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [],
   adapter: FirestoreAdapter(),
 })
 ```
