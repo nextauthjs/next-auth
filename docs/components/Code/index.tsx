@@ -34,12 +34,15 @@ const allFrameworks = {
   [ExpressCode.name]: "Express",
 }
 
+/**
+ * Replace all non-alphabetic characters with a hyphen
+ *
+ * @param url - URL to parse
+ * @returns - A string parsed from the URL
+ */
 const parseParams = (url: string): string => {
-  return url
-    .toLowerCase()
-    .replace(/\s/g, "")
-    .replaceAll(/\(/g, "-")
-    .replaceAll(/\)/g, "")
+  let parsedUrl = url.toLowerCase().replaceAll(/[^a-zA-z]+/g, "-")
+  return parsedUrl.endsWith("-") ? parsedUrl.slice(0, -1) : parsedUrl
 }
 
 export function Code({ children }: ChildrenProps) {
@@ -68,23 +71,15 @@ export function Code({ children }: ChildrenProps) {
   }
 
   useEffect(() => {
-    const getCookitFramework = window.localStorage.getItem(AUTHJS_TAB_KEY)
-    if (!getCookitFramework) {
-      updateFrameworkStorage("next.js")
+    const length = Object.keys(renderedFrameworks).length
+    const getFrameworkStorage = window.localStorage.getItem(AUTHJS_TAB_KEY)
+    const indexFramework = parseInt(getFrameworkStorage ?? "0") % length
+    if (!getFrameworkStorage) {
       window.localStorage.setItem(AUTHJS_TAB_KEY, "0")
-    } else {
-      const indexCookieFramework = parseInt(getCookitFramework)
-      if (indexCookieFramework > Object.keys(renderedFrameworks).length - 1) {
-        updateFrameworkStorage("next.js")
-        window.localStorage.setItem(AUTHJS_TAB_KEY, "0")
-      } else {
-        updateFrameworkStorage(
-          parseParams(
-            Object.values(renderedFrameworks)[parseInt(getCookitFramework)]
-          )
-        )
-      }
     }
+    updateFrameworkStorage(
+      parseParams(Object.values(renderedFrameworks)[indexFramework])
+    )
   }, [router.pathname, renderedFrameworks])
 
   return (
