@@ -36,15 +36,16 @@ export default function () {
   const docSearchRef = useRef<HTMLDivElement>(null)
   const [isSearchHitsVisible, setIsSearchHitsVisible] = useState(false)
 
-  const ctrlKHandler = (e: KeyboardEvent) => {
-    if (e.repeat || e.target instanceof HTMLInputElement) return
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault()
-      document.querySelector<HTMLInputElement>('input[type="search"]')?.focus()
-    }
-  }
-
   useEffect(() => {
+    function ctrlKHandler(e: KeyboardEvent) {
+      if (e.repeat || e.target instanceof HTMLInputElement) return
+      if (e.ctrlKey && e.key === "k") {
+        e.preventDefault()
+        document
+          .querySelector<HTMLInputElement>('input[type="search"]')
+          ?.focus()
+      }
+    }
     function clickSearchBoxOutsideHandler(event: MouseEvent) {
       setIsSearchHitsVisible(
         Boolean(
