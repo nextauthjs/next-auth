@@ -40,7 +40,7 @@ export const config = (clientPromise: Promise<Surreal>) => ({
           surreal.delete("user"),
         ])
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
       if (surreal.close) surreal.close()
     },
@@ -51,7 +51,6 @@ export const config = (clientPromise: Promise<Surreal>) => ({
         user: userId,
       })
       const user = users.at(0)
-      console.log(user)
       if (user) return docToUser(user)
       return null
     },
