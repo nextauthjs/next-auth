@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^5.20.0",
-    "@prisma/extension-accelerate": "^1.2.0",
+    "@prisma/extension-accelerate": "1.1.0",
     "mongodb": "^6.9.0",
     "prisma": "^5.20.0"
   }
