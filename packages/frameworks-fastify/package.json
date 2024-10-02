@@ -1,0 +1,62 @@
+{
+  "name": "@auth/fastify",
+  "description": "Authentication for Fastify.",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "lib",
+    "providers",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./providers": {
+      "types": "./providers/index.d.ts"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
+    },
+    "./providers/*": {
+      "types": "./providers/*.d.ts",
+      "import": "./providers/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "pnpm clean && pnpm providers && tsc",
+    "clean": "rm -rf lib index.* src/lib/providers",
+    "test": "vitest run -c ../utils/vitest.config.ts",
+    "test:debug": "vitest --inspect --inspect-brk --pool threads --poolOptions.threads.singleThread run -c ../utils/vitest.config.ts",
+    "providers": "node ../utils/scripts/providers"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "@fastify/formbody": "^8.0.1"
+  },
+  "devDependencies": {
+    "@auth/core": "workspace:experimental",
+    "fastify": "^5.0.0"
+  },
+  "peerDependencies": {
+    "fastify": "^5.0.0"
+  },
+  "keywords": [
+    "Fastify",
+    "Auth.js"
+  ],
+  "author": "Lachie Hill <lachiehill46@gmail.com>",
+  "contributors": [
+    "Rexford Essilfie <rexfordessilfie09@gmail.com",
+    "Lachie Hill <lachiehill46@gmail.com>"
+  ],
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "license": "ISC"
+}

@@ -150,6 +150,65 @@ app.use("/", root)
 ```
 
 </Code.Express>
+<Code.Fastify>
+
+You can protect routes by checking for the presence of a session and then redirect to a login page if the session is not present. This can either be done per route, or for a group of routes using a middleware such as the following:
+
+```ts filename="lib.ts"
+import { getSession } from "@auth/fastify"
+
+export async function authenticatedUser(
+  req: FastifyRequest,
+  reply: FastifyReply
+) {
+  reply.session ??= await getSession(req, authConfig)
+  if (!reply.session?.user) {
+    res.redirect("/login")
+  }
+}
+```
+
+To protect a single route, simply register the preHandler hook to the route as follows:
+
+```ts filename="app.ts"
+import { authenticatedUser } from "./lib.ts"
+
+// This route is protected
+fastify.get("/profile", { preHandler: [authenticatedUser] }, (req, reply) => {
+  const session = reply.session
+  reply.view("profile", { user: session?.user })
+})
+
+// This route is not protected
+fastify.get("/", (req, reply) => {
+  reply.view("index")
+})
+```
+
+To protect a group of routes, create a plugin and register the authenication hook and routes to the instance as follows:
+
+```ts filename="app.ts"
+import { authenticatedUser } from "./lib.ts"
+
+fastify.register(
+  async (instance) => {
+    // All routes on this instance will be protected because of the preHandler hook
+    instance.addHook("preHandler", authenticatedUser)
+
+    instance.get("/", (req, reply) => {
+      reply.view("protected")
+    })
+
+    // Example api route
+    instance.get("/me", (req, reply) => {
+      reply.send(reply.session?.user)
+    })
+  },
+  { prefix: "/protected" }
+)
+```
+
+</Code.Fastify>
 </Code>
 
 ### API Routes
@@ -238,6 +297,11 @@ export const GET: RequestHandler = async (event) => {
 API Routes are protected in the same way as any other route in Express, see [the examples above](/getting-started/session-management/protecting?framework=express#pages).
 
 </Code.Express>
+<Code.Fastify>
+
+API Routes are protected in the same way as any other route in Fastify, see [the examples above](/getting-started/session-management/protecting?framework=fastify#pages).
+
+</Code.Fastify>
 </Code>
 
 ### Next.js Middleware

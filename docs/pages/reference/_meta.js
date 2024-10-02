@@ -10,6 +10,7 @@ export default {
   express: "@auth/express",
   qwik: "@auth/qwik",
   "solid-start": "@auth/solid-start",
+  fastify: "@auth/fastify",
   warnings: "Warnings",
   errors: {
     title: "Errors",

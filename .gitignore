@@ -116,6 +116,10 @@ docs/docs/reference/solidstart
 # Express
 docs/docs/reference/express
 
+# Fastify
+docs/docs/reference/fastify
+
+
 
 # Adapters
 docs/docs/reference/adapter

@@ -14,6 +14,7 @@ Code.NextClient = NextClientCode
 Code.Svelte = SvelteCode
 // Code.Solid = SolidCode;
 Code.Express = ExpressCode
+Code.Fastify = FastifyCode
 Code.Qwik = QwikCode
 
 const baseFrameworks = {
@@ -22,6 +23,7 @@ const baseFrameworks = {
   [SvelteCode.name]: "SvelteKit",
   [ExpressCode.name]: "Express",
   // [SolidCode.name]: "SolidStart",
+  [FastifyCode.name]: "Fastify",
 }
 
 const allFrameworks = {
@@ -31,6 +33,7 @@ const allFrameworks = {
   [SvelteCode.name]: "SvelteKit",
   // [SolidCode.name]: "SolidStart",
   [ExpressCode.name]: "Express",
+  [FastifyCode.name]: "Fastify",
 }
 
 const findTabIndex = (frameworks: Record<string, string>, tab: string) => {
@@ -129,5 +132,9 @@ function ExpressCode({ children }: ChildrenProps) {
 }
 
 function QwikCode({ children }: ChildrenProps) {
+  return <Tabs.Tab>{children}</Tabs.Tab>
+}
+
+function FastifyCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }

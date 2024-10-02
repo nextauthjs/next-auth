@@ -42,6 +42,9 @@ packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
 # @auth/express
 packages/frameworks-express/providers
 
+# @auth/fastify
+packages/frameworks-fastify/providers
+
 # next-auth
 packages/next-auth/src/providers/oauth-types.ts
 packages/next-auth/css/index.css
