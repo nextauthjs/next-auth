@@ -12,12 +12,17 @@ This is `name`, `email`, and `image`.
 
 A common use case is to add the user's id to the session. Below it is shown how to do this based on the session strategy you are using.
 
+<Callout type="info">
+  By default, the `id` property does not exist on `token` or `session`. See the
+  [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
+</Callout>
+
 ## With JWT
 
 To have access to the user id, add the following to your Auth.js configuration:
 
 ```ts filename="auth.ts"
-  providers,
+  //  By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   callbacks: {
     jwt({ token, user }) {
       if (user) { // User is available during sign-in
@@ -44,7 +49,7 @@ Calls to `auth()` or `useSession()` will now have access to the user's id.
 If you are using a database session strategy, you can add the user's id to the session by modifying the `session` callback:
 
 ```ts filename="auth.ts"
-  providers,
+  //  By default, the `id` property does not exist on `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id
