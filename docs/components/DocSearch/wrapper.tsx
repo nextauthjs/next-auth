@@ -44,21 +44,16 @@ export default function () {
     }
   }
 
-  const clickSearchBoxOutsideHandler = (event: MouseEvent) => {
-    if (
-      event.target &&
-      event.target instanceof Node &&
-      docSearchRef.current &&
-      docSearchRef.current.contains(event.target)
-    ) {
-      setIsSearchHitsVisible(true)
-      return
+  useEffect(() => {
+    function clickSearchBoxOutsideHandler(event: MouseEvent) {
+      setIsSearchHitsVisible(
+        Boolean(
+          event.target instanceof Node &&
+            docSearchRef.current?.contains(event.target)
+        )
+      )
     }
 
-    setIsSearchHitsVisible(false)
-  }
-
-  useEffect(() => {
     window.addEventListener("keydown", ctrlKHandler)
     window.addEventListener("mousedown", clickSearchBoxOutsideHandler)
 
