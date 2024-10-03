@@ -90,7 +90,7 @@ export default function Strava<P extends StravaProfile>(
     },
     profile(profile) {
       return {
-        id: profile.id,
+        id: String(profile.id),
         name: `${profile.firstname} ${profile.lastname}`,
         email: null,
         image: profile.profile,
