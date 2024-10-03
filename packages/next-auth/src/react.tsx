@@ -501,13 +501,11 @@ export function SessionProvider(props: SessionProviderProps) {
             : { body: { csrfToken: await getCsrfToken(), data } }
         )
         setLoading(false)
-        if (newSession) {
-          setSession(newSession)
-          broadcast().postMessage({
-            event: "session",
-            data: { trigger: "getSession" },
-          })
-        }
+        setSession(newSession)
+        broadcast().postMessage({
+          event: "session",
+          data: { trigger: "getSession" },
+        })
         return newSession
       },
     }),
