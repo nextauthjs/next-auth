@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#fd4b2d", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#fd4b2d", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Authentik</b> integration.</span>
  * <a href="https://goauthentik.io/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/authentik.svg" height="48" width="48"/>

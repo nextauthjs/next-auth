@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>WordPress</b> integration.</span>
  * <a href="https://wordpress.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/wordpress.svg" height="48" />
