@@ -35,7 +35,7 @@ providers: [
 
 WorkOS is not an identity provider itself, but, rather, a bridge to multiple single sign-on (SSO) providers. As a result, we need to make some additional changes to authenticate users using WorkOS.
 
-In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use. You should use the `organization` or `connection` `authorizationParams` to specifiy which connection to use:
+In order to sign a user in using WorkOS, we need to specify which WorkOS Connection to use. You should use the `organization` or `connection` `authorizationParams` to specify which connection to use:
 
 ```js
 import { signIn } from "next-auth/react"
