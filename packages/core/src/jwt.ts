@@ -71,7 +71,7 @@ export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
     .encrypt(encryptionSecret)
 }
 
-/** Decodes a Auth.js issued JWT. */
+/** Decodes an Auth.js issued JWT. */
 export async function decode<Payload = JWT>(
   params: JWTDecodeParams
 ): Promise<Payload | null> {
@@ -108,7 +108,7 @@ export async function decode<Payload = JWT>(
 }
 
 type GetTokenParamsBase = {
-  secret: JWTDecodeParams["secret"]
+  secret?: JWTDecodeParams["secret"]
   salt?: JWTDecodeParams["salt"]
 }
 
@@ -155,8 +155,6 @@ export async function getToken(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
-  if (!secret)
-    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   const headers =
     req.headers instanceof Headers ? req.headers : new Headers(req.headers)
@@ -179,6 +177,9 @@ export async function getToken(
   if (!token) return null
 
   if (raw) return token
+
+  if (!secret)
+    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   try {
     return await _decode({ token, secret, salt })

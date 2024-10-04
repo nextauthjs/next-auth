@@ -24,3 +24,5 @@
 </p>
 
 ---
+
+Check out the documentation at [authjs.dev](https://authjs.dev/getting-started/adapters/azure-tables).

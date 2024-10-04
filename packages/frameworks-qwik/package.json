@@ -1,6 +1,6 @@
 {
   "name": "@auth/qwik",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "description": "Authentication for Qwik.",
   "license": "ISC",
   "author": "gioboa <giorgiob.boa@gmail.com>",
@@ -27,6 +27,9 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./index.qwik.js"
+    },
+    "./adapters": {
+      "types": "./adapters.d.ts"
     },
     "./providers": {
       "types": "./providers/index.d.ts"

@@ -72,7 +72,9 @@ export default function Nodemailer(
         text: text({ url, host }),
         html: html({ url, host, theme }),
       })
-      const failed = result.rejected.concat(result.pending).filter(Boolean)
+      const rejected = result.rejected || []
+      const pending = result.pending || []
+      const failed = rejected.concat(pending).filter(Boolean)
       if (failed.length) {
         throw new Error(`Email (${failed.join(", ")}) could not be sent`)
       }
