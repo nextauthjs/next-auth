@@ -17,5 +17,5 @@ export default defineConfig({
     },
     setupFiles: ["../utils/vitest-setup.ts"],
   },
-  plugins: [swc.vite(), preact({ include: ["**/*[jt]sx"] })],
+  plugins: [swc.vite(), preact.default({ include: ["**/*[jt]sx"] })],
 })
