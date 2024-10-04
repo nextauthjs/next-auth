@@ -20,7 +20,8 @@
       "@/utils/*": ["utils/*"],
       "@/icons/*": ["components/Icons/*"],
       "@/icons": ["components/Icons"],
-      "@/data/*": ["pages/data/*"]
+      "@/data/*": ["pages/data/*"],
+      "@/hooks/*": ["hooks/*"]
     },
     "plugins": [
       {
