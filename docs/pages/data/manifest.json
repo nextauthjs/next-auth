@@ -123,5 +123,23 @@
     "resend": "Resend",
     "sendgrid": "Sendgrid",
     "nodemailer": "Nodemailer"
-  }
+  },
+  "requiresIssuer": [
+    "authentik",
+    "azure-ad-b2c",
+    "battlenet",
+    "beyondidentity",
+    "boxyhq-saml",
+    "cognito",
+    "descope",
+    "duende-identityserver-6",
+    "fusionauth",
+    "identity-server4",
+    "keycloak",
+    "mastodon",
+    "mattermost",
+    "okta",
+    "osso",
+    "passage"
+  ]
 }

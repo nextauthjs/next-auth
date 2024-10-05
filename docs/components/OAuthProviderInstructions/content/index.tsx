@@ -39,6 +39,16 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
   }
 
   const providerName = manifest.providersOAuth[providerId]
+  const envVars = [
+    `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}`,
+    `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}`,
+  ]
+  if (manifest.requiresIssuer.includes(providerId)) {
+    envVars.push(
+      `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ISSUER={ISSUER_URL}`
+    )
+  }
+  const envString = `\n${envVars.join("\n")}\n`
 
   return (
     <div
@@ -107,9 +117,18 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       {/* Step 2 */}
       <StepTitle>Setup Environment Variables</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
-        Once registered, you should get a <strong>Client ID</strong> and{" "}
-        <strong>Client Secret</strong>. Add those in your application
-        environment file:
+        Once registered, you should get a{" "}
+        {manifest.requiresIssuer.includes(providerId) ? (
+          <>
+            <strong>Client ID</strong> , <strong>Client Secret</strong> and{" "}
+            <strong>Issuer URL</strong>
+          </>
+        ) : (
+          <>
+            <strong>Client ID</strong> and <strong>Client Secret</strong>
+          </>
+        )}
+        . Add those in your application environment file:
       </p>
       <Code>
         <Code.Next>
@@ -117,12 +136,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
             data-copy=""
             data-filename=".env.local"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
         </Code.Next>
@@ -131,12 +145,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
             data-copy=""
             data-filename=".env"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
         </Code.Qwik>
@@ -145,12 +154,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
             data-copy=""
             data-filename=".env"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
         </Code.Svelte>
@@ -159,12 +163,7 @@ AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
             data-copy=""
             data-filename=".env"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
           <p className="mt-2 leading-7 first:mt-0">
