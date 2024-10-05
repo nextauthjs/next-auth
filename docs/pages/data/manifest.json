@@ -125,6 +125,8 @@
     "nodemailer": "Nodemailer"
   },
   "requiresIssuer": [
+    "asgardeo",
+    "auth0",
     "authentik",
     "azure-ad-b2c",
     "battlenet",
@@ -136,10 +138,14 @@
     "fusionauth",
     "identity-server4",
     "keycloak",
+    "kinde",
     "mastodon",
     "mattermost",
+    "nextcloud",
     "okta",
+    "ory-hydra",
     "osso",
-    "passage"
+    "passage",
+    "ping-id"
   ]
 }
