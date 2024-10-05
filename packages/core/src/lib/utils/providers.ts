@@ -10,7 +10,11 @@ import type {
 } from "../../providers/index.js"
 import type { InternalProvider, Profile } from "../../types.js"
 import { type AuthConfig } from "../../index.js"
-import { customFetch } from "../utils/custom-fetch.js"
+import {
+  customFetch,
+  processResponse,
+  processResponseInternal,
+} from "../utils/custom-fetch.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -44,8 +48,11 @@ export default function parseProviders(params: {
         "oauth" | "oidc"
       >
       // @ts-expect-error Symbols don't get merged by the `merge` function
-      // so we need to do it manually.
       normalized[customFetch] ??= userOptions?.[customFetch]
+      normalized[processResponse] ??= processResponseInternal(
+        // @ts-expect-error Symbols don't get merged by the `merge` function
+        userOptions?.[processResponse]
+      )
       return normalized
     }
 

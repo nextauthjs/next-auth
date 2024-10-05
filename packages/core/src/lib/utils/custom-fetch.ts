@@ -35,10 +35,9 @@ export function fetchOpt(provider: InternalProvider<"oauth" | "oidc">) {
 
 export const processResponse = Symbol("process-response")
 
+/** @internal */
 export function processResponseInternal(
-  provider: InternalProvider<"oauth" | "oidc">
+  handler?: InternalProvider<"oauth" | "oidc">[typeof processResponse]
 ) {
-  return function (response: Response) {
-    return provider[processResponse]?.(response.clone() ?? response)
-  }
+  return async (response: Response) => handler?.(response.clone()) ?? response
 }

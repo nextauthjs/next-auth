@@ -17,10 +17,7 @@ import type {
 import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import { isOIDCProvider } from "../../../utils/providers.js"
-import {
-  fetchOpt,
-  processResponseInternal,
-} from "../../../utils/custom-fetch.js"
+import { fetchOpt, processResponse } from "../../../utils/custom-fetch.js"
 
 /**
  * Handles the following OAuth steps.
@@ -46,29 +43,23 @@ export async function handleOAuth(
     (!token?.url || token.url.host === "authjs.dev") &&
     (!userinfo?.url || userinfo.url.host === "authjs.dev")
   ) {
-    // We assume that issuer is always defined as this has been asserted earlier
+    // @ts-expect-error REVIEW: Can we make sure issuer is always defined here?
+    const issuer = new URL(provider.issuer)
+    let discoveryResponse = await o.discoveryRequest(issuer, fetchOpt(provider))
+    discoveryResponse = await provider[processResponse](discoveryResponse)
+    as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
-    const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(
-      issuer,
-      fetchOpt(provider)
-    )
-    const discoveredAs = await o.processDiscoveryResponse(
-      issuer,
-      discoveryResponse
-    )
-
-    if (!discoveredAs.token_endpoint)
+    if (!as.token_endpoint) {
       throw new TypeError(
-        "TODO: Authorization server did not provide a token endpoint."
+        "Authorization server did not provide a token endpoint."
       )
+    }
 
-    if (!discoveredAs.userinfo_endpoint)
+    if (!as.userinfo_endpoint) {
       throw new TypeError(
-        "TODO: Authorization server did not provide a userinfo endpoint."
+        "Authorization server did not provide a userinfo endpoint."
       )
-
-    as = discoveredAs
+    }
   } else {
     as = {
       issuer: provider.issuer ?? "https://authjs.dev", // TODO: review fallback issuer
@@ -127,6 +118,7 @@ export async function handleOAuth(
       clientPrivateKey: provider.token?.clientPrivateKey,
     }
   )
+  codeGrantResponse = await provider[processResponse](codeGrantResponse)
 
   if (provider.token?.conform) {
     codeGrantResponse =
@@ -147,13 +139,17 @@ export async function handleOAuth(
 
   if (isOIDCProvider(provider)) {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
-    const processedCodeResponse =
-      await o.processAuthorizationCodeOpenIDResponse(
-        as,
-        client,
-        codeGrantResponse,
-        nonce ?? o.expectNoNonce
-      )
+
+    const processAuthorizationCodeResponse = provider.idToken
+      ? o.processAuthorizationCodeOpenIDResponse
+      : o.processAuthorizationCodeOAuth2Response
+
+    const processedCodeResponse = await processAuthorizationCodeResponse(
+      as,
+      client,
+      codeGrantResponse,
+      nonce ?? o.expectNoNonce
+    )
 
     if (o.isOAuth2Error(processedCodeResponse)) {
       console.log("error", processedCodeResponse)
@@ -161,22 +157,31 @@ export async function handleOAuth(
     }
 
     const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)
-    profile = idTokenClaims
 
-    if (provider.idToken === false) {
-      const userinfoResponse = await o.userInfoRequest(
+    if (provider.idToken && idTokenClaims) {
+      profile = idTokenClaims
+    } else {
+      let userinfoResponse = await o.userInfoRequest(
         as,
         client,
         processedCodeResponse.access_token,
         fetchOpt(provider)
       )
 
+      userinfoResponse = await provider[processResponse](userinfoResponse)
+
+      const subjectCheck = provider.idToken
+        ? (idTokenClaims?.sub ?? "invalid")
+        : o.skipSubjectCheck
+
       profile = await o.processUserInfoResponse(
         as,
         client,
-        idTokenClaims.sub,
+        subjectCheck,
         userinfoResponse
       )
+
+      console.log("profile", profile)
     }
     tokens = processedCodeResponse
   } else {

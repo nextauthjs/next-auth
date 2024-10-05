@@ -3,7 +3,7 @@ import * as o from "oauth4webapi"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
-import { fetchOpt } from "../../utils/custom-fetch.js"
+import { fetchOpt, processResponse } from "../../utils/custom-fetch.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -16,7 +16,7 @@ export async function getAuthorizationUrl(
 ) {
   const { logger, provider } = options
 
-  let url = provider.authorization?.url
+  let url = provider.authorization?.url ?? new URL("https://authjs.dev")
   let as: o.AuthorizationServer | undefined
 
   // Falls back to authjs.dev if the user only passed params
@@ -24,12 +24,14 @@ export async function getAuthorizationUrl(
     // If url is undefined, we assume that issuer is always defined
     // We check this in assert.ts
 
-    const issuer = new URL(provider.issuer!)
+    // @ts-expect-error REVIEW: Can we make sure issuer is always defined here?
+    const issuer = new URL(provider.issuer)
     const discoveryResponse = await o.discoveryRequest(
       issuer,
-      fetchOpt(options.provider)
+      fetchOpt(provider)
     )
-    const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
+    const response = await provider[processResponse](discoveryResponse)
+    const as = await o.processDiscoveryResponse(issuer, response)
 
     if (!as.authorization_endpoint) {
       throw new TypeError(
