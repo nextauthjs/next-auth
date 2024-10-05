@@ -45,6 +45,8 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    * @deprecated TODO: Mention customFetch/processResponse
    */
   request?: EndpointRequest<C, R, P>
+  /** @internal */
+  conform?: (response: Response) => Awaitable<Response | undefined>
   clientPrivateKey?: CryptoKey | PrivateKey
 }
 
@@ -271,6 +273,8 @@ export type OAuthConfigInternal<Profile> = Omit<
     /** @deprecated TODO: Mention customFetch/processResponse */
     request?: TokenEndpointHandler["request"]
     clientPrivateKey?: CryptoKey | PrivateKey
+    /** @internal */
+    conform?: TokenEndpointHandler["conform"]
   }
   userinfo?: {
     url: URL

@@ -128,6 +128,12 @@ export async function handleOAuth(
     }
   )
 
+  if (provider.token?.conform) {
+    codeGrantResponse =
+      (await provider.token.conform(codeGrantResponse.clone())) ??
+      codeGrantResponse
+  }
+
   let challenges: o.WWWAuthenticateChallenge[] | undefined
   if ((challenges = o.parseWwwAuthenticateChallenges(codeGrantResponse))) {
     for (const challenge of challenges) {
