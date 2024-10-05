@@ -222,7 +222,7 @@ export interface OAuth2Config<Profile>
    */
   allowDangerousEmailAccountLinking?: boolean
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
-  /** TODO: Document */
+  /** @see {customFetch} */
   [customFetch]?: typeof fetch
   /**
    * The options provided by the user.
