@@ -117,10 +117,10 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       {/* Step 2 */}
       <StepTitle>Setup Environment Variables</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
-        Once registered, you should get a{" "}
+        Once registered, you should receive a{" "}
         {manifest.requiresIssuer.includes(providerId) ? (
           <>
-            <strong>Client ID</strong> , <strong>Client Secret</strong> and{" "}
+            <strong>Client ID</strong>, <strong>Client Secret</strong> and{" "}
             <strong>Issuer URL</strong>
           </>
         ) : (
