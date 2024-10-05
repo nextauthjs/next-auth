@@ -108,26 +108,24 @@ export async function handleOAuth(
     redirect_uri = provider.redirectProxyUrl
   }
 
-  const codeGrantResponse = await processResponseInternal(provider)(
-    await o.authorizationCodeGrantRequest(
-      as,
-      client,
-      codeGrantParams,
-      redirect_uri,
-      codeVerifier ?? "auth", // TODO: review fallback code verifier,
-      {
-        [o.customFetch]: (...args) => {
-          if (
-            !provider.checks.includes("pkce") &&
-            args[1]?.body instanceof URLSearchParams
-          ) {
-            args[1].body.delete("code_verifier")
-          }
-          return fetchOpt(provider)[o.customFetch](...args)
-        },
-        clientPrivateKey: provider.token?.clientPrivateKey,
-      }
-    )
+  let codeGrantResponse = await o.authorizationCodeGrantRequest(
+    as,
+    client,
+    codeGrantParams,
+    redirect_uri,
+    codeVerifier ?? "auth", // TODO: review fallback code verifier,
+    {
+      [o.customFetch]: (...args) => {
+        if (
+          !provider.checks.includes("pkce") &&
+          args[1]?.body instanceof URLSearchParams
+        ) {
+          args[1].body.delete("code_verifier")
+        }
+        return fetchOpt(provider)[o.customFetch](...args)
+      },
+      clientPrivateKey: provider.token?.clientPrivateKey,
+    }
   )
 
   let challenges: o.WWWAuthenticateChallenge[] | undefined
@@ -160,13 +158,11 @@ export async function handleOAuth(
     profile = idTokenClaims
 
     if (provider.idToken === false) {
-      const userinfoResponse = await processResponseInternal(provider)(
-        await o.userInfoRequest(
-          as,
-          client,
-          processedCodeResponse.access_token,
-          fetchOpt(provider)
-        )
+      const userinfoResponse = await o.userInfoRequest(
+        as,
+        client,
+        processedCodeResponse.access_token,
+        fetchOpt(provider)
       )
 
       profile = await o.processUserInfoResponse(
