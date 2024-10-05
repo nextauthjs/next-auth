@@ -45,13 +45,11 @@ export const getUserAndAccountArgs = {
     authorization: {
       url: new URL("https://google.com"),
       request: undefined,
-      conform: undefined,
     },
     token: { url: new URL("https://google.com") },
     userinfo: {
       url: new URL("https://google.com"),
       // request: async () => {},
-      conform: undefined,
     },
     profile: () => userProfile,
     style: { logo: "/github.svg", bg: "#24292f", text: "#fff" },

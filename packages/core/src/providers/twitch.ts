@@ -8,6 +8,7 @@
  *
  * @module providers/twitch
  */
+import { processResponse } from "../lib/utils/custom-fetch.js"
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface TwitchProfile extends Record<string, any> {
@@ -86,34 +87,33 @@ export default function Twitch(
         },
       },
     },
-    token: {
-      async conform(response) {
-        const body = await response.json()
-        if (response.ok) {
-          if (typeof body.scope === "string") {
-            console.warn(
-              "'scope' is a string. Redundant workaround, please open an issue."
-            )
-          } else if (Array.isArray(body.scope)) {
-            body.scope = body.scope.join(" ")
-            return new Response(JSON.stringify(body), response)
-          } else if ("scope" in body) {
-            delete body.scope
-            return new Response(JSON.stringify(body), response)
-          }
-        } else {
-          const { message: error_description, error } = body
-          if (typeof error !== "string") {
-            return new Response(
-              JSON.stringify({ error: "invalid_request", error_description }),
-              response
-            )
-          }
+    async [processResponse](response) {
+      const body = await response.json()
+      if (response.ok) {
+        if (typeof body.scope === "string") {
           console.warn(
-            "Response has 'error'. Redundant workaround, please open an issue."
+            "'scope' is a string. Redundant workaround, please open an issue."
+          )
+        } else if (Array.isArray(body.scope)) {
+          body.scope = body.scope.join(" ")
+          return new Response(JSON.stringify(body), response)
+        } else if ("scope" in body) {
+          delete body.scope
+          return new Response(JSON.stringify(body), response)
+        }
+      } else {
+        const { message: error_description, error } = body
+        if (typeof error !== "string") {
+          return new Response(
+            JSON.stringify({ error: "invalid_request", error_description }),
+            response
           )
         }
-      },
+        console.warn(
+          "Response has 'error'. Redundant workaround, please open an issue."
+        )
+      }
+      return response
     },
     style: { bg: "#65459B", text: "#fff" },
     options: config,

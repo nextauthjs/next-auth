@@ -8,3 +8,14 @@ export const customFetch = Symbol("custom-fetch")
 export function fetchOpt(provider: InternalProvider<"oauth" | "oidc">) {
   return { [o.customFetch]: provider[customFetch] ?? fetch }
 }
+
+/** TODO: Document */
+export const processResponse = Symbol("process-response")
+
+export function processResponseInternal(
+  provider: InternalProvider<"oauth" | "oidc">
+) {
+  return function (response: Response) {
+    return provider[processResponse]?.(response.clone() ?? response)
+  }
+}

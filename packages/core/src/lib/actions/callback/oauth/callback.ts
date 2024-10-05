@@ -17,7 +17,10 @@ import type {
 import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import { isOIDCProvider } from "../../../utils/providers.js"
-import { fetchOpt } from "../../../utils/custom-fetch.js"
+import {
+  fetchOpt,
+  processResponseInternal,
+} from "../../../utils/custom-fetch.js"
 
 /**
  * Handles the following OAuth steps.
@@ -105,31 +108,27 @@ export async function handleOAuth(
     redirect_uri = provider.redirectProxyUrl
   }
 
-  let codeGrantResponse = await o.authorizationCodeGrantRequest(
-    as,
-    client,
-    codeGrantParams,
-    redirect_uri,
-    codeVerifier ?? "auth", // TODO: review fallback code verifier,
-    {
-      [o.customFetch]: (...args) => {
-        if (
-          !provider.checks.includes("pkce") &&
-          args[1]?.body instanceof URLSearchParams
-        ) {
-          args[1].body.delete("code_verifier")
-        }
-        return fetchOpt(provider)[o.customFetch](...args)
-      },
-      clientPrivateKey: provider.token?.clientPrivateKey,
-    }
+  const codeGrantResponse = await processResponseInternal(provider)(
+    await o.authorizationCodeGrantRequest(
+      as,
+      client,
+      codeGrantParams,
+      redirect_uri,
+      codeVerifier ?? "auth", // TODO: review fallback code verifier,
+      {
+        [o.customFetch]: (...args) => {
+          if (
+            !provider.checks.includes("pkce") &&
+            args[1]?.body instanceof URLSearchParams
+          ) {
+            args[1].body.delete("code_verifier")
+          }
+          return fetchOpt(provider)[o.customFetch](...args)
+        },
+        clientPrivateKey: provider.token?.clientPrivateKey,
+      }
+    )
   )
-
-  if (provider.token?.conform) {
-    codeGrantResponse =
-      (await provider.token.conform(codeGrantResponse.clone())) ??
-      codeGrantResponse
-  }
 
   let challenges: o.WWWAuthenticateChallenge[] | undefined
   if ((challenges = o.parseWwwAuthenticateChallenges(codeGrantResponse))) {
@@ -161,11 +160,13 @@ export async function handleOAuth(
     profile = idTokenClaims
 
     if (provider.idToken === false) {
-      const userinfoResponse = await o.userInfoRequest(
-        as,
-        client,
-        processedCodeResponse.access_token,
-        fetchOpt(provider)
+      const userinfoResponse = await processResponseInternal(provider)(
+        await o.userInfoRequest(
+          as,
+          client,
+          processedCodeResponse.access_token,
+          fetchOpt(provider)
+        )
       )
 
       profile = await o.processUserInfoResponse(
