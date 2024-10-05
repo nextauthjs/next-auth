@@ -165,7 +165,7 @@ export default function MicrosoftEntraID(
       }
     },
     style: { text: "#fff", bg: "#0072c6" },
-    idToken: false,
+    idToken: userDefinedIssuer,
     async [processResponse](response) {
       if (userDefinedIssuer) return response
       const contentType = response.headers.get("content-type")
