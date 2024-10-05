@@ -2,13 +2,13 @@ import { Code } from "@/components/Code"
 
 # Supporting corporate proxies
 
-Auth.js libraries like NextAuth.js use the `fetch` API to communicate with OAuth providers. If your organization uses a corporate proxy, you may need to configure the `fetch` API to use the proxy.
+Auth.js libraries use the `fetch` API to communicate with OAuth providers. If your organization uses a corporate proxy, you may need to configure the `fetch` API to use the proxy.
 
 ## Using a custom fetch function
 
-You can provide a custom `fetch` function to NextAuth.js by passing it as an option to the provider. This allows you to configure the `fetch` function to use a proxy.
+You can provide a custom `fetch` function by passing it as an option to the provider.
 
-Here, we use the `undici` library to make requests through a proxy server. We create a custom `fetch` function that uses `undici` and the `ProxyAgent` library to make requests through the proxy server.
+Here, we use the `undici` library to make requests through a proxy server, by passing a `dispatcher` to the `fetch` implementation by `undici`.
 
 <Code>
   <Code.Next>
@@ -16,6 +16,7 @@ Here, we use the `undici` library to make requests through a proxy server. We cr
 ```tsx filename="auth.ts"
 import NextAuth, { customFetch } from "next-auth"
 import GitHub from "next-auth/providers/github"
+import { ProxyAgent, fetch as undici } from "undici"
 
 const dispatcher = new ProxyAgent("my.proxy.server")
 function proxy(...args: Parameters<typeof fetch>): ReturnType<typeof fetch> {
@@ -30,3 +31,7 @@ export const { handlers, auth } = NextAuth({
 
   </Code.Next>
 </Code>
+
+## Resources
+
+- [`undici` - Basic Proxy Request with local agent dispatcher](https://undici.nodejs.org/#/docs/api/ProxyAgent?id=example-basic-proxy-request-with-local-agent-dispatcher)
