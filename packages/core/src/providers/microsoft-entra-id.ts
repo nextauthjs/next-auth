@@ -129,7 +129,7 @@ export default function MicrosoftEntraID(
     profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
   }
 ): OIDCConfig<MicrosoftEntraIDProfile> {
-  const hasIssuer = !!config.issuer
+  const userDefinedIssuer = !!config.issuer
   const discovery = "https://login.microsoftonline.com/common/v2.0"
   config.issuer ??= discovery
   const { profilePhotoSize = 48 } = config
@@ -137,7 +137,7 @@ export default function MicrosoftEntraID(
     id: "microsoft-entra-id",
     name: "Microsoft Entra ID",
     type: "oidc",
-    idToken: false,
+
     authorization: { params: { scope: "openid profile email User.Read" } },
     async profile(profile, tokens) {
       // https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
@@ -165,19 +165,23 @@ export default function MicrosoftEntraID(
       }
     },
     style: { text: "#fff", bg: "#0072c6" },
-
+    idToken: false,
     async [processResponse](response) {
-      // If issuer is set, don't process response
-      if (hasIssuer) return response
+      if (userDefinedIssuer) return response
       const contentType = response.headers.get("content-type")
       if (!contentType?.includes("application/json")) return response
 
       const json = await response.clone().json()
+
       if ("issuer" in json && json.issuer !== discovery) {
         // Reprocess discovery response
         return Response.json({ ...json, issuer: discovery })
       } else if ("id_token" in json) {
         // Reprocess token response
+        // HACK: This is a big hack, because Microsoft Entra ID is non-compliant with the OIDC spec.
+        // The `id_token`'s `iss` is not going to match the `issuer` we have through discovery,
+        // so we force getting user data via the userinfo endpoint by removing the `id_token`
+        // and setting `idToken: false` in the provider config.
         const { id_token: _, ...tokenSet } = json
         return Response.json(tokenSet)
       }
