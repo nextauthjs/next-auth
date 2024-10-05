@@ -3,7 +3,7 @@ import * as o from "oauth4webapi"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
-import { fetchOpt, processResponse } from "../../utils/custom-fetch.js"
+import { fetchOpt, conformResponse } from "../../utils/custom-fetch.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -30,7 +30,7 @@ export async function getAuthorizationUrl(
       issuer,
       fetchOpt(provider)
     )
-    const response = await provider[processResponse](discoveryResponse)
+    const response = await provider[conformResponse](discoveryResponse)
     const as = await o.processDiscoveryResponse(issuer, response)
 
     if (!as.authorization_endpoint) {

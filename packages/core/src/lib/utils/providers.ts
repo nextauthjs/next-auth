@@ -12,8 +12,8 @@ import type { InternalProvider, Profile } from "../../types.js"
 import { type AuthConfig } from "../../index.js"
 import {
   customFetch,
-  processResponse,
-  processResponseInternal,
+  conformResponse,
+  conformResponseInternal,
 } from "../utils/custom-fetch.js"
 
 /**
@@ -49,9 +49,9 @@ export default function parseProviders(params: {
       >
       // @ts-expect-error Symbols don't get merged by the `merge` function
       normalized[customFetch] ??= userOptions?.[customFetch]
-      normalized[processResponse] ??= processResponseInternal(
+      normalized[conformResponse] ??= conformResponseInternal(
         // @ts-expect-error Symbols don't get merged by the `merge` function
-        userOptions?.[processResponse]
+        userOptions?.[conformResponse]
       )
       return normalized
     }

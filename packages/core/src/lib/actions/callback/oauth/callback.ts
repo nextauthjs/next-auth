@@ -17,7 +17,7 @@ import type {
 import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import { isOIDCProvider } from "../../../utils/providers.js"
-import { fetchOpt, processResponse } from "../../../utils/custom-fetch.js"
+import { fetchOpt, conformResponse } from "../../../utils/custom-fetch.js"
 
 /**
  * Handles the following OAuth steps.
@@ -46,7 +46,7 @@ export async function handleOAuth(
     // @ts-expect-error REVIEW: Can we make sure issuer is always defined here?
     const issuer = new URL(provider.issuer)
     let discoveryResponse = await o.discoveryRequest(issuer, fetchOpt(provider))
-    discoveryResponse = await provider[processResponse](discoveryResponse)
+    discoveryResponse = await provider[conformResponse](discoveryResponse)
     as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
     if (!as.token_endpoint) {
@@ -118,7 +118,7 @@ export async function handleOAuth(
       clientPrivateKey: provider.token?.clientPrivateKey,
     }
   )
-  codeGrantResponse = await provider[processResponse](codeGrantResponse)
+  codeGrantResponse = await provider[conformResponse](codeGrantResponse)
 
   if (provider.token?.conform) {
     codeGrantResponse =
@@ -168,7 +168,7 @@ export async function handleOAuth(
         fetchOpt(provider)
       )
 
-      userinfoResponse = await provider[processResponse](userinfoResponse)
+      userinfoResponse = await provider[conformResponse](userinfoResponse)
 
       const subjectCheck = provider.idToken
         ? (idTokenClaims?.sub ?? "invalid")

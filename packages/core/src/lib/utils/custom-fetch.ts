@@ -33,11 +33,11 @@ export function fetchOpt(provider: InternalProvider<"oauth" | "oidc">) {
   return { [o.customFetch]: provider[customFetch] ?? fetch }
 }
 
-export const processResponse = Symbol("process-response")
+export const conformResponse = Symbol("conform-response")
 
 /** @internal */
-export function processResponseInternal(
-  handler?: InternalProvider<"oauth" | "oidc">[typeof processResponse]
+export function conformResponseInternal(
+  handler?: InternalProvider<"oauth" | "oidc">[typeof conformResponse]
 ) {
   return async (response: Response) => handler?.(response.clone()) ?? response
 }

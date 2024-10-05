@@ -2,7 +2,7 @@ import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
-import type { customFetch, processResponse } from "../lib/utils/custom-fetch.js"
+import type { customFetch, conformResponse } from "../lib/utils/custom-fetch.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -42,7 +42,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
    *
    * - ⚠ **This is an advanced option.**
    * You should **try to avoid using advanced options** unless you are very comfortable using them.
-   * @deprecated TODO: Mention customFetch/processResponse
+   * @deprecated TODO: Mention customFetch/conformResponse
    */
   request?: EndpointRequest<C, R, P>
   /** @internal */
@@ -225,8 +225,8 @@ export interface OAuth2Config<Profile>
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
   /** @see {customFetch} */
   [customFetch]?: typeof fetch
-  /** @see {processResponse} */
-  [processResponse]?(response: Response): ReturnType<typeof fetch>
+  /** @see {conformResponse} */
+  [conformResponse]?(response: Response): ReturnType<typeof fetch>
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -266,11 +266,11 @@ export type OAuthConfigInternal<Profile> = Omit<
   OAuthConfig<Profile>,
   OAuthEndpointType | "redirectProxyUrl"
 > & {
-  [processResponse](response: Response): Awaitable<Response>
+  [conformResponse](response: Response): Awaitable<Response>
   authorization?: { url: URL }
   token?: {
     url: URL
-    /** @deprecated TODO: Mention customFetch/processResponse */
+    /** @deprecated TODO: Mention customFetch/conformResponse */
     request?: TokenEndpointHandler["request"]
     clientPrivateKey?: CryptoKey | PrivateKey
     /** @internal */
@@ -278,7 +278,7 @@ export type OAuthConfigInternal<Profile> = Omit<
   }
   userinfo?: {
     url: URL
-    /** @deprecated TODO: Mention customFetch/processResponse */
+    /** @deprecated TODO: Mention customFetch/conformResponse */
     request?: UserinfoEndpointHandler["request"]
   }
   /**

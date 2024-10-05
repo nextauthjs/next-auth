@@ -8,7 +8,7 @@
  *
  * @module providers/microsoft-entra-id
  */
-import { processResponse } from "../lib/utils/custom-fetch.js"
+import { conformResponse } from "../lib/utils/custom-fetch.js"
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface MicrosoftEntraIDProfile extends Record<string, any> {
@@ -166,7 +166,7 @@ export default function MicrosoftEntraID(
     },
     style: { text: "#fff", bg: "#0072c6" },
     idToken: userDefinedIssuer,
-    async [processResponse](response) {
+    async [conformResponse](response) {
       if (userDefinedIssuer) return response
       const contentType = response.headers.get("content-type")
       if (!contentType?.includes("application/json")) return response
