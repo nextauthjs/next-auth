@@ -140,9 +140,10 @@ export async function handleOAuth(
   if (isOIDCProvider(provider)) {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
 
-    const processAuthorizationCodeResponse = provider.idToken
-      ? o.processAuthorizationCodeOpenIDResponse
-      : o.processAuthorizationCodeOAuth2Response
+    const processAuthorizationCodeResponse =
+      provider.idToken !== false
+        ? o.processAuthorizationCodeOpenIDResponse
+        : o.processAuthorizationCodeOAuth2Response
 
     const processedCodeResponse = await processAuthorizationCodeResponse(
       as,
@@ -158,7 +159,7 @@ export async function handleOAuth(
 
     const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)
 
-    if (provider.idToken && idTokenClaims) {
+    if (provider.idToken !== false && idTokenClaims) {
       profile = idTokenClaims
     } else {
       let userinfoResponse = await o.userInfoRequest(
@@ -170,9 +171,10 @@ export async function handleOAuth(
 
       userinfoResponse = await provider[conformResponse](userinfoResponse)
 
-      const subjectCheck = provider.idToken
-        ? (idTokenClaims?.sub ?? "invalid")
-        : o.skipSubjectCheck
+      const subjectCheck =
+        provider.idToken !== false
+          ? (idTokenClaims?.sub ?? "invalid")
+          : o.skipSubjectCheck
 
       profile = await o.processUserInfoResponse(
         as,
