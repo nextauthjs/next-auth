@@ -9,6 +9,7 @@
  * @module providers/microsoft-entra-id
  */
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
+import { customFetch } from "../lib/utils/custom-fetch.js"
 
 export interface MicrosoftEntraIDProfile extends Record<string, any> {
   sub: string
@@ -132,11 +133,19 @@ export default function MicrosoftEntraID(
   }
 ): OIDCConfig<MicrosoftEntraIDProfile> {
   const { profilePhotoSize = 48, tenantId = "common", ...rest } = config
+
+  const userDefinedIssuer = !!config.issuer
+  // HACK: Entra ID returns the wrong issuer
+  if (!userDefinedIssuer) {
+    const discovery = "https://login.microsoftonline.com/common/v2.0"
+    config.wellKnown ??= `${discovery}/.well-known/openid-configuration`
+    config.issuer ??= discovery.replace("common", tenantId)
+  }
+
   return {
     id: "microsoft-entra-id",
     name: "Microsoft Entra ID",
     type: "oidc",
-    wellKnown: `${rest.issuer}/.well-known/openid-configuration?appid=${config.clientId}`,
     authorization: { params: { scope: "openid profile email User.Read" } },
     async profile(profile, tokens) {
       // https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
@@ -164,6 +173,22 @@ export default function MicrosoftEntraID(
       }
     },
     style: { text: "#fff", bg: "#0072c6" },
+    // HACK: Entra ID returns the wrong issuer
+    async [customFetch](...args) {
+      // If the issuer is user defined, do nothing
+      if (userDefinedIssuer) return fetch(...args)
+
+      // If we are not fetching the discovery document, do nothing
+      const url = new URL(args[0] instanceof Request ? args[0].url : args[0])
+      if (!url.pathname.endsWith(".well-known/openid-configuration")) {
+        return fetch(...args)
+      }
+
+      const response = await fetch(...args)
+      const json = await response.clone().json()
+      const issuer = json.issuer.replace("{tenantid}", tenantId)
+      return Response.json({ ...json, issuer })
+    },
     options: rest,
   }
 }
