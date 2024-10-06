@@ -76,7 +76,7 @@ const config = {
     Hubspot,
     Keycloak({ name: "Keycloak (bob/bob)" }),
     LinkedIn,
-    MicrosoftEntraId,
+    MicrosoftEntraId({ name: "Entra ID (bob@bob.com/bob" }),
     Netlify,
     Okta,
     Passkey({
