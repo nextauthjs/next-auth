@@ -1,5 +1,6 @@
 import { Auth, setEnvDefaults, type AuthConfig } from "@auth/core"
 import Apple from "@auth/core/providers/apple"
+import Atlassian from "@auth/core/providers/atlassian"
 import Auth0 from "@auth/core/providers/auth0"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
 import BankId from "@auth/core/providers/bankid-no"
@@ -33,6 +34,7 @@ import Zoom from "@auth/core/providers/zoom"
 const authConfig: AuthConfig = {
   providers: [
     Apple,
+    Atlassian,
     Auth0,
     AzureB2C({
       clientId: process.env.AUTH_AZURE_AD_B2C_ID,
