@@ -132,8 +132,7 @@ export default function MicrosoftEntraID(
     tenantId?: string
   }
 ): OIDCConfig<MicrosoftEntraIDProfile> {
-  const { profilePhotoSize = 48, tenantId = "common", ...rest } = config
-
+  const { profilePhotoSize = 48, tenantId = "common" } = config
   const userDefinedIssuer = !!config.issuer
   // HACK: Entra ID returns the wrong issuer
   if (!userDefinedIssuer) {
@@ -189,6 +188,6 @@ export default function MicrosoftEntraID(
       const issuer = json.issuer.replace("{tenantid}", tenantId)
       return Response.json({ ...json, issuer })
     },
-    options: rest,
+    options: config,
   }
 }
