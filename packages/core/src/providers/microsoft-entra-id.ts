@@ -8,8 +8,8 @@
  *
  * @module providers/microsoft-entra-id
  */
+import { customFetch } from "../index.js"
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
-import { customFetch } from "../lib/utils/custom-fetch.js"
 
 export interface MicrosoftEntraIDProfile extends Record<string, any> {
   sub: string
@@ -128,18 +128,11 @@ export default function MicrosoftEntraID(
      * @default 48
      */
     profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
-    /** @default "common" */
-    tenantId?: string
   }
 ): OIDCConfig<MicrosoftEntraIDProfile> {
-  const { profilePhotoSize = 48, tenantId = "common" } = config
-  const userDefinedIssuer = !!config.issuer
-  // HACK: Entra ID returns the wrong issuer
-  if (!userDefinedIssuer) {
-    const discovery = "https://login.microsoftonline.com/common/v2.0"
-    config.wellKnown ??= `${discovery}/.well-known/openid-configuration`
-    config.issuer ??= discovery.replace("common", tenantId)
-  }
+  const { profilePhotoSize = 48 } = config
+
+  config.issuer ??= "https://login.microsoftonline.com/common/v2.0"
 
   return {
     id: "microsoft-entra-id",
@@ -174,9 +167,6 @@ export default function MicrosoftEntraID(
     style: { text: "#fff", bg: "#0072c6" },
     // HACK: Entra ID returns the wrong issuer
     async [customFetch](...args) {
-      // If the issuer is user defined, do nothing
-      if (userDefinedIssuer) return fetch(...args)
-
       // If we are not fetching the discovery document, do nothing
       const url = new URL(args[0] instanceof Request ? args[0].url : args[0])
       if (!url.pathname.endsWith(".well-known/openid-configuration")) {
@@ -185,6 +175,8 @@ export default function MicrosoftEntraID(
 
       const response = await fetch(...args)
       const json = await response.clone().json()
+      const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
+      const tenantId = config.issuer?.match(tenantRe)?.[1] ?? "common"
       const issuer = json.issuer.replace("{tenantid}", tenantId)
       return Response.json({ ...json, issuer })
     },

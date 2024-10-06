@@ -18,6 +18,7 @@ import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import { isOIDCProvider } from "../../../utils/providers.js"
 import { fetchOpt } from "../../../utils/custom-fetch.js"
+import { decodeJwt } from "jose"
 
 /**
  * Handles the following OAuth steps.
@@ -139,6 +140,24 @@ export async function handleOAuth(
 
   if (isOIDCProvider(provider)) {
     const nonce = await checks.nonce.use(cookies, resCookies, options)
+
+    if (provider.id === "microsoft-entra-id") {
+      const { tid, iss } = decodeJwt(
+        (await codeGrantResponse.clone().json()).id_token
+      )
+
+      if (typeof tid === "string" && iss) {
+        const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
+        const tenantId = as.issuer?.match(tenantRe)?.[1] ?? "common"
+        const issuer = new URL(as.issuer.replace(tenantId, tid))
+        const discoveryResponse = await o.discoveryRequest(
+          issuer,
+          fetchOpt(provider)
+        )
+        as = await o.processDiscoveryResponse(issuer, discoveryResponse)
+      }
+    }
+
     const processedCodeResponse =
       await o.processAuthorizationCodeOpenIDResponse(
         as,
