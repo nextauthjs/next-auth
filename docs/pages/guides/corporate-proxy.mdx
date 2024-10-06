@@ -21,7 +21,7 @@ import { ProxyAgent, fetch as undici } from "undici"
 const dispatcher = new ProxyAgent("my.proxy.server")
 function proxy(...args: Parameters<typeof fetch>): ReturnType<typeof fetch> {
   // @ts-expect-error `undici` has a `duplex` option
-  return undici(args[0], { ...(args[1] ?? {}), dispatcher })
+  return undici(args[0], { ...args[1], dispatcher })
 }
 
 export const { handlers, auth } = NextAuth({
