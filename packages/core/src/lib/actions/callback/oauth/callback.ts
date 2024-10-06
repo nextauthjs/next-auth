@@ -50,22 +50,17 @@ export async function handleOAuth(
       issuer,
       fetchOpt(provider)
     )
-    const discoveredAs = await o.processDiscoveryResponse(
-      issuer,
-      discoveryResponse
-    )
+    as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
-    if (!discoveredAs.token_endpoint)
+    if (!as.token_endpoint)
       throw new TypeError(
         "TODO: Authorization server did not provide a token endpoint."
       )
 
-    if (!discoveredAs.userinfo_endpoint)
+    if (!as.userinfo_endpoint)
       throw new TypeError(
         "TODO: Authorization server did not provide a userinfo endpoint."
       )
-
-    as = discoveredAs
   } else {
     as = {
       issuer: provider.issuer ?? "https://authjs.dev", // TODO: review fallback issuer
@@ -183,11 +178,13 @@ export async function handleOAuth(
         client,
         codeGrantResponse
       )
-    tokens = processedCodeResponse
+
     if (o.isOAuth2Error(processedCodeResponse)) {
       console.log("error", processedCodeResponse)
       throw new Error("TODO: Handle OAuth 2.0 response body error")
     }
+
+    tokens = processedCodeResponse
 
     if (userinfo?.request) {
       const _profile = await userinfo.request({ tokens, provider })
