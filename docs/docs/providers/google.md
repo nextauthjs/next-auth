@@ -79,12 +79,34 @@ You can use this property to restrict access to people with verified accounts at
 const options = {
   ...
   callbacks: {
-    async signIn({ account, profile }) {
-      if (account.provider === "google") {
-        return profile.email_verified && profile.email.endsWith("@example.com")
+      async signIn({ user, account }: {
+        user: {
+          email: string;
+          name: string
+        },
+        account: {
+          provider: "google" | "github"
+        }
+      }) {
+        console.log("hi signin")
+        if (!user || !user.email) {
+          return false;
+        }
+          create: {
+            email: user.email,
+            name: user.name,
+            auth_type: account.provider === "google" ? "Google" : "Github" // Use a prisma type here
+          },
+          update: {
+            name: user.name,
+            auth_type: account.provider === "google" ? "Google" : "Github" // Use a prisma type here
+          }
+        });
+
+        return true;
       }
-      return true // Do different verification for other providers that don't have `email_verified`
     },
+    secret: process.env.NEXTAUTH_SECRET || "secret"
   }
   ...
 }
