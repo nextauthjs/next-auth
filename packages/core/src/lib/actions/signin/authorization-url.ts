@@ -25,10 +25,11 @@ export async function getAuthorizationUrl(
     // We check this in assert.ts
 
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(
-      issuer,
-      fetchOpt(options.provider)
-    )
+    // TODO: move away from allowing insecure HTTP requests
+    const discoveryResponse = await o.discoveryRequest(issuer, {
+      ...fetchOpt(options.provider),
+      [o.allowInsecureRequests]: true,
+    })
     const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
     if (!as.authorization_endpoint) {
