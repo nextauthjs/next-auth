@@ -17,6 +17,7 @@ import type {
 import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import { isOIDCProvider } from "../../../utils/providers.js"
+import { fetchOpt } from "../../../utils/custom-fetch.js"
 
 /**
  * Handles the following OAuth steps.
@@ -33,6 +34,7 @@ export async function handleOAuth(
   options: InternalOptions<"oauth" | "oidc">
 ) {
   const { logger, provider } = options
+
   let as: o.AuthorizationServer
 
   const { token, userinfo } = provider
@@ -44,7 +46,10 @@ export async function handleOAuth(
     // We assume that issuer is always defined as this has been asserted earlier
 
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
+    const discoveryResponse = await o.discoveryRequest(
+      issuer,
+      fetchOpt(provider)
+    )
     const discoveredAs = await o.processDiscoveryResponse(
       issuer,
       discoveryResponse
@@ -114,7 +119,7 @@ export async function handleOAuth(
         ) {
           args[1].body.delete("code_verifier")
         }
-        return fetch(...args)
+        return fetchOpt(provider)[o.customFetch](...args)
       },
       clientPrivateKey: provider.token?.clientPrivateKey,
     }
@@ -159,7 +164,8 @@ export async function handleOAuth(
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
-        processedCodeResponse.access_token
+        processedCodeResponse.access_token,
+        fetchOpt(provider)
       )
 
       profile = await o.processUserInfoResponse(
@@ -190,7 +196,8 @@ export async function handleOAuth(
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
-        processedCodeResponse.access_token
+        processedCodeResponse.access_token,
+        fetchOpt(provider)
       )
       profile = await userinfoResponse.json()
     } else {
