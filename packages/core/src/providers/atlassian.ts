@@ -33,7 +33,7 @@ export interface AtlassianProfile extends Record<string, any> {
 }
 
 // Any config required that isn't part of the `OAuthUserConfig` spec should belong here
-// For example, we must pass a `redirectUri` to the Notion API when requesting tokens, therefore we add it here
+// For example, we must pass a `redirectUri` to the Atlassian API when requesting tokens, therefore we add it here
 interface AdditionalConfig {
   redirectUri: string | undefined
 }
