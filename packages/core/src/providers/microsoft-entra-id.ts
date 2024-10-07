@@ -8,7 +8,8 @@
  *
  * @module providers/microsoft-entra-id
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import { customFetch } from "../index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface MicrosoftEntraIDProfile extends Record<string, any> {
   sub: string
@@ -16,18 +17,6 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
   email: string
   picture: string
 }
-
-export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
-  OAuthUserConfig<P> & {
-    /**
-     * https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
-     *
-     * @default 48
-     */
-    profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
-    /** @default "common" */
-    tenantId?: string
-  }
 
 /**
  *
@@ -111,8 +100,8 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * ### Notes
  *
- * By default, Auth.js assumes that the MicrosoftEntra provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ * By default, Auth.js assumes that the Microsoft Entra ID provider is
+ * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
  * :::tip
  *
@@ -131,21 +120,25 @@ export type MicrosoftEntraIDOptions<P extends MicrosoftEntraIDProfile> =
  *
  * :::
  */
-export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
-  options: MicrosoftEntraIDOptions<P>
-): OAuthConfig<P> {
-  const { tenantId = "common", profilePhotoSize = 48, ...rest } = options
-  rest.issuer ??= `https://login.microsoftonline.com/${tenantId}/v2.0`
+export default function MicrosoftEntraID(
+  config: OIDCUserConfig<MicrosoftEntraIDProfile> & {
+    /**
+     * https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
+     *
+     * @default 48
+     */
+    profilePhotoSize?: 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648
+  }
+): OIDCConfig<MicrosoftEntraIDProfile> {
+  const { profilePhotoSize = 48 } = config
+
+  config.issuer ??= "https://login.microsoftonline.com/common/v2.0"
+
   return {
     id: "microsoft-entra-id",
     name: "Microsoft Entra ID",
     type: "oidc",
-    wellKnown: `${rest.issuer}/.well-known/openid-configuration?appid=${options.clientId}`,
-    authorization: {
-      params: {
-        scope: "openid profile email User.Read",
-      },
-    },
+    authorization: { params: { scope: "openid profile email User.Read" } },
     async profile(profile, tokens) {
       // https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
       const response = await fetch(
@@ -172,6 +165,21 @@ export default function MicrosoftEntraID<P extends MicrosoftEntraIDProfile>(
       }
     },
     style: { text: "#fff", bg: "#0072c6" },
-    options: rest,
+    // HACK: Entra ID returns the wrong issuer
+    async [customFetch](...args) {
+      // If we are not fetching the discovery document, do nothing
+      const url = new URL(args[0] instanceof Request ? args[0].url : args[0])
+      if (!url.pathname.endsWith(".well-known/openid-configuration")) {
+        return fetch(...args)
+      }
+
+      const response = await fetch(...args)
+      const json = await response.clone().json()
+      const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
+      const tenantId = config.issuer?.match(tenantRe)?.[1] ?? "common"
+      const issuer = json.issuer.replace("{tenantid}", tenantId)
+      return Response.json({ ...json, issuer })
+    },
+    options: config,
   }
 }
