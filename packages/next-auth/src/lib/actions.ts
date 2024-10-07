@@ -107,11 +107,12 @@ export async function signOut(
 
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
+  if (options?.redirect === false) 
+    return res as any
+  
   for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
 
-  if (options?.redirect ?? true) return redirect(res.redirect!)
-
-  return res as any
+  return redirect(res.redirect!)
 }
 
 type UpdateParams = Parameters<NextAuthResult["unstable_update"]>
