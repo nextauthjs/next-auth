@@ -2,6 +2,7 @@ import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
+import type { customFetch } from "../lib/utils/custom-fetch.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -221,6 +222,8 @@ export interface OAuth2Config<Profile>
    */
   allowDangerousEmailAccountLinking?: boolean
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
+  /** @see {customFetch} */
+  [customFetch]?: typeof fetch
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values

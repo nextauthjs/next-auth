@@ -1,6 +1,6 @@
 {
   "name": "next-auth",
-  "version": "5.0.0-beta.20",
+  "version": "5.0.0-beta.22",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
@@ -109,7 +109,7 @@
   "devDependencies": {
     "@types/react": "18.0.37",
     "dotenv": "^10.0.0",
-    "next": "14.2.3",
+    "next": "14.2.10",
     "nodemailer": "^6.9.3",
     "react": "^18.2.0"
   }

@@ -3,6 +3,7 @@ import * as o from "oauth4webapi"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
+import { fetchOpt } from "../../utils/custom-fetch.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -24,7 +25,10 @@ export async function getAuthorizationUrl(
     // We check this in assert.ts
 
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
+    const discoveryResponse = await o.discoveryRequest(
+      issuer,
+      fetchOpt(options.provider)
+    )
     const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
     if (!as.authorization_endpoint) {
@@ -39,10 +43,10 @@ export async function getAuthorizationUrl(
   const authParams = url.searchParams
 
   let redirect_uri: string = provider.callbackUrl
-  let data: object | undefined
+  let data: string | undefined
   if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
-    data = { origin: provider.callbackUrl }
+    data = provider.callbackUrl
     logger.debug("using redirect proxy", { redirect_uri, data })
   }
 
@@ -73,7 +77,7 @@ export async function getAuthorizationUrl(
     if (as && !as.code_challenge_methods_supported?.includes("S256")) {
       // We assume S256 PKCE support, if the server does not advertise that,
       // a random `nonce` must be used for CSRF protection.
-      if (provider.type === "oidc") provider.checks = ["nonce"] as any
+      if (provider.type === "oidc") provider.checks = ["nonce"]
     } else {
       const { value, cookie } = await checks.pkce.create(options)
       authParams.set("code_challenge", value)

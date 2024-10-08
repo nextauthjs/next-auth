@@ -110,7 +110,7 @@
  */
 
 import type { AuthConfig } from "@auth/core"
-import { Auth, isAuthAction, skipCSRFCheck } from "@auth/core"
+import { Auth, isAuthAction, skipCSRFCheck, customFetch } from "@auth/core"
 import { AuthAction, Session } from "@auth/core/types"
 import { implicit$FirstArg, type QRL } from "@builder.io/qwik"
 import {
@@ -123,6 +123,17 @@ import {
 import { EnvGetter } from "@builder.io/qwik-city/middleware/request-handler"
 import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
+
+export { customFetch }
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
+
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
 
 /** Configure the {@link QwikAuth$} method. */
 export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> {}

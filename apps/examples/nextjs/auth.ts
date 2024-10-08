@@ -17,6 +17,7 @@ import Google from "next-auth/providers/google"
 import Hubspot from "next-auth/providers/hubspot"
 import Keycloak from "next-auth/providers/keycloak"
 import LinkedIn from "next-auth/providers/linkedin"
+import MicrosoftEntraId from "next-auth/providers/microsoft-entra-id"
 import Netlify from "next-auth/providers/netlify"
 import Okta from "next-auth/providers/okta"
 import Passage from "next-auth/providers/passage"
@@ -24,9 +25,11 @@ import Passkey from "next-auth/providers/passkey"
 import Pinterest from "next-auth/providers/pinterest"
 import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
+import Salesforce from "next-auth/providers/salesforce"
 import Spotify from "next-auth/providers/spotify"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
+import Vipps from "next-auth/providers/vipps"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
@@ -73,6 +76,7 @@ const config = {
     Hubspot,
     Keycloak({ name: "Keycloak (bob/bob)" }),
     LinkedIn,
+    MicrosoftEntraId,
     Netlify,
     Okta,
     Passkey({
@@ -87,16 +91,21 @@ const config = {
     Passage,
     Pinterest,
     Reddit,
+    Salesforce,
     Slack,
     Spotify,
     Twitch,
     Twitter,
+    Vipps({
+      issuer: "https://apitest.vipps.no/access-management-1.0/access/",
+    }),
     WorkOS({
       connection: process.env.AUTH_WORKOS_CONNECTION!,
     }),
     Zoom,
   ],
   basePath: "/auth",
+  session: { strategy: "jwt" },
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
