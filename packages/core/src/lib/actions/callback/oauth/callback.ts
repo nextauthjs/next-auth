@@ -142,11 +142,11 @@ export async function handleOAuth(
     const nonce = await checks.nonce.use(cookies, resCookies, options)
 
     if (provider.id === "microsoft-entra-id") {
-      const { tid, iss } = decodeJwt(
+      const { tid } = decodeJwt(
         (await codeGrantResponse.clone().json()).id_token
       )
 
-      if (typeof tid === "string" && iss) {
+      if (typeof tid === "string") {
         const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
         const tenantId = as.issuer?.match(tenantRe)?.[1] ?? "common"
         const issuer = new URL(as.issuer.replace(tenantId, tid))
