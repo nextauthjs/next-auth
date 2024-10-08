@@ -54,11 +54,7 @@ const config = {
   adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
-    Atlassian({
-      clientId: process.env.AUTH_ATLASSIAN_ID,
-      clientSecret: process.env.AUTH_ATLASSIAN_SECRET,
-      redirectUri: process.env.AUTH_ATLASSIAN_REDIRECT_URI,
-    }),
+    Atlassian,
     Auth0,
     AzureB2C({
       clientId: process.env.AUTH_AZURE_AD_B2C_ID,

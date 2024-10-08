@@ -32,12 +32,6 @@ export interface AtlassianProfile extends Record<string, any> {
   picture: string
 }
 
-// Any config required that isn't part of the `OAuthUserConfig` spec should belong here
-// For example, we must pass a `redirectUri` to the Atlassian API when requesting tokens, therefore we add it here
-interface AdditionalConfig {
-  redirectUri: string | undefined
-}
-
 /**
  * ### Setup
  *
@@ -50,19 +44,16 @@ interface AdditionalConfig {
  *
  * Import the provider and configure it in your **Auth.js** initialization file:
  *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import AtlassianProvider from "next-auth/providers/atlassian"
- *
- * export default NextAuth({
- *   providers: [
- *     AtlassianProvider({
- *       clientId: process.env.ATLASSIAN_ID,
- *       clientSecret: process.env.ATLASSIAN_SECRET,
- *       redirectUri: process.env.ATLASSIAN_REDIRECT_URI,
- *     }),
- *   ],
- * })
+ * ```ts
+ * import Atlassian from "@auth/core/providers/atlassian"
+ * ...
+ * providers: [
+ *  Atlassian({
+ *    clientId: env.AUTH_ATLASSIAN_ID,
+ *    clientSecret: env.AUTH_ATLASSIAN_SECRET,
+ *  }),
+ * ]
+ * ...
  * ```
  *
  * ### Configuring Atlassian
@@ -81,9 +72,8 @@ interface AdditionalConfig {
  * Then, create a `.env` file in the project root add the following entries:
  *
  * ```
- * ATLASSIAN_ID=<Client ID copied in step 8>
- * ATLASSIAN_SECRET=<Secret copied in step 8>
- * ATLASSIAN_REDIRECT_URI=<Callback URL of your application>
+ * AUTH_ATLASSIAN_ID=<Client ID copied in step 8>
+ * AUTH_ATLASSIAN_SECRET=<Secret copied in step 8>
  * ```
  *
  * ### Resources
@@ -102,9 +92,9 @@ interface AdditionalConfig {
  * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
  * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
  */
-export default function Atlassian<P extends AtlassianProfile>(
-  options: OAuthUserConfig<P> & AdditionalConfig
-): OAuthConfig<P> {
+export default function Atlassian(
+  options: OAuthUserConfig<AtlassianProfile>
+): OAuthConfig<AtlassianProfile> {
   return {
     id: "atlassian",
     name: "Atlassian",
@@ -113,12 +103,8 @@ export default function Atlassian<P extends AtlassianProfile>(
       url: "https://auth.atlassian.com/authorize",
       params: {
         audience: "api.atlassian.com",
-        prompt: "consent",
-        client_id: options.clientId,
         scope: "read:me",
-        redirect_uri: options.redirectUri,
         state: "sample_state", // required field, so must have
-        response_type: "code",
       },
     },
     token: "https://auth.atlassian.com/oauth/token",
