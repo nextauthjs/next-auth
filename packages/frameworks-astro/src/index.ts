@@ -187,6 +187,7 @@ export default (config: AstroAuthConfig = {}): AstroIntegration => ({
         )
       }
       const edge = ["@astrojs/vercel/edge", "@astrojs/cloudflare"].includes(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain -- ignore
         astroConfig.adapter?.name!
       )
 
