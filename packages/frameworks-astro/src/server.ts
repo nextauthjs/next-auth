@@ -92,7 +92,9 @@ export async function getSession(
     ctx.request.headers,
     // @ts-expect-error
     import.meta.env,
-    config.basePath
+    {
+      basePath: config.basePath ?? "/auth",
+    }
   )
   const response = (await Auth(
     new Request(url, { headers: ctx.request.headers }),

@@ -16,8 +16,8 @@
   "type": "module",
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
-    "clean": "rm -rf dist src/lib",
-    "providers": "node ../utils/scripts/providers.js --out src/lib"
+    "clean": "rm -rf dist src/providers",
+    "providers": "node ../utils/scripts/providers.js --out src"
   },
   "files": [
     "dist",
