@@ -34,7 +34,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest -c ../utils/vitest.config.ts"
+    "test": "vitest -c ../utils/vitest.config.ts",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

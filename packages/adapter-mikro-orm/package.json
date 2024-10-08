@@ -38,7 +38,8 @@
   },
   "scripts": {
     "test": "vitest -c ../utils/vitest.config.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf *.js *.d.ts* lib"
   },
   "peerDependencies": {
     "@mikro-orm/core": "^5"

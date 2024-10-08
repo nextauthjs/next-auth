@@ -41,7 +41,8 @@
     "fauna": "fauna",
     "build": "tsc",
     "dev": "tsc -w",
-    "test": "./test/test.sh"
+    "test": "./test/test.sh",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

@@ -71,7 +71,7 @@
     "@types/cookie": "0.6.0",
     "cookie": "0.7.1",
     "jose": "^5.9.3",
-    "oauth4webapi": "^2.17.0",
+    "oauth4webapi": "^3.0.0",
     "preact": "10.11.3",
     "preact-render-to-string": "5.2.3"
   },
