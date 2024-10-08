@@ -81,15 +81,11 @@
  * @module @auth/astro
  */
 
+import type { AuthConfig } from "@auth/core"
 import type { AstroIntegration } from "astro"
 import type { PluginOption } from "vite"
 
-export interface AstroAuthConfig {
-  /**
-   * Defines the base path for the auth routes.
-   * @default '/auth'
-   */
-  basePath?: string
+export interface AstroAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
    * Defineds wether or not you want the integration to handle the API routes
    * @default true
@@ -138,7 +134,9 @@ export const virtualConfigModule = ({
 /**
  * The Astro integration to add auth.js to your project.
  */
-export default (config: AstroAuthConfig = {}): AstroIntegration => ({
+export default (
+  config: AstroAuthConfig = { providers: [] }
+): AstroIntegration => ({
   name: "astro-auth",
   hooks: {
     "astro:config:setup": async ({
