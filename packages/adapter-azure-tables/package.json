@@ -39,7 +39,7 @@
   "scripts": {
     "test": "./test/test.sh",
     "build": "tsc",
-    "clean": "rm -rf *.js *.d.ts *.d.ts.map"
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
