@@ -33,13 +33,19 @@ export type BattleNetIssuer =
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import BattleNet from "@auth/core/providers/battlenet"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BattleNet({ clientId: BATTLENET_CLIENT_ID, clientSecret: BATTLENET_CLIENT_SECRET. issuer: BATTLENET_ISSUER })],
+ *   providers: [
+ *     BattleNet({
+ *       clientId: BATTLENET_CLIENT_ID,
+ *       clientSecret: BATTLENET_CLIENT_SECRET,
+ *       issuer: BATTLENET_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  * issuer must be one of these values, based on the available regions:

@@ -1,6 +1,9 @@
 /**
  *
- * NextAuth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
+ * NextAuth.js is the official integration of Auth.js for Next.js applications. It supports both
+ * [Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the
+ * [Pages Router](https://nextjs.org/docs/pages). It includes methods for signing in, signing out, hooks, and a React
+ * Context provider to wrap your application and make session data available anywhere.
  *
  * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://authjs.dev/guides/upgrade-to-v5#methods)
  *
@@ -69,15 +72,26 @@ export const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
+let broadcastChannel: BroadcastChannel | null = null
+
+function getNewBroadcastChannel() {
+  return new BroadcastChannel("next-auth")
+}
+
 function broadcast() {
-  if (typeof BroadcastChannel !== "undefined") {
-    return new BroadcastChannel("next-auth")
+  if (typeof BroadcastChannel === "undefined") {
+    return {
+      postMessage: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }
   }
-  return {
-    postMessage: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
+
+  if (broadcastChannel === null) {
+    broadcastChannel = getNewBroadcastChannel()
   }
+
+  return broadcastChannel
 }
 
 // TODO:
@@ -113,7 +127,7 @@ export const SessionContext = React.createContext?.<
  * React Hook that gives you access to the logged in user's session data and lets you modify it.
  *
  * :::info
- * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `useSession` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function useSession<R extends boolean>(
@@ -171,7 +185,8 @@ export async function getSession(params?: GetSessionParams) {
     params
   )
   if (params?.broadcast ?? true) {
-    broadcast().postMessage({
+    const broadcastChannel = getNewBroadcastChannel()
+    broadcastChannel.postMessage({
       event: "session",
       data: { trigger: "getSession" },
     })
@@ -224,7 +239,9 @@ export async function signIn<
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+  const { redirect = true } = options ?? {}
+  const redirectTo =
+    options?.redirectTo ?? options?.callbackUrl ?? window.location.href
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
@@ -236,7 +253,7 @@ export async function signIn<
 
   if (!provider || !(provider in providers)) {
     window.location.href = `${baseUrl}/signin?${new URLSearchParams({
-      callbackUrl,
+      callbackUrl: redirectTo,
     })}`
     return
   }
@@ -262,7 +279,7 @@ export async function signIn<
       body: new URLSearchParams({
         ...options,
         csrfToken,
-        callbackUrl,
+        callbackUrl: redirectTo,
       }),
     }
   )
@@ -271,7 +288,7 @@ export async function signIn<
 
   // TODO: Do not redirect for Credentials and Email providers by default in next major
   if (redirect || !isSupportingReturn) {
-    const url = data.url ?? callbackUrl
+    const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
@@ -279,6 +296,7 @@ export async function signIn<
   }
 
   const error = new URL(data.url).searchParams.get("error")
+  const code = new URL(data.url).searchParams.get("code")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -286,6 +304,7 @@ export async function signIn<
 
   return {
     error,
+    code,
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,
@@ -299,7 +318,8 @@ export async function signIn<
 export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse> {
-  const { callbackUrl = window.location.href } = options ?? {}
+  const redirectTo =
+    options?.redirectTo ?? options?.callbackUrl ?? window.location.href
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
@@ -308,14 +328,14 @@ export async function signOut<R extends boolean = true>(
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    body: new URLSearchParams({ csrfToken, callbackUrl }),
+    body: new URLSearchParams({ csrfToken, callbackUrl: redirectTo }),
   })
   const data = await res.json()
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
 
   if (options?.redirect ?? true) {
-    const url = data.url ?? callbackUrl
+    const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
@@ -335,7 +355,7 @@ export async function signOut<R extends boolean = true>(
  * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
  *
  * :::info
- * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `SessionProvider` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function SessionProvider(props: SessionProviderProps) {
@@ -470,7 +490,7 @@ export function SessionProvider(props: SessionProviderProps) {
           ? "authenticated"
           : "unauthenticated",
       async update(data: any) {
-        if (loading || !session) return
+        if (loading) return
         setLoading(true)
         const newSession = await fetchData<Session>(
           "session",

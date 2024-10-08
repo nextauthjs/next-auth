@@ -9,7 +9,7 @@ module.exports = {
   tsconfig: "./tsconfig.json",
   plugin: [
     require.resolve("./../../docs/typedoc-nextauth.cjs"),
-    require.resolve("./../../docs/typedoc-mdn-links.cjs"),
+    "typedoc-plugin-markdown",
   ],
   entryFileName: "../prisma-adapter.mdx",
   entryModule: "@auth/prisma-adapter",

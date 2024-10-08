@@ -1,22 +1,16 @@
 <p align="center">
-   <br/>
-   <a href="https://authjs.dev" target="_blank"><img width="150px" src="https://authjs.dev/img/logo-sm.png" /></a>
-   <h3 align="center">SvelteKit Auth</a></h3>
-   <h4 align="center">Authentication for SvelteKit.</h4>
-   <p align="center" style="align: center;">
-      <a href="https://npm.im/next-auth">
-        <img src="https://img.shields.io/badge/TypeScript-blue?style=flat-square" alt="TypeScript" />
-      </a>
-      <a href="https://npm.im/@auth/sveltekit">
-        <img alt="npm" src="https://img.shields.io/npm/v/@auth/sveltekit?color=green&label=@auth/sveltekit&style=flat-square">
-      </a>
-      <a href="https://www.npmtrends.com/@auth/sveltekit">
-        <img src="https://img.shields.io/npm/dm/@auth/sveltekit?label=%20downloads&style=flat-square" alt="Downloads" />
-      </a>
-      <a href="https://github.com/nextauthjs/next-auth/stargazers">
-        <img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square" alt="Github Stars" />
-      </a>
-   </p>
+  <a href="https://kit.svelte.dev" target="_blank"><img height="96px" src="https://authjs.dev/img/etc/sveltekit.svg" /></a>
+  <a href="https://sveltekit.authjs.dev" target="_blank"><img height="96px" src="https://authjs.dev/img/logo-sm.png" /></a>
+  <h1 align="center">SvelteKit Auth</h1>
+</p>
+<p align="center">
+  Authentication for SvelteKit.
+</p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/@auth/sveltekit"><img src="https://img.shields.io/npm/v/@auth/sveltekit?style=flat-square&label=latest&color=purple" alt="npm latest release" /></a>
+  <a href="https://www.npmtrends.com/@auth/sveltekit"><img src="https://img.shields.io/npm/dm/@auth/sveltekit?style=flat-square&color=cyan" alt="Downloads" /></a>
+  <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
+  <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=fff&style=flat-square" alt="TypeScript" />
 </p>
 
 ---

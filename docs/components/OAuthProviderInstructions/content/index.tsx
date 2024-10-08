@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getHighlighter } from "shiki"
+import { type Highlighter, getHighlighter } from "shiki"
 import cx from "classnames"
 import { Callout, Pre, Code as NXCode } from "nextra/components"
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function OAuthInstructions({ providerId, disabled = false }: Props) {
-  const [highlighter, setHighlighter] = useState(null)
+  const [highlighter, setHighlighter] = useState<Highlighter | null>(null)
   useEffect(() => {
     ;(async () => {
       const hl = await getHighlighter({
@@ -28,7 +28,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
   }, [])
 
   const highlight = (code: string): string => {
-    if (!highlighter) return null
+    if (!highlighter) return ""
     return highlighter.codeToHtml(code, {
       lang: "tsx",
       themes: {
@@ -39,11 +39,21 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
   }
 
   const providerName = manifest.providersOAuth[providerId]
+  const envVars = [
+    `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}`,
+    `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}`,
+  ]
+  if (manifest.requiresIssuer.includes(providerId)) {
+    envVars.push(
+      `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ISSUER={ISSUER_URL}`
+    )
+  }
+  const envString = `\n${envVars.join("\n")}\n`
 
   return (
     <div
       className={cx(
-        "nextra-steps ml-4 mb-12 border-l border-gray-200 pl-6 dark:border-neutral-800 [counter-reset:step]",
+        "nextra-steps mb-12 ml-4 border-l border-gray-200 pl-6 [counter-reset:step] dark:border-neutral-800",
         { "pointer-events-none opacity-40": disabled }
       )}
     >
@@ -57,7 +67,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
         If you haven’t used OAuth before, you can read the beginners
         step-by-step guide on{" "}
         <Link href="/guides/configuring-github">
-          how to setup "Sign in with Github" with Auth.js
+          how to setup "Sign in with GitHub" with Auth.js
         </Link>
         .
       </Callout>
@@ -66,7 +76,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
         ask you to enter your application’s callback URL. See below for the
         callback URL you must insert based on your framework.
       </p>
-      <h4 className="mt-4 -mb-3 text-lg font-bold">Callback URL</h4>
+      <h4 className="-mb-3 mt-4 text-lg font-bold">Callback URL</h4>
       <Code>
         <Code.Next>
           <Pre data-copy="">
@@ -75,6 +85,13 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
             </NXCode>
           </Pre>
         </Code.Next>
+        <Code.Qwik>
+          <Pre data-copy="">
+            <NXCode>
+              <span>{`[origin]/auth/callback/${providerId}`}</span>
+            </NXCode>
+          </Pre>
+        </Code.Qwik>
         <Code.Svelte>
           <Pre data-copy="">
             <NXCode>
@@ -100,9 +117,18 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       {/* Step 2 */}
       <StepTitle>Setup Environment Variables</StepTitle>
       <p className="mt-6 leading-7 first:mt-0">
-        Once registered, you should get a <strong>Client ID</strong> and{" "}
-        <strong>Client Secret</strong>. Add those in your application
-        environment file:
+        Once registered, you should receive a{" "}
+        {manifest.requiresIssuer.includes(providerId) ? (
+          <>
+            <strong>Client ID</strong>, <strong>Client Secret</strong> and{" "}
+            <strong>Issuer URL</strong>
+          </>
+        ) : (
+          <>
+            <strong>Client ID</strong> and <strong>Client Secret</strong>
+          </>
+        )}
+        . Add those in your application environment file:
       </p>
       <Code>
         <Code.Next>
@@ -110,40 +136,34 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
             data-copy=""
             data-filename=".env.local"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
         </Code.Next>
+        <Code.Qwik>
+          <Pre
+            data-copy=""
+            data-filename=".env"
+            dangerouslySetInnerHTML={{
+              __html: highlight(envString),
+            }}
+          />
+        </Code.Qwik>
         <Code.Svelte>
           <Pre
             data-copy=""
-            data-filename=".env.local"
+            data-filename=".env"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
         </Code.Svelte>
         <Code.Express>
           <Pre
             data-copy=""
-            data-filename=".env.local"
+            data-filename=".env"
             dangerouslySetInnerHTML={{
-              __html: highlight(
-                `
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}
-AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}
-`
-              ),
+              __html: highlight(envString),
             }}
           />
           <p className="mt-2 leading-7 first:mt-0">

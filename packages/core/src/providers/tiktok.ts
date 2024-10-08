@@ -1,6 +1,6 @@
 /**
  * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Tiktok</b> integration.</span>
+ * <span>Built-in <b>TikTok</b> integration.</span>
  * <a href="https://www.tiktok.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/tiktok.svg" height="48" />
  * </a>
@@ -63,7 +63,7 @@ export interface TiktokProfile extends Record<string, any> {
        * To return this field, add `fields=username` in the user profile request's query parameter.
        */
       username: string
-      /** @note Email is currently unsupported by Tiktok  */
+      /** @note Email is currently unsupported by TikTok  */
       email?: string
       /**
        * User's bio description if there is a valid one.
@@ -127,7 +127,7 @@ export interface TiktokProfile extends Record<string, any> {
 }
 
 /**
- * Add Tiktok login to your page.
+ * Add TikTok login to your page.
  *
  * ### Setup
  *
@@ -137,19 +137,21 @@ export interface TiktokProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
- * import Tiktok from "@auth/core/providers/tiktok"
+ *```ts
+ * import { Auth } from "@auth/core"
+ * import TikTok from "@auth/core/providers/tiktok"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Tiktok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET })],
+ *   providers: [
+ *     TikTok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
- *  - [Tiktok app console](https://developers.tiktok.com/)
- *  - [Tiktok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
+ *  - [TikTok app console](https://developers.tiktok.com/)
+ *  - [TikTok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
  *  - [Avaliable Scopes](https://developers.tiktok.com/doc/tiktok-api-scopes/)
  *
  *
@@ -157,28 +159,28 @@ export interface TiktokProfile extends Record<string, any> {
  *
  * :::tip
  *
- * Production applications cannot use localhost URLs to sign in with Tiktok. You need add the domain and Callback/Redirect url's to your Tiktok app and have them review and approved by the Tiktok Team.
+ * Production applications cannot use localhost URLs to sign in with TikTok. You need add the domain and Callback/Redirect url's to your TikTok app and have them review and approved by the TikTok Team.
  *
  * :::
  *
  * :::tip
  *
- * Email address is not supported by Tiktok.
+ * Email address is not supported by TikTok.
  *
  * :::
  *
  * :::tip
  *
- * Client_ID will be the Client Key in the Tiktok Application
+ * Client_ID will be the Client Key in the TikTok Application
  *
  * :::
  *
- * By default, Auth.js assumes that the Tiktok provider is
+ * By default, Auth.js assumes that the TikTok provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
  *
- * The Tiktok provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/tiktok.ts).
+ * The TikTok provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/tiktok.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
@@ -193,7 +195,7 @@ export interface TiktokProfile extends Record<string, any> {
  *
  * :::
  */
-export default function Tiktok<P extends TiktokProfile>(
+export default function TikTok<P extends TiktokProfile>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
@@ -210,8 +212,9 @@ export default function Tiktok<P extends TiktokProfile>(
     },
 
     token: {
+      url: "https://open.tiktokapis.com/v2/oauth/token/",
       async request({ params, provider }) {
-        const res = await fetch(`https://open.tiktokapis.com/v2/oauth/token/`, {
+        const res = await fetch(provider.token?.url as unknown as string, {
           method: "POST",
           headers: {
             "Cache-Control": "no-cache",
@@ -253,7 +256,7 @@ export default function Tiktok<P extends TiktokProfile>(
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,
         image: profile.data.user.avatar_url,
-        email: profile.data.user.email || null,
+        email: profile.data.user.email || profile.data.user.username || null,
       }
     },
     style: {

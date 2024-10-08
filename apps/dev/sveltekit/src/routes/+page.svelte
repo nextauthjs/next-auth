@@ -36,19 +36,33 @@
           <code>@auth/sveltekit/components</code> to run via form actions.
         </p>
         <div class="actions">
+          <SignIn provider="github">
+            <span slot="submitButton">
+              <img
+                src="https://authjs.dev/img/providers/github.svg"
+                alt="GitHub Logo"
+                width="20"
+                height="20"
+              />
+              GitHub
+            </span>
+          </SignIn>
+          <SignIn provider="discord">
+            <span slot="submitButton">
+              <img
+                src="https://authjs.dev/img/providers/discord.svg"
+                alt="Discord Logo"
+                width="20"
+                height="20"
+              />
+              Discord
+            </span>
+          </SignIn>
+          <div class="or-split">or</div>
           <SignIn provider="credentials">
             <span slot="submitButton">Sign In with Credentials</span>
             <div slot="credentials" style="width: 100%;">
               <div class="wrapper-form" style="width: 100%;">
-                <div class="input-wrapper">
-                  <label for="server-username">Username</label>
-                  <input
-                    placeholder="Anything"
-                    type="text"
-                    id="server-username"
-                    name="username"
-                  />
-                </div>
                 <div class="input-wrapper">
                   <label for="server-password">Password</label>
                   <input
@@ -61,26 +75,6 @@
                 </div>
               </div>
             </div>
-          </SignIn>
-          <SignIn provider="github">
-            <span slot="submitButton">
-              <img
-                src="https://authjs.dev/img/providers/github.svg"
-                alt="Github Logo"
-                width="32"
-                height="32"
-              />
-            </span>
-          </SignIn>
-          <SignIn provider="discord">
-            <span slot="submitButton">
-              <img
-                src="https://authjs.dev/img/providers/discord.svg"
-                alt="Discord Logo"
-                width="32"
-                height="32"
-              />
-            </span>
           </SignIn>
         </div>
       </div>
@@ -95,16 +89,30 @@
           <code>@auth/sveltekit/client</code>
         </p>
         <div class="actions">
-          <div class="wrapper-form">
-            <div class="input-wrapper">
-              <label for="client-username">Username</label>
-              <input
-                placeholder="Anything"
-                type="text"
-                id="client-username"
-                name="username"
+          <div class="wrapper-form social-btn">
+            <button on:click={() => signIn("github")}>
+              <img
+                src="https://authjs.dev/img/providers/github.svg"
+                alt="GitHub Logo"
+                width="20"
+                height="20"
               />
-            </div>
+              GitHub
+            </button>
+          </div>
+          <div class="wrapper-form social-btn">
+            <button on:click={() => signIn("discord")}>
+              <img
+                src="https://authjs.dev/img/providers/discord.svg"
+                alt="Discord Logo"
+                width="20"
+                height="20"
+              />
+              Discord
+            </button>
+          </div>
+          <div class="or-split">or</div>
+          <div class="wrapper-form">
             <div class="input-wrapper">
               <label for="client-password">Password</label>
               <input
@@ -118,26 +126,6 @@
             </div>
             <button on:click={() => signIn("credentials", { password })}>
               Sign In with Credentials
-            </button>
-          </div>
-          <div class="wrapper-form">
-            <button on:click={() => signIn("github")}>
-              <img
-                src="https://authjs.dev/img/providers/github.svg"
-                alt="Github Logo"
-                width="32"
-                height="32"
-              />
-            </button>
-          </div>
-          <div class="wrapper-form">
-            <button on:click={() => signIn("discord")}>
-              <img
-                src="https://authjs.dev/img/providers/discord.svg"
-                alt="Discord Logo"
-                width="32"
-                height="32"
-              />
             </button>
           </div>
         </div>

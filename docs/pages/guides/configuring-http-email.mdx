@@ -22,7 +22,9 @@ export const { handlers, auth } = NextAuth({
   providers: [
     {
       id: "http-email",
+      name: "Email",
       type: "email",
+      maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
       sendVerificationRequest,
     },
   ],
@@ -30,6 +32,28 @@ export const { handlers, auth } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { sendVerificationRequest } from "../lib/authSendRequest"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      {
+        id: "http-email",
+        name: "Email",
+        type: "email",
+        maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
+        sendVerificationRequest,
+      },
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -41,7 +65,9 @@ export const { handle, auth } = SvelteKitAuth({
   providers: [
     {
       id: "http-email",
+      name: "Email",
       type: "email",
+      maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
       sendVerificationRequest,
     },
   ],
@@ -66,7 +92,9 @@ app.use(
     providers: [
       {
         id: "http-email",
+        name: "Email",
         type: "email",
+        maxAge: 60 * 60 * 24, // Email link will expire in 24 hours
         sendVerificationRequest,
       },
     ],

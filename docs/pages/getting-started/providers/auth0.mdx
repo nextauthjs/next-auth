@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Auth0 docs](https://auth0.com/docs/authenticate)
+- [Auth0 documentation](https://auth0.com/docs/authenticate)
 
 ## Setup
 
@@ -20,6 +20,13 @@ https://example.com/api/auth/callback/auth0
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/auth0
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -51,6 +58,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Auth0 from "@auth/qwik/providers/auth0"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Auth0],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

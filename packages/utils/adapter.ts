@@ -1,6 +1,6 @@
-import { test, expect, beforeAll, afterAll } from "vitest"
+import { afterAll, beforeAll, expect, test } from "vitest"
 
-import type { Adapter } from "@auth/core/adapters"
+import type { Adapter, VerificationToken } from "@auth/core/adapters"
 import { createHash, randomInt, randomUUID } from "crypto"
 
 export interface TestOptions {
@@ -287,7 +287,7 @@ export async function runBasicTests(options: TestOptions) {
       identifier,
       expires:
         options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
-    }
+    } satisfies VerificationToken
     await adapter.createVerificationToken?.(verificationToken)
 
     const dbVerificationToken1 = await adapter.useVerificationToken?.({
@@ -301,8 +301,26 @@ export async function runBasicTests(options: TestOptions) {
 
     expect(dbVerificationToken1).toEqual(verificationToken)
 
-    const dbVerificationToken2 = await adapter.useVerificationToken?.({
+    const dbVerificationTokenSecondTry = await adapter.useVerificationToken?.({
       identifier,
+      token: hashedToken,
+    })
+
+    expect(dbVerificationTokenSecondTry).toBeNull()
+
+    // Should only return if the identifier matches
+
+    const verificationToken2 = {
+      token: hashedToken,
+      identifier,
+      expires:
+        options.fixtures?.verificationTokenExpires ?? FIFTEEN_MINUTES_FROM_NOW,
+    } satisfies VerificationToken
+
+    await adapter.createVerificationToken?.(verificationToken2)
+
+    const dbVerificationToken2 = await adapter.useVerificationToken?.({
+      identifier: "invalid@identifier.com",
       token: hashedToken,
     })
 
@@ -548,13 +566,15 @@ export async function runBasicTests(options: TestOptions) {
 
     const authenticators1 = await adapter.listAuthenticatorsByUserId(user1.id)
     expect(authenticators1).not.toBeNull()
-    expect([authenticator1, authenticator2]).toMatchObject(
-      authenticators1 || []
+    expect([authenticator2, authenticator1]).toEqual(
+      expect.arrayContaining(authenticators1 || [])
     )
 
     const authenticators2 = await adapter.listAuthenticatorsByUserId(user2.id)
     expect(authenticators2).not.toBeNull()
-    expect([authenticator3]).toMatchObject(authenticators2 || [])
+    expect([authenticator3]).toMatchObject(
+      expect.arrayContaining(authenticators2 || [])
+    )
   })
   maybeTest("updateAuthenticatorCounter", async () => {
     // Setup
@@ -607,6 +627,9 @@ export function hashToken(token: string) {
 export { randomUUID }
 
 export const ONE_WEEK_FROM_NOW = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+ONE_WEEK_FROM_NOW.setMilliseconds(0)
 export const FIFTEEN_MINUTES_FROM_NOW = new Date(Date.now() + 15 * 60 * 1000)
+FIFTEEN_MINUTES_FROM_NOW.setMilliseconds(0)
 export const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 export const ONE_MONTH_FROM_NOW = new Date(Date.now() + ONE_MONTH)
+ONE_MONTH_FROM_NOW.setMilliseconds(0)

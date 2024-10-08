@@ -21,6 +21,13 @@ https://example.com/api/auth/callback/gitlab
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/gitlab
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -44,22 +51,36 @@ AUTH_GITLAB_SECRET
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import Gitlab from "next-auth/providers/gitlab"
+import GitLab from "next-auth/providers/gitlab"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [Gitlab],
+  providers: [GitLab],
 })
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import GitLab from "@auth/qwik/providers/gitlab"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [GitLab],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import Gitlab from "@auth/sveltekit/providers/gitlab"
+import GitLab from "@auth/sveltekit/providers/gitlab"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [Gitlab],
+  providers: [GitLab],
 })
 ```
 
@@ -68,9 +89,9 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import Gitlab from "@auth/express/providers/gitlab"
+import GitLab from "@auth/express/providers/gitlab"
 
-app.use("/auth/*", ExpressAuth({ providers: [Gitlab] }))
+app.use("/auth/*", ExpressAuth({ providers: [GitLab] }))
 ```
 
   </Code.Express>

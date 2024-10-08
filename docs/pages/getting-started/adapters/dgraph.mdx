@@ -7,7 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Dgraph Docs](https://dgraph.io/docs)
+- [Dgraph documentation](https://dgraph.io/docs)
 
 ## Setup
 
@@ -46,6 +46,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { DgraphAdapter } from "@auth/dgraph-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: DgraphAdapter({
+      endpoint: import.meta.env.DGRAPH_GRAPHQL_ENDPOINT,
+      authToken: import.meta.env.DGRAPH_GRAPHQL_KEY,
+      // you can omit the following properties if you are running an unsecure schema
+      authHeader: import.meta.env.AUTH_HEADER, // default: "Authorization",
+      jwtSecret: import.meta.env.SECRET,
+    }),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

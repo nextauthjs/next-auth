@@ -33,13 +33,18 @@ export interface AzureADProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import AzureAd from "@auth/core/providers/azure-ad"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [AzureAd({ clientId: AZURE_AD_CLIENT_ID, clientSecret: AZURE_AD_CLIENT_SECRET })],
+ *   providers: [
+ *     AzureAd({
+ *       clientId: AZURE_AD_CLIENT_ID,
+ *       clientSecret: AZURE_AD_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -79,14 +84,14 @@ export interface AzureADProfile extends Record<string, any> {
  * Azure AD returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
  * :::
  *
- * In `pages/api/auth/[...nextauth].js` find or add the `AzureAD` entries:
+ * In `auth.ts` find or add the `AzureAD` entries:
  *
- * ```js
- * import AzureADProvider from "next-auth/providers/azure-ad";
+ * ```ts
+ * import AzureAd from "@auth/core/providers/azure-ad"
  *
  * ...
  * providers: [
- *   AzureADProvider({
+ *   AzureAD({
  *     clientId: process.env.AZURE_AD_CLIENT_ID,
  *     clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
  *     tenantId: process.env.AZURE_AD_TENANT_ID,
@@ -144,15 +149,19 @@ export default function AzureAD<P extends AzureADProfile>(
     },
     async profile(profile, tokens) {
       // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-      const response = await fetch(
-        `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
-        { headers: { Authorization: `Bearer ${tokens.access_token}` } }
-      )
+      let response = null
+
+      try {
+        response = await fetch(
+          `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
+          { headers: { Authorization: `Bearer ${tokens.access_token}` } }
+        )
+      } catch {}
 
       // Confirm that profile photo was returned
-      let image
+      let image = null
       // TODO: Do this without Buffer
-      if (response.ok && typeof Buffer !== "undefined") {
+      if (response && response.ok && typeof Buffer !== "undefined") {
         try {
           const pictureBuffer = await response.arrayBuffer()
           const pictureBase64 = Buffer.from(pictureBuffer).toString("base64")

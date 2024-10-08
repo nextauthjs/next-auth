@@ -12,7 +12,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 ## Resources
 
-- [DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)
+- [DynamoDB documentation](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)
 
 ## Setup
 
@@ -67,6 +67,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
+import { DynamoDBAdapter } from "@auth/dynamodb-adapter"
+
+const config: DynamoDBClientConfig = {
+  credentials: {
+    accessKeyId: import.meta.env.AUTH_DYNAMODB_ID,
+    secretAccessKey: import.meta.env.AUTH_DYNAMODB_SECRET,
+  },
+  region: import.meta.env.AUTH_DYNAMODB_REGION,
+}
+
+const client = DynamoDBDocument.from(new DynamoDB(config), {
+  marshallOptions: {
+    convertEmptyValues: true,
+    removeUndefinedValues: true,
+    convertClassInstanceToMap: true,
+  },
+})
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: DynamoDBAdapter(client),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -181,7 +214,7 @@ app.use(
 
 ## Advanced usage
 
-### IaaC Templates
+### IaC Templates
 
 Below are some infrastructure-as-code templates for popular providers to help you spin up DynamoDB.
 

@@ -1,22 +1,24 @@
-import { useThemeConfig } from "nextra-theme-docs"
 import { useRouter } from "next/router"
+import { useThemeConfig } from "nextra-theme-docs"
 import { Tabs } from "nextra/components"
-import React, { Children, ReactNode, useEffect, useState } from "react"
+import React, { Children, useEffect, useState } from "react"
 
 interface ChildrenProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 const AUTHJS_TAB_KEY = "authjs.codeTab.framework"
 
 Code.Next = NextCode
-Code.NextPages = NextPagesCode
+Code.NextClient = NextClientCode
 Code.Svelte = SvelteCode
 // Code.Solid = SolidCode;
 Code.Express = ExpressCode
+Code.Qwik = QwikCode
 
 const baseFrameworks = {
   [NextCode.name]: "Next.js",
+  [QwikCode.name]: "Qwik",
   [SvelteCode.name]: "SvelteKit",
   [ExpressCode.name]: "Express",
   // [SolidCode.name]: "SolidStart",
@@ -24,7 +26,8 @@ const baseFrameworks = {
 
 const allFrameworks = {
   [NextCode.name]: "Next.js",
-  [NextPagesCode.name]: "Next.js (Pages)",
+  [NextClientCode.name]: "Next.js (Client)",
+  [QwikCode.name]: "Qwik",
   [SvelteCode.name]: "SvelteKit",
   // [SolidCode.name]: "SolidStart",
   [ExpressCode.name]: "Express",
@@ -47,7 +50,7 @@ export function Code({ children }: ChildrenProps) {
 
   const withNextJsPages = childs.some(
     // @ts-expect-error: Hacky dynamic child wrangling
-    (p) => p && p.type.name === NextPagesCode.name
+    (p) => p && p.type.name === NextClientCode.name
   )
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
@@ -84,7 +87,7 @@ export function Code({ children }: ChildrenProps) {
             child
           ) : (
             <Tabs.Tab key={f}>
-              <p className="p-6 font-semibold rounded-lg bg-slate-100 dark:bg-neutral-950">
+              <p className="rounded-lg bg-slate-100 p-6 font-semibold dark:bg-neutral-950">
                 {renderedFrameworks[f]} not documented yet. Help us by
                 contributing{" "}
                 <a
@@ -105,7 +108,7 @@ export function Code({ children }: ChildrenProps) {
   )
 }
 
-function NextPagesCode({ children }: ChildrenProps) {
+function NextClientCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }
 
@@ -122,5 +125,9 @@ function SvelteCode({ children }: ChildrenProps) {
 // }
 
 function ExpressCode({ children }: ChildrenProps) {
+  return <Tabs.Tab>{children}</Tabs.Tab>
+}
+
+function QwikCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }

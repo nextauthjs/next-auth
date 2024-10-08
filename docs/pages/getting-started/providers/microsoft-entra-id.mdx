@@ -33,6 +33,13 @@ https://example.com/api/auth/callback/microsoft-entra-id
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/microsoft-entra-id
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -57,11 +64,11 @@ AUTH_MICROSOFT_ENTRA_ID_TENANT_ID
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import Entra from "next-auth/providers/microsoft-entra-id"
+import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
 
-const { handlers, auth, signin, signout } = NextAuth({
+const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    Entra({
+    MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
       tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
@@ -71,6 +78,26 @@ const { handlers, auth, signin, signout } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Entra from "@auth/qwik/providers/microsoft-entra-id"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Entra({
+        clientId: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+        clientSecret: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+        tenantId: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

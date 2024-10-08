@@ -1,0 +1,105 @@
+---
+title: BankID Norge
+---
+
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/bankid-no.svg" width="64" height="64" />
+
+# BankID Norway Provider
+
+[BankID Norge](https://bankid.no) is a widespread login method in Norway, used by banks, government agencies, and other organizations. This provider allows users to sign in with BankID Norway.
+
+## Resources
+
+- [BankID Norway documentation](https://confluence.bankidnorge.no/confluence/pdoidcl)
+- [BankID Testing](https://developer.bankid.no/bankid-with-biometrics/testing)
+- [BankID Public Testing discovery endpoint](https://auth.current.bankid.no/auth/realms/current/.well-known/openid-configuration)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/bankid-no
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/bankid-no
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/bankid-no
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_BANKID_NO_ID
+AUTH_BANKID_NO_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import BankIDNorway from "next-auth/providers/bankid-no"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [BankIDNorway],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import BankIDNorway from "@auth/qwik/providers/bankid-no"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [BankIDNorway],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import BankIDNorway from "@auth/sveltekit/providers/bankid-no"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [BankIDNorway],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import BankIDNorway from "@auth/express/providers/bankid-no"
+
+app.use("/auth/*", ExpressAuth({ providers: [BankIDNorway] }))
+```
+
+  </Code.Express>
+</Code>

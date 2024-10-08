@@ -57,16 +57,16 @@ export default {
   "-- Sponsor": {
     title: (
       <>
-        <span className="font-normal text-[0.65rem] text-neutral-400">
+        <span className="text-[0.65rem] font-normal text-neutral-400">
           Sponsored
         </span>
-        <a
-          href="https://clerk.com?utm_source=sponsorship&utm_medium=website&utm_campaign=authjs&utm_content=nav"
-          target="_blank"
-        >
-          <div className="flex flex-col gap-1 p-2 text-xs font-normal rounded-md border ml-[1px] bg-neutral-100 text-neutral-500 border-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700">
-            Looking for a hosted alternative?
-            <span className="text-sky-600 dark:text-sky-500">Use Clerk ›</span>
+        <a href="https://go.clerk.com/DefS1u4" target="_blank">
+          <div className="mt-2 space-y-1 rounded-md border border-neutral-300 bg-neutral-100 px-3 py-2 font-medium leading-snug text-neutral-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400">
+            Looking for a<br />
+            hosted alternative?
+            <div className="font-semibold text-violet-600 dark:text-violet-400">
+              Use Clerk &#8594;
+            </div>
           </div>
         </a>
       </>

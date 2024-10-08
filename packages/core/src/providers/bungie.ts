@@ -21,13 +21,19 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Bungie from "@auth/core/providers/bungie"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Bungie({ clientId: BUNGIE_CLIENT_ID, clientSecret: BUNGIE_CLIENT_SECRET, headers: { "X-API-Key": BUNGIE_API_KEY } })],
+ *   providers: [
+ *     Bungie({
+ *       clientId: BUNGIE_CLIENT_ID,
+ *       clientSecret: BUNGIE_CLIENT_SECRET,
+ *       headers: { "X-API-Key": BUNGIE_API_KEY },
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -68,7 +74,7 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  *
  * [How to edit my host file?](https://phoenixnap.com/kb/how-to-edit-hosts-file-in-windows-mac-or-linux)
  *
- * On Windows (Run Powershell as administrator)
+ * On Windows (Run PowerShell as administrator)
  *
  * ```ps
  * Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "127.0.0.1`tdev.example.com" -Force

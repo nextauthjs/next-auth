@@ -1,0 +1,79 @@
+# Integrating with third-party backends
+
+When logging in through a provider, you can use the received OAuth tokens to authenticate against a third-party API.
+These tokens can be used to authorize requests to backends that are supporting the corresponding provider.
+
+For example:
+
+- GitHub's `access_token` will give you access to GitHub's APIs.
+- Self-managed providers (like [Keycloak](https://www.keycloak.org), [`oidc-provider`](https://github.com/panva/node-oidc-provider), etc.) can be used to authorize against custom third-party backends.
+
+## Storing the token in the session
+
+The token(s) are made available in the `account` parameter of the jwt callback.
+To store them in the session, they can be attached to the token first.
+
+```typescript
+jwt({ token, trigger, session, account }) {
+  if (account?.provider === "my-provider") {
+    return { ...token, accessToken: account.access_token }
+  }
+  // ...
+}
+```
+
+In order to access the token when making API requests, it needs to be made available to the Auth.js session.
+
+```typescript
+async session({ session, token }) {
+  session.accessToken = token.accessToken
+  return session
+}
+```
+
+## Using the token to make authorized API requests
+
+OAuth tokens are commonly attached as `Authorization: Bearer <>` header.
+It is recommended to attach this header server side, like a [Route Handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers).
+
+```typescript
+export async function handler(request: NextRequest) {
+  const session = await auth()
+  return await fetch(/*<your-backend-url>/api/authenticated/greeting*/, {
+    headers: { "Authorization":  `Bearer ${session?.accessToken}` }
+  })
+  // ...
+}
+```
+
+## Configuring the backend to authorize requests through your provider
+
+Consult your backend framework's documentation on how to verify incoming access tokens.
+Below is an [example](https://github.com/nextauthjs/authjs-third-party-backend/tree/main/backend-express) with Express.js using a [Keycloak](https://providers.authjs.dev/keycloak) instance.
+
+```javascript
+const app = express()
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri:
+      "https://keycloak.authjs.dev/realms/master/protocol/openid-connect/certs",
+  }),
+  issuer: "https://keycloak.authjs.dev/realms/master",
+  algorithms: ["RS256"],
+})
+app.get("*", jwtCheck, (req, res) => {
+  const name = req.auth?.name ?? "unknown name"
+  res.json({ greeting: `Hello, ${name}!` })
+})
+// ...
+```
+
+## Resources
+
+- Further examples for different backend frameworks can be found [here](https://github.com/nextauthjs/authjs-third-party-backend/tree/main).
+- A full example of how to integrate a client app with a third-party API can be found in the [next-auth-example](https://github.com/nextauthjs/next-auth-example).
+- [Keycloak](https://www.keycloak.org) - Open Source Identity and Access Management For Modern Applications and Services
+- [`oidc-provider`](https://github.com/panva/node-oidc-provider) - OpenID Certified™ OAuth 2.0 Authorization Server implementation for Node.js

@@ -1,6 +1,6 @@
 import { parse as parseCookie, serialize } from "cookie"
 import { UnknownAction } from "../../errors.js"
-import { logger } from "./logger.js"
+import { setLogger } from "./logger.js"
 
 import type {
   AuthAction,
@@ -28,7 +28,7 @@ export async function toInternalRequest(
 ): Promise<RequestInternal | undefined> {
   try {
     if (req.method !== "GET" && req.method !== "POST")
-      throw new UnknownAction("Only GET and POST requests are supported.")
+      throw new UnknownAction("Only GET and POST requests are supported")
 
     // Defaults are usually set in the `init` function, but this is needed below
     config.basePath ??= "/auth"
@@ -52,6 +52,7 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
+    const logger = setLogger(config)
     logger.error(e as Error)
     logger.debug("request", req)
   }
@@ -85,7 +86,7 @@ export function toResponse(res: ResponseInternal): Response {
   else if (headers.get("content-type") === "application/x-www-form-urlencoded")
     body = new URLSearchParams(res.body).toString()
 
-  const status = res.redirect ? 302 : res.status ?? 200
+  const status = res.redirect ? 302 : (res.status ?? 200)
   const response = new Response(body, { headers, status })
 
   if (res.redirect) response.headers.set("Location", res.redirect)
@@ -123,9 +124,9 @@ export function parseActionAndProviderId(
 
   if (a === null) throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  const [_, actionAndProviderId] = a
+  const actionAndProviderId = a.at(-1)!
 
-  const b = actionAndProviderId.replace(/^\//, "").split("/")
+  const b = actionAndProviderId.replace(/^\//, "").split("/").filter(Boolean)
 
   if (b.length !== 1 && b.length !== 2)
     throw new UnknownAction(`Cannot parse action at ${pathname}`)

@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Dropbox from "@auth/core/providers/dropbox"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Dropbox({ clientId: DROPBOX_CLIENT_ID, clientSecret: DROPBOX_CLIENT_SECRET })],
+ *   providers: [
+ *     Dropbox({
+ *       clientId: DROPBOX_CLIENT_ID,
+ *       clientSecret: DROPBOX_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -64,10 +69,25 @@ export default function Dropbox(
     id: "dropbox",
     name: "Dropbox",
     type: "oauth",
-    authorization:
-      "https://www.dropbox.com/oauth2/authorize?token_access_type=offline&scope=account_info.read",
+    authorization: {
+      url: "https://www.dropbox.com/oauth2/authorize",
+      params: {
+        access_type: "offline",
+        scope: "account_info.read",
+      },
+    },
     token: "https://api.dropboxapi.com/oauth2/token",
-    userinfo: "https://api.dropboxapi.com/2/users/get_current_account",
+    userinfo: {
+      url: "https://api.dropboxapi.com/2/users/get_current_account",
+      async request({ tokens, provider }) {
+        return await fetch(provider.userinfo?.url as URL, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+          },
+        }).then(async (res) => await res.json())
+      },
+    },
     profile(profile) {
       return {
         id: profile.account_id,

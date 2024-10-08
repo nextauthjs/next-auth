@@ -1,7 +1,13 @@
 import { Callout, Tabs } from "nextra/components"
 import { Code } from "@/components/Code"
 
-<img align="right" src="/img/providers/resend.svg" height="64" width="96" />
+<img
+  align="right"
+  src="/img/providers/resend.svg"
+  className="dark:bg-[currentColor]"
+  height="64"
+  width="96"
+/>
 
 # Resend Provider
 
@@ -57,18 +63,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Resend from "@auth/qwik/providers/resend"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Resend({
+        // If your environment variable is named differently than default
+        apiKey: import.meta.env.AUTH_RESEND_KEY,
+        from: "no-reply@company.com",
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Resend from "@auth/sveltekit/providers/resend"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Resend({
       // If your environment variable is named differently than default
-      apiKey: AUTH_RESEND_KEY,
+      apiKey: env.AUTH_RESEND_KEY,
       from: "no-reply@company.com",
     }),
   ],

@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://www.surrealdb.com">SurrealDB</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>Official <a href="https://www.surrealdb.com">SurrealDB</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://www.surrealdb.com">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/surrealdb.png" width="30" />
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/surrealdb.svg" width="30" />
  *  </a>
  * </div>
  *
@@ -118,89 +118,6 @@ export const toId = (surrealId: string) => {
   return surrealId.replace(/^⟨(.+)⟩$/, "$1")
 }
 
-/**
- * ## Setup
- *
- * The SurrealDB adapter does not handle connections automatically, so you will have to make sure that you pass the Adapter a `SurrealDBClient` that is connected already. Below you can see an example how to do this.
- *
- * ### Add the SurrealDB client
- *
- * #### Option 1/2 – Using RPC:
- *
- * ```js
- * import { Surreal } from "surrealdb.js";
- *
- * const connectionString = "http://0.0.0.0:8000"
- * const username = ""
- * const password = ""
- * const namespace = ""
- * const database = ""
- *
- * const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
- *   const db = new Surreal();
- *   try {
- *     await db.connect(`${connectionString}/rpc`, {
- *       namespace,
- *       database,
- *       auth: { username, password }
- *     })
- *     resolve(db)
- *   } catch (e) {
- *     reject(e)
- *   }
- * })
- *
- * // Export a module-scoped MongoClient promise. By doing this in a
- * // separate module, the client can be shared across functions.
- * export default clientPromise
- * ```
- *
- * #### Option 2/2 – Using HTTP:
- *
- * Usefull in serverlees environments like Vercel.
- *
- * ```js
- * import { ExperimentalSurrealHTTP } from "surrealdb.js"
- *
- * const connectionString = "http://0.0.0.0:8000"
- * const username = ""
- * const password = ""
- * const namespace = ""
- * const database = ""
- *
- * const clientPromise = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(async (resolve, reject) => {
- *   try {
- *     const db = new ExperimentalSurrealHTTP(connectionString, {
- *       fetch,
- *       namespace,
- *       database,
- *       auth: { username, password }
- *     })
- *     resolve(db)
- *   } catch (e) {
- *     reject(e)
- *   }
- * })
- *
- * // Export a module-scoped MongoClient promise. By doing this in a
- * // separate module, the client can be shared across functions.
- * export default clientPromise
- * ```
- *
- * ### Configure Auth.js
- *
- * ```js
- * import NextAuth from "next-auth"
- * import { SurrealDBAdapter } from "@auth/surrealdb-adapter"
- * import clientPromise from "../../../lib/surrealdb"
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/providers/oauth
- * export default NextAuth({
- *   adapter: SurrealDBAdapter(clientPromise),
- * })
- * ```
- **/
 export function SurrealDBAdapter<T>(
   client: Promise<Surreal | ExperimentalSurrealHTTP<T>>
   // options = {}
@@ -232,7 +149,7 @@ export function SurrealDBAdapter<T>(
         if (doc) {
           return docToUser(doc)
         }
-      } catch (e) {}
+      } catch {}
       return null
     },
     async getUserByEmail(email: string) {
@@ -244,7 +161,7 @@ export function SurrealDBAdapter<T>(
         )
         const doc = users[0]?.[0]
         if (doc) return docToUser(doc)
-      } catch (e) {}
+      } catch {}
       return null
     },
     async getUserByAccount({
@@ -264,7 +181,7 @@ export function SurrealDBAdapter<T>(
 
         const user = users[0]?.[0]?.userId
         if (user) return docToUser(user)
-      } catch (e) {}
+      } catch {}
       return null
     },
     async updateUser(user: Partial<AdapterUser>) {
@@ -275,7 +192,7 @@ export function SurrealDBAdapter<T>(
         emailVerified: user.emailVerified?.toISOString(),
         id: undefined,
       }
-      let updatedUser = await surreal.merge<UserDoc, Omit<UserDoc, "id">>(
+      const updatedUser = await surreal.merge<UserDoc, Omit<UserDoc, "id">>(
         `user:${toSurrealId(user.id)}`,
         doc
       )
@@ -303,7 +220,7 @@ export function SurrealDBAdapter<T>(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch (e) {}
+      } catch {}
 
       // delete session
       try {
@@ -319,7 +236,7 @@ export function SurrealDBAdapter<T>(
           const sessionId = extractId(session.id)
           await surreal.delete(`session:${sessionId}`)
         }
-      } catch (e) {}
+      } catch {}
 
       // delete user
       await surreal.delete(`user:${surrealId}`)
@@ -350,7 +267,7 @@ export function SurrealDBAdapter<T>(
           const accountId = extractId(account.id)
           await surreal.delete(`account:${accountId}`)
         }
-      } catch (e) {}
+      } catch {}
     },
     async createSession({ sessionToken, userId, expires }) {
       const surreal = await client
@@ -389,7 +306,7 @@ export function SurrealDBAdapter<T>(
             }),
           }
         }
-      } catch (e) {}
+      } catch {}
       return null
     },
     async updateSession(
@@ -407,7 +324,7 @@ export function SurrealDBAdapter<T>(
         const sessionDoc = sessions[0]?.[0]
         if (sessionDoc && session.expires) {
           const sessionId = extractId(sessionDoc.id)
-          let updatedSession = await surreal.merge<
+          const updatedSession = await surreal.merge<
             SessionDoc,
             Omit<SessionDoc, "id">
           >(
@@ -425,7 +342,7 @@ export function SurrealDBAdapter<T>(
             return null
           }
         }
-      } catch (e) {}
+      } catch {}
       return null
     },
     async deleteSession(sessionToken: string) {
@@ -444,7 +361,7 @@ export function SurrealDBAdapter<T>(
           await surreal.delete(`session:${sessionId}`)
           return
         }
-      } catch (e) {}
+      } catch {}
     },
     async createVerificationToken({
       identifier,
@@ -492,7 +409,7 @@ export function SurrealDBAdapter<T>(
         } else {
           return null
         }
-      } catch (e) {}
+      } catch {}
       return null
     },
   }

@@ -18,33 +18,32 @@
  *
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth({
- *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+ *   providers: [GitHub],
  * })
  * ```
  *
- * or to use SvelteKit platform environment variables for platforms like Cloudflare
+ * ### Lazy initialization
+ * `@auth/sveltekit` supports lazy initialization where you can read the `event` object to lazily set the configuration. This is especially useful when you have to get the environment variables from `event.platform` for platforms like Cloudflare Workers.
  *
  * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import type { Handle } from "@sveltejs/kit";
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
  *     providers: [
  *       GitHub({
- *         clientId: event.platform.env.GITHUB_ID,
- *         clientSecret: event.platform.env.GITHUB_SECRET
+ *         clientId: event.platform.env.AUTH_GITHUB_ID,
+ *         clientSecret: event.platform.env.AUTH_GITHUB_SECRET
  *       })
  *     ],
  *     secret: event.platform.env.AUTH_SECRET,
  *     trustHost: true
  *   }
  *   return authOptions
- * }) satisfies Handle;
+ * })
  * ```
  *
  * Re-export the handle in `src/hooks.server.ts`:
@@ -277,16 +276,17 @@
  * @module @auth/sveltekit
  */
 
-/// <reference types="@sveltejs/kit" />
+import "@sveltejs/kit"
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
-import { Auth, isAuthAction } from "@auth/core"
+import { Auth, isAuthAction, customFetch } from "@auth/core"
 import { building } from "$app/environment"
 
+export { customFetch }
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export type {
@@ -324,8 +324,8 @@ export function SvelteKitAuth(
       const formData = await request.formData()
       const { providerId: provider, ...options } = Object.fromEntries(formData)
       // get the authorization params from the options prefixed with `authorizationParams-`
-      let authorizationParams: Parameters<typeof signIn>[2] = {}
-      let _options: Parameters<typeof signIn>[1] = {}
+      const authorizationParams: Parameters<typeof signIn>[2] = {}
+      const _options: Parameters<typeof signIn>[1] = {}
       for (const key in options) {
         if (key.startsWith(authorizationParamsPrefix)) {
           authorizationParams[key.slice(authorizationParamsPrefix.length)] =
