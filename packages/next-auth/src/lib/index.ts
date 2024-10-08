@@ -127,7 +127,7 @@ export function initAuth(
     return async (...args: WithAuthArgs) => {
       if (!args.length) {
         // React Server Components
-        const _headers = headers()
+        const _headers = await headers()
         const _config = await config(undefined) // Review: Should we pass headers() here instead?
         onLazyLoad?.(_config)
 
