@@ -101,11 +101,7 @@ export default function Atlassian(
     type: "oauth",
     authorization: {
       url: "https://auth.atlassian.com/authorize",
-      params: {
-        audience: "api.atlassian.com",
-        scope: "read:me",
-        state: "sample_state", // required field, so must have
-      },
+      params: { audience: "api.atlassian.com", scope: "read:me" },
     },
     token: "https://auth.atlassian.com/oauth/token",
     userinfo: "https://api.atlassian.com/me",
