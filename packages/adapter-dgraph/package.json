@@ -38,7 +38,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./test/test.sh"
+    "test": "./test/test.sh",
+    "clean": "rm -rf *.js *.d.ts* lib"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.5"
