@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=authjs-remult-test
+CONTAINER_NAME=next-auth-postgres-test
 docker run -d --rm --name ${CONTAINER_NAME} 
   
 # Always stop container, but exit with 1 when tests are failing
