@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+/// <reference types="vite/types/importMeta.d.ts" />
 declare namespace App {
   interface Locals {
     session: import('@auth/core/types').Session | null

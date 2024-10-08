@@ -10,7 +10,6 @@ import { parseString } from "set-cookie-parser"
 function AstroAuthHandler(config?: ReturnType<typeof authConfig>) {
   return async (ctx: APIContext) => {
     config ??= authConfig(ctx)
-    // @ts-expect-error import.meta.env does not exist in this environment
     setEnvDefaults(import.meta.env, config)
     const { basePath } = config
 
@@ -77,12 +76,10 @@ export async function getSession(
   config?: ReturnType<typeof authConfig>
 ): Promise<Session | null> {
   config ??= authConfig(ctx)
-  // @ts-expect-error
   setEnvDefaults(import.meta.env, config)
 
   const protocol =
     ctx.request.headers.get("x-forwarded-proto") === "http" ||
-    // @ts-expect-error
     import.meta.env.DEV
       ? "http"
       : "https"
@@ -90,7 +87,6 @@ export async function getSession(
     "session",
     protocol,
     ctx.request.headers,
-    // @ts-expect-error
     import.meta.env,
     {
       basePath: config.basePath ?? "/auth",
