@@ -1,6 +1,6 @@
 import { Auth, createActionURL, type AuthConfig } from "@auth/core"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
-import { headers } from "next/headers"
+import { headers, type UnsafeUnwrappedHeaders } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { NextResponse } from "next/server"
 import { reqWithEnvURL } from "./env.js"
@@ -183,7 +183,7 @@ export function initAuth(
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
-      return getSession(headers(), config).then((r) => r.json())
+      return getSession((headers() as unknown as UnsafeUnwrappedHeaders), config).then((r) => r.json())
     }
     if (args[0] instanceof Request) {
       // middleware.ts inline
