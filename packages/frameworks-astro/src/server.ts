@@ -21,7 +21,7 @@ function AstroAuthHandler(config?: ReturnType<typeof authConfig>) {
       return
     }
 
-    const res = (await Auth(request, config)) as Response
+    const res = await Auth(request, config)
     if (["callback", "signin", "signout"].includes(action)) {
       // Properly handle multiple Set-Cookie headers (they can't be concatenated in one)
       res.headers.getSetCookie().forEach((cookie: string) => {
@@ -71,7 +71,7 @@ export function AstroAuth(config?: ReturnType<typeof authConfig>) {
  * @param req The request object.
  * @returns The current session, or `null` if there is no session.
  */
-export async function getSession(
+export async function auth(
   ctx: APIContext,
   config?: ReturnType<typeof authConfig>
 ): Promise<Session | null> {
@@ -92,10 +92,10 @@ export async function getSession(
       basePath: config.basePath ?? "/auth",
     }
   )
-  const response = (await Auth(
+  const response = await Auth(
     new Request(url, { headers: ctx.request.headers }),
     config
-  )) as Response
+  )
   const { status = 200 } = response
 
   const data = await response.json()
