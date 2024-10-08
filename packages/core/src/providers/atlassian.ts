@@ -113,6 +113,7 @@ export default function Atlassian(
         image: profile.picture,
       }
     },
+    checks: ["state"],
     style: { bg: "#fff", text: "#0052cc" },
     options,
   }
