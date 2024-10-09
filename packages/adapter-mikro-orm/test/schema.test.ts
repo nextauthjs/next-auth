@@ -5,7 +5,7 @@ import { expect, test } from "vitest"
 
 const config: Options<SqliteDriver> = {
   dbName: "./db.sqlite",
-  type: "sqlite",
+  driver: SqliteDriver,
   entities: [
     defaultEntities.User,
     defaultEntities.Account,
