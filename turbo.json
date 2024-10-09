@@ -102,6 +102,7 @@
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",
         "@auth/prisma-adapter#build",
+        "@auth/remult-adapter#build",
         "@auth/sequelize-adapter#build",
         "@auth/solid-start#build",
         "@auth/supabase-adapter#build",
