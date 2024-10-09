@@ -203,6 +203,11 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
       "https://avatars.githubusercontent.com/u/7936820?v=4",
       "Route4Me",
     ],
+    [
+      "https://github.com/neondatabase/neon",
+      "https://avatars.githubusercontent.com/u/77690634?v=4",
+      "Neon",
+    ],
   ].map(([href, src, name]) => (
     <a
       key={name}
