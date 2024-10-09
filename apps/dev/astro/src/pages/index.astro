@@ -1,0 +1,35 @@
+---
+const { session } = Astro.locals
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body>
+		<h1>Astro</h1>
+    {
+      session ? (
+        <p>Hi {session?.user?.name}!</p>
+        <button class="signout">Sign out</button>
+      ) : (
+        <button class="signin">Sign in</button>
+      )
+    }
+
+    <p>
+      <a href="/protected">Go to protected page</a>
+    </p>
+
+    <script>
+      import { signIn, signOut } from '@auth/astro/client'
+
+      document.querySelector('.signin')?.addEventListener('click', () => signIn('github'))
+      document.querySelector('.signout')?.addEventListener('click', () => signOut())
+    </script>
+	</body>
+</html>
