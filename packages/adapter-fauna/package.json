@@ -1,6 +1,6 @@
 {
   "name": "@auth/fauna-adapter",
-  "version": "3.5.3",
+  "version": "3.7.0",
   "description": "Fauna Adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -41,7 +41,8 @@
     "fauna": "fauna",
     "build": "tsc",
     "dev": "tsc -w",
-    "test": "./test/test.sh"
+    "test": "./test/test.sh",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

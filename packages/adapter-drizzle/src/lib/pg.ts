@@ -532,7 +532,7 @@ export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
       dataType: "string"
     }>
     userId: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
+      columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
       dataType: "string"

@@ -67,7 +67,7 @@
  * @module next-auth
  */
 
-import { Auth } from "@auth/core"
+import { Auth, customFetch } from "@auth/core"
 import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
@@ -87,6 +87,8 @@ import type {
 import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
+
+export { customFetch }
 
 export type {
   Session,
