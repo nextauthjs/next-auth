@@ -5,6 +5,7 @@ import type {
   AdapterSession,
   AdapterUser,
   VerificationToken,
+  AdapterAuthenticator,
 } from "@auth/core/adapters"
 import type { Account } from "@auth/core/types"
 
@@ -69,5 +70,18 @@ runBasicTests({
 
       return format<VerificationToken>(verificationToken)
     },
+    async authenticator(credentialID) {
+      const { data, error } = await supabase
+        .from("authenticators")
+        .select()
+        .eq("credentialID", credentialID)
+        .maybeSingle()
+
+      if (error) throw error
+      if (!data) return null
+
+      return format<AdapterAuthenticator>(data, ["counter"])
+    },
   },
+  testWebAuthnMethods: true,
 })
