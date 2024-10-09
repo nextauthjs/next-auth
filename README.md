@@ -109,13 +109,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://www.beyondidentity.com" target="_blank">
-          <img height="96" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
-        </a><br />
-        <div>Beyond Identity</div>
-        <sub>💵</sub>
-      </td>
-      <td align="center" valign="top">
         <a href="https://stytch.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/69983493?s=200&v=4" alt="Stytch Logo" />
         </a><br />
@@ -129,8 +122,22 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Prisma</div>
         <sub>💵</sub>
       </td>
+      <td align="center" valign="top">
+        <a href="https://neon.tech" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/77690634?v=4" alt="Neon Logo" />
+        </a><br />
+        <div>Neon</div>
+        <sub>💵</sub>
+      </td>
     </tr>
     <tr>
+      <td align="center" valign="top">
+        <a href="https://www.beyondidentity.com" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
+        </a><br />
+        <div>Beyond Identity</div>
+        <sub>💵</sub>
+      </td>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -166,6 +173,8 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Arcjet</div>
         <sub>💵</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top">
         <a href="https://route4me.com/?ref=auth.js" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/7936820?v=4" alt="Route4Me Logo" />
@@ -173,8 +182,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Route4Me</div>
         <sub>💵</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://www.netlight.com/" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/1672348?s=200&v=4" alt="Netlight logo" />
