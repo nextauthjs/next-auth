@@ -3,6 +3,7 @@ import * as o from "oauth4webapi"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
+import { fetchOpt } from "../../utils/custom-fetch.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -24,7 +25,11 @@ export async function getAuthorizationUrl(
     // We check this in assert.ts
 
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
+    // TODO: move away from allowing insecure HTTP requests
+    const discoveryResponse = await o.discoveryRequest(issuer, {
+      ...fetchOpt(options.provider),
+      [o.allowInsecureRequests]: true,
+    })
     const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
     if (!as.authorization_endpoint) {

@@ -16,9 +16,10 @@
  * @module @auth/solid-start
  */
 
-import { Auth, type AuthConfig } from "@auth/core"
+import { Auth, type AuthConfig, customFetch } from "@auth/core"
 import type { AuthAction, Session } from "@auth/core/types"
 
+export { customFetch }
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 export type {
   Account,
