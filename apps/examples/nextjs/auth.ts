@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import "next-auth/jwt"
 
 import Apple from "next-auth/providers/apple"
+// import Atlassian from "next-auth/providers/atlassian"
 import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BankIDNorway from "next-auth/providers/bankid-no"
@@ -17,6 +18,7 @@ import Google from "next-auth/providers/google"
 import Hubspot from "next-auth/providers/hubspot"
 import Keycloak from "next-auth/providers/keycloak"
 import LinkedIn from "next-auth/providers/linkedin"
+import MicrosoftEntraId from "next-auth/providers/microsoft-entra-id"
 import Netlify from "next-auth/providers/netlify"
 import Okta from "next-auth/providers/okta"
 import Passage from "next-auth/providers/passage"
@@ -52,6 +54,7 @@ const config = {
   adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
+    // Atlassian,
     Auth0,
     AzureB2C({
       clientId: process.env.AUTH_AZURE_AD_B2C_ID,
@@ -75,6 +78,7 @@ const config = {
     Hubspot,
     Keycloak({ name: "Keycloak (bob/bob)" }),
     LinkedIn,
+    MicrosoftEntraId,
     Netlify,
     Okta,
     Passkey({
