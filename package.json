@@ -85,7 +85,8 @@
   },
   "pnpm": {
     "overrides": {
-      "mailparser": "3.6.6"
+      "mailparser": "3.6.6",
+      "mermaid": "11.3.0"
     },
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.5.1": "patches/@balazsorban__monorepo-release@0.5.1.patch"
