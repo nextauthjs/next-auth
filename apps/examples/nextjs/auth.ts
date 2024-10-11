@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import "next-auth/jwt"
 
 import Apple from "next-auth/providers/apple"
+// import Atlassian from "next-auth/providers/atlassian"
 import Auth0 from "next-auth/providers/auth0"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BankIDNorway from "next-auth/providers/bankid-no"
@@ -53,6 +54,7 @@ const config = {
   adapter: UnstorageAdapter(storage),
   providers: [
     Apple,
+    // Atlassian,
     Auth0,
     AzureB2C({
       clientId: process.env.AUTH_AZURE_AD_B2C_ID,
