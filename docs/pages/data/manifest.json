@@ -34,7 +34,7 @@
     "mikro-orm": "Mikro ORM",
     "mongodb": "MongoDB",
     "neo4j": "Neo4j",
-    "pg": "pg",
+    "pg": "PostgreSQL",
     "pouchdb": "PouchDB",
     "sequelize": "Sequelize",
     "surrealdb": "SurrealDB",
