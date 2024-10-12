@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import "next-auth/jwt"
 
+import Amazon from "next-auth/providers/amazon"
 import Apple from "next-auth/providers/apple"
 // import Atlassian from "next-auth/providers/atlassian"
 import Auth0 from "next-auth/providers/auth0"
@@ -53,6 +54,7 @@ const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
   providers: [
+    Amazon,
     Apple,
     // Atlassian,
     Auth0,
