@@ -254,6 +254,12 @@ export async function down(db: Kysely<any>): Promise<void> {
 
 For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://kysely.dev/docs/migrations).
 
+If you'd prefer organising your tables under a separate schema you can initialise the Kysely adapter as follows:
+
+```
+KyselyAdapter(db, { schemaName: "auth" })
+```
+
 ### Naming conventions
 
 If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://kysely-org.github.io/kysely-apidoc/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
