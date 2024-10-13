@@ -63,8 +63,8 @@
   "devDependencies": {
     "@types/node": "^18.7.14",
     "@types/set-cookie-parser": "^2.4.7",
-    "astro": "^4.2.4",
-    "vite": "^5.2.10"
+    "astro": "^4.16.2",
+    "vite": "^5.4.8"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
