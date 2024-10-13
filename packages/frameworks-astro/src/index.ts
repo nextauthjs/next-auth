@@ -170,7 +170,7 @@ export default (
       if (config.injectEndpoints !== false) {
         const { dirname, join } = await import("node:path")
         const currentDir = dirname(import.meta.url.replace("file://", ""))
-        const entrypoint = join(currentDir, "../api/[...auth].ts")
+        const entrypoint = join(currentDir, "./api/[...auth].js")
         injectRoute({
           pattern: config.basePath + "/[...auth]",
           entrypoint,

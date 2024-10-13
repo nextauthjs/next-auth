@@ -1,3 +1,3 @@
-import { AstroAuth } from "../src/server"
+import { AstroAuth } from "../server.js"
 
 export const { GET, POST } = AstroAuth()
