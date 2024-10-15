@@ -8,7 +8,7 @@
  *
  * @module providers/microsoft-entra-id
  */
-import { customFetch } from "../index.js"
+import { conformInternal, customFetch } from "../lib/symbols.js"
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface MicrosoftEntraIDProfile extends Record<string, any> {
@@ -22,31 +22,27 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
  *
  * Add Microsoft Entra ID login to your page.
  *
- * :::note
- * Entra is the [new name](https://learn.microsoft.com/en-us/entra/fundamentals/new-name) Microsoft has given to what was previously known as "Azure AD"
- * :::
- *
  * ## Setup
  *
  * ### Callback URL
  * ```
- * https://example.com/api/auth/callback/microsoft-entra-id
+ * https://example.com/auth/callback/microsoft-entra-id
  * ```
  *
  * ### Configuration
- * ```ts
- * import { Auth } from "@auth/core"
- * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
  *
- * const request = new Request(origin)
- * const response = await Auth(request, {
- *   providers: [
- *     MicrosoftEntraID({
- *       clientId: AUTH_MICROSOFT_ENTRA_ID_ID,
- *       clientSecret: AUTH_MICROSOFT_ENTRA_ID_SECRET,
- *     }),
- *   ],
- * })
+ * @example
+ *
+ * ```ts
+ * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
+ * ...
+ * providers: [
+ *   MicrosoftEntraID({
+ *     clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
+ *     clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+ *   }),
+ * ]
+ * ...
  * ```
  *
  * ### Resources
@@ -54,51 +50,28 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
  *  - [Microsoft Entra OAuth documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
  *  - [Microsoft Entra OAuth apps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
  *
- * @example
- *
  * ### To allow specific Active Directory users access:
  *
- * - In https://entra.microsoft.com/ select Identity from the left bar menu.
- * - Next, go to "App Registration" in the left menu, and create a new one.
- * - Pay close attention to "Who can use this application or access this API?"
- *   - This allows you to scope access to specific types of user accounts
- *   - Only your tenant, all Microsoft tenants, or all Microsoft tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
- * - When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/microsoft-entra-id` or for development `http://localhost:3000/api/auth/callback/microsoft-entra-id`.
- * - After your App Registration is created, under "Client Credential" create your Client secret.
- * - Now copy your:
- *   - Application (client) ID
- *   - Directory (tenant) ID
- *   - Client secret (value)
+ * By default, the Entra ID provider lets the users to log in with any Microsoft account (either Personal, School or Work).
  *
- * In `.env.local` create the following entries:
+ * To only allow your organization's users to log in, you'll need to set the `issuer`, in addition to the client id and secret.
  *
- * ```
- * AUTH_MICROSOFT_ENTRA_ID_ID=<copy Application (client) ID here>
- * AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
- * AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=<copy the tenant id here>
- * ```
- *
- * That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
- *
- * :::note
- * Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
- * :::
- *
- * In `auth.ts` find or add the `Entra` entries:
- *
+ * @example
  * ```ts
  * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
  *
  * providers: [
  *   MicrosoftEntraID({
- *     clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
- *     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
- *     tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+ *     clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
+ *     clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+ *     issuer: env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
  *   }),
  * ]
  * ```
  *
  * ### Notes
+ *
+ * Microsoft Entra ID returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
  *
  * By default, Auth.js assumes that the Microsoft Entra ID provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
@@ -165,21 +138,20 @@ export default function MicrosoftEntraID(
       }
     },
     style: { text: "#fff", bg: "#0072c6" },
-    // HACK: Entra ID returns the wrong issuer
+    /** Entra ID returns the wrong issuer @see https://github.com/MicrosoftDocs/azure-docs/issues/113944 */
     async [customFetch](...args) {
-      // If we are not fetching the discovery document, do nothing
       const url = new URL(args[0] instanceof Request ? args[0].url : args[0])
-      if (!url.pathname.endsWith(".well-known/openid-configuration")) {
-        return fetch(...args)
+      if (url.pathname.endsWith(".well-known/openid-configuration")) {
+        const response = await fetch(...args)
+        const json = await response.clone().json()
+        const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
+        const tenantId = config.issuer?.match(tenantRe)?.[1] ?? "common"
+        const issuer = json.issuer.replace("{tenantid}", tenantId)
+        return Response.json({ ...json, issuer })
       }
-
-      const response = await fetch(...args)
-      const json = await response.clone().json()
-      const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
-      const tenantId = config.issuer?.match(tenantRe)?.[1] ?? "common"
-      const issuer = json.issuer.replace("{tenantid}", tenantId)
-      return Response.json({ ...json, issuer })
+      return fetch(...args)
     },
+    [conformInternal]: true,
     options: config,
   }
 }
