@@ -32,7 +32,7 @@ Below are two diagrams visually illustrating the same basic flow as described ab
 sequenceDiagram
     participant Browser
     participant App Server
-    participant Auth Server (GitHub)
+    participant GitHub as "Auth Server (GitHub)"
     Note left of Browser: User clicks on "Sign in"
     Browser->>App Server: GET<br/>"api/auth/signin"
     App Server->>App Server: Computes the available<br/>sign in providers<br/>from the "providers" option
@@ -41,17 +41,17 @@ sequenceDiagram
     Note left of Browser: User clicks on<br/>"Sign in with GitHub"
     Browser->>App Server: POST<br/>"api/auth/signin/github"
     App Server->>App Server: Computes sign in<br/>options for GitHub<br/>(scopes, callback URL, etc...)
-    App Server->>Auth Server (GitHub): GET<br/>"github.com/login/oauth/authorize"
-    Note left of Auth Server (GitHub): Sign in options<br> are supplied as<br/>query params<br/>(clientId, <br/>scope, etc...)
-    Auth Server (GitHub)->>Browser: Shows sign in page<br/>in GitHub.com<br/>to the user
+    App Server->>GitHub: GET<br/>"github.com/login/oauth/authorize"
+    Note left of GitHub: Sign in options<br> are supplied as<br/>query params<br/>(clientId, <br/>scope, etc...)
+    GitHub->>Browser: Shows sign in page<br/>in GitHub.com<br/>to the user
     Note left of Browser: User inserts their<br/>credentials in GitHub
-    Browser->>Auth Server (GitHub): GitHub validates the inserted credentials
-    Auth Server (GitHub)->>Auth Server (GitHub): Generates one time access code<br/>and calls callback<br>URL defined in<br/>App settings
-    Auth Server (GitHub)->>App Server: GET<br/>"api/auth/github/callback?code=123"
+    Browser->>GitHub: GitHub validates the inserted credentials
+    GitHub->>GitHub: Generates one time access code<br/>and calls callback<br>URL defined in<br/>App settings
+    GitHub->>App Server: GET<br/>"api/auth/github/callback?code=123"
     App Server->>App Server: Grabs code<br/>to exchange it for<br/>access token
-    App Server->>Auth Server (GitHub): POST<br/>"github.com/login/oauth/access_token"<br/>{code: 123}
-    Auth Server (GitHub)->>Auth Server (GitHub): Verifies code is<br/>valid and generates<br/>access token
-    Auth Server (GitHub)->>App Server: { access_token: 16C7x... }
+    App Server->>GitHub: POST<br/>"github.com/login/oauth/access_token"<br/>{code: 123}
+    GitHub->>GitHub: Verifies code is<br/>valid and generates<br/>access token
+    GitHub->>App Server: { access_token: 16C7x... }
     App Server->>App Server: Generates session token<br/>and stores session
     App Server->>Browser: You're now logged in!
 ```
