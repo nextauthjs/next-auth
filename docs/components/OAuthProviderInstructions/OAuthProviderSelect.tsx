@@ -56,20 +56,20 @@ export function OAuthProviderSelect() {
             <p className="mt-8 rounded-md">
               Or jump directly to one of the popular ones below.
             </p>
-            <div className="mt-8 flex flex-row gap-6 pb-8">
+            <div className="mt-8 flex flex-row gap-6 overflow-x-scroll pb-8">
               <div
                 role="button"
                 onClick={() =>
                   handleSelectOption({ id: "google", name: "Google" })
                 }
-                className="flex h-32 w-32 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+                className="flex h-32 w-32 min-w-24 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
               >
                 <img src={`/img/providers/google.svg`} className="mt-2 w-11" />
                 <div className="text-center text-sm">Google</div>
               </div>
               <div
                 role="button"
-                className="flex h-32 w-32 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+                className="flex h-32 w-32 min-w-24 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
                 onClick={() =>
                   handleSelectOption({ id: "github", name: "GitHub" })
                 }
@@ -82,7 +82,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "twitter", name: "Twitter" })
                 }
-                className="flex h-32 w-32 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+                className="flex h-32 w-32 min-w-24 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
               >
                 <img src={`/img/providers/twitter.svg`} className="mt-2 w-11" />
                 <div className="text-center text-sm">Twitter</div>
@@ -92,7 +92,7 @@ export function OAuthProviderSelect() {
                 onClick={() =>
                   handleSelectOption({ id: "keycloak", name: "keycloak" })
                 }
-                className="flex h-32 w-32 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+                className="flex h-32 w-32 min-w-24 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
               >
                 <img
                   src={`/img/providers/keycloak.svg`}
@@ -103,7 +103,7 @@ export function OAuthProviderSelect() {
               <div
                 role="button"
                 onClick={() => handleSelectOption({ id: "okta", name: "okta" })}
-                className="flex h-32 w-32 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+                className="flex h-32 w-32 min-w-24 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
               >
                 <img src={`/img/providers/okta.svg`} className="mt-2 w-11" />
                 <div className="text-center text-sm">Okta</div>

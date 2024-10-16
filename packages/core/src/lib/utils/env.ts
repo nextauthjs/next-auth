@@ -24,6 +24,8 @@ export function setEnvDefaults(
       }
     }
   } catch {
+    // Catching and swallowing potential URL parsing errors, we'll fall
+    // back to `/auth` below.
   } finally {
     config.basePath ??= `/auth`
   }
@@ -46,17 +48,23 @@ export function setEnvDefaults(
     envObject.CF_PAGES ??
     envObject.NODE_ENV !== "production"
   )
-  config.providers = config.providers.map((p) => {
-    const finalProvider = typeof p === "function" ? p({}) : p
-    const ID = finalProvider.id.toUpperCase().replace(/-/g, "_")
+  config.providers = config.providers.map((provider) => {
+    const { id } = typeof provider === "function" ? provider({}) : provider
+    const ID = id.toUpperCase().replace(/-/g, "_")
+    const clientId = envObject[`AUTH_${ID}_ID`]
+    const clientSecret = envObject[`AUTH_${ID}_SECRET`]
+    const issuer = envObject[`AUTH_${ID}_ISSUER`]
+    const apiKey = envObject[`AUTH_${ID}_KEY`]
+    const finalProvider =
+      typeof provider === "function"
+        ? provider({ clientId, clientSecret, issuer, apiKey })
+        : provider
     if (finalProvider.type === "oauth" || finalProvider.type === "oidc") {
-      finalProvider.clientId ??= envObject[`AUTH_${ID}_ID`]
-      finalProvider.clientSecret ??= envObject[`AUTH_${ID}_SECRET`]
-      if (finalProvider.type === "oidc") {
-        finalProvider.issuer ??= envObject[`AUTH_${ID}_ISSUER`]
-      }
+      finalProvider.clientId ??= clientId
+      finalProvider.clientSecret ??= clientSecret
+      finalProvider.issuer ??= issuer
     } else if (finalProvider.type === "email") {
-      finalProvider.apiKey ??= envObject[`AUTH_${ID}_KEY`]
+      finalProvider.apiKey ??= apiKey
     }
     return finalProvider
   })
@@ -70,7 +78,7 @@ export function createActionURL(
   config: Pick<AuthConfig, "basePath" | "logger">
 ): URL {
   const basePath = config?.basePath
-  let envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
+  const envUrl = envObject.AUTH_URL ?? envObject.NEXTAUTH_URL
 
   let url: URL
   if (envUrl) {

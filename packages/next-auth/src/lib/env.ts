@@ -28,6 +28,8 @@ export function setEnvDefaults(config: NextAuthConfig) {
     if (pathname === "/") return
     config.basePath ||= pathname
   } catch {
+    // Catching and swallowing potential URL parsing errors, we'll fall
+    // back to `/api/auth` below.
   } finally {
     config.basePath ||= "/api/auth"
     coreSetEnvDefaults(process.env, config, true)

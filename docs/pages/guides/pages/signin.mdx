@@ -133,7 +133,9 @@ import { redirect } from "next/navigation"
 import { signIn, auth, providerMap } from "@/auth.ts"
 import { AuthError } from "next-auth"
 
-export default async function SignInPage() {
+export default async function SignInPage(props: {
+  searchParams: { callbackUrl: string | undefined }
+}) {
   return (
     <div className="flex flex-col gap-2">
       <form
@@ -164,7 +166,9 @@ export default async function SignInPage() {
           action={async () => {
             "use server"
             try {
-              await signIn(provider.id)
+              await signIn(provider.id, {
+                redirectTo: props.searchParams?.callbackUrl ?? "",
+              })
             } catch (error) {
               // Signin can fail for a number of reasons, such as the user
               // not existing, or the user not having the correct role.

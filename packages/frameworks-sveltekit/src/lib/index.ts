@@ -276,16 +276,17 @@
  * @module @auth/sveltekit
  */
 
-/// <reference types="@sveltejs/kit" />
+import "@sveltejs/kit"
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
-import { Auth, isAuthAction } from "@auth/core"
+import { Auth, isAuthAction, customFetch } from "@auth/core"
 import { building } from "$app/environment"
 
+export { customFetch }
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export type {
@@ -323,8 +324,8 @@ export function SvelteKitAuth(
       const formData = await request.formData()
       const { providerId: provider, ...options } = Object.fromEntries(formData)
       // get the authorization params from the options prefixed with `authorizationParams-`
-      let authorizationParams: Parameters<typeof signIn>[2] = {}
-      let _options: Parameters<typeof signIn>[1] = {}
+      const authorizationParams: Parameters<typeof signIn>[2] = {}
+      const _options: Parameters<typeof signIn>[1] = {}
       for (const key in options) {
         if (key.startsWith(authorizationParamsPrefix)) {
           authorizationParams[key.slice(authorizationParamsPrefix.length)] =

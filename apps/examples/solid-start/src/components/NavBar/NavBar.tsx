@@ -1,8 +1,8 @@
-import { Match, Show, Switch, type Component } from "solid-js"
+import { Show, type Component } from "solid-js"
 import { createServerData$ } from "solid-start/server"
 import { authOpts } from "~/routes/api/auth/[...solidauth]"
-import { signIn, signOut } from "@solid-auth/next/client"
-import { getSession } from "@solid-auth/next"
+import { signIn, signOut } from "@auth/solid-start/client"
+import { getSession } from "@auth/solid-start"
 import { A } from "solid-start"
 
 interface INavBarProps {}

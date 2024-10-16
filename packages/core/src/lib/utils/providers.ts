@@ -7,28 +7,27 @@ import type {
   OAuthEndpointType,
   OAuthUserConfig,
   ProfileCallback,
-  Provider,
 } from "../../providers/index.js"
 import type { InternalProvider, Profile } from "../../types.js"
-import type { AuthConfig } from "../../index.js"
+import { type AuthConfig } from "../../index.js"
+import { customFetch } from "../utils/custom-fetch.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
  * and deep merge user-defined options.
  */
 export default function parseProviders(params: {
-  providers: Provider[]
   url: URL
   providerId?: string
-  options: AuthConfig
+  config: AuthConfig
 }): {
   providers: InternalProvider[]
   provider?: InternalProvider
 } {
-  const { providerId, options } = params
-  const url = new URL(options.basePath ?? "/auth", params.url.origin)
+  const { providerId, config } = params
+  const url = new URL(config.basePath ?? "/auth", params.url.origin)
 
-  const providers = params.providers.map((p) => {
+  const providers = config.providers.map((p) => {
     const provider = typeof p === "function" ? p() : p
     const { options: userOptions, ...defaults } = provider
 
@@ -40,11 +39,17 @@ export default function parseProviders(params: {
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
-      merged.redirectProxyUrl ??= options.redirectProxyUrl
-      return normalizeOAuth(merged)
+      merged.redirectProxyUrl ??= config.redirectProxyUrl
+      const normalized = normalizeOAuth(merged) as InternalProvider<
+        "oauth" | "oidc"
+      >
+      // @ts-expect-error Symbols don't get merged by the `merge` function
+      // so we need to do it manually.
+      normalized[customFetch] ??= userOptions?.[customFetch]
+      return normalized
     }
 
-    return merged
+    return merged as InternalProvider
   })
 
   return {
@@ -57,7 +62,7 @@ export default function parseProviders(params: {
 // We should return both a client and authorization server config.
 function normalizeOAuth(
   c: OAuthConfig<any> | OAuthUserConfig<any>
-): OAuthConfigInternal<any> | {} {
+): OAuthConfigInternal<any> | object {
   if (c.issuer) c.wellKnown ??= `${c.issuer}/.well-known/openid-configuration`
 
   const authorization = normalizeEndpoint(c.authorization, c.issuer)
@@ -125,7 +130,9 @@ const defaultAccount: AccountCallback = (account) => {
 
 function stripUndefined<T extends object>(o: T): T {
   const result = {} as any
-  for (let [k, v] of Object.entries(o)) v !== undefined && (result[k] = v)
+  for (const [k, v] of Object.entries(o)) {
+    if (v !== undefined) result[k] = v
+  }
   return result as T
 }
 
@@ -147,7 +154,9 @@ function normalizeEndpoint(
   const url = new URL(e?.url ?? "https://authjs.dev")
   if (e?.params != null) {
     for (let [key, value] of Object.entries(e.params)) {
-      if (key === "claims") value = JSON.stringify(value)
+      if (key === "claims") {
+        value = JSON.stringify(value)
+      }
       url.searchParams.set(key, String(value))
     }
   }

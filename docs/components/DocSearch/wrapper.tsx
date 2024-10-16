@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import algoliasearch from "algoliasearch/lite"
 import { InstantSearch, Hits, useInstantSearch } from "react-instantsearch"
 //import { InstantSearchNext } from "react-instantsearch-nextjs"
@@ -32,35 +32,58 @@ const searchClient = {
   },
 }
 
-export default function () {
-  const ctrlKHandler = (e: KeyboardEvent) => {
-    if (e.repeat || e.target instanceof HTMLInputElement) return
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault()
-      document.querySelector<HTMLInputElement>('input[type="search"]')?.focus()
-    }
-  }
+export default function Wrapper() {
+  const docSearchRef = useRef<HTMLDivElement>(null)
+  const [isSearchHitsVisible, setIsSearchHitsVisible] = useState(false)
 
   useEffect(() => {
-    window.addEventListener("keydown", ctrlKHandler)
+    function ctrlKHandler(e: KeyboardEvent) {
+      if (e.repeat || e.target instanceof HTMLInputElement) return
+      if (e.ctrlKey && e.key === "k") {
+        e.preventDefault()
+        document
+          .querySelector<HTMLInputElement>('input[type="search"]')
+          ?.focus()
+      }
+    }
 
-    return window.addEventListener("keydown", ctrlKHandler)
+    function clickSearchBoxOutsideHandler(event: MouseEvent) {
+      setIsSearchHitsVisible(
+        Boolean(
+          event.target instanceof Node &&
+            docSearchRef.current?.contains(event.target)
+        )
+      )
+    }
+
+    window.addEventListener("keydown", ctrlKHandler)
+    window.addEventListener("mousedown", clickSearchBoxOutsideHandler)
+
+    return () => {
+      window.removeEventListener("keydown", ctrlKHandler)
+      window.removeEventListener("mousedown", clickSearchBoxOutsideHandler)
+    }
   }, [])
 
   return (
-    <div className="relative">
+    <div
+      ref={docSearchRef}
+      className="relative [aside_&]:w-full max-md:[nav_&]:hidden"
+    >
       <InstantSearch
         indexName="next-auth"
         // @ts-expect-error
         searchClient={searchClient}
       >
         <CustomSearchBox />
-        <NoResultsBoundary>
-          <Hits
-            hitComponent={Hit}
-            className="fixed left-2 top-28 z-50 mt-[50px] max-h-[calc(100dvh_-_120px)] w-[calc(100vw_-_16px)] overflow-y-auto rounded-md bg-neutral-100 p-2 shadow-lg md:absolute md:left-auto md:right-0 md:top-12 md:mt-auto md:w-96 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
-          />
-        </NoResultsBoundary>
+        {isSearchHitsVisible && (
+          <NoResultsBoundary>
+            <Hits
+              hitComponent={Hit}
+              className="fixed left-2 top-28 z-50 mt-[50px] max-h-[calc(100dvh_-_120px)] w-[calc(100vw_-_16px)] overflow-y-auto rounded-md bg-neutral-100 shadow-lg md:absolute md:left-auto md:right-0 md:top-12 md:mt-auto md:w-96 dark:bg-neutral-800 [&>ol]:flex [&>ol]:flex-col [&>ol]:divide-y [&>ol]:divide-neutral-400/30 [&>ol]:dark:divide-neutral-900/50"
+            />
+          </NoResultsBoundary>
+        )}
       </InstantSearch>
     </div>
   )

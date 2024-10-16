@@ -29,9 +29,7 @@ export function PrismaAdapter(
   const p = prisma as PrismaClient
   return {
     // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
-    createUser: ({ id: _id, ...data }) => {
-      return p.user.create({ data })
-    },
+    createUser: ({ id, ...data }) => p.user.create(stripUndefined(data)),
     getUser: (id) => p.user.findUnique({ where: { id } }),
     getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
@@ -42,7 +40,10 @@ export function PrismaAdapter(
       return (account?.user as AdapterUser) ?? null
     },
     updateUser: ({ id, ...data }) =>
-      p.user.update({ where: { id }, data }) as Promise<AdapterUser>,
+      p.user.update({
+        where: { id },
+        ...stripUndefined(data),
+      }) as Promise<AdapterUser>,
     deleteUser: (id) =>
       p.user.delete({ where: { id } }) as Promise<AdapterUser>,
     linkAccount: (data) =>
@@ -60,13 +61,18 @@ export function PrismaAdapter(
       const { user, ...session } = userAndSession
       return { user, session } as { user: AdapterUser; session: AdapterSession }
     },
-    createSession: (data) => p.session.create({ data }),
+    createSession: (data) => p.session.create(stripUndefined(data)),
     updateSession: (data) =>
-      p.session.update({ where: { sessionToken: data.sessionToken }, data }),
+      p.session.update({
+        where: { sessionToken: data.sessionToken },
+        ...stripUndefined(data),
+      }),
     deleteSession: (sessionToken) =>
       p.session.delete({ where: { sessionToken } }),
     async createVerificationToken(data) {
-      const verificationToken = await p.verificationToken.create({ data })
+      const verificationToken = await p.verificationToken.create(
+        stripUndefined(data)
+      )
       // @ts-expect-errors // MongoDB needs an ID, but we don't
       if (verificationToken.id) delete verificationToken.id
       return verificationToken
@@ -92,10 +98,8 @@ export function PrismaAdapter(
         where: { providerAccountId, provider },
       }) as Promise<AdapterAccount | null>
     },
-    async createAuthenticator(authenticator) {
-      return p.authenticator.create({
-        data: authenticator,
-      })
+    async createAuthenticator(data) {
+      return p.authenticator.create(stripUndefined(data))
     },
     async getAuthenticator(credentialID) {
       return p.authenticator.findUnique({
@@ -114,4 +118,11 @@ export function PrismaAdapter(
       })
     },
   }
+}
+
+/** @see https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/null-and-undefined */
+function stripUndefined<T>(obj: T) {
+  const data = {} as T
+  for (const key in obj) if (obj[key] !== undefined) data[key] = obj[key]
+  return { data }
 }

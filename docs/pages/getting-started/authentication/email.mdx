@@ -32,7 +32,15 @@ This login mechanism starts by the user providing their email address at the log
     defaultValue="resend"
     className="w-full flex flex-col"
   >
-    <RichTabs.List className="flex gap-4 flex-wrap">
+    <RichTabs.List className="grid grid-cols-[repeat(auto-fit,140px)] justify-center gap-4">
+      <RichTabs.Trigger
+        value="forwardemail"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16 dark:bg-[currentColor]" src={`/img/providers/forwardemail.svg`} />
+        <div className="text-sm text-center line-clamp-1">Forward Email</div>
+      </RichTabs.Trigger>
       <RichTabs.Trigger
         value="resend"
         orientation="vertical"
@@ -65,13 +73,175 @@ This login mechanism starts by the user providing their email address at the log
         <img className="size-16" src={`/img/providers/postmark.svg`} />
         <div className="text-sm text-center">Postmark</div>
       </RichTabs.Trigger>
+      <RichTabs.Trigger
+        value="mailgun"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/mailgun.svg`} />
+        <div className="text-sm text-center">Mailgun</div>
+      </RichTabs.Trigger>
     </RichTabs.List>
   <RichTabs.Content
     orientation="vertical"
-    value="resend"
+    value="forwardemail"
     className="h-full !border-0 !w-full"
     tabIndex={-1}
   >
+
+### Forward Email Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+AUTH_FORWARDEMAIL_KEY=abc123
+```
+
+### Setup Provider
+
+Let’s enable `ForwardEmail` as a sign in option in our Auth.js configuration. You’ll have to import the `ForwardEmail` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import ForwardEmail from "next-auth/providers/forwardemail"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [ForwardEmail],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import ForwardEmail from "@auth/qwik/providers/forwardemail"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [ForwardEmail],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import ForwardEmail from "@auth/sveltekit/providers/forwardemail"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [ForwardEmail],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("forwardemail", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Forward Email</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="forwardemail" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  Check our [Customising magic links
+  emails](/getting-started/providers/forwardemail#customization) to learn how to
+  change the look and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Forward Email docs page](/getting-started/providers/forwardemail).
+
+</RichTabs.Content>
+
+<RichTabs.Content
+  orientation="vertical"
+  value="resend"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
 
 ### Resend Setup
 
@@ -109,7 +279,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 </Code.Next>
 <Code.Qwik>
-  
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Resend from "@auth/qwik/providers/resend"
@@ -166,6 +336,30 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  const resendAction = (formData: FormData) => {
+    signIn("resend", formData)
+  }
+
+  return (
+    <form action={resendAction}>
+      <label htmlFor="email-resend">
+        Email
+        <input type="email" id="email-resend" name="email" />
+      </label>
+      <input type="submit" value="Signin with Resend" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
@@ -263,7 +457,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 </Code.Next>
 <Code.Qwik>
-  
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Sendgrid from "@auth/qwik/providers/sendgrid"
@@ -320,6 +514,30 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  const sendgridAction = (formData: FormData) => {
+    signIn("sendgrid", formData)
+  }
+
+  return (
+    <form action={sendgridAction}>
+      <label htmlFor="email-sendgrid">
+        Email
+        <input type="email" id="email-sendgrid" name="email" />
+      </label>
+      <input type="submit" value="Signin with Sendgrid" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
@@ -431,7 +649,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 </Code.Next>
 <Code.Qwik>
-  
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Nodemailer from "@auth/qwik/providers/nodemailer"
@@ -510,7 +728,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 </Code.Next>
 <Code.Qwik>
-  
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Nodemailer from "@auth/qwik/providers/nodemailer"
@@ -688,7 +906,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 </Code.Next>
 <Code.Qwik>
-  
+
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 import Postmark from "@auth/qwik/providers/postmark"
@@ -745,6 +963,30 @@ export function SignIn() {
 ```
 
 </Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  const postmarkAction = (formData: FormData) => {
+    signIn("postmark", formData)
+  }
+
+  return (
+    <form action={postmarkAction}>
+      <label htmlFor="email-postmark">
+        Email
+        <input type="email" id="email-postmark" name="email" />
+      </label>
+      <input type="submit" value="Signin with Postmark" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
 <Code.Qwik>
 
 ```ts filename="./components/sign-in.tsx"
@@ -798,6 +1040,159 @@ Start your application, once the user enters their Email and clicks on the signi
 For more information on this provider go to the [Postmark docs page](/getting-started/providers/postmark).
 
 </RichTabs.Content>
+<RichTabs.Content
+  orientation="vertical"
+  value="mailgun"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
 
+### Mailgun Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example above.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+AUTH_MAILGUN_KEY=abc123
+```
+
+### Setup Provider
+
+Let’s enable `Mailgun` as a sign in option in our Auth.js configuration.
+You’ll have to import the `Mailgun` provider from the package and pass it to the providers array we setup earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Mailgun from "next-auth/providers/mailgun"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Mailgun],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Mailgun from "@auth/qwik/providers/mailgun"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Mailgun],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Mailgun from "@auth/sveltekit/providers/mailgun"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Mailgun],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("mailgun", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with Mailgun</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="mailgun" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  Check our [Customising magic links
+  emails](/getting-started/providers/mailgun#customization) to learn how to
+  change the look and feel of the emails the user receives to sign in.
+</Callout>
+
+For more information on this provider go to the [Mailgun docs page](/getting-started/providers/mailgun).
+
+</RichTabs.Content>
   </RichTabs>
 </div>

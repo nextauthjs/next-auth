@@ -157,10 +157,6 @@ a.button {
   }
 }
 
-button span {
-  flex-grow: 1;
-}
-
 button,
 a.button {
   padding: 0.75rem 1rem;
@@ -175,7 +171,7 @@ a.button {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
   &:hover {
     background-color: var(--provider-bg-hover, var(--color-background-hover));
@@ -188,11 +184,6 @@ a.button {
 
   span {
     color: #fff;
-  }
-
-  #provider-logo {
-    width: 25px;
-    display: block;
   }
 }
 
