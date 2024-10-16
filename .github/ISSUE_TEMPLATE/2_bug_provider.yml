@@ -51,6 +51,7 @@ body:
         - "Foursquare"
         - "Freshbooks"
         - "FusionAuth"
+        - "Gitea"
         - "GitHub"
         - "GitLab"
         - "Google"
