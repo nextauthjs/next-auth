@@ -19,27 +19,27 @@ export interface GiteaProfile extends Record<string, any> {
   email: string
   picture: string
   groups: string
-  // id: string
-  // login: string
-  // login_name: string
-  // full_name: string
-  // email: string
-  // avatar_url: string
-  // language: string
-  // is_admin: string
-  // last_login: string
-  // created: string
-  // restricted: string
-  // active: string
-  // prohibit_login: string
-  // location: string
-  // website: string
-  // description: string
-  // visibility: string
-  // followers_count: string
-  // following_count: string
-  // starred_repos_count: string
-  // username: string
+  id: string
+  login: string
+  login_name: string
+  full_name: string
+  email: string
+  avatar_url: string
+  language: string
+  is_admin: string
+  last_login: string
+  created: string
+  restricted: string
+  active: string
+  prohibit_login: string
+  location: string
+  website: string
+  description: string
+  visibility: string
+  followers_count: string
+  following_count: string
+  starred_repos_count: string
+  username: string
 }
 /**
  * Add Gitea login to your page.
@@ -101,7 +101,6 @@ export default function Gitea<P extends GiteaProfile>(
     id: "gitea",
     name: "Gitea",
     type: "oidc",
-    issuer: options.issuer,
     style: { logo: "/gitea.svg", text: "#fff", bg: "#609926" },
     options,
   }
