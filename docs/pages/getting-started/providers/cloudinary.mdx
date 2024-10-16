@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/cloudinary.svg" height="64" width="64" />
+
+# Cloudinary Provider
+
+## Resources
+
+- [Cloudinary OAuth documentation](https://cloudinary.com/documentation/using_oauth_to_access_cloudinary_apis)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/cloudinary
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/cloudinary
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/cloudinary
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_CLOUDINARY_ID
+AUTH_CLOUDINARY_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Cloudinary from "next-auth/providers/cloudinary"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Cloudinary],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Cloudinary from "@auth/qwik/providers/cloudinary"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Cloudinary],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Cloudinary from "@auth/sveltekit/providers/cloudinary"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Cloudinary],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Cloudinary from "@auth/express/providers/cloudinary"
+
+app.use("/auth/*", ExpressAuth({ providers: [Cloudinary] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- The Cloudinary `userinfo` endpoint returns only a `sub` which is used for both the `id` and the `email` in the user's profile. If you'd like to get more information about the user – you can use the [Cloudinary Account Provisioning API](https://cloudinary.com/documentation/provisioning_api)
+- If the OAuth token is used against the Admin/Upload API, the user must be assigned a Master Admin role within the product environment
