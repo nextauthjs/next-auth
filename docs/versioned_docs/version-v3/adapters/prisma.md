@@ -58,43 +58,64 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+this is how I edited my schema and the error is gone // This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String     @id @default(uuid())
+  name                  String
+  email                 String?    @unique
+  emailVerified         DateTime?   @map("email_verified")
+  image                 String?
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  accounts              Account[]
+  sessions              Session[]
+  @@map("users")
+}
 model Account {
   id                 String    @id @default(cuid())
-  userId             String
-  providerType       String
-  providerId         String
-  providerAccountId  String
-  refreshToken       String?
-  accessToken        String?
-  accessTokenExpires DateTime?
+  userId              String    @map("user_id")
+  type                 String?
+  provider           String
+  providerAccountId  String    @map("provider_account_id")
+  token_type         String?
+  refresh_token      String?   @db.Text
+  access_token       String?   @db.Text
+  expires_at         Int?
+  scope              String?
+  id_token           String? @db.Text
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
-  user               User      @relation(fields: [userId], references: [id])
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([providerId, providerAccountId])
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
   id           String   @id @default(cuid())
-  userId       String
+  userId       String?  @map("user_id")
+  sessionToken String   @db.Text @map("session_token") @unique
+  accessToken  String?  @db.Text @map("access_token")
   expires      DateTime
-  sessionToken String   @unique
-  accessToken  String   @unique
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id])
-}
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  @@map("sessions")
 }
 
 model VerificationRequest {
