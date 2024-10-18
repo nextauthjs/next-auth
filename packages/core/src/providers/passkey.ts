@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Passkey</b> integration.</span>
  * <a href="https://passkeys.dev">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/passkey.svg" height="48" width="48"/>
