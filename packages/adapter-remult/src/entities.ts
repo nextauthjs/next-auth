@@ -1,6 +1,6 @@
-import {
+import type {
   AdapterAccount,
-  type AdapterAccountType,
+  AdapterAccountType,
   AdapterSession,
   AdapterUser,
 } from "@auth/core/adapters"

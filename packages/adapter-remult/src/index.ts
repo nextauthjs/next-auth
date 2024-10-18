@@ -6,7 +6,8 @@ import type {
   AdapterSession,
   AdapterAuthenticator,
 } from "@auth/core/adapters"
-import { ClassType, remult, repo, withRemult, type DataProvider } from "remult"
+import type { ClassType, DataProvider } from "remult"
+import { remult, repo, withRemult } from "remult"
 import {
   Account as local_Account,
   Authenticator as local_Authenticator,
@@ -23,7 +24,7 @@ import type {
   VerificationToken,
 } from "./entities.js"
 
-const toAdapterUser: (u?: TUser) => AdapterUser | null = (u) => {
+const toAdapterUserDefault: (u?: TUser) => AdapterUser | null = (u) => {
   if (u) {
     return {
       email: u.email,
@@ -110,6 +111,7 @@ export const RemultAdapter: (args: {
     User?: ClassType<TUser>
     // VerificationToken?: ClassType<TVerificationToken>
   }
+  userDbToSession?: (user?: TUser) => AdapterUser | null
 }) => { adapter: Adapter } = (args) => {
   // Init stuff
   const Account = args?.customEntities?.Account ?? local_Account
@@ -122,6 +124,8 @@ export const RemultAdapter: (args: {
   const VerificationToken = local_VerificationToken
 
   let executeEnsureSchema = args.ensureSchema ?? true
+
+  const toAdapterUser = args.userDbToSession ?? toAdapterUserDefault
 
   const entities = [Account, Authenticator, Session, User, VerificationToken]
   return {
@@ -144,7 +148,7 @@ export const RemultAdapter: (args: {
           await repo(VerificationToken).delete({ identifier, token })
           return v!
         },
-        async createUser(user) {
+        async createUser(user: AdapterUser) {
           return await repo(User).insert(user)
         },
         async getUser(id) {
@@ -225,7 +229,7 @@ export const RemultAdapter: (args: {
           })
           return newSession
         },
-        async deleteSession(sessionToken) {
+        async deleteSession(sessionToken: string) {
           await repo(Session).delete({ sessionToken })
         },
         async unlinkAccount(partialAccount) {
@@ -278,6 +282,7 @@ export const RemultAdapter: (args: {
                   await remult.dataProvider.ensureSchema?.(
                     entities.map((x) => remult.repo(x as any).metadata)
                   )
+                  executeEnsureSchema = false
                 }
                 if (target[prop]) {
                   return await target[prop](...args1)
