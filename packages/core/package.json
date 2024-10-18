@@ -30,35 +30,35 @@
   ],
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js",
-      "default": "./index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./adapters": {
-      "types": "./adapters.d.ts",
-      "import": "./adapters.js",
-      "default": "./adapters.js"
+      "types": "./dist/adapters.d.ts",
+      "import": "./dist/adapters.js",
+      "default": "./dist/adapters.js"
     },
     "./errors": {
-      "types": "./errors.d.ts",
-      "import": "./errors.js",
-      "default": "./errors.js"
+      "types": "./dist/errors.d.ts",
+      "import": "./dist/errors.js",
+      "default": "./dist/errors.js"
     },
     "./jwt": {
-      "types": "./jwt.d.ts",
-      "import": "./jwt.js",
-      "default": "./jwt.js"
+      "types": "./dist/jwt.d.ts",
+      "import": "./dist/jwt.js",
+      "default": "./dist/jwt.js"
     },
     "./providers": {
-      "types": "./providers/index.d.ts"
+      "types": "./dist/providers/index.d.ts"
     },
     "./providers/*": {
-      "types": "./providers/*.d.ts",
-      "import": "./providers/*.js",
-      "default": "./providers/*.js"
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js",
+      "default": "./dist/providers/*.js"
     },
     "./types": {
-      "types": "./types.d.ts"
+      "types": "./dist/types.d.ts"
     }
   },
   "license": "ISC",
