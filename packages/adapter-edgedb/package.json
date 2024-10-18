@@ -1,6 +1,6 @@
 {
   "name": "@auth/edgedb-adapter",
-  "version": "1.4.2",
+  "version": "1.7.1",
   "description": "EdgeDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -38,7 +38,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest -c ../utils/vitest.config.ts"
+    "test": "vitest -c ../utils/vitest.config.ts",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
