@@ -10,7 +10,7 @@ import type {
 } from "../../providers/index.js"
 import type { InternalProvider, Profile } from "../../types.js"
 import { type AuthConfig } from "../../index.js"
-import { customFetch } from "../utils/custom-fetch.js"
+import { customFetch } from "../symbols.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider

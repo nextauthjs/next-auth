@@ -2,7 +2,7 @@ import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
-import type { customFetch } from "../lib/utils/custom-fetch.js"
+import type { conformInternal, customFetch } from "../lib/symbols.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -231,6 +231,8 @@ export interface OAuth2Config<Profile>
    *
    * @internal
    */
+  /** @see {conformInternal} */
+  [conformInternal]?: true
   options?: OAuthUserConfig<Profile>
 }
 
