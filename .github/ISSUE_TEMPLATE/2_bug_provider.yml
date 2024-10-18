@@ -83,6 +83,7 @@ body:
         - "SimpleLogin"
         - "Slack"
         - "Spotify"
+        - "SSOReady SAML"
         - "Strava"
         - "Threads"
         - "Tiktok"
