@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -38,20 +38,20 @@
     "test": "vitest run -c ../utils/vitest.config.ts"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.0.0",
-    "@sveltejs/kit": "^2.5.7",
-    "@sveltejs/package": "^2.0.0",
-    "@sveltejs/vite-plugin-svelte": "^3.0.0",
-    "@types/set-cookie-parser": "^2.4.7",
-    "svelte": "^4.0.0",
-    "svelte-check": "^3.4.3",
-    "tslib": "^2.4.1",
+    "@sveltejs/adapter-auto": "^3.2.5",
+    "@sveltejs/kit": "^2.6.4",
+    "@sveltejs/package": "^2.3.5",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@types/set-cookie-parser": "^2.4.10",
+    "svelte": "^4.2.19",
+    "svelte-check": "^4.0.4",
+    "tslib": "^2.7.0",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "set-cookie-parser": "^2.6.0"
+    "set-cookie-parser": "^2.7.0"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",

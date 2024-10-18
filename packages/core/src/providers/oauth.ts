@@ -205,7 +205,7 @@ export interface OAuth2Config<Profile>
    * Pass overrides to the underlying OAuth library.
    * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
    */
-  client?: Partial<Client>
+  client?: Partial<Client & { token_endpoint_auth_method: string }>
   style?: OAuthProviderButtonStyles
   /**
    * Normally, when you sign in with an OAuth provider and another account

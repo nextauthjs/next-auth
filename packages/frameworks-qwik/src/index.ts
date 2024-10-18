@@ -156,7 +156,7 @@ export function QwikAuthQrl(
 
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
-      const body = new URLSearchParams({ redirectTo })
+      const body = new URLSearchParams({ callbackUrl: redirectTo })
       Object.entries(rest).forEach(([key, value]) => {
         body.set(key, String(value))
       })
@@ -170,18 +170,12 @@ export function QwikAuthQrl(
 
       const data = await authAction(body, req, signInUrl, authOpts)
 
-      // set authjs.callback-url cookie. Fix for https://github.com/QwikDev/qwik/issues/5227
-      req.cookie.set("authjs.callback-url", redirectTo, {
-        path: "/",
-      })
-
       if (data.url) {
         throw req.redirect(301, data.url)
       }
     },
     zod$({
       providerId: z.string().optional(),
-      /** Yoooo */
       redirectTo: z.string().optional(),
       options: z
         .object({
@@ -201,7 +195,7 @@ export function QwikAuthQrl(
       redirectTo ??= defaultRedirectTo(req)
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
-      const body = new URLSearchParams({ redirectTo })
+      const body = new URLSearchParams({ callbackUrl: redirectTo })
       await authAction(body, req, `/auth/signout`, authOpts)
     },
     zod$({
