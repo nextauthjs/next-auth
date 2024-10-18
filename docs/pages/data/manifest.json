@@ -19,6 +19,7 @@
   "adapters": {
     "prisma": "Prisma",
     "drizzle": "Drizzle ORM",
+    "remult": "Remult",
     "supabase": "Supabase",
     "firebase": "Firebase",
     "typeorm": "TypeORM",

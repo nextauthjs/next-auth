@@ -15,6 +15,7 @@ export default {
   pg: "PostgreSQL",
   pouchdb: "PouchDB",
   prisma: "Prisma",
+  remult: "Remult",
   sequelize: "Sequelize",
   supabase: "Supabase",
   surrealdb: "SurrealDB",
