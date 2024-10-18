@@ -4,11 +4,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "outDir": ".",
+    "outDir": "dist",
     "rootDir": "src",
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
 }

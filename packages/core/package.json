@@ -26,11 +26,7 @@
   "type": "module",
   "types": "./index.d.ts",
   "files": [
-    "*.js",
-    "*.d.ts*",
-    "lib",
-    "providers",
-    "src"
+    "dist"
   ],
   "exports": {
     ".": {
@@ -93,7 +89,7 @@
   },
   "scripts": {
     "build": "pnpm css && pnpm providers && tsc",
-    "clean": "rm -rf *.js *.d.ts* lib providers",
+    "clean": "rm -rf dist",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
     "test": "vitest run -c ../utils/vitest.config.ts",
