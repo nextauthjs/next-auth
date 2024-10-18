@@ -267,7 +267,7 @@ export async function getUserAndAccount(
     const userFromProfile = await provider.profile(OAuthProfile, tokens)
     const user = {
       ...userFromProfile,
-      id: crypto.randomUUID(),
+      id: userFromProfile.id ?? crypto.randomUUID(),
       email: userFromProfile.email?.toLowerCase(),
     } satisfies User
 
