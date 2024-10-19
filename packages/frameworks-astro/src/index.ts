@@ -174,8 +174,6 @@ export default (
         injectRoute({
           pattern: config.basePath + "/[...auth]",
           entrypoint,
-          // @ts-expect-error Astro 3.0 support (see: https://docs.astro.build/en/guides/upgrade-to/v4/#renamed-entrypoint-integrations-api)
-          entryPoint: entrypoint,
         })
       }
 
