@@ -183,7 +183,9 @@ export function initAuth(
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
-      return headers().then((h: Headers) => getSession(h, config).then((r) => r.json()))
+      return headers().then((h: Headers) =>
+        getSession(h, config).then((r) => r.json())
+      )
     }
     if (args[0] instanceof Request) {
       // middleware.ts inline
