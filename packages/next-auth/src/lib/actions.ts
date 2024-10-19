@@ -71,7 +71,8 @@ export async function signIn(
   const req = new Request(url, { method: "POST", headers, body })
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  for (const c of res?.cookies ?? []) (await cookies()).set(c.name, c.value, c.options)
+  const cookieJar = await cookies()
+  for (const c of res?.cookies ?? []) cookieJar.set(c.name, c.value, c.options)
 
   const responseUrl =
     res instanceof Response ? res.headers.get("Location") : res.redirect
@@ -107,7 +108,8 @@ export async function signOut(
 
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  for (const c of res?.cookies ?? []) (await cookies()).set(c.name, c.value, c.options)
+  const cookieJar = await cookies()
+  for (const c of res?.cookies ?? []) cookieJar.set(c.name, c.value, c.options)
 
   if (options?.redirect ?? true) return redirect(res.redirect!)
 
@@ -135,7 +137,8 @@ export async function update(
 
   const res: any = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  for (const c of res?.cookies ?? []) (await cookies()).set(c.name, c.value, c.options)
+  const cookieJar = await cookies()
+  for (const c of res?.cookies ?? []) cookieJar.set(c.name, c.value, c.options)
 
   return res.body
 }
