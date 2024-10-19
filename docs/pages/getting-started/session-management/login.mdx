@@ -12,7 +12,7 @@ To signin your users, make sure you have at least one [authentication method](/g
 ```tsx filename="./components/auth/signin-button.tsx"
 import { signIn } from "@/auth.ts"
 
-export function SignIn() {
+export default function SignIn() {
   return (
     <form
       action={async () => {
@@ -33,7 +33,7 @@ export function SignIn() {
 "use client"
 import { signIn } from "next-auth/react"
 
-export function SignIn() {
+export default function SignIn() {
   return <button onClick={() => signIn()}>Sign In</button>
 }
 ```
