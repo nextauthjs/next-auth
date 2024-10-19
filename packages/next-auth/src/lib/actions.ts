@@ -15,7 +15,7 @@ export async function signIn(
   authorizationParams: SignInParams[2],
   config: NextAuthConfig
 ) {
-  const headers = new Headers(nextHeaders())
+  const headers = new Headers(await nextHeaders())
   const {
     redirect: shouldRedirect = true,
     redirectTo,
@@ -71,7 +71,7 @@ export async function signIn(
   const req = new Request(url, { method: "POST", headers, body })
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
+  for (const c of res?.cookies ?? []) (await cookies()).set(c.name, c.value, c.options)
 
   const responseUrl =
     res instanceof Response ? res.headers.get("Location") : res.redirect
@@ -90,7 +90,7 @@ export async function signOut(
   options: SignOutParams[0],
   config: NextAuthConfig
 ) {
-  const headers = new Headers(nextHeaders())
+  const headers = new Headers(await nextHeaders())
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
   const url = createActionURL(
@@ -107,7 +107,7 @@ export async function signOut(
 
   const res = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
+  for (const c of res?.cookies ?? []) (await cookies()).set(c.name, c.value, c.options)
 
   if (options?.redirect ?? true) return redirect(res.redirect!)
 
@@ -119,7 +119,7 @@ export async function update(
   data: UpdateParams[0],
   config: NextAuthConfig
 ): Promise<Session | null> {
-  const headers = new Headers(nextHeaders())
+  const headers = new Headers(await nextHeaders())
   headers.set("Content-Type", "application/json")
 
   const url = createActionURL(
@@ -135,7 +135,7 @@ export async function update(
 
   const res: any = await Auth(req, { ...config, raw, skipCSRFCheck })
 
-  for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
+  for (const c of res?.cookies ?? []) (await cookies()).set(c.name, c.value, c.options)
 
   return res.body
 }

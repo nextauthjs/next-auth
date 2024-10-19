@@ -127,7 +127,7 @@ export function initAuth(
     return async (...args: WithAuthArgs) => {
       if (!args.length) {
         // React Server Components
-        const _headers = headers()
+        const _headers = await headers()
         const _config = await config(undefined) // Review: Should we pass headers() here instead?
         onLazyLoad?.(_config)
 
@@ -183,7 +183,7 @@ export function initAuth(
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
-      return getSession(headers(), config).then((r) => r.json())
+      return headers().then((h: Headers) => getSession(h, config).then((r) => r.json()))
     }
     if (args[0] instanceof Request) {
       // middleware.ts inline
