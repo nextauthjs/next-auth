@@ -301,6 +301,9 @@ export async function getUserAndAccount(
     const userFromProfile = await provider.profile(OAuthProfile, tokens)
     const user = {
       ...userFromProfile,
+      // The user's id is intentionally not set based on the profile id, as
+      // the user should remain independent of the provider and the profile id
+      // is saved on the Account already, as `providerAccountId`.
       id: crypto.randomUUID(),
       email: userFromProfile.email?.toLowerCase(),
     } satisfies User
