@@ -2,6 +2,7 @@ import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
+import type { conformInternal, customFetch } from "../lib/symbols.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -204,7 +205,7 @@ export interface OAuth2Config<Profile>
    * Pass overrides to the underlying OAuth library.
    * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
    */
-  client?: Partial<Client>
+  client?: Partial<Client & { token_endpoint_auth_method: string }>
   style?: OAuthProviderButtonStyles
   /**
    * Normally, when you sign in with an OAuth provider and another account
@@ -221,6 +222,8 @@ export interface OAuth2Config<Profile>
    */
   allowDangerousEmailAccountLinking?: boolean
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
+  /** @see {customFetch} */
+  [customFetch]?: typeof fetch
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -228,6 +231,8 @@ export interface OAuth2Config<Profile>
    *
    * @internal
    */
+  /** @see {conformInternal} */
+  [conformInternal]?: true
   options?: OAuthUserConfig<Profile>
 }
 

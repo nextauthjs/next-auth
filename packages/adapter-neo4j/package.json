@@ -1,6 +1,6 @@
 {
   "name": "@auth/neo4j-adapter",
-  "version": "2.4.2",
+  "version": "2.7.1",
   "description": "neo4j adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -37,7 +37,8 @@
   },
   "scripts": {
     "test": "./test/test.sh",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "peerDependencies": {
     "neo4j-driver": "^4.0.0 || ^5.7.0"

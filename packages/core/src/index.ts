@@ -67,6 +67,7 @@ import type { CredentialInput, Provider } from "./providers/index.js"
 import { JWT, JWTOptions } from "./jwt.js"
 import { isAuthAction } from "./lib/utils/actions.js"
 
+export { customFetch } from "./lib/symbols.js"
 export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
