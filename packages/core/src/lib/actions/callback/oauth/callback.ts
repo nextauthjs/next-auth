@@ -118,6 +118,9 @@ export async function handleOAuth(
         },
       })
       break
+    case "none":
+      clientAuth = o.None()
+      break
     default:
       throw new Error("unsupported client authentication method")
   }
