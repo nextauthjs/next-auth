@@ -270,7 +270,10 @@ export type OAuthConfigInternal<Profile> = Omit<
     url: URL
     request?: TokenEndpointHandler["request"]
     clientPrivateKey?: CryptoKey | PrivateKey
-    /** @internal */
+    /**
+     * @internal
+     * @deprecated
+     */
     conform?: TokenEndpointHandler["conform"]
   }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
