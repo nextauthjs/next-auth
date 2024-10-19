@@ -53,7 +53,7 @@ const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
   providers: [
-    Apple,
+    Apple({ redirectProxyUrl: "" }),
     // Atlassian,
     Auth0,
     AzureB2C,
