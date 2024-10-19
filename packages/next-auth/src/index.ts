@@ -383,6 +383,7 @@ export default function NextAuth(
 
     return {
       handlers: { GET: httpHandler, POST: httpHandler } as const,
+      // @ts-expect-error
       auth: initAuth(config, (c) => setEnvDefaults(c)),
 
       signIn: async (provider, options, authorizationParams) => {
@@ -406,6 +407,7 @@ export default function NextAuth(
   const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
+    // @ts-expect-error
     auth: initAuth(config),
     signIn: (provider, options, authorizationParams) => {
       return signIn(provider, options, authorizationParams, config)
