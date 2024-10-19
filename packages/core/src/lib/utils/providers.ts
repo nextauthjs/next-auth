@@ -10,7 +10,7 @@ import type {
 } from "../../providers/index.js"
 import type { InternalProvider, Profile } from "../../types.js"
 import { type AuthConfig } from "../../index.js"
-import { customFetch } from "../utils/custom-fetch.js"
+import { customFetch } from "../symbols.js"
 
 /**
  * Adds `signinUrl` and `callbackUrl` to each provider
@@ -39,10 +39,20 @@ export default function parseProviders(params: {
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
-      merged.redirectProxyUrl ??= config.redirectProxyUrl
+      merged.redirectProxyUrl ??=
+        userOptions?.redirectProxyUrl ?? config.redirectProxyUrl
+
       const normalized = normalizeOAuth(merged) as InternalProvider<
         "oauth" | "oidc"
       >
+      // We currently don't support redirect proxies for response_mode=form_post
+      if (
+        normalized.authorization?.url.searchParams.get("response_mode") ===
+        "form_post"
+      ) {
+        delete normalized.redirectProxyUrl
+      }
+
       // @ts-expect-error Symbols don't get merged by the `merge` function
       // so we need to do it manually.
       normalized[customFetch] ??= userOptions?.[customFetch]

@@ -7,6 +7,9 @@ import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
 
 import type { RequestInternal, ResponseInternal } from "../types.js"
 import type { AuthConfig } from "../index.js"
+import { skipCSRFCheck } from "./symbols.js"
+
+export { customFetch, raw, skipCSRFCheck } from "./symbols.js"
 
 /** @internal */
 export async function AuthInternal(
@@ -92,25 +95,3 @@ export async function AuthInternal(
   }
   throw new UnknownAction(`Cannot handle action: ${action}`)
 }
-
-/**
- * :::danger
- * This option is intended for framework authors.
- * :::
- *
- * Auth.js comes with built-in CSRF protection, but
- * if you are implementing a framework that is already protected against CSRF attacks, you can skip this check by
- * passing this value to {@link AuthConfig.skipCSRFCheck}.
- */
-export const skipCSRFCheck = Symbol("skip-csrf-check")
-
-/**
- * :::danger
- * This option is intended for framework authors.
- * :::
- *
- * Auth.js returns a web standard {@link Response} by default, but
- * if you are implementing a framework you might want to get access to the raw internal response
- * by passing this value to {@link AuthConfig.raw}.
- */
-export const raw = Symbol("return-type-raw")
