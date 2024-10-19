@@ -764,6 +764,12 @@ importers:
       astro:
         specifier: ^4.16.2
         version: 4.16.2(@types/node@18.11.10)(rollup@4.24.0)(sass@1.70.0)(terser@5.27.0)(typescript@5.6.3)
+      typedoc:
+        specifier: ^0.26.10
+        version: 0.26.10(typescript@5.6.3)
+      typedoc-plugin-markdown:
+        specifier: ^4.2.9
+        version: 4.2.9(typedoc@0.26.10(typescript@5.6.3))
       vite:
         specifier: ^5.4.8
         version: 5.4.8(@types/node@18.11.10)(sass@1.70.0)(terser@5.27.0)
@@ -10096,6 +10102,10 @@ packages:
     resolution: {integrity: sha512-o5vL7aDWatOTX8LzaS1WMoaoxIiLRQJuIKKe2wAw6IeULDHaqbiqiggmx+pKvZDb1Sj+pE46Sn1T7lCqfFtg1Q==}
     engines: {node: '>=16'}
 
+  markdown-it@14.1.0:
+    resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
+    hasBin: true
+
   markdown-table@3.0.3:
     resolution: {integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==}
 
@@ -10189,6 +10199,9 @@ packages:
 
   mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
+
+  mdurl@2.0.0:
+    resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
 
   media-typer@0.3.0:
     resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
@@ -11800,6 +11813,10 @@ packages:
 
   pump@3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
+
+  punycode.js@2.3.1:
+    resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
+    engines: {node: '>=6'}
 
   punycode@1.4.1:
     resolution: {integrity: sha512-jmYNElW7yvO7TV33CjSmvSiE2yco3bV2czu/OzDKdMNVZQWfxCblURLhf+47syQRBntjfLdd/H0egrzIG+oaFQ==}
@@ -13420,6 +13437,12 @@ packages:
     peerDependencies:
       typedoc: 0.25.x
 
+  typedoc-plugin-markdown@4.2.9:
+    resolution: {integrity: sha512-Wqmx+7ezKFgtTklEq/iUhQ5uFeBDhAT6wiS2na9cFLidIpl9jpDHJy/COYh8jUZXgIRIZVQ/bPNjyrnPFoDwzg==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      typedoc: 0.26.x
+
   typedoc-plugin-mdn-links@3.3.2:
     resolution: {integrity: sha512-5CGxkdfsG4Yki6UsFOvVN8vWXXDb25SozOlyThk9Dq8JvKcUgY+Ra+cZvkFWs3hLlO4W8xpFbYQxNngCLf9MMA==}
     peerDependencies:
@@ -13431,6 +13454,13 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x
+
+  typedoc@0.26.10:
+    resolution: {integrity: sha512-xLmVKJ8S21t+JeuQLNueebEuTVphx6IrP06CdV7+0WVflUSW3SPmR+h1fnWVdAR/FQePEgsSWCUHXqKKjzuUAw==}
+    engines: {node: '>= 18'}
+    hasBin: true
+    peerDependencies:
+      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x
 
   typeorm-naming-strategies@4.1.0:
     resolution: {integrity: sha512-vPekJXzZOTZrdDvTl1YoM+w+sUIfQHG4kZTpbFYoTsufyv9NIBRe4Q+PdzhEAFA2std3D9LZHEb1EjE9zhRpiQ==}
@@ -13540,6 +13570,9 @@ packages:
 
   uc.micro@2.0.0:
     resolution: {integrity: sha512-DffL94LsNOccVn4hyfRe5rdKa273swqeA5DJpMOeFmEn1wCDc7nAbbB0gXlgBCL7TNzeTv6G7XVWzan7iJtfig==}
+
+  uc.micro@2.1.0:
+    resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
   ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
@@ -26524,6 +26557,15 @@ snapshots:
 
   markdown-extensions@2.0.0: {}
 
+  markdown-it@14.1.0:
+    dependencies:
+      argparse: 2.0.1
+      entities: 4.5.0
+      linkify-it: 5.0.0
+      mdurl: 2.0.0
+      punycode.js: 2.3.1
+      uc.micro: 2.1.0
+
   markdown-table@3.0.3: {}
 
   marked@13.0.3: {}
@@ -26782,6 +26824,8 @@ snapshots:
   mdn-data@2.0.28: {}
 
   mdn-data@2.0.30: {}
+
+  mdurl@2.0.0: {}
 
   media-typer@0.3.0: {}
 
@@ -28810,6 +28854,8 @@ snapshots:
       end-of-stream: 1.4.4
       once: 1.4.0
 
+  punycode.js@2.3.1: {}
+
   punycode@1.4.1: {}
 
   punycode@2.3.1: {}
@@ -30751,6 +30797,10 @@ snapshots:
     dependencies:
       typedoc: 0.25.13(typescript@5.6.3)
 
+  typedoc-plugin-markdown@4.2.9(typedoc@0.26.10(typescript@5.6.3)):
+    dependencies:
+      typedoc: 0.26.10(typescript@5.6.3)
+
   typedoc-plugin-mdn-links@3.3.2(typedoc@0.25.13(typescript@5.6.3)):
     dependencies:
       typedoc: 0.25.13(typescript@5.6.3)
@@ -30762,6 +30812,15 @@ snapshots:
       minimatch: 9.0.5
       shiki: 0.14.7
       typescript: 5.6.3
+
+  typedoc@0.26.10(typescript@5.6.3):
+    dependencies:
+      lunr: 2.3.9
+      markdown-it: 14.1.0
+      minimatch: 9.0.5
+      shiki: 1.22.0
+      typescript: 5.6.3
+      yaml: 2.5.1
 
   typeorm-naming-strategies@4.1.0(typeorm@0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.3.3))):
     dependencies:
@@ -30825,6 +30884,8 @@ snapshots:
   ua-parser-js@1.0.37: {}
 
   uc.micro@2.0.0: {}
+
+  uc.micro@2.1.0: {}
 
   ufo@1.5.3: {}
 
