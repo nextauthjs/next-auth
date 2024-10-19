@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -58,7 +58,7 @@
     "@simplewebauthn/server": "^9.0.3",
     "@sveltejs/kit": "^1.0.0 || ^2.0.0",
     "nodemailer": "^6.6.5",
-    "svelte": "^3.54.0 || ^4.0.0 || ^5"
+    "svelte": "^3.54.0 || ^4.0.0 || ^5.0.0-0"
   },
   "peerDependenciesMeta": {
     "@simplewebauthn/browser": {

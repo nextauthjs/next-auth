@@ -56,11 +56,7 @@ const config = {
     Apple,
     // Atlassian,
     Auth0,
-    AzureB2C({
-      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
-      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
-      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
-    }),
+    AzureB2C,
     BankIDNorway,
     BoxyHQSAML({
       clientId: "dummy",
