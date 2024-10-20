@@ -9,53 +9,29 @@ NextAuth.js has an active community of developers building tools and plugins tha
 
 It's entirely self-hosted, meaning no 3rd party API keys required, and it currently supports Lightning and Nostr pubkey auth.
 
-## Complete docs
-
-[https://www.npmjs.com/package/next-auth-pubkey](https://www.npmjs.com/package/next-auth-pubkey)
-
-
 ## Getting started
 
-#### Install
+### Install
 
-```bash
-npm i next-auth-pubkey
+```bash npm2yarn2pnpm
+npm install next-auth-pubkey
 ```
 
-#### .env
+### Adding .env vars
 
-You'll need to setup a couple of env vars in your project's `.env` file. However, you may already have them defined as part of your `next-auth` configuration.
+You'll need to setup a couple of env vars in your project's `.env` file. However, you may already have them defined as part of your NextAuth.js configuration.
 
----
+The [NEXTAUTH_URL](/configuration/options#nextauth_url) env var must be defined as the canonical URL of your site.
 
-The `NEXTAUTH_URL` env var must be defined as the canonical URL of your site.
+The [NEXTAUTH_SECRET](/configuration/options#nextauth_secret) env var must be defined as a securely generated random string.
 
-```bash
-NEXTAUTH_URL="http://localhost:3000"
-```
-
----
-
-The `NEXTAUTH_SECRET` env var must be defined as a securely generated random string.
-
-```bash
-NEXTAUTH_SECRET="<super-secret-random-string>"
-```
-
-You can quickly create a good value for `NEXTAUTH_SECRET` on the command line via this `openssl` command.
-
-```bash
-openssl rand -base64 32
-```
-
-#### API
+### Pubkey API
 
 Create a new API route under `pages/api/pubkey/[...pubkey].ts`
 
 This API will handle all of the pubkey auth API requests, such as generating QRs, handling callbacks, polling and issuing JWT auth tokens.
 
-```typescript
-// @/pages/api/pubkey/[...pubkey].ts
+```ts title="@/pages/api/pubkey/[...pubkey].ts"
 
 import NextAuthPubkey, { NextAuthPubkeyConfig } from "next-auth-pubkey";
 import generateQr from "next-auth-pubkey/generators/qr";
@@ -87,23 +63,28 @@ export { lightningProvider, nostrProvider };
 export default handler;
 ```
 
-> ℹ️ The above example uses the Pages Router. If your app uses the App Router then take a look at the [examples/app-router/](https://github.com/jowo-io/next-auth-pubkey/tree/main/examples/app-router/) example app.
+> ℹ️ The above example uses the Pages Router. If your app uses the App Router see:
+> [https://github.com/jowo-io/next-auth-pubkey/tree/main/examples/app-router/](https://github.com/jowo-io/next-auth-pubkey/tree/main/examples/app-router/)
 
-#### Provider
+### Configuring Providers
 
-In your existing `pages/api/auth/[...nextauth].ts` config file, import and add the Lightning provider to the provider array.
+In your existing `pages/api/auth/[...nextauth].ts` config file, import and add the pubkey providers to the providers array.
 
-```typescript
-// @/pages/api/auth/[...nextauth].ts
+```ts title="@/pages/api/pubkey/[...pubkey].ts"
 
 import { lightningProvider, nostrProvider } from "../pubkey/[...pubkey]"; // <--- import the providers from the pubkey API route
 
 export const authOptions: AuthOptions = {
   providers: [
-    lightningProvider, // <--- and add the providers to the providers array
-    nostrProvider, //     <--- and add the providers to the providers array
+    lightningProvider, // <--- add the provider to the providers array
+    nostrProvider, //     <--- add the provider to the providers array
   ],
 };
 
 export default NextAuth(authOptions);
 ```
+
+## Complete docs
+
+[https://www.npmjs.com/package/next-auth-pubkey](https://www.npmjs.com/package/next-auth-pubkey)
+

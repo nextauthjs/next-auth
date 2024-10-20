@@ -34,6 +34,7 @@ module.exports = {
             "configuration/providers/oauth",
             "configuration/providers/email",
             "configuration/providers/credentials",
+            "configuration/providers/pubkey",
           ],
         },
         "configuration/databases",
