@@ -6,7 +6,7 @@ import type {
   AdapterSession,
   AdapterUser,
 } from "../../../adapters.js"
-import type { Account, InternalOptions, User } from "../../../types.js"
+import type { Account, InternalConfig, User } from "../../../types.js"
 import type { JWT } from "../../../jwt.js"
 import type { OAuthConfig } from "../../../providers/index.js"
 import type { SessionToken } from "../../utils/cookie.js"
@@ -27,7 +27,7 @@ export async function handleLoginOrRegister(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   _account: AdapterAccount | Account | null,
-  options: InternalOptions
+  options: InternalConfig
 ) {
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
@@ -251,7 +251,7 @@ export async function handleLoginOrRegister(
 
     return { session, user: userByAccount, isNewUser }
   } else {
-    const { provider: p } = options as InternalOptions<"oauth" | "oidc">
+    const { provider: p } = options as InternalConfig<"oauth" | "oidc">
     const { type, provider, providerAccountId, userId, ...tokenSet } = account
     const defaults = { providerAccountId, provider, type, userId }
     account = Object.assign(p.account(tokenSet) ?? {}, defaults)

@@ -1,6 +1,6 @@
 import { SignOutError } from "../../errors.js"
 
-import type { InternalOptions, ResponseInternal } from "../../types.js"
+import type { InternalConfig, ResponseInternal } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
 
 /**
@@ -13,7 +13,7 @@ import type { Cookie, SessionStore } from "../utils/cookie.js"
 export async function signOut(
   cookies: Cookie[],
   sessionStore: SessionStore,
-  options: InternalOptions
+  options: InternalConfig
 ): Promise<ResponseInternal> {
   const { jwt, events, callbackUrl: redirect, logger, session } = options
   const sessionToken = sessionStore.value

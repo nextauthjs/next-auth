@@ -3,7 +3,7 @@ import type {
   Account,
   Authenticator,
   Awaited,
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   User,
@@ -39,7 +39,7 @@ export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
 export type WebAuthnAction = WebAuthnRegister | WebAuthnAuthenticate
 
-type InternalOptionsWebAuthn = InternalOptions<WebAuthnProviderType> & {
+type InternalOptionsWebAuthn = InternalConfig<WebAuthnProviderType> & {
   adapter: Required<Adapter>
 }
 export type WebAuthnOptionsResponseBody =
@@ -318,7 +318,7 @@ export async function verifyAuthenticate(
 }
 
 export async function verifyRegister(
-  options: InternalOptions<WebAuthnProviderType>,
+  options: InternalConfig<WebAuthnProviderType>,
   request: RequestInternal,
   resCookies: Cookie[]
 ): Promise<{ account: Account; user: User; authenticator: Authenticator }> {
@@ -480,7 +480,7 @@ async function getRegistrationOptions(
 }
 
 export function assertInternalOptionsWebAuthn(
-  options: InternalOptions
+  options: InternalConfig
 ): InternalOptionsWebAuthn {
   const { provider, adapter } = options
 

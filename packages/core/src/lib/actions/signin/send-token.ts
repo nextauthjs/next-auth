@@ -1,7 +1,7 @@
 import { createHash, randomString, toRequest } from "../../utils/web.js"
 import { AccessDenied } from "../../../errors.js"
 
-import type { InternalOptions, RequestInternal } from "../../../types.js"
+import type { InternalConfig, RequestInternal } from "../../../types.js"
 import type { Account } from "../../../types.js"
 
 /**
@@ -11,7 +11,7 @@ import type { Account } from "../../../types.js"
  */
 export async function sendToken(
   request: RequestInternal,
-  options: InternalOptions<"email">
+  options: InternalConfig<"email">
 ) {
   const { body } = request
   const { provider, callbacks, adapter } = options

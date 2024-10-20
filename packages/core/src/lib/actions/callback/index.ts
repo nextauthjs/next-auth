@@ -17,7 +17,7 @@ import type { AdapterSession } from "../../../adapters.js"
 import type {
   Account,
   Authenticator,
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   User,
@@ -32,7 +32,7 @@ import {
 /** Handle callbacks from login services */
 export async function callback(
   request: RequestInternal,
-  options: InternalOptions,
+  options: InternalConfig,
   sessionStore: SessionStore,
   cookies: Cookie[]
 ): Promise<ResponseInternal> {
@@ -537,8 +537,8 @@ export async function callback(
 }
 
 async function handleAuthorized(
-  params: Parameters<InternalOptions["callbacks"]["signIn"]>[0],
-  config: InternalOptions
+  params: Parameters<InternalConfig["callbacks"]["signIn"]>[0],
+  config: InternalConfig
 ): Promise<string | undefined> {
   let authorized
   const { signIn, redirect } = config.callbacks

@@ -1,7 +1,7 @@
 import * as checks from "../callback/oauth/checks.js"
 import * as o from "oauth4webapi"
 
-import type { InternalOptions, RequestInternal } from "../../../types.js"
+import type { InternalConfig, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
 import { customFetch } from "../../symbols.js"
 
@@ -12,7 +12,7 @@ import { customFetch } from "../../symbols.js"
  */
 export async function getAuthorizationUrl(
   query: RequestInternal["query"],
-  options: InternalOptions<"oauth" | "oidc">
+  options: InternalConfig<"oauth" | "oidc">
 ) {
   const { logger, provider } = options
 

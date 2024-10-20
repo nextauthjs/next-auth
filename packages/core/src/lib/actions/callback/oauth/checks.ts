@@ -6,7 +6,7 @@ import { decode, encode } from "../../../../jwt.js"
 
 import type {
   CookiesOptions,
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   User,
 } from "../../../../types.js"
@@ -23,7 +23,7 @@ const COOKIE_TTL = 60 * 15 // 15 minutes
 async function sealCookie(
   name: keyof CookiesOptions,
   payload: string,
-  options: InternalOptions<"oauth" | "oidc" | WebAuthnProviderType>
+  options: InternalConfig<"oauth" | "oidc" | WebAuthnProviderType>
 ): Promise<Cookie> {
   const { cookies, logger } = options
   const cookie = cookies[name]
@@ -50,7 +50,7 @@ async function sealCookie(
 async function parseCookie(
   name: keyof CookiesOptions,
   value: string | undefined,
-  options: InternalOptions
+  options: InternalConfig
 ): Promise<string> {
   try {
     const { logger, cookies, jwt } = options
@@ -73,7 +73,7 @@ async function parseCookie(
 
 function clearCookie(
   name: keyof CookiesOptions,
-  options: InternalOptions,
+  options: InternalConfig,
   resCookies: Cookie[]
 ) {
   const { logger, cookies } = options
@@ -93,7 +93,7 @@ function useCookie(
   return async function (
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalOptions<"oidc">
+    options: InternalConfig<"oidc">
   ) {
     const { provider, logger } = options
     if (!provider?.checks?.includes(check)) return
@@ -111,7 +111,7 @@ function useCookie(
  */
 export const pkce = {
   /** Creates a PKCE code challenge and verifier pair. The verifier in stored in the cookie. */
-  async create(options: InternalOptions<"oauth">) {
+  async create(options: InternalConfig<"oauth">) {
     const code_verifier = o.generateRandomCodeVerifier()
     const value = await o.calculatePKCECodeChallenge(code_verifier)
     const cookie = await sealCookie("pkceCodeVerifier", code_verifier, options)
@@ -139,7 +139,7 @@ const encodedStateSalt = "encodedState"
  */
 export const state = {
   /** Creates a state cookie with an optionally encoded body. */
-  async create(options: InternalOptions<"oauth">, origin?: string) {
+  async create(options: InternalConfig<"oauth">, origin?: string) {
     const { provider } = options
     if (!provider.checks.includes("state")) {
       if (origin) {
@@ -172,7 +172,7 @@ export const state = {
    */
   use: useCookie("state", "state"),
   /** Decodes the state. If it could not be decoded, it throws an error. */
-  async decode(state: string, options: InternalOptions) {
+  async decode(state: string, options: InternalConfig) {
     try {
       options.logger.debug("DECODE_STATE", { state })
       const payload = await decode<EncodedState>({
@@ -189,7 +189,7 @@ export const state = {
 }
 
 export const nonce = {
-  async create(options: InternalOptions<"oidc">) {
+  async create(options: InternalConfig<"oidc">) {
     if (!options.provider.checks.includes("nonce")) return
     const value = o.generateRandomNonce()
     const cookie = await sealCookie("nonce", value, options)
@@ -215,7 +215,7 @@ interface WebAuthnChallengePayload {
 const webauthnChallengeSalt = "encodedWebauthnChallenge"
 export const webauthnChallenge = {
   async create(
-    options: InternalOptions<WebAuthnProviderType>,
+    options: InternalConfig<WebAuthnProviderType>,
     challenge: string,
     registerData?: User
   ) {
@@ -234,7 +234,7 @@ export const webauthnChallenge = {
   },
   /** Returns WebAuthn challenge if present. */
   async use(
-    options: InternalOptions<WebAuthnProviderType>,
+    options: InternalConfig<WebAuthnProviderType>,
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[]
   ): Promise<WebAuthnChallengePayload> {

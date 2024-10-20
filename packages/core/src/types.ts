@@ -394,7 +394,7 @@ export interface Authenticator {
 }
 
 /** @internal */
-export interface InternalOptions<TProviderType = ProviderType> {
+export interface InternalConfig<TProviderType = ProviderType> {
   providers: InternalProvider[]
   url: URL
   action: AuthAction
@@ -424,4 +424,6 @@ export interface InternalOptions<TProviderType = ProviderType> {
   isOnRedirectProxy: boolean
   experimental: NonNullable<AuthConfig["experimental"]>
   basePath: string
+  /** These set of cookies should be serialized and sent to the client as `Set-Cookie` headers */
+  resCookies: Cookie[]
 }

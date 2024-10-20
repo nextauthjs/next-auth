@@ -1,11 +1,11 @@
-import type { InternalOptions, User } from "../../types.js"
+import type { InternalConfig, User } from "../../types.js"
 import type { SessionStore } from "./cookie.js"
 
 /**
  * Returns the currently logged in user, if any.
  */
 export async function getLoggedInUser(
-  options: InternalOptions,
+  options: InternalConfig,
   sessionStore: SessionStore
 ): Promise<User | null> {
   const {

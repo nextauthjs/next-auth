@@ -1,5 +1,5 @@
 import type {
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   User,
@@ -19,7 +19,7 @@ import {
  */
 export async function webAuthnOptions(
   request: RequestInternal,
-  options: InternalOptions,
+  options: InternalConfig,
   sessionStore: SessionStore,
   cookies: Cookie[]
   // @ts-expect-error issue with returning from a switch case

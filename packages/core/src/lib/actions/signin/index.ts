@@ -3,7 +3,7 @@ import { sendToken } from "./send-token.js"
 
 import type { Cookie } from "../../utils/cookie.js"
 import type {
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
 } from "../../../types.js"
@@ -11,7 +11,7 @@ import type {
 export async function signIn(
   request: RequestInternal,
   cookies: Cookie[],
-  options: InternalOptions
+  options: InternalConfig
 ): Promise<ResponseInternal> {
   const signInUrl = `${options.url.origin}${options.basePath}/signin`
 

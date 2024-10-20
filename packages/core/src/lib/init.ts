@@ -8,14 +8,17 @@ import parseProviders from "./utils/providers.js"
 import { setLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 
-import type { InternalOptions, RequestInternal } from "../types.js"
+import type {
+  InternalConfig as InternalConfig,
+  RequestInternal,
+} from "../types.js"
 import type { AuthConfig } from "../index.js"
 
 interface InitParams {
   url: URL
-  authOptions: AuthConfig
+  config: AuthConfig
   providerId?: string
-  action: InternalOptions["action"]
+  action: InternalConfig["action"]
   /** Callback URL value extracted from the incoming request. */
   callbackUrl?: string
   /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
@@ -26,7 +29,7 @@ interface InitParams {
   cookies: RequestInternal["cookies"]
 }
 
-export const defaultCallbacks: InternalOptions["callbacks"] = {
+export const defaultCallbacks: InternalConfig["callbacks"] = {
   signIn() {
     return true
   },
@@ -52,7 +55,7 @@ export const defaultCallbacks: InternalOptions["callbacks"] = {
 
 /** Initialize all internal options and cookies. */
 export async function init({
-  authOptions: config,
+  config,
   providerId,
   action,
   url,
@@ -61,10 +64,7 @@ export async function init({
   csrfToken: reqCsrfToken,
   csrfDisabled,
   isPost,
-}: InitParams): Promise<{
-  options: InternalOptions
-  cookies: cookie.Cookie[]
-}> {
+}: InitParams): Promise<InternalConfig> {
   const logger = setLogger(config)
   const { providers, provider } = parseProviders({ url, providerId, config })
 
@@ -87,7 +87,7 @@ export async function init({
 
   // User provided options are overridden by other options,
   // except for the options with special handling above
-  const options: InternalOptions = {
+  const internalConfig: InternalConfig = {
     debug: false,
     pages: {},
     theme: {
@@ -139,62 +139,59 @@ export async function init({
     experimental: {
       ...config.experimental,
     },
+    resCookies: [],
   }
 
-  // Init cookies
-
-  const cookies: cookie.Cookie[] = []
-
   if (csrfDisabled) {
-    options.csrfTokenVerified = true
+    internalConfig.csrfTokenVerified = true
   } else {
     const {
       csrfToken,
       cookie: csrfCookie,
       csrfTokenVerified,
     } = await createCSRFToken({
-      options,
-      cookieValue: reqCookies?.[options.cookies.csrfToken.name],
+      options: internalConfig,
+      cookieValue: reqCookies?.[internalConfig.cookies.csrfToken.name],
       isPost,
       bodyValue: reqCsrfToken,
     })
 
-    options.csrfToken = csrfToken
-    options.csrfTokenVerified = csrfTokenVerified
+    internalConfig.csrfToken = csrfToken
+    internalConfig.csrfTokenVerified = csrfTokenVerified
 
     if (csrfCookie) {
-      cookies.push({
-        name: options.cookies.csrfToken.name,
+      internalConfig.resCookies.push({
+        name: internalConfig.cookies.csrfToken.name,
         value: csrfCookie,
-        options: options.cookies.csrfToken.options,
+        options: internalConfig.cookies.csrfToken.options,
       })
     }
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
-    options,
-    cookieValue: reqCookies?.[options.cookies.callbackUrl.name],
+    options: internalConfig,
+    cookieValue: reqCookies?.[internalConfig.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })
-  options.callbackUrl = callbackUrl
+  internalConfig.callbackUrl = callbackUrl
   if (callbackUrlCookie) {
-    cookies.push({
-      name: options.cookies.callbackUrl.name,
+    internalConfig.resCookies.push({
+      name: internalConfig.cookies.callbackUrl.name,
       value: callbackUrlCookie,
-      options: options.cookies.callbackUrl.options,
+      options: internalConfig.cookies.callbackUrl.options,
     })
   }
 
-  return { options, cookies }
+  return internalConfig
 }
 
 type Method = (...args: any[]) => Promise<any>
 
 /** Wraps an object of methods and adds error handling. */
 function eventsErrorHandler(
-  methods: Partial<InternalOptions["events"]>,
+  methods: Partial<InternalConfig["events"]>,
   logger: LoggerInstance
-): Partial<InternalOptions["events"]> {
+): Partial<InternalConfig["events"]> {
   return Object.keys(methods).reduce<any>((acc, name) => {
     acc[name] = async (...args: any[]) => {
       try {

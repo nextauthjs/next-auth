@@ -7,7 +7,7 @@ import {
 
 import type {
   Account,
-  InternalOptions,
+  InternalConfig,
   LoggerInstance,
   Profile,
   RequestInternal,
@@ -47,7 +47,7 @@ function clientSecretBasic(clientId: string, clientSecret: string) {
 export async function handleOAuth(
   params: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalOptions<"oauth" | "oidc">
+  options: InternalConfig<"oauth" | "oidc">
 ) {
   const { logger, provider } = options
 

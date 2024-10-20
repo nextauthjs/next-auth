@@ -7,7 +7,7 @@ import VerifyRequestPage from "./verify-request.js"
 import { UnknownAction } from "../../errors.js"
 
 import type {
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   InternalProvider,
@@ -40,7 +40,7 @@ type RenderPageParams = {
   cookies?: Cookie[]
 } & Partial<
   Pick<
-    InternalOptions,
+    InternalConfig,
     "url" | "callbackUrl" | "csrfToken" | "providers" | "theme" | "pages"
   >
 >
@@ -53,7 +53,7 @@ export default function renderPage(params: RenderPageParams) {
   const { url, theme, query, cookies, pages, providers } = params
 
   return {
-    csrf(skip: boolean, options: InternalOptions, cookies: Cookie[]) {
+    csrf(skip: boolean, options: InternalConfig, cookies: Cookie[]) {
       if (!skip) {
         return {
           headers: { "Content-Type": "application/json" },

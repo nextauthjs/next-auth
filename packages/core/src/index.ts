@@ -43,11 +43,13 @@ import {
   ErrorPageLoop,
   isClientError,
 } from "./errors.js"
-import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
+import { AuthInternal } from "./lib/index.js"
 import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
 import { setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
+import { isAuthAction } from "./lib/utils/actions.js"
+import { raw, skipCSRFCheck, customFetch } from "./lib/symbols.js"
 
 import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
 import type {
@@ -64,11 +66,16 @@ import type {
   User,
 } from "./types.js"
 import type { CredentialInput, Provider } from "./providers/index.js"
-import { JWT, JWTOptions } from "./jwt.js"
-import { isAuthAction } from "./lib/utils/actions.js"
+import type { JWT, JWTOptions } from "./jwt.js"
 
-export { customFetch } from "./lib/symbols.js"
-export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
+export {
+  setEnvDefaults,
+  createActionURL,
+  isAuthAction,
+  customFetch,
+  raw,
+  skipCSRFCheck,
+}
 
 export async function Auth(
   request: Request,

@@ -9,19 +9,17 @@ import type { RequestInternal, ResponseInternal } from "../types.js"
 import type { AuthConfig } from "../index.js"
 import { skipCSRFCheck } from "./symbols.js"
 
-export { customFetch, raw, skipCSRFCheck } from "./symbols.js"
-
 /** @internal */
 export async function AuthInternal(
   request: RequestInternal,
-  authOptions: AuthConfig
+  config: AuthConfig
 ): Promise<ResponseInternal> {
   const { action, providerId, error, method } = request
 
-  const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
+  const csrfDisabled = config.skipCSRFCheck === skipCSRFCheck
 
-  const { options, cookies } = await init({
-    authOptions,
+  const internalConfig = await init({
+    config,
     action,
     providerId,
     url: request.url,
@@ -33,24 +31,41 @@ export async function AuthInternal(
   })
 
   const sessionStore = new SessionStore(
-    options.cookies.sessionToken,
+    internalConfig.cookies.sessionToken,
     request.cookies,
-    options.logger
+    internalConfig.logger
   )
 
   if (method === "GET") {
-    const render = renderPage({ ...options, query: request.query, cookies })
+    const render = renderPage({
+      ...internalConfig,
+      query: request.query,
+      cookies: internalConfig.resCookies,
+    })
     switch (action) {
       case "callback":
-        return await actions.callback(request, options, sessionStore, cookies)
+        return await actions.callback(
+          request,
+          internalConfig,
+          sessionStore,
+          internalConfig.resCookies
+        )
       case "csrf":
-        return render.csrf(csrfDisabled, options, cookies)
+        return render.csrf(
+          csrfDisabled,
+          internalConfig,
+          internalConfig.resCookies
+        )
       case "error":
         return render.error(error)
       case "providers":
-        return render.providers(options.providers)
+        return render.providers(internalConfig.providers)
       case "session":
-        return await actions.session(options, sessionStore, cookies)
+        return await actions.session(
+          internalConfig,
+          sessionStore,
+          internalConfig.resCookies
+        )
       case "signin":
         return render.signin(providerId, error)
       case "signout":
@@ -60,36 +75,49 @@ export async function AuthInternal(
       case "webauthn-options":
         return await actions.webAuthnOptions(
           request,
-          options,
+          internalConfig,
           sessionStore,
-          cookies
+          internalConfig.resCookies
         )
       default:
     }
   } else {
-    const { csrfTokenVerified } = options
+    const { csrfTokenVerified } = internalConfig
     switch (action) {
       case "callback":
-        if (options.provider.type === "credentials")
+        if (internalConfig.provider.type === "credentials")
           // Verified CSRF Token required for credentials providers only
           validateCSRF(action, csrfTokenVerified)
-        return await actions.callback(request, options, sessionStore, cookies)
+        return await actions.callback(
+          request,
+          internalConfig,
+          sessionStore,
+          internalConfig.resCookies
+        )
       case "session":
         validateCSRF(action, csrfTokenVerified)
         return await actions.session(
-          options,
+          internalConfig,
           sessionStore,
-          cookies,
+          internalConfig.resCookies,
           true,
           request.body?.data
         )
       case "signin":
         validateCSRF(action, csrfTokenVerified)
-        return await actions.signIn(request, cookies, options)
+        return await actions.signIn(
+          request,
+          internalConfig.resCookies,
+          internalConfig
+        )
 
       case "signout":
         validateCSRF(action, csrfTokenVerified)
-        return await actions.signOut(cookies, sessionStore, options)
+        return await actions.signOut(
+          internalConfig.resCookies,
+          sessionStore,
+          internalConfig
+        )
       default:
     }
   }

@@ -1,7 +1,7 @@
-import type { InternalOptions } from "../../types.js"
+import type { InternalConfig } from "../../types.js"
 
 interface CreateCallbackUrlParams {
-  options: InternalOptions
+  options: InternalConfig
   /** Try reading value from request body (POST) then from query param (GET) */
   paramValue?: string
   cookieValue?: string
