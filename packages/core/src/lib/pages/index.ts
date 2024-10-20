@@ -38,11 +38,7 @@ function send({
  * Unless the user defines their [own pages](https://authjs.dev/reference/core#pages),
  * we render a set of default ones, using Preact SSR.
  */
-export default function renderPage(
-  request: RequestInternal,
-  config: InternalConfig
-) {
-  const { query } = request
+export default function renderPage(config: Partial<InternalConfig>) {
   const { url, theme, resCookies: cookies, pages, providers } = config
 
   return {
@@ -54,18 +50,18 @@ export default function renderPage(
           cookies,
         }
       }
-      config.logger.warn("csrf-disabled")
-      cookies.push({
-        name: config.cookies.csrfToken.name,
+      config.logger?.warn("csrf-disabled")
+      cookies?.push({
+        name: config.cookies!.csrfToken.name,
         value: "",
-        options: { ...config.cookies.csrfToken.options, maxAge: 0 },
+        options: { ...config.cookies?.csrfToken.options, maxAge: 0 },
       })
       return { status: 404, cookies }
     },
     providers() {
       return {
         headers: { "Content-Type": "application/json" },
-        body: providers.reduce<Record<string, PublicProvider>>(
+        body: providers?.reduce<Record<string, PublicProvider>>(
           (acc, { id, name, type, signinUrl, callbackUrl }) => {
             acc[id] = { id, name, type, signinUrl, callbackUrl }
             return acc
@@ -74,7 +70,8 @@ export default function renderPage(
         ),
       }
     },
-    signin(providerId?: string, error?: any) {
+    signin(request: RequestInternal) {
+      const { error, query, providerId } = request
       if (providerId) throw new UnknownAction("Unsupported action")
       if (pages?.signIn) {
         let signinUrl = `${pages.signIn}${
@@ -119,7 +116,7 @@ export default function renderPage(
           ),
           callbackUrl: config.callbackUrl,
           theme: config.theme,
-          error,
+          error: error as any,
           ...query,
         }),
         title: "Sign In",
