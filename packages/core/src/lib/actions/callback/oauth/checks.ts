@@ -2,7 +2,7 @@ import * as o from "oauth4webapi"
 import { InvalidCheck } from "../../../../errors.js"
 
 // NOTE: We use the default JWT methods here because they encrypt/decrypt the payload, not just sign it.
-import { decode, encode } from "../../../../jwt.js"
+import { decode as unseal, encode as seal } from "../../../../jwt.js"
 
 import type {
   CookiesOptions,
@@ -37,14 +37,15 @@ async function sealCookie(
     expires,
   })
 
-  const encoded = await encode({
-    ...config.jwt,
+  const sealed = await seal({
+    secret: config.secret,
     maxAge: COOKIE_TTL,
     token: { value: payload } satisfies CookiePayload,
     salt: cookie.name,
   })
+
   const cookieOptions = { ...cookie.options, expires }
-  return { name: cookie.name, value: encoded, options: cookieOptions }
+  return { name: cookie.name, value: sealed, options: cookieOptions }
 }
 
 async function parseCookie(
@@ -53,16 +54,16 @@ async function parseCookie(
   config: InternalConfig
 ): Promise<string> {
   try {
-    const { logger, cookies, jwt } = config
+    const { logger, cookies } = config
     logger.debug(`PARSE_${name.toUpperCase()}`, { cookie: value })
 
     if (!value) throw new InvalidCheck(`${name} cookie was missing`)
-    const parsed = await decode<CookiePayload>({
-      ...jwt,
+    const unsealed = await unseal<CookiePayload>({
+      secret: config.secret,
       token: value,
       salt: cookies[name].name,
     })
-    if (parsed?.value) return parsed.value
+    if (unsealed?.value) return unsealed.value
     throw new Error("Invalid cookie")
   } catch (error) {
     throw new InvalidCheck(`${name} value could not be parsed`, {
@@ -155,8 +156,8 @@ export const state = {
       origin,
       random: o.generateRandomState(),
     } satisfies EncodedState
-    const value = await encode({
-      secret: config.jwt.secret,
+    const value = await seal({
+      secret: config.secret,
       token: payload,
       salt: encodedStateSalt,
       maxAge: STATE_MAX_AGE,
@@ -175,8 +176,8 @@ export const state = {
   async decode(state: string, config: InternalConfig) {
     try {
       config.logger.debug("DECODE_STATE", { state })
-      const payload = await decode<EncodedState>({
-        secret: config.jwt.secret,
+      const payload = await unseal<EncodedState>({
+        secret: config.secret,
         token: state,
         salt: encodedStateSalt,
       })
@@ -222,8 +223,8 @@ export const webauthnChallenge = {
     return {
       cookie: await sealCookie(
         "webauthnChallenge",
-        await encode({
-          secret: config.jwt.secret,
+        await seal({
+          secret: config.secret,
           token: { challenge, registerData } satisfies WebAuthnChallengePayload,
           salt: webauthnChallengeSalt,
           maxAge: WEBAUTHN_CHALLENGE_MAX_AGE,
@@ -242,8 +243,8 @@ export const webauthnChallenge = {
 
     const parsed = await parseCookie("webauthnChallenge", cookieValue, config)
 
-    const payload = await decode<WebAuthnChallengePayload>({
-      secret: config.jwt.secret,
+    const payload = await unseal<WebAuthnChallengePayload>({
+      secret: config.secret,
       token: parsed,
       salt: webauthnChallengeSalt,
     })

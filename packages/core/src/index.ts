@@ -311,7 +311,7 @@ export interface AuthConfig
      * By default, the cookie is sealed using an encrypted JWT. It uses the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
      * {@link AuthConfig.session.secret} is used to derive a suitable encryption key.
      */
-    seal?: () => Awaitable<string>
+    seal?: JWTOptions["encode"]
     /**
      * Unseals the session payload from the cookie, to read the data on the server.
      *
@@ -320,7 +320,7 @@ export interface AuthConfig
      *
      * If you passed an array of secrets, we will iterate over them from first-to-last, trying to unseal the data.
      */
-    unseal?: () => Awaitable<JWT | string>
+    unseal?: JWTOptions["decode"]
   }
   /**
    * Specify URLs to be used if you want to create custom sign in, sign out and error pages.

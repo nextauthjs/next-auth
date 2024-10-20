@@ -12,15 +12,15 @@ export async function session(
 ): Promise<ResponseInternal<Session | null>> {
   const {
     adapter,
-    jwt,
     events,
     callbacks,
     logger,
-    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+    session: sessionConfig,
     resCookies: cookies,
     sessionStore,
   } = config
 
+  const sessionMaxAge = sessionConfig.maxAge
   const response: ResponseInternal<Session | null> = {
     body: null,
     headers: { "Content-Type": "application/json" },
@@ -31,10 +31,9 @@ export async function session(
 
   if (!sessionToken) return response
 
-  if (sessionStrategy === "jwt") {
+  if (!sessionConfig.isDatabase) {
     try {
-      const salt = config.cookies.sessionToken.name
-      const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
+      const payload = await sessionConfig.unseal(sessionToken)
 
       if (!payload) throw new Error("Invalid JWT")
 
@@ -61,7 +60,7 @@ export async function session(
         response.body = newSession
 
         // Refresh JWT expiry by re-signing it, with an updated expiry date
-        const newToken = await jwt.encode({ ...jwt, token, salt })
+        const newToken = await sessionConfig.seal(token)
 
         // Set cookie, to also update expiry date on cookie
         const sessionCookies = sessionStore.chunk(newToken, {

@@ -55,7 +55,6 @@ import type { CookieSerializeOptions } from "cookie"
 import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
-import type { JWTOptions } from "./jwt.js"
 import type { Cookie, SessionStore } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
@@ -69,6 +68,7 @@ import type {
   WebAuthnConfig,
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
+import { JWT } from "./jwt.js"
 
 export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
 export type { AuthConfig } from "./index.js"
@@ -408,9 +408,17 @@ export interface InternalConfig<TProviderType = ProviderType> {
   secret: string | string[]
   theme: Theme
   logger: LoggerInstance
-  session: NonNullable<Required<AuthConfig["session"]>>
+  session: {
+    isDatabase: boolean
+    unseal(value: string): Awaitable<JWT | null>
+    seal(payload: JWT): Awaitable<string>
+    generateSessionToken: NonNullable<
+      Required<AuthConfig["session"]>
+    >["generateSessionToken"]
+    maxAge: NonNullable<Required<AuthConfig["session"]>>["maxAge"]
+    updateAge: NonNullable<Required<AuthConfig["session"]>>["updateAge"]
+  }
   pages: Partial<PagesOptions>
-  jwt: JWTOptions
   events: NonNullable<AuthConfig["events"]>
   adapter: Required<Adapter> | undefined
   callbacks: NonNullable<Required<AuthConfig["callbacks"]>>

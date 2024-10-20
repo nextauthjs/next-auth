@@ -13,7 +13,6 @@ export async function signOut(
   config: InternalConfig
 ): Promise<ResponseInternal> {
   const {
-    jwt,
     events,
     callbackUrl: redirect,
     logger,
@@ -25,13 +24,12 @@ export async function signOut(
   if (!sessionToken) return { redirect, cookies }
 
   try {
-    if (session.strategy === "jwt") {
-      const salt = config.cookies.sessionToken.name
-      const token = await jwt.decode({ ...jwt, token: sessionToken, salt })
-      await events.signOut?.({ token })
-    } else {
+    if (session.isDatabase) {
       const session = await config.adapter?.deleteSession(sessionToken)
       await events.signOut?.({ session })
+    } else {
+      const token = await session.unseal(sessionToken)
+      await events.signOut?.({ token })
     }
   } catch (e) {
     logger.error(new SignOutError(e as Error))

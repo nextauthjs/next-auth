@@ -35,12 +35,7 @@ export async function handleLoginOrRegister(
   if (!["email", "oauth", "oidc", "webauthn"].includes(_account.type))
     throw new Error("Provider not supported")
 
-  const {
-    adapter,
-    jwt,
-    events,
-    session: { strategy: sessionStrategy, generateSessionToken },
-  } = config
+  const { adapter, events, session: sessionConfig } = config
 
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
@@ -67,13 +62,13 @@ export async function handleLoginOrRegister(
   let user: AdapterUser | null = null
   let isNewUser = false
 
-  const useJwtSession = sessionStrategy === "jwt"
+  const useJwtSession = !sessionConfig.isDatabase
+  const { generateSessionToken, maxAge: sessionMaxAge } = sessionConfig
 
   if (sessionToken) {
     if (useJwtSession) {
       try {
-        const salt = config.cookies.sessionToken.name
-        session = await jwt.decode({ ...jwt, token: sessionToken, salt })
+        session = await sessionConfig.unseal(sessionToken)
         if (session && "sub" in session && session.sub) {
           user = await getUser(session.sub)
         }
@@ -121,7 +116,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(config.session.maxAge),
+          expires: fromDate(sessionMaxAge),
         })
 
     return { session, user, isNewUser }
@@ -153,7 +148,7 @@ export async function handleLoginOrRegister(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: userByAccount.id,
-            expires: fromDate(config.session.maxAge),
+            expires: fromDate(sessionMaxAge),
           })
 
       const currentAccount: AdapterAccount = {
@@ -212,7 +207,7 @@ export async function handleLoginOrRegister(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: user.id,
-            expires: fromDate(config.session.maxAge),
+            expires: fromDate(sessionMaxAge),
           })
 
       const currentAccount: AdapterAccount = { ...account, userId: user.id }
@@ -246,7 +241,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: userByAccount.id,
-          expires: fromDate(config.session.maxAge),
+          expires: fromDate(sessionMaxAge),
         })
 
     return { session, user: userByAccount, isNewUser }
@@ -326,7 +321,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(config.session.maxAge),
+          expires: fromDate(sessionMaxAge),
         })
 
     return { session, user, isNewUser }

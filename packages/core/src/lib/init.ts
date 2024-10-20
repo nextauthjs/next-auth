@@ -56,8 +56,6 @@ export async function init(
     config: userConfig,
   })
 
-  const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
-
   let isOnRedirectProxy = false
   if (isOAuthProvider(provider) && provider.redirectProxyUrl) {
     try {
@@ -76,6 +74,11 @@ export async function init(
     ),
     userConfig.cookies
   )
+
+  const sessionSecret = userConfig.jwt?.secret ?? userConfig.secret! // Asserted in assert.ts
+  const sessionSalt = cookies.sessionToken.name
+  const unseal = userConfig.jwt?.decode ?? jwt.decode
+  const seal = userConfig.jwt?.encode ?? jwt.encode
 
   // User provided options are overridden by other options,
   // except for the options with special handling above
@@ -99,20 +102,28 @@ export async function init(
     providers,
     // Session options
     session: {
-      // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: userConfig.adapter ? "database" : "jwt",
-      maxAge,
-      updateAge: 24 * 60 * 60,
-      generateSessionToken: () => crypto.randomUUID(),
-      ...userConfig.session,
-    },
-    // JWT options
-    jwt: {
-      secret: userConfig.secret!, // Asserted in assert.ts
-      maxAge: userConfig.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
-      encode: jwt.encode,
-      decode: jwt.decode,
-      ...userConfig.jwt,
+      isDatabase: !userConfig.session?.strategy
+        ? !!userConfig.adapter
+        : userConfig.session.strategy === "database",
+      generateSessionToken() {
+        return crypto.randomUUID()
+      },
+      updateAge: 24 * 60 * 60, // Sessions are updated if they are within 24 hours of expiry by default
+      maxAge: userConfig.jwt?.maxAge ?? 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle by default
+      unseal(value) {
+        return unseal({
+          secret: sessionSecret,
+          token: value,
+          salt: sessionSalt,
+        })
+      },
+      seal(payload) {
+        return seal({
+          secret: sessionSecret,
+          token: payload,
+          salt: sessionSalt,
+        })
+      },
     },
     // Event messages
     events: eventsErrorHandler(userConfig.events ?? {}, logger),
@@ -122,9 +133,7 @@ export async function init(
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
-    experimental: {
-      ...userConfig.experimental,
-    },
+    experimental: { ...userConfig.experimental },
     resCookies: [],
     sessionStore: new cookie.SessionStore(
       cookies.sessionToken,

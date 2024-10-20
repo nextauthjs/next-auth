@@ -42,16 +42,16 @@ export async function callback(
     url,
     callbackUrl,
     pages,
-    jwt,
     events,
     callbacks,
-    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+    session: sessionConfig,
     logger,
     resCookies: cookies,
     sessionStore,
   } = config
 
-  const useJwtSession = sessionStrategy === "jwt"
+  const useJwtSession = !sessionConfig.isDatabase
+  const sessionMaxAge = sessionConfig.maxAge
 
   try {
     if (provider.type === "oauth" || provider.type === "oidc") {
@@ -156,9 +156,7 @@ export async function callback(
         if (token === null) {
           cookies.push(...sessionStore.clean())
         } else {
-          const salt = config.cookies.sessionToken.name
-          // Encode token
-          const newToken = await jwt.encode({ ...jwt, token, salt })
+          const newToken = await sessionConfig.seal(token)
 
           // Set cookie expiry date
           const cookieExpires = new Date()
@@ -263,7 +261,7 @@ export async function callback(
           picture: loggedInUser.image,
           sub: loggedInUser.id?.toString(),
         }
-        const token = await callbacks.jwt({
+        const payload = await callbacks.jwt({
           token: defaultToken,
           user: loggedInUser,
           account,
@@ -271,13 +269,11 @@ export async function callback(
           trigger: isNewUser ? "signUp" : "signIn",
         })
 
-        // Clear cookies if token is null
-        if (token === null) {
+        // Clear cookies if payload is null
+        if (payload === null) {
           cookies.push(...sessionStore.clean())
         } else {
-          const salt = config.cookies.sessionToken.name
-          // Encode token
-          const newToken = await jwt.encode({ ...jwt, token, salt })
+          const newToken = await sessionConfig.seal(payload)
 
           // Set cookie expiry date
           const cookieExpires = new Date()
@@ -352,7 +348,7 @@ export async function callback(
         sub: user.id,
       }
 
-      const token = await callbacks.jwt({
+      const payload = await callbacks.jwt({
         token: defaultToken,
         user,
         account,
@@ -360,13 +356,12 @@ export async function callback(
         trigger: "signIn",
       })
 
-      // Clear cookies if token is null
-      if (token === null) {
+      // Clear cookies if payload is null
+      if (payload === null) {
         cookies.push(...sessionStore.clean())
       } else {
-        const salt = config.cookies.sessionToken.name
         // Encode token
-        const newToken = await jwt.encode({ ...jwt, token, salt })
+        const newToken = await sessionConfig.seal(payload)
 
         // Set cookie expiry date
         const cookieExpires = new Date()
@@ -455,7 +450,7 @@ export async function callback(
           picture: loggedInUser.image,
           sub: loggedInUser.id?.toString(),
         }
-        const token = await callbacks.jwt({
+        const payload = await callbacks.jwt({
           token: defaultToken,
           user: loggedInUser,
           account: currentAccount,
@@ -463,13 +458,11 @@ export async function callback(
           trigger: isNewUser ? "signUp" : "signIn",
         })
 
-        // Clear cookies if token is null
-        if (token === null) {
+        // Clear cookies if payload is null
+        if (payload === null) {
           cookies.push(...sessionStore.clean())
         } else {
-          const salt = config.cookies.sessionToken.name
-          // Encode token
-          const newToken = await jwt.encode({ ...jwt, token, salt })
+          const newToken = await sessionConfig.seal(payload)
 
           // Set cookie expiry date
           const cookieExpires = new Date()
