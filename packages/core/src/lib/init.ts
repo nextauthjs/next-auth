@@ -155,7 +155,7 @@ export async function init({
       cookie: csrfCookie,
       csrfTokenVerified,
     } = await createCSRFToken({
-      options: internalConfig,
+      config: internalConfig,
       cookieValue: reqCookies?.[internalConfig.cookies.csrfToken.name],
       isPost,
       bodyValue: reqCsrfToken,
@@ -174,7 +174,7 @@ export async function init({
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
-    options: internalConfig,
+    config: internalConfig,
     cookieValue: reqCookies?.[internalConfig.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })

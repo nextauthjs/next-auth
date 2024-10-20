@@ -23,9 +23,9 @@ const COOKIE_TTL = 60 * 15 // 15 minutes
 async function sealCookie(
   name: keyof CookiesOptions,
   payload: string,
-  options: InternalConfig<"oauth" | "oidc" | WebAuthnProviderType>
+  config: InternalConfig<"oauth" | "oidc" | WebAuthnProviderType>
 ): Promise<Cookie> {
-  const { cookies, logger } = options
+  const { cookies, logger } = config
   const cookie = cookies[name]
   const expires = new Date()
   expires.setTime(expires.getTime() + COOKIE_TTL * 1000)
@@ -38,7 +38,7 @@ async function sealCookie(
   })
 
   const encoded = await encode({
-    ...options.jwt,
+    ...config.jwt,
     maxAge: COOKIE_TTL,
     token: { value: payload } satisfies CookiePayload,
     salt: cookie.name,
@@ -50,10 +50,10 @@ async function sealCookie(
 async function parseCookie(
   name: keyof CookiesOptions,
   value: string | undefined,
-  options: InternalConfig
+  config: InternalConfig
 ): Promise<string> {
   try {
-    const { logger, cookies, jwt } = options
+    const { logger, cookies, jwt } = config
     logger.debug(`PARSE_${name.toUpperCase()}`, { cookie: value })
 
     if (!value) throw new InvalidCheck(`${name} cookie was missing`)
@@ -73,10 +73,10 @@ async function parseCookie(
 
 function clearCookie(
   name: keyof CookiesOptions,
-  options: InternalConfig,
+  config: InternalConfig,
   resCookies: Cookie[]
 ) {
-  const { logger, cookies } = options
+  const { logger, cookies } = config
   const cookie = cookies[name]
   logger.debug(`CLEAR_${name.toUpperCase()}`, { cookie })
   resCookies.push({
@@ -93,14 +93,14 @@ function useCookie(
   return async function (
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[],
-    options: InternalConfig<"oidc">
+    config: InternalConfig<"oidc">
   ) {
-    const { provider, logger } = options
+    const { provider, logger } = config
     if (!provider?.checks?.includes(check)) return
-    const cookieValue = cookies?.[options.cookies[name].name]
+    const cookieValue = cookies?.[config.cookies[name].name]
     logger.debug(`USE_${name.toUpperCase()}`, { value: cookieValue })
-    const parsed = await parseCookie(name, cookieValue, options)
-    clearCookie(name, options, resCookies)
+    const parsed = await parseCookie(name, cookieValue, config)
+    clearCookie(name, config, resCookies)
     return parsed
   }
 }
@@ -111,10 +111,10 @@ function useCookie(
  */
 export const pkce = {
   /** Creates a PKCE code challenge and verifier pair. The verifier in stored in the cookie. */
-  async create(options: InternalConfig<"oauth">) {
+  async create(config: InternalConfig<"oauth">) {
     const code_verifier = o.generateRandomCodeVerifier()
     const value = await o.calculatePKCECodeChallenge(code_verifier)
-    const cookie = await sealCookie("pkceCodeVerifier", code_verifier, options)
+    const cookie = await sealCookie("pkceCodeVerifier", code_verifier, config)
     return { cookie, value }
   },
   /**
@@ -139,8 +139,8 @@ const encodedStateSalt = "encodedState"
  */
 export const state = {
   /** Creates a state cookie with an optionally encoded body. */
-  async create(options: InternalConfig<"oauth">, origin?: string) {
-    const { provider } = options
+  async create(config: InternalConfig<"oauth">, origin?: string) {
+    const { provider } = config
     if (!provider.checks.includes("state")) {
       if (origin) {
         throw new InvalidCheck(
@@ -156,12 +156,12 @@ export const state = {
       random: o.generateRandomState(),
     } satisfies EncodedState
     const value = await encode({
-      secret: options.jwt.secret,
+      secret: config.jwt.secret,
       token: payload,
       salt: encodedStateSalt,
       maxAge: STATE_MAX_AGE,
     })
-    const cookie = await sealCookie("state", value, options)
+    const cookie = await sealCookie("state", value, config)
 
     return { cookie, value }
   },
@@ -172,11 +172,11 @@ export const state = {
    */
   use: useCookie("state", "state"),
   /** Decodes the state. If it could not be decoded, it throws an error. */
-  async decode(state: string, options: InternalConfig) {
+  async decode(state: string, config: InternalConfig) {
     try {
-      options.logger.debug("DECODE_STATE", { state })
+      config.logger.debug("DECODE_STATE", { state })
       const payload = await decode<EncodedState>({
-        secret: options.jwt.secret,
+        secret: config.jwt.secret,
         token: state,
         salt: encodedStateSalt,
       })
@@ -189,10 +189,10 @@ export const state = {
 }
 
 export const nonce = {
-  async create(options: InternalConfig<"oidc">) {
-    if (!options.provider.checks.includes("nonce")) return
+  async create(config: InternalConfig<"oidc">) {
+    if (!config.provider.checks.includes("nonce")) return
     const value = o.generateRandomNonce()
-    const cookie = await sealCookie("nonce", value, options)
+    const cookie = await sealCookie("nonce", value, config)
     return { cookie, value }
   },
   /**
@@ -215,7 +215,7 @@ interface WebAuthnChallengePayload {
 const webauthnChallengeSalt = "encodedWebauthnChallenge"
 export const webauthnChallenge = {
   async create(
-    options: InternalConfig<WebAuthnProviderType>,
+    config: InternalConfig<WebAuthnProviderType>,
     challenge: string,
     registerData?: User
   ) {
@@ -223,33 +223,33 @@ export const webauthnChallenge = {
       cookie: await sealCookie(
         "webauthnChallenge",
         await encode({
-          secret: options.jwt.secret,
+          secret: config.jwt.secret,
           token: { challenge, registerData } satisfies WebAuthnChallengePayload,
           salt: webauthnChallengeSalt,
           maxAge: WEBAUTHN_CHALLENGE_MAX_AGE,
         }),
-        options
+        config
       ),
     }
   },
   /** Returns WebAuthn challenge if present. */
   async use(
-    options: InternalConfig<WebAuthnProviderType>,
+    config: InternalConfig<WebAuthnProviderType>,
     cookies: RequestInternal["cookies"],
     resCookies: Cookie[]
   ): Promise<WebAuthnChallengePayload> {
-    const cookieValue = cookies?.[options.cookies.webauthnChallenge.name]
+    const cookieValue = cookies?.[config.cookies.webauthnChallenge.name]
 
-    const parsed = await parseCookie("webauthnChallenge", cookieValue, options)
+    const parsed = await parseCookie("webauthnChallenge", cookieValue, config)
 
     const payload = await decode<WebAuthnChallengePayload>({
-      secret: options.jwt.secret,
+      secret: config.jwt.secret,
       token: parsed,
       salt: webauthnChallengeSalt,
     })
 
     // Clear the WebAuthn challenge cookie after use
-    clearCookie("webauthnChallenge", options, resCookies)
+    clearCookie("webauthnChallenge", config, resCookies)
 
     if (!payload) throw new InvalidCheck("WebAuthn challenge was missing")
 

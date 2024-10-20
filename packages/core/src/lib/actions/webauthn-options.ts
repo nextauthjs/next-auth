@@ -28,7 +28,7 @@ export async function webAuthnOptions(
 
   // Extract the action from the query parameters
   const { action } = (request.query ?? {}) as Record<string, unknown>
-  const { resCookies: cookies, sessionStore } = config
+  const { resCookies: cookies } = config
 
   // Action must be either "register", "authenticate", or undefined
   if (
@@ -47,7 +47,7 @@ export async function webAuthnOptions(
   }
 
   // Get the user info from the session
-  const sessionUser = await getLoggedInUser(config, sessionStore)
+  const sessionUser = await getLoggedInUser(config)
 
   // Extract user info from request
   // If session user exists, we don't need to call getUserInfo

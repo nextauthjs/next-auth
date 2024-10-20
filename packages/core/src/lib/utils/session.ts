@@ -1,25 +1,24 @@
 import type { InternalConfig, User } from "../../types.js"
-import type { SessionStore } from "./cookie.js"
 
 /**
  * Returns the currently logged in user, if any.
  */
 export async function getLoggedInUser(
-  options: InternalConfig,
-  sessionStore: SessionStore
+  config: InternalConfig
 ): Promise<User | null> {
   const {
     adapter,
     jwt,
     session: { strategy: sessionStrategy },
-  } = options
+    sessionStore,
+  } = config
 
   const sessionToken = sessionStore.value
   if (!sessionToken) return null
 
   // Try to decode JWT
   if (sessionStrategy === "jwt") {
-    const salt = options.cookies.sessionToken.name
+    const salt = config.cookies.sessionToken.name
     const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
 
     if (payload && payload.sub) {

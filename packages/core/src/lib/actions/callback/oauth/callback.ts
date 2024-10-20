@@ -47,9 +47,9 @@ function clientSecretBasic(clientId: string, clientSecret: string) {
 export async function handleOAuth(
   params: RequestInternal["query"],
   cookies: RequestInternal["cookies"],
-  options: InternalConfig<"oauth" | "oidc">
+  config: InternalConfig<"oauth" | "oidc">
 ) {
-  const { logger, provider } = options
+  const { logger, provider } = config
 
   let as: o.AuthorizationServer
 
@@ -127,7 +127,7 @@ export async function handleOAuth(
 
   const resCookies: Cookie[] = []
 
-  const state = await checks.state.use(cookies, resCookies, options)
+  const state = await checks.state.use(cookies, resCookies, config)
 
   let codeGrantParams: URLSearchParams
   try {
@@ -149,10 +149,10 @@ export async function handleOAuth(
     throw err
   }
 
-  const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
+  const codeVerifier = await checks.pkce.use(cookies, resCookies, config)
 
   let redirect_uri = provider.callbackUrl
-  if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
+  if (!config.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
   }
 
@@ -217,7 +217,7 @@ export async function handleOAuth(
     client,
     codeGrantResponse,
     {
-      expectedNonce: await checks.nonce.use(cookies, resCookies, options),
+      expectedNonce: await checks.nonce.use(cookies, resCookies, config),
       requireIdToken,
     }
   )

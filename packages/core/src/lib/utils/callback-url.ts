@@ -1,7 +1,7 @@
 import type { InternalConfig } from "../../types.js"
 
 interface CreateCallbackUrlParams {
-  options: InternalConfig
+  config: InternalConfig
   /** Try reading value from request body (POST) then from query param (GET) */
   paramValue?: string
   cookieValue?: string
@@ -12,11 +12,11 @@ interface CreateCallbackUrlParams {
  * and add it to `req.options.callbackUrl`.
  */
 export async function createCallbackUrl({
-  options,
+  config,
   paramValue,
   cookieValue,
 }: CreateCallbackUrlParams) {
-  const { url, callbacks } = options
+  const { url, callbacks } = config
 
   let callbackUrl = url.origin
 

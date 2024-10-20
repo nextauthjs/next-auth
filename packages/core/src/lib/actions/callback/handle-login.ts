@@ -27,7 +27,7 @@ export async function handleLoginOrRegister(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   _account: AdapterAccount | Account | null,
-  options: InternalConfig
+  config: InternalConfig
 ) {
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
@@ -40,7 +40,7 @@ export async function handleLoginOrRegister(
     jwt,
     events,
     session: { strategy: sessionStrategy, generateSessionToken },
-  } = options
+  } = config
 
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
@@ -72,7 +72,7 @@ export async function handleLoginOrRegister(
   if (sessionToken) {
     if (useJwtSession) {
       try {
-        const salt = options.cookies.sessionToken.name
+        const salt = config.cookies.sessionToken.name
         session = await jwt.decode({ ...jwt, token: sessionToken, salt })
         if (session && "sub" in session && session.sub) {
           user = await getUser(session.sub)
@@ -121,7 +121,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(config.session.maxAge),
         })
 
     return { session, user, isNewUser }
@@ -153,7 +153,7 @@ export async function handleLoginOrRegister(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: userByAccount.id,
-            expires: fromDate(options.session.maxAge),
+            expires: fromDate(config.session.maxAge),
           })
 
       const currentAccount: AdapterAccount = {
@@ -212,7 +212,7 @@ export async function handleLoginOrRegister(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: user.id,
-            expires: fromDate(options.session.maxAge),
+            expires: fromDate(config.session.maxAge),
           })
 
       const currentAccount: AdapterAccount = { ...account, userId: user.id }
@@ -246,12 +246,12 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: userByAccount.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(config.session.maxAge),
         })
 
     return { session, user: userByAccount, isNewUser }
   } else {
-    const { provider: p } = options as InternalConfig<"oauth" | "oidc">
+    const { provider: p } = config as InternalConfig<"oauth" | "oidc">
     const { type, provider, providerAccountId, userId, ...tokenSet } = account
     const defaults = { providerAccountId, provider, type, userId }
     account = Object.assign(p.account(tokenSet) ?? {}, defaults)
@@ -287,7 +287,7 @@ export async function handleLoginOrRegister(
       ? await getUserByEmail(profile.email)
       : null
     if (userByEmail) {
-      const provider = options.provider as OAuthConfig<any>
+      const provider = config.provider as OAuthConfig<any>
       if (provider?.allowDangerousEmailAccountLinking) {
         // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
         // account linking even when the user is not signed-in.
@@ -326,7 +326,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(config.session.maxAge),
         })
 
     return { session, user, isNewUser }

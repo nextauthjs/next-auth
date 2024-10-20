@@ -413,7 +413,7 @@ export async function callback(
           break
         }
         case "register": {
-          const verified = await verifyRegister(config, request, cookies)
+          const verified = await verifyRegister(request, config)
 
           user = verified.user
           account = verified.account

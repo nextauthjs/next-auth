@@ -6,7 +6,7 @@ import type { InternalConfig, ResponseInternal, Session } from "../../types.js"
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(
-  options: InternalConfig,
+  config: InternalConfig,
   isUpdate?: boolean,
   newSession?: any
 ): Promise<ResponseInternal<Session | null>> {
@@ -19,7 +19,7 @@ export async function session(
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     resCookies: cookies,
     sessionStore,
-  } = options
+  } = config
 
   const response: ResponseInternal<Session | null> = {
     body: null,
@@ -33,7 +33,7 @@ export async function session(
 
   if (sessionStrategy === "jwt") {
     try {
-      const salt = options.cookies.sessionToken.name
+      const salt = config.cookies.sessionToken.name
       const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
 
       if (!payload) throw new Error("Invalid JWT")
@@ -101,7 +101,7 @@ export async function session(
     if (userAndSession) {
       const { user, session } = userAndSession
 
-      const sessionUpdateAge = options.session.updateAge
+      const sessionUpdateAge = config.session.updateAge
       // Calculate last updated date to throttle write updates to database
       // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
       //     e.g. ({expiry date} - 30 days) + 1 hour
@@ -136,10 +136,10 @@ export async function session(
 
       // Set cookie again to update expiry
       response.cookies?.push({
-        name: options.cookies.sessionToken.name,
+        name: config.cookies.sessionToken.name,
         value: sessionToken,
         options: {
-          ...options.cookies.sessionToken.options,
+          ...config.cookies.sessionToken.options,
           expires: newExpires,
         },
       })
