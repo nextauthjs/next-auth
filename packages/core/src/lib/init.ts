@@ -82,7 +82,7 @@ export async function init(
 
   // User provided options are overridden by other options,
   // except for the options with special handling above
-  const internalConfig: InternalConfig = {
+  const config: InternalConfig = {
     debug: false,
     pages: {},
     theme: {
@@ -138,46 +138,46 @@ export async function init(
   }
 
   if (csrfDisabled) {
-    internalConfig.csrfTokenVerified = true
+    config.csrfTokenVerified = true
   } else {
     const {
       csrfToken,
       cookie: csrfCookie,
       csrfTokenVerified,
     } = await createCSRFToken({
-      config: internalConfig,
-      cookieValue: reqCookies?.[internalConfig.cookies.csrfToken.name],
+      config: config,
+      cookieValue: reqCookies?.[config.cookies.csrfToken.name],
       isPost,
       bodyValue: reqCsrfToken,
     })
 
-    internalConfig.csrfToken = csrfToken
-    internalConfig.csrfTokenVerified = csrfTokenVerified
+    config.csrfToken = csrfToken
+    config.csrfTokenVerified = csrfTokenVerified
 
     if (csrfCookie) {
-      internalConfig.resCookies.push({
-        name: internalConfig.cookies.csrfToken.name,
+      config.resCookies.push({
+        name: config.cookies.csrfToken.name,
         value: csrfCookie,
-        options: internalConfig.cookies.csrfToken.options,
+        options: config.cookies.csrfToken.options,
       })
     }
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
-    config: internalConfig,
-    cookieValue: reqCookies?.[internalConfig.cookies.callbackUrl.name],
+    config: config,
+    cookieValue: reqCookies?.[config.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })
-  internalConfig.callbackUrl = callbackUrl
+  config.callbackUrl = callbackUrl
   if (callbackUrlCookie) {
-    internalConfig.resCookies.push({
-      name: internalConfig.cookies.callbackUrl.name,
+    config.resCookies.push({
+      name: config.cookies.callbackUrl.name,
       value: callbackUrlCookie,
-      options: internalConfig.cookies.callbackUrl.options,
+      options: config.cookies.callbackUrl.options,
     })
   }
 
-  return internalConfig
+  return config
 }
 
 type Method = (...args: any[]) => Promise<any>
