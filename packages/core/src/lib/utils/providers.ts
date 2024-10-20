@@ -192,7 +192,7 @@ export function isOAuth2Provider(
 
 /** Either OAuth 2 or OIDC */
 export function isOAuthProvider(
-  provider: InternalProvider<any>
+  provider?: InternalProvider<any>
 ): provider is InternalProvider<"oauth" | "oidc"> {
-  return provider.type === "oauth" || provider.type === "oidc"
+  return provider?.type === "oauth" || provider?.type === "oidc"
 }

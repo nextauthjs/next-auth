@@ -4,7 +4,7 @@ import * as cookie from "./utils/cookie.js"
 import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 
 import { AdapterError, EventError } from "../errors.js"
-import parseProviders from "./utils/providers.js"
+import parseProviders, { isOAuthProvider } from "./utils/providers.js"
 import { setLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 import { skipCSRFCheck } from "./symbols.js"
@@ -59,10 +59,7 @@ export async function init(
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
   let isOnRedirectProxy = false
-  if (
-    (provider?.type === "oauth" || provider?.type === "oidc") &&
-    provider.redirectProxyUrl
-  ) {
+  if (isOAuthProvider(provider) && provider.redirectProxyUrl) {
     try {
       isOnRedirectProxy =
         new URL(provider.redirectProxyUrl).origin === url.origin
