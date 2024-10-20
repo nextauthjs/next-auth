@@ -30,11 +30,7 @@ export async function AuthInternal(
   })
 
   if (method === "GET") {
-    const render = renderPage({
-      ...internalConfig,
-      query: request.query,
-      cookies: internalConfig.resCookies,
-    })
+    const render = renderPage(request, internalConfig)
     switch (action) {
       case "callback":
         return await actions.callback(

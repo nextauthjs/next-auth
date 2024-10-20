@@ -35,22 +35,16 @@ function send({
   }
 }
 
-type RenderPageParams = {
-  query?: RequestInternal["query"]
-  cookies?: Cookie[]
-} & Partial<
-  Pick<
-    InternalConfig,
-    "url" | "callbackUrl" | "csrfToken" | "providers" | "theme" | "pages"
-  >
->
-
 /**
  * Unless the user defines their [own pages](https://authjs.dev/reference/core#pages),
  * we render a set of default ones, using Preact SSR.
  */
-export default function renderPage(params: RenderPageParams) {
-  const { url, theme, query, cookies, pages, providers } = params
+export default function renderPage(
+  request: RequestInternal,
+  config: InternalConfig
+) {
+  const { query } = request
+  const { url, theme, resCookies: cookies, pages, providers } = config
 
   return {
     csrf(skip: boolean, options: InternalConfig, cookies: Cookie[]) {
@@ -86,7 +80,7 @@ export default function renderPage(params: RenderPageParams) {
       if (pages?.signIn) {
         let signinUrl = `${pages.signIn}${
           pages.signIn.includes("?") ? "&" : "?"
-        }${new URLSearchParams({ callbackUrl: params.callbackUrl ?? "/" })}`
+        }${new URLSearchParams({ callbackUrl: config.callbackUrl ?? "/" })}`
         if (error) signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
         return { redirect: signinUrl, cookies }
       }
@@ -111,9 +105,9 @@ export default function renderPage(params: RenderPageParams) {
         cookies,
         theme,
         html: SigninPage({
-          csrfToken: params.csrfToken,
+          csrfToken: config.csrfToken,
           // We only want to render providers
-          providers: params.providers?.filter(
+          providers: config.providers?.filter(
             (provider) =>
               // Always render oauth and email type providers
               ["email", "oauth", "oidc"].includes(provider.type) ||
@@ -124,8 +118,8 @@ export default function renderPage(params: RenderPageParams) {
               // Don't render other provider types
               false
           ),
-          callbackUrl: params.callbackUrl,
-          theme: params.theme,
+          callbackUrl: config.callbackUrl,
+          theme: config.theme,
           error,
           ...query,
         }),
@@ -138,7 +132,7 @@ export default function renderPage(params: RenderPageParams) {
       return send({
         cookies,
         theme,
-        html: SignoutPage({ csrfToken: params.csrfToken, url, theme }),
+        html: SignoutPage({ csrfToken: config.csrfToken, url, theme }),
         title: "Sign Out",
       })
     },
