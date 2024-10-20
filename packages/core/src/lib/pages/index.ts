@@ -13,7 +13,6 @@ import type {
   InternalProvider,
   PublicProvider,
 } from "../../types.js"
-import type { Cookie } from "../utils/cookie.js"
 
 function send({
   html,
@@ -47,23 +46,23 @@ export default function renderPage(
   const { url, theme, resCookies: cookies, pages, providers } = config
 
   return {
-    csrf(skip: boolean, options: InternalConfig, cookies: Cookie[]) {
+    csrf(skip: boolean) {
       if (!skip) {
         return {
           headers: { "Content-Type": "application/json" },
-          body: { csrfToken: options.csrfToken },
+          body: { csrfToken: config.csrfToken },
           cookies,
         }
       }
-      options.logger.warn("csrf-disabled")
+      config.logger.warn("csrf-disabled")
       cookies.push({
-        name: options.cookies.csrfToken.name,
+        name: config.cookies.csrfToken.name,
         value: "",
-        options: { ...options.cookies.csrfToken.options, maxAge: 0 },
+        options: { ...config.cookies.csrfToken.options, maxAge: 0 },
       })
       return { status: 404, cookies }
     },
-    providers(providers: InternalProvider[]) {
+    providers() {
       return {
         headers: { "Content-Type": "application/json" },
         body: providers.reduce<Record<string, PublicProvider>>(

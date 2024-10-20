@@ -3,13 +3,10 @@ import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
 import type { InternalConfig, ResponseInternal, Session } from "../../types.js"
-import type { Cookie, SessionStore } from "../utils/cookie.js"
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(
   options: InternalConfig,
-  sessionStore: SessionStore,
-  cookies: Cookie[],
   isUpdate?: boolean,
   newSession?: any
 ): Promise<ResponseInternal<Session | null>> {
@@ -20,6 +17,8 @@ export async function session(
     callbacks,
     logger,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
+    resCookies: cookies,
+    sessionStore,
   } = options
 
   const response: ResponseInternal<Session | null> = {

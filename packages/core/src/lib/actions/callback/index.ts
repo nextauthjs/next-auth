@@ -22,7 +22,6 @@ import type {
   ResponseInternal,
   User,
 } from "../../../types.js"
-import type { Cookie, SessionStore } from "../../utils/cookie.js"
 import {
   assertInternalOptionsWebAuthn,
   verifyAuthenticate,
@@ -32,11 +31,9 @@ import {
 /** Handle callbacks from login services */
 export async function callback(
   request: RequestInternal,
-  options: InternalConfig,
-  sessionStore: SessionStore,
-  cookies: Cookie[]
+  config: InternalConfig
 ): Promise<ResponseInternal> {
-  if (!options.provider)
+  if (!config.provider)
     throw new InvalidProvider("Callback route called without provider")
   const { query, body, method, headers } = request
   const {
@@ -50,7 +47,9 @@ export async function callback(
     callbacks,
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
     logger,
-  } = options
+    resCookies: cookies,
+    sessionStore,
+  } = config
 
   const useJwtSession = sessionStrategy === "jwt"
 
@@ -66,13 +65,13 @@ export async function callback(
       // If we have a state and we are on a redirect proxy, we try to parse it
       // and see if it contains a valid origin to redirect to. If it does, we
       // redirect the user to that origin with the original state.
-      if (options.isOnRedirectProxy && params?.state) {
+      if (config.isOnRedirectProxy && params?.state) {
         // NOTE: We rely on the state being encrypted using a shared secret
         // between the proxy and the original server.
-        const parsedState = await state.decode(params.state, options)
+        const parsedState = await state.decode(params.state, config)
         const shouldRedirect =
           parsedState?.origin &&
-          new URL(parsedState.origin).origin !== options.url.origin
+          new URL(parsedState.origin).origin !== config.url.origin
         if (shouldRedirect) {
           const proxyRedirect = `${parsedState.origin}?${new URLSearchParams(params)}`
           logger.debug("Proxy redirecting to", proxyRedirect)
@@ -83,7 +82,7 @@ export async function callback(
       const authorizationResult = await handleOAuth(
         params,
         request.cookies,
-        options
+        config
       )
 
       if (authorizationResult.cookies.length) {
@@ -126,7 +125,7 @@ export async function callback(
           account,
           profile: OAuthProfile,
         },
-        options
+        config
       )
       if (redirect) return { redirect, cookies }
 
@@ -134,7 +133,7 @@ export async function callback(
         sessionStore.value,
         userFromProvider,
         account,
-        options
+        config
       )
 
       if (useJwtSession) {
@@ -157,7 +156,7 @@ export async function callback(
         if (token === null) {
           cookies.push(...sessionStore.clean())
         } else {
-          const salt = options.cookies.sessionToken.name
+          const salt = config.cookies.sessionToken.name
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token, salt })
 
@@ -173,10 +172,10 @@ export async function callback(
       } else {
         // Save Session Token in cookie
         cookies.push({
-          name: options.cookies.sessionToken.name,
+          name: config.cookies.sessionToken.name,
           value: (session as AdapterSession).sessionToken,
           options: {
-            ...options.cookies.sessionToken.options,
+            ...config.cookies.sessionToken.options,
             expires: (session as AdapterSession).expires,
           },
         })
@@ -215,7 +214,7 @@ export async function callback(
         throw e
       }
 
-      const secret = provider.secret ?? options.secret
+      const secret = provider.secret ?? config.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
         // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
@@ -247,7 +246,7 @@ export async function callback(
         provider: provider.id,
       }
 
-      const redirect = await handleAuthorized({ user, account }, options)
+      const redirect = await handleAuthorized({ user, account }, config)
       if (redirect) return { redirect, cookies }
 
       // Sign user in
@@ -255,12 +254,7 @@ export async function callback(
         user: loggedInUser,
         session,
         isNewUser,
-      } = await handleLoginOrRegister(
-        sessionStore.value,
-        user,
-        account,
-        options
-      )
+      } = await handleLoginOrRegister(sessionStore.value, user, account, config)
 
       if (useJwtSession) {
         const defaultToken = {
@@ -281,7 +275,7 @@ export async function callback(
         if (token === null) {
           cookies.push(...sessionStore.clean())
         } else {
-          const salt = options.cookies.sessionToken.name
+          const salt = config.cookies.sessionToken.name
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token, salt })
 
@@ -297,10 +291,10 @@ export async function callback(
       } else {
         // Save Session Token in cookie
         cookies.push({
-          name: options.cookies.sessionToken.name,
+          name: config.cookies.sessionToken.name,
           value: (session as AdapterSession).sessionToken,
           options: {
-            ...options.cookies.sessionToken.options,
+            ...config.cookies.sessionToken.options,
             expires: (session as AdapterSession).expires,
           },
         })
@@ -347,7 +341,7 @@ export async function callback(
 
       const redirect = await handleAuthorized(
         { user, account, credentials },
-        options
+        config
       )
       if (redirect) return { redirect, cookies }
 
@@ -370,7 +364,7 @@ export async function callback(
       if (token === null) {
         cookies.push(...sessionStore.clean())
       } else {
-        const salt = options.cookies.sessionToken.name
+        const salt = config.cookies.sessionToken.name
         // Encode token
         const newToken = await jwt.encode({ ...jwt, token, salt })
 
@@ -399,7 +393,7 @@ export async function callback(
       }
       // Return an error if the adapter is missing or if the provider
       // is not a webauthn provider.
-      const localOptions = assertInternalOptionsWebAuthn(options)
+      const localOptions = assertInternalOptionsWebAuthn(config)
 
       // Verify request to get user, account and authenticator
       let user: User
@@ -419,7 +413,7 @@ export async function callback(
           break
         }
         case "register": {
-          const verified = await verifyRegister(options, request, cookies)
+          const verified = await verifyRegister(config, request, cookies)
 
           user = verified.user
           account = verified.account
@@ -430,7 +424,7 @@ export async function callback(
       }
 
       // Check if user is allowed to sign in
-      await handleAuthorized({ user, account }, options)
+      await handleAuthorized({ user, account }, config)
 
       // Sign user in, creating them and their account if needed
       const {
@@ -438,12 +432,7 @@ export async function callback(
         isNewUser,
         session,
         account: currentAccount,
-      } = await handleLoginOrRegister(
-        sessionStore.value,
-        user,
-        account,
-        options
-      )
+      } = await handleLoginOrRegister(sessionStore.value, user, account, config)
 
       if (!currentAccount) {
         // This is mostly for type checking. It should never actually happen.
@@ -478,7 +467,7 @@ export async function callback(
         if (token === null) {
           cookies.push(...sessionStore.clean())
         } else {
-          const salt = options.cookies.sessionToken.name
+          const salt = config.cookies.sessionToken.name
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token, salt })
 
@@ -494,10 +483,10 @@ export async function callback(
       } else {
         // Save Session Token in cookie
         cookies.push({
-          name: options.cookies.sessionToken.name,
+          name: config.cookies.sessionToken.name,
           value: (session as AdapterSession).sessionToken,
           options: {
-            ...options.cookies.sessionToken.options,
+            ...config.cookies.sessionToken.options,
             expires: (session as AdapterSession).expires,
           },
         })
