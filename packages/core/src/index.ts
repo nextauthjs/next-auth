@@ -287,7 +287,7 @@ export interface AuthConfig
      *
      * @default 2592000 // 30 days
      */
-    maxAge?: number | Date
+    maxAge?: number // TODO: | Date
     /**
      * How often the session should be updated in seconds. If set to `0`, the session is updated every time.
      *
