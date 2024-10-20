@@ -85,6 +85,11 @@ export async function init({
     }
   }
 
+  const cookies = merge(
+    cookie.defaultCookies(config.useSecureCookies ?? url.protocol === "https:"),
+    config.cookies
+  )
+
   // User provided options are overridden by other options,
   // except for the options with special handling above
   const internalConfig: InternalConfig = {
@@ -104,12 +109,7 @@ export async function init({
     action,
     // @ts-expect-errors
     provider,
-    cookies: merge(
-      cookie.defaultCookies(
-        config.useSecureCookies ?? url.protocol === "https:"
-      ),
-      config.cookies
-    ),
+    cookies,
     providers,
     // Session options
     session: {
@@ -140,6 +140,11 @@ export async function init({
       ...config.experimental,
     },
     resCookies: [],
+    sessionStore: new cookie.SessionStore(
+      cookies.sessionToken,
+      reqCookies,
+      logger
+    ),
   }
 
   if (csrfDisabled) {

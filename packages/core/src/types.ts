@@ -56,7 +56,7 @@ import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
 import type { JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/utils/cookie.js"
+import type { Cookie, SessionStore } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialsConfig,
@@ -426,4 +426,5 @@ export interface InternalConfig<TProviderType = ProviderType> {
   basePath: string
   /** These set of cookies should be serialized and sent to the client as `Set-Cookie` headers */
   resCookies: Cookie[]
+  sessionStore: SessionStore
 }

@@ -1,5 +1,4 @@
 import { UnknownAction } from "../errors.js"
-import { SessionStore } from "./utils/cookie.js"
 import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as actions from "./actions/index.js"
@@ -30,12 +29,6 @@ export async function AuthInternal(
     csrfDisabled,
   })
 
-  const sessionStore = new SessionStore(
-    internalConfig.cookies.sessionToken,
-    request.cookies,
-    internalConfig.logger
-  )
-
   if (method === "GET") {
     const render = renderPage({
       ...internalConfig,
@@ -47,7 +40,7 @@ export async function AuthInternal(
         return await actions.callback(
           request,
           internalConfig,
-          sessionStore,
+          internalConfig.sessionStore,
           internalConfig.resCookies
         )
       case "csrf":
@@ -63,7 +56,7 @@ export async function AuthInternal(
       case "session":
         return await actions.session(
           internalConfig,
-          sessionStore,
+          internalConfig.sessionStore,
           internalConfig.resCookies
         )
       case "signin":
@@ -76,7 +69,7 @@ export async function AuthInternal(
         return await actions.webAuthnOptions(
           request,
           internalConfig,
-          sessionStore,
+          internalConfig.sessionStore,
           internalConfig.resCookies
         )
       default:
@@ -91,14 +84,14 @@ export async function AuthInternal(
         return await actions.callback(
           request,
           internalConfig,
-          sessionStore,
+          internalConfig.sessionStore,
           internalConfig.resCookies
         )
       case "session":
         validateCSRF(action, csrfTokenVerified)
         return await actions.session(
           internalConfig,
-          sessionStore,
+          internalConfig.sessionStore,
           internalConfig.resCookies,
           true,
           request.body?.data
@@ -115,7 +108,7 @@ export async function AuthInternal(
         validateCSRF(action, csrfTokenVerified)
         return await actions.signOut(
           internalConfig.resCookies,
-          sessionStore,
+          internalConfig.sessionStore,
           internalConfig
         )
       default:
