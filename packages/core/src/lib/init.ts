@@ -9,10 +9,7 @@ import { setLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 import { skipCSRFCheck } from "./symbols.js"
 
-import type {
-  InternalConfig as InternalConfig,
-  RequestInternal,
-} from "../types.js"
+import type { InternalConfig, RequestInternal } from "../types.js"
 import type { AuthConfig } from "../index.js"
 
 export const defaultCallbacks: InternalConfig["callbacks"] = {
