@@ -7,27 +7,13 @@ import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
 import { setLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
+import { skipCSRFCheck } from "./symbols.js"
 
 import type {
   InternalConfig as InternalConfig,
   RequestInternal,
 } from "../types.js"
 import type { AuthConfig } from "../index.js"
-
-interface InitParams {
-  url: URL
-  config: AuthConfig
-  providerId?: string
-  action: InternalConfig["action"]
-  /** Callback URL value extracted from the incoming request. */
-  callbackUrl?: string
-  /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
-  csrfToken?: string
-  /** Is the incoming request a POST request? */
-  csrfDisabled: boolean
-  isPost: boolean
-  cookies: RequestInternal["cookies"]
-}
 
 export const defaultCallbacks: InternalConfig["callbacks"] = {
   signIn() {
@@ -53,20 +39,25 @@ export const defaultCallbacks: InternalConfig["callbacks"] = {
   },
 }
 
-/** Initialize all internal options and cookies. */
-export async function init({
-  config,
-  providerId,
-  action,
-  url,
-  cookies: reqCookies,
-  callbackUrl: reqCallbackUrl,
-  csrfToken: reqCsrfToken,
-  csrfDisabled,
-  isPost,
-}: InitParams): Promise<InternalConfig> {
-  const logger = setLogger(config)
-  const { providers, provider } = parseProviders({ url, providerId, config })
+/** Initialize all internal options. */
+export async function init(
+  request: RequestInternal,
+  userConfig: AuthConfig
+): Promise<InternalConfig> {
+  const logger = setLogger(userConfig)
+
+  const { providerId, action, url, cookies: reqCookies } = request
+  const isPost = request.method === "POST"
+  const csrfDisabled = userConfig.skipCSRFCheck === skipCSRFCheck
+
+  const reqCallbackUrl = request.body?.callbackUrl ?? request.query?.callbackUrl
+  const reqCsrfToken = request.body?.csrfToken
+
+  const { providers, provider } = parseProviders({
+    url,
+    providerId,
+    config: userConfig,
+  })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
@@ -86,8 +77,10 @@ export async function init({
   }
 
   const cookies = merge(
-    cookie.defaultCookies(config.useSecureCookies ?? url.protocol === "https:"),
-    config.cookies
+    cookie.defaultCookies(
+      userConfig.useSecureCookies ?? url.protocol === "https:"
+    ),
+    userConfig.cookies
   )
 
   // User provided options are overridden by other options,
@@ -102,7 +95,7 @@ export async function init({
       buttonText: "",
     },
     // Custom options override defaults
-    ...config,
+    ...userConfig,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
     url,
@@ -114,30 +107,30 @@ export async function init({
     // Session options
     session: {
       // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: config.adapter ? "database" : "jwt",
+      strategy: userConfig.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: () => crypto.randomUUID(),
-      ...config.session,
+      ...userConfig.session,
     },
     // JWT options
     jwt: {
-      secret: config.secret!, // Asserted in assert.ts
-      maxAge: config.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
+      secret: userConfig.secret!, // Asserted in assert.ts
+      maxAge: userConfig.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
       encode: jwt.encode,
       decode: jwt.decode,
-      ...config.jwt,
+      ...userConfig.jwt,
     },
     // Event messages
-    events: eventsErrorHandler(config.events ?? {}, logger),
-    adapter: adapterErrorHandler(config.adapter, logger),
+    events: eventsErrorHandler(userConfig.events ?? {}, logger),
+    adapter: adapterErrorHandler(userConfig.adapter, logger),
     // Callback functions
-    callbacks: { ...defaultCallbacks, ...config.callbacks },
+    callbacks: { ...defaultCallbacks, ...userConfig.callbacks },
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
     experimental: {
-      ...config.experimental,
+      ...userConfig.experimental,
     },
     resCookies: [],
     sessionStore: new cookie.SessionStore(

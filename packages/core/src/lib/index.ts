@@ -13,27 +13,17 @@ export async function AuthInternal(
   request: RequestInternal,
   userConfig: AuthConfig
 ): Promise<ResponseInternal> {
-  const { action, providerId, error, method } = request
+  const { action, error, method } = request
+
+  const internalConfig = await init(request, userConfig)
 
   const csrfDisabled = userConfig.skipCSRFCheck === skipCSRFCheck
 
-  const config = await init({
-    config: userConfig,
-    action,
-    providerId,
-    url: request.url,
-    callbackUrl: request.body?.callbackUrl ?? request.query?.callbackUrl,
-    csrfToken: request.body?.csrfToken,
-    cookies: request.cookies,
-    isPost: method === "POST",
-    csrfDisabled,
-  })
-
   if (method === "GET") {
-    const render = renderPage(config)
+    const render = renderPage(internalConfig)
     switch (action) {
       case "callback":
-        return await actions.callback(request, config)
+        return await actions.callback(request, internalConfig)
       case "csrf":
         return render.csrf(csrfDisabled)
       case "error":
@@ -41,7 +31,7 @@ export async function AuthInternal(
       case "providers":
         return render.providers()
       case "session":
-        return await actions.session(config)
+        return await actions.session(internalConfig)
       case "signin":
         return render.signin(request)
       case "signout":
@@ -49,26 +39,26 @@ export async function AuthInternal(
       case "verify-request":
         return render.verifyRequest()
       case "webauthn-options":
-        return await actions.webAuthnOptions(request, config)
+        return await actions.webAuthnOptions(request, internalConfig)
       default:
     }
   } else {
-    const { csrfTokenVerified } = config
+    const { csrfTokenVerified } = internalConfig
     switch (action) {
       case "callback":
-        if (config.provider.type === "credentials")
+        if (internalConfig.provider.type === "credentials")
           // Verified CSRF Token required for credentials providers only
           validateCSRF(action, csrfTokenVerified)
-        return await actions.callback(request, config)
+        return await actions.callback(request, internalConfig)
       case "session":
         validateCSRF(action, csrfTokenVerified)
-        return await actions.session(config, true, request.body?.data)
+        return await actions.session(internalConfig, true, request.body?.data)
       case "signin":
         validateCSRF(action, csrfTokenVerified)
-        return await actions.signIn(request, config)
+        return await actions.signIn(request, internalConfig)
       case "signout":
         validateCSRF(action, csrfTokenVerified)
-        return await actions.signOut(config)
+        return await actions.signOut(internalConfig)
       default:
     }
   }
