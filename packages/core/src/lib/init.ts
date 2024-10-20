@@ -80,7 +80,6 @@ export async function init(
   // User provided options are overridden by other options,
   // except for the options with special handling above
   const config: InternalConfig = {
-    debug: false,
     pages: {},
     theme: {
       colorScheme: "auto",

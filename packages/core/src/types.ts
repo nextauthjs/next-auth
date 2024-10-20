@@ -407,7 +407,6 @@ export interface InternalConfig<TProviderType = ProviderType> {
   csrfTokenVerified?: boolean
   secret: string | string[]
   theme: Theme
-  debug: boolean
   logger: LoggerInstance
   session: NonNullable<Required<AuthConfig["session"]>>
   pages: Partial<PagesOptions>
