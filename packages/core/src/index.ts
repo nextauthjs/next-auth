@@ -213,54 +213,76 @@ export async function Auth(
  *
  * @see [Initialization](https://authjs.dev/reference/core/types#authconfig)
  */
-export interface AuthConfig {
+export interface AuthConfig
+  extends IntegrationAuthConfig,
+    DeprecatedAuthConfig {
   /**
-   * List of authentication providers for signing in
+   * The only required option.
+   *
+   * The list of authentication providers for signing in
    * (e.g. Google, Facebook, Twitter, GitHub, Email, etc) in any order.
    * This can be one of the built-in providers or an object with a custom provider.
-   *
-   * @default []
    */
   providers: Provider[]
   /**
-   * A random string used to hash tokens, sign cookies and generate cryptographic keys.
+   * A cryptographically random string or list of strings that is used to hash tokens,
+   * seal cookies (JWT encryption by default) and generate other cryptographic keys.
    *
-   * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+   * You can generate a random string with our CLI: `npx auth secret` or use a tool like `openssl`.
+   *
+   * If you pass an array of secrets, we will iterate over them from first-to-last, trying to unseal JWT encrypted cookies.
    *
    * @note
-   * You can also pass an array of secrets, in which case the first secret that successfully
-   * decrypts the JWT will be used. This is useful for rotating secrets without invalidating existing sessions.
-   * The newer secret should be added to the start of the array, which will be used for all new sessions.
+   * This is useful for rotating secrets without invalidating existing sessions.
+   * The newer secret should be added to the start of the array. This will be used for all new sessions.
+   *
+   * We support inferring up to 4 secrets from the environment variables `AUTH_SECRET`, `AUTH_SECRET_1`, `AUTH_SECRET_2`, `AUTH_SECRET_3`,
+   * in which case, this option is optional.
    *
    */
   secret?: string | string[]
-  /**
-   * Configure your session like if you want to use JWT or a database,
-   * how long until an idle session expires, or to throttle write operations in case you are using a database.
-   */
+  /** Configure how you want to persist your session, how often it should be updated, or in what format it should be saved. */
   session?: {
     /**
      * Choose how you want to save the user session.
-     * The default is `"jwt"`, an encrypted JWT (JWE) in the session cookie.
      *
-     * If you use an `adapter` however, we default it to `"database"` instead.
-     * You can still force a JWT session by explicitly defining `"jwt"`.
+     * The default is `"cookie"` (Previously called "jwt", but same behavior). This saves the session information as an [encrypted JWT](https://datatracker.ietf.org/doc/html/rfc7516) in cookies.
      *
-     * When using `"database"`, the session cookie will only contain a `sessionToken` value,
-     * which is used to look up the session in the database.
+     * @note Even if the persisted information would exceed the 4kb cookie limit most browsers impose, Auth.js
+     * will chunk the cookie into multiple cookies to avoid this limitation.
      *
-     * [Documentation](https://authjs.dev/reference/core#authconfig#session) | [Adapter](https://authjs.dev/reference/core#authconfig#adapter) | [About JSON Web Tokens](https://authjs.dev/concepts/session-strategies#jwt-session)
+     * If you use an {@link AuthConfig.adapter} however, the default is set to `"database"` instead.
+     *
+     * Note, that you can still force a JWT session by explicitly defining `"jwt"`.
+     *
+     * Learn more about the different [session strategies](https://authjs.dev/concepts/session-strategies),
+     * their advantages and disadvantages.
      */
-    strategy?: "jwt" | "database"
+    strategy?: "cookie" | "database" | "jwt"
     /**
-     * Relative time from now in seconds when to expire the session
+     * Either a relative time in seconds, or an absolute `Date` when to expire the session.
+     *
+     * - If a relative time is set, the session expiry is updated when the session is accessed,
+     * but at most at the rate of `updateAge` value.
+     *
+     * @note This strikes a balance between updating the session too often
+     * or letting it expire mid-action while the user is interacting with the site.
+     *
+     * - If an absolute `Date` is set, the session will expire at that time, regardless of activity.
+     *
+     * @note Currently, there is no way to expire a session when the browser is closed, as most browsers
+     * keep running in the background and keep the session alive indefinitely, which would give a false sense of security,
+     * as the session would still be valid if the browser is reopened.
+     * For this reason, we recommend:
+     * 1. setting a short `maxAge`
+     * 2. using a database session strategy that you can revoke server-side
+     * 3. set an absolute `Date` for the session expiry
      *
      * @default 2592000 // 30 days
      */
-    maxAge?: number
+    maxAge?: number | Date
     /**
-     * How often the session should be updated in seconds.
-     * If set to `0`, session is updated every time.
+     * How often the session should be updated in seconds. If set to `0`, the session is updated every time.
      *
      * @default 86400 // 1 day
      */
@@ -270,20 +292,33 @@ export interface AuthConfig {
      * By default, a random UUID or string is generated depending on the Node.js version.
      * However, you can specify your own custom string (such as CUID) to be used.
      *
+     * @note this is not equivalent to the ID of the session in the database, to avoid leaking information,
+     * eg. if the database creates predictable IDs.
+     *
      * @default `randomUUID` or `randomBytes.toHex` depending on the Node.js version
      */
     generateSessionToken?: () => string
+    /**
+     * Seals the session payload in the cookie, to obscure the data from the client.
+     *
+     * By default, the cookie is sealed using an encrypted JWT. It uses the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
+     * {@link AuthConfig.session.secret} is used to derive a suitable encryption key.
+     */
+    seal?: () => Awaitable<string>
+    /**
+     * Unseals the session payload from the cookie, to read the data on the server.
+     *
+     * By default, the cookie is sealed using an encrypted JWT. It uses the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
+     * {@link AuthConfig.session.secret} is used to derive the encryption key.
+     *
+     * If you passed an array of secrets, we will iterate over them from first-to-last, trying to unseal the data.
+     */
+    unseal?: () => Awaitable<JWT | string>
   }
-  /**
-   * JSON Web Tokens are enabled by default if you have not specified an {@link AuthConfig.adapter}.
-   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
-   */
-  jwt?: Partial<JWTOptions>
   /**
    * Specify URLs to be used if you want to create custom sign in, sign out and error pages.
    * Pages specified will override the corresponding built-in page.
    *
-   * @default {}
    * @example
    *
    * ```ts
@@ -296,7 +331,7 @@ export interface AuthConfig {
    *   }
    * ```
    */
-  pages?: Partial<PagesOptions>
+  pages?: PagesOptions
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
    * Callbacks are *extremely powerful*, especially in scenarios involving JSON Web Tokens
@@ -530,16 +565,17 @@ export interface AuthConfig {
   /** You can use the adapter option to pass in your database adapter. */
   adapter?: Adapter
   /**
-   * Set debug to true to enable debug messages for authentication and database operations.
+   * Set the log level for the built-in logger.
    *
-   * - ⚠ If you added a custom {@link AuthConfig.logger}, this setting is ignored.
+   * If any of the log levels are overriden in {@link AuthConfig.logger},
+   * this setting is ignored for that level.
    *
-   * @default false
+   * @default "error"
    */
-  debug?: boolean
+  logLevel?: "verbose" | "warn" | "error" | "silent"
   /**
    * Override any of the logger levels (`undefined` levels will use the built-in logger),
-   * and intercept logs in NextAuth. You can use this option to send NextAuth logs to a third-party logging service.
+   * and intercept logs in Auth.js. You can use this option to send Auth.js logs to a third-party logging service.
    *
    * @example
    *
@@ -598,17 +634,21 @@ export interface AuthConfig {
    */
   cookies?: Partial<CookiesOptions>
   /**
-   * Auth.js relies on the incoming request's `host` header to function correctly. For this reason this property needs to be set to `true`.
+   * Auth.js relies on the incoming request's `host` header to function correctly. For this reason this property needs to be set to `true` explicitly.
    *
    * Make sure that your deployment platform sets the `host` header safely.
    *
-   * :::note
-   * Official Auth.js-based libraries will attempt to set this value automatically for some deployment platforms (eg.: Vercel) that are known to set the `host` header safely.
-   * :::
+   * @note
+   * Auth.js will attempt to set this value automatically for some cases, eg.: if it detects a trusted platform's environment variable,
+   * or if the host value can be inferred from the environment, instead of the incoming request.
+   *
+   * The following conditions will enable this automatically:
+   *
+   * ```ts
+   * AUTH_URL ?? AUTH_TRUST_HOST ?? VERCEL ?? CF_PAGES ?? NODE_ENV !== "production"
+   * ```
    */
   trustHost?: boolean
-  skipCSRFCheck?: typeof skipCSRFCheck
-  raw?: typeof raw
   /**
    * When set, during an OAuth sign-in flow,
    * the `redirect_uri` of the authorization request
@@ -641,25 +681,64 @@ export interface AuthConfig {
    * See also: [Guide: Securing a Preview Deployment](https://authjs.dev/getting-started/deployment#securing-a-preview-deployment)
    */
   redirectProxyUrl?: string
-
   /**
-   * Use this option to enable experimental features.
-   * When enabled, it will print a warning message to the console.
-   * @note Experimental features are not guaranteed to be stable and may change or be removed without notice. Please use with caution.
-   * @default {}
+   * Enable/disable experimental features.
+   *
+   * @note Experimental features are not guaranteed to be stable and may change or be removed without notice.
    */
-  experimental?: {
-    /**
-     * Enable WebAuthn support.
-     *
-     * @default false
-     */
-    enableWebAuthn?: boolean
-  }
+  experimental?: ExperimentalOptions
   /**
    * The base path of the Auth.js API endpoints.
    *
-   * @default "/api/auth" in "next-auth"; "/auth" with all other frameworks
+   * @default `"/api/auth"` in "next-auth" (for historical reasons only); `"/auth"` for all other frameworks
    */
   basePath?: string
+}
+
+interface ExperimentalOptions {
+  /**
+   * Enable [WebAuthn](https://authjs.dev/getting-started/authentication/webauthn) support.
+   *
+   * @default false
+   */
+  enableWebAuthn?: boolean
+}
+
+interface DeprecatedAuthConfig {
+  /**
+   * Set debug to true to enable debug messages for authentication and database operations.
+   *
+   * - ⚠ If you added a custom {@link AuthConfig.logger}, this setting is ignored.
+   *
+   * @default false
+   * @deprecated Use `logLevel: "verbose"` instead.
+   */
+  debug?: boolean
+  /**
+   * JSON Web Tokens are enabled by default if you have not specified an {@link AuthConfig.adapter}.
+   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
+   *
+   * @deprecated
+   */
+  jwt?: Partial<JWTOptions>
+}
+
+/**
+ * These options are meant for integrators who would like to use `@auth/core` as the base for their library.
+ *
+ * If you are a developer, you likely do not need these options.
+ */
+export interface IntegrationAuthConfig {
+  /**
+   * Auth.js ships its own CSRF protection. You can disable this, if your framework has built-in protection.
+   * Make sure your framework covers both server and client-side.
+   */
+  skipCSRFCheck?: typeof skipCSRFCheck
+  /**
+   * By default, the `@auth/core` package returns a `Response` object.
+   * It might be easier though to not needing to re-parse the response if you are creating
+   * a framework-specific package. This option will make the Auth.js core return
+   * the internal response object instead.
+   */
+  raw?: typeof raw
 }

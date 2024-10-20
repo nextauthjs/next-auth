@@ -222,8 +222,8 @@ export interface PagesOptions {
    *
    * @default "/signin"
    */
-  signIn: string
-  signOut: string
+  signIn?: string
+  signOut?: string
   /**
    * The path to the error page.
    *
@@ -232,10 +232,10 @@ export interface PagesOptions {
    *
    * @default "/error"
    */
-  error: string
-  verifyRequest: string
+  error?: string
+  verifyRequest?: string
   /** If set, new users will be directed here on first sign in */
-  newUser: string
+  newUser?: string
 }
 
 type ISODateString = string
