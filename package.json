@@ -18,6 +18,7 @@
     "dev:sveltekit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
     "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
     "dev:qwik": "turbo run dev --parallel --continue --filter=qwik-auth-app...",
+    "dev:astro": "turbo run dev --parallel --continue --filter=astro-auth-app...",
     "dev:docs": "turbo run dev --filter=docs",
     "email": "fake-smtp-server",
     "lint": "eslint --cache .",
