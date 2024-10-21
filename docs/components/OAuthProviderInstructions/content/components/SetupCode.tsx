@@ -60,10 +60,10 @@ export const { GET, POST } = handlers
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
-import { SvelteKitAuth } from "@auth/sveltekit"
-import ${providerName} from "@auth/sveltekit/providers/${providerId}"
+import { QwikAuth$ } from "@auth/qwik"
+import ${providerName} from "@auth/qwik/providers/${providerId}"
 
-export const { handle, signIn, signOut } = SvelteKitAuth({
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$({
   providers: [${providerName}],
 }) `),
           }}
