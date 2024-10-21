@@ -9,6 +9,15 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["*.js", "*.d.ts", "lib", "providers"]
+  "include": ["src/**/*", "scripts/**/*"],
+  "exclude": ["*.js", "*.d.ts", "lib", "providers"],
+  "ts-node": {
+    "transpileOnly": true,
+    "include": [],
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "allowImportingTsExtensions": true,
+      "noEmit": true
+    }
+  }
 }

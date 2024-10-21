@@ -246,7 +246,7 @@ importers:
         version: 0.4.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/widgets':
         specifier: ^0.2.289
-        version: 0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        version: 0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
       '@next/third-parties':
         specifier: ^14.2.15
         version: 14.2.15(next@14.2.15(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)
@@ -675,12 +675,6 @@ importers:
       oauth4webapi:
         specifier: ^3.1.1
         version: 3.1.1
-      preact:
-        specifier: 10.24.3
-        version: 10.24.3
-      preact-render-to-string:
-        specifier: 6.5.11
-        version: 6.5.11(preact@10.24.3)
     devDependencies:
       '@simplewebauthn/browser':
         specifier: 9.0.1
@@ -709,6 +703,15 @@ importers:
       postcss-nesting:
         specifier: ^12.1.5
         version: 12.1.5(postcss@8.4.19)
+      preact:
+        specifier: 10.24.3
+        version: 10.24.3
+      preact-render-to-string:
+        specifier: 6.5.11
+        version: 6.5.11(preact@10.24.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.3.106)(@types/node@18.11.10)(typescript@5.6.3)
       typedoc:
         specifier: ^0.25.12
         version: 0.25.13(typescript@5.6.3)
@@ -13741,7 +13744,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.6)':
+  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.2)':
     dependencies:
       '@zag-js/accordion': 0.20.0
       '@zag-js/anatomy': 0.20.0
@@ -13752,7 +13755,7 @@ snapshots:
       '@zag-js/color-utils': 0.20.0
       '@zag-js/combobox': 0.20.0
       '@zag-js/date-picker': 0.20.0
-      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.6)
+      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.2)
       '@zag-js/dialog': 0.20.0
       '@zag-js/editable': 0.20.0
       '@zag-js/hover-card': 0.20.0
@@ -13778,7 +13781,7 @@ snapshots:
     transitivePeerDependencies:
       - '@internationalized/date'
 
-  '@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@zag-js/accordion': 0.19.1
       '@zag-js/anatomy': 0.19.1
@@ -13790,7 +13793,7 @@ snapshots:
       '@zag-js/combobox': 0.19.1
       '@zag-js/core': 0.19.1
       '@zag-js/date-picker': 0.19.1
-      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.6)
+      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.2)
       '@zag-js/dialog': 0.19.1
       '@zag-js/editable': 0.19.1
       '@zag-js/hover-card': 0.19.1
@@ -16513,11 +16516,11 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.44
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
@@ -16529,9 +16532,9 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
     transitivePeerDependencies:
@@ -16539,10 +16542,10 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
       colorjs.io: 0.4.5
@@ -16557,14 +16560,14 @@ snapshots:
 
   '@inkeep/styled-system@0.0.46': {}
 
-  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
       '@apollo/client': 3.9.5(@types/react@18.2.78)(graphql-ws@5.14.3(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/color-mode': 0.0.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.46
       '@types/lodash.isequal': 4.5.8
@@ -19859,9 +19862,9 @@ snapshots:
     dependencies:
       '@internationalized/date': 3.5.2
 
-  '@zag-js/date-utils@0.19.1(@internationalized/date@3.5.6)':
+  '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.2)':
     dependencies:
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.5.2
 
   '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.6)':
     dependencies:
@@ -28722,6 +28725,26 @@ snapshots:
     dependencies:
       '@ts-morph/common': 0.20.0
       code-block-writer: 12.0.0
+
+  ts-node@10.9.2(@swc/core@1.3.106)(@types/node@18.11.10)(typescript@5.6.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.9
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 18.11.10
+      acorn: 8.12.1
+      acorn-walk: 8.3.2
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.6.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.3.106(@swc/helpers@0.5.13)
 
   ts-node@10.9.2(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3):
     dependencies:
