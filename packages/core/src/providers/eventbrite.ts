@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#f05537", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#f05537", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Eventbrite</b> integration.</span>
  * <a href="https://www.eventbrite.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/eventbrite.svg" height="48" width="48"/>
