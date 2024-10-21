@@ -40,17 +40,17 @@ const config: NextAuthPubkeyConfig = {
   baseUrl: process.env.NEXTAUTH_URL,
   secret: process.env.NEXTAUTH_SECRET,
   storage: {
-    async set({ k1, session }) {
-      // save lnurl auth session data based on k1 id
+    async set({ k1, data }) {
+      // save pubkey data based on k1 id
     },
     async get({ k1 }) {
-      // lookup and return lnurl auth session data based on k1 id
+      // lookup and return pubkey data based on k1 id
     },
-    async update({ k1, session }) {
-      // update lnurl auth session data based on k1 id
+    async update({ k1, data }) {
+      // update pubkey data based on k1 id
     },
     async delete({ k1 }) {
-      // delete lnurl auth session data based on k1 id
+      // delete pubkey data based on k1 id
     },
   },
   generateQr,
