@@ -63,7 +63,7 @@ export const { GET, POST } = handlers
 import { QwikAuth$ } from "@auth/qwik"
 import ${providerName} from "@auth/qwik/providers/${providerId}"
 
-export const { useSession, useSignIn, useSignOut } = QwikAuth$({
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$({
   providers: [${providerName}],
 }) `),
           }}
