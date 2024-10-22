@@ -34,6 +34,12 @@ export async function toInternalRequest(
     config.basePath ??= "/auth"
 
     const url = new URL(req.url)
+    if (config.trustHost && req.headers.get("host") && req.headers.get("host") !== url.host) {
+      url.host = req.headers.get("host") ?? url.host;
+      if (url.protocol === "https:") {
+        url.port = "443";
+      }
+    }
 
     const { action, providerId } = parseActionAndProviderId(
       url.pathname,
