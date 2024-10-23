@@ -95,7 +95,7 @@ export function proxyLogger(
 
     const clientLogger: Record<string, unknown> = {}
     for (const level in logger) {
-      clientLogger[level] = (code: string, metadata: Error) => {
+      clientLogger[level] = async (code: string, metadata: Error) => {
         _logger[level](code, metadata) // Logs to console
 
         if (level === "error") {
