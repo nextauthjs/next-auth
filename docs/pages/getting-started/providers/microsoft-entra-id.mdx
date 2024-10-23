@@ -71,7 +71,7 @@ const { handlers, auth, signIn, signOut } = NextAuth({
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
     }),
   ],
 })
@@ -90,7 +90,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
       Entra({
         clientId: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_ID,
         clientSecret: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-        tenantId: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+        issuer: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
       }),
     ],
   })
@@ -110,7 +110,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Entra({
       clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
     }),
   ],
 })
@@ -130,7 +130,7 @@ app.use(
       Entra({
         clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
         clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-        tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+        issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
       }),
     ],
   })
