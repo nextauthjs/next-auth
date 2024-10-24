@@ -13,10 +13,11 @@ import type {
   AuthAction,
   NextAuthRequest,
   NextAuthResponse,
+  Awaitable,
 } from "../core/types"
 
 interface RouteHandlerContext {
-  params: { nextauth: string[] }
+  params: Awaitable<{ nextauth: string[] }>
 }
 
 async function NextAuthApiHandler(
@@ -74,7 +75,7 @@ async function NextAuthRouteHandler(
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { headers, cookies } = require("next/headers")
-  const nextauth = context.params?.nextauth
+  const nextauth = (await context.params)?.nextauth
   const query = Object.fromEntries(req.nextUrl.searchParams)
   const body = await getBody(req)
   const internalResponse = await AuthHandler({
@@ -82,11 +83,9 @@ async function NextAuthRouteHandler(
       body,
       query,
       cookies: Object.fromEntries(
-        cookies()
-          .getAll()
-          .map((c) => [c.name, c.value])
+        (await cookies()).getAll().map((c) => [c.name, c.value])
       ),
-      headers: Object.fromEntries(headers() as Headers),
+      headers: Object.fromEntries((await headers()) as Headers),
       method: req.method,
       action: nextauth?.[0] as AuthAction,
       providerId: nextauth?.[1],
@@ -176,7 +175,7 @@ export async function getServerSession<
   O extends GetServerSessionOptions,
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
-    : Session
+    : Session,
 >(...args: GetServerSessionParams<O>): Promise<R | null> {
   const isRSC = args.length === 0 || args.length === 1
 
@@ -187,11 +186,9 @@ export async function getServerSession<
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { headers, cookies } = require("next/headers")
     req = {
-      headers: Object.fromEntries(headers() as Headers),
+      headers: Object.fromEntries((await headers()) as Headers),
       cookies: Object.fromEntries(
-        cookies()
-          .getAll()
-          .map((c) => [c.name, c.value])
+        (await cookies()).getAll().map((c) => [c.name, c.value])
       ),
     }
     res = { getHeader() {}, setCookie() {}, setHeader() {} }
@@ -236,7 +233,7 @@ export async function unstable_getServerSession<
   O extends GetServerSessionOptions,
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
-    : Session
+    : Session,
 >(...args: GetServerSessionParams<O>): Promise<R | null> {
   if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
