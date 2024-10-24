@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server"
  * second argument.
  */
 export type AppRouteHandlerFnContext = {
-  params?: Record<string, string | string[]>
+  params?: Promise<Record<string, string | string[]>>
 }
 /**
  * Handler function for app routes. If a non-Response value is returned, an error
