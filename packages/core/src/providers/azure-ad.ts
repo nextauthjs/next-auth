@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Azure AD</b> integration.</span>
  * <a href="https://learn.microsoft.com/en-us/azure/active-directory">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure-ad.svg" height="48" width="48"/>

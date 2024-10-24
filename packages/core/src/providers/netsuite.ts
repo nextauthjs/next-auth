@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>NetSuite</b> integration.</span>
  * <a href="https://system.netsuite.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/netsuite.svg" height="48" width="48"/>
