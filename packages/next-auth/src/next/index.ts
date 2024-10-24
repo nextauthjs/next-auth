@@ -27,7 +27,10 @@ async function NextAuthApiHandler(
 ) {
   const { nextauth, ...query } = req.query
 
-  options.secret ??= options.jwt?.secret ?? process.env.NEXTAUTH_SECRET
+  options.secret ??=
+    options.jwt?.secret ??
+    process.env.NEXTAUTH_SECRET ??
+    process.env.AUTH_SECRET
 
   const handler = await AuthHandler({
     req: {
@@ -71,7 +74,7 @@ async function NextAuthRouteHandler(
   context: RouteHandlerContext,
   options: AuthOptions
 ) {
-  options.secret ??= process.env.NEXTAUTH_SECRET
+  options.secret ??= process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { headers, cookies } = require("next/headers")
@@ -175,7 +178,7 @@ export async function getServerSession<
   O extends GetServerSessionOptions,
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
-    : Session,
+    : Session
 >(...args: GetServerSessionParams<O>): Promise<R | null> {
   const isRSC = args.length === 0 || args.length === 1
 
@@ -198,7 +201,7 @@ export async function getServerSession<
     options = Object.assign({}, args[2], { providers: [] })
   }
 
-  options.secret ??= process.env.NEXTAUTH_SECRET
+  options.secret ??= process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
 
   const session = await AuthHandler<Session | {} | string>({
     options,
@@ -233,7 +236,7 @@ export async function unstable_getServerSession<
   O extends GetServerSessionOptions,
   R = O["callbacks"] extends { session: (...args: any[]) => infer U }
     ? U
-    : Session,
+    : Session
 >(...args: GetServerSessionParams<O>): Promise<R | null> {
   if (!deprecatedWarningShown && process.env.NODE_ENV !== "production") {
     console.warn(
@@ -250,6 +253,8 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NEXTAUTH_URL?: string
+      NEXTAUTH_SECRET?: string
+      AUTH_SECRET?: string
       VERCEL?: "1"
     }
   }

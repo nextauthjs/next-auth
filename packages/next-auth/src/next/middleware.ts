@@ -118,7 +118,8 @@ async function handleMiddleware(
     return
   }
 
-  const secret = options?.secret ?? process.env.NEXTAUTH_SECRET
+  const secret =
+    options?.secret ?? process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
   if (!secret) {
     console.error(
       `[next-auth][error][NO_SECRET]`,
