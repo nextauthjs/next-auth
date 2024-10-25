@@ -1,6 +1,6 @@
 {
   "name": "@auth/upstash-redis-adapter",
-  "version": "2.7.0",
+  "version": "2.7.2",
   "description": "Upstash adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",

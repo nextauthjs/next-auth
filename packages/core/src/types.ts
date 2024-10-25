@@ -51,7 +51,7 @@
  * @module types
  */
 
-import type { CookieSerializeOptions } from "cookie"
+import type { SerializeOptions } from "cookie"
 import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
@@ -183,7 +183,7 @@ export interface Profile {
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookieOption {
   name: string
-  options: CookieSerializeOptions
+  options: SerializeOptions
 }
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
