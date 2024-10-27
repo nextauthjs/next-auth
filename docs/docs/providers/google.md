@@ -28,15 +28,19 @@ You can override any of the options to suit your own use case.
 
 ```js
 import GoogleProvider from "next-auth/providers/google";
-...
-providers: [
-  GoogleProvider({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET
-  })
-]
-...
-```
+import NextAuth, { NextAuthOptions } from 'next-auth'
+interface ProcessEnv {
+    GOOGLE_CLIENT_ID: string
+    GOOGLE_CLIENT_SECRET: string
+  }
+   ...
+   providers: [
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      })
+    ],
+  ...
 
 :::warning
 Google only provides Refresh Token to an application the first time a user signs in.
@@ -49,26 +53,23 @@ Alternatively, you can also pass options in the `params` object of `authorizatio
 If you need access to the RefreshToken or AccessToken for a Google account and you are not using a database to persist user accounts, this may be something you need to do.
 
 ```js
-const options = {
+   const authOptions: NextAuthOptions = {
   ...
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code"
+    providers: [
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        authorization: {
+          params: {
+            prompt: "consent",
+            access_type: "offline",
+            response_type: "code"
+          }
         }
-      }
-    })
-  ],
-  ...
+      })
+    ],
 }
 ```
-
-:::
 
 :::tip
 Google also returns a `email_verified` boolean property in the OAuth profile.
