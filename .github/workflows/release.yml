@@ -2,7 +2,13 @@ name: Release
 
 on:
   push:
-    branches:
+   
+    
+    
+    
+    
+    
+  branches:
       - main
       - beta
       - next
