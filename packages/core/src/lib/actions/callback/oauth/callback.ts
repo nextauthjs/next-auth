@@ -17,7 +17,8 @@ import type {
 import { type OAuthConfigInternal } from "../../../../providers/index.js"
 import type { Cookie } from "../../../utils/cookie.js"
 import { isOIDCProvider } from "../../../utils/providers.js"
-import { fetchOpt } from "../../../utils/custom-fetch.js"
+import { conformInternal, customFetch } from "../../../symbols.js"
+import { decodeJwt } from "jose"
 
 function formUrlEncode(token: string) {
   return encodeURIComponent(token).replace(/%20/g, "+")
@@ -61,27 +62,21 @@ export async function handleOAuth(
     // We assume that issuer is always defined as this has been asserted earlier
 
     const issuer = new URL(provider.issuer!)
-    // TODO: move away from allowing insecure HTTP requests
     const discoveryResponse = await o.discoveryRequest(issuer, {
-      ...fetchOpt(provider),
       [o.allowInsecureRequests]: true,
+      [o.customFetch]: provider[customFetch],
     })
-    const discoveredAs = await o.processDiscoveryResponse(
-      issuer,
-      discoveryResponse
-    )
+    as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
-    if (!discoveredAs.token_endpoint)
+    if (!as.token_endpoint)
       throw new TypeError(
         "TODO: Authorization server did not provide a token endpoint."
       )
 
-    if (!discoveredAs.userinfo_endpoint)
+    if (!as.userinfo_endpoint)
       throw new TypeError(
         "TODO: Authorization server did not provide a userinfo endpoint."
       )
-
-    as = discoveredAs
   } else {
     as = {
       issuer: provider.issuer ?? "https://authjs.dev", // TODO: review fallback issuer
@@ -122,6 +117,9 @@ export async function handleOAuth(
           payload.aud = [as.issuer, as.token_endpoint!]
         },
       })
+      break
+    case "none":
+      clientAuth = o.None()
       break
     default:
       throw new Error("unsupported client authentication method")
@@ -172,7 +170,7 @@ export async function handleOAuth(
         if (!provider.checks.includes("pkce")) {
           args[1].body.delete("code_verifier")
         }
-        return fetchOpt(provider)[o.customFetch](...args)
+        return (provider[customFetch] ?? fetch)(...args)
       },
     }
   )
@@ -185,22 +183,58 @@ export async function handleOAuth(
 
   let profile: Profile = {}
 
-  const isOidc = isOIDCProvider(provider)
+  const requireIdToken = isOIDCProvider(provider)
+
+  if (provider[conformInternal]) {
+    switch (provider.id) {
+      case "microsoft-entra-id":
+      case "azure-ad": {
+        /**
+         * These providers need the authorization server metadata to be re-processed
+         * based on the `id_token`'s `tid` claim
+         * @see https://github.com/MicrosoftDocs/azure-docs/issues/113944
+         */
+        const { tid } = decodeJwt(
+          (await codeGrantResponse.clone().json()).id_token
+        )
+        if (typeof tid === "string") {
+          const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
+          const tenantId = as.issuer?.match(tenantRe)?.[1] ?? "common"
+          const issuer = new URL(as.issuer.replace(tenantId, tid))
+          const discoveryResponse = await o.discoveryRequest(issuer, {
+            [o.customFetch]: provider[customFetch],
+          })
+          as = await o.processDiscoveryResponse(issuer, discoveryResponse)
+        }
+        break
+      }
+      default:
+        break
+    }
+  }
   const processedCodeResponse = await o.processAuthorizationCodeResponse(
     as,
     client,
     codeGrantResponse,
     {
       expectedNonce: await checks.nonce.use(cookies, resCookies, options),
-      requireIdToken: isOidc,
+      requireIdToken,
     }
   )
 
   const tokens: TokenSet & Pick<Account, "expires_at"> = processedCodeResponse
 
-  if (isOidc) {
+  if (requireIdToken) {
     const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)!
     profile = idTokenClaims
+
+    // Apple sends some of the user information in a `user` parameter as a stringified JSON.
+    // It also only does so the first time the user consents to share their information.
+    if (provider[conformInternal] && provider.id === "apple") {
+      try {
+        profile.user = JSON.parse(params?.user)
+      } catch {}
+    }
 
     if (provider.idToken === false) {
       const userinfoResponse = await o.userInfoRequest(
@@ -208,7 +242,7 @@ export async function handleOAuth(
         client,
         processedCodeResponse.access_token,
         {
-          ...fetchOpt(provider),
+          [o.customFetch]: provider[customFetch],
           // TODO: move away from allowing insecure HTTP requests
           [o.allowInsecureRequests]: true,
         }
@@ -230,7 +264,7 @@ export async function handleOAuth(
         as,
         client,
         processedCodeResponse.access_token,
-        fetchOpt(provider)
+        { [o.customFetch]: provider[customFetch] }
       )
       profile = await userinfoResponse.json()
     } else {
@@ -267,6 +301,9 @@ export async function getUserAndAccount(
     const userFromProfile = await provider.profile(OAuthProfile, tokens)
     const user = {
       ...userFromProfile,
+      // The user's id is intentionally not set based on the profile id, as
+      // the user should remain independent of the provider and the profile id
+      // is saved on the Account already, as `providerAccountId`.
       id: crypto.randomUUID(),
       email: userFromProfile.email?.toLowerCase(),
     } satisfies User
