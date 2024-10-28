@@ -18,18 +18,6 @@ export async function getRequestFromEvent(event: H3Event) {
   })
 }
 
-export function checkOrigin(
-  request: Request,
-  runtimeConfig: Partial<RuntimeConfig>
-) {
-  if (process.env.NODE_ENV === "development") return
-  if (request.method !== "POST") return // Only check post requests
-
-  const requestOrigin = request.headers.get("Origin")
-  const serverOrigin = runtimeConfig.authJs?.baseUrl
-  if (serverOrigin !== requestOrigin) throw new Error("CSRF protected")
-}
-
 export function getBasePath(req: Request) {
   return req.url.replace(/\/$/, "")
 }

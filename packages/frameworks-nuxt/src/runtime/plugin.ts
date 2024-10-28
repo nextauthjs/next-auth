@@ -18,7 +18,7 @@ export default defineNuxtPlugin({
       })
       const hasSession = data && Object.keys(data).length
       if (hasSession) updateSession(data)
-      else removeSession
+      else removeSession()
     }
   },
 })
