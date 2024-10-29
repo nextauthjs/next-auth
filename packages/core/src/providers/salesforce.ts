@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#00a1e0", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#00a1e0", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Salesforce</b> integration.</span>
  * <a href="https://www.salesforce.com/ap/?ir=1">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/salesforce.svg" height="48" />
