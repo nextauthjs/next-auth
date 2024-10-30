@@ -1,5 +1,5 @@
 /**
- * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+ * <div class="provider" style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
  * <span style={{fontSize: "1.35rem" }}>
  *  Built-in sign in with <b>Auth0</b> integration.
  * </span>
