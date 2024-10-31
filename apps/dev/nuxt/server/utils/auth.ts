@@ -1,9 +1,8 @@
-import { NuxtAuthHandler, getServerSession } from "#auth"
+import { NuxtAuth } from "#auth"
 import type { AuthConfig } from "@auth/nuxt"
 import Credentials from "@auth/nuxt/providers/credentials"
 import GitHub from "@auth/nuxt/providers/github"
 import Discord from "@auth/nuxt/providers/discord"
-import { getServers } from "dns"
 import type { H3Event } from "h3"
 
 const runtimeConfig = useRuntimeConfig()
@@ -22,7 +21,7 @@ export const authConfig: AuthConfig = {
         return {
           name: "Fill Murray",
           email: "bill@fillmurray.com",
-          image: "https://source.boringavatars.com/marble/120",
+          image: "https://api.dicebear.com/9.x/thumbs/svg?seed=Eden",
           id: "1",
         }
       },
@@ -30,11 +29,12 @@ export const authConfig: AuthConfig = {
   ],
 }
 
+const { handlers, auth: _auth } = NuxtAuth(authConfig)
+
 export function authHandler() {
-  return NuxtAuthHandler(authConfig)
+  return handlers
 }
 
 export async function auth(event: H3Event) {
-  const getSession = getServerSession(authConfig)
-  return await getSession(event)
+  return await _auth(event)
 }

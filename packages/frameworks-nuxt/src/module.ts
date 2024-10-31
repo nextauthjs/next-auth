@@ -238,18 +238,15 @@ export default defineNuxtModule<NuxtAuthConfig>({
       getContents: () =>
         [
           "declare module '#auth' {",
-          `  const NuxtAuthHandler: typeof import('${resolve(
-            "./runtime/lib/server"
-          )}').NuxtAuthHandler`,
           `  const signIn: typeof import('${resolve(
             "./runtime/lib/client"
           )}').signIn`,
           `  const signOut: typeof import('${resolve(
             "./runtime/lib/client"
           )}').signOut`,
-          `  const getServerSession: typeof import('${resolve(
+          `  const NuxtAuth: typeof import('${resolve(
             "./runtime/lib/server"
-          )}').getServerSession`,
+          )}').NuxtAuth`,
           "}",
         ].join("\n"),
     })

@@ -1,27 +1,59 @@
 import { Auth, setEnvDefaults } from "@auth/core"
 import type { AuthConfig } from "@auth/core"
-import { getRequestFromEvent, getBasePath } from "../utils"
+import { getRequestFromEvent } from "../utils"
 import { defineEventHandler } from "h3"
-import type { H3Event } from "h3"
+import type { H3Event, EventHandler, EventHandlerRequest } from "h3"
 import type { Session } from "@auth/core/types"
 
-/**
- * Handle auth calls in Nuxt project.
- *
- *  @example
- * ```ts title="server/routes/auth/[...].ts"
- * import { NuxtAuthHandler } from "#auth"
- * import GitHub from "@auth/nuxt/providers/github"
- *
- * export default defineEventHandler(async (event) => {
- *    return NuxtAuthHandler({ providers: [GitHub] })
- * })
- * ```
- *
- * @param config AuthConfig
- * @returns EventHandler
- */
-export function NuxtAuthHandler(config: AuthConfig) {
+export interface NuxtAuthResult {
+  /**
+   * Handle auth calls in Nuxt project.
+   *
+   * @param config AuthConfig
+   * @returns EventHandler
+   *
+   *  @example
+   * ```ts title="server/utils/auth.ts"
+   * import { NuxtAuth } from "#auth"
+   * import GitHub from "@auth/nuxt/providers/github"
+   *
+   * const { handlers, auth: _auth } = NuxtAuth(providers: [GitHub])
+   *
+   * export function authHandler() {
+   *   return handlers
+   *}
+   * ```
+   *
+   * ```ts title="server/routes/auth/[...].ts"
+   * export default authHandler()
+   * ```
+   *
+   */
+  handlers: EventHandler<EventHandlerRequest, Promise<Response | undefined>>
+
+  /**
+   * Gets and returns the session to be used in server side, like in API routes.
+   *
+   * @example
+   * ```ts title="server/api/protected.get.ts"
+   * export default defineEventHandler(async (event) => {
+   *   const session = await auth(event)
+   *
+   *  if (!session) return null
+   *
+   *  return {
+   *    message: "Protected data",
+   *  }
+   *})
+   * ```
+   *
+   * @param event H3Event
+   * @returns Session
+   */
+  auth: (event: H3Event) => Promise<Session | null>
+}
+
+function NuxtAuthHandler(config: AuthConfig) {
   return defineEventHandler(async (event) => {
     /**
      * If the request is a prerender request, do nothing.
@@ -41,7 +73,7 @@ export function NuxtAuthHandler(config: AuthConfig) {
 
     const request = await getRequestFromEvent(event)
     config.trustHost ??= true
-    config.basePath ??= getBasePath(request)
+    config.basePath ??= "/auth"
 
     return await Auth(request, config)
   })
@@ -63,26 +95,35 @@ async function getServerSessionInner(
   return data
 }
 
-export function getServerSession(config: AuthConfig) {
-  /**
-   * Gets and returns the session to be used in server side, like in API routes.
-   *
-   * @example
-   * ```ts title="server/api/protected.get.ts"
-   * const { getServerSession } = auth()
-   *
-   * export default defineEventHandler(async (event) => {
-   *  const session = await getServerSession(event)
-   *  if (!session) return null
-   *
-   *  return {
-   *    message: "Protected data",
-   *  }
-   * })
-   * ```
-   *
-   * @param event H3Event
-   * @returns Session
-   */
+function auth(config: AuthConfig) {
   return async (event: H3Event) => await getServerSessionInner(event, config)
+}
+
+/**
+ *  Initialize NuxtAuth.js.
+ *
+ * @param config AuthConfig
+ *
+ *  @example
+ * ```ts title="server/utils/auth.ts"
+ * import { NuxtAuth } from "#auth"
+ * import GitHub from "@auth/nuxt/providers/github"
+ *
+ * const { handlers, auth: _auth } = NuxtAuth(providers: [GitHub])
+ *
+ * export function authHandler() {
+ *   return handlers
+ *}
+ *
+ * export async function auth(event: H3Event) {
+ *   return await _auth(event)
+ *}
+ * ```
+ *
+ */
+export function NuxtAuth(config: AuthConfig): NuxtAuthResult {
+  return {
+    handlers: NuxtAuthHandler(config),
+    auth: auth(config),
+  }
 }
