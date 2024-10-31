@@ -7,7 +7,7 @@ import type { Awaitable } from "@auth/core/types"
  * second argument.
  */
 export type AppRouteHandlerFnContext = {
-  params?: Awaitable<Record<string, string | string[]>>
+  params: Awaitable<Record<string, string | string[]>>
 }
 /**
  * Handler function for app routes. If a non-Response value is returned, an error
