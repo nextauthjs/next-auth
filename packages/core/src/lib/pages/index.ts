@@ -144,7 +144,11 @@ export default function renderPage(params: RenderPageParams) {
     },
     verifyRequest(props?: any) {
       if (pages?.verifyRequest)
-        return { redirect: pages.verifyRequest, cookies }
+        return {
+          redirect: `${pages.verifyRequest}${url?.search ? url?.search : ""}`,
+          cookies,
+        }
+      //return { redirect: pages.verifyRequest + (url?.search? url?.search : ''), cookies }
       return send({
         cookies,
         theme,
