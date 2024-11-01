@@ -72,7 +72,7 @@ export default function Dropbox(
     authorization: {
       url: "https://www.dropbox.com/oauth2/authorize",
       params: {
-        access_type: "offline",
+        token_access_type: "offline",
         scope: "account_info.read",
       },
     },
