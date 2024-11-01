@@ -14,25 +14,33 @@ import { Code } from "@/components/Code"
 ### Installation
 
 ```bash npm2yarn
-npm install next-auth @auth/d1-adapter
+npm install @auth/d1-adapter
 ```
 
-### Environment Variables
+### Bindings
 
-Environment variables in Cloudflare's platform are set either via a [`wrangler.toml`](https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables) configuration file, or in the [admin dashboard](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/environment-variables).
+Bindings allow your Cloudflare Workers to interact with resources on the Cloudflare platform. To use this adapter, you must define the D1 binding in [`wrangler.toml`](https://developers.cloudflare.com/workers/wrangler/configuration/#d1-databases).
+
+Follow [these docs](https://developers.cloudflare.com/d1/get-started/#4-bind-your-worker-to-your-d1-database) for instructions on how to do so.
 
 ### Configuration
 
 <Code>
 <Code.Next>
 
+Once you have [set up next-on-pages](https://developers.cloudflare.com/pages/framework-guides/nextjs/ssr/get-started/), you can access bindings via `getRequestContext`.
+
+
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { D1Adapter } from "@auth/d1-adapter"
+import { getRequestContext } from "@cloudflare/next-on-pages"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [],
-  adapter: D1Adapter(env.db),
+export const { handlers, auth, signIn, signOut } = NextAuth(() => {
+  return {
+    providers: [],
+    adapter: D1Adapter(getRequestContext().env.db),
+  }
 })
 ```
 
@@ -44,9 +52,9 @@ import { QwikAuth$ } from "@auth/qwik"
 import { D1Adapter } from "@auth/d1-adapter"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
-  () => ({
+  (event) => ({
     providers: [],
-    adapter: D1Adapter(env.db),
+    adapter: D1Adapter(event.platform.env.db),
   })
 )
 ```
@@ -58,30 +66,18 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { D1Adapter } from "@auth/d1-adapter"
 
-export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [],
-  adapter: D1Adapter(env.db),
+export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
+  return {
+    providers: [],
+    adapter: D1Adapter(event.platform.env.db),
+  }
 })
 ```
 
 </Code.Svelte>
 <Code.Express>
 
-```ts filename="./src/routes/auth.route.ts"
-import { ExpressAuth } from "@auth/express"
-import { D1Adapter } from "@auth/d1-adapter"
-
-const app = express()
-
-app.set("trust proxy", true)
-app.use(
-  "/auth/*",
-  ExpressAuth({
-    providers: [],
-    adapter: D1Adapter(env.db),
-  })
-)
-```
+Cloudflare Workers do not support the full Node.js API, and libraries that depend on Node.js modules (like express) may not work directly.
 
 </Code.Express>
 </Code>
