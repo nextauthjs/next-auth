@@ -282,8 +282,8 @@ declare module "@nuxt/schema" {
   }
 }
 
-declare module "#app" {
-  interface PageMeta {
+declare module "vue-router" {
+  interface RouteMeta {
     auth?: {
       unauthenticatedRedirectTo?: string
       authenticatedRedirectTo?: string

@@ -3,9 +3,10 @@ import {
   createError,
   defineNuxtRouteMiddleware,
 } from "#imports"
+import type { RouteLocationNormalized } from "vue-router"
 import { useAuth } from "../composables/useAuth"
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware((to: RouteLocationNormalized) => {
   const { auth } = useAuth()
   if (auth.value.loggedIn) {
     if (import.meta.server) {

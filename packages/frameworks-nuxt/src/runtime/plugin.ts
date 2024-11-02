@@ -1,6 +1,5 @@
 import type { Session } from "@auth/core/types"
 import { useAuth } from "./composables/useAuth"
-import { defineNuxtPlugin, useRequestHeaders } from "#app"
 
 export default defineNuxtPlugin({
   name: "@auth/nuxt",
