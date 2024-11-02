@@ -17,15 +17,15 @@
  *
  * Add `@auth/nuxt` to the `modules` section of `nuxt.config.ts`.
  * You can also set the `basePath` option to change the default path for the authentication routes.
- * Use runtime configuration to set auth related secrets. These will be automatically repalced by the runtime values,
- * if your environemnt has variables like NUXT_AUTH_SECRET, NUXT_AUTH_GITHUB_CLIENT_ID, NUXT_AUTH_GITHUB_CLIENT_SECRET.
+ * Use runtime configuration to set auth related secrets. These will be automatically replaced by the runtime values,
+ * if your environment has variables like `NUXT_AUTH_SECRET`, `NUXT_AUTH_GITHUB_CLIENT_ID`, `NUXT_AUTH_GITHUB_CLIENT_SECRET`.
  *
  * ```ts title="nuxt.config.ts"
  * export default defineNuxtConfig({
  *  modules: ["@auth/nuxt"],
  *
  *  // module options
- *  authJs: {
+ *  auth: {
  *    basePath: "/auth",
  *  },
  *
@@ -43,24 +43,36 @@
  *
  * ## Provider Configuration
  *
- * To configure the providers, you need to set up the handler in a file in the `server/routes/auth` directory.
+ * To configure the providers, you need to set up the handler in a file in the `server/utils/auth.ts` (this will provide auto-import on the server side) and `server/routes/auth/[...].ts` files.
  * Use runtime configuration to set the client ID and client secret, and also the AuthJS secret.
  *
- * ```ts title="src/server/routes/auth/[...].ts"
+ * ```ts title="src/server/utils/auth.ts"
  *
- * import { NuxtAuthHandler } from "#auth"
+ * import { NuxtAuth } from "#auth"
+ * import type { AuthConfig } from "@auth/nuxt"
+ * import type { H3Event } from "h3"
  * import GitHub from "@auth/nuxt/providers/github"
  *
  * const runtimeConfig = useRuntimeConfig()
- * const authConfig: NuxtAuthConfig = {
+ * export const authConfig: AuthConfig = {
+ *     ...runtimeConfig.auth,
  *     secret: runtimeConfig.auth.secret,
- *     GitHub({
- *      clientId: runtimeConfig.auth.github.clientId,
- *      clientSecret: runtimeConfig.auth.github.clientSecret,
- *  }),
+ *     providers: [GitHub(runtimeConfig.auth.github)],
  * }
  *
- * export default NuxtAuthHandler(authConfig)
+ * const { handlers, auth: _auth } = NuxtAuth(authConfig)
+ * export function authHandler() {
+ *   return handlers
+ * }
+ *
+ * // You can use this for getting session on the server side
+ * export async function auth(event: H3Event) {
+ *   return await _auth(event)
+ * }
+ * ```
+ * ```ts title="src/server/routes/auth/[...].ts"
+ * // no need even to import the authHandler, it will be auto-imported from the src/server/utils/auth.ts
+ * export default authHandler()
  * ```
  * ## Signing in and signing out
  *
@@ -68,14 +80,13 @@
  *
  * ```ts title="src/pages/index.vue"
  *    <script setup lang="ts">
- *    const { signIn, signOut, session, user, status } = useAuth()
+ *    const { signIn, signOut, session, auth } = useAuth()
  *    </script>
  *
  *    <template>
  *      <div>
- *        <div v-if="status === 'loading'">Loading...</div>
- *        <div v-else-if="status === 'authenticated'">
- *          <p>Welcome, {{ user?.name }}</p>
+ *        <div v-if="auth.loggedIn">
+ *          <p>Welcome, {{ auth?.user?.name }}</p>
  *          <button @click="signOut">Sign out</button>
  *        </div>
  *        <div v-else>
@@ -96,7 +107,7 @@
  * There are 2 main scenarios:
  *
  * ### 1. No enforced authentication in pages, opt-in for authentication at certain pages
- *  - Use the `auth-logged-in` middelware with `definePageMeta()` at a given page:
+ *  - Use the `auth-logged-in` middelware with `definePageMeta()` at a given to-be-protected page:
  *    Optionally set a redirect location for unauthenticated users.
  *    @example
  *   ```ts title="src/pages/protected.vue"
@@ -110,38 +121,30 @@
  *
  * ### 2. Require authentication for all pages, opt-out from authentication at certain pages
  *  - Load `auth-logged-in` middleware to all to-be-protected pages in `nuxt.config.ts` using 'pages-extend' hook.
- *    You can use arbitrary logic to determine which pages should be exempt from the middleware.
- *    ```ts title="nuxt.config.ts"
- *    hooks: {
- *      "pages:extend"(pages) {
- *        function setMiddleware(pages: NuxtPage[]) {
- *          for (const page of pages) {
- *            // Add middleware to all pages except the root and guest pages
- *            if (!["/", "/guest"].includes(page.path)) {
- *              page.meta ||= {}
- *              page.meta.middleware = page.meta.middleware ?? []
- *              page.meta?.middleware.push("auth-logged-in")
- *            }
- *             if (page.children) {
- *              setMiddleware(page.children)
- *            }
- *          }
- *        }
- *         setMiddleware(pages)
- *      },
- *    },
- *   ```
+ *    You can use arbitrary logic to determine which pages should be exempt from the middleware (in the below example the `/` and `/guest` routes are unprotected).
  *
- *  - Use the `auth-logged-out` middelware with `definePageMeta()` at a given page:
- *    Optionally set a redirect location for authenticated users.
- *    ```ts title="src/pages/guest.ts
- *       definePageMeta({
- *         middleware: ["auth-logged-out"],
- *         auth: {
- *           authenticatedRedirectTo: "/protected",
- *         },
- *       })
- *    ```
+ *   @example
+ *    ```ts title="middleware/auth.global.ts"
+ * export default defineNuxtRouteMiddleware((to, from) => {
+ *  // root and guest pages are always accessible
+ *  if (["/", "/guest"].includes(to.path)) {
+ *    return
+ *  }
+ *
+ *  // All other pages require authentication
+ *  const { auth } = useAuth()
+ *
+ *  if (!auth.value.loggedIn) {
+ *    if (import.meta.server) {
+ *      return createError({
+ *        statusCode: 401,
+ *        message: "You must be logged in to access this page",
+ *      })
+ *    }
+ *    return abortNavigation()
+ *  }
+ *})
+ *   ```
  *
  * @module @auth/nuxt
  */
