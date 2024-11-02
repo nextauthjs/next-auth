@@ -65,6 +65,7 @@
     "./providers/*": {
       "types": "./dist/providers/*.d.ts",
       "import": "./dist/providers/*.js"
-    }
+    },
+    "./nuxt": "./src/module.ts"
   }
 }
