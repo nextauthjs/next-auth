@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   css: ["~/assets/style.css"],
 
-  authJs: {},
+  auth: {},
 
   // Runtime configuration with secrets
   // Use these to override sensitive, environment dependent settings

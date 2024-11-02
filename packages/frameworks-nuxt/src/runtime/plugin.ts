@@ -9,7 +9,7 @@ export default defineNuxtPlugin({
 
     // refresh session when running on the server or when session is not available on the client side
     if (import.meta.server || (import.meta.client && !session.value)) {
-      const { basePath } = useRuntimeConfig().public.authJs
+      const { basePath } = useRuntimeConfig().public.auth
 
       const headers = useRequestHeaders(["cookie"])
       const data = await $fetch<Session>(`${basePath}/session`, {

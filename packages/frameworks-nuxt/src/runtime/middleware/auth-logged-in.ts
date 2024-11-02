@@ -20,7 +20,8 @@ export default defineNuxtRouteMiddleware((to: RouteLocationNormalized) => {
     // Redirect if needed
     const route =
       to?.meta?.auth?.unauthenticatedRedirectTo ??
-      useRuntimeConfig()?.public?.authJs?.globalUnauthenticatedRedirectTo
+      useRuntimeConfig()?.public?.auth?.middleware
+        ?.globalUnauthenticatedRedirectTo
 
     // To prevent infinite loops, check if the route is already the same
     if (route !== to.path) {

@@ -157,7 +157,7 @@ import {
 } from "@nuxt/kit"
 import { defu } from "defu"
 
-const configKey = "authJs" as const
+const configKey = "auth" as const
 
 // Re-export types of Auth.js
 export type {
@@ -204,19 +204,16 @@ export default defineNuxtModule<NuxtAuthConfig>({
 
     const { resolve } = createResolver(import.meta.url)
 
-    // Make configuration available at runtime
-    nuxt.options.runtimeConfig[configKey] = defu(
-      nuxt.options.runtimeConfig[configKey] || {},
-      options
-    )
-
+    // Make public configuration available at runtime
     nuxt.options.runtimeConfig.public[configKey] = defu(
       nuxt.options.runtimeConfig.public[configKey] || {},
       {
         basePath: options.basePath,
-        globalUnauthenticatedRedirectTo:
-          options.middleware?.globalUnauthenticatedRedirectTo,
-      }
+        middleware: {
+          globalUnauthenticatedRedirectTo:
+            options.middleware?.globalUnauthenticatedRedirectTo || undefined,
+        },
+      } as NuxtAuthConfig
     )
 
     // Add composables
@@ -270,15 +267,8 @@ export default defineNuxtModule<NuxtAuthConfig>({
 
 // Ambient types
 declare module "@nuxt/schema" {
-  interface RuntimeConfig {
-    authJs: NuxtAuthConfig
-  }
-
   interface PublicRuntimeConfig {
-    authJs: {
-      basePath: string
-      globalUnauthenticatedRedirectTo: string
-    }
+    auth: NuxtAuthConfig
   }
 }
 

@@ -62,7 +62,7 @@ export async function signIn<
   try {
     const { callbackUrl = window.location.href, redirect = true } =
       options ?? {}
-    const { basePath } = useRuntimeConfig().public.authJs
+    const { basePath } = useRuntimeConfig().public.auth
 
     const isCredentials = providerId === "credentials"
     const isEmail = providerId === "email"
@@ -139,7 +139,7 @@ export async function signOut(options?: SignOutParams) {
   try {
     auth.value = { loggedIn: false, user: null }
     const { callbackUrl = window.location.href } = options ?? {}
-    const { basePath } = useRuntimeConfig().public.authJs
+    const { basePath } = useRuntimeConfig().public.auth
 
     const { csrfToken } = await $fetch<{ csrfToken: string }>(
       `${basePath}/csrf`
@@ -175,6 +175,6 @@ export async function signOut(options?: SignOutParams) {
 }
 
 export async function getProviders() {
-  const { basePath } = useRuntimeConfig().public.authJs
+  const { basePath } = useRuntimeConfig().public.auth
   return $fetch<Record<string, Provider>[]>(`${basePath}/providers`)
 }

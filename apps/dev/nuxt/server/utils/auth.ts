@@ -8,7 +8,7 @@ import type { H3Event } from "h3"
 const runtimeConfig = useRuntimeConfig()
 
 export const authConfig: AuthConfig = {
-  ...runtimeConfig.authJs,
+  ...runtimeConfig.auth,
   secret: runtimeConfig.auth.secret,
 
   providers: [
