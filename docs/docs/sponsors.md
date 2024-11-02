@@ -208,6 +208,11 @@ Maintaining NextAuth.js would not be possible without the generous support of ou
       "https://avatars.githubusercontent.com/u/77690634?v=4",
       "Neon",
     ],
+    [
+      "https://sent.dm",
+      "https://avatars.githubusercontent.com/u/153308555?v=4",
+      "Sent.dm",
+    ],
   ].map(([href, src, name]) => (
     <a
       key={name}

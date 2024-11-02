@@ -270,14 +270,21 @@ We're happy to announce we've recently created an [OpenCollective](https://openc
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://sent.dm/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/153308555?v=4" alt="Sent.dm Logo" />
+        </a><br />
+        <div>Sent.dm</div>
+        <sub>💵</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
         <a href="https://arcjet.com/?ref=auth.js" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/24397786?s=200&v=4" alt="Arcjet Logo" />
         </a><br />
         <div>Arcjet</div>
         <sub>💵</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://route4me.com/?ref=auth.js" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/7936820?v=4" alt="Route4Me Logo" />
