@@ -66,6 +66,7 @@
         "@auth/core#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
+        "@auth/nuxt#build",
         "@auth/solid-start#build",
         "@auth/qwik#build"
       ],

@@ -1,37 +1,3 @@
-import {
-  defineNuxtModule,
-  addImports,
-  addPlugin,
-  addTypeTemplate,
-  createResolver,
-  addRouteMiddleware,
-  useLogger,
-} from "@nuxt/kit"
-import { defu } from "defu"
-
-const configKey = "authJs" as const
-
-// Re-export types of Auth.js
-export type {
-  Account,
-  DefaultSession,
-  Profile,
-  Session,
-  User,
-} from "@auth/core/types"
-
-export type { AuthConfig } from "@auth/core"
-
-export interface MiddlewareConfig {
-  globalUnauthenticatedRedirectTo?: string
-}
-
-/** Configure the {@link defineNuxtModule} method. */
-export interface NuxtAuthConfig {
-  basePath?: string
-  middleware?: MiddlewareConfig
-}
-
 /**
  *
  * :::warning
@@ -179,6 +145,41 @@ export interface NuxtAuthConfig {
  *
  * @module @auth/nuxt
  */
+
+import {
+  defineNuxtModule,
+  addImports,
+  addPlugin,
+  addTypeTemplate,
+  createResolver,
+  addRouteMiddleware,
+  useLogger,
+} from "@nuxt/kit"
+import { defu } from "defu"
+
+const configKey = "authJs" as const
+
+// Re-export types of Auth.js
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
+
+export type { AuthConfig } from "@auth/core"
+
+export interface MiddlewareConfig {
+  globalUnauthenticatedRedirectTo?: string
+}
+
+/** Configure the {@link defineNuxtModule} method. */
+export interface NuxtAuthConfig {
+  basePath?: string
+  middleware?: MiddlewareConfig
+}
+
 export default defineNuxtModule<NuxtAuthConfig>({
   meta: {
     name: "@auth/nuxt",
