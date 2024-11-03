@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: ["@auth/nuxt"],
   devtools: { enabled: false },
   css: ["~/assets/style.css"],
+  telemetry: false,
 
   auth: {},
 
@@ -15,12 +16,12 @@ export default defineNuxtConfig({
     auth: {
       secret: "",
       github: {
-        clientId: "",
-        clientSecret: "",
+        id: "",
+        secret: "",
       },
       discord: {
-        clientId: "",
-        clientSecret: "",
+        id: "",
+        secret: "",
       },
     },
   },
