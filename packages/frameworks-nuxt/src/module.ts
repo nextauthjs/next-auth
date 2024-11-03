@@ -33,8 +33,8 @@
  *    auth: {
  *      secret: "",
  *      github: {
- *        clientId: "",
- *        clientSecret: "",
+ *        id: "",
+ *        secret: "",
  *      },
  *    },
  *  },
@@ -57,7 +57,7 @@
  * export const authConfig: AuthConfig = {
  *     ...runtimeConfig.auth,
  *     secret: runtimeConfig.auth.secret,
- *     providers: [GitHub(runtimeConfig.auth.github)],
+ *     providers: [GitHub],
  * }
  *
  * const { handlers, auth: _auth } = NuxtAuth(authConfig)
