@@ -19,6 +19,7 @@ const password = ref("")
       </div>
       <div class="session-code-body">
         <pre>
+<!-- prettier-ignore -->
 {{ session ?? "null" }}
         </pre>
       </div>
@@ -30,6 +31,7 @@ const password = ref("")
       </div>
       <div class="session-code-body">
         <pre>
+<!-- prettier-ignore -->
 {{ auth.user }}
         </pre>
       </div>

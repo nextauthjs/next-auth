@@ -12,10 +12,6 @@ export const authConfig: AuthConfig = {
   secret: runtimeConfig.auth.secret,
 
   providers: [
-    // GitHub({
-    //   clientId: runtimeConfig.auth.github.id,
-    //   clientSecret: runtimeConfig.auth.github.secret,
-    // }),
     GitHub,
     Discord,
     Credentials({

@@ -2,4 +2,3 @@
   <Header />
   <slot />
 </template>
-

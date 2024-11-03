@@ -2,7 +2,8 @@
 const { signIn, signOut, session, auth } = useAuth()
 
 const password = ref("")
-async function callAPI() {
+
+async function getProtectedRoute() {
   const data = await $fetch("/api/protected")
 
   alert(data?.message ?? "No data returned")
@@ -50,7 +51,7 @@ async function callAPI() {
       <NuxtLink class="linkItem" href="/">Home</NuxtLink>
       <NuxtLink class="linkItem" href="/protected">Protected</NuxtLink>
       <NuxtLink class="linkItem" href="/guest">Guest</NuxtLink>
-      <div class="linkItem" @click="callAPI">Call Protected API</div>
+      <div class="linkItem" @click="getProtectedRoute">Call Protected API</div>
     </div>
   </header>
 </template>
