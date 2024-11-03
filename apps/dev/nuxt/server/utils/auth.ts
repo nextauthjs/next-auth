@@ -12,14 +12,8 @@ export const authConfig: AuthConfig = {
   secret: runtimeConfig.auth.secret,
 
   providers: [
-    GitHub({
-      clientId: runtimeConfig.auth.github.id,
-      clientSecret: runtimeConfig.auth.github.secret,
-    }),
-    Discord({
-      clientId: runtimeConfig.auth.discord.id,
-      clientSecret: runtimeConfig.auth.discord.secret,
-    }),
+    GitHub(runtimeConfig.auth.github),
+    Discord(runtimeConfig.auth.discord),
     Credentials({
       credentials: { password: { label: "Password", type: "password" } },
       async authorize(credentials) {

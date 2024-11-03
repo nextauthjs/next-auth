@@ -18,7 +18,7 @@
  * Add `@auth/nuxt` to the `modules` section of `nuxt.config.ts`.
  * You can also set the `basePath` option to change the default path for the authentication routes.
  * Use runtime configuration to set auth related secrets. These will be automatically replaced by the runtime values,
- * if your environment has variables like `NUXT_AUTH_SECRET`, `NUXT_AUTH_GITHUB_ID`, `NUXT_AUTH_GITHUB_SECRET`.
+ * if your environment has variables like `NUXT_AUTH_SECRET`, `NUXT_AUTH_GITHUB_CLIENT_ID`, `NUXT_AUTH_GITHUB_CLIENT_SECRET`.
  *
  * ```ts title="nuxt.config.ts"
  * export default defineNuxtConfig({
@@ -33,8 +33,8 @@
  *    auth: {
  *      secret: "",
  *      github: {
- *        id: "",
- *        secret: "",
+ *        clientId: "",
+ *        clientSecret: "",
  *      },
  *    },
  *  },
@@ -57,10 +57,7 @@
  * export const authConfig: AuthConfig = {
  *     ...runtimeConfig.auth,
  *     secret: runtimeConfig.auth.secret,
- *     providers: [GitHub({
- *       clientId: runtimeConfig.auth.github.id,
- *       clientSecret: runtimeConfig.auth.github.secret,
- *     })],
+ *     providers: [GitHub(runtimeConfig.auth.github)],
  * }
  *
  * const { handlers, auth: _auth } = NuxtAuth(authConfig)

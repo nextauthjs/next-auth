@@ -16,12 +16,12 @@ export default defineNuxtConfig({
     auth: {
       secret: "",
       github: {
-        id: "",
-        secret: "",
+        clientId: "",
+        clientSecret: "",
       },
       discord: {
-        id: "",
-        secret: "",
+        clientId: "",
+        clientSecret: "",
       },
     },
   },
