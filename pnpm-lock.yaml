@@ -180,7 +180,7 @@ importers:
     devDependencies:
       nuxt:
         specifier: ^3.13.2
-        version: 3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(encoding@0.1.13)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3)
+        version: 3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3)
 
   apps/dev/qwik:
     devDependencies:
@@ -265,7 +265,7 @@ importers:
         version: 0.4.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/widgets':
         specifier: ^0.2.272
-        version: 0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
+        version: 0.2.289(@internationalized/date@3.5.5)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
       '@next/third-parties':
         specifier: ^14.2.1
         version: 14.2.13(next@14.2.10(@opentelemetry/api@1.9.0)(@playwright/test@1.47.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.4))(react@18.3.1)
@@ -789,7 +789,7 @@ importers:
         version: 1.12.0
       nuxt:
         specifier: ^3.13.2
-        version: 3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(encoding@0.1.13)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@3.29.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.3.3)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@20.12.7)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3)
+        version: 3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@3.29.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.3.3)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@20.12.7)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3)
       ofetch:
         specifier: ^1.4.0
         version: 1.4.0
@@ -10271,7 +10271,6 @@ packages:
 
   libsql@0.3.19:
     resolution: {integrity: sha512-Aj5cQ5uk/6fHdmeW0TiXK42FqUlwx7ytmMLPSaUQPin5HKKKuUPD62MAbN4OEweGBBI7q1BekoEN4gPUEL6MZA==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   libsql@0.4.5:
@@ -15545,7 +15544,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.2)':
+  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.5)':
     dependencies:
       '@zag-js/accordion': 0.20.0
       '@zag-js/anatomy': 0.20.0
@@ -15556,7 +15555,7 @@ snapshots:
       '@zag-js/color-utils': 0.20.0
       '@zag-js/combobox': 0.20.0
       '@zag-js/date-picker': 0.20.0
-      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.2)
+      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.5)
       '@zag-js/dialog': 0.20.0
       '@zag-js/editable': 0.20.0
       '@zag-js/hover-card': 0.20.0
@@ -15582,7 +15581,7 @@ snapshots:
     transitivePeerDependencies:
       - '@internationalized/date'
 
-  '@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@ark-ui/react@0.15.0(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@zag-js/accordion': 0.19.1
       '@zag-js/anatomy': 0.19.1
@@ -15594,7 +15593,7 @@ snapshots:
       '@zag-js/combobox': 0.19.1
       '@zag-js/core': 0.19.1
       '@zag-js/date-picker': 0.19.1
-      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.2)
+      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.5)
       '@zag-js/dialog': 0.19.1
       '@zag-js/editable': 0.19.1
       '@zag-js/hover-card': 0.19.1
@@ -18742,11 +18741,11 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)':
+  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)':
     dependencies:
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.44
       '@pandacss/dev': 0.22.1(typescript@5.6.2)
@@ -18758,9 +18757,9 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)':
+  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.5)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.2)
     transitivePeerDependencies:
@@ -18768,10 +18767,10 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)':
+  '@inkeep/preset@0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.5)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.2)
       colorjs.io: 0.4.5
@@ -18786,14 +18785,14 @@ snapshots:
 
   '@inkeep/styled-system@0.0.46': {}
 
-  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)':
+  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.5)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)':
     dependencies:
       '@apollo/client': 3.9.5(@types/react@18.2.78)(graphql-ws@5.14.3(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/color-mode': 0.0.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.2)
+      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.5)(typescript@5.6.2)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.46
       '@types/lodash.isequal': 4.5.8
@@ -22059,7 +22058,7 @@ snapshots:
     dependencies:
       '@upstash/redis': 1.25.1
 
-  '@vercel/nft@0.26.5(encoding@0.1.13)':
+  '@vercel/nft@0.26.5':
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11(encoding@0.1.13)
       '@rollup/pluginutils': 4.2.1
@@ -22622,9 +22621,9 @@ snapshots:
     dependencies:
       '@internationalized/date': 3.5.2
 
-  '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.2)':
+  '@zag-js/date-utils@0.19.1(@internationalized/date@3.5.5)':
     dependencies:
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.5
 
   '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.5)':
     dependencies:
@@ -29565,7 +29564,7 @@ snapshots:
       - supports-color
       - typescript
 
-  nitropack@2.9.7(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3):
+  nitropack@2.9.7(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(magicast@0.3.5)(webpack-sources@3.2.3):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@netlify/functions': 2.8.1
@@ -29578,7 +29577,7 @@ snapshots:
       '@rollup/plugin-terser': 0.4.4(rollup@4.22.5)
       '@rollup/pluginutils': 5.1.2(rollup@4.22.5)
       '@types/http-proxy': 1.17.15
-      '@vercel/nft': 0.26.5(encoding@0.1.13)
+      '@vercel/nft': 0.26.5
       archiver: 7.0.1
       c12: 1.11.2(magicast@0.3.5)
       chalk: 5.3.0
@@ -29816,7 +29815,7 @@ snapshots:
 
   nuxi@3.14.0: {}
 
-  nuxt@3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(encoding@0.1.13)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@3.29.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.3.3)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@20.12.7)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3):
+  nuxt@3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@3.29.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.3.3)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@20.12.7)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3):
     dependencies:
       '@nuxt/devalue': 2.0.2
       '@nuxt/devtools': 1.5.1(bufferutil@4.0.8)(rollup@3.29.5)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@20.12.7)(sass@1.79.4)(terser@5.34.1))(vue@3.5.10(typescript@5.3.3))(webpack-sources@3.2.3)
@@ -29853,7 +29852,7 @@ snapshots:
       magic-string: 0.30.11
       mlly: 1.7.1
       nanotar: 0.1.1
-      nitropack: 2.9.7(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3)
+      nitropack: 2.9.7(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(magicast@0.3.5)(webpack-sources@3.2.3)
       nuxi: 3.14.0
       nypm: 0.3.12
       ofetch: 1.4.0
@@ -29929,7 +29928,7 @@ snapshots:
       - webpack-sources
       - xml2js
 
-  nuxt@3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(encoding@0.1.13)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3):
+  nuxt@3.13.2(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@parcel/watcher@2.4.1)(@types/node@22.7.4)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(bufferutil@4.0.8)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.5)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3):
     dependencies:
       '@nuxt/devalue': 2.0.2
       '@nuxt/devtools': 1.5.1(bufferutil@4.0.8)(rollup@4.22.5)(utf-8-validate@6.0.4)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.10(typescript@5.6.2))(webpack-sources@3.2.3)
@@ -29966,7 +29965,7 @@ snapshots:
       magic-string: 0.30.11
       mlly: 1.7.1
       nanotar: 0.1.1
-      nitropack: 2.9.7(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3)
+      nitropack: 2.9.7(@azure/data-tables@13.2.2)(@azure/identity@4.4.1)(@upstash/redis@1.34.0)(@vercel/kv@1.0.1)(better-sqlite3@9.6.0)(magicast@0.3.5)(webpack-sources@3.2.3)
       nuxi: 3.14.0
       nypm: 0.3.12
       ofetch: 1.4.0
