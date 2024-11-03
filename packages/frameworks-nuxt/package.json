@@ -18,8 +18,8 @@
   "license": "ISC",
   "scripts": {
     "clean": "rimraf dist src/providers .nuxt",
-    "providers": "node ../utils/scripts/providers",
-    "build": "pnpm clean && pnpm providers && nuxi prepare && nuxt-module-build build",
+    "providers": "node ../utils/scripts/providers --out src",
+    "build": "export NUXT_TELEMETRY_DISABLED=1 && pnpm clean && pnpm providers && nuxi prepare && nuxt-module-build build",
     "postinstall": "nuxi prepare",
     "prepack": "nuxi prepare && nuxt-module-build build",
     "test": "vitest run -c ../utils/vitest.config.ts"
