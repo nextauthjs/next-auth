@@ -146,8 +146,10 @@ export default function Discord<P extends DiscordProfile>(
     id: "discord",
     name: "Discord",
     type: "oauth",
-    authorization:
-      "https://discord.com/api/oauth2/authorize?scope=identify+email",
+    authorization: {
+      url: "https://discord.com/api/oauth2/authorize",
+      params: { scope: "identify email"},
+    },
     token: "https://discord.com/api/oauth2/token",
     userinfo: "https://discord.com/api/users/@me",
     profile(profile) {
