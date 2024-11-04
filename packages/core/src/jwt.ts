@@ -44,7 +44,7 @@ import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"
 import * as cookie from "cookie"
 
-const { parse } = cookie
+const { parse: parseCookie } = cookie
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 const now = () => (Date.now() / 1000) | 0
@@ -162,7 +162,7 @@ export async function getToken(
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
-    parse(headers.get("cookie") ?? ""),
+    parseCookie(headers.get("cookie") ?? ""),
     logger
   )
 
