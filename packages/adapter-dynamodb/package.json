@@ -1,7 +1,7 @@
 {
   "name": "@auth/dynamodb-adapter",
   "repository": "https://github.com/nextauthjs/next-auth",
-  "version": "2.5.3",
+  "version": "2.7.3",
   "description": "AWS DynamoDB adapter for next-auth.",
   "keywords": [
     "next-auth",

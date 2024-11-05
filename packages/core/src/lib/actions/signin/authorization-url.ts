@@ -3,6 +3,7 @@ import * as o from "oauth4webapi"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
+import { customFetch } from "../../symbols.js"
 
 /**
  * Generates an authorization/request token URL.
@@ -24,7 +25,11 @@ export async function getAuthorizationUrl(
     // We check this in assert.ts
 
     const issuer = new URL(provider.issuer!)
-    const discoveryResponse = await o.discoveryRequest(issuer)
+    const discoveryResponse = await o.discoveryRequest(issuer, {
+      [o.customFetch]: provider[customFetch],
+      // TODO: move away from allowing insecure HTTP requests
+      [o.allowInsecureRequests]: true,
+    })
     const as = await o.processDiscoveryResponse(issuer, discoveryResponse)
 
     if (!as.authorization_endpoint) {
@@ -62,6 +67,17 @@ export async function getAuthorizationUrl(
   for (const k in params) authParams.set(k, params[k])
 
   const cookies: Cookie[] = []
+
+  if (
+    // Otherwise "POST /redirect_uri" wouldn't include the cookies
+    provider.authorization?.url.searchParams.get("response_mode") ===
+    "form_post"
+  ) {
+    options.cookies.state.options.sameSite = "none"
+    options.cookies.state.options.secure = true
+    options.cookies.nonce.options.sameSite = "none"
+    options.cookies.nonce.options.secure = true
+  }
 
   const state = await checks.state.create(options, data)
   if (state) {

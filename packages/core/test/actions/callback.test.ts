@@ -1,6 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import * as jose from "jose"
-import * as o from "oauth4webapi"
 
 import GitHub from "../../src/providers/github.js"
 import Credentials from "../../src/providers/credentials.js"

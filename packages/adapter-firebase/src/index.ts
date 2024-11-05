@@ -44,29 +44,53 @@ export interface FirebaseAdapterConfig extends AppOptions {
    *
    *
    * @example
-   * ```ts title="pages/api/auth/[...nextauth].ts"
-   * import NextAuth from "next-auth"
-   * import { FirestoreAdapter } from "@auth/firebase-adapter"
-   *
-   * export default NextAuth({
+   * ```ts
+   *  // This will convert all field and collection names to snake_case
    *  adapter: FirestoreAdapter({ namingStrategy: "snake_case" })
    *  // ...
    * })
    * ```
    */
   namingStrategy?: "snake_case" | "default"
+  /**
+   * Use this option if you already have one of the default collections in your Firestore database.
+   *
+   * @example
+   * ```ts
+   *  // This will use the collection name "authjs_users" instead of the default "users"
+   *  adapter: FirestoreAdapter({ collections: { users: "authjs_users" } })
+   *  // ...
+   * ```
+   */
+  collections?: {
+    users?: string
+    sessions?: string
+    accounts?: string
+    verificationTokens?: string
+  }
 }
 
 export function FirestoreAdapter(
   config?: FirebaseAdapterConfig | Firestore
 ): Adapter {
-  const { db, namingStrategy = "default" } =
-    config instanceof Firestore
-      ? { db: config }
-      : { ...config, db: config?.firestore ?? initFirestore(config) }
+  const {
+    db,
+    namingStrategy = "default",
+    collections = {},
+  } = config instanceof Firestore
+    ? { db: config }
+    : { ...config, db: config?.firestore ?? initFirestore(config) }
 
   const preferSnakeCase = namingStrategy === "snake_case"
-  const C = collectionsFactory(db, preferSnakeCase)
+  const C = collectionsFactory(db, preferSnakeCase, {
+    users: "users",
+    sessions: "sessions",
+    accounts: "accounts",
+    verificationTokens: preferSnakeCase
+      ? "verification_tokens"
+      : "verificationTokens",
+    ...collections,
+  })
   const mapper = mapFieldsFactory(preferSnakeCase)
 
   return {
@@ -247,12 +271,11 @@ export function mapFieldsFactory(preferSnakeCase?: boolean) {
   return { toDb: identity, fromDb: identity }
 }
 
-/** @internal */
 function getConverter<Document extends Record<string, any>>(options: {
   excludeId?: boolean
   preferSnakeCase?: boolean
 }): FirebaseFirestore.FirestoreDataConverter<Document> {
-  const mapper = mapFieldsFactory(options?.preferSnakeCase ?? false)
+  const mapper = mapFieldsFactory(options?.preferSnakeCase)
 
   return {
     toFirestore(object) {
@@ -302,7 +325,6 @@ export async function getOneDoc<T>(
   return querySnap.docs[0]?.data() ?? null
 }
 
-/** @internal */
 async function deleteDocs<T>(
   querySnapshot: FirebaseFirestore.Query<T>
 ): Promise<void> {
@@ -323,22 +345,21 @@ export async function getDoc<T>(
 /** @internal */
 export function collectionsFactory(
   db: FirebaseFirestore.Firestore,
-  preferSnakeCase = false
+  preferSnakeCase = false,
+  collections: Required<NonNullable<FirebaseAdapterConfig["collections"]>>
 ) {
   return {
     users: db
-      .collection("users")
+      .collection(collections.users)
       .withConverter(getConverter<AdapterUser>({ preferSnakeCase })),
     sessions: db
-      .collection("sessions")
+      .collection(collections.sessions)
       .withConverter(getConverter<AdapterSession>({ preferSnakeCase })),
     accounts: db
-      .collection("accounts")
+      .collection(collections.accounts)
       .withConverter(getConverter<AdapterAccount>({ preferSnakeCase })),
     verification_tokens: db
-      .collection(
-        preferSnakeCase ? "verification_tokens" : "verificationTokens"
-      )
+      .collection(collections.verificationTokens)
       .withConverter(
         getConverter<VerificationToken>({ preferSnakeCase, excludeId: true })
       ),

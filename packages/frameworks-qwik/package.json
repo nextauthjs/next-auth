@@ -1,6 +1,6 @@
 {
   "name": "@auth/qwik",
-  "version": "0.3.3",
+  "version": "0.5.3",
   "description": "Authentication for Qwik.",
   "license": "ISC",
   "author": "gioboa <giorgiob.boa@gmail.com>",
@@ -50,7 +50,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && vite build --mode lib",
     "clean": "rm -rf *.mjs *.js *.d.ts* providers src/providers",
-    "providers": "node ../utils/scripts/providers --out src"
+    "providers": "node ../utils/scripts/providers"
   },
   "dependencies": {
     "@auth/core": "workspace:*",

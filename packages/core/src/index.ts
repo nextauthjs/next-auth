@@ -67,6 +67,7 @@ import type { CredentialInput, Provider } from "./providers/index.js"
 import { JWT, JWTOptions } from "./jwt.js"
 import { isAuthAction } from "./lib/utils/actions.js"
 
+export { customFetch } from "./lib/symbols.js"
 export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
@@ -323,7 +324,7 @@ export interface AuthConfig {
      */
     signIn?: (params: {
       user: User | AdapterUser
-      account: Account | null
+      account?: Account | null
       /**
        * If OAuth provider is used, it contains the full
        * OAuth profile returned by your provider.
@@ -451,7 +452,7 @@ export interface AuthConfig {
        * Also includes {@link TokenSet}
        * @note available when `trigger` is `"signIn"` or `"signUp"`
        */
-      account: Account | null
+      account?: Account | null
       /**
        * The OAuth profile returned from your provider.
        * (In case of OIDC it will be the decoded ID Token or /userinfo response)
@@ -496,7 +497,7 @@ export interface AuthConfig {
      */
     signIn?: (message: {
       user: User
-      account: Account | null
+      account?: Account | null
       profile?: Profile
       isNewUser?: boolean
     }) => Awaitable<void>

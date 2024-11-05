@@ -15,6 +15,7 @@ import Google from "@auth/core/providers/google"
 import Hubspot from "@auth/core/providers/hubspot"
 import Keycloak from "@auth/core/providers/keycloak"
 import LinkedIn from "@auth/core/providers/linkedin"
+import MicrosoftEntraId from "@auth/core/providers/microsoft-entra-id"
 import Netlify from "@auth/core/providers/netlify"
 import Okta from "@auth/core/providers/okta"
 import Passage from "@auth/core/providers/passage"
@@ -33,11 +34,7 @@ const authConfig: AuthConfig = {
   providers: [
     Apple,
     Auth0,
-    AzureB2C({
-      clientId: process.env.AUTH_AZURE_AD_B2C_ID,
-      clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,
-      issuer: process.env.AUTH_AZURE_AD_B2C_ISSUER,
-    }),
+    AzureB2C,
     BankId,
     BoxyHQSAML({
       clientId: "dummy",
@@ -55,6 +52,7 @@ const authConfig: AuthConfig = {
     Hubspot,
     Keycloak,
     LinkedIn,
+    MicrosoftEntraId,
     Netlify,
     Okta,
     Passage,

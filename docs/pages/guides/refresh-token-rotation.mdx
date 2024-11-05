@@ -244,7 +244,7 @@ import { useEffect } from "react"
 import { auth, signIn } from "@/auth"
 
 export default async function Page() {
-  const session = await useSession()
+  const session = await auth()
   if (session?.error === "RefreshTokenError") {
     await signIn("google") // Force sign in to obtain a new set of access and refresh tokens
   }
@@ -262,7 +262,7 @@ import { useEffect } from "react"
 import { signIn, useSession } from "next-auth/react"
 
 export default function Page() {
-  const { data: session } = useSession()
+  const { data: session } = useSession() // For this to work, the Page should be wrapped inside the SessionProvider component in Layout
   useEffect(() => {
     if (session?.error !== "RefreshTokenError") return
     signIn("google") // Force sign in to obtain a new set of access and refresh tokens
