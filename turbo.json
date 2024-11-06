@@ -124,10 +124,7 @@
       ]
     },
     "nuxt-auth-app#dev": {
-      "dependsOn": [
-        "@auth/core#build",
-        "@auth/nuxt#build"
-      ]
+      "dependsOn": ["@auth/core#build", "@auth/nuxt#build"]
     }
   }
 }
