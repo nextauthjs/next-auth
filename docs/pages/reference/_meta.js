@@ -9,6 +9,7 @@ export default {
   sveltekit: "@auth/sveltekit",
   express: "@auth/express",
   qwik: "@auth/qwik",
+  nuxt: "@auth/nuxt",
   "solid-start": "@auth/solid-start",
   warnings: "Warnings",
   errors: {

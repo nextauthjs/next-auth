@@ -66,6 +66,7 @@
         "@auth/core#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
+        "@auth/nuxt#build",
         "@auth/solid-start#build",
         "@auth/qwik#build"
       ],
@@ -121,6 +122,9 @@
         "docs/reference/**",
         "!docs/reference/_meta.js"
       ]
+    },
+    "nuxt-auth-app#dev": {
+      "dependsOn": ["@auth/core#build", "@auth/nuxt#build"]
     }
   }
 }

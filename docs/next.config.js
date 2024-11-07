@@ -35,6 +35,12 @@ export default withNextra({
       },
       {
         source: "/:path(.*)",
+        has: [{ type: "host", value: "nuxt.authjs.dev" }],
+        destination: "https://authjs.dev/reference/nuxt",
+        permanent: true,
+      },
+      {
+        source: "/:path(.*)",
         has: [{ type: "host", value: "solid-start.authjs.dev" }],
         destination: "https://authjs.dev/reference/solid-start",
         permanent: true,
