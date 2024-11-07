@@ -207,7 +207,6 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 
       if (error) throw error
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id, ...verificationToken } = data
 
       return format<VerificationToken>(verificationToken)
@@ -223,7 +222,6 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
       if (error) throw error
       if (!data) return null
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id, ...verificationToken } = data
 
       return format<VerificationToken>(verificationToken)
