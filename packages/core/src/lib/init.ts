@@ -42,10 +42,7 @@ export const defaultCallbacks: InternalOptions["callbacks"] = {
         email: session.user?.email,
         image: session.user?.image,
       },
-      expires:
-        typeof session.expires === "string"
-          ? session.expires
-          : session.expires.toISOString(),
+      expires: session.expires?.toISOString?.() ?? session.expires,
     }
   },
   jwt({ token }) {

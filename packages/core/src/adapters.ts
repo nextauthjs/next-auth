@@ -215,7 +215,6 @@ export interface AdapterSession {
    * A randomly generated value that is used to look up the session in the database
    * when using `"database"` `AuthConfig.strategy` option.
    * This value is saved in a secure, HTTP-Only cookie on the client.
-   * @internal
    */
   sessionToken: string
   /** Connects the active session to a user in the database */
