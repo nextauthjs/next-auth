@@ -100,7 +100,9 @@ export async function session(
     }
 
     if (userAndSession) {
-      const { user, session } = userAndSession
+      const { user, session: _session } = userAndSession
+      // We never really need to pass this to the user, so filtered off of the session object
+      const { sessionToken: _, ...session } = _session
 
       const sessionUpdateAge = options.session.updateAge
       // Calculate last updated date to throttle write updates to database
@@ -125,7 +127,6 @@ export async function session(
       const sessionPayload = await callbacks.session({
         // TODO: user already passed below,
         // remove from session object in https://github.com/nextauthjs/next-auth/pull/9702
-        // @ts-expect-error
         session: { ...session, user },
         user,
         newSession,

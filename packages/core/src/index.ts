@@ -400,15 +400,21 @@ export interface AuthConfig {
      * ```
      */
     session?: (
-      params: ({
-        session: { user: AdapterUser } & AdapterSession
-        /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
-        user: AdapterUser
-      } & {
-        session: Session
-        /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
-        token: JWT
-      }) & {
+      params: (
+        | {
+            session: { user: AdapterUser } & Omit<
+              AdapterSession,
+              "sessionToken"
+            >
+            /** Available when {@link AuthConfig.session} is set to `strategy: "database"`. */
+            user: AdapterUser
+          }
+        | {
+            session: Session
+            /** Available when {@link AuthConfig.session} is set to `strategy: "jwt"` */
+            token: JWT
+          }
+      ) & {
         /**
          * Available when using {@link AuthConfig.session} `strategy: "database"` and an update is triggered for the session.
          *
