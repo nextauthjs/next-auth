@@ -237,4 +237,4 @@ our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIB
 
 ## License
 
-ISC
+[ISC](https://en.wikipedia.org/wiki/ISC_license)
