@@ -583,6 +583,18 @@ export interface AuthConfig {
    */
   useSecureCookies?: boolean
   /**
+   * When set the cookie name will use this as it's name. For example, the session cookie will be 
+   * of the form `mycookiename.session-token` or `__Secure-mycookiename.session-token`.
+   * The exact full name of the cookie will change based on other cookie-related options.
+   *
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   *
+   * The default is `authjs`.
+   */
+  cookieName?: string
+  /**
    * You can override the default cookie names and options for any of the cookies used by Auth.js.
    * You can specify one or more cookies with custom properties
    * and missing options will use the default values defined by Auth.js.
