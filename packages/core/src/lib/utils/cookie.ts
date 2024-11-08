@@ -56,12 +56,12 @@ export type SessionToken<T extends "jwt" | "database" = "jwt"> = T extends "jwt"
  *
  * @TODO Review cookie settings (names, options)
  */
-export function defaultCookies(useSecureCookies: boolean) {
+export function defaultCookies(useSecureCookies: boolean, cookieName = "authjs") {
   const cookiePrefix = useSecureCookies ? "__Secure-" : ""
   return {
     // default cookie options
     sessionToken: {
-      name: `${cookiePrefix}authjs.session-token`,
+      name: `${cookiePrefix}${cookieName}.session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -70,7 +70,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       },
     },
     callbackUrl: {
-      name: `${cookiePrefix}authjs.callback-url`,
+      name: `${cookiePrefix}${cookieName}.callback-url`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -81,7 +81,7 @@ export function defaultCookies(useSecureCookies: boolean) {
     csrfToken: {
       // Default to __Host- for CSRF token for additional protection if using useSecureCookies
       // NB: The `__Host-` prefix is stricter than the `__Secure-` prefix.
-      name: `${useSecureCookies ? "__Host-" : ""}authjs.csrf-token`,
+      name: `${useSecureCookies ? "__Host-" : ""}${cookieName}.csrf-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -90,7 +90,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       },
     },
     pkceCodeVerifier: {
-      name: `${cookiePrefix}authjs.pkce.code_verifier`,
+      name: `${cookiePrefix}${cookieName}.pkce.code_verifier`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -100,7 +100,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       },
     },
     state: {
-      name: `${cookiePrefix}authjs.state`,
+      name: `${cookiePrefix}${cookieName}.state`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -110,7 +110,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       },
     },
     nonce: {
-      name: `${cookiePrefix}authjs.nonce`,
+      name: `${cookiePrefix}${cookieName}.nonce`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -119,7 +119,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       },
     },
     webauthnChallenge: {
-      name: `${cookiePrefix}authjs.challenge`,
+      name: `${cookiePrefix}${cookieName}.challenge`,
       options: {
         httpOnly: true,
         sameSite: "lax",
