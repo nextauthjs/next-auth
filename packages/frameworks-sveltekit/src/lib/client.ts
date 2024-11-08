@@ -81,9 +81,12 @@ export async function signIn<
 
   if (redirect || !isSupportingReturn) {
     // TODO: Do not redirect for Credentials and Email providers by default in next major
-    window.location.href = data.url ?? callbackUrl
-    // If url contains a hash, the browser does not reload the page. We reload manually
-    if (data.url.includes("#")) window.location.reload()
+    const url = data.url ?? callbackUrl
+    const previousOrigin = window.location.origin
+    window.location.href = url
+    const sameOrigin = previousOrigin == new URL(url).origin
+    // If same origin and url contains a hash, the browser does not reload the page. We reload manually
+    if (sameOrigin && url.includes("#")) window.location.reload()
     return
   }
 
@@ -111,7 +114,9 @@ export async function signOut(options?: SignOutParams) {
   const data = await res.json()
 
   const url = data.url ?? callbackUrl
+  const previousOrigin = window.location.origin
   window.location.href = url
-  // If url contains a hash, the browser does not reload the page. We reload manually
-  if (url.includes("#")) window.location.reload()
+  const sameOrigin = previousOrigin == new URL(url).origin
+  // If same origin and url contains a hash, the browser does not reload the page. We reload manually
+  if (sameOrigin && url.includes("#")) window.location.reload()
 }
