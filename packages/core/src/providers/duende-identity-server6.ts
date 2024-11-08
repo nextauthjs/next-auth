@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>DuendeIdentityServer6</b> integration.</span>
  * <a href="https://docs.duendesoftware.com/identityserver/v6">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/duende-identity-server6.svg" height="48" width="48"/>

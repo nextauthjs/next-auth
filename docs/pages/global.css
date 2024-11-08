@@ -247,3 +247,17 @@ div.nextra-search kbd {
     opacity: 0;
   }
 }
+
+:is(html[class~="dark"])
+  > head:has(meta[content*="reference/core/providers"])
+  + body
+  .provider {
+  color: #e2e8f0 !important;
+  background-color: transparent !important;
+}
+
+html > head:has(meta[content*="reference/core/providers"]) + body .provider {
+  padding: 1rem;
+  font-size: 1rem;
+  color: #000 !important;
+}
