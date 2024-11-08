@@ -101,7 +101,7 @@ export interface SignOutParams<R extends boolean = true> {
    * It can give a very nice experience for the user.
    */
   redirectTo?: string
-  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1) */
   redirect?: R
 }
 
