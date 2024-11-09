@@ -160,7 +160,7 @@ export async function fetchData<T = any>(
     const options: RequestInit = {
       ...__NEXTAUTH.fetchOptions,
       headers: {
-        ...(__NEXTAUTH.fetchOptions || {}),
+        ...(__NEXTAUTH.fetchOptions.headers || {}),
         "Content-Type": "application/json",
         ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
       },
