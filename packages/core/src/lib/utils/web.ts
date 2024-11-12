@@ -1,4 +1,4 @@
-import { parse as parseCookie, serialize } from "cookie"
+import * as cookie from "cookie"
 import { UnknownAction } from "../../errors.js"
 import { setLogger } from "./logger.js"
 
@@ -9,6 +9,8 @@ import type {
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
 import type { AuthConfig } from "../../index.js"
+
+const { parse: parseCookie, serialize: serializeCookie } = cookie
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -74,7 +76,7 @@ export function toResponse(res: ResponseInternal): Response {
 
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
-    const cookieHeader = serialize(name, value, options)
+    const cookieHeader = serializeCookie(name, value, options)
     if (headers.has("Set-Cookie")) headers.append("Set-Cookie", cookieHeader)
     else headers.set("Set-Cookie", cookieHeader)
   })
