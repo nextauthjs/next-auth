@@ -100,6 +100,8 @@ export default function Eartho<P extends EarthoProfile>(
     name: "Eartho",
     type: "oidc",
     issuer: "https://account.eartho.io",
+    idToken: false,
+    checks: ["pkce"],
     style: {
       brandColor: "#000",
       logo: "https://eartho.io/logo.png",
