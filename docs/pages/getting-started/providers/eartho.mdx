@@ -1,0 +1,145 @@
+```markdown
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/eartho.svg" height="64" width="64" />
+
+# Eartho Provider
+
+Eartho is an open-source, privacy-focused alternative to traditional login providers such as Google, Facebook, and Apple. It allows users to authenticate without sacrificing personal data privacy or control. By acting as a privacy-first layer over popular login providers, Eartho offers a simple, secure, and privacy-respecting sign-in experience that ensures user data remains out of reach from Big Tech tracking.
+
+## Resources
+
+- [Eartho OAuth documentation](https://docs.eartho.io)
+- [Eartho Developer Console](https://console.eartho.io)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/eartho
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/eartho
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/eartho
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_EARTHO_ID
+AUTH_EARTHO_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="@/auth.ts"
+import NextAuth from "next-auth"
+import Eartho from "next-auth/providers/eartho"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Eartho],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Eartho from "@auth/qwik/providers/eartho"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Eartho],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Eartho from "@auth/sveltekit/providers/eartho"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Eartho],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Eartho from "@auth/express/providers/eartho"
+
+app.use("/auth/*", ExpressAuth({ providers: [Eartho] }))
+```
+
+  </Code.Express>
+</Code>
+
+## Notes
+
+### Refresh Token
+
+Eartho provides a Refresh Token to applications on the first user sign-in. If users need a new Refresh Token, they must re-authenticate or reauthorize the application via the Eartho console: [Eartho User Dashboard](https://console.eartho.io/permissions).
+
+```ts filename="app/api/auth/[...nextauth]/route.ts"
+import Eartho from "next-auth/providers/eartho"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Eartho({
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
+  ],
+})
+```
+
+For more information on exchanging a code for an access token and refresh token, see the [Eartho OAuth documentation](https://eartho.io/docs/oauth#token-exchange).
+
+### Email Verified
+
+Eartho provides an `email_verified` property in the OAuth profile. You can use it to restrict access to users with verified emails from specific domains.
+
+```ts filename="@/auth.ts"
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  callbacks: {
+    async signIn({ account, profile }) {
+      if (account.provider === "eartho") {
+        return profile.email_verified && profile.email.endsWith("@example.com")
+      }
+      return true
+    },
+  },
+})
+```
