@@ -6,7 +6,7 @@
 
 /**
  * This is a workaround to support ESM-only environments, until `cookie` ships ESM builds.
- * @see https://x.com/OrJDevv/status/1853418682522763369
+ * @see https://github.com/jshttp/cookie/issues/211
  */
 
 /**
