@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import * as cookie from "cookie"
+import * as cookie from "../../src/lib/vendored/cookie.js"
 import { MemoryAdapter, initMemory } from "../memory-adapter.js"
 import { randomString } from "../../src/lib/utils/web.js"
 import type { AdapterUser } from "../../src/adapters.js"
