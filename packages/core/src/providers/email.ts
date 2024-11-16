@@ -1,5 +1,6 @@
 import type { CommonProviderOptions } from "./index.js"
 import type { Awaitable, Theme } from "../types.js"
+export type { EmailProviderId } from "./provider-types.js"
 
 // TODO: Kepts for backwards compatibility
 // Remove this import and encourage users
@@ -22,13 +23,9 @@ export default function Email(config: NodemailerUserConfig): NodemailerConfig {
   }
 }
 
-// TODO: Rename to Token provider
-// when started working on https://github.com/nextauthjs/next-auth/discussions/1465
-export type EmailProviderType = "email"
-
 export interface EmailConfig extends CommonProviderOptions {
   id: string
-  type: EmailProviderType
+  type: "email"
   name: string
   from?: string
   maxAge?: number
