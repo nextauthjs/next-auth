@@ -1,7 +1,7 @@
 import { base } from "$app/paths"
 import type { ProviderId } from "@auth/core/providers"
 
-interface SignInOptions<Redirect extends boolean = true>
+export interface SignInOptions<Redirect extends boolean = true>
   extends Record<string, unknown> {
   /** @deprecated Use `redirectTo` instead. */
   callbackUrl?: string
@@ -20,7 +20,7 @@ interface SignInOptions<Redirect extends boolean = true>
   redirect?: Redirect
 }
 
-interface SignInResponse {
+export interface SignInResponse {
   error: string | undefined
   code: string | undefined
   status: number
@@ -28,11 +28,17 @@ interface SignInResponse {
   url: string | null
 }
 
-interface SignOutParams<R extends boolean = true> {
-  /** [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1) */
+export interface SignOutParams<Redirect extends boolean = true> {
+  /** @deprecated Use `redirectTo` instead. */
   callbackUrl?: string
+  /**
+   * If you pass `redirect: false`, the page will not reload.
+   * The session will be deleted, and `useSession` is notified, so any indication about the user will be shown as logged out automatically.
+   * It can give a very nice experience for the user.
+   */
+  redirectTo?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
-  redirect?: R
+  redirect?: Redirect
 }
 
 /** Match `inputType` of `new URLSearchParams(inputType)` */
@@ -121,28 +127,49 @@ export async function signIn<Redirect extends boolean = true>(
   }
 }
 
+export interface SignOutResponse {
+  url: string
+}
+
 /**
- * Signs the user out, by removing the session cookie.
+ * Initiate a signout, by destroying the current session.
+ * Handles CSRF protection.
  *
- * [Documentation](https://authjs.dev/reference/sveltekit/client#signout)
+ * @note This method can only be used from Client Components ("use client" or Pages Router).
+ * For Server Actions, use the `signOut` method imported from the `auth` config.
  */
-export async function signOut(options?: SignOutParams) {
-  const { callbackUrl = window.location.href } = options ?? {}
-  const basePath = base ?? ""
-  const res = await fetch(`${basePath}/auth/signout`, {
+export async function signOut(options?: SignOutParams<true>): Promise<void>
+export async function signOut(
+  options?: SignOutParams<false>
+): Promise<SignOutResponse>
+export async function signOut<R extends boolean = true>(
+  options?: SignOutParams<R>
+): Promise<SignOutResponse | void> {
+  const {
+    redirect = true,
+    redirectTo = options?.callbackUrl ?? window.location.href,
+  } = options ?? {}
+
+  const baseUrl = base ?? ""
+  const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
     body: new URLSearchParams({
-      callbackUrl,
+      callbackUrl: redirectTo,
     }),
   })
   const data = await res.json()
 
-  const url = data.url ?? callbackUrl
-  window.location.href = url
-  // If url contains a hash, the browser does not reload the page. We reload manually
-  if (url.includes("#")) window.location.reload()
+  if (redirect) {
+    const url = data.url ?? redirectTo
+    window.location.href = url
+    // If url contains a hash, the browser does not reload the page. We reload manually
+    if (url.includes("#")) window.location.reload()
+    return
+  }
+
+  return data
 }
