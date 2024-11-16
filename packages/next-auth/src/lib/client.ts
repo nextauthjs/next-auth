@@ -87,7 +87,6 @@ export interface SignOutResponse {
 export interface SignOutParams<Redirect extends boolean = true> {
   /** @deprecated Use `redirectTo` instead. */
   callbackUrl?: string
-
   /**
    * If you pass `redirect: false`, the page will not reload.
    * The session will be deleted, and `useSession` is notified, so any indication about the user will be shown as logged out automatically.
