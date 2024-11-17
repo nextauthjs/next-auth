@@ -65,12 +65,14 @@
  *
  * ### Server-side
  *
- * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. You will need two things to make this work:
+ * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. Another example is available on [our svelte-auth-example repo](https://github.com/nextauthjs/sveltekit-auth-example).
  *
- * 1. Using the components in your SvelteKit app's frontend
+ * You will need two things to make this work:
+ *
+ * 1. Using the components in your SvelteKit app's frontend (for instance `src/routes/+page.svelte`)
  * 2. Add the required `page.server.ts` at `/signin` (for `SignIn`) and `/signout` (for `SignOut`) to handle the form actions
  *
- * ```ts
+ * ```ts title="src/routes/+page.svelte"
  * <script>
  *   import { SignIn, SignOut } from "@auth/sveltekit/components"
  *   import { page } from "$app/stores"
@@ -123,8 +125,11 @@
  *
  * We also export two methods from `@auth/sveltekit/client` in order to do client-side sign-in and sign-out actions.
  *
- * ```ts title="src/routes/index.svelte"
- * import { signIn, signOut } from "@auth/sveltekit/client"
+ * ```ts title="src/routes/+page.svelte"
+ * <script>
+ *   import { signIn, signOut } from "@auth/sveltekit/client"
+ *   let password
+ * </script>
  *
  * <nav>
  *   <p>
@@ -152,7 +157,7 @@
  *       <button on:click={() => signIn("credentials", { password })}>
  *         Sign In with Credentials
  *       </button>
- *       <button on:click={() => signOut()})}>
+ *       <button on:click={() => signOut()}>
  *         Sign Out
  *       </button>
  *     </div>
@@ -177,7 +182,7 @@
  * ```
  *
  * What you return in the function `LayoutServerLoad` will be available inside the `$page` store, in the `data` property: `$page.data`.
- * In this case we return an object with the 'session' property which is what we are accessing in the other code paths.
+ * In this case we return an object with the `session` property which is what we are accessing in the other code paths.
  *
  * ## Handling authorization
  *
@@ -186,7 +191,7 @@
  * ### Per component
  *
  * The simplest case is protecting a single page, in which case you should put the logic in the `+page.server.ts` file.
- * Notice in this case that you could also await event.parent and grab the session from there, however this implementation works even if you haven't done the above in your root `+layout.server.ts`
+ * Notice in this case that you could also `await event.parent` and grab the session from there, however this implementation works even if you haven't done the above in your root `+layout.server.ts`
  *
  * ```ts
  * import { redirect } from '@sveltejs/kit';
