@@ -5,11 +5,11 @@
 
 version: 2
 updates:
-  - package-ecosystem: 'npm' # See documentation for possible values
-    directory: '/' # Location of package manifests
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/" # Location of package manifests
     schedule:
-      interval: 'weekly'
-    versioning-strategy: 'increase'
+      interval: "weekly"
+    versioning-strategy: "increase"
     allow:
-      - dependency-name: 'oauth4webapi'
-      - dependency-name: 'jose'
+      - dependency-name: "oauth4webapi"
+      - dependency-name: "jose"
