@@ -69,9 +69,7 @@
   "dependencies": {
     "@panva/hkdf": "^1.2.1",
     "jose": "^5.9.6",
-    "oauth4webapi": "^3.1.1",
-    "preact": "10.24.3",
-    "preact-render-to-string": "6.5.11"
+    "oauth4webapi": "^3.1.1"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
@@ -92,7 +90,9 @@
   "scripts": {
     "build": "pnpm css && pnpm providers && tsc",
     "clean": "rm -rf *.js *.d.ts* lib providers",
+    "prerender": "pnpm css && pnpm html",
     "css": "node scripts/generate-css",
+    "html": "node --loader ts-node/esm scripts/generate-html",
     "dev": "pnpm css && pnpm providers && tsc -w",
     "test": "vitest run -c ../utils/vitest.config.ts",
     "test:watch": "vitest -c ../utils/vitest.config.ts",
@@ -108,6 +108,9 @@
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
     "postcss-nesting": "^12.1.5",
+    "preact": "10.24.3",
+    "preact-render-to-string": "6.5.11",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
   }
