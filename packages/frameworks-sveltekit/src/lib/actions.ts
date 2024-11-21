@@ -28,7 +28,7 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const signInURL = createActionURL("signin", protocol, headers, env, config)
+  const signInURL = createActionURL("signin", protocol, headers, env, config?.basePath)
 
   if (!provider) {
     signInURL.searchParams.append("callbackUrl", callbackUrl)
@@ -92,7 +92,7 @@ export async function signOut(
   const headers = new Headers(request.headers)
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL("signout", protocol, headers, env, config)
+  const url = createActionURL("signout", protocol, headers, env, config?.basePath)
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
@@ -125,7 +125,7 @@ export async function auth(
     protocol,
     req.headers,
     env,
-    config
+    config?.basePath
   )
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },
