@@ -17,6 +17,7 @@ export function SignInCode({ providerId, providerName, highlight }: Props) {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
@@ -43,10 +44,12 @@ export default function SignIn() {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
 "use client"
+
 import { signIn } from "next-auth/react"
  
 export default function SignIn() {
@@ -64,6 +67,7 @@ export default function SignIn() {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
@@ -107,6 +111,7 @@ export default component$(() => {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           data-filename="src/routes/+page.svelte"
           dangerouslySetInnerHTML={{
@@ -131,6 +136,7 @@ export default component$(() => {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           data-filename="src/routes/signin/+page.server.ts"
           dangerouslySetInnerHTML={{
@@ -148,6 +154,7 @@ export const actions: Actions = { default: signIn }
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           data-filename="src/routes/+page.svelte"
           dangerouslySetInnerHTML={{
