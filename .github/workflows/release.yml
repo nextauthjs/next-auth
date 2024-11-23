@@ -107,7 +107,7 @@ jobs:
         run: cd apps/examples/nextjs-docker && pnpm test:docker
       - name: Run E2E tests
         continue-on-error: true # TODO: Make this less flakey
-        if: github.repository == 'nextauthjs/next-auth'
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         timeout-minutes: 15
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
