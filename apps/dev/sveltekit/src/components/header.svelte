@@ -35,5 +35,6 @@
   <div class="links">
     <a class="linkItem" href="/">Home</a>
     <a class="linkItem" href="/protected">Protected</a>
+    <a class="linkItem" href="/users">Admin</a>
   </div>
 </header>
