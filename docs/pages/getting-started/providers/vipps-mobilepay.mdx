@@ -1,0 +1,113 @@
+---
+title: Vipps MobilePay
+---
+
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/vipps-mobilepay.svg" width="116" height="50" />
+
+# Vipps MobilePay Provider
+
+[Vipps MobilePay](https://vippsmobilepay.com/) is a widespread mobile payment application for mobile in Norway, Sweden, Denmark and Finland. The brand is split, where you have Vipps in Norway and Sweden, and MobilePay in Denmark and Finland, but both brands/apps are using the same API.
+
+## Resources
+
+- [Vipps MobilePay login documentation](https://developer.vippsmobilepay.com/docs/APIs/login-api/)
+- [Official Vipps MobilePay Buttons](https://developer.vippsmobilepay.com/docs/knowledge-base/design-guidelines/buttons/)
+- [Vipps MobilePay Public Testing discovery endpoint](https://apitest.vipps.no/access-management-1.0/access/.well-known/openid-configuration)
+- [Vipps MobilePay Public Production discovery endpoint](https://api.vipps.no/access-management-1.0/access/.well-known/openid-configuration)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/vipps
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/vipps
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/vipps
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_VIPPS_ID
+AUTH_VIPPS_SECRET
+```
+
+### Test API
+
+To use the test mode, you need to override the issuer with the test API endpoint.
+```
+Vipps({ issuer: "https://apitest.vipps.no/access-management-1.0/access/" })
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Vipps from "next-auth/providers/vipps";
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Vipps],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Vipps from "@auth/qwik/providers/vipps"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Vipps],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Vipps from "@auth/sveltekit/providers/vipps"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Vipps],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Vipps from "@auth/express/providers/vipps"
+
+app.use("/auth/*", ExpressAuth({ providers: [Vipps] }))
+```
+
+  </Code.Express>
+</Code>
