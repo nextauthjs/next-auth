@@ -4,7 +4,12 @@ title: Vipps MobilePay
 
 import { Code } from "@/components/Code"
 
-<img align="right" src="/img/providers/vipps-mobilepay.svg" width="116" height="50" />
+<img
+  align="right"
+  src="/img/providers/vipps-mobilepay.svg"
+  width="116"
+  height="50"
+/>
 
 # Vipps MobilePay Provider
 
@@ -55,6 +60,7 @@ AUTH_VIPPS_SECRET
 ### Test API
 
 To use the test mode, you need to override the issuer with the test API endpoint.
+
 ```
 Vipps({ issuer: "https://apitest.vipps.no/access-management-1.0/access/" })
 ```
@@ -66,7 +72,7 @@ Vipps({ issuer: "https://apitest.vipps.no/access-management-1.0/access/" })
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import Vipps from "next-auth/providers/vipps";
+import Vipps from "next-auth/providers/vipps"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Vipps],
