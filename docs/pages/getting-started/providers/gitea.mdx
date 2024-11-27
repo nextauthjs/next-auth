@@ -1,0 +1,103 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/gitea.svg" height="64" width="64" />
+
+# Gitea Provider
+
+## Resources
+
+- [Gitea OAuth documentation](https://docs.gitea.com/development/oauth2-provider)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/gitea
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/gitea
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/gitea
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_GITEA_ID
+AUTH_GITEA_ID
+AUTH_GITEA_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Gitea from "next-auth/providers/gitea"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Gitea],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Gitea from "@auth/qwik/providers/gitea"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Gitea],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Gitea from "@auth/sveltekit/providers/gitea"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Gitea],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Gitea from "@auth/express/providers/gitea"
+
+app.use("/auth/*", ExpressAuth({ providers: [Gitea] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- Due to the way Gitea is architected, you have to define the `issuer` to be the instance URL against which you want to authenticate
