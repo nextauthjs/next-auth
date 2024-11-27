@@ -23,7 +23,7 @@ export interface OryHydraProfile extends Record<string, any> {
 }
 
 /**
- * Add Ory Hydra login to your page.
+ * Add login with self-hosted Ory Hydra to your app.
  *
  * ### Setup
  *
@@ -55,8 +55,12 @@ export interface OryHydraProfile extends Record<string, any> {
  *
  * ### Notes
  *
- * Ory Hydra can be setup using the default Ory Network setup or self hosted on your own
+ * Ory Hydra can be setup using the default Ory Network setup or self-hosted on your own
  * infrastructure.
+ *
+ * This provider is best for self-hosted Ory Hydra instances. For the Ory Network, use the
+ * `Ory` provider.
+ *
  * By default, Auth.js assumes that the Ory Hydra provider is
  * based on the [Open ID Connect](https://openid.net/specs/openid-connect-core-1_0.html) specification.
  *
@@ -82,7 +86,7 @@ export default function OryHydra<P extends OryHydraProfile>(
 ): OIDCConfig<P> {
   return {
     id: "hydra",
-    name: "Hydra",
+    name: "Ory Hydra",
     type: "oidc",
     style: {
       bg: "#fff",
