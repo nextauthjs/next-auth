@@ -1,5 +1,6 @@
 import type { CommonProviderOptions } from "./index.js"
 import type { Awaitable, Theme } from "../types.js"
+export type { EmailProviderId } from "./provider-types.js"
 
 // TODO: Kepts for backwards compatibility
 // Remove this import and encourage users
@@ -38,7 +39,7 @@ export type EmailProviderSendVerificationRequestParams = {
 
 export interface EmailConfig extends CommonProviderOptions {
   id: string
-  type: EmailProviderType
+  type: "email"
   name: string
   from?: string
   maxAge?: number

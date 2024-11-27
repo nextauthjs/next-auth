@@ -319,6 +319,7 @@ export interface AuthConfig {
      *  async signIn({ profile }) {
      *   // Only allow sign in for users with email addresses ending with "yourdomain.com"
      *   return profile?.email?.endsWith("@yourdomain.com")
+     *  }
      * }
      * ```
      */
