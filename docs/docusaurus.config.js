@@ -123,17 +123,6 @@ module.exports = {
               label: "Introduction",
               to: "/getting-started/introduction",
             },
-            {
-              html: `
-            <a target="_blank" rel="noopener noreferrer" href="https://vercel.com?utm_source=nextauthjs&utm_campaign=oss">
-              <img
-                alt="Powered by Vercel"
-                style="margin-top: 8px"
-                height="32"
-                src="img/powered-by-vercel.svg"
-              />
-            </a>`,
-            },
           ],
         },
         {
