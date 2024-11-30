@@ -1,6 +1,6 @@
 {
   "name": "@auth/dgraph-adapter",
-  "version": "2.5.3",
+  "version": "2.7.4",
   "description": "Dgraph adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -38,7 +38,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "./test/test.sh"
+    "test": "./test/test.sh",
+    "clean": "rm -rf *.js *.d.ts* lib"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.5"
