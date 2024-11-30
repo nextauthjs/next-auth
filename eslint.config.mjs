@@ -164,7 +164,7 @@ export default tsEslint.config(
       "static",
       "coverage",
       "dist",
-      "packages/core/src/providers/oauth-types.ts",
+      "packages/core/src/providers/provider-types.ts",
       "packages/core/src/lib/pages/styles.ts",
       "packages/frameworks-sveltekit/package",
       "packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*",
