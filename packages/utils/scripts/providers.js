@@ -13,7 +13,7 @@ const args = parseArgs({
 const { out } = args.values
 
 const destinationDir = resolve(process.cwd(), join(out, "providers"))
-const nonProvider = ["oauth-types.ts", "oauth.ts"]
+const nonProvider = ["provider-types.ts", "oauth.ts"]
 try {
   await fs.mkdir(destinationDir, { recursive: true })
   const files = (await fs.readdir(sourceDir)).filter(

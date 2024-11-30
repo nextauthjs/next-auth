@@ -22,15 +22,11 @@ import {
   useOnline,
 } from "./lib/client.js"
 
-import type {
-  BuiltInProviderType,
-  RedirectableProviderType,
-} from "@auth/core/providers"
+import type { ProviderId } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
 import type {
   AuthClientConfig,
   ClientSafeProvider,
-  LiteralUnion,
   SessionProviderProps,
   SignInAuthorizationParams,
   SignInOptions,
@@ -42,7 +38,6 @@ import type {
 
 // TODO: Remove/move to core?
 export type {
-  LiteralUnion,
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
@@ -209,61 +204,74 @@ export async function getCsrfToken() {
   return response?.csrfToken ?? ""
 }
 
-type ProvidersType = Record<
-  LiteralUnion<BuiltInProviderType>,
-  ClientSafeProvider
->
-
-/**
- * Returns a client-safe configuration object of the currently
- * available providers.
- */
 export async function getProviders() {
-  return fetchData<ProvidersType>("providers", __NEXTAUTH, logger)
+  return fetchData<Record<ProviderId, ClientSafeProvider>>(
+    "providers",
+    __NEXTAUTH,
+    logger
+  )
 }
 
 /**
- * Initiate a signin flow or send the user to the signin page listing all possible providers.
+ * Initiates a signin flow or sends the user to the signin page listing all possible providers.
  * Handles CSRF protection.
+ *
+ * @note This method can only be used from Client Components ("use client" or Pages Router).
+ * For Server Actions, use the `signIn` method imported from the `auth` config.
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined,
->(
-  provider?: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
-  options?: SignInOptions,
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<true>,
   authorizationParams?: SignInAuthorizationParams
-): Promise<
-  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
-> {
-  const { redirect = true } = options ?? {}
-  const redirectTo =
-    options?.redirectTo ?? options?.callbackUrl ?? window.location.href
+): Promise<void>
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<false>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse>
+export async function signIn<Redirect extends boolean = true>(
+  provider?: ProviderId,
+  options?: SignInOptions<Redirect>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse | void> {
+  const { callbackUrl, ...rest } = options ?? {}
+  const {
+    redirect = true,
+    redirectTo = callbackUrl ?? window.location.href,
+    ...signInParams
+  } = rest
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
 
   if (!providers) {
-    window.location.href = `${baseUrl}/error`
-    return
+    const url = `${baseUrl}/error`
+    window.location.href = url
+    return // TODO: Return error if `redirect: false`
   }
 
-  if (!provider || !(provider in providers)) {
-    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
+  if (!provider || !providers[provider]) {
+    const url = `${baseUrl}/signin?${new URLSearchParams({
       callbackUrl: redirectTo,
     })}`
-    return
+    window.location.href = url
+    return // TODO: Return error if `redirect: false`
   }
 
-  const isCredentials = providers[provider].type === "credentials"
-  const isEmail = providers[provider].type === "email"
-  const isSupportingReturn = isCredentials || isEmail
+  const providerType = providers[provider].type
+
+  if (providerType === "webauthn") {
+    // TODO: Add docs link with explanation
+    throw new TypeError(
+      [
+        `Provider id "${provider}" refers to a WebAuthn provider.`,
+        'Please use `import { signIn } from "next-auth/webauthn"` instead.',
+      ].join("\n")
+    )
+  }
 
   const signInUrl = `${baseUrl}/${
-    isCredentials ? "callback" : "signin"
+    providerType === "credentials" ? "callback" : "signin"
   }/${provider}`
 
   const csrfToken = await getCsrfToken()
@@ -275,9 +283,8 @@ export async function signIn<
         "Content-Type": "application/x-www-form-urlencoded",
         "X-Auth-Return-Redirect": "1",
       },
-      // @ts-expect-error
       body: new URLSearchParams({
-        ...options,
+        ...signInParams,
         csrfToken,
         callbackUrl: redirectTo,
       }),
@@ -286,8 +293,7 @@ export async function signIn<
 
   const data = await res.json()
 
-  // TODO: Do not redirect for Credentials and Email providers by default in next major
-  if (redirect || !isSupportingReturn) {
+  if (redirect) {
     const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
@@ -295,8 +301,8 @@ export async function signIn<
     return
   }
 
-  const error = new URL(data.url).searchParams.get("error")
-  const code = new URL(data.url).searchParams.get("code")
+  const error = new URL(data.url).searchParams.get("error") ?? undefined
+  const code = new URL(data.url).searchParams.get("code") ?? undefined
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -308,18 +314,28 @@ export async function signIn<
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,
-  } as any
+  }
 }
 
 /**
  * Initiate a signout, by destroying the current session.
  * Handles CSRF protection.
+ *
+ * @note This method can only be used from Client Components ("use client" or Pages Router).
+ * For Server Actions, use the `signOut` method imported from the `auth` config.
  */
+export async function signOut(options?: SignOutParams<true>): Promise<void>
+export async function signOut(
+  options?: SignOutParams<false>
+): Promise<SignOutResponse>
 export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
-): Promise<R extends true ? undefined : SignOutResponse> {
-  const redirectTo =
-    options?.redirectTo ?? options?.callbackUrl ?? window.location.href
+): Promise<SignOutResponse | void> {
+  const {
+    redirect = true,
+    redirectTo = options?.callbackUrl ?? window.location.href,
+  } = options ?? {}
+
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
@@ -334,12 +350,11 @@ export async function signOut<R extends boolean = true>(
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
 
-  if (options?.redirect ?? true) {
+  if (redirect) {
     const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
-    // @ts-expect-error
     return
   }
 

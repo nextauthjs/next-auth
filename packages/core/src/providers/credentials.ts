@@ -74,7 +74,7 @@ export interface CredentialsConfig<
   ) => Awaitable<User | null>
 }
 
-export type CredentialsProviderType = "Credentials"
+export type CredentialsProviderId = "credentials"
 
 /**
  * The Credentials provider allows you to handle signing in with arbitrary credentials,

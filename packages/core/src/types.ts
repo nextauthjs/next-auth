@@ -51,7 +51,7 @@
  * @module types
  */
 
-import type { SerializeOptions } from "cookie"
+import type { SerializeOptions } from "./lib/vendored/cookie.js"
 import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"

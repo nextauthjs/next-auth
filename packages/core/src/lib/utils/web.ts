@@ -1,4 +1,4 @@
-import * as cookie from "cookie"
+import * as cookie from "../vendored/cookie.js"
 import { UnknownAction } from "../../errors.js"
 import { setLogger } from "./logger.js"
 

@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
-import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import Keycloak from "next-auth/providers/keycloak"
+import GitHub from "next-auth/providers/github"
 
 // import { PrismaClient } from "@prisma/client"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -66,8 +66,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         }
       },
     }),
+    GitHub,
     Keycloak,
   ],
+
   callbacks: {
     jwt({ token, trigger, session }) {
       if (trigger === "update") token.name = session.user.name

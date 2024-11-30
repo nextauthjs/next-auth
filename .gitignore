@@ -87,7 +87,7 @@ docs/.next
 docs/manifest.mjs
 
 # Core
-packages/core/src/providers/oauth-types.ts
+packages/core/src/providers/provider-types.ts
 packages/core/lib
 packages/core/providers
 packages/core/src/lib/pages/styles.ts

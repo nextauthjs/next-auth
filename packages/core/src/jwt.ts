@@ -42,7 +42,7 @@ import { defaultCookies, SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"
-import * as cookie from "cookie"
+import * as cookie from "./lib/vendored/cookie.js"
 
 const { parse: parseCookie } = cookie
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days

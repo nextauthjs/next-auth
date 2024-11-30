@@ -13,7 +13,7 @@
         "*.d.ts",
         "*.d.ts.map",
         "src/lib/pages/styles.ts",
-        "src/providers/oauth-types.ts",
+        "src/providers/provider-types.ts",
         ".svelte-kit/**"
       ],
       "outputLogs": "new-only"

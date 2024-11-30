@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import type { BuiltInProviderType, ProviderType } from "@auth/core/providers"
+import type { ProviderId, ProviderType } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
 import { AuthError } from "@auth/core/errors"
 
@@ -33,14 +33,8 @@ export interface UseSessionOptions<R extends boolean> {
   onUnauthenticated?: () => void
 }
 
-// Util type that matches some strings literally, but allows any other string as well.
-// @source https://github.com/microsoft/TypeScript/issues/29729#issuecomment-832522611
-export type LiteralUnion<T extends U, U = string> =
-  | T
-  | (U & Record<never, never>)
-
 export interface ClientSafeProvider {
-  id: LiteralUnion<BuiltInProviderType>
+  id: ProviderId
   name: string
   type: ProviderType
   signinUrl: string
@@ -48,14 +42,14 @@ export interface ClientSafeProvider {
   redirectTo: string
 }
 
-export interface SignInOptions extends Record<string, unknown> {
-  /**
-   * @deprecated Use `redirectTo` instead.
-   */
+export interface SignInOptions<Redirect extends boolean = true>
+  extends Record<string, unknown> {
+  /** @deprecated Use `redirectTo` instead. */
   callbackUrl?: string
   /**
    * Specify where the user should be redirected to after a successful signin.
-   * Defaults to the page URL the sign-in is initiated from.
+   *
+   * By default, it is the page the sign-in was initiated from.
    */
   redirectTo?: string
   /**
@@ -64,7 +58,7 @@ export interface SignInOptions extends Record<string, unknown> {
    *
    * For this purpose, you can set this to option `redirect: false`.
    */
-  redirect?: boolean
+  redirect?: Redirect
 }
 
 export interface SignInResponse {
@@ -90,11 +84,9 @@ export interface SignOutResponse {
   url: string
 }
 
-export interface SignOutParams<R extends boolean = true> {
-  /** @deprecated Use `redirectTo` instead.
-   */
+export interface SignOutParams<Redirect extends boolean = true> {
+  /** @deprecated Use `redirectTo` instead. */
   callbackUrl?: string
-
   /**
    * If you pass `redirect: false`, the page will not reload.
    * The session will be deleted, and `useSession` is notified, so any indication about the user will be shown as logged out automatically.
@@ -102,7 +94,7 @@ export interface SignOutParams<R extends boolean = true> {
    */
   redirectTo?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
-  redirect?: R
+  redirect?: Redirect
 }
 
 /**
