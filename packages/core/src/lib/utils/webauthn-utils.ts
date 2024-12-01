@@ -3,7 +3,7 @@ import type {
   Account,
   Authenticator,
   Awaited,
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   User,
@@ -39,7 +39,7 @@ export type WebAuthnRegister = "register"
 export type WebAuthnAuthenticate = "authenticate"
 export type WebAuthnAction = WebAuthnRegister | WebAuthnAuthenticate
 
-type InternalOptionsWebAuthn = InternalOptions<WebAuthnProviderType> & {
+type InternalOptionsWebAuthn = InternalConfig<WebAuthnProviderType> & {
   adapter: Required<Adapter>
 }
 export type WebAuthnOptionsResponseBody =
@@ -318,11 +318,10 @@ export async function verifyAuthenticate(
 }
 
 export async function verifyRegister(
-  options: InternalOptions<WebAuthnProviderType>,
   request: RequestInternal,
-  resCookies: Cookie[]
+  config: InternalConfig<WebAuthnProviderType>
 ): Promise<{ account: Account; user: User; authenticator: Authenticator }> {
-  const { provider } = options
+  const { provider, resCookies } = config
 
   // Get WebAuthn response from request body
   const data =
@@ -340,7 +339,7 @@ export async function verifyRegister(
 
   // Get challenge from request cookies
   const { challenge: expectedChallenge, registerData: user } =
-    await webauthnChallenge.use(options, request.cookies, resCookies)
+    await webauthnChallenge.use(config, request.cookies, resCookies)
   if (!user) {
     throw new AuthError(
       "Missing user registration data in WebAuthn challenge cookie"
@@ -350,7 +349,7 @@ export async function verifyRegister(
   // Verify the response
   let verification: VerifiedRegistrationResponse
   try {
-    const relayingParty = provider.getRelayingParty(options, request)
+    const relayingParty = provider.getRelayingParty(config, request)
     verification = await provider.simpleWebAuthn.verifyRegistrationResponse({
       ...provider.verifyRegistrationOptions,
       expectedChallenge,
@@ -372,7 +371,7 @@ export async function verifyRegister(
   // Build a new account
   const account = {
     providerAccountId: toBase64(verification.registrationInfo.credentialID),
-    provider: options.provider.id,
+    provider: config.provider.id,
     type: provider.type,
   }
 
@@ -480,9 +479,9 @@ async function getRegistrationOptions(
 }
 
 export function assertInternalOptionsWebAuthn(
-  options: InternalOptions
+  config: InternalConfig
 ): InternalOptionsWebAuthn {
-  const { provider, adapter } = options
+  const { provider, adapter } = config
 
   // Adapter is required for WebAuthn
   if (!adapter)
@@ -492,7 +491,7 @@ export function assertInternalOptionsWebAuthn(
     throw new InvalidProvider("Provider must be WebAuthn")
   }
   // Narrow the options type for typed usage later
-  return { ...options, provider, adapter }
+  return { ...config, provider, adapter }
 }
 
 function fromAdapterAuthenticator(
