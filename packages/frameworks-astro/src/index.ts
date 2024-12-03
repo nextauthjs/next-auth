@@ -84,6 +84,7 @@
 import type { AuthConfig } from "@auth/core"
 import type { AstroIntegration } from "astro"
 import type { PluginOption } from "vite"
+import { dirname, join } from "node:path"
 
 export interface AstroAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
@@ -168,7 +169,6 @@ export default (
       })
 
       if (config.injectEndpoints !== false) {
-        const { dirname, join } = await import("node:path")
         const currentDir = dirname(import.meta.url.replace("file://", ""))
         const entrypoint = join(currentDir, "./api/[...auth].js")
         injectRoute({
