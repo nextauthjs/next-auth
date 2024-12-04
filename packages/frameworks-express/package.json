@@ -48,7 +48,7 @@
     "supertest": "^6.3.3"
   },
   "peerDependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2 || ^5.0.0"
   },
   "keywords": [
     "Express",
