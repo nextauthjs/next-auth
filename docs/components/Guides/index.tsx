@@ -105,6 +105,12 @@ export function Guides() {
                 demo: "https://qwik-auth-example.vercel.app",
                 repo: "qwik-auth-example",
               },
+              {
+                id: "solidstart",
+                name: "SolidStart",
+                demo: "https://solid-start-auth-example.vercel.app",
+                repo: "solid-start-auth-example",
+              },
             ].map((f) => (
               <li
                 key={f.id}
