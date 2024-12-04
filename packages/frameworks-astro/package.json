@@ -1,0 +1,88 @@
+{
+  "name": "@auth/astro",
+  "version": "0.1.0",
+  "description": "Authentication for Astro.",
+  "keywords": [
+    "astro",
+    "withastro",
+    "astro-component",
+    "authjs",
+    "auth"
+  ],
+  "homepage": "https://astro.authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "author": "Reuben Tier <otterlord.dev@gmail.com>",
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm clean && pnpm providers && tsc",
+    "clean": "rm -rf dist src/providers",
+    "providers": "node ../utils/scripts/providers.js --out src"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    },
+    "./middleware": {
+      "types": "./dist/middleware.d.ts",
+      "import": "./dist/middleware.js"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts",
+      "import": "./dist/providers/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*",
+    "set-cookie-parser": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.14",
+    "@types/set-cookie-parser": "^2.4.7",
+    "astro": "^5.0.0",
+    "typedoc": "^0.26.10",
+    "typedoc-plugin-markdown": "^4.2.9",
+    "vite": "^5.4.8"
+  },
+  "peerDependencies": {
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.2",
+    "astro": "^4.0.0",
+    "nodemailer": "^6.8.0"
+  },
+  "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
+    "@simplewebauthn/server": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    }
+  }
+}

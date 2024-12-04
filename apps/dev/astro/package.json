@@ -1,0 +1,19 @@
+{
+  "name": "astro-auth-app",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/node": "^9.0.0",
+    "@auth/astro": "workspace:*",
+    "astro": "^5.0.0",
+    "typescript": "^5.3.3"
+  }
+}
