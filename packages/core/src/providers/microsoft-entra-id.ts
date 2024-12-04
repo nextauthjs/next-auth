@@ -56,6 +56,9 @@ export interface MicrosoftEntraIDProfile extends Record<string, any> {
  *
  * To only allow your organization's users to log in, you'll need to set the `issuer`, in addition to the client id and secret.
  *
+ * Issuer Example: https://login.microsoftonline.com/{Directory (tenant) ID}/v2.0
+ * You can find {Directory (tenant) ID} on the App Registrations Page
+ * 
  * @example
  * ```ts
  * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
