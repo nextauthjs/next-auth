@@ -1,6 +1,6 @@
 {
   "name": "@auth/typeorm-adapter",
-  "version": "2.4.2",
+  "version": "2.7.4",
   "description": "TypeORM adapter for Auth.js.",
   "homepage": "https://authjs.dev/reference/adapter/typeorm",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -38,7 +38,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist *.js *.d.ts*",
     "test": "pnpm test:mysql && pnpm test:sqlite && pnpm test:pg",
     "test:mysql": "pnpm clean && ./test/mysql/test.sh",
     "test:pg": "pnpm clean && ./test/postgresql/test.sh",

@@ -10,7 +10,7 @@ Protecting routes can be done generally by checking for the session and taking a
 <Code>
 <Code.Next>
 
-You can use the `auth` function returned from `NextAuth()` and exported from your `auth.js` configuration file to get the session object.
+You can use the `auth` function returned from `NextAuth()` and exported from your `auth.ts` or `auth.js` configuration file to get the session object.
 
 ```tsx filename="app/server/page.tsx" {4}
 import { auth } from "@/auth"

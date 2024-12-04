@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.34.2",
+  "version": "0.37.4",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -67,13 +67,11 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@panva/hkdf": "^1.1.1",
-    "@types/cookie": "0.6.0",
-    "cookie": "0.6.0",
-    "jose": "^5.1.3",
-    "oauth4webapi": "^2.10.4",
-    "preact": "10.11.3",
-    "preact-render-to-string": "5.2.3"
+    "@panva/hkdf": "^1.2.1",
+    "jose": "^5.9.6",
+    "oauth4webapi": "^3.1.3",
+    "preact": "10.24.3",
+    "preact-render-to-string": "6.5.11"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
@@ -96,7 +94,6 @@
     "clean": "rm -rf *.js *.d.ts* lib providers",
     "css": "node scripts/generate-css",
     "dev": "pnpm css && pnpm providers && tsc -w",
-    "test:e2e": "playwright test -c ../utils/playwright.config.ts",
     "test": "vitest run -c ../utils/vitest.config.ts",
     "test:watch": "vitest -c ../utils/vitest.config.ts",
     "providers": "node scripts/generate-providers"
@@ -110,7 +107,7 @@
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
     "postcss": "8.4.19",
-    "postcss-nesting": "^12.0.2",
+    "postcss-nesting": "^12.1.5",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
   }

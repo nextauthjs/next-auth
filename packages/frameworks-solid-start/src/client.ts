@@ -1,19 +1,30 @@
-import type {
-  BuiltInProviderType,
-  RedirectableProviderType,
-} from "@auth/core/providers"
+import type { ProviderId } from "@auth/core/providers"
 
-type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
-
-interface SignInOptions extends Record<string, unknown> {
-  /**
-   * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
-   *
-   * [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl)
-   */
+interface SignInOptions<Redirect extends boolean = true>
+  extends Record<string, unknown> {
+  /** @deprecated Use `redirectTo` instead. */
   callbackUrl?: string
-  /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
-  redirect?: boolean
+  /**
+   * Specify where the user should be redirected to after a successful signin.
+   *
+   * By default, it is the page the sign-in was initiated from.
+   */
+  redirectTo?: string
+  /**
+   * You might want to deal with the signin response on the same page, instead of redirecting to another page.
+   * For example, if an error occurs (like wrong credentials given by the user), you might want to show an inline error message on the input field.
+   *
+   * For this purpose, you can set this to option `redirect: false`.
+   */
+  redirect?: Redirect
+}
+
+export interface SignInResponse {
+  error: string | undefined
+  code: string | undefined
+  status: number
+  ok: boolean
+  url: string | null
 }
 
 interface SignOutParams<R extends boolean = true> {
@@ -41,59 +52,81 @@ export type SignInAuthorizationParams =
  * signIn("provider") // example: signIn("github")
  * ```
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined,
->(
-  providerId?: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
-  options?: SignInOptions,
+
+/**
+ * Initiates a signin flow or sends the user to the signin page listing all possible providers.
+ * Handles CSRF protection.
+ *
+ * @note This method can only be used from Client Components ("use client" or Pages Router).
+ * For Server Actions, use the `signIn` method imported from the `auth` config.
+ */
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<true>,
   authorizationParams?: SignInAuthorizationParams
-) {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+): Promise<void>
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<false>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse>
+export async function signIn<Redirect extends boolean = true>(
+  provider?: ProviderId,
+  options?: SignInOptions<Redirect>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse | void> {
+  const { callbackUrl, ...rest } = options ?? {}
+  const {
+    redirect = true,
+    redirectTo = callbackUrl ?? window.location.href,
+    ...signInParams
+  } = rest
 
-  // TODO: Support custom providers
-  const isCredentials = providerId === "credentials"
-  const isEmail = providerId === "email"
-  const isSupportingReturn = isCredentials || isEmail
+  const isCredentials = provider === "credentials"
 
-  // TODO: Handle custom base path
   const signInUrl = `/api/auth/${
     isCredentials ? "callback" : "signin"
-  }/${providerId}`
-
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+  }/${provider}`
 
   // TODO: Handle custom base path
   const csrfTokenResponse = await fetch("/api/auth/csrf")
   const { csrfToken } = await csrfTokenResponse.json()
+  const res = await fetch(
+    `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Auth-Return-Redirect": "1",
+      },
+      body: new URLSearchParams({
+        ...signInParams,
+        csrfToken,
+        callbackUrl: redirectTo,
+      }),
+    }
+  )
 
-  const res = await fetch(_signInUrl, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-Auth-Return-Redirect": "1",
-    },
-    // @ts-ignore
-    body: new URLSearchParams({
-      ...options,
-      csrfToken,
-      callbackUrl,
-    }),
-  })
+  const data = await res.json()
 
-  const data = await res.clone().json()
-  const error = new URL(data.url).searchParams.get("error")
-  if (redirect || !isSupportingReturn || !error) {
-    // TODO: Do not redirect for Credentials and Email providers by default in next major
-    window.location.href = data.url ?? data.redirect ?? callbackUrl
+  if (redirect) {
+    const url = data.url ?? redirectTo
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
-    if (data.url.includes("#")) window.location.reload()
+    if (url.includes("#")) window.location.reload()
     return
   }
-  return res
+
+  const error = new URL(data.url).searchParams.get("error") ?? undefined
+  const code = new URL(data.url).searchParams.get("code") ?? undefined
+
+  return {
+    error,
+    code,
+    status: res.status,
+    ok: res.ok,
+    url: error ? null : data.url,
+  }
 }
 
 /**

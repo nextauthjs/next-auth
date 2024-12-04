@@ -14,7 +14,7 @@ import { auth } from "../auth"
 export default async function UserAvatar() {
   const session = await auth()
 
-  if (!session.user) return null
+  if (!session?.user) return null
 
   return (
     <div>
@@ -27,9 +27,41 @@ export default async function UserAvatar() {
 </Code.Next>
 <Code.NextClient>
 
-In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
+Although `next-auth` supports client-side data retrieval using `useSession` and `SessionProvider` for both the App Router and Pages Router, in real-world scenarios, these are used less frequently. Typically, you'll want to take full advantage of server-side rendering to optimize performance and security.
+
+### App Router
+
+```tsx filename="app/admin/dashboard.tsx"
+"use client"
+import { useSession } from "next-auth/react"
+
+export default function Dashboard() {
+  const { data: session } = useSession()
+
+  if (session?.user?.role === "admin") {
+    return <p>You are an admin, welcome!</p>
+  }
+
+  return <p>You are not authorized to view this page!</p>
+}
+```
+
+```tsx filename="app/admin/page.tsx"
+import { SessionProvider } from "next-auth/react"
+import { Dashboard } from "./Dashboard"
+
+export default function Administrator() {
+  return (
+    <SessionProvider>
+      <Dashboard />
+    </SessionProvider>
+  )
+}
+```
 
 ### Page Server Side
+
+In the pages router, to access a session in a component, you'll first need to get the `session` object in a page and then pass it down to the component.
 
 ```tsx filename="./pages/dashboard.tsx"
 import { auth } from "@/auth.ts"
@@ -99,7 +131,7 @@ export function UserAvatar({ session }: { session: Session | null }) {
   return (
     <div>
       <img
-        src={session?.user?.image ?? "https://source.boringavatars.com/marble/120"}
+        src={session?.user?.image ?? "https://i.pravatar.cc/300"}
         alt="User Avatar"
       />
     </div>
@@ -143,8 +175,7 @@ Then you can access the `session` on the `$page.data` object in your page.
 
 <nav>
   <img
-    src={$page.data.session?.user?.image ??
-      "https://source.boringavatars.com/marble/120/"}
+    src={$page.data.session?.user?.image ?? "https://i.pravatar.cc/300"}
     alt="User Avatar"
   />
 </nav>

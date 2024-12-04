@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Dropbox</b> integration.</span>
  * <a href="https://dropbox.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/dropbox.svg" height="48" width="48"/>
@@ -72,7 +72,7 @@ export default function Dropbox(
     authorization: {
       url: "https://www.dropbox.com/oauth2/authorize",
       params: {
-        access_type: "offline",
+        token_access_type: "offline",
         scope: "account_info.read",
       },
     },

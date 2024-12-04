@@ -77,6 +77,49 @@ export const { auth, handlers } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="plugin@auth.ts"
+import { DefaultSession, QwikAuth$ } from "@auth/qwik"
+
+declare module "@auth/qwik" {
+  /**
+   * Returned by the `useSession` hook and the `session` object in the sharedMap
+   */
+  interface Session {
+    user: {
+      /** The user's postal address. */
+      address: string
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"]
+  }
+}
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    callbacks: {
+      session({ session, token, user }) {
+        // `session.user.address` is now a valid property, and will be type-checked
+        // in places like `useSession().user` or `sharedMap.get('session').user`
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            address: user.address,
+          },
+        }
+      },
+    },
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="auth.ts"

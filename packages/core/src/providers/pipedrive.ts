@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Pipedrive</b> integration.</span>
  * <a href="https://www.pipedrive.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/pipedrive.svg" height="48" />

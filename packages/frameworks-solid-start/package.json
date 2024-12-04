@@ -1,6 +1,6 @@
 {
   "name": "@auth/solid-start",
-  "version": "0.12.2",
+  "version": "0.15.4",
   "description": "Authentication for SolidStart.",
   "license": "ISC",
   "author": "OrJDev <orjdeveloper@gmail.com>",
@@ -51,7 +51,7 @@
   "scripts": {
     "build": "pnpm clean && pnpm providers && tsc",
     "test": "vitest run -c ../utils/vitest.config.ts",
-    "providers": "node ../utils/scripts/providers --out src",
+    "providers": "node ../utils/scripts/providers",
     "clean": "rm -rf *.js *.d.ts* providers src/providers"
   },
   "dependencies": {

@@ -177,11 +177,6 @@ html[data-theme="dark"] .github-counter {
   animation: fadeOut 250ms ease-in;
 }
 
-/* Nextra Tabs buttons - fix ring cutoff from overflow-hidden */
-button[id^="headlessui-tabs-tab"] {
-  margin: 0 3px 0 3px;
-}
-
 #carbonads_bak {
   @apply flex flex-col gap-1 rounded-md bg-neutral-100 p-3 text-xs text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
 
@@ -205,11 +200,6 @@ button[id^="headlessui-tabs-tab"] {
     background-color: unset !important;
     padding: 0 !important;
   }
-}
-
-/* Sidebar hack for padding for focus ring */
-aside.nextra-sidebar-container .nextra-scrollbar > div {
-  padding: 4px;
 }
 
 .sponsoredBadge {
@@ -256,4 +246,18 @@ div.nextra-search kbd {
   [popover]:popover-open {
     opacity: 0;
   }
+}
+
+:is(html[class~="dark"])
+  > head:has(meta[content*="reference/core/providers"])
+  + body
+  .provider {
+  color: #e2e8f0 !important;
+  background-color: transparent !important;
+}
+
+html > head:has(meta[content*="reference/core/providers"]) + body .provider {
+  padding: 1rem;
+  font-size: 1rem;
+  color: #000 !important;
 }
