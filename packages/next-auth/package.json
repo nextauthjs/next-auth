@@ -102,8 +102,8 @@
     "@auth/core": "0.34.2",
     "next": "^12.2.5 || ^13 || ^14 || ^15",
     "nodemailer": "^6.6.5",
-    "react": "^17.0.2 || ^18",
-    "react-dom": "^17.0.2 || ^18"
+    "react": "^17.0.2 || ^18 || ^19",
+    "react-dom": "^17.0.2 || ^18 || ^19"
   },
   "peerDependenciesMeta": {
     "@auth/core": {
