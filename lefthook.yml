@@ -1,0 +1,6 @@
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      run: pnpm prettier --cache --write {staged_files}
+      stage_fixed: true

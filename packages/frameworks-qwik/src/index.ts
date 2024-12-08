@@ -110,7 +110,7 @@
  */
 
 import type { AuthConfig } from "@auth/core"
-import { Auth, isAuthAction, skipCSRFCheck } from "@auth/core"
+import { Auth, isAuthAction, skipCSRFCheck, customFetch } from "@auth/core"
 import { AuthAction, Session } from "@auth/core/types"
 import { implicit$FirstArg, type QRL } from "@builder.io/qwik"
 import {
@@ -123,6 +123,17 @@ import {
 import { EnvGetter } from "@builder.io/qwik-city/middleware/request-handler"
 import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
+
+export { customFetch }
+export { AuthError, CredentialsSignin } from "@auth/core/errors"
+
+export type {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "@auth/core/types"
 
 /** Configure the {@link QwikAuth$} method. */
 export interface QwikAuthConfig extends Omit<AuthConfig, "raw"> {}
@@ -145,7 +156,7 @@ export function QwikAuthQrl(
 
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
-      const body = new URLSearchParams({ redirectTo })
+      const body = new URLSearchParams({ callbackUrl: redirectTo })
       Object.entries(rest).forEach(([key, value]) => {
         body.set(key, String(value))
       })
@@ -159,18 +170,12 @@ export function QwikAuthQrl(
 
       const data = await authAction(body, req, signInUrl, authOpts)
 
-      // set authjs.callback-url cookie. Fix for https://github.com/QwikDev/qwik/issues/5227
-      req.cookie.set("authjs.callback-url", redirectTo, {
-        path: "/",
-      })
-
       if (data.url) {
         throw req.redirect(301, data.url)
       }
     },
     zod$({
       providerId: z.string().optional(),
-      /** Yoooo */
       redirectTo: z.string().optional(),
       options: z
         .object({
@@ -190,7 +195,7 @@ export function QwikAuthQrl(
       redirectTo ??= defaultRedirectTo(req)
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
-      const body = new URLSearchParams({ redirectTo })
+      const body = new URLSearchParams({ callbackUrl: redirectTo })
       await authAction(body, req, `/auth/signout`, authOpts)
     },
     zod$({
@@ -282,7 +287,7 @@ async function authAction(
 
   try {
     return await res.json()
-  } catch (error) {
+  } catch {
     return await res.text()
   }
 }

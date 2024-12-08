@@ -1,9 +1,9 @@
-import { InferInsertModel, and, eq, getTableColumns } from "drizzle-orm"
+import { GeneratedColumnConfig, and, eq, getTableColumns } from "drizzle-orm"
 import {
   PgColumn,
   PgDatabase,
+  PgQueryResultHKT,
   PgTableWithColumns,
-  QueryResultHKT,
   boolean,
   integer,
   pgTable,
@@ -21,6 +21,7 @@ import type {
   AdapterUser,
   VerificationToken,
 } from "@auth/core/adapters"
+import { Awaitable } from "@auth/core/types"
 
 export function defineTables(
   schema: Partial<DefaultPostgresSchema> = {}
@@ -32,7 +33,7 @@ export function defineTables(
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
       name: text("name"),
-      email: text("email").notNull(),
+      email: text("email").unique(),
       emailVerified: timestamp("emailVerified", { mode: "date" }),
       image: text("image"),
     }) satisfies DefaultPostgresUsersTable)
@@ -122,7 +123,7 @@ export function defineTables(
 }
 
 export function PostgresDrizzleAdapter(
-  client: PgDatabase<QueryResultHKT, any>,
+  client: PgDatabase<PgQueryResultHKT, any>,
   schema?: DefaultPostgresSchema
 ): Adapter {
   const {
@@ -142,21 +143,25 @@ export function PostgresDrizzleAdapter(
         .insert(usersTable)
         .values(hasDefaultId ? insertData : { ...insertData, id })
         .returning()
-        .then((res) => res[0])
+        .then((res) => res[0]) as Awaitable<AdapterUser>
     },
     async getUser(userId: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.id, userId))
-        .then((res) => (res.length > 0 ? res[0] : null))
+        .then((res) =>
+          res.length > 0 ? res[0] : null
+        ) as Awaitable<AdapterUser | null>
     },
     async getUserByEmail(email: string) {
       return client
         .select()
         .from(usersTable)
         .where(eq(usersTable.email, email))
-        .then((res) => (res.length > 0 ? res[0] : null))
+        .then((res) =>
+          res.length > 0 ? res[0] : null
+        ) as Awaitable<AdapterUser | null>
     },
     async createSession(data: {
       sessionToken: string
@@ -178,7 +183,10 @@ export function PostgresDrizzleAdapter(
         .from(sessionsTable)
         .where(eq(sessionsTable.sessionToken, sessionToken))
         .innerJoin(usersTable, eq(usersTable.id, sessionsTable.userId))
-        .then((res) => (res.length > 0 ? res[0] : null))
+        .then((res) => (res.length > 0 ? res[0] : null)) as Awaitable<{
+        session: AdapterSession
+        user: AdapterUser
+      } | null>
     },
     async updateUser(data: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       if (!data.id) {
@@ -195,7 +203,7 @@ export function PostgresDrizzleAdapter(
         throw new Error("No user found.")
       }
 
-      return result
+      return result as Awaitable<AdapterUser>
     },
     async updateSession(
       data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">
@@ -228,7 +236,8 @@ export function PostgresDrizzleAdapter(
         )
         .then((res) => res[0])
 
-      return result?.user ?? null
+      const user = result?.user ?? null
+      return user as Awaitable<AdapterUser | null>
     },
     async deleteSession(sessionToken: string) {
       await client
@@ -286,21 +295,21 @@ export function PostgresDrizzleAdapter(
         .insert(authenticatorsTable)
         .values(data)
         .returning()
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0] ?? null) as Awaitable<AdapterAuthenticator>
     },
     async getAuthenticator(credentialID: string) {
       return client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.credentialID, credentialID))
-        .then((res) => res[0] ?? null)
+        .then((res) => res[0] ?? null) as Awaitable<AdapterAuthenticator | null>
     },
     async listAuthenticatorsByUserId(userId: string) {
       return client
         .select()
         .from(authenticatorsTable)
         .where(eq(authenticatorsTable.userId, userId))
-        .then((res) => res)
+        .then((res) => res) as Awaitable<AdapterAuthenticator[]>
     },
     async updateAuthenticatorCounter(credentialID: string, newCounter: number) {
       const authenticator = await client
@@ -312,7 +321,7 @@ export function PostgresDrizzleAdapter(
 
       if (!authenticator) throw new Error("Authenticator not found.")
 
-      return authenticator
+      return authenticator as Awaitable<AdapterAuthenticator>
     },
   }
 }
@@ -322,6 +331,7 @@ type DefaultPostgresColumn<
     data: string | number | boolean | Date
     dataType: "string" | "number" | "boolean" | "date"
     notNull: boolean
+    isPrimaryKey?: boolean
     columnType:
       | "PgVarchar"
       | "PgText"
@@ -332,6 +342,10 @@ type DefaultPostgresColumn<
   },
 > = PgColumn<{
   name: string
+  isAutoincrement: boolean
+  isPrimaryKey: T["isPrimaryKey"] extends true ? true : false
+  hasRuntimeDefault: boolean
+  generated: GeneratedColumnConfig<T["data"]> | undefined
   columnType: T["columnType"]
   data: T["data"]
   driverParam: string | number | boolean
@@ -347,6 +361,7 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
   columns: {
     id: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText" | "PgUUID"
+      isPrimaryKey: true
       data: string
       notNull: true
       dataType: "string"
@@ -360,7 +375,7 @@ export type DefaultPostgresUsersTable = PgTableWithColumns<{
     email: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
-      notNull: true
+      notNull: boolean
       dataType: "string"
     }>
     emailVerified: DefaultPostgresColumn<{
@@ -460,6 +475,7 @@ export type DefaultPostgresSessionsTable = PgTableWithColumns<{
     sessionToken: DefaultPostgresColumn<{
       columnType: "PgVarchar" | "PgText"
       data: string
+      isPrimaryKey: true
       notNull: true
       dataType: "string"
     }>
@@ -516,7 +532,7 @@ export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
       dataType: "string"
     }>
     userId: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
+      columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
       dataType: "string"

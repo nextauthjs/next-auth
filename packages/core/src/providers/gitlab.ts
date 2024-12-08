@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>GitLab</b> integration.</span>
  * <a href="https://gitlab.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/gitlab.svg" height="48" width="48"/>
@@ -120,7 +120,7 @@ export default function GitLab<P extends GitLabProfile>(
     userinfo: "https://gitlab.com/api/v4/user",
     profile(profile) {
       return {
-        id: profile.id.toString(),
+        id: profile.sub?.toString(),
         name: profile.name ?? profile.username,
         email: profile.email,
         image: profile.avatar_url,

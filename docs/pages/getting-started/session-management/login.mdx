@@ -26,24 +26,15 @@ export function SignIn() {
 }
 ```
 
-In a client component, you can still use the imports from `next-auth/react` as they are marked with the `"use client;"` directive.
-
-```tsx filename="./components/auth/signin-button.tsx"
-import { signIn } from "next-auth/react"
-
-export function SignIn() {
-  return <Button onClick={() => signIn()}>Sign In</Button>
-}
-```
-
   </Code.Next>
   <Code.NextClient>
 
 ```tsx filename="./components/auth/signin-button.tsx"
+"use client"
 import { signIn } from "next-auth/react"
 
 export function SignIn() {
-  return <Button onClick={() => signIn()}>Sign In</Button>
+  return <button onClick={() => signIn()}>Sign In</button>
 }
 ```
 
@@ -122,7 +113,7 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 
 ```svelte filename="src/routes/+page.svelte" {2, 8}
 <script lang="ts">
-  import { signIn } from '@auth/sveltekit/client'
+  import { signIn } from "@auth/sveltekit/client"
 </script>
 
 <div>
@@ -157,7 +148,7 @@ by passing the target URL as `redirectTo` in the sign-in options.
 <Code.Next>
 
 ```tsx filename="app/components/signin-button.tsx" {8}
-import { signIn } from "../../auth.ts"
+import { signIn } from "@/auth.ts"
 
 export function SignIn() {
   return (
@@ -177,13 +168,14 @@ export function SignIn() {
 <Code.NextClient>
 
 ```tsx filename="src/components/signin-button.tsx" {5}
+"use client"
 import { signIn } from "next-auth/react"
 
 export function SignIn() {
   return (
-    <Button onClick={() => signIn("github", { redirectTo: "/dashboard" })}>
+    <button onClick={() => signIn("github", { redirectTo: "/dashboard" })}>
       Sign In
-    </Button>
+    </button>
   )
 }
 ```
@@ -248,7 +240,7 @@ Signing out can be done similarly to signing in. Most frameworks offer both a cl
 To sign out users with a form action, you can build a button that calls the exported signout function from your Auth.js config.
 
 ```tsx filename="app/components/signout-button.tsx" {8}
-import { signOut } from "../../auth.ts"
+import { signOut } from "@/auth.ts"
 
 export function SignOut() {
   return (
@@ -264,20 +256,11 @@ export function SignOut() {
 }
 ```
 
-Again, in a client component, you can use the `next-auth/react` imports as they are marked with the `"use client;"` directive.
-
-```tsx filename="./components/auth/signin-button.tsx"
-import { signOut } from "next-auth/react"
-
-export function SignOut() {
-  return <Button onClick={() => signOut()}>Signout</Button>
-}
-```
-
 </Code.Next>
 <Code.NextClient>
 
 ```tsx filename="src/components/signout-button.tsx" {5}
+"use client"
 import { signOut } from "next-auth/react"
 
 export function SignOut() {
@@ -353,7 +336,7 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 
 ```svelte filename="src/routes/+page.svelte" {8}
 <script lang="ts">
-  import { signOut } from '@auth/sveltekit/client'
+  import { signOut } from "@auth/sveltekit/client"
 </script>
 
 <div>

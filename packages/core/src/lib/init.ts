@@ -5,7 +5,7 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
-import { logger, type LoggerInstance } from "./utils/logger.js"
+import { setLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 
 import type { InternalOptions, RequestInternal } from "../types.js"
@@ -52,7 +52,7 @@ export const defaultCallbacks: InternalOptions["callbacks"] = {
 
 /** Initialize all internal options and cookies. */
 export async function init({
-  authOptions,
+  authOptions: config,
   providerId,
   action,
   url,
@@ -65,12 +65,8 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const { providers, provider } = parseProviders({
-    providers: authOptions.providers,
-    url,
-    providerId,
-    options: authOptions,
-  })
+  const logger = setLogger(config)
+  const { providers, provider } = parseProviders({ url, providerId, config })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
 
@@ -101,7 +97,7 @@ export async function init({
       buttonText: "",
     },
     // Custom options override defaults
-    ...authOptions,
+    ...config,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
     url,
@@ -110,38 +106,38 @@ export async function init({
     provider,
     cookies: merge(
       cookie.defaultCookies(
-        authOptions.useSecureCookies ?? url.protocol === "https:"
+        config.useSecureCookies ?? url.protocol === "https:"
       ),
-      authOptions.cookies
+      config.cookies
     ),
     providers,
     // Session options
     session: {
       // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: authOptions.adapter ? "database" : "jwt",
+      strategy: config.adapter ? "database" : "jwt",
       maxAge,
       updateAge: 24 * 60 * 60,
       generateSessionToken: () => crypto.randomUUID(),
-      ...authOptions.session,
+      ...config.session,
     },
     // JWT options
     jwt: {
-      secret: authOptions.secret!, // Asserted in assert.ts
-      maxAge: authOptions.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
+      secret: config.secret!, // Asserted in assert.ts
+      maxAge: config.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
       encode: jwt.encode,
       decode: jwt.decode,
-      ...authOptions.jwt,
+      ...config.jwt,
     },
     // Event messages
-    events: eventsErrorHandler(authOptions.events ?? {}, logger),
-    adapter: adapterErrorHandler(authOptions.adapter, logger),
+    events: eventsErrorHandler(config.events ?? {}, logger),
+    adapter: adapterErrorHandler(config.adapter, logger),
     // Callback functions
-    callbacks: { ...defaultCallbacks, ...authOptions.callbacks },
+    callbacks: { ...defaultCallbacks, ...config.callbacks },
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
     experimental: {
-      ...authOptions.experimental,
+      ...config.experimental,
     },
   }
 

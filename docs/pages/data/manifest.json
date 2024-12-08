@@ -62,13 +62,13 @@
     "box": "Box",
     "boxyhq-saml": "BoxyHQ SAML",
     "bungie": "Bungie",
-    "clickup": "ClickUp",
+    "click-up": "ClickUp",
     "cognito": "Cognito",
     "coinbase": "Coinbase",
     "descope": "Descope",
     "dribbble": "Dribbble",
     "dropbox": "Dropbox",
-    "duende-identityserver6": "DuendeIdentityServer6",
+    "duende-identityserver-6": "DuendeIdentityServer6",
     "eveonline": "EVE Online",
     "faceit": "FACEIT",
     "foursquare": "Foursquare",
@@ -79,6 +79,7 @@
     "identity-server4": "IdentityServer4",
     "instagram": "Instagram",
     "kakao": "Kakao",
+    "kinde": "Kinde",
     "line": "LINE",
     "linkedin": "LinkedIn",
     "mailchimp": "Mailchimp",
@@ -118,8 +119,33 @@
     "zoom": "Zoom"
   },
   "providersEmail": {
+    "forwardemail": "Forward Email",
     "resend": "Resend",
     "sendgrid": "Sendgrid",
     "nodemailer": "Nodemailer"
-  }
+  },
+  "requiresIssuer": [
+    "asgardeo",
+    "auth0",
+    "authentik",
+    "azure-ad-b2c",
+    "battlenet",
+    "beyondidentity",
+    "boxyhq-saml",
+    "cognito",
+    "descope",
+    "duende-identityserver-6",
+    "fusionauth",
+    "identity-server4",
+    "keycloak",
+    "kinde",
+    "mastodon",
+    "mattermost",
+    "nextcloud",
+    "okta",
+    "ory-hydra",
+    "osso",
+    "passage",
+    "ping-id"
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@auth/xata-adapter",
-  "version": "1.4.1",
+  "version": "1.7.4",
   "description": "Xata adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -34,7 +34,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest -c ../utils/vitest.config.ts"
+    "test": "vitest -c ../utils/vitest.config.ts",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
