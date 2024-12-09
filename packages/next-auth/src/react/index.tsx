@@ -218,14 +218,15 @@ export async function signIn<
       : BuiltInProviderType
   >,
   options?: SignInOptions,
-  authorizationParams?: SignInAuthorizationParams
+  authorizationParams?: SignInAuthorizationParams,
+  defaultProviders?: Record<any, ClientSafeProvider>
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
-  const providers = await getProviders()
+  const providers =  await getProviders() ?? defaultProviders
 
   if (!providers) {
     window.location.href = `${baseUrl}/error`
