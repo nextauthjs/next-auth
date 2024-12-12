@@ -60,22 +60,30 @@ const defaultLogger: LoggerInstance = {
 
 /**
  * Override the built-in logger with user's implementation.
- * Any `undefined` level will use the default logger.
+ * Any `undefined` level will use the default.
  */
 export function setLogger(
-  config: Pick<AuthConfig, "logger" | "debug">
+  config: Pick<AuthConfig, "logger" | "debug" | "logLevel">
 ): LoggerInstance {
-  const newLogger: LoggerInstance = {
-    ...defaultLogger,
+  const newLogger: LoggerInstance = { error() {}, warn() {}, debug() {} }
+
+  let { debug, logLevel = "silent", logger } = config
+  if (debug) logLevel = "verbose"
+
+  const levels = ["error", "warn", "debug"]
+  const levelIndex = levels.indexOf(logLevel)
+
+  for (const level of levels) {
+    if (levels.indexOf(level) <= levelIndex) {
+      newLogger[level] = defaultLogger[level]
+    }
   }
 
-  // Turn off debug logging if `debug` isn't set to `true`
-  if (!config.debug) newLogger.debug = () => {}
+  // User preference overrides default logger
+  if (logger?.error) newLogger.error = logger.error
+  if (logger?.warn) newLogger.warn = logger.warn
+  if (logger?.debug) newLogger.debug = logger.debug
+  logger ??= newLogger
 
-  if (config.logger?.error) newLogger.error = config.logger.error
-  if (config.logger?.warn) newLogger.warn = config.logger.warn
-  if (config.logger?.debug) newLogger.debug = config.logger.debug
-
-  config.logger ??= newLogger
   return newLogger
 }

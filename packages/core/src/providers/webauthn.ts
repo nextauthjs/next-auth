@@ -15,7 +15,7 @@ import type {
 } from "@simplewebauthn/server"
 
 import type {
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   SemverString,
   User,
@@ -45,7 +45,7 @@ type RelayingPartyArray = {
 }
 
 export type GetUserInfo = (
-  options: InternalOptions<WebAuthnProviderType>,
+  config: InternalConfig<WebAuthnProviderType>,
   request: RequestInternal
 ) => Promise<
   | { user: User; exists: true }
@@ -92,7 +92,7 @@ export interface WebAuthnConfig extends CommonProviderOptions {
    * Function that returns the relaying party for the current request.
    */
   getRelayingParty: (
-    options: InternalOptions<WebAuthnProviderType>,
+    config: InternalConfig<WebAuthnProviderType>,
     request: RequestInternal
   ) => RelayingParty
   /**
@@ -266,9 +266,9 @@ const getUserInfo: GetUserInfo = async (options, request) => {
  */
 function getRelayingParty(
   /** The options object containing the provider and URL information. */
-  options: InternalOptions<WebAuthnProviderType>
+  config: InternalConfig<WebAuthnProviderType>
 ): RelayingParty {
-  const { provider, url } = options
+  const { provider, url } = config
   const { relayingParty } = provider
 
   const id = Array.isArray(relayingParty?.id)

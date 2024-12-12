@@ -276,8 +276,16 @@ export interface JWTOptions {
    * @default 30 * 24 * 60 * 60 // 30 days
    */
   maxAge: number
-  /** Override this method to control the Auth.js issued JWT encoding. */
+  /**
+   * Override this method to control the Auth.js issued JWT encoding.
+   *
+   * @deprecated Use {@link AuthConfig.session.seal} instead.
+   */
   encode: (params: JWTEncodeParams) => Awaitable<string>
-  /** Override this method to control the Auth.js issued JWT decoding. */
+  /**
+   * Override this method to control the Auth.js issued JWT decoding.
+   *
+   * @deprecated Use {@link AuthConfig.session.unseal} instead.
+   */
   decode: (params: JWTDecodeParams) => Awaitable<JWT | null>
 }
