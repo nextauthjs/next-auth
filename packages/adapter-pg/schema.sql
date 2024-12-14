@@ -4,7 +4,7 @@ CREATE TABLE users
 (
   id SERIAL,
   name VARCHAR(255),
-  email VARCHAR(255) UNIQUE NOT NULL,
+  email VARCHAR(255) UNIQUE,
   "emailVerified" TIMESTAMPTZ,
   image TEXT,
  
