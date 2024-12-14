@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
-import { type Highlighter, getHighlighter } from "shiki"
+import { type Highlighter, createHighlighter } from "shiki"
 import cx from "classnames"
 import { Callout, Pre, Code as NXCode } from "nextra/components"
-
 import { StepTitle } from "./components/StepTitle"
 import { SetupCode } from "./components/SetupCode"
 import { SignInCode } from "./components/SignInCode"
@@ -19,7 +18,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
   const [highlighter, setHighlighter] = useState<Highlighter | null>(null)
   useEffect(() => {
     ;(async () => {
-      const hl = await getHighlighter({
+      const hl = await createHighlighter({
         themes: ["github-light", "github-dark"],
         langs: ["ts", "tsx", "bash"],
       })
@@ -52,10 +51,9 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
 
   return (
     <div
-      className={cx(
-        "nextra-steps mb-12 ml-4 border-l border-gray-200 pl-6 [counter-reset:step] dark:border-neutral-800",
-        { "pointer-events-none opacity-40": disabled }
-      )}
+      className={cx("nextra-steps mb-12 ml-4 dark:border-neutral-800", {
+        "pointer-events-none opacity-40": disabled,
+      })}
     >
       {/* Step 1 */}
       <StepTitle count={1}>
