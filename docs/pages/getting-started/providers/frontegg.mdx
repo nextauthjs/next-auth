@@ -1,0 +1,90 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/frontegg.svg" width="64" height="64" />
+
+# Frontegg Provider
+
+## Resources
+
+- [Frontegg documentation](https://docs.frontegg.com/docs/how-to-use-our-docs)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+    ```bash
+    https://example.com/api/auth/callback/frontegg
+    ```
+
+  </Code.Next>
+  <Code.Svelte>
+
+    ```bash
+    https://example.com/auth/callback/frontegg
+    ```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_FRONTEGG_ID
+AUTH_FRONTEGG_SECRET
+AUTH_FRONTEGG_ISSUER
+```
+
+### Configuration
+
+Follow these steps:
+
+Log into the [Frontegg portal](https://portal.frontegg.com)
+
+Get the following from the Frontegg's portal:
+
+AUTH_FRONTEGG_ID="<Client ID>" # Environments > Your environment > Env settings
+AUTH_FRONTEGG_SECRET="<API KEY>" # Environments > Your environment > Env settings
+AUTH_FRONTEGG_ISSUER="<https://[YOUR_SUBDOMAIN].frontegg.com>" # Environments > Your environment > Env settings > Domains > Domain name
+
+Add the required environment variables from above to your `.env.local` file.
+
+<Code>
+  <Code.Next>
+
+    ```ts filename="/auth.ts"
+    import NextAuth from "next-auth"
+    import Frontegg from "next-auth/providers/frontegg"
+
+    export const { handlers, auth, signIn, signOut } = NextAuth({
+    providers: [Frontegg],
+  })
+    ```
+
+  </Code.Next>
+  <Code.Svelte>
+
+    ```ts filename="/src/auth.ts"
+    import { SvelteKitAuth } from "@auth/sveltekit"
+    import Frontegg from "@auth/sveltekit/providers/frontegg"
+
+    export const { handle, signIn, signOut } = SvelteKitAuth({
+    providers: [Frontegg],
+  })
+    ```
+
+  </Code.Svelte>
+  <Code.Express>
+
+    ```ts filename="/src/app.ts"
+    import { ExpressAuth } from "@auth/express"
+    import Frontegg from "@auth/express/providers/frontegg"
+
+    app.use("/auth/*", ExpressAuth({ providers: [Frontegg] }))
+    ```
+
+  </Code.Express>
+</Code>
