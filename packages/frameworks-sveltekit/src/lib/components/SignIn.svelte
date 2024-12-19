@@ -16,6 +16,7 @@
       : options?.redirectTo
   const redirect =
     options instanceof FormData ? options.get("redirect") : options?.redirectTo
+  const redirectTo = callbackUrl
 
   const authorizationParamsInputs = authorizationParams
     ? typeof authorizationParams === "string" && authorizationParams
@@ -37,6 +38,9 @@
   {/if}
   {#if redirect}
     <input type="hidden" name="redirect" value={redirect} />
+  {/if}
+  {#if redirectTo}
+    <input type="hidden" name="redirectTo" value={redirectTo} />
   {/if}
   {#if authorizationParamsInputs}
     {#each Object.entries(authorizationParamsInputs) as [key, value]}
