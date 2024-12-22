@@ -15,31 +15,37 @@
  *
  * @module @auth/prisma-adapter
  */
-import type { PrismaClient, Prisma } from "@prisma/client";
+import type { PrismaClient, Prisma } from "@prisma/client"
 import type {
   Adapter,
   AdapterAccount,
   AdapterSession,
   AdapterUser,
-} from "@auth/core/adapters";
+} from "@auth/core/adapters"
 
 export function PrismaAdapter(
   prisma: PrismaClient | ReturnType<PrismaClient["$extends"]>,
   options?: {
-    accountModel?: string;
-    authenticatorModel?: string;
-    sessionModel?: string;
-    userModel?: string;
-    verificationTokenModel?: string;
+    accountModel?: string
+    authenticatorModel?: string
+    sessionModel?: string
+    userModel?: string
+    verificationTokenModel?: string
   }
 ): Adapter {
-  const p = prisma as PrismaClient;
-  const accountModel = p[options?.accountModel ?? "account"];
-  const authenticatorModel = p[options?.authenticatorModel ?? "authenticator"];
-  const sessionModel = p[options?.sessionModel ?? "session"];
-  const userModel = p[options?.userModel ?? "user"];
+  const p = prisma as PrismaClient
+  const accountModel =
+    p[(options?.accountModel ?? "account") as keyof PrismaClient]
+  const authenticatorModel =
+    p[(options?.authenticatorModel ?? "authenticator") as keyof PrismaClient]
+  const sessionModel =
+    p[(options?.sessionModel ?? "session") as keyof PrismaClient]
+  const userModel = p[(options?.userModel ?? "user") as keyof PrismaClient]
   const verificationTokenModel =
-    p[options?.verificationTokenModel ?? "verificationToken"];
+    p[
+      (options?.verificationTokenModel ??
+        "verificationToken") as keyof PrismaClient
+    ]
   return {
     // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
     createUser: ({ id, ...data }) => userModel.create(stripUndefined(data)),
@@ -49,8 +55,8 @@ export function PrismaAdapter(
       const account = await accountModel.findUnique({
         where: { provider_providerAccountId },
         select: { user: true },
-      });
-      return (account?.user as AdapterUser) ?? null;
+      })
+      return (account?.user as AdapterUser) ?? null
     },
     updateUser: ({ id, ...data }) =>
       userModel.update({
@@ -69,13 +75,13 @@ export function PrismaAdapter(
       const userAndSession = await sessionModel.findUnique({
         where: { sessionToken },
         include: { user: true },
-      });
-      if (!userAndSession) return null;
-      const { user, ...session } = userAndSession;
+      })
+      if (!userAndSession) return null
+      const { user, ...session } = userAndSession
       return { user, session } as {
-        user: AdapterUser;
-        session: AdapterSession;
-      };
+        user: AdapterUser
+        session: AdapterSession
+      }
     },
     createSession: (data) => sessionModel.create(stripUndefined(data)),
     updateSession: (data) =>
@@ -88,57 +94,57 @@ export function PrismaAdapter(
     async createVerificationToken(data) {
       const verificationToken = await verificationTokenModel.create(
         stripUndefined(data)
-      );
+      )
       // @ts-expect-errors // MongoDB needs an ID, but we don't
-      if (verificationToken.id) delete verificationToken.id;
-      return verificationToken;
+      if (verificationToken.id) delete verificationToken.id
+      return verificationToken
     },
     async useVerificationToken(identifier_token) {
       try {
         const verificationToken = await verificationTokenModel.delete({
           where: { identifier_token },
-        });
+        })
         // @ts-expect-errors // MongoDB needs an ID, but we don't
-        if (verificationToken.id) delete verificationToken.id;
-        return verificationToken;
+        if (verificationToken.id) delete verificationToken.id
+        return verificationToken
       } catch (error) {
         // If token already used/deleted, just return null
         // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
         if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025")
-          return null;
-        throw error;
+          return null
+        throw error
       }
     },
     async getAccount(providerAccountId, provider) {
       return accountModel.findFirst({
         where: { providerAccountId, provider },
-      }) as Promise<AdapterAccount | null>;
+      }) as Promise<AdapterAccount | null>
     },
     async createAuthenticator(data) {
-      return authenticatorModel.create(stripUndefined(data));
+      return authenticatorModel.create(stripUndefined(data))
     },
     async getAuthenticator(credentialID) {
       return authenticatorModel.findUnique({
         where: { credentialID },
-      });
+      })
     },
     async listAuthenticatorsByUserId(userId) {
       return authenticatorModel.findMany({
         where: { userId },
-      });
+      })
     },
     async updateAuthenticatorCounter(credentialID, counter) {
       return authenticatorModel.update({
         where: { credentialID },
         data: { counter },
-      });
+      })
     },
-  };
+  }
 }
 
 /** @see https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/null-and-undefined */
 function stripUndefined<T>(obj: T) {
-  const data = {} as T;
-  for (const key in obj) if (obj[key] !== undefined) data[key] = obj[key];
-  return { data };
+  const data = {} as T
+  for (const key in obj) if (obj[key] !== undefined) data[key] = obj[key]
+  return { data }
 }
