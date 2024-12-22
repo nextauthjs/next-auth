@@ -23,8 +23,8 @@ import type {
 } from "@auth/core/adapters"
 import type { Pool } from "@neondatabase/serverless"
 
-export function mapExpiresAt(account: any): any {
-  const expires_at: number = parseInt(account.expires_at)
+export function mapExpiresAt(account: AdapterAccount): AdapterAccount {
+  const expires_at = account.expires_at
   return {
     ...account,
     expires_at,
