@@ -18,6 +18,7 @@
 import type {
   Adapter,
   AdapterUser,
+  AdapterAccount,
   VerificationToken,
   AdapterSession,
 } from "@auth/core/adapters"
