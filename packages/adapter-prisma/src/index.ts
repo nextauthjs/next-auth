@@ -74,7 +74,8 @@ export function PrismaAdapter(
       const verificationToken = await p.verificationToken.create(
         stripUndefined(data)
       )
-      if (verificationToken.id) delete verificationToken.id
+      if ("id" in verificationToken && verificationToken.id)
+        delete verificationToken.id
       return verificationToken
     },
     async useVerificationToken(identifier_token) {
@@ -82,7 +83,8 @@ export function PrismaAdapter(
         const verificationToken = await p.verificationToken.delete({
           where: { identifier_token },
         })
-        if (verificationToken.id) delete verificationToken.id
+        if ("id" in verificationToken && verificationToken.id)
+          delete verificationToken.id
         return verificationToken
       } catch (error: unknown) {
         // If token already used/deleted, just return null
