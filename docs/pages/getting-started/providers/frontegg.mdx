@@ -61,8 +61,10 @@ Add the required environment variables from above to your `.env.local` file.
 
     export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [Frontegg],
-  })
-    ```
+
+})
+
+````
 
   </Code.Next>
   <Code.Svelte>
@@ -73,8 +75,9 @@ Add the required environment variables from above to your `.env.local` file.
 
     export const { handle, signIn, signOut } = SvelteKitAuth({
     providers: [Frontegg],
-  })
-    ```
+
+})
+````
 
   </Code.Svelte>
   <Code.Express>
