@@ -209,7 +209,7 @@ CREATE TABLE users
   email VARCHAR(255) UNIQUE,
   "emailVerified" TIMESTAMPTZ,
   image TEXT,
- 
+
   PRIMARY KEY (id)
 );
 
@@ -227,17 +227,17 @@ CREATE TABLE accounts
   scope TEXT,
   session_state TEXT,
   token_type TEXT,
- 
+
   PRIMARY KEY (id)
 );
- 
+
 CREATE TABLE sessions
 (
   id SERIAL,
   "userId" INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   expires TIMESTAMPTZ NOT NULL,
   "sessionToken" VARCHAR(255) UNIQUE NOT NULL,
- 
+
   PRIMARY KEY (id)
 );
 
@@ -246,7 +246,7 @@ CREATE TABLE verification_token
   identifier TEXT NOT NULL,
   expires TIMESTAMPTZ NOT NULL,
   token TEXT NOT NULL,
- 
+
   PRIMARY KEY (identifier, token)
 );
 
