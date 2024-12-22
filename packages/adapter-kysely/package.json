@@ -38,11 +38,11 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "kysely": "^0.26.1"
+    "kysely": "^0.27.5"
   },
   "devDependencies": {
     "@types/pg": "^8.6.5",
-    "kysely": "^0.24.2",
+    "kysely": "^0.27.5",
     "libsql": "^0.3.18",
     "mysql2": "^3.9.7",
     "pg": "^8.10.0"
