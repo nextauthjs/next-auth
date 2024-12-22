@@ -53,12 +53,12 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "@prisma/client": ">=2.26.0 || >=3 || >=4 || >=5"
+    "@prisma/client": ">=2.26.0 || >=3 || >=4 || >=5 || >=6"
   },
   "devDependencies": {
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^6.0.0",
     "@prisma/extension-accelerate": "1.1.0",
     "mongodb": "^6.9.0",
-    "prisma": "^5.20.0"
+    "prisma": "^6.0.0"
   }
 }
