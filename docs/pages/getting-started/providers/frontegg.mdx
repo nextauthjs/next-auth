@@ -55,39 +55,36 @@ Add the required environment variables from above to your `.env.local` file.
 <Code>
   <Code.Next>
 
-    ```ts filename="/auth.ts"
-    import NextAuth from "next-auth"
-    import Frontegg from "next-auth/providers/frontegg"
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Frontegg from "next-auth/providers/frontegg"
 
-    export const { handlers, auth, signIn, signOut } = NextAuth({
-    providers: [Frontegg],
-
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Frontegg],
 })
-
-````
+```
 
   </Code.Next>
   <Code.Svelte>
 
-    ```ts filename="/src/auth.ts"
-    import { SvelteKitAuth } from "@auth/sveltekit"
-    import Frontegg from "@auth/sveltekit/providers/frontegg"
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Frontegg from "@auth/sveltekit/providers/frontegg"
 
-    export const { handle, signIn, signOut } = SvelteKitAuth({
-    providers: [Frontegg],
-
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Frontegg],
 })
-````
+```
 
   </Code.Svelte>
   <Code.Express>
 
-    ```ts filename="/src/app.ts"
-    import { ExpressAuth } from "@auth/express"
-    import Frontegg from "@auth/express/providers/frontegg"
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Frontegg from "@auth/express/providers/frontegg"
 
-    app.use("/auth/*", ExpressAuth({ providers: [Frontegg] }))
-    ```
+app.use("/auth/*", ExpressAuth({ providers: [Frontegg] }))
+```
 
   </Code.Express>
 </Code>
