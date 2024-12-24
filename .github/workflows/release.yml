@@ -59,7 +59,7 @@ env:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Init
         uses: actions/checkout@v4
@@ -107,7 +107,7 @@ jobs:
         run: cd apps/examples/nextjs-docker && pnpm test:docker
       - name: Run E2E tests
         continue-on-error: true # TODO: Make this less flakey
-        if: github.repository == 'nextauthjs/next-auth'
+        if: ${{ env.PACKAGES_CHANGES == 'true' || github.ref == 'refs/heads/main' }}
         timeout-minutes: 15
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
