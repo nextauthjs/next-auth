@@ -17,7 +17,6 @@ import Credentials from "next-auth/providers/credentials"
 import type { Provider } from "next-auth/providers"
 
 const providers: Provider[] = [
-  GitHub,
   Credentials({
     credentials: { password: { label: "Password", type: "password" } },
     authorize(c) {
@@ -29,16 +28,19 @@ const providers: Provider[] = [
       }
     },
   }),
+  GitHub,
 ]
 
-export const providerMap = providers.map((provider) => {
-  if (typeof provider === "function") {
-    const providerData = provider()
-    return { id: providerData.id, name: providerData.name }
-  } else {
-    return { id: provider.id, name: provider.name }
-  }
-})
+export const providerMap = providers
+  .map((provider) => {
+    if (typeof provider === "function") {
+      const providerData = provider()
+      return { id: providerData.id, name: providerData.name }
+    } else {
+      return { id: provider.id, name: provider.name }
+    }
+  })
+  .filter((provider) => provider.id !== "credentials")
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers,
@@ -131,15 +133,42 @@ import { redirect } from "next/navigation"
 import { signIn, auth, providerMap } from "@/auth.ts"
 import { AuthError } from "next-auth"
 
-export default async function SignInPage() {
+export default async function SignInPage(props: {
+  searchParams: { callbackUrl: string | undefined }
+}) {
   return (
     <div className="flex flex-col gap-2">
+      <form
+        action={async (formData) => {
+          "use server"
+          try {
+            await signIn("credentials", formData)
+          } catch (error) {
+            if (error instanceof AuthError) {
+              return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+            }
+            throw error
+          }
+        }}
+      >
+        <label htmlFor="email">
+          Email
+          <input name="email" id="email" />
+        </label>
+        <label htmlFor="password">
+          Password
+          <input name="password" id="password" />
+        </label>
+        <input type="submit" value="Sign In" />
+      </form>
       {Object.values(providerMap).map((provider) => (
         <form
           action={async () => {
             "use server"
             try {
-              await signIn(provider.id)
+              await signIn(provider.id, {
+                redirectTo: props.searchParams?.callbackUrl ?? "",
+              })
             } catch (error) {
               // Signin can fail for a number of reasons, such as the user
               // not existing, or the user not having the correct role.
@@ -148,8 +177,8 @@ export default async function SignInPage() {
                 return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
               }
 
-              // Otherwise if a redirects happens NextJS can handle it
-              // so you can just re-thrown the error and let NextJS handle it.
+              // Otherwise if a redirects happens Next.js can handle it
+              // so you can just re-thrown the error and let Next.js handle it.
               // Docs:
               // https://nextjs.org/docs/app/api-reference/functions/redirect#server-component
               throw error
@@ -221,11 +250,7 @@ export default component$(() => {
     </h2>
     <div>
       {#each providerMap as provider}
-        <SignIn
-          provider={provider.id}
-          signInPage="signin"
-          className="w-full"
-        >
+        <SignIn provider={provider.id} signInPage="signin" className="w-full">
           <div slot="submitButton">
             <span>
               Signin with {provider.name}

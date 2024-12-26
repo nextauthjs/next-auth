@@ -25,7 +25,7 @@ export const Logo = ({ providerId: id, name, scale }) => {
     >
       <motion.img
         src={`/img/providers/${id}.svg`}
-        className="opacity-40 animate-orbit grayscale dark:invert"
+        className="animate-orbit opacity-40 grayscale dark:invert"
         style={{
           // @ts-expect-error
           "--duration": randomFloat(20, 30),

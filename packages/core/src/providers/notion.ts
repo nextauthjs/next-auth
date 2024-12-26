@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Notion</b> integration.</span>
  * <a href="https://notion.so">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/notion.svg" height="48" width="48"/>
@@ -152,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
       url: `${NOTION_HOST}/v1/oauth/authorize`,
     },
 
-    async profile(profile, tokens) {
+    async profile(profile) {
       return {
         id: profile.id,
         name: profile.name,

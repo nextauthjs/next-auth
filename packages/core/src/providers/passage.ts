@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Passage by 1Password</b> integration.</span>
  * <a href="https://passage.1password.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/passage.svg" height="48" width="48"/>

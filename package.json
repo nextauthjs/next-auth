@@ -6,13 +6,14 @@
   "scripts": {
     "build:app": "turbo run build --filter=next-auth-app",
     "build:docs": "turbo run build --filter=docs",
-    "build": "turbo run build --filter=next-auth --filter=@auth/* --no-deps",
+    "build": "turbo run build --filter=next-auth --filter=@auth/*",
     "test": "turbo run test --concurrency=1 --filter=[HEAD^1] --filter=./packages/* --filter=!*app* --filter=!*dynamo* --filter=!*edgedb* --filter=!*hasura* --filter=!*mikro* --filter=!*dgraph* --filter=!*xata* --filter=!*typeorm*",
-    "test:e2e": "turbo run test:e2e",
+    "test:e2e": "turbo run test:e2e --filter=next-auth",
     "test:e2e:watch": "turbo run test:e2e -- --ui",
     "clean": "turbo run clean --no-cache",
     "dev": "pnpm dev:next",
     "dev:next": "turbo run dev --parallel --continue --filter=next-auth-app... --filter=@auth/core --filter=!./packages/adapter-*",
+    "dev:e2e:next": "turbo run dev --filter=next-auth-app",
     "dev:db": "turbo run dev --parallel --continue --filter=next-auth-app...",
     "dev:sveltekit": "turbo run dev --parallel --continue --filter=sveltekit-auth-app...",
     "dev:express": "turbo run dev --parallel --continue --filter=express-auth-app...",
@@ -30,34 +31,37 @@
   "devDependencies": {
     "@actions/core": "^1.10.0",
     "@balazsorban/monorepo-release": "0.5.1",
-    "@playwright/test": "1.41.2",
+    "@eslint/compat": "^1.1.1",
+    "@eslint/js": "^9.9.1",
+    "@playwright/test": "1.40.0",
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "v6.19.1",
     "@typescript-eslint/parser": "v6.19.1",
     "@vitest/coverage-v8": "1.2.1",
     "@vitest/ui": "^1.2.2",
-    "eslint": "8.30.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-standard-with-typescript": "^21.0.1",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jsdoc": "^39.6.4",
-    "eslint-plugin-node": "^11.1.0",
+    "eslint": "9.9.1",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import-x": "^4.1.1",
+    "eslint-plugin-jsdoc": "^39.9.1",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-svelte": "^2.38.0",
     "fake-smtp-server": "^0.8.0",
-    "prettier": "3.1.1",
-    "prettier-plugin-svelte": "^3.1.2",
-    "prettier-plugin-tailwindcss": "^0.5.13",
+    "lefthook": "1.7.15",
+    "globals": "^15.9.0",
+    "prettier": "3.3.3",
+    "prettier-plugin-svelte": "^3.2.6",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "svelte-eslint-parser": "^0.35.0",
-    "turbo": "^1.11.3",
+    "turbo": "^2.1.1",
     "typescript": "5.3.3",
+    "typescript-eslint": "^8.3.0",
     "utils": "workspace:*",
-    "vite": "^5.0.13",
+    "vite": "^5.1.8",
     "vitest": "1.2.2"
   },
   "engines": {
-    "node": "^18.18.0 || ^20.8.0"
+    "node": "^18.18.0 || ^20.8.0 || ^22.0.0"
   },
   "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771",
   "funding": [
@@ -70,165 +74,14 @@
       "url": "https://opencollective.com/nextauth"
     }
   ],
-  "eslintIgnore": [
-    ".eslintrc.js",
-    ".cache-loader",
-    ".DS_Store",
-    ".pnpm-debug.log",
-    ".turbo",
-    ".vscode/generated*",
-    "/_work",
-    "/actions-runner",
-    "node_modules",
-    "patches",
-    "pnpm-lock.yaml",
-    ".github/actions/issue-validator/index.mjs",
-    "*.cjs",
-    "*.js",
-    "*.d.ts",
-    "*.d.ts.map",
-    ".svelte-kit",
-    ".next",
-    ".nuxt",
-    "build",
-    "static",
-    "coverage",
-    "dist",
-    "packages/core/src/providers/oauth-types.ts",
-    "packages/core/src/lib/pages/styles.ts",
-    "packages/frameworks-sveltekit/package",
-    "packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*",
-    ".branches",
-    "db.sqlite",
-    "dev.db",
-    "dynamodblocal-bin",
-    "firebase-debug.log",
-    "firestore-debug.log",
-    "migrations",
-    "test.schema.gql",
-    "apps",
-    "packages/**/*test*"
-  ],
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es2021": true,
-      "node": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "prettier"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "*.ts",
-          "*.tsx"
-        ],
-        "parser": "@typescript-eslint/parser",
-        "parserOptions": {
-          "project": [
-            "./packages/**/tsconfig.json",
-            "./apps/**/tsconfig.json"
-          ]
-        },
-        "settings": {
-          "react": {
-            "version": "18"
-          }
-        },
-        "extends": [
-          "plugin:react/recommended",
-          "plugin:react/jsx-runtime",
-          "standard-with-typescript",
-          "prettier"
-        ],
-        "rules": {
-          "@typescript-eslint/explicit-function-return-type": "off",
-          "@typescript-eslint/method-signature-style": "off",
-          "@typescript-eslint/naming-convention": "off",
-          "@typescript-eslint/no-non-null-assertion": "off",
-          "@typescript-eslint/restrict-template-expressions": "off",
-          "@typescript-eslint/strict-boolean-expressions": "off",
-          "react/prop-types": "off",
-          "react/no-unescaped-entities": "off"
-        }
-      },
-      {
-        "files": [
-          "packages/{core,sveltekit}/*.ts"
-        ],
-        "plugins": [
-          "jsdoc"
-        ],
-        "extends": [
-          "plugin:jsdoc/recommended"
-        ],
-        "rules": {
-          "jsdoc/require-param": "off",
-          "jsdoc/require-returns": "off",
-          "jsdoc/require-jsdoc": [
-            "warn",
-            {
-              "publicOnly": true,
-              "enableFixer": false
-            }
-          ],
-          "jsdoc/no-multi-asterisks": [
-            "warn",
-            {
-              "allowWhitespace": true
-            }
-          ],
-          "jsdoc/tag-lines": "off"
-        }
-      },
-      {
-        "files": [
-          "packages/frameworks-sveltekit"
-        ],
-        "extends": [
-          "plugin:svelte/recommended"
-        ],
-        "overrides": [
-          {
-            "files": [
-              "*.svelte"
-            ],
-            "parser": "svelte-eslint-parser",
-            "parserOptions": {
-              "parser": "@typescript-eslint/parser"
-            }
-          }
-        ],
-        "parser": "@typescript-eslint/parser",
-        "parserOptions": {
-          "sourceType": "module",
-          "ecmaVersion": 2020,
-          "extraFileExtensions": [
-            ".svelte"
-          ]
-        },
-        "env": {
-          "browser": true,
-          "es2017": true,
-          "node": true
-        }
-      }
-    ],
-    "parserOptions": {
-      "sourceType": "module",
-      "ecmaVersion": "latest",
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    },
-    "root": true
-  },
   "prettier": {
     "semi": false,
     "singleQuote": false,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "plugins": [
+      "prettier-plugin-svelte",
+      "prettier-plugin-tailwindcss"
+    ]
   },
   "pnpm": {
     "overrides": {

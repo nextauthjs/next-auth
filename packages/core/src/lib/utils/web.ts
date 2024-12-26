@@ -1,4 +1,4 @@
-import { parse as parseCookie, serialize } from "cookie"
+import * as cookie from "../vendored/cookie.js"
 import { UnknownAction } from "../../errors.js"
 import { setLogger } from "./logger.js"
 
@@ -9,6 +9,8 @@ import type {
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
 import type { AuthConfig } from "../../index.js"
+
+const { parse: parseCookie, serialize: serializeCookie } = cookie
 
 async function getBody(req: Request): Promise<Record<string, any> | undefined> {
   if (!("body" in req) || !req.body || req.method !== "POST") return
@@ -74,7 +76,7 @@ export function toResponse(res: ResponseInternal): Response {
 
   res.cookies?.forEach((cookie) => {
     const { name, value, options } = cookie
-    const cookieHeader = serialize(name, value, options)
+    const cookieHeader = serializeCookie(name, value, options)
     if (headers.has("Set-Cookie")) headers.append("Set-Cookie", cookieHeader)
     else headers.set("Set-Cookie", cookieHeader)
   })
@@ -86,7 +88,7 @@ export function toResponse(res: ResponseInternal): Response {
   else if (headers.get("content-type") === "application/x-www-form-urlencoded")
     body = new URLSearchParams(res.body).toString()
 
-  const status = res.redirect ? 302 : res.status ?? 200
+  const status = res.redirect ? 302 : (res.status ?? 200)
   const response = new Response(body, { headers, status })
 
   if (res.redirect) response.headers.set("Location", res.redirect)

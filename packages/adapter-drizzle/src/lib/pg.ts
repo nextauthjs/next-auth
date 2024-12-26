@@ -83,9 +83,9 @@ export function defineTables(
         token: text("token").notNull(),
         expires: timestamp("expires", { mode: "date" }).notNull(),
       },
-      (verficationToken) => ({
+      (verificationToken) => ({
         compositePk: primaryKey({
-          columns: [verficationToken.identifier, verficationToken.token],
+          columns: [verificationToken.identifier, verificationToken.token],
         }),
       })
     ) satisfies DefaultPostgresVerificationTokenTable)
@@ -532,7 +532,7 @@ export type DefaultPostgresAuthenticatorTable = PgTableWithColumns<{
       dataType: "string"
     }>
     userId: DefaultPostgresColumn<{
-      columnType: "PgVarchar" | "PgText"
+      columnType: "PgVarchar" | "PgText" | "PgUUID"
       data: string
       notNull: true
       dataType: "string"

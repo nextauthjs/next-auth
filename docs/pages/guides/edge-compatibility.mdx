@@ -108,7 +108,7 @@ export default async function Page() {
 
   return (
     <div className="container">
-      <pre>{session}</pre>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   )
 }

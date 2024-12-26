@@ -7,7 +7,8 @@ import type {
 
 // Uncomment to recalculate the estimated size
 // of an empty session cookie
-// import { serialize } from "cookie"
+// import * as cookie from "../vendored/cookie.js"
+// const { serialize } = cookie
 // console.log(
 //   "Cookie estimated to be ",
 //   serialize(`__Secure.authjs.session-token.0`, "", {

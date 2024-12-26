@@ -26,7 +26,7 @@ Auth.js libraries can be configured to use this `refresh_token` to obtain a new 
   at the same time. The Auth.js team is aware of this and would like to provide
   a solution in the future. This might include some "lock" mechanism to prevent
   multiple requests from trying to refresh the token at the same time, but that
-  comes with the drawback of potentically creating a bottleneck in the
+  comes with the drawback of potentially creating a bottleneck in the
   application. Another possible solution is background token refresh, to prevent
   the token from expiring during an authenticated request.
 </Callout>
@@ -102,14 +102,15 @@ export const { handlers, auth } = NextAuth({
             refresh_token?: string
           }
 
-          token.access_token = newTokens.access_token
-          token.expires_at = Math.floor(
-            Date.now() / 1000 + newTokens.expires_in
-          )
-          // Some providers only issue refresh tokens once, so preserve if we did not get a new one
-          if (newTokens.refresh_token)
-            token.refresh_token = newTokens.refresh_token
-          return token
+          return {
+            ...token,
+            access_token: newTokens.access_token,
+            expires_at: Math.floor(Date.now() / 1000 + newTokens.expires_in),
+            // Some providers only issue refresh tokens once, so preserve if we did not get a new one
+            refresh_token: newTokens.refresh_token
+              ? newTokens.refresh_token
+              : token.refresh_token,
+          }
         } catch (error) {
           console.error("Error refreshing access_token", error)
           // If we fail to refresh the token, return an error so we can handle it on the page
@@ -117,6 +118,10 @@ export const { handlers, auth } = NextAuth({
           return token
         }
       }
+    },
+    async session({ session, token }) {
+      session.error = token.error
+      return session
     },
   },
 })
@@ -240,7 +245,7 @@ import { useEffect } from "react"
 import { auth, signIn } from "@/auth"
 
 export default async function Page() {
-  const session = await useSession()
+  const session = await auth()
   if (session?.error === "RefreshTokenError") {
     await signIn("google") // Force sign in to obtain a new set of access and refresh tokens
   }
@@ -258,7 +263,7 @@ import { useEffect } from "react"
 import { signIn, useSession } from "next-auth/react"
 
 export default function Page() {
-  const { data: session } = useSession()
+  const { data: session } = useSession() // For this to work, the Page should be wrapped inside the SessionProvider component in Layout
   useEffect(() => {
     if (session?.error !== "RefreshTokenError") return
     signIn("google") // Force sign in to obtain a new set of access and refresh tokens

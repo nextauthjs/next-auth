@@ -5,9 +5,9 @@ const DocSearch = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="relative max-md:ml-6 h-8 appearance-none rounded-lg px-3 py-1.5 transition-colors text-base leading-tight md:text-sm bg-black/[.05] dark:bg-gray-50/10 focus:!bg-transparent pr-2 w-48 text-gray-500 dark:text-gray-400">
+      <div className="relative h-8 w-48 appearance-none rounded-lg bg-black/[.05] px-3 py-1.5 pr-2 text-base leading-tight text-gray-500 transition-colors focus:!bg-transparent max-md:ml-6 md:text-sm dark:bg-gray-50/10 dark:text-gray-400">
         Search...
-        <kbd className="flex absolute top-0 right-0 gap-1 items-center px-1.5 my-1.5 h-5 font-mono font-medium text-gray-500 bg-white rounded border transition-opacity pointer-events-none select-none ltr:right-1.5 rtl:left-1.5 text-[10px] contrast-more:border-current contrast-more:text-current contrast-more:dark:border-current max-sm:hidden dark:border-gray-100/20 dark:bg-black/50">
+        <kbd className="pointer-events-none absolute right-0 top-0 my-1.5 flex h-5 select-none items-center gap-1 rounded border bg-white px-1.5 font-mono text-[10px] font-medium text-gray-500 transition-opacity contrast-more:border-current contrast-more:text-current max-sm:hidden ltr:right-1.5 rtl:left-1.5 dark:border-gray-100/20 dark:bg-black/50 contrast-more:dark:border-current">
           CTRL K
         </kbd>
       </div>

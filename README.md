@@ -5,11 +5,13 @@
   <p align="center">Authentication for the Web.</p>
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
   <p align="center" style="align: center;">
-    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/github/v/release/nextauthjs/next-auth?style=flat-square&label=latest%20release&color=purple" alt="GitHub Stable Release" /></a>
+    <a href="https://x.com/authjs" ><img src="https://shields.io/badge/Follow @authjs-000?logo=x&style=flat-square" alt="X (formerly known Twitter)" /></a>
+    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/latest?style=flat-square&label=latest%20stable" alt="NPM next-auth@latest release" /></a>
+    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/beta?style=flat-square&label=latest%20NextAuth.js v5" alt="NPM next-auth@beta release" /></a>
     <!-- TODO: Should count `@auth/core` when NextAuth.js v5 is released as stable. -->
     <a href="https://www.npmtrends.com/next-auth"><img src="https://img.shields.io/npm/dm/next-auth?style=flat-square&color=cyan" alt="Downloads" /></a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
-    <a href="https://codecov.io/gh/nextauthjs/next-auth" ><img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov"></a>
+    <!-- <a href="https://codecov.io/gh/nextauthjs/next-auth" ><img alt="Codecov" src="https://img.shields.io/codecov/c/github/nextauthjs/next-auth?token=o2KN5GrPsY&style=flat-square&logo=codecov"></a> -->
     <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=fff&style=flat-square" alt="TypeScript" />
   </p>
   <p align="center">
@@ -93,7 +95,7 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
-        <a href="https://auth0.com" target="_blank">
+        <a href="https://a0.to/signup/nextauthjs" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/2824157?v=4" alt="Auth0 Logo" />
         </a><br />
         <div>Auth0</div>
@@ -104,13 +106,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
           <img height="96" src="https://avatars.githubusercontent.com/u/41974756?s=200&v=4" alt="FusionAuth Logo" />
         </a><br />
         <div>FusionAuth</div>
-        <sub>💵</sub>
-      </td>
-      <td align="center" valign="top">
-        <a href="https://www.beyondidentity.com" target="_blank">
-          <img height="96" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
-        </a><br />
-        <div>Beyond Identity</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
@@ -127,8 +122,22 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Prisma</div>
         <sub>💵</sub>
       </td>
+      <td align="center" valign="top">
+        <a href="https://neon.tech" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/77690634?v=4" alt="Neon Logo" />
+        </a><br />
+        <div>Neon</div>
+        <sub>💵</sub>
+      </td>
     </tr>
     <tr>
+      <td align="center" valign="top">
+        <a href="https://www.beyondidentity.com" target="_blank">
+          <img height="96" src="https://avatars.githubusercontent.com/u/69811361?s=200&v=4" alt="Beyond Identity Logo" />
+        </a><br />
+        <div>Beyond Identity</div>
+        <sub>💵</sub>
+      </td>
       <td align="center" valign="top">
         <a href="https://lowdefy.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/47087496?s=200&v=4" alt="Lowdefy Logo" />
@@ -158,10 +167,26 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
+        <a href="https://sent.dm/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/153308555?v=4" alt="Sent.dm Logo" />
+        </a><br />
+        <div>Sent.dm</div>
+        <sub>💵</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
         <a href="https://arcjet.com/?ref=auth.js" target="_blank">
           <img width="108" src="https://avatars.githubusercontent.com/u/24397786?s=200&v=4" alt="Arcjet Logo" />
         </a><br />
         <div>Arcjet</div>
+        <sub>💵</sub>
+      </td>
+      <td align="center" valign="top">
+        <a href="https://route4me.com/?ref=auth.js" target="_blank">
+          <img width="108" src="https://avatars.githubusercontent.com/u/7936820?v=4" alt="Route4Me Logo" />
+        </a><br />
+        <div>Route4Me</div>
         <sub>💵</sub>
       </td>
       <td align="center" valign="top">
@@ -171,8 +196,6 @@ We have an [OpenCollective](https://opencollective.com/nextauth) for companies a
         <div>Netlight</div>
         <sub>☁️</sub>
       </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <a href="https://checklyhq.com" target="_blank">
           <img height="96" src="https://avatars.githubusercontent.com/u/25982255?s=200&v=4" alt="Checkly Logo" />

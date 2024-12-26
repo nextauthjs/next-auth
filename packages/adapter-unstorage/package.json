@@ -1,6 +1,6 @@
 {
   "name": "@auth/unstorage-adapter",
-  "version": "2.4.2",
+  "version": "2.7.4",
   "description": "Unstorage adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -35,7 +35,8 @@
   "scripts": {
     "test": "./test/test.sh",
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

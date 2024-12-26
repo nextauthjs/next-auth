@@ -15,8 +15,6 @@ Start by installing the appropriate package for your framework.
 
   </Code.Next>
   <Code.Qwik>
-    
-    You can use the Qwik starter script:
 
     ```bash npm2yarn
     npm run qwik add auth
@@ -97,17 +95,7 @@ export { auth as middleware } from "@/auth"
   </Code.Next>
   <Code.Qwik>
 
-You can add Auth.js easily by using the following Qwik starter script:
-
-```bash npm2yarn
-npm run qwik add auth
-```
-
-This command will add a new package:
-
-`@auth/qwik`
-
-and create a new file named `plugin@auth.ts` with an example configuration.
+1. Start by creating a new `plugin@auth.ts` file in your `src/routes` directory with the following content.
 
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
