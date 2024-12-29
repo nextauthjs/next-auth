@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { parse } from "cookie"
+import * as cookie from "../../src/lib/vendored/cookie.js"
 import { MemoryAdapter, initMemory } from "../memory-adapter.js"
 import { randomString } from "../../src/lib/utils/web.js"
-import { AdapterUser } from "../../adapters.js"
+import type { AdapterUser } from "../../src/adapters.js"
 import { decode, encode } from "../../src/jwt.js"
 import {
   callbacks,
@@ -15,6 +15,8 @@ import {
   AUTH_SECRET,
   SESSION_COOKIE_NAME,
 } from "../utils.js"
+
+const { parse: parseCookie } = cookie
 
 describe("assert GET session action", () => {
   beforeEach(() => {
@@ -61,11 +63,9 @@ describe("assert GET session action", () => {
       })
       const actualBodySession = await response.json()
 
-      let cookies = response.headers
-        .getSetCookie()
-        .reduce<Record<string, string>>((acc, cookie) => {
-          return { ...acc, ...parse(cookie) }
-        }, {})
+      let cookies = response.headers.getSetCookie().reduce((acc, cookie) => {
+        return { ...acc, ...parseCookie(cookie) }
+      }, {})
       const sessionToken = cookies[SESSION_COOKIE_NAME]
       const actualToken = await decode({
         salt: SESSION_COOKIE_NAME,
@@ -176,11 +176,9 @@ describe("assert GET session action", () => {
 
       const actualBodySession = await response.json()
 
-      let cookies = response.headers
-        .getSetCookie()
-        .reduce<Record<string, string>>((acc, cookie) => {
-          return { ...acc, ...parse(cookie) }
-        }, {})
+      let cookies = response.headers.getSetCookie().reduce((acc, cookie) => {
+        return { ...acc, ...parseCookie(cookie) }
+      }, {})
       const actualSessionToken = cookies[SESSION_COOKIE_NAME]
 
       expect(memory.users.get(expectedUserId)).toEqual(expectedUser)
@@ -248,11 +246,9 @@ describe("assert GET session action", () => {
 
       const actualBodySession = await response.json()
 
-      let cookies = response.headers
-        .getSetCookie()
-        .reduce<Record<string, string>>((acc, cookie) => {
-          return { ...acc, ...parse(cookie) }
-        }, {})
+      let cookies = response.headers.getSetCookie().reduce((acc, cookie) => {
+        return { ...acc, ...parseCookie(cookie) }
+      }, {})
       const actualSessionToken = cookies[SESSION_COOKIE_NAME]
 
       expect(memory.users.get(expectedUserId)).toEqual(expectedUser)

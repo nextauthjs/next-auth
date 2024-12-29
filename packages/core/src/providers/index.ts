@@ -1,15 +1,12 @@
 import type { Profile } from "../types.js"
 import CredentialsProvider from "./credentials.js"
-import type {
-  CredentialsConfig,
-  CredentialsProviderType,
-} from "./credentials.js"
+import type { CredentialsConfig, CredentialsProviderId } from "./credentials.js"
 import type EmailProvider from "./email.js"
-import type { EmailConfig, EmailProviderType } from "./email.js"
+import type { EmailConfig, EmailProviderId } from "./email.js"
 import type {
   OAuth2Config,
   OAuthConfig,
-  OAuthProviderType,
+  OAuthProviderId,
   OIDCConfig,
 } from "./oauth.js"
 import type { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
@@ -91,11 +88,11 @@ export type Provider<P extends Profile = any> = (
   InternalProviderOptions
 
 export type BuiltInProviders = Record<
-  OAuthProviderType,
+  OAuthProviderId,
   (config: Partial<OAuthConfig<any>>) => OAuthConfig<any>
 > &
-  Record<CredentialsProviderType, typeof CredentialsProvider> &
-  Record<EmailProviderType, typeof EmailProvider> &
+  Record<CredentialsProviderId, typeof CredentialsProvider> &
+  Record<EmailProviderId, typeof EmailProvider> &
   Record<
     WebAuthnProviderType,
     (config: Partial<WebAuthnConfig>) => WebAuthnConfig
@@ -110,9 +107,9 @@ export interface AppProvider extends CommonProviderOptions {
   callbackUrl: string
 }
 
-export type RedirectableProviderType = "email" | "credentials"
-
-export type BuiltInProviderType =
-  | RedirectableProviderType
-  | OAuthProviderType
+export type ProviderId =
+  | CredentialsProviderId
+  | EmailProviderId
+  | OAuthProviderId
   | WebAuthnProviderType
+  | (string & {}) // HACK: To allow user-defined providers in `signIn`
