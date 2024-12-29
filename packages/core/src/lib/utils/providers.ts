@@ -62,10 +62,15 @@ export default function parseProviders(params: {
     return merged as InternalProvider
   })
 
-  return {
-    providers,
-    provider: providers.find(({ id }) => id === providerId),
+  const provider = providers.find(({ id }) => id === providerId)
+  if (providerId && !provider) {
+    const availableProviders = providers.map((p) => p.id).join(", ")
+    throw new Error(
+      `Provider with id "${providerId}" not found. Available providers: [${availableProviders}].`
+    )
   }
+
+  return { providers, provider }
 }
 
 // TODO: Also add discovery here, if some endpoints/config are missing.
