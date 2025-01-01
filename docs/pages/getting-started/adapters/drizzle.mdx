@@ -95,8 +95,8 @@ export const accounts = pgTable(
         columns: [account.provider, account.providerAccountId],
       }),
     },
-  ],
-);
+  ]
+)
 
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
@@ -119,8 +119,8 @@ export const verificationTokens = pgTable(
         columns: [verificationToken.identifier, verificationToken.token],
       }),
     },
-  ],
-);
+  ]
+)
 
 export const authenticators = pgTable(
   "authenticator",
@@ -142,8 +142,8 @@ export const authenticators = pgTable(
         columns: [authenticator.userId, authenticator.credentialID],
       }),
     },
-  ],
-);
+  ]
+)
 ```
 
 </Accordion>
