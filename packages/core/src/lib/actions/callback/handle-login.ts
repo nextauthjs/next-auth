@@ -6,7 +6,7 @@ import type {
   AdapterSession,
   AdapterUser,
 } from "../../../adapters.js"
-import type { Account, InternalOptions, User } from "../../../types.js"
+import type { Account, InternalConfig, User } from "../../../types.js"
 import type { JWT } from "../../../jwt.js"
 import type { OAuthConfig } from "../../../providers/index.js"
 import type { SessionToken } from "../../utils/cookie.js"
@@ -27,7 +27,7 @@ export async function handleLoginOrRegister(
   sessionToken: SessionToken,
   _profile: User | AdapterUser | { email: string },
   _account: AdapterAccount | Account | null,
-  options: InternalOptions
+  config: InternalConfig
 ) {
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
@@ -35,12 +35,7 @@ export async function handleLoginOrRegister(
   if (!["email", "oauth", "oidc", "webauthn"].includes(_account.type))
     throw new Error("Provider not supported")
 
-  const {
-    adapter,
-    jwt,
-    events,
-    session: { strategy: sessionStrategy, generateSessionToken },
-  } = options
+  const { adapter, events, session: sessionConfig } = config
 
   // If no adapter is configured then we don't have a database and cannot
   // persist data; in this mode we just return a dummy session object.
@@ -67,13 +62,13 @@ export async function handleLoginOrRegister(
   let user: AdapterUser | null = null
   let isNewUser = false
 
-  const useJwtSession = sessionStrategy === "jwt"
+  const useJwtSession = !sessionConfig.isDatabase
+  const { generateSessionToken, maxAge: sessionMaxAge } = sessionConfig
 
   if (sessionToken) {
     if (useJwtSession) {
       try {
-        const salt = options.cookies.sessionToken.name
-        session = await jwt.decode({ ...jwt, token: sessionToken, salt })
+        session = await sessionConfig.unseal(sessionToken)
         if (session && "sub" in session && session.sub) {
           user = await getUser(session.sub)
         }
@@ -121,7 +116,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(sessionMaxAge),
         })
 
     return { session, user, isNewUser }
@@ -153,7 +148,7 @@ export async function handleLoginOrRegister(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: userByAccount.id,
-            expires: fromDate(options.session.maxAge),
+            expires: fromDate(sessionMaxAge),
           })
 
       const currentAccount: AdapterAccount = {
@@ -212,7 +207,7 @@ export async function handleLoginOrRegister(
         : await createSession({
             sessionToken: generateSessionToken(),
             userId: user.id,
-            expires: fromDate(options.session.maxAge),
+            expires: fromDate(sessionMaxAge),
           })
 
       const currentAccount: AdapterAccount = { ...account, userId: user.id }
@@ -246,12 +241,12 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: userByAccount.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(sessionMaxAge),
         })
 
     return { session, user: userByAccount, isNewUser }
   } else {
-    const { provider: p } = options as InternalOptions<"oauth" | "oidc">
+    const { provider: p } = config as InternalConfig<"oauth" | "oidc">
     const { type, provider, providerAccountId, userId, ...tokenSet } = account
     const defaults = { providerAccountId, provider, type, userId }
     account = Object.assign(p.account(tokenSet) ?? {}, defaults)
@@ -287,7 +282,7 @@ export async function handleLoginOrRegister(
       ? await getUserByEmail(profile.email)
       : null
     if (userByEmail) {
-      const provider = options.provider as OAuthConfig<any>
+      const provider = config.provider as OAuthConfig<any>
       if (provider?.allowDangerousEmailAccountLinking) {
         // If you trust the oauth provider to correctly verify email addresses, you can opt-in to
         // account linking even when the user is not signed-in.
@@ -326,7 +321,7 @@ export async function handleLoginOrRegister(
       : await createSession({
           sessionToken: generateSessionToken(),
           userId: user.id,
-          expires: fromDate(options.session.maxAge),
+          expires: fromDate(sessionMaxAge),
         })
 
     return { session, user, isNewUser }

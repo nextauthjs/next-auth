@@ -7,13 +7,12 @@ import VerifyRequestPage from "./verify-request.js"
 import { UnknownAction } from "../../errors.js"
 
 import type {
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   InternalProvider,
   PublicProvider,
 } from "../../types.js"
-import type { Cookie } from "../utils/cookie.js"
 
 function send({
   html,
@@ -35,44 +34,34 @@ function send({
   }
 }
 
-type RenderPageParams = {
-  query?: RequestInternal["query"]
-  cookies?: Cookie[]
-} & Partial<
-  Pick<
-    InternalOptions,
-    "url" | "callbackUrl" | "csrfToken" | "providers" | "theme" | "pages"
-  >
->
-
 /**
  * Unless the user defines their [own pages](https://authjs.dev/reference/core#pages),
  * we render a set of default ones, using Preact SSR.
  */
-export default function renderPage(params: RenderPageParams) {
-  const { url, theme, query, cookies, pages, providers } = params
+export default function renderPage(config: Partial<InternalConfig>) {
+  const { url, theme, resCookies: cookies, pages, providers } = config
 
   return {
-    csrf(skip: boolean, options: InternalOptions, cookies: Cookie[]) {
+    csrf(skip: boolean) {
       if (!skip) {
         return {
           headers: { "Content-Type": "application/json" },
-          body: { csrfToken: options.csrfToken },
+          body: { csrfToken: config.csrfToken },
           cookies,
         }
       }
-      options.logger.warn("csrf-disabled")
-      cookies.push({
-        name: options.cookies.csrfToken.name,
+      config.logger?.warn("csrf-disabled")
+      cookies?.push({
+        name: config.cookies!.csrfToken.name,
         value: "",
-        options: { ...options.cookies.csrfToken.options, maxAge: 0 },
+        options: { ...config.cookies?.csrfToken.options, maxAge: 0 },
       })
       return { status: 404, cookies }
     },
-    providers(providers: InternalProvider[]) {
+    providers() {
       return {
         headers: { "Content-Type": "application/json" },
-        body: providers.reduce<Record<string, PublicProvider>>(
+        body: providers?.reduce<Record<string, PublicProvider>>(
           (acc, { id, name, type, signinUrl, callbackUrl }) => {
             acc[id] = { id, name, type, signinUrl, callbackUrl }
             return acc
@@ -81,12 +70,13 @@ export default function renderPage(params: RenderPageParams) {
         ),
       }
     },
-    signin(providerId?: string, error?: any) {
+    signin(request: RequestInternal) {
+      const { error, query, providerId } = request
       if (providerId) throw new UnknownAction("Unsupported action")
       if (pages?.signIn) {
         let signinUrl = `${pages.signIn}${
           pages.signIn.includes("?") ? "&" : "?"
-        }${new URLSearchParams({ callbackUrl: params.callbackUrl ?? "/" })}`
+        }${new URLSearchParams({ callbackUrl: config.callbackUrl ?? "/" })}`
         if (error) signinUrl = `${signinUrl}&${new URLSearchParams({ error })}`
         return { redirect: signinUrl, cookies }
       }
@@ -111,9 +101,9 @@ export default function renderPage(params: RenderPageParams) {
         cookies,
         theme,
         html: SigninPage({
-          csrfToken: params.csrfToken,
+          csrfToken: config.csrfToken,
           // We only want to render providers
-          providers: params.providers?.filter(
+          providers: config.providers?.filter(
             (provider) =>
               // Always render oauth and email type providers
               ["email", "oauth", "oidc"].includes(provider.type) ||
@@ -124,9 +114,9 @@ export default function renderPage(params: RenderPageParams) {
               // Don't render other provider types
               false
           ),
-          callbackUrl: params.callbackUrl,
-          theme: params.theme,
-          error,
+          callbackUrl: config.callbackUrl,
+          theme: config.theme,
+          error: error as any,
           ...query,
         }),
         title: "Sign In",
@@ -138,7 +128,7 @@ export default function renderPage(params: RenderPageParams) {
       return send({
         cookies,
         theme,
-        html: SignoutPage({ csrfToken: params.csrfToken, url, theme }),
+        html: SignoutPage({ csrfToken: config.csrfToken, url, theme }),
         title: "Sign Out",
       })
     },

@@ -1,10 +1,9 @@
 import type {
-  InternalOptions,
+  InternalConfig,
   RequestInternal,
   ResponseInternal,
   User,
 } from "../../types.js"
-import type { Cookie, SessionStore } from "../utils/cookie.js"
 import { getLoggedInUser } from "../utils/session.js"
 import {
   assertInternalOptionsWebAuthn,
@@ -19,18 +18,17 @@ import {
  */
 export async function webAuthnOptions(
   request: RequestInternal,
-  options: InternalOptions,
-  sessionStore: SessionStore,
-  cookies: Cookie[]
+  config: InternalConfig
   // @ts-expect-error issue with returning from a switch case
 ): Promise<ResponseInternal> {
   // Return an error if the adapter is missing or if the provider
   // is not a webauthn provider.
-  const narrowOptions = assertInternalOptionsWebAuthn(options)
+  const narrowOptions = assertInternalOptionsWebAuthn(config)
   const { provider } = narrowOptions
 
   // Extract the action from the query parameters
   const { action } = (request.query ?? {}) as Record<string, unknown>
+  const { resCookies: cookies } = config
 
   // Action must be either "register", "authenticate", or undefined
   if (
@@ -49,7 +47,7 @@ export async function webAuthnOptions(
   }
 
   // Get the user info from the session
-  const sessionUser = await getLoggedInUser(options, sessionStore)
+  const sessionUser = await getLoggedInUser(config)
 
   // Extract user info from request
   // If session user exists, we don't need to call getUserInfo
@@ -58,7 +56,7 @@ export async function webAuthnOptions(
         user: sessionUser,
         exists: true,
       }
-    : await provider.getUserInfo(options, request)
+    : await provider.getUserInfo(config, request)
 
   const userInfo = getUserInfoResponse?.user
 
