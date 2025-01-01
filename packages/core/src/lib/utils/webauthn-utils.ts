@@ -58,7 +58,7 @@ type WebAuthnOptionsResponse = ResponseInternal & {
 export type CredentialDeviceType = "singleDevice" | "multiDevice"
 interface InternalAuthenticator {
   providerAccountId: string
-  credentialID: Uint8Array
+  credentialID: string
   credentialPublicKey: Uint8Array
   counter: number
   credentialDeviceType: CredentialDeviceType
@@ -72,8 +72,8 @@ type RGetUserInfo = Awaited<ReturnType<GetUserInfo>>
  * Infers the WebAuthn options based on the provided parameters.
  *
  * @param action - The WebAuthn action to perform (optional).
- * @param loggedInUser - The logged-in user (optional).
- * @param userInfoResponse - The response containing user information (optional).
+ * @param loggedIn - Whether the user is logged in or not.
+ * @param userInfoResponse - The response containing user information.
  *
  * @returns The WebAuthn action to perform, or null if no inference could be made.
  */
@@ -371,7 +371,7 @@ export async function verifyRegister(
 
   // Build a new account
   const account = {
-    providerAccountId: toBase64(verification.registrationInfo.credentialID),
+    providerAccountId: verification.registrationInfo.credentialID,
     provider: options.provider.id,
     type: provider.type,
   }
@@ -380,7 +380,7 @@ export async function verifyRegister(
   const authenticator = {
     providerAccountId: account.providerAccountId,
     counter: verification.registrationInfo.counter,
-    credentialID: toBase64(verification.registrationInfo.credentialID),
+    credentialID: verification.registrationInfo.credentialID,
     credentialPublicKey: toBase64(
       verification.registrationInfo.credentialPublicKey
     ),
@@ -428,7 +428,7 @@ async function getAuthenticationOptions(
     ...provider.authenticationOptions,
     rpID: relayingParty.id,
     allowCredentials: authenticators?.map((a) => ({
-      id: fromBase64(a.credentialID),
+      id: a.credentialID,
       type: "public-key",
       transports: stringToTransports(a.transports),
     })),
@@ -466,13 +466,13 @@ async function getRegistrationOptions(
   // Return the registration options.
   return await provider.simpleWebAuthn.generateRegistrationOptions({
     ...provider.registrationOptions,
-    userID,
+    userID: new Uint8Array(Buffer.from(userID)),
     userName: user.email,
     userDisplayName: user.name ?? undefined,
     rpID: relayingParty.id,
     rpName: relayingParty.name,
     excludeCredentials: authenticators?.map((a) => ({
-      id: fromBase64(a.credentialID),
+      id: a.credentialID,
       type: "public-key",
       transports: stringToTransports(a.transports),
     })),
@@ -503,7 +503,7 @@ function fromAdapterAuthenticator(
     credentialDeviceType:
       authenticator.credentialDeviceType as InternalAuthenticator["credentialDeviceType"],
     transports: stringToTransports(authenticator.transports),
-    credentialID: fromBase64(authenticator.credentialID),
+    credentialID: authenticator.credentialID,
     credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
   }
 }
