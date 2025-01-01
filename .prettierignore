@@ -32,7 +32,7 @@ packages/**/*.js
 !packages/*/scripts/*.js
 
 # @auth/core
-packages/core/src/providers/oauth-types.ts
+packages/core/src/providers/provider-types.ts
 packages/core/src/lib/pages/styles.ts
 
 # @auth/sveltekit
@@ -43,7 +43,7 @@ packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*
 packages/frameworks-express/providers
 
 # next-auth
-packages/next-auth/src/providers/oauth-types.ts
+packages/next-auth/src/providers/provider-types.ts
 packages/next-auth/css/index.css
 
 # Adapters

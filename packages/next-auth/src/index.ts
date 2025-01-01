@@ -73,7 +73,7 @@ import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Awaitable, Session } from "@auth/core/types"
-import type { BuiltInProviderType } from "@auth/core/providers"
+import type { ProviderId } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -289,10 +289,7 @@ export interface NextAuthResult {
    * ```
    *
    */
-  signIn: <
-    P extends BuiltInProviderType | (string & {}),
-    R extends boolean = true,
-  >(
+  signIn: <P extends ProviderId, R extends boolean = true>(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
     options?:

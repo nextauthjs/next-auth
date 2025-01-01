@@ -264,7 +264,11 @@ export async function handleOAuth(
         as,
         client,
         processedCodeResponse.access_token,
-        { [o.customFetch]: provider[customFetch] }
+        {
+          [o.customFetch]: provider[customFetch],
+          // TODO: move away from allowing insecure HTTP requests
+          [o.allowInsecureRequests]: true,
+        }
       )
       profile = await userinfoResponse.json()
     } else {

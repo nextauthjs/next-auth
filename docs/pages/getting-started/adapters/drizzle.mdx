@@ -34,8 +34,8 @@ To use this adapter, you must have setup Drizzle ORM and Drizzle Kit in your pro
 1. Create your schema file, based off of one of the ones below.
 2. Install a supported database driver to your project, like `@libsql/client`, `mysql2` or `postgres`.
 3. Create a `drizzle.config.ts` [file](https://orm.drizzle.team/kit-docs/conf).
-4. Generate the initial migration from your schema file with a command like, `drizzle-kit generate:pg`.
-5. Apply migrations by using `migrate()` function or push changes directly to your database with a command like, `drizzle-kit push:pg`.
+4. Generate the initial migration from your schema file with a command like, `drizzle-kit generate`.
+5. Apply migrations by using `migrate()` function or push changes directly to your database with a command like, `drizzle-kit push`.
 6. If your schemas differ from the default ones, pass them as the second parameter to the adapter.
 
 #### Schemas
@@ -89,12 +89,14 @@ export const accounts = pgTable(
     id_token: text("id_token"),
     session_state: text("session_state"),
   },
-  (account) => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  })
-)
+  (account) => [
+    {
+      compoundKey: primaryKey({
+        columns: [account.provider, account.providerAccountId],
+      }),
+    },
+  ],
+);
 
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
@@ -111,12 +113,14 @@ export const verificationTokens = pgTable(
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (verificationToken) => ({
-    compositePk: primaryKey({
-      columns: [verificationToken.identifier, verificationToken.token],
-    }),
-  })
-)
+  (verificationToken) => [
+    {
+      compositePk: primaryKey({
+        columns: [verificationToken.identifier, verificationToken.token],
+      }),
+    },
+  ],
+);
 
 export const authenticators = pgTable(
   "authenticator",
@@ -132,12 +136,14 @@ export const authenticators = pgTable(
     credentialBackedUp: boolean("credentialBackedUp").notNull(),
     transports: text("transports"),
   },
-  (authenticator) => ({
-    compositePK: primaryKey({
-      columns: [authenticator.userId, authenticator.credentialID],
-    }),
-  })
-)
+  (authenticator) => [
+    {
+      compositePK: primaryKey({
+        columns: [authenticator.userId, authenticator.credentialID],
+      }),
+    },
+  ],
+);
 ```
 
 </Accordion>
