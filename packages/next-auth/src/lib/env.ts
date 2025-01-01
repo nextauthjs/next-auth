@@ -3,9 +3,12 @@ import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
-/** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
+/** If `NEXTAUTH_URL` or `AUTH_URL` is defined or host headers are set,
+ * override the request's URL.
+ */
 export function reqWithEnvURL(req: NextRequest): NextRequest {
-  const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+  const url =
+    process.env.AUTH_URL ?? process.env.NEXTAUTH_URL ?? urlFromHeaders(req)
   if (!url) return req
   const { origin: envOrigin } = new URL(url)
   const { href, origin } = req.nextUrl
@@ -34,4 +37,20 @@ export function setEnvDefaults(config: NextAuthConfig) {
     config.basePath ||= "/api/auth"
     coreSetEnvDefaults(process.env, config, true)
   }
+}
+
+function urlFromHeaders(req: NextRequest): string | null {
+  const detectedHost =
+    req.headers.get("x-forwarded-host") ?? req.headers.get("host")
+
+  if (!detectedHost) {
+    return null
+  }
+
+  const detectedProtocol =
+    req.headers.get("x-forwarded-proto") ?? req.protocol ?? "https"
+  const _protocol = detectedProtocol.endsWith(":")
+    ? detectedProtocol
+    : detectedProtocol + ":"
+  return `${_protocol}//${detectedHost}`
 }
