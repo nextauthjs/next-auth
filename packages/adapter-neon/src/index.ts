@@ -18,19 +18,10 @@
 import type {
   Adapter,
   AdapterUser,
-  AdapterAccount,
   VerificationToken,
   AdapterSession,
 } from "@auth/core/adapters"
 import type { Pool } from "@neondatabase/serverless"
-
-export function mapExpiresAt(account: AdapterAccount): AdapterAccount {
-  const expires_at = account.expires_at
-  return {
-    ...account,
-    expires_at,
-  }
-}
 
 export default function PostgresAdapter(client: Pool): Adapter {
   return {
@@ -174,7 +165,7 @@ export default function PostgresAdapter(client: Pool): Adapter {
       ]
 
       const result = await client.query(sql, params)
-      return mapExpiresAt(result.rows[0])
+      return result.rows[0]
     },
     async createSession({ sessionToken, userId, expires }) {
       if (userId === undefined) {

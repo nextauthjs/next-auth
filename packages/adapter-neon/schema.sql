@@ -18,7 +18,7 @@ CREATE TABLE accounts
   "providerAccountId" VARCHAR(255) NOT NULL,
   refresh_token TEXT,
   access_token TEXT,
-  expires_at BIGINT,
+  expires_at INTEGER,
   id_token TEXT,
   scope TEXT,
   session_state TEXT,

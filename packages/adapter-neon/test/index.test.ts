@@ -1,5 +1,5 @@
 import { runBasicTests } from "utils/adapter"
-import PostgresAdapter, { mapExpiresAt } from "../src"
+import PostgresAdapter from "../src"
 import { neonConfig, Pool } from "@neondatabase/serverless"
 
 // Using websockets
@@ -42,7 +42,7 @@ runBasicTests({
           select * from accounts where "providerAccountId" = $1`
 
       const result = await client.query(sql, [account.providerAccountId])
-      return result.rowCount !== 0 ? mapExpiresAt(result.rows[0]) : null
+      return result.rowCount !== 0 ? result.rows[0] : null
     },
     session: async (sessionToken) => {
       const result1 = await client.query(
