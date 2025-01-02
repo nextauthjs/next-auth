@@ -98,7 +98,7 @@ export async function updateConnectionEntities(
   dataSource.entityMetadatas = entities
 
   // @ts-expect-error
-  dataSource.buildMetadatas()
+  await dataSource.buildMetadatas()
 
   if (dataSource.options.synchronize !== false) {
     console.warn(
