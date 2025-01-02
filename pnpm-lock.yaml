@@ -377,7 +377,7 @@ importers:
         version: 0.23.0
       drizzle-orm:
         specifier: ^0.32.0
-        version: 0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.27.5)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6)
+        version: 0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.7.0)(@prisma/client@5.20.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6)
       libsql:
         specifier: ^0.3.18
         version: 0.3.18
@@ -510,6 +510,22 @@ importers:
       neo4j-driver:
         specifier: ^5.7.0
         version: 5.16.0
+
+  packages/adapter-neon:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+      '@neondatabase/serverless':
+        specifier: ^0.10.4
+        version: 0.10.4
+    devDependencies:
+      '@types/ws':
+        specifier: ^8.5.13
+        version: 8.5.13
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.0
 
   packages/adapter-pg:
     dependencies:
@@ -3625,6 +3641,9 @@ packages:
   '@neon-rs/load@0.0.4':
     resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
 
+  '@neondatabase/serverless@0.10.4':
+    resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
+
   '@next/env@13.5.6':
     resolution: {integrity: sha512-Yac/bV5sBGkkEXmAX5FWPS9Mmo2rthrOPRQQNfycJPkjUAUclomCPH7QFVCDQ4Mp2k2K1SSM6m0zrxYrOwtFQw==}
 
@@ -5147,6 +5166,9 @@ packages:
   '@types/pg@8.11.0':
     resolution: {integrity: sha512-sDAlRiBNthGjNFfvt0k6mtotoVYVQ63pA8R4EMWka7crawSR60waVYR0HAgmPRs/e2YaeJTD/43OoZ3PFw80pw==}
 
+  '@types/pg@8.11.6':
+    resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
+
   '@types/phoenix@1.6.4':
     resolution: {integrity: sha512-B34A7uot1Cv0XtaHRYDATltAdKx0BvVKNgYNqE4WjtPUa4VQJM7kxeXcVKaH+KS+kCmZ+6w+QaUdcljiheiBJA==}
 
@@ -5289,11 +5311,8 @@ packages:
   '@types/wrap-ansi@3.0.0':
     resolution: {integrity: sha512-ltIpx+kM7g/MLRZfkbL7EsCEjfzCcScLpkg37eXEtx5kmrAKBkTJwd1GIAjDSL8wTpM6Hzn5YO4pSb91BEwu1g==}
 
-  '@types/ws@8.5.10':
-    resolution: {integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==}
-
-  '@types/ws@8.5.12':
-    resolution: {integrity: sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==}
+  '@types/ws@8.5.13':
+    resolution: {integrity: sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA==}
 
   '@typescript-eslint/eslint-plugin@6.19.1':
     resolution: {integrity: sha512-roQScUGFruWod9CEyoV5KlCYrubC/fvG8/1zXuT0WTcxX87GnMMmnksMwSg99lo1xiKrBzw2icsJPMAw1OtKxg==}
@@ -13537,18 +13556,6 @@ packages:
   write-stream@0.4.3:
     resolution: {integrity: sha512-IJrvkhbAnj89W/GAVdVgbnPiVw5Ntg/B4tc/MUCIEwj/g6JIww1DWJyB/yBMT3yw2/TkT6IUZ0+IYef3flEw8A==}
 
-  ws@8.16.0:
-    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.18.0:
     resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
@@ -16325,12 +16332,12 @@ snapshots:
   '@graphql-tools/executor-graphql-ws@1.1.0(graphql@16.8.1)':
     dependencies:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
-      '@types/ws': 8.5.10
+      '@types/ws': 8.5.13
       graphql: 16.8.1
       graphql-ws: 5.14.3(graphql@16.8.1)
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.7.0
-      ws: 8.16.0
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -16351,11 +16358,11 @@ snapshots:
   '@graphql-tools/executor-legacy-ws@1.0.5(graphql@16.8.1)':
     dependencies:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
-      '@types/ws': 8.5.10
+      '@types/ws': 8.5.13
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.7.0
-      ws: 8.16.0
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -16507,13 +16514,13 @@ snapshots:
       '@graphql-tools/executor-legacy-ws': 1.0.5(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@graphql-tools/wrap': 10.0.1(graphql@16.8.1)
-      '@types/ws': 8.5.10
+      '@types/ws': 8.5.13
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.8.1
-      isomorphic-ws: 5.0.0(ws@8.16.0)
+      isomorphic-ws: 5.0.0(ws@8.18.0)
       tslib: 2.7.0
       value-or-promise: 1.0.12
-      ws: 8.16.0
+      ws: 8.18.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -16959,7 +16966,7 @@ snapshots:
 
   '@libsql/isomorphic-ws@0.1.5':
     dependencies:
-      '@types/ws': 8.5.12
+      '@types/ws': 8.5.13
       ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
@@ -17252,6 +17259,10 @@ snapshots:
       '@napi-rs/simple-git-win32-x64-msvc': 0.1.16
 
   '@neon-rs/load@0.0.4': {}
+
+  '@neondatabase/serverless@0.10.4':
+    dependencies:
+      '@types/pg': 8.11.6
 
   '@next/env@13.5.6': {}
 
@@ -18801,8 +18812,8 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
       '@types/phoenix': 1.6.4
-      '@types/ws': 8.5.10
-      ws: 8.16.0
+      '@types/ws': 8.5.13
+      ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -19187,6 +19198,12 @@ snapshots:
       pg-protocol: 1.6.0
       pg-types: 4.0.2
 
+  '@types/pg@8.11.6':
+    dependencies:
+      '@types/node': 20.12.7
+      pg-protocol: 1.6.0
+      pg-types: 4.0.2
+
   '@types/phoenix@1.6.4': {}
 
   '@types/pouchdb-adapter-cordova-sqlite@1.0.4':
@@ -19379,14 +19396,9 @@ snapshots:
 
   '@types/wrap-ansi@3.0.0': {}
 
-  '@types/ws@8.5.10':
+  '@types/ws@8.5.13':
     dependencies:
       '@types/node': 20.12.7
-
-  '@types/ws@8.5.12':
-    dependencies:
-      '@types/node': 20.12.7
-    optional: true
 
   '@typescript-eslint/eslint-plugin@6.19.1(@typescript-eslint/parser@6.19.1(eslint@9.9.1(jiti@1.21.6))(typescript@5.3.3))(eslint@9.9.1(jiti@1.21.6))(typescript@5.3.3)':
     dependencies:
@@ -22236,14 +22248,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.0)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.27.5)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6):
+  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.7.0)(@prisma/client@5.20.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.24.2)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240117.0
       '@libsql/client': 0.6.0
+      '@neondatabase/serverless': 0.10.4
       '@opentelemetry/api': 1.7.0
       '@prisma/client': 6.0.0(prisma@6.0.0)
       '@types/better-sqlite3': 7.6.9
-      '@types/pg': 8.11.0
+      '@types/pg': 8.11.6
       '@types/react': 18.2.78
       '@xata.io/client': 0.28.0(typescript@5.3.3)
       better-sqlite3: 9.6.0
@@ -24359,9 +24372,9 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-ws@5.0.0(ws@8.16.0):
+  isomorphic-ws@5.0.0(ws@8.18.0):
     dependencies:
-      ws: 8.16.0
+      ws: 8.18.0
 
   istanbul-lib-coverage@3.2.2: {}
 
@@ -28618,8 +28631,8 @@ snapshots:
 
   surrealdb.js@0.11.0:
     dependencies:
-      unws: 0.2.4(ws@8.16.0)
-      ws: 8.16.0
+      unws: 0.2.4(ws@8.18.0)
+      ws: 8.18.0
       zod: 3.22.4
     transitivePeerDependencies:
       - bufferutil
@@ -29445,9 +29458,9 @@ snapshots:
       consola: 3.2.3
       pathe: 1.1.2
 
-  unws@0.2.4(ws@8.16.0):
+  unws@0.2.4(ws@8.18.0):
     dependencies:
-      ws: 8.16.0
+      ws: 8.18.0
 
   update-browserslist-db@1.0.13(browserslist@4.23.0):
     dependencies:
@@ -29955,10 +29968,7 @@ snapshots:
     dependencies:
       readable-stream: 0.0.4
 
-  ws@8.16.0: {}
-
-  ws@8.18.0:
-    optional: true
+  ws@8.18.0: {}
 
   xml2js@0.5.0:
     dependencies:

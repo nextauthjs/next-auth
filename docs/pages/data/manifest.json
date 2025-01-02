@@ -19,6 +19,7 @@
   "adapters": {
     "prisma": "Prisma",
     "drizzle": "Drizzle ORM",
+    "neon": "Neon",
     "supabase": "Supabase",
     "firebase": "Firebase",
     "typeorm": "TypeORM",
