@@ -99,16 +99,16 @@ app.use("/auth/*", ExpressAuth({ providers: [EveOnline] }))
 
 ### Notes
 
-- When creating your application, make sure to select `Authentication Only` as the connection type.
+- When creating your application, make sure to select `Authentication & API Access` as the connection type. Also ensure that the `publicData` scope is selected.
 
 - If using JWT for the session, you can add the `CharacterID` to the JWT and session. For example:
 
 ```ts
 const AuthConfig = {
   callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.characterId = user.CharacterID
+    jwt({ token, profile }) {
+      if (profile) {
+        token.characterId = profile.CharacterID
       }
       return token
     },
