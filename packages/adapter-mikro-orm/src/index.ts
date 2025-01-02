@@ -113,6 +113,7 @@ export function MikroOrmAdapter<
       })
       if (!account) return null
       const user = await em.findOne(UserModel, { id: account.userId })
+      if (!user) return null
 
       return wrap(user).toObject()
     },
@@ -120,7 +121,7 @@ export function MikroOrmAdapter<
       const em = await getEM()
       const user = await em.findOne(UserModel, { id: data.id })
       if (!user) throw new Error("User not found")
-      wrap(user).assign(data, { mergeObjects: true })
+      wrap(user).assign(data, { mergeObjectProperties: true })
       await em.persistAndFlush(user)
 
       return wrap(user).toObject()
@@ -139,6 +140,7 @@ export function MikroOrmAdapter<
       const user = await em.findOne(UserModel, { id: data.userId })
       if (!user) throw new Error("User not found")
       const account = new AccountModel()
+      // @ts-expect-error
       wrap(account).assign(data)
       user.accounts.add(account)
       await em.persistAndFlush(user)
@@ -186,6 +188,7 @@ export function MikroOrmAdapter<
       const session = await em.findOne(SessionModel, {
         sessionToken: data.sessionToken,
       })
+      if (!session) return null
       wrap(session).assign(data)
       if (!session) throw new Error("Session not found")
       await em.persistAndFlush(session)
