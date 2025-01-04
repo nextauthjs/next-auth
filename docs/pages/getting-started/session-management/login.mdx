@@ -269,13 +269,13 @@ export default component$(() => {
 <Code.Express>
 ```ts filename="src/routes/auth.ts"
 import express, { Request, Response } from "express";
-import { signIn } from "../auth"; 
+import { signOut } from "../auth"; 
 const router = express.Router()
 
 router.post("/auth/signout", async (req: Request, res: Response) => {
 try {
 await signOut(req, res)
-res.redirect("/dashboard")
+res.redirect("/")
 } catch (error) {
 res.status(500).send("Sign out failed")
 }
