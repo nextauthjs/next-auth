@@ -154,7 +154,7 @@ To sign out users with Express, you can create a route that handles the sign-out
 
 ```ts filename="src/routes/auth.ts"
 import express, { Request, Response } from "express"
-import { signIn } from "../auth"
+import { signOut } from "../auth"
 const router = express.Router()
 
 router.post("/auth/signout", async (req: Request, res: Response) => {
