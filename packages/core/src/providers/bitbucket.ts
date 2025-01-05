@@ -62,17 +62,18 @@ export interface BitbucketProfile {
  *   ],
  * })
  * ```
- * #### Notes
- *
- * By default, Auth.js assumes that the Bitbucket provider is
- * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
- *
+ * 
  * #### Resources
  *
  * - [Using OAuth on Bitbucket Cloud](https://support.atlassian.com/bitbucket-cloud/docs/use-oauth-on-bitbucket-cloud/)
  * - [Bitbucket REST API Authentication](https://developer.atlassian.com/cloud/bitbucket/rest/intro/#authentication)
  * - [Bitbucket REST API Users](https://developer.atlassian.com/cloud/bitbucket/rest/api-group-users/#api-group-users)
  *
+ *  #### Notes
+ *
+ * By default, Auth.js assumes that the Bitbucket provider is
+ * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ * 
  * :::tip
  *
  * The Bitbucket provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/bitbucket.ts).
