@@ -67,18 +67,6 @@ export interface BitbucketProfile {
  * By default, Auth.js assumes that the Bitbucket provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
- * #### Registration
- *
- * - [Login](https://bitbucket.org/)
- * - [Workspaces](https://bitbucket.org/account/workspaces/)
- * - Settings > Workspace settings > OAuth consumers > Add consumer
- *     Name: Auth.js,
- *     Description: Auth.js,
- *     Callback URL: https://example.com/api/auth/callback/bitbucket
- *     Permissions: Account: Read Email Write
- *   Click "Save"
- *   Copy the "Key" and "Secret" to your `.env.local` file.
- *
  * #### Resources
  *
  * - [Using OAuth on Bitbucket Cloud](https://support.atlassian.com/bitbucket-cloud/docs/use-oauth-on-bitbucket-cloud/)
@@ -110,29 +98,13 @@ export default function Bitbucket(
     name: "Bitbucket",
     type: "oauth",
     authorization: {
-      url: `https://bitbucket.org/site/oauth2/authorize`,
+      url: "https://bitbucket.org/site/oauth2/authorize",
       params: {
-        response_type: "code",
         scope: "account",
       },
     },
-    token: {
-      url: "https://bitbucket.org/site/oauth2/access_token",
-      params: {
-        grant_type: "authorization_code",
-      },
-    },
-    userinfo: {
-      url: "https://api.bitbucket.org/2.0/user",
-      async request({ tokens, provider }) {
-        return await fetch(provider.userinfo?.url as URL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${tokens.access_token}`,
-          },
-        }).then((response) => response.json())
-      },
-    },
+    token: "https://bitbucket.org/site/oauth2/access_token",
+    userinfo: "https://api.bitbucket.org/2.0/user",
     profile(profile) {
       return {
         name: profile.display_name ?? profile.username,
@@ -140,7 +112,6 @@ export default function Bitbucket(
         image: profile.links.avatar?.href,
       }
     },
-    issuer: "https://bitbucket.org",
     options: config,
     style: {
       text: "#fff",
