@@ -92,7 +92,7 @@ export interface BitbucketProfile {
  * :::
  */
 export default function Bitbucket(
-  config: OAuthUserConfig<BitbucketProfile>
+  options: OAuthUserConfig<BitbucketProfile>
 ): OAuthConfig<BitbucketProfile> {
   return {
     id: "bitbucket",
@@ -113,7 +113,7 @@ export default function Bitbucket(
         image: profile.links.avatar?.href,
       }
     },
-    options: config,
+    options,
     style: {
       text: "#fff",
       bg: "#205081",
