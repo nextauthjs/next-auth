@@ -13,8 +13,9 @@ import { Code } from "@/components/Code"
 ### Installation
 
 ```bash npm2yarn
-npm install @mikro-orm/core @auth/mikro-orm-adapter
+npm install @mikro-orm/core @mikro-orm/knex @mikro-orm/sqlite @auth/mikro-orm-adapter
 ```
+> Check MikroORM docs for other database drivers (e.g. MySQL, PostgreSQL, ...)
 
 ### Environment Variables
 
@@ -30,12 +31,13 @@ DATABASE_CONNECTION_STRING=./db.sqlite
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+import { SqliteDriver } from "@mikro-orm/sqlite"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MikroOrmAdapter({
     // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
     dbName: process.env.DATABASE_CONNECTION_STRING,
-    type: "sqlite",
+    driver: SqliteDriver,
     debug: true,
   }),
   providers: [],
@@ -68,12 +70,13 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+import { SqliteDriver } from "@mikro-orm/sqlite"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: MikroOrmAdapter({
     // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
     dbName: process.env.DATABASE_CONNECTION_STRING,
-    type: "sqlite",
+    driver: SqliteDriver,
     debug: true,
   }),
   providers: [],
@@ -86,6 +89,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+import { SqliteDriver } from "@mikro-orm/sqlite"
 
 const app = express()
 
@@ -97,7 +101,7 @@ app.use(
     adapter: MikroOrmAdapter({
       // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
       dbName: process.env.DATABASE_CONNECTION_STRING,
-      type: "sqlite",
+      driver: SqliteDriver,
       debug: true,
     }),
   })
@@ -125,7 +129,7 @@ import {
   PrimaryKey,
   Property,
   Unique,
-} from "@mikro-orm/core"
+} from "@mikro-orm/sqlite"
 import { defaultEntities } from "@auth/mikro-orm-adapter"
 
 const type { Account, Session } = defaultEntities
@@ -171,7 +175,7 @@ export class User implements defaultEntities.User {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: MikroOrmAdapter(config, { entities: { User } }),
+  adapter: MikroOrmAdapter(config, { entities: [ User ] }),
 })
 ```
 
