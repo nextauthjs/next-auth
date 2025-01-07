@@ -23,7 +23,7 @@ export function FrameworkLink({
   return (
     <div className="group flex flex-col gap-2">
       <Link
-        href={`/getting-started/installation?framework=${name}`}
+        href={`/getting-started?framework=${name}`}
         className="relative flex h-28 w-28 flex-col flex-wrap items-center justify-between rounded-lg border border-solid border-neutral-200 bg-white p-4 !no-underline shadow-sm transition-colors duration-300 hover:bg-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-950"
       >
         <img
