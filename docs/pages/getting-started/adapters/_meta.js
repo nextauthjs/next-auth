@@ -12,6 +12,7 @@ export default {
   "mikro-orm": "MikroORM",
   mongodb: "MongoDB",
   neo4j: "Neo4j",
+  neon: "Neon",
   pg: "PostgreSQL",
   pouchdb: "PouchDB",
   prisma: "Prisma",
@@ -21,5 +22,5 @@ export default {
   typeorm: "TypeORM",
   unstorage: "Unstorage",
   "upstash-redis": "Upstash Redis",
-  xata: "Xata",
+  xata: "Xata"
 }
