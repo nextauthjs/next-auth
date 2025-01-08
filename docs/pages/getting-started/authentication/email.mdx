@@ -680,7 +680,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
-import { env } from "$env/dynamic/prviate"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
@@ -766,7 +766,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
-import { env } from "$env/dynamic/prviate"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
