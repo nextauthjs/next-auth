@@ -299,6 +299,12 @@ export interface Adapter {
    */
   getUserByEmail?(email: string): Awaitable<AdapterUser | null>
   /**
+   * Returns a user from the database via the user's phone number address.
+   *
+   * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
+   */
+  getUserByPhoneNumber?(phone_number: string): Awaitable<AdapterUser | null>
+  /**
    * Using the provider id and the id of the user for a specific account, get the user.
    *
    * See also [User management](https://authjs.dev/guides/creating-a-database-adapter#user-management)

@@ -28,6 +28,7 @@ export type ProviderType =
   | "oauth"
   | "email"
   | "credentials"
+  | "sms"
   | WebAuthnProviderType
 
 /** Shared across all {@link ProviderType} */
