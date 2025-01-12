@@ -6,7 +6,7 @@ To be able to investigate, we need access to a reproduction to identify what tri
 
 The bug template that you filled out has a section called "Reproduction URL", which is where you should provide the link to the reproduction.
 
-- If you did not provide a link or the link you provided is not valid, we will close the issue.
+- If you did not provide a link or the link you provided is not hosted on github.com outside of the next-auth organization, we will close the issue.
 - If you provide a link to a private repository, we will close the issue.
 - If you provide a link to a repository but not in the correct section, we will close the issue.
 
@@ -14,7 +14,7 @@ The bug template that you filled out has a section called "Reproduction URL", wh
 
 Depending on the reason the issue was closed, you can do the following:
 
-- If you did not provide a link, please open a new issue with a link to a reproduction.
+- If you did not provide a link hosted on github.com outside of the next-auth organization, please open a new issue with a link to such a reproduction.
 - If you provided a link to a private repository, please open a new issue with a link to a public repository.
 - If you provided a link to a repository but not in the correct section, please open a new issue with a link to a reproduction in the correct section.
 

@@ -69,7 +69,7 @@ export function parseDataSourceConfig(
     }
 
     return config
-  } catch (error) {
+  } catch {
     // If URL parsing fails for any reason, try letting TypeORM handle it
     return { url: configOrString } as any
   }
@@ -98,7 +98,7 @@ export async function updateConnectionEntities(
   dataSource.entityMetadatas = entities
 
   // @ts-expect-error
-  dataSource.buildMetadatas()
+  await dataSource.buildMetadatas()
 
   if (dataSource.options.synchronize !== false) {
     console.warn(

@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b> Wikimedia</b> integration.</span>
  * <a href="https://mediawiki.org/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/wikimedia.svg" height="48" />
@@ -174,13 +174,18 @@ export interface WikimediaProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Wikimedia from "@auth/core/providers/wikimedia"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Wikimedia({ clientId: WIKIMEDIA_CLIENT_ID, clientSecret: WIKIMEDIA_CLIENT_SECRET })],
+ *   providers: [
+ *     Wikimedia({
+ *       clientId: WIKIMEDIA_CLIENT_ID,
+ *       clientSecret: WIKIMEDIA_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

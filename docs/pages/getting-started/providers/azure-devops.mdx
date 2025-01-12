@@ -19,8 +19,8 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Azure DevOps Apps](https://aex.dev.azure.com)
-- [Microsoft Docs](https://docs.microsoft.com/en-us) · [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/) · [Authorize access to REST APIs with OAuth 2.0](https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops])
+- [Azure DevOps Apps documentation](https://aex.dev.azure.com)
+- [Microsoft documentation](https://docs.microsoft.com/en-us) · [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/) · [Authorize access to REST APIs with OAuth 2.0](https://docs.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/oauth?view=azure-devops])
 
 ## Setup
 
@@ -34,6 +34,13 @@ https://example.com/api/auth/callback/azure-devops
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/azure-devops
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -102,6 +109,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import AzureDevOps from "@auth/qwik/providers/azure-devops"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      AzureDevOps({
+        clientId: import.meta.env.AUTH_AZURE_DEVOPS_APP_ID,
+        clientSecret: import.meta.env.AUTH_AZURE_DEVOPS_CLIENT_SECRET,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

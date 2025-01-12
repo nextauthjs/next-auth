@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [EdgeDB Docs](https://www.edgedb.com/docs/)
+- [EdgeDB documentation](https://www.edgedb.com/docs/)
 
 ## Setup
 
@@ -44,6 +44,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { EdgeDBAdapter } from "@auth/edgedb-adapter"
+import { createClient } from "edgedb"
+
+const client = createClient({ dsn: import.meta.env.AUTH_EDGEDB_DSN })
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: EdgeDBAdapter(client),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```js filename="./auth.ts"
@@ -53,7 +71,7 @@ import { createClient } from "edgedb"
 
 const client = createClient({ dsn: process.env.AUTH_EDGEDB_DSN })
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: EdgeDBAdapter(client),
   providers: [],
 })

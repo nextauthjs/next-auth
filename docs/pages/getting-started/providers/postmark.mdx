@@ -5,8 +5,6 @@ import { Code } from "@/components/Code"
 
 # Postmark Provider
 
-<Callout>To be released in `next-auth@5.0.0-beta.17`</Callout>
-
 ## Overview
 
 The Postmark provider uses email to send "magic links" that contain URLs with verification tokens can be used to sign in.
@@ -59,18 +57,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Postmark from "@auth/qwik/providers/postmark"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Postmark({
+        // If your environment variable is named differently than default
+        apiKey: import.meta.env.AUTH_POSTMARK_KEY,
+        from: "no-reply@company.com",
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Postmark from "@auth/sveltekit/providers/postmark"
+import { env } from "$env/dynamic/prviate"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
   providers: [
     Postmark({
       // If your environment variable is named differently than default
-      apiKey: AUTH_POSTMARK_KEY,
+      apiKey: env.AUTH_POSTMARK_KEY,
       from: "no-reply@company.com",
     }),
   ],

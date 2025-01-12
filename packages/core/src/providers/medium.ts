@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Medium</b> integration.</span>
  * <a href="https://medium.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/medium.svg" height="48" width="48"/>
@@ -22,13 +22,15 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Medium from "@auth/core/providers/medium"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Medium({ clientId: MEDIUM_CLIENT_ID, clientSecret: MEDIUM_CLIENT_SECRET })],
+ *   providers: [
+ *     Medium({ clientId: MEDIUM_CLIENT_ID, clientSecret: MEDIUM_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

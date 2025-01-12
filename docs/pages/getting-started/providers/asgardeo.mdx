@@ -21,6 +21,13 @@ https://example.com/api/auth/callback/asgardeo
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/asgardeo
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -35,6 +42,7 @@ https://example.com/auth/callback/asgardeo
 ```
 AUTH_ASGARDEO_ID
 AUTH_ASGARDEO_SECRET
+AUTH_ASGARDEO_ISSUER
 ```
 
 ### Configuration
@@ -65,6 +73,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Asgardeo from "@auth/qwik/providers/asgardeo"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Asgardeo],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"

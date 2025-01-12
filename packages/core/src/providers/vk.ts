@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>VK</b> integration.</span>
  * <a href="https://vk.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/vk.svg" height="48" />
@@ -302,8 +302,8 @@ export interface VkProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import VK from "@auth/core/providers/vk"
  *
  * const request = new Request(origin)
@@ -333,10 +333,10 @@ export interface VkProfile {
  *
  * By default the provider uses 5.126 version of the API. See https://vk.com/dev/versions for more info.
  * If you want to use a different version, you can pass it to provider's options object:
- * ```js title="pages/api/auth/[...nextauth].js"
+ * ```ts
  * const apiVersion = "5.126"
  * providers: [
- *   VkProvider({
+ *   Vk({
  *     accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
  *     requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
  *     authorizationUrl:

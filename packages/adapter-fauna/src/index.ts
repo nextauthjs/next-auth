@@ -1,8 +1,8 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px"}}>
- *  <p style={{fontWeight: "300"}}>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>Official <a href="https://docs.fauna.com/fauna/current/">Fauna</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://fauna.com/features">
- *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" height="30"/>
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/fauna.svg" width="64" />
  *  </a>
  * </div>
  *
@@ -21,7 +21,6 @@ import {
   NullDocument,
   QueryValue,
   QueryValueObject,
-  Module,
 } from "fauna"
 
 import type {
@@ -63,179 +62,6 @@ const defaultCollectionNames = {
   verificationToken: "VerificationToken",
 }
 
-/**
- *
- * ## Setup
- *
- * This is the Fauna Adapter for [Auth.js](https://authjs.dev). This package can only be used in conjunction with the primary `next-auth` and other framework packages. It is not a standalone package.
- *
- * You can find the Fauna schema and seed information in the docs at [authjs.dev/reference/adapter/fauna](https://authjs.dev/reference/adapter/fauna).
- *
- * ### Configure Auth.js
- *
- * ```js title="pages/api/auth/[...nextauth].js"
- * import NextAuth from "next-auth"
- * import { Client } from "fauna"
- * import { FaunaAdapter } from "@auth/fauna-adapter"
- *
- * const client = new Client({
- *   secret: "secret",
- *   endpoint: new URL('http://localhost:8443')
- * })
- *
- * // For more information on each option (and a full list of options) go to
- * // https://authjs.dev/reference/core/types#authconfig
- * export default NextAuth({
- *   // https://authjs.dev/getting-started/authentication/oauth
- *   providers: [],
- *   adapter: FaunaAdapter(client)
- * })
- * ```
- *
- * ### Schema
- *
- * Run the following FQL code inside the `Shell` tab in the Fauna dashboard to set up the appropriate collections and indexes.
- *
- * ```javascript
- * Collection.create({
- *   name: "Account",
- *   indexes: {
- *     byUserId: {
- *       terms: [
- *         { field: "userId" }
- *       ]
- *     },
- *     byProviderAndProviderAccountId: {
- *       terms [
- *         { field: "provider" },
- *         { field: "providerAccountId" }
- *       ]
- *     },
- *   }
- * })
- * Collection.create({
- *   name: "Session",
- *   constraints: [
- *     {
- *       unique: ["sessionToken"],
- *       status: "active",
- *     }
- *   ],
- *   indexes: {
- *     bySessionToken: {
- *       terms: [
- *         { field: "sessionToken" }
- *       ]
- *     },
- *     byUserId: {
- *       terms [
- *         { field: "userId" }
- *       ]
- *     },
- *   }
- * })
- * Collection.create({
- *   name: "User",
- *   constraints: [
- *     {
- *       unique: ["email"],
- *       status: "active",
- *     }
- *   ],
- *   indexes: {
- *     byEmail: {
- *       terms [
- *         { field: "email" }
- *       ]
- *     },
- *   }
- * })
- * Collection.create({
- *   name: "VerificationToken",
- *   indexes: {
- *     byIdentifierAndToken: {
- *       terms [
- *         { field: "identifier" },
- *         { field: "token" }
- *       ]
- *     },
- *   }
- * })
- * ```
- *
- * > This schema is adapted for use in Fauna and based upon our main [schema](https://authjs.dev/reference/core/adapters#models)
- *
- * #### Custom collection names
- * If you want to use custom collection names, you can pass them as an option to the adapter, like this:
- *
- * ```javascript
- * FaunaAdapter(client, {
- *   collectionNames: {
- *     user: "CustomUser",
- *     account: "CustomAccount",
- *     session: "CustomSession",
- *     verificationToken: "CustomVerificationToken",
- *   }
- * })
- * ```
- *
- * Make sure the collection names you pass to the provider match the collection names of your Fauna database.
- *
- * ### Migrating from v1
- * In v2, we've renamed the collections to use uppercase naming, in accordance with Fauna best practices. If you're migrating from v1, you'll need to rename your collections to match the new naming scheme.
- * Additionally, we've renamed the indexes to match the new method-like index names.
- *
- * #### Migration script
- * Run this FQL script inside a Fauna shell for the database you're migrating from v1 to v2 (it will rename your collections and indexes to match):
- *
- * ```javascript
- * Collection.byName("accounts")!.update({
- *   name: "Account"
- *   indexes: {
- *     byUserId: {
- *         terms: [{ field: "userId" }]
- *     },
- *     byProviderAndProviderAccountId: {
- *         terms: [{ field: "provider" }, { field: "providerAccountId" }]
- *     },
- *     account_by_provider_and_provider_account_id: null,
- *     accounts_by_user_id: null
- *   }
- * })
- * Collection.byName("sessions")!.update({
- *   name: "Session",
- *   indexes: {
- *     bySessionToken: {
- *         terms: [{ field: "sessionToken" }]
- *     },
- *     byUserId: {
- *         terms: [{ field: "userId" }]
- *     },
- *     session_by_session_token: null,
- *     sessions_by_user_id: null
- *   }
- * })
- * Collection.byName("users")!.update({
- *   name: "User",
- *   indexes: {
- *     byEmail: {
- *         terms: [{ field: "email" }]
- *     },
- *     user_by_email: null
- *   }
- * })
- * Collection.byName("verification_tokens")!.update({
- *   name: "VerificationToken",
- *   indexes: {
- *     byIdentifierAndToken: {
- *         terms: [{ field: "identifier" }, { field: "token" }]
- *     },
- *     verification_token_by_identifier_and_token: null
- *   }
- * })
- * ```
- *
- **/
 export function FaunaAdapter(client: Client, config?: AdapterConfig): Adapter {
   const { collectionNames = defaultCollectionNames } = config || {}
 

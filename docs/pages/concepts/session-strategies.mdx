@@ -9,18 +9,17 @@ When a user visits your application, you want them to not have to log in every s
   evaluate based on the requirements of your application.
 </Callout>
 
-You can configure the session strategy using the [`session.strategy`](/reference/core#session) option in the main Auth.js config file.
+You can configure the session strategy using the [`session.strategy`](/reference/core#strategy) option in the main Auth.js config file.
 
 ## JWT Session
 
-Auth.js can create sessions using [JSON Web Tokens (JWT)](https://datatracker.ietf.org/doc/html/rfc7519). This is the default session strategy for Auth.js. When a user signs in, a JWT is created [in a `HttpOnly` cookie](https://developer.mozilla.org/en-US/getting-started/Web/HTTP/Cookies#restrict_access_to_cookies). Making the cookie `HttpOnly` prevents JavaScript from accessing it client-side (via `document.cookie`, for example), which makes it harder for attackers to steal the value. In addition, the JWT is encrypted with a secret key only known to the server. So, even if an attacker were to steal the JWT from the cookie, they could not decrypt it. Combined with a short expiration time, this makes JWTs a secure way to create sessions.
+Auth.js can create sessions using [JSON Web Tokens (JWT)](https://datatracker.ietf.org/doc/html/rfc7519). This is the default session strategy for Auth.js unless a database provider is configured. When a user signs in, a JWT is created [in a `HttpOnly` cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#block_access_to_your_cookies). Making the cookie `HttpOnly` prevents JavaScript from accessing it client-side (via `document.cookie`, for example), which makes it harder for attackers to steal the value. In addition, the JWT is encrypted with a secret key only known to the server. So, even if an attacker were to steal the JWT from the cookie, they could not decrypt it. Combined with a short expiration time, this makes JWTs a secure way to create sessions.
 
 When a user signs out, Auth.js deletes the JWT from the cookies, destroying the session.
 
 ### Advantages
 
 - JWTs as a session do not require a database to store sessions; this can be faster, cheaper, and easier to scale.
-- JWT sessions are most compatible with new runtimes, like on the Edge.
 - This strategy requires fewer resources as you don't need to manage an extra database/service.
 - You may then use the created token to pass information between services and APIs on the same domain without having to contact a database to verify the included information.
 - You can use JWT to securely store information without exposing it to third-party JavaScript running on your site.

@@ -3,6 +3,7 @@
   "description": "Proxy for Auth.js hosted examples",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@9.10.0",
   "dependencies": {
     "@auth/core": "latest"
   }

@@ -1,22 +1,25 @@
-import { useThemeConfig } from "nextra-theme-docs"
+import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
+import { useThemeConfig } from "nextra-theme-docs"
 import { Tabs } from "nextra/components"
-import React, { Children, ReactNode, useEffect, useState } from "react"
+import React, { Children, useEffect, MouseEvent } from "react"
 
 interface ChildrenProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 const AUTHJS_TAB_KEY = "authjs.codeTab.framework"
 
 Code.Next = NextCode
-Code.NextPages = NextPagesCode
+Code.NextClient = NextClientCode
 Code.Svelte = SvelteCode
 // Code.Solid = SolidCode;
 Code.Express = ExpressCode
+Code.Qwik = QwikCode
 
 const baseFrameworks = {
   [NextCode.name]: "Next.js",
+  [QwikCode.name]: "Qwik",
   [SvelteCode.name]: "SvelteKit",
   [ExpressCode.name]: "Express",
   // [SolidCode.name]: "SolidStart",
@@ -24,56 +27,69 @@ const baseFrameworks = {
 
 const allFrameworks = {
   [NextCode.name]: "Next.js",
-  [NextPagesCode.name]: "Next.js (Pages)",
+  [NextClientCode.name]: "Next.js (Client)",
+  [QwikCode.name]: "Qwik",
   [SvelteCode.name]: "SvelteKit",
   // [SolidCode.name]: "SolidStart",
   [ExpressCode.name]: "Express",
 }
 
-const findTabIndex = (frameworks: Record<string, string>, tab: string) => {
-  // TODO: Slugify instead of matching on indexes
-  return Object.values(frameworks).findIndex(
-    (f) => f.toLowerCase() === tab.toLowerCase()
-  )
+/**
+ * Replace all non-alphabetic characters with a hyphen
+ *
+ * @param url - URL to parse
+ * @returns - A string parsed from the URL
+ */
+const parseParams = (url: string): string => {
+  let parsedUrl = url.toLowerCase().replaceAll(/[^a-zA-z]+/g, "-")
+  return parsedUrl.endsWith("-") ? parsedUrl.slice(0, -1) : parsedUrl
 }
 
 export function Code({ children }: ChildrenProps) {
   const router = useRouter()
-  const {
-    query: { framework },
-  } = router
+  const searchParams = useSearchParams()
   const childs = Children.toArray(children)
   const { project } = useThemeConfig()
 
   const withNextJsPages = childs.some(
     // @ts-expect-error: Hacky dynamic child wrangling
-    (p) => p && p.type.name === NextPagesCode.name
+    (p) => p && p.type.name === NextClientCode.name
   )
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
-  const [tabIndex, setTabIndex] = useState(0)
+
+  const updateFrameworkStorage = (value: string): void => {
+    const params = new URLSearchParams(searchParams?.toString())
+    params.set("framework", value)
+    router.push(`${router.pathname}?${params.toString()}`)
+  }
+
+  const handleClickFramework = (event: MouseEvent<HTMLDivElement>) => {
+    if (!(event.target instanceof HTMLButtonElement)) return
+    const { textContent } = event.target as unknown as HTMLDivElement
+    updateFrameworkStorage(parseParams(textContent!))
+  }
 
   useEffect(() => {
-    const savedTabPreference = Number(
-      window.localStorage.getItem(AUTHJS_TAB_KEY)
-    )
-    if (framework) {
-      window.localStorage.setItem(
-        AUTHJS_TAB_KEY,
-        String(findTabIndex(renderedFrameworks, framework as string))
-      )
-      setTabIndex(findTabIndex(renderedFrameworks, framework as string))
-    } else if (savedTabPreference) {
-      setTabIndex(savedTabPreference)
+    const length = Object.keys(renderedFrameworks).length
+    const getFrameworkStorage = window.localStorage.getItem(AUTHJS_TAB_KEY)
+    const indexFramework = parseInt(getFrameworkStorage ?? "0") % length
+    if (!getFrameworkStorage) {
+      window.localStorage.setItem(AUTHJS_TAB_KEY, "0")
     }
-  }, [framework, renderedFrameworks])
+    updateFrameworkStorage(
+      parseParams(Object.values(renderedFrameworks)[indexFramework])
+    )
+  }, [router.pathname, renderedFrameworks])
 
   return (
-    <div className="[&_div[role='tablist']]:!pb-0">
+    <div
+      className="[&_div[role='tablist']]:!pb-0"
+      onClick={handleClickFramework}
+    >
       <Tabs
         storageKey={AUTHJS_TAB_KEY}
         items={Object.values(renderedFrameworks)}
-        selectedIndex={tabIndex}
       >
         {Object.keys(renderedFrameworks).map((f) => {
           // @ts-expect-error: Hacky dynamic child wrangling
@@ -84,7 +100,7 @@ export function Code({ children }: ChildrenProps) {
             child
           ) : (
             <Tabs.Tab key={f}>
-              <p className="p-6 font-semibold rounded-lg bg-slate-100 dark:bg-neutral-950">
+              <p className="rounded-lg bg-slate-100 p-6 font-semibold dark:bg-neutral-950">
                 {renderedFrameworks[f]} not documented yet. Help us by
                 contributing{" "}
                 <a
@@ -105,7 +121,7 @@ export function Code({ children }: ChildrenProps) {
   )
 }
 
-function NextPagesCode({ children }: ChildrenProps) {
+function NextClientCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }
 
@@ -122,5 +138,9 @@ function SvelteCode({ children }: ChildrenProps) {
 // }
 
 function ExpressCode({ children }: ChildrenProps) {
+  return <Tabs.Tab>{children}</Tabs.Tab>
+}
+
+function QwikCode({ children }: ChildrenProps) {
   return <Tabs.Tab>{children}</Tabs.Tab>
 }

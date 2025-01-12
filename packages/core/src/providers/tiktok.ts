@@ -1,6 +1,6 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Tiktok</b> integration.</span>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>TikTok</b> integration.</span>
  * <a href="https://www.tiktok.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/tiktok.svg" height="48" />
  * </a>
@@ -8,13 +8,13 @@
  *
  * @module providers/tiktok
  */
-import { TokenSet } from "../types.js"
+import { customFetch } from "../lib/symbols.js"
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 /**
  * [More info](https://developers.tiktok.com/doc/tiktok-api-v2-get-user-info/)
  */
-export interface TiktokProfile extends Record<string, any> {
+export interface TiktokProfile {
   data: {
     user: {
       /**
@@ -63,7 +63,7 @@ export interface TiktokProfile extends Record<string, any> {
        * To return this field, add `fields=username` in the user profile request's query parameter.
        */
       username: string
-      /** @note Email is currently unsupported by Tiktok  */
+      /** @note Email is currently unsupported by TikTok  */
       email?: string
       /**
        * User's bio description if there is a valid one.
@@ -127,7 +127,7 @@ export interface TiktokProfile extends Record<string, any> {
 }
 
 /**
- * Add Tiktok login to your page.
+ * Add TikTok login to your page.
  *
  * ### Setup
  *
@@ -137,49 +137,113 @@ export interface TiktokProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
- * import Tiktok from "@auth/core/providers/tiktok"
+ * You can omit the client and secret if you have set the `AUTH_TIKTOK_ID` and `AUTH_TIKTOK_SECRET` environment variables.
+ * Remeber that the AUTH_TIKTOK_ID is the Client Key in the TikTok Application
+ *```ts
+ * import { Auth } from "@auth/core"
+ * import TikTok from "@auth/core/providers/tiktok"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Tiktok({ clientId: TIKTOK_CLIENT_KEY, clientSecret: TIKTOK_CLIENT_SECRET })],
+ *   providers: [
+ *     TikTok({ clientId: AUTH_TIKTOK_ID, clientSecret: AUTH_TIKTOK_SECRET }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
- *  - [Tiktok app console](https://developers.tiktok.com/)
- *  - [Tiktok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
+ *  - [TikTok app console](https://developers.tiktok.com/)
+ *  - [TikTok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
  *  - [Avaliable Scopes](https://developers.tiktok.com/doc/tiktok-api-scopes/)
+ *  - [Sandbox for testing](https://developers.tiktok.com/blog/introducing-sandbox)
  *
  *
  * ### Notes
  *
  * :::tip
  *
- * Production applications cannot use localhost URLs to sign in with Tiktok. You need add the domain and Callback/Redirect url's to your Tiktok app and have them review and approved by the Tiktok Team.
+ * Production applications cannot use localhost URLs to sign in with TikTok. You need add the domain and Callback/Redirect url's to your TikTok app and have them review and approved by the TikTok Team.
+ * If you need to test your implementation, you can use the sandbox feature and ngrok for testing in localhost.
  *
  * :::
  *
  * :::tip
  *
- * Email address is not supported by Tiktok.
+ * Email address is not supported by TikTok.
  *
  * :::
  *
  * :::tip
  *
- * Client_ID will be the Client Key in the Tiktok Application
+ * AUTH_TIKTOK_ID will be the Client Key in the TikTok Application
  *
  * :::
  *
- * By default, Auth.js assumes that the Tiktok provider is
+ * By default, Auth.js assumes that the TikTok provider is
  * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
  *
  * :::tip
  *
- * The Tiktok provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/tiktok.ts).
+ * The TikTok provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/tiktok.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
+ *
+ * If You Need to Customize the TikTok Provider, You Can Use the Following Configuration as a custom provider
+ *
+ * ```ts
+ * {
+ *   async [customFetch](...args) {
+ *     const url = new URL(args[0] instanceof Request ? args[0].url : args[0]);
+ *     if (url.pathname.endsWith("/token/")) {
+ *       const [url, request] = args;
+ *       const customHeaders = {
+ *         ...request?.headers,
+ *         "content-type": "application/x-www-form-urlencoded",
+ *       };
+ *
+ *       const customBody = new URLSearchParams(request?.body as string);
+ *       customBody.append("client_key", process.env.AUTH_TIKTOK_ID!);
+ *
+ *       const response = await fetch(url, {
+ *         ...request,
+ *         headers: customHeaders,
+ *         body: customBody.toString(),
+ *       });
+ *       const json = await response.json();
+ *       return Response.json({ ...json });
+ *     }
+ *     return fetch(...args);
+ *   },
+ *
+ *   id: "tiktok",
+ *   name: "TikTok",
+ *   type: "oauth",
+ *   client: {
+ *     token_endpoint_auth_method: "client_secret_post",
+ *   },
+ *
+ *   authorization: {
+ *     url: "https://www.tiktok.com/v2/auth/authorize",
+ *     params: {
+ *       client_key: options.clientId,
+ *       scope: "user.info.profile", //Add scopes you need eg(user.info.profile,user.info.stats,video.list)
+ *     },
+ *   },
+ *
+ *   token: "https://open.tiktokapis.com/v2/oauth/token/",
+ *
+ *   userinfo: "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username", //Add fields you need eg(open_id,avatar_url,display_name,username)
+ *
+ *   profile(profile) {
+ *     return {
+ *       id: profile.data.user.open_id,
+ *       name: profile.data.user.display_name,
+ *       image: profile.data.user.avatar_url,
+ *       email: profile.data.user.email || profile.data.user.username || null,
+ *     };
+ *   },
+ * }
+ *
+ * ```
  *
  * :::
  *
@@ -193,67 +257,56 @@ export interface TiktokProfile extends Record<string, any> {
  *
  * :::
  */
-export default function Tiktok<P extends TiktokProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+export default function TikTok(
+  options: OAuthUserConfig<TiktokProfile>
+): OAuthConfig<TiktokProfile> {
   return {
+    async [customFetch](...args) {
+      const url = new URL(args[0] instanceof Request ? args[0].url : args[0])
+      if (url.pathname.endsWith("/token/")) {
+        const [url, request] = args
+
+        const customHeaders = {
+          ...request?.headers,
+          "content-type": "application/x-www-form-urlencoded",
+        }
+
+        const customBody = new URLSearchParams(request?.body as string)
+        customBody.append("client_key", options.clientId!)
+        const response = await fetch(url, {
+          ...request,
+          headers: customHeaders,
+          body: customBody.toString(),
+        })
+        const json = await response.json()
+        return Response.json({ ...json })
+      }
+      return fetch(...args)
+    },
     id: "tiktok",
     name: "TikTok",
     type: "oauth",
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
+    },
     authorization: {
       url: "https://www.tiktok.com/v2/auth/authorize",
       params: {
         client_key: options.clientId,
         scope: "user.info.profile",
-        response_type: "code",
       },
     },
 
-    token: {
-      async request({ params, provider }) {
-        const res = await fetch(`https://open.tiktokapis.com/v2/oauth/token/`, {
-          method: "POST",
-          headers: {
-            "Cache-Control": "no-cache",
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            client_key: provider.clientId!,
-            client_secret: provider.clientSecret!,
-            code: params.code!,
-            grant_type: "authorization_code",
-            redirect_uri: provider.callbackUrl!,
-          }),
-        }).then((res) => res.json())
+    token: "https://open.tiktokapis.com/v2/oauth/token/",
+    userinfo:
+      "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username",
 
-        const tokens: TokenSet = {
-          access_token: res.access_token,
-          expires_at: res.expires_in,
-          refresh_token: res.refresh_token,
-          scope: res.scope,
-          id_token: res.open_id,
-          token_type: res.token_type,
-          session_state: res.open_id,
-        }
-        return {
-          tokens,
-        }
-      },
-    },
-    userinfo: {
-      url: "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username",
-      async request({ tokens, provider }) {
-        return await fetch(provider.userinfo?.url as URL, {
-          headers: { Authorization: `Bearer ${tokens.access_token}` },
-        }).then(async (res) => await res.json())
-      },
-    },
     profile(profile) {
       return {
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,
         image: profile.data.user.avatar_url,
-        email: profile.data.user.email || null,
+        email: profile.data.user.email || profile.data.user.username || null,
       }
     },
     style: {

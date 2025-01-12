@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>FusionAuth</b> integration.</span>
  * <a href="https://fusionauth.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/fushionauth.svg" height="48" width="48"/>
@@ -42,13 +42,20 @@ export interface FusionAuthProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import FusionAuth from "@auth/core/providers/fusionauth"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FusionAuth({ clientId: FUSIONAUTH_CLIENT_ID, clientSecret: FUSIONAUTH_CLIENT_SECRET, tenantId: FUSIONAUTH_TENANT_ID, issuer: FUSIONAUTH_ISSUER })],
+ *   providers: [
+ *     FusionAuth({
+ *       clientId: FUSIONAUTH_CLIENT_ID,
+ *       clientSecret: FUSIONAUTH_CLIENT_SECRET,
+ *       tenantId: FUSIONAUTH_TENANT_ID,
+ *       issuer: FUSIONAUTH_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  * :::warning

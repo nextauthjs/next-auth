@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>LINE</b> integration.</span>
  * <a href="https://LINE.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/line.svg" height="48" width="48"/>
@@ -33,13 +33,15 @@ export interface LineProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import LINE from "@auth/core/providers/line"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [LINE({ clientId: LINE_CLIENT_ID, clientSecret: LINE_CLIENT_SECRET })],
+ *   providers: [
+ *     LINE({ clientId: LINE_CLIENT_ID, clientSecret: LINE_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

@@ -46,7 +46,7 @@ import {
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
 import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
-import { logger, setLogger, type LoggerInstance } from "./lib/utils/logger.js"
+import { setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
 
 import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
@@ -67,6 +67,7 @@ import type { CredentialInput, Provider } from "./providers/index.js"
 import { JWT, JWTOptions } from "./jwt.js"
 import { isAuthAction } from "./lib/utils/actions.js"
 
+export { customFetch } from "./lib/symbols.js"
 export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
 
 export async function Auth(
@@ -86,10 +87,10 @@ export async function Auth(
  *
  * @example
  * ```ts
- * import Auth from "@auth/core"
+ * import { Auth } from "@auth/core"
  *
  * const request = new Request("https://example.com")
- * const response = await AuthHandler(request, {
+ * const response = await Auth(request, {
  *   providers: [Google],
  *   secret: "...",
  *   trustHost: true,
@@ -101,7 +102,7 @@ export async function Auth(
   request: Request,
   config: AuthConfig
 ): Promise<Response | ResponseInternal> {
-  setLogger(config.logger, config.debug)
+  const logger = setLogger(config)
 
   const internalRequest = await toInternalRequest(request, config)
   // There was an error parsing the request
@@ -153,7 +154,8 @@ export async function Auth(
       return toResponse(page)
     }
 
-    return Response.redirect(`${pages.error}?error=Configuration`)
+    const url = `${internalRequest.url.origin}${pages.error}?error=Configuration`
+    return Response.redirect(url)
   }
 
   const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
@@ -317,12 +319,13 @@ export interface AuthConfig {
      *  async signIn({ profile }) {
      *   // Only allow sign in for users with email addresses ending with "yourdomain.com"
      *   return profile?.email?.endsWith("@yourdomain.com")
+     *  }
      * }
      * ```
      */
     signIn?: (params: {
       user: User | AdapterUser
-      account: Account | null
+      account?: Account | null
       /**
        * If OAuth provider is used, it contains the full
        * OAuth profile returned by your provider.
@@ -450,7 +453,7 @@ export interface AuthConfig {
        * Also includes {@link TokenSet}
        * @note available when `trigger` is `"signIn"` or `"signUp"`
        */
-      account: Account | null
+      account?: Account | null
       /**
        * The OAuth profile returned from your provider.
        * (In case of OIDC it will be the decoded ID Token or /userinfo response)
@@ -495,7 +498,7 @@ export interface AuthConfig {
      */
     signIn?: (message: {
       user: User
-      account: Account | null
+      account?: Account | null
       profile?: Profile
       isNewUser?: boolean
     }) => Awaitable<void>

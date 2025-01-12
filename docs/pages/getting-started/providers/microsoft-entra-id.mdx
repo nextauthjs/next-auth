@@ -16,8 +16,6 @@ import { Code } from "@/components/Code"
   [here](https://learn.microsoft.com/en-us/entra/fundamentals/new-name).
 </Callout>
 
-<Callout>To be released in `next-auth@5.0.0-beta.17`</Callout>
-
 ## Resources
 
 - [Microsoft Entra OAuth documentation](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
@@ -35,6 +33,13 @@ https://example.com/api/auth/callback/microsoft-entra-id
 ```
 
   </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/microsoft-entra-id
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```bash
@@ -44,6 +49,14 @@ https://example.com/auth/callback/microsoft-entra-id
   </Code.Svelte>
 </Code>
 
+### Environment Variables
+
+```
+AUTH_MICROSOFT_ENTRA_ID_ID
+AUTH_MICROSOFT_ENTRA_ID_SECRET
+AUTH_MICROSOFT_ENTRA_ID_ISSUER
+```
+
 ### Configuration
 
 <Code>
@@ -51,19 +64,40 @@ https://example.com/auth/callback/microsoft-entra-id
 
 ```ts filename="/auth.ts"
 import NextAuth from "next-auth"
-import Entra from "next-auth/providers/microsoft-entra-id"
+import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
 
-const { handlers, auth, signin, signout } = NextAuth({
+const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    Entra({
+    MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
     }),
   ],
 })
 ```
 
   </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Entra from "@auth/qwik/providers/microsoft-entra-id"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Entra({
+        clientId: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+        clientSecret: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+        issuer: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
   <Code.Svelte>
 
 ```ts filename="/src/auth.ts"
@@ -76,6 +110,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     Entra({
       clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
     }),
   ],
 })
@@ -95,6 +130,7 @@ app.use(
       Entra({
         clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
         clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+        issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
       }),
     ],
   })
@@ -117,15 +153,15 @@ app.use(
 - After your App Registration is created, under "Client Credential" create your Client secret.
 - Now copy your:
   - Application (client) ID
-  - Directory (tenant) ID
   - Client secret (value)
+  - Issuer
 
 In `.env.local` create the following entries:
 
 ```
 AUTH_MICROSOFT_ENTRA_ID_ID=<copy Application (client) ID here>
 AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
-AUTH_MICROSOFT_ENTRA_ID_TENANT_ID=<copy the tenant id here>
+AUTH_MICROSOFT_ENTRA_ID_ISSUER=<copy the issuer here>
 ```
 
 That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).

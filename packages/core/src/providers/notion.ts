@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Notion</b> integration.</span>
  * <a href="https://notion.so">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/notion.svg" height="48" width="48"/>
@@ -59,26 +59,34 @@ const NOTION_API_VERSION = "2022-06-28"
 /**
  * Add Notion login to your page.
  *
- * @example
+ * ### Setup
  *
- * ```ts
+ * #### Callback URL
+ * ```
+ * https://example.com/api/auth/callback/notion
+ * ```
+ *
+ * #### Configuration
+ *```ts
  * import { Auth } from "@auth/core"
  * import Notion from "@auth/core/providers/notion"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Notion({ clientId: NOTION_CLIENT_ID, clientSecret: NOTION_CLIENT_SECRET, redirectUri: NOTION_CLIENT_REDIRECT_URI })],
+ *   providers: [
+ *     Notion({
+ *       clientId: NOTION_CLIENT_ID,
+ *       clientSecret: NOTION_CLIENT_SECRET,
+ *       redirectUri: NOTION_CLIENT_REDIRECT_URI,
+ *     }),
+ *   ],
  * })
  * ```
- *
- * ---
  *
  * ### Resources
  * - [Notion Docs](https://developers.notion.com/docs)
  * - [Notion Authorization Docs](https://developers.notion.com/docs/authorization)
  * - [Notion Integrations](https://www.notion.so/my-integrations)
- *
- * ---
  *
  * ### Notes
  * You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.
@@ -144,7 +152,7 @@ export default function NotionProvider<P extends NotionProfile>(
       url: `${NOTION_HOST}/v1/oauth/authorize`,
     },
 
-    async profile(profile, tokens) {
+    async profile(profile) {
       return {
         id: profile.id,
         name: profile.name,

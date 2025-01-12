@@ -17,12 +17,11 @@ docker run -d --rm \
   -p ${PGPORT}:5432 \
   postgres:15.3
 
-echo "Waiting 5s for db to start..." && sleep 5
+echo "Waiting 15s for db to start..." && sleep 15
 
 # Push schema and seed
-drizzle-kit generate:pg --config=./test/pg/drizzle.config.ts
-NODE_OPTIONS='--import tsx'
-tsx ./test/pg/migrator.ts
+drizzle-kit generate --config=./test/pg/drizzle.config.ts
+drizzle-kit migrate --config=./test/pg/drizzle.config.ts
 
 if vitest run -c ../utils/vitest.config.ts ./test/pg/index.test.ts; then
   docker stop ${PG_CONTAINER_NAME}

@@ -5,9 +5,10 @@ export default {
     title: "Frameworks",
   },
   core: "@auth/core",
-  "next-auth": "next-auth",
+  "nextjs": "next-auth",
   sveltekit: "@auth/sveltekit",
   express: "@auth/express",
+  qwik: "@auth/qwik",
   "solid-start": "@auth/solid-start",
   warnings: "Warnings",
   errors: {

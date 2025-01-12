@@ -3,14 +3,10 @@ import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import { getCsrfToken, getProviders, __NEXTAUTH } from "./react.js"
 
 import type { LoggerInstance } from "@auth/core/types"
-import type { WebAuthnOptionsResponseBody } from "@auth/core/lib/utils/webauthn-utils"
-import type {
-  BuiltInProviderType,
-  RedirectableProviderType,
-} from "@auth/core/providers"
+import type { WebAuthnOptionsResponseBody } from "@auth/core/types"
+import type { ProviderId } from "@auth/core/providers"
 import type {
   AuthClientConfig,
-  LiteralUnion,
   SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
@@ -25,15 +21,11 @@ const logger: LoggerInstance = {
 /**
  * Fetch webauthn options from server and prompt user for authentication or registration.
  * Returns either the completed WebAuthn response or an error request.
- *
- * @param providerID provider ID
- * @param options SignInOptions
- * @returns WebAuthn response or error
  */
 async function webAuthnOptions(
-  providerID: string,
+  providerID: ProviderId,
   nextAuthConfig: AuthClientConfig,
-  options?: SignInOptions
+  options?: Omit<SignInOptions, "redirect">
 ) {
   const baseUrl = apiBaseUrl(nextAuthConfig)
 
@@ -58,87 +50,84 @@ async function webAuthnOptions(
 }
 
 /**
- * Initiate a signin flow or send the user to the signin page listing all possible providers.
- * Handles CSRF protection.
+ * Initiate a WebAuthn signin flow.
+ * @see https://authjs.dev/getting-started/authentication/webauthn
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined,
->(
-  provider?: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
-  options?: SignInOptions,
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<true>,
   authorizationParams?: SignInAuthorizationParams
-): Promise<
-  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
-> {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+): Promise<void>
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<false>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse>
+export async function signIn<Redirect extends boolean = true>(
+  provider?: ProviderId,
+  options?: SignInOptions<Redirect>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse | void> {
+  const { callbackUrl, ...rest } = options ?? {}
+  const {
+    redirectTo = callbackUrl ?? window.location.href,
+    redirect = true,
+    ...signInParams
+  } = rest
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
 
   if (!providers) {
     window.location.href = `${baseUrl}/error`
-    return
+    return // TODO: Return error if `redirect: false`
   }
 
-  if (!provider || !(provider in providers)) {
-    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
-      callbackUrl,
-    })}`
-    return
-  }
-
-  const isCredentials = providers[provider].type === "credentials"
-  const isEmail = providers[provider].type === "email"
-  const isWebAuthn = providers[provider].type === "webauthn"
-  const isSupportingReturn = isCredentials || isEmail || isWebAuthn
-
-  const signInUrl = `${baseUrl}/${
-    isCredentials || isWebAuthn ? "callback" : "signin"
-  }/${provider}`
-
-  // Execute WebAuthn client flow if needed
-  const webAuthnBody: Record<string, unknown> = {}
-  if (isWebAuthn) {
-    const { data, error, action } = await webAuthnOptions(
-      provider,
-      __NEXTAUTH,
-      options
+  if (
+    !provider ||
+    !providers[provider] ||
+    providers[provider].type !== "webauthn"
+  ) {
+    // TODO: Add docs link with explanation
+    throw new TypeError(
+      [
+        `Provider id "${provider}" does not refer to a WebAuthn provider.`,
+        'Please use `import { signIn } from "next-auth/react"` instead.',
+      ].join("\n")
     )
-    if (error) {
-      logger.error(new Error(await error.text()))
-      return
-    }
-    webAuthnBody.data = JSON.stringify(data)
-    webAuthnBody.action = action
   }
 
-  const csrfToken = await getCsrfToken()
-  const res = await fetch(
-    `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
-    {
-      method: "post",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "X-Auth-Return-Redirect": "1",
-      },
-      // @ts-expect-error
-      body: new URLSearchParams({
-        ...options,
-        ...webAuthnBody,
-        csrfToken,
-        callbackUrl,
-      }),
-    }
+  const webAuthnBody: Record<string, unknown> = {}
+  const webAuthnResponse = await webAuthnOptions(
+    provider,
+    __NEXTAUTH,
+    signInParams
   )
+  if (webAuthnResponse.error) {
+    logger.error(new Error(await webAuthnResponse.error.text()))
+    return
+  }
+  webAuthnBody.data = JSON.stringify(webAuthnResponse.data)
+  webAuthnBody.action = webAuthnResponse.action
+
+  const signInUrl = `${baseUrl}/callback/${provider}?${new URLSearchParams(authorizationParams)}`
+  const res = await fetch(signInUrl, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Auth-Return-Redirect": "1",
+    },
+    body: new URLSearchParams({
+      ...signInParams,
+      ...webAuthnBody,
+      csrfToken: await getCsrfToken(),
+      callbackUrl: redirectTo,
+    }),
+  })
 
   const data = await res.json()
 
-  // TODO: Do not redirect for Credentials and Email providers by default in next major
-  if (redirect || !isSupportingReturn) {
+  if (redirect) {
     const url = data.url ?? callbackUrl
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
@@ -147,6 +136,7 @@ export async function signIn<
   }
 
   const error = new URL(data.url).searchParams.get("error")
+  const code = new URL(data.url).searchParams.get("code")
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -154,6 +144,7 @@ export async function signIn<
 
   return {
     error,
+    code,
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,

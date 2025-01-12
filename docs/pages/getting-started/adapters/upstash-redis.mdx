@@ -11,7 +11,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Upstash Docs](https://docs.upstash.com/redis)
+- [Upstash documentation](https://docs.upstash.com/redis)
 
 ## Setup
 
@@ -36,12 +36,12 @@ UPSTASH_REDIS_TOKEN
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 
-const redis = upstashRedisClient(
-  process.env.UPSTASH_REDIS_URL,
-  process.env.UPSTASH_REDIS_TOKEN
-)
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UpstashRedisAdapter(redis),
@@ -50,19 +50,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
+import { Redis } from "@upstash/redis"
+
+const redis = new Redis({
+  url: import.meta.env.UPSTASH_REDIS_URL!,
+  token: import.meta.env.UPSTASH_REDIS_TOKEN!,
+})
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: UpstashRedisAdapter(redis),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 
-const redis = upstashRedisClient(
-  process.env.UPSTASH_REDIS_URL,
-  process.env.UPSTASH_REDIS_TOKEN
-)
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: UpstashRedisAdapter(redis),
   providers: [],
 })
@@ -74,12 +95,12 @@ export const { handler, signIn, signOut } = SvelteKitAuth({
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import { UpstashRedisAdapter } from "@auth/upstash-redis-adapter"
-import upstashRedisClient from "@upstash/redis"
+import { Redis } from "@upstash/redis"
 
-const redis = upstashRedisClient(
-  process.env.UPSTASH_REDIS_URL,
-  process.env.UPSTASH_REDIS_TOKEN
-)
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
 
 const app = express()
 
@@ -122,7 +143,7 @@ const defaultOptions = {
 Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
 
 ```ts
-export default NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: UpstashRedisAdapter(redis, { baseKeyPrefix: "app2:" }),
 })
 ```

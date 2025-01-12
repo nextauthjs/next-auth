@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Mastodon</b> integration.</span>
  * <a href="https://mastodon.social">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/mastodon.svg" height="48" width="48"/>
@@ -41,13 +41,19 @@ export interface MastodonProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Mastodon from "@auth/core/providers/mastodon"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Mastodon({ clientId: MASTODON_CLIENT_ID, clientSecret: MASTODON_CLIENT_SECRET, issuer: MASTODON_ISSUER })],
+ *   providers: [
+ *     Mastodon({
+ *       clientId: MASTODON_CLIENT_ID,
+ *       clientSecret: MASTODON_CLIENT_SECRET,
+ *       issuer: MASTODON_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

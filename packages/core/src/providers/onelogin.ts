@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>OneLogin</b> integration.</span>
  * <a href="https://onelogin.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/onelogin.svg" height="48" />
@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import OneLogin from "@auth/core/providers/onelogin"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [OneLogin({ clientId: ONELOGIN_CLIENT_ID, clientSecret: ONELOGIN_CLIENT_SECRET })],
+ *   providers: [
+ *     OneLogin({
+ *       clientId: ONELOGIN_CLIENT_ID,
+ *       clientSecret: ONELOGIN_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

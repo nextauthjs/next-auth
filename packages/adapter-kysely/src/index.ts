@@ -1,6 +1,6 @@
 /**
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
- *  <p style={{fontWeight: "normal"}}>Official <a href="https://kysely.dev/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
+ *  <p>Official <a href="https://kysely.dev/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://kysely.dev/">
  *   <img style={{display: "block"}} src="/img/adapters/kysely.svg" width="38" />
  *  </a>
@@ -17,12 +17,13 @@
 
 import { Kysely, SqliteAdapter } from "kysely"
 
-import type {
-  Adapter,
-  AdapterUser,
-  AdapterAccount,
-  AdapterSession,
-  VerificationToken,
+import {
+  type Adapter,
+  type AdapterUser,
+  type AdapterAccount,
+  type AdapterSession,
+  type VerificationToken,
+  isDate,
 } from "@auth/core/adapters"
 
 export interface Database {
@@ -30,13 +31,6 @@ export interface Database {
   Account: AdapterAccount
   Session: AdapterSession
   VerificationToken: VerificationToken
-}
-
-// https://github.com/honeinc/is-iso-date/blob/master/index.js
-const isoDateRE =
-  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
-function isDate(value: any) {
-  return value && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 export const format = {
@@ -57,187 +51,6 @@ export const format = {
   },
 }
 
-/**
- *
- * ## Setup
- *
- * This adapter supports the same first party dialects that Kysely (as of v0.24.2) supports: PostgreSQL, MySQL, and SQLite. The examples below use PostgreSQL with the [pg](https://www.npmjs.com/package/pg) client.
- *
- *  ```bash npm2yarn
- * npm install pg
- * npm install --save-dev @types/pg
- * ```
- *
- * ```ts title="pages/api/auth/[...nextauth].ts"
- * import NextAuth from "next-auth"
- * import GoogleProvider from "next-auth/providers/google"
- * import { KyselyAdapter } from "@auth/kysely-adapter"
- * import { db } from "../../../db"
- *
- * export default NextAuth({
- *   adapter: KyselyAdapter(db),
- *   providers: [
- *     GoogleProvider({
- *       clientId: process.env.GOOGLE_CLIENT_ID,
- *       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
- *     }),
- *   ],
- * })
- * ```
- *
- * Kysely's constructor requires a database interface that contains an entry with an interface for each of your tables. You can define these types manually, or use `kysely-codegen` / `prisma-kysely` to automatically generate them. Check out the default [models](/reference/core/adapters#models) required by Auth.js.
- *
- * ```ts title="db.ts"
- * import { PostgresDialect } from "kysely"
- * import { Pool } from "pg"
- *
- * // This adapter exports a wrapper of the original `Kysely` class called `KyselyAuth`,
- * // that can be used to provide additional type-safety.
- * // While using it isn't required, it is recommended as it will verify
- * // that the database interface has all the fields that Auth.js expects.
- * import { KyselyAuth } from "@auth/kysely-adapter"
- *
- * import type { GeneratedAlways } from "kysely"
- *
- * interface Database {
- *   User: {
- *     id: GeneratedAlways<string>
- *     name: string | null
- *     email: string
- *     emailVerified: Date | null
- *     image: string | null
- *   }
- *   Account: {
- *     id: GeneratedAlways<string>
- *     userId: string
- *     type: string
- *     provider: string
- *     providerAccountId: string
- *     refresh_token: string | null
- *     access_token: string | null
- *     expires_at: number | null
- *     token_type: string | null
- *     scope: string | null
- *     id_token: string | null
- *     session_state: string | null
- *   }
- *   Session: {
- *     id: GeneratedAlways<string>
- *     userId: string
- *     sessionToken: string
- *     expires: Date
- *   }
- *   VerificationToken: {
- *     identifier: string
- *     token: string
- *     expires: Date
- *   }
- * }
- *
- * export const db = new KyselyAuth<Database>({
- *   dialect: new PostgresDialect({
- *     pool: new Pool({
- *       host: process.env.DATABASE_HOST,
- *       database: process.env.DATABASE_NAME,
- *       user: process.env.DATABASE_USER,
- *       password: process.env.DATABASE_PASSWORD,
- *     }),
- *   }),
- * })
- * ```
- *
- * :::note
- * An alternative to manually defining types is generating them from the database schema using [kysely-codegen](https://github.com/RobinBlomberg/kysely-codegen), or from Prisma schemas using [prisma-kysely](https://github.com/valtyr/prisma-kysely). When using generated types with `KyselyAuth`, import `Codegen` and pass it as the second generic arg:
- *
- * ```ts
- * import type { Codegen } from "@auth/kysely-adapter"
- * new KyselyAuth<Database, Codegen()
- * ```
- * :::
- *
- * ### Schema
- * ```ts title="db/migrations/001_create_db.ts"
- * import { Kysely, sql } from "kysely"
- *
- * export async function up(db: Kysely<any>): Promise<void> {
- *   await db.schema
- *     .createTable("User")
- *     .addColumn("id", "uuid", (col) =>
- *       col.primaryKey().defaultTo(sql`gen_random_uuid()`)
- *     )
- *     .addColumn("name", "text")
- *     .addColumn("email", "text", (col) => col.unique().notNull())
- *     .addColumn("emailVerified", "timestamptz")
- *     .addColumn("image", "text")
- *     .execute()
- *
- *   await db.schema
- *     .createTable("Account")
- *     .addColumn("id", "uuid", (col) =>
- *       col.primaryKey().defaultTo(sql`gen_random_uuid()`)
- *     )
- *     .addColumn("userId", "uuid", (col) =>
- *       col.references("User.id").onDelete("cascade").notNull()
- *     )
- *     .addColumn("type", "text", (col) => col.notNull())
- *     .addColumn("provider", "text", (col) => col.notNull())
- *     .addColumn("providerAccountId", "text", (col) => col.notNull())
- *     .addColumn("refresh_token", "text")
- *     .addColumn("access_token", "text")
- *     .addColumn("expires_at", "bigint")
- *     .addColumn("token_type", "text")
- *     .addColumn("scope", "text")
- *     .addColumn("id_token", "text")
- *     .addColumn("session_state", "text")
- *     .execute()
- *
- *   await db.schema
- *     .createTable("Session")
- *     .addColumn("id", "uuid", (col) =>
- *       col.primaryKey().defaultTo(sql`gen_random_uuid()`)
- *     )
- *     .addColumn("userId", "uuid", (col) =>
- *       col.references("User.id").onDelete("cascade").notNull()
- *     )
- *     .addColumn("sessionToken", "text", (col) => col.notNull().unique())
- *     .addColumn("expires", "timestamptz", (col) => col.notNull())
- *     .execute()
- *
- *   await db.schema
- *     .createTable("VerificationToken")
- *     .addColumn("identifier", "text", (col) => col.notNull())
- *     .addColumn("token", "text", (col) => col.notNull().unique())
- *     .addColumn("expires", "timestamptz", (col) => col.notNull())
- *     .execute()
- *
- *   await db.schema
- *     .createIndex("Account_userId_index")
- *     .on("Account")
- *     .column("userId")
- *     .execute()
- *
- *   await db.schema
- *     .createIndex("Session_userId_index")
- *     .on("Session")
- *     .column("userId")
- *     .execute()
- * }
- *
- * export async function down(db: Kysely<any>): Promise<void> {
- *   await db.schema.dropTable("Account").ifExists().execute()
- *   await db.schema.dropTable("Session").ifExists().execute()
- *   await db.schema.dropTable("User").ifExists().execute()
- *   await db.schema.dropTable("VerificationToken").ifExists().execute()
- * }
- * ```
- *
- * > This schema is adapted for use in Kysely and is based upon our main [schema](/reference/core/adapters#models).
- *
- * For more information about creating and running migrations with Kysely, refer to the [Kysely migrations documentation](https://kysely.dev/docs/migrations).
- *
- * ### Naming conventions
- * If mixed snake_case and camelCase column names is an issue for you and/or your underlying database system, we recommend using Kysely's `CamelCasePlugin` ([see the documentation here](https://kysely-org.github.io/kysely-apidoc/classes/CamelCasePlugin.html)) feature to change the field names. This won't affect NextAuth.js, but will allow you to have consistent casing when using Kysely.
- */
 export function KyselyAdapter(db: Kysely<Database>): Adapter {
   const { adapter } = db.getExecutor()
   const { supportsReturning } = adapter
@@ -373,6 +186,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
             .selectFrom("VerificationToken")
             .selectAll()
             .where("token", "=", token)
+            .where("identifier", "=", identifier)
             .executeTakeFirst()
             .then(async (res) => {
               await query.executeTakeFirst()

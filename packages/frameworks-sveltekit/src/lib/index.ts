@@ -18,33 +18,32 @@
  *
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private"
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth({
- *   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+ *   providers: [GitHub],
  * })
  * ```
  *
- * or to use SvelteKit platform environment variables for platforms like Cloudflare
+ * ### Lazy initialization
+ * `@auth/sveltekit` supports lazy initialization where you can read the `event` object to lazily set the configuration. This is especially useful when you have to get the environment variables from `event.platform` for platforms like Cloudflare Workers.
  *
  * ```ts title="src/auth.ts"
  * import { SvelteKitAuth } from "@auth/sveltekit"
  * import GitHub from "@auth/sveltekit/providers/github"
- * import type { Handle } from "@sveltejs/kit";
  *
  * export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
  *   const authOptions = {
  *     providers: [
  *       GitHub({
- *         clientId: event.platform.env.GITHUB_ID,
- *         clientSecret: event.platform.env.GITHUB_SECRET
+ *         clientId: event.platform.env.AUTH_GITHUB_ID,
+ *         clientSecret: event.platform.env.AUTH_GITHUB_SECRET
  *       })
  *     ],
  *     secret: event.platform.env.AUTH_SECRET,
  *     trustHost: true
  *   }
  *   return authOptions
- * }) satisfies Handle;
+ * })
  * ```
  *
  * Re-export the handle in `src/hooks.server.ts`:
@@ -66,12 +65,14 @@
  *
  * ### Server-side
  *
- * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. You will need two things to make this work:
+ * `<SignIn />` and `<SignOut />` are components that `@auth/sveltekit` provides out of the box - they handle the sign-in/signout flow, and can be used as-is as a starting point or customized for your own components. This is an example of how to use the `SignIn` and `SignOut` components to login and logout using SvelteKit's server-side form actions. Another example is available on [our svelte-auth-example repo](https://github.com/nextauthjs/sveltekit-auth-example).
  *
- * 1. Using the components in your SvelteKit app's frontend
+ * You will need two things to make this work:
+ *
+ * 1. Using the components in your SvelteKit app's frontend (for instance `src/routes/+page.svelte`)
  * 2. Add the required `page.server.ts` at `/signin` (for `SignIn`) and `/signout` (for `SignOut`) to handle the form actions
  *
- * ```ts
+ * ```ts title="src/routes/+page.svelte"
  * <script>
  *   import { SignIn, SignOut } from "@auth/sveltekit/components"
  *   import { page } from "$app/stores"
@@ -124,8 +125,11 @@
  *
  * We also export two methods from `@auth/sveltekit/client` in order to do client-side sign-in and sign-out actions.
  *
- * ```ts title="src/routes/index.svelte"
- * import { signIn, signOut } from "@auth/sveltekit/client"
+ * ```ts title="src/routes/+page.svelte"
+ * <script>
+ *   import { signIn, signOut } from "@auth/sveltekit/client"
+ *   let password
+ * </script>
  *
  * <nav>
  *   <p>
@@ -153,7 +157,7 @@
  *       <button on:click={() => signIn("credentials", { password })}>
  *         Sign In with Credentials
  *       </button>
- *       <button on:click={() => signOut()})}>
+ *       <button on:click={() => signOut()}>
  *         Sign Out
  *       </button>
  *     </div>
@@ -178,7 +182,7 @@
  * ```
  *
  * What you return in the function `LayoutServerLoad` will be available inside the `$page` store, in the `data` property: `$page.data`.
- * In this case we return an object with the 'session' property which is what we are accessing in the other code paths.
+ * In this case we return an object with the `session` property which is what we are accessing in the other code paths.
  *
  * ## Handling authorization
  *
@@ -187,7 +191,7 @@
  * ### Per component
  *
  * The simplest case is protecting a single page, in which case you should put the logic in the `+page.server.ts` file.
- * Notice in this case that you could also await event.parent and grab the session from there, however this implementation works even if you haven't done the above in your root `+layout.server.ts`
+ * Notice in this case that you could also `await event.parent` and grab the session from there, however this implementation works even if you haven't done the above in your root `+layout.server.ts`
  *
  * ```ts
  * import { redirect } from '@sveltejs/kit';
@@ -203,7 +207,7 @@
  * :::danger
  * Make sure to ALWAYS grab the session information from the parent instead of using the store in the case of a `PageLoad`.
  * Not doing so can lead to users being able to incorrectly access protected information in the case the `+layout.server.ts` does not run for that page load.
- * This code sample already implements the correct method by using `const { session } = await parent();`. For more information on SvelteKit's `load` functionality behaviour and its implications on authentication, see this [SvelteKit docs section](https://kit.svelte.dev/docs/load#implications-for-authentication).
+ * For more information on SvelteKit's `load` functionality behaviour and its implications on authentication, see this [SvelteKit docs section](https://kit.svelte.dev/docs/load#implications-for-authentication).
  * :::
  *
  * You should NOT put authorization logic in a `+layout.server.ts` as the logic is not guaranteed to propagate to leafs in the tree.
@@ -277,16 +281,17 @@
  * @module @auth/sveltekit
  */
 
-/// <reference types="@sveltejs/kit" />
+import "@sveltejs/kit"
 import type { Action, Handle, RequestEvent } from "@sveltejs/kit"
 import { env } from "$env/dynamic/private"
 
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 import { auth, signIn, signOut } from "./actions"
-import { Auth, isAuthAction } from "@auth/core"
+import { Auth, isAuthAction, customFetch } from "@auth/core"
 import { building } from "$app/environment"
 
+export { customFetch }
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export type {
@@ -324,8 +329,8 @@ export function SvelteKitAuth(
       const formData = await request.formData()
       const { providerId: provider, ...options } = Object.fromEntries(formData)
       // get the authorization params from the options prefixed with `authorizationParams-`
-      let authorizationParams: Parameters<typeof signIn>[2] = {}
-      let _options: Parameters<typeof signIn>[1] = {}
+      const authorizationParams: Parameters<typeof signIn>[2] = {}
+      const _options: Parameters<typeof signIn>[1] = {}
       for (const key in options) {
         if (key.startsWith(authorizationParamsPrefix)) {
           authorizationParams[key.slice(authorizationParamsPrefix.length)] =

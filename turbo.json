@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [
@@ -13,10 +13,10 @@
         "*.d.ts",
         "*.d.ts.map",
         "src/lib/pages/styles.ts",
-        "src/providers/oauth-types.ts",
+        "src/providers/provider-types.ts",
         ".svelte-kit/**"
       ],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "clean": {
       "cache": false
@@ -27,18 +27,28 @@
     "test": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**/", "test/**/"],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "test:e2e": {
+      "dependsOn": ["next-auth#build"],
       "outputs": [
         "blob-report/**",
         "playwright-report/**",
         "playwright/.cache/**",
         "test-results/**"
+      ],
+      "env": [
+        "TEST_KEYCLOAK_PASSWORD",
+        "TEST_KEYCLOAK_USERNAME",
+        "AUTH_SECRET",
+        "AUTH_KEYCLOAK_ID",
+        "AUTH_KEYCLOAK_SECRET",
+        "AUTH_KEYCLOAK_ISSUER",
+        "AUTH_TRUST_HOST"
       ]
     },
     "@auth/xata-adapter#test": {
-      "env": ["XATA_API_KEY", "XATA_DATABASE_URL"]
+      "passThroughEnv": ["XATA_API_KEY", "XATA_DATABASE_URL"]
     },
     "@auth/hasura-adapter#build": {
       "dependsOn": ["@auth/core#build"],
@@ -56,12 +66,24 @@
         "@auth/core#build",
         "@auth/sveltekit#build",
         "@auth/express#build",
-        "@auth/solid-start#build"
+        "@auth/solid-start#build",
+        "@auth/qwik#build"
       ],
+      "persistent": true,
       "cache": false
     },
     "docs#build": {
-      "inputs": ["docs/pages"],
+      "inputs": [
+        "pages/**",
+        "utils/**",
+        "public/**",
+        "components/**",
+        "theme.config.tsx",
+        "typedoc*",
+        "vercel.json",
+        "next-sitemap.config.cjs",
+        "next.config.js"
+      ],
       "dependsOn": [
         "@auth/core#build",
         "@auth/azure-tables-adapter#build",
@@ -89,6 +111,7 @@
         "@auth/unstorage-adapter#build",
         "@auth/upstash-redis-adapter#build",
         "@auth/xata-adapter#build",
+        "@auth/qwik#build",
         "next-auth#build",
         "^build"
       ],

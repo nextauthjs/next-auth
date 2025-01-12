@@ -2,11 +2,11 @@ import { Callout } from "nextra/components"
 import { Screenshot } from "@/components/Screenshot"
 import { Code } from "@/components/Code"
 
-# Typescript
+# TypeScript
 
 Auth.js is committed to type-safety, so it's written in TypeScript and 100% type safe. It comes with its own type definitions to use in your project.
 
-Even if you don't use TypeScript, IDEs like VSCode will pick this up to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes links to documentation, examples, and other valuable resources.
+Even if you don't use TypeScript, IDEs like VS Code will pick this up to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes links to documentation, examples, and other valuable resources.
 
 ## Philosophy
 
@@ -77,6 +77,49 @@ export const { auth, handlers } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="plugin@auth.ts"
+import { DefaultSession, QwikAuth$ } from "@auth/qwik"
+
+declare module "@auth/qwik" {
+  /**
+   * Returned by the `useSession` hook and the `session` object in the sharedMap
+   */
+  interface Session {
+    user: {
+      /** The user's postal address. */
+      address: string
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"]
+  }
+}
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    callbacks: {
+      session({ session, token, user }) {
+        // `session.user.address` is now a valid property, and will be type-checked
+        // in places like `useSession().user` or `sharedMap.get('session').user`
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            address: user.address,
+          },
+        }
+      },
+    },
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="auth.ts"
@@ -155,5 +198,5 @@ declare module "next-auth/jwt" {
 ## Resources
 
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
-2. [Digital Ocean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
+2. [DigitalOcean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
 3. [Creating a Database Adapter](/guides/creating-a-database-adapter)

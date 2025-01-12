@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Keycloak</b> integration.</span>
  * <a href="https://keycloak.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/keycloak.svg" height="48" width="48"/>
@@ -45,13 +45,19 @@ export interface KeycloakProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Keycloak from "@auth/core/providers/keycloak"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Keycloak({ clientId: KEYCLOAK_CLIENT_ID, clientSecret: KEYCLOAK_CLIENT_SECRET, issuer: KEYCLOAK_ISSUER, })],
+ *   providers: [
+ *     Keycloak({
+ *       clientId: KEYCLOAK_CLIENT_ID,
+ *       clientSecret: KEYCLOAK_CLIENT_SECRET,
+ *       issuer: KEYCLOAK_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

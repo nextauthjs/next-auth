@@ -7,7 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Sequelize Docs](https://sequelize.org/docs/v6/getting-started/)
+- [Sequelize documentation](https://sequelize.org/docs/v6/getting-started/)
 - [Connecting to a Database](https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database)
 
 ## Setup
@@ -48,6 +48,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import SequelizeAdapter from "@auth/sequelize-adapter"
+import { Sequelize } from "sequelize"
+
+const sequelize = new Sequelize(import.meta.env.DATABASE_URL)
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: SequelizeAdapter(sequelize),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -57,7 +75,7 @@ import { Sequelize } from "sequelize"
 
 const sequelize = new Sequelize(process.env.DATABASE_URL)
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [],
   adapter: SequelizeAdapter(sequelize),
 })

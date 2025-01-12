@@ -31,6 +31,12 @@ describe("parse the action and provider id", () => {
       basePath: "/api/auth",
     },
     {
+      path: "/api/auth/signin/github/",
+      action: "signin",
+      providerId: "github",
+      basePath: "/api/auth",
+    },
+    {
       path: "/api/auth/signin/github",
       action: "signin",
       providerId: "github",
@@ -45,6 +51,18 @@ describe("parse the action and provider id", () => {
       path: "/api/auth/signin/api/auth/signin/github",
       error: "Cannot parse action at /api/auth/signin/api/auth/signin/github",
       basePath: "/api/auth",
+    },
+    {
+      path: "/auth/signin/auth0/",
+      action: "signin",
+      providerId: "auth0",
+      basePath: "/auth",
+    },
+    {
+      path: "/auth/signin/auth0///",
+      action: "signin",
+      providerId: "auth0",
+      basePath: "/auth",
     },
     {
       path: "/auth/signin/auth0",

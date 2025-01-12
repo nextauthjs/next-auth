@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Slack</b> integration.</span>
  * <a href="https://www.slack.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/slack.svg" height="48" />
@@ -53,13 +53,15 @@ export interface SlackProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Slack from "@auth/core/providers/slack"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Slack({ clientId: SLACK_CLIENT_ID, clientSecret: SLACK_CLIENT_SECRET })],
+ *   providers: [
+ *     Slack({ clientId: SLACK_CLIENT_ID, clientSecret: SLACK_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

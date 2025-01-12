@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Coinbase</b> integration.</span>
  * <a href="https://coinbase.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/coinbase.svg" height="48" width="48"/>
@@ -21,13 +21,18 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Coinbase from "@auth/core/providers/coinbase"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Coinbase({ clientId: COINBASE_CLIENT_ID, clientSecret: COINBASE_CLIENT_SECRET })],
+ *   providers: [
+ *     Coinbase({
+ *       clientId: COINBASE_CLIENT_ID,
+ *       clientSecret: COINBASE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -69,8 +74,8 @@ export default function Coinbase(
     name: "Coinbase",
     type: "oauth",
     authorization:
-      "https://www.coinbase.com/oauth/authorize?scope=wallet:user:email+wallet:user:read",
-    token: "https://api.coinbase.com/oauth/token",
+      "https://login.coinbase.com/oauth2/auth?scope=wallet:user:email+wallet:user:read",
+    token: "https://login.coinbase.com/oauth2/token",
     userinfo: "https://api.coinbase.com/v2/user",
     profile(profile) {
       return {

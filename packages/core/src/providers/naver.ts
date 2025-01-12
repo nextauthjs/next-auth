@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Naver</b> integration.</span>
  * <a href="https://naver.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/naver.svg" height="48" width="48"/>
@@ -40,13 +40,15 @@ export interface NaverProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Naver from "@auth/core/providers/naver"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Naver({ clientId: NAVER_CLIENT_ID, clientSecret: NAVER_CLIENT_SECRET })],
+ *   providers: [
+ *     Naver({ clientId: NAVER_CLIENT_ID, clientSecret: NAVER_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

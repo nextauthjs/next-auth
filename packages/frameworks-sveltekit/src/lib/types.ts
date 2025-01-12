@@ -1,5 +1,5 @@
 import type { AuthConfig } from "@auth/core"
-import type { BuiltInProviderType } from "@auth/core/providers"
+import type { ProviderId } from "@auth/core/providers"
 import type { Session } from "@auth/core/types"
 
 /** Configure the {@link SvelteKitAuth} method. */
@@ -12,19 +12,16 @@ declare global {
       auth(): Promise<Session | null>
       /** @deprecated Use `auth` instead. */
       getSession(): Promise<Session | null>
-      signIn: <
-        P extends BuiltInProviderType | (string & NonNullable<unknown>),
-        R extends boolean = true,
-      >(
+      signIn: <Redirect extends boolean = true>(
         /** Provider to sign in to */
-        provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
+        provider?: ProviderId, // See: https://github.com/microsoft/TypeScript/issues/29729
         options?:
           | FormData
           | ({
               /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
               redirectTo?: string
               /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
-              redirect?: R
+              redirect?: Redirect
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } & Record<string, any>),
         authorizationParams?:
@@ -33,18 +30,18 @@ declare global {
           | string
           | URLSearchParams
       ) => Promise<
-        R extends false
+        Redirect extends false
           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
             any
           : never
       >
-      signOut: <R extends boolean = true>(options?: {
+      signOut: <Redirect extends boolean = true>(options?: {
         /** The URL to redirect to after signing out. By default, the user is redirected to the current page. */
         redirectTo?: string
         /** If set to `false`, the `signOut` method will return the URL to redirect to instead of redirecting automatically. */
-        redirect?: R
+        redirect?: Redirect
       }) => Promise<
-        R extends false
+        Redirect extends false
           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
             any
           : never

@@ -1,6 +1,6 @@
 {
   "name": "@auth/sveltekit",
-  "version": "1.0.0",
+  "version": "1.7.4",
   "description": "Authentication for SvelteKit.",
   "keywords": [
     "authentication",
@@ -12,8 +12,13 @@
     "passwordless",
     "svelte"
   ],
+  "license": "ISC",
   "homepage": "https://sveltekit.authjs.dev",
-  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nextauthjs/next-auth",
+    "directory": "packages/frameworks-sveltekit"
+  },
   "author": "Thang Huu Vu <hi@thvu.dev>",
   "contributors": [
     "Thang Huu Vu <hi@thvu.dev>",
@@ -26,31 +31,45 @@
     "build": "pnpm clean && pnpm providers && pnpm check && svelte-package",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "clean": "rm -rf client.* index.* package src/lib/providers",
+    "clean": "rm -rf dist src/lib/providers",
     "dev": "pnpm providers && svelte-package -w",
     "preview": "vite preview",
     "providers": "node ../utils/scripts/providers.js --out src/lib",
     "test": "vitest run -c ../utils/vitest.config.ts"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.0.0",
-    "@sveltejs/kit": "^2.4.3",
-    "@sveltejs/package": "^2.0.0",
-    "@sveltejs/vite-plugin-svelte": "^3.0.0",
-    "@types/set-cookie-parser": "^2.4.7",
-    "svelte": "^4.0.0",
-    "svelte-check": "^3.4.3",
-    "tslib": "^2.4.1",
+    "@sveltejs/adapter-auto": "^3.2.5",
+    "@sveltejs/kit": "^2.6.4",
+    "@sveltejs/package": "^2.3.5",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@types/set-cookie-parser": "^2.4.10",
+    "svelte": "^4.2.19",
+    "svelte-check": "^4.0.4",
+    "tslib": "^2.7.0",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "set-cookie-parser": "^2.6.0"
+    "set-cookie-parser": "^2.7.0"
   },
   "peerDependencies": {
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/server": "^9.0.3",
     "@sveltejs/kit": "^1.0.0 || ^2.0.0",
-    "svelte": "^3.54.0 || ^4.0.0 || ^5"
+    "nodemailer": "^6.6.5",
+    "svelte": "^3.54.0 || ^4.0.0 || ^5.0.0-0"
+  },
+  "peerDependenciesMeta": {
+    "@simplewebauthn/browser": {
+      "optional": true
+    },
+    "@simplewebauthn/server": {
+      "optional": true
+    },
+    "nodemailer": {
+      "optional": true
+    }
   },
   "type": "module",
   "types": "./dist/index.d.ts",
@@ -66,6 +85,10 @@
     "./client": {
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
+    },
+    "./webauthn": {
+      "types": "./dist/webauthn.d.ts",
+      "import": "./dist/webauthn.js"
     },
     "./components": {
       "types": "./dist/components/index.d.ts",

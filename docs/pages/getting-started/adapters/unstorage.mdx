@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Unstorage Docs](https://unstorage.unjs.io/)
+- [Unstorage documentation](https://unstorage.unjs.io/)
 
 ## Setup
 
@@ -35,6 +35,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { createStorage } from "unstorage"
+
+const storage = createStorage()
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: UnstorageAdapter(storage),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -44,7 +62,7 @@ import { createStorage } from "unstorage"
 
 const storage = createStorage()
 
-export const { handler, signIn, signOut } = SvelteKitAuth({
+export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: UnstorageAdapter(storage),
   providers: [],
 })

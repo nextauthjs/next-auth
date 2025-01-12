@@ -16,7 +16,8 @@ A common use case is to add the user's id to the session. Below it is shown how 
 
 To have access to the user id, add the following to your Auth.js configuration:
 
-```ts
+```ts filename="auth.ts"
+  //  By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   callbacks: {
     jwt({ token, user }) {
       if (user) { // User is available during sign-in
@@ -29,6 +30,7 @@ To have access to the user id, add the following to your Auth.js configuration:
       return session
     },
   },
+}
 ```
 
 During sign-in, the `jwt` callback exposes the user's profile information coming from the provider.
@@ -41,13 +43,15 @@ Calls to `auth()` or `useSession()` will now have access to the user's id.
 
 If you are using a database session strategy, you can add the user's id to the session by modifying the `session` callback:
 
-```ts
+```ts filename="auth.ts"
+  //  By default, the `id` property does not exist on `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id
       return session
     },
-  },
+  }
+}
 ```
 
 This will add the user's id to the session object. Notice that in this case, we are getting the id from the `user` object, not the `token`.
@@ -62,6 +66,31 @@ Calls to `auth()` or `useSession()` will now have access to the user's id.
   server-side, you must save it elsewhere. You can connect to the database in
   the `session()` callback to retrieve this information.
 </Callout>
+
+## With provider functions
+
+We can extend the default session data in a few ways, one of which is by using the `authorize` and `profile` functions. These functions let us return a user object with the properties we need. We can then create logic based on this information to search in a database or an external API.
+
+```ts
+import Github from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
+import type { Provider } from "next-auth/providers"
+
+const providers: Provider[] = [
+  Google({
+    clientId: process.env.AUTH_GOOGLE_ID,
+    clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    async profile(profile) {
+      return { ...profile }
+    },
+  }),
+  Credentials({
+    async authorize(credentials) {
+      return { ...credentials }
+    },
+  }),
+]
+```
 
 ## Resources
 

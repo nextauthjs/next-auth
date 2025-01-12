@@ -3,25 +3,9 @@ import { Screenshot } from "@/components/Screenshot"
 
 # Built-in Pages
 
-Auth.js comes by default with a set of pages that are presented to the user as they go through their authentication journey (sign up, sign in, sign out, error, etc...). This is helpful so that you don't need to write those from scratch when using the library first time.
+Auth.js comes by default with a set of pages that are presented to the user as they go through their authentication journey (sign up, sign in, sign out, error, etc...). This is helpful so that you don't need to write those from scratch when using the library first time. The UI created is based on the providers specified in your configuration file.
 
-<Code>
-<Code.Next>
-
-```tsx filename="components/sign-in.tsx"
-"use client"
-
-import { signIn } from "next-auth/react"
-
-export function SignInButton() {
-  return <button onClick={() => signIn()}>Sign in</button>
-}
-```
-
-</Code.Next>
-</Code>
-
-If you do not pass a providerId, the `signIn` function will redirect the user to the signin page.
+If you do not pass a `providerId`, the `signIn` function will redirect the user to the signin page.
 
 import SignInPage from "../../../public/img/tutorials/sign-in-page.webp"
 

@@ -1,6 +1,6 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
- * <span>Built-in <b>Linkedin</b> integration.</span>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <span>Built-in <b>LinkedIn</b> integration.</span>
  * <a href="https://linkedin.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/linkedin.svg" height="48" width="48"/>
  * </a>
@@ -33,13 +33,18 @@ export interface LinkedInProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import LinkedIn from "@auth/core/providers/linkedin"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [LinkedIn({ clientId: LINKEDIN_CLIENT_ID, clientSecret: LINKEDIN_CLIENT_SECRET })],
+ *   providers: [
+ *     LinkedIn({
+ *       clientId: LINKEDIN_CLIENT_ID,
+ *       clientSecret: LINKEDIN_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -78,17 +83,9 @@ export default function LinkedIn<P extends LinkedInProfile>(
     name: "LinkedIn",
     type: "oidc",
     client: { token_endpoint_auth_method: "client_secret_post" },
-    issuer: "https://www.linkedin.com",
-    jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
-    async profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+    issuer: "https://www.linkedin.com/oauth",
     style: { bg: "#069", text: "#fff" },
+    checks: ["state"],
     options,
   }
 }

@@ -12,39 +12,83 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
   return (
     <Code>
       <Code.Next>
+        In Next.js we recommend setting up your configuration in a file in the
+        root of your repository, like at <code>auth.ts</code>.
+        <br />
         <Pre
-          data-filename="@/auth"
+          data-filename="./auth.ts"
           data-theme="default"
           data-copy=""
           data-language="tsx"
           icon={TSIcon}
+          className="px-4"
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import NextAuth from "next-auth"
 import ${providerName} from "next-auth/providers/${providerId}"
  
-export const { signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [${providerName}],
 })`),
           }}
         />
+        <br />
+        Add the <code>handlers</code> which <code>NextAuth</code> returns to
+        your <code>api/auth/[...nextauth]/route.ts</code> file so that Auth.js
+        can run on any incoming request.
+        <Pre
+          data-filename="./app/api/auth/[...nextauth]/route.ts"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          className="px-4"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+import { handlers } from "@/auth"
+export const { GET, POST } = handlers
+`),
+          }}
+        />
       </Code.Next>
+      <Code.Qwik>
+        We recommend setting up your configuration in{" "}
+        <code>/src/routes/plugin@auth.ts</code> file.
+        <Pre
+          data-filename="/src/routes/plugin@auth.ts"
+          data-theme="default"
+          data-copy=""
+          data-language="tsx"
+          className="px-4"
+          icon={TSIcon}
+          dangerouslySetInnerHTML={{
+            __html: highlight(`
+import { QwikAuth$ } from "@auth/qwik"
+import ${providerName} from "@auth/qwik/providers/${providerId}"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$({
+  providers: [${providerName}],
+}) `),
+          }}
+        />
+      </Code.Qwik>
       <Code.Svelte>
         In SvelteKit you should also setup your Auth.js configuration in a file
-        at `/src/auth.ts`.
+        at <code>/src/auth.ts</code>.
         <br />
         <Pre
           data-filename="./src/auth.ts"
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import { SvelteKitAuth } from "@auth/sveltekit"
 import ${providerName} from "@auth/sveltekit/providers/${providerId}"
  
-export const { handle } = SvelteKitAuth({
+export const { handle, signIn } = SvelteKitAuth({
   providers: [${providerName}],
 }) `),
           }}
@@ -58,6 +102,7 @@ export const { handle } = SvelteKitAuth({
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`export { handle } from "./auth"`),
@@ -73,6 +118,7 @@ export const { handle } = SvelteKitAuth({
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
@@ -94,6 +140,7 @@ export const load: LayoutServerLoad = async (event) => {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`

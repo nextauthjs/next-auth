@@ -1,6 +1,6 @@
 {
   "name": "@auth/sequelize-adapter",
-  "version": "2.0.0",
+  "version": "2.7.4",
   "description": "Sequelize adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -34,7 +34,8 @@
   },
   "scripts": {
     "test": "vitest -c ../utils/vitest.config.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Passage by 1Password</b> integration.</span>
  * <a href="https://passage.1password.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/passage.svg" height="48" width="48"/>
@@ -45,13 +45,19 @@ export interface PassageProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Passage from "@auth/core/providers/passage"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Passage({ clientId: PASSAGE_ID, clientSecret: PASSAGE_SECRET, issuer: PASSAGE_ISSUER })],
+ *   providers: [
+ *     Passage({
+ *       clientId: PASSAGE_ID,
+ *       clientSecret: PASSAGE_SECRET,
+ *       issuer: PASSAGE_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

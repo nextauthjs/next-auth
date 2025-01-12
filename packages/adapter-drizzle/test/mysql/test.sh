@@ -11,16 +11,14 @@ docker run -d --rm \
   -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
   --name "${MYSQL_CONTAINER_NAME}" \
   -p 3306:3306 \
-  mysql:8 \
-  --default-authentication-plugin=mysql_native_password
+  mysql:8
 
-echo "Waiting 10s for db to start..." && sleep 10
+echo "Waiting 15s for db to start..." && sleep 15
 
-# Push schema and seed
-drizzle-kit generate:mysql --config=./test/mysql/drizzle.config.ts
-NODE_OPTIONS='--import tsx'
-tsx ./test/mysql/migrator.ts
+drizzle-kit generate --config=./test/mysql/drizzle.config.ts
+drizzle-kit migrate --config=./test/mysql/drizzle.config.ts
 
+# Run Tests
 if vitest run -c ../utils/vitest.config.ts ./test/mysql/index.test.ts; then
   docker stop ${MYSQL_CONTAINER_NAME}
 else

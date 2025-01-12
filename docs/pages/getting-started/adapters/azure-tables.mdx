@@ -11,7 +11,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Azure Tables](https://azure.microsoft.com/en-us/products/storage/tables)
+- [Azure Tables documentation](https://azure.microsoft.com/en-us/products/storage/tables)
 
 ## Setup
 
@@ -58,6 +58,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { TableStorageAdapter } from "@auth/azure-tables-adapter"
+import { AzureNamedKeyCredential, TableClient } from "@azure/data-tables"
+
+const credential = new AzureNamedKeyCredential(
+  import.meta.env.AUTH_AZURE_ACCOUNT,
+  import.meta.env.AUTH_AZURE_ACCESS_KEY
+)
+const authClient = new TableClient(
+  import.meta.env.AUTH_AZURE_TABLES_ENDPOINT,
+  "auth",
+  credential
+)
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: TableStorageAdapter(authClient),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"

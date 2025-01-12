@@ -1,6 +1,9 @@
 /**
  *
- * NextAuth.js methods and components that work in [Client components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the [Pages Router](https://nextjs.org/docs/pages).
+ * NextAuth.js is the official integration of Auth.js for Next.js applications. It supports both
+ * [Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components) and the
+ * [Pages Router](https://nextjs.org/docs/pages). It includes methods for signing in, signing out, hooks, and a React
+ * Context provider to wrap your application and make session data available anywhere.
  *
  * For use in [Server Actions](https://nextjs.org/docs/app/api-reference/functions/server-actions), check out [these methods](https://authjs.dev/guides/upgrade-to-v5#methods)
  *
@@ -19,15 +22,11 @@ import {
   useOnline,
 } from "./lib/client.js"
 
-import type {
-  BuiltInProviderType,
-  RedirectableProviderType,
-} from "@auth/core/providers"
+import type { ProviderId } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
 import type {
   AuthClientConfig,
   ClientSafeProvider,
-  LiteralUnion,
   SessionProviderProps,
   SignInAuthorizationParams,
   SignInOptions,
@@ -39,7 +38,6 @@ import type {
 
 // TODO: Remove/move to core?
 export type {
-  LiteralUnion,
   SignInOptions,
   SignInAuthorizationParams,
   SignOutParams,
@@ -69,15 +67,26 @@ export const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
+let broadcastChannel: BroadcastChannel | null = null
+
+function getNewBroadcastChannel() {
+  return new BroadcastChannel("next-auth")
+}
+
 function broadcast() {
-  if (typeof BroadcastChannel !== "undefined") {
-    return new BroadcastChannel("next-auth")
+  if (typeof BroadcastChannel === "undefined") {
+    return {
+      postMessage: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }
   }
-  return {
-    postMessage: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
+
+  if (broadcastChannel === null) {
+    broadcastChannel = getNewBroadcastChannel()
   }
+
+  return broadcastChannel
 }
 
 // TODO:
@@ -113,7 +122,7 @@ export const SessionContext = React.createContext?.<
  * React Hook that gives you access to the logged in user's session data and lets you modify it.
  *
  * :::info
- * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `useSession` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function useSession<R extends boolean>(
@@ -171,7 +180,8 @@ export async function getSession(params?: GetSessionParams) {
     params
   )
   if (params?.broadcast ?? true) {
-    broadcast().postMessage({
+    const broadcastChannel = getNewBroadcastChannel()
+    broadcastChannel.postMessage({
       event: "session",
       data: { trigger: "getSession" },
     })
@@ -194,59 +204,74 @@ export async function getCsrfToken() {
   return response?.csrfToken ?? ""
 }
 
-type ProvidersType = Record<
-  LiteralUnion<BuiltInProviderType>,
-  ClientSafeProvider
->
-
-/**
- * Returns a client-safe configuration object of the currently
- * available providers.
- */
 export async function getProviders() {
-  return fetchData<ProvidersType>("providers", __NEXTAUTH, logger)
+  return fetchData<Record<ProviderId, ClientSafeProvider>>(
+    "providers",
+    __NEXTAUTH,
+    logger
+  )
 }
 
 /**
- * Initiate a signin flow or send the user to the signin page listing all possible providers.
+ * Initiates a signin flow or sends the user to the signin page listing all possible providers.
  * Handles CSRF protection.
+ *
+ * @note This method can only be used from Client Components ("use client" or Pages Router).
+ * For Server Actions, use the `signIn` method imported from the `auth` config.
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined,
->(
-  provider?: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
-  options?: SignInOptions,
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<true>,
   authorizationParams?: SignInAuthorizationParams
-): Promise<
-  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
-> {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+): Promise<void>
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<false>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse>
+export async function signIn<Redirect extends boolean = true>(
+  provider?: ProviderId,
+  options?: SignInOptions<Redirect>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse | void> {
+  const { callbackUrl, ...rest } = options ?? {}
+  const {
+    redirect = true,
+    redirectTo = callbackUrl ?? window.location.href,
+    ...signInParams
+  } = rest
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const providers = await getProviders()
 
   if (!providers) {
-    window.location.href = `${baseUrl}/error`
-    return
+    const url = `${baseUrl}/error`
+    window.location.href = url
+    return // TODO: Return error if `redirect: false`
   }
 
-  if (!provider || !(provider in providers)) {
-    window.location.href = `${baseUrl}/signin?${new URLSearchParams({
-      callbackUrl,
+  if (!provider || !providers[provider]) {
+    const url = `${baseUrl}/signin?${new URLSearchParams({
+      callbackUrl: redirectTo,
     })}`
-    return
+    window.location.href = url
+    return // TODO: Return error if `redirect: false`
   }
 
-  const isCredentials = providers[provider].type === "credentials"
-  const isEmail = providers[provider].type === "email"
-  const isSupportingReturn = isCredentials || isEmail
+  const providerType = providers[provider].type
+
+  if (providerType === "webauthn") {
+    // TODO: Add docs link with explanation
+    throw new TypeError(
+      [
+        `Provider id "${provider}" refers to a WebAuthn provider.`,
+        'Please use `import { signIn } from "next-auth/webauthn"` instead.',
+      ].join("\n")
+    )
+  }
 
   const signInUrl = `${baseUrl}/${
-    isCredentials ? "callback" : "signin"
+    providerType === "credentials" ? "callback" : "signin"
   }/${provider}`
 
   const csrfToken = await getCsrfToken()
@@ -258,27 +283,26 @@ export async function signIn<
         "Content-Type": "application/x-www-form-urlencoded",
         "X-Auth-Return-Redirect": "1",
       },
-      // @ts-expect-error
       body: new URLSearchParams({
-        ...options,
+        ...signInParams,
         csrfToken,
-        callbackUrl,
+        callbackUrl: redirectTo,
       }),
     }
   )
 
   const data = await res.json()
 
-  // TODO: Do not redirect for Credentials and Email providers by default in next major
-  if (redirect || !isSupportingReturn) {
-    const url = data.url ?? callbackUrl
+  if (redirect) {
+    const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     return
   }
 
-  const error = new URL(data.url).searchParams.get("error")
+  const error = new URL(data.url).searchParams.get("error") ?? undefined
+  const code = new URL(data.url).searchParams.get("code") ?? undefined
 
   if (res.ok) {
     await __NEXTAUTH._getSession({ event: "storage" })
@@ -286,20 +310,32 @@ export async function signIn<
 
   return {
     error,
+    code,
     status: res.status,
     ok: res.ok,
     url: error ? null : data.url,
-  } as any
+  }
 }
 
 /**
  * Initiate a signout, by destroying the current session.
  * Handles CSRF protection.
+ *
+ * @note This method can only be used from Client Components ("use client" or Pages Router).
+ * For Server Actions, use the `signOut` method imported from the `auth` config.
  */
+export async function signOut(options?: SignOutParams<true>): Promise<void>
+export async function signOut(
+  options?: SignOutParams<false>
+): Promise<SignOutResponse>
 export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
-): Promise<R extends true ? undefined : SignOutResponse> {
-  const { callbackUrl = window.location.href } = options ?? {}
+): Promise<SignOutResponse | void> {
+  const {
+    redirect = true,
+    redirectTo = options?.callbackUrl ?? window.location.href,
+  } = options ?? {}
+
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
@@ -308,18 +344,17 @@ export async function signOut<R extends boolean = true>(
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    body: new URLSearchParams({ csrfToken, callbackUrl }),
+    body: new URLSearchParams({ csrfToken, callbackUrl: redirectTo }),
   })
   const data = await res.json()
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
 
-  if (options?.redirect ?? true) {
-    const url = data.url ?? callbackUrl
+  if (redirect) {
+    const url = data.url ?? redirectTo
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
-    // @ts-expect-error
     return
   }
 
@@ -335,7 +370,7 @@ export async function signOut<R extends boolean = true>(
  * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
  *
  * :::info
- * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * `SessionProvider` is for client-side use only and when using [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router) you should prefer the `auth()` export.
  * :::
  */
 export function SessionProvider(props: SessionProviderProps) {
@@ -470,7 +505,7 @@ export function SessionProvider(props: SessionProviderProps) {
           ? "authenticated"
           : "unauthenticated",
       async update(data: any) {
-        if (loading || !session) return
+        if (loading) return
         setLoading(true)
         const newSession = await fetchData<Session>(
           "session",

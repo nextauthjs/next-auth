@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Webex</b> integration.</span>
  * <a href="https://webex.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/webex.svg" height="48" width="48"/>
@@ -35,13 +35,15 @@ export interface WebexProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Webex from "@auth/core/providers/webex"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Webex({ clientId: WEBEX_CLIENT_ID, clientSecret: WEBEX_CLIENT_SECRET })],
+ *   providers: [
+ *     Webex({ clientId: WEBEX_CLIENT_ID, clientSecret: WEBEX_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

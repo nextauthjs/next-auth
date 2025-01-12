@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Ory Hydra</b> integration.</span>
  * <a href="https://www.ory.sh/hydra/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/ory.svg" height="48" />
@@ -33,13 +33,19 @@ export interface OryHydraProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import OryHydra from "@auth/core/providers/ory-hydra"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [OryHydra({ clientId: ORY_HYDRA_CLIENT_ID, clientSecret: ORY_HYDRA_CLIENT_SECRET, issuer: ORY_HYDRA_ISSUER })],
+ *   providers: [
+ *     OryHydra({
+ *       clientId: ORY_HYDRA_CLIENT_ID,
+ *       clientSecret: ORY_HYDRA_CLIENT_SECRET,
+ *       issuer: ORY_HYDRA_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  *

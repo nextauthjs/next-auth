@@ -33,8 +33,12 @@ export default function Client() {
             </>
           ) : (
             <>
-              <button onClick={() => signIn("github")}>Sign in Github</button>
-              <button onClick={() => signIn("credentials", {})}>
+              <button onClick={() => signIn("github")}>Sign in GitHub</button>
+              <button
+                onClick={async () => {
+                  await signIn("webauthn", {})
+                }}
+              >
                 Sign in Credentials
               </button>
             </>
