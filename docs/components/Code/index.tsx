@@ -2,7 +2,7 @@ import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
 import { useThemeConfig } from "nextra-theme-docs"
 import { Tabs } from "nextra/components"
-import React, { Children, useEffect, MouseEvent } from "react"
+import React, { Children, useEffect, MouseEvent, useState } from "react"
 
 interface ChildrenProps {
   children: React.ReactNode
@@ -58,28 +58,61 @@ export function Code({ children }: ChildrenProps) {
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
 
+  const [selectedFramework, setSelectedFramework] = useState<string>(
+    Object.values(renderedFrameworks)[0]
+  )
+
   const updateFrameworkStorage = (value: string): void => {
     const params = new URLSearchParams(searchParams?.toString())
     params.set("framework", value)
     router.push(`${router.pathname}?${params.toString()}`)
   }
 
+  const handleFrameworkChange = (framework: string) => {
+    window.localStorage.setItem(AUTHJS_TAB_KEY, framework)
+    window.dispatchEvent(
+      new StorageEvent("storage", {
+        key: AUTHJS_TAB_KEY,
+        newValue: framework,
+      })
+    )
+    updateFrameworkStorage(parseParams(framework))
+  }
+
   const handleClickFramework = (event: MouseEvent<HTMLDivElement>) => {
     if (!(event.target instanceof HTMLButtonElement)) return
     const { textContent } = event.target as unknown as HTMLDivElement
-    updateFrameworkStorage(parseParams(textContent!))
+    if (textContent) {
+      handleFrameworkChange(textContent)
+    }
   }
 
   useEffect(() => {
-    const length = Object.keys(renderedFrameworks).length
-    const getFrameworkStorage = window.localStorage.getItem(AUTHJS_TAB_KEY)
-    const indexFramework = parseInt(getFrameworkStorage ?? "0") % length
-    if (!getFrameworkStorage) {
-      window.localStorage.setItem(AUTHJS_TAB_KEY, "0")
+    function handleStorage(event: StorageEvent) {
+      if (
+        event.key === AUTHJS_TAB_KEY &&
+        event.newValue &&
+        Object.values(renderedFrameworks).includes(event.newValue)
+      ) {
+        setSelectedFramework(event.newValue)
+      }
     }
-    updateFrameworkStorage(
-      parseParams(Object.values(renderedFrameworks)[indexFramework])
-    )
+    window.addEventListener("storage", handleStorage)
+    return () => {
+      window.removeEventListener("storage", handleStorage)
+    }
+  }, [])
+
+  useEffect(() => {
+    const getFrameworkStorage = window.localStorage.getItem(AUTHJS_TAB_KEY)
+    if (!getFrameworkStorage) {
+      handleFrameworkChange(Object.values(renderedFrameworks)[0])
+    } else if (
+      Object.values(renderedFrameworks).includes(getFrameworkStorage)
+    ) {
+      setSelectedFramework(getFrameworkStorage)
+      updateFrameworkStorage(parseParams(getFrameworkStorage))
+    }
   }, [router.pathname, renderedFrameworks])
 
   return (
@@ -88,7 +121,9 @@ export function Code({ children }: ChildrenProps) {
       onClick={handleClickFramework}
     >
       <Tabs
-        storageKey={AUTHJS_TAB_KEY}
+        selectedIndex={Object.values(renderedFrameworks).indexOf(
+          selectedFramework
+        )}
         items={Object.values(renderedFrameworks)}
       >
         {Object.keys(renderedFrameworks).map((f) => {
