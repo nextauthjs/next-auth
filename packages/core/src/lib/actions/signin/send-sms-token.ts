@@ -19,7 +19,8 @@ export async function sendSmsToken(
   const phone_number = normalizer(body?.phone_number)
 
   const defaultUser = { id: crypto.randomUUID(), phone_number }
-  const user = (await adapter!.getUserByPhoneNumber(phone_number)) ?? defaultUser
+  const user =
+    (await adapter!.getUserByPhoneNumber(phone_number)) ?? defaultUser
 
   const account = {
     providerAccountId: phone_number,
@@ -92,9 +93,9 @@ export async function sendSmsToken(
 }
 
 function defaultNormalizer(phone_number?: string) {
-  if (!phone_number) throw new Error("Missing phone_number from request body.");
-  if(!/^\+\d{11}$/.test(phone_number)) {
-    throw new Error("Invalid phone number format (+XXXXXXXXXXXX.");
+  if (!phone_number) throw new Error("Missing phone_number from request body.")
+  if (!/^\+\d{11}$/.test(phone_number)) {
+    throw new Error("Invalid phone number format (+XXXXXXXXXXXX.")
   }
   return phone_number
 }

@@ -69,7 +69,7 @@ import type {
   WebAuthnConfig,
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
-import {SMSConfig} from "./providers/sms.js";
+import { SMSConfig } from "./providers/sms.js"
 
 export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
 export type { AuthConfig } from "./index.js"
@@ -272,13 +272,13 @@ export type InternalProvider<T = ProviderType> = (T extends "oauth"
     ? OIDCConfigInternal<any>
     : T extends "email"
       ? EmailConfig
-    : T extends "sms"
-      ? SMSConfig
-      : T extends "credentials"
-        ? CredentialsConfig
-        : T extends WebAuthnProviderType
-          ? WebAuthnConfig
-          : never) & {
+      : T extends "sms"
+        ? SMSConfig
+        : T extends "credentials"
+          ? CredentialsConfig
+          : T extends WebAuthnProviderType
+            ? WebAuthnConfig
+            : never) & {
   signinUrl: string
   /** @example `"https://example.com/api/auth/callback/id"` */
   callbackUrl: string

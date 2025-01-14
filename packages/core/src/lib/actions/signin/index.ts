@@ -7,7 +7,7 @@ import type {
   RequestInternal,
   ResponseInternal,
 } from "../../../types.js"
-import {sendSmsToken} from "./send-sms-token.js";
+import { sendSmsToken } from "./send-sms-token.js"
 
 export async function signIn(
   request: RequestInternal,
