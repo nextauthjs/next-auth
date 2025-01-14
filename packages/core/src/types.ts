@@ -51,7 +51,7 @@
  * @module types
  */
 
-import type { SerializeOptions } from "cookie"
+import type { SerializeOptions } from "./lib/vendored/cookie.js"
 import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
@@ -248,17 +248,19 @@ export interface DefaultSession {
 /** The active session of the logged in user. */
 export interface Session extends DefaultSession {}
 
-/**
- * The shape of the returned object in the OAuth providers' `profile` callback,
- * available in the `jwt` and `session` callbacks,
- * or the second parameter of the `session` callback, when using a database.
- */
-export interface User {
+export interface DefaultUser {
   id?: string
   name?: string | null
   email?: string | null
   image?: string | null
 }
+
+/**
+ * The shape of the returned object in the OAuth providers' `profile` callback,
+ * available in the `jwt` and `session` callbacks,
+ * or the second parameter of the `session` callback, when using a database.
+ */
+export interface User extends DefaultUser {}
 
 // Below are types that are only supposed be used by next-auth internally
 

@@ -11,7 +11,7 @@ type IssuerMetadata = any
 type OAuthCallbackChecks = any
 type OpenIDCallbackChecks = any
 
-export type { OAuthProviderType } from "./oauth-types.js"
+export type { OAuthProviderId } from "./provider-types.js"
 
 export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
