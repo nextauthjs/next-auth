@@ -1,0 +1,131 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/bitbucket.svg" height="64" width="64" />
+
+# bitbucket Provider
+
+## Resources
+
+- [Using OAuth on Bitbucket Cloud](https://support.atlassian.com/bitbucket-cloud/docs/use-oauth-on-bitbucket-cloud/)
+- [Bitbucket REST API Authentication](https://developer.atlassian.com/cloud/bitbucket/rest/intro/#authentication)
+- [Bitbucket REST API Users](https://developer.atlassian.com/cloud/bitbucket/rest/api-group-users/#api-group-users)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/google
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/google
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/google
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+<Code>
+  <Code.Next>
+
+```bash filename=".env.local"
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash filename=".env"
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash filename=".env"
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+```
+
+  </Code.Svelte>
+
+    <Code.Express>
+
+```bash filename=".env"
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+```
+
+  </Code.Express>
+</Code>
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="@/auth.ts"
+import NextAuth from "next-auth"
+import Bitbucket from "next-auth/providers/bitbucket"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Bitbucket],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Bitbucket from "@auth/qwik/providers/bitbucket"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Bitbucket],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Bitbucket from "@auth/sveltekit/providers/bitbucket"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Bitbucket],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Bitbucket from "@auth/express/providers/bitbucket"
+
+app.use("/auth/*", ExpressAuth({ providers: [Bitbucket] }))
+```
+
+  </Code.Express>
+</Code>
