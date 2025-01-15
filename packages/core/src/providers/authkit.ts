@@ -9,24 +9,25 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 export interface AuthKitProfile extends Record<string, any> {
   object: string
   id: string
-  organization_id: string
-  connection_id: string
-  connection_type: string
-  idp_id: string
   email: string
+  email_verified: boolean
   first_name: string
   last_name: string
-  raw_attributes: {
-    id: string
-    email: string
-    lastName: string
-    firstName: string
-    picture: string
-  }
+  profile_picture_url: string | null
+  created_at: string
+  updated_at: string
 }
 
 export default function AuthKit<P extends AuthKitProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & {
+    authkitProvider?:
+      | "authkit"
+      | "GoogleOAuth"
+      | "AppleOAuth"
+      | "MicrosoftOAuth"
+      | "GitHubOAuth"
+    screenHint?: "sign-in" | "sign-up"
+  }
 ): OAuthConfig<P> {
   return {
     id: "authkit",
@@ -35,8 +36,8 @@ export default function AuthKit<P extends AuthKitProfile>(
     authorization: {
       url: "https://api.workos.com/user_management/authorize",
       params: {
-        provider: "authkit",
-        screen_hint: "sign-in",
+        provider: options.authkitProvider ?? "authkit",
+        screen_hint: options.screenHint ?? "sign-up",
       },
     },
     token: {
