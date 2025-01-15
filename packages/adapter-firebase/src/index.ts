@@ -1,7 +1,10 @@
 /**
- * Official **Firebase** adapter for Auth.js / NextAuth.js, using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
- * and [Firestore](https://firebase.google.com/docs/firestore).
- * [![Firestore logo](https://authjs.dev/img/adapters/firebase.svg)](https://firebase.google.com)
+ * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
+ *  <p>Official **Firestore** adapter for Auth.js / NextAuth.js, using the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)</p>
+ *  <a href="https://firebase.google.com/docs/firestore/">
+ *   <img style={{display: "block"}} src="/img/adapters/firebase.svg" width="48" />
+ *  </a>
+ * </div>
  *
  * ## Installation
  *
