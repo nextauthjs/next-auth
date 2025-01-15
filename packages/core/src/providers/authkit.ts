@@ -32,7 +32,6 @@ export default function AuthKit<P extends AuthKitProfile>(
     id: "authkit",
     name: "AuthKit",
     type: "oauth",
-    allowDangerousEmailAccountLinking: true,
     authorization: {
       url: "https://api.workos.com/user_management/authorize",
       params: {
