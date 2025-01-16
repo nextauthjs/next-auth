@@ -29,7 +29,7 @@ export type SMSUserConfig = Omit<Partial<SMSConfig>, "options" | "type">
 
 export default function SMSProvider(config: SMSUserConfig): SMSConfig {
   return {
-    id: "resend",
+    id: "sms",
     type: "sms",
     name: "SMS",
     maxAge: 5 * 60,
