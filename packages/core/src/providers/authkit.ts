@@ -11,9 +11,9 @@ export interface AuthKitProfile extends Record<string, any> {
   id: string
   email: string
   email_verified: boolean
-  first_name: string
-  last_name: string
-  profile_picture_url: string | null
+  first_name?: string | null
+  last_name?: string | null
+  profile_picture_url?: string | null
   created_at: string
   updated_at: string
 }
@@ -71,9 +71,16 @@ export default function AuthKit<P extends AuthKitProfile>(
       },
     },
     profile(profile) {
+      let name = null
+      if (profile.first_name) {
+        name = profile.first_name
+      }
+      if (profile.last_name) {
+        name = name ? `${name} ${profile.last_name}` : profile.last_name
+      }
       return {
         id: profile.id,
-        name: `${profile.first_name} ${profile.last_name}`,
+        name,
         email: profile.email,
         image: profile.profile_picture_url ?? null,
       }
