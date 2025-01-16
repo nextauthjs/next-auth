@@ -64,7 +64,7 @@ export function Code({ children }: ChildrenProps) {
 
   const updateFrameworkStorage = (value: string): void => {
     const params = new URLSearchParams(searchParams?.toString())
-    params.set("framework", value)
+    params.set("framework", parseParams(value))
     router.push(`${router.pathname}?${params.toString()}`)
   }
 
@@ -76,13 +76,16 @@ export function Code({ children }: ChildrenProps) {
         newValue: framework,
       })
     )
-    updateFrameworkStorage(parseParams(framework))
+    updateFrameworkStorage(framework)
   }
 
   const handleClickFramework = (event: MouseEvent<HTMLDivElement>) => {
     if (!(event.target instanceof HTMLButtonElement)) return
     const { textContent } = event.target as unknown as HTMLDivElement
-    if (textContent) {
+    if (
+      textContent &&
+      Object.values(renderedFrameworks).includes(textContent)
+    ) {
       handleFrameworkChange(textContent)
     }
   }
@@ -106,12 +109,12 @@ export function Code({ children }: ChildrenProps) {
   useEffect(() => {
     const getFrameworkStorage = window.localStorage.getItem(AUTHJS_TAB_KEY)
     if (!getFrameworkStorage) {
-      handleFrameworkChange(Object.values(renderedFrameworks)[0])
+      handleFrameworkChange(selectedFramework)
     } else if (
       Object.values(renderedFrameworks).includes(getFrameworkStorage)
     ) {
       setSelectedFramework(getFrameworkStorage)
-      updateFrameworkStorage(parseParams(getFrameworkStorage))
+      updateFrameworkStorage(getFrameworkStorage)
     }
   }, [router.pathname, renderedFrameworks])
 
