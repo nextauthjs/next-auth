@@ -62,7 +62,10 @@ export async function signIn(
     return url
   }
 
-  if (foundProvider.type === "credentials") {
+  if (
+    foundProvider.type === "credentials" ||
+    foundProvider.type === "anonymous"
+  ) {
     url = url.replace("signin", "callback")
   }
 

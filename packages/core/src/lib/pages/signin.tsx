@@ -200,6 +200,20 @@ export default function SigninPage(props: {
                   </button>
                 </form>
               )}
+              {provider.type === "anonymous" && (
+                <form action={provider.signinUrl} method="POST">
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  <label
+                    className="section-header"
+                    htmlFor={`input-anonymous-for-${provider.id}-provider`}
+                  >
+                    Anonymous
+                  </label>
+                  <button id="submitButton" type="submit" tabIndex={0}>
+                    Sign in with {provider.name}
+                  </button>
+                </form>
+              )}
               {provider.type === "credentials" && (
                 <form action={provider.callbackUrl} method="POST">
                   <input type="hidden" name="csrfToken" value={csrfToken} />

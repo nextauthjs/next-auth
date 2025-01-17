@@ -11,7 +11,7 @@ import {
 import { handleLoginOrRegister } from "./handle-login.js"
 import { handleOAuth } from "./oauth/callback.js"
 import { state } from "./oauth/checks.js"
-import { createHash } from "../../utils/web.js"
+import { createHash, randomString } from "../../utils/web.js"
 
 import type { AdapterSession } from "../../../adapters.js"
 import type {
@@ -442,6 +442,95 @@ export async function callback(
 
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
+    } else if (provider.type === "anonymous") {
+      const anonymousId = randomString(64)
+      const user = (await adapter!.getUserByPhoneNumber(anonymousId)) ?? {
+        id: crypto.randomUUID(),
+        anonymousId,
+        anonymousIdVerified: null,
+      }
+
+      const account: Account = {
+        providerAccountId: user.id!,
+        userId: user.id,
+        type: "anonymous" as const,
+        provider: provider.id,
+      }
+      const redirect = await handleAuthorized({ user, account }, options)
+      if (redirect) return { redirect, cookies }
+
+      // Sign user in
+      const {
+        user: loggedInUser,
+        session,
+        isNewUser,
+      } = await handleLoginOrRegister(
+        sessionStore.value,
+        user,
+        account,
+        options
+      )
+
+      if (useJwtSession) {
+        const defaultToken = {
+          name: loggedInUser.name,
+          phoneNumber: loggedInUser.phoneNumber,
+          picture: loggedInUser.image,
+          sub: loggedInUser.id?.toString(),
+        }
+        const token = await callbacks.jwt({
+          token: defaultToken,
+          user: loggedInUser,
+          account,
+          isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
+        })
+
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          const salt = options.cookies.sessionToken.name
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token, salt })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+          cookies.push(...sessionCookies)
+        }
+      } else {
+        // Save Session Token in cookie
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: (session as AdapterSession).sessionToken,
+          options: {
+            ...options.cookies.sessionToken.options,
+            expires: (session as AdapterSession).expires,
+          },
+        })
+      }
+
+      await events.signIn?.({ user: loggedInUser, account, isNewUser })
+
+      // Handle first logins on new accounts
+      // e.g. option to send users to a new account landing page on initial login
+      // Note that the callback URL is preserved, so the journey can still be resumed
+      if (isNewUser && pages.newUser) {
+        return {
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }${new URLSearchParams({ callbackUrl })}`,
+          cookies,
+        }
+      }
+
+      // Callback URL is already verified at this point, so safe to use if specified
+      return { redirect: callbackUrl, cookies }
     } else if (provider.type === "credentials" && method === "POST") {
       const credentials = body ?? {}
 
@@ -452,7 +541,7 @@ export async function callback(
       const userFromAuthorize = await provider.authorize(
         credentials,
         // prettier-ignore
-        new Request(url, { headers, method, body: JSON.stringify(body) })
+        new Request(url, {headers, method, body: JSON.stringify(body)})
       )
       const user = userFromAuthorize
 

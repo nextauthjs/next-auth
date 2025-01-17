@@ -18,6 +18,7 @@ export async function signIn(
 
   if (!options.provider) return { redirect: signInUrl, cookies }
 
+  // throw new Error(`Not implemented2 ${JSON.stringify(options)}`)
   switch (options.provider.type) {
     case "oauth":
     case "oidc": {
@@ -36,6 +37,7 @@ export async function signIn(
       const response = await sendSmsToken(request, options)
       return { ...response, cookies }
     }
+    case "anonymous":
     default:
       return { redirect: signInUrl, cookies }
   }
