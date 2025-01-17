@@ -34,8 +34,8 @@ export default function SMSProvider(config: SMSUserConfig): SMSConfig {
     name: "SMS",
     maxAge: 5 * 60,
     async generateVerificationToken() {
-      const random = crypto.getRandomValues(new Uint8Array(8))
-      return Buffer.from(random).toString("hex").slice(0, 6)
+      const random = crypto.getRandomValues(new Uint8Array(6))
+      return Array.from(random, (byte) => byte % 10).join("")
     },
     async sendVerificationRequest(params) {
       throw new Error(`sendVerificationRequest not implemented: ${params}`)

@@ -177,6 +177,29 @@ export default function SigninPage(props: {
                   </button>
                 </form>
               )}
+              {provider.type === "sms" && (
+                <form action={provider.signinUrl} method="POST">
+                  <input type="hidden" name="csrfToken" value={csrfToken} />
+                  <label
+                    className="section-header"
+                    htmlFor={`input-email-for-${provider.id}-provider`}
+                  >
+                    SNS
+                  </label>
+                  <input
+                    id={`input-phoneNumber-for-${provider.id}-provider`}
+                    autoFocus
+                    type="tel"
+                    name="phoneNumber"
+                    value={email}
+                    placeholder="+4XXXXXXXXXX"
+                    required
+                  />
+                  <button id="submitButton" type="submit" tabIndex={0}>
+                    Sign in with {provider.name}
+                  </button>
+                </form>
+              )}
               {provider.type === "credentials" && (
                 <form action={provider.callbackUrl} method="POST">
                   <input type="hidden" name="csrfToken" value={csrfToken} />

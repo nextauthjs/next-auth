@@ -10,6 +10,7 @@ import type {
   OIDCConfig,
 } from "./oauth.js"
 import type { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
+import { SMSConfig } from "./sms.js"
 
 export * from "./credentials.js"
 export * from "./email.js"
@@ -71,6 +72,7 @@ export type Provider<P extends Profile = any> = (
       | OIDCConfig<P>
       | OAuth2Config<P>
       | EmailConfig
+      | SMSConfig
       | CredentialsConfig
       | WebAuthnConfig
     ) &
@@ -81,6 +83,7 @@ export type Provider<P extends Profile = any> = (
       | OAuth2Config<P>
       | OIDCConfig<P>
       | EmailConfig
+      | SMSConfig
       | CredentialsConfig
       | WebAuthnConfig
     ) &

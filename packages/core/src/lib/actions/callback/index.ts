@@ -322,6 +322,126 @@ export async function callback(
 
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
+    } else if (provider.type === "sms") {
+      const paramToken = query?.token as string | undefined
+      const paramIdentifier = query?.phoneNumber as string | undefined
+
+      if (!paramToken) {
+        const e = new TypeError(
+          "Missing token. The sign-in URL was manually opened without token or the link was not sent correctly in the sms.",
+          { cause: { hasToken: !!paramToken } }
+        )
+        e.name = "Configuration"
+        throw e
+      }
+
+      const secret = provider.secret ?? options.secret
+      // @ts-expect-error -- Verified in `assertConfig`.
+      const invite = await adapter.useVerificationToken({
+        // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
+        identifier: paramIdentifier, // TODO: Drop this requirement for lookup in official adapters too
+        token: await createHash(`${paramToken}${secret}`),
+      })
+
+      const hasInvite = !!invite
+      const expired = hasInvite && invite.expires.valueOf() < Date.now()
+      const invalidInvite =
+        !hasInvite ||
+        expired ||
+        // The user might have configured the link to not contain the identifier
+        // so we only compare if it exists
+        (paramIdentifier && invite.identifier !== paramIdentifier)
+      if (invalidInvite) throw new Verification({ hasInvite, expired })
+
+      const { identifier } = invite
+      const user = (await adapter!.getUserByPhoneNumber(identifier)) ?? {
+        id: crypto.randomUUID(),
+        phoneNumber: identifier,
+        phoneNumberVerified: null,
+      }
+
+      const account: Account = {
+        providerAccountId: user.phoneNumber!,
+        userId: user.id,
+        type: "sms" as const,
+        provider: provider.id,
+      }
+
+      const redirect = await handleAuthorized({ user, account }, options)
+      if (redirect) return { redirect, cookies }
+
+      // Sign user in
+      const {
+        user: loggedInUser,
+        session,
+        isNewUser,
+      } = await handleLoginOrRegister(
+        sessionStore.value,
+        user,
+        account,
+        options
+      )
+
+      if (useJwtSession) {
+        const defaultToken = {
+          name: loggedInUser.name,
+          phoneNumber: loggedInUser.phoneNumber,
+          picture: loggedInUser.image,
+          sub: loggedInUser.id?.toString(),
+        }
+        const token = await callbacks.jwt({
+          token: defaultToken,
+          user: loggedInUser,
+          account,
+          isNewUser,
+          trigger: isNewUser ? "signUp" : "signIn",
+        })
+
+        // Clear cookies if token is null
+        if (token === null) {
+          cookies.push(...sessionStore.clean())
+        } else {
+          const salt = options.cookies.sessionToken.name
+          // Encode token
+          const newToken = await jwt.encode({ ...jwt, token, salt })
+
+          // Set cookie expiry date
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
+
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: cookieExpires,
+          })
+          cookies.push(...sessionCookies)
+        }
+      } else {
+        // Save Session Token in cookie
+        cookies.push({
+          name: options.cookies.sessionToken.name,
+          value: (session as AdapterSession).sessionToken,
+          options: {
+            ...options.cookies.sessionToken.options,
+            expires: (session as AdapterSession).expires,
+          },
+        })
+      }
+
+      await events.signIn?.({ user: loggedInUser, account, isNewUser })
+
+      // Handle first logins on new accounts
+      // e.g. option to send users to a new account landing page on initial login
+      // Note that the callback URL is preserved, so the journey can still be resumed
+      if (isNewUser && pages.newUser) {
+        return {
+          redirect: `${pages.newUser}${
+            pages.newUser.includes("?") ? "&" : "?"
+          }${new URLSearchParams({ callbackUrl })}`,
+          cookies,
+        }
+      }
+
+      // Callback URL is already verified at this point, so safe to use if specified
+      return { redirect: callbackUrl, cookies }
     } else if (provider.type === "credentials" && method === "POST") {
       const credentials = body ?? {}
 

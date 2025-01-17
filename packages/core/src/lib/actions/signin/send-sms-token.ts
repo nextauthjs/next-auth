@@ -1,4 +1,9 @@
-import { createHash, randomString, toRequest } from "../../utils/web.js"
+import {
+  createHash,
+  randomNumber,
+  randomString,
+  toRequest,
+} from "../../utils/web.js"
 import { AccessDenied } from "../../../errors.js"
 
 import type { InternalOptions, RequestInternal } from "../../../types.js"
@@ -51,11 +56,11 @@ export async function sendSmsToken(
 
   const { callbackUrl, theme } = options
   const token =
-    (await provider.generateVerificationToken?.()) ?? randomString(32)
+    (await provider.generateVerificationToken?.()) ?? randomNumber(6)
 
-  const ONE_DAY_IN_SECONDS = 86400
+  const QUARTER_HOUR_IN_SECONDS = 3600
   const expires = new Date(
-    Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
+    Date.now() + (provider.maxAge ?? QUARTER_HOUR_IN_SECONDS) * 1000
   )
 
   const secret = provider.secret ?? options.secret
