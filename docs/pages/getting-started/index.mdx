@@ -14,6 +14,8 @@ import manifest from "@/data/manifest.json"
 
 ## Installation
 
+<small>Next section: [Authentication methods](#authentication-methods)</small>
+
 Start by installing the appropriate package for your framework.
 
 <Code>
@@ -48,14 +50,18 @@ Start by installing the appropriate package for your framework.
 
 ### Setup Environment
 
-The only environment variable that is mandatory is the `AUTH_SECRET`. This is a random value used by the library to encrypt tokens and email
-verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via the official [Auth.js CLI](https://cli.authjs.dev) running:
+The only mandatory environment variable is `AUTH_SECRET`. This is must be a cryptographically random value. You can generate one via the [Auth.js CLI](https://cli.authjs.dev):
 
 ```bash
 npx auth secret
 ```
 
 This will also add it to your `.env` file, respecting the framework conventions (eg.: Next.js' `.env.local`).
+
+<Callout type="info">
+  The value is used to seal cookies and hash [email](#email) verification
+  tokens.
+</Callout>
 
 ### Configure
 
@@ -169,13 +175,26 @@ Note this creates the Auth.js API, but does not yet protect resources. Continue 
 
 ## Authentication Methods
 
-Next, let's set up the authentication methods you want to use.
+<small>Next section: [Database](#database)</small>
+
+In addition to the guides below, you can also use the [Auth.js CLI tool](https://cli.authjs.dev) inside your project:
+
+```bash
+npx auth add [provider]
+```
 
 ### OAuth
 
-Auth.js comes with over 80 providers preconfigured. We constantly test ~20 of the most popular ones, by having them enabled and actively used in our [example application](https://next-auth-example.vercel.app). You can choose a provider below to get a walk-through, or find your provider of choice in the sidebar for further details.
-
 <OAuthProviderSelect />
+
+Can't find yours? You can [configure any OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider), even if it's not on the list.
+
+<Callout type="info">
+  Many providers are available in our hosted [example
+  app](https://next-auth-example.vercel.app) to test out.
+</Callout>
+
+You can learn more about OAuth in our [Concepts: OAuth](/concepts/oauth).
 
 ### Email
 
@@ -822,6 +841,8 @@ export const { handle } = SvelteKitAuth({
 
 ## Database
 
+<small>Next section: [Signing in](#signing-in)</small>
+
 <Callout type="info">
   Auth.js can persist sessions in a cookie. Using a database is therefore
   optional, unless you want to persist user data in your own database or a
@@ -901,13 +922,19 @@ erDiagram
 
 ## Signing in
 
+<small>Next section: [Signing out](#signing-out)</small>
+
 TODO:
 
 ## Signing out
 
+<small>Next section: [Session management](#session-management)</small>
+
 TODO:
 
 ## Session management
+
+<small>Next section: [TypeScript](#typescript)</small>
 
 TODO:
 
@@ -916,6 +943,8 @@ TODO:
 TODO:
 
 ## TypeScript
+
+<small>Next section: [Deployment](#deployment)</small>
 
 Auth.js is fully authored in TypeScript. It comes with its own type definitions to use in your project.
 
@@ -1115,6 +1144,8 @@ declare module "next-auth/jwt" {
 
 ## Deployment
 
+<small>Next section: [Observability](#observability)</small>
+
 ### Environment Variables
 
 - `AUTH_SECRET`: Used to encrypt sessions, hash tokens, etc. You can generate one using the following command:
@@ -1276,6 +1307,8 @@ Then, the OAuth provider will redirect the user to the stable URL mentioned abov
 </details>
 
 ## Observability
+
+<small>Next section: [Congratulations](#congratulations)</small>
 
 To pass on your current user's details on to your observability tools, you can use the callbacks provided by Auth.js. For example, in the `session` callback, you could pass the `user.id` on to Sentry.
 

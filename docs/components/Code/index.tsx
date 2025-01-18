@@ -58,16 +58,17 @@ export function Code({ children }: ChildrenProps) {
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
 
-  const updateFrameworkStorage = (value: string): void => {
-    const params = new URLSearchParams(searchParams?.toString())
-    params.set("framework", value)
-    router.push(`${router.pathname}?${params.toString()}`)
+  const setFrameworkSearchParam = (value: string): void => {
+    const url = new URL(window.location.href)
+    if (url.searchParams.has("framework")) return
+    url.searchParams.set("framework", value)
+    router.push(url.toString().replace(window.location.origin, ""))
   }
 
   const handleClickFramework = (event: MouseEvent<HTMLDivElement>) => {
     if (!(event.target instanceof HTMLButtonElement)) return
     const { textContent } = event.target as unknown as HTMLDivElement
-    updateFrameworkStorage(parseParams(textContent!))
+    setFrameworkSearchParam(parseParams(textContent!))
   }
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export function Code({ children }: ChildrenProps) {
     if (!getFrameworkStorage) {
       window.localStorage.setItem(AUTHJS_TAB_KEY, "0")
     }
-    updateFrameworkStorage(
+    setFrameworkSearchParam(
       parseParams(Object.values(renderedFrameworks)[indexFramework])
     )
   }, [router.pathname, renderedFrameworks])
