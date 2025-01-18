@@ -173,9 +173,89 @@ Note this creates the Auth.js API, but does not yet protect resources. Continue 
   </Code.Express>
 </Code>
 
+## Database
+
+<small>Next section: [Authentication methods](#authentication-methods)</small>
+
+<Callout type="info">
+  This section is optional. If you're using a provider that doesn't require a
+  database, or you don't need to persist any data, you can skip it.
+</Callout>
+
+**Database** adapters are the bridge we use to connect Auth.js to your database. For instance, [when implementing magic links](/getting-started/authentication/email), the Email provider will require you to setup a database adapter to be able to store the [verification tokens](/concepts/database-models#verificationtoken) present on the links.
+
+### Official Adapters
+
+Official database adapters are available under the `@auth/` scope on npm. Their source code is available in the [`nextauthjs/next-auth`
+monorepo](https://github.com/nextauthjs/next-auth/tree/main/packages).
+
+<div className="mb-12 mt-8 grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+  {Object.entries(manifest.adapters).map(([value, label]) => (
+    <Link
+      href={`/getting-started/adapters/${value}`}
+      key={value}
+      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+    >
+      <img src={`/img/adapters/${value}.svg`} className="mt-2 h-12" />
+      <div className="text-center text-sm">{label}</div>
+    </Link>
+  ))}
+</div>
+
+<Callout>
+  If you don't find an adapter for your database or service of choice, you can
+  create one yourself. Have a look at our guide on [how to create a database
+  adapter](/guides/creating-a-database-adapter). If you create a new adapter,
+  we'd love it if you [opened a
+  PR](/guides/creating-a-database-adapter#official-adapter-guidelines) to share
+  it with everyone!
+</Callout>
+
+### Models
+
+This is a generic ER Diagram of what the full database schema should look like. Your database adapter of choice will include a template schema with more details for applying this schema to the underlying database. For more details, check out our [database models](/concepts/database-models) documentation. Please note, that the entire schema is not required for every use-case, for more details check out our [database adapters guide](/guides/creating-a-database-adapter).
+
+```mermaid
+%%{init: {'theme':'neutral'}}%%
+erDiagram
+    Account }o--|| User : ""
+    Account {
+        string userId
+        string type
+        string provider
+        string providerAccountId
+        string refresh_token
+        string access_token
+        int expires_at
+        string token_type
+        string scope
+        string id_token
+        string session_state
+    }
+    Session }o--|| User : ""
+    Session {
+        string userId
+        string sessionToken
+        timestamp expires
+    }
+    VerificationToken }o--|| User : ""
+    VerificationToken {
+        string identified
+        string token
+        timestamp expires
+    }
+    User {
+        string id
+        string name
+        string email
+        timestamp emailVerified
+        string image
+    }
+```
+
 ## Authentication Methods
 
-<small>Next section: [Database](#database)</small>
+<small>Next section: [Signing in](#signing-in)</small>
 
 In addition to the guides below, you can also use the [Auth.js CLI tool](https://cli.authjs.dev) inside your project:
 
@@ -838,87 +918,6 @@ export const { handle } = SvelteKitAuth({
 
 </Code.Svelte>
 </Code>
-
-## Database
-
-<small>Next section: [Signing in](#signing-in)</small>
-
-<Callout type="info">
-  Auth.js can persist sessions in a cookie. Using a database is therefore
-  optional, unless you want to persist user data in your own database or a
-  provider requires it.
-</Callout>
-
-**Database** adapters are the bridge we use to connect Auth.js to your database. For instance, [when implementing magic links](/getting-started/authentication/email), the Email provider will require you to setup a database adapter to be able to store the [verification tokens](/concepts/database-models#verificationtoken) present on the links.
-
-### Official Adapters
-
-Official database adapters are available under the `@auth/` scope on npm. Their source code is available in the [`nextauthjs/next-auth`
-monorepo](https://github.com/nextauthjs/next-auth/tree/main/packages).
-
-<div className="mb-12 mt-8 grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
-  {Object.entries(manifest.adapters).map(([value, label]) => (
-    <Link
-      href={`/getting-started/adapters/${value}`}
-      key={value}
-      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
-    >
-      <img src={`/img/adapters/${value}.svg`} className="mt-2 h-12" />
-      <div className="text-center text-sm">{label}</div>
-    </Link>
-  ))}
-</div>
-
-<Callout>
-  If you don't find an adapter for your database or service of choice, you can
-  create one yourself. Have a look at our guide on [how to create a database
-  adapter](/guides/creating-a-database-adapter). If you create a new adapter,
-  we'd love it if you [opened a
-  PR](/guides/creating-a-database-adapter#official-adapter-guidelines) to share
-  it with everyone!
-</Callout>
-
-### Models
-
-This is a generic ER Diagram of what the full database schema should look like. Your database adapter of choice will include a template schema with more details for applying this schema to the underlying database. For more details, check out our [database models](/concepts/database-models) documentation. Please note, that the entire schema is not required for every use-case, for more details check out our [database adapters guide](/guides/creating-a-database-adapter).
-
-```mermaid
-%%{init: {'theme':'neutral'}}%%
-erDiagram
-    Account }o--|| User : ""
-    Account {
-        string userId
-        string type
-        string provider
-        string providerAccountId
-        string refresh_token
-        string access_token
-        int expires_at
-        string token_type
-        string scope
-        string id_token
-        string session_state
-    }
-    Session }o--|| User : ""
-    Session {
-        string userId
-        string sessionToken
-        timestamp expires
-    }
-    VerificationToken }o--|| User : ""
-    VerificationToken {
-        string identified
-        string token
-        timestamp expires
-    }
-    User {
-        string id
-        string name
-        string email
-        timestamp emailVerified
-        string image
-    }
-```
 
 ## Signing in
 
