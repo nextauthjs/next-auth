@@ -14,12 +14,12 @@ export default {
     title: "Getting Started",
     type: "page",
   },
-  guides: {
-    title: "Guides",
+  reference: {
+    title: "Reference",
     type: "page",
   },
-  reference: {
-    title: "API reference",
+  guides: {
+    title: "Guides",
     type: "page",
   },
   concepts: {

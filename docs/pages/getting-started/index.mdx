@@ -12,11 +12,13 @@ import MagicLink from "../../public/img/magic-links/start.webp"
 
 import manifest from "@/data/manifest.json"
 
-## Installation
+## Setup
 
 <small>Next section: [Database](#database)</small>
 
-Start by installing the appropriate package for your framework.
+### Installation
+
+To get started, install one of the framework integrations.
 
 <Code>
   <Code.Next>
@@ -48,67 +50,49 @@ Start by installing the appropriate package for your framework.
   </Code.Express>
 </Code>
 
-### Setup Environment
+### Environment
 
-The only mandatory environment variable is `AUTH_SECRET`. This is must be a cryptographically random value. You can generate one via the [Auth.js CLI](https://cli.authjs.dev):
+The only required environment variable is `AUTH_SECRET`. Generate one via the [Auth.js CLI](https://cli.authjs.dev):
 
 ```bash
 npx auth secret
 ```
 
-This will also add it to your `.env` file, respecting the framework conventions (eg.: Next.js' `.env.local`).
+<small>
+- _Must_ be a cryptographically random value, as it is used to seal cookies and hash
+  [email](#email) verification tokens
+- The CLI updates the **.env** file too, respecting the framework's conventions
+- Multiple values are supported for rotating secrets, without invalidating existing sessions. See [Rotating Secrets](/guides/rotating-secrets)
 
-<Callout type="info">
-  The value is used to seal cookies and hash [email](#email) verification
-  tokens.
-</Callout>
+</small>
 
-### Configure
+### Configuration
 
-Next, create the Auth.js config file and object. This is where you can control the behaviour of the library and specify custom authentication logic, adapters, etc. We recommend all frameworks to create an `auth.ts` file in the project. In this file we'll pass in all the options to the framework specific initalization function and then export the route handler(s), signin and signout methods, and more.
+To configure Auth.js, each integration does the following:
 
-<Callout type="info">
-  You can name this file whatever you want and place it wherever you like, these
-  are just conventions we've come up with.
-</Callout>
+- Adds the [configuration](/reference/core#authconfig)
+- Registers [REST API](/reference/rest-api) endpoints for [OAuth](#oauth) callbacks, rendering default pages, and [email](#email) verification
 
 <Code>
   <Code.Next>
 
-1. Start by creating a new `auth.ts` file at the root of your app with the following content.
-
-```ts filename="./auth.ts"
+```ts filename="auth.ts"
 import NextAuth from "next-auth"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers } = NextAuth({
   providers: [],
 })
 ```
 
-2. Add a Route Handler under `/app/api/auth/[...nextauth]/route.ts`.
-
-<Callout>
-  This file must be an App Router Route Handler, however, the rest of your app
-  can stay under `page/` if you'd like.
-</Callout>
-
-```ts filename="./app/api/auth/[...nextauth]/route.ts"
-import { handlers } from "@/auth" // Referring to the auth.ts we just created
+```ts filename="app/api/auth/[...nextauth]/route.ts"
+import { handlers } from "@/auth"
 export const { GET, POST } = handlers
-```
-
-3. Add optional Middleware to keep the session alive, this will update the session expiry every time its called.
-
-```ts filename="./middleware.ts"
-export { auth as middleware } from "@/auth"
 ```
 
   </Code.Next>
   <Code.Qwik>
 
-1. Start by creating a new `plugin@auth.ts` file in your `src/routes` directory with the following content.
-
-```ts filename="/src/routes/plugin@auth.ts"
+```ts filename="src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
@@ -121,9 +105,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   </Code.Qwik>
   <Code.Svelte>
 
-1. Start by creating a new `auth.ts` file in your `src/` directory with the following content.
-
-```ts filename="./src/auth.ts"
+```ts filename="src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 
 export const { handle } = SvelteKitAuth({
@@ -131,44 +113,26 @@ export const { handle } = SvelteKitAuth({
 })
 ```
 
-2. Re-export the `handle` method in SvelteKit's `src/hooks.server.ts` file.
-
-```ts filename="./src/hooks.server.ts"
+```ts filename="src/hooks.server.ts"
 export { handle } from "./auth"
-```
-
-3. That handle function adds an `auth()` method onto our `event.locals`, which is available in any `+layout.server.ts` or `+page.server.ts` file. Therefore, we can access the session in our `load` function like this.
-
-```ts filename="./src/routes/+layout.server.ts" {4}
-import type { LayoutServerLoad } from "./$types"
-
-export const load: LayoutServerLoad = async (event) => {
-  const session = await event.locals.auth()
-
-  return {
-    session,
-  }
-}
 ```
 
   </Code.Svelte>
   <Code.Express>
 
-1. Start by importing `ExpressAuth` and adding the handler to the auth route.
-
-```ts filename="./src/routes/auth.route.ts" {1, 9}
+```ts filename="src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import express from "express"
 
 const app = express()
-
-// If your app is served through a proxy
-// trust the proxy to allow us to read the `X-Forwarded-*` headers
-app.set("trust proxy", true)
-app.use("/auth/*", ExpressAuth({ providers: [] }))
+app.set("trust proxy", true) // Read: https://expressjs.com/en/guide/behind-proxies.html
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+  })
+)
 ```
-
-Note this creates the Auth.js API, but does not yet protect resources. Continue on to [protecting resources](/getting-started/session-management/protecting) for more details.
 
   </Code.Express>
 </Code>
@@ -183,7 +147,7 @@ Note this creates the Auth.js API, but does not yet protect resources. Continue 
   section](#authentication-methods).
 </Callout>
 
-Auth.js holds very loose opinions when it comes to persisting data. You can use any database you like, even mix and match them - like for example using Redis for sessions and Magic Links, and SQL for persisting user and account data.
+Auth.js has little opinions when it comes to persisting data. It is compatible with any database/service, and even supports mix and matching them in a single adapter - for example using Redis for sessions and Magic Links, and SQL for persisting user and account data.
 Learn more in the [create your own adapter](/guides/creating-a-database-adapter) guide for a more detailed explanation.
 
 {/* TODO: Explain what model is needed when, what columns are optional, which ones aren't, etc. */}
@@ -265,7 +229,7 @@ Official database adapters are available under the `@auth/` scope on npm. Their 
   it with everyone!
 </Callout>
 
-## Authentication Methods
+## Authentication methods
 
 <small>Next section: [Signing in](#signing-in)</small>
 
@@ -276,6 +240,8 @@ npx auth add [provider]
 ```
 
 ### OAuth
+
+Choose an OAuth/OIDC provider to enable social logins.
 
 <OAuthProviderSelect />
 
@@ -303,14 +269,14 @@ This login mechanism starts by the user providing their email address at the log
   verification tokens and look them up when the user attempts to login.
 </Callout>
 
-### WebAuthn (Passkeys)
+### WebAuthn
 
 <Callout type="warning">
   The WebAuthn/Passkeys provider is currently experimental and not supported by
   all framework integrations yet.
 </Callout>
 
-#### Install peer dependencies
+**Install peer dependencies**
 
 This provider requires the `@simplewebauthn/server` and `@simplewebauthn/browser` packages to be installed.
 
@@ -320,7 +286,7 @@ npm install @simplewebauthn/server@9.0.3 @simplewebauthn/browser@9.0.1
 
 The `@simplewebauthn/browser` peer dependency **is only required for custom signin pages**. If you're using the Auth.js default pages, you can skip installing that peer dependency.
 
-#### Apply the required schema Migrations
+**Apply the required schema Migrations**
 
 This is the raw SQL migration for PostgreSQL, for more details including example migrations for other databases, check out the updated Prisma schemas at the [`@auth/prisma-adapter` docs](/getting-started/adapters/prisma).
 
@@ -346,7 +312,7 @@ CREATE TABLE "Authenticator" (
 CREATE UNIQUE INDEX "Authenticator_credentialID_key" ON "Authenticator"("credentialID");
 ```
 
-#### Update Auth.js Configuration
+**Update Auth.js Configuration**
 
 Add the `Passkeys` provider to your configuration. Also make sure you're using a compatible database adapter.
 
@@ -366,7 +332,7 @@ export default {
 
 If you're using the built-in Auth.js pages, then you are good to go! Navigating to your `/signin` route should include a "Signin with Passkeys" button.
 
-#### Custom Pages
+**Custom Pages**
 
 If you're using a custom signin page, you can leverage the `next-auth` `signIn` function to initiate WebAuthn registration and login flows with the following code.
 
@@ -398,7 +364,7 @@ export default function Login() {
 }
 ```
 
-### Credentials
+### Custom
 
 To setup Auth.js with any external authentication mechanisms or use a traditional username/email and password flow, we can use the `Credentials` provider. This provider is designed to forward any credentials inserted into the login form (i.e. username/password, but not limited to) to your authentication service.
 
@@ -426,7 +392,7 @@ so there are no plans to remove this provider.
 
 <Steps>
 
-#### Credentials Provider
+**Credentials Provider**
 
 First, let's initialize the `Credentials` provider in the Auth.js configuration file. You'll have to import the provider and add it to your `providers` array.
 
@@ -601,7 +567,7 @@ app.use(
   callbacks (like the `jwt`) the type will match correctly.
 </Callout>
 
-#### Signin Form
+**Signin Form**
 
 Finally, let's create a simple sign-in form.
 
@@ -750,7 +716,7 @@ export default component$(() => {
 
 </Steps>
 
-#### Validating credentials
+**Validating credentials**
 
 Always validate the credentials server-side, i.e. by leveraging a schema validation library like [Zod](https://zod.dev).
 
@@ -953,10 +919,6 @@ TODO:
 
 TODO:
 
-### Protecting resources
-
-TODO:
-
 ## TypeScript
 
 <small>Next section: [Deployment](#deployment)</small>
@@ -965,7 +927,7 @@ Auth.js is fully authored in TypeScript. It comes with its own type definitions 
 
 Even if you don't use TypeScript, IDEs like VS Code will pick this up to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes links to documentation, examples, and other valuable resources.
 
-### Philosophy
+**Philosophy**
 
 We have chosen [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
 over [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) as the main technique to type Auth.js resources across your application in case you extend them.
@@ -982,7 +944,7 @@ With module augmentation, you defined the types once, and you can be sure that t
 
 </details>
 
-### Module Augmentation
+**Module Augmentation**
 
 Auth.js libraries come with certain interfaces that are shared across submodules and different Auth.js libraries (For example: `next-auth` and `@auth/prisma-adapter` will rely on types from `@auth/core`).
 
@@ -1151,7 +1113,7 @@ declare module "next-auth/jwt" {
   project&apos;s `tsconfig.json`.
 </Callout>
 
-### Resources
+**Resources**
 
 1. [TypeScript documentation: Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
 2. [DigitalOcean: Module Augmentation in TypeScript](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation)
@@ -1325,32 +1287,57 @@ Then, the OAuth provider will redirect the user to the stable URL mentioned abov
 
 <small>Next section: [Congratulations](#congratulations)</small>
 
-To pass on your current user's details on to your observability tools, you can use the callbacks provided by Auth.js. For example, in the `session` callback, you could pass the `user.id` on to Sentry.
+**Logging**
+
+By default, Auth.js will only log [errors](/errors) and [warnings](/warnings) to the console.
+
+To enable debugging with more verbose information during the auth process, set the `debug` option.
 
 ```ts filename="auth.ts"
-import * as Sentry from "@sentry/browser"
-import NextAuth from "next-auth"
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  callbacks: {
-    session({ session, user }) {
-      const scope = Sentry.getCurrentScope()
-
-      scope.setUser({
-        id: user.id,
-        email: user.email,
-      })
-
-      return session
-    },
-  },
-})
+{
+  // TIP: Set process.env.NODE_ENV !== 'production'
+  // - or the equivalent in non-Node.js runtimes -
+  // to enable debug mode during development.
+  debug: true
+}
 ```
+
+<Callout type="warning">
+  Enabling debugging in production can lead to sensitive information being
+  logged. Therefore, we only recommend enabling it for a short period,
+  otherwise, make sure to properly santizize the logs via the `logger` option.
+</Callout>
+
+Customize the logging output by providing a `logger`. It can be partial object.
+
+This lets you send logs to an external service, or customize the format of the logs.
+
+```ts filename="auth.ts"
+import { log } from "logging-service"
+
+{
+  logger: {
+    error(code, ...message) {
+      log.error(code, message)
+    },
+    warn(code, ...message) {
+      log.warn(code, message)
+    },
+    debug(code, ...message) {
+      log.debug(code, message)
+    }
+  }
+}
+```
+
+When `logger` options are set, the `debug` option is ignored. You can also provide a partial logger object, only providing the methods you want to override.
 
 ## Congratulations
 
-You have learnt the basics of Auth.js and successfully configured it in your application.
+You have configured Auth.js in your application!
+
+Next steps:
 
 - For more in-depth customization and advanced use-cases, check out our [Guides](/guides).
 - Check out our hosted [examples](/about#examples) for more complete implementations.
-- Or learn more about auth concepts in the [concepts](/concepts) section. (Not only for Auth.js users!).
+- Learn more about auth concepts in the [concepts](/concepts) section. (Not just for Auth.js users!).
