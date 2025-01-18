@@ -40,6 +40,12 @@ const config: DocsThemeConfig = {
   ),
   components: {
     a: (props: ChildrenProps) => <Link href="" {...props} />,
+    h2: (props: ChildrenProps) => (
+      <h2
+        {...props}
+        className="_font-semibold _tracking-tight _text-slate-900 dark:_text-slate-100 _mt-10 _pb-1 _text-3xl"
+      />
+    ),
   },
   project: {
     link: "https://github.com/nextauthjs/next-auth",
