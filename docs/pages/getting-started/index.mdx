@@ -179,79 +179,91 @@ Note this creates the Auth.js API, but does not yet protect resources. Continue 
 
 <Callout type="info">
   This section is optional. If you're using a provider that doesn't require a
-  database, or you don't need to persist any data, you can skip it.
+  database, or you don't need to persist any data, you can skip to the [next
+  section](#authentication-methods).
 </Callout>
 
-**Database** adapters are the bridge we use to connect Auth.js to your database. For instance, [when implementing magic links](/getting-started/authentication/email), the Email provider will require you to setup a database adapter to be able to store the [verification tokens](/concepts/database-models#verificationtoken) present on the links.
+Auth.js holds very loose opinions when it comes to persisting data. You can use any database you like, even mix and match them - like for example using Redis for sessions and Magic Links, and SQL for persisting user and account data.
+Learn more in the [create your own adapter](/guides/creating-a-database-adapter) guide for a more detailed explanation.
 
-### Official Adapters
+{/* TODO: Explain what model is needed when, what columns are optional, which ones aren't, etc. */}
 
-Official database adapters are available under the `@auth/` scope on npm. Their source code is available in the [`nextauthjs/next-auth`
-monorepo](https://github.com/nextauthjs/next-auth/tree/main/packages).
+Below is a graph of how an Auth.js database _might_ look like, however, when you create your database, you only need to create the tables/columns that you need.
 
-<div className="mb-12 mt-8 grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+```mermaid
+erDiagram
+    User ||--|{ Account : ""
+    User {
+      string id
+      string name
+      string email
+      timestamp emailVerified
+      string image
+    }
+    User ||--|{ Session : ""
+    Session {
+      string id
+      timestamp expires
+      string sessionToken
+      string userId
+    }
+    Account {
+      string id
+      string userId
+      string type
+      string provider
+      string providerAccountId
+      string refresh_token
+      string access_token
+      int expires_at
+      string token_type
+      string scope
+      string id_token
+      string session_state
+    }
+    User ||--|{ VerificationToken : ""
+    VerificationToken {
+      string identifier
+      string token
+      timestamp expires
+    }
+```
+
+<Callout type="info">
+  Auth.js uses `camelCase` for the database rows that are coming from
+  JavaScript, while respecting the conventional `snake_case` formatting for
+  OAuth-related values. However, there is no strict requirement for this mixed
+  format. Most built-in adapters support a configuration option to change the
+  table and column names, and you can also create your own adapter and map the
+  values however you like.
+</Callout>
+
+Official database adapters are available under the `@auth/` scope on npm. Their source code is available [in our monorepo](https://github.com/nextauthjs/next-auth/tree/main/packages).
+
+<div>
   {Object.entries(manifest.adapters).map(([value, label]) => (
     <Link
       href={`/getting-started/adapters/${value}`}
       key={value}
-      className="flex h-32 w-36 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+      className="m-0.5 inline-flex items-center gap-1 rounded-md border-neutral-200 p-2 transition-colors duration-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
     >
-      <img src={`/img/adapters/${value}.svg`} className="mt-2 h-12" />
-      <div className="text-center text-sm">{label}</div>
+      <img
+        className="light:bg-white inline h-4 w-4 drop-shadow-sm"
+        src={`/img/adapters/${value}.svg`}
+      />
+      <span className="text-ellipsis whitespace-nowrap text-sm">{label}</span>
     </Link>
   ))}
 </div>
 
 <Callout>
-  If you don't find an adapter for your database or service of choice, you can
-  create one yourself. Have a look at our guide on [how to create a database
+  If you don't find an adapter for your database or service, you can create one
+  yourself. Have a look at our guide on [how to create a database
   adapter](/guides/creating-a-database-adapter). If you create a new adapter,
   we'd love it if you [opened a
   PR](/guides/creating-a-database-adapter#official-adapter-guidelines) to share
   it with everyone!
 </Callout>
-
-### Models
-
-This is a generic ER Diagram of what the full database schema should look like. Your database adapter of choice will include a template schema with more details for applying this schema to the underlying database. For more details, check out our [database models](/concepts/database-models) documentation. Please note, that the entire schema is not required for every use-case, for more details check out our [database adapters guide](/guides/creating-a-database-adapter).
-
-```mermaid
-%%{init: {'theme':'neutral'}}%%
-erDiagram
-    Account }o--|| User : ""
-    Account {
-        string userId
-        string type
-        string provider
-        string providerAccountId
-        string refresh_token
-        string access_token
-        int expires_at
-        string token_type
-        string scope
-        string id_token
-        string session_state
-    }
-    Session }o--|| User : ""
-    Session {
-        string userId
-        string sessionToken
-        timestamp expires
-    }
-    VerificationToken }o--|| User : ""
-    VerificationToken {
-        string identified
-        string token
-        timestamp expires
-    }
-    User {
-        string id
-        string name
-        string email
-        timestamp emailVerified
-        string image
-    }
-```
 
 ## Authentication Methods
 
@@ -267,7 +279,11 @@ npx auth add [provider]
 
 <OAuthProviderSelect />
 
-Can't find yours? You can [configure any OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider), even if it's not on the list.
+<Callout>
+  Can't find yours? You can [configure any OAuth
+  provider](/guides/configuring-oauth-providers#use-your-own-provider), even if
+  it's not on the list.
+</Callout>
 
 <Callout type="info">
   Many providers are available in our hosted [example

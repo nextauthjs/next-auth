@@ -5,7 +5,6 @@ import {
   ComboboxProvider,
 } from "@ariakit/react"
 import dynamic from "next/dynamic"
-import { Link } from "@/components/Link"
 import manifest from "@/data/manifest.json"
 import { PreviewProviders } from "@/components/SearchBarProviders/PreviewProviders"
 import { useSelectCombobox } from "@/hooks/use-select-combobox"
