@@ -2,7 +2,7 @@ import { Steps, Callout, Tabs } from "nextra/components"
 import { Code } from "@/components/Code"
 import { Link } from "@/components/Link"
 import { Accordion, Accordions } from "@/components/Accordion"
-import { OAuthProviderSelect } from "@/components/OAuthProviderInstructions"
+import { OAuthProviderSelect } from "@/components/OAuthProviderInstructions/OAuthProviderSelect"
 
 import { useState } from "react"
 import { RichTabs } from "@/components/RichTabs"
@@ -52,17 +52,16 @@ To get started, install one of the framework integrations.
 
 ### Environment
 
-The only required environment variable is `AUTH_SECRET`. Generate one via the [Auth.js CLI](https://cli.authjs.dev):
+For development, the only required environment variable is `AUTH_SECRET`. Generate one via the [Auth.js CLI](https://cli.authjs.dev):
 
 ```bash
 npx auth secret
 ```
 
+Any other environment variable is optional. Continue reading to learn about when and how to use them.
+
 <small>
-- _Must_ be a cryptographically random value, as it is used to seal cookies and hash
-  [email](#email) verification tokens
-- The CLI updates the **.env** file too, respecting the framework's conventions
-- Multiple values are supported for rotating secrets, without invalidating existing sessions. See [Rotating Secrets](/guides/rotating-secrets)
+- The CLI updates the **.env** file automatically.
 
 </small>
 
@@ -252,11 +251,9 @@ Choose an OAuth/OIDC provider to enable social logins.
 </Callout>
 
 <Callout type="info">
-  Many providers are available in our hosted [example
-  app](https://next-auth-example.vercel.app) to test out.
+  Auth.js supports using the same OAuth client on multiple domains. Learn more
+  in the [Deployment](#securing-multiple-deployments) section.
 </Callout>
-
-You can learn more about OAuth in our [Concepts: OAuth](/concepts/oauth).
 
 ### Email
 
@@ -1123,9 +1120,9 @@ declare module "next-auth/jwt" {
 
 <small>Next section: [Observability](#observability)</small>
 
-### Environment Variables
+**Environment Variables**
 
-- `AUTH_SECRET`: Used to encrypt sessions, hash tokens, etc. You can generate one using the following command:
+- As for development, `AUTH_SECRET` is the only required environment variable.
 
 ```bash npm2yarn
 npm exec auth secret
