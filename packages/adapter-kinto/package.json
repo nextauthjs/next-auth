@@ -1,0 +1,48 @@
+{
+  "name": "@auth/kinto-adapter",
+  "version": "2.7.4",
+  "description": "Kinto adapter for next-auth.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Les De Ridder <les@celescare.com>",
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "kinto"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm clean && tsc",
+    "clean": "rm -rf index.*",
+    "test": "vitest run -c ../utils/vitest.config.ts"
+  },
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "peerDependencies": {
+    "kinto": "^15.0.0"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "devDependencies": {
+    "kinto": "^15.0.0"
+  }
+}
