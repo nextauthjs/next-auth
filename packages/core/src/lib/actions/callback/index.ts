@@ -323,7 +323,7 @@ export async function callback(
       // Callback URL is already verified at this point, so safe to use if specified
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "sms") {
-      const paramToken = query?.token as string | undefined
+      const paramToken = body?.token || (query?.token as string | undefined)
       const paramIdentifier = query?.phoneNumber as string | undefined
 
       if (!paramToken) {

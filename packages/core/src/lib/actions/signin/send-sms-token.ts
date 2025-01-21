@@ -93,6 +93,7 @@ export async function sendSmsToken(
     redirect: `${baseUrl}/verify-request?${new URLSearchParams({
       provider: provider.id,
       type: provider.type,
+      phone_number: phone_number,
     })}`,
   }
 }
@@ -100,7 +101,9 @@ export async function sendSmsToken(
 function defaultNormalizer(phone_number?: string) {
   if (!phone_number) throw new Error("Missing phone_number from request body.")
   if (!/^\+\d{11}$/.test(phone_number)) {
-    throw new Error("Invalid phone number format (+XXXXXXXXXXXX.")
+    throw new Error(
+      "Invalid phone number format, it should be like +XXXXXXXXXXXX"
+    )
   }
   return phone_number
 }

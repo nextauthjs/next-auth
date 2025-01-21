@@ -271,7 +271,10 @@ export async function signIn<Redirect extends boolean = true>(
   }
 
   const signInUrl = `${baseUrl}/${
-    providerType === "credentials" ? "callback" : "signin"
+    providerType === "credentials" ||
+    (providerType === "sms" && signInParams.token)
+      ? "callback"
+      : "signin"
   }/${provider}`
 
   const csrfToken = await getCsrfToken()
